@@ -279,7 +279,7 @@ class ITradeStateProcess(Interface):
 
   def isTradeStateCompleted(explanation, trade_state):
     """Returns True if all predecessor trade states are
-    completed and if no successor trade state is completed
+    completed and if the provided trade state is also completed
     in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
@@ -356,7 +356,7 @@ class ITradePhaseProcess(Interface):
     trade_phase -- a Trade Phase category
     """
 
-  def getRemainingTradePhaseList(business_link, trade_phase_list=None):
+  def getRemainingTradePhaseList(business_link):
     """Returns the list of remaining trade phases which to be achieved
     as part of a business process. This list is calculated by analysing 
     the graph of business link and trade states, starting from a given
@@ -365,9 +365,6 @@ class ITradePhaseProcess(Interface):
     supply and production chain.
 
     business_link -- a Business Link document
-
-    trade_phase_list -- if provided, the result is filtered by it after
-                        being collected - ???? useful ? XXX-JPS ?
 
     NOTE: explanation is not involved here because we consider here that
     self is the result of asUnionBusinessProcess and thus only contains

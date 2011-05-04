@@ -35,7 +35,7 @@ from Products.ERP5.mixin.solver import SolverMixin
 from Products.ERP5.mixin.configurable import ConfigurableMixin
 
 class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
-  """
+  """Target solver that adopts the values from the prevision on the decision.
   """
   meta_type = 'ERP5 Adopt Solver'
   portal_type = 'Adopt Solver'
@@ -79,8 +79,11 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
       for solved_property in solved_property_list:
         # XXX hardcoded
         if solved_property == 'quantity':
+          # For 'quantity' case, we need to recalculate delivery_ratio
+          # for all related simulation movements.
+          simulation_movement_list = movement.getDeliveryRelatedValueList()
           total_quantity = sum(
-            [x.getQuantity() for x in movement.getDeliveryRelatedValueList()])
+            [x.getQuantity() for x in simulation_movement_list])
           movement.setQuantity(total_quantity)
           for simulation_movement in simulation_movement_list:
             quantity = simulation_movement.getQuantity()
@@ -95,9 +98,18 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
         else:
           # XXX TODO we need to support multiple values for categories or
           # list type property.
-          simulation_movement = movement.getDeliveryRelatedValue()
-          movement.setProperty(solved_property,
-                               simulation_movement.getProperty(solved_property))
+
+          # XXX-Leo: If there is more than one simulation_movement in
+          # the simulation_movement_list, this indicates a wrong
+          # configuration or bad selection by the user. Should we do
+          # anything about it, like log or fail?
+          # Also, the behaviour below is naive, and could cause another
+          # non-divergent Simulation Movement to become divergent.
+          for simulation_movement in simulation_movement_list:
+            movement.setProperty(
+              solved_property,
+              simulation_movement.getProperty(solved_property)
+            )
     # Finish solving
     if self.getPortalObject().portal_workflow.isTransitionPossible(
       self, 'succeed'):

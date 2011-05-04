@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="TALES Constraint" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Documents should have one group or use one project as                       Follow Up relation</string> </value>
+        </item>
+        <item>
+            <key> <string>expression</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+python: len(object.getFollowUpList()) > 0 \t              or len(object.getGroupList()) > 0 or \t\t      object.getValidationState() == "embedded"
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>assignor_existence_constraint</string> </value>
+        </item>
+        <item>
+            <key> <string>message_expression_false</string> </key>
+            <value> <string>Follow Up or Group must be defined</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>TALES Constraint</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

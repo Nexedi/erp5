@@ -247,7 +247,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     portal_transforms = portal.portal_transforms
     result = portal_transforms.convertToData(mime_type, content,
                                              object=self, context=self,
-                                             filename=self.getTitleOrId(),
+                                             filename=self.getFilename(),
                                              mimetype=src_mimetype)
     if result is None:
       # portal_transforms fails to convert.
@@ -269,6 +269,9 @@ class Image(TextConvertableMixin, File, OFSImage):
         data = aq_base(data)
         self.setConversion(data, mime=mime_type, format=format)
         return mime_type, data
+    if not (format or kw):
+      # User asked for original content
+      return self.getContentType(), self.getData()
     image_size = self.getSizeFromImageDisplay(kw.get('display'))
     # store all keys usefull to convert or resize an image
     # 'display' parameter can be discarded
@@ -392,7 +395,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     """At least see if it *might* be valid."""
     return self.getWidth() and self.getHeight() and self.getData() and self.getContentType()
 
-  security.declareProtected(Permissions.View, 'getSizeFromImageDisplay')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
     """Return the size for this image display,
        or dimension of this image.

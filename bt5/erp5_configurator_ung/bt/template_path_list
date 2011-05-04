@@ -1,0 +1,4 @@
+business_configuration_module/ung_configuration
+business_configuration_module/ung_configuration/default_image
+workflow_module/ung_configuration_workflow
+workflow_module/ung_configuration_workflow/**

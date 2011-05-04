@@ -60,9 +60,9 @@ class TestPerson(ERP5TypeTestCase):
     user = uf.getUserById('seb').__of__(uf)
     newSecurityManager(None, user)
   
-  def _makeOne(self, *args, **kw):
-    from Products.ERP5Type.Document.Person import Person
-    return Person(*args, **kw).__of__(self.portal)
+  def _makeOne(self, **kw):
+    module = self.portal.person_module
+    return module.newContent(portal_type="Person", **kw)
 
   def test_01_CopyPastePersonObject(self, quiet=0, run=run_all_test):
     """ Test copy/paste a Person object. """
@@ -92,28 +92,28 @@ class TestPerson(ERP5TypeTestCase):
 
   # title & first_name, last_name
   def testEmptyTitle(self):
-    p = self._makeOne('person')
+    p = self._makeOne()
     self.assertEquals('', p.getTitle())
   
   def testSetFirstName(self):
-    p = self._makeOne('person')
+    p = self._makeOne()
     p.setFirstName('first')
     self.assertEquals('first', p.getFirstName())
 
   def testSetLastName(self):
-    p = self._makeOne('person')
+    p = self._makeOne(id='person')
     p.setLastName('last')
     self.assertEquals('last', p.getLastName())
 
   def testTitleFromFirstLastName(self):
-    p = self._makeOne('person')
+    p = self._makeOne(id='person')
     p.setFirstName('first')
     p.setLastName('last')
     self.assertEquals('first last', p.getTitle())
 
   def testEditFirstNameLastName(self):
     # using 'edit' method
-    p = self._makeOne('person')
+    p = self._makeOne(id='person')
     p.edit( first_name='first',
             last_name='last' )
     self.assertEquals('first', p.getFirstName())
@@ -121,14 +121,14 @@ class TestPerson(ERP5TypeTestCase):
     self.assertEquals('first last', p.getTitle())
 
   def testEditTitleFirstNameLastName(self):
-    p = self._makeOne('person')
+    p = self._makeOne(id='person')
     p.edit( first_name='first',
             last_name='last',
             title='title' )
     # no infinite loop :) but there's no guarantee on the behaviour
     
   def testGetTitleOrId(self):
-    p = self._makeOne('person')
+    p = self._makeOne(id='person')
     self.assertEquals('person', p.getTitleOrId())
     self.assertEquals('person', p.title_or_id())
 
@@ -138,13 +138,13 @@ class TestPerson(ERP5TypeTestCase):
     self.assertEquals('first last', p.title_or_id())
     
   def testHasTitle(self):
-    p = self._makeOne('person')
+    p = self._makeOne(id='person')
     self.assertFalse(p.hasTitle())
     p.setFirstName('bob')
     self.assertTrue(p.hasTitle())
 
   def testSetPasswordSecurity(self):
-    p = self._makeOne('person')
+    p = self._makeOne(id='person')
     p.manage_permission(Permissions.SetOwnPassword, [], 0)
     self.assertRaises(Unauthorized, p.setPassword, 'secret')
     self.assertRaises(Unauthorized, p.edit, password='secret')
@@ -164,7 +164,7 @@ class TestPerson(ERP5TypeTestCase):
     self.assertTrue(p.getPassword())
 
   def testPasswordFormat(self):
-    p = self._makeOne('person')
+    p = self._makeOne(id='person')
     p._setEncodedPassword('pass_A', format='A')
     p._setEncodedPassword('pass_B', format='B')
     self.assertEquals('pass_A', p.getPassword(format='A'))

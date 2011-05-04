@@ -16,6 +16,7 @@ except ImportError:
   BaseMailTemplate = None
 
 from email.Header import make_header
+from email.Utils import make_msgid
 
 if BaseMailTemplate is not None:
   def _process_utf8(self,kw):
@@ -80,6 +81,8 @@ if BaseMailTemplate is not None:
               ))
       # add date header
       headers['Date']=BaseMailTemplate.DateTime().rfc822()
+      # add message-id header
+      headers['Message-ID']=make_msgid()
       # turn headers into an ordered list for predictable header order
       keys = headers.keys()
       keys.sort()

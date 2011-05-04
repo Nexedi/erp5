@@ -1,0 +1,586 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsepython.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+var PythonParser = Editor.Parser = (function() {\n
+    function wordRegexp(words) {\n
+        return new RegExp("^(?:" + words.join("|") + ")$");\n
+    }\n
+    var DELIMITERCLASS = \'py-delimiter\';\n
+    var LITERALCLASS = \'py-literal\';\n
+    var ERRORCLASS = \'py-error\';\n
+    var OPERATORCLASS = \'py-operator\';\n
+    var IDENTIFIERCLASS = \'py-identifier\';\n
+    var STRINGCLASS = \'py-string\';\n
+    var BYTESCLASS = \'py-bytes\';\n
+    var UNICODECLASS = \'py-unicode\';\n
+    var RAWCLASS = \'py-raw\';\n
+    var NORMALCONTEXT = \'normal\';\n
+    var STRINGCONTEXT = \'string\';\n
+    var singleOperators = \'+-*/%&|^~<>\';\n
+    var doubleOperators = wordRegexp([\'==\', \'!=\', \'\\\\<=\', \'\\\\>=\', \'\\\\<\\\\>\',\n
+                                      \'\\\\<\\\\<\', \'\\\\>\\\\>\', \'\\\\/\\\\/\', \'\\\\*\\\\*\']);\n
+    var singleDelimiters = \'()[]{}@,:`=;\';\n
+    var doubleDelimiters = [\'\\\\+=\', \'\\\\-=\', \'\\\\*=\', \'/=\', \'%=\', \'&=\', \'\\\\|=\',\n
+                            \'\\\\^=\'];\n
+    var tripleDelimiters = wordRegexp([\'//=\',\'\\\\>\\\\>=\',\'\\\\<\\\\<=\',\'\\\\*\\\\*=\']);\n
+    var singleStarters = singleOperators + singleDelimiters + \'=!\';\n
+    var doubleStarters = \'=<>*/\';\n
+    var identifierStarters = /[_A-Za-z]/;\n
+\n
+    var wordOperators = wordRegexp([\'and\', \'or\', \'not\', \'is\', \'in\']);\n
+    var commonkeywords = [\'as\', \'assert\', \'break\', \'class\', \'continue\',\n
+                          \'def\', \'del\', \'elif\', \'else\', \'except\', \'finally\',\n
+                          \'for\', \'from\', \'global\', \'if\', \'import\',\n
+                          \'lambda\', \'pass\', \'raise\', \'return\',\n
+                          \'try\', \'while\', \'with\', \'yield\'];\n
+    var commontypes = [\'bool\', \'classmethod\', \'complex\', \'dict\', \'enumerate\',\n
+                       \'float\', \'frozenset\', \'int\', \'list\', \'object\',\n
+                       \'property\', \'reversed\', \'set\', \'slice\', \'staticmethod\',\n
+                       \'str\', \'super\', \'tuple\', \'type\'];\n
+    var py2 = {\'types\': [\'basestring\', \'buffer\', \'file\', \'long\', \'unicode\',\n
+                         \'xrange\'],\n
+               \'keywords\': [\'exec\', \'print\'],\n
+               \'version\': 2 };\n
+    var py3 = {\'types\': [\'bytearray\', \'bytes\', \'filter\', \'map\', \'memoryview\',\n
+                         \'open\', \'range\', \'zip\'],\n
+               \'keywords\': [\'nonlocal\'],\n
+               \'version\': 3};\n
+\n
+    var py, keywords, types, stringStarters, stringTypes, config;\n
+\n
+    function configure(conf) {\n
+        if (!conf.hasOwnProperty(\'pythonVersion\')) {\n
+            conf.pythonVersion = 2;\n
+        }\n
+        if (!conf.hasOwnProperty(\'strictErrors\')) {\n
+            conf.strictErrors = true;\n
+        }\n
+        if (conf.pythonVersion != 2 && conf.pythonVersion != 3) {\n
+            alert(\'CodeMirror: Unknown Python Version "\' +\n
+                  conf.pythonVersion +\n
+                  \'", defaulting to Python 2.x.\');\n
+            conf.pythonVersion = 2;\n
+        }\n
+        if (conf.pythonVersion == 3) {\n
+            py = py3;\n
+            stringStarters = /[\\\'\\"rbRB]/;\n
+            stringTypes = /[rb]/;\n
+            doubleDelimiters.push(\'\\\\-\\\\>\');\n
+        } else {\n
+            py = py2;\n
+            stringStarters = /[\\\'\\"RUru]/;\n
+            stringTypes = /[ru]/;\n
+        }\n
+        config = conf;\n
+        keywords = wordRegexp(commonkeywords.concat(py.keywords));\n
+        types = wordRegexp(commontypes.concat(py.types));\n
+        doubleDelimiters = wordRegexp(doubleDelimiters);\n
+    }\n
+\n
+    var tokenizePython = (function() {\n
+        function normal(source, setState) {\n
+            var stringDelim, threeStr, temp, type, word, possible = {};\n
+            var ch = source.next();\n
+            \n
+            function filterPossible(token, styleIfPossible) {\n
+                if (!possible.style && !possible.content) {\n
+                    return token;\n
+                } else if (typeof(token) == STRINGCONTEXT) {\n
+                    token = {content: source.get(), style: token};\n
+                }\n
+                if (possible.style || styleIfPossible) {\n
+                    token.style = styleIfPossible ? styleIfPossible : possible.style;\n
+                }\n
+                if (possible.content) {\n
+                    token.content = possible.content + token.content;\n
+                }\n
+                possible = {};\n
+                return token;\n
+            }\n
+\n
+            // Handle comments\n
+            if (ch == \'#\') {\n
+                while (!source.endOfLine()) {\n
+                    source.next();\n
+                }\n
+                return \'py-comment\';\n
+            }\n
+            // Handle special chars\n
+            if (ch == \'\\\\\') {\n
+                if (!source.endOfLine()) {\n
+                    var whitespace = true;\n
+                    while (!source.endOfLine()) {\n
+                        if(!(/[\\s\\u00a0]/.test(source.next()))) {\n
+                            whitespace = false;\n
+                        }\n
+                    }\n
+                    if (!whitespace) {\n
+                        return ERRORCLASS;\n
+                    }\n
+                }\n
+                return \'py-special\';\n
+            }\n
+            // Handle operators and delimiters\n
+            if (singleStarters.indexOf(ch) != -1 || (ch == "." && !source.matches(/\\d/))) {\n
+                if (doubleStarters.indexOf(source.peek()) != -1) {\n
+                    temp = ch + source.peek();\n
+                    // It must be a double delimiter or operator or triple delimiter\n
+                    if (doubleOperators.test(temp)) {\n
+                        source.next();\n
+                        var nextChar = source.peek();\n
+                        if (nextChar && tripleDelimiters.test(temp + nextChar)) {\n
+                            source.next();\n
+                            return DELIMITERCLASS;\n
+                        } else {\n
+                            return OPERATORCLASS;\n
+                        }\n
+                    } else if (doubleDelimiters.test(temp)) {\n
+                        source.next();\n
+                        return DELIMITERCLASS;\n
+                    }\n
+                }\n
+                // It must be a single delimiter or operator\n
+                if (singleOperators.indexOf(ch) != -1 || ch == ".") {\n
+                    return OPERATORCLASS;\n
+                } else if (singleDelimiters.indexOf(ch) != -1) {\n
+                    if (ch == \'@\' && source.matches(/\\w/)) {\n
+                        source.nextWhileMatches(/[\\w\\d_]/);\n
+                        return {style:\'py-decorator\',\n
+                                content: source.get()};\n
+                    } else {\n
+                        return DELIMITERCLASS;\n
+                    }\n
+                } else {\n
+                    return ERRORCLASS;\n
+                }\n
+            }\n
+            // Handle number literals\n
+            if (/\\d/.test(ch) || (ch == "." && source.matches(/\\d/))) {\n
+                if (ch === \'0\' && !source.endOfLine()) {\n
+                    switch (source.peek()) {\n
+                        case \'o\':\n
+                        case \'O\':\n
+                            source.next();\n
+                            source.nextWhileMatches(/[0-7]/);\n
+                            return filterPossible(LITERALCLASS, ERRORCLASS);\n
+                        case \'x\':\n
+                        case \'X\':\n
+                            source.next();\n
+                            source.nextWhileMatches(/[0-9A-Fa-f]/);\n
+                            return filterPossible(LITERALCLASS, ERRORCLASS);\n
+                        case \'b\':\n
+                        case \'B\':\n
+                            source.next();\n
+                            source.nextWhileMatches(/[01]/);\n
+                            return filterPossible(LITERALCLASS, ERRORCLASS);\n
+                    }\n
+                }\n
+                source.nextWhileMatches(/\\d/);\n
+                if (ch != \'.\' && source.peek() == \'.\') {\n
+                    source.next();\n
+                    source.nextWhileMatches(/\\d/);\n
+                }\n
+                // Grab an exponent\n
+                if (source.matches(/e/i)) {\n
+                    source.next();\n
+                    if (source.peek() == \'+\' || source.peek() == \'-\') {\n
+                        source.next();\n
+                    }\n
+                    if (source.matches(/\\d/)) {\n
+                        source.nextWhileMatches(/\\d/);\n
+                    } else {\n
+                        return filterPossible(ERRORCLASS);\n
+                    }\n
+                }\n
+                // Grab a complex number\n
+                if (source.matches(/j/i)) {\n
+                    source.next();\n
+                }\n
+\n
+                return filterPossible(LITERALCLASS);\n
+            }\n
+            // Handle strings\n
+            if (stringStarters.test(ch)) {\n
+                var peek = source.peek();\n
+                var stringType = STRINGCLASS;\n
+                if ((stringTypes.test(ch)) && (peek == \'"\' || peek == "\'")) {\n
+                    switch (ch.toLowerCase()) {\n
+                        case \'b\':\n
+                            stringType = BYTESCLASS;\n
+                            break;\n
+                        case \'r\':\n
+                            stringType = RAWCLASS;\n
+                            break;\n
+                        case \'u\':\n
+                            stringType = UNICODECLASS;\n
+                            break;\n
+                    }\n
+                    ch = source.next();\n
+                    stringDelim = ch;\n
+                    if (source.peek() != stringDelim) {\n
+                        setState(inString(stringType, stringDelim));\n
+                        return null;\n
+                    } else {\n
+                        source.next();\n
+                        if (source.peek() == stringDelim) {\n
+                            source.next();\n
+                            threeStr = stringDelim + stringDelim + stringDelim;\n
+                            setState(inString(stringType, threeStr));\n
+                            return null;\n
+                        } else {\n
+                            return stringType;\n
+                        }\n
+                    }\n
+                } else if (ch == "\'" || ch == \'"\') {\n
+                    stringDelim = ch;\n
+                    if (source.peek() != stringDelim) {\n
+                        setState(inString(stringType, stringDelim));\n
+                        return null;\n
+                    } else {\n
+                        source.next();\n
+                        if (source.peek() == stringDelim) {\n
+                            source.next();\n
+                            threeStr = stringDelim + stringDelim + stringDelim;\n
+                            setState(inString(stringType, threeStr));\n
+                            return null;\n
+                        } else {\n
+                            return stringType;\n
+                        }\n
+                    }\n
+                }\n
+            }\n
+            // Handle Identifier\n
+            if (identifierStarters.test(ch)) {\n
+                source.nextWhileMatches(/[\\w\\d_]/);\n
+                word = source.get();\n
+                if (wordOperators.test(word)) {\n
+                    type = OPERATORCLASS;\n
+                } else if (keywords.test(word)) {\n
+                    type = \'py-keyword\';\n
+                } else if (types.test(word)) {\n
+                    type = \'py-type\';\n
+                } else {\n
+                    type = IDENTIFIERCLASS;\n
+                    while (source.peek() == \'.\') {\n
+                        source.next();\n
+                        if (source.matches(identifierStarters)) {\n
+                            source.nextWhileMatches(/[\\w\\d]/);\n
+                        } else {\n
+                            type = ERRORCLASS;\n
+                            break;\n
+                        }\n
+                    }\n
+                    word = word + source.get();\n
+                }\n
+                return filterPossible({style: type, content: word});\n
+            }\n
+\n
+            // Register Dollar sign and Question mark as errors. Always!\n
+            if (/\\$\\?/.test(ch)) {\n
+                return filterPossible(ERRORCLASS);\n
+            }\n
+\n
+            return filterPossible(ERRORCLASS);\n
+        }\n
+\n
+        function inString(style, terminator) {\n
+            return function(source, setState) {\n
+                var matches = [];\n
+                var found = false;\n
+                while (!found && !source.endOfLine()) {\n
+                    var ch = source.next(), newMatches = [];\n
+                    // Skip escaped characters\n
+                    if (ch == \'\\\\\') {\n
+                        if (source.peek() == \'\\n\') {\n
+                            break;\n
+                        }\n
+                        ch = source.next();\n
+                        ch = source.next();\n
+                    }\n
+                    if (ch == terminator.charAt(0)) {\n
+                        matches.push(terminator);\n
+                    }\n
+                    for (var i = 0; i < matches.length; i++) {\n
+                        var match = matches[i];\n
+                        if (match.charAt(0) == ch) {\n
+                            if (match.length == 1) {\n
+                                setState(normal);\n
+                                found = true;\n
+                                break;\n
+                            } else {\n
+                                newMatches.push(match.slice(1));\n
+                            }\n
+                        }\n
+                    }\n
+                    matches = newMatches;\n
+                }\n
+                return style;\n
+            };\n
+        }\n
+\n
+        return function(source, startState) {\n
+            return tokenizer(source, startState || normal);\n
+        };\n
+    })();\n
+\n
+    function parsePython(source, basecolumn) {\n
+        if (!keywords) {\n
+            configure({});\n
+        }\n
+        basecolumn = basecolumn || 0;\n
+\n
+        var tokens = tokenizePython(source);\n
+        var lastToken = null;\n
+        var column = basecolumn;\n
+        var context = {prev: null,\n
+                       endOfScope: false,\n
+                       startNewScope: false,\n
+                       level: basecolumn,\n
+                       next: null,\n
+                       type: NORMALCONTEXT\n
+                       };\n
+\n
+        function pushContext(level, type) {\n
+            type = type ? type : NORMALCONTEXT;\n
+            context = {prev: context,\n
+                       endOfScope: false,\n
+                       startNewScope: false,\n
+                       level: level,\n
+                       next: null,\n
+                       type: type\n
+                       };\n
+        }\n
+\n
+        function popContext(remove) {\n
+            remove = remove ? remove : false;\n
+            if (context.prev) {\n
+                if (remove) {\n
+                    context = context.prev;\n
+                    context.next = null;\n
+                } else {\n
+                    context.prev.next = context;\n
+                    context = context.prev;\n
+                }\n
+            }\n
+        }\n
+\n
+        function indentPython(context) {\n
+            var temp;\n
+            return function(nextChars, currentLevel, direction) {\n
+                if (direction === null || direction === undefined) {\n
+                    if (nextChars) {\n
+                        while (context.next) {\n
+                            context = context.next;\n
+                        }\n
+                    }\n
+                    return context.level;\n
+                }\n
+                else if (direction === true) {\n
+                    if (currentLevel == context.level) {\n
+                        if (context.next) {\n
+                            return context.next.level;\n
+                        } else {\n
+                            return context.level;\n
+                        }\n
+                    } else {\n
+                        temp = context;\n
+                        while (temp.prev && temp.prev.level > currentLevel) {\n
+                            temp = temp.prev;\n
+                        }\n
+                        return temp.level;\n
+                    }\n
+                } else if (direction === false) {\n
+                    if (currentLevel > context.level) {\n
+                        return context.level;\n
+                    } else if (context.prev) {\n
+                        temp = context;\n
+                        while (temp.prev && temp.prev.level >= currentLevel) {\n
+                            temp = temp.prev;\n
+                        }\n
+                        if (temp.prev) {\n
+                            return temp.prev.level;\n
+                        } else {\n
+                            return temp.level;\n
+                        }\n
+                    }\n
+                }\n
+                return context.level;\n
+            };\n
+        }\n
+\n
+        var iter = {\n
+            next: function() {\n
+                var token = tokens.next();\n
+                var type = token.style;\n
+                var content = token.content;\n
+\n
+                if (lastToken) {\n
+                    if (lastToken.content == \'def\' && type == IDENTIFIERCLASS) {\n
+                        token.style = \'py-func\';\n
+                    }\n
+                    if (lastToken.content == \'\\n\') {\n
+                        var tempCtx = context;\n
+                        // Check for a different scope\n
+                        if (type == \'whitespace\' && context.type == NORMALCONTEXT) {\n
+                            if (token.value.length < context.level) {\n
+                                while (token.value.length < context.level) {\n
+                                    popContext();\n
+                                }\n
+\n
+                                if (token.value.length != context.level) {\n
+                                    context = tempCtx;\n
+                                    if (config.strictErrors) {\n
+                                        token.style = ERRORCLASS;\n
+                                    }\n
+                                } else {\n
+                                    context.next = null;\n
+                                }\n
+                            }\n
+                        } else if (context.level !== basecolumn &&\n
+                                   context.type == NORMALCONTEXT) {\n
+                            while (basecolumn !== context.level) {\n
+                                popContext();\n
+                            }\n
+\n
+                            if (context.level !== basecolumn) {\n
+                                context = tempCtx;\n
+                                if (config.strictErrors) {\n
+                                    token.style = ERRORCLASS;\n
+                                }\n
+                            }\n
+                        }\n
+                    }\n
+                }\n
+\n
+                // Handle Scope Changes\n
+                switch(type) {\n
+                    case STRINGCLASS:\n
+                    case BYTESCLASS:\n
+                    case RAWCLASS:\n
+                    case UNICODECLASS:\n
+                        if (context.type !== STRINGCONTEXT) {\n
+                            pushContext(context.level + 1, STRINGCONTEXT);\n
+                        }\n
+                        break;\n
+                    default:\n
+                        if (context.type === STRINGCONTEXT) {\n
+                            popContext(true);\n
+                        }\n
+                        break;\n
+                }\n
+                switch(content) {\n
+                    case \'.\':\n
+                    case \'@\':\n
+                        // These delimiters don\'t appear by themselves\n
+                        if (content !== token.value) {\n
+                            token.style = ERRORCLASS;\n
+                        }\n
+                        break;\n
+                    case \':\':\n
+                        // Colons only delimit scope inside a normal scope\n
+                        if (context.type === NORMALCONTEXT) {\n
+                            context.startNewScope = context.level+indentUnit;\n
+                        }\n
+                        break;\n
+                    case \'(\':\n
+                    case \'[\':\n
+                    case \'{\':\n
+                        // These start a sequence scope\n
+                        pushContext(column + content.length, \'sequence\');\n
+                        break;\n
+                    case \')\':\n
+                    case \']\':\n
+                    case \'}\':\n
+                        // These end a sequence scope\n
+                        popContext(true);\n
+                        break;\n
+                    case \'pass\':\n
+                    case \'return\':\n
+                        // These end a normal scope\n
+                        if (context.type === NORMALCONTEXT) {\n
+                            context.endOfScope = true;\n
+                        }\n
+                        break;\n
+                    case \'\\n\':\n
+                        // Reset our column\n
+                        column = basecolumn;\n
+                        // Make any scope changes\n
+                        if (context.endOfScope) {\n
+                            context.endOfScope = false;\n
+                            popContext();\n
+                        } else if (context.startNewScope !== false) {\n
+                            var temp = context.startNewScope;\n
+                            context.startNewScope = false;\n
+                            pushContext(temp, NORMALCONTEXT);\n
+                        }\n
+                        // Newlines require an indentation function wrapped in a closure for proper context.\n
+                        token.indentation = indentPython(context);\n
+                        break;\n
+                }\n
+\n
+                // Keep track of current column for certain scopes.\n
+                if (content != \'\\n\') {\n
+                    column += token.value.length;\n
+                }\n
+\n
+                lastToken = token;\n
+                return token;\n
+            },\n
+\n
+            copy: function() {\n
+                var _context = context, _tokenState = tokens.state;\n
+                return function(source) {\n
+                    tokens = tokenizePython(source, _tokenState);\n
+                    context = _context;\n
+                    return iter;\n
+                };\n
+            }\n
+        };\n
+        return iter;\n
+    }\n
+\n
+    return {make: parsePython,\n
+            electricChars: "",\n
+            configure: configure};\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>21868</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

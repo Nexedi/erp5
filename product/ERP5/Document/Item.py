@@ -32,13 +32,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Amount import Amount
-from Products.ERP5.Document.ImmobilisableItem import ImmobilisableItem
 
 
-NEGLIGEABLE_PRICE = 10e-8
-
-
-class Item(XMLObject, Amount, ImmobilisableItem):
+class Item(XMLObject, Amount):
     """
       Items in ERP5 are intended to provide a way to track objects
     """

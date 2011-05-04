@@ -30,6 +30,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.Path import Path
 from Products.ERP5.ExplanationCache import _getExplanationCache, _getBusinessLinkClosure
@@ -38,6 +39,8 @@ from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 import zope.interface
 
 from zLOG import LOG
+
+_marker = object()
 
 class BusinessProcess(Path, XMLObject):
   """The BusinessProcess class is a container class which is used
@@ -135,17 +138,9 @@ class BusinessProcess(Path, XMLObject):
         trade_phase = (trade_phase,)
       trade_phase = set(x.split('trade_phase/', 1)[-1]
                         for x in trade_phase)
-    if kw.get('portal_type', None) is None:
-      kw['portal_type'] = self.getPortalTradeModelPathTypeList()
-    if kw.get('sort_on', None) is None:
-      kw['sort_on'] = 'int_index'
+    kw.setdefault('portal_type', self.getPortalTradeModelPathTypeList())
+    kw.setdefault('sort_on', 'int_index')
     original_path_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS
-    LOG('self', 0, repr(self))
-    LOG('objectValues', 0, repr(self.objectValues()))
-    LOG('portal_type', 0, repr(kw['portal_type']))
-    LOG('objectValues kw', 0, repr(self.objectValues(**kw)))
-    LOG('trade_phase', 0, trade_phase)
-    LOG('original_path_list', 0, original_path_list)
     # Separate the selection of trade model paths into two steps
     # for easier debugging.
     # First, collect trade model paths which can be applicable to a given context.
@@ -154,17 +149,11 @@ class BusinessProcess(Path, XMLObject):
       # Filter our business path which trade phase does not match
       if trade_phase is None or trade_phase.intersection(path.getTradePhaseList()):
         path_list.append(path)
-    LOG('path_list', 0, path_list)
     # Then, filter trade model paths by Predicate API.
     # FIXME: Ideally, we should use the Domain Tool to search business paths,
     # and avoid using the low level Predicate API. But the Domain Tool does
     # support the condition above without scripting?
-    result = []
-    for path in path_list:
-      if path.test(context):
-        result.append(path)
-    LOG('result', 0, result)
-    return result
+    return [path for path in path_list if path.test(context)]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getExpectedTradeModelPathStartAndStopDate')
   def getExpectedTradeModelPathStartAndStopDate(self, explanation, trade_model_path,
@@ -180,9 +169,6 @@ class BusinessProcess(Path, XMLObject):
     delay_mode -- optional value to specify calculation mode ('min', 'max')
                   if no value specified use average delay
     """
-    if explanation.getPortalType() != 'Applied Rule':
-      raise TypeError('explanation must be an Applied Rule')
-
     if explanation.getParentValue().getPortalType() == 'Simulation Tool':
       raise ValueError('explanation must not be a Root Applied Rule')
 
@@ -194,7 +180,6 @@ class BusinessProcess(Path, XMLObject):
       raise ValueError('a reference date method must be defined on every Trade Model Path')
 
     explanation_cache = _getExplanationCache(explanation)
-    LOG('calling explanation_cache.getReferenceDate', 0, '%s %s %s %s' % (explanation, self, trade_date, reference_date_method_id))
     reference_date = explanation_cache.getReferenceDate(self, trade_date, reference_date_method_id)
 
     # Computer start_date and stop_date (XXX-JPS this could be cached and accelerated)    
@@ -212,7 +197,7 @@ class BusinessProcess(Path, XMLObject):
   # IBusinessLinkProcess implementation
   security.declareProtected(Permissions.AccessContentsInformation, 'getBusinessLinkValueList')
   def getBusinessLinkValueList(self, trade_phase=None, context=None,
-                               predecessor=None, successor=None, **kw):
+                               predecessor=_marker, successor=_marker, **kw):
     """Returns all Business Links of the current BusinessProcess which
     are matching the given trade_phase and the optional context.
 
@@ -232,36 +217,34 @@ class BusinessProcess(Path, XMLObject):
         trade_phase = set((trade_phase,))
       else:
         trade_phase = set(trade_phase)
-    if kw.get('portal_type', None) is None:
-      kw['portal_type'] = self.getPortalBusinessLinkTypeList()
-    if kw.get('sort_on', None) is None:
-      kw['sort_on'] = 'int_index'
+    kw.setdefault('portal_type', self.getPortalBusinessLinkTypeList())
+    kw.setdefault('sort_on', 'int_index')
     original_business_link_list = self.objectValues(**kw) # Why Object Values ??? XXX-JPS
     # Separate the selection of business links into two steps
     # for easier debugging.
     # First, collect business links which can be applicable to a given context.
     business_link_list = []
     for business_link in original_business_link_list:
-      if predecessor is not None and business_link.getPredecessor() != predecessor:
+      if (predecessor is not _marker and
+          business_link.getPredecessor() != predecessor):
         continue # Filter our business link which predecessor does not match
-      if successor is not None and business_link.getSuccessor() != successor:
+      if (successor is not _marker and
+          business_link.getSuccessor() != successor):
         continue # Filter our business link which successor does not match
-      if trade_phase is not None and not trade_phase.intersection(business_link.getTradePhaseList()):
+      if trade_phase is not None and not trade_phase.intersection(
+                                   business_link.getTradePhaseList()):
         continue # Filter our business link which trade phase does not match
       business_link_list.append(business_link)
     # Then, filter business links by Predicate API.
     # FIXME: Ideally, we should use the Domain Tool to search business links,
     # and avoid using the low level Predicate API. But the Domain Tool does
     # support the condition above without scripting?
-    LOG('business_link_list', 0, repr(business_link_list))
     if context is None:
-      LOG('context is None', 0, repr(business_link_list))
+      LOG('ERP5.Document.BusinessProcess', 0, 'Context is None %r' %
+                  (business_link_list,))
       return business_link_list
-    result = []
-    for business_link in business_link_list:
-      if business_link.test(context):
-        result.append(business_link)
-    return result
+    return [business_link for business_link in business_link_list
+                if business_link.test(context)]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isBusinessLinkCompleted')
   def isBusinessLinkCompleted(self, explanation, business_link):
@@ -273,7 +256,6 @@ class BusinessProcess(Path, XMLObject):
 
     business_link -- a Business Link document
     """
-    LOG('In isBusinessLinkCompleted', 0, repr(business_link))
     # Return False if Business Link is not completed
     if not business_link.isCompleted(explanation):
       return False
@@ -373,9 +355,7 @@ class BusinessProcess(Path, XMLObject):
     business_link -- a Business Link document
     """
     # If everything is delivered, no need to build
-    LOG('In isBusinessLinkBuildable', 0, repr(business_link))
     if business_link.isDelivered(explanation):
-      LOG('In isBusinessLinkBuildable', 0, 'business link is delivered and thus False')
       return False
     # We must take the closure cause only way to combine business process
     closure_process = _getBusinessLinkClosure(self, explanation, business_link)
@@ -525,18 +505,15 @@ class BusinessProcess(Path, XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'isTradeStateCompleted')
   def isTradeStateCompleted(self, explanation, trade_state):
     """Returns True if all predecessor trade states are
-    completed and if no successor trade state is completed
-    in the context of given explanation.
+    completed in the context of given explanation.
 
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
 
     trade_state -- a Trade State category
     """
-    LOG('In isTradeStateCompleted', 0, repr(trade_state))
     for business_link in self.getBusinessLinkValueList(successor=trade_state):
       if not self.isBusinessLinkCompleted(explanation, business_link):
-        LOG('A business link is not completed', 0, repr(business_link))
         return False
     return True      
 
@@ -618,8 +595,9 @@ class BusinessProcess(Path, XMLObject):
         return False
     return True
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getRemainingTradePhaseList')
-  def getRemainingTradePhaseList(self, explanation, business_link, trade_phase_list=None):
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getRemainingTradePhaseList')
+  def getRemainingTradePhaseList(self, business_link):
     """Returns the list of remaining trade phases which to be achieved
     as part of a business process. This list is calculated by analysing 
     the graph of business link and trade states, starting from a given
@@ -632,11 +610,6 @@ class BusinessProcess(Path, XMLObject):
 
     business_link -- a Business Link document
 
-    trade_phase_list -- if provided, the result is filtered by it after
-                        being collected - XXX-JPS - is this really useful ?
-
-    NOTE: this code has not been reviewed and needs review
-
     NOTE: explanation is not involved here because we consider here that
     self is the result of asUnionBusinessProcess and thus only contains
     applicable Business Link to a given simulation subtree. Since the list
@@ -646,25 +619,39 @@ class BusinessProcess(Path, XMLObject):
     """
     remaining_trade_phase_list = []
     trade_state = business_link.getSuccessor()
-    for link in [x for x in self.objectValues(portal_type="Business Link") \
-        if x.getPredecessor() == trade_state]:
-      # XXX When no simulations related to link, what should link.isCompleted return?
-      #     if True we don't have way to add remaining trade phases to new movement
-      if not (link.getRelatedSimulationMovementValueList(explanation) and
-              link.isCompleted(explanation)):
-        remaining_trade_phase_list += link.getTradePhaseValueList()
+    tv = getTransactionalVariable(self)
+    # We might need a key which depends on the explanation
+    key = 'BusinessProcess_predecessor_successor_%s' % self.getRelativeUrl()
+    predecessor_successor_dict = tv.get(key, None)
+    if predecessor_successor_dict is None:
+      predecessor_successor_dict = {'predecessor':{},
+                                    'successor':{}}
+      for business_link in self.objectValues(portal_type="Business Link"):
+        for property_name in ('predecessor', 'successor'):
+          property_value = business_link.getProperty(property_name)
+          if property_value:
+            business_link_list = predecessor_successor_dict[property_name].\
+                setdefault(property_value, [])
+            business_link_list.append(business_link)
+      tv[key] = predecessor_successor_dict
+
+    business_link_list = predecessor_successor_dict['predecessor'].\
+                           get(trade_state, [])
+    assert len(business_link_list) <= 1, \
+        "code is not able yet to manage this case"
+    for link in business_link_list:
+      remaining_trade_phase_list += link.getTradePhaseValueList()
 
       # collect to successor direction recursively
-      state = link.getSuccessorValue()
+      state = link.getSuccessor()
       if state is not None:
+        next_business_link_list = predecessor_successor_dict['successor'].\
+                                    get(state, [])
+        assert len(next_business_link_list) == 1, \
+            "code is not able yet to manage this case"
         remaining_trade_phase_list.extend(
-          self.getRemainingTradePhaseList(explanation, state, None))
-
-    # filter just at once if given
-    if trade_phase_list is not None:
-      remaining_trade_phase_list = filter(
-        lambda x : x.getLogicalPath() in trade_phase_list,
-        remaining_trade_phase_list)
+          self.getRemainingTradePhaseList(
+          next_business_link_list[0]))
 
     return remaining_trade_phase_list
 
@@ -848,6 +835,5 @@ class BusinessProcess(Path, XMLObject):
     """
       Build whatever is buildable
     """
-    LOG('In business process build', 0, repr(explanation))
     for business_link in self.getBuildableBusinessLinkValueList(explanation):
       business_link.build(explanation=explanation)

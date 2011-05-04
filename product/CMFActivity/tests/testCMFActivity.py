@@ -101,6 +101,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
   def afterSetUp(self):
     super(TestCMFActivity, self).afterSetUp()
+    from Products.CMFActivity.ActivityRuntimeEnvironment import BaseMessage
+    # Set 'max_retry' to a known value so that we can test the feature
+    BaseMessage.max_retry = property(lambda self:
+      self.activity_kw.get('max_retry', 5))
     self.login()
     portal = self.portal
     # trap outgoing e-mails
@@ -3827,6 +3831,19 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
         self.assertFalse(activity_tool.getMessageList())
     finally:
       del activity_tool.__class__.doSomething
+
+  def test_126_beforeCommitHook(self):
+    """
+    Check it is possible to activate an object from a before commit hook
+    """
+    def doSomething(person):
+      person.activate(activity='SQLDict')._setFirstName('John')
+      person.activate(activity='SQLQueue')._setLastName('Smith')
+    person = self.portal.person_module.newContent()
+    transaction.get().addBeforeCommitHook(doSomething, (person,))
+    transaction.commit()
+    self.tic()
+    self.assertEqual(person.getTitle(), 'John Smith')
 
   def test_connection_migration(self):
     """

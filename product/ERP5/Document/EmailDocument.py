@@ -172,13 +172,6 @@ class EmailDocument(TextDocument):
     """
     return False
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'hasBaseData')
-  def hasBaseData(self):
-    """
-    """
-    return self.hasFile() or self.hasTextContent()
-
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):
     """
@@ -626,6 +619,8 @@ class EmailDocument(TextDocument):
     if not _checkPermission(Permissions.View, self):
       raise Unauthorized
 
+    additional_headers = {}
+
     #
     # Build mail message
     # This part will be replaced with MailTemplate soon.
@@ -652,9 +647,13 @@ class EmailDocument(TextDocument):
     # Return-Path
     if reply_url is None:
       reply_url = self.portal_preferences.getPreferredEventSenderEmail()
-    additional_headers = None
     if reply_url:
-      additional_headers = {'Return-Path':reply_url}
+      additional_headers['Return-Path'] = reply_url
+
+    # Reply-To
+    destination_reference = self.getDestinationReference()
+    if destination_reference is not None:
+      additional_headers['In-Reply-To'] = destination_reference
 
     # To (multiple)
     to_url_list = []

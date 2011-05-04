@@ -30,7 +30,7 @@
 import unittest
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5OOo.tests.testFormPrintout import TestFormPrintoutMixin
+from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 from Products.ERP5OOo.tests.utils import Validator
 from Products.ERP5Type.tests.utils import FileUpload
@@ -67,17 +67,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
                     precondition='',
                     content_type='application/vnd.oasis.opendocument.graphics')
     erp5OOo = custom.manage_addProduct['ERP5OOo']
-    addOOoTemplate = erp5OOo.addOOoTemplate
-    if custom._getOb('Foo_viewAsOdg', None) is None:
-      addOOoTemplate(id='Foo_viewAsOdg', title='')
-    request = self.app.REQUEST
-    Foo_viewAsOdg = custom.Foo_viewAsOdg
-    Foo_viewAsOdg.doSettings(request, title='', xml_file_id='content.xml',
-                             ooo_stylesheet='Foo_getODGStyleSheet')
-    builder = OOoBuilder(foo_file)
-    content = builder.extract('content.xml')
-    Foo_viewAsOdg.pt_edit(content,
-        content_type='application/vnd.oasis.opendocument.graphics')
+
     if custom._getOb('Foo_viewAsODGPrintout', None) is None:
       erp5OOo.addFormPrintout(id='Foo_viewAsODGPrintout', title='',
                               form_name='Foo_view', template='Foo_getODGStyleSheet')
@@ -310,7 +300,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     parent_dir = os.path.dirname(current_dir)
     image_path = os.path.join(parent_dir, 'www', 'form_printout_icon.png')
     file_data = FileUpload(image_path, 'rb')
-    image = person1.newContent(portal_type='Image')
+    image = person1.newContent(portal_type='Embedded File')
     image.edit(file=file_data)
 
     foo_printout = image.Foo_viewAsODGPrintout

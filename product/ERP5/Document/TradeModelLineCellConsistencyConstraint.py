@@ -57,3 +57,12 @@ class TradeModelLineCellConsistencyConstraint(ConstraintMixin):
           mapping=dict(line=document.getTitle()))]
 
     return []
+
+  _message_id_tuple = ('message_cell_inexistance',)
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(base_id):
+    """
+    @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
+    """
+    yield dict(base_id=base_id)

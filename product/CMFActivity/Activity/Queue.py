@@ -273,7 +273,7 @@ class Queue:
     return 0
 
   # Transaction Management
-  def prepareQueueMessage(self, activity_tool, m):
+  def prepareQueueMessageList(self, activity_tool, message_list):
     # Called to prepare transaction commit for queued messages
     pass
 

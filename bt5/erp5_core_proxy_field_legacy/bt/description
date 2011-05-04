@@ -1,0 +1,3 @@
+This bt must be dropped as soon as cleanup is finished.
+
+This bt contains for compatibility reasons all old not well named proxy field and proxy field libraries that were in erp5_core before. Like this we can do cleanup of erp5_core but we still give more time to people still using old fields to do the cleanup.

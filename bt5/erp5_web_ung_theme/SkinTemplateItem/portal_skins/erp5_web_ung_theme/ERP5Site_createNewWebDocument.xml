@@ -50,7 +50,12 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>request = context.REQUEST\n
+            <value> <string>from zExceptions import Unauthorized\n
+\n
+if context.portal_membership.isAnonymousUser():\n
+  raise Unauthorized("You are not allowed to use this script")\n
+\n
+request = context.REQUEST\n
 template_name = template or request.get("template")\n
 if template_name is None:\n
   return None\n
@@ -71,8 +76,7 @@ portal_type = new_content.getPortalType()\n
 module = portal.getDefaultModule(portal_type)\n
 \n
 kw["webpage_path"] = new_content.getPath()\n
-return new_content.Base_redirect(context.Base_getEditorViewName(portal_type), \n
-                                keep_items = dict(editable_mode=1, **kw))\n
+return new_content.Base_redirect(keep_items = dict(editable_mode=1, **kw))\n
 </string> </value>
         </item>
         <item>

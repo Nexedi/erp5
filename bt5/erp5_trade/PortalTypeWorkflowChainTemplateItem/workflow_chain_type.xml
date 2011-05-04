@@ -56,6 +56,10 @@
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, movement_resource_interaction_workflow, pricing_interaction_workflow, trade_matrix_workflow</workflow>
  </chain>
  <chain>
+  <type>Internal Trade Condition</type>
+  <workflow>edit_workflow, reindex_object_interaction_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Inventory</type>
   <workflow>edit_workflow, inventory_workflow</workflow>
  </chain>
@@ -158,6 +162,10 @@
  <chain>
   <type>Trade Model Line</type>
   <workflow>edit_workflow, trade_model_line_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Trade Model Line Cell Consistency Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Trade Model Path</type>

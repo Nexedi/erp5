@@ -45,12 +45,7 @@ You should have received a copy of the GNU General Public License\n
 along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
-\n
-var fixLeftRightHeightAndFocusOnLoad = function () {\n
-  fixLeftRightHeightAndFocus(1);\n
-};\n
-\n
-addLoadEvent(fixLeftRightHeightAndFocusOnLoad);\n
+// XXX: to be overriden in othe JavaScript based styles \n
 </string> </value>
         </item>
         <item>

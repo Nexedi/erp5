@@ -69,7 +69,7 @@ class AttributeUnicity(PropertyExistence):
       from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
       # Add uid in criterion keys to avoid fetching current object.
       criterion_dict['query'] = NegatedQuery(Query(uid=obj.getUid()))
-      portal = obj.portal_catalog.getPortalObject()
+      portal = obj.getPortalObject()
       result = portal.portal_catalog.countResults(**criterion_dict)[0][0]
       if result >= 1:
         mapping['value'] = criterion_dict.get(attribute_name)

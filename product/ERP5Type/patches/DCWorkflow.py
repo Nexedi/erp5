@@ -127,10 +127,10 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
       return None
 
     def _listGlobalActions(user=None, id=None, portal_path=None):
-      portal_url = getToolByName(self, 'portal_url')
+      portal = self._getPortalRoot()
+      portal_url = portal.portal_url
       portal_url = portal_url()
       sm = getSecurityManager()
-      portal = self._getPortalRoot()
       res = []
       fmt_data = None
       # We want to display some actions depending on the current date
@@ -152,10 +152,14 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
               var_match_keys = qdef.getVarMatchKeys()
               if var_match_keys:
                   # Check the catalog for items in the worklist.
-                  catalog = getToolByName(self, 'portal_catalog')
+                  catalog = portal.portal_catalog
                   for k in var_match_keys:
                     v = qdef.getVarMatch(k)
-                    v_fmt = map(lambda x, info=info: x%info, v)
+                    if instance(v, Expression):
+                      v_fmt = v(createExprContext(StateChangeInfo(portal,
+                                self, kwargs=info.__dict__.copy())))
+                    else:
+                      v_fmt = map(lambda x, info=info: x%info, v)
                     dict[k] = v_fmt
                   # Patch to automatically filter workflists per portal type
                   # so that the same state can be used for different
@@ -205,6 +209,8 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
 
 DCWorkflowDefinition.listGlobalActions = DCWorkflowDefinition_listGlobalActions
 
+from Products.DCWorkflow.Expression import Expression
+
 from Products.ERP5Type.patches.WorkflowTool import SECURITY_PARAMETER_ID, WORKLIST_METADATA_KEY
 def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
                                                       check_guard=True):
@@ -216,8 +222,9 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
   if not self.worklists:
     return None
 
+  portal = self.getPortalObject()
   def getPortalTypeListForWorkflow(workflow_id):
-      workflow_tool = getToolByName(self, 'portal_workflow')
+      workflow_tool = portal.portal_workflow
       result = []
       append = result.append
       for type_info in workflow_tool._listTypeInfo():
@@ -233,14 +240,24 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
     return None
   variable_match_dict = {}
   security_manager = getSecurityManager()
-  portal = self.getPortalObject()
+  workflow_tool = portal.portal_workflow
   workflow_id = self.id
   workflow_title = self.title
   for worklist_id, worklist_definition in self.worklists.items():
     action_box_name = worklist_definition.actbox_name
     guard = worklist_definition.guard
     if action_box_name:
-      variable_match = dict(((x, [y % info for y in worklist_definition.getVarMatch(x)]) for x in worklist_definition.getVarMatchKeys()))
+      variable_match = {}
+      for key in worklist_definition.getVarMatchKeys():
+        var = worklist_definition.getVarMatch(key)
+        if isinstance(var, Expression):
+          evaluated_value = var(createExprContext(StateChangeInfo(portal,
+                                self, kwargs=info.__dict__.copy())))
+          if isinstance(evaluated_value, (str, int, long)):
+            evaluated_value = [str(evaluated_value)]
+        else:
+          evaluated_value = [x % info for x in var]
+        variable_match[key] = evaluated_value
       if 'portal_type' in variable_match and len(variable_match['portal_type']):
         portal_type_intersection = set(variable_match['portal_type'])\
             .intersection(portal_type_list)
@@ -263,8 +280,9 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
       if is_permitted_worklist:
         format_data = TemplateDict()
         format_data._push(info)
-        format_data._push({'portal_type': '&portal_type='.join(variable_match['portal_type']),
-                           'local_roles': '&local_roles='.join(variable_match.get(SECURITY_PARAMETER_ID, []))})
+        variable_match.setdefault(SECURITY_PARAMETER_ID, ())
+        format_data._push(dict((k, ('&%s:list=' % k).join(v)) for\
+                                           k, v in variable_match.iteritems()))
         variable_match[WORKLIST_METADATA_KEY] = {'format_data': format_data,
                                                  'worklist_title': action_box_name,
                                                  'worklist_id': worklist_id,
@@ -308,21 +326,22 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
     validation_exc = None
 
     # Figure out the old and new states.
-    old_sdef = self._getWorkflowStateOf(ob)
-    old_state = old_sdef.getId()
+    old_state = self._getWorkflowStateOf(ob, True)
     if tdef is None:
         new_state = self.initial_state
+        if not new_state:
+            # Do nothing if there is no initial state. We may want to create
+            # workflows with no state at all, only for worklists.
+            return
         former_status = {}
     else:
-        new_state = tdef.new_state_id
-        if not new_state:
-            # Stay in same state.
-            new_state = old_state
+        new_state = tdef.new_state_id or old_state
         former_status = self._getStatusOf(ob)
-    new_sdef = self.states.get(new_state, None)
-    if new_sdef is None:
-        raise WorkflowException, (
-            'Destination state undefined: ' + new_state)
+    old_sdef = self.states[old_state]
+    try:
+        new_sdef = self.states[new_state]
+    except KeyError:
+        raise WorkflowException('Destination state undefined: ' + new_state)
 
     # Execute the "before" script.
     before_script_success = 1

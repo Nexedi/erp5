@@ -67,15 +67,11 @@ class ComplexQuery(Query):
             This value will be passed through to SQLExpression. If it is
             provided, this ComplexQuery must have no subquery (regular
             SQLExpression limitation)
-        implicit_table_list (list of strings)
-          Each entry in this list will be registered to column map. This is
-          used to make column mapper choose tables differently.
     """
     self.logical_operator = kw.pop('logical_operator', kw.pop('operator', 'and')).lower()
     assert self.logical_operator in ('and', 'or', 'not'), self.logical_operator
     unknown_column_dict = kw.pop('unknown_column_dict', {})
     self.from_expression = unknown_column_dict.pop('from_expression', None)
-    self.implicit_table_list = kw.pop('implicit_table_list', [])
     query_list = []
     append = query_list.append
     extend = query_list.extend
@@ -203,8 +199,6 @@ class ComplexQuery(Query):
 
   @profiler_decorator
   def registerColumnMap(self, sql_catalog, column_map):
-    for implicit_table_column in self.implicit_table_list:
-      column_map.registerColumn(implicit_table_column)
     for query in self.query_list:
       query.registerColumnMap(sql_catalog, column_map)
 

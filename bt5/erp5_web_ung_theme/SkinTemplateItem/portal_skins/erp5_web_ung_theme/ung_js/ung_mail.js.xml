@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ung_mail.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>function loadEmailFormActions(){\n
+  $("button#discard-mail").click(function(){\n
+    window.location.reload();\n
+  });\n
+  $("span#add-cc-field").click(function(){\n
+    $(this).hide();\n
+    $("tr#cc").show();\n
+  });\n
+  $("span#add-bcc-field").click(function(){\n
+    $(this).hide();\n
+    $("tr#bcc").show();\n
+  });\n
+}\n
+\n
+function saveEmailThread(event){\n
+  event.preventDefault();\n
+  var formData = new Array();\n
+  $("div.compose-mail-page textarea, div.compose-mail-page input").each(function(){\n
+    formData.push({name: $(this).attr("id"), value: $(this).attr("value")});\n
+  });\n
+  formData.push({name: "action", value: event.currentTarget.id});\n
+  var divMail = $("div.compose-mail-page");\n
+  var eventId = divMail.data("event_uid") != undefined ? divMail.data("event_uid") : "";\n
+  formData.push({name: "event_id", value: eventId});\n
+  $.ajax({\n
+     type: "post",\n
+     url: "ERP5Site_createNewEmailThread",\n
+     data: formData,\n
+     mediaType: "json",\n
+     success: function(data){\n
+       if (event.currentTarget.id == "send-mail"){\n
+         $("div.compose-mail-page").removeDate("event_id");\n
+         var baseUrl = window.location.href.split("?")[0];\n
+         window.location.href = baseUrl + "?reset:int=1";\n
+       }\n
+       if (event.currentTarget.id == "save-mail"){\n
+         $("div.compose-mail-page").data("event_uid", data);\n
+       }\n
+     }\n
+  });\n
+}\n
+\n
+$().ready(function(){\n
+  var baseUrl = window.location.href.split("?")[0];\n
+  $("button#compose-mail").click(function(event){\n
+    event.preventDefault();\n
+    $("div.main-right fieldset.widget").hide();\n
+    $("div.main-right").css("background-color", "#BBCCFF");\n
+    $("div.main-right").load("EmailThread_formView", {}, function(){\n
+      loadEmailFormActions();\n
+      $("button#save-mail, button#send-mail").click(saveEmailThread);  \n
+    });\n
+  });\n
+  $("img[alt=\'mail_logo_box\']").click(function(){\n
+    window.location.href = baseUrl + "?reset:int=1";\n
+  });\n
+  $("input#submit-search").click(function(event){\n
+    event.preventDefault();\n
+    var text = $("input[name=\'searchable-text\']").attr("value").replace(/\\ /g,"%20");\n
+    window.location.href = baseUrl + "?SearchableText=" + text;\n
+  });\n
+  $("input[name=\'searchable-text\']").keypress(function(event){\n
+    (event.which == 13) ? $("input#submit-search").click() : null;\n
+  });\n
+  $("div.listbox-body table.listbox td.listbox-table-data-cell a").click(function(event){\n
+    event.preventDefault();\n
+    var emailThreadUId = $(this).parent().parent().find("input").attr("value");\n
+    var emailUid = [{name: "email_thread_uid", value: emailThreadUId}];\n
+    $.ajax({\n
+       type: "post",\n
+       url: "ERP5Site_loadEmailThreadData",\n
+       data: emailUid,\n
+       mediaType: "json",\n
+       success: function(data){\n
+         var data = jQuery.parseJSON(data);\n
+         $("div.main-right fieldset.widget").hide();\n
+         $("div.main-right").css("background-color", "#BBCCFF");\n
+         $("div.main-right").load("EmailThread_formView", {}, function(){\n
+           if (data.state != "draft"){\n
+             $("button#discard-mail").hide();\n
+           }\n
+           $("button#save-mail, button#send-mail").click(saveEmailThread);\n
+           $(this).ready(function(){\n
+             (data.cc != null) ? $("textarea#cc").attr("value", data.cc) : null;\n
+             (data.bcc != null) ? $("textarea#bcc").attr("value", data.bcc) : null;\n
+             (data.to != null) ? $("textarea#to").attr("value", data.to) : null;\n
+             (data.text_content != null) ? $("textarea#text-content").attr("value", data.text_content) : null;\n
+             (data.subject != null) ? $("input#subject").attr("value", data.subject) : null;\n
+             (data.id != null) ? $("div.compose-mail-page").data("event_id", data.id) : null;\n
+             loadEmailFormActions();\n
+           });\n
+         });\n
+       }\n
+    });\n
+    $("div.compose-mail-page").data("event_uid", emailThreadUId);\n
+  });\n
+});</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

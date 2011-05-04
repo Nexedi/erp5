@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>count_method</string>
                 <string>list_method</string>
                 <string>title</string>
               </list>
@@ -101,6 +102,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>count_method</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

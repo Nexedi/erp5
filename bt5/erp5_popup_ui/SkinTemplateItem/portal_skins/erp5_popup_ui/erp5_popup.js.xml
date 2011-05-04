@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="DTMLMethod" module="OFS.DTMLMethod"/>
+      <global name="File" module="OFS.Image"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -11,23 +11,19 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts01396443.57</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>erp5_popup.js</string> </value>
         </item>
         <item>
-            <key> <string>_vars</string> </key>
-            <value>
-              <dictionary/>
-            </value>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
-            <key> <string>globals</string> </key>
-            <value>
-              <dictionary/>
-            </value>
-        </item>
-        <item>
-            <key> <string>raw</string> </key>
+            <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
 /*\n
@@ -102,15 +98,16 @@ $(function() {\n
       if (!query) query = {};\n
       if (!ajax_method) ajax_method = $.post;\n
       //dialog.empty();\n
-\n
+      // scroll up to begin of "window"\n
+      window.scrollTo(0,0);\n
       // Some bogus animations for having the user to feel easier.\n
       var animate = function() {\n
         var element = $(\'p.loading\', dialog);\n
         if (element.length != 0) {\n
           //element.animate({opacity: 1}, 2000, \'linear\');\n
           //element.animate({opacity: 0}, 2000, \'linear\', animate);\n
-          element.animate({color: "white"}, 2000, \'linear\');\n
-          element.animate({color: "black"}, 2000, \'linear\', animate);\n
+          element.animate({color: \'white\'}, 2000, \'linear\');\n
+          element.animate({color: \'black\'}, 2000, \'linear\', animate);\n
         }\n
       };\n
       $(\'<div class="loading" style="background-color: #AAAAAA; opacity: 0.5; position: absolute; left: 0%; width: 100%; top: 0%; height: 100%; transparent;"><p class="loading" style="position: absolute; left: 0%; width: 100%; top: 30%; height: 40%; text-align: center; color: black; font-size: 32pt;">Loading...</p></div>\').appendTo(dialog);\n
@@ -122,7 +119,7 @@ $(function() {\n
           dialog.empty();\n
           //$(\'div.loading\', dialog).remove();\n
 \n
-          dialog.html($(\'<div />\').append(data.replace(/<script(.|\\s)*?\\/script>/g, "")).find(\'form\'));\n
+          dialog.html($(\'<div />\').append(data.replace(/<script(.|\\s)*?\\/script>/g, \'\')).find(\'form\'));\n
 \n
           // XXX Get rid of unneeded stuff in JavaScript for now.\n
           $(\'.bars, .breadcrumb, .logged_in_as\', dialog).remove();\n
@@ -131,7 +128,7 @@ $(function() {\n
           $(\'.wrapper\', dialog).remove();\n
 \n
           // Insert the same buttons as at the bottom into near the top.\n
-          $(\'div.bottom_actions\', dialog).clone().insertAfter($(\'div.dialog_box\', dialog)).css(\'margin-bottom\', \'1em\');\n
+          //$(\'div.bottom_actions\', dialog).clone().insertAfter($(\'div.dialog_box\', dialog)).css(\'margin-bottom\', \'1em\');\n
 \n
           $(\'input[type="image"], button.sort_button, .dialog_selector > button, button.save\', dialog).click(function(event) {\n
             event.preventDefault();\n
@@ -153,9 +150,9 @@ $(function() {\n
             load(form.attr(\'action\'), $.param(params) + \'&\' + form.serialize());\n
           });\n
 \n
-          // XXX Remove the hardcoded handler.\n
-          $(\'input[type="text"][name="listbox_page_start"][onkeypress]\', dialog).removeAttr(\'onkeypress\');\n
-          $(\'input[type="text"][name="listbox_page_start"]\', dialog).keypress(function(event) {\n
+          // listbox type in page number\n
+          $(\'input[name="listbox_page_start"][onkeypress]\', dialog).removeAttr(\'onkeypress\');\n
+          $(\'input[name="listbox_page_start"]\', dialog).keypress(function(event) {\n
             if (event.keyCode == \'13\') {\n
               event.preventDefault();\n
               var self = $(this);\n
@@ -165,8 +162,19 @@ $(function() {\n
               load(\'listbox_setPage\', form.serialize());\n
             }\n
           });\n
-\n
-          $(\'tr.listbox_search_line input[type="text"]\', dialog).removeAttr(\'onkeypress\').keypress(function(event) {\n
+          \n
+          // Listbox next & previous, last & first buttons\n
+          $.each([\'listbox_nextPage\', \'listbox_previousPage\', \'listbox_firstPage\', \'listbox_lastPage\'], \n
+                 function(index, value) {\n
+                   var button = $(\'button[type="submit"][name="\' + value + \':method"]\', dialog).first();\n
+                   button.click(function(event) {\n
+                                  var form = $(\'form.main_form\', dialog);\n
+                                  event.preventDefault();\n
+                                  load(value, form.serialize());            \n
+                   });\n
+          });\n
+         \n
+          $(\'th.listbox-table-filter-cell input[type="text"]\', dialog).removeAttr(\'onkeypress\').keypress(function(event) {\n
             if (event.keyCode == \'13\') {\n
               event.preventDefault();\n
               //var self = $(this);\n
@@ -227,7 +235,25 @@ $(function() {\n
         }\n
     });\n
   });\n
+  \n
+  // login logout links for KM\n
+  $(\'a[id="login-logout-link"]\').click(function(event) {\n
+    if($(\'a[id="login-logout-link"]\').attr(\'href\').indexOf(\'login_form\')==-1){\n
+      // we show popup only for login_form\n
+      return\n
+    }\n
+    event.preventDefault();\n
 \n
+    dialog.erp5_popup({\n
+        dialog: { title: $(\'label\', this.parentNode.parentNode).text() },\n
+        load: {\n
+            url: this.href,\n
+            method: $.get,\n
+        }\n
+    });\n
+  });\n
+  \n
+  \n
   // Make the Add gadget dialog work as pop-ups.\n
   $(\'a[id="add-gadgets"]\').click(function(event) {\n
     event.preventDefault();\n
@@ -245,6 +271,14 @@ $(function() {\n
 
 
 ]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10183</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

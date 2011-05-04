@@ -15,8 +15,8 @@
   <item>vault_type</item>
  </portal_type>
  <portal_type id="Check">
-  <item>site</item>
   <item>check_type</item>
+  <item>site</item>
  </portal_type>
  <portal_type id="Check Model Type Variation">
   <item>check_type</item>
@@ -25,9 +25,9 @@
   <item>aggregate_resource</item>
  </portal_type>
  <portal_type id="Checkbook">
+  <item>check_amount</item>
   <item>resource</item>
   <item>site</item>
-  <item>check_amount</item>
  </portal_type>
  <portal_type id="Checkbook Model">
   <item>composition</item>
@@ -36,8 +36,8 @@
   <item>site</item>
  </portal_type>
  <portal_type id="Currency Exchange Cell">
-  <item>price_currency</item>
   <item>currency_exchange_type</item>
+  <item>price_currency</item>
  </portal_type>
  <portal_type id="Currency Exchange Line">
   <item>price_currency</item>

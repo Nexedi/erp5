@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="BaseCategory" module="Products.ERP5Type.Document.BaseCategory"/>
-        <tuple/>
-      </tuple>
+      <global name="Base Category" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

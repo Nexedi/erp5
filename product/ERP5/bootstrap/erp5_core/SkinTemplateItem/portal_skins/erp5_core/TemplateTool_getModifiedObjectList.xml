@@ -104,12 +104,12 @@ for bt in bt_id_list:\n
     object_id = bt+\'|\'+object_id\n
     line = newTempBase(context, \'tmp_install_%s\' % i)\n
 \n
-    if object_state == \'Modified\':\n
+    if object_state.startswith(\'Modified\'):\n
       if object_class in no_backup_dict:\n
         choice_item_list = [[upgrade_title, \'install\']]\n
       else:\n
         choice_item_list = [[backup_title, \'backup\']]\n
-    elif object_state in (\'Removed\', \'Removed but used\'):\n
+    elif object_state.startswith(\'Removed\'):\n
       if object_class in no_backup_dict:\n
         choice_item_list = [[remove_title, \'remove\']]\n
       else:\n

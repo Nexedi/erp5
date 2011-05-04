@@ -50,63 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-from AccessControl import getSecurityManager\n
-\n
-# Search current user ID\n
-user_id = getSecurityManager().getUser().getId()\n
-source = None\n
-person_subordination = None\n
-for person in context.portal_catalog(reference=user_id, portal_type=\'Person\'):\n
-  source = person.getRelativeUrl()\n
-  person_subordination = person.getSubordination()\n
-  break\n
-\n
-follow_up_url = None\n
-start_date = DateTime()\n
-stop_date = None\n
-causality = None\n
-destination = context.getRelativeUrl()\n
-\n
-if direction == \'out\':\n
-  source_url = source\n
-  source_section_url = person_subordination\n
-  destination_url = destination\n
-  if context.getPortalType() == \'Person\':\n
-    destination_section_url = context.getSubordination()\n
-  else:\n
-    destination_section_url = destination\n
-elif direction == \'in\':\n
-  source_url = destination\n
-  if context.getPortalType() == \'Person\':\n
-    source_section_url = context.getRelativeUrl()\n
-  else:\n
-    source_section_url = destination\n
-  destination_url = source\n
-  destination_section_url = person_subordination\n
-else:\n
-  raise KeyError, \'Direction Specified not handling: %s\' % direction\n
-\n
-event_kw = {}\n
-event_kw[\'portal_type\'] = portal_type\n
-event_kw[\'title\'] = title\n
-event_kw[\'resource\'] = resource\n
-event_kw[\'source\'] = source_url\n
-event_kw[\'source_section\'] = source_section_url\n
-event_kw[\'destination\'] = destination_url\n
-event_kw[\'destination_section\'] = destination_section_url\n
-event_kw[\'follow_up\'] = follow_up_url\n
-event_kw[\'start_date\'] = start_date\n
-event_kw[\'stop_date\'] = stop_date\n
-event_kw[\'causality\'] = causality\n
-\n
-# Create event\n
-module = context.getDefaultModule(portal_type=portal_type)\n
-event = module.newContent(**event_kw)\n
-\n
-message = context.Base_translateString(\'New event created.\')\n
-\n
-event.Base_redirect(keep_items={\'portal_status_message\': message})\n
+            <value> <string>from Products.ERP5Type.Log import log\n
+log(\'Obsoleted, please use Base_addEvent (with Base_viewAddEventDialog) instead\')\n
+return context.Base_addEvent(title, direction, portal_type, resource, **kw)\n
 </string> </value>
         </item>
         <item>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91031161.43</string> </value>
+            <value> <string>ts00782283.02</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,76 +20,159 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/x-javascript</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-// Browser gadget toggle section\n
+/*\n
+Copyright (c) 2011-2012 Nexedi SARL and Contributors. All Rights Reserved.\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+\n
 function toggleSection(section_id, image_id){\n
-  section_obj = MochiKit.DOM.getElement(section_id);\n
-  image_obj = MochiKit.DOM.getElement(image_id);\n
-  if(section_obj.style.display==\'none\'){\n
-    section_obj.style.display=\'block\';\n
-    image_obj.src=\'images/tree_open.png\';}\n
+  /* Browser gadget toggle section */\n
+  section_obj = $("#" + section_id);\n
+  image_obj = $("#" + image_id);\n
+  if(section_obj.is(":hidden")){\n
+    section_obj.show();\n
+    image_obj.attr("src", "images/tree_open.png");}\n
   else{\n
-    section_obj.style.display=\'none\';\n
-    image_obj.src=\'images/tree_closed.png\';}\n
+    section_obj.hide();\n
+    image_obj.attr("src", "images/tree_closed.png");}\n
   } \n
 \n
-// Pop up window for KM\n
-function delayedDocumentDetailsPopupWindowLoad(dom_element, url){\n
-  dom_id = dom_element.id;\n
-  if (dom_element.style.display==\'block\'){\n
-    d = MochiKit.Async.doSimpleXMLHttpRequest(url);\n
-    d.addCallback(handleServerSuccess);\n
-   }};\n
-\n
-function handleServerSuccess(res){\n
-  dom_element.innerHTML = res.responseText;};\n
-\n
-function toggleDocumentDetailsPopupWindow(dom_id, show, url){\n
-  dom_element = getElement(dom_id);\n
-  remote_url = url;\n
-  if (show==true){\n
-    dom_element.style.display=\'block\';\n
-    setTimeout(\'delayedDocumentDetailsPopupWindowLoad(dom_element, remote_url);\', 500)\n
-    }\n
-  else{\n
-    dom_element.style.display=\'none\';\n
-    }\n
-}\n
-\n
-// Toggle any element\n
-function toggleElement(tag_name, class_name){\n
-  dom_element = MochiKit.DOM.getFirstElementByTagAndClassName(tag_name, class_name);\n
-  MochiKit.Visual.toggle(dom_element);\n
-}\n
-\n
 function toggleHiddenFormatDialogSelection(){\n
-  toggleElement(\'div\', \'download-document-format-list-menu-hidden\');\n
-  MochiKit.DOM.removeElement(MochiKit.DOM.getFirstElementByTagAndClassName(\'li\', \'toggle-hidden-format-dialog-selection-link\'));\n
+  /* Expand more download formats widget */\n
+  $("div.download-document-format-list-menu-hidden").toggle();\n
+  $("li.toggle-hidden-format-dialog-selection-link").remove();\n
 }\n
-\n
-// MochiKit.DOM.addLoadEvent(setScreenClass);\n
-// connect(window, "onresize", setScreenClass);\n
-\n
-// function setScreenClass(){\n
-//   var fmt = document.documentElement.clientWidth;\n
-//   var cls = (fmt<=800)?\'screen_small\':(fmt>800)?\'screen_wide\':\'screen_small\';\n
-//   document.body.className=cls;\n
-// };\n
 \n
 function requestPasswordReset(script_name){\n
-  MochiKit.DOM.getElement(\'reference\').value = MochiKit.DOM.getElement(\'__ac_name\').value;\n
-  /* reset __ac_name & __ac_password in case they have been filled by browser */\n
-  MochiKit.DOM.getElement(\'__ac_name\').value = "";\n
-  MochiKit.DOM.getElement(\'__ac_password\').value = "";\n
-  /* Submit request password */\n
-  submitAction(MochiKit.DOM.getElement(\'main_form\'), script_name);  \n
+  $("#reference").attr("value", $("#__ac_name").val()) \n
+  // reset __ac_name & __ac_password in case they have been filled by browser\n
+  $("#__ac_name").attr("value", "");\n
+  $("#__ac_password").attr("value", "");\n
+  // Submit request password\n
+  main_form = $("#main_form");\n
+  main_form.attr("action", script_name);\n
+  main_form.submit();\n
 };\n
-
+\n
+//enable or disable right side search result preview\n
+var show_preview=false;\n
+var popup_local_dict={};\n
+var popup_request_dict={};\n
+\n
+function togglePreview(dom_id,path){\n
+  /* \n
+  Enable or disable right preview in search mode listbox style. \n
+  */\n
+  listbox_container = $("#"+dom_id).parents("div.listbox-container")\n
+  if(!$("#listbox-preview").length){\n
+    // init only once per listbox\n
+    listbox_container.append(\'<div id="listbox-preview"><img src="ajax-loader.gif" title="Loading" alt="Loading" /><p>Loading...</p> </div>\');\n
+    show_preview=true;\n
+    showPopik(dom_id, path);\n
+  }\n
+  else{\n
+    // we can switch it off\n
+    $("#listbox-preview").remove();\n
+    show_preview=false;}\n
+}\n
+\n
+function formatPreview(dom_id, path){\n
+  /*\n
+    Format visually the popup preview.\n
+  */\n
+  popup = $("#listbox-preview");\n
+  dom_object = $("#"+dom_id);\n
+  parent_row = dom_object.parents("tr").first()\n
+  row_object = dom_object.parents("tr").first();\n
+  class_name = row_object.attr("class"); \n
+  class_name = class_name.replace("listbox-data-line-","");\n
+  class_name = class_name.replace("DataA","");\n
+  class_name = class_name.replace("DataB","");\n
+  row_index = parseInt(class_name);\n
+  //calculate current row offset relative to listbox\'s table.tbody\n
+  offset = parent_row.position("tbody").top - $("tr.listbox-data-line-0").position("tbody").top;\n
+  popup.css("top", offset + "px");\n
+}\n
+\n
+function requestPopupInfo(dom_id, path){\n
+  /*\n
+    Get popup infor from server and cache it locally for page\'s lifetime.\n
+  */\n
+  var popup = $("#listbox-preview");\n
+  popup_request_dict[dom_id] = popup_request_dict;\n
+  $.ajax({url: path + "/Document_getPopupInfo", \n
+          success: function(popup_html){\n
+                           formatPreview(dom_id, path);\n
+                           popup.html(popup_html);\n
+                           popup.show();\n
+                           popup_local_dict[dom_id] = popup_html;}});\n
+  }\n
+  \n
+\n
+function showPopik(dom_id, path){\n
+  /* \n
+    Show / Hide popup details window up in search mode. \n
+  */\n
+  if(!show_preview) return;\n
+  popup = $("#listbox-preview");\n
+  if($("#hidden_popup_listbox_"+dom_id).length){\n
+    // popup info is inline just copy it\n
+    formatPreview(dom_id, path);\n
+    popup_html = $("#hidden_popup_listbox_"+dom_id).html();\n
+    popup.html(popup_html);\n
+    popup.show();\n
+    return\n
+  }\n
+  // we must request popup info with another request\n
+  popup_html = popup_local_dict[dom_id];\n
+  popup_request = popup_request_dict[dom_id];\n
+  if (popup_html==undefined&&popup_request==undefined){\n
+    // still not cached for page\'s lifetime not any pending requests to server\n
+    requestPopupInfo(dom_id, path);\n
+  }\n
+  else{\n
+    // cached for page\'s lifetime\n
+    formatPreview(dom_id, path);\n
+    popup.html(popup_html);\n
+    popup.show();\n
+  }\n
+}\n
+\n
+function initialize_form(){\n
+  /* \n
+    Pressing enter in an input field in editable_mode must called default form submit button.\n
+    Due to different browser implementations in regard to determing which is the *right*\n
+    form\'s submit button (in KM case we can have many) we explicitly catch events and call it.\n
+  */\n
+   if($("#input-save-edit")){\n
+     $(\'#main_form\').each(function() {\n
+          $(\'input\').keypress(function(e) {\n
+            if(e.which == 10 || e.which == 13) {$("#input-save-edit").click();}\n
+          });\n
+      })\n
+   }\n
+ }\n
+ \n
+$(document).ready(initialize_form);
 
 ]]></string> </value>
         </item>
@@ -99,7 +182,7 @@ function requestPasswordReset(script_name){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2235</int> </value>
+            <value> <int>5038</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

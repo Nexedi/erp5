@@ -43,6 +43,7 @@ class TestSQLCachedWorklist(TestWorklist):
     self.portal.portal_workflow.refreshWorklistCache()
 
   test_02_related_key = todo_erp5(TestWorklist.test_02_related_key)
+  test_04_dynamic_variables = todo_erp5(TestWorklist.test_04_dynamic_variables)
 
 def test_suite():
   suite = unittest.TestSuite()

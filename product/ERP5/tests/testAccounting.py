@@ -233,7 +233,8 @@ class AccountingTestCase(ERP5TypeTestCase):
     # a dependancy of erp5_accounting_ui_test, because it's used to test
     # standalone accounting and only installs erp5_accounting_ui_test to have
     # some default content created.
-    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
             'erp5_accounting', 'erp5_project', 'erp5_accounting_ui_test',
             'erp5_ods_style', 'erp5_simulation_test')
 
@@ -292,7 +293,9 @@ class TestTransactionValidation(AccountingTestCase):
                                   start_date=DateTime('2006/01/01'),
                                   stop_date=DateTime('2006/12/31'))
       accounting_period_2006.start()
-      accounting_period_2006.stop()
+      self.portal.portal_workflow.doActionFor(accounting_period_2006,
+          'stop_action',
+          profit_and_loss_account=self.portal.account_module.contentValues()[0].getRelativeUrl())
       accounting_period_2007 = self.main_section.newContent(
                                   id='accounting_period_2007',
                                   portal_type='Accounting Period',
@@ -1290,6 +1293,7 @@ class TestClosingPeriod(AccountingTestCase):
 
     # now check content of stock table
     q = self.portal.erp5_sql_connection.manage_test
+    # 3 lines, one with quantity 3.3, 2 with quantity 0
     self.assertEquals(1, q(
       "SELECT count(*) FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
@@ -1484,24 +1488,31 @@ class TestClosingPeriod(AccountingTestCase):
                     source_debit=100)))
     self.assertEquals(1, len(self.accounting_module))
 
-    # close the period
-    self.portal.portal_workflow.doActionFor(period, 'stop_action')
-    self.assertEquals('stopped', period.getSimulationState())
-    # reopen it, then close it got real
-    self.portal.portal_workflow.doActionFor(period, 'restart_action')
-    self.assertEquals('started', period.getSimulationState())
-    self.portal.portal_workflow.doActionFor(period, 'stop_action')
-    self.assertEquals('stopped', period.getSimulationState())
-    
     pl_account = self.portal.account_module.newContent(
                     portal_type='Account',
                     account_type='equity',
                     gap='my_country/my_accounting_standards/1',
                     title='Profit & Loss')
     pl_account.validate()
-    self.portal.portal_workflow.doActionFor(
-            period, 'deliver_action',
+
+    # close the period
+    self.portal.portal_workflow.doActionFor(period, 'stop_action',
             profit_and_loss_account=pl_account.getRelativeUrl())
+    self.assertEquals('stopped', period.getSimulationState())
+    transaction.commit()
+    self.tic()
+    # reopen it, then close it got real
+    self.portal.portal_workflow.doActionFor(period, 'restart_action')
+    self.assertEquals('started', period.getSimulationState())
+    transaction.commit()
+    self.tic()
+    self.portal.portal_workflow.doActionFor(period, 'stop_action',
+            profit_and_loss_account=pl_account.getRelativeUrl())
+    self.assertEquals('stopped', period.getSimulationState())
+    transaction.commit()
+    self.tic()
+    
+    self.portal.portal_workflow.doActionFor(period, 'deliver_action',)
 
     transaction.commit()
     self.tic()
@@ -1519,8 +1530,6 @@ class TestClosingPeriod(AccountingTestCase):
                               if m.getDestinationValue() == pl_account]))
 
   def test_MultipleSection(self):
-    """
-    """
     period = self.main_section.newContent(portal_type='Accounting Period')
     period.setStartDate(DateTime(2006, 1, 1))
     period.setStopDate(DateTime(2006, 12, 31))
@@ -1558,14 +1567,15 @@ class TestClosingPeriod(AccountingTestCase):
     transaction.commit()
     self.tic()
 
-    self.portal.portal_workflow.doActionFor(period, 'stop_action')
-    
     pl = self.portal.account_module.newContent(
               portal_type='Account',
               account_type='equity')
+    self.portal.portal_workflow.doActionFor(period, 'stop_action',
+              profit_and_loss_account=pl.getRelativeUrl())
+    
 
-    period.AccountingPeriod_createBalanceTransaction(
-                             profit_and_loss_account=pl.getRelativeUrl())
+    transaction.commit()
+    self.tic()
     
     created_balance_transaction_list = self.portal.accounting_module.contentValues(
                                     portal_type='Balance Transaction')
@@ -1590,6 +1600,129 @@ class TestClosingPeriod(AccountingTestCase):
     section_balance_transaction.reindexObject()
     transaction.commit()
     self.tic()
+  
+  def test_MultipleSectionIndependant(self):
+    stool = self.portal.portal_simulation
+    period_main_section = self.main_section.newContent(portal_type='Accounting Period')
+    period_main_section.setStartDate(DateTime(2006, 1, 1))
+    period_main_section.setStopDate(DateTime(2006, 12, 31))
+    period_main_section.start()
+    
+    period_section = self.section.newContent(portal_type='Accounting Period')
+    period_section.setStartDate(DateTime(2006, 1, 1))
+    period_section.setStopDate(DateTime(2006, 12, 31))
+    period_section.start()
+
+    transaction_main = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Purchase Invoice Transaction',
+        destination_section_value=self.main_section,
+        source_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(destination_value=self.account_module.goods_purchase,
+                    destination_debit=30),
+               dict(destination_value=self.account_module.payable,
+                    destination_credit=30)))
+
+    transaction_section = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Purchase Invoice Transaction',
+        destination_section_value=self.section,
+        source_section_value=self.organisation_module.client_1,
+        simulation_state='stopped',
+        lines=(dict(destination_value=self.account_module.goods_purchase,
+                    destination_debit=20),
+               dict(destination_value=self.account_module.payable,
+                    destination_credit=20)))
+
+    transaction_section.deliver()
+    transaction.commit()
+    self.tic()
+
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
+    self.portal.portal_workflow.doActionFor(period_main_section, 'stop_action',
+              profit_and_loss_account=pl.getRelativeUrl())
+    
+    transaction.commit()
+    self.tic()
+    
+    created_balance_transaction_list = self.portal.accounting_module.contentValues(
+                                    portal_type='Balance Transaction')
+    self.assertEquals(1, len(created_balance_transaction_list))
+
+    self.assertEquals(30, stool.getInventory(
+                              section_uid=self.main_section.getUid(),
+                              node_uid=pl.getUid()))
+    self.assertEquals(-30, stool.getInventory(
+                              section_uid=self.main_section.getUid(),
+                              node_uid=self.portal.account_module.payable.getUid()))
+
+    # Section is not impacted at the moment
+    self.assertEquals(0, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=pl.getUid()))
+    self.assertEquals(-20, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=self.portal.account_module.payable.getUid()))
+
+    # Close section's period
+    self.portal.portal_workflow.doActionFor(period_section, 'stop_action',
+              profit_and_loss_account=pl.getRelativeUrl())
+    
+    transaction.commit()
+    self.tic()
+    
+    created_balance_transaction_list = self.portal.accounting_module.contentValues(
+                                    portal_type='Balance Transaction')
+    self.assertEquals(2, len(created_balance_transaction_list))
+    
+    # section is now impacted
+    self.assertEquals(20, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=pl.getUid()))
+    self.assertEquals(-20, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=self.portal.account_module.payable.getUid()))
+    
+    self.assertEquals(30, stool.getInventory(
+                              section_uid=self.main_section.getUid(),
+                              node_uid=pl.getUid()))
+    self.assertEquals(-30, stool.getInventory(
+                              section_uid=self.main_section.getUid(),
+                              node_uid=self.portal.account_module.payable.getUid()))
+
+  def test_MultipleSectionEmpty(self):
+    period = self.main_section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+    period.start()
+    
+    transaction_main = self._makeOne(
+        start_date=DateTime(2006, 1, 2),
+        portal_type='Purchase Invoice Transaction',
+        destination_section_value=self.main_section,
+        source_section_value=self.organisation_module.client_1,
+        simulation_state='delivered',
+        lines=(dict(destination_value=self.account_module.goods_purchase,
+                    destination_debit=30),
+               dict(destination_value=self.account_module.payable,
+                    destination_credit=30)))
+    
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
+    self.portal.portal_workflow.doActionFor(period, 'stop_action',
+              profit_and_loss_account=pl.getRelativeUrl())
+
+    transaction.commit()
+    self.tic()
+    
+    created_balance_transaction_list = self.portal.accounting_module.contentValues(
+                                    portal_type='Balance Transaction')
+    self.assertEquals(1, len(created_balance_transaction_list))
+    # no balance transaction has been created for section
 
   def test_SecondAccountingPeriod(self):
     """Tests having two accounting periods.
@@ -1608,8 +1741,6 @@ class TestClosingPeriod(AccountingTestCase):
                     destination_debit=100),
                dict(destination_value=self.account_module.payable,
                     destination_credit=100)))
-    period1.stop()
-    # deliver the period1 using workflow, so that we have 
     pl_account = self.portal.account_module.newContent(
                     portal_type='Account',
                     account_type='equity',
@@ -1617,9 +1748,11 @@ class TestClosingPeriod(AccountingTestCase):
                     title='Profit & Loss')
     pl_account.validate()
     self.portal.portal_workflow.doActionFor(
-            period1, 'deliver_action',
+            period1, 'stop_action',
             profit_and_loss_account=pl_account.getRelativeUrl())
-    
+    transaction.commit()
+    self.tic()
+
     balance_transaction_list = self.accounting_module.contentValues(
                                   portal_type='Balance Transaction')
     self.assertEquals(1, len(balance_transaction_list))
@@ -1784,9 +1917,11 @@ class TestClosingPeriod(AccountingTestCase):
                     section_uid=self.section.getUid(),
                     node_uid=node_uid))
     # and only one movement is returned by getMovementHistoryList
-    self.assertEquals(1, len(stool.getMovementHistoryList(
+    movement_history_list = stool.getMovementHistoryList(
                     section_uid=self.section.getUid(),
-                    node_uid=node_uid)))
+                    node_uid=node_uid)
+    self.assertEquals(1, len(movement_history_list))
+    self.assertEquals([100], [x.total_price  for x in movement_history_list])
     
     # the account 'goods_sales' has a balance of -100
     node_uid = self.account_module.goods_sales.getUid()
@@ -1809,6 +1944,42 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(100, stool.getInventory(
                               section_uid=self.section.getUid(),
                               node_uid=node_uid))
+
+    # Now check that even if we change the old movement and we
+    # reindex the balance, the stock will still be the same
+    getInventoryList = self.portal.portal_simulation.getInventoryList
+    def getInventoryQuantityList():
+      quantity_list = [x.inventory for x in getInventoryList(
+         section_uid=self.section.getUid(),
+         node_uid=node_uid)]
+      quantity_list.sort()
+      return quantity_list
+    # 100 for the transaction, 0 for the balance
+    # because in the balance we put exactly what we have in stock
+    self.assertEquals(getInventoryQuantityList(),
+                      [100])
+    def setQuantityOnTransaction1(quantity):
+      for line in transaction1.objectValues():
+        if line.getSourceDebit():
+          line.setSourceDebit(quantity)
+        if line.getSourceCredit():
+          line.setSourceCredit(quantity)
+      transaction.commit()
+      self.tic()
+      balance.reindexObject()
+      transaction.commit()
+      self.tic()
+    setQuantityOnTransaction1(99)
+    # 99 for the transaction, 1 for the balance
+    # because in the balance we have 100, which is 1 more
+    # than actual stock of 99
+    self.assertEquals(getInventoryQuantityList(),
+                      [1, 99])
+    setQuantityOnTransaction1(100)
+    # Then finally we check that we have again same thing
+    # as initial conditions
+    self.assertEquals(getInventoryQuantityList(),
+                      [100])
 
   def test_InventoryIndexingNodeDiffOnNode(self):
     # Balance Transactions are indexed as Inventories.
@@ -2100,9 +2271,12 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(-150, stool.getInventory(
                               section_uid=self.section.getUid(),
                               node_uid=node_uid))
-    self.assertEquals(2, len(stool.getMovementHistoryList(
+    movement_history_list = stool.getMovementHistoryList(
                               section_uid=self.section.getUid(),
-                              node_uid=node_uid)))
+                              node_uid=node_uid)
+    self.assertEquals(2, len(movement_history_list))
+    self.assertEquals([-50, -100], [x.total_quantity for x in \
+          movement_history_list])
 
 
   def test_BalanceTransactionDateInInventoryAPI(self):
@@ -2173,7 +2347,65 @@ class TestClosingPeriod(AccountingTestCase):
                               node_uid=node_uid)
     self.assertEquals(1, len(mvt_history_list))
 
-  # TODO : test deletion ?
+  def test_TemporaryClosing(self):
+    organisation_module = self.organisation_module
+    stool = self.portal.portal_simulation
+    period = self.section.newContent(portal_type='Accounting Period')
+    period.setStartDate(DateTime(2006, 1, 1))
+    period.setStopDate(DateTime(2006, 12, 31))
+    period.start()
+    pl = self.portal.account_module.newContent(
+              portal_type='Account',
+              account_type='equity')
+
+    transaction1 = self._makeOne(
+        start_date=DateTime(2006, 1, 1),
+        destination_section_value=organisation_module.client_1,
+        portal_type='Sale Invoice Transaction',
+        simulation_state='delivered',
+        lines=(dict(source_value=self.account_module.goods_sales,
+                    source_credit=100),
+               dict(source_value=self.account_module.receivable,
+                    source_debit=100)))
+
+    self.portal.portal_workflow.doActionFor(
+           period, 'stop_action',
+           profit_and_loss_account=pl.getRelativeUrl())
+
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(100, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=self.account_module.receivable.getUid()))
+
+    self.assertEquals(-100, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=pl.getUid()))
+
+    # when period is temporary stopped, a balance transaction is created
+    created_balance_transaction_list = self.portal.accounting_module.contentValues(
+                                    portal_type='Balance Transaction')
+    self.assertEquals(1, len(created_balance_transaction_list))
+
+    self.portal.portal_workflow.doActionFor(
+           period, 'restart_action' )
+
+    transaction.commit()
+    self.tic()
+
+    # when we restart, then this balance transaction is deleted
+    created_balance_transaction_list = self.portal.accounting_module.contentValues(
+                                    portal_type='Balance Transaction')
+    self.assertEquals(0, len(created_balance_transaction_list))
+
+    self.assertEquals(0, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=pl.getUid()))
+    self.assertEquals(100, stool.getInventory(
+                              section_uid=self.section.getUid(),
+                              node_uid=self.account_module.receivable.getUid()))
+
 
 
 class TestAccountingExport(AccountingTestCase):
@@ -3059,8 +3291,9 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
-    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
-            'erp5_accounting', 'erp5_simulation_test')
+    return ('erp5_core_proxy_field_legacy', 'erp5_base', 'erp5_pdm',
+            'erp5_simulation', 'erp5_trade', 'erp5_accounting',
+            'erp5_simulation_test')
 
   # XXX
   def playSequence(self, sequence_string, quiet=1) :
@@ -3215,12 +3448,14 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
     self.assertEquals(accounting_period.getSimulationState(),
                       'started')
                       
-  def stepConfirmAccountingPeriod(self, sequence, **kw):
-    """Confirm the Accounting Period."""
+  def stepStopAccountingPeriod(self, sequence, **kw):
+    """Stops the Accounting Period."""
     accounting_period = sequence.get('accounting_period')
+    # take any account for profit and loss account, here we don't care
+    profit_and_loss_account = self.portal.account_module.contentValues()[0]
     self.getPortal().portal_workflow.doActionFor(
-                        accounting_period,
-                        'stop_action' )
+           accounting_period, 'stop_action',
+           profit_and_loss_account=profit_and_loss_account.getRelativeUrl())
     self.assertEquals(accounting_period.getSimulationState(),
                       'stopped')
 
@@ -3234,11 +3469,8 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
   def stepDeliverAccountingPeriod(self, sequence, **kw):
     """Deliver the Accounting Period."""
     accounting_period = sequence.get('accounting_period')
-    # take any account for profit and loss account, here we don't care
-    profit_and_loss_account = self.portal.account_module.contentValues()[0]
-    self.getPortal().portal_workflow.doActionFor(
-           accounting_period, 'deliver_action',
-           profit_and_loss_account=profit_and_loss_account.getRelativeUrl())
+    self.portal.portal_workflow.doActionFor(
+           accounting_period, 'deliver_action', )
     self.assertEquals(accounting_period.getSimulationState(),
                       'delivered')
     
@@ -4101,7 +4333,7 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
       stepTic
       stepCreateOtherSectionInvoices
       stepTic
-      stepConfirmAccountingPeriod
+      stepStopAccountingPeriod
       stepTic
       stepDeliverAccountingPeriod
       stepTic

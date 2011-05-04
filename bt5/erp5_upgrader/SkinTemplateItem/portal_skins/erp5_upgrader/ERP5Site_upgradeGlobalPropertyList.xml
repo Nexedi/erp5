@@ -53,7 +53,7 @@
             <value> <string>portal = context.getPortalObject()\n
 message_list = []\n
 is_upgrade_required = 0\n
-site_property_dict = portal.ERP5Site_getUpgraderSignature(\'erp5_site_property_dict\')\n
+site_property_dict = portal.ERP5Site_getUpgraderSignature().get(\'erp5_site_property_dict\', {})\n
 \n
 for prop in site_property_dict:\n
   if site_property_dict[prop] != getattr(portal,prop , None):\n
@@ -65,82 +65,18 @@ for prop in site_property_dict:\n
 if is_upgrade_required:\n
   for prop in site_property_dict:\n
     portal.ERP5Site_editERP5SiteProperty(prop, site_property_dict[prop])\n
-    message_list.append("Upgrade Executed for Global Properties.")\n
+    message_list.append("Upgrade Executed for Global Properties (%s)." % prop)\n
 \n
 return message_list\n
 </string> </value>
-        </item>
-        <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>upgrade=0</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>upgrade</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>message_list</string>
-                            <string>is_upgrade_required</string>
-                            <string>site_property_dict</string>
-                            <string>_getiter_</string>
-                            <string>prop</string>
-                            <string>_getitem_</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_upgradeGlobalPropertyList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

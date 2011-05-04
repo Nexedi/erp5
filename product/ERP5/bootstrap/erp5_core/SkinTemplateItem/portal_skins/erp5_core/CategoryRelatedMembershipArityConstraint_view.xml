@@ -100,7 +100,7 @@
                         <string>my_min_arity</string>
                         <string>my_max_arity</string>
                         <string>my_constraint_base_category_list</string>
-                        <string>my_constraint_portal_type_list</string>
+                        <string>my_constraint_portal_type</string>
                         <string>my_filter_parameter</string>
                       </list>
                     </value>

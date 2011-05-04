@@ -57,77 +57,23 @@
   specification of an upgrader.\n
 """\n
 \n
+# Prevent unintended use of this script, as it would otherwise trigger an upgrade without possible site-specific settings.\n
+raise Exception(\'This script is only an example. Copy, paste & customise it for your needs.\')\n
+\n
 # Alarm dict is used to enable/disable upgrade alarms.\n
-# ie.: If you don\'t want upgrade products in some environments\n
-# you can just define \'product_upgrader\' : False.\n
 \n
 ALARM_DICT = {\n
- "system_upgrader" : True,\n
- "product_upgrader" : True,\n
  "bt5_upgrader" : True,\n
  "finalize_upgrader" : True\n
 }\n
-\n
-# The destination release provided by this upgrader\n
-DESTINATION_RELEASE = \'5.4.7\'\n
-\n
-ZOPE_VERSION = "2.8.11"\n
-\n
-PYTHON_VERSION = "2.4.6"\n
-\n
-# The list of URLs to get bt5 from\n
-#   NOTE: we expect the system buildout to be able\n
-#   to get everything we need from SVN and copy it\n
-#   to /srv/share/RELEASE/bt5/\n
-#   Some people may prefer to download stuff from the web\n
-#   but this is not the way we are going since we recommend\n
-#   the use of a standard buildout to create the filesystem\n
-#   hierarchy\n
-# XXX-Luke: See bug #1503 - this variable is very hard to be used in Upgrader\n
-#           tests.\n
-BT5_URL_BASE_LIST = ( \'file:///srv/share/bt5/%s\' % DESTINATION_RELEASE ,\n
-                      \'http://www.erp5.org/dists/release/%s/bt5/\' % DESTINATION_RELEASE,\n
-                      # XXX Use snapshot folder to test upgrade to HEAD\n
-                      \'http://www.erp5.org/dists/snapshot/bt5/\',\n
-                      \'file:///srv/share/bt5/upgrade\',\n
-                      # INSTANCE_HOME_REPOSITORY represents $INSTANCE_HOME/bt5 \n
-                      # It is not possible get the instance home into ZODB easily,\n
-                      # so the detection script find the appropriate repository \n
-                      # for the Business Templates.\n
-                      \'INSTANCE_HOME_REPOSITORY\' ,\n
-                    )\n
-\n
-if getattr(context, "ERP5Site_getBT5UrlBaseList", None) is not None:\n
-  # XXX This script should be present when it is required custom places for\n
-  # run upgrade (ie.: unit tests)\n
-  BT5_URL_BASE_LIST = context.ERP5Site_getBT5UrlBaseList()\n
-\n
 \n
 # A list of bt5 which the upgrader can upgrade\n
 #   ie. a bt5 not in this list will not be upgraded\n
 #   by having an explicit list we can handle dedicate\n
 #   and we can allow people to create some developer mode\n
-#   stuff which they can control\n
+#   stuff which they can control.\n
 UPGRADABLE_BT5_ID_LIST = (\n
-                        "erp5_l10n_fr",\n
-                        "erp5_l10n_ja",\n
-                        "erp5_l10n_ko",\n
-                        "erp5_l10n_pl_PL",\n
-                        "erp5_l10n_pt-BR",\n
-                        "erp5_accounting_l10n_ifrs",\n
-                        "erp5_accounting_l10n_fr", \n
-                        "erp5_accounting_l10n_sn",\n
-                        # Update some bt5 not from default\n
-                        # But it can be present\n
-                        "erp5_mobile",\n
-                        "erp5_ui_test_core",\n
-                        "erp5_ui_test",\n
-                         )\n
-\n
-# A list bt5 which are required for the upgrade\n
-#  ie. the upgrader will install them even\n
-#  if they are not already installed\n
-REQUIRED_BT5_ID_LIST = ("erp5_core",\n
+                        "erp5_core",\n
                         "erp5_mysql_innodb_catalog",\n
                         "erp5_xhtml_style",\n
                         "erp5_knowledge_pad",\n
@@ -150,13 +96,33 @@ REQUIRED_BT5_ID_LIST = ("erp5_core",\n
                         "erp5_discount_resource",\n
                         "erp5_legacy_tax_system",\n
                         "erp5_ooo_import",\n
-                        "express_customisation",\n
-                       )\n
+                        "erp5_l10n_fr",\n
+                        "erp5_l10n_ja",\n
+                        "erp5_l10n_ko",\n
+                        "erp5_l10n_pl_PL",\n
+                        "erp5_l10n_pt-BR",\n
+                        "erp5_accounting_l10n_ifrs",\n
+                        "erp5_accounting_l10n_fr", \n
+                        "erp5_accounting_l10n_sn",\n
+                        "erp5_accounting_l10n_br_extend", \n
+                        "erp5_mobile",\n
+                        "erp5_ui_test_core",\n
+                        "erp5_ui_test",\n
+                        "erp5_jquery", \n
+                        "erp5_jquery_ui", \n
+                        "erp5_dhtml_style",\n
+                        "erp5_configurator",\n
+                        "erp5_configurator_standard",\n
+                         )\n
+\n
+# A list bt5 which are required for the upgrade\n
+#  ie. the upgrader will install them even\n
+#  if they are not already installed\n
+REQUIRED_BT5_ID_LIST = ()\n
 \n
 # A list bt5 which are required to upgrade catalog.\n
 # After the bt5 be updated, update catalog will be trigger.\n
 UPDATE_CATALOG_BT5_ID_LIST = ()\n
-\n
 \n
 # Call some scripts inside same transaction before or after BT update\n
 BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT = {}\n
@@ -165,8 +131,7 @@ AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT = {\'erp5_mysql_innodb_catalog\': (\'ERP5Site
 # A list bt5 which require reinstallation\n
 #   ie. the upgrader will call reinstall\n
 #   on each of them and revert all local changes.\n
-REINSTALABLE_BT5_ID_LIST = (\'erp5_odt_style\',\n
-)\n
+REINSTALLABLE_BT5_ID_LIST = ()\n
 \n
 # A snapshot of workflow chains which are known to be valid\n
 #   this snapshot will be generated automatically from release\n
@@ -175,231 +140,23 @@ REINSTALABLE_BT5_ID_LIST = (\'erp5_odt_style\',\n
 #   chains are exhaustive: they may contain more workflows that\n
 #   installed workflows in a system (which is not perfect for\n
 #   example in the case of -chains in bt5)\n
-\n
-# XXX It is only for test proprose now.\n
-WORKFLOW_CHAIN_DICT = {\'chain_Account\': \'edit_workflow, account_workflow\',\n
- \'chain_Accounting Period\': \'edit_workflow, accounting_period_workflow\',\n
- \'chain_Accounting Transaction\': \'accounting_workflow, edit_workflow\',\n
- \'chain_Accounting Transaction Line\': \'delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow\',\n
- \'chain_Acknowledgement\': \'acknowledgement_workflow\',\n
- \'chain_Action Information\': \'base_type_interaction_workflow\',\n
- \'chain_Address\': \'edit_workflow\',\n
- \'chain_Agent\': \'edit_workflow\',\n
- \'chain_Assignment\': \'edit_workflow, assignment_workflow\',\n
- \'chain_Balance Transaction\': \'edit_workflow, accounting_workflow\',\n
- \'chain_Bank Account\': \'validation_workflow, edit_workflow\',\n
- \'chain_Base Category\': \'category_publication_workflow, edit_workflow\',\n
- \'chain_Base Type\': \'base_type_interaction_workflow\',\n
- \'chain_Business Path\': \'edit_workflow\',\n
- \'chain_Business Process\': \'edit_workflow, validation_workflow\',\n
- \'chain_Business State\': \'edit_workflow\',\n
- \'chain_Business Template\': \'business_template_building_workflow, business_template_installation_workflow\',\n
- \'chain_Campaign\': \'edit_workflow, pricing_interaction_workflow, ticket_workflow, ticket_interaction_workflow\',\n
- \'chain_Career\': \'career_workflow\',\n
- \'chain_Cash Register\': \'validation_workflow, edit_workflow\',\n
- \'chain_Category\': \'category_publication_workflow, edit_workflow\',\n
- \'chain_Category Divergence Tester\': \'edit_workflow\',\n
- \'chain_Chat Address\': \'edit_workflow\',\n
- \'chain_Component\': \'validation_workflow, edit_workflow\',\n
- \'chain_Container\': \'edit_workflow, pricing_interaction_workflow\',\n
- \'chain_Container Cell\': \'container_interaction_workflow, pricing_interaction_workflow, edit_workflow\',\n
- \'chain_Container Line\': \'edit_workflow, trade_matrix_workflow, container_interaction_workflow, pricing_interaction_workflow\',\n
- \'chain_Credit Card\': \'edit_workflow, validation_workflow\',\n
- \'chain_Currency\': \'validation_workflow, edit_workflow\',\n
- \'chain_Currency Exchange Line\': \'validation_workflow, currency_exchange_line_interaction_workflow, edit_workflow\',\n
- \'chain_Delivery Cell\': \'delivery_movement_simulation_interaction_workflow, delivery_movement_causality_interaction_workflow\',\n
- \'chain_Delivery Rule\': \'rule_validation_workflow, edit_workflow\',\n
- \'chain_Discount\': \'edit_workflow, validation_workflow\',\n
- \'chain_Distributed Ram Cache\': \'distributed_ram_cache_interaction_workflow\',\n
- \'chain_Document\': \'edit_workflow\',\n
- \'chain_Document Ingestion Message\': \'document_ingestion_interaction_workflow, document_ingestion_workflow, edit_workflow\',\n
- \'chain_Drawing\': \'edit_workflow, local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow, document_publication_workflow\',\n
- \'chain_Email\': \'edit_workflow\',\n
- \'chain_Fax\': \'edit_workflow\',\n
- \'chain_Fax Message\': \'edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow\',\n
- \'chain_File\': \'edit_workflow, local_permission_interaction_workflow, processing_status_workflow, document_publication_workflow, document_interaction_workflow\',\n
- \'chain_Gadget\': \'edit_workflow, knowledge_pad_validation_workflow\',\n
- \'chain_Image\': \'edit_workflow, local_permission_interaction_workflow, processing_status_workflow, document_publication_workflow, document_interaction_workflow\',\n
- \'chain_Internal Packing List\': \'packing_list_workflow, edit_workflow, delivery_causality_workflow, delivery_causality_interaction_workflow, delivery_simulation_interaction_workflow\',\n
- \'chain_Internal Packing List Cell\': \'delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow, delivery_movement_causality_interaction_workflow\',\n
- \'chain_Internal Packing List Line\': \'delivery_movement_causality_interaction_workflow, edit_workflow, trade_matrix_workflow, pricing_interaction_workflow, delivery_movement_simulation_interaction_workflow, movement_base_contribution_interaction_workflow\',\n
- \'chain_Internal Supply\': \'edit_workflow, validation_workflow\',\n
- \'chain_Internal Supply Line\': \'edit_workflow, supply_line_interaction_workflow\',\n
- \'chain_Inventory\': \'inventory_workflow, edit_workflow\',\n
- \'chain_Inventory Cell\': \'pricing_interaction_workflow\',\n
- \'chain_Inventory Line\': \'trade_matrix_workflow, pricing_interaction_workflow, edit_workflow\',\n
- \'chain_Invoice Cell\': \'pricing_interaction_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, tax_interaction_workflow, edit_workflow\',\n
- \'chain_Invoice Line\': \'delivery_movement_simulation_interaction_workflow, pricing_interaction_workflow, tax_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, edit_workflow, movement_base_contribution_interaction_workflow\',\n
- \'chain_Invoice Rule\': \'edit_workflow, rule_validation_workflow\',\n
- \'chain_Invoice Transaction Rule\': \'edit_workflow, rule_interaction_workflow, rule_validation_workflow\',\n
- \'chain_Invoicing Rule\': \'edit_workflow, rule_validation_workflow\',\n
- \'chain_Knowledge Box\': \'edit_workflow, knowledge_pad_validation_workflow\',\n
- \'chain_Knowledge Pad\': \'edit_workflow, knowledge_pad_validation_workflow\',\n
- \'chain_Letter\': \'event_interaction_workflow, edit_workflow, pricing_interaction_workflow, event_workflow\',\n
- \'chain_Link\': \'edit_workflow\',\n
- \'chain_Mail Message\': \'edit_workflow, pricing_interaction_workflow, event_workflow, event_interaction_workflow\',\n
- \'chain_Mapped Value\': \'edit_workflow\',\n
- \'chain_Measure\': \'edit_workflow, measure_interaction_workflow\',\n
- \'chain_Meeting\': \'pricing_interaction_workflow, edit_workflow, ticket_workflow, ticket_interaction_workflow\',\n
- \'chain_Memcached Plugin\': \'memcached_plugin_interaction_workflow\',\n
- \'chain_Note\': \'event_workflow, edit_workflow, pricing_interaction_workflow, event_interaction_workflow\',\n
- \'chain_Notification Message\': \'edit_workflow, notification_message_workflow\',\n
- \'chain_Order Rule\': \'edit_workflow, rule_validation_workflow\',\n
- \'chain_Organisation\': \'edit_workflow, validation_workflow\',\n
- \'chain_PDF\': \'edit_workflow, local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow, document_publication_workflow\',\n
- \'chain_Payment Condition\': \'edit_workflow\',\n
- \'chain_Payment Rule\': \'edit_workflow, rule_validation_workflow\',\n
- \'chain_Payment Transaction\': \'edit_workflow, accounting_workflow\',\n
- \'chain_Person\': \'validation_workflow, edit_workflow, user_account_workflow, local_permission_interaction_workflow, person_interaction_workflow, express_person_interaction_workflow\',\n
-\n
- \'chain_Phone Call\': \'event_interaction_workflow, event_workflow, pricing_interaction_workflow, edit_workflow\',\n
- \'chain_Predicate\': \'rule_interaction_workflow\',\n
- \'chain_Preference\': \'preference_workflow\',\n
- \'chain_Presentation\': \'edit_workflow, document_publication_workflow, local_permission_interaction_workflow, processing_status_workflow, document_interaction_workflow\',\n
- \'chain_Product\': \'validation_workflow, edit_workflow\',\n
- \'chain_Property Divergence Tester\': \'edit_workflow\',\n
- \'chain_Purchase Invoice Transaction\': \'delivery_simulation_interaction_workflow, delivery_causality_interaction_workflow, edit_workflow, accounting_workflow, delivery_tax_interaction_workflow, delivery_causality_workflow\',\n
- \'chain_Purchase Invoice Transaction Line\': \'edit_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow\',\n
- \'chain_Purchase Order\': \'edit_workflow, order_workflow, order_simulation_interaction_workflow, delivery_tax_interaction_workflow\',\n
- \'chain_Purchase Order Cell\': \'edit_workflow, pricing_interaction_workflow, tax_interaction_workflow, order_movement_simulation_interaction_workflow\',\n
- \'chain_Purchase Order Line\': \'order_movement_simulation_interaction_workflow, edit_workflow, trade_matrix_workflow, pricing_interaction_workflow, tax_interaction_workflow, movement_base_contribution_interaction_workflow\',\n
- \'chain_Purchase Packing List\': \'edit_workflow, delivery_simulation_interaction_workflow, packing_list_workflow, delivery_causality_interaction_workflow, delivery_causality_workflow\',\n
- \'chain_Purchase Packing List Cell\': \'pricing_interaction_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow\',\n
- \'chain_Purchase Packing List Line\': \'edit_workflow, pricing_interaction_workflow, delivery_movement_causality_interaction_workflow, trade_matrix_workflow, delivery_movement_simulation_interaction_workflow, movement_base_contribution_interaction_workflow\',\n
- \'chain_Purchase Supply\': \'edit_workflow, validation_workflow\',\n
- \'chain_Purchase Supply Line\': \'edit_workflow, supply_line_interaction_workflow\',\n
- \'chain_Purchase Trade Condition\': \'edit_workflow, validation_workflow\',\n
- \'chain_Quantity Divergence Tester\': \'edit_workflow\',\n
- \'chain_Query\': \'edit_workflow, query_workflow\',\n
- \'chain_RSS Feed\': \'document_publication_workflow, edit_workflow, local_permission_interaction_workflow\',\n
- \'chain_Returned Sale Packing List\': \'delivery_causality_workflow, edit_workflow, packing_list_workflow, delivery_causality_workflow\',\n
- \'chain_Returned Sale Packing List Cell\': \'pricing_interaction_workflow\',\n
- \'chain_Returned Sale Packing List Line\': \'pricing_interaction_workflow, trade_matrix_workflow\',\n
- \'chain_Role Definition\': \'local_permission_interaction_workflow, edit_workflow\',\n
- \'chain_Rounding Model\': \'validation_workflow\',\n
- \'chain_Sale Invoice Transaction\': \'delivery_simulation_interaction_workflow, delivery_causality_interaction_workflow, edit_workflow, accounting_workflow, delivery_tax_interaction_workflow, delivery_causality_workflow\',\n
- \'chain_Sale Invoice Transaction Line\': \'edit_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow\',\n
- \'chain_Sale Opportunity\': \'pricing_interaction_workflow, ticket_interaction_workflow, sale_opportunity_workflow, edit_workflow\',\n
- \'chain_Sale Order\': \'edit_workflow, order_workflow, order_simulation_interaction_workflow, delivery_tax_interaction_workflow\',\n
- \'chain_Sale Order Cell\': \'edit_workflow, pricing_interaction_workflow, tax_interaction_workflow, order_movement_simulation_interaction_workflow\',\n
- \'chain_Sale Order Line\': \'order_movement_simulation_interaction_workflow, edit_workflow, trade_matrix_workflow, pricing_interaction_workflow, tax_interaction_workflow, movement_base_contribution_interaction_workflow\',\n
- \'chain_Sale Packing List\': \'edit_workflow, packing_list_workflow, delivery_causality_interaction_workflow, delivery_simulation_interaction_workflow, delivery_causality_workflow, packing_list_container_workflow\',\n
- \'chain_Sale Packing List Cell\': \'pricing_interaction_workflow, delivery_movement_simulation_interaction_workflow, container_interaction_workflow, delivery_movement_causality_interaction_workflow\',\n
- \'chain_Sale Packing List Line\': \'edit_workflow, pricing_interaction_workflow, container_interaction_workflow, trade_matrix_workflow, delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, movement_base_contribution_interaction_workflow\',\n
- \'chain_Sale Supply\': \'edit_workflow, validation_workflow\',\n
- \'chain_Sale Supply Line\': \'edit_workflow, supply_line_interaction_workflow\',\n
- \'chain_Sale Trade Condition\': \'edit_workflow, validation_workflow\',\n
- \'chain_Service\': \'validation_workflow, edit_workflow\',\n
- \'chain_Simulation Movement\': \'simulation_movement_causality_interaction_workflow\',\n
- \'chain_Site Message\': \'edit_workflow, event_interaction_workflow, event_workflow\',\n
- \'chain_Spreadsheet\': \'edit_workflow, document_interaction_workflow, processing_status_workflow, document_publication_workflow, local_permission_interaction_workflow\',\n
- \'chain_Supply Line\': \'supply_line_interaction_workflow, edit_workflow\',\n
- \'chain_Support Request\': \'edit_workflow, pricing_interaction_workflow, ticket_interaction_workflow, ticket_workflow\',\n
- \'chain_System Preference\': \'preference_workflow\',\n
- \'chain_Tax\': \'edit_workflow, validation_workflow\',\n
- \'chain_Tax Rule\': \'edit_workflow, rule_validation_workflow\',\n
- \'chain_Telephone\': \'edit_workflow\',\n
- \'chain_Text\': \'edit_workflow, processing_status_workflow, local_permission_interaction_workflow, document_publication_workflow, document_interaction_workflow\',\n
- \'chain_Trade Model Line\': \'edit_workflow, trade_model_line_interaction_workflow\',\n
- \'chain_Trade Model Rule\': \'edit_workflow, rule_validation_workflow\',\n
- \'chain_Transformation\': \'edit_workflow, validation_workflow\',\n
- \'chain_Transformation Operation\': \'edit_workflow\',\n
- \'chain_Transformation Optional Resource\': \'edit_workflow\',\n
- \'chain_Transformation Transformed Resource\': \'edit_workflow\',\n
- \'chain_URL Crawler\': \'edit_workflow, document_publication_workflow, local_permission_interaction_workflow\',\n
- \'chain_Visit\': \'event_interaction_workflow, pricing_interaction_workflow, event_workflow, edit_workflow\',\n
- \'chain_Web Message\': \'pricing_interaction_workflow, event_interaction_workflow, event_workflow, edit_workflow\',\n
- \'chain_Web Page\': \'local_permission_interaction_workflow, edit_workflow, document_publication_workflow, document_interaction_workflow\',\n
- \'chain_Web Section\': \'category_publication_workflow, local_permission_interaction_workflow, edit_workflow\',\n
- \'chain_Web Site\': \'local_permission_interaction_workflow, edit_workflow, category_publication_workflow\'}\n
+WORKFLOW_CHAIN_DICT = None\n
 \n
 # Portal Type definition based on portal_types_roles_express.sxc\n
 # Once this document changes this script should be immediately \n
 # updated to include or fix any security change.\n
 \n
+# Workflows whose security should be updated.\n
+# To upgrade entire security use context.portal_workflow.objectIds()\n
+# or [] to update None.\n
+\n
+UPDATE_SECURITY_WORKFLOW_ID_LIST = []\n
+\n
 # Portal Types to be updated using updateMappingDefinition.\n
-UPDATE_ROLE_PORTAL_TYPE_LIST = [ \'Person Module\',\n
-                                 \'Organisation Module\',\n
-                                 \'Currency Module\',\n
-                                 \'Query Module\',\n
-                                 \'Event Module\',\n
-                                 \'Sale Opportunity Module\',\n
-                                 \'Support Request Module\',\n
-                                 \'Meeting Module\',\n
-                                 \'Campaign Module\',\n
-                                 \'Accounting Transaction Module\',\n
-                                 \'Account Module\',\n
-                                 \'Sale Trade Condition Module\',\n
-                                 \'Purchase Trade Condition Module\',\n
-                                 \'Sale Order Module\',\n
-                                 \'Purchase Order Module\',\n
-                                 \'Sale Packing List Module\',\n
-                                 \'Purchase Packing List Module\',\n
-                                 \'Inventory Module\',\n
-                                 \'Document Module\',\n
-                                 \'Image Module\',\n
-                                 \'Document Ingestion Module\',\n
-                                 \'Web Page Module\',\n
-                                 \'Component Module\',\n
-                                 \'Product Module\',\n
-                                 \'Service Module\',\n
-                                 \'Tax Module\',\n
-                                 \'Contribution Tool\',\n
-                                 \'Gadget Tool\',\n
-                                 \'Knowledge Pad Module\',\n
-                                 \'Person\',\n
-                                 \'Organisation\',\n
-                                 \'Currency\',\n
-                                 \'Query\',\n
-                                 \'Assignment\',\n
-                                 \'Fax Message\',\n
-                                 \'Web Message\',\n
-                                 \'Letter\',\n
-                                 \'Mail Message\',\n
-                                 \'Note\',\n
-                                 \'Visit\',\n
-                                 \'Phone Call\',\n
-                                 \'Sale Opportunity\',\n
-                                 \'Support Request\',\n
-                                 \'Meeting\',\n
-                                 \'Campaign\',\n
-                                 \'Account\',\n
-                                 \'Accounting Period\',\n
-                                 \'Balance Transaction\',\n
-                                 \'Sale Invoice Transaction\',\n
-                                 \'Purchase Invoice Transaction\',\n
-                                 \'Accounting Transaction\',\n
-                                 \'Payment Transaction\',\n
-                                 \'Bank Account\',\n
-                                 \'Cash Register\',\n
-                                 \'Credit Card\',\n
-                                 \'Drawing\',\n
-                                 \'PDF\',\n
-                                 \'Presentation\',\n
-                                 \'Spreadsheet\',\n
-                                 \'Text\',\n
-                                 \'Web Page\',\n
-                                 \'Wizard Tool\',\n
-                                 \'Component\',\n
-                                 \'Product\',\n
-                                 \'Service\',\n
-                                 \'Transformation\',\n
-                                 \'Transformation Operation\',\n
-                                 \'Transformation Optional Resource\',\n
-                                 \'Transformation Transformed Resource\',\n
-                                 \'Tax\',\n
-                                 \'Inventory\',\n
-                                 \'Purchase Order\',\n
-                                 \'Purchase Packing List\',\n
-                                 \'Purchase Trade Condition\',\n
-                                 \'Sale Order\',\n
-                                 \'Sale Packing List\',\n
-                                 \'Sale Trade Condition\',\n
-                                 \'Gadget\',\n
-                                 \'Knowledge Pad\',\n
-                                 \'Knowledge Box\', \n
-                                 \'Currency Exchange Line\'\n
-                               ]\n
+# To upgrade entire security use context.portal_types.objectIds()\n
+# or [] to update None.\n
+\n
+UPDATE_ROLE_PORTAL_TYPE_LIST = []\n
 \n
 # A property sheet expected to found into a Portal Type List.\n
 # Example: (\'TradeOrder\', ["Sale Packing List", "Purchase Packing List"]),\n
@@ -440,40 +197,48 @@ KEEP_ORIGINAL_DICT = {\n
 \n
 }\n
 \n
-# Items which need validation at upgrade time\n
-VALIDATION_DICT = {\n
-  \'erp5_base\':((\'portal_categories/group\', \'draft\', \'embed\'),\n
-               (\'portal_categories/site\', \'draft\', \'embed\'),\n
+# Items which need validation or change at upgrade time.\n
+#   { BUSINESS_TEMPLATE_TITLE : (\n
+#                  (OBJECT_PATH,\n
+#                   SCRIPT TO COLLECT INFORMATION,\n
+#                   RETURN EXPECTED THAT INDICATES THE OBJECT IS BROKEN,\n
+#                   SCRIPT USED TO FIX , \n
+#                   !OPTIONAL! PARAMETERS FOR THE SCRIPT AS A DICT),\n
+#                  ),\n
+#        }\n
+OBJECT_ACTION_DICT = {\n
+  \'erp5_base\':((\'portal_categories/group\', \'getValidationState\', \'draft\', \'embed\'),\n
+               (\'portal_categories/site\', \'getValidationState\', \'draft\', \'embed\'),\n
               ),\n
 \n
    \'erp5_knowledge_pad\': (# Make gadgets visible\n
-                          (\'portal_gadgets/clock\', \'invisible\', \'visible\'),\n
-                          (\'portal_gadgets/erp5_advertisement\', \'invisible\', \'visible\'),\n
-                          (\'portal_gadgets/erp5_documentation\', \'invisible\', \'visible\'),\n
-                          (\'portal_gadgets/erp5_persons\', \'invisible\', \'visible\'),\n
-                          (\'portal_gadgets/erp5_rss\', \'invisible\', \'visible\'),\n
-                          (\'portal_gadgets/erp5_worklists\', \'invisible\', \'visible\'),\n
-                          (\'portal_gadgets/google_calendar\', \'invisible\', \'visible\'),\n
-                          (\'portal_gadgets/google_maps\', \'invisible\', \'visible\'),\n
-                          (\'portal_gadgets/google_search\', \'invisible\', \'visible\'),\n
+                          (\'portal_gadgets/clock\', \'getValidationState\',\'invisible\', \'visible\'),\n
+                          (\'portal_gadgets/erp5_advertisement\', \'getValidationState\',\'invisible\', \'visible\'),\n
+                          (\'portal_gadgets/erp5_documentation\', \'getValidationState\',\'invisible\', \'visible\'),\n
+                          (\'portal_gadgets/erp5_persons\', \'getValidationState\',\'invisible\', \'visible\'),\n
+                          (\'portal_gadgets/erp5_rss\', \'getValidationState\',\'invisible\', \'visible\'),\n
+                          (\'portal_gadgets/erp5_worklists\', \'getValidationState\',\'invisible\', \'visible\'),\n
+                          (\'portal_gadgets/google_calendar\', \'getValidationState\',\'invisible\', \'visible\'),\n
+                          (\'portal_gadgets/google_maps\', \'getValidationState\',\'invisible\', \'visible\'),\n
+                          (\'portal_gadgets/google_search\', \'getValidationState\',\'invisible\', \'visible\'),\n
                           # Make gadgets published\n
-                          (\'portal_gadgets/clock\', \'visible\', \'public\'),\n
-                          (\'portal_gadgets/erp5_advertisement\', \'visible\', \'public\'),\n
-                          (\'portal_gadgets/erp5_documentation\', \'visible\', \'public\'),\n
-                          (\'portal_gadgets/erp5_persons\', \'visible\', \'public\'),\n
-                          (\'portal_gadgets/erp5_rss\', \'visible\', \'public\'),\n
-                          (\'portal_gadgets/erp5_worklists\', \'visible\', \'public\'),\n
-                          (\'portal_gadgets/google_calendar\', \'visible\', \'public\'),\n
-                          (\'portal_gadgets/google_maps\', \'visible\', \'public\'),\n
-                          (\'portal_gadgets/google_search\', \'visible\', \'public\'),\n
+                          (\'portal_gadgets/clock\', \'getValidationState\',\'visible\', \'public\'),\n
+                          (\'portal_gadgets/erp5_advertisement\', \'getValidationState\',\'visible\', \'public\'),\n
+                          (\'portal_gadgets/erp5_documentation\', \'getValidationState\',\'visible\', \'public\'),\n
+                          (\'portal_gadgets/erp5_persons\', \'getValidationState\',\'visible\', \'public\'),\n
+                          (\'portal_gadgets/erp5_rss\', \'getValidationState\',\'visible\', \'public\'),\n
+                          (\'portal_gadgets/erp5_worklists\', \'getValidationState\',\'visible\', \'public\'),\n
+                          (\'portal_gadgets/google_calendar\', \'getValidationState\',\'visible\', \'public\'),\n
+                          (\'portal_gadgets/google_maps\', \'getValidationState\',\'visible\', \'public\'),\n
+                          (\'portal_gadgets/google_search\', \'getValidationState\',\'visible\', \'public\'),\n
                          ), \n
 \n
-  \'erp5_trade\':((\'portal_rules/default_order_rule\', \'draft\', \'validate\'),\n
-                (\'portal_rules/default_delivery_rule\', \'draft\', \'validate\'),\n
+  \'erp5_trade\':((\'portal_rules/default_order_rule\', \'getValidationState\',\'draft\', \'validate\'),\n
+                (\'portal_rules/default_delivery_rule\', \'getValidationState\',\'draft\', \'validate\'),\n
                ),\n
-  \'erp5_invoicing\':((\'portal_rules/default_invoice_transaction_rule\', \'draft\', \'validate\'),\n
-                    (\'portal_rules/default_invoicing_rule\', \'draft\', \'validate\'),\n
-                    (\'portal_rules/default_trade_model_rule\', \'validated\', \'invalidate\'),\n
+  \'erp5_invoicing\':((\'portal_rules/default_invoice_transaction_rule\', \'getValidationState\',\'draft\', \'validate\'),\n
+                    (\'portal_rules/default_invoicing_rule\', \'getValidationState\',\'draft\', \'validate\'),\n
+                    (\'portal_rules/default_trade_model_rule\', \'getValidationState\',\'validated\', \'invalidate\'),\n
                ),\n
 }\n
 \n
@@ -481,28 +246,7 @@ VALIDATION_DICT = {\n
 # Dictionary the expected filters for catalog. This is a usually determinated\n
 # by catalog.getFilterDict()\n
 #\n
-\n
-CATALOG_FILTER_DICT = { \n
-   \'z_catalog_item_list\' : \'python: here.providesIMovement()\',\n
-   \'z_catalog_predicate_category_list\': \'python: isPredicate\',\n
-   \'z_catalog_movement_category_list\': \'python: here.providesIMovement()\',\n
-   \'z_catalog_delivery_list\': \'python: isDelivery\',\n
-   \'z_catalog_alarm_list\': \'\',\n
-   \'z0_uncatalog_subject\': \'python: isDocument\',\n
-   \'z0_uncatalog_inventory\': \'python: isInventory\',\n
-   \'z_catalog_stock_list\': \'python: here.providesIMovement() and not isInventoryMovement\',\n
-   \'z0_uncatalog_versioning\': "python:getattr(here, \'getVersion\', None) is not None",\n
-   \'z_catalog_non_movement_category_list\': \'python: not here.providesIMovement()\',\n
-   \'z_catalog_email_list\': \'\',\n
-   \'z_catalog_subject_list\': \'python: isDocument\',\n
-   \'z_catalog_movement_list\': \'python: here.providesIMovement()\',\n
-   \'z_catalog_predicate_list\': \'python: isPredicate\',\n
-   \'z_catalog_measure_list\': \'python: here.getPortalType() in here.getPortalResourceTypeList()\',\n
-   \'z_catalog_versioning_list\': "python:getattr(here, \'getVersion\', None) is not None",\n
-   \'z0_uncatalog_email\': \'\',\n
-   \'z_catalog_quantity_unit_conversion_list\': \'python: here.getPortalType() in here.getPortalResourceTypeList()\',\n
-   \'z0_uncatalog_inventory_stock\': \'python: isInventoryMovement\'}\n
-\n
+CATALOG_FILTER_DICT = None\n
 \n
 #\n
 # List of Scripts to be run after upgrade is finished to determinate \n
@@ -510,10 +254,24 @@ CATALOG_FILTER_DICT = { \n
 #\n
 \n
 INTEGRITY_VERIFICATION_SCRIPT_ID_LIST = (\'ERP5Site_verifyUpgradeIntegrity\',\n
-                                         \'ERP5Site_verifyBT5UpgradeIntegrity\',\n
                                          \'ERP5Site_verifyMemcachedIntegrity\',\n
                                          \'ERP5Site_verifySQLCatalogFilterIntegrity\',\n
                                          \'ERP5Site_verifyActivityIntegrity\')\n
+\n
+#\n
+# List of Scripts to be sense and run after business template be upgraded. This can\n
+# be consider as After methods.\n
+  \n
+FINALIZE_ALARM_SCRIPT = ( \'ERP5Site_upgradeGlobalPropertyList\',\n
+                          \'ERP5Site_upgradeObjectList\',\n
+                          \'ERP5Site_upgradeWorkflowChain\',\n
+                          \'ERP5Site_upgradePortalTypePropertySheet\',\n
+                          \'ERP5Site_upgradeSecurity\',\n
+                          \'ERP5Site_upgradeObjectClass\',\n
+                          \'ERP5Site_upgradeSQLCatalogFilter\',\n
+                          \'ERP5Site_upgradeAlarmToolConfiguration\',\n
+                          \'ERP5Site_upgradeSQLCatalog\',\n
+                        )\n
 \n
 # \n
 # Define the property and value ({\'property\' : \'value\', ...} to be set or created \n
@@ -545,22 +303,12 @@ UPGRADE_OBJECT_CLASS_LIST = ( (\'portal_gadgets\', \n
                           \'Products.ERP5Type.Document.Gadget.Gadget\', \n
                           \'ERP5Site_testUpgradeObjectClass\'  ), )\n
 \n
-RECATALOG = True\n
+RECATALOG = False\n
 \n
 # Wrap everything into a dict\n
 signature_dict = {\n
    # Defines the alarms enabled for the upgrade\n
    \'alarm_dict\' : ALARM_DICT\n
-   # Defines the default release for bt5\n
- , \'release\': DESTINATION_RELEASE\n
-   # Defines the default version for zope\n
- , \'zope\': ZOPE_VERSION\n
-   # Defines the default version for python\n
- , \'python\': PYTHON_VERSION\n
-   # Defines the default release for products\n
- , \'product\': DESTINATION_RELEASE\n
-   # Defines the default location of bt5\n
- , \'bt5_base_url_list\': BT5_URL_BASE_LIST\n
    # Provides a snapshot of how workflow chains should be configured\n
  , \'workflow_chain_dict\': WORKFLOW_CHAIN_DICT\n
    # Provides a list of required bt5 (without which upgrader wont\'t work)\n
@@ -571,15 +319,19 @@ signature_dict = {\n
  , \'before_triggered_bt5_id_dict\': BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT\n
  , \'after_triggered_bt5_id_dict\': AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT\n
    # Provide a list of bt5 which require reinstallation\n
- , \'reinstalable_bt5_id_list\': REINSTALABLE_BT5_ID_LIST\n
+ , \'reinstallable_bt5_id_list\': REINSTALLABLE_BT5_ID_LIST\n
    # Provides a list of bt5 path and items which must not be upgraded or deleted\n
  , \'keep_original_dict\': KEEP_ORIGINAL_DICT\n
-   # Provides a list of bt5 path which require workflow action after upgrade\n
- , \'validation_dict\': VALIDATION_DICT\n
+   # Provides a list of bt5 path which require some action after upgrade\n
+ , \'object_action_dict\': OBJECT_ACTION_DICT\n
    # Provides a list of script ids that will be run after the upgrade to check the Instance Integrity\n
  , \'integrity_verification_script_id_list\': INTEGRITY_VERIFICATION_SCRIPT_ID_LIST\n
+   # Provides a list of script ids that will be run during finalization step\n
+ , \'finalize_upgrade_script_list\': FINALIZE_ALARM_SCRIPT\n
    # Provides a dict with expected catalog filter expressions\n
  , \'catalog_filter_dict\': CATALOG_FILTER_DICT\n
+   # Provides a list of workflow ids whose security should be updated.\n
+ , \'update_security_workflow_id_list\': UPDATE_SECURITY_WORKFLOW_ID_LIST\n
    # Provides a list of portal types to had rules updated.\n
  , \'update_role_portal_type_list\': UPDATE_ROLE_PORTAL_TYPE_LIST\n
    # Provide a list of Property Sheet Expected into a portal type list\n
@@ -603,93 +355,12 @@ else:\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>item=None</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>item</string>
-                            <string>True</string>
-                            <string>ALARM_DICT</string>
-                            <string>DESTINATION_RELEASE</string>
-                            <string>ZOPE_VERSION</string>
-                            <string>PYTHON_VERSION</string>
-                            <string>BT5_URL_BASE_LIST</string>
-                            <string>getattr</string>
-                            <string>context</string>
-                            <string>None</string>
-                            <string>_getattr_</string>
-                            <string>UPGRADABLE_BT5_ID_LIST</string>
-                            <string>REQUIRED_BT5_ID_LIST</string>
-                            <string>UPDATE_CATALOG_BT5_ID_LIST</string>
-                            <string>BEFORE_TRIGGERED_BT5_SCRIPT_ID_DICT</string>
-                            <string>AFTER_TRIGGERED_BT5_SCRIPT_ID_DICT</string>
-                            <string>REINSTALABLE_BT5_ID_LIST</string>
-                            <string>WORKFLOW_CHAIN_DICT</string>
-                            <string>UPDATE_ROLE_PORTAL_TYPE_LIST</string>
-                            <string>PORTAL_TYPE_PROPERTY_SHEET_LIST</string>
-                            <string>KEEP_ORIGINAL_DICT</string>
-                            <string>VALIDATION_DICT</string>
-                            <string>CATALOG_FILTER_DICT</string>
-                            <string>INTEGRITY_VERIFICATION_SCRIPT_ID_LIST</string>
-                            <string>ERP5_SITE_PROPERTY_DICT</string>
-                            <string>ALARM_TOOL_CONFIGURATION_LIST</string>
-                            <string>UPGRADE_OBJECT_CLASS_LIST</string>
-                            <string>RECATALOG</string>
-                            <string>signature_dict</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_getUpgraderSignature</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

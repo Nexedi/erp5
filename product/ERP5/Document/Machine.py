@@ -29,10 +29,10 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5.Document.Item import Item
+from Products.ERP5.Document.ImmobilisableItem import ImmobilisableItem
 
 
-class Machine(Item):
+class Machine(ImmobilisableItem):
     """
     Machine represents 
     """

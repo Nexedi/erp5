@@ -14,8 +14,7 @@ Accounting Transaction Root Simulation Rule | Net Converted Quantity Divergence 
 Accounting Transaction Root Simulation Rule | String Divergence Tester
 Accounting Transaction Root Simulation Rule | Variation Divergence Tester
 Accounting Transaction | Accounting Transaction Line
-Accounting Transaction | File
-Accounting Transaction | Image
+Accounting Transaction | Embedded File
 Balance Transaction | Balance Transaction Line
 Internal Invoice Transaction | Internal Invoice Transaction Line
 Invoice Root Simulation Rule | Category Membership Divergence Tester
@@ -38,18 +37,17 @@ Payment Simulation Rule | Specialise Divergence Tester
 Payment Simulation Rule | String Divergence Tester
 Payment Simulation Rule | Variation Divergence Tester
 Payment Transaction | Accounting Transaction Line
-Payment Transaction | File
-Payment Transaction | Image
+Payment Transaction | Embedded File
 Preference | Accounting Transaction
 Preference | Payment Transaction
 Preference | Purchase Invoice Transaction
 Preference | Sale Invoice Transaction
-Purchase Invoice Transaction | File
-Purchase Invoice Transaction | Image
+Property Sheet | Account Type Constraint
+Property Sheet | Accounting Transaction Balance Constraint
+Purchase Invoice Transaction | Embedded File
 Purchase Invoice Transaction | Purchase Invoice Transaction Line
 Rule Tool | Accounting Transaction Root Simulation Rule
 Rule Tool | Invoice Root Simulation Rule
 Rule Tool | Payment Simulation Rule
-Sale Invoice Transaction | File
-Sale Invoice Transaction | Image
+Sale Invoice Transaction | Embedded File
 Sale Invoice Transaction | Sale Invoice Transaction Line

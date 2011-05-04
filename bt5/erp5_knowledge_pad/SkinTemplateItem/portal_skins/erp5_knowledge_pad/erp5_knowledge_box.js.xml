@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts93010596.68</string> </value>
+            <value> <string>ts00370324.82</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/x-javascript</string> </value>
+            <value> <string>application/javascript</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -39,148 +39,146 @@ var is_knowledge_template_used = 0;\n
 // dictionary of invisible gadgets\n
 var invisible_gadgets={};\n
 \n
+var create_default_knowledge_pad_script_id = "ERP5Site_createDefaultKnowledgePadListForUser";\n
+var check_for_activities_on_server_script_id = "ERP5Site_hasUserActivity";\n
+var knowledge_box_edit_script_id = "KnowledgeBox_baseEdit";\n
+var knowledge_pad_save_layout_script_id = "KnowledgePad_saveBoxColumnLayout";\n
+var knowledge_pad_delete_box_script_id = "KnowledgePad_deleteBox";\n
+var knowledge_box_toggle_script_id = "KnowledgeBox_toggleVisibility";\n
+var knowledge_pad_rename_script_id = "ERP5Site_renameKnowledgePad";\n
+var knowledge_pad_delete_script_id = "ERP5Site_deleteKnowledgePad";\n
+var add_new_knowledge_pad_script_id = "ERP5Site_addNewKnowledgePad";\n
+var knowledge_pad_as_json_script_id = "KnowledgePad_getPadAsJSON";\n
+var add_new_gadget_form_id = "Base_viewGadgetListDialog";\n
+\n
 function createCustomKnowledgePadOnServer(){\n
-  url = "ERP5Site_createDefaultKnowledgePadListForUser";\n
-  d = MochiKit.Async.doSimpleXMLHttpRequest(url, \n
-                 {\'mode\': mode,\n
-                  \'default_pad_group\': default_pad_group});\n
-  d.addCallback(handleServerSuccess);\n
-  function handleServerSuccess(res){\n
-    response = res.responseText;\n
-    window.location=cancel_url + \'/view?active_pad_url=\'+response;\n
-  }\n
+  $.ajax({url:create_default_knowledge_pad_script_id, \n
+          data:{mode: mode,\n
+                default_pad_group: default_pad_group},\n
+          dataType: "json",\n
+          success:function(data){window.location=cancel_url + "/view?active_pad_url=" + data.knowledge_pad_relative_url;}});\n
 }\n
 \n
 function showCreateDefaultKnowledgePadWarningMessage(){\n
   user_choice = confirm("In order to complete operation you must have your own tab on server instead of the default one which you are currently using and which you can not change.Is it OK to create new one for you now?");\n
   if (user_choice==true){\n
-    createCustomKnowledgePadOnServer();\n
-  }\n
+    createCustomKnowledgePadOnServer();}\n
 }\n
 \n
-function handleServerError(res){\n
-  /*alert(\'Error on server\');*/\n
-};\n
-\n
 function createCookie(name, value, days, path) {\n
-  if (days) {\n
-          var date = new Date();\n
-          date.setTime(date.getTime()+(days*24*60*60*1000));\n
-          var expires = "; expires="+date.toGMTString();\n
-  }\n
+  if (days){\n
+    var date = new Date();\n
+    date.setTime(date.getTime()+(days*24*60*60*1000));\n
+    var expires = "; expires="+date.toGMTString();}\n
   else var expires = "";\n
   if (!path){var path=\'/\';}\n
   document.cookie = name+"="+value+expires+"; path="+path;\n
 }\n
 \n
 function updater(url, box_relative_url, dom_id, \n
-                 parent_web_section_url, editable_mode, additionnal_request_params){\n
-  /* request box content from server */\n
- request_params = {};\n
- /* getting parameters for the request in the form\'s hidden inputs */\n
- inputs =  getElement(dom_id).getElementsByTagName(\'input\');\n
- forEach(inputs, function (input){\n
-   if(input.type == \'hidden\'){\n
-     // turn \'gadget_form_id\' into \'form_id\'\n
-     if(input.name == \'gadget_form_id\'){\n
-       request_params[\'form_id\'] = input.value;}\n
-     else if(input.name.substring(input.name.length,input.name.length-5) == \':list\'){\n
-       if(typeof(request_params[input.name]) == \'undefined\'){\n
-         request_params[input.name] = new Array()\n
-       }\n
-       request_params[input.name].push(input.value);\n
-     }\n
-     else{\n
-       request_params[input.name] = input.value;\n
-     }\n
-   }\n
-});\n
+                 editable_mode, additionnal_request_params, field_prefix){\n
+  /* Get content from server */\n
+  request_params = {};\n
+  additionnal_request_params = typeof(additionnal_request_params) != \'undefined\' ? additionnal_request_params : [];\n
 \n
- /*getting parameters for request from the parameter additionnal_request_params*/\n
- forEach(keys(additionnal_request_params), function (key){\n
-   request_params[key] = additionnal_request_params[key];\n
- });\n
+  // getting parameters for the request in the form\'s hidden inputs\n
+  input_list = $("#" + dom_id).find("input");\n
 \n
- request_params[\'box_relative_url\'] = box_relative_url;\n
- request_params[\'parent_web_section_url\'] = parent_web_section_url; \n
- request_params[\'is_gadget_mode:int\'] = 1; \n
- request_params[\'editable_mode:int\'] = editable_mode; \n
-\n
- getElement(dom_id).style.opacity = 0.5;\n
- d = MochiKit.Async.doSimpleXMLHttpRequest(url, request_params);\n
- d.addCallbacks(handleServerSuccess, handleServerError);\n
- function handleServerSuccess(res){\n
-      content_type = res.getResponseHeader(\'Content-Type\');\n
-      if(content_type.search("application/json")!=-1){\n
-        /* server returned JSON which may contain HTML & JavaScript */\n
-        text = res.responseText \n
-        json_dict = evalJSON(text);\n
-        html = json_dict[\'body\'];\n
-        eval(json_dict[\'javascript\']);\n
-      }\n
+  function extractHiddenInputs(index){\n
+    element = $(this);\n
+    type = element.attr("type");\n
+    name = element.attr("name");\n
+    value = element.val();\n
+    is_list = name.substring(name.length, name.length - 5) == ":list";\n
+    if(type == "hidden"){\n
+      if(name == "gadget_form_id"){\n
+        // turn \'gadget_form_id\' into \'form_id\'\n
+        request_params["form_id"] = value;}\n
+      else if(is_list){\n
+        if(typeof(request_params[name]) == "undefined"){\n
+          request_params[name] = new Array()}\n
+        request_params[name].push(value);}\n
       else{\n
-        /* server returned HTML */\n
-        html = res.responseText;\n
-      }\n
-      /* set HTML as returned from server */\n
-      getElement(dom_id).innerHTML = html;\n
-      getElement(dom_id).style.opacity = 1.0;};\n
+        // not list input\n
+        request_params[name] = value;}\n
+    }}\n
+  \n
+  input_list.each(extractHiddenInputs);\n
+\n
+  // we can have a field_prefix which allows multiple gadgets within same HTML form\n
+  if (field_prefix){\n
+    $.each(request_params,  \n
+         function (key, value){\n
+           if (key.match("^"+field_prefix)){\n
+             delete request_params[key];\n
+             request_params[key.replace(field_prefix,\'\')] = value;\n
+           }});\n
+  }\n
+  \n
+  // getting parameters for request from the parameter additionnal_request_params\n
+  $.each(additionnal_request_params,  \n
+         function (key, value){request_params[key] = additionnal_request_params[key];});\n
+         \n
+  request_params["box_relative_url"] = box_relative_url;\n
+  request_params["is_gadget_mode:int"] = 1; \n
+  request_params["editable_mode:int"] = editable_mode; \n
+\n
+  // set transperancy to show an activity is going on\n
+  $("#" + dom_id).css("opacity", 0.5);\n
+  $.ajax({url:url,\n
+          data: request_params,\n
+          success: handleServerSuccess,\n
+          error: handleServerError,\n
+          // it\'s important for Zope to have traditional way of encoding an URL\n
+          traditional: 1});\n
       \n
- function handleServerError(res){\n
-      getElement(dom_id).innerHTML = \'Server side error.\';\n
-      getElement(dom_id).style.opacity = 1.0;};\n
+  function handleServerSuccess(data, text_status, xhr){\n
+    content_type = xhr.getResponseHeader(\'Content-Type\');\n
+    if(content_type.search("application/json")!=-1){\n
+      // server returned JSON which may contain HTML & JavaScript\n
+      html = data[\'body\'];\n
+      eval(data[\'javascript\']);}\n
+    else{\n
+      /* server returned HTML */\n
+      html = data;}\n
+    $("#" + dom_id).html(html);\n
+    $("#" + dom_id).css("opacity", 1.0);\n
+  }\n
+      \n
+  function handleServerError(res){\n
+    $("#" + dom_id).html("Server side error.");\n
+    $("#" + dom_id).css("opacity", 1.0);\n
+  }\n
 }\n
+\n
 \n
 function checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group){\n
   /* check if activities are over and refresh current page */\n
   window.setInterval(\n
     function () {\n
-      d = MochiKit.Async.doSimpleXMLHttpRequest(\'ERP5Site_hasUserActivity\',\n
-                                                {\'js_call\': 1,\n
-                                                 \'mode\': mode,\n
-                                                 \'default_pad_group\': default_pad_group});\n
-      d.addCallback(handleServerSuccess);\n
-      function handleServerSuccess(res){\n
-         if(res.responseText==\'False\'){window.location=return_url;}\n
-         }}, \n
+      $.ajax({url:check_for_activities_on_server_script_id,\n
+              data: {js_call: 1,\n
+                     mode: mode,\n
+                     default_pad_group: default_pad_group},\n
+              dataType: "json",\n
+              success:  function (data){if(data.result=="False"){window.location=return_url;}}\n
+              })},\n
     timeout);\n
-}\n
-\n
-function stickPadOnWebSection(create_url,\n
-                              knowledge_pad_url,\n
-                              websection_url,\n
-                              cancel_url){\n
-  /* stick pad on Web Section and then check if \n
-     activities are over and refresh current page */\n
-  d = doSimpleXMLHttpRequest(\n
-           create_url, \n
-           {\'knowledge_pad_url\': knowledge_pad_url,\n
-            \'cancel_url\': cancel_url});\n
-  d.addCallbacks(handleServerSuccess, handleServerError);\n
-  function handleServerSuccess(res){\n
-      window.location=cancel_url+\'?active_pad_url=\'+res.responseText;\n
-      };\n
 };\n
 \n
-function createDefaultPadOnServer(timeout, create_url,\n
-                                  default_pad_group, return_url, mode){\n
+function createDefaultPadOnServer(timeout, default_pad_group, return_url, mode){\n
   /* create default tab on server and then check if \n
      activities are over and refresh current page */\n
-  d = doSimpleXMLHttpRequest(\n
-           create_url, \n
-           {\'default_pad_group\': default_pad_group,\n
-            \'mode\': mode});\n
-  d.addCallbacks(handleServerSuccess, handleServerError);\n
-  function handleServerSuccess(res){\n
-      checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group);};\n
-};\n
+  $.ajax({url: create_default_knowledge_pad_script_id, \n
+          data: {default_pad_group: default_pad_group,\n
+                 mode: mode},\n
+          success: function(data){checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group);}});\n
+}\n
 \n
-// This function can be used to submit gadget preferences form whenever\n
-// an enter is pressed in form\n
 function submitGadgetPreferenceFormOnEnter(event, form_fields_main_prefix, box_relative_url){\n
-  if(event.keyCode == 13){\n
-    submitSynchronousGadgetPreferenceForm(form_fields_main_prefix, box_relative_url);\n
-  }\n
+  /* This function can be used to submit gadget preferences form whenever\n
+  an enter is pressed in form */\n
+  if(event.keyCode == 13){submitSynchronousGadgetPreferenceForm(form_fields_main_prefix, box_relative_url);}\n
 }\n
 \n
 function submitSynchronousGadgetPreferenceForm(\n
@@ -189,21 +187,11 @@ function submitSynchronousGadgetPreferenceForm(\n
   /* this will add respective gadget knowledge box relative url and\n
      gadget ERP5 preference form field_prefix (so multiple gadgets can \n
      safely coexist in one HTML page with one HTML form */\n
-  appendChildNodes(document.forms[0], \n
-                   INPUT({\'value\':box_relative_url, \n
-                          \'name\': \'box_relative_url\', \n
-                          \'type\':\'hidden\'}));\n
-  appendChildNodes(document.forms[0], \n
-                   INPUT({\'value\':form_fields_main_prefix, \n
-                          \'name\': \'form_fields_main_prefix\', \n
-                          \'type\':\'hidden\'}));\n
-  // append current return URL so we know where to redirect user\n
   redirect_url = window.location.protocol + "//" + window.location.host + window.location.pathname\n
-  appendChildNodes(document.forms[0], \n
-                   INPUT({\'value\':redirect_url, \n
-                          \'name\': "gadget_redirect_url", \n
-                          \'type\':\'hidden\'}));\n
-  clickSaveButton(\'KnowledgeBox_baseEdit\');\n
+  $("form").append(\'<input type="hidden" name="box_relative_url" value="\' +box_relative_url +  \'">\');\n
+  $("form").append(\'<input type="hidden" name="form_fields_main_prefix" value="\' +form_fields_main_prefix +  \'">\');\n
+  $("form").append(\'<input type="hidden" name="gadget_redirect_url" value="\' +redirect_url +  \'">\');\n
+  clickSaveButton(knowledge_box_edit_script_id);    \n
 };\n
 \n
 function submitAsynchronousGadgetPreferenceForm(\n
@@ -212,79 +200,78 @@ function submitAsynchronousGadgetPreferenceForm(\n
                                  box_relative_url, \n
                                  visual_block_dom_id, \n
                                  form_fields_main_prefix){\n
-  // iterate over all possible form elements within edit form,\n
-  // collect them and send to server\n
-  var request_str = "?box_relative_url=" + box_relative_url+ "&form_fields_main_prefix=" + form_fields_main_prefix + "&";\n
-  var url="KnowledgeBox_baseEdit";\n
-  forEach(getElementsByTagAndClassName(\'input\', null, form_dom_id) , function (item) {\n
-    if (item.type == "checkbox"){\n
-      if (item.checked){request_str+=item.name + \':boolean=True&\';}\n
-      else {request_str+=item.name + \':boolean=False&\';}}\n
-    if (item.type == "radio"){\n
-      if (item.checked){request_str+=item.name + \'=\'+item.value+\'&\';}}\n
-    if (item.type == "text"){request_str+=item.name + \'=\' + item.value + \'&\';}\n
-    if (item.type == "password"){request_str+=item.name + \'=\' + item.value + \'&\';}\n
-  });\n
-  forEach(getElementsByTagAndClassName(\'select\', null, form_dom_id), function (item) {\n
-    //support multifield in gadget edit form\n
-    if (item.multiple){\n
-      forEach(getElementsByTagAndClassName(\'option\', null, item), function (selection) {\n
-        if(selection.selected){\n
-          request_str+=item.name + \'=\' + selection.value + \'&\';\n
-        }\n
-      });\n
-    }else{\n
-      request_str+=item.name + \'=\' + item.value + \'&\';\n
-    }\n
-  });\n
-\n
-  /* save form preferences to remote server*/\n
-  url = url + request_str;\n
-  d = MochiKit.Async.doSimpleXMLHttpRequest(url);\n
-  d.addCallback(handleServerSuccess);\n
-  function handleServerSuccess(res){\n
-    /* update content view area back from server */\n
-    updater(view_form_url, box_relative_url, visual_block_dom_id);\n
-    toggle(form_dom_id);}\n
-  };\n
-\n
-function updateServerBoxColumnLayout(container){\n
-  // read columns structure from DOM  ..\n
-  var columns_arr = new Array;\n
-  var columns = getElementsByTagAndClassName(\'div\', \'portal-column\');\n
-  // sort alphabetically as it\'s required to get proper layout from DOM\n
-  columns.sort(keyComparator("id")); \n
-  for (var i = 0; i < columns.length; i++){\n
-    column_items = getElementsByTagAndClassName(\'div\', \'block\', columns[i]);\n
-    var items_arr = new Array;\n
-    for (var j = 0; j < column_items.length; j++){\n
-        items_arr[j] = column_items[j].id;};\n
-    columns_arr[i] = items_arr.join(\'|\')\n
-  };\n
-  var layout = columns_arr.join(\'##\');\n
-  // .. and send it to server only if it\'s different\n
-  // XXX: This may bloat ZODB as everry change is a chnage to an ZODB object.\n
-  if (layout!=last_layout){\n
-    last_layout = layout;\n
-    doSimpleXMLHttpRequest("KnowledgePad_saveBoxColumnLayout", {user_layout: layout});\n
-    }\n
-  return\n
+  /* Iterate over all possible form elements within edit form,\n
+    collect them and send to server*/\n
+  var request_str = "box_relative_url=" + box_relative_url+ "&form_fields_main_prefix=" + form_fields_main_prefix + "&";\n
+  \n
+  //input tags\n
+  $("#" + form_dom_id).find("input").each(\n
+    function (index) {\n
+      element = $(this);\n
+      type = element.attr("type");\n
+      name = element.attr("name");\n
+      is_checked = element.attr("checked");\n
+      value = element.val()\n
+      if (type == "checkbox"){\n
+        if (is_checked){request_str+=name + ":boolean=True&";}\n
+        else {request_str+=name + ":boolean=False&";}}\n
+      if (type == "radio" && is_checked){request_str+=name + "="+value+"&";}\n
+      if (type == "text" || type == "password"){request_str+=name + "=" + value + "&";}\n
+    } );\n
+  \n
+  // select tags\n
+  $("#" + form_dom_id).find("select").each(\n
+    function (index) {\n
+      element = $(this);\n
+      name = element.attr("name");\n
+      is_multiple = element.attr("multiple");\n
+      value = element.val()      \n
+      if (is_multiple){\n
+        //support multifield selects in gadget edit form\n
+        element.children("option").each(\n
+          function (index) {\n
+            option = $(this);\n
+            if(option.attr("selected")){request_str+=element.attr("name") + \'=\' + option.val() + \'&\';}\n
+          }); }\n
+       else{request_str+=name + \'=\' + value + \'&\';} });\n
+    \n
+  // save form preferences to remote server\n
+  $.ajax({url: knowledge_box_edit_script_id + "?" + request_str,\n
+          success: function (data){\n
+                     updater(view_form_url, box_relative_url, visual_block_dom_id);\n
+                     $("#" + form_dom_id).toggle();} });\n
 }\n
 \n
-function addBoxToServer(url, dom_id, gadget_relative_url){\n
-  /* add gadget to knowledge pad */\n
-  d = doSimpleXMLHttpRequest(url, {gadget_relative_url: gadget_relative_url});\n
-  d.addCallback(handleServerSuccess);\n
-  function handleServerSuccess(res){\n
-    button = getElement(dom_id);\n
-    button.innerHTML = res.responseText;\n
-    button.disabled = true;}\n
+function updateServerBoxColumnLayout(event, ui){\n
+  /* read columns structure from DOM  and save it to server */\n
+  var columns_arr = new Array;\n
+  var columns = $("div.portal-column");\n
+  // sort alphabetically as it\'s required to get proper layout from DOM\n
+  columns.sort(function(a, b) {\n
+                 var compA = $(a).attr("id").toUpperCase();\n
+                 var compB = $(b).attr("id").toUpperCase();\n
+                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;})\n
+\n
+  columns.each(function(column_index, column){\n
+    column = $(this);\n
+    var items_arr = new Array;\n
+    column_items = column.find("div.block");\n
+    column_items.each(function(box_index, box){\n
+      items_arr[box_index] = column_items[box_index].id;});           \n
+    columns_arr[column_index] = items_arr.join(\'|\') });\n
+  \n
+  var layout = columns_arr.join("##");\n
+  // .. and send it to server only if it\'s different\n
+  if (layout!=last_layout){\n
+    last_layout = layout;\n
+    $.ajax({url: knowledge_pad_save_layout_script_id, \n
+            data: {user_layout: layout}});}\n
 }\n
 \n
 function showAddNewPadPopup(){\n
-   toggleElementById(\'add_new_tab_dialog\'); \n
-   // set focus on new Pad title after toggle effect is over \n
-   setTimeout("MochiKit.DOM.getElement(\'new_pad_title\').focus()", 500 );\n
+  $("#add_new_tab_dialog").toggle();\n
+  // set focus on new Pad title after toggle effect is over \n
+  setTimeout("$(\'#new_pad_title\').focus()", 500 );\n
 }\n
 \n
 function showRenamePadPopup(knowledge_pad_relative_url, knowledge_pad_title_dom_id){\n
@@ -292,81 +279,72 @@ function showRenamePadPopup(knowledge_pad_relative_url, knowledge_pad_title_dom_
   active_knowledge_pad_relative_url = knowledge_pad_relative_url;\n
   active_knowledge_pad_title_dom_id = knowledge_pad_title_dom_id;\n
   // init rename dialog input field to current active pad\n
-  getElement("new_knowledge_pad_title").value = getElement(knowledge_pad_title_dom_id).innerHTML;\n
+  $("#new_knowledge_pad_title")[0].value = $("#"+knowledge_pad_title_dom_id)[0].innerHTML;\n
   // show rename dialog\n
-  toggleElementById(\'rename_tab_dialog\');\n
+  $("#rename_tab_dialog").toggle();\n
   // set focus on new Pad title after toggle effect is over \n
-  setTimeout("MochiKit.DOM.getElement(\'new_knowledge_pad_title\').focus()", 500 );\n
+  setTimeout("$(\'#new_knowledge_pad_title\').focus()", 500);\n
 }\n
 \n
 function loadPadFromServer(pad_relative_url, selected_pad_dom_id, mode){\n
   /* Load Pad from server */\n
   //  show some animation\n
-  getElement("loading-wrapper").style.display="block";\n
-  \n
-  d = MochiKit.Async.loadJSONDoc(\'KnowledgePag_getPadAsJSON\', \n
-                                 {\'pad_relative_url\':pad_relative_url,\n
-                                  \'mode\':mode});\n
-  d.addCallbacks(handleServerSuccess, metadataFetchFailed);\n
-\n
+  $("#loading-wrapper").first().show()\n
+  $.ajax({url: knowledge_pad_as_json_script_id, \n
+          data: {pad_relative_url: pad_relative_url,\n
+                 mode: mode},\n
+          dataType: "json",\n
+          success: handleServerSuccess});\n
   // set old pad to not selected\n
-  pads_container = getElement("tabs");\n
-  old_selected_pad = getFirstElementByTagAndClassName("li", "tab_selected", pads_container);\n
-  old_selected_pad.setAttribute("class", "tab");\n
-  pad_actions = getFirstElementByTagAndClassName("div", "pad-actions", old_selected_pad);\n
-  pad_actions.style.display="none";\n
+  old_selected_pad = $("#tabs ul").children("li.tab_selected").first()\n
+  old_selected_pad.removeClass("tab_selected");\n
+  old_selected_pad.addClass("tab");\n
   \n
+  pad_actions = old_selected_pad.children("div.pad-actions").first();\n
+  pad_actions.hide();\n
+   \n
   // set new selected pad class \n
-  new_selected_pad = getElement(selected_pad_dom_id);\n
-  new_selected_pad.setAttribute("class", "tab tab_selected");\n
+  new_selected_pad = $("#" + selected_pad_dom_id).first();\n
+  new_selected_pad.addClass("tab_selected");\n
   \n
   // enable "settings" for this pad and hide instant switch\n
-  pad_actions = getFirstElementByTagAndClassName("div", "pad-actions", new_selected_pad);\n
-  pad_actions.style.display="block";\n
+  pad_actions = new_selected_pad.children("div.pad-actions").first()\n
+  pad_actions.show()\n
   \n
   // set new active pad\n
   active_knowledge_pad_relative_url = pad_relative_url;\n
   \n
-  function metadataFetchFailed(meta){}\n
+  // update "Add Gadget" link\n
+  current_url = $("#add-gadgets").attr("href");\n
+  new_url = current_url.substring(0, current_url.indexOf("active_pad_relative_url=")+24)+active_knowledge_pad_relative_url\n
+  $("#add-gadgets").attr("href", new_url);\n
   \n
-  function handleServerSuccess(meta){\n
-    body = meta.body\n
-    javascript = meta.javascript\n
-    body_element = getElement(\'pad-body-wrapper\');\n
+  //function metadataFetchFailed(meta){}\n
+  function handleServerSuccess(data){\n
+    body = data.body\n
+    javascript = data.javascript\n
+    body_element = $("#pad-body-wrapper")[0]\n
     body_element.innerHTML = body;\n
     // init new Pad\n
     initialize();\n
     // execute JS code provided by server\n
     eval(javascript);\n
     // give some timeout as we can be sometimes two fast loading a tab\n
-    setTimeout("getElement(\'loading-wrapper\').style.display=\'none\';", 250 );\n
-  }\n
+    setTimeout("$(\'#loading-wrapper\').first().hide();", 250 );};\n
 }\n
 \n
-function addNewPad(cancel_url, knowledge_pad_relative_url, mode){\n
-  // if it\'s first time we switch set active_knowledge_pad_relative_url\n
-  if(active_knowledge_pad_relative_url==\'\'){\n
-    active_knowledge_pad_relative_url = knowledge_pad_relative_url;\n
-  }\n
-  // redirect to add gadget dialog\n
-  window.location="Base_viewGadgetListDialog?reset=1&cancel_url="+cancel_url+"&active_pad_relative_url="+active_knowledge_pad_relative_url+"&mode="+mode; \n
-}\n
-\n
-function addPadOnServerOnEnter(event, create_url, mode, cancel_url){\n
+function addPadOnServerOnEnter(event, mode, cancel_url){\n
   /* Catch and submit form when ENTER is pressed */\n
   if(event.keyCode == 13){\n
-    addPadOnServer(create_url, mode, cancel_url);\n
-    return false;\n
-  }\n
+    addPadOnServer(mode, cancel_url);\n
+    return false;}\n
 }\n
 \n
-function addPadOnServer(create_url,\n
-                        mode,\n
+function addPadOnServer(mode,\n
                         cancel_url){\n
   /* add pad on server */\n
-  pad_title = getElement(\'new_pad_title\');\n
-  pad_title_value = pad_title.value\n
-  window.location = create_url + \'?redirect_url=\' + cancel_url + \'&mode=\' + mode + \'&pad_title=\'+pad_title_value ;\n
+  pad_title_value = $("#new_pad_title").first().val();\n
+  window.location = add_new_knowledge_pad_script_id + "?redirect_url=" + cancel_url + "&mode=" + mode + "&pad_title=" + pad_title_value;\n
 };\n
 \n
 function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode){\n
@@ -377,15 +355,13 @@ function removeKnowledgePadFromServer(knowledge_pad_relative_url, mode){\n
     var user_choice = true;\n
     user_choice = confirm("Are you sure you want to remove this pad from your home?");\n
     if (user_choice==true){\n
-      location.href=\'ERP5Site_deleteKnowledgePad?knowledge_pad_relative_url=\' + knowledge_pad_relative_url+\'&mode=\'+mode;}\n
-    }\n
+      location.href=knowledge_pad_delete_script_id + "?knowledge_pad_relative_url=" + knowledge_pad_relative_url+"&mode="+mode;} }\n
 }\n
 \n
 function renameKnowledgePadToServerOnEnter(event){\n
   if(event.keyCode == 13){\n
     renameKnowledgePadToServer();\n
-    return false;\n
-  }\n
+    return false;}\n
   return true;\n
 }\n
 \n
@@ -394,123 +370,119 @@ function renameKnowledgePadToServer(){\n
     showCreateDefaultKnowledgePadWarningMessage();}\n
   else{\n
     // rename it locally and update server asynchonously\n
-    title_element = getElement(active_knowledge_pad_title_dom_id)\n
-    input_element = getElement("new_knowledge_pad_title")\n
-    var knowledge_pad_title = input_element.value;\n
-    title_element.innerHTML = knowledge_pad_title;\n
-    doSimpleXMLHttpRequest("ERP5Site_renameKnowledgePad", \n
-                          {knowledge_pad_relative_url: active_knowledge_pad_relative_url,\n
-                           knowledge_pad_title: knowledge_pad_title});\n
+    title_element = $("#"+active_knowledge_pad_title_dom_id).first()\n
+    input_element = $("#new_knowledge_pad_title")\n
+    var knowledge_pad_title = input_element.val();\n
+    title_element.html(knowledge_pad_title);\n
+    $.ajax({url: knowledge_pad_rename_script_id, \n
+            data: {knowledge_pad_relative_url: active_knowledge_pad_relative_url,\n
+                   knowledge_pad_title: knowledge_pad_title}});                                           \n
   }\n
-  //anyway toggle show dialog\n
-  toggle("rename_tab_dialog");\n
-}\n
-\n
-function toggleElementById(dom_id){\n
-  /* Toggle element by its Id. */\n
-  MochiKit.Visual.toggle(dom_id);\n
+  $("#rename_tab_dialog").toggle();\n
 }\n
 \n
 function initialize(){\n
-  // define sortable columns\n
+  // initialize sortable columns\n
   if (is_knowledge_template_used==0){\n
     // allow drag and drop only if we are dealing with a pad we can modify\n
-    var sortables = getElementsByTagAndClassName(\'div\', \'portal-column\');\n
-    forEach(sortables, function (item) {\n
-      // eliminate undraggable columns by checking exact match\n
-      if (item.className==\'portal-column\'){\n
-        MochiKit.Sortable.create(item.id,  {"constraint"  : false,\n
-                                            "containment" : sortables,\n
-                                            "handle": "handle",\n
-                                            "only": "block",\n
-                                            "tag": "div",\n
-                                            "scroll": "true",\n
-                                            "hoverclass": "block-hover",\n
-                                            "dropOnEmpty": "true",\n
-                                            "onUpdate": updateServerBoxColumnLayout,\n
-                                            "starteffect" : MochiKit.Base.noop,\n
-                                            "endeffect"   : MochiKit.Base.noop\n
-                                          });\n
-      };\n
-    })}\n
+    sortable_list = $("div.portal-column");\n
+    function makeSortables(index){\n
+      element = $(this);\n
+      if (element.attr("class") == "portal-column"){\n
+        // eliminate undraggable columns by checking exact match\n
+        element.sortable({handle: "h3.handle",\n
+                          connectWith: sortable_list,\n
+                          placeholder: "block-hover",\n
+                          forcePlaceholderSize: 1,\n
+                          opacity: 0.8,\n
+                          containment: "document",\n
+                          delay: 100,\n
+                          stop: updateServerBoxColumnLayout});} }\n
+    if (sortable_list!=null) sortable_list.each(makeSortables);\n
+  }\n
 \n
   // enable show/hide tabs\n
-  tabs = getElement(\'tabs\');\n
-  tabs_switcher = getElement(\'tabs_switcher\');\n
-  add_gadget = getElement(\'add_new_gadget_link\')\n
-  if(tabs_switcher){\n
-    connect(tabs_switcher, \'onclick\', function (){\n
-      var is_tabs_visible=0;\n
-      if(tabs.style.display!=\'block\'){\n
-        is_tabs_visible=1;\n
-        getElement("tab_switcher_visible").style.display = "block";\n
-        getElement("tab_switcher_hidden").style.display = "none";\n
-        add_gadget.className = "border_bottom1px";\n
-        tabs_switcher.className = "border_bottom1px";\n
-      }\n
-      else{\n
-        getElement("tab_switcher_hidden").style.display = "block";\n
-        getElement("tab_switcher_visible").style.display = "none";\n
-        add_gadget.className = "border_bottom0px";\n
-        tabs_switcher.className = "border_bottom0px";\n
-      }\n
-      toggle(tabs);\n
-      createCookie("is_tabs_visible", is_tabs_visible, 365);\n
-    });}\n
+  gadgets_tabs = $("#tabs");\n
+  gadgets_tabs_switcher = $("#tabs_switcher");  \n
+  add_gadget = $("#add_new_gadget_link");\n
+  \n
+  function toggleTabNavigation(){\n
+    /* Toggle tabs navigation */\n
+    var is_tabs_visible=0;\n
+    if($("#tabs").css("display")!="block"){\n
+      is_tabs_visible=1;\n
+      $("#tab_switcher_visible").show();\n
+      $("#tab_switcher_hidden").hide();}\n
+    else{\n
+      $("#tab_switcher_visible").hide();\n
+      $("#tab_switcher_hidden").show();}\n
+    $("#tabs").toggle();\n
+    createCookie("is_tabs_visible", is_tabs_visible, 365); }\n
+ \n
+  function bindGadgetHandlers(index, box){\n
+    /* Bind all gadgets handlers */\n
+    box = $(this)\n
+    var edit = box.find("a.block-edit-form").first();\n
+    var edit_form = box.find("div.edit-form").first();\n
+    var remove = box.find("a.block-remove").first();   \n
+    var minimize = box.find("a.block-minimize").first(); \n
+    var minimize_wrapper = box.find("div.minimize_wrapper").first(); \n
+    if(minimize){\n
+      minimize.unbind("click");\n
+      minimize.bind("click", function (){\n
+        if (is_knowledge_template_used){showCreateDefaultKnowledgePadWarningMessage();}\n
+        else{\n
+          minimize_wrapper.toggle();\n
+          box_id = box.attr("id")\n
+          js_dom_id = box_id + "_content";\n
+          js_code = invisible_gadgets[js_dom_id];\n
+          if (js_code!=undefined){\n
+            eval(js_code);\n
+            // gadget is now visible, i.e. no need to query server just toggle locally dom\n
+            delete invisible_gadgets[js_dom_id];}\n
+           $.ajax({url: knowledge_box_toggle_script_id, \n
+                   data: {box_relative_url: box_id}});\n
+           }\n
+        });}\n
 \n
+    if(edit){\n
+      edit.unbind("click");\n
+      edit.bind("click", function (){\n
+        if (is_knowledge_template_used){showCreateDefaultKnowledgePadWarningMessage();}\n
+        else{edit_form.toggle()}});}\n
+        \n
+    if(remove){\n
+      remove.unbind("click");\n
+      remove.bind("click", function (){\n
+        if (is_knowledge_template_used){showCreateDefaultKnowledgePadWarningMessage();}\n
+        else{\n
+          user_choice = confirm("Are you sure you want to remove this gadget from your personalized page?");\n
+          if (user_choice==true){\n
+            box_id = box.attr("id");\n
+            box.toggle();\n
+            $.ajax({url: knowledge_pad_delete_box_script_id, \n
+                    data: {box_relative_url: box_id}});}\n
+        }});}\n
+  }\n
+  \n
+  // tabs navigation\n
+  if(gadgets_tabs_switcher){\n
+    gadgets_tabs_switcher.unbind("click");\n
+    gadgets_tabs_switcher.bind("click", toggleTabNavigation);}\n
+  \n
   // for each box (gadget) add respective event handlers\n
-  var boxes = getElementsByTagAndClassName(\'div\', \'block\');\n
-  forEach(boxes, function (box) {\n
-     var edit = getFirstElementByTagAndClassName(\'a\',\n
-                                                 \'block-edit-form\', box);\n
-     var edit_form = getFirstElementByTagAndClassName(\'div\', \n
-                                                      \'edit-form\', box);\n
-     var remove = getFirstElementByTagAndClassName(\'a\', \n
-                                                   \'block-remove\', box);\n
-     var minimize = getFirstElementByTagAndClassName(\'a\', \n
-                                                     \'block-minimize\', box);\n
-     var minimize_wrapper = getFirstElementByTagAndClassName(\'div\', \n
-                                                             \'minimize_wrapper\', box);\n
-     if(minimize){\n
-       connect(minimize, \'onclick\', function (){\n
-         if (is_knowledge_template_used){\n
-           showCreateDefaultKnowledgePadWarningMessage();}\n
-         else{\n
-           // togle DOM element (locally)\n
-           toggle(minimize_wrapper);\n
-           js_dom_id = box.id + \'_content\';\n
-           js_code = invisible_gadgets[js_dom_id];\n
-           if (js_code!=undefined){\n
-             eval(js_code);\n
-             // gadget is now visible, i.e. no need to query server just toggle locally dom\n
-             delete invisible_gadgets[js_dom_id];}\n
-           // update server \n
-           doSimpleXMLHttpRequest("KnowledgeBox_toggleVisibility", \n
-                                  {box_relative_url: box.id});}});\n
-       }\n
-     if(edit){\n
-       connect(edit, \'onclick\', function (){\n
-         if (is_knowledge_template_used){\n
-           showCreateDefaultKnowledgePadWarningMessage();}\n
-         else{toggle(edit_form);}});\n
-      }\n
-\n
-     if(remove){\n
-       connect(remove, \'onclick\', function (){\n
-         if (is_knowledge_template_used){\n
-           showCreateDefaultKnowledgePadWarningMessage();}\n
-         else{\n
-              user_choice = confirm("Are you sure you want to remove this gadget from your personalized page?");\n
-              if (user_choice==true){\n
-                toggle(box);\n
-                doSimpleXMLHttpRequest("KnowledgePad_deleteBox", \n
-                                     {box_relative_url: box.id});}}});\n
-      }\n
-  });\n
+  gadget_list = $("div.block");\n
+  if (gadget_list!=null){\n
+    gadget_list.each(bindGadgetHandlers);\n
+    // when dom is loaded we need to remove all gadget\'s scripts otherwise currently when a gadget is moved\n
+    // its HTML is getting executed again, thus making unecessary calls to server, etc ...\n
+    gadget_list.each(\n
+      function (index, box){  $(this).find("script").remove();});\n
+  }\n
 }\n
 \n
 // call function after load of document\n
-MochiKit.DOM.addLoadEvent(initialize);\n
+$(document).ready(initialize);\n
 
 
 ]]></string> </value>
@@ -521,7 +493,7 @@ MochiKit.DOM.addLoadEvent(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19630</int> </value>
+            <value> <int>18244</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

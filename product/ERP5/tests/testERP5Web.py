@@ -30,7 +30,6 @@
 
 import re
 import unittest
-
 import transaction
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
@@ -61,7 +60,9 @@ class TestERP5Web(ERP5TypeTestCase):
     """
     Return the list of required business templates.
     """
-    return ('erp5_base',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base',
+            'erp5_jquery',
             'erp5_web',
             )
 
@@ -106,8 +107,7 @@ class TestERP5Web(ERP5TypeTestCase):
                                                           id = self.website_id,
                                                           **kw)
     website.publish()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     return website
 
   def setupWebSection(self, **kw):
@@ -127,8 +127,7 @@ class TestERP5Web(ERP5TypeTestCase):
                             max='',
                             min='')
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     return websection
 
   def setupWebSitePages(self, prefix, suffix=None, version='0.1',
@@ -154,8 +153,7 @@ class TestERP5Web(ERP5TypeTestCase):
                                                 language=language,
                                                 **kw)
       webpage.publish()
-      transaction.commit()
-      self.tic()
+      self.stepTic()
       self.assertEquals(language, webpage.getLanguage())
       self.assertEquals(reference, webpage.getReference())
       self.assertEquals(version, webpage.getVersion())
@@ -199,12 +197,10 @@ class TestERP5Web(ERP5TypeTestCase):
     self.portal.portal_transforms.max_sec_in_cache=-1
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<p>Hé Hé Hé!</p>')
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEquals('Hé Hé Hé!', page.asText().strip())
     page.edit(text_content='<p>Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé!</p>')
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEquals("""Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé
 Hé Hé Hé!""", page.asText().strip())
 
@@ -226,8 +222,7 @@ Hé Hé Hé!""", page.asText().strip())
     website = portal.web_site_module[self.website_id]
     website.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     # find person object by reference
     person = website.ERP5Site_getAuthenticatedMemberPersonValue(kw['reference'])
@@ -242,6 +237,21 @@ Hé Hé Hé!""", page.asText().strip())
     user = uf.getUserById( kw['reference'])
     self.assertEquals(str(user),  kw['reference'])
     self.assertEquals(1, user.has_role(('Member', 'Authenticated',)))
+    self.login(kw['reference'])
+    self.assertEquals(kw['reference'], str(self.portal.portal_membership.getAuthenticatedMember()))
+
+    # test redirection to person oobject
+    path = website.absolute_url_path() + '/WebSite_redirectToUserView'
+    response = self.publish(path, '%s:%s' %(kw['reference'], kw['password']))
+    self.assertTrue(person.getRelativeUrl() in response.getHeader("Location"))
+    
+    # test redirecting to new Person preference
+    path = website.absolute_url_path() + '/WebSite_redirectToUserPreference'
+    response = self.publish(path, '%s:%s' %(kw['reference'], kw['password']))
+    self.assertTrue('portal_preferences' in response.getHeader("Location"))
+    # one preference should be created for user
+    self.assertEquals(1, self.portal.portal_catalog.countResults(**{'portal_type': 'Preference',
+                                                                    'owner': kw['reference']})[0][0])
 
   def test_04_WebPageTranslation(self):
     """
@@ -335,13 +345,11 @@ Hé Hé Hé!""", page.asText().strip())
                                                  reference='NXD-DDP',
                                                  publication_section_list=publication_section_category_id_list[:1])
     websection.setAggregateValue(web_page_en)
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEqual(None, websection.getDefaultDocumentValue())
     # publish it
     web_page_en.publish()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEqual(web_page_en, websection.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
     # uses the web section rather than the portal
@@ -374,13 +382,11 @@ Hé Hé Hé!""", page.asText().strip())
                                                  reference='NXD-DDP-Site',
                                                  publication_section_list=publication_section_category_id_list[:1])
     website.setAggregateValue(web_page_en)
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEqual(None, website.getDefaultDocumentValue())
     # publish it
     web_page_en.publish()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEqual(web_page_en, website.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
     # uses the web site rather than the portal
@@ -426,12 +432,13 @@ Hé Hé Hé!""", page.asText().strip())
                       '13' : dict(language = 'en' , version = "3" , reference = "D"),
                       '14' : dict(language = 'ja' , version = "2" , reference = "E"),
                       '15' : dict(language = 'pt' , version = "2" , reference = "F"),
+                      '16' : dict(language = '' , version = "1" , reference = "A"),
                     }
     sequence_one = property_dict.keys()
     sequence_two = ['01', '13', '12', '09', '06', '15' , '04', '11', '02', '05', '03',
-                    '07', '10', '08', '14' ]
+                    '07', '10', '08', '14', '16']
     sequence_three = ['05', '12', '13', '14',  '06', '09', '10', '07', '03', '01', '02',
-                    '11', '04', '08' , '15']
+                    '11', '04', '08' , '15', '16']
 
     sequence_count = 0
     for sequence in [ sequence_one , sequence_two , sequence_three ]:
@@ -448,20 +455,17 @@ Hé Hé Hé!""", page.asText().strip())
                                   publication_section_list=publication_section_category_id_list[:1])
 
         web_page.edit(**property_dict[key])
-        transaction.commit()
-        self.tic()
+        self.stepTic()
         web_page_list.append(web_page)
 
-      transaction.commit()
-      self.tic()
+      self.stepTic()
       # in draft state, no documents should belong to this Web Section
       self.assertEqual(0, len(websection.getDocumentValueList()))
 
       # when published, all web pages should belong to it
       for web_page in web_page_list:
         web_page.publish()
-      transaction.commit()
-      self.tic()
+      self.stepTic()
 
       # Test for limit parameter
       self.assertEqual(2, len(websection.getDocumentValueList(limit=2)))
@@ -487,6 +491,11 @@ Hé Hé Hé!""", page.asText().strip())
       self.assertEqual(4, len(ja_document_value_list))
       self.assertEqual(['ja' , 'ja', 'ja', 'ja'],
                            [ w.getLanguage() for w in ja_document_value_list])
+
+      bg_document_value_list = websection.getDocumentValueList(language='bg')
+      self.assertEqual(1, len(bg_document_value_list))
+      self.assertEqual([''],
+                       [ w.getLanguage() for w in bg_document_value_list])
 
       # Testing for all_versions parameter
       en_document_value_list = websection.getDocumentValueList(all_versions=1)
@@ -548,6 +557,22 @@ Hé Hé Hé!""", page.asText().strip())
       self.assertEqual(['3'], [ w.getVersion() for w in ja_document_value_list \
                             if w.getLanguage() == 'en'])
 
+      bg_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
+                                                                              language='bg')
+      self.assertEqual(6, len(bg_document_value_list))
+      self.assertEqual(0, len([ w.getLanguage() for w in bg_document_value_list \
+                              if w.getLanguage() == 'bg']))
+      self.assertEqual(3, len([ w.getLanguage() for w in bg_document_value_list \
+                              if w.getLanguage() == 'en']))
+      self.assertEqual(1, len([ w.getLanguage() for w in bg_document_value_list \
+                              if w.getLanguage() == 'pt']))
+      self.assertEqual(['3'], [ w.getVersion() for w in bg_document_value_list \
+                              if w.getLanguage() == 'pt'])
+      self.assertEqual(1, len([ w.getLanguage() for w in bg_document_value_list \
+                              if w.getLanguage() == 'ja']))
+      self.assertEqual(['3'], [ w.getVersion() for w in bg_document_value_list \
+                            if w.getLanguage() == 'ja'])
+
       # Tests for all_languages and all_versions
       en_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
                                                                               all_versions=1)
@@ -563,7 +588,7 @@ Hé Hé Hé!""", page.asText().strip())
       for document_value_list in [ en_document_value_list, pt_document_value_list ,
                                    ja_document_value_list]:
 
-        self.assertEqual(15, len(document_value_list))
+        self.assertEqual(16, len(document_value_list))
         self.assertEqual(5, len([ w.getLanguage() for w in document_value_list \
                                 if w.getLanguage() == 'en']))
         self.assertEqual(5, len([ w.getLanguage() for w in en_document_value_list \
@@ -623,8 +648,7 @@ Hé Hé Hé!""", page.asText().strip())
       publication_section.newContent(portal_type='Category',
                                      id='my_test_category',
                                      title='Test')
-      transaction.commit()
-      self.tic()
+      self.stepTic()
 
     website = self.setupWebSite()
     websection = self.setupWebSection(
@@ -643,8 +667,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     # We need a default document.
     websection.setAggregateValue(web_page_list[0])
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     # Obtain documens in various ways.
     default_document = websection.getDefaultDocumentValue()
@@ -674,8 +697,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     # First, make sure that we use the default skin selection.
     portal.changeSkin(ps.getDefaultSkin())
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     # Make some skin stuff.
     if ps._getOb('test_erp5_web', None) is not None:
@@ -700,8 +722,7 @@ Hé Hé Hé!""", page.asText().strip())
             'WebSite_test_13_WebSiteSkinSelection',
             '', 'return "bar"')
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     path = website.absolute_url_path() + '/WebSite_test_13_WebSiteSkinSelection'
     request = portal.REQUEST
@@ -712,8 +733,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     # With the test skin.
     website.setSkinSelectionName('Test ERP5 Web')
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     request['PARENTS'] = [self.app]
     self.assertEquals(request.traverse(path)(), 'bar')
@@ -748,8 +768,7 @@ Hé Hé Hé!""", page.asText().strip())
     # Commit transaction
     def _commit():
       portal.portal_caches.clearAllCache()
-      transaction.commit()
-      self.tic()
+      self.stepTic()
 
     # By default, as now Web Section is visible, nothing should be returned
     _commit()
@@ -811,8 +830,7 @@ Hé Hé Hé!""", page.asText().strip())
                                            reference='foo',
                                            text_content='<b>OK</b>')
     page.publish()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     webpage = self.portal.restrictedTraverse(
       'web_site_module/%s/%s' % (website_id, page_ref))
@@ -880,8 +898,7 @@ Hé Hé Hé!""", page.asText().strip())
             reference='NXD-Document.Cache',
             text_content=content)
     document.publish()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEquals(document.asText().strip(), 'initial text')
 
     # First make sure conversion already exists on the web site
@@ -903,8 +920,7 @@ Hé Hé Hé!""", page.asText().strip())
     # modified the web_page content
     document.edit(text_content=new_content)
     self.assertEquals(document.asText().strip(), 'modified text')
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     # check the cache doesn't send again the old content
     # Through the web_site.
@@ -943,8 +959,7 @@ Hé Hé Hé!""", page.asText().strip())
             reference='NXD-Document.Cache',
             text_content=content)
     document.publish()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEquals(document.asText().strip(), 'initial text')
 
     # Make sure document cache keeps converted content even if ID changes
@@ -976,8 +991,7 @@ Hé Hé Hé!""", page.asText().strip())
             reference='NXD-Document.Cache',
             text_content=content)
     document.publish()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     self.assertEquals(document.asText().strip(), 'initial text')
 
     # Through the web_site.
@@ -998,8 +1012,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertFalse(document.hasConversion(format='txt'))
     # Make sure cache is regenerated
     self.assertEquals(web_document.asText().strip(), 'modified text')
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     # First make sure conversion already exists (since it should
     # have been generated previously)
@@ -1047,8 +1060,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.createUserAssignement(user, {})
     user = self.createUser('webeditor')
     self.createUserAssignement(user, {})
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     preference_tool = self.getPreferenceTool()
     isTransitionPossible = self.portal.portal_workflow.isTransitionPossible
 
@@ -1080,8 +1092,7 @@ Hé Hé Hé!""", page.asText().strip())
     webeditor_preference.setPreferredHtmlStyleDevelopperMode(False)
     webeditor_preference.setPreferredHtmlStyleTranslatorMode(True)
     self.login()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     web_site = self.setupWebSite()
     websection = self.setupWebSection()
@@ -1121,8 +1132,7 @@ Hé Hé Hé!""", page.asText().strip())
             reference='NXD-Document.Cache',
             text_content=content)
     document.publish()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     # test Different Policy installed by erp5_web
     # unauthenticated web pages
@@ -1188,9 +1198,7 @@ Hé Hé Hé!""", page.asText().strip())
     websection = self.setupWebSection()
     self.assertEquals(websection.getId(), websection.getTitle())
 
-    transaction.commit()
-    self.tic()
-
+    self.stepTic()
     response = self.publish('/%s/%s/%s/%s/Base_editAndEditAsWeb' % \
                     (self.portal.getId(), website.getRelativeUrl(), 
                      language, websection.getId()),
@@ -1210,8 +1218,7 @@ Hé Hé Hé!""", page.asText().strip())
     new_location = response.getHeader('Location')
     new_location = new_location.split('/', 3)[-1]
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     response = self.publish(new_location, basic='ERP5TypeTestCase:',)
     self.assertEquals(HTTP_OK, response.getStatus())
@@ -1219,8 +1226,7 @@ Hé Hé Hé!""", page.asText().strip())
                       response.getHeader('content-type'))
     self.assertTrue("Data updated." in response.getBody())
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     self.assertEquals('%s_edited' % websection.getId(), websection.getTitle())
     self.assertEquals(1, len(self.portal.portal_catalog(
@@ -1250,8 +1256,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     self.assertEquals(website.getId(), website.getTitle())
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     response = self.publish('/%s/%s/%s/Base_editAndEditAsWeb' % \
                     (self.portal.getId(), website.getRelativeUrl(), 
@@ -1272,8 +1277,7 @@ Hé Hé Hé!""", page.asText().strip())
     new_location = response.getHeader('Location')
     new_location = new_location.split('/', 3)[-1]
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     response = self.publish(new_location, basic='ERP5TypeTestCase:',)
     self.assertEquals(HTTP_OK, response.getStatus())
@@ -1281,8 +1285,7 @@ Hé Hé Hé!""", page.asText().strip())
                       response.getHeader('content-type'))
     self.assertTrue("Data updated." in response.getBody())
 
-    transaction.commit()
-    self.tic()
+    self.stepTic()
 
     self.assertEquals('%s_edited' % website.getId(), website.getTitle())
     self.assertEquals(1, len(self.portal.portal_catalog(

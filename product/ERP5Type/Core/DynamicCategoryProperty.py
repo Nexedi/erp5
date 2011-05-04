@@ -28,11 +28,13 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.Expression import Expression
-
+from zLOG import LOG, INFO
+from Products.ERP5Type.Utils import evaluateExpressionFromString
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
+from Products.ERP5Type.Core.StandardProperty import StandardProperty
 
-class DynamicCategoryProperty(XMLObject):
+class DynamicCategoryProperty(CategoryProperty):
   """
   Define a Dynamic Category Property Document for a ZODB Property
   Sheets (a dynamic category is defined by a TALES expression rather
@@ -46,16 +48,7 @@ class DynamicCategoryProperty(XMLObject):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Reference,
                      PropertySheet.DynamicCategoryProperty)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'exportToFilesystemDefinition')
-  def exportToFilesystemDefinition(self):
-    """
-    Return the filesystem definition of the property
-    """
-    return Expression(self.getCategoryExpression())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'importFromFilesystemDefinition')
@@ -66,3 +59,23 @@ class DynamicCategoryProperty(XMLObject):
     """
     return context.newContent(portal_type=cls.portal_type,
                               category_expression=category_expression.text)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'applyOnAccessorHolder')
+  def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
+    category_id_list = evaluateExpressionFromString(expression_context,
+                                                    self.getCategoryExpression())
+
+    if not isinstance(category_id_list, (tuple, list)):
+      category_id_list = [category_id_list]
+
+    for category_id in category_id_list:
+      try:
+        self.applyDefinitionOnAccessorHolder(accessor_holder,
+                                             category_id,
+                                             portal)
+      except ValueError, e:
+        # If one of the category defined is invalid, don't give up as
+        # the other ones may be fine
+        LOG("ERP5Type.Core.DynamicCategoryProperty", INFO,
+            "Invalid category: %s" % str(e))

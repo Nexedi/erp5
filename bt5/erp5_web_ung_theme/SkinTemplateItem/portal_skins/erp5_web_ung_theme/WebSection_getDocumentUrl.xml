@@ -50,11 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal_type = kw["brain"].getPortalType()\n
-absolute_url = kw["brain"].absolute_url()\n
-\n
-return "%s/%s?editable_mode:int=1" % (absolute_url, \n
-                                      context.Base_getEditorViewName(portal_type))\n
+            <value> <string>return "%s?editable_mode:int=1" % kw["brain"].absolute_url()\n
 </string> </value>
         </item>
         <item>

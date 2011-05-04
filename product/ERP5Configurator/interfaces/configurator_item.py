@@ -30,13 +30,13 @@ from zope.interface import Interface
 
 class IConfiguratorItem(Interface):
   """ 
-  Configurator Item interface specification.
+   Configurator Item interface specification.
 
    Documents which implement the IConfiguratorItem interface
-   can be used to build an ERP5 Configuration.
+   can be used to build an ERP5 Configuration Save.
   """
 
-  def build(business_configuration):
+  def _build(business_configuration):
     """ 
     Build new ERP5 Documents based on stored parameters during
     the configuraton process.

@@ -222,6 +222,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
         relative_url = str(relative_url)
         if base_category is not None:
           relative_url = '%s/%s' % (base_category, relative_url)
+        relative_url = \
+        self._removeDuplicateBaseCategoryIdInCategoryPath(base_category,
+                                                                 relative_url)
         node = self.unrestrictedTraverse(relative_url)
         value = node
       except (TypeError, KeyError, NotFound):
@@ -567,6 +570,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
           else:
             category = my_category.getRelativeUrl()
           if my_base_category == category:
+            path = self._removeDuplicateBaseCategoryIdInCategoryPath(my_base_category, path)
             if spec_len == 0:
               if base:
                 membership.append(path)
@@ -574,13 +578,13 @@ class CategoryTool( UniqueObject, Folder, Base ):
                 membership.append(path[len(category)+1:])
             else:
               try:
-               o = self.unrestrictedTraverse(path)
-               # LOG('getCategoryMembershipList',0,str(o.portal_type))
-               if o.portal_type in spec:
-                if base:
-                  membership.append(path)
-                else:
-                  membership.append(path[len(category)+1:])
+                o = self.unrestrictedTraverse(path)
+                # LOG('getCategoryMembershipList',0,str(o.portal_type))
+                if o.portal_type in spec:
+                  if base:
+                    membership.append(path)
+                  else:
+                    membership.append(path[len(category)+1:])
               except KeyError:
                 LOG('WARNING: CategoriesTool',0, 'Unable to find object for path %s' % path)
       # We must include parent if specified explicitely
@@ -823,12 +827,9 @@ class CategoryTool( UniqueObject, Folder, Base ):
       if getattr(aq_base(context), 'categories', _marker) is not _marker:
 
         for category_url in self._getCategoryList(context):
-          try:
-            index = category_url.index('/')
-            my_base_category = category_url[:index]
-          except ValueError:
-            my_base_category = category_url
+          my_base_category = category_url.split('/', 1)[0]
           if my_base_category == base_category:
+            category_url = self._removeDuplicateBaseCategoryIdInCategoryPath(my_base_category, category_url)
             #LOG("getSingleCategoryMembershipList",0,"%s %s %s %s" % (context.getRelativeUrl(),
             #                  my_base_category, base_category, category_url))
             if (checked_permission is None) or \
@@ -922,8 +923,6 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
         acquisition_mask_value    --    if set to 1, the value of the category of self
                             has priority on the looked up value
-
-        acquisition_sync_value    --    if set to 1, keep self and looked up value in sync
 
         _acquired_object_set is a special, internal parameter to deal with
         recursive calls on the same object.
@@ -1064,9 +1063,8 @@ class CategoryTool( UniqueObject, Folder, Base ):
                     result.extend(new_result)
                   elif len(new_result) > 0:
                     #LOG("new_result ",0,str(new_result))
-                    if (len(original_result) == 0 \
-                            and base_category_value.getAcquisitionCopyValue()) \
-                            or base_category_value.getAcquisitionSyncValue():
+                    if len(original_result) == 0 \
+                            and base_category_value.getAcquisitionCopyValue():
                       # If copy is set and result was empty, then copy it once
                       # If sync is set, then copy it again
                       self.setCategoryMembership( context, base_category, new_result,
@@ -1076,8 +1074,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
 
 
           if len(result) > 0 \
-                  and (base_category_value.getAcquisitionCopyValue() \
-                       or base_category_value.getAcquisitionSyncValue()):
+                  and base_category_value.getAcquisitionCopyValue():
             # If copy is set and result was empty, then copy it once
             # If sync is set, then copy it again
             self.setCategoryMembership( context, base_category, result,
@@ -1746,6 +1743,18 @@ class CategoryTool( UniqueObject, Folder, Base ):
     _setProperty = Base._setProperty
     getProperty = Base.getProperty
     hasProperty = Base.hasProperty
+
+    def _removeDuplicateBaseCategoryIdInCategoryPath(self, base_category_id,
+                                                     path):
+      """Specific Handling to remove duplicated base_categories in path
+      values like in following example: 'region/region/europe/west'.
+      """
+      splitted_path = path.split('/', 2)
+      if len(splitted_path) >= 2 and base_category_id == splitted_path[1]:
+        # Duplicate found, strip len(base_category_id + '/') in path
+        path = path[len(base_category_id)+1:]
+      return path
+
 
 InitializeClass( CategoryTool )
 

@@ -100,6 +100,7 @@
                         <string>my_type_class</string>
                         <string>my_type_init_script_id</string>
                         <string>my_type_mixin_list</string>
+                        <string>my_type_interface_list</string>
                         <string>my_type_add_permission</string>
                         <string>my_type_acquire_local_role</string>
                         <string>my_type_property_sheet_list</string>

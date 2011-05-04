@@ -33,7 +33,7 @@ from Products.ERP5.MovementCollectionDiff import MovementCollectionDiff
 from Products.ERP5.mixin.rule import _compare
 
 class MovementCollectionUpdaterMixin:
-  """Movement Collection Updater interface specification
+  """Movement Collection Updater.
 
   Documents which implement IMovementCollectionUpdater
   usually invoke an IMovementGenerator to generate
@@ -67,12 +67,15 @@ class MovementCollectionUpdaterMixin:
     # We suppose here that we have an IMovementCollection in hand
     decision_movement_list = context.getMovementList()
     prevision_movement_list = movement_generator.getGeneratedMovementList(
-      movement_list=self._getMovementGeneratorMovementList(context), rounding=rounding) # XXX-JPS This mixin is not self-contained
+      # XXX-JPS This mixin is not self-contained
+      movement_list=self._getMovementGeneratorMovementList(context), rounding=rounding)
 
     # Get divergence testers
     tester_list = self._getMatchingTesterList()
     if not tester_list and len(prevision_movement_list) > 1:
-      raise ValueError("It is not possible to match movements without divergence testers")
+      raise ValueError("It is not possible to match movements from movement"
+          " collection updater %r, because it does not contain any tester"
+          " configured as matching provider" % (self, ))
 
     # Create small groups of movements per hash keys
     decision_movement_dict = {}
@@ -129,7 +132,8 @@ class MovementCollectionUpdaterMixin:
         map_list = []
         for decision_movement in decision_movement_dict.get(tester_key, ()):
           if _compare(tester_list, prevision_movement, decision_movement):
-            # XXX is it OK to have more than 2 decision_movements? # XXX-JPS - I think yes
+            # XXX is it OK to have more than 2 decision_movements?
+            # XXX-JPS - I think yes
             map_list.append(decision_movement)
         prevision_to_decision_map.append((prevision_movement, map_list))
 
@@ -139,7 +143,6 @@ class MovementCollectionUpdaterMixin:
       self._extendMovementCollectionDiff(movement_collection_diff, prevision_movement,
                                          decision_movement_list)
 
-    # Return result
     return movement_collection_diff
 
   def updateMovementCollection(self, context, rounding=False,
@@ -167,6 +170,7 @@ class MovementCollectionUpdaterMixin:
       for property_id in kw.iterkeys():
         movement.clearRecordedProperty(property_id)
     for movement in movement_diff.getNewMovementList():
-      # This case is easy, because it is an applied rule
       kw = movement_diff.getMovementPropertyDict(movement)
       movement = context.newContent(portal_type=self.movement_type, **kw)
+
+ 

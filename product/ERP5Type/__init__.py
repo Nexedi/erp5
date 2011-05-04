@@ -34,6 +34,14 @@ from patches import python
 from zLOG import LOG, INFO
 DISPLAY_BOOT_PROCESS = False
 
+# We have a name conflict with source_reference and destination_reference,
+# which are at the same time property accessors for 'source_reference'
+# property, and category accessors (similar to getSourceValue().getReference())
+# When this is set to True, those accessors will be the property accessors.
+# At the time beeing, if it's set to False for document having both category
+# and property, the result seem to be undefined.
+SOURCE_DESTINATION_REFERENCE_LEGACY = True
+
 # This is used to register all Document classes used in ERP5
 # items are class names, values are class paths, e.g.:
 #   'Person' -> 'Products.ERP5.Document.Person.Person'
@@ -90,13 +98,17 @@ def initialize( context ):
   from Tool import (ClassTool, CacheTool, MemcachedTool, SessionTool,
                     TypesTool, WebServiceTool, PropertySheetTool)
   import Document
-  import Base, XMLObject
+  from Base import Base, DocumentationHelper
+  import XMLObject
   from ERP5Type import ERP5TypeInformation
   import CodingStyle
   # Define documents, classes, constructors and tools
   object_classes = ()
   content_constructors = ()
-  content_classes = Base.Base, XMLObject.XMLObject, ERP5TypeInformation
+  content_classes = ( Base,
+                      DocumentationHelper,
+                      XMLObject.XMLObject,
+                      ERP5TypeInformation )
   portal_tools = ( ClassTool.ClassTool,
                    CacheTool.CacheTool,
                    MemcachedTool.MemcachedTool,
@@ -113,9 +125,6 @@ def initialize( context ):
                          portal_tools = portal_tools,
                          content_constructors = content_constructors,
                          content_classes = content_classes)
-
-  from dynamic.portal_type_class import initializeDynamicModules
-  initializeDynamicModules()
 
   # Register our Workflow factories directly (if on CMF 2)
   Products.ERP5Type.Workflow.registerAllWorkflowFactories(context)
@@ -164,7 +173,8 @@ ModuleSecurityInfo('Products.ERP5Type.Utils').declarePublic(
     'sortValueList', 'convertToUpperCase', 'UpperCase',
     'convertToMixedCase', 'cartesianProduct', 'sleep', 'getCommonTimeZoneList',
     'int2letter', 'getMessageIdWithContext', 'getTranslationStringWithContext',
-    'Email_parseAddressHeader', 'guessEncodingFromText')
+    'Email_parseAddressHeader', 'guessEncodingFromText',
+    'isValidTALESExpression')
 
 allow_module('Products.ERP5Type.Message')
 ModuleSecurityInfo('Products.ERP5Type.Message').declarePublic('translateString')
@@ -175,6 +185,7 @@ allow_module('Products.ERP5Type.Log')
 ModuleSecurityInfo('Products.ERP5Type.JSON').declarePublic('dumps', 'loads')
 ModuleSecurityInfo('Products.ERP5Type.Constraint').declarePublic('PropertyTypeValidity')
 ModuleSecurityInfo('Products.ERP5Type.collections').declarePublic('OrderedDict')
+ModuleSecurityInfo('Products.ERP5Type.DiffUtils').declarePublic('DiffFile')
 ModuleSecurityInfo('pprint').declarePublic('pformat', 'pprint')
 
 if sys.version_info[0:2] == (2, 4):

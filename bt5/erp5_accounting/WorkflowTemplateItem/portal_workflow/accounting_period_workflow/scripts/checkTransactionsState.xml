@@ -72,7 +72,37 @@ section_category = section.getGroup(base=True)\n
 if not section_category:\n
   raise ValidationFailed, translateString("This Organisation must be member of a Group")\n
 \n
-section_uid = portal.Base_getSectionUidListForSectionCategory(section_category)\n
+\n
+# XXX copy and paste from AccountingPeriod_createBalanceTransaction !\n
+def isIndenpendantSection(section):\n
+  for ap in section.contentValues(\n
+              portal_type=\'Accounting Period\',\n
+              checked_permission=\'View\'):\n
+    if ap.getSimulationState() in (\'started\', \'stopped\', \'delivered\'):\n
+      return True\n
+  return False\n
+\n
+def getDependantSectionList(group, main_section):\n
+  section_list = []\n
+  recurse = True\n
+  for section in group.getGroupRelatedValueList(\n
+                            portal_type=\'Organisation\',\n
+                            strict_membership=True,\n
+                            checked_permission=\'View\'):\n
+    if section != main_section:\n
+      if isIndenpendantSection(section):\n
+        recurse = False\n
+      else:\n
+        section_list.append(section)\n
+  if recurse:\n
+    for subgroup in group.contentValues():\n
+      section_list.extend(getDependantSectionList(subgroup, main_section))\n
+\n
+  return section_list\n
+# /XXX\n
+\n
+section_uid = [section.getUid()] + [x.getUid() for x in getDependantSectionList(section.getGroupValue(), section)]\n
+\n
 \n
 movement_list = portal.portal_simulation.getMovementHistoryList(\n
       section_uid=section_uid,\n

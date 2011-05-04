@@ -206,15 +206,17 @@ class TestBPMMixin(ERP5TypeTestCase):
   def afterSetUp(self):
     self.validateRules()
     self.createCategories()
+    portal_rules = self.portal.portal_rules
+    if getattr(portal_rules,'test_invoice_transaction_simulation_rule', None)\
+         is not None:
+      portal_rules.manage_delObjects(
+          ids=['test_invoice_transaction_simulation_rule'])
     self.createInvoiceTransactionRule()
     self.stepTic()
 
   def beforeTearDown(self):
     # abort any transaction
     transaction.abort()
-    # remove not needed rules
-    self.portal.portal_rules.manage_delObjects(
-        ids=['test_invoice_transaction_simulation_rule'])
     self.stepTic()
 
 class TestBPMImplementation(TestBPMMixin):

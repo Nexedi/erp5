@@ -28,17 +28,20 @@
 ##############################################################################
 
 import sys
+import os
 import inspect
 from types import ModuleType
 
-from dynamic_module import registerDynamicModule
-
-from Products.ERP5Type.Base import _aq_reset, Base
+from Products.ERP5Type.dynamic.dynamic_module import registerDynamicModule
+from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
+from Products.ERP5Type.Base import Base, resetRegisteredWorkflowMethod
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
+from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderModuleType, \
+    createAllAccessorHolderList
+from Products.ERP5Type.TransactionalVariable import TransactionalResource
 
-from zope.interface import classImplements
 from zLOG import LOG, ERROR, INFO, WARNING
 
 def _importClass(classpath):
@@ -54,49 +57,6 @@ def _importClass(classpath):
     return klass
   except StandardError:
     raise ImportError('Could not import document class %s' % classpath)
-
-def _fillAccessorHolderList(accessor_holder_list,
-                            create_accessor_holder_func,
-                            property_sheet_name_set,
-                            accessor_holder_module,
-                            property_sheet_module):
-  """
-  Fill the accessor holder list with the given Property Sheets (which
-  could be coming either from the filesystem or ZODB)
-  """
-  for property_sheet_name in property_sheet_name_set:
-    # LOG("ERP5Type.dynamic", INFO,
-    #     "Getting accessor holder for " + property_sheet_name)
-
-    try:
-      # Get the already generated accessor holder
-      accessor_holder_list.append(getattr(accessor_holder_module,
-                                          property_sheet_name))
-
-    except AttributeError:
-      # Generate the accessor holder as it has not been done yet
-      try:
-        accessor_holder_class = \
-          create_accessor_holder_func(getattr(property_sheet_module,
-                                              property_sheet_name))
-
-      except AttributeError:
-        LOG("ERP5Type.dynamic", ERROR,
-            "Ignoring missing Property Sheet " + property_sheet_name)
-
-        raise
-
-      accessor_holder_list.append(accessor_holder_class)
-
-      setattr(accessor_holder_module, property_sheet_name,
-              accessor_holder_class)
-
-    #   LOG("ERP5Type.dynamic", INFO,
-    #       "Created accessor holder for %s in %s" % (property_sheet_name,
-    #                                                 accessor_holder_module))
-
-    # LOG("ERP5Type.dynamic", INFO,
-    #     "Got accessor holder for " + property_sheet_name)
 
 # Loading Cache Factory portal type would generate the accessor holder
 # for Cache Factory, itself defined with Standard Property thus
@@ -123,25 +83,36 @@ property_sheet_generating_portal_type_set = set()
 core_portal_type_class_dict = {
   'Base Type':    {'type_class': 'ERP5TypeInformation',
                    'generating': False},
+  'Solver Type':  {'type_class': 'SolverTypeInformation',
+                   'generating': False},
   'Types Tool':   {'type_class': 'TypesTool',
                    'generating': False},
-  'Solver Tool': {'type_class': 'SolverTool',
-                  'generating': False}
+  'Solver Tool':  {'type_class': 'SolverTool',
+                   'generating': False}
   }
 
-def generatePortalTypeClass(portal_type_name):
+def generatePortalTypeClass(site, portal_type_name):
   """
   Given a portal type, look up in Types Tool the corresponding
   Base Type object holding the definition of this portal type,
   and computes __bases__ and __dict__ for the class that will
   be created to represent this portal type
-  """
-  from Products.ERP5.ERP5Site import getSite
-  site = getSite()
 
+  Returns tuple with 4 items:
+    - base_tuple: a tuple of classes to be used as __bases__
+    - base_category_list: categories defined on the portal type
+        (and portal type only: this excludes property sheets)
+    - interface_list: list of zope interfaces the portal type implements
+    - attribute dictionary: any additional attributes to put on the class
+  """
   # LOG("ERP5Type.dynamic", INFO, "Loading portal type " + portal_type_name)
 
   global core_portal_type_class_dict
+
+  portal_type_category_list = []
+  attribute_dict = dict(portal_type=portal_type_name,
+                        _categories=[],
+                        constraints=[])
 
   if portal_type_name in core_portal_type_class_dict:
     if not core_portal_type_class_dict[portal_type_name]['generating']:
@@ -158,7 +129,7 @@ def generatePortalTypeClass(portal_type_name):
 
       # Don't do anything else, just allow to load fully the outer
       # portal type class
-      return ((klass,), [], {})
+      return ((klass,), [], [], attribute_dict)
 
   # Do not use __getitem__ (or _getOb) because portal_type may exist in a
   # type provider other than Types Tool.
@@ -181,6 +152,12 @@ def generatePortalTypeClass(portal_type_name):
 
     mixin_list = portal_type.getTypeMixinList()
     interface_list = portal_type.getTypeInterfaceList()
+    portal_type_category_list = portal_type.getTypeBaseCategoryList()
+    attribute_dict['_categories'] = portal_type_category_list[:]
+  else:
+    LOG("ERP5Type.dynamic", WARNING,
+        "Cannot find a portal type definition for '%s', trying to guess..."
+        % portal_type_name)
 
   # But if neither factory_init_method_id nor type_class are set on
   # the portal type, we have to try to guess, for compatibility.
@@ -207,11 +184,14 @@ def generatePortalTypeClass(portal_type_name):
     raise AttributeError('Document class is not defined on Portal Type %s' \
             % portal_type_name)
 
-  type_class_path = document_class_registry.get(type_class)
-  if type_class_path is None:
-    raise AttributeError('Document class %s has not been registered:' \
-                         ' cannot import it as base of Portal Type %s' \
-                         % (type_class, portal_type_name))
+  if '.' in type_class:
+    type_class_path = type_class
+  else:
+    type_class_path = document_class_registry.get(type_class)
+    if type_class_path is None:
+      raise AttributeError('Document class %s has not been registered:'
+                           ' cannot import it as base of Portal Type %s'
+                           % (type_class, portal_type_name))
 
   klass = _importClass(type_class_path)
 
@@ -225,53 +205,18 @@ def generatePortalTypeClass(portal_type_name):
 
     property_sheet_generating_portal_type_set.add(portal_type_name)
 
-    property_sheet_tool = getattr(site, 'portal_property_sheets', None)
+    # Initialize ZODB Property Sheets accessor holders
+    accessor_holder_list = createAllAccessorHolderList(site,
+                                                       portal_type_name,
+                                                       portal_type,
+                                                       klass)
 
-    property_sheet_set = set()
+    base_category_set = set(attribute_dict['_categories'])
+    for accessor_holder in accessor_holder_list:
+      base_category_set.update(accessor_holder._categories)
+      attribute_dict['constraints'].extend(accessor_holder.constraints)
 
-    # The Property Sheet Tool may be None if the code is updated but
-    # the BT has not been upgraded yet with portal_property_sheets
-    if property_sheet_tool is None:
-      LOG("ERP5Type.dynamic", WARNING,
-          "Property Sheet Tool was not found. Please update erp5_core "
-          "Business Template")
-    else:
-      if portal_type is not None:
-        # Get the Property Sheets defined on the portal_type and use the
-        # ZODB Property Sheet rather than the filesystem only if it
-        # exists in ZODB
-        zodb_property_sheet_set = set(property_sheet_tool.objectIds())
-        for property_sheet in portal_type.getTypePropertySheetList():
-          if property_sheet in zodb_property_sheet_set:
-            property_sheet_set.add(property_sheet)
-      else:
-        zodb_property_sheet_set = set()
-
-      # Get the Property Sheets defined on the document and its bases
-      # recursively. Fallback on the filesystem Property Sheet only and
-      # only if the ZODB Property Sheet does not exist
-      from Products.ERP5Type.Base import getClassPropertyList
-      for property_sheet in getClassPropertyList(klass):
-        # If the Property Sheet is a string, then this is a ZODB
-        # Property Sheet
-        #
-        # NOTE: The Property Sheets of a document should be given as a
-        #       string from now on
-        if isinstance(property_sheet, basestring) and \
-          property_sheet in zodb_property_sheet_set:
-          property_sheet_name = property_sheet
-          property_sheet_set.add(property_sheet_name)
-
-    import erp5
-
-    if property_sheet_set:
-      # Initialize ZODB Property Sheets accessor holders
-      _fillAccessorHolderList(
-        accessor_holder_list,
-        property_sheet_tool.createZodbPropertySheetAccessorHolder,
-        property_sheet_set,
-        erp5.accessor_holder,
-        property_sheet_tool)
+    attribute_dict['_categories'] = list(base_category_set)
 
     property_sheet_generating_portal_type_set.remove(portal_type_name)
 
@@ -297,11 +242,12 @@ def generatePortalTypeClass(portal_type_name):
 
   #LOG("ERP5Type.dynamic", INFO,
   #    "Portal type %s loaded with bases %s" \
-  #        % (portal_type_name, repr(baseclasses)))
+  #        % (portal_type_name, repr(base_class_list)))
 
   return (tuple(base_class_list),
+          portal_type_category_list,
           interface_class_list,
-          dict(portal_type=portal_type_name))
+          attribute_dict)
 
 from lazy_class import generateLazyPortalTypeClass
 def initializeDynamicModules():
@@ -316,14 +262,28 @@ def initializeDynamicModules():
       for example classes created through ClassTool that are in
       $INSTANCE_HOME/Document
     erp5.accessor_holder
-      holds accessors of ZODB Property Sheets
+      holds accessor holders common to ZODB Property Sheets and Portal Types
+    erp5.accessor_holder.property_sheet
+      holds accessor holders of ZODB Property Sheets
+    erp5.accessor_holder.portal_type
+      holds accessors holders of Portal Types
   """
   erp5 = ModuleType("erp5")
   sys.modules["erp5"] = erp5
   erp5.document = ModuleType("erp5.document")
   sys.modules["erp5.document"] = erp5.document
-  erp5.accessor_holder = ModuleType("erp5.accessor_holder")
+  erp5.accessor_holder = AccessorHolderModuleType("erp5.accessor_holder")
   sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
+
+  erp5.accessor_holder.property_sheet = \
+      AccessorHolderModuleType("erp5.accessor_holder.property_sheet")
+
+  sys.modules["erp5.accessor_holder.property_sheet"] = \
+      erp5.accessor_holder.property_sheet
+
+  erp5.accessor_holder.portal_type = registerDynamicModule(
+    'erp5.accessor_holder.portal_type',
+    AccessorHolderModuleType)
 
   portal_type_container = registerDynamicModule('erp5.portal_type',
                                                 generateLazyPortalTypeClass)
@@ -341,31 +301,14 @@ def initializeDynamicModules():
     """
     klass = getattr(portal_type_container, portal_type_name)
 
-    from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
-      PropertyConstantGetter
-
-    class TempDocument(klass):
-      isTempDocument = PropertyConstantGetter('isTempDocument', value=True)
-      __roles__ = None
-    TempDocument.__name__ = "Temp " + portal_type_name
-
-    # Replace some attributes.
-    for name in ('isIndexable', 'reindexObject', 'recursiveReindexObject',
-                 'activate', 'setUid', 'setTitle', 'getTitle', 'getUid'):
-      setattr(TempDocument, name, getattr(klass, '_temp_%s' % name))
-
-    # Make some methods public.
-    for method_id in ('reindexObject', 'recursiveReindexObject',
-                      'activate', 'setUid', 'setTitle', 'getTitle',
-                      'edit', 'setProperty', 'getUid', 'setCriterion',
-                      'setCriterionPropertyList'):
-      setattr(TempDocument, '%s__roles__' % method_id, None)
-    return TempDocument
+    return type("Temporary %s" % portal_type_name,
+                (TemporaryDocumentMixin, klass), {})
 
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)
 
-last_sync = 0
+last_sync = -1
+_bootstrapped = set()
 def synchronizeDynamicModules(context, force=False):
   """
   Allow resetting all classes to ghost state, most likely done after
@@ -391,23 +334,82 @@ def synchronizeDynamicModules(context, force=False):
       return
     last_sync = cookie
 
-  LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
-
   import erp5
 
   Base.aq_method_lock.acquire()
   try:
-    for class_name, klass in inspect.getmembers(erp5.portal_type,
-                                                inspect.isclass):
-      klass.restoreGhostState()
+    # Thanks to TransactionalResource, the '_bootstrapped' global variable
+    # is updated in a transactional way. Without it, it would be required to
+    # restart the instance if anything went wrong.
+    if portal.id not in _bootstrapped and \
+       TransactionalResource.registerOnce(__name__, 'bootstrap', portal.id):
+      migrate = False
+      from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
+      from Products.ERP5Type.Tool.TypesTool import TypesTool
+      for tool_class in TypesTool, PropertySheetTool:
+        # if the instance has no property sheet tool, or incomplete
+        # property sheets, we need to import some data to bootstrap
+        # (only likely to happen on the first run ever)
+        tool_id = tool_class.id
+        tool = getattr(portal, tool_id, None)
+        if tool is None:
+          tool = tool_class()
+          try:
+            portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
+          except TypeError:
+            portal._setObject(tool_id, tool, set_owner=False)
+          tool = getattr(portal, tool_id)
+        elif tool._isBootstrapRequired():
+          migrate = True
+        else:
+          continue
+        tool._bootstrap()
+        tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
 
-    # Clear accessor holders of ZODB Property Sheets
-    for property_sheet_id in erp5.accessor_holder.__dict__.keys():
-      if not property_sheet_id.startswith('__'):
-        delattr(erp5.accessor_holder, property_sheet_id)
+      if migrate:
+        from Products.ERP5Type.dynamic.persistent_migration import PickleUpdater
+        if PickleUpdater.get:
+          portal.migrateToPortalTypeClass()
+        portal.portal_skins.changeSkin(None)
+        TransactionalResource(tpc_finish=lambda txn:
+            _bootstrapped.add(portal.id))
+        LOG('ERP5Site', INFO, 'Transition successful, please update your'
+            ' business templates')
+      else:
+        _bootstrapped.add(portal.id)
+
+    LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
+    try:
+      for class_name, klass in inspect.getmembers(erp5.portal_type,
+                                                  inspect.isclass):
+        klass.restoreGhostState()
+
+      # Clear accessor holders of ZODB Property Sheets and Portal Types
+      erp5.accessor_holder.clear()
+      erp5.accessor_holder.property_sheet.clear()
+
+      for name in erp5.accessor_holder.portal_type.__dict__.keys():
+        if name[0] != '_':
+          delattr(erp5.accessor_holder.portal_type, name)
+
+    except Exception:
+      # Allow easier debugging when the code is wrong as this
+      # exception is catched later and re-raised as a BadRequest
+      import traceback; traceback.print_exc()
+      raise
+
   finally:
     Base.aq_method_lock.release()
 
-  # Necessary because accessors are wrapped in WorkflowMethod by
-  # _aq_dynamic (performed in createAccessorHolder)
-  _aq_reset()
+  # It's okay for classes to keep references to old methods - maybe.
+  # but we absolutely positively need to clear the workflow chains
+  # stored in WorkflowMethod objects: our generation of workflow
+  # methods adds/registers/wraps existing methods, but does not
+  # remove old chains. Do it now.
+  resetRegisteredWorkflowMethod()
+
+  # Some method generations are based on portal methods, and portal
+  # methods cache results. So it is safer to invalidate the cache.
+  cache_tool = getattr(portal, 'portal_caches', None)
+  if cache_tool is not None:
+    cache_tool.clearCache()

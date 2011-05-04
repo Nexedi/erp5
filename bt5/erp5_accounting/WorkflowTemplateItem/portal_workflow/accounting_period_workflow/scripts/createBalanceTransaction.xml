@@ -62,7 +62,7 @@ portal = accounting_period.getPortalObject()\n
 profit_and_loss_account = portal.portal_workflow.getInfoFor(\n
                             accounting_period, \'profit_and_loss_account\')\n
 \n
-accounting_period.AccountingPeriod_createBalanceTransaction(\n
+accounting_period.activate(after_method_id=\'unindexObject\').AccountingPeriod_createBalanceTransaction(\n
                        profit_and_loss_account=profit_and_loss_account)\n
 </string> </value>
         </item>

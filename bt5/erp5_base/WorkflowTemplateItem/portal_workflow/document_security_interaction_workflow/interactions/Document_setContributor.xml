@@ -56,6 +56,7 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
+                <string>_edit</string>
                 <string>_set*</string>
               </list>
             </value>
@@ -67,18 +68,7 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Discussion Post</string>
-                <string>Discussion Thread</string>
-                <string>Drawing</string>
-                <string>File</string>
-                <string>Image</string>
-                <string>PDF</string>
-                <string>Presentation</string>
-                <string>Spreadsheet</string>
-                <string>Text</string>
-                <string>Web Page</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>
@@ -86,6 +76,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

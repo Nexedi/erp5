@@ -129,7 +129,7 @@ if hide_analytic:\n
                                            \'mirror_section_uid\',\n
                                            \'payment_uid\' )\n
 else:\n
-  analytic_column_list = context.AccountModule_getAnalyticColumnList()\n
+  analytic_column_list = context.accounting_module.AccountModule_getAnalyticColumnList()\n
 \n
 account_columns = (\n
       (\'Movement_getSpecificReference\', \'Reference\'),\n
@@ -187,13 +187,10 @@ def getFullAccountName(account_info):\n
 \n
 \n
 # look at inventories to decide which sections will be shown\n
-account_type_to_group_by_node = [\n
-                  \'account_type/asset\',\n
-                  \'account_type/asset/cash\',\n
-                  \'account_type/asset/receivable/refundable_vat\',\n
-                  \'account_type/liability/payable/collected_vat\',\n
-                  \'account_type/equity\',\n
-                  \'account_type/liability\',]\n
+balance_sheet_account_type_list = [c[0] for c in \n
+ cat_tool.account_type.asset.getCategoryChildItemList(base=1, is_self_excluded=False, display_none_category=False ) + \\\n
+ cat_tool.account_type.equity.getCategoryChildItemList(base=1, is_self_excluded=False, display_none_category=False) + \\\n
+ cat_tool.account_type.liability.getCategoryChildItemList(base=1, is_self_excluded=False, display_none_category=False) ]\n
 \n
 profit_and_loss_account_type = []\n
 for account_type_value in (cat_tool.account_type.expense,\n
@@ -208,6 +205,9 @@ account_type_to_group_by_mirror_section = [\n
                   \'account_type/asset/receivable\',\n
                   \'account_type/liability/payable\', ]\n
 \n
+account_type_to_group_by_node = [at for at in balance_sheet_account_type_list\n
+  if at not in account_type_to_group_by_payment\n
+  and at not in account_type_to_group_by_mirror_section]\n
 \n
 if gap_list or gap_root:\n
   params[\'node_category\'] = gap_list or gap_root\n

@@ -103,3 +103,9 @@ class ResourceMeasuresConsistencyConstraint(ConstraintMixin):
             error('message_missing_metric_type', metric_type=quantity)
 
     return error_list
+
+  _message_id_tuple = ('message_measure_no_quantity_unit',
+                       'message_measure_no_quantity',
+                       'message_duplicate_metric_type',
+                       'message_duplicate_default_measure',
+                       'message_missing_metric_type')

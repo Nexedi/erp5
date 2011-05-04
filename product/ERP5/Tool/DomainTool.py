@@ -103,9 +103,10 @@ class DomainTool(BaseTool):
         invoked with "test=False" value. Otherwise, it should only change
         execution duration.
       """
-      portal_catalog = context.portal_catalog
-      portal_categories = context.portal_categories
-      portal_preferences = context.portal_preferences
+      portal = self.getPortalObject()
+      portal_catalog = portal.portal_catalog
+      portal_categories = portal.portal_categories
+      portal_preferences = portal.portal_preferences
       # Search the columns of the predicate table
       column_list = [x.split('.')[1] for x in portal_catalog.getColumnIds()
                      if x.startswith('predicate.')]
@@ -176,15 +177,14 @@ class DomainTool(BaseTool):
         else:
           category_list = context.getCategoryList()
       else:
-        category_list = []
         if acquired:
-          for tested_base_category in tested_base_category_list:
-            category_list.extend(
-                context.getAcquiredCategoryMembershipList(tested_base_category, base=1))
+          getter = context.getAcquiredCategoryMembershipList
         else:
-          for tested_base_category in tested_base_category_list:
-            category_list.extend(
-                context.getCategoryMembershipList(tested_base_category, base=1))
+          getter = context.getCategoryMembershipList
+        category_list = []
+        extend = category_list.extend
+        for tested_base_category in tested_base_category_list:
+          extend(getter(tested_base_category, base=1))
 
       if tested_base_category_list != []:
         preferred_predicate_category_list = portal_preferences.getPreferredPredicateCategoryList()
@@ -315,7 +315,7 @@ class DomainTool(BaseTool):
                 if value is not None:
                   mapped_value_property_dict[mapped_value_property] = value
         # Update mapped value
-        mapped_value = mapped_value.asContext(**mapped_value_property_dict)
+        mapped_value.edit(**mapped_value_property_dict)
       return mapped_value
 
     # XXX FIXME method should not be public 

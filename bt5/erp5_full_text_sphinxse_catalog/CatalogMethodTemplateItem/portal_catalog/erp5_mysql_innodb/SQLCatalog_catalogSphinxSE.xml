@@ -59,7 +59,7 @@ parameter_dict = {\'uid\':[], \'SearchableText\':[]}\n
 for i in context.getPortalObject().portal_catalog(path=getPath, select_expression=\'SearchableText\'):\n
   for property in (\'uid\', \'SearchableText\'):\n
     parameter_dict[property].append(getattr(i, property))\n
-if len(parameter_dict):\n
+if len(parameter_dict[\'uid\']):\n
   return method(**parameter_dict)\n
 return\n
 \n

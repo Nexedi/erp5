@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="Activity Tool">
+  <item>Active Process</item>
+ </portal_type>
  <portal_type id="Alarm Tool">
   <item>Alarm</item>
  </portal_type>
@@ -52,25 +55,33 @@
   <item>Preference</item>
   <item>System Preference</item>
  </portal_type>
+ <portal_type id="Preference Tool Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
+ <portal_type id="Preference Type">
+  <item>Action Information</item>
+  <item>Role Information</item>
+ </portal_type>
  <portal_type id="Property Sheet">
-  <item>Accounting Transaction Balance Constraint</item>
   <item>Acquired Property</item>
+  <item>Attribute Blacklisted Constraint</item>
   <item>Attribute Equality Constraint</item>
-  <item>Category Acquired Membership Arity Constraint</item>
+  <item>Attribute Unicity Constraint</item>
+  <item>Category Acquired Membership State Constraint</item>
   <item>Category Existence Constraint</item>
   <item>Category Membership Arity Constraint</item>
+  <item>Category Membership State Constraint</item>
   <item>Category Property</item>
   <item>Category Related Membership Arity Constraint</item>
+  <item>Category Related Membership State Constraint</item>
   <item>Content Existence Constraint</item>
   <item>Dynamic Category Property</item>
   <item>Property Existence Constraint</item>
   <item>Property Type Validity Constraint</item>
-  <item>Resource Measures Consistency Constraint</item>
   <item>Standard Property</item>
+  <item>String Attribute Match Constraint</item>
   <item>TALES Constraint</item>
-  <item>Trade Model Line Cell Consistency Constraint</item>
-  <item>Transaction Quantity Value Feasability Constraint</item>
-  <item>Transaction Quantity Value Validity Constraint</item>
  </portal_type>
  <portal_type id="Property Sheet Tool">
   <item>Property Sheet</item>

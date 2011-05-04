@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -84,10 +81,11 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
+                        <string>listbox_codification</string>
+                        <string>listbox_id</string>
                         <string>listbox_int_index</string>
                         <string>listbox_title</string>
-                        <string>listbox_id</string>
-                        <string>listbox_codification</string>
+                        <string>listbox_short_title</string>
                       </list>
                     </value>
                 </item>
@@ -97,6 +95,8 @@
                       <list>
                         <string>my_id</string>
                         <string>my_title</string>
+                        <string>my_short_title</string>
+                        <string>my_reference</string>
                         <string>my_vault_type</string>
                       </list>
                     </value>
@@ -107,6 +107,8 @@
                       <list>
                         <string>my_codification</string>
                         <string>my_int_index</string>
+                        <string>my_translated_validation_state_title</string>
+                        <string>my_quantity</string>
                       </list>
                     </value>
                 </item>

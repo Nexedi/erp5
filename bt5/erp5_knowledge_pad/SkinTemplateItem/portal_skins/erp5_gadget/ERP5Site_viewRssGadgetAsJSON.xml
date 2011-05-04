@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.JSON import dumps\n
+            <value> <string>from json import dumps\n
 \n
 request = context.REQUEST\n
 \n
@@ -65,7 +65,7 @@ gadget_title_dom_id = \'%s_gadget_title\' %box_dom_id\n
 # return some JavaScript which will update respective page\n
 gadget_title = request.get(\'rss_gadget_title\', box.getSpecialiseValue().getTitle())\n
 gadget_title = unicode(gadget_title).encode(\'utf-8\')[:40]\n
-javascript = \'getElement("%s").innerHTML="%s";\' %(gadget_title_dom_id, gadget_title)\n
+javascript = \'$("#%s").html("%s");\' %(gadget_title_dom_id, gadget_title)\n
 \n
 request.RESPONSE.setHeader("Content-Type", "application/json;; charset=utf-8")\n
 result =  {"body": html,\n

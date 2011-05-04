@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import sys
+import sys, types
 
 if sys.version_info < (2, 5):
   import __builtin__, imp
@@ -72,3 +72,39 @@ if sys.version_info < (2, 5):
 
   import re, sre
   re._compile = sre._compile
+
+  # Monkey-patch pprint to sort keys of dictionaries
+  class _ordered_dict(dict):
+    def iteritems(self):
+      return sorted(self.items())
+
+  import pprint as _pprint
+  orig_safe_repr = _pprint._safe_repr
+  def _safe_repr(object, context, maxlevels, level):
+    if type(object) is dict:
+      object = _ordered_dict(object)
+    return orig_safe_repr(object, context, maxlevels, level)
+  _pprint._safe_repr = _safe_repr
+
+
+if sys.version_info < (2, 6):
+
+  try:
+    import simplejson as json
+  except ImportError, missing_simplejson:
+    class dummy(types.ModuleType):
+      def __getattr__(self, name):
+        raise missing_simplejson
+    json = dummy('dummy_json')
+  sys.modules['json'] = json
+
+
+if sys.version_info < (2, 7):
+
+  try:
+    from ordereddict import OrderedDict
+  except ImportError, missing_ordereddict:
+    def OrderedDict(*args, **kw):
+      raise missing_ordereddict
+  import collections
+  collections.OrderedDict = OrderedDict

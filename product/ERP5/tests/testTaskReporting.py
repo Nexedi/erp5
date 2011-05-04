@@ -40,7 +40,8 @@ class TestTaskReporting(ERP5ReportTestCase):
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
-    return ('erp5_base','erp5_pdm', 'erp5_simulation', 'erp5_trade',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base','erp5_pdm', 'erp5_simulation', 'erp5_trade',
             'erp5_project', 'erp5_simulation_test')
 
   @reindex
@@ -205,43 +206,30 @@ class TestTaskReporting(ERP5ReportTestCase):
     request['from_date'] = DateTime('2009/07/01')
     request['at_date'] = DateTime('2009/07/31')
     request['report_depth'] = 5
+    self.portal.REQUEST['simulation_state'] = ['planned', 'confirmed']
     report_section_list = self.getReportSectionList(
         self.portal.project_module.Project_1,
         'Project_viewMonthlyReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEquals(2, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
-    self.checkLineProperties(data_line_list[0],
-                   **{'person_module/Person_1': 3.0,
-                      })
-    self.checkLineProperties(data_line_list[1],
-                   **{'person_module/Person_1': 3.0,
-                      })
-
-    request = self.portal.REQUEST
-    request.form['from_date'] = DateTime('2009/07/01')
-    request.form['at_date'] = DateTime('2009/07/30')
-    request.form['report_depth'] = 5
-    report_section_list = self.getReportSectionList(
-        self.portal.project_module.Project_1,
-        'Project_viewMonthlyReport')
-    self.assertEquals(1, len(report_section_list))
-
     # We should have this result
     # month             Person1
     # 2009-07             3
+    #  Project1
     #   Project1/Line1    3
-    line_list = self.getListBoxLineList(report_section_list[0])
-    data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(2, len(data_line_list))
+    self.assertEquals(3, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                    **{'person_module/Person_1': 3.0,
                       })
     self.checkLineProperties(data_line_list[1],
+                   **{'person_module/Person_1': None,
+                      })
+    self.checkLineProperties(data_line_list[2],
                    **{'person_module/Person_1': 3.0,
                       })
+
     # Create Tasks
     self._makeOneTask(
               title='Task 2',
@@ -298,9 +286,11 @@ class TestTaskReporting(ERP5ReportTestCase):
     # We should have this result
     # month             Person1  Person2
     # 2009-07             3         6.5
+    #  Project1
     #   Project1/Line1    3         0
     #   Project1/Line2    0         6.5
     # 2009-08             23        6.5
+    #  Project1
     #   Project1/Line2    11        0
     #   Project1/Line2    12        6.5
     # 2009-09             0         0
@@ -312,36 +302,44 @@ class TestTaskReporting(ERP5ReportTestCase):
     report_section_list = self.getReportSectionList(
         self.portal.project_module.Project_1,
         'Project_viewMonthlyReport')
-    self.assertEquals(1, len(report_section_list))
+    self.assertEquals(2, len(report_section_list))
 
     line_list = self.getListBoxLineList(report_section_list[0])
     data_line_list = [l for l in line_list if l.isDataLine()]
-    self.assertEquals(7, len(data_line_list))
+    self.assertEquals(9, len(data_line_list))
     self.checkLineProperties(data_line_list[0],
                    **{'person_module/Person_1': 3.0,
                       'person_module/Person_2': 6.5,
                       })
     self.checkLineProperties(data_line_list[1],
-                   **{'person_module/Person_1': 3.0,
+                   **{'person_module/Person_1': None,
                       'person_module/Person_2': None,
                       })
     self.checkLineProperties(data_line_list[2],
+                   **{'person_module/Person_1': 3.0,
+                      'person_module/Person_2': None,
+                      })
+    self.checkLineProperties(data_line_list[3],
                    **{'person_module/Person_1': None,
                       'person_module/Person_2': 6.5,
                       })
-    self.checkLineProperties(data_line_list[3],
+    self.checkLineProperties(data_line_list[4],
                    **{'person_module/Person_1': 23,
                       'person_module/Person_2': 6.5,
                       })
-    self.checkLineProperties(data_line_list[4],
+    self.checkLineProperties(data_line_list[5],
+                   **{'person_module/Person_1': None,
+                      'person_module/Person_2': None,
+                      })
+    self.checkLineProperties(data_line_list[6],
                    **{'person_module/Person_1': 11,
                       'person_module/Person_2': None,
                       })
-    self.checkLineProperties(data_line_list[5],
+    self.checkLineProperties(data_line_list[7],
                    **{'person_module/Person_1': 12,
                       'person_module/Person_2': 6.5,
                       })
-    self.checkLineProperties(data_line_list[6],
+    self.checkLineProperties(data_line_list[8],
                    **{'person_module/Person_1': None,
                       'person_module/Person_2': None,
                       })

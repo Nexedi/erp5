@@ -1,0 +1,52 @@
+# ERP5 buildout my.cnf template based on my-huge.cnf shipped with mysql
+# The MySQL server
+[mysqld]
+# ERP5 by default requires InnoDB storage. MySQL by default fallbacks to using
+# different engine, like MyISAM. Such behaviour generates problems only, when
+# tables requested as InnoDB are silently created with MyISAM engine.
+#
+# Loud fail is really required in such case.
+sql-mode="NO_ENGINE_SUBSTITUTION"
+
+skip-show-database
+port = %(tcp_port)s
+bind-address = %(ip)s
+socket = %(socket)s
+datadir = %(data_directory)s
+pid-file = %(pid_file)s
+log-error = %(error_log)s
+log-slow-file = %(slow_query_log)s
+long_query_time = 5
+max_allowed_packet = 128M
+query_cache_size = 32M
+
+plugin-load = ha_innodb_plugin.so
+
+# The following are important to configure and depend a lot on to the size of
+# your database and the available resources.
+#innodb_buffer_pool_size = 4G
+#innodb_log_file_size = 256M
+#innodb_log_buffer_size = 8M
+
+# Some dangerous settings you may want to uncomment if you only want
+# performance or less disk access. Useful for unit tests.
+#innodb_flush_log_at_trx_commit = 0
+#innodb_flush_method = nosync
+#innodb_doublewrite = 0
+#sync_frm = 0
+
+# Uncomment the following if you need binary logging, which is recommended
+# on production instances (either for replication or incremental backups).
+#log-bin=mysql-bin
+
+# Force utf8 usage
+collation_server = utf8_unicode_ci
+character_set_server = utf8
+skip-character-set-client-handshake
+
+[mysql]
+no-auto-rehash
+socket = %(socket)s
+
+[mysqlhotcopy]
+interactive-timeout

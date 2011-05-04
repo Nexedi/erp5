@@ -8,7 +8,4 @@
  <portal_type id="Open Sale Order Line">
   <item>Open Sale Order Cell</item>
  </portal_type>
- <portal_type id="Periodicity Line">
-  <item>Predicate</item>
- </portal_type>
 </hidden_content_type_list>

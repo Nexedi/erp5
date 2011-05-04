@@ -21,12 +21,14 @@
 ##############################################################################
 
 # Load all monkey patches
+from Products.ERP5Type.patches import Restricted
 from Products.ERP5Type.patches import m2crypto
 from Products.ERP5Type.patches import ObjectManager
 from Products.ERP5Type.patches import PropertyManager
 from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
 from Products.ERP5Type.patches import DCWorkflow
+from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
 from Products.ERP5Type.patches import WorkflowTool
 from Products.ERP5Type.patches import XMLExportImport
@@ -49,9 +51,11 @@ from Products.ERP5Type.patches import CMFCoreSkinnable
 from Products.ERP5Type.patches import CMFCoreSkinsTool
 from Products.ERP5Type.patches import CMFBTreeFolder
 from Products.ERP5Type.patches import OFSFolder
+from Products.ERP5Type.patches import OFSUninstalled
 from Products.ERP5Type.patches import PersistentMapping
 from Products.ERP5Type.patches import DateTimePatch
 from Products.ERP5Type.patches import PythonScript
+from Products.ERP5Type.patches import MailHost
 from Products.ERP5Type.patches import MailTemplates
 from Products.ERP5Type.patches import http_server
 from Products.ERP5Type.patches import memcache_client
@@ -67,6 +71,7 @@ from Products.ERP5Type.patches import ZODBConnection
 # dropped support for older versions.
 from Products.ERP5Type.patches import TransactionAddBeforeCommitHook
 from Products.ERP5Type.patches import ZopePageTemplate
+from Products.ERP5Type.patches import ZopePageTemplateUtils
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager

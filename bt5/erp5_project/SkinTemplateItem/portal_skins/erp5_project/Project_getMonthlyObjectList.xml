@@ -61,17 +61,24 @@ current_criterion = object_domain.getCriterionList()\n
 date = current_criterion[0].identity\n
 result_list = []\n
 if len(object_domain.getMembershipCriterionBaseCategoryList())==0:\n
-  # First level, so level of month\n
+  # First level, so level of month, we display summary of total\n
+  # quantity per worker for the full month\n
   returned_object = summary_dict.get(date, None)\n
   if returned_object is not None:\n
     result_list.append(returned_object)\n
 else:\n
   returned_object = object_dict.get(date, None)\n
   if returned_object is not None:\n
-    for k,v in returned_object.items():\n
-      if object_domain.test(v, strict_membership=1):\n
-        result_list.append(v)\n
-\n
+    # optimisation, in this report we have exactly one temp object at most\n
+    # matching our domain, and we have already a dict with nice keys, so\n
+    # there is no need to parse all temp objects\n
+    membership_criterion_category_list = object_domain.getMembershipCriterionCategoryList()\n
+    assert len(membership_criterion_category_list) == 1\n
+    membership_criterion_category = membership_criterion_category_list[0]\n
+    assert membership_criterion_category.startswith(\'source_project/\')\n
+    project_relative_url = membership_criterion_category[len(\'source_project/\'):]\n
+    if returned_object.has_key(project_relative_url):\n
+      result_list.append(returned_object[project_relative_url])\n
 return result_list\n
 </string> </value>
         </item>

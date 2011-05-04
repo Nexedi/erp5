@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block metal:define-macro="init_test_environment">\n
+  <tr>\n
+    <td>store</td>\n
+    <td tal:content="python:\n
+        here.REQUEST.get(\'URL\')[0:here.REQUEST.get(\'URL\').find(\'/portal_tests/\')]">erp5</td>\n
+    <td>base_url</td>\n
+  </tr>\n
+  <!-- Always initialize browser to English language -->\n
+  <tr>\n
+    <td>deleteCookie</td>\n
+    <td>LOCALIZER_LANGUAGE</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>createCookie</td>\n
+    <td>LOCALIZER_LANGUAGE=en</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/view</td>\n
+    <td></td>\n
+  </tr>\n
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="login_as_manager">\n
+  <!-- Login as manager -->\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/logout</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/login_form</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="__ac_name"]</td>\n
+    <td tal:content="python:\n
+          here.Zuite_getHowToInfo()[\'manager_username\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="__ac_password"]</td>\n
+    <td tal:content="python:\n
+        here.Zuite_getHowToInfo()[\'manager_password\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>clickAndWait</td>\n
+    <td>//input[@name="logged_in:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/view</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td tal:content="python:\n
+          here.Zuite_getHowToInfo()[\'manager_username\']"></td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="wait_for_activities">\n
+  <!-- Wait for activities to finish -->\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Zuite_waitForActivities</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Done.</td>\n
+    <td></td>\n
+  </tr> \n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="login_as_functional_test_user">\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Zuite_createFunctionalTestUser</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Done.</td>\n
+    <td></td>\n
+  </tr>\n
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Base_clearCache</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>assertTextPresent</td>\n
+    <td>Cleared.</td>\n
+    <td></td>\n
+  </tr>\n
+  <!-- login with functional test user -->\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/logout</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/login_form</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="__ac_name"]</td>\n
+    <td tal:content="python:\n
+          here.Zuite_getHowToInfo()[\'functional_test_username\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="__ac_password"]</td>\n
+    <td tal:content="python:\n
+        here.Zuite_getHowToInfo()[\'functional_test_user_password\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>clickAndWait</td>\n
+    <td>//input[@name="logged_in:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/view</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td tal:content="python:\n
+          here.Zuite_getHowToInfo()[\'functional_test_username\']"></td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="login_as_user">\n
+  <!-- login with newly created user from Express configuration -->\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/view</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/logout</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/login_form</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="__ac_name"]</td>\n
+    <td tal:content="python:\n
+          here.Zuite_getHowToInfo()[\'person_howto_reference\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="__ac_password"]</td>\n
+    <td tal:content="python:\n
+          here.Zuite_getHowToInfo()[\'person_howto_password\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>clickAndWait</td>\n
+    <td>//input[@name="logged_in:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/view</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td tal:content="python:\n
+          here.Zuite_getHowToInfo()[\'person_howto_reference\']"></td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_viewTestMacroLibrary</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

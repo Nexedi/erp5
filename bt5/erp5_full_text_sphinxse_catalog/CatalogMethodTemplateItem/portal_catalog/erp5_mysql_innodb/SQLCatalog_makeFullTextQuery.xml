@@ -50,13 +50,21 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
+            <value> <string>"""\n
+  Sphinx full text searchable key implementation.\n
+"""\n
+from Products.ZSQLCatalog.SQLCatalog import Query\n
 \n
-# XXX Should we use system preference here?\n
-if \'sphinxse_index\' in container.getCatalogSearchTableIds():\n
-  query = Query(**{\'sphinxse_query\':value})\n
-else:\n
-  query = Query(**{\'full_text.SearchableText\':value})\n
+# set some global search engine defaults (XXX: use preferences?)\n
+defaut_dict = {\'mode\': \'ext2\', # full text search mode\n
+               \'limit\': 1000,  # max number of results\n
+              }\n
+for key, item in defaut_dict.items():\n
+  operator = \';%s\' %key\n
+  if operator not in value and value not in (\'\', None):\n
+    value = \'%s%s=%s\' %(value, operator, item)\n
+\n
+query = Query(**{\'sphinxse_query\': value})\n
 return query\n
 </string> </value>
         </item>

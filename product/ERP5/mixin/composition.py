@@ -144,7 +144,10 @@ class asComposedDocument(object):
 
   @property
   def _folder_handler(self):
-    assert False
+    assert False, "Attempt to use .asComposedDocument() result as folder. This should never happen!"
+
+  def _getOb(self, key, *args, **kw):
+    raise KeyError(key)
 
   def __getattr__(self, name):
     raise AttributeError(name)

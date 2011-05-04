@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>start</string> </value>
+            <value> <string>restart</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

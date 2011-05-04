@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -29,7 +30,6 @@
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5SyncML.SyncCode import SyncCode
 
 from zLOG import LOG
 
@@ -49,13 +49,15 @@ class ERP5ConduitTitleGid(ERP5Conduit):
     """
     return object.getTitle()
 
-  def getGidFromXML(self, xml, namespace, gid_from_xml_list):
+  def getGidFromXML(self, xml, gid_from_xml_list):
     """
     return the Gid composed of FirstName and LastName generate with a peace of
     xml
     """
-    first_name = xml.xpath('string(.//syncml:object//syncml:first_name)')
-    last_name = xml.xpath('string(.//syncml:object//syncml:last_name)')
+    first_name = xml.xpath('string(.//syncml:object//syncml:first_name)',
+                           namespaces=xml.nsmap)
+    last_name = xml.xpath('string(.//syncml:object//syncml:last_name)',
+                          namespaces=xml.nsmap)
     gid = "%s %s" % (first_name, last_name)
     if gid in gid_from_xml_list or gid == ' ':
       return False

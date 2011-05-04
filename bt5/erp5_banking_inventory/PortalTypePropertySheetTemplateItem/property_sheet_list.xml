@@ -1,58 +1,58 @@
 <property_sheet_list>
  <portal_type id="Bank Account Inventory">
-  <item>Base</item>
-  <item>DublinCore</item>
-  <item>XMLObject</item>
-  <item>Document</item>
   <item>Arrow</item>
-  <item>Inventory</item>
+  <item>Base</item>
+  <item>Document</item>
+  <item>DublinCore</item>
   <item>Folder</item>
+  <item>Inventory</item>
+  <item>XMLObject</item>
  </portal_type>
  <portal_type id="Bank Account Inventory Group">
-  <item>Task</item>
   <item>Arrow</item>
+  <item>Task</item>
  </portal_type>
  <portal_type id="Bank Account Inventory Line">
-  <item>Arrow</item>
-  <item>Discount</item>
   <item>Amount</item>
+  <item>Arrow</item>
+  <item>Base</item>
+  <item>Discount</item>
+  <item>DublinCore</item>
+  <item>Folder</item>
   <item>InventoryLine</item>
   <item>XMLObject</item>
-  <item>DublinCore</item>
-  <item>Folder</item>
-  <item>Base</item>
  </portal_type>
  <portal_type id="Bank Account Inventory Module">
-  <item>Document</item>
-  <item>XMLObject</item>
-  <item>Folder</item>
-  <item>DublinCore</item>
   <item>Base</item>
+  <item>Document</item>
+  <item>DublinCore</item>
+  <item>Folder</item>
+  <item>XMLObject</item>
  </portal_type>
  <portal_type id="Cash Inventory">
   <item>Arrow</item>
-  <item>XMLObject</item>
-  <item>Document</item>
   <item>Base</item>
+  <item>Document</item>
   <item>DublinCore</item>
-  <item>Inventory</item>
   <item>Folder</item>
+  <item>Inventory</item>
+  <item>XMLObject</item>
  </portal_type>
  <portal_type id="Cash Inventory Cell">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Cash Inventory Group">
-  <item>Task</item>
   <item>Arrow</item>
+  <item>Task</item>
  </portal_type>
  <portal_type id="Cash Inventory Line">
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Cash Inventory Module">
-  <item>XMLObject</item>
   <item>Base</item>
-  <item>DublinCore</item>
   <item>Document</item>
+  <item>DublinCore</item>
   <item>Folder</item>
+  <item>XMLObject</item>
  </portal_type>
 </property_sheet_list>

@@ -1788,9 +1788,7 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
     self.portal.portal_solvers.manage_delObjects(self.added_target_solver_list)
     transaction.commit()
     self.tic()
-    beforeTearDown = getattr(TestPackingListMixin, 'beforeTearDown',
-                             ERP5TypeTestCase.beforeTearDown)
-    beforeTearDown(self)
+    super(TestSolvingPackingList, self).beforeTearDown()
 
   @UnrestrictedMethod
   def _setUpTargetSolver(self, solver_id, solver_class, tested_property_list):

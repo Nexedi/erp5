@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -199,110 +196,12 @@ return check_list\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference=None, reference_range_min=None, reference_range_max=None, source=0, destination=1, bank_account=None, resource=None</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>7</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>reference</string>
-                            <string>reference_range_min</string>
-                            <string>reference_range_max</string>
-                            <string>source</string>
-                            <string>destination</string>
-                            <string>bank_account</string>
-                            <string>resource</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>None</string>
-                            <string>msg</string>
-                            <string>reference_list</string>
-                            <string>int</string>
-                            <string>ValueError</string>
-                            <string>_getiter_</string>
-                            <string>range</string>
-                            <string>ref</string>
-                            <string>check_list</string>
-                            <string>bank_account_uid</string>
-                            <string>resource_value</string>
-                            <string>reference_dict</string>
-                            <string>check_reference</string>
-                            <string>message_tag</string>
-                            <string>result</string>
-                            <string>len</string>
-                            <string>result_len</string>
-                            <string>_write_</string>
-                            <string>_getitem_</string>
-                            <string>generic_model</string>
-                            <string>checkbook</string>
-                            <string>composition_related_list</string>
-                            <string>brain</string>
-                            <string>obj</string>
-                            <string>checkbook_tag</string>
-                            <string>check</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <int>0</int>
-                <int>1</int>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_checkOrCreateCheck</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

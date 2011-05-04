@@ -1,0 +1,14 @@
+<workflow_chain>
+ <chain>
+  <type>Email Reader</type>
+  <workflow>document_publication_workflow, edit_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Email Thread</type>
+  <workflow>edit_workflow, email_thread_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Email Thread Module</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>

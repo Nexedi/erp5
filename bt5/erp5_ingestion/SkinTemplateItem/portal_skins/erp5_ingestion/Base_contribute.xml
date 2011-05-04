@@ -53,11 +53,13 @@
             <value> <string>"""\n
   Use to contribute file to ERP5.\n
 """\n
-from Products.ERP5Type.Message import translateString\n
 from ZTUtils import make_query\n
 \n
-MARKER = [\'\', None]\n
 portal = context.getPortalObject()\n
+translateString = portal.Base_translateString\n
+\n
+\n
+MARKER = [\'\', None]\n
 portal_contributions = portal.portal_contributions\n
 context_url = context.getRelativeUrl()\n
 \n
@@ -70,8 +72,11 @@ if user_login is None:\n
   # get current authenticated user\n
   user_login = str(portal.portal_membership.getAuthenticatedMember())\n
   \n
-document_kw = {}\n
-document_kw[\'user_login\'] = user_login\n
+document_kw = {\'user_login\': user_login,\n
+               \'group\': group,\n
+               \'publication_section\': publication_section,\n
+              }\n
+\n
 if use_context_for_container:\n
   document_kw[\'container_path\'] = context_url\n
 if portal_type not in MARKER:\n
@@ -95,12 +100,9 @@ if url is not None:\n
       redirect_url= \'%s?%s\' %(cancel_url, \n
                             make_query(dict(portal_status_message=translateString("Wrong or not accessible URL address."))))\n
       return context.REQUEST.RESPONSE.redirect(redirect_url)\n
-  filename=document.getId()\n
 else:\n
   # contribute file\n
-  filename = getattr(file, \'filename\', None)\n
-  document_kw.update({\'file\': file,\n
-                      \'filename\': filename,})\n
+  document_kw.update({\'file\': file})\n
   document = portal_contributions.newContent(**document_kw)\n
 \n
 is_existing_document_updated = False\n
@@ -109,6 +111,7 @@ if synchronous_metadata_discovery:\n
   # this in an activity\n
   if document.isSupportBaseDataConversion():\n
     document.processFile()\n
+  filename = document.getFilename()\n
   merged_document = document.Document_convertToBaseFormatAndDiscoverMetadata(\n
                                filename=filename,\n
                                user_login=user_login,\n
@@ -163,7 +166,7 @@ return document\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, cancel_url=None, batch_mode=False, max_repeat=0, editable_mode = 1, follow_up_list=None, user_login=None, **kw</string> </value>
+            <value> <string>file=None, url=None, portal_type=None, classification=None, synchronous_metadata_discovery=None, redirect_to_document=None, attach_document_to_context=False, use_context_for_container=False, redirect_url=None, cancel_url=None, batch_mode=False, max_repeat=0, editable_mode = 1, follow_up_list=None, user_login=None, group=None, publication_section=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

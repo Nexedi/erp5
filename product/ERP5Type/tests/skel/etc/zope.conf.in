@@ -909,7 +909,7 @@ instancehome $INSTANCE
 <zodb_db main>
     # Main FileStorage database
     <filestorage>
-      path $INSTANCE/Data.fs
+      path $INSTANCE/var/Data.fs
     </filestorage>
     mount-point /
 </zodb_db>

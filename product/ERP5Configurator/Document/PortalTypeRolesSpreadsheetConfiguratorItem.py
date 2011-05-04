@@ -35,10 +35,10 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
-                    , PropertySheet.PortalTypeRolesSpreadsheetConfiguratorItem
+                    , PropertySheet.ConfiguratorItem
                     )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     self._readSpreadSheet()
     for type_name, role_list in self._spreadsheet_cache.items():
@@ -82,9 +82,9 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
     if getattr(aq_self, '_spreadsheet_cache', None) is None:
       role_dict = dict()
       info_dict = self.ConfigurationTemplate_readOOCalcFile(
-                      'default_portal_type_roles_spreadsheet')
-      for sheet_name, table in self.ConfigurationTemplate_readOOCalcFile(
-                          'default_portal_type_roles_spreadsheet').items():
+                      "portal_roles_spreadsheet.ods",
+                      data=self.getDefaultConfigurationSpreadsheetData())
+      for sheet_name, table in info_dict.items():
         for line in table:
           if 'Portal_Type' in line:
             ptype_role_list = role_dict.setdefault(line['Portal_Type'], [])
@@ -93,14 +93,14 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
       aq_self._spreadsheet_cache = role_dict
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                           'setDefaultPortalTypeRolesSpreadsheetFile')
-  def setDefaultPortalTypeRolesSpreadsheetFile(self, *args, **kw):
+                           'setDefaultConfigurationSpreadsheetFile')
+  def setDefaultConfigurationSpreadsheetFile(self, *args, **kw):
     """Reset the spreadsheet cache."""
-    self._setDefaultPortalTypeRolesSpreadsheetFile(*args, **kw)
+    self._setDefaultConfigurationSpreadsheetFile(*args, **kw)
     self._spreadsheet_cache = None
     self.reindexObject()
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                           'setPortalTypeRolesSpreadsheetFile')
-  setPortalTypeRolesSpreadsheetFile = setDefaultPortalTypeRolesSpreadsheetFile
+                           'setConfigurationSpreadsheetFile')
+  setConfigurationSpreadsheetFile = setDefaultConfigurationSpreadsheetFile
 

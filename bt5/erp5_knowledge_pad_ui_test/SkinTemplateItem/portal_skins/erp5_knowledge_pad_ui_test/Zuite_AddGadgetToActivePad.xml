@@ -53,9 +53,7 @@
             <value> <string>"""\n
   Add (if not present) gadgets to current knowledge pad.\n
 """\n
-\n
-all_pads = [x for x in context.ERP5Site_getKnowledgePadListForUser(mode, default_pad_group)]\n
-active_pad, all_pads = context.ERP5Site_getActiveKnowledgePadForUser(all_pads, mode, default_pad_group)\n
+active_pad, all_pads = context.ERP5Site_getActiveKnowledgePadForUser(mode, default_pad_group)\n
 \n
 active_pad = active_pad.getObject()\n
 gadget_list = active_pad.contentValues(filter={\'portal_type\': \'Knowledge Box\'})\n

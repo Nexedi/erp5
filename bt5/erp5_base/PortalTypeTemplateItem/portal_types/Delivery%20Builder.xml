@@ -122,7 +122,7 @@ to Simulation Movements related to a limited set of existing Deliveries.</string
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <none/> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -139,7 +139,7 @@ to Simulation Movements related to a limited set of existing Deliveries.</string
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <none/> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

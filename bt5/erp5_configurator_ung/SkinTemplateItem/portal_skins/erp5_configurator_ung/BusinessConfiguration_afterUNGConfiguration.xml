@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>""" This script will be called to apply the customization. """\n
+from AccessControl import getSecurityManager\n
+\n
+portal = context.getPortalObject()\n
+portal_preferences = portal.portal_preferences\n
+business_template = context.getSpecialiseValue()\n
+isTransitionPossible = portal.portal_workflow.isTransitionPossible\n
+\n
+# enable ung preference\n
+ung_preference = getattr(portal.portal_preferences, \'ung_preference\', None)\n
+if ung_preference is not None and isTransitionPossible(ung_preference, \'enable\'):\n
+  ung_preference.enable()\n
+\n
+# publish the ung web site\n
+ung_web_site = getattr(portal.web_site_module, \'ung\', None)\n
+if ung_web_site is not None and isTransitionPossible(ung_web_site, \'publish\', None):\n
+    ung_web_site.publish()\n
+\n
+language = context.getGlobalConfigurationAttr("default_available_language")\n
+\n
+ung_web_site.setDefaultAvailableLanguage(language)\n
+for web_section in ung_web_site.contentValues(portal_types=\'Web Section\'):\n
+  if isTransitionPossible(web_section, \'publish\', None):\n
+    web_section.publish()\n
+\n
+bt5 = portal.portal_catalog.getResultValue(portal_type="Business Template",\n
+                                           title="erp5_web_ung_role")\n
+\n
+if bt5 is not None:\n
+  for portal_type in bt5.getTemplatePortalTypeRolesList():\n
+    module_list = portal.contentValues(filter=dict(portal_type=portal_type))\n
+    portal_type_object = portal.portal_catalog.getResultValue(portal_type="Base Type",\n
+                                                              id=portal_type)\n
+    portal_type_object.updateRoleMapping()\n
+    context.log("Updated Role Mappings for: %s " % (portal_type_object.getId()))\n
+    for module in module_list:\n
+      module.updateLocalRolesOnSecurityGroups()\n
+      context.log("Updated Role Mappings for: %s(%s) " % (module.getTitle(), module.getPortalType()))\n
+\n
+if business_template is not None:\n
+  # update path items. FIXME: local roles should be exported by business template instead\n
+  for path in business_template.getTemplatePathList():\n
+    obj = portal.restrictedTraverse(path, None)\n
+    # no need to update security on categories\n
+    if obj is not None and obj.getPortalType() not in (\'Category\', \'Base Category\',):\n
+      obj.updateLocalRolesOnSecurityGroups()\n
+      context.log("Updated Role Mappings for: ", path, obj.getPortalType())\n
+\n
+  # validate and open all objects\n
+  for path in business_template.getTemplatePathList():\n
+    obj = context.getPortalObject().restrictedTraverse(path, None)\n
+    if obj is not None and hasattr(obj, \'getPortalType\'):\n
+      # XXX This hardcoded list is a bit inconvinient.\n
+      if obj.getPortalType() in (\'Person\', \n
+                                 \'Organisation\'):\n
+        if isTransitionPossible(obj, \'validate\'):\n
+          obj.validate()\n
+          context.log("Validated: ", obj.getRelativeUrl())\n
+\n
+        for assignment in obj.contentValues(filter={\'portal_type\':\'Assignment\'}):\n
+          if isTransitionPossible(assignment, \'open\'):\n
+            assignment.open()\n
+            assignment.updateLocalRolesOnSecurityGroups()\n
+            context.log("\\tOpen (assignment): ", assignment.getRelativeUrl())\n
+\n
+for gadget in context.portal_gadgets.objectValues():\n
+  if gadget.getValidationState() == \'invisible\':\n
+    gadget.visible()\n
+    gadget.public()\n
+\n
+# XXX - check if is possible add this configuration in bt5\n
+portal.knowledge_pad_module.manage_permission(\'Add portal content\',\n
+                                              roles=[\'Assignor\', "Manager", "Authenticated", "Author"],\n
+                                              acquire=0)\n
+context.log("Indexing translations")\n
+portal.ERP5Site_updateTranslationTable()\n
+\n
+# clear cache so user security is recalculated\n
+portal.portal_caches.clearAllCache()\n
+context.log("Clear cache.")\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>alter_preferences=True</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessConfiguration_afterUNGConfiguration</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

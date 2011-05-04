@@ -67,12 +67,12 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IExpandable,
+  zope.interface.implements(interfaces.IExpandableItem,
                             interfaces.IMovementGenerator,
                            )
 
   # IExpandable interface implementation
-  def expand(self, applied_rule_id=None, force=0, activate_kw=None, **kw):
+  def expand(self, applied_rule_id=None, activate_kw=None, **kw):
     """
       Lookup start / stop properties in related Open Order
       or Path and expand.
@@ -91,6 +91,20 @@ class SubscriptionItem(Item, MovementGeneratorMixin, PeriodicityMixin):
     # Pass expand
     if my_applied_rule is not None:
       my_applied_rule.expand(activate_kw=activate_kw, **kw) # XXX-JPS why **kw ?
+
+  # IExpandableItem interface implementation
+  def getSimulationMovementSimulationState(self, simulation_movement):
+    """Returns the simulation state for this simulation movement.
+    
+    This generic implementation assumes that if there is one open order line
+    which is validated or archived, the movements will be planned. This
+    behaviour might have to be adapted in subclasses.
+    """
+    for path in self.getAggregateRelatedValueList(
+        portal_type=self.getPortalObject().getPortalSupplyPathTypeList(),):
+      if path.getValidationState() in ('validated', 'archived'):
+        return 'planned'
+    return 'draft'
 
   def isSimulated(self):
     """

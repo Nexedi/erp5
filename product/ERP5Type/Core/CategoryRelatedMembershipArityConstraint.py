@@ -30,6 +30,7 @@
 ##############################################################################
 
 from Products.ERP5Type import PropertySheet
+from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.Core.CategoryMembershipArityConstraint \
           import CategoryMembershipArityConstraint
 
@@ -73,3 +74,39 @@ class CategoryRelatedMembershipArityConstraint(CategoryMembershipArityConstraint
 
     portal = obj.getPortalObject()
     return len(portal.portal_catalog.unrestrictedSearchResults(**sql_kw))
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(min_arity,
+                                       portal_type=(),
+                                       max_arity=None,
+                                       base_category=(),
+                                       filter_parameter=None):
+    """
+    @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
+
+    Filesystem definition example:
+    { 'id'            : 'source',
+      'description'   : '',
+      'type'          : 'CategoryMembershipArity',
+      'min_arity'     : '1',
+      'max_arity'     : '1',
+      'portal_type'   : ('Organisation', ),
+      'base_category' : ('source',)
+      'condition'     : 'python: object.getPortalType() == 'Foo',
+    }
+    """
+    constraint_portal_type_str = isinstance(portal_type, Expression) and \
+        portal_type.text or 'python: ' + repr(portal_type)
+
+    zodb_property_dict = dict(
+      min_arity=int(min_arity),
+      constraint_portal_type=constraint_portal_type_str,
+      constraint_base_category_list=base_category)
+
+    if max_arity is not None:
+      zodb_property_dict['max_arity'] = int(max_arity)
+
+    if filter_parameter is not None:
+      zodb_property_dict['filter_parameter'] = filter_parameter
+
+    yield zodb_property_dict

@@ -60,6 +60,7 @@ skins_tool = context.portal_skins\n
 selection_name_dict = {}\n
 \n
 ok_to_share_selection_form_list = [\'Resource_viewInventory\', \'Resource_viewMovementHistory\']\n
+legacy_skin_folders = [\'erp5_simulation_legacy\']\n
 \n
 for field_path, field in skins_tool.ZopeFind(\n
          skins_tool, obj_metatypes=[\'ProxyField\', \'ListBox\'], search_sub=1):\n
@@ -83,8 +84,12 @@ for field_path, field in skins_tool.ZopeFind(\n
     selection_name = field.get_orig_value(\'selection_name\')\n
   if selection_name == \'\':\n
     continue\n
-  selection_name_dict.setdefault(\n
-         selection_name, []).append(field_path)\n
+  skin_folder, field_path = field_path.split(\'/\', 1)\n
+  if skin_folder in legacy_skin_folders:\n
+    # we don\'t care about selection duplication in legacy fields\n
+    continue\n
+  field_path_map = selection_name_dict.setdefault(selection_name, {})\n
+  field_path_map.setdefault(field_path, []).append(skin_folder)\n
 \n
 # leave only duplicating ones\n
 duplicating_selection_name_dict = {}\n

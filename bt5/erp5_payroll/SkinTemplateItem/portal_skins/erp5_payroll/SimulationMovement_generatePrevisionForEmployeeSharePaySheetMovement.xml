@@ -50,13 +50,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>property_dict[\'source_section\'] = context.getDestination()\n
-return property_dict\n
+            <value> <string>category_list = []\n
+for base_category in context.getSourceArrowBaseCategoryList():\n
+  if base_category == "source_section":\n
+    category = "source_section/"+movement.getDefaultAcquiredCategoryMembership("destination", base=0)\n
+  else:\n
+    category = context.getDefaultAcquiredCategoryMembership(base_category, base=1) # This should be moved to degault implementation of business path - XXX-JPS\n
+  \n
+  if category is None:\n
+    category = movement.getDefaultAcquiredCategoryMembership(base_category, base=1)\n
+\n
+  if category:\n
+    category_list.append(category)\n
+\n
+return category_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>property_dict</string> </value>
+            <value> <string>movement</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

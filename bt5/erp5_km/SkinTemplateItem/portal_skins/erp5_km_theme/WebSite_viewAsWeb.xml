@@ -52,6 +52,8 @@
             <key> <string>_body</string> </key>
             <value> <string>"""\n
   Return default rendering of Web Site for KM.\n
+  This will assure that both default "view" and website_module/xxx/view \n
+  are consistentin web_mode of a KM site with default CustomRenderMethodId defined.\n
 """\n
 return context()\n
 </string> </value>

@@ -43,7 +43,8 @@ class TestTradeReports(ERP5ReportTestCase):
 
   def getBusinessTemplateList(self):
     """Returns list of BT to be installed."""
-    return ('erp5_base', 'erp5_trade', 'erp5_pdm', )
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base', 'erp5_trade', 'erp5_pdm', )
 
   def login(self):
     """login with Manager roles."""

@@ -1,4 +1,5 @@
 erp5_mysql_innodb/z_catalog_delivery_list
+erp5_mysql_innodb/z_catalog_inventory_list
 erp5_mysql_innodb/z_catalog_item_list
 erp5_mysql_innodb/z_catalog_object_list
 erp5_mysql_innodb/z_catalog_stock_list
@@ -8,6 +9,6 @@ erp5_mysql_innodb/z_create_delivery
 erp5_mysql_innodb/z_create_item
 erp5_mysql_innodb/z_create_roles_and_users
 erp5_mysql_innodb/z_create_stock
+erp5_mysql_innodb/z_erp5_banking_related_explanation
 erp5_mysql_innodb/z_related_default_site
 erp5_mysql_innodb/z_related_destination_payment
-erp5_mysql_innodb/z_related_translated_simulation_state_title

@@ -82,25 +82,6 @@ class AccountingTransaction(Delivery):
       if section is not None:
         return section.getPortalType() != 'Person'
       return False
-    
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'SearchableText')
-    def SearchableText(self):
-      """Text for full text search"""
-      text_list = []
-      for prop in ( self.getTitle(),
-                    self.getDescription(),
-                    self.getComment(),
-                    self.getReference(),
-                    self.getSourceReference(),
-                    self.getDestinationReference(),
-                    self.getSourceSectionTitle(),
-                    self.getDestinationSectionTitle(),
-                    self.getStartDate(),
-                    self.getStopDate(), ):
-        if prop:
-          text_list.append(str(prop))
-      return ' '.join(text_list)
 
 # Compatibility
 # It may be necessary to create an alias after removing the Transaction class

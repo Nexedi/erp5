@@ -217,22 +217,19 @@ class CopyContainer:
       if len(ids) > 0:
         # Use default method
         return ObjectManager.manage_delObjects(self, ids, REQUEST)
-      if isinstance(uids, (str, int)):
-        ids=[uids]
       if not uids:
           return MessageDialog(title='No items specified',
                  message='No items were specified!',
                  action ='./manage_main',)
       while uids:
-          uid=uids[-1]
+          uid = uids.pop()
           ob=self.getPortalObject().portal_catalog.getObject(uid)
           container = ob.aq_inner.aq_parent
           id = ob.id
           v=container._getOb(id, self)
           if v is self:
-              raise BadRequest('%s does not exist' % ids[-1])
+              raise BadRequest('%s does not exist' % id)
           container._delObject(id)
-          del uids[-1]
       if REQUEST is not None:
               return self.manage_main(self, REQUEST, update_menu=1)
 

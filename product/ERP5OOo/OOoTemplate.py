@@ -258,13 +258,19 @@ class OOoTemplate(ZopePageTemplate):
       file = builder.prepareContentXml(self.ooo_xml_file_id)
     return ZopePageTemplate.pt_upload(self, REQUEST, file)
 
-  security.declareProtected('Change Page Templates', 'pt_edit')
-  def pt_edit(self, text, content_type):
-    if content_type:
-      self.content_type = str(content_type)
-    if hasattr(text, 'read'):
-      text = text.read()
-    self.write(text)
+  if 'pt_edit' not in ZopePageTemplate.__dict__:
+    # Override it only for 2.8 !
+    # ZopePageTemplate v.2.8 inherate pt_edit from
+    # PageTemplate. If method is defined on ZopePageTemplate
+    # means we are under 2.12.
+    # Delete me when we drop support of 2.8
+    security.declareProtected('Change Page Templates', 'pt_edit')
+    def pt_edit(self, text, content_type):
+      if content_type:
+        self.content_type = str(content_type)
+      if hasattr(text, 'read'):
+        text = text.read()
+      self.write(text)
 
   security.declareProtected('Change Page Templates', 'doSettings')
   def doSettings(self, REQUEST, title, xml_file_id, ooo_stylesheet, script_name=None):
@@ -525,10 +531,6 @@ class OOoTemplate(ZopePageTemplate):
                                  media_type=document_dict['doc_type'],
                                  content=document_dict['document'])
 
-    # Debug mode
-    if request.get('debug',0):
-      return doc_xml
-
     # Replace content.xml in master openoffice template
     ooo_builder.replace(self.ooo_xml_file_id, doc_xml)
 
@@ -568,8 +570,9 @@ class OOoTemplate(ZopePageTemplate):
             'Validation of %s failed:\n%s' % (self.getId(), ''.join(err_list)))
 
     extension = None
+    mimetype = ooo_builder.getMimeType()
     mimetypes_registry = self.getPortalObject().mimetypes_registry
-    mimetype_object_list = mimetypes_registry.lookup(self.content_type)
+    mimetype_object_list = mimetypes_registry.lookup(mimetype)
     for mimetype_object in mimetype_object_list:
       if mimetype_object.extensions:
         extension = mimetype_object.extensions[0]
@@ -586,7 +589,7 @@ class OOoTemplate(ZopePageTemplate):
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
     tmp_ooo.edit(data=ooo,
                  filename=filename,
-                 content_type=self.content_type,)
+                 content_type=mimetype,)
 
     format = opts.get('format', request.get('format', None))
     if format:
@@ -594,9 +597,9 @@ class OOoTemplate(ZopePageTemplate):
       # We already have OOo format data, so we do not need to call
       # convertToBaseFormat(), but just copy it into base_data property.
       tmp_ooo.setBaseData(ooo)
-      tmp_ooo.setBaseContentType(self.content_type)
+      tmp_ooo.setBaseContentType(mimetype)
 
-    if request is not None and not batch_mode:
+    if request is not None and not batch_mode and not source:
       return tmp_ooo.index_html(REQUEST=request,
                                 RESPONSE=request.RESPONSE,
                                 format=format)

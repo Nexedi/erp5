@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
 Search for all predicates that corresponds to this particular context\n
 and returns the base price of the resource\n
 This script derives form getPriceCalculationOperandDict and is invoked by getPrice.\n
@@ -63,36 +61,37 @@ This script derives form getPriceCalculationOperandDict and is invoked by getPri
 \n
 """\n
 \n
-def sort_by_date(a, b):\n
-  if a.getStartDateRangeMin() > b.getStartDateRangeMin() :\n
-    return -1\n
-  return 1\n
+def sort_key(exchange_line):\n
+  if exchange_line.getPortalType() == \'Currency Exchange Cell\':\n
+    exchange_line = exchange_line.getParentValue()\n
+  start_date_range_min = exchange_line.getStartDate()\n
+  start_date_range_max = exchange_line.getStopDate()\n
+  if start_date_range_min and start_date_range_max:\n
+    return start_date_range_max - start_date_range_min\n
+  return 2**16\n
 \n
-#If getPrice is directly called on a resource, call directly\n
-#Resource_getPriceCalculationOperandDict on the resource\n
+# If getPrice is directly called on a resource, call directly\n
+# Resource_getPriceCalculationOperandDict on the resource\n
 if movement is None:\n
   return context.Resource_getPriceCalculationOperandDict(**kw)\n
 else:\n
-  # sort_method can already exist in kw.\n
-  kw[\'sort_method\'] = sort_by_date\n
   if validation_state is None:\n
-    validation_state=\'validated\'\n
+    validation_state = \'validated\'\n
   kw.setdefault(\'portal_type\', \'Currency Exchange Line\')\n
   predicate_list = context.portal_domains.searchPredicateList(\n
       context=movement,\n
       validation_state=validation_state,\n
-      test=1,\n
+      test=True,\n
       **kw)\n
 \n
+  predicate_list.sort(key=sort_key)\n
   # For each predicate(i.e: Currency Exchange Line) found, get the exchange rate\n
   # with the reference currency\n
   for predicate in predicate_list:\n
-    operand_dict = predicate.Resource_getPriceCalculationOperandDict(movement=predicate, **kw)\n
-    if operand_dict is not None and operand_dict.get(\'price\'):\n
-      return operand_dict\n
-
-
-]]></string> </value>
+    price = predicate.getPrice() or predicate.getBasePrice()\n
+    if price:\n
+      return dict(price=price)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

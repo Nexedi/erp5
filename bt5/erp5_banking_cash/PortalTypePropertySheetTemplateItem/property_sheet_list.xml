@@ -1,17 +1,17 @@
 <property_sheet_list>
  <portal_type id="Cash Balance Regulation">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Cash Exchange">
-  <item>Simulation</item>
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
   <item>Resource</item>
+  <item>Simulation</item>
  </portal_type>
  <portal_type id="Cash Movement">
-  <item>Price</item>
   <item>CashMovement</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Cash Movement New Not Emitted">
   <item>Amount</item>
@@ -27,18 +27,18 @@
   <item>Price</item>
  </portal_type>
  <portal_type id="Cash To Currency Purchase">
-  <item>Price</item>
-  <item>Resource</item>
-  <item>Reference</item>
-  <item>Discount</item>
-  <item>CurrencyExchangeRate</item>
   <item>Amount</item>
+  <item>CurrencyExchangeRate</item>
+  <item>Discount</item>
+  <item>Price</item>
+  <item>Reference</item>
+  <item>Resource</item>
  </portal_type>
  <portal_type id="Cash To Currency Sale">
-  <item>Reference</item>
-  <item>Discount</item>
   <item>Amount</item>
+  <item>Discount</item>
   <item>Price</item>
+  <item>Reference</item>
   <item>Resource</item>
  </portal_type>
  <portal_type id="Container Cell">
@@ -88,15 +88,15 @@
  </portal_type>
  <portal_type id="Internal Money Payment">
   <item>Amount</item>
-  <item>Price</item>
   <item>ItemAggregation</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Monetary Destruction">
-  <item>Price</item>
   <item>Account</item>
-  <item>MonetaryDestruction</item>
-  <item>Task</item>
   <item>Amount</item>
+  <item>MonetaryDestruction</item>
+  <item>Price</item>
+  <item>Task</item>
  </portal_type>
  <portal_type id="Monetary Destruction Cell">
   <item>CashDeliveryLine</item>
@@ -105,8 +105,8 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Monetary Issue">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Monetary Issue Line">
   <item>CashDeliveryLine</item>
@@ -122,8 +122,8 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Monetary Reception">
-  <item>Comment</item>
   <item>CashContainer</item>
+  <item>Comment</item>
  </portal_type>
  <portal_type id="Monetary Survey">
   <item>Amount</item>
@@ -131,16 +131,16 @@
  </portal_type>
  <portal_type id="Money Deposit">
   <item>Arrow</item>
-  <item>Task</item>
   <item>Price</item>
+  <item>Task</item>
  </portal_type>
  <portal_type id="Money Deposit Rendering">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Mutilated Banknote">
-  <item>MutilatedBanknote</item>
   <item>Amount</item>
+  <item>MutilatedBanknote</item>
   <item>Price</item>
  </portal_type>
  <portal_type id="Outgoing Cash Balance Regulation Line">
@@ -171,8 +171,8 @@
   <item>CashDeliveryLine</item>
  </portal_type>
  <portal_type id="Usual Cash Rendering">
-  <item>Price</item>
   <item>Amount</item>
+  <item>Price</item>
  </portal_type>
  <portal_type id="Usual Cash Transfer">
   <item>Amount</item>

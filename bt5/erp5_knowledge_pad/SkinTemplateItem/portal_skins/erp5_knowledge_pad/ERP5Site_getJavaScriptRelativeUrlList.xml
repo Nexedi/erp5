@@ -59,8 +59,7 @@
 #\n
 # BBB: For the history, erp5_xhtml_appearance.js is included by default when\n
 #      js_list is not pre-defined before the global definitions.\n
-\n
-js_list = (\'MochiKit/MochiKit.js\', \'erp5.js\', \'erp5_knowledge_box.js\',)\n
+js_list = (\'jquery/core/jquery.js\', \'jquery/ui/js/jquery-ui.js\', \'erp5.js\', \'erp5_knowledge_box.js\',)\n
 return js_list\n
 </string> </value>
         </item>

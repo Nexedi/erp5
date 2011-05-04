@@ -57,7 +57,7 @@
 \n
 order = context\n
 Base_translateString = context.Base_translateString\n
-trade_condition_portal_type_list = (\'Purchase Trade Condition\', \'Sale Trade Condition\',)\n
+trade_condition_portal_type_list = (\'Internal Trade Condition\',)\n
 \n
 trade_condition_list = order.getSpecialiseValueList(\n
     portal_type=trade_condition_portal_type_list)\n

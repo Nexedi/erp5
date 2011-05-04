@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import transaction
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
@@ -152,11 +153,13 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSimulationState')
   def getSimulationState(self, id_only=1):
-    """
-      Returns the current state in simulation
+    """Returns the current state in simulation
 
-      Inherit from order or delivery or parent (but use a conversion
-      table to make orders planned when parent is confirmed)
+      Inherit from delivery or parent (using a conversion table to make orders
+      planned when parent is confirmed).
+      
+      In the case of simulation coming from an item, the simulation state is
+      delegated to the item.
 
       XXX: movements in zero stock rule can not acquire simulation state
     """
@@ -167,13 +170,22 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     order = self.getOrderValue()
     if order is not None:
       return order.getSimulationState()
+
     try:
-      parent_state = self.getParentValue().getSimulationState()
+      parent_state = None
+      try:
+        parent_state = self.getParentValue().getSimulationState()
+      except AttributeError:
+        item = self.getParentValue().getCausalityValue(
+                portal_type=self.getPortalItemTypeList())
+        if interfaces.IExpandableItem.providedBy(item):
+          return item.getSimulationMovementSimulationState(self)
+        raise
       return parent_to_movement_simulation_state[parent_state]
     except (KeyError, AttributeError):
       LOG('SimulationMovement.getSimulationState', WARNING,
           'Could not acquire simulation state from %s'
-          % self.getRelativeUrl())
+          % self.getRelativeUrl(), error=True)
       return None
 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -214,6 +226,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """Lookup business path and, if any, return True whenever
     simulation_state is in one of the frozen states defined on business path
     """
+    if self._baseGetFrozen():
+      return True
     business_link =  self.getCausalityValue(
                          portal_type=self.getPortalBusinessLinkTypeList())
     if business_link is None:
@@ -223,7 +237,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         return True
       if self._baseIsFrozen() == 0:
         self._baseSetFrozen(None)
-      return self._baseGetFrozen() or False
+      return False
     return self.getSimulationState() in business_link.getFrozenStateList()
 
   security.declareProtected( Permissions.AccessContentsInformation,
@@ -241,8 +255,108 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
   #######################################################
   # Causality Workflow Methods
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'calculate')
+  def calculate(self):
+    """Move related delivery in 'calculating' state by activity
+
+    Activity to update causality state is delayed until all related simulation
+    movement are reindexed.
+    This method should be only called by
+    simulation_movement_causality_interaction_workflow.
+    """
+    delivery = self.getDeliveryValue()
+    if delivery is not None:
+      delivery = delivery.getRootDeliveryValue()
+      tv = getTransactionalVariable()
+      path = self.getPath()
+      delivery_path = delivery.getPath()
+      key = 'SimulationMovement.calculate', delivery_path
+      try:
+        tv[key].append(path)
+      except KeyError:
+        tv[key] = [path]
+        def before_commit():
+          method_id_list = ('immediateReindexObject',
+                            'recursiveImmediateReindexObject')
+          tag = delivery_path + '_calculate'
+          delivery.activate(tag=tag).Delivery_calculate(activate_kw=
+            {'after_path_and_method_id': (tv[key], method_id_list)})
+          tv[key] = None # disallow further calls to 'calculate'
+        transaction.get().addBeforeCommitHook(before_commit)
+
+  security.declarePrivate('_getSuccessorTradePhaseList')
+  def _getSuccessorTradePhaseList(self):
+    """
+    Get the list of future trade_phase categories from this simulation
+    movement according to the related business process
+    """
+    # XXX-Leo this method could be smaller if (one or more of):
+    #  * Simulation Movements had trade_state instead of trade_phase categories,
+    #  * .asComposedDocument() also included the causality Business Link,
+    #  * BusinessLink objects had a '.getSucessorTradePhaseList' method (accepting
+    #      a context parameter for predicate checking).
+    #  * .getBusinessLinkValueList() accepted a predecessor_link parameter,
+    #  * some of the work below was done by a Business Process method,
+    portal = self.getPortalObject()
+    business_process = self.asComposedDocument()
+    business_link_type_list = portal.getPortalBusinessLinkTypeList()
+    business_link = self.getCausalityValue(portal_type=business_link_type_list)
+    if business_link is None:
+      # XXX-Leo we could just return self.getTradePhaseList() for
+      # backward compatibility
+      from Products.ERP5Type.Errors import SimulationError
+      raise SimulationError('No Business Link Causality for %r. Cannot enumerate successor trade_phases.' % 
+                            (self,))
+    # from this Business Process, get the Business Links which
+    # predecessor state match the successor state of our Business Link
+    # causality
+    successor_trade_state = business_link.getSuccessor()
+    successor_link_list = business_process.getBusinessLinkValueList(
+      context=self,
+      predecessor=successor_trade_state)
+    successor_trade_phase_list = [link.getTradePhase()
+                                  for link in successor_link_list]
+
+    return successor_trade_phase_list
+
+  security.declarePrivate('_asSuccessorContext')
+  def _asSuccessorContext(self):
+    """ Returns a version of self with future trade phases
+    """
+    successor_trade_phase_list = self._getSuccessorTradePhaseList()
+    context = self.asContext()
+    context.edit(trade_phase_list=successor_trade_phase_list)
+    return context
+
+  security.declarePrivate('_checkSuccessorContext')
+  def _checkSuccessorContext(self):
+    # XXX turn this into a decorator?
+    if not (self.isTempObject() and
+            'trade_phase_list' in self._v_modified_property_dict):
+      raise RuntimeError(
+        'Method should only be called on self._asSuccessorContext()'
+      )
+ 
+  security.declarePrivate('_isSuccessorContext')
+  def _isRuleStillApplicable(self, rule):
+    self._checkSuccessorContext()
+    return rule.test(self)
+
+  security.declarePrivate('_getApplicableRuleList')
+  def _getApplicableRuleList(self):
+    """ Search rules that match this movement
+    """
+    self._checkSuccessorContext()
+    portal_rules = self.getPortalObject().portal_rules
+    # XXX-Leo: According to JP, the 'version' search below is wrong and
+    # should be replaced by a check that there are not two rules with the
+    # same reference that can be returned.
+    return portal_rules.searchRuleList(self,
+                                       sort_on='version',
+                                       sort_order='descending')
+
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, force=0, **kw):
+  def expand(self, **kw):
     """
     Checks all existing applied rules and make sure they still apply.
     Checks for other possible rules and starts expansion process (instanciates
@@ -253,8 +367,6 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     a delivery,
     finally, apply new rules if no rule with the same type is already applied.
     """
-    portal_rules = getToolByName(self.getPortalObject(), 'portal_rules')
-
     tv = getTransactionalVariable()
     cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
     cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
@@ -265,15 +377,21 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     applied_rule_dict = {}
     applicable_rule_dict = {}
-    for rule in portal_rules.searchRuleList(self, sort_on='version',
-        sort_order='descending'):
+    successor_self = self._asSuccessorContext()
+    for rule in successor_self._getApplicableRuleList():
       reference = rule.getReference()
       if reference:
+        # XXX-Leo: We should complain loudly if there is more than one
+        # applicable rule per reference. It indicates a configuration error.
         applicable_rule_dict.setdefault(reference, rule)
 
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
-      if rule.test(self) or applied_rule._isTreeDelivered():
+      # check if applied rule is already expanded, or if its portal
+      # rule is still applicable to this Simulation Movement with
+      # successor trade_phases
+      if (successor_self._isRuleStillApplicable(rule) or
+          applied_rule._isTreeDelivered()):
         applied_rule_dict[rule.getReference()] = applied_rule
       else:
         self._delObject(applied_rule.getId())
@@ -286,7 +404,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     self.setCausalityState('expanded')
     # expand
     for applied_rule in applied_rule_dict.itervalues():
-      applied_rule.expand(force=force, **kw)
+      applied_rule.expand(**kw)
 
     # disable and clear cache
     if not cache_enabled:
@@ -563,7 +681,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
                             'isBuildable')
   def isBuildable(self):
     """Simulation Movement buildable logic"""
-    if self.getDeliveryValue() is not None:
+    if self.getDelivery():
       # already delivered
       return False
 
@@ -576,14 +694,16 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     ## XXX Code below following line has been moved to BusinessPath (cf r37116)
     #return len(business_path.filterBuildableMovementList([self])) == 1
 
-    predecessor_state = business_link.getPredecessorValue()
+    predecessor_state = business_link.getPredecessor()
     if predecessor_state is None:
       # first one, can be built
       return True # XXX-JPS wrong cause root is marked
 
     # movement is not built, and corresponding business path
     # has predecessors: check movements related to those predecessors!
-    predecessor_path_list = predecessor_state.getSuccessorRelatedValueList()
+    composed_document = self.asComposedDocument()
+    predecessor_link_list = composed_document.getBusinessLinkValueList(
+            successor=predecessor_state)
 
     def isBuiltAndCompleted(simulation, path):
       return simulation.getCausalityValue() is not None and \
@@ -602,7 +722,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       current = current.getParentValue().getParentValue()
 
     remaining_path_set = set()
-    for path in predecessor_path_list:
+    for path in predecessor_link_list:
       related_simulation = causality_dict.get(path.getRelativeUrl())
       if related_simulation is None:
         remaining_path_set.add(path)
@@ -618,6 +738,9 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     # in 90% of cases, Business Path goes downward and this is enough
     if not remaining_path_set:
       return True
+
+    # XXX(Seb) All the code below is not tested and not documented.
+    # Documentation must be written, the code must be reviewed or dropped
 
     # But sometimes we have to dig deeper
 
@@ -785,8 +908,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         else:
           return quantity - profit_quantity + delivery_error
       return mapping.getMappedProperty(self, property)
-    else:
-      return self.getProperty(property)
+    return self.getProperty(property)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setMappedProperty')
@@ -794,5 +916,4 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     mapping = self.getPropertyMappingValue()
     if mapping is not None:
       return mapping.setMappedProperty(self, property, value)
-    else:
-      return self.setProperty(property, value)
+    return self.setProperty(property, value)

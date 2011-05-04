@@ -72,8 +72,7 @@ class TestConstraint(PropertySheetTestCase):
     transaction.abort()
     module = self.portal.organisation_module
     module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
-    self.tic()
+    super(TestConstraint, self).beforeTearDown()
 
   def createCategories(self):
     """
@@ -1191,8 +1190,10 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEquals(1, len(obj._local_properties))
     self.assertEquals([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
-    self._addProperty(obj.getPortalType(),
-                      "{'id': 'local_property', 'type': 'string'}")
+    self._addProperty(obj.getPortalType(), "FixLocalPropertiesString",
+                      portal_type="Standard Property",
+                      property_id="local_property",
+                      elementary_type="string")
     constraint.fixConsistency(obj)
     self.assertEquals((), obj._local_properties)
     self.assertEquals('1', obj.getLocalProperty())
@@ -1211,8 +1212,10 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEquals(1, len(obj._local_properties))
     #self.assertEquals([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
-    self._addProperty(obj.getPortalType(),
-                      "{'id': 'local_property', 'type': 'float'}")
+    self._addProperty(obj.getPortalType(), "FixLocalPropertiesFloat",
+                      portal_type="Standard Property",
+                      property_id="local_property",
+                      elementary_type="float")
     constraint.fixConsistency(obj)
     self.assertEquals((), obj._local_properties)
     self.assertEquals(1.234, obj.getLocalProperty())
@@ -1230,18 +1233,20 @@ class TestConstraint(PropertySheetTestCase):
     obj.edit(default_organisation_title='foo')
     self.assertEquals([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
-    self._addProperty(obj.getPortalType(),
-                 ''' { 'id':         'organisation',
-                        'storage_id': 'default_organisation',
-                        'type':       'content',
-                        'portal_type': ('Organisation', ),
-                        'acquired_property_id': ('title', ),
-                        'mode':       'w', }''')
+    self._addProperty(obj.getPortalType(), "FixLocalPropertiesContent",
+                      portal_type="Acquired Property",
+                      commit=False,
+                      property_id="organisation",
+                      storage_id="default_organisation",
+                      elementary_type="content",
+                      content_portal_type="python: ('Organisation', )",
+                      content_acquired_property_id= ('title',))
     # this property suppose that we can add some Organisation inside
     # Organisation, so we temporary patch the type information.
     ti = self.getTypesTool().getTypeInfo(obj)
     allowed_types = ti.getTypeAllowedContentTypeList()
     ti._setTypeAllowedContentTypeList(allowed_types + ['Organisation'])
+    transaction.commit()
     try:
       constraint.fixConsistency(obj)
       self.assertEquals('foo', obj.getDefaultOrganisationTitle())
@@ -1263,9 +1268,9 @@ class TestConstraint(PropertySheetTestCase):
     obj.edit(testing_category=obj.getRelativeUrl())
     self.assertEquals([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
-    self._addPropertySheet(obj.getPortalType(),
-      property_sheet_code=\
-       '''class TestPropertySheet: _categories=('testing_category',)''')
+    self._addProperty(obj.getPortalType(), "FixForCategories",
+                      portal_type="Category Property",
+                      property_id="testing_category")
     # fix consistency
     constraint.fixConsistency(obj)
     # now we can use testing_category as any category accessor
@@ -1388,20 +1393,22 @@ class TestConstraint(PropertySheetTestCase):
     # constraint are registred in property sheets
     obj = self._makeOne()
     obj.setTitle('b')
-    self._addPropertySheet(obj.getPortalType(),
-      property_sheet_code=\
-      '''class TestPropertySheet:
-          _constraints = (
-            { 'id': 'testing_constraint',
-              'type': 'StringAttributeMatch',
-              'title': 'a.*', },)
-      ''')
+    property_sheet = self._addProperty(
+                        obj.getPortalType(), 
+                        "TestRegisterWithPropertySheet",
+                        commit=True,
+                        property_id="title_constraint",
+                        portal_type='Attribute Equality Constraint',
+                        constraint_attribute_name = 'title',
+                        constraint_attribute_value = 'string:a',
+    )  
+  
     consistency_message_list = obj.checkConsistency()
     self.assertEquals(1, len(consistency_message_list))
     message = consistency_message_list[0]
     from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
     self.assertTrue(isinstance(message, ConsistencyMessage))
-    self.assertEquals(message.class_name, 'StringAttributeMatch')
+    self.assertEquals(message.class_name, 'Temporary Attribute Equality Constraint')
     obj.setTitle('a')
     self.assertEquals(obj.checkConsistency(), [])
 
@@ -1409,16 +1416,17 @@ class TestConstraint(PropertySheetTestCase):
     # messages can be overriden in property sheet
     obj = self._makeOne()
     obj.setTitle('b')
-    self._addPropertySheet(obj.getPortalType(),
-      property_sheet_code=\
-      '''class TestPropertySheet:
-          _constraints = (
-            { 'id': 'testing_constraint',
-              'message_attribute_does_not_match':
-                  'Attribute ${attribute_name} does not match',
-              'type': 'StringAttributeMatch',
-              'title': 'a.*', },)
-      ''')
+    property_sheet = self._addProperty(
+                        obj.getPortalType(), 
+                        "TestOverrideMessage",
+                        commit=True,
+                        property_id="title_constraint",
+                        portal_type='Attribute Equality Constraint',
+                        constraint_attribute_name = 'title',
+                        constraint_attribute_value = 'string:a',
+                        message_invalid_attribute_value='Attribute ${attribute_name} does not match',
+
+    )   
     consistency_message_list = obj.checkConsistency()
     self.assertEquals(1, len(consistency_message_list))
     message = consistency_message_list[0]
@@ -1429,23 +1437,17 @@ class TestConstraint(PropertySheetTestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     assignment = person.newContent(portal_type='Assignment')
     # add a source_title property on Assignment.
-    self._addPropertySheet('Assignment',
-      property_sheet_code=\
-      '''class TestPropertySheet:
-          _properties = (
-           {'id':'source_title',
-            'description':'The title of the source of this movement',
-            'type':'string',
-            'acquisition_base_category':('source',),
-            'acquisition_portal_type':('Category'),
-            'acquisition_accessor_id':'getTitle',
-            'mode':''},)
-          _constraints = (
-            { 'type': 'PropertyTypeValidity',
-              'id': 'type_check',
-              'description': "Type Validity Check Error",
-            }, )
-      ''')
+    self._addProperty('Assignment', "UnauthorizedCategory",
+                      commit=False,
+                      portal_type="Acquired Property",
+                      property_id="source_title",
+                      elementary_type="string",
+                      acquisition_base_category=('source',),
+                      acquisition_portal_type="python: ('Category',)",
+                      acquisition_accessor_id="getTitle")
+    self._addProperty('Assignment', "UnauthorizedCategory",
+                      portal_type="Property Type Validity Constraint",
+                      property_id="type_check")
     self.assertEquals([], person.checkConsistency())
     group3 = self.category_tool.restrictedTraverse(
       'group/testGroup3', self.category_tool.group.newContent(
@@ -1479,11 +1481,11 @@ class TestConstraint(PropertySheetTestCase):
                    klass_name='PropertyTypeValidity',
                    id='multi_valuated_property', )
     obj = self._makeOne()
-    self._addProperty(obj.getPortalType(),
-                      '''{'id': 'multi_valuated_property',
-                          'type': 'float',
-                          'multivalued': 1,
-                          'mode':       'w', }''')
+    self._addProperty(obj.getPortalType(), "ForMultivalued",
+                      property_id="multi_valuated_property",
+                      portal_type="Standard Property",
+                      elementary_type="float",
+                      multivalued=1)
     obj.edit(multi_valuated_property=[1.0, 2.0, 3.0, ])
     self.assertEquals([], constraint.checkConsistency(obj))
 

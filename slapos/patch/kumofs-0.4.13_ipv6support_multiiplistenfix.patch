@@ -1,0 +1,183 @@
+# Author: Guillaume BOTTEX
+# Feature added: support for IPv6
+# Bug fixed: https://github.com/etolabo/kumofs/issues#issue/8
+diff --git a/src/logic/boot.cc b/src/logic/boot.cc
+index d0a4c32..c197a30 100644
+--- a/src/logic/boot.cc
++++ b/src/logic/boot.cc
+@@ -29,6 +29,12 @@ scoped_listen_tcp::scoped_listen_tcp(struct sockaddr_in addr) :
+ 	m_addr(addr),
+ 	m_sock(listen(m_addr)) { }
+ 
++#ifdef KUMO_IPV6
++scoped_listen_tcp::scoped_listen_tcp(struct sockaddr_in6 addr) :
++	m_addr(addr),
++	m_sock(listen(m_addr)) { }
++#endif
++
+ scoped_listen_tcp::~scoped_listen_tcp()
+ {
+ 	::close(m_sock);
+@@ -37,7 +43,11 @@ scoped_listen_tcp::~scoped_listen_tcp()
+ 
+ int scoped_listen_tcp::listen(const rpc::address& addr)
+ {
++#ifdef KUMO_IPV6
++	int lsock = socket(PF_INET6, SOCK_STREAM, 0);
++#else
+ 	int lsock = socket(PF_INET, SOCK_STREAM, 0);
++#endif
+ 	if(lsock < 0) {
+ 		throw std::runtime_error("socket failed");
+ 	}
+@@ -152,7 +162,11 @@ void rpc_args::convert()
+ void cluster_args::convert()
+ {
+ 	cluster_addr = rpc::address(cluster_addr_in);
+-	cluster_addr_in.sin_addr.s_addr = INADDR_ANY;  // listen any
++#ifdef KUMO_IPV6
++	// cluster_addr_in.sin6_addr = in6addr_any;  // listen any
++#else
++	// cluster_addr_in.sin_addr.s_addr = INADDR_ANY;  // listen any
++#endif
+ 	cluster_lsock = scoped_listen_tcp::listen(
+ 			rpc::address(cluster_addr_in));
+ 	rpc_args::convert();
+diff --git a/src/logic/boot.h b/src/logic/boot.h
+index 5d09549..e0e6ac1 100644
+--- a/src/logic/boot.h
++++ b/src/logic/boot.h
+@@ -31,6 +31,9 @@ namespace kumo {
+ class scoped_listen_tcp {
+ public:
+ 	scoped_listen_tcp(struct sockaddr_in addr);
++#ifdef KUMO_IPV6
++	scoped_listen_tcp(struct sockaddr_in6 addr);
++#endif
+ 	~scoped_listen_tcp();
+ 
+ public:
+@@ -110,7 +113,11 @@ struct cluster_args : rpc_args {
+ 	virtual void set_basic_args();
+ 	virtual void show_usage();
+ 
++#ifdef KUMO_IPV6
++	struct sockaddr_in6 cluster_addr_in;
++#else
+ 	struct sockaddr_in cluster_addr_in;
++#endif
+ 	rpc::address cluster_addr;  // convert
+ 	int cluster_lsock;  // convert
+ 
+diff --git a/src/logic/gateway/main.cc b/src/logic/gateway/main.cc
+index 8829d6b..7faf81a 100644
+--- a/src/logic/gateway/main.cc
++++ b/src/logic/gateway/main.cc
+@@ -30,8 +30,13 @@ using namespace kumo;
+ 
+ struct arg_t : rpc_args {
+ 
++#ifdef KUMO_IPV6
++	sockaddr_in6 manager1_in;
++	sockaddr_in6 manager2_in;
++#else
+ 	sockaddr_in manager1_in;
+ 	sockaddr_in manager2_in;
++#endif
+ 	bool manager2_set;
+ 	rpc::address manager1;  // convert
+ 	rpc::address manager2;  // convert
+@@ -48,15 +53,27 @@ struct arg_t : rpc_args {
+ 	std::string local_cache;
+ 
+ 	bool mctext_set;
++#ifdef KUMO_IPV6
++	sockaddr_in6 mctext_addr_in;
++#else
+ 	sockaddr_in mctext_addr_in;
++#endif
+ 	int mctext_lsock;  // convert
+ 
+ 	bool mcbin_set;
++#ifdef KUMO_IPV6
++	sockaddr_in6 mcbin_addr_in;
++#else
+ 	sockaddr_in mcbin_addr_in;
++#endif
+ 	int mcbin_lsock;  // convert
+ 
+ 	bool cloudy_set;
++#ifdef KUMO_IPV6
++	sockaddr_in6 cloudy_addr_in;
++#else
+ 	sockaddr_in cloudy_addr_in;
++#endif
+ 	int cloudy_lsock;  // convert
+ 
+ 	bool mc_save_flag;
+diff --git a/src/logic/manager/main.cc b/src/logic/manager/main.cc
+index 5847ae0..63f948a 100644
+--- a/src/logic/manager/main.cc
++++ b/src/logic/manager/main.cc
+@@ -27,7 +27,11 @@ struct arg_t : cluster_args {
+ 	bool auto_replace;
+ 
+ 	bool partner_set;
++#ifdef KUMO_IPV6
++	struct sockaddr_in6 partner_in;
++#else
+ 	struct sockaddr_in partner_in;
++#endif
+ 	rpc::address partner;  // convert
+ 
+ 	virtual void convert()
+diff --git a/src/logic/server/main.cc b/src/logic/server/main.cc
+index cd92e46..5d87120 100644
+--- a/src/logic/server/main.cc
++++ b/src/logic/server/main.cc
+@@ -25,8 +25,13 @@ struct arg_t : cluster_args {
+ 
+ 	std::string dbpath;
+ 
++#ifdef KUMO_IPV6
++	sockaddr_in6 manager1_in;
++	sockaddr_in6 manager2_in;
++#else
+ 	sockaddr_in manager1_in;
+ 	sockaddr_in manager2_in;
++#endif
+ 	bool manager2_set;
+ 	rpc::address manager1;  // convert
+ 	rpc::address manager2;  // convert
+diff --git a/src/logic/server/mod_replace_stream.cc b/src/logic/server/mod_replace_stream.cc
+index 091ebc9..25ee736 100644
+--- a/src/logic/server/mod_replace_stream.cc
++++ b/src/logic/server/mod_replace_stream.cc
+@@ -104,7 +104,11 @@ RPC_IMPL(mod_replace_stream_t, ReplaceOffer, req, z, response)
+ 
+ 	using namespace mp::placeholders;
+ 	m_stream_core->connect(
++#ifdef KUMO_IPV6
++			PF_INET6, SOCK_STREAM, 0,
++#else
+ 			PF_INET, SOCK_STREAM, 0,
++#endif
+ 			(sockaddr*)addrbuf, sizeof(addrbuf),
+ 			net->connect_timeout_msec(),
+ 			mp::bind(&mod_replace_stream_t::stream_connected, this, _1, _2));
+diff --git a/src/rpc/client_tmpl.h b/src/rpc/client_tmpl.h
+index 8424677..173a308 100644
+--- a/src/rpc/client_tmpl.h
++++ b/src/rpc/client_tmpl.h
+@@ -159,7 +159,11 @@ bool client_tmpl<Transport, Session>::async_connect(
+ 	addr.getaddr((sockaddr*)&addrbuf);
+ 
+ 	using namespace mp::placeholders;
++#ifdef KUMO_IPV6
++	wavy::connect(PF_INET6, SOCK_STREAM, 0,
++#else
+ 	wavy::connect(PF_INET, SOCK_STREAM, 0,
++#endif
+ 			(sockaddr*)addrbuf, sizeof(addrbuf),
+ 			m_connect_timeout_msec,
+ 			mp::bind(

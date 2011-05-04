@@ -13,3 +13,5 @@ Budget | budget_workflow
 Budget | edit_workflow
 Category Budget Variation | edit_workflow
 Node Budget Variation | edit_workflow
+Transaction Quantity Value Feasability Constraint | dynamic_class_generation_interaction_workflow
+Transaction Quantity Value Validity Constraint | dynamic_class_generation_interaction_workflow

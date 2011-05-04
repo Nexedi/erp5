@@ -1,0 +1,14 @@
+<type_roles>
+  <role id='Auditor'>
+   <property id='title'>Forum User</property>
+   <property id='description'>Forum users can see information on Persons.</property>
+   <multi_property id='category'>function/forum/visitor</multi_property>
+   <multi_property id='category'>function/forum/user</multi_property>
+   <multi_property id='category'>function/forum/administrator</multi_property>
+  </role>
+  <role id='Auditor'>
+   <property id='title'>Forum Visitor</property>
+   <property id='description'>Just a visitor.</property>
+   <multi_property id='category'>function/forum/visitor</multi_property>
+  </role>
+</type_roles>

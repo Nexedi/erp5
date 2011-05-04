@@ -1025,6 +1025,10 @@ class SimulationTool(BaseTool):
 
       omit_simulation - doesn't take into account simulation movements
 
+      only_accountable - Only take into account accountable movements. By
+                        default, only movements for which isAccountable() is
+                        true will be taken into account.
+
       omit_input     -  doesn't take into account movement with quantity > 0
 
       omit_output    -  doesn't take into account movement with quantity < 0
@@ -1184,6 +1188,7 @@ class SimulationTool(BaseTool):
     def getInventoryList(self, src__=0, optimisation__=True,
                          ignore_variation=0, standardise=0,
                          omit_simulation=0, 
+                         only_accountable=True,
                          default_stock_table='stock',
                          selection_domain=None, selection_report=None,
                          statistic=0, inventory_list=1, 
@@ -1417,6 +1422,7 @@ class SimulationTool(BaseTool):
                 stock_table_id=EQUAL_DATE_TABLE_ID,
                 src__=src__, ignore_variation=ignore_variation,
                 standardise=standardise, omit_simulation=omit_simulation,
+                only_accountable=only_accountable,
                 selection_domain=selection_domain,
                 selection_report=selection_report, precision=precision,
                 inventory_list=inventory_list,
@@ -1429,6 +1435,7 @@ class SimulationTool(BaseTool):
                 stock_table_id=GREATER_THAN_DATE_TABLE_ID,
                 src__=src__, ignore_variation=ignore_variation,
                 standardise=standardise, omit_simulation=omit_simulation,
+                only_accountable=only_accountable,
                 selection_domain=selection_domain,
                 selection_report=selection_report, precision=precision,
                 inventory_list=inventory_list,
@@ -1556,6 +1563,7 @@ class SimulationTool(BaseTool):
                     stock_table_id=default_stock_table,
                     src__=src__, ignore_variation=ignore_variation,
                     standardise=standardise, omit_simulation=omit_simulation,
+                    only_accountable=only_accountable,
                     selection_domain=selection_domain,
                     selection_report=selection_report, precision=precision,
                     inventory_list=inventory_list, connection_id=connection_id,
@@ -1837,7 +1845,8 @@ class SimulationTool(BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getInventoryHistoryList')
     def getInventoryHistoryList(self, src__=0, ignore_variation=0,
-                                standardise=0, omit_simulation=0, omit_input=0,
+                                standardise=0, omit_simulation=0,
+                                only_accountable=True, omit_input=0,
                                 omit_output=0, selection_domain=None,
                                 selection_report=None, precision=None, **kw):
       """
@@ -1853,6 +1862,7 @@ class SimulationTool(BaseTool):
       return self.Resource_getInventoryHistoryList(
                       src__=src__, ignore_variation=ignore_variation,
                       standardise=standardise, omit_simulation=omit_simulation,
+                      only_accountable=only_accountable,
                       omit_input=omit_input, omit_output=omit_output,
                       selection_domain=selection_domain,
                       selection_report=selection_report, precision=precision,
@@ -1862,6 +1872,7 @@ class SimulationTool(BaseTool):
                               'getInventoryHistoryChart')
     def getInventoryHistoryChart(self, src__=0, ignore_variation=0,
                                  standardise=0, omit_simulation=0,
+                                 only_accountable=True,
                                  omit_input=0, omit_output=0,
                                  selection_domain=None,
                                  selection_report=None, precision=None, **kw):
@@ -1877,6 +1888,7 @@ class SimulationTool(BaseTool):
       return self.Resource_getInventoryHistoryChart(
                     src__=src__, ignore_variation=ignore_variation,
                     standardise=standardise, omit_simulation=omit_simulation,
+                    only_accountable=only_accountable,
                     omit_input=omit_input, omit_output=omit_output,
                     selection_domain=selection_domain,
                     selection_report=selection_report, precision=precision,
@@ -1887,6 +1899,7 @@ class SimulationTool(BaseTool):
     def getMovementHistoryList(self, src__=0, ignore_variation=0,
                                standardise=0, omit_simulation=0,
                                omit_input=0, omit_output=0,
+                               only_accountable=True,
                                omit_asset_increase=0, omit_asset_decrease=0,
                                selection_domain=None, selection_report=None,
                                initial_running_total_quantity=0,
@@ -1906,6 +1919,7 @@ class SimulationTool(BaseTool):
                          src__=src__, ignore_variation=ignore_variation,
                          standardise=standardise,
                          omit_simulation=omit_simulation,
+                         only_accountable=only_accountable,
                          omit_input=omit_input, omit_output=omit_output,
                          omit_asset_increase=omit_asset_increase,
                          omit_asset_decrease=omit_asset_decrease,
@@ -1920,7 +1934,8 @@ class SimulationTool(BaseTool):
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getMovementHistoryStat')
     def getMovementHistoryStat(self, src__=0, ignore_variation=0,
-                               standardise=0, omit_simulation=0, omit_input=0,
+                               standardise=0, omit_simulation=0,
+                               only_accountable=True, omit_input=0,
                                omit_output=0, selection_domain=None,
                                selection_report=None, precision=None, **kw):
       """
@@ -1930,9 +1945,10 @@ class SimulationTool(BaseTool):
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_zGetInventory(src__=src__,
           ignore_variation=ignore_variation, standardise=standardise,
-          omit_simulation=omit_simulation, omit_input=omit_input,
-          omit_output=omit_output, selection_domain=selection_domain,
-          selection_report=selection_report, precision=precision, **sql_kw)
+          omit_simulation=omit_simulation, only_accountable=only_accountable,
+          omit_input=omit_input, omit_output=omit_output,
+          selection_domain=selection_domain, selection_report=selection_report,
+          precision=precision, **sql_kw)
 
     security.declareProtected(Permissions.AccessContentsInformation, 
                               'getNextNegativeInventoryDate')

@@ -125,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: \'custom\' in [getattr(here, \'getPaymentConditionTradeDate\', lambda: None),getattr(here, \'getTradeDate\', lambda: None)]</string> </value>
+            <value> <string>python: \'custom\' in [getattr(here, \'getPaymentConditionTradeDate\', lambda: None)(),getattr(here, \'getTradeDate\', lambda: None)()]</string> </value>
         </item>
       </dictionary>
     </pickle>

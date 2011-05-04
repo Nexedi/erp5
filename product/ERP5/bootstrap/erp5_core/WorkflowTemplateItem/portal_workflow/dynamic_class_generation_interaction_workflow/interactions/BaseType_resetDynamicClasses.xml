@@ -27,15 +27,15 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>DynamicClassGeneration_resetDynamicDocuments</string>
+              </list>
             </value>
         </item>
         <item>
             <key> <string>before_commit_script_name</string> </key>
             <value>
-              <list>
-                <string>DynamicClassGeneration_resetDynamicDocuments</string>
-              </list>
+              <tuple/>
             </value>
         </item>
         <item>
@@ -56,10 +56,11 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_setTypeClass.*</string>
+                <string>_setTypeClass</string>
                 <string>_setTypeMixin.*</string>
                 <string>_setTypeInterface.*</string>
                 <string>_setTypePropertySheet.*</string>
+                <string>_setTypeBaseCategory.*</string>
               </list>
             </value>
         </item>

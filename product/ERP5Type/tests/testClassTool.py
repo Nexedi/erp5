@@ -124,24 +124,18 @@ class TestClassTool(ERP5TypeTestCase):
     This tests checks that Documentation Helper works with propertysheets
     that define their categories using expressions.
     """
-    from Products.ERP5Type import PropertySheet
-    from Products.ERP5Type.Document.Movement import Movement
-    from Products.ERP5Type.Document.Delivery import Delivery
-    from Products.CMFCore.Expression import Expression
+    from Products.ERP5Type.Core import DynamicCategoryProperty
+    from erp5.portal_type import Movement, Delivery
     movement = Movement('dummy_movement').__of__(
                         Delivery('dummy_delivery').__of__(self.portal))
     # This test relies on the fact that Movement class has categories defined
     # by an expression.
-    found_one = 0
-    for ps in movement.property_sheets:
-      if isinstance(ps, basestring):
-        ps = getattr(PropertySheet, ps)
-      for category in getattr(ps, '_categories', []):
-        if isinstance(category, Expression):
-          found_one = 1
+    portal_property_sheets = self.portal.portal_property_sheets
+    movement_propert_sheet = portal_property_sheets.Movement
+
+    for ps in movement_propert_sheet.contentValues():
+      if isinstance(ps, DynamicCategoryProperty.DynamicCategoryProperty):
           break
-      if found_one:
-        break
     else:
       self.fail("Movement _categories doesn't include expressions; "
                 "this test is outdated")

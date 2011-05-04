@@ -156,8 +156,7 @@ class Person(EncryptedPasswordMixin, XMLObject):
       if self.getLastName(): name_list.append(self.getLastName())
       if name_list: self._setTitle(' '.join(name_list))
 
-    security.declareProtected('Manage users', 'setReference')
-    def setReference(self, value):
+    def _setReference(self, value):
       """
         Set the user id. This method is defined explicitly, because:
 
@@ -200,7 +199,7 @@ class Person(EncryptedPasswordMixin, XMLObject):
         else:
           transactional_variable[tag] = None
 
-      self._setReference(value)
+      self._baseSetReference(value)
       self.reindexObject(activate_kw=activate_kw)
       # invalid the cache for ERP5Security
       portal_caches = portal.portal_caches

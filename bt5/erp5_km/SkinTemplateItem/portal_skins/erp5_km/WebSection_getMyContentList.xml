@@ -60,6 +60,9 @@
 if context.getPortalType() == \'Person\':\n
   # If context is a person, get the user\n
   user = context.getReference()\n
+  if user is None:\n
+    # no way to determine documents if we have no reference\n
+    return []\n
   return context.ContributionTool_getMyContentList(user=user, **kw)\n
 else:\n
   return context.ContributionTool_getMyContentList(**kw)\n

@@ -33,7 +33,7 @@ import unittest
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import skip
-from Products.ERP5OOo.tests.testFormPrintout import TestFormPrintoutMixin
+from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.MimetypesRegistry.mime_types.magic import guessMime
 from Products.ERP5OOo.OOoUtils import OOoBuilder
@@ -106,18 +106,7 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
                     precondition='',
                     content_type='application/vnd.oasis.opendocument.text')
     erp5OOo = custom.manage_addProduct['ERP5OOo']
-    addOOoTemplate = erp5OOo.addOOoTemplate
-    if custom._getOb('Foo_viewAsOdt', None) is None:
-      addOOoTemplate(id='Foo_viewAsOdt', title='')
-    request = self.app.REQUEST
-    Foo_viewAsOdt = custom.Foo_viewAsOdt
-    Foo_viewAsOdt.doSettings(request, title='', xml_file_id='content.xml',
-                             ooo_stylesheet='Foo_getODTStyleSheet')
-    #Foo_viewAsOdt.pt_upload(request, file=foo_file)
-    #render_result = Foo_viewAsOdt(REQUEST=request)
-    builder = OOoBuilder(foo_file)
-    content = builder.extract('content.xml')
-    Foo_viewAsOdt.pt_edit(content, content_type='application/vnd.oasis.opendocument.text')
+
     if custom._getOb('Foo_viewAsPrintout', None) is None:
       erp5OOo.addFormPrintout(id='Foo_viewAsPrintout', title='',
                               form_name='Foo_view', template='Foo_getODTStyleSheet')

@@ -119,8 +119,8 @@ class EquivalenceTesterMixin:
   def compare(self, prevision_movement, decision_movement):
     """
     Returns True if prevision_movement and delivery_movement
-    match. Returns False else. The method is asymmetric and
-    the order of parameter matters. For example, a sourcing
+    match. Returns False otherwise. The method is asymmetric and
+    the order of parameters matters. For example, a sourcing
     rule may use a tester which makes sure that movements are
     delivered no sooner than 2 weeks before production but
     no later than the production date.
@@ -176,7 +176,7 @@ class EquivalenceTesterMixin:
     message = '<a href="${decision_url}">${property_name} of ${decision_value} of ${decision_type} ${decision_title}</a> of <a href="${delivery_url}">${delivery_title}</a> is different from <a href="${prevision_url}">planned ${property_name} of ${prevision_value}</a>.'
     decision_movement = self.getPortalObject().unrestrictedTraverse(
       divergence_message.getProperty('object_relative_url'))
-    decision_delivery = decision_movement.getDeliveryValue()
+    decision_delivery = decision_movement.getRootDeliveryValue()
     mapping = {
       'decision_url':decision_movement.absolute_url(),
       # TODO we need a way to map the property name to the business word,
@@ -202,8 +202,8 @@ class EquivalenceTesterMixin:
 
   def getUpdatablePropertyDict(self, prevision_movement, decision_movement):
     """
-    Returns a list of properties to update on decision_movement
-    prevision_movement so that next call to compare returns True.
+    Returns a mapping of properties to update on decision_movement so that next
+    call to compare against prevision_movement returns True.
 
     prevision_movement -- a simulation movement (prevision)
 

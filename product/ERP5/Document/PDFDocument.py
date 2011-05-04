@@ -87,6 +87,14 @@ class PDFDocument(Image):
         data = self._convertToText()
         self.setConversion(data, mime=mime, format='txt')
         return (mime, data)
+    elif format in ('djvu', 'DJVU'):
+      try:
+        return self.getConversion(format='djvu')
+      except KeyError:
+        mime = 'image/vnd.djvu'
+        data = self._convertToDJVU()
+        self.setConversion(data, mime=mime, format='djvu')
+        return (mime, data)
     elif format is None:
       return self.getContentType(), self.getData()
     else:
@@ -115,7 +123,7 @@ class PDFDocument(Image):
       return ''
     mime_type = 'text/plain'
     portal_transforms = self.getPortalObject().portal_transforms
-    filename = self.getStandardFilename(format='txt')
+    filename = self.getFilename()
     result = portal_transforms.convertToData(mime_type, str(self.getData()),
                                              context=self, filename=filename,
                                              mimetype=self.getContentType())
@@ -149,7 +157,7 @@ class PDFDocument(Image):
           text += result
       return text
 
-  security.declareProtected(Permissions.View, 'getSizeFromImageDisplay')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getSizeFromImageDisplay')
   def getSizeFromImageDisplay(self, image_display):
     """
     Return the size for this image display, or None if this image display name
@@ -196,6 +204,31 @@ class PDFDocument(Image):
     h = h.replace('href="%s.html' % tmp.name.split(os.sep)[-1],
                                                           'href="asEntireHTML')
     return h
+
+  security.declarePrivate('_convertToDJVU')
+  def _convertToDJVU(self):
+    """
+    Convert the PDF text content to DJVU with pdf2djvu
+    """
+    if not self.hasData():
+      return ''
+    tmp = tempfile.NamedTemporaryFile()
+    tmp.write(self.getData())
+    tmp.seek(0)
+
+    command_result = None
+    try:
+      command = ['pdf2djvu', tmp.name]
+      try:
+        command_result = Popen(command, stdout=PIPE).communicate()[0]
+      except OSError, e:
+        if e.errno == errno.ENOENT:
+          raise ConversionError('pdf2djvu was not found')
+        raise
+
+    finally:
+      tmp.close()
+    return command_result
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentInformation')
   def getContentInformation(self):

@@ -55,7 +55,7 @@ result = []\n
 if empty_first_element==True:\n
   result = [[\'\', \'\'],]\n
 \n
-filename = "currency_list.sxc"\n
+filename = "standard_currency_list.ods"\n
 cachedMethod = CachingMethod(context.ConfigurationTemplate_readOOCalcFile, \n
                              script.getId(),\n
                              cache_factory="erp5_content_long")\n
@@ -70,83 +70,12 @@ return result\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>empty_first_element = True, filter="world"</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>2</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>empty_first_element</string>
-                            <string>filter</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>result</string>
-                            <string>True</string>
-                            <string>filename</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>script</string>
-                            <string>cachedMethod</string>
-                            <string>rows</string>
-                            <string>Base_translateString</string>
-                            <string>_getiter_</string>
-                            <string>row</string>
-                            <string>_getitem_</string>
-                            <string>currency_title</string>
-                            <string>line</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>1</int>
-                <string>world</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>BusinessConfiguration_getISOCurrencyList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

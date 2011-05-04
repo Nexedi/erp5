@@ -36,31 +36,38 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="actions  python:here.Base_filterDuplicateActions(here.portal_actions.listFilteredActionsFor(here.getObject()));\n
+<tal:block tal:define="actions  python:here.Base_filterDuplicateActions(here.portal_actions.listFilteredActionsFor(here));\n
                        dummy    python:request.set(\'actions\', actions);">\n
-       <a tal:content="python: \'Updated %s by\' % context.getModificationDate().toZone(\'UTC\').ISO()"/>\n
-       <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
-\n
-       <button onclick="javascript:clickSaveButton(\'Base_edit\')" \n
-               name="Base_edit:method" title="Save" \n
-               class="save" type="submit">Save</button>\n
-       <div class="action_menu">\n
-       <tal:block tal:define="portal_path here/absolute_url;\n
-                       url_suffix python: \'/ERP5Site_createNewWebDocument?select_action=\'">\n
-         <li><a id="change_state">Change State<img tal:attributes="src python: portal_path + \'/ung_images/arrow.png\'"></a>\n
-           <ul>\n
-             <tal:block tal:repeat="action actions/workflow">\n
-             <li>\n
-               <a tal:attributes="href string:workflow ${action/url}">\n
-                 <h6 tal:content="action/name"></h6>\n
-               </a>\n
-             </li>\n
-             </tal:block>\n
-           </ul>\n
-         </li>\n
-        </tal:block>\n
-        </div>\n
-      <a id=\'sharing_url\'></a>\n
+  <a tal:condition="python: context.getModificationDate() is not None">\n
+    <a tal:content="python: \'Updated %s by\' % context.getModificationDate().ISO()"/>\n
+  </a>\n
+  <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
+  <button onclick="javascript:clickSaveButton(\'Base_edit\')"\n
+          name="Base_edit:method" \n
+          class="save" type="submit"\n
+          i18n:translate="" i18n:domain="ui">Save</button>\n
+  <div class="action_menu">\n
+    <tal:block tal:define="url_suffix python: \'/ERP5Site_createNewWebDocument?select_action=\'">\n
+      <li>\n
+        <a id="change_state">\n
+          <span i18n:translate="" i18n:domain="ui">Change State</span>\n
+          <img tal:attributes="src python: here.absolute_url() + \'/ung_images/arrow.png\'">\n
+        </a>\n
+        <ul>\n
+          <tal:block tal:repeat="action actions/workflow">\n
+            <li>\n
+              <a tal:attributes="href string:workflow ${action/url}">\n
+                <h6 tal:content="action/name" i18n:translate="" i18n:domain="ui"></h6>\n
+              </a>\n
+            </li>\n
+          </tal:block>\n
+        </ul>\n
+      </li>\n
+    </tal:block>\n
+  </div>\n
+  <tal:block tal:condition="python: here.getValidationState() == \'shared\'">\n
+   <span id="sharing_url" tal:content="python: here.getWebSiteValue().absolute_url() + \'?key=\' + here.getReference()">Key</span>\n
+  </tal:block>\n
 </tal:block>
 
 ]]></unicode> </value>

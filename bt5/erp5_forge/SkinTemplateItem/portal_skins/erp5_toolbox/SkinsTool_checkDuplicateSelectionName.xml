@@ -55,8 +55,9 @@
 """\n
 \n
 selection_name_dict = context.SkinsTool_getDuplicateSelectionNameDict()\n
-for selection_name, field_list in selection_name_dict.items():\n
-  print repr(selection_name), \'\\n\\t\', \'\\n\\t\'.join(field_list)\n
+for selection_name, field_map in selection_name_dict.items():\n
+  print repr(selection_name), \'\\n\\t\', \'\\n\\t\'.join(["%r: %s" % (field, skin_list) \n
+                                                   for field, skin_list in field_map.items()])\n
 return printed\n
 </string> </value>
         </item>

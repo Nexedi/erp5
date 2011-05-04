@@ -52,16 +52,12 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# XXX-Luke: Beware, I will modify this script *very* much\n
-portal = context.getPortalObject()\n
-\n
 configuration_save_url = kw.get(\'configuration_save_url\', None)\n
 preferred_event_sender_email = kw.get(\'preferred_event_sender_email\', \'\')\n
 preferred_date_order = kw.get(\'preferred_date_order\', None)\n
 preferred_language_list = kw.get(\'lang\', [])\n
 \n
 configuration_save = context.restrictedTraverse(configuration_save_url)\n
-business_configuration = configuration_save.getParent()\n
 \n
 # if preferred email is not specified used previously saved company email.\n
 company_email = context.getGlobalConfigurationAttr(\'company_email\')\n
@@ -122,7 +118,7 @@ service_list = (\n
   (\'event_other\', \'Other event\'),\n
   )\n
 configuration_save.addConfigurationItem("Service Configurator Item",\n
-                                        service_list=service_list)\n
+                                        configuration_list=service_list)\n
 \n
 # configure preferences\n
 prefs = dict(\n
@@ -194,11 +190,6 @@ system_prefs = dict(\n
                              \'service_module/support_other\',],\n
   preferred_event_sender_email = preferred_event_sender_email,\n
   preferred_event_assessment_form_id_list = [],\n
-  # oood\n
-  # XXX-Luke: (critical) Use Conversion Server parameters related with\n
-  #           Business Configartion\n
-  preferred_ooodoc_server_address=\'oood\',\n
-  preferred_ooodoc_server_port_number=8008,\n
   # dms\n
   # XXX-Luke: (proposal) Allow to define, maybe use some magic of\n
   #           representation\n
@@ -220,11 +211,7 @@ system_prefs = dict(\n
   preferred_client_role_list = [\'client\'],\n
   preferred_sale_use_list = [\'trade/sale\'],\n
   preferred_purchase_use_list = [\'trade/purchase\'],\n
-  preferred_packing_use_list = [\'trade/container\'],\n
-  # Express preferences\n
-  preferred_express_subscription_status = 1,\n
-  preferred_express_configuration_status = 1,\n
-  preferred_express_after_setup_script_id = \'ERP5Generator_afterSetup\')\n
+  preferred_packing_use_list = [\'trade/container\'])\n
 \n
 configuration_save.addConfigurationItem(\n
     \'System Preference Configurator Item\',\n
@@ -233,7 +220,6 @@ configuration_save.addConfigurationItem(\n
     \'preference",\n
     title="Default Configurator System Site Preference",\n
     **system_prefs)\n
-\n
 \n
 # preferred_languages\n
 for bt5_id in preferred_language_list:\n
@@ -244,85 +230,8 @@ for bt5_id in preferred_language_list:\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>None</string>
-                            <string>configuration_save_url</string>
-                            <string>preferred_event_sender_email</string>
-                            <string>preferred_date_order</string>
-                            <string>preferred_language_list</string>
-                            <string>configuration_save</string>
-                            <string>business_configuration</string>
-                            <string>company_email</string>
-                            <string>_getitem_</string>
-                            <string>currency_info</string>
-                            <string>_getiter_</string>
-                            <string>currency_reference</string>
-                            <string>currency_base_unit_quantity</string>
-                            <string>currency_title</string>
-                            <string>organisation_configurator_item</string>
-                            <string>organisation_configurator_item_obj</string>
-                            <string>service_list</string>
-                            <string>dict</string>
-                            <string>prefs</string>
-                            <string>_apply_</string>
-                            <string>True</string>
-                            <string>system_prefs</string>
-                            <string>bt5_id</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -331,12 +240,6 @@ for bt5_id in preferred_language_list:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Configure global ERP5 preferences</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

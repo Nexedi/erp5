@@ -3,8 +3,11 @@
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
       <tuple>
-        <global name="Variables" module="Products.DCWorkflow.Variables"/>
-        <tuple/>
+        <tuple>
+          <string>Products.DCWorkflow.Variables</string>
+          <string>Variables</string>
+        </tuple>
+        <none/>
       </tuple>
     </pickle>
     <pickle>

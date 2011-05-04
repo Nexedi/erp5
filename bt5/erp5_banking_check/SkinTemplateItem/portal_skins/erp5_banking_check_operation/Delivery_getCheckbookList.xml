@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -172,12 +169,6 @@ return listbox\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=None, item_portal_type_list=None,destination_payment=None,model_filter_dict=None,batch_mode=0,simulation_state=None,disable_node=0,at_date=None,reference=None,checkbook_model=None,title=None,limit=None,count=False,**kw</string> </value>
         </item>
@@ -190,114 +181,8 @@ return listbox\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>13</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>listbox</string>
-                            <string>item_portal_type_list</string>
-                            <string>destination_payment</string>
-                            <string>model_filter_dict</string>
-                            <string>batch_mode</string>
-                            <string>simulation_state</string>
-                            <string>disable_node</string>
-                            <string>at_date</string>
-                            <string>reference</string>
-                            <string>checkbook_model</string>
-                            <string>title</string>
-                            <string>limit</string>
-                            <string>count</string>
-                            <string>kw</string>
-                            <string>DateTime</string>
-                            <string>Dummy</string>
-                            <string>dummy</string>
-                            <string>_getattr_</string>
-                            <string>node</string>
-                            <string>vault</string>
-                            <string>None</string>
-                            <string>_getiter_</string>
-                            <string>list_start</string>
-                            <string>list_length</string>
-                            <string>context</string>
-                            <string>item_list</string>
-                            <string>getCurrentTrackingList</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>_write_</string>
-                            <string>checkbook_model_uid</string>
-                            <string>search_criterion</string>
-                            <string>_apply_</string>
-                            <string>current_tracking_list</string>
-                            <string>True</string>
-                            <string>len</string>
-                            <string>item_index</string>
-                            <string>item</string>
-                            <string>exclude</string>
-                            <string>resource</string>
-                            <string>property</string>
-                            <string>value</string>
-                            <string>item_portal_type</string>
-                            <string>item_dict</string>
-                            <string>destination_payment_value</string>
-                            <string>internal_bank_account_number</string>
-                            <string>_inplacevar_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <int>0</int>
-                <none/>
-                <int>0</int>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Delivery_getCheckbookList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

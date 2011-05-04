@@ -86,6 +86,8 @@ class TestInvoiceMixin(TestPackingListMixin):
   @UnrestrictedMethod
   def createCategories(self):
     """Create the categories for our test. """
+    # pull in the TestOrderMixin categories first
+    super(TestInvoiceMixin, self).createCategories()
     for cat_string in self.getNeededCategoryList() :
       base_cat = cat_string.split("/")[0]
       path = self.getPortal().portal_categories[base_cat]
@@ -1678,11 +1680,11 @@ class TestInvoice(TestInvoiceMixin):
                     title='Resource',)
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Client')
-    client_logo = client.newContent(portal_type='Image',
+    client_logo = client.newContent(portal_type='Embedded File',
                                     id='default_image')
     vendor = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Vendor')
-    vendor_logo = vendor.newContent(portal_type='Image',
+    vendor_logo = vendor.newContent(portal_type='Embedded File',
                                     id='default_image')
     self.assertEquals(0, vendor_logo.getSize())
     self.assertEquals(0, vendor.getDefaultImageWidth())
@@ -1725,12 +1727,12 @@ class TestInvoice(TestInvoiceMixin):
     file_data = FileUpload(__file__, 'rb')
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Client')
-    client_logo = client.newContent(portal_type='Image',
+    client_logo = client.newContent(portal_type='Embedded File',
                                     id='default_image',
                                     file=file_data)
     vendor = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Vendor')
-    vendor_logo = vendor.newContent(portal_type='Image',
+    vendor_logo = vendor.newContent(portal_type='Embedded File',
                                     id='default_image',
                                     file=file_data)
 

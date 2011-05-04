@@ -1,0 +1,593 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>codemirror.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* CodeMirror main module (http://codemirror.net/)\n
+ *\n
+ * Implements the CodeMirror constructor and prototype, which take care\n
+ * of initializing the editor frame, and providing the outside interface.\n
+ */\n
+\n
+// The CodeMirrorConfig object is used to specify a default\n
+// configuration. If you specify such an object before loading this\n
+// file, the values you put into it will override the defaults given\n
+// below. You can also assign to it after loading.\n
+var CodeMirrorConfig = window.CodeMirrorConfig || {};\n
+\n
+var CodeMirror = (function(){\n
+  function setDefaults(object, defaults) {\n
+    for (var option in defaults) {\n
+      if (!object.hasOwnProperty(option))\n
+        object[option] = defaults[option];\n
+    }\n
+  }\n
+  function forEach(array, action) {\n
+    for (var i = 0; i < array.length; i++)\n
+      action(array[i]);\n
+  }\n
+\n
+  // These default options can be overridden by passing a set of\n
+  // options to a specific CodeMirror constructor. See manual.html for\n
+  // their meaning.\n
+  setDefaults(CodeMirrorConfig, {\n
+    stylesheet: [],\n
+    path: "",\n
+    parserfile: [],\n
+    basefiles: ["util.js", "stringstream.js", "select.js", "undo.js", "editor.js", "tokenize.js"],\n
+    iframeClass: null,\n
+    passDelay: 200,\n
+    passTime: 50,\n
+    lineNumberDelay: 200,\n
+    lineNumberTime: 50,\n
+    continuousScanning: false,\n
+    saveFunction: null,\n
+    onChange: null,\n
+    undoDepth: 50,\n
+    undoDelay: 800,\n
+    disableSpellcheck: true,\n
+    textWrapping: true,\n
+    readOnly: false,\n
+    width: "",\n
+    height: "300px",\n
+    minHeight: 100,\n
+    autoMatchParens: false,\n
+    parserConfig: null,\n
+    tabMode: "indent", // or "spaces", "default", "shift"\n
+    enterMode: "indent", // or "keep", "flat"\n
+    electricChars: true,\n
+    reindentOnLoad: false,\n
+    activeTokens: null,\n
+    cursorActivity: null,\n
+    lineNumbers: false,\n
+    firstLineNumber: 1,\n
+    indentUnit: 2,\n
+    domain: null\n
+  });\n
+\n
+  function addLineNumberDiv(container, firstNum) {\n
+    var nums = document.createElement("DIV"),\n
+        scroller = document.createElement("DIV");\n
+    nums.style.position = "absolute";\n
+    nums.style.height = "100%";\n
+    if (nums.style.setExpression) {\n
+      try {nums.style.setExpression("height", "this.previousSibling.offsetHeight + \'px\'");}\n
+      catch(e) {} // Seems to throw \'Not Implemented\' on some IE8 versions\n
+    }\n
+    nums.style.top = "0px";\n
+    nums.style.left = "0px";\n
+    nums.style.overflow = "hidden";\n
+    container.appendChild(nums);\n
+    scroller.className = "CodeMirror-line-numbers";\n
+    nums.appendChild(scroller);\n
+    scroller.innerHTML = "<div>" + firstNum + "</div>";\n
+    return nums;\n
+  }\n
+\n
+  function frameHTML(options) {\n
+    if (typeof options.parserfile == "string")\n
+      options.parserfile = [options.parserfile];\n
+    if (typeof options.basefiles == "string")\n
+      options.basefiles = [options.basefiles];\n
+    if (typeof options.stylesheet == "string")\n
+      options.stylesheet = [options.stylesheet];\n
+\n
+    var html = ["<!DOCTYPE HTML PUBLIC \\"-//W3C//DTD HTML 4.0 Transitional//EN\\" \\"http://www.w3.org/TR/html4/loose.dtd\\"><html><head>"];\n
+    // Hack to work around a bunch of IE8-specific problems.\n
+    html.push("<meta http-equiv=\\"X-UA-Compatible\\" content=\\"IE=EmulateIE7\\"/>");\n
+    forEach(options.stylesheet, function(file) {\n
+      html.push("<link rel=\\"stylesheet\\" type=\\"text/css\\" href=\\"" + file + "\\"/>");\n
+    });\n
+    forEach(options.basefiles.concat(options.parserfile), function(file) {\n
+      if (!/^https?:/.test(file)) file = options.path + file;\n
+      html.push("<script type=\\"text/javascript\\" src=\\"" + file + "\\"><" + "/script>");\n
+    });\n
+    html.push("</head><body style=\\"border-width: 0;\\" class=\\"editbox\\" spellcheck=\\"" +\n
+              (options.disableSpellcheck ? "false" : "true") + "\\"></body></html>");\n
+    return html.join("");\n
+  }\n
+\n
+  var internetExplorer = document.selection && window.ActiveXObject && /MSIE/.test(navigator.userAgent);\n
+\n
+  function CodeMirror(place, options) {\n
+    // Use passed options, if any, to override defaults.\n
+    this.options = options = options || {};\n
+    setDefaults(options, CodeMirrorConfig);\n
+\n
+    // Backward compatibility for deprecated options.\n
+    if (options.dumbTabs) options.tabMode = "spaces";\n
+    else if (options.normalTab) options.tabMode = "default";\n
+\n
+    var frame = this.frame = document.createElement("IFRAME");\n
+    if (options.iframeClass) frame.className = options.iframeClass;\n
+    frame.frameBorder = 0;\n
+    frame.style.border = "0";\n
+    frame.style.width = \'100%\';\n
+    frame.style.height = \'100%\';\n
+    // display: block occasionally suppresses some Firefox bugs, so we\n
+    // always add it, redundant as it sounds.\n
+    frame.style.display = "block";\n
+\n
+    var div = this.wrapping = document.createElement("DIV");\n
+    div.style.position = "relative";\n
+    div.className = "CodeMirror-wrapping";\n
+    div.style.width = options.width;\n
+    div.style.height = (options.height == "dynamic") ? options.minHeight + "px" : options.height;\n
+    // This is used by Editor.reroutePasteEvent\n
+    var teHack = this.textareaHack = document.createElement("TEXTAREA");\n
+    div.appendChild(teHack);\n
+    teHack.style.position = "absolute";\n
+    teHack.style.left = "-10000px";\n
+    teHack.style.width = "10px";\n
+\n
+    // Link back to this object, so that the editor can fetch options\n
+    // and add a reference to itself.\n
+    frame.CodeMirror = this;\n
+    if (options.domain && internetExplorer) {\n
+      this.html = frameHTML(options);\n
+      frame.src = "javascript:(function(){document.open();" +\n
+        (options.domain ? "document.domain=\\"" + options.domain + "\\";" : "") +\n
+        "document.write(window.frameElement.CodeMirror.html);document.close();})()";\n
+    }\n
+    else {\n
+      frame.src = "javascript:;";\n
+    }\n
+\n
+    if (place.appendChild) place.appendChild(div);\n
+    else place(div);\n
+    div.appendChild(frame);\n
+    if (options.lineNumbers) this.lineNumbers = addLineNumberDiv(div, options.firstLineNumber);\n
+\n
+    this.win = frame.contentWindow;\n
+    if (!options.domain || !internetExplorer) {\n
+      this.win.document.open();\n
+      this.win.document.write(frameHTML(options));\n
+      this.win.document.close();\n
+    }\n
+  }\n
+\n
+  CodeMirror.prototype = {\n
+    init: function() {\n
+      if (this.options.initCallback) this.options.initCallback(this);\n
+      if (this.options.lineNumbers) this.activateLineNumbers();\n
+      if (this.options.reindentOnLoad) this.reindent();\n
+      if (this.options.height == "dynamic") this.setDynamicHeight();\n
+    },\n
+\n
+    getCode: function() {return this.editor.getCode();},\n
+    setCode: function(code) {this.editor.importCode(code);},\n
+    selection: function() {this.focusIfIE(); return this.editor.selectedText();},\n
+    reindent: function() {this.editor.reindent();},\n
+    reindentSelection: function() {this.focusIfIE(); this.editor.reindentSelection(null);},\n
+\n
+    focusIfIE: function() {\n
+      // in IE, a lot of selection-related functionality only works when the frame is focused\n
+      if (this.win.select.ie_selection) this.focus();\n
+    },\n
+    focus: function() {\n
+      this.win.focus();\n
+      if (this.editor.selectionSnapshot) // IE hack\n
+        this.win.select.setBookmark(this.win.document.body, this.editor.selectionSnapshot);\n
+    },\n
+    replaceSelection: function(text) {\n
+      this.focus();\n
+      this.editor.replaceSelection(text);\n
+      return true;\n
+    },\n
+    replaceChars: function(text, start, end) {\n
+      this.editor.replaceChars(text, start, end);\n
+    },\n
+    getSearchCursor: function(string, fromCursor, caseFold) {\n
+      return this.editor.getSearchCursor(string, fromCursor, caseFold);\n
+    },\n
+\n
+    undo: function() {this.editor.history.undo();},\n
+    redo: function() {this.editor.history.redo();},\n
+    historySize: function() {return this.editor.history.historySize();},\n
+    clearHistory: function() {this.editor.history.clear();},\n
+\n
+    grabKeys: function(callback, filter) {this.editor.grabKeys(callback, filter);},\n
+    ungrabKeys: function() {this.editor.ungrabKeys();},\n
+\n
+    setParser: function(name, parserConfig) {this.editor.setParser(name, parserConfig);},\n
+    setSpellcheck: function(on) {this.win.document.body.spellcheck = on;},\n
+    setStylesheet: function(names) {\n
+      if (typeof names === "string") names = [names];\n
+      var activeStylesheets = {};\n
+      var matchedNames = {};\n
+      var links = this.win.document.getElementsByTagName("link");\n
+      // Create hashes of active stylesheets and matched names.\n
+      // This is O(n^2) but n is expected to be very small.\n
+      for (var x = 0, link; link = links[x]; x++) {\n
+        if (link.rel.indexOf("stylesheet") !== -1) {\n
+          for (var y = 0; y < names.length; y++) {\n
+            var name = names[y];\n
+            if (link.href.substring(link.href.length - name.length) === name) {\n
+              activeStylesheets[link.href] = true;\n
+              matchedNames[name] = true;\n
+            }\n
+          }\n
+        }\n
+      }\n
+      // Activate the selected stylesheets and disable the rest.\n
+      for (var x = 0, link; link = links[x]; x++) {\n
+        if (link.rel.indexOf("stylesheet") !== -1) {\n
+          link.disabled = !(link.href in activeStylesheets);\n
+        }\n
+      }\n
+      // Create any new stylesheets.\n
+      for (var y = 0; y < names.length; y++) {\n
+        var name = names[y];\n
+        if (!(name in matchedNames)) {\n
+          var link = this.win.document.createElement("link");\n
+          link.rel = "stylesheet";\n
+          link.type = "text/css";\n
+          link.href = name;\n
+          this.win.document.getElementsByTagName(\'head\')[0].appendChild(link);\n
+        }\n
+      }\n
+    },\n
+    setTextWrapping: function(on) {\n
+      if (on == this.options.textWrapping) return;\n
+      this.win.document.body.style.whiteSpace = on ? "" : "nowrap";\n
+      this.options.textWrapping = on;\n
+      if (this.lineNumbers) {\n
+        this.setLineNumbers(false);\n
+        this.setLineNumbers(true);\n
+      }\n
+    },\n
+    setIndentUnit: function(unit) {this.win.indentUnit = unit;},\n
+    setUndoDepth: function(depth) {this.editor.history.maxDepth = depth;},\n
+    setTabMode: function(mode) {this.options.tabMode = mode;},\n
+    setEnterMode: function(mode) {this.options.enterMode = mode;},\n
+    setLineNumbers: function(on) {\n
+      if (on && !this.lineNumbers) {\n
+        this.lineNumbers = addLineNumberDiv(this.wrapping);\n
+        this.activateLineNumbers();\n
+      }\n
+      else if (!on && this.lineNumbers) {\n
+        this.wrapping.removeChild(this.lineNumbers);\n
+        this.wrapping.style.marginLeft = "";\n
+        this.lineNumbers = null;\n
+      }\n
+    },\n
+\n
+    cursorPosition: function(start) {this.focusIfIE(); return this.editor.cursorPosition(start);},\n
+    firstLine: function() {return this.editor.firstLine();},\n
+    lastLine: function() {return this.editor.lastLine();},\n
+    nextLine: function(line) {return this.editor.nextLine(line);},\n
+    prevLine: function(line) {return this.editor.prevLine(line);},\n
+    lineContent: function(line) {return this.editor.lineContent(line);},\n
+    setLineContent: function(line, content) {this.editor.setLineContent(line, content);},\n
+    removeLine: function(line){this.editor.removeLine(line);},\n
+    insertIntoLine: function(line, position, content) {this.editor.insertIntoLine(line, position, content);},\n
+    selectLines: function(startLine, startOffset, endLine, endOffset) {\n
+      this.win.focus();\n
+      this.editor.selectLines(startLine, startOffset, endLine, endOffset);\n
+    },\n
+    nthLine: function(n) {\n
+      var line = this.firstLine();\n
+      for (; n > 1 && line !== false; n--)\n
+        line = this.nextLine(line);\n
+      return line;\n
+    },\n
+    lineNumber: function(line) {\n
+      var num = 0;\n
+      while (line !== false) {\n
+        num++;\n
+        line = this.prevLine(line);\n
+      }\n
+      return num;\n
+    },\n
+    jumpToLine: function(line) {\n
+      if (typeof line == "number") line = this.nthLine(line);\n
+      this.selectLines(line, 0);\n
+      this.win.focus();\n
+    },\n
+    currentLine: function() { // Deprecated, but still there for backward compatibility\n
+      return this.lineNumber(this.cursorLine());\n
+    },\n
+    cursorLine: function() {\n
+      return this.cursorPosition().line;\n
+    },\n
+    cursorCoords: function(start) {return this.editor.cursorCoords(start);},\n
+\n
+    activateLineNumbers: function() {\n
+      var frame = this.frame, win = frame.contentWindow, doc = win.document, body = doc.body,\n
+          nums = this.lineNumbers, scroller = nums.firstChild, self = this;\n
+      var barWidth = null;\n
+\n
+      function sizeBar() {\n
+        if (frame.offsetWidth == 0) return;\n
+        for (var root = frame; root.parentNode; root = root.parentNode){}\n
+        if (!nums.parentNode || root != document || !win.Editor) {\n
+          // Clear event handlers (their nodes might already be collected, so try/catch)\n
+          try{clear();}catch(e){}\n
+          clearInterval(sizeInterval);\n
+          return;\n
+        }\n
+\n
+        if (nums.offsetWidth != barWidth) {\n
+          barWidth = nums.offsetWidth;\n
+          frame.parentNode.style.paddingLeft = barWidth + "px";\n
+        }\n
+      }\n
+      function doScroll() {\n
+        nums.scrollTop = body.scrollTop || doc.documentElement.scrollTop || 0;\n
+      }\n
+      // Cleanup function, registered by nonWrapping and wrapping.\n
+      var clear = function(){};\n
+      sizeBar();\n
+      var sizeInterval = setInterval(sizeBar, 500);\n
+\n
+      function ensureEnoughLineNumbers(fill) {\n
+        var lineHeight = scroller.firstChild.offsetHeight;\n
+        if (lineHeight == 0) return;\n
+        var targetHeight = 50 + Math.max(body.offsetHeight, Math.max(frame.offsetHeight, body.scrollHeight || 0)),\n
+            lastNumber = Math.ceil(targetHeight / lineHeight);\n
+        for (var i = scroller.childNodes.length; i <= lastNumber; i++) {\n
+          var div = document.createElement("DIV");\n
+          div.appendChild(document.createTextNode(fill ? String(i + self.options.firstLineNumber) : "\\u00a0"));\n
+          scroller.appendChild(div);\n
+        }\n
+      }\n
+\n
+      function nonWrapping() {\n
+        function update() {\n
+          ensureEnoughLineNumbers(true);\n
+          doScroll();\n
+        }\n
+        self.updateNumbers = update;\n
+        var onScroll = win.addEventHandler(win, "scroll", doScroll, true),\n
+            onResize = win.addEventHandler(win, "resize", update, true);\n
+        clear = function(){\n
+          onScroll(); onResize();\n
+          if (self.updateNumbers == update) self.updateNumbers = null;\n
+        };\n
+        update();\n
+      }\n
+\n
+      function wrapping() {\n
+        var node, lineNum, next, pos, changes = [], styleNums = self.options.styleNumbers;\n
+\n
+        function setNum(n, node) {\n
+          // Does not typically happen (but can, if you mess with the\n
+          // document during the numbering)\n
+          if (!lineNum) lineNum = scroller.appendChild(document.createElement("DIV"));\n
+          if (styleNums) styleNums(lineNum, node, n);\n
+          // Changes are accumulated, so that the document layout\n
+          // doesn\'t have to be recomputed during the pass\n
+          changes.push(lineNum); changes.push(n);\n
+          pos = lineNum.offsetHeight + lineNum.offsetTop;\n
+          lineNum = lineNum.nextSibling;\n
+        }\n
+        function commitChanges() {\n
+          for (var i = 0; i < changes.length; i += 2)\n
+            changes[i].innerHTML = changes[i + 1];\n
+          changes = [];\n
+        }\n
+        function work() {\n
+          if (!scroller.parentNode || scroller.parentNode != self.lineNumbers) return;\n
+\n
+          var endTime = new Date().getTime() + self.options.lineNumberTime;\n
+          while (node) {\n
+            setNum(next++, node.previousSibling);\n
+            for (; node && !win.isBR(node); node = node.nextSibling) {\n
+              var bott = node.offsetTop + node.offsetHeight;\n
+              while (scroller.offsetHeight && bott - 3 > pos) setNum("&nbsp;");\n
+            }\n
+            if (node) node = node.nextSibling;\n
+            if (new Date().getTime() > endTime) {\n
+              commitChanges();\n
+              pending = setTimeout(work, self.options.lineNumberDelay);\n
+              return;\n
+            }\n
+          }\n
+          while (lineNum) setNum(next++);\n
+          commitChanges();\n
+          doScroll();\n
+        }\n
+        function start(firstTime) {\n
+          doScroll();\n
+          ensureEnoughLineNumbers(firstTime);\n
+          node = body.firstChild;\n
+          lineNum = scroller.firstChild;\n
+          pos = 0;\n
+          next = self.options.firstLineNumber;\n
+          work();\n
+        }\n
+\n
+        start(true);\n
+        var pending = null;\n
+        function update() {\n
+          if (pending) clearTimeout(pending);\n
+          if (self.editor.allClean()) start();\n
+          else pending = setTimeout(update, 200);\n
+        }\n
+        self.updateNumbers = update;\n
+        var onScroll = win.addEventHandler(win, "scroll", doScroll, true),\n
+            onResize = win.addEventHandler(win, "resize", update, true);\n
+        clear = function(){\n
+          if (pending) clearTimeout(pending);\n
+          if (self.updateNumbers == update) self.updateNumbers = null;\n
+          onScroll();\n
+          onResize();\n
+        };\n
+      }\n
+      (this.options.textWrapping || this.options.styleNumbers ? wrapping : nonWrapping)();\n
+    },\n
+\n
+    setDynamicHeight: function() {\n
+      var self = this, activity = self.options.cursorActivity, win = self.win, body = win.document.body,\n
+          lineHeight = null, timeout = null, vmargin = 2 * self.frame.offsetTop;\n
+      body.style.overflowY = "hidden";\n
+      win.document.documentElement.style.overflowY = "hidden";\n
+      this.frame.scrolling = "no";\n
+\n
+      function updateHeight() {\n
+        var trailingLines = 0, node = body.lastChild, computedHeight;\n
+        while (node && win.isBR(node)) {\n
+          if (!node.hackBR) trailingLines++;\n
+          node = node.previousSibling;\n
+        }\n
+        if (node) {\n
+          lineHeight = node.offsetHeight;\n
+          computedHeight = node.offsetTop + (1 + trailingLines) * lineHeight;\n
+        }\n
+        else if (lineHeight) {\n
+          computedHeight = trailingLines * lineHeight;\n
+        }\n
+        if (computedHeight)\n
+          self.wrapping.style.height = Math.max(vmargin + computedHeight, self.options.minHeight) + "px";\n
+      }\n
+      setTimeout(updateHeight, 300);\n
+      self.options.cursorActivity = function(x) {\n
+        if (activity) activity(x);\n
+        clearTimeout(timeout);\n
+        timeout = setTimeout(updateHeight, 100);\n
+      };\n
+    }\n
+  };\n
+\n
+  CodeMirror.InvalidLineHandle = {toString: function(){return "CodeMirror.InvalidLineHandle";}};\n
+\n
+  CodeMirror.replace = function(element) {\n
+    if (typeof element == "string")\n
+      element = document.getElementById(element);\n
+    return function(newElement) {\n
+      element.parentNode.replaceChild(newElement, element);\n
+    };\n
+  };\n
+\n
+  CodeMirror.fromTextArea = function(area, options) {\n
+    if (typeof area == "string")\n
+      area = document.getElementById(area);\n
+\n
+    options = options || {};\n
+    if (area.style.width && options.width == null)\n
+      options.width = area.style.width;\n
+    if (area.style.height && options.height == null)\n
+      options.height = area.style.height;\n
+    if (options.content == null) options.content = area.value;\n
+\n
+    if (area.form) {\n
+      function updateField() {\n
+        area.value = mirror.getCode();\n
+      }\n
+      if (typeof area.form.addEventListener == "function")\n
+        area.form.addEventListener("submit", updateField, false);\n
+      else\n
+        area.form.attachEvent("onsubmit", updateField);\n
+      var realSubmit = area.form.submit;\n
+      function wrapSubmit() {\n
+        updateField();\n
+        // Can\'t use realSubmit.apply because IE6 is too stupid\n
+        area.form.submit = realSubmit;\n
+        area.form.submit();\n
+        area.form.submit = wrapSubmit;\n
+      }\n
+      area.form.submit = wrapSubmit;\n
+    }\n
+\n
+    function insert(frame) {\n
+      if (area.nextSibling)\n
+        area.parentNode.insertBefore(frame, area.nextSibling);\n
+      else\n
+        area.parentNode.appendChild(frame);\n
+    }\n
+\n
+    area.style.display = "none";\n
+    var mirror = new CodeMirror(insert, options);\n
+    mirror.toTextArea = function() {\n
+      area.parentNode.removeChild(mirror.wrapping);\n
+      area.style.display = "";\n
+      if (area.form) {\n
+        area.form.submit = realSubmit;\n
+        if (typeof area.form.removeEventListener == "function")\n
+          area.form.removeEventListener("submit", updateField, false);\n
+        else\n
+          area.form.detachEvent("onsubmit", updateField);\n
+      }\n
+    };\n
+\n
+    return mirror;\n
+  };\n
+\n
+  CodeMirror.isProbablySupported = function() {\n
+    // This is rather awful, but can be useful.\n
+    var match;\n
+    if (window.opera)\n
+      return Number(window.opera.version()) >= 9.52;\n
+    else if (/Apple Computers, Inc/.test(navigator.vendor) && (match = navigator.userAgent.match(/Version\\/(\\d+(?:\\.\\d+)?)\\./)))\n
+      return Number(match[1]) >= 3;\n
+    else if (document.selection && window.ActiveXObject && (match = navigator.userAgent.match(/MSIE (\\d+(?:\\.\\d*)?)\\b/)))\n
+      return Number(match[1]) >= 6;\n
+    else if (match = navigator.userAgent.match(/gecko\\/(\\d{8})/i))\n
+      return Number(match[1]) >= 20050901;\n
+    else if (match = navigator.userAgent.match(/AppleWebKit\\/(\\d+)/))\n
+      return Number(match[1]) >= 525;\n
+    else\n
+      return null;\n
+  };\n
+\n
+  return CodeMirror;\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>20994</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

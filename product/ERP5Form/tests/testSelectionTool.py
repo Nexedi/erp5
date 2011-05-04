@@ -31,7 +31,7 @@ from threading import Thread
 from thread import get_ident
 
 import transaction
-from Testing import ZODButil
+import ZODB
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -248,7 +248,7 @@ class TestSelectionPersistence(unittest.TestCase):
     SelectionTool._getUserId = lambda self: 'user'
     SelectionTool._isAnonymous = lambda self: 0
 
-    self.db = ZODButil.makeDB()
+    self.db = ZODB.DB(ZODB.DemoStorage.DemoStorage())
     self.cnx = self.db.open()
     self.portal_selections = \
       self.cnx.root().portal_selections = SelectionTool()
@@ -259,7 +259,7 @@ class TestSelectionPersistence(unittest.TestCase):
     # revert the patch from setUp
     SelectionTool._getUserId = SelectionTool._getUserId_saved
     self.cnx.close()
-    ZODButil.cleanDB()
+    self.db.close()
 
   def _runWithAnotherConnection(self, thread_func):
     """runs `thread_func` with another ZODB connection

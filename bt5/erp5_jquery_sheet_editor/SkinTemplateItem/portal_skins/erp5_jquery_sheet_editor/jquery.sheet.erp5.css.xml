@@ -208,14 +208,17 @@ body div.content{\n
 .verticalMenu .selected td a{\n
   color:#fff;\n
 }\n
+\n
 .verticalMenu .disabled td, .verticalMenu .disabled td a {\n
   color: #666;\n
 }\n
+\n
 .verticalMenu .subMenuOpener{\n
   background-image:url("../images/menuArrow_w.gif");\n
   background-repeat:no-repeat;\n
   background-position:right;\n
 }\n
+\n
 .verticalMenu .menuShadow{\n
   background:black;\n
   padding:5px;\n
@@ -223,6 +226,10 @@ body div.content{\n
 \n
 span#themeSwitcher {\n
   display:none;\n
+}\n
+\n
+.jSheetControls img {\n
+  margin-top: 4px;\n
 }</string> </value>
         </item>
         <item>

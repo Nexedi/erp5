@@ -104,9 +104,11 @@ def getExcerptText(context, txt, sw, tags, trail, maxlines):
   txt = re.sub(r,'',txt)
   r = re.compile('<([^>]+)>',re.DOTALL|re.IGNORECASE)
   txt = re.sub(r,'',txt)
+  txt = txt.replace('-',' - ') # to find hyphenated occurrences
+  txt = txt.replace(',',', ')
+  txt = txt.replace(';','; ')
   r = re.compile('\s+')
   txt = re.sub(r,' ',txt)
-  txt = txt.replace('-',' - ') # to find hyphenated occurrences
   text = ' '.join(txt.split('\n')).split(' ') # very rough tokenization
   return [p for p in generateParts(context,text,sw,tags,trail,maxlines)]
 

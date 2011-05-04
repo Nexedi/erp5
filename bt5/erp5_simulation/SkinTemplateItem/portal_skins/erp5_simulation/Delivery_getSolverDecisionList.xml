@@ -60,6 +60,7 @@ for i in solver_list:\n
     solver_process = i\n
     break\n
 \n
+\n
 if solver_process is None:\n
   solver_process = context.getPortalObject().portal_solver_processes.newSolverProcess(context)\n
 else:\n

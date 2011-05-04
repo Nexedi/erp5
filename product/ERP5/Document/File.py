@@ -38,8 +38,6 @@ from OFS.Image import Pdata
 import cStringIO
 from Products.ERP5Type.Utils import deprecated
 
-import md5
-
 def _unpackData(data):
   """
   Unpack Pdata into string
@@ -141,10 +139,7 @@ class File(Document, CMFFile):
 
   def _setFile(self, data, precondition=None):
     if data is not None and self.hasData() and \
-      md5.md5(str(data.read())).digest() ==\
-      md5.md5(str(self.getData())).digest():
-      # Compute md5 hash only if there is something to hash on both sides.
-      #
+      str(data.read()) == str(self.getData()):
       # Same data as previous, no need to change it's content
       return
     CMFFile._edit(self, precondition=precondition, file=data)
@@ -246,23 +241,10 @@ class File(Document, CMFFile):
     return (mime_type, content)
 
   def _convert(self, format, **kw):
-    """According content_type of data we can proceed some Conversions.
-    The idea is to wrap data into TempDocument who support conversion
-    then return conversion from this temporary document.
-
-    mimetype                             Class of temp document
-
-    text/????                            newTempTextDocument
-    image/????                           newTempImage
-    application/pdf                      newTempPDFDocument
-    [ooo supported content_type list]    newTempOOoDocument
-    unknown                              no conversion supported
-
-    XXX Another idea of implementation from JPS: Changing dynamicaly the Class
-    of persistent_object.
-    for example any instance of File portal_type can follow TextDocument API
-    if content_type is 'text/html' and support conversion features of
-    TextDocument.
+    """File is not convertable.
+    Only original format and text formats are allowed.
+    However this document can migrate to another portal_type which support
+    conversions.
     """
     content_type = self.getContentType() or ''
     if format is None:

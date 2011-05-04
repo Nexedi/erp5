@@ -11,8 +11,7 @@
  </portal_type>
  <portal_type id="Accounting Transaction">
   <item>Accounting Transaction Line</item>
-  <item>File</item>
-  <item>Image</item>
+  <item>Embedded File</item>
  </portal_type>
  <portal_type id="Accounting Transaction Module">
   <item>Accounting Transaction</item>
@@ -62,8 +61,7 @@
  </portal_type>
  <portal_type id="Payment Transaction">
   <item>Accounting Transaction Line</item>
-  <item>File</item>
-  <item>Image</item>
+  <item>Embedded File</item>
  </portal_type>
  <portal_type id="Preference">
   <item>Accounting Transaction</item>
@@ -71,9 +69,12 @@
   <item>Purchase Invoice Transaction</item>
   <item>Sale Invoice Transaction</item>
  </portal_type>
+ <portal_type id="Property Sheet">
+  <item>Account Type Constraint</item>
+  <item>Accounting Transaction Balance Constraint</item>
+ </portal_type>
  <portal_type id="Purchase Invoice Transaction">
-  <item>File</item>
-  <item>Image</item>
+  <item>Embedded File</item>
   <item>Purchase Invoice Transaction Line</item>
  </portal_type>
  <portal_type id="Rule Tool">
@@ -82,8 +83,7 @@
   <item>Payment Simulation Rule</item>
  </portal_type>
  <portal_type id="Sale Invoice Transaction">
-  <item>File</item>
-  <item>Image</item>
+  <item>Embedded File</item>
   <item>Sale Invoice Transaction Line</item>
  </portal_type>
 </allowed_content_type_list>

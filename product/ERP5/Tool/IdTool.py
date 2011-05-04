@@ -117,18 +117,16 @@ class IdTool(BaseTool):
       Generate the next id in the sequence of ids of a particular group
     """
     if id_group in (None, 'None'):
-      raise ValueError, '%s is not a valid group Id.' % (repr(id_group), )
+      raise ValueError, '%s is not a valid id_group' % (repr(id_group), )
     # for compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
       id_group = repr(id_group)
-      warnings.warn('The id_group must be a string the other types '
-                    'is deprecated.', DeprecationWarning)
+      warnings.warn('id_group must be a string, other types '
+                    'are deprecated.', DeprecationWarning)
     if id_generator is None:
       id_generator = 'document'
     if method is not _marker:
-      warnings.warn("The usage of 'method' argument is deprecated.\n"
-                    "use this method with a id generator without this"
-                    "argument", DeprecationWarning)
+      warnings.warn("Use of 'method' argument is deprecated", DeprecationWarning)
     try:
       #use _getLatestGeneratorValue here for that the technical level
       #must not call the method
@@ -145,9 +143,9 @@ class IdTool(BaseTool):
       else:
         # Compatibility code below, in case the last version of erp5_core
         # is not installed yet
-        warnings.warn("You use the old version of API which is deprecated.\n"
-                      "please, update the business template erp5_core "
-                      "to use the new API", DeprecationWarning)
+        warnings.warn("You are using an old version of erp5_core to generate"
+                      "ids.\nPlease update erp5_core business template to "
+                      "use new id generators", DeprecationWarning)
         dict_ids = getattr(aq_base(self), 'dict_ids', None)
         if dict_ids is None:
           dict_ids = self.dict_ids = PersistentMapping()
@@ -178,18 +176,17 @@ class IdTool(BaseTool):
       Generate a list of next ids in the sequence of ids of a particular group
     """
     if id_group in (None, 'None'):
-      raise ValueError, '%s is not a valid group Id.' % (repr(id_group), )
+      raise ValueError, '%s is not a valid id_group' % (repr(id_group), )
     # for compatibilty with sql data, must not use id_group as a list
     if not isinstance(id_group, str):
       id_group = repr(id_group)
-      warnings.warn('The id_group must be a string the other types '
-                    'is deprecated.', DeprecationWarning)
+      warnings.warn('id_group must be a string, other types '
+                    'are deprecated.', DeprecationWarning)
     if id_generator is None:
       id_generator = 'uid'
     if store is not _marker:
-      warnings.warn("The usage of 'store' argument is deprecated.\n"
-                    "use this method with a id generator and without this."
-                    "argument", DeprecationWarning)
+      warnings.warn("Use of 'store' argument is deprecated.",
+                    DeprecationWarning)
     try:
       #use _getLatestGeneratorValue here for that the technical level
       #must not call the method
@@ -206,9 +203,9 @@ class IdTool(BaseTool):
       else:
         # Compatibility code below, in case the last version of erp5_core
         # is not installed yet
-        warnings.warn("You use the old version of erp5_core to generate the ids.\n"
-                      "please, update the business template erp5_core "
-                      "to have the new id generators", DeprecationWarning)
+        warnings.warn("You are using an old version of erp5_core to generate"
+                      "ids.\nPlease update erp5_core business template to "
+                      "use new id generators", DeprecationWarning)
         new_id = None
         if default is None:
           default = 1
@@ -298,8 +295,8 @@ class IdTool(BaseTool):
     """
     Get the last length id generated
     """
-    warnings.warn('The usage of this method is deprecated.\n'
-                   , DeprecationWarning)
+    warnings.warn('getLastLengthGeneratedId is deprecated',
+                   DeprecationWarning)
     # check in persistent mapping if exists
     if getattr(aq_base(self), 'dict_length_ids', None) is not None:
       last_id = self.dict_length_ids.get(id_group)
@@ -331,8 +328,7 @@ class IdTool(BaseTool):
     """
     Get the last id generated
     """
-    warnings.warn('The usage of this method is deprecated.\n'
-                   , DeprecationWarning)
+    warnings.warn('getLastGeneratedId is deprecated', DeprecationWarning)
     if getattr(aq_base(self), 'dict_ids', None) is None:
       self.dict_ids = PersistentMapping()
     last_id = None
@@ -354,17 +350,17 @@ class IdTool(BaseTool):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                            'generateNewLengthId')
-  def generateNewLengthId(self, id_group=None, default=None, store=1):
+  def generateNewLengthId(self, id_group=None, default=None, store=_marker):
+     """Generates an Id using a conflict free id generator. Deprecated.
      """
-       Generates an Id.
-       See generateNewLengthIdList documentation for details.
-     """
-     warnings.warn('The usage of this method is deprecated.\n'
-                   'use directly generateNewIdList'
-                   ' with a id_generator sql', DeprecationWarning)
-     new_id = self.generateNewIdList(id_group=id_group,
-      			     id_count=1, default=default, store=store)[0]
-     return new_id
+     warnings.warn('generateNewLengthId is deprecated.\n'
+                   'Use generateNewIdList with a sql id_generator',
+                   DeprecationWarning)
+     if store is not _marker:
+       return self.generateNewIdList(id_group=id_group,
+                        id_count=1, default=default, store=store)[0]
+     return self.generateNewIdList(id_group=id_group,
+                        id_count=1, default=default)[0]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getDictLengthIdsItems')

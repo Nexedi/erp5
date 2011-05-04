@@ -58,7 +58,7 @@ class CustomerBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     template_tool = getToolByName(self.getPortalObject(),
                                   'portal_templates')
     bt5 = template_tool.newContent(portal_type="Business Template", \

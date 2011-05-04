@@ -163,12 +163,12 @@ class SolverProcess(XMLObject, ActiveProcess):
     # Fourth, build target solvers
     for solver, solver_key_dict in grouped_solver_dict.items():
       for solver_key, solver_movement_dict in solver_key_dict.items():
-         solver_instance = self.newContent(portal_type=solver.getId())
-         solver_instance._setDeliveryValueList(solver_movement_dict.keys())
-         for movement, configuration_list in solver_movement_dict.iteritems():
-           for configuration_mapping in configuration_list:
-             if len(configuration_mapping):
-               solver_instance.updateConfiguration(**dict(configuration_mapping))
+        solver_instance = self.newContent(portal_type=solver.getId())
+        solver_instance._setDeliveryValueList(solver_movement_dict.keys())
+        for movement, configuration_list in solver_movement_dict.iteritems():
+          for configuration_mapping in configuration_list:
+            if len(configuration_mapping):
+              solver_instance.updateConfiguration(**dict(configuration_mapping))
 
     # Return empty list of conflicts
     return []
@@ -239,17 +239,18 @@ class SolverProcess(XMLObject, ActiveProcess):
     for movement in movement_list:
       for simulation_movement in movement.getDeliveryRelatedValueList():
         for divergence_tester in simulation_movement.getParentValue().getSpecialiseValue()._getDivergenceTesterList(exclude_quantity=False):
-          if divergence_tester.explain(simulation_movement) in (None, []):
-            continue
-          application_list = map(lambda x:x.getRelativeUrl(),
-                 solver_tool.getSolverDecisionApplicationValueList(movement, divergence_tester))
-          application_list.sort()
-          solver_list = solver_tool.searchTargetSolverList(
-            divergence_tester, simulation_movement)
-          solver_list.sort(key=lambda x:x.getId())
-          solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list), tuple(solver_list))
-          movement_dict = solver_decision_dict.setdefault(solver_decision_key, {})
-          movement_dict[simulation_movement] = None
+          if divergence_tester.test(simulation_movement):
+            if divergence_tester.explain(simulation_movement) in (None, []):
+              continue
+            application_list = map(lambda x:x.getRelativeUrl(),
+                   solver_tool.getSolverDecisionApplicationValueList(movement, divergence_tester))
+            application_list.sort()
+            solver_list = solver_tool.searchTargetSolverList(
+              divergence_tester, simulation_movement)
+            solver_list.sort(key=lambda x:x.getId())
+            solver_decision_key = (divergence_tester.getRelativeUrl(), tuple(application_list), tuple(solver_list))
+            movement_dict = solver_decision_dict.setdefault(solver_decision_key, {})
+            movement_dict[simulation_movement] = None
 
     # Now build the solver decision instances based on the previous
     # grouping

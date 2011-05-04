@@ -57,14 +57,20 @@ by ListField instances.\n
 """\n
 from zExceptions import Unauthorized\n
 from Products.ERP5Type.Cache import CachingMethod\n
+portal = context.getPortalObject()\n
 \n
 def getResourceItemList():\n
   result = [(\'\', \'\')]\n
-  url_list = context.portal_preferences.getPreferredSupportRequestResourceList()\n
+  url_list = portal.portal_preferences.getPreferredSupportRequestResourceList()\n
   for url in url_list:\n
     try:\n
-      resource_value = context.getPortalObject().restrictedTraverse(url)\n
-      result.append((resource_value.getTranslatedTitle(), resource_value.getRelativeUrl()))\n
+      resource_value = portal.restrictedTraverse(url, None)\n
+      if resource_value is not None:\n
+        if resource_value.getPortalType() == \'Category\':\n
+          category_relative_url = resource_value.getCategoryRelativeUrl()\n
+        else:\n
+          category_relative_url = resource_value.getRelativeUrl()\n
+        result.append((resource_value.getTranslatedTitle(), category_relative_url))\n
     except Unauthorized:\n
       pass\n
   return result\n

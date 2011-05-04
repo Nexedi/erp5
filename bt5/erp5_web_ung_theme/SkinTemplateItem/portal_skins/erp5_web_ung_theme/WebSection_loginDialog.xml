@@ -36,13 +36,137 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<div id="login_form">\n
-<h4>Log in</h4>\n
-<label for="name" class="required">Name</label><br/>\n
-<input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" /><br/>\n
-<label for="password">Password</label><br/>\n
-<input type="password" name="__ac_password" id="password" /><br/>\n
-<input type="submit" name="logged_in:method" class="submit" value="Login">\n
+<h2 i18n:translate="" i18n:domain="ui">Welcome to UNG Web Office</h2>\n
+<div id="main-content">\n
+ <table border="0" width="100%" cellpadding="0" cellspacing="0">\n
+   <tbody>\n
+     <tr>\n
+       <td valign="top">\n
+         <div id="advertisement">\n
+           <b i18n:translate="" i18n:domain="ui">Sign in to edit documents, spreadsheets and drawing and share this document with another users</b>\n
+         </div>\n
+       </td>\n
+       <td>\n
+         <table id="field_table">\n
+           <tbody>\n
+             <tr>\n
+               <td align="center">\n
+                 <table>\n
+                   <tr>\n
+                     <td align="center" colspan="2">\n
+                       <font size="-1" i18n:translate="" i18n:domain="ui">Login in</font>\n
+                     </td>\n
+                   </tr>\n
+                   <tr></tr>\n
+                   <tr>\n
+                     <td align="center">\n
+                       <label for="name" i18n:translate="" i18n:domain="ui">Name</label>\n
+                     </td>\n
+                     <td align="center">\n
+                       <input type="text" name="__ac_name" id="name" tal:attributes="value python: request.get(\'__ac_name\') or \'\'" />\n
+                     </td>\n
+                   </tr>\n
+                   <tr>\n
+                     <td align="center">\n
+                       <label for="password" i18n:translate="" i18n:domain="ui">Password</label>\n
+                     </td>\n
+                     <td><input type="password" name="__ac_password" id="password" /></td>\n
+                   </tr>\n
+                   <td align="center" colspan="2">\n
+                     <input type="submit" \n
+                            name="logged_in:method"\n
+                            class="submit" \n
+                            value="Login" i18n:translate="" i18n:domain="ui">\n
+                   </td>\n
+                 </table>\n
+               </td>\n
+             </tr>\n
+           </tbody>\n
+         </table>\n
+       </td>\n
+     </tr>\n
+     <tr>\n
+       <td><br/></td>\n
+       <td>\n
+         <table id="create-new-user">\n
+           <tbody>\n
+             <tr>\n
+               <td>\n
+                 <form id="create-user" method="post">\n
+                   <table width="100%">\n
+                     <tr>\n
+                       <td align="center" colspan="2">\n
+                         <b i18n:translate="" i18n:domain="ui">Create an account</b>\n
+                       </td>\n
+                     </tr>\n
+                     <tr><td id="form-message" align="center" colspan="2"></td></tr>\n
+                     <tr>\n
+                       <td i18n:translate="" i18n:domain="ui">First Name</td>\n
+                       <td><input type="text" name="firstname"/></td>\n
+                     </tr>\n
+                     <tr>\n
+                        <td i18n:translate="" i18n:domain="ui">Last Name</td>\n
+                        <td><input type="text" name="lastname"/></td>\n
+                     </tr>\n
+                     <tr><td>Email</td><td><input type="text" name="email"/></td></tr>\n
+                     <tr>\n
+                        <td i18n:translate="" i18n:domain="ui">Login name</td>\n
+                        <td><input type="text" name="login_name"/></td>\n
+                     </tr>\n
+                     <tr>\n
+                       <td i18n:translate="" i18n:domain="ui">Password</td>\n
+                       <td><input type="password" name="password"/></td>\n
+                     </tr>\n
+                     <tr>\n
+                       <td i18n:translate="" i18n:domain="ui">Confirm Password</td>\n
+                       <td><input type="password" name="confirm"/></td>\n
+                     </tr>\n
+                     <td align="center" colspan="2">\n
+                       <input type="submit" name="logged_in:method" \n
+                              class="submit" value="Create Account" i18n:translate="" i18n:domain="ui">\n
+                     </td>\n
+                     <tr><td id="back-login" align="left" colspan="2">&lt;&lt<span i18n:translate="" i18n:domain="ui">Back</span></td></tr>\n
+                   </table>\n
+                 </form>\n
+               </td>\n
+             </tr>\n
+           </tbody>\n
+         </table>\n
+       </td>\n
+     <tr>\n
+     <tr>\n
+       <td></td>\n
+       <td>\n
+         <table id="new-account-table">\n
+           <tbody>\n
+             <tr>\n
+               <td>\n
+                 <table width="100%">\n
+                   <tr>\n
+                     <td align="center" colspan="2">\n
+                       <b>Don\'t have an UNG Account?</b>\n
+                     </td>\n
+                   </tr>\n
+                   <tr>\n
+                     <td id="new-account-form" \n
+                         align="center" \n
+                         colspan="2" \n
+                         i18n:translate="" i18n:domain="ui">Create an account now</td>\n
+                   </tr>\n
+                 </table>\n
+               </td>\n
+             </tr>\n
+           </tbody>\n
+         </table>\n
+       </td>\n
+     </tr>\n
+  </tbody>\n
+  </table> \n
+</div>\n
+<div class="footer">\n
+  <a target="_blank" href="http://www.freecloudalliance.org/">Free Cloud Alliance</a>\n
+  -\n
+  <a href="#" i18n:translate="" i18n:domain="ui">Help</a>\n
 </div>
 
 ]]></unicode> </value>

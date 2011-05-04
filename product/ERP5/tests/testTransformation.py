@@ -132,29 +132,35 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     have additionnals propertysheets on transformations lines and that used
     variation properties
     """
-    # Only for testing purpose, use a property sheet that has nothing to
-    # do with component. It would have been possible to create a new
-    # property sheet for this test.
+    ps_id = self._testMethodName
+    property_sheet = self.portal.portal_property_sheets.newContent(
+      ps_id, portal_type='Property Sheet')
+    property_sheet.newContent(portal_type='Standard Property',
+                              reference='foo',
+                              storage_id='bar',
+                              elementary_type='boolean')
     # When one do that, the property sheet should be added to many other types
     # like movements, order lines and so on.
-    self._addPropertySheet('Amount', 'Bug')
-    self._addPropertySheet(self.transformed_resource_portal_type, 'Bug')
-    # XXX 'tested' works here because 'storage_id' does not differ
-    #     (see also MappedValue.__doc__)
-    variation_property_list = ['tested']
+    self._addPropertySheet('Amount', ps_id)
+    self._addPropertySheet(self.transformed_resource_portal_type, ps_id)
+    # need to force accessor regeneration after portal type changes
+    transaction.commit()
 
     transformation = self.createTransformation()
     transformed_resource = self.createTransformedResource(transformation)
-    component = self.createComponent(
-        variation_property_list=variation_property_list)
+    component = self.createComponent(variation_property_list=['foo'])
     transformed_resource.edit(
         resource_value=component,
         quantity=1)
-    transformed_resource.setTested(True)
+    transformed_resource.setFoo(True)
     aggregated_amount, = transformation.getAggregatedAmountList()
-    # Make sure that the isTested method is working properly on the
-    # temp object
-    self.assertTrue(aggregated_amount.isTested())
+    # Make sure that the isFoo method is working properly on the temp object
+    self.assertTrue(aggregated_amount.isFoo())
+
+    # XXX aborting a transaction should reset classes
+    #     if they were reset during the transaction
+    transaction.abort()
+    self.getTypesTool().resetDynamicDocuments()
 
   def test_variationCategory(self):
     swimcap = self.createResource(

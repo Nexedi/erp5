@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,8 +68,10 @@ if exchange_line.getBasePrice() in (None, 0, 0.0):\n
 \n
 \n
 # We have to looking for other currency exchanges lines\n
-from Products.ERP5Type.Document import newTempBase\n
-temp_object = newTempBase(context.getPortalObject(),\'temp_object\')\n
+# Note: SupplyCell is the class of Currency Exchange Line portal type objects\n
+# But in reality, anything should do.\n
+from Products.ERP5Type.Document import newTempSupplyCell as newTemp\n
+temp_object = newTemp(context.getPortalObject(),\'temp_object\')\n
 start_date = exchange_line.getStartDate()\n
 temp_kw = {\'category_list\':[\'resource/%s\' % exchange_line.getParentValue().getRelativeUrl(),\n
                             \'price_currency/%s\' % exchange_line.getPriceCurrency()],\n
@@ -101,12 +100,6 @@ for line in line_list:\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>state_change,**kw</string> </value>
         </item>
@@ -119,77 +112,8 @@ for line in line_list:\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>state_change</string>
-                            <string>kw</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>DateTime</string>
-                            <string>_getitem_</string>
-                            <string>exchange_line</string>
-                            <string>_getattr_</string>
-                            <string>None</string>
-                            <string>msg</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>newTempBase</string>
-                            <string>context</string>
-                            <string>temp_object</string>
-                            <string>start_date</string>
-                            <string>temp_kw</string>
-                            <string>_apply_</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>line_list</string>
-                            <string>line</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>checkSingleExchangeLine</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

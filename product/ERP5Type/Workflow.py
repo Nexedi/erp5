@@ -142,9 +142,10 @@ def registerAllWorkflowFactories(context):
 def setupERP5Workflow(wf):
   """Sets up an DC Workflow with defaults variables needed by ERP5.
   """
-  wf.setProperties(title='ERP5 default workflow')
-  for s in ('draft',):
-    wf.states.addState(s)
+  wf.setProperties(title='ERP5 Default Workflow')
+  for state_id, state_title in (('draft', 'Draft'),):
+    wf.states.addState(state_id)
+    wf.states[state_id].title = state_title
   for v in ('action', 'actor', 'comment', 'history', 'time',
             'error_message', 'portal_type'):
     wf.variables.addVariable(v)

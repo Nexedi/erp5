@@ -1021,7 +1021,7 @@ instancehome $INSTANCE
     <filestorage>
       # See .../ZODB/component.xml for directives (sectiontype
       # "filestorage").
-      path $INSTANCE/Data.fs
+      path $INSTANCE/var/Data.fs
     </filestorage>
     mount-point /
 </zodb_db>

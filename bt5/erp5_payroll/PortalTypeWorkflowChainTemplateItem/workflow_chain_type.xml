@@ -16,6 +16,10 @@
   <workflow>edit_workflow, paysheet_model_interaction_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Pay Sheet Model Cell</type>
+  <workflow>trade_model_cell_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Pay Sheet Model Line</type>
   <workflow>edit_workflow, trade_matrix_workflow</workflow>
  </chain>

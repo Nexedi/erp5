@@ -64,7 +64,7 @@ class EmploymentContract(SubscriptionItem):
     movement_id = 'movement_%s_%s' % (start_date.year(), start_date.month())
     return len(applied_rule.searchFolder(id=movement_id))
 
-  def expandOpenOrderRule(self, applied_rule, force=0, **kw):
+  def expandOpenOrderRule(self, applied_rule, **kw):
     """
       Expand tries to find all applicable supply path and all
       applicable transformations.

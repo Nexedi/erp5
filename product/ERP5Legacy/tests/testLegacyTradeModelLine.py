@@ -41,12 +41,17 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestComplexTradeModelLineUseCasePurchase))
   return suite
 
+def getAggregatedAmountList(self, amount_generator, *args, **kw):
+  kw.setdefault('generate_empty_amounts', False)
+  return amount_generator.getAggregatedAmountList(*args, **kw)
+TestTradeModelLineMixin.getAggregatedAmountList = getAggregatedAmountList
+
 ###
 ##  TestTradeModelLine
 ##
 
 TestTradeModelLine.trade_model_path_portal_type = None
-TestTradeModelLine.business_link_portal_type = None
+TestTradeModelLineMixin.business_link_portal_type = None
 
 for name in list(TestTradeModelLine.__dict__):
   if '_NewSimulation_' in name:
@@ -143,6 +148,8 @@ def checkTradeModelRuleSimulationExpand(self, delivery):
                           ['base_amount/' + use])
         self.assertEqual(sm.getBaseContributionList(),
                           dict(discount=['base_amount/tax'], tax=[])[use])
-    self.assertEqual({}, result_dict)
+    # Ignore SM that were created from empty amounts
+    self.assertEqual({}, dict(x for x in result_dict.iteritems()
+                                if x[1].getQuantity()))
 TestTradeModelLine.checkTradeModelRuleSimulationExpand = \
   checkTradeModelRuleSimulationExpand

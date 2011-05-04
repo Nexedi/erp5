@@ -125,10 +125,12 @@ class NodeBudgetVariation(BudgetVariation):
       axis = 'default_%s' % base_category
     if axis == 'movement_strict_membership':
       axis = 'default_strict_%s' % base_category
-    # TODO: This is not correct if axis is a category such as
-    # section_category, because getInventoryList for now does not support
-    # parameters such as section_category_uid
-    axis = '%s_uid' % axis
+    
+    uid_based_axis = False
+    if axis in ('node', 'section', 'payment', 'function', 'project',
+                'mirror_section', 'mirror_node', 'funding' ):
+      axis = '%s_uid' % axis
+      uid_based_axis = True
 
     query = None
     portal_categories = self.getPortalObject().portal_categories
@@ -150,7 +152,10 @@ class NodeBudgetVariation(BudgetVariation):
               if node.getRelativeUrl() == 'budget_special_node/none':
                 none_node_selected = True
               else:
-                other_uid_list.append(node.getUid())
+                if uid_based_axis:
+                  other_uid_list.append(node.getUid())
+                else:
+                  other_uid_list.append(node.getRelativeUrl())
           if none_node_selected:
             # in this case we don't want to include NULL in All others
             query = NegatedQuery(Query(**{axis: other_uid_list}))
@@ -161,9 +166,12 @@ class NodeBudgetVariation(BudgetVariation):
                             operator="OR")
 
         else:
-          query_dict.setdefault(axis, []).append(
-                portal_categories.getCategoryValue(node_url,
-                  base_category=criterion_base_category).getUid())
+          value = portal_categories.getCategoryValue(node_url,
+                  base_category=criterion_base_category)
+          if uid_based_axis:
+            query_dict.setdefault(axis, []).append(value.getUid())
+          else:
+            query_dict.setdefault(axis, []).append(value.getRelativeUrl())
 
     if query:
       if axis in query_dict:
@@ -204,9 +212,11 @@ class NodeBudgetVariation(BudgetVariation):
     else:
       query_dict['group_by_%s' % axis] = True
 
-    # TODO: This is not correct if axis is a category (such as
-    # section_category)
-    axis = '%s_uid' % axis
+    uid_based_axis = False
+    if axis in ('node', 'section', 'payment', 'function', 'project',
+                'mirror_section', 'mirror_node', 'funding' ):
+      axis = '%s_uid' % axis
+      uid_based_axis = True
 
     # if we have a virtual "all others" node, we don't set a criterion here.
     if self.getProperty('include_virtual_other_node'):
@@ -216,9 +226,15 @@ class NodeBudgetVariation(BudgetVariation):
     for node_url in context.getVariationCategoryList(
                           base_category_list=(base_category,)):
       if node_url != '%s/budget_special_node/none' % base_category:
-        query_dict.setdefault(axis, []).append(
+        __traceback_info__ = (node_url, )
+        if uid_based_axis:
+          query_dict.setdefault(axis, []).append(
                 portal_categories.getCategoryValue(node_url,
                       base_category=base_category).getUid())
+        else:
+          query_dict.setdefault(axis, []).append(
+                portal_categories.getCategoryValue(node_url,
+                      base_category=base_category).getRelativeUrl())
       found = True
     if found:
       if self.getProperty('include_virtual_none_node'):
@@ -260,7 +276,7 @@ class NodeBudgetVariation(BudgetVariation):
                 for node in self._getNodeList(budget_line)]
 
   def getBudgetVariationRangeCategoryList(self, budget):
-    """Returns the Variation Range Category Listhat can be applied to this
+    """Returns the Variation Range Category List that can be applied to this
     budget.
     """
     base_category = self.getProperty('variation_base_category')

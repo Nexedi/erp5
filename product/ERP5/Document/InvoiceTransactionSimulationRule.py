@@ -138,7 +138,10 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
       for arrow in 'destination', 'source':
         section = input_movement.getDefaultAcquiredValue(arrow + '_section')
         if section is not None:
-          currency_url = section.getPriceCurrency()
+          try:
+            currency_url = section.getPriceCurrency()
+          except AttributeError:
+            currency_url = None
           if currency_url not in (None, resource):
             currency = portal.unrestrictedTraverse(currency_url)
             exchange_ratio = currency.getPrice(

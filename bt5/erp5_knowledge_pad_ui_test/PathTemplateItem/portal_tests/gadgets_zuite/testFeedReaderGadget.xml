@@ -51,8 +51,6 @@
 \n
 <tal:block metal:use-macro="here/Zuite_CommonTemplate/macros/init" />\n
 \n
-<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />\n
-\n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/view</td>\n
@@ -133,8 +131,6 @@
   <td>selenium.isElementPresent(\'//img[@class="hidden_label gadget-rss-reader-logo"]\')</td>\n
   <td>30000</td> \n
 </tr>\n
-\n
-<tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n
 </tbody></table>\n
 </body>\n

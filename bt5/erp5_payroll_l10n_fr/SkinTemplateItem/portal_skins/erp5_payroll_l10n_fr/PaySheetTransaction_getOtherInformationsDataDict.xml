@@ -121,7 +121,9 @@ def getTaxableNetPayId(salaire_net_imposable):\n
   return s\n
 \n
 total_employee_tax = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/payroll/tax\',\n
+    no_base_contribution=True,\n
+    include_empty_contribution=False,\n
+    excluded_reference_list=[\'ticket_restaurant\',],\n
     contribution_share=\'contribution_share/employee\')\n
 def getTotalEmployeeTaxId(total_employee_tax):\n
   s = \'\'\n
@@ -131,7 +133,9 @@ def getTotalEmployeeTaxId(total_employee_tax):\n
   return s\n
 \n
 total_employer_tax = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
-    base_contribution=\'base_contribution/base_amount/payroll/tax\',\n
+    no_base_contribution=True,\n
+    include_empty_contribution=False,\n
+    excluded_reference_list=[\'ticket_restaurant\',],\n
     contribution_share=\'contribution_share/employer\')\n
 def getTotalEmployerTaxId(total_employer_tax):\n
   s = \'\'\n
@@ -176,10 +180,11 @@ def getPaymentConditionText(paysheet):\n
 gross_salary = context.PaySheetTransaction_getMovementTotalPriceFromCategory(\\\n
     base_contribution=\'base_contribution/base_amount/payroll/report/salary/gross\',\n
     contribution_share=\'contribution_share/employee\')\n
-year_to_date_gross_salary = context.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
-    paysheet=context, base_contribution_list=\'payroll/report/salary/gross\') + gross_salary\n
-\n
+#year_to_date_gross_salary = context.PaySheetTransaction_getYearToDateBaseContributionTotalPrice(\\\n
+#    paysheet=context, base_contribution_list=\'payroll/report/salary/gross\') + gross_salary\n
+year_to_date_gross_salary = context.PaySheetTransaction_getYearToDateSlice()\n
 year_to_date_slice_a = context.PaySheetTransaction_getYearToDateSlice(\'salary_range/france/tranche_a\')\n
+year_to_date_slice_b = context.PaySheetTransaction_getYearToDateSlice(\'salary_range/france/tranche_b\')\n
 \n
 worked_hour_count = context.getWorkTimeAnnotationLineQuantity(0)\n
 year_to_date_worked_hour_count = worked_hour_count + \\\n
@@ -234,6 +239,7 @@ data_dict = {\n
   \'description\': getFieldAsLineList(context.getDescription() or \'\'),\n
   \'year_to_date_gross_salary\': year_to_date_gross_salary,\n
   \'year_to_date_slice_a\': year_to_date_slice_a,\n
+  \'year_to_date_slice_b\': year_to_date_slice_b,\n
   \'year_to_date_worked_hour_count\': year_to_date_worked_hour_count,\n
   \'year_to_date_bonus_worked_hour_count\': year_to_date_bonus_worked_hour_count,\n
   \'year_to_date_bonus_worked_hour_amount\': year_to_date_bonus_worked_hour_amount,\n

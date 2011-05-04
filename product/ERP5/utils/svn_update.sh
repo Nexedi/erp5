@@ -4,7 +4,7 @@ echo -e "\033[0;31mThis is an unsupported script. You should use 'svn update' co
 
 # Modules to get from the SVN
 PRODUCTS="CMFActivity CMFCategory ERP5 ERP5Banking ERP5Catalog \
-          ERP5Form ERP5OOo ERP5Security ERP5Subversion ERP5SyncML \
+          ERP5Form ERP5OOo ERP5Security ERP5VCS ERP5SyncML \
           ERP5Type TimerService ZMySQLDDA ZSQLCatalog"
 
 # System user and group that own Zope product files

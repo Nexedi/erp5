@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!-- ERP5 WEB INTEGRATION -->\n
+<tal:block metal:define-macro="master">\n
+  <tal:block tal:define="website here/getWebSiteValue;\n
+                        enctype string:multipart/form-data;\n
+                        portal_path website/absolute_url;\n
+                        section here/getWebSectionValue;\n
+                        section_url section/absolute_url;\n
+                        current_main_section here/WebSite_getMainSection;\n
+                        editable request/editable_mode | python: 0;\n
+                        list_mode list_mode | nothing;\n
+                        dialog_mode dialog_mode | nothing;\n
+                        has_no_layout python: layout_form is None;\n
+                        dummy python: request.set(\'dialog_mode\', dialog_mode);\n
+                        dummy python: request.set(\'list_mode\', list_mode);\n
+                        aggregate python: has_no_layout or layout_form.Form_getGroupList(\n
+                                          [\'top\',\'breadcrumb\',\'side\']);\n
+                        aggregate python: ((aggregate is not has_no_layout) and dict(aggregate)) or {};\n
+                        top_area python:aggregate.get(\'top\', []);\n
+                        has_top_area python:len(top_area);\n
+                        breadcrumb_area python:aggregate.get(\'breadcrumb\', []);\n
+                        has_breadcrumb_area python:len(breadcrumb_area);\n
+                        side_area python:aggregate.get(\'side\', []);\n
+                        has_side_area python:len(side_area);\n
+                        css_url_list python: [\'/cloudooo_style/cloudooo.css\'] + [additional_css for additional_css in section.getLayoutProperty(\'layout_additional_css\', [])];\n
+                        global css_list_template python:[\'%s%s\' % (portal_path,item) for item in css_url_list];   \n
+                        js_url_list python: [\'/jquery/core/jquery.js\',\'/cloudooo_js/cloudooo.js\',\'/jquery/ui/js/jquery-ui.js\'];                   \n
+                        global js_list python:[\'%s%s\' % (portal_path,item) for item in js_url_list];">\n
+\n
+    <tal:block metal:use-macro="here/template_erp5_xhtml_style/macros/master">\n
+      <tal:block metal:fill-slot="head">\n
+        <link rel="top" title="" href="/" />\n
+        <!--[if IE]><link rel="stylesheet" type="text/css" href="cloudooo_style/fix-ie.css" media="screen" /><![endif]-->\n
+      </tal:block>\n
+      <tal:block metal:fill-slot="layout">\n
+        <tal:block metal:use-macro="here/aggregate_render/macros/populate_request"/>\n
+        \n
+        <!--top here//-->\n
+        <!-- ERP5 layout form rendering code -->                  \n
+        <tal:block tal:condition="has_top_area">\n
+          <tal:block tal:condition="python: layout_form is not None">\n
+            <tal:block tal:repeat="aggregate python: [(\'top\', top_area, )]">\n
+                <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render">\n
+              </tal:block>\n
+            </tal:block>\n
+          </tal:block>    \n
+        </tal:block>\n
+        <!--top here//-->\n
+        \n
+        <div id="container">\n
+        <div id="content" tal:attributes="class python: has_side_area and \'twocolumns area left\' or \'area\'">\n
+          <!--status message here//-->\n
+          <tal:block tal:condition="here/REQUEST/portal_status_message | nothing">\n
+            <div tal:content="structure here/REQUEST/portal_status_message | nothing" \n
+                 id="transition-message" class="error center"/>\n
+          </tal:block>\n
+         <!--status message here//-->\n
+\n
+          <div id="content_padding">\n
+\n
+            <!--breadcrump here//-->\n
+            <!-- ERP5 layout form rendering code -->                  \n
+            <tal:block tal:condition="has_breadcrumb_area">\n
+              <tal:block tal:condition="python: layout_form is not None">\n
+                <tal:block tal:repeat="aggregate python: [(\'breadcrumb\', breadcrumb_area, )]">\n
+                    <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render">\n
+                    </tal:block>\n
+                </tal:block>\n
+              </tal:block>    \n
+            </tal:block>\n
+            <!--breadcrump here//-->\n
+\n
+              <!--Content area here//-->\n
+                <tal:block metal:define-slot="main">\n
+                  <!-- Content goes here-->\n
+                </tal:block>\n
+              <!--Content area here//-->\n
+\n
+              <div class="clear"></div>    \n
+          </div>\n
+          <!--Content padding //-->   \n
+        </div>   \n
+        <!--Content //-->    \n
+\n
+        <!--side here//-->\n
+        <!-- ERP5 layout form rendering code -->                  \n
+            <tal:block tal:condition="has_side_area">\n
+            <div id="sidebar" class="right area">\n
+            <tal:block tal:condition="python: layout_form is not None"\n
+                        tal:define="widget_renderer here/sidebar_box_renderer/macros/widget;\n
+                                    wrapper_class string:right_sidebar">\n
+                <tal:block tal:repeat="aggregate python: [(\'side\', side_area, )]">\n
+                    <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render">\n
+                  </tal:block>\n
+                </tal:block>\n
+              </tal:block> \n
+            </div>   \n
+            </tal:block>\n
+            <!--side here//-->                     \n
+        </div><!--Container here//-->  \n
+        <!--Footer here//-->          \n
+        <div id="footer" class="bottom" tal:content="structure python:here.WebSection_viewInlinePageRenderer(here.getLayoutProperty(\'layout_footer_reference\')) or \'Copyright Cloudooo &copy; 2010\'">\n
+          Copyright Cloudooo &copy; 2010\n
+        </div>\n
+        <!--Footer here//-->\n
+       \n
+      </tal:block>        \n
+    </tal:block>    \n
+  </tal:block>        \n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>template_cloudooo_web</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

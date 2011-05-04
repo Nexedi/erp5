@@ -80,7 +80,8 @@ IDEAS:\n
               </tal:block>\n
             </tal:block>\n
           </tal:block>\n
-          <tal:block tal:repeat="css python: css_list">\n
+          <tal:block tal:define="dummy python: css_list.append(\'wizard.css\')"\n
+                     tal:repeat="css python: css_list">\n
             <link tal:attributes="href css" type="text/css" rel="stylesheet" />\n
           </tal:block>\n
           <tal:block tal:repeat="js python: js_list">\n
@@ -92,7 +93,7 @@ IDEAS:\n
         <body>\n
           <form id="main_form"\n
                 tal:attributes="enctype form/Form_getEnctype | enctype | nothing;\n
-                action url;\n
+                action python: form is not None and (form.action == \'login\' and \'Base_callDialogMethod\') or url;\n
                 method python:str(path(\'form/method | string:post\')).lower()">\n
             <fieldset id="hidden_fieldset">\n
               <!-- Hidden button as explained in http://ppewww.ph.gla.ac.uk/~flavell/www/formquestion.html -->\n

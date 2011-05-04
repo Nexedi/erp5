@@ -65,22 +65,27 @@ class TransformedResource(AmountGeneratorLine):
     def getMappedValuePropertyList(self):
       result = self._baseGetMappedValuePropertyList()
       if not result:
+        # Since MappedValue does not inherit Amount, and type class of
+        # Transformation {Operation,Transformed Resource} Cell
+        # was changed to TransformedResource as a workaround,
+        # we also need to check if 'self' has a quantity.
+        # Otherwise, generated amounts could have 0 quantity
+        # (overridden by cells that only define variation).
         result = ['quantity']
         # Take into account variation_property_list for each variation
         # for which hasProperty is true...
         # FIXME: Why the resource and not the model line itself ? Or both ??
         resource = self.getDefaultResourceValue()
         if resource is not None:
-          # XXX Using getattr directly is a hack. See MappedValue.__doc__
-          result.extend(key for key in resource.getVariationPropertyList()
-                            if getattr(self, key, self) is not self)
+          result += resource.getVariationPropertyList()
+        result = filter(self.hasProperty, result)
       return result
 
     def getMappedValueBaseCategoryList(self):
-      result = self._baseGetMappedValueBaseCategoryList()
+      result = list(self._baseGetMappedValueBaseCategoryList())
       if not result:
         if not self.hasCellContent(base_id='variation'):
-          result = self.getVariationRangeBaseCategoryList() # The current resource variation
+          result = list(self.getVariationRangeBaseCategoryList()) # The current resource variation
         if 'trade_phase' not in result:
           result.append('trade_phase')
       return result
@@ -92,7 +97,7 @@ class TransformedResource(AmountGeneratorLine):
     @classmethod
     def getBaseAmountQuantity(cls, delivery_amount, base_application, rounding):
       value = delivery_amount.getGeneratedAmountQuantity(base_application)
-      if base_application == 'produced_quantity':
+      if base_application == 'base_amount/produced_quantity':
         value += delivery_amount.getConvertedQuantity()
       return value
 
@@ -105,7 +110,8 @@ class TransformedResource(AmountGeneratorLine):
       """
       """
       # It is OK to try to acquire
-      return self._categoryGetBaseApplicationList() or ['produced_quantity']
+      return self._categoryGetBaseApplicationList() \
+          or ['base_amount/produced_quantity']
 
     ### Variation matrix definition
     # XXX-JPS Some explanation needed

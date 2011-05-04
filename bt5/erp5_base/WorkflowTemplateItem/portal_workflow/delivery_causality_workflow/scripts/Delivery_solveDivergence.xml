@@ -68,7 +68,9 @@ if len(delivery_solve_property_dict) or len(divergence_to_accept_list) \\\n
     delivery_builder.solveDivergence(delivery_relative_url,\n
                                      divergence_to_accept_list=divergence_to_accept_list,\n
                                      divergence_to_adopt_list=divergence_to_adopt_list)\n
-delivery.activate().updateCausalityState()\n
+# There could be a pending \'Delivery_calculate\' activity if we solved from\n
+# \'calculating\' state, so wait that it is gone before updating causality state.\n
+delivery.activate(after_tag=delivery.getPath() + \'_calculate\').updateCausalityState()\n
 </string> </value>
         </item>
         <item>

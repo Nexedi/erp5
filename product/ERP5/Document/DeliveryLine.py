@@ -203,7 +203,7 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
       """
       return XMLMatrix.getCellValueList(self, base_id=base_id)
 
-    security.declareProtected( Permissions.View, 'getCell' )
+    security.declareProtected( Permissions.AccessContentsInformation, 'getCell' )
     def getCell(self, *kw , **kwd):
       """
           This method can be overriden
@@ -367,16 +367,17 @@ class DeliveryLine(Movement, XMLObject, XMLMatrix, ImmobilisationMovement):
 
 # divergence support with solving
 
-    security.declareProtected(Permissions.View, 'isDivergent')
+    security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
     def isDivergent(self):
-      """ Returns true if the delivery line is divergent
+      """Returns true if the delivery line is divergent, or if any contained
+      cell is divergent.
       """
       return bool(self.getDivergenceList())
 
-    security.declareProtected(Permissions.View, 'getDivergenceList')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getDivergenceList')
     def getDivergenceList(self):
-      """
-      Return a list of messages that contains the divergences
+      """Returns a list of messages that contains the divergences for that line
+      and the cells it may contain.
       """
       divergence_list = []
       if self.hasCellContent():

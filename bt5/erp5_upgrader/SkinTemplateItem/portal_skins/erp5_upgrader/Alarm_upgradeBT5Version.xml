@@ -58,7 +58,7 @@
 # Setup skins\n
 context.ERP5Site_setupUpgraderSkinSelection()\n
 \n
-alarm_dict = context.ERP5Site_getUpgraderSignature("alarm_dict")\n
+alarm_dict = context.ERP5Site_getUpgraderSignature().get(\'alarm_dict\', {})\n
 if not alarm_dict.get(context.getId(), True):\n
   return False\n
 \n
@@ -73,18 +73,6 @@ active_process = active_process.getPath()\n
 \n
 message_list = []\n
 \n
-system_upgrader_sense = portal_alarms.system_upgrader.sense()\n
-product_upgrader_sense = portal_alarms.product_upgrader.sense()\n
-\n
-if system_upgrader_sense and product_upgrader_sense:\n
-  activate(active_process=active_process,\n
-           activity=\'SQLQueue\',\n
-           priority=2).Alarm_saveActiveResult(\n
-              summary="ERROR: Upgrade BT5 not started",\n
-              severity=0,\n
-              detail=\'System Upgrader Sense: %s , Product Upgrader Sense : %s\' \\\n
-                       % ( system_upgrader_sense, product_upgrader_sense))\n
-\n
 # update existing bt5\n
 message_list.extend(context.ERP5Site_upgradeBusinessTemplateList(upgrade=1))\n
 \n
@@ -98,75 +86,12 @@ return message_list\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>alarm_dict</string>
-                            <string>True</string>
-                            <string>False</string>
-                            <string>portal_alarms</string>
-                            <string>activate</string>
-                            <string>active_process</string>
-                            <string>None</string>
-                            <string>message_list</string>
-                            <string>system_upgrader_sense</string>
-                            <string>product_upgrader_sense</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Alarm_upgradeBT5Version</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

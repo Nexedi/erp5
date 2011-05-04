@@ -34,7 +34,7 @@ PropertyManager_manage_propertiesForm=DTMLFile('properties',
                                                property_extensible_schema__=1)
 
 
-def PropertyManager_updateProperty(self, id, value):
+def PropertyManager_updateProperty(self, id, value, local_properties=False):
     # Update the value of an existing property. If value
     # is a string, an attempt will be made to convert
     # the value to the type of the existing property.
@@ -43,35 +43,42 @@ def PropertyManager_updateProperty(self, id, value):
       if not self.hasProperty(id):
           raise BadRequest, 'The property %s does not exist' % escape(id)
     if isinstance(value, str):
-        proptype=self.getPropertyType(id) or 'string'
+        proptype=self.getPropertyType(id, local_properties=local_properties) \
+           or 'string'
         if type_converters.has_key(proptype):
             value=type_converters[proptype](value)
     self._setPropValue(id, value)
 
-def PropertyManager_hasProperty(self, id):
+def PropertyManager_hasProperty(self, id, local_properties=False):
     """Return true if object has a property 'id'"""
-    for p in self.propertyIds():
+    for p in self.propertyIds(local_properties=local_properties):
         if id==p:
             return 1
     return 0
 
-def PropertyManager_getProperty(self, id, d=None, evaluate=1):
+def PropertyManager_getProperty(self, id, d=None, evaluate=1,
+                                local_properties=False):
     """Get the property 'id', returning the optional second
         argument or None if no such property is found."""
-    property_type = self.getPropertyType(id)
+    property_type = self.getPropertyType(id,
+                      local_properties=local_properties)
     if evaluate and property_type == 'tales':
         value = getattr(self, id)
         expression = Expression(value)
         econtext = createExpressionContext(self)
         return expression(econtext)
     elif property_type:
-      return getattr(self, id)
+      return getattr(self, id, d)
     return d
 
-def PropertyManager_getPropertyType(self, id):
+def PropertyManager_getPropertyType(self, id, local_properties=False):
     """Get the type of property 'id', returning None if no
       such property exists"""
-    for md in self._propertyMap():
+    if local_properties:
+      property_map = getattr(self, '_local_properties', [])
+    else:
+      property_map = self._propertyMap()
+    for md in property_map:
         if md['id']==id:
             return md.get('type', 'string')
     return None
@@ -138,9 +145,10 @@ def PropertyManager_delProperty(self, id):
     self._local_properties=tuple(filter(lambda i, n=id: i['id'] != n,
                                   getattr(self, '_local_properties', ())))
 
-def PropertyManager_propertyIds(self):
+def PropertyManager_propertyIds(self, local_properties=False):
     """Return a list of property ids """
-    return map(lambda i: i['id'], self._propertyMap())
+    return map(lambda i: i['id'], self._propertyMap(
+      local_properties=local_properties))
 
 def PropertyManager_propertyValues(self):
     """Return a list of actual property objects """
@@ -150,7 +158,7 @@ def PropertyManager_propertyItems(self):
     """Return a list of (id,property) tuples """
     return map(lambda i,s=self: (i['id'],s.getProperty(i['id'])), self._propertyMap())
 
-def PropertyManager_propertyMap(self):
+def PropertyManager_propertyMap(self, local_properties=False):
     """Return a tuple of mappings, giving meta-data for properties """
     property_map = list(self._properties)
     property_dict = {}

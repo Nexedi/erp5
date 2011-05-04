@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.96</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tokenize.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+// A framework for simple tokenizers. Takes care of newlines and\n
+// white-space, and of getting the text from the source stream into\n
+// the token object. A state is a function of two arguments -- a\n
+// string stream and a setState function. The second can be used to\n
+// change the tokenizer\'s state, and can be ignored for stateless\n
+// tokenizers. This function should advance the stream over a token\n
+// and return a string or object containing information about the next\n
+// token, or null to pass and have the (new) state be called to finish\n
+// the token. When a string is given, it is wrapped in a {style, type}\n
+// object. In the resulting object, the characters consumed are stored\n
+// under the content property. Any whitespace following them is also\n
+// automatically consumed, and added to the value property. (Thus,\n
+// content is the actual meaningful part of the token, while value\n
+// contains all the text it spans.)\n
+\n
+function tokenizer(source, state) {\n
+  // Newlines are always a separate token.\n
+  function isWhiteSpace(ch) {\n
+    // The messy regexp is because IE\'s regexp matcher is of the\n
+    // opinion that non-breaking spaces are no whitespace.\n
+    return ch != "\\n" && /^[\\s\\u00a0]*$/.test(ch);\n
+  }\n
+\n
+  var tokenizer = {\n
+    state: state,\n
+\n
+    take: function(type) {\n
+      if (typeof(type) == "string")\n
+        type = {style: type, type: type};\n
+\n
+      type.content = (type.content || "") + source.get();\n
+      if (!/\\n$/.test(type.content))\n
+        source.nextWhile(isWhiteSpace);\n
+      type.value = type.content + source.get();\n
+      return type;\n
+    },\n
+\n
+    next: function () {\n
+      if (!source.more()) throw StopIteration;\n
+\n
+      var type;\n
+      if (source.equals("\\n")) {\n
+        source.next();\n
+        return this.take("whitespace");\n
+      }\n
+      \n
+      if (source.applies(isWhiteSpace))\n
+        type = "whitespace";\n
+      else\n
+        while (!type)\n
+          type = this.state(source, function(s) {tokenizer.state = s;});\n
+\n
+      return this.take(type);\n
+    }\n
+  };\n
+  return tokenizer;\n
+}\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2006</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

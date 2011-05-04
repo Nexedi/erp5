@@ -91,6 +91,12 @@ def makeFileUpload(name, as_name=None):
   return FileUpload(path, as_name)
 
 class TestDocumentMixin(ERP5TypeTestCase):
+  
+  bussiness_template_list = ['erp5_core_proxy_field_legacy',
+                             'erp5_full_text_myisam_catalog','erp5_base',
+                             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
+                             'erp5_web', 'erp5_dms']
+
   def setUpOnce(self):
     # set a dummy localizer (because normally it is cookie based)
     self.portal.Localizer = DummyLocalizer()
@@ -137,9 +143,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
     return getattr(self.getPortal(),'document_module')
 
   def getBusinessTemplateList(self):
-    return ('erp5_base',
-            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-            'erp5_web', 'erp5_dms')
+    return self.bussiness_template_list
 
   def getNeededCategoryList(self):
     return ()
@@ -218,6 +222,40 @@ class TestDocument(TestDocumentMixin):
 
   def clearCache(self):
     self.portal.portal_caches.clearAllCache()
+
+  def getPreferences(self, image_display):
+    preference_tool = self.portal.getPortalObject().portal_preferences
+    height_preference = 'preferred_%s_image_height' % (image_display,)
+    width_preference = 'preferred_%s_image_width' % (image_display,)
+    height = int(preference_tool.getPreference(height_preference))
+    width = int(preference_tool.getPreference(width_preference))
+    return (width, height)
+
+  def getURLSizeList(self, uri, **kw):
+    # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
+    url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
+    format=kw.get('format', 'jpeg')
+    infile = urllib.urlopen(url)
+    # save as file with proper incl. format filename (for some reasons PIL uses this info)
+    filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format)
+    f = open(filename, "w")
+    image_data = infile.read()
+    f.write(image_data)
+    f.close()
+    infile.close()
+    file_size = len(image_data)
+    try:
+      from PIL import Image
+      image = Image.open(filename)
+      image_size = image.size
+    except ImportError:
+      from subprocess import Popen, PIPE
+      identify_output = Popen(['identify', filename],
+                              stdout=PIPE).communicate()[0]
+      image_size = tuple(map(lambda x:int(x),
+                             identify_output.split()[2].split('x')))
+    os.remove(filename)
+    return image_size, file_size
 
   ## tests
 
@@ -699,11 +737,9 @@ class TestDocument(TestDocumentMixin):
     Check the validation state of embedded document when its container is
     cloned
     """
-    filename = 'TEST-en-002.doc'
-    file = makeFileUpload(filename)
-    document = self.portal.portal_contributions.newContent(file=file)
+    document = self.portal.person_module.newContent(portal_type='Person')
 
-    sub_document = document.newContent(portal_type='Image')
+    sub_document = document.newContent(portal_type='Embedded File')
     self.assertEquals('embedded', sub_document.getValidationState())
     transaction.commit()
     self.tic()
@@ -716,7 +752,7 @@ class TestDocument(TestDocumentMixin):
     paste_result = container.manage_pasteObjects(cb_copy_data=clipboard)
     new_document = container[paste_result[0]['new_id']]
 
-    new_sub_document_list = new_document.contentValues(portal_type='Image')
+    new_sub_document_list = new_document.contentValues(portal_type='Embedded File')
     self.assertEquals(1, len(new_sub_document_list))
     new_sub_document = new_sub_document_list[0]
     self.assertEquals('embedded', new_sub_document.getValidationState())
@@ -778,7 +814,7 @@ class TestDocument(TestDocumentMixin):
     self.stepTic()
 
     def getAdvancedSearchTextResultList(searchable_text, portal_type=None,src__=0):
-      kw = {'SearchableText': searchable_text}
+      kw = {'full_text': searchable_text}
       if portal_type is not None:
         kw['portal_type'] = portal_type
       if src__==1:
@@ -790,16 +826,16 @@ class TestDocument(TestDocumentMixin):
       getAdvancedSearchTextResultList('ScriptableKey'))
     self.assertEqual(len(getAdvancedSearchTextResultList('RelatedKey')), 0)
     self.assertSameSet([document_1, document_2], \
-      getAdvancedSearchTextResultList('make'))
+      getAdvancedSearchTextResultList('make', ('File',)))
     self.assertSameSet([web_page, person], \
       getAdvancedSearchTextResultList("Great", ('Person', 'Web Page')))
     # full text search with whole title of a document
     self.assertSameSet([document_3], \
-      getAdvancedSearchTextResultList(document_3.getTitle()))
+      getAdvancedSearchTextResultList(document_3.getTitle(), ('Presentation',)))
     # full text search with reference part of searchable_text 
     # (i.e. not specified with 'reference:' - simply part of search text)
     self.assertSameSet([document_3], \
-      getAdvancedSearchTextResultList(document_3.getReference()))
+      getAdvancedSearchTextResultList(document_3.getReference(), ('Presentation',)))
 
    # full text search with reference
     self.assertSameSet([web_page], \
@@ -833,7 +869,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document_1, web_page], \
       getAdvancedSearchTextResultList('language:en'))
     self.assertSameSet([document_1], \
-      getAdvancedSearchTextResultList('Hello language:en'))
+      getAdvancedSearchTextResultList('ScriptableKey language:en'))
     self.assertSameSet([document_2], \
       getAdvancedSearchTextResultList('language:fr'))
     self.assertSameSet([web_page], \
@@ -848,7 +884,6 @@ class TestDocument(TestDocumentMixin):
                                          web_page.getReference(),
                                          web_page.getLanguage(),
                                          web_page.getVersion())))
-  @expectedFailure
   def test_10_SearchString(self):
     """
     Test search string search generation and parsing.
@@ -1018,9 +1053,8 @@ class TestDocument(TestDocumentMixin):
     # parse with multiple portal_type containing spaces in one portal_type
     search_string = 'erp5 AND (portal_type:Document OR portal_type:Presentation OR portal_type:"Web Page")'
     parsed_string = parse(search_string)
-    self.assertEquals(parsed_string['portal_type'], ['Document','Presentation','Web Page'])
+    self.assertEquals(parsed_string['portal_type'], ['Document','Presentation','"Web Page"'])
 
-  @expectedFailure
   def test_11_Base_getAdvancedSearchResultList(self):
     """
     Test search string search capabilities using Base_getAdvancedSearchResultList script.
@@ -1081,7 +1115,7 @@ class TestDocument(TestDocumentMixin):
     self.stepTic()
 
     # login as another user
-    ERP5TypeTestCase.login(self, 'user1')
+    super(TestDocument, self).login('user1')
     document_4 = portal.document_module.newContent(
                    portal_type = 'Presentation',
                    description = 'owner different user contributing document',
@@ -1100,11 +1134,13 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document_1,web_page_1], getAdvancedSearchStringResultList(**kw))
     
     # exact word search
-    kw = {'searchabletext_phrase': 'linux python'}
+    kw = {'searchabletext_any': '*',
+          'searchabletext_phrase': 'linux python'}
     self.assertSameSet([document_1], getAdvancedSearchStringResultList(**kw))
-    kw = {'searchabletext_phrase': 'python linux'}
+    kw = {'searchabletext_any': '*',
+          'searchabletext_phrase': 'python linux'}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
-    kw = {'searchabletext_any': '',
+    kw = {'searchabletext_any': '*',
           'searchabletext_phrase': 'python linux knowledge system'}
     self.assertSameSet([document_2], getAdvancedSearchStringResultList(**kw))
     
@@ -1162,7 +1198,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([], getAdvancedSearchStringResultList(**kw))
   
     # only my docs
-    ERP5TypeTestCase.login(self, 'user1')
+    super(TestDocument, self).login('user1')
     kw = {'searchabletext_any': 'owner'}
     # should return all documents matching a word no matter if we're owner or not
     self.assertSameSet([web_page_1, document_4], getAdvancedSearchStringResultList(**kw))
@@ -1444,7 +1480,7 @@ class TestDocument(TestDocumentMixin):
     # Continue the test with image resizing support
     image_display = 'large'
     # Add url parameters
-    html_content = '<p><img src="%s?display=%s&quality=75"/></p>' % \
+    html_content = '<p><img src="%s?format=jpeg&amp;display=%s&amp;quality=75"/></p>' % \
                                               (image_reference, image_display)
     web_page.edit(text_content=html_content)
     mime_type, odt_archive = web_page.convert('odt')
@@ -1473,7 +1509,7 @@ class TestDocument(TestDocumentMixin):
     self.stepTic()
 
     # login as first one
-    ERP5TypeTestCase.login(self, 'contributor1')
+    super(TestDocument, self).login('contributor1')
     doc = document_module.newContent(portal_type='File', 
                                      title='Test1')
     self.stepTic()
@@ -1482,7 +1518,7 @@ class TestDocument(TestDocumentMixin):
                        doc.getContributorValueList())
 
     # login as second one
-    ERP5TypeTestCase.login(self, 'contributor2')
+    super(TestDocument, self).login('contributor2')
     doc.edit(title='Test2')
     self.stepTic()
     self.login()
@@ -1531,9 +1567,23 @@ class TestDocument(TestDocumentMixin):
       </body>
     </html>
     """.decode('utf-8').encode('iso-8859-1')
-    web_page.edit(text_content=html_content)
+    # content encoded into another codec
+    # than utf-8 comes from necessarily an external file
+    # (Ingestion, or FileField), not from user interface 
+    # which is always utf-8.
+    # Edit web_page with a file to force conversion to base_format
+    # as it is done in reality
 
-    # Check that outputed stripped html is safe
+    # Mimic the behaviour of a FileUpload from WebPage_view
+    file_like = StringIO.StringIO()
+    file_like.write(html_content)
+    setattr(file_like, 'filename', 'something.htm')
+    web_page.edit(file=file_like)
+    # run conversion to base format
+    transaction.commit() 
+    self.tic()
+
+    # Check that outputted stripped html is safe
     safe_html = web_page.asStrippedHTML()
     self.assertTrue('My splendid title' in safe_html)
     self.assertTrue('script' not in safe_html, safe_html)
@@ -1913,6 +1963,24 @@ return 1
     self.assertTrue('odg' in presentation.getTargetFormatList())
     self.assertTrue('jpg' in presentation.getTargetFormatList())
     self.assertTrue('png' in presentation.getTargetFormatList())
+  
+  def test_convertWebPageWithEmbeddedZODBImageToImageOnTraversal(self):
+    """
+    Test Web Page using embedded Images into ZODB case (in its HTML body)
+    """
+    display= 'thumbnail'
+    convert_kw = {'display':display, 
+                  'format':'jpeg', 
+                  'quality':100}
+    preffered_size_for_display = self.getPreferences(display)    
+    web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
+    # use ERP5's favourite.png"
+    web_page_document.setTextContent('<b> test </b><img src="images/favourite.png"/>')
+    self.stepTic()
+    
+    web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
+    web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
+    self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
 
   def test_convertToImageOnTraversal(self):
     """
@@ -1921,7 +1989,7 @@ return 1
      - document_module/1?quality=100&display=large&format=jpeg
      - document_module/1?quality=10&display=large&format=jpeg
      - document_module/1?display=large&format=jpeg
-     - etc ...
+     - web_page_module/1?quality=100&display=xlarge&format=jpeg
     """
     # Create OOo document
     ooo_document = self.portal.document_module.newContent(portal_type='Presentation')
@@ -1935,48 +2003,19 @@ return 1
     image_document = self.portal.image_module.newContent(portal_type='Image')
     upload_file = makeFileUpload('TEST-en-002.png')
     image_document.edit(file=upload_file)
+    
+    web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
+    web_page_document.setTextContent('<b> test </b>')    
     self.stepTic()
-
-    def getPreferences(image_display):
-      preference_tool = self.portal.getPortalObject().portal_preferences
-      height_preference = 'preferred_%s_image_height' % (image_display,)
-      width_preference = 'preferred_%s_image_width' % (image_display,)
-      height = int(preference_tool.getPreference(height_preference))
-      width = int(preference_tool.getPreference(width_preference))
-      return (width, height)
-
-    def getURLSizeList(uri, **kw):
-      # __ac=RVJQNVR5cGVUZXN0Q2FzZTo%3D is encoded ERP5TypeTestCase with empty password
-      url = '%s?%s&__ac=%s' %(uri, urllib.urlencode(kw), 'RVJQNVR5cGVUZXN0Q2FzZTo%3D')
-      format=kw.get('format', 'jpeg')
-      infile = urllib.urlopen(url)
-      # save as file with proper incl. format filename (for some reasons PIL uses this info)
-      filename = "%s%stest-image-format-resize.%s" %(os.getcwd(), os.sep, format)
-      f = open(filename, "w")
-      image_data = infile.read()
-      f.write(image_data)
-      f.close()
-      infile.close()
-      file_size = len(image_data)
-      try:
-        from PIL import Image
-        image = Image.open(filename)
-        image_size = image.size
-      except ImportError:
-        from subprocess import Popen, PIPE
-        identify_output = Popen(['identify', filename],
-                                stdout=PIPE).communicate()[0]
-        image_size = tuple(map(lambda x:int(x),
-                               identify_output.split()[2].split('x')))
-      os.remove(filename)
-      return image_size, file_size
 
     ooo_document_url = '%s/%s' %(self.portal.absolute_url(), ooo_document.getRelativeUrl())
     pdf_document_url = '%s/%s' %(self.portal.absolute_url(), pdf_document.getRelativeUrl())
     image_document_url = '%s/%s' %(self.portal.absolute_url(), image_document.getRelativeUrl())
+    web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
+   
     for display in ('nano', 'micro', 'thumbnail', 'xsmall', 'small', 'medium', 'large', 'xlarge',):
       max_tollerance_px = 1
-      preffered_size_for_display = getPreferences(display)
+      preffered_size_for_display = self.getPreferences(display)
       for format in ('png', 'jpeg', 'gif',):
         convert_kw = {'display':display, \
                       'format':format, \
@@ -1985,29 +2024,34 @@ return 1
         # so allow some tollerance which is produced by respective portal_transform command
 
         # any OOo based portal type
-        ooo_document_image_size, ooo_document_file_size = getURLSizeList(ooo_document_url, **convert_kw)
+        ooo_document_image_size, ooo_document_file_size = self.getURLSizeList(ooo_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(ooo_document_image_size) <= max_tollerance_px)
 
         # PDF
-        pdf_document_image_size, pdf_document_file_size = getURLSizeList(pdf_document_url, **convert_kw)
+        pdf_document_image_size, pdf_document_file_size = self.getURLSizeList(pdf_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(pdf_document_image_size) <= max_tollerance_px)
 
         # Image
-        image_document_image_size, image_document_file_size = getURLSizeList(image_document_url, **convert_kw)
+        image_document_image_size, image_document_file_size = self.getURLSizeList(image_document_url, **convert_kw)
         self.assertTrue(max(preffered_size_for_display) - max(image_document_image_size) <= max_tollerance_px)
+        
+        # Web Page
+        web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
+        self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= max_tollerance_px)
+        
 
     # test changing image quality will decrease its file size
-    for url in (image_document_url, pdf_document_url, ooo_document_url):
+    for url in (image_document_url, pdf_document_url, ooo_document_url, web_page_document_url):
       convert_kw = {'display':'xlarge', \
                     'format':'jpeg', \
                     'quality':100}
-      image_document_image_size_100p,image_document_file_size_100p = getURLSizeList(url, **convert_kw)
+      image_document_image_size_100p,image_document_file_size_100p = self.getURLSizeList(url, **convert_kw)
       # decrease in quality should decrease its file size
       convert_kw['quality'] = 5.0
-      image_document_image_size_5p,image_document_file_size_5p = getURLSizeList(url, **convert_kw)
+      image_document_image_size_5p,image_document_file_size_5p = self.getURLSizeList(url, **convert_kw)
       # removing quality should enable defaults settings which should be reasonable between 5% and 100%
       del convert_kw['quality']
-      image_document_image_size_no_quality,image_document_file_size_no_quality = getURLSizeList(url, **convert_kw)
+      image_document_image_size_no_quality,image_document_file_size_no_quality = self.getURLSizeList(url, **convert_kw)
       # check file sizes
       self.assertTrue(image_document_file_size_100p > image_document_file_size_no_quality and \
                       image_document_file_size_no_quality > image_document_file_size_5p)
@@ -2184,6 +2228,58 @@ return 1
       subject_result = portal.portal_catalog(subject=subject_list)
       self.assertEquals(len(subject_result), 1)
       self.assertEquals(subject_result[0].getPath(), document.getPath())
+
+  def test_base_convertable_behaviour_with_successive_updates(self):
+    """Check that update content's document (with setData and setFile)
+    will refresh base_data and content_md5 as expected.
+
+    When cloning a document base_data must not be computed once again.
+    """
+    # create a document
+    upload_file = makeFileUpload('TEST-en-002.doc')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
+    document = self.portal.Base_contribute(**kw)
+    self.stepTic()
+    previous_md5 = document.getContentMd5()
+    previous_base_data = document.getBaseData()
+
+    # Clone document: base_data must not be computed once again
+    cloned_document = document.Base_createCloneDocument(batch_mode=True)
+    self.assertEquals(previous_md5, cloned_document.getContentMd5())
+    self.assertEquals(document.getData(), cloned_document.getData())
+    self.assertEquals(document.getBaseData(), cloned_document.getBaseData())
+    self.assertEquals(document.getExternalProcessingState(),
+                      cloned_document.getExternalProcessingState())
+    self.assertEquals(document.getExternalProcessingState(), 'converted')
+
+    # Update document with another content by using setData:
+    # base_data must be recomputed
+    document.edit(data=makeFileUpload('TEST-en-002.odt').read())
+    self.stepTic()
+    self.assertTrue(document.hasBaseData())
+    self.assertNotEquals(previous_base_data, document.getBaseData(),
+                         'base data is not refreshed')
+    self.assertNotEquals(previous_md5, document.getContentMd5())
+    self.assertEquals(document.getExternalProcessingState(), 'converted')
+    previous_md5 = document.getContentMd5()
+    previous_base_data = document.getBaseData()
+
+    # Update document with another content by using setFile:
+    # base_data must be recomputed
+    document.edit(file=makeFileUpload('TEST-en-002.doc'))
+    self.stepTic()
+    self.assertTrue(document.hasBaseData())
+    self.assertNotEquals(previous_base_data, document.getBaseData(),
+                         'base data is not refreshed')
+    self.assertNotEquals(previous_md5, document.getContentMd5())
+    self.assertEquals(document.getExternalProcessingState(), 'converted')
+
+    # Delete content: base_data must be deleted
+    document.edit(data=None)
+    self.stepTic()
+    self.assertFalse(document.hasBaseData())
+    self.assertFalse(document.hasContentMd5())
+    self.assertEquals(document.getExternalProcessingState(), 'empty')
 
   def _test_document_publication_workflow(self, portal_type, transition):
     document = self.getDocumentModule().newContent(portal_type=portal_type)
@@ -2384,7 +2480,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     those properties are taken into account when the user
     views an image
     """
-    ERP5TypeTestCase.login(self, 'yusei')
+    super(TestDocumentWithSecurity, self).login('yusei')
     preference_tool = self.portal.portal_preferences
     #get the thumbnail sizes defined by default on default site preference
     default_thumbnail_image_height = \
@@ -2421,7 +2517,7 @@ class TestDocumentWithSecurity(TestDocumentMixin):
     image_module = self.portal.getDefaultModule(image_portal_type)
     image = image_module.newContent(portal_type=image_portal_type)
     self.assertEqual('thumbnail',
-       image.Image_view._getOb("image_view", None).get_value('image_display'))
+       image.Image_view._getOb('my_thumbnail', None).get_value('image_display'))
     self.assertEqual((user_pref.getPreferredThumbnailImageWidth(),
                     user_pref.getPreferredThumbnailImageHeight()),
                      image.getSizeFromImageDisplay('thumbnail'))
@@ -2446,7 +2542,7 @@ class TestDocumentPerformance(TestDocumentMixin):
     req_time = (after - before)
     # we should have image converted in less than 20s
     self.assertTrue(req_time < 30.0)
-    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))

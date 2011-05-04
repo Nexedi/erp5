@@ -56,7 +56,7 @@ structure = {}\n
 structure[\'line\'] = None\n
 structure[\'line_list\'] = []\n
 \n
-if not (is_report_tree_mode or is_domain_tree_mode):\n
+if not ((is_report_tree_mode or is_domain_tree_mode) and max_section_depth):\n
   # When this is not a report tree, return the "plain structure"\n
   structure[\'line\'] = None\n
   structure[\'line_list\'] = [dict(line=x, line_list=[]) for x in listbox_line_list]\n
@@ -83,6 +83,8 @@ def order_line_list(line_list, current_structure, depth=0, index=0, last_dict=No
     else:\n
       return index\n
   if index < len(line_list):\n
+    # FIXME: this way of recursing is not appropriate, as we reach very easily the maximum\n
+    # recursion depth from python.\n
     index = order_line_list(line_list, current_structure, depth=depth, index=index, last_dict=last_dict)\n
   return index\n
 \n
@@ -95,7 +97,7 @@ return structure\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>listbox_line_list=None, is_report_tree_mode=False, is_domain_tree_mode=False</string> </value>
+            <value> <string>listbox_line_list=None, is_report_tree_mode=False, is_domain_tree_mode=False, max_section_depth=0</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

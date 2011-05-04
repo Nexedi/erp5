@@ -1,7 +1,11 @@
 Gadget Tool | view
+Gadget Type | action_view
+Gadget Type | gadget_view
+Gadget Type | view
 Gadget | preferences
 Gadget | view
 Knowledge Box | preferences
 Knowledge Box | view
 Knowledge Pad Module | view
 Knowledge Pad | view
+portal_actions | configure_gadgets

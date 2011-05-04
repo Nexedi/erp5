@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts95899417.07</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>cal-day.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/gif</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">R0lGODlhEAAQAOYAAAAAAP////z8/n2j9Iin6fD0/TNkxzpy3zNjwzdpzzps0D903z9v0UV54ERz
+00t+4Ep31VKC4lB811qI41eB2WGN5F2H22WM3mmS5WuS4Hij9nCX5nmh9XKX4nec6IOr+Xic5H2g
+6H6g5oKk6YOk6Ieo6ouq6t3o/tzn/eDq/uLr/uzx+/T3/fv8/nGe8n+n84iv+a+8097p/tvm+uHr
+/pqovs/f+bXB1LrE1N3o+uDq++Dq+unw+/X4/XCLsoSexI+q0ZWv1J2116CvxaSzyaKxx6e2zK69
+1NHh+d3p+uzy+4qMj/j6/TVJY2+LsnmXv3qXv3uYv3SPtHyZwIWjzX6awYilzoOew4SfxI+oyaG5
+2Z+316O62pOit5invKW1y5yrwNLY4H2bwX+cwZ6uwuvy+4eJiyAlIFpbWlhZWP/+/P+ZIfzlyL52
+Jf/DhP/Qn/7+/v39/dfX14CAgH9/f3BwcGNjY////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5
+BAEAAHcALAAAAAAQABAAAAfVgHdngoSDhoRoZgFLAXQBc48BdQF2cWlyJgQkIiAdGRcWFBIQDgwK
+CSYqNCkyJygwHy8vAxwaLgYmJiUjIR4bGBUTEQ8NCwcIRnBwVMrMyy1MVAUrTV/KT9fZLFRlYU1E
+QVVO4Wvla1DoVFNNRcpBymtqbG1vLFA7OE1D7vBvbvQFoMy40YRMuHFVyrVpgw4KFShNwCizImCZ
+AAFUAuSggiRGkxrKpjDpIUYJjydJdIyxcaSJly0/nHDJIkULFh9CrjgBEqVJlyZAgwodeqeo0aNI
+7wQCADs=</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>632</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>cal-day.gif</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>16</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

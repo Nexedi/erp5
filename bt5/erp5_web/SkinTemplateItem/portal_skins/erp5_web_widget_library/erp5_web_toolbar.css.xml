@@ -62,6 +62,7 @@ div.web-toolbar h3 {\n
   padding:0px 10px;\n
   margin: 0em;\n
   cursor:pointer;\n
+  display:block;\n
 }\n
 div.web-toolbar h3:hover {\n
   background:#ccf;\n
@@ -84,7 +85,7 @@ li.toolboxSection > div {\n
   display:none;\n
   margin:0;\n
   bottom:20px;\n
-  position:fixed;\n
+  position:absolute;\n
   background-color:white;\n
   border:1px solid #ccc;\n
   padding:8px;\n
@@ -211,12 +212,13 @@ div.web-toolbar div.menu ul li{\n
 div.web-toolbar div.menu div.field{\n
   margin-bottom:0.2em!important;\n
 }\n
-div.web-toolbar div.menu ul li a:active,a:visited,a:link{\n
+div.web-toolbar div.menu ul li a:active,\n
+div.web-toolbar div.menu ul li a:visited,\n
+div.web-toolbar div.menu ul li a:link{\n
   color:auto !important;\n
 }\n
 \n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>

@@ -1,0 +1,765 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block metal:define-macro="checked_logged_in_as_express_user_client_instance">\n
+  <!-- Check we\'re logged against client_instance -->\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${client_instance_base_url}/view</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td tal:content="python: configuration[\'customer_user1_reference\']"></td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+\n
+<tal:block metal:define-macro="checked_logged_in_as_express_user_server_instance">\n
+  <!-- Check we\'re logged against server -->\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/view</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td tal:content="python: configuration[\'customer_user1_reference\']"></td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+\n
+<tal:block metal:define-macro="init_test_environment">\n
+  <tr>\n
+    <td>store</td>\n
+    <td tal:content="python:\n
+        here.REQUEST.get(\'URL\')[0:here.REQUEST.get(\'URL\').find(\'/portal_tests/\')]">erp5</td>\n
+    <td>base_url</td>\n
+  </tr>\n
+  <tr>\n
+    <td>setTimeout</td>\n
+    <td>60000</td>\n
+    <td></td>\n
+  </tr>\n
+  <!-- Always initialize browser to English language -->\n
+  <tr>\n
+    <td>deleteCookie</td>\n
+    <td>LOCALIZER_LANGUAGE</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>createCookie</td>\n
+    <td>LOCALIZER_LANGUAGE=en</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/view</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="restore_test_environment">\n
+  <tr>\n
+    <td>setTimeout</td>\n
+    <td>30000</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+\n
+<tal:block metal:define-macro="configurator_frame_check">\n
+\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>ERP5 Configuration</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Installation steps</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Number of user accounts</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>User accounts configuration</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Accounting</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Application preferences</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>ERP5 installation</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="configurator_consulting_frame_check">\n
+\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>ERP5 Configuration</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Installation steps</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Your Categories</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Your roles settings</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Number of user accounts</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>User accounts configuration</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Accounting</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Application preferences</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>ERP5 installation</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="configurator_consulting_page1_check">\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Your Categories</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Upload your categories spreadsheet.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Categories Spreadsheet</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td>Configure Categories</td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="configurator_consulting_page2_check">\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Your roles settings</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Upload your roles settings spreadsheet.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Portal Type Roles Spreadsheet</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td>Configure Roles</td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="configurator_page1_check">\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Your organisation</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>What is the name of your company?</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Email</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Telephone</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Street Address</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Postal Code</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>City</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Country</td>\n
+    <td></td>\n
+  </tr>\n
+\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td>Configure Organisation</td>\n
+  </tr>\n
+\n
+</tal:block>\n
+\n
+\n
+<tal:block metal:define-macro="configurator_page2_check">\n
+\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Number of user accounts</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Enter the number of user accounts you want to create. In your company, each person using ERP5 should have his own user account.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Select the number of user accounts you want to configure</td>\n
+    <td></td>\n
+  </tr>\n
+\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td>Configure user accounts number</td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="previous:method"]</td>\n
+    <td>Previous</td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="previous:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+\n
+<tal:block metal:define-macro="configurator_page3_check">\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>User accounts configuration</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Fill in detailled information for each ERP5 user.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td> User accounts configuration</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td> Fill in detailled information for each ERP5 user.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>First Name</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Last Name</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>User Login</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>User Password</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Password Confirmation</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Function</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td>Configure user accounts</td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="previous:method"]</td>\n
+    <td>Previous</td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="previous:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="configurator_page4_check">\n
+\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Accounting</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Configure your accounting.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Which accouting plan do you use?</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Accounting Period</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Accounting Periods are used to define the range of dates in which you will be allowed to input accounting transactions.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>To start using the system, you have to configure the first accounting period.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>What is the begin date of your current accounting period?</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>What will be the end date of your current accounting period?</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>What is the name of this period?</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td>Configure accounting</td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="previous:method"]</td>\n
+    <td>Previous</td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="previous:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+\n
+<tal:block metal:define-macro="configurator_page5_check">\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Application preferences</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Define some global preferences for your ERP5 application.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>What email address should be used as From email address for automatically generated emails?</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>What is the currency used in your company?</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Which date format do you use?</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Which translations do you want to use?</td>\n
+    <td></td>\n
+  </tr>\n
+\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td>Configure ERP5 Preferences</td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="previous:method"]</td>\n
+    <td>Previous</td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="previous:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="configurator_page6_check">\n
+\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>ERP5 installation</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Installation procedure may begin</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>All needed information is collected.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Please proceed using Install button below.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>In the next page you will receive automatically updated installation status report.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="next:method"]</td>\n
+    <td>Install</td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyValue</td>\n
+    <td>//input[@name="previous:method"]</td>\n
+    <td>Previous</td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyElementPresent</td>\n
+    <td>//input[@name="previous:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="login_as_express_user">\n
+\n
+  <tal:block tal:condition="here/ExpressZuite_isExpressUserAccountAvailable">\n
+    <!-- login with newly created user from Express configuration -->\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/view</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/logout</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/login_form</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>//input[@name="__ac_name"]</td>\n
+      <td tal:content="python:\n
+            here.Zuite_getConfigurationTestDict()[\'customer_user1_reference\']"></td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>//input[@name="__ac_password"]</td>\n
+      <td tal:content="python:\n
+            here.Zuite_getConfigurationTestDict()[\'customer_user1_password\']"></td>\n
+    </tr>\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td>//input[@name="logged_in:method"]</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/view</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>verifyTextPresent</td>\n
+      <td tal:content="python:\n
+            here.Zuite_getConfigurationTestDict()[\'customer_user1_reference\']"></td>\n
+      <td></td>\n
+    </tr>\n
+  </tal:block>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="login_as_functional_test_user">\n
+\n
+  <tal:block tal:condition="here/ExpressZuite_isExpressUserAccountAvailable">\n
+    <!-- login with functional test user -->\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/view</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/logout</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/login_form</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>//input[@name="__ac_name"]</td>\n
+      <td tal:content="python:\n
+            here.Zuite_getConfigurationTestDict()[\'functional_test_username\']"></td>\n
+    </tr>\n
+    <tr>\n
+      <td>type</td>\n
+      <td>//input[@name="__ac_password"]</td>\n
+      <td tal:content="python:\n
+          here.Zuite_getConfigurationTestDict()[\'functional_test_user_password\']"></td>\n
+    </tr>\n
+    <tr>\n
+      <td>clickAndWait</td>\n
+      <td>//input[@name="logged_in:method"]</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>openAndWait</td>\n
+      <td>${base_url}/view</td>\n
+      <td></td>\n
+    </tr>\n
+    <tr>\n
+      <td>verifyTextPresent</td>\n
+      <td tal:content="python:\n
+            here.Zuite_getConfigurationTestDict()[\'functional_test_username\']"></td>\n
+      <td></td>\n
+    </tr>\n
+  </tal:block>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="fill_assignment_start_date_and_stop_date">\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="subfield_field_my_start_date_year"]</td>\n
+    <td tal:content="python: configuration[\'assignment_start_date_year\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="subfield_field_my_start_date_month"]</td>\n
+    <td tal:content="python: configuration[\'assignment_start_date_month\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="subfield_field_my_start_date_day"]</td>\n
+    <td tal:content="python: configuration[\'assignment_start_date_day\']"></td>\n
+  </tr>\n
+\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="subfield_field_my_stop_date_year"]</td>\n
+    <td tal:content="python: configuration[\'assignment_stop_date_year\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="subfield_field_my_stop_date_month"]</td>\n
+    <td tal:content="python: configuration[\'assignment_stop_date_month\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="subfield_field_my_stop_date_day"]</td>\n
+    <td tal:content="python: configuration[\'assignment_stop_date_day\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>clickAndWait</td>\n
+    <td>//button[@name="Base_edit:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Data updated.</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_viewConfiguratorTestMacroLibrary</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

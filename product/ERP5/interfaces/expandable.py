@@ -36,14 +36,14 @@ class IExpandable(Interface):
   """
     An Expandable class provides methods which trigger
     the generation of the root applied rule of a simulation tree
-    and its expansion. Classes which implement IExpand include
+    and its expansion. Classes which implement IExpandable include
     Deliveries (whenever can be the cause of an Applied Rule),
-    Items (whenever they  are the cause of a movement sequence)
+    Items (whenever they are the cause of a movement sequence)
     such as Subscription Items or Immobilisation Items, Movements
     (which have been previously built).
   """
 
-  def expand(applied_rule_id=None, force=False, activate_kw=None, **kw):
+  def expand(applied_rule_id=None, activate_kw=None, **kw):
     """
       Expand the current Expandable class into the simulation.
       If no applied_rule_id is provided, try first to find 
@@ -52,10 +52,6 @@ class IExpandable(Interface):
       applied_rule_id -- a hint parameter (optional), which can
                          be provided to reindex the whole 
                          simulation tree from the root applied rule
-
-      force -- (LEGACY) this named parameter is no longer used. It
-               used to be required because of unclear specification
-               of expand stability
 
       activate_kw -- (TO BE EXPLAINED BY KAZ)
     """

@@ -1,23 +1,17 @@
-Cash Balance Regulation Module | print_pdf
 Cash Balance Regulation Module | view
 Cash Balance Regulation | final
 Cash Balance Regulation | incoming_fastinput
 Cash Balance Regulation | initial
 Cash Balance Regulation | outgoing_fastinput
-Cash Balance Regulation | print
 Cash Balance Regulation | view
 Cash Container Item | view
-Cash Container | print
 Cash Container | view
-Cash Exchange Module | print_pdf
 Cash Exchange Module | view
 Cash Exchange | incoming_fastinput
 Cash Exchange | outgoing_fastinput
-Cash Exchange | print
 Cash Exchange | receipt
 Cash Exchange | return
 Cash Exchange | view
-Cash Movement Module | print_pdf
 Cash Movement Module | view
 Cash Movement New Not Emitted Container | view
 Cash Movement New Not Emitted Line | view
@@ -27,13 +21,10 @@ Cash Movement New Not Emitted | container
 Cash Movement New Not Emitted | fastInput
 Cash Movement New Not Emitted | view
 Cash Movement | fastinput
-Cash Movement | print_pdf
 Cash Movement | view
 Cash Sorting Module | view
-Cash Sorting Statistic Module | print
 Cash Sorting Statistic Module | view
 Cash Sorting Statistic | fastInput
-Cash Sorting Statistic | print
 Cash Sorting Statistic | view
 Cash Sorting | incoming_fastinput
 Cash Sorting | incoming_line_view
@@ -45,123 +36,87 @@ Cash To Currency Purchase | incoming_cash
 Cash To Currency Purchase | incoming_fastinput
 Cash To Currency Purchase | outgoing_cash
 Cash To Currency Purchase | outgoing_fastinput
-Cash To Currency Purchase | print
 Cash To Currency Purchase | view
 Cash To Currency Sale Module | view
 Cash To Currency Sale | incoming_cash_view
 Cash To Currency Sale | incoming_fastinput
 Cash To Currency Sale | outgoing_cash_view
 Cash To Currency Sale | outgoing_fastinput
-Cash To Currency Sale | print
 Cash To Currency Sale | view
-Classification Survey Module | print_pdf
 Classification Survey Module | view
 Classification Survey | incoming_fastinput
 Classification Survey | outgoing_fastinput
-Classification Survey | print
 Classification Survey | result
 Classification Survey | supply
 Classification Survey | view
 Container Cell | view
 Container Line | view
 Container Line | view_quantity
-Counter Rendering Module | print_pdf
 Counter Rendering Module | view
 Counter Rendering | fastinput
-Counter Rendering | print_pdf
 Counter Rendering | view
-Destruction Survey Module | print_pdf
 Destruction Survey Module | view
 Destruction Survey | fastInput
-Destruction Survey | print
 Destruction Survey | view
-Exchanged Mutilated Banknote Line | print
 Exchanged Mutilated Banknote Line | view
-Foreign Cash Reception Module | print_pdf
 Foreign Cash Reception Module | view
 Foreign Cash Reception | fastinput
-Foreign Cash Reception | print_pdf
 Foreign Cash Reception | view
-Historical Operation Module | print
 Historical Operation Module | view
 Historical Operation | accounting_view
 Historical Operation | fastInput
-Historical Operation | print
 Historical Operation | related_agents
 Historical Operation | view
 Incoming Cash Balance Regulation Line | view
-Incoming Cash Exchange Line | print
 Incoming Cash Exchange Line | view
 Incoming Cash Sorting Line | view
-Incoming Cash To Currency Purchase Line | print
 Incoming Cash To Currency Purchase Line | view
-Incoming Cash To Currency Sale Line | print
 Incoming Cash To Currency Sale Line | view
 Incoming Classification Survey Line | view
-Incoming Mutilated Banknote Line | print
 Incoming Mutilated Banknote Line | view
 Internal Money Deposit Module | view
 Internal Money Deposit | accouting_view
 Internal Money Deposit | fast_input
-Internal Money Deposit | print
 Internal Money Deposit | view
 Internal Money Payment Module | view
 Internal Money Payment | accouting_view
 Internal Money Payment | fast_input
-Internal Money Payment | print
 Internal Money Payment | view
 Monetary Destruction Cell | view
-Monetary Destruction Line | print
 Monetary Destruction Line | view
 Monetary Destruction Module | view
 Monetary Destruction | fastinput
-Monetary Destruction | print
 Monetary Destruction | view
 Monetary Issue Container | view
-Monetary Issue Line | print
 Monetary Issue Line | view
 Monetary Issue Module | view
 Monetary Issue | coin_fastinput
 Monetary Issue | container
 Monetary Issue | fastInput
-Monetary Issue | print
 Monetary Issue | view
 Monetary Recall Cell | view
-Monetary Recall Line | print
 Monetary Recall Line | view
-Monetary Recall Module | print_pdf
 Monetary Recall Module | view
 Monetary Recall | fastinput
-Monetary Recall | print
 Monetary Recall | view
 Monetary Reception Module | import
-Monetary Reception Module | print_pdf
 Monetary Reception Module | view
 Monetary Reception | cahs_container
 Monetary Reception | fastinput
-Monetary Reception | print_pdf
 Monetary Reception | view
-Monetary Survey Module | print_pdf
 Monetary Survey Module | view
 Monetary Survey | fastInput
-Monetary Survey | print
 Monetary Survey | view
-Money Deposit Module | print
 Money Deposit Module | view
-Money Deposit Rendering Module | print_pdf
 Money Deposit Rendering Module | view
 Money Deposit Rendering | fastinput
-Money Deposit Rendering | print_pdf
 Money Deposit Rendering | view
 Money Deposit | accouting_view
 Money Deposit | fast_input
-Money Deposit | print
 Money Deposit | view
-Mutilated Banknote Module | print_pdf
 Mutilated Banknote Module | view
 Mutilated Banknote | exchanged_line
 Mutilated Banknote | exchanged_line_fast_input
-Mutilated Banknote | print_pdf
 Mutilated Banknote | returned_line
 Mutilated Banknote | returned_line_fast_input
 Mutilated Banknote | supply_line
@@ -171,30 +126,20 @@ Outgoing Cash Balance Regulation Line | view
 Outgoing Cash Exchange Line | view
 Outgoing Cash Sorting Cell | view
 Outgoing Cash Sorting Line | view
-Outgoing Cash To Currency Purchase Line | print
 Outgoing Cash To Currency Purchase Line | view
-Outgoing Cash To Currency Sale Line | print
 Outgoing Cash To Currency Sale Line | view
 Outgoing Classification Survey Cell | view
 Outgoing Classification Survey Line | view
-Outgoing Mutilated Banknote Line | print
 Outgoing Mutilated Banknote Line | view
-Usual Cash Rendering Module | print_pdf
 Usual Cash Rendering Module | view
 Usual Cash Rendering | fastinput
-Usual Cash Rendering | print_pdf
 Usual Cash Rendering | view
-Usual Cash Transfer Module | print_pdf
 Usual Cash Transfer Module | view
 Usual Cash Transfer | fastinput
-Usual Cash Transfer | print
 Usual Cash Transfer | view
 Vault Transfer Cell | view
-Vault Transfer Line | print
 Vault Transfer Line | view
 Vault Transfer Module | list
-Vault Transfer Module | print_pdf
 Vault Transfer Module | view
 Vault Transfer | fastinput
-Vault Transfer | print_pdf
 Vault Transfer | view

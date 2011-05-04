@@ -78,7 +78,7 @@ respond_event.start()\n
 if respond_event.portal_type==\'Mail Message\' and respond_event.getSource():\n
   respond_event.send()\n
 else:\n
-  respond_event.send(mfrom=context.portal_preferences.getPreferredEventSenderEmail())\n
+  respond_event.send(from_url=context.portal_preferences.getPreferredEventSenderEmail())\n
 </string> </value>
         </item>
         <item>

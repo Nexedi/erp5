@@ -96,7 +96,7 @@
 \n
 <tr>\n
   <td>assertValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%c%</td>\n
 </tr>\n
 <tr>\n
@@ -113,7 +113,7 @@
 \n
 <tr>\n
   <td>assertValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%c%</td>\n
 </tr>\n
 \n
@@ -131,7 +131,7 @@
 \n
 <tr>\n
   <td>assertValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%c%</td>\n
 </tr>\n
 \n
@@ -165,7 +165,7 @@
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%c%</td>\n
 </tr>\n
 \n
@@ -198,7 +198,7 @@
 </tr>\n
 <tr>\n
   <td>assertValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%c%</td>\n
 </tr>\n
 <tr>\n
@@ -216,7 +216,7 @@
 \n
 <tr>\n
   <td>assertValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%c%</td>\n
 </tr>\n
 \n
@@ -238,8 +238,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

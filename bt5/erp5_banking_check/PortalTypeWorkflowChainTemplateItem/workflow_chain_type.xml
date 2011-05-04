@@ -13,11 +13,11 @@
  </chain>
  <chain>
   <type>Checkbook Reception</type>
-  <workflow>edit_workflow, checkbook_reception_workflow</workflow>
+  <workflow>checkbook_reception_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Checkbook Usual Cash Transfer</type>
-  <workflow>edit_workflow, checkbook_usual_cash_transfer_workflow</workflow>
+  <workflow>checkbook_usual_cash_transfer_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Checkbook Vault Transfer</type>

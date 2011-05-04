@@ -37,11 +37,12 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                        _getConversionServerDict
 from AccessControl.SecurityManagement import newSecurityManager
+from AccessControl import getSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import convertToUpperCase
 from zExceptions import BadRequest
 from Products.ERP5Type.tests.backportUnittest import skip
-from Products.ERP5Type.Tool.ClassTool import _aq_reset
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.CMFCore.WorkflowCore import WorkflowException
 
@@ -136,7 +137,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     self.getWorkflowTool().setChainForPortalTypes(
         ['Organisation'], ())
-    _aq_reset()
 
   def stepAssociateWorkflows(self, sequence=None, sequence_list=None, **kw):
     """
@@ -144,7 +144,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     self.getWorkflowTool().setChainForPortalTypes(
         ['Organisation'], ('validation_workflow', 'edit_workflow'))
-    _aq_reset()
 
   def stepAssociateWorkflowsExcludingEdit(self, sequence=None, 
                                           sequence_list=None, **kw):
@@ -153,7 +152,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     self.getWorkflowTool().setChainForPortalTypes(
         ['Organisation'], ('validation_workflow',))
-    _aq_reset()
 
   def stepCreateObject(self, sequence=None, sequence_list=None, **kw):
     """
@@ -950,6 +948,9 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     pw = self.getWorkflowTool()
     dummy_worlflow_id = 'never_existent_workflow'
     addWorkflowByType(pw, 'erp5_workflow', dummy_worlflow_id)
+
+    transaction.commit()
+
     cbt = pw._chains_by_type
     props = {}
     for id, wf_ids in cbt.iteritems():
@@ -959,8 +960,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     pw.manage_changeWorkflows('', props = props)
     pw.manage_delObjects([dummy_worlflow_id])
 
-    # Make sure that _aq_dynamic will be called again.
-    _aq_reset()
+    transaction.commit()
 
     try:
       self.assertRaises(AttributeError, getattr, obj,
@@ -976,6 +976,8 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                     if wf_id != dummy_worlflow_id]
         props['chain_%s' % id] = ','.join(wf_ids)
       pw.manage_changeWorkflows('', props = props)
+
+      transaction.commit()
 
   def test_14_UpdateRoleMappingwithNoDefinedRoleAndAcquisitionActivatedOnWorkflow(self, quiet=quiet, run=run_all_test):
     """updateRoleMappingsFor does a logical AND between all workflow defining security,
@@ -1015,7 +1017,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     for permission in permission_list:
       manager_has_no_permission[permission] = ()
 
-    from AccessControl import getSecurityManager
     user = getSecurityManager().getUser()
     try:
       self.assertTrue(permission_list)
@@ -1085,8 +1086,12 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       def __init__(self, filename):
         self.filename = os.path.basename(filename)
         file.__init__(self, filename)
-    f = self.portal.newContent(portal_type='File', id='f')
-    f._edit(content_type='text/plain', file=DummyFile(__file__))
+    portal = self.getPortal()
+    organisation = portal.organisation_module.newContent(portal_type='Organisation')
+    file_document = organisation.newContent(portal_type='Embedded File',
+                                            file=DummyFile(__file__),
+                                            content_type='text/plain')
+
     # login as a member
     uf = self.portal.acl_users
     uf._doAddUser('member_user', 'secret', ['Member'], [])
@@ -1094,8 +1099,10 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     newSecurityManager(None, user)
 
     # if it didn't raise Unauthorized, Ok
-    response = self.publish('%s/Base_download' % f.getPath())
-    self.assertEquals(file(__file__).read(), response.body)
+    basic = '%s:' % self.username
+    response = self.publish('%s/Base_download' % file_document.getPath(),
+                            basic=basic)
+    self.assertEquals(file_document.getData(), response.body)
     self.assertEquals('text/plain',
                       response.getHeader('content-type').split(';')[0])
     self.assertEquals('attachment; filename="%s"' % os.path.basename(__file__),
@@ -1187,15 +1194,48 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEquals(1, len(self.getPortal().portal_catalog(
       translated_portal_type='Person', title='translate_table_test')))
 
-  def test_TempBasePublicMethods(self):
-    # make sure TempBase methods 'edit' and 'setProperty' are actually public
+  def test_TemporaryObjectPublicMethodListForAnonymous(self):
+    """make sure temporary object methods are actually public.
+    Thanks to owner role, even for Anonymous users
+    """
     self.logout()
-    from Products.ERP5Type.Document import newTempBase
-    from OFS.Traversable import guarded_getattr
-    tb = newTempBase(self.portal, '_temp_base')
-    for name in ('edit', 'setProperty'):
+    organisation = self.portal.organisation_module.newContent(
+                                                    portal_type='Organisation',
+                                                    temp_object=True)
+    user = getSecurityManager().getUser()
+    self.assertTrue('Owner' in user.getRolesInContext(organisation))
+    from AccessControl.ZopeGuards import guarded_getattr
+    property_map_dict = organisation.propertyMap()
+    property_id_list = ('edit', 'setProperty', 'getProperty') + \
+              tuple(['get' + convertToUpperCase(property_map['id'])\
+                     for property_map in property_map_dict])
+
+    for property_id in property_id_list:
       # should not raise Unauthorized
-      edit = guarded_getattr(tb, name)
+      guarded_getattr(organisation, property_id)
+
+  def test_TemporaryObjectPublicMethodList(self):
+    """make sure temporary object methods are actually public.
+    Thanks to owner role.
+    """
+    uf = self.getPortal().acl_users
+    uf._doAddUser('BOBBY', '', ['Member',], [])
+    user = uf.getUserById('BOBBY').__of__(uf)
+    newSecurityManager(None, user)
+    organisation = self.portal.organisation_module.newContent(
+                                                    portal_type='Organisation',
+                                                    temp_object=True)
+    user = getSecurityManager().getUser()
+    self.assertTrue('Owner' in user.getRolesInContext(organisation))
+    from AccessControl.ZopeGuards import guarded_getattr
+    property_map_dict = organisation.propertyMap()
+    property_id_list = ('edit', 'setProperty', 'getProperty') + \
+              tuple(['get' + convertToUpperCase(property_map['id'])\
+                     for property_map in property_map_dict])
+
+    for property_id in property_id_list:
+      # should not raise Unauthorized
+      guarded_getattr(organisation, property_id)
 
   @skip("isIndexable is not designed to work like tested here, this test \
       must be rewritten once we know how to handle correctly templates")

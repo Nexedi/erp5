@@ -46,7 +46,6 @@ class MatrixError(Exception): pass
 class DuplicatedPropertyDictKeysError(Exception): pass
 
 class SelectMethodError(Exception): pass
-class SelectMovementError(Exception): pass
 
 class BuilderMixin(XMLObject, Amount, Predicate):
   """
@@ -147,11 +146,10 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                        movement_list=movement_list,**kw)
     # Call a script after building
     self.callAfterBuildingScript(delivery_list, movement_list, **kw)
-    # XXX Returning the delivery list is probably not necessary
     return delivery_list
 
   def getRelatedBusinessLinkValueList(self):
-    return self.getDeliveryBuilderRelatedValueList(portal_type='Business Link') 
+    return self.getDeliveryBuilderRelatedValueList(portal_type='Business Link')
 
   def callBeforeBuildingScript(self):
     """
@@ -321,7 +319,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       for instance_to_update in instance_list:
         result, property_dict = self._test(
           instance_to_update, movement_group_node_list, divergence_list)
-        if result == True:
+        if result:
           instance = instance_to_update
           break
     return instance, property_dict

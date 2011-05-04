@@ -35,6 +35,7 @@ from Products.ERP5Type.Globals import get_request
 from Persistence import Persistent
 from ZPublisher import BeforeTraverse
 from ZPublisher.HTTPRequest import HTTPRequest
+from warnings import warn
 
 WEBSITE_KEY = 'web_site_value'
 WEBSITE_LANGUAGE_KEY = 'web_site_language'
@@ -163,7 +164,7 @@ class WebSite(WebSection):
         return self
 
     # Static Language Selection support
-    def _getExtensibleContent(self, request, name):
+    def getExtensibleContent(self, request, name):
       language_list = self.getAvailableLanguageList()
       if language_list and self.isStaticLanguageSelection():
         # Interprete names which could be a language
@@ -175,6 +176,14 @@ class WebSite(WebSection):
             request.set(WEBSITE_LANGUAGE_KEY, name)
           return self.asContext(id=name)
       return WebSection.getExtensibleContent(self, request, name)
+
+    def _getExtensibleContent(self, request, name):
+      """
+      Legacy API
+      """
+      warn("_getExtensibleContent() function is deprecated. Use getExtensibleContent() instead.", \
+            DeprecationWarning, stacklevel=2)
+      return self.getExtensibleContent(request, name)
 
     # Virtual Hosting Support
     security.declarePrivate( 'manage_beforeDelete' )

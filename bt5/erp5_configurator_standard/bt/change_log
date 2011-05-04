@@ -1,3 +1,58 @@
+2011-04-12 lucas
+* Added default image on default_standard_configuration and a better description.
+
+2011-04-12 lucas
+* Added new business configuration for consulting workflow.
+
+2011-04-04 lucas
+* Added a new test to check if simulation is working as expected.
+
+2011-04-04 lucas
+* Added new tests to check Purchase Trade Condition and Sale Trande Condition.
+
+2011-04-01 lucas
+* Renamed  module_permission_access.ods to standard_module_permission_access.ods
+
+2011-04-01 lucas
+* Renamed default_accounts_express.ods to standard_default_accounts.ods
+
+2011-04-01 lucas
+* Renamed currency_list.ods to standard_currency_list.ods
+
+2011-04-01 lucas
+* Remove short_title.
+
+2011-04-01 lucas
+* Added tests to check Business Process and Solvers after the configuration.
+
+2011-04-01 lucas
+* Updated script to add the Solver Configuration Item objects.
+
+2011-04-01 lucas
+* Added a new script with solver informations.
+
+2011-03-31 lucas
+* Since r44521 the default preferences from core are not disabled anymore., hence the preferences created by configurator has low priority.
+
+2011-03-31 lucas
+* Added a new script with business process informations.
+
+2011-03-30 lucas
+* The mixin class called TestLiveConfiguratorWorkflowMixin has been moved to ERP5Configurator/tests/ConfiguratorTestMixin.py.
+* Added tests with Russian configuration.
+
+2011-03-30 lucas
+* Enabled russian language and accounting plan. (Thanks to Vera Kurpas for the contributions).
+
+2011-03-30 lucas
+* Updated default_accounts_express.ods with Russian accounts information. (Thanks to Vera Kurpas.)
+
+2010-01-07 lucas
+* Merged with consulting workflow.
+
+2010-01-04 lucas
+* Converted files from .sxc to .ods
+
 2010-01-01 lucas
 * Removed External Method used to validate the user name.
 

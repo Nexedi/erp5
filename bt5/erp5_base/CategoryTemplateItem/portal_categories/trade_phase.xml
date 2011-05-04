@@ -70,10 +70,7 @@
         <item>
             <key> <string>category_type</string> </key>
             <value>
-              <tuple>
-                <string>option</string>
-                <string>variation</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

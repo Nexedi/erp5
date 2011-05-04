@@ -1,4 +1,4 @@
-Component | Image
+Component | Embedded File
 Component | Internal Supply Line
 Component | Purchase Supply Line
 Component | Sale Supply Line
@@ -7,7 +7,7 @@ Internal Supply Line | Internal Supply Cell
 Internal Supply Line | Predicate
 Internal Supply | Supply Line
 Measure | Measure Cell
-Product | Image
+Product | Embedded File
 Product | Internal Supply Line
 Product | Purchase Supply Line
 Product | Sale Supply Line

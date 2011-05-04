@@ -12,7 +12,9 @@ from zLOG import LOG
 from Products.ERP5OOo.OOoUtils import OOoBuilder
 import re
 from lxml import etree
+from lxml import html
 from lxml.etree import ParseError, Element
+from lxml.etree import SubElement
 
 from urllib import unquote
 from urlparse import urlparse
@@ -21,6 +23,28 @@ try:
   from urlparse import parse_qsl
 except ImportError:
   from cgi import parse_qsl
+
+
+# XXX Must be replaced by portal_data_adapters soon
+from Products.ERP5OOo.Document.OOoDocument import OOoServerProxy
+from Products.ERP5OOo.Document.OOoDocument import enc
+from Products.ERP5OOo.Document.OOoDocument import dec
+
+def includeMetaContentType(html_node):
+  """XXX Temp workaround time to fix issue
+  in lxml when include_meta_content_type is not honoured
+  Force encondig into utf-8
+  """
+  head = html_node.find('head')
+  if head is None:
+    head = Element('head')
+    html_node.insert(0, head)
+  meta_content_type_node_list = head.xpath('meta[translate('\
+               'attribute::http-equiv, "CONTEYP", "conteyp") = "content-type"]')
+  for meta_content_type_node in meta_content_type_node_list:
+    head.remove(meta_content_type_node)
+  SubElement(head, 'meta', **{'http-equiv': 'Content-Type',
+                              'content': 'application/xhtml+xml; charset=utf-8'})
 
 CLEAN_RELATIVE_PATH = re.compile('^../')
 
@@ -62,20 +86,12 @@ class OOOdCommandTransform(commandtransform):
 
   def __init__(self, context, name, data, mimetype):
     commandtransform.__init__(self, name)
-    if name:
-      self.__name__ = name
+    self.__name__ = name
     self.mimetype = mimetype
     self.context = context
     if self.mimetype == 'text/html':
       data = self.includeExternalCssList(data)
-    tmp_ooo = newTempOOoDocument(context, name)
-    tmp_ooo.edit( data=data,
-                  fname=self.name(),
-                  source_reference=self.name(),
-                  filename=self.name(),
-                  content_type=self.mimetype,)
-    tmp_ooo.convertToBaseFormat()
-    self.ooo = tmp_ooo
+    self.data = data
 
   def name(self):
     return self.__name__
@@ -107,6 +123,9 @@ class OOOdCommandTransform(commandtransform):
         # <img src="REF.TO.IMAGE" ... /> become <draw:image xlink:href="../REF.TO.IMAGE" ... />
         # So remove "../" added by OOo
         path = CLEAN_RELATIVE_PATH.sub('', path)
+        # in some cases like Web Page content "/../" can be contained in image URL which will break 
+        # restrictedTraverse calls, our best guess is to remove it
+        path = path.replace('/../', '')
         # retrieve http parameters and use them to convert image
         query_parameter_string = parse_result[4]
         image_parameter_dict = dict(parse_qsl(query_parameter_string))
@@ -122,17 +141,18 @@ class OOOdCommandTransform(commandtransform):
                                      'mimetypes_registry').lookup(content_type)
 
           format = image_parameter_dict.pop('format', None)
-          for mimetype_object in mimetype_list:
-            if mimetype_object.extensions:
-              format = mimetype_object.extensions[0]
-              break
-            elif mimetype_object.globs:
-              format = mimetype_object.globs.strip('*.')
-              break
+          if not format:
+            for mimetype_object in mimetype_list:
+              if mimetype_object.extensions:
+                format = mimetype_object.extensions[0]
+                break
+              elif mimetype_object.globs:
+                format = mimetype_object.globs.strip('*.')
+                break
           if getattr(image, 'meta_type', None) == 'ERP5 Image':
             #ERP5 API
             # resize image according parameters
-            mime, image_data = image.convert(None, **image_parameter_dict)
+            mime, image_data = image.convert(format, **image_parameter_dict)
             image = OFSImage(image.getId(), image.getTitle(), image_data)
 
           # image should be OFSImage
@@ -190,12 +210,26 @@ class OOOdCommandTransform(commandtransform):
           parent_node.append(style_node)
           style_node.attrib.update({'type': 'text/css'})
           parent_node.remove(css_link_tag)
-    return etree.tostring(xml_doc, encoding='utf-8',
-                          xml_declaration=False, pretty_print=False, )
+
+    includeMetaContentType(xml_doc)
+    xml_output = html.tostring(xml_doc, encoding='utf-8',
+                               include_meta_content_type=True)
+
+    return xml_output
 
   def convertTo(self, format):
-    if self.ooo.isTargetFormatAllowed(format):
-      mime, data = self.ooo.convert(format)
+    server_proxy = OOoServerProxy(self.context)
+    response_code, response_dict, message = \
+                           server_proxy.getAllowedTargetItemList(self.mimetype)
+    allowed_extension_list = response_dict['response_data']
+    if format in dict(allowed_extension_list):
+      response_code, response_dict, message = server_proxy.run_generate(
+                                                                '',
+                                                                enc(self.data),
+                                                                None,
+                                                                format,
+                                                                self.mimetype)
+      data = dec(response_dict['data'])
       if self.mimetype == 'text/html':
         data = self.includeImageList(data)
       return data

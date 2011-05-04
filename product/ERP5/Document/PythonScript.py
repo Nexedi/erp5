@@ -75,6 +75,11 @@ class PythonScript(XMLObject, ZopePythonScript):
     # Declarative security
     security = ClassSecurityInfo()
     security.declareObjectProtected(Permissions.AccessContentsInformation)
+    
+    #View content list, Force /view, Standart option in python scripts
+    manage_options = ( XMLObject.manage_options[0],
+                       {'icon':'', 'label':'View','action':'view'}) \
+                       + ZopePythonScript.manage_options
 
     # Declarative properties
     property_sheets = ( PropertySheet.Base
@@ -96,7 +101,16 @@ class PythonScript(XMLObject, ZopePythonScript):
       """
       override to call ZopePythonScript methods to initialize code
       """
+      if value is None:
+        value = ''
       self.write(value)
+
+    def _setParameterSignature(self, value):
+      """
+      override to call ZopePythonScript methods to force compiling code
+      """
+      self._baseSetParameterSignature(value)
+      self._compile()
 
     def _setProxyRoleList(self, value):
       """

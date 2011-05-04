@@ -121,116 +121,148 @@ class TestERP5Base(ERP5TypeTestCase):
     """
     self.category_list = [
                          # Grade categories
-                           {'path' : 'grade/director'
+                           {'base_category' : 'grade'
+                           ,'category_relative_url': 'director'
                            ,'title': 'Director'
                            }
-                         , {'path' : 'grade/engineer'
+                         , {'base_category' : 'grade'
+                           ,'category_relative_url': 'engineer'
                            ,'title': 'Engineer'
                            }
 
                          # Function categories
-                         , {'path' : 'function/hq'
+                         , {'base_category' : 'function'
+                           ,'category_relative_url': 'hq'
                            ,'title': 'Headquarters'
                            }
-                         , {'path' : 'function/warehouse'
+                         , {'base_category' : 'functionwarehouse'
+                           ,'category_relative_url': 'warehouse'
                            ,'title': 'Warehouse'
                            }
-                         , {'path' : 'function/research_center'
+                         , {'base_category' : 'function'
+                           ,'category_relative_url': 'research_center'
                            ,'title': 'Research Center'
                            }
 
                          # Activity categories
-                         , {'path' : 'activity/media'
+                         , {'base_category' : 'activity'
+                           ,'category_relative_url': 'media'
                            ,'title': 'Media'
                            }
-                         , {'path' : 'activity/software'
+                         , {'base_category' : 'activity'
+                           ,'category_relative_url': 'software'
                            ,'title': 'Software'
                            }
-                         , {'path' : 'activity/mechanics'
+                         , {'base_category' : 'activity'
+                           ,'category_relative_url': 'mechanics'
                            ,'title': 'Mechanics'
                            }
-                         , {'path' : 'activity/mechanics/aerospace'
+                         , {'base_category' : 'activity'
+                           ,'category_relative_url': 'mechanics/aerospace'
                            ,'title': 'Aerospace'
                            }
-                         , {'path' : 'activity/mechanics/automotive'
+                         , {'base_category' : 'activity'
+                           ,'category_relative_url': 'mechanics/automotive'
                            ,'title': 'Automotive'
                            }
 
                          # Group categories
-                         , {'path' : 'group/nexedi'
+                         , {'base_category' : 'group'
+                           ,'category_relative_url': 'nexedi'
                            ,'title': 'Nexedi'
                            }
-                         , {'path' : 'group/nexedi/storever'
+                         , {'base_category' : 'group'
+                           ,'category_relative_url': 'nexedi/storever'
                            ,'title': 'Storever'
                            }
-                         , {'path' : 'group/nexedi/rentalinux'
+                         , {'base_category' : 'group'
+                           ,'category_relative_url': 'nexedi/rentalinux'
                            ,'title': 'Rentalinux'
                            }
 
                          # Role categories
-                         , {'path' : 'role/client'
+                         , {'base_category' : 'role'
+                           ,'category_relative_url': 'client'
                            ,'title': 'Client'
                            }
-                         , {'path' : 'role/supplier'
+                         , {'base_category' : 'role'
+                           ,'category_relative_url': 'supplier'
                            ,'title': 'Supplier'
                            }
-                         , {'path' : 'role/internal'
+                         , {'base_category' : 'role'
+                           ,'category_relative_url': 'internal'
                            ,'title': 'Internal'
                            }
 
                          # Site categories
-                         , {'path' : 'site/production/madrid'
+                         , {'base_category' : 'site'
+                           ,'category_relative_url': 'production/madrid'
                            ,'title': 'Madrid Production Site'
                            }
-                         , {'path' : 'site/distibution/paris'
+                         , {'base_category' : 'site'
+                           ,'category_relative_url': 'distibution/paris'
                            ,'title': 'Paris Distribution Site'
                            }
-                         , {'path' : 'site/distibution/tokyo'
+                         , {'base_category' : 'site'
+                           ,'category_relative_url': 'distibution/tokyo'
                            ,'title': 'Tokyo Distribution Site'
                            }
-                         , {'path' : 'site/distibution/new_york'
+                         , {'base_category' : 'site'
+                           ,'category_relative_url': 'distibution/new_york'
                            ,'title': 'New York Distribution Site'
                            }
 
                          # Skill categories
-                         , {'path' : 'skill/design/graphic'
+                         , {'base_category' : 'skill'
+                           ,'category_relative_url': 'design/graphic'
                            ,'title': 'Graphic'
                            }
-                         , {'path' : 'skill/design/sound'
+                         , {'base_category' : 'skill'
+                           ,'category_relative_url': 'design/sound'
                            ,'title': 'Sound'
                            }
-                         , {'path' : 'skill/it/consulting'
+                         , {'base_category' : 'skill'
+                           ,'category_relative_url': 'it/consulting'
                            ,'title': 'Consulting'
                            }
-                         , {'path' : 'skill/it/programming'
+                         , {'base_category' : 'skill'
+                           ,'category_relative_url': 'it/programming'
                            ,'title': 'Programming'
                            }
 
                          # Region categories
-                         , {'path' : 'region/europe/france'
+                         , {'base_category' : 'region'
+                           ,'category_relative_url': 'europe/france'
                            ,'title': 'France'
                            }
-                         , {'path' : 'region/europe/germany'
+                         , {'base_category' : 'region'
+                           ,'category_relative_url': 'europe/germany'
                            ,'title': 'Germany'
                            }
-                         , {'path' : 'region/america/canada'
+                         , {'base_category' : 'region'
+                           ,'category_relative_url': 'america/canada'
                            ,'title': 'Canada'
                            }
-                         , {'path' : 'region/america/brazil'
+                         , {'base_category' : 'region'
+                           ,'category_relative_url': 'america/brazil'
                            ,'title': 'Brazil'
                            }
 
                          # Salary Level categories
-                         , {'path' : 'salary_level/france/1/A'
+                         , {'base_category' : 'salary_level'
+                           ,'category_relative_url': 'france/1/A'
                            ,'title': '1.A'
                            }
-                         , {'path' : 'salary_level/france/1/B'
+                         , {'base_category' : 'salary_level'
+                           ,'category_relative_url': 'france/1/B'
                            ,'title': '1.B'
                            }
-                         , {'path' : 'salary_level/france/1/C'
+                         , {'base_category' : 'salary_level'
+                           ,'category_relative_url': 'france/1/C'
                            ,'title': '1.C'
                            }
-                         , {'path' : 'salary_level/france/2'
+                         , {'base_category' : 'salary_level'
+                           ,'category_relative_url': 'france/2'
                            ,'title': '2'
                            }
                          ]
@@ -238,49 +270,64 @@ class TestERP5Base(ERP5TypeTestCase):
     # Create categories
     # Note : this code was taken from the CategoryTool_importCategoryFile python
     #        script (packaged in erp5_core).
-    for category in self.category_list:
-      keys = category.keys()
-      if 'path' in keys:
-        base_path_obj = self.portal_categories
-        is_base_category = True
-        for category_id in category['path'].split('/'):
-          # The current category is not existing
-          if category_id not in base_path_obj.contentIds():
-            # Create the category
-            if is_base_category:
-              category_type = 'Base Category'
-            else:
-              category_type = 'Category'
-            base_path_obj.newContent( portal_type       = category_type
-                                    , id                = category_id
-                                    )
-          base_path_obj = base_path_obj[category_id]
-          is_base_category = False
-        new_category = base_path_obj
+    for category_dict in self.category_list:
+      category_tool = self.portal_categories
+      base_category_id = category_dict['base_category']
+      if base_category_id not in category_tool.contentIds():
+        category_tool.newContent(portal_type='Base Category',
+                                 id=base_category_id)
+      base_category_value = category_tool[base_category_id]
+      category_relative_url = category_dict['category_relative_url']
+      parent_value = base_category_value
+      for category_id in category_relative_url.split('/'):
+        # The current category is not existing
+        if category_id not in parent_value.contentIds():
+          parent_value.newContent(portal_type='Category',
+                                  id=category_id)
+        parent_value = parent_value[category_id]
+      parent_value.setTitle(category_dict['title'])
 
-        # Set the category properties
-        for key in keys:
-          if key != 'path':
-            method_id = "set" + convertToUpperCase(key)
-            value = category[key]
-            if value not in ('', None):
-              if hasattr(new_category, method_id):
-                method = getattr(new_category, method_id)
-                method(value.encode('UTF-8'))
-
-
-  def getCategoryList(self, base_category=None):
+  def getCategoryDictList(self, base_category):
     """
       Get a list of categories with same base categories.
     """
-    categories = []
-    if base_category != None:
-      for category in self.category_list:
-        if category["path"].split('/')[0] == base_category:
-          categories.append(category)
-    return categories
+    return [category_dict for category_dict in self.category_list if\
+            base_category == category_dict['base_category']]
 
-
+  def _checkCategoryAccessorList(self, document, tested_base_category_list):
+    """Check getters and setters on categories
+    """
+    for base_category in tested_base_category_list:
+      category_dict_list = self.getCategoryDictList(base_category)
+      base_accessor_id = convertToUpperCase(base_category)
+      category_relative_url_list = []
+      category_title_list = []
+      category_value_list = []
+      for category_dict in category_dict_list:
+        category_relative_url = category_dict['category_relative_url']
+        category_relative_url_list.append(category_relative_url)
+        category_title = category_dict['title']
+        category_title_list.append(category_title)
+        category_path = '%s/%s' % (base_category, category_relative_url)
+        category_document = self.portal_categories.resolveCategory(category_path)
+        category_value_list.append(category_document)
+        set_accessor = getattr(document, 'set' + base_accessor_id)
+        set_accessor(category_relative_url)
+        self.assertEquals(getattr(document, 'get' + base_accessor_id)(),
+                          category_relative_url)
+        self.assertEquals(getattr(document, 'get' + base_accessor_id + 'Title')(),
+                          category_title)
+        self.assertEquals(getattr(document, 'get' + base_accessor_id + 'Value')(),
+                          category_document)
+      set_accessor_list = 'set' + base_accessor_id + 'List'
+      accessor_list = getattr(document, set_accessor_list)
+      accessor_list(category_relative_url_list)
+      self.assertEquals(getattr(document, 'get' + base_accessor_id + 'List')(),
+                        category_relative_url_list)
+      self.assertEquals(getattr(document, 'get' + base_accessor_id + 'TitleList')(),
+                        category_title_list)
+      self.assertEquals(getattr(document, 'get' + base_accessor_id + 'ValueList')(),
+                        category_value_list)
 
   ##################################
   ##  Basic steps
@@ -296,7 +343,6 @@ class TestERP5Base(ERP5TypeTestCase):
                                                   title='A new organisation')
     sequence.edit(organisation = organisation)
 
-
   def stepSetOrganisationCategories(self, sequence=None,
                                     sequence_list=None, **kw):
     """
@@ -305,72 +351,9 @@ class TestERP5Base(ERP5TypeTestCase):
     """
     organisation = sequence.get('organisation')
 
-    # Set & Check function
-    function_categories = self.getCategoryList(base_category='function')
-    function_path   = function_categories[0]['path']
-    function_title  = function_categories[0]['title']
-    function_object = self.portal_categories.resolveCategory(function_path)
-    organisation.setFunction(function_path)
-    self.assertEquals(organisation.getFunction()     , function_path)
-    self.assertEquals(organisation.getFunctionTitle(), function_title)
-    self.assertEquals(organisation.getFunctionValue(), function_object)
-
-    # Set & Check activity
-    activity_categories = self.getCategoryList(base_category='activity')
-    activity_path   = activity_categories[0]['path']
-    activity_title  = activity_categories[0]['title']
-    activity_object = self.portal_categories.resolveCategory(activity_path)
-    organisation.setActivity(activity_path)
-    self.assertEquals(organisation.getActivity()     , activity_path)
-    self.assertEquals(organisation.getActivityTitle(), activity_title)
-    self.assertEquals(organisation.getActivityValue(), activity_object)
-
-    # Set & Check group
-    group_categories = self.getCategoryList(base_category='group')
-    group_path   = group_categories[0]['path']
-    group_title  = group_categories[0]['title']
-    group_object = self.portal_categories.resolveCategory(group_path)
-    organisation.setGroup(group_path)
-    self.assertEquals(organisation.getGroup()     , group_path)
-    self.assertEquals(organisation.getGroupTitle(), group_title)
-    self.assertEquals(organisation.getGroupValue(), group_object)
-
-    # Set & Check role
-    role_categories = self.getCategoryList(base_category='role')
-    role_path   = role_categories[0]['path']
-    role_title  = role_categories[0]['title']
-    role_object = self.portal_categories.resolveCategory(role_path)
-    organisation.setRole(role_path)
-    self.assertEquals(organisation.getRole()     , role_path)
-    self.assertEquals(organisation.getRoleTitle(), role_title)
-    self.assertEquals(organisation.getRoleValue(), role_object)
-
-    # Set & Check site
-    site_categories = self.getCategoryList(base_category='site')
-    site_path   = site_categories[0]['path']
-    site_title  = site_categories[0]['title']
-    site_object = self.portal_categories.resolveCategory(site_path)
-    organisation.setSite(site_path)
-    self.assertEquals(organisation.getSite()     , site_path)
-    self.assertEquals(organisation.getSiteTitle(), site_title)
-    self.assertEquals(organisation.getSiteValue(), site_object)
-
-    # Set & Check skills
-    skill_categories = self.getCategoryList(base_category='skill')
-    skill_path_list   = []
-    skill_title_list  = []
-    skill_object_list = []
-    for skill in skill_categories[:2]:
-      skill_path   = skill['path']
-      skill_title  = skill['title']
-      skill_object = self.portal_categories.resolveCategory(skill_path)
-      skill_path_list.append(skill_path)
-      skill_title_list.append(skill_title)
-      skill_object_list.append(skill_object)
-    organisation.setSkillList(skill_path_list)
-    self.assertEquals(organisation.getSkillList()     , skill_path_list)
-    self.assertEquals(organisation.getSkillTitleList(), skill_title_list)
-    self.assertEquals(organisation.getSkillValueList(), skill_object_list)
+    tested_base_category_list = ('function', 'activity', 'group', 'role',
+                                 'site', 'skill')
+    self._checkCategoryAccessorList(organisation, tested_base_category_list)
 
 
   def stepResetOrganisationCategories(self, sequence=None,
@@ -416,10 +399,10 @@ class TestERP5Base(ERP5TypeTestCase):
     """
     organisation = sequence.get('organisation')
 
-    region = self.getCategoryList(base_category='region')[0]
-    region_path   = region["path"]
+    region = self.getCategoryDictList(base_category='region')[0]
+    region_path   = region["category_relative_url"]
     region_title  = region["title"]
-    region_object = self.portal_categories.resolveCategory(region_path)
+    region_object = self.portal_categories.resolveCategory('region/'+region_path)
     organisation.setDefaultAddressCity('Lille')
     organisation.setDefaultAddressRegion(region_path)
     organisation.setDefaultAddressZipCode('59000')
@@ -527,83 +510,22 @@ class TestERP5Base(ERP5TypeTestCase):
     self.assertEquals(person.getActivity(), person.getCareerActivity())
     self.assertEquals('Software', person.getActivityTitle())
 
-    # Set & Check function
-    function_categories = self.getCategoryList(base_category='function')
-    function_path   = function_categories[1]['path']
-    function_title  = function_categories[1]['title']
-    function_object = self.portal_categories.resolveCategory(function_path)
-    person.setCareerFunction(function_path)
-    self.assertEquals(person.getCareerFunction()     , function_path)
-    self.assertEquals(person.getCareerFunctionTitle(), function_title)
-    self.assertEquals(person.getCareerFunctionValue(), function_object)
-    # function must be acquired on person
-    person.reindexObject(); transaction.commit(); self.tic()
-    self.failUnless(person in function_object.getFunctionRelatedValueList())
+    tested_base_category_list = ('function', 'role', 'grade', 'salary_level',
+                                 'skill')
+    self._checkCategoryAccessorList(person, tested_base_category_list)
 
-    # Set & Check role
-    role_categories = self.getCategoryList(base_category='role')
-    role_path   = role_categories[1]['path']
-    role_title  = role_categories[1]['title']
-    role_object = self.portal_categories.resolveCategory(role_path)
-    person.setCareerRole(role_path)
-    self.assertEquals(person.getCareerRole()     , role_path)
-    self.assertEquals(person.getCareerRoleTitle(), role_title)
-    self.assertEquals(person.getCareerRoleValue(), role_object)
-    # role must be acquired on person
-    person.reindexObject(); transaction.commit(); self.tic()
-    self.failUnless(person in role_object.getRoleRelatedValueList())
-
-    # Set & Check grade
-    grade_categories = self.getCategoryList(base_category='grade')
-    grade_path   = grade_categories[1]['path']
-    grade_title  = grade_categories[1]['title']
-    grade_object = self.portal_categories.resolveCategory(grade_path)
-    person.setCareerGrade(grade_path)
-    self.assertEquals(person.getCareerGrade()     , grade_path)
-    self.assertEquals(person.getCareerGradeTitle(), grade_title)
-    self.assertEquals(person.getCareerGradeValue(), grade_object)
-    # grade must be acquired on person 
-    person.reindexObject(); transaction.commit(); self.tic()
-    self.failUnless(person in grade_object.getGradeRelatedValueList())
-
-    # Set & Check salary level
-    salary_level_categories = self.getCategoryList(
-                                base_category='salary_level')
-    salary_level_path   = salary_level_categories[1]['path']
-    salary_level_title  = salary_level_categories[1]['title']
-    salary_level_object = self.portal_categories.resolveCategory(
-                          salary_level_path)
-    person.setCareerSalaryLevel(salary_level_path)
-    self.assertEquals(person.getCareerSalaryLevel()     , salary_level_path)
-    self.assertEquals(person.getCareerSalaryLevelTitle(), salary_level_title)
-    self.assertEquals(person.getCareerSalaryLevelValue(), salary_level_object)
-    # salary_level must be acquired on person 
-    person.reindexObject(); transaction.commit(); self.tic()
-    self.failUnless(person in
-                   salary_level_object.getSalaryLevelRelatedValueList())
-
-    # Set & Check skills
-    skill_categories = self.getCategoryList(base_category='skill')
-    skill_path_list   = []
-    skill_title_list  = []
-    skill_object_list = []
-    for skill in skill_categories[1:3]:
-      skill_path   = skill['path']
-      skill_title  = skill['title']
-      skill_object = self.portal_categories.resolveCategory(skill_path)
-      skill_path_list.append(skill_path)
-      skill_title_list.append(skill_title)
-      skill_object_list.append(skill_object)
-    person.setCareerSkillList(skill_path_list)
-    self.assertEquals(person.getCareerSkillList()     , skill_path_list)
-    self.assertEquals(person.getCareerSkillTitleList(), skill_title_list)
-    self.assertEquals(person.getCareerSkillValueList(), skill_object_list)
-    self.assertEquals(person.getCareerSkillTitle(), skill_title_list[0])
-    self.assertEquals(person.getCareerSkillValue(), skill_object_list[0])
     # skill must be acquired on person 
-    person.reindexObject(); transaction.commit(); self.tic()
+    transaction.commit()
+    self.tic()
+    category_dict_list = self.getCategoryDictList('skill')
+    skill_object_list = []
+    for category_dict in category_dict_list:
+      category_path = '%s/%s' % (category_dict['base_category'],
+                                 category_dict['category_relative_url'])
+      category_value = self.portal_categories.resolveCategory(category_path)
+      skill_object_list.append(category_value)
     for skill_object in skill_object_list:
-      self.failUnless(person in skill_object.getSkillRelatedValueList())
+      self.assertTrue(person in skill_object.getSkillRelatedValueList())
     self.assertEquals(person.getSkillValue(), skill_object_list[0])
 
   def stepCheckPersonCareer(self, sequence=None, sequence_list=None, **kw):
@@ -1255,7 +1177,7 @@ class TestERP5Base(ERP5TypeTestCase):
     # We can add Images inside Persons and Organisation
     for entity in (self.getPersonModule().newContent(portal_type='Person'),
         self.getOrganisationModule().newContent(portal_type='Organisation')):
-      image = entity.newContent(portal_type='Image')
+      image = entity.newContent(portal_type='Embedded File')
       self.assertEquals([], image.checkConsistency())
       image.view() # viewing the image does not cause error
 

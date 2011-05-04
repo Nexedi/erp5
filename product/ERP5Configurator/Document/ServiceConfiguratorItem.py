@@ -53,18 +53,15 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
-                    , PropertySheet.ServiceConfiguratorItem )
+                    , PropertySheet.ConfiguratorItem )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
-    module = portal.service_module
-    for service_id, service_title in self.getServiceList():
-      # XXX FIXME We cannot define service_id like this, 
-      # because it cause conflict when configurator is
-      # used twice.
-      document = module.newContent(portal_type='Service',
-                                   #id=service_id,
-                                   title=service_title,
-                                   )
+    for service_id, service_title in iter(self.getConfigurationListList()):
+      document = getattr(portal.service_module, service_id, None)
+      if document is None:
+        document = portal.service_module.newContent(portal_type='Service',
+                                   id=service_id,
+                                   title=service_title)
       ## add to customer template
       self.install(document, business_configuration)

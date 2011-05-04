@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="ERP5Form" module="Products.ERP5Form.Form"/>
-        <tuple/>
-      </tuple>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -85,6 +82,7 @@
                       <list>
                         <string>listbox_quantity</string>
                         <string>listbox_total_price</string>
+                        <string>listbox_total_quantity</string>
                       </list>
                     </value>
                 </item>
@@ -101,9 +99,7 @@
                 <item>
                     <key> <string>not_assigned</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_total_quantity</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

@@ -56,8 +56,6 @@
 This script is used in an alarm that acts as a cron job.\n
 It will start an instance upgrade if any of the following alarms:\n
 - bt5_upgrader (supported)\n
-- product_upgrader (supported)\n
-- system_upgrader (supported)\n
 \n
 "sense" a need of an upgrade. This alarm is likely to disappear soon as it\'s needed \n
  due to lack of functionality (which is that alarms can not automatically "solve" themselves).\n
@@ -110,26 +108,15 @@ def launchUpgraderAlarm(alarm_id, after_method_id=[]):\n
 # There is one strict order to run the alarms\n
 # This is required because the one alarms depends the previous one be\n
 # Fully done.\n
-previous_method_id = launchUpgraderAlarm(\'system_upgrader\')\n
-previous_method_id = launchUpgraderAlarm(\'product_upgrader\', \n
-                                     after_method_id = previous_method_id)\n
-\n
-\n
-previous_method_id.extend(["ERP5Site_restartZopeInstance",\n
-                           "ERP5Site_clearActivities"])\n
-\n
-previous_method_id = launchUpgraderAlarm(\'bt5_upgrader\', \n
-                                    after_method_id = previous_method_id)\n
+previous_method_id = launchUpgraderAlarm(\'bt5_upgrader\')\n
 \n
 previous_method_id.extend([\'updateBusinessTemplateFromUrl\',\n
-                           \'TemplateTool_reinstallBT5\',\n
                            \'immediateReindexObject\'])\n
 \n
 previous_method_id = launchUpgraderAlarm(\'finalize_upgrader\',\n
                                    after_method_id = previous_method_id)\n
 \n
-for alarm_id in [\'system_upgrader\', \'product_upgrader\', \n
-               \'bt5_upgrader\' , \'finalize_upgrader\']:\n
+for alarm_id in [\'bt5_upgrader\' , \'finalize_upgrader\']:\n
 \n
    upgrader_alarm = getattr(portal_alarms, alarm_id, None)\n
    if upgrader_alarm is not None and upgrader_alarm.sense():\n
@@ -147,78 +134,12 @@ return\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>getattr</string>
-                            <string>context</string>
-                            <string>None</string>
-                            <string>before_script</string>
-                            <string>_getattr_</string>
-                            <string>portal_alarms</string>
-                            <string>activate</string>
-                            <string>previous_tag</string>
-                            <string>active_process</string>
-                            <string>DateTime</string>
-                            <string>launchUpgraderAlarm</string>
-                            <string>previous_method_id</string>
-                            <string>_getiter_</string>
-                            <string>alarm_id</string>
-                            <string>upgrader_alarm</string>
-                            <string>False</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Alarm_senseUpgradeNeed</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

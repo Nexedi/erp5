@@ -54,7 +54,7 @@ class CategoryConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore)
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     category_root = portal.portal_categories[self.category_root]
     object_id = self.object_id

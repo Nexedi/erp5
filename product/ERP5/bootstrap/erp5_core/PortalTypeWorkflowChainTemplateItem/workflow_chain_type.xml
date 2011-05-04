@@ -1,9 +1,5 @@
 <workflow_chain>
  <chain>
-  <type>Accounting Transaction Balance Constraint</type>
-  <workflow>dynamic_class_generation_interaction_workflow</workflow>
- </chain>
- <chain>
   <type>Acquired Property</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
@@ -16,7 +12,15 @@
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
+  <type>Attribute Blacklisted Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Attribute Equality Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Attribute Unicity Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
@@ -28,11 +32,15 @@
   <workflow>base_type_interaction_workflow, dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Business Template</type>
+  <workflow>business_template_building_workflow, business_template_installation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category</type>
   <workflow>edit_workflow</workflow>
  </chain>
  <chain>
-  <type>Category Acquired Membership Arity Constraint</type>
+  <type>Category Acquired Membership State Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
@@ -44,11 +52,19 @@
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Category Membership State Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Category Property</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Category Related Membership Arity Constraint</type>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Category Related Membership State Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
@@ -104,11 +120,11 @@
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Resource Measures Consistency Constraint</type>
+  <type>Standard Property</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Standard Property</type>
+  <type>String Attribute Match Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
@@ -117,18 +133,6 @@
  </chain>
  <chain>
   <type>TALES Constraint</type>
-  <workflow>dynamic_class_generation_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Trade Model Line Cell Consistency Constraint</type>
-  <workflow>dynamic_class_generation_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Transaction Quantity Value Feasability Constraint</type>
-  <workflow>dynamic_class_generation_interaction_workflow</workflow>
- </chain>
- <chain>
-  <type>Transaction Quantity Value Validity Constraint</type>
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

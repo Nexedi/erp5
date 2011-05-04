@@ -95,7 +95,8 @@ kw</string> </value>
         catalog.creation_date,\n
         catalog.title,\n
         CONCAT(CASE my_versioning.language\n
-                   WHEN <dtml-sqlvar language type="string"> THEN \'3\'\n
+                   WHEN <dtml-sqlvar language type="string"> THEN \'4\'\n
+                   WHEN \'\' THEN \'3\'\n
                    WHEN \'en\' THEN \'2\'\n
                    ELSE \'1\' END,\n
                my_versioning.version) AS priority\n
@@ -118,7 +119,7 @@ kw</string> </value>
 \n
         <dtml-if all_languages>\n
         <dtml-else>\n
-          AND my_versioning.language = <dtml-sqlvar language type="string">\n
+          AND my_versioning.language IN (<dtml-sqlvar language type="string">, \'\')\n
         </dtml-if>\n
 \n
         <dtml-if is_translation_order_by>\n

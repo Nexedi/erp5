@@ -55,7 +55,7 @@
 \n
     <div class="teaser"\n
          tal:attributes="class python: test(is_read, \'teaser read\', \'teaser unread\');\n
-                         onclick string:if(this.className!=\'teaser read\'){this.className=\'teaser read\';;MochiKit.Async.doSimpleXMLHttpRequest(\'Base_setRssItemReadInSelection\', {\'selection_name\':\'${selection_name}\',\'item\':\'${md5}\'})};;toggle(\'${dom_id}\');">\n
+                         onclick string:if(this.className!=\'teaser read\'){this.className=\'teaser read\';;$.get(\'Base_setRssItemReadInSelection\', {\'selection_name\':\'${selection_name}\',\'item\':\'${md5}\'})};;$(\'#${dom_id}\').toggle();">\n
       <img class="thumbnail-image"\n
            tal:condition="python: image not in ((), None, [])"\n
            tal:attributes="src python: image[0]" alt="Thumbnail"/>\n
@@ -78,8 +78,7 @@
     </div>\n
   </div>\n
   \n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -97,7 +96,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -40,7 +40,7 @@ class ExtensibleTraversableMixIn:
       except KeyError:
         pass
 
-      document = self._getExtensibleContent(request, name)
+      document = self.getExtensibleContent(request, name)
       if document is not None:
         return aq_base(document).__of__(self)
 

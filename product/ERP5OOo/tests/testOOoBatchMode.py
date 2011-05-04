@@ -57,7 +57,8 @@ class TestOoodResponse(ERP5TypeTestCase):
     portal_skins = self.getSkinsTool()
     import_file_path = os.path.join(os.path.dirname(__file__),
                                     'test_document',
-                                    'PersonSpreadsheetStylesheet.ods')
+                                    'REF-en-001.odt')# Any text document will
+                                                     # feet our needs
     import_file = open(import_file_path, 'rb')
     custom = portal_skins.custom
     addStyleSheet = custom.manage_addProduct['OFSP'].manage_addFile
@@ -68,7 +69,7 @@ class TestOoodResponse(ERP5TypeTestCase):
     portal_skins.changeSkin(skinname=None)
     ERP5Site_viewNothingAsOdt = self.getPortal().ERP5Site_viewNothingAsOdt
     text = "<office:document-content xmlns:draw='urn:oasis:names:tc:opendocument:xmlns:drawing:1.0' xmlns:office='urn:oasis:names:tc:opendocument:xmlns:office:1.0' xmlns:text='urn:oasis:names:tc:opendocument:xmlns:text:1.0' xmlns:ooo='http://openoffice.org/2004/office' xmlns:number='urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0' xmlns:dc='http://purl.org/dc/elements/1.1/' xmlns:meta='urn:oasis:names:tc:opendocument:xmlns:meta:1.0' xmlns:table='urn:oasis:names:tc:opendocument:xmlns:table:1.0' xmlns:dr3d='urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0' xmlns:fo='urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0' xmlns:style='urn:oasis:names:tc:opendocument:xmlns:style:1.0' xmlns:xforms='http://www.w3.org/2002/xforms' xmlns:form='urn:oasis:names:tc:opendocument:xmlns:form:1.0' xmlns:script='urn:oasis:names:tc:opendocument:xmlns:script:1.0' xmlns:ooow='http://openoffice.org/2004/writer' xmlns:svg='urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0' xmlns:chart='urn:oasis:names:tc:opendocument:xmlns:chart:1.0' xmlns:dom='http://www.w3.org/2001/xml-events' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:xsd='http://www.w3.org/2001/XMLSchema' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:oooc='http://openoffice.org/2004/calc' xmlns:math='http://www.w3.org/1998/Math/MathML'  xmlns:tal='http://xml.zope.org/namespaces/tal'></office:document-content>"
-    content_type = 'application/vnd.oasis.opendocument.text'
+    content_type = 'text/xml'
     ERP5Site_viewNothingAsOdt.pt_edit(text, content_type)
 
   def test_01_noExcNoFormatNoBatchMode(self):

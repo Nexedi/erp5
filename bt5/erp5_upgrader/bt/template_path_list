@@ -1,6 +1,3 @@
 portal_alarms/bt5_upgrader
 portal_alarms/finalize_upgrader
-portal_alarms/product_upgrader
-portal_alarms/system_upgrader
 portal_alarms/upgrader_controller
-portal_workflow/business_template_installation_workflow/scripts/BusinessTemplate_install

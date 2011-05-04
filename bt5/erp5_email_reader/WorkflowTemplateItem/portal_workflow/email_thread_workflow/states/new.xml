@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="StateDefinition" module="Products.DCWorkflow.States"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>new</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>New</string> </value>
+        </item>
+        <item>
+            <key> <string>transitions</string> </key>
+            <value>
+              <tuple>
+                <string>ignore</string>
+                <string>ignore_action</string>
+                <string>ingest</string>
+                <string>ingest_action</string>
+                <string>mark_as_sent</string>
+                <string>read</string>
+                <string>read_action</string>
+                <string>reply</string>
+                <string>reply_action</string>
+                <string>spam</string>
+                <string>spam_action</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

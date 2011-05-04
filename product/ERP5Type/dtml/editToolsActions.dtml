@@ -216,7 +216,7 @@ Add an action
 </td>
 <td>
   <div class="form-element">
-  <input type="text" name="title" value="" />
+  <input type="text" name="name" value="" />
   </div>
 </td>
 </tr>

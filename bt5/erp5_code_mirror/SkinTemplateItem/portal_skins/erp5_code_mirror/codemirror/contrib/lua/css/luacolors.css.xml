@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>luacolors.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>html {\n
+  cursor: text;\n
+}\n
+\n
+.editbox {\n
+  margin: .4em;\n
+  padding: 0;\n
+  font-family: monospace;\n
+  font-size: 10pt;\n
+  color: black;\n
+}\n
+\n
+pre.code, .editbox {\n
+  color: #666666;\n
+}\n
+\n
+.editbox p {\n
+  margin: 0;\n
+}\n
+\n
+span.lua-comment {\n
+  color: #BB9977;\n
+}\n
+\n
+span.lua-keyword {\n
+  font-weight: bold;\n
+  color: blue;\n
+}\n
+\n
+span.lua-string {\n
+  color: #AA2222;\n
+}\n
+\n
+span.lua-stdfunc {\n
+  font-weight: bold;\n
+  color: #077;\n
+}\n
+span.lua-customfunc {\n
+  font-weight: bold;\n
+  color: #0AA;\n
+}\n
+\n
+\n
+span.lua-identifier {\n
+  color: black;\n
+}\n
+\n
+span.lua-number {\n
+  color: #3A3;\n
+}\n
+\n
+span.lua-token {\n
+  color: #151;\n
+}\n
+\n
+span.lua-error {\n
+  color: #FFF;\n
+  background-color: #F00;\n
+}\n
+\n
+\n
+\n
+\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>634</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

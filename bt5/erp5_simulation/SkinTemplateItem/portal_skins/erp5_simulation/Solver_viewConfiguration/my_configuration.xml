@@ -155,7 +155,7 @@
                 </item>
                 <item>
                     <key> <string>formbox_target_id</string> </key>
-                    <value> <string>Solver_viewConfiguration</string> </value>
+                    <value> <string>Solver_viewConfiguration_form_id_should_come_from_TALES_override</string> </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>

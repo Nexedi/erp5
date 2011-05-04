@@ -405,7 +405,8 @@ class ContributionTool(BaseTool):
           # be for user interface and should thus be handled by
           # ZODB scripts
           document.activate(after_path_and_method_id=(document.getPath(),
-            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat'))) \
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat',
+             'immediateReindexObject', 'recursiveImmediateReindexObject')))\
           .discoverMetadata(filename=filename,
                             user_login=user_login,
                             input_parameter_dict=input_parameter_dict)
@@ -541,7 +542,8 @@ class ContributionTool(BaseTool):
       url_registry_tool.registerURL(url, None, context=container)
 
   security.declareProtected(Permissions.AddPortalContent, 'updateContentFromURL')
-  def updateContentFromURL(self, content, repeat=MAX_REPEAT, crawling_depth=0):
+  def updateContentFromURL(self, content, repeat=MAX_REPEAT, crawling_depth=0,
+                           repeat_interval=1, batch_mode=True):
     """
       Updates an existing content.
     """
@@ -555,20 +557,11 @@ class ContributionTool(BaseTool):
       try:
         url = content.asURL()
         file_object, filename, content_type = self._openURL(url)
-      except urllib2.HTTPError, error:
-        if repeat == 0:
-          # XXX - Call the extendBadURLList method,--NOT Implemented--
-          # IDEA : ajouter l'url en question dans une list "bad_url_list" puis lors du crawling au lieu que de boucler sur 
-          #        la liste des url extraites de la page web on fait un test supplementaire qui verifie que l'url n'est pas 
-          #        dans la liste bad_url_lis
-          raise
-        content.activate(at_date=DateTime() + 1).updateContentFromURL(repeat=repeat - 1)
-        return
       except urllib2.URLError, error:
-        if repeat == 0:
+        if repeat == 0 or not batch_mode:
           # XXX - Call the extendBadURLList method,--NOT Implemented--
           raise
-        content.activate(at_date=DateTime() + 1).updateContentFromURL(repeat=repeat - 1)
+        content.activate(at_date=DateTime() + repeat_interval).updateContentFromURL(repeat=repeat - 1)
         return
 
       content._edit(file=file_object, content_type=content_type)
@@ -591,8 +584,8 @@ class ContributionTool(BaseTool):
         content.activate().crawlContent()
 
   security.declareProtected(Permissions.AddPortalContent, 'newContentFromURL')
-  def newContentFromURL(self, container_path=None, id=None, repeat=MAX_REPEAT,
-                        repeat_interval=1, batch_mode=True, url=None, **kw):
+  def newContentFromURL(self, url, container_path=None, id=None, repeat=MAX_REPEAT,
+                        repeat_interval=1, batch_mode=True, **kw):
     """
       A wrapper method for newContent which provides extra safety
       in case or errors (ie. download, access, conflict, etc.).
@@ -605,8 +598,6 @@ class ContributionTool(BaseTool):
       id parameter is ignored
     """
     document = None
-    if not url:
-      raise TypeError, 'url parameter is mandatory'
     try:
       document = self.newContent(container_path=container_path, url=url, **kw)
       if document.isIndexContent() and document.getCrawlingDepth() >= 0:
@@ -616,25 +607,13 @@ class ContributionTool(BaseTool):
         # If this is an index document, stop crawling if crawling_depth is 0
         document.activate().crawlContent()
     except urllib2.HTTPError, error:
-      if repeat == 0 and batch_mode:
+      if repeat == 0 or not batch_mode:
         # here we must call the extendBadURLList method,--NOT Implemented--
         # which had to add this url to bad URL list, so next time we avoid
         # crawling bad URL
         raise
       if repeat > 0:
         # Catch any HTTP error
-        self.activate(at_date=DateTime() + repeat_interval).newContentFromURL(
-                          container_path=container_path, url=url,
-                          repeat=repeat - 1,
-                          repeat_interval=repeat_interval, **kw)
-    except urllib2.URLError, error:
-      if repeat == 0 and batch_mode:
-        # XXX - Call the extendBadURLList method, --NOT Implemented--
-        raise
-      #if getattr(error.reason,'args',None):
-        #if error.reason.args[0] == socket.EAI_AGAIN:
-          ## Temporary failure in name resolution - try again in 1 day
-      if repeat > 0:
         self.activate(at_date=DateTime() + repeat_interval,
                       activity="SQLQueue").newContentFromURL(
                         container_path=container_path, url=url,

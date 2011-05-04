@@ -57,6 +57,15 @@ from Products.PageTemplates.Expressions import getEngine
 from Products.PageTemplates.Expressions import SecureModuleImporter
 from Products.ZCatalog.Lazy import LazyMap
 
+try:
+  import chardet
+except ImportError:
+  chardet = None
+try:
+  import magic
+except ImportError:
+  magic = None
+
 def simple_decorator(decorator):
   """Decorator to turn simple function into well-behaved decorator
 
@@ -70,11 +79,13 @@ def simple_decorator(decorator):
     g.__name__ = f.__name__
     g.__doc__ = f.__doc__
     g.__dict__.update(f.__dict__)
+    g._original = f # for tab_completion navigation in IPython
     return g
   # Now a few lines needed to make simple_decorator itself
   # be a well-behaved decorator.
   new_decorator.__name__ = decorator.__name__
   new_decorator.__doc__ = decorator.__doc__
+  new_decorator._original = decorator # for tab_completion navigation in IPython
   new_decorator.__dict__.update(decorator.__dict__)
   return new_decorator
 
@@ -207,14 +218,19 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
     file.write(warnings.formatwarning(message, category, filename, lineno))
 warnings.showwarning = _showwarning
 
-@simple_decorator
-def deprecated(wrapped):
-  message = "Use of '%s' function (%s, line %s) is deprecated." % (
-    wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
-  def wrapper(*args, **kw):
-    warnings.warn(message, DeprecationWarning, 2)
-    return wrapped(*args, **kw)
-  return wrapper
+def deprecated(message=''):
+  @simple_decorator
+  def _deprecated(wrapped):
+    m = message or "Use of '%s' function (%s, line %s) is deprecated." % (
+      wrapped.__name__, wrapped.__module__, wrapped.func_code.co_firstlineno)
+    def deprecated(*args, **kw):
+      warnings.warn(m, DeprecationWarning, 2)
+      return wrapped(*args, **kw)
+    return deprecated
+  if callable(message):
+    m, message = message, ''
+    return _deprecated(m)
+  return _deprecated
 
 #####################################################
 # Useful methods
@@ -879,44 +895,6 @@ def setDefaultClassProperties(property_holder):
         )
       }
 
-class PersistentMigrationMixin(object):
-  """
-  All classes issued from ERP5Type.Document.XXX submodules
-  will gain with mixin as a base class.
-
-  It allows us to migrate ERP5Type.Document.XXX.YYY classes to
-  erp5.portal_type.ZZZ namespace
-
-  Note that migration can be disabled by setting the '_no_migration'
-  class attribute to a nonzero value, as all old objects in the system
-  should inherit from this mixin
-  """
-  _no_migration = 0
-
-  def __setstate__(self, value):
-    klass = self.__class__
-    if PersistentMigrationMixin._no_migration \
-        or klass.__module__ in ('erp5.portal_type', 'erp5.temp_portal_type'):
-      super(PersistentMigrationMixin, self).__setstate__(value)
-      return
-
-    portal_type = value.get('portal_type')
-    if portal_type is None:
-      portal_type = getattr(klass, 'portal_type', None)
-    if portal_type is None:
-      LOG('ERP5Type', PROBLEM,
-          "no portal type was found for %s (class %s)" \
-               % (self, klass))
-      super(PersistentMigrationMixin, self).__setstate__(value)
-    else:
-      # proceed with migration
-      import erp5.portal_type
-      newklass = getattr(erp5.portal_type, portal_type)
-      assert self.__class__ != newklass
-      self.__class__ = newklass
-      self.__setstate__(value)
-      LOG('ERP5Type', TRACE, "Migration for object %s" % self)
-
 from Globals import Persistent, PersistentMapping
 
 def importLocalDocument(class_id, path=None, class_path=None):
@@ -954,30 +932,8 @@ def importLocalDocument(class_id, path=None, class_path=None):
 
   ### Migration
   module_name = "Products.ERP5Type.Document.%s" % class_id
-
-  # Most of Document modules define a single class
-  # (ERP5Type.Document.Person.Person)
-  # but some (eek) need to act as module to find other documents,
-  # e.g. ERP5Type.Document.BusinessTemplate.SkinTemplateItem
-  #
-  def migrate_me_document_loader(document_name):
-    klass = getattr(module, document_name)
-    if issubclass(klass, (Persistent, PersistentMapping)):
-      setDefaultClassProperties(klass)
-      InitializeClass(klass)
-
-      class MigrateMe(PersistentMigrationMixin, klass):
-        pass
-      MigrateMe.__name__ = document_name
-      MigrateMe.__module__ = module_name
-      return MigrateMe
-    else:
-      return klass
-  from dynamic.dynamic_module import registerDynamicModule
-  document_module = registerDynamicModule(module_name,
-                                          migrate_me_document_loader)
-
-  setattr(Products.ERP5Type.Document, class_id, document_module)
+  sys.modules[module_name] = module
+  setattr(Products.ERP5Type.Document, class_id, module)
 
   ### newTempFoo
   from Products.ERP5Type.ERP5Type import ERP5TypeInformation
@@ -1042,6 +998,39 @@ def initializeLocalInteractorRegistry():
 # Product initialization
 #####################################################
 
+def registerDocumentClass(module_name, class_name):
+  """
+  register a class in document_class_registry without overwriting
+  existing records
+  """
+  old_value = document_class_registry.get(class_name)
+  new_value = "%s.%s" % (module_name, class_name)
+
+  if old_value is not None:
+    old_was_erp5 = old_value.startswith('Products.ERP5')
+    new_is_erp5 = module_name.startswith('Products.ERP5')
+
+    conflict = True
+    if not old_was_erp5:
+      if new_is_erp5:
+        # overwrite the non-erp5 class with the erp5 class
+        # likely to happen with e.g. CMF Category Tool and ERP5 Category Tool
+        LOG('Utils', INFO, 'Replacing non-ERP5 class %s by ERP5 class %s' %
+              (old_value, new_value))
+        conflict = False
+    elif not new_is_erp5:
+      # argh, trying to overwrite an existing erp5 class.
+      LOG('Utils', INFO,
+          'Ignoring replacement of ERP5 class %s by non-ERP5 class %s' %
+            (old_value, new_value))
+      return
+
+    if conflict:
+      raise TypeError("Class %s and %s from different products have the "
+                      "same name" % (old_value, new_value))
+
+  document_class_registry[class_name] = new_value
+
 def initializeProduct( context,
                        this_module,
                        global_hook,
@@ -1061,8 +1050,7 @@ def initializeProduct( context,
   # other products were all already registered in updateGlobals()
   # because getModuleIdList works fine for Document/ and Core/
   for klass in content_classes:
-    n = klass.__name__
-    document_class_registry[n] = "%s.%s" % (klass.__module__, n)
+    registerDocumentClass(klass.__module__, klass.__name__)
 
   mixin_module = getattr(this_module, 'mixin', None)
   if mixin_module is not None:
@@ -1093,12 +1081,20 @@ def initializeProduct( context,
   except:
     LOG("ERP5Type", BLATHER, "No help directory for %s" % product_name)
 
+  # create dynamic modules if they dont exist, this only ever happens
+  # once.
+  try:
+    import erp5.portal_type
+  except ImportError:
+    from dynamic.portal_type_class import initializeDynamicModules
+    initializeDynamicModules()
+    import erp5.portal_type
+
   # Tools initialization
   tools = portal_tools
   if len(tools) > 0:
     for tool in tools:
-      n = tool.__name__
-      document_class_registry[n] = "%s.%s" % (tool.__module__, n)
+      registerDocumentClass(tool.__module__, tool.__name__)
     try:
       utils.ToolInit('%s Tool' % product_name,
                       tools=tools,
@@ -1144,6 +1140,7 @@ def initializeProduct( context,
 
   # Register Objets
   for c in object_classes:
+    registerDocumentClass(c.__module__, c.__name__)
     icon = getattr(c, 'icon', None)
     permission = getattr(c, 'permission_type', None)
     context.registerClass(c,
@@ -1151,29 +1148,15 @@ def initializeProduct( context,
                           permission = permission,
                           icon = icon)
 
-class ConstraintNotFound(Exception):
-  pass
-
-def createConstraintList(property_holder, constraint_definition):
-  """
-    This function creates constraint instances for a class
-    and a property
-
-    constraint_definition -- the constraint with all attributes
-  """
-  from Products.ERP5Type import Constraint
-  try:
-    consistency_class = getattr(Constraint, constraint_definition['type'])
-  except AttributeError:
-    LOG("ERP5Type", PROBLEM, "Can not find Constraint: %s" \
-        % constraint_definition['type'], error=sys.exc_info())
-    raise ConstraintNotFound(repr(constraint_definition))
-  consistency_instance = consistency_class(**constraint_definition)
-  property_holder.constraints += [consistency_instance]
-
 #####################################################
-# Constructor initialization
+# TALES Expression
 #####################################################
+
+# This gets the Engine and CompilerError classes for TALES Expression
+# wherever it is defined (which is different depending on the Zope
+# version)
+ExpressionEngine = getEngine()
+CompilerError = ExpressionEngine.getCompilerError()
 
 def createExpressionContext(object, portal=None):
   """
@@ -1202,8 +1185,8 @@ def createExpressionContext(object, portal=None):
         folder = aq_parent(aq_inner(folder))
 
   if portal is not None:
-    pm = getToolByName(portal, 'portal_membership')
-    if pm.isAnonymousUser():
+    pm = getattr(portal, 'portal_membership', None)
+    if pm is None or pm.isAnonymousUser():
       member = None
     else:
       member = pm.getAuthenticatedMember()
@@ -1241,1677 +1224,56 @@ def createExpressionContext(object, portal=None):
       # the proper name these days
       'context':         object,
       }
-  ec = getEngine().getContext(data)
+  ec = ExpressionEngine.getContext(data)
   tv[cache_key] = ec
   return ec
 
-def getExistingBaseCategoryList(portal, base_cat_list):
-  cache = getReadOnlyTransactionCache()
-  if cache is None:
-    cache = getTransactionalVariable()
-  category_tool = portal.portal_categories
-  new_base_cat_list = []
-  for base_cat in base_cat_list:
-    key = (base_cat,)
-    try:
-      value = cache[key]
-    except KeyError:
-      value = category_tool._getOb(base_cat, None)
-      if value is None:
-        warnings.warn("Base Category %r is missing."
-                      " Accessors can not be generated." % base_cat, Warning)
-      cache[key] = value
-    if value is not None:
-      new_base_cat_list.append(base_cat)
-  return tuple(new_base_cat_list)
-
-default_translation_property_dict = {
-  'id' : 'translation_domain',
-  'description' : '',
-  'default' : '',
-  'type' : 'string',
-  'mode' : 'w',
-}
-def setDefaultProperties(property_holder, object=None, portal=None):
-    """
-      This methods sets default accessors for this object as well
-      as consistency checkers, based on the definition
-      stored in PropertySheet objects.
-
-      Accessors include
-
-      - attribute accessors (ie. a string, float value stored by the object)
-
-      - category accessors (ie. a membership of an object to a category)
-
-      - relation accessors (ie. a kind of membership where the category
-                            instance is content)
-
-      - programmable acquisition acessors (ie. attribute accessors which
-                                           are based on relations)
-
-      Consistency checkers are intended to check the content consistency
-      (ex. ariry of a relation) as well as fix content consistency
-      through a default consistency fixing method.
-
-    Set default attributes in current object for all properties in '_properties'
-    """
-    econtext = createExpressionContext(object, portal)
-    # First build the property list from the property sheet
-    # and the class properties
-    prop_list = []
-    # Do not consider superclass _properties definition
-    for prop in property_holder.__dict__.get('_properties', []):
-      # Copy the dict so that Expression objects are not overwritten.
-      prop_list.append(prop.copy())
-    # Do not consider superclass _categories definition
-    cat_list = property_holder.__dict__.get('_categories', [])
-    # a list of declarative consistency definitions (ie. constraints)
-    # Do not consider superclass _constraints definition
-    constraint_list = property_holder.__dict__.get('_constraints', [])
-    for base in property_holder.property_sheets:
-      for prop in base._properties:
-        # Copy the dict so that Expression objects are not overwritten.
-        prop_list.append(prop.copy())
-      if hasattr(base, '_categories'):
-        if isinstance(base._categories, (tuple, list)):
-          cat_list += base._categories
-        else:
-          cat_list.append(base._categories)
-      if hasattr(base, '_constraints'):
-        constraint_list += base._constraints
-
-    # Evaluate TALES expressions.
-    for prop in prop_list:
-      for key,value in prop.items():
-        if isinstance(value, Expression):
-          prop[key] = value(econtext)
-    new_cat_list = []
-    for cat in cat_list:
-      if isinstance(cat, Expression):
-        result = cat(econtext)
-        if isinstance(result, (tuple, list)):
-          new_cat_list.extend(result)
-        else:
-          new_cat_list.append(result)
-      else:
-        new_cat_list.append(cat)
-    cat_list = getExistingBaseCategoryList(portal, new_cat_list)
-
-    from Products.ERP5Type.mixin.constraint import ConstraintMixin
-    for const in constraint_list:
-      if isinstance(const, ConstraintMixin):
-        continue
-      for key, value in const.items():
-        if isinstance(value, Expression):
-          const[key] = value(econtext)
-
-    # Store ERP5 properties on specific attributes
-    property_holder._erp5_properties = tuple(prop_list)
-
-    # Create default accessors for property sheets
-    converted_prop_list = []
-    converted_prop_set = set()
-    for prop in prop_list:
-      read_permission = prop.get('read_permission',
-                                 Permissions.AccessContentsInformation)
-      if isinstance(read_permission, Expression):
-        read_permission = read_permission(econtext)
-      write_permission = prop.get('write_permission',
-                                  Permissions.ModifyPortalContent)
-      if isinstance(write_permission, Expression):
-        write_permission = write_permission(econtext)
-      if prop['type'] not in type_definition:
-        raise TypeError, '"%s" is invalid type for propertysheet' % \
-                                            prop['type']
-      if 'base_id' in prop:
-        continue
-      if prop['id'] not in converted_prop_set:
-        if prop['type'] != 'content':
-          converted_prop_list.append(prop)
-        converted_prop_set.add(prop['id'])
-
-      # Create range accessors, if this has a range.
-      if prop.get('range', 0):
-        for value in ('min', 'max'):
-          range_prop = prop.copy()
-          del range_prop['range']
-          range_prop.pop('storage_id', None)
-          if range_prop.get('acquisition_accessor_id', 0):
-            range_prop['acquisition_accessor_id'] = '%sRange%s' % (
-                 range_prop['acquisition_accessor_id'], value.capitalize())
-          range_prop['alt_accessor_id'] = (
-                                'get' + convertToUpperCase(prop['id']),)
-          createDefaultAccessors(
-                      property_holder,
-                      '%s_range_%s' % (prop['id'], value),
-                      prop=range_prop,
-                      read_permission=read_permission,
-                      write_permission=write_permission,
-                      portal=portal)
-
-      # Create translation accesor, if translatable is set
-      if prop.get('translatable', 0):
-        # make accessors like getTranslatedProperty
-        createTranslationAccessors(
-                  property_holder,
-                  'translated_%s' % (prop['id']),
-                  prop,
-                  read_permission=read_permission,
-                  write_permission=write_permission)
-        createTranslationLanguageAccessors(
-                  property_holder,
-                  prop,
-                  read_permission=read_permission,
-                  write_permission=write_permission,
-                  portal=portal)
-        # make accessor to translation_domain
-        # first create default one as a normal property
-        accessor_id = '%s_translation_domain' % prop['id']
-        createDefaultAccessors(
-                  property_holder,
-                  accessor_id,
-                  prop=default_translation_property_dict,
-                  read_permission=read_permission,
-                  write_permission=write_permission,
-                  portal=portal)
-        # then overload accesors getPropertyTranslationDomain
-        default = prop.get('translation_domain', '')
-        createTranslationAccessors(
-                        property_holder,
-                        accessor_id,
-                        prop,
-                        read_permission=read_permission,
-                        write_permission=write_permission,
-                        default=default)
-      createDefaultAccessors(
-                      property_holder,
-                      prop['id'],
-                      prop=prop,
-                      read_permission=read_permission,
-                      write_permission=write_permission,
-                      portal=portal)
-    # Create Category Accessors
-    for cat in cat_list:
-      # Create free text accessors.
-      prop = {
-        'id'         : '%s_free_text' % cat,
-        'description': 'free text to specify %s' % cat,
-        'type'       : 'text',
-        'default'    : '',
-        'mode'       : 'w'
-      }
-      # XXX These are only for backward compatibility.
-      if cat == 'group':
-        prop['storage_id'] = 'group'
-      elif cat == 'site':
-        prop['storage_id'] = 'location'
-      createDefaultAccessors(
-                        property_holder,
-                        prop['id'],
-                        prop=prop,
-                        read_permission=Permissions.AccessContentsInformation,
-                        write_permission=Permissions.ModifyPortalContent,
-                        portal=portal)
-
-      # Get read and write permission
-      if portal is not None:
-        cat_object = portal.portal_categories.get(cat, None)
-      else:
-        cat_object = None
-      if cat_object is not None:
-        read_permission = Permissions.__dict__.get(
-                                cat_object.getReadPermission(),
-                                Permissions.AccessContentsInformation)
-        if isinstance(read_permission, Expression):
-          read_permission = read_permission(econtext)
-        write_permission = Permissions.__dict__.get(
-                                cat_object.getWritePermission(),
-                                Permissions.ModifyPortalContent)
-        if isinstance(write_permission, Expression):
-          write_permission = write_permission(econtext)
-      else:
-        read_permission = Permissions.AccessContentsInformation
-        write_permission = Permissions.ModifyPortalContent
-      # Actualy create accessors
-      createCategoryAccessors(property_holder, cat,
-        read_permission=read_permission, write_permission=write_permission)
-      createValueAccessors(property_holder, cat,
-        read_permission=read_permission, write_permission=write_permission)
-    if object is not None and property_holder.__name__ == "Base":
-                            # XXX use if possible is and real class
-      base_category_list = []
-      # first extend the Tales category definitions into base_category_list
-      for cat in base_category_dict:
-        if isinstance(cat, Expression):
-          result = cat(econtext)
-          if isinstance(result, (list, tuple)):
-            base_category_list.extend(result)
-          else:
-            base_category_list.append(result)
-        else:
-          base_category_list.append(cat)
-
-      for cat in base_category_list:
-        # Get read and write permission
-        if portal is not None:
-          cat_object = portal.portal_categories.get(cat, None)
-        else:
-          cat_object = None
-        if cat_object is not None:
-          read_permission = Permissions.__dict__.get(
-                                  cat_object.getReadPermission(),
-                                  Permissions.AccessContentsInformation)
-          if isinstance(read_permission, Expression):
-            read_permission = read_permission(econtext)
-          write_permission = Permissions.__dict__.get(
-                                  cat_object.getWritePermission(),
-                                  Permissions.ModifyPortalContent)
-          if isinstance(write_permission, Expression):
-            write_permission = write_permission(econtext)
-        else:
-          read_permission = Permissions.AccessContentsInformation
-          write_permission = Permissions.ModifyPortalContent
-        # Actually create accessors
-        createRelatedValueAccessors(property_holder, cat, read_permission=read_permission)
-      # Unnecessary to create these accessors more than once.
-      base_category_dict.clear()
-
-    property_holder.constraints = []
-    for constraint in constraint_list:
-      # ZODB Property Sheets constraints are no longer defined by a
-      # dictionary but by a ConstraintMixin, thus just append it to
-      # the list of constraints
-      if isinstance(constraint, ConstraintMixin):
-        property_holder.constraints.append(constraint)
-      else:
-        createConstraintList(property_holder, constraint_definition=constraint)
-
-    # ERP5 _properties and Zope _properties are somehow different
-    # The id is converted to the Zope standard - we keep the original id
-    # as base_id
-    new_converted_prop_list = []
-    for prop in converted_prop_list:
-      new_prop = prop.copy()
-      if prop['type'] in list_types or prop.get('multivalued', 0):
-        # Display as list
-        if not prop.get('base_id', None):
-          new_prop['base_id'] = prop['id']
-          new_prop['id'] = prop['id'] + '_list'
-      if prop.has_key('acquisition_base_category')\
-              and not prop.get('acquisition_copy_value'):
-        # Set acquisition values as read only if no value is copied
-        new_prop['mode'] = 'r'
-      new_converted_prop_list.append(new_prop)
-    # Set the properties of the class
-    property_holder._properties = tuple(new_converted_prop_list)
-    property_holder._categories = tuple(cat_list)
-    property_holder._constraints = tuple(constraint_list)
-    # And the default values - default values are needed
-    # for historical reasons : many objects have a default
-    # value defines at the class level. The use of None
-    # allows to create the equivalent of NULL values
-    # - new - XXX
-    # We remove such properties here
-    #from Base import Base as BaseClass
-    for prop in converted_prop_list:
-      if prop['type'] not in type_definition:
-        raise TypeError, '"%s" is invalid type for propertysheet' % \
-                                        prop['type']
-      #if not hasattr(property_holder, prop['id']):
-        # setattr(property_holder, prop['id'], None) # This makes sure no acquisition will happen
-        # but is wrong when we use storage_id .....
-      #storage_id = prop.get('storage_id', prop['id'])
-      #if not hasattr(BaseClass, storage_id):
-        # setattr(property_holder, storage_id, None) # This breaks things with aq_dynamic
-        #setattr(BaseClass, storage_id, None) # This blocks acquisition
-      #else:
-        #LOG('existing property',0,str(storage_id))
-        #if prop.get('default') is not None:
-        #  # setattr(property_holder, prop['id'], prop.get('default'))
-        #  pass
-        #else:
-        #  # setattr(property_holder, prop['id'], defaults[prop['type']])
-        #  pass
-
-    # Create for every portal type group an accessor (like isPortalDeliveryType)
-    # In the future, this should probably use categories
-    if portal is not None and object is not None: # we can not do anything without portal
-      # import lately in order to avoid circular dependency
-      from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-      portal_type = object.portal_type
-      for group in ERP5TypeInformation.defined_group_list:
-        value = portal_type in portal._getPortalGroupedTypeSet(group)
-        prop = {
-           'id'          : group,
-           'description' : "accessor to know the membership of portal group %s" \
-               % group,
-           'type'        : 'group_type',
-           'default'     : value,
-           'group_type' : group,
-           }
-        createDefaultAccessors(
-            property_holder,
-            prop['id'],
-            prop=prop,
-            read_permission=Permissions.AccessContentsInformation,
-            portal=portal)
-
-#####################################################
-# Accessor initialization
-#####################################################
-
-from Base import Base as BaseClass
-from Accessor import Base, List, Acquired, Content,\
-                     AcquiredProperty, ContentProperty, \
-                     Alias
-
-def createDefaultAccessors(property_holder, id, prop = None,
-    read_permission=Permissions.AccessContentsInformation,
-    write_permission=Permissions.ModifyPortalContent,
-    portal=None):
+def evaluateExpressionFromString(expression_context, expression_string):
   """
-    This function creates accessor and setter for a class
-    and a property
+  Evaluate a TALES Expression from the given string with the given
+  Expression context (as returned by createExpressionContext for
+  instance).
 
-    property_holder -- the class to add an accessor to
+  Any exception normally raised when parsing and evaluating a TALES
+  Expression is re-raised as a ValueError.
 
-    id    -- the id of the property
-
-    prop  -- the property definition of the property
+  @param expression_context: Expression context
+  @type expression_context: Products.PageTemplates.Expressions.ZopeContext
+  @param expression_string: TALES Expression string to evaluate
+  @type expression_string: str
   """
-  override = prop.get('override',0)
-  ######################################################
-  # Create Translation Acquired Accessors.
-  if prop.get('translation_acquired_property_id'):
-    createTranslationAcquiredPropertyAccessors(property_holder, prop,
-                                               portal=portal)
+  if expression_string is None:
+    return None
 
-  ######################################################
-  # Create Portal Category Type Accessors.
-  if prop['type'] == 'group_type':
-    createGroupTypeAccessors(property_holder, prop,
-                             read_permission=read_permission,
-                             portal=portal)
+  try:
+    return Expression(expression_string)(expression_context)
+  # An AttributeError is raised when instanciating an Expression
+  # class, and CompilerError and ValueError are raised in case of
+  # error when evaluation the expression
+  except (AttributeError, CompilerError, ValueError), e:
+    raise ValueError("Error in TALES expression: '%s': %s" % (expression_string,
+                                                              str(e)))
 
-  ######################################################
-  # Create Getters
-  elif prop.has_key('acquisition_base_category'):
-    # Create getters for an acquired property
-    # XXXX Missing Boolean accessor
-    accessor_args = (
-                prop['type'],
-                prop.get('default'),
-                prop['acquisition_base_category'],
-                prop['acquisition_portal_type'],
-                prop['acquisition_accessor_id'],
-                prop.get('acquisition_copy_value',0),
-                prop.get('acquisition_mask_value',0),
-                prop.get('acquisition_sync_value',0),
-                prop.get('storage_id'),
-                prop.get('alt_accessor_id'),
-                prop.get('acquisition_object_id'),
-                (prop['type'] in list_types or prop.get('multivalued', 0)),
-                (prop['type'] == 'tales')
-                )
-    # Base Getter
-    accessor_name = 'get' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
-    # Default Getter
-    accessor_name = 'getDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGetDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
-    # List Getter
-    if prop['type'] in list_types or prop.get('multivalued', 0):
-      accessor_name = 'get' + UpperCase(id) + 'List'
-      if not hasattr(property_holder, accessor_name) or override:
-        property_holder.registerAccessor(accessor_name, id, Acquired.ListGetter, accessor_args)
-        property_holder.declareProtected( read_permission, accessor_name )
-      accessor_name = '_baseGet' + UpperCase(id) + 'List'
-      if not hasattr(property_holder, accessor_name) or override:
-        property_holder.registerAccessor(accessor_name, id, Acquired.ListGetter, accessor_args)
-      # Set Getter
-      accessor_name = 'get' + UpperCase(id) + 'Set'
-      if not hasattr(property_holder, accessor_name) or override:
-        property_holder.registerAccessor(accessor_name, id, Acquired.SetGetter, accessor_args)
-        property_holder.declareProtected( read_permission, accessor_name )
-      accessor_name = '_baseGet' + UpperCase(id) + 'Set'
-      if not hasattr(property_holder, accessor_name) or override:
-        property_holder.registerAccessor(accessor_name, id, Acquired.SetGetter, accessor_args)
-    if prop['type'] == 'content':
-      #LOG('Value Object Accessor', 0, prop['id'])
-      # Base Getter
-      accessor_name = 'get' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or override:
-        property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
-        property_holder.declareProtected( read_permission, accessor_name )
-      accessor_name = '_baseGet' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or override:
-        property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
-      # Default Getter
-      accessor_name = 'getDefault' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or override:
-        property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
-        property_holder.declareProtected( read_permission, accessor_name )
-      accessor_name = '_baseGetDefault' + UpperCase(id) + 'Value'
-      if not hasattr(property_holder, accessor_name) or override:
-        property_holder.registerAccessor(accessor_name, id, Acquired.DefaultGetter, accessor_args)
-      # List Getter
-      accessor_name = 'get' + UpperCase(id) + 'ValueList'
-      if not hasattr(property_holder, accessor_name) or override:
-        property_holder.registerAccessor(accessor_name, id, Acquired.ListGetter, accessor_args)
-        property_holder.declareProtected( read_permission, accessor_name )
-      accessor_name = '_baseGet' + UpperCase(id) + 'ValueList'
-      if not hasattr(property_holder, accessor_name) or override:
-        property_holder.registerAccessor(accessor_name, id, Acquired.ListGetter, accessor_args)
-      # AcquiredProperty Getters
-      if prop.has_key('acquired_property_id'):
-        for aq_id in prop['acquired_property_id']:
-          composed_id = "%s_%s" % (id, aq_id)
-          # Getter
-          # print "Set composed_id accessor %s" % composed_id
-          accessor_name = 'get' + UpperCase(composed_id)
-          # print "Set accessor_name accessor %s" % accessor_name
-          accessor_args = (
-                prop['type'],
-                prop['portal_type'],
-                aq_id,
-                prop['acquisition_base_category'],
-                prop['acquisition_portal_type'],
-                prop['acquisition_accessor_id'],
-                prop.get('acquisition_copy_value',0),
-                prop.get('acquisition_mask_value',0),
-                prop.get('acquisition_sync_value',0),
-                prop.get('storage_id'),
-                prop.get('alt_accessor_id'),
-                prop.get('acquisition_object_id'),
-                (prop['type'] in list_types or prop.get('multivalued', 0)),
-                (prop['type'] == 'tales')
-                )
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.Getter, accessor_args)
-            property_holder.declareProtected( read_permission, accessor_name )
-          accessor_name = '_baseGet' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.Getter, accessor_args)
-          # Default Getter
-          accessor_name = 'getDefault' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.DefaultGetter, accessor_args)
-            property_holder.declareProtected( read_permission, accessor_name )
-          accessor_name = '_baseGetDefault' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.DefaultGetter, accessor_args)
-          # List Getter
-          ################# NOT YET
-          # Setter
-          accessor_name = 'set' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, '_' + accessor_name, Alias.Reindex, ())
-            property_holder.declareProtected( write_permission, accessor_name )
-          accessor_name = '_set' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.Setter, accessor_args)
-          accessor_name = '_baseSet' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.Setter, accessor_args)
-          # Default Setter
-          accessor_name = 'setDefault' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, '_' + accessor_name, Alias.Reindex, ())
-            property_holder.declareProtected( write_permission, accessor_name )
-          accessor_name = '_setDefault' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.DefaultSetter, accessor_args)
-          accessor_name = '_baseSetDefault' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id, AcquiredProperty.DefaultSetter, accessor_args)
-          # List Getter
-          ################# NOT YET
+def isValidTALESExpression(value):
+  """return if given value is valid TALES Expression.
+  This validator only validates Syntax of TALES Expression,
+  it does not tell that Expression is callable on given context
 
-  elif prop['type'] in list_types or prop.get('multivalued', 0):
-    # The base accessor returns the first item in a list
-    # and simulates a simple property
-    # The default value is the first element of prop.get('default') if it exists
-    default = prop.get('default')
-    accessor_args = (prop['type'], prop.get('default'), prop.get('storage_id'))
-    # Create getters for a list property
-    accessor_name = 'get' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, List.Getter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, List.Getter, accessor_args)
-    accessor_name = 'getDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, List.DefaultGetter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGetDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, List.DefaultGetter, accessor_args)
-    accessor_name = 'get' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, List.ListGetter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, List.ListGetter, accessor_args)
-    accessor_name = 'get' + UpperCase(id) + 'Set'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, List.SetGetter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id) + 'Set'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, List.SetGetter, accessor_args)
-  elif prop['type'] == 'content':
-    accessor_args = (prop['type'], prop.get('portal_type'), prop.get('storage_id'))
-    # Create getters for a list property
-    accessor_name = 'get' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.Getter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.Getter, accessor_args)
-    accessor_name = 'getDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.DefaultGetter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGetDefault' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.DefaultGetter, accessor_args)
-    accessor_name = 'get' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.ListGetter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.ListGetter, accessor_args)
-    # Create value getters for a list property
-    accessor_name = 'get' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.ValueGetter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.ValueGetter, accessor_args)
-    accessor_name = 'getDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.DefaultValueGetter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGetDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.DefaultValueGetter, accessor_args)
-    accessor_name = 'get' + UpperCase(id) + 'ValueList'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.ValueListGetter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id) + 'ValueList'
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Content.ValueListGetter, accessor_args)
-    if prop.has_key('acquired_property_id'):
-      for aq_id in prop['acquired_property_id']:
-        for composed_id in ("%s_%s" % (id, aq_id), "default_%s_%s" % (id, aq_id)) :
-          accessor_name = 'get' + UpperCase(composed_id)
-          accessor_args = (prop['type'], aq_id, prop.get('portal_type'), prop.get('storage_id'))
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id, ContentProperty.Getter, accessor_args)
-            property_holder.declareProtected( read_permission, accessor_name )
-          accessor_name = 'get' + UpperCase(composed_id) + 'List'
-          list_accessor_args = (prop['type'], aq_id + '_list', prop.get('portal_type'), prop.get('storage_id'))
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id + '_list',
-                                             ContentProperty.Getter, list_accessor_args)
-            property_holder.declareProtected( read_permission, accessor_name )
-          # No default getter YET XXXXXXXXXXXXXX
-          # No list getter YET XXXXXXXXXXXXXX
-          accessor_name = '_set' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id, ContentProperty.Setter, accessor_args)
-            property_holder.declareProtected( write_permission, accessor_name )
-          accessor_name = '_set' + UpperCase(composed_id) + 'List'
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, composed_id + '_list',
-                                             ContentProperty.Setter, list_accessor_args)
-            property_holder.declareProtected( write_permission, accessor_name )
-          accessor_name = 'set' + UpperCase(composed_id)
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, '_' + accessor_name, Alias.Reindex, ())
-            property_holder.declareProtected( write_permission, accessor_name )
-          accessor_name = 'set' + UpperCase(composed_id) + 'List'
-          if not hasattr(property_holder, accessor_name) or override:
-            property_holder.registerAccessor(accessor_name, '_' + accessor_name, Alias.Reindex, ())
-            property_holder.declareProtected( write_permission, accessor_name )
-          # No default getter YET XXXXXXXXXXXXXX
-          # No list getter YET XXXXXXXXXXXXXX
+  - value: string we try to compile
+
+  return tuple: (boolean result, error_message or None)
+  """
+  try:
+    ExpressionEngine.compile(value)
+  except CompilerError, message:
+    return False, message
   else:
-    accessor_args = (prop['type'], prop.get('default'), prop.get('storage_id'))
-    # Create getters for a simple property
-    accessor_name = 'get' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Base.Getter, accessor_args)
-      property_holder.declareProtected( read_permission, accessor_name )
-    accessor_name = '_baseGet' + UpperCase(id)
-    if not hasattr(property_holder, accessor_name) or override:
-      property_holder.registerAccessor(accessor_name, id, Base.Getter, accessor_args)
-  ######################################################
-  # Create Setters
-  if prop['type'] == 'group_type':
-    # No setter
-    pass
-  elif prop['type'] in list_types or prop.get('multivalued', 0):
-    # Create setters for a list property by aliasing
-    setter_name = 'set' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-      property_holder.declareProtected(write_permission, setter_name)
-    setter_name = 'setDefault' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-      property_holder.declareProtected(write_permission, setter_name)
-    setter_name = 'set' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-      property_holder.declareProtected(write_permission, setter_name)
-    setter_name = 'set' + UpperCase(id) + 'Set'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-      property_holder.declareProtected(write_permission, setter_name)
-    # Create setters for a list property (no reindexing)
-    # The base accessor sets the list to a singleton
-    # and allows simulates a simple property
-    accessor_args = (prop['type'], prop.get('storage_id'))
-    # Create setters for a list property
-    setter_name = '_set' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, List.Setter, accessor_args)
-    setter_name = '_baseSet' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, List.Setter, accessor_args)
-    setter_name = '_setDefault' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, List.DefaultSetter, accessor_args)
-    setter_name = '_baseSetDefault' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, List.DefaultSetter, accessor_args)
-    setter_name = '_set' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, List.ListSetter, accessor_args)
-    setter_name = '_baseSet' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, List.ListSetter, accessor_args)
-    setter_name = '_set' + UpperCase(id) + 'Set'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, List.SetSetter, accessor_args)
-    setter_name = '_baseSet' + UpperCase(id) + 'Set'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, List.SetSetter, accessor_args)
-  elif prop['type'] == 'content':
-    # Create setters for an object property
-    # Create setters for a list property (reindexing)
-    # The base accessor sets the list to a singleton
-    # and allows simulates a simple property
-    base_setter_name = 'set' + UpperCase(id)
-    # The default setter sets the first item of a list without changing other items
-    default_setter_name = 'setDefault' + UpperCase(id)
-    # Create setters for an object property
-    setter_name = 'set' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, '_' + base_setter_name, Alias.Reindex, ())
-      property_holder.declareProtected(write_permission, setter_name)
-    setter_name = 'setDefault' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, '_' + default_setter_name, Alias.Reindex, ())
-      property_holder.declareProtected(write_permission, setter_name)
-    setter_name = 'set' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, '_' + base_setter_name, Alias.Reindex, ())
-      property_holder.declareProtected(write_permission, setter_name)
-    setter_name = 'setDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, '_' + default_setter_name, Alias.Reindex, ())
-      property_holder.declareProtected(write_permission, setter_name)
-    # Create setters for a list property (no reindexing)
-    # The base accessor sets the list to a singleton
-    # and allows simulates a simple property
-    accessor_args = (prop['type'], prop.get('storage_id'))
-    # Create setters for an object property
-    setter_name = '_set' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, Content.Setter, accessor_args)
-    setter_name = '_baseSet' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, Content.Setter, accessor_args)
-    setter_name = '_setDefault' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, Content.DefaultSetter, accessor_args)
-    setter_name = '_baseSetDefault' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, Content.DefaultSetter, accessor_args)
-    setter_name = '_set' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, Content.Setter, accessor_args)
-    setter_name = '_baseSet' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, Content.Setter, accessor_args)
-    setter_name = '_setDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, Content.DefaultSetter, accessor_args)
-    setter_name = '_baseSetDefault' + UpperCase(id) + 'Value'
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, Content.DefaultSetter, accessor_args)
-  else:
-    accessor_args = (prop['type'], prop.get('storage_id'))
-    # Create setters for a simple property
-    setter_name = 'set' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-      property_holder.declareProtected(write_permission, setter_name)
-    setter_name = '_set' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, Base.Setter, accessor_args)
-    setter_name = '_baseSet' + UpperCase(id)
-    if not hasattr(property_holder, setter_name):
-      property_holder.registerAccessor(setter_name, id, Base.Setter, accessor_args)
-  ######################################################
-  # Create testers
-  if prop['type'] == 'group_type':
-    # No testters
-    pass
-  elif prop['type'] == 'content':
-    # XXX This approach is wrong because testers for all properties
-    # should be created upfront rather than on demand
-    accessor_args = (prop['type'], prop.get('storage_id'))
-    tester_name = 'has' + UpperCase(id)
-    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
-      property_holder.registerAccessor(setter_name, id, Content.Tester, accessor_args)
-      property_holder.declareProtected(read_permission, tester_name)
-  else:
-    accessor_args = (prop['type'], prop.get('storage_id'))
-    tester_name = 'has' + UpperCase(id)
-    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
-      property_holder.registerAccessor(tester_name, id, Base.Tester, accessor_args)
-      property_holder.declareProtected(read_permission, tester_name)
-
-    tester_name = '_baseHas' + UpperCase(id)
-    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
-      property_holder.registerAccessor(tester_name, id, Base.Tester, accessor_args)
-
-    # List Tester
-    tester_name = 'has' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
-      property_holder.registerAccessor(tester_name, id, List.Tester, accessor_args)
-      property_holder.declareProtected(read_permission, tester_name)
-    tester_name = '_baseHas' + UpperCase(id) + 'List'
-    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
-      property_holder.registerAccessor(tester_name, id, List.Tester, accessor_args)
-    tester_name = 'hasDefault' + UpperCase(id)
-    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
-      property_holder.registerAccessor(tester_name, id, List.Tester, accessor_args)
-      property_holder.declareProtected(read_permission, tester_name)
-    tester_name = '_baseHasDefault' + UpperCase(id)
-    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
-      property_holder.registerAccessor(tester_name, id, List.Tester, accessor_args)
-
-    # First Implementation of Boolean Accessor
-    tester_name = 'is' + UpperCase(id)
-    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
-      property_holder.registerAccessor(tester_name, id, Base.Getter,
-                     (prop['type'], prop.get('default'), prop.get('storage_id')))
-      property_holder.declareProtected(read_permission, tester_name)
-    tester_name = '_baseIs' + UpperCase(id)
-    if not hasattr(property_holder, tester_name) or prop.get('override', 0):
-      property_holder.registerAccessor(tester_name, id, Base.Getter,
-                     (prop['type'], prop.get('default'), prop.get('storage_id')))
-
-from Accessor import Category
-
-def createCategoryAccessors(property_holder, id,
-    read_permission=Permissions.AccessContentsInformation,
-    write_permission=Permissions.ModifyPortalContent):
-  """
-    This function creates category accessor and setter for a class
-    and a property
-  """
-  accessor_name = 'get' + UpperCase(id) + 'List'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.ListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'List'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.ListGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'Set'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.SetGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'Set'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.SetGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'ItemList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.ItemListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-
-  accessor_name = 'getDefault' + UpperCase(id)
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.DefaultGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id)
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.DefaultGetter, ())
-
-  accessor_name = 'get' + UpperCase(id)
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.DefaultGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id)
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.DefaultGetter, ())
-
-  accessor_name = 'has' + UpperCase(id)
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Category.Tester, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-
-  setter_name = 'set' + UpperCase(id)
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  setter_name = 'set' + UpperCase(id) + 'List'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  setter_name = 'setDefault' + UpperCase(id)
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  setter_name = 'set' + UpperCase(id) + 'Set'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  accessor_args = ()
-  setter_name = '_set' + UpperCase(id)
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Category.Setter, accessor_args)
-  setter_name = '_categorySet' + UpperCase(id)
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Category.Setter, accessor_args)
-
-  setter_name = '_set' + UpperCase(id) + 'List'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Category.ListSetter, accessor_args)
-  setter_name = '_categorySet' + UpperCase(id) + 'List'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Category.ListSetter, accessor_args)
-
-  setter_name = '_set' + UpperCase(id) + 'Set'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Category.SetSetter, accessor_args)
-  setter_name = '_categorySet' + UpperCase(id) + 'Set'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Category.SetSetter, accessor_args)
-
-  setter_name = '_setDefault' + UpperCase(id)
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Category.DefaultSetter, accessor_args)
-  setter_name = '_categorySetDefault' + UpperCase(id)
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Category.DefaultSetter, accessor_args)
-
-
-from Accessor import Value, Related, RelatedValue, Translation
-
-def createValueAccessors(property_holder, id,
-    read_permission=Permissions.AccessContentsInformation,
-    write_permission=Permissions.ModifyPortalContent):
-  """
-    Creates relation accessors for category id
-
-  """
-  accessor_name = 'get' + UpperCase(id) + 'ValueList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.ListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'ValueList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.ListGetter, ())
-  accessor_name = UpperCase(id) + 'Values'
-  accessor_name = string.lower(accessor_name[0]) + accessor_name[1:]
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.ListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-
-  accessor_name = 'get' + UpperCase(id) + 'ValueSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.SetGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'ValueSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.SetGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'TitleList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.TitleListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'TitleList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.TitleListGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'TitleSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.TitleSetGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'TitleSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.TitleSetGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'TranslatedTitleList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.TranslatedTitleListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'TranslatedTitleList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.TranslatedTitleListGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'TranslatedTitleSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.TranslatedTitleSetGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'TranslatedTitleSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.TranslatedTitleSetGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'ReferenceList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.ReferenceListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'ReferenceList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.ReferenceListGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'ReferenceSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.ReferenceSetGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'ReferenceSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.ReferenceSetGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'IdList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.IdListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'IdList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.IdListGetter, ())
-  accessor_name = UpperCase(id) + 'Ids'
-  accessor_name = string.lower(accessor_name[0]) + accessor_name[1:]
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.IdListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-
-  accessor_name = 'get' + UpperCase(id) + 'IdSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.IdSetGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'IdSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.IdSetGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'LogicalPathList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.LogicalPathListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'LogicalPathList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.LogicalPathListGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'LogicalPathSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.LogicalPathSetGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'LogicalPathSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.LogicalPathSetGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'UidList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.UidListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'UidList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.UidListGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'UidSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.UidSetGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'UidSet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.UidSetGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'PropertyList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.PropertyListGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'PropertyList'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.PropertyListGetter, ())
-
-  accessor_name = 'get' + UpperCase(id) + 'PropertySet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.PropertySetGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'PropertySet'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.PropertySetGetter, ())
-
-  accessor_name = 'getDefault' + UpperCase(id) + 'Value'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'Value'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultGetter, ())
-  accessor_name = 'get' + UpperCase(id) + 'Value'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGet' + UpperCase(id) + 'Value'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultGetter, ())
-
-  accessor_name = 'getDefault' + UpperCase(id) + 'Title'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTitleGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'Title'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTitleGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'Title'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTitleGetter, ())
-  accessor_name = '_categoryGet' + UpperCase(id) + 'Title'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTitleGetter, ())
-
-  accessor_name = 'getDefault' + UpperCase(id) + 'TranslatedTitle'
-  accessor = Value.DefaultTranslatedTitleGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTranslatedTitleGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'TranslatedTitle'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTranslatedTitleGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'TranslatedTitle'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTranslatedTitleGetter, ())
-  accessor_name = '_categoryGet' + UpperCase(id) + 'TranslatedTitle'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTranslatedTitleGetter, ())
-
-  accessor_name = 'getDefault' + UpperCase(id) + 'Reference'
-  accessor = Value.DefaultReferenceGetter(accessor_name, id)
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultReferenceGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'Reference'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultReferenceGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'Reference'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultReferenceGetter, ())
-  accessor_name = '_categoryGet' + UpperCase(id) + 'Reference'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultReferenceGetter, ())
-
-  accessor_name = 'getDefault' + UpperCase(id) + 'Uid'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultUidGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'Uid'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultUidGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'Uid'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultUidGetter, ())
-  accessor_name = '_categoryGet' + UpperCase(id) + 'Uid'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultUidGetter, ())
-
-  accessor_name = 'getDefault' + UpperCase(id) + 'Id'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultIdGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'Id'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultIdGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'Id'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultIdGetter, ())
-  accessor_name = '_categoryGet' + UpperCase(id) + 'Id'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultIdGetter, ())
-
-  accessor_name = 'getDefault' + UpperCase(id) + 'TitleOrId'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTitleOrIdGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'TitleOrId'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTitleOrIdGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'TitleOrId'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTitleOrIdGetter, ())
-  accessor_name = '_categoryGet' + UpperCase(id) + 'TitleOrId'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTitleOrIdGetter, ())
-
-  accessor_name = 'getDefault' + UpperCase(id) + 'Property'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultPropertyGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'Property'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultPropertyGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'Property'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultPropertyGetter, ())
-  accessor_name = '_categoryGet' + UpperCase(id) + 'Property'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultPropertyGetter, ())
-
-  accessor_name = 'getDefault' + UpperCase(id) + 'LogicalPath'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultLogicalPathGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'LogicalPath'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultLogicalPathGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = 'get' + UpperCase(id) + 'TranslatedLogicalPath'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTranslatedLogicalPathGetter, ())
-    property_holder.declareProtected(read_permission, accessor_name)
-  accessor_name = '_categoryGetDefault' + UpperCase(id) + 'LogicalPath'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultLogicalPathGetter, ())
-  accessor_name = '_categoryGet' + UpperCase(id) + 'LogicalPath'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultLogicalPathGetter, ())
-  accessor_name = '_categoryGet' + UpperCase(id) + 'TranslatedLogicalPath'
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, Value.DefaultTranslatedLogicalPathGetter, ())
-
-  setter_name = 'set' + UpperCase(id) + 'Value'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  setter_name = 'set' + UpperCase(id) + 'ValueList'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  setter_name = 'set' + UpperCase(id) + 'ValueSet'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  setter_name = 'setDefault' + UpperCase(id) + 'Value'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  accessor_args = ()
-  setter_name = '_set' + UpperCase(id) + 'Value'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.Setter, accessor_args)
-  setter_name = '_categorySet' + UpperCase(id) + 'Value'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.Setter, accessor_args)
-
-  setter_name = '_set' + UpperCase(id) + 'ValueList'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.ListSetter, accessor_args)
-  setter_name = '_categorySet' + UpperCase(id) + 'ValueList'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.ListSetter, accessor_args)
-
-  setter_name = '_set' + UpperCase(id) + 'ValueSet'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.SetSetter, accessor_args)
-  setter_name = '_categorySet' + UpperCase(id) + 'ValueSet'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.SetSetter, accessor_args)
-
-  setter_name = '_setDefault' + UpperCase(id) + 'Value'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.DefaultSetter, accessor_args)
-  setter_name = '_categorySetDefault' + UpperCase(id) + 'Value'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.DefaultSetter, accessor_args)
-
-  # Uid setters
-  setter_name = 'set' + UpperCase(id) + 'Uid'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  setter_name = 'setDefault' + UpperCase(id) + 'Uid'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  setter_name = 'set' + UpperCase(id) + 'UidList'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  setter_name = 'set' + UpperCase(id) + 'UidSet'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, '_' + setter_name, Alias.Reindex, ())
-    property_holder.declareProtected(write_permission, setter_name)
-
-  setter_name = '_set' + UpperCase(id) + 'Uid'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.UidSetter, accessor_args)
-  setter_name = '_categorySet' + UpperCase(id) + 'Uid'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.UidSetter, accessor_args)
-
-  setter_name = '_setDefault' + UpperCase(id) + 'Uid'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.UidDefaultSetter, accessor_args)
-  setter_name = '_categorySetDefault' + UpperCase(id) + 'Uid'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.UidDefaultSetter, accessor_args)
-
-  setter_name = '_set' + UpperCase(id) + 'UidList'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.UidListSetter, accessor_args)
-  setter_name = '_categorySet' + UpperCase(id) + 'UidList'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.UidListSetter, accessor_args)
-
-  setter_name = '_set' + UpperCase(id) + 'UidSet'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.UidSetSetter, accessor_args)
-  setter_name = '_categorySet' + UpperCase(id) + 'UidSet'
-  if not hasattr(property_holder, setter_name):
-    property_holder.registerAccessor(setter_name, id, Value.UidSetSetter, accessor_args)
-
-
-def createRelatedValueAccessors(property_holder, id, read_permission=Permissions.AccessContentsInformation):
-
-  upper_case_id = UpperCase(id)
-  # Related Values (ie. reverse relation getters)
-
-  # AccessorClass: (accessor_name, )
-  accessor_dict = {
-    # List getter
-    RelatedValue.ListGetter: (
-      '%s%sRelatedValues' % (upper_case_id[0].lower(),
-                             upper_case_id[1:]),
-      'get%sRelatedValueList' % upper_case_id,
-      '_categoryGet%sRelatedValueList' % upper_case_id,
-    ),
-
-    # Set getter
-    RelatedValue.SetGetter: (
-      'get%sRelatedValueSet' % upper_case_id,
-      '_categoryGet%sRelatedValueSet' % upper_case_id,
-    ),
-
-    # Default value getter
-    RelatedValue.DefaultGetter: (
-      'getDefault%sRelatedValue' % upper_case_id,
-      'get%sRelatedValue' % upper_case_id,
-      '_categoryGetDefault%sRelatedValue' % upper_case_id,
-      '_categoryGet%sRelatedValue' % upper_case_id,
-    ),
-
-    # Related Relative Url
-    Related.ListGetter: (
-      'get%sRelatedList' % upper_case_id,
-      '_categoryGet%sRelatedList' % upper_case_id,
-    ),
-
-    # Related as Set
-    Related.SetGetter: (
-      'get%sRelatedSet' % upper_case_id,
-      '_categoryGet%sRelatedSet' % upper_case_id,
-    ),
-
-    # Default getter
-    Related.DefaultGetter: (
-      'getDefault%sRelated' % upper_case_id,
-      'get%sRelated' % upper_case_id,
-      '_categoryGetDefault%sRelated' % upper_case_id,
-      '_categoryGet%sRelated' % upper_case_id,
-    ),
-
-    # Related Ids (ie. reverse relation getters)
-    RelatedValue.IdListGetter: (
-      '%s%sRelatedIds' % (upper_case_id[0].lower(),
-                          upper_case_id[1:]),
-      'get%sRelatedIdList' % upper_case_id,
-      '_categoryGet%sRelatedIdList' % upper_case_id,
-    ),
-
-    # Related Ids as Set
-    RelatedValue.IdSetGetter: (
-      'get%sRelatedIdSet' % upper_case_id,
-      '_categoryGet%sRelatedIdSet' % upper_case_id,
-    ),
-
-    # Default Id getter
-    RelatedValue.DefaultIdGetter: (
-      'getDefault%sRelatedId' % upper_case_id,
-      'get%sRelatedId' % upper_case_id,
-      '_categoryGetDefault%sRelatedId' % upper_case_id,
-      '_categoryGet%sRelatedId' % upper_case_id,
-    ),
-
-    # Related Title list
-    RelatedValue.TitleListGetter: (
-      'get%sRelatedTitleList' % upper_case_id,
-      '_categoryGet%sRelatedTitleList' % upper_case_id,
-    ),
-
-    # Related Title Set
-    RelatedValue.TitleSetGetter: (
-      'get%sRelatedTitleSet' % upper_case_id,
-      '_categoryGet%sRelatedTitleSet' % upper_case_id,
-    ),
-
-    # Related default title
-    RelatedValue.DefaultTitleGetter: (
-      'getDefault%sRelatedTitle' % upper_case_id,
-      'get%sRelatedTitle' % upper_case_id,
-      '_categoryGetDefault%sRelatedTitle' % upper_case_id,
-      '_categoryGet%sRelatedTitle' % upper_case_id,
-    ),
-
-    # Related Property list
-    RelatedValue.PropertyListGetter: (
-      'get%sRelatedPropertyList' % upper_case_id,
-      '_categoryGet%sRelatedPropertyList' % upper_case_id,
-    ),
-
-    # Related Property Set
-    RelatedValue.PropertySetGetter: (
-      'get%sRelatedPropertySet' % upper_case_id,
-      '_categoryGet%sRelatedPropertySet' % upper_case_id,
-    ),
-
-    # Related default title
-    RelatedValue.DefaultPropertyGetter: (
-      'getDefault%sRelatedProperty' % upper_case_id,
-      'get%sRelatedProperty' % upper_case_id,
-      '_categoryGetDefault%sRelatedProperty' % upper_case_id,
-      '_categoryGet%sRelatedProperty' % upper_case_id,
-    ),
-  }
-
-  for accessor_class, accessor_name_list in accessor_dict.items():
-    for accessor_name in accessor_name_list:
-      if property_holder is not None:
-        if not hasattr(property_holder, accessor_name):
-          property_holder.registerAccessor(accessor_name, id, accessor_class, ())
-          if accessor_name[0] != '_':
-            property_holder.declareProtected(read_permission, accessor_name)
-      else:
-        accessor = accessor_class(accessor_name, id)
-        if not hasattr(BaseClass, accessor_name):
-          setattr(BaseClass, accessor_name,
-                  accessor.dummy_copy(accessor_name))
-          # Declare the security of method which doesn't start with _
-          if accessor_name[0] != '_':
-            BaseClass.security.declareProtected(read_permission, accessor_name)
-
-def createGroupTypeAccessors(property_holder, prop,
-  read_permission=None, portal=None):
-  """
-  Generate accessors that allows to know if we belongs to a particular
-  group of portal types
-  """
-  # Getter
-  group = prop['group_type']
-  accessor_name = 'is' + UpperCase(group) + 'Type'
-  value = prop['default']
-  accessor_args = (value,)
-  if not hasattr(property_holder, accessor_name):
-    property_holder.registerAccessor(accessor_name, id, ConstantGetter,
-                                     accessor_args)
-    property_holder.declareProtected(read_permission, accessor_name)
-
-def createTranslationAcquiredPropertyAccessors(
-  property_holder,
-  property,
-  read_permission=Permissions.AccessContentsInformation,
-  write_permission=Permissions.ModifyPortalContent,
-  portal=None):
-  """Generate translation acquired property accessor to Base class"""
-  property = property.copy()
-  translation_acquired_property_id_list = []
-  accessor_dict_list = []
-
-  # Language Dependent Getter/Setter
-  for language in portal.Localizer.get_languages():
-    language_key = language.replace('-', '_')
-    for acquired_property_id in property['acquired_property_id']:
-      key = '%s_translated_%s' % (language_key, acquired_property_id)
-      capitalised_composed_id = UpperCase("%s_%s" % (property['id'], key))
-      accessor_args = (
-        property['type'],
-        property['portal_type'],
-        key,
-        property['acquisition_base_category'],
-        property['acquisition_portal_type'],
-        property['acquisition_accessor_id'],
-        property.get('acquisition_copy_value',0),
-        property.get('acquisition_mask_value',0),
-        property.get('acquisition_sync_value',0),
-        property.get('storage_id'),
-        property.get('alt_accessor_id'),
-        property.get('acquisition_object_id'),
-        (property['type'] in list_types or property.get('multivalued', 0)),
-        (property['type'] == 'tales'),
-        )
-
-      accessor_dict_list.append({'name':'get' + capitalised_composed_id,
-                                 'key': key,
-                                 'class':Translation.AcquiredPropertyGetter,
-                                 'argument':accessor_args,
-                                 'permission':read_permission})
-      accessor_dict_list.append({'name':'_baseGet' + capitalised_composed_id,
-                                 'key': key,
-                                 'class':Translation.AcquiredPropertyGetter,
-                                 'argument':accessor_args,
-                                 'permission':read_permission})
-      accessor_dict_list.append({'name': 'getDefault' + capitalised_composed_id,
-                                 'key': key,
-                                 'class': Translation.AcquiredPropertyGetter,
-                                 'argument': accessor_args,
-                                 'permission': read_permission})
-      accessor_dict_list.append({'name': 'set' + capitalised_composed_id,
-                                 'key': '_set' + capitalised_composed_id,
-                                 'class': Alias.Reindex,
-                                 'argument': (),
-                                 'permission': write_permission})
-      accessor_dict_list.append({'name': '_set' + capitalised_composed_id,
-                                 'key': key,
-                                 'class': AcquiredProperty.DefaultSetter,
-                                 'argument': accessor_args,
-                                 'permission': write_permission})
-      accessor_dict_list.append({'name': 'setDefault' + capitalised_composed_id,
-                                 'key': '_set' + capitalised_composed_id,
-                                 'class': Alias.Reindex,
-                                 'argument': (),
-                                 'permission': write_permission})
-
-  # Language Independent Getter
-  for acquired_property_id in property['acquired_property_id']:
-    if acquired_property_id in property.get('translation_acquired_property_id',()):
-      key = 'translated_%s' % acquired_property_id
-      capitalised_composed_id = UpperCase('%s_%s' % (property['id'], key))
-      accessor_args = (
-        property['type'],
-        property['portal_type'],
-        key,
-        property['acquisition_base_category'],
-        property['acquisition_portal_type'],
-        property['acquisition_accessor_id'],
-        property.get('acquisition_copy_value',0),
-        property.get('acquisition_mask_value',0),
-        property.get('acquisition_sync_value',0),
-        property.get('storage_id'),
-        property.get('alt_accessor_id'),
-        property.get('acquisition_object_id'),
-        (property['type'] in list_types or property.get('multivalued', 0)),
-        (property['type'] == 'tales'),
-        )
-
-      accessor_dict_list.append({'name': 'get' + capitalised_composed_id,
-                                 'key': key,
-                                 'class': Translation.AcquiredPropertyGetter,
-                                 'argument': accessor_args,
-                                 'permission': read_permission})
-      accessor_dict_list.append({'name': '_baseGet' + capitalised_composed_id,
-                                 'key': key,
-                                 'class': Translation.AcquiredPropertyGetter,
-                                 'argument': accessor_args,
-                                 'permission': read_permission})
-      accessor_dict_list.append({'name': 'getDefault' + capitalised_composed_id,
-                                 'key': key,
-                                 'class': Translation.AcquiredPropertyGetter,
-                                 'argument': accessor_args,
-                                 'permission': read_permission})
-
-  for accessor_dict in accessor_dict_list:
-    accessor_name = accessor_dict['name']
-    if getattr(property_holder, accessor_name, None) is None:
-      property_holder.registerAccessor(accessor_name, # id
-                                       accessor_dict['key'],
-                                       accessor_dict['class'],
-                                       accessor_dict['argument'])
-      property_holder.declareProtected(accessor_dict['permission'],
-                                       accessor_name)
-
-def createTranslationAccessors(property_holder, id, property,
-    read_permission=Permissions.AccessContentsInformation,
-    write_permission=Permissions.ModifyPortalContent, default=''):
-  """
-  Generate the translation accessor for a class and a property
-  """
-  capitalised_id = UpperCase(id)
-  if 'translated' in id:
-    accessor_name = 'get' + capitalised_id
-    private_accessor_name = '_baseGet' + capitalised_id
-    if not hasattr(property_holder, accessor_name):
-      property_holder.registerAccessor(accessor_name,
-                                       id,
-                                       Translation.TranslatedPropertyGetter,
-                                       (property['id'], property['type'], None, default))
-      property_holder.declareProtected(read_permission, accessor_name)
-    if not hasattr(property_holder, private_accessor_name):
-      property_holder.registerAccessor(private_accessor_name,
-                                       id,
-                                       Translation.TranslatedPropertyGetter,
-                                       (property['id'], property['type'], None, default))
-
-  if 'translation_domain' in id:
-    # Getter
-    accessor_name = 'get' + capitalised_id
-    property_holder.registerAccessor(accessor_name,
-                                     id,
-                                     Translation.PropertyTranslationDomainGetter,
-                                     ('string', default,))
-    property_holder.declareProtected(read_permission, accessor_name)
-
-
-def createTranslationLanguageAccessors(property_holder, property,
-    read_permission=Permissions.AccessContentsInformation,
-    write_permission=Permissions.ModifyPortalContent, default='',
-    portal=None):
-  """
-  Generate translation language accessors
-  """
-  accessor_dict_list = []
-
-  for language in portal.Localizer.get_languages():
-    language_key = language.replace('-', '_')
-    composed_id = '%s_translated_%s' % (language_key, property['id'])
-    capitalised_compose_id = UpperCase(composed_id)
-
-    # get
-    getter_accessor_args = (property['id'], property['type'], language, default)
-    accessor_dict_list.append({'name': 'get' + capitalised_compose_id,
-                               'class': Translation.TranslatedPropertyGetter,
-                               'argument': getter_accessor_args,
-                               'permission': read_permission})
-    accessor_dict_list.append({'name': '_baseGet' + capitalised_compose_id,
-                               'class': Translation.TranslatedPropertyGetter,
-                               'argument': getter_accessor_args,
-                               'permission': read_permission})
-
-    # has
-    has_accessor_args = (property['id'], property['type'], language)
-    accessor_dict_list.append({'name': 'has' + capitalised_compose_id,
-                               'class': Translation.TranslatedPropertyTester,
-                               'argument': has_accessor_args,
-                               'permission': read_permission})
-
-    # set
-    accessor_dict_list.append({'name':'set' + capitalised_compose_id,
-                               'key': '_set' + capitalised_compose_id,
-                               'class': Alias.Reindex,
-                               'argument': (),
-                               'permission': write_permission})
-    setter_accessor_args = (property['id'], property['type'], language)
-    accessor_dict_list.append({'name': '_set' + capitalised_compose_id,
-                               'class': Translation.TranslationPropertySetter,
-                               'argument': setter_accessor_args,
-                               'permission': write_permission})
-
-  for accessor_dict in accessor_dict_list:
-    accessor_name = accessor_dict['name']
-    if getattr(property_holder, accessor_name, None) is None:
-      property_holder.registerAccessor(accessor_name,
-                                       accessor_dict.get('key', None),
-                                       accessor_dict['class'],
-                                       accessor_dict['argument'])
-      property_holder.declareProtected(accessor_dict['permission'],
-                                       accessor_name)
-
+    return True, None
 
 #####################################################
 # More Useful methods which require Base
 #####################################################
+from Products.ERP5Type.Base import Base as BaseClass
 
 def assertAttributePortalType(o, attribute_name, portal_type):
   """
@@ -3178,6 +1540,7 @@ class ScalarMaxConflictResolver(persistent.Persistent):
 ###################
 #  URL Normaliser #
 ###################
+from Products.PythonScripts.standard import url_unquote
 try:
   import urlnorm
 except ImportError:
@@ -3248,11 +1611,14 @@ def urlnormNormaliseUrl(url, base_url=None):
   """The normalisation up is delegated to urlnorm library.
   """
   try:
-    url = urlnorm.norm(url)
-  except (AttributeError, urlnorm.InvalidUrl):
+    try:
+      url = urlnorm.norm(url)
+    except UnicodeDecodeError:
+      url = urlnorm.norm(url_unquote(url).decode('latin1'))
+  except (AttributeError, UnicodeDecodeError, urlnorm.InvalidUrl):
     # This url is not valid, a better Exception will
     # be raised
-    return
+    return url
   url_split = urlparse.urlsplit(url)
   url_protocol = url_split[0]
   url_domain = url_split[1]
@@ -3276,14 +1642,6 @@ def guessEncodingFromText(data, content_type='text/html'):
   By default python-magic is used
   XXX this implementation must migrate to cloudooo
   """
-  try:
-    import chardet
-  except ImportError:
-    chardet = None
-  try:
-    import magic
-  except:
-    magic = None
   if chardet is not None and content_type == 'text/html':
     # chardet works fine on html document
     return chardet.detect(data).get('encoding', None)
@@ -3293,8 +1651,13 @@ def guessEncodingFromText(data, content_type='text/html'):
     enconding_detector = magic.Magic(mime_encoding=True)
     return enconding_detector.from_buffer(data)
   else:
-    raise NotImplementedError, 'No encoding detector found.'\
-                                  ' You must install chardet and python-magic'
+    if chardet is None:
+      message = 'No encoding detector found.'\
+                ' You must install chardet and python-magic'
+    else:
+      message = 'No suitable encoding detector found.'\
+                ' You must install python-magic'
+    raise NotImplementedError, message
 
 _reencodeUrlEscapes_map = dict((chr(x), chr(x) in (# safe
                                                    "!'()*-." "0123456789" "_~"

@@ -1102,7 +1102,6 @@ Inside PropertySheet: programmable acquisition
           'acquisition_portal_type'   : ('Organisation',),
           'acquisition_copy_value'    : 0,
           'acquisition_mask_value'    : 0,
-          'acquisition_sync_value'    : 0,
           'acquisition_append_value'  : 0,
           'acquisition_accessor_id'   : 'getDefaultAddress',
           'acquisition_depends'       : None,
@@ -1135,11 +1134,6 @@ Inside PropertySheet: programmable acquisition
     in synchronization processes where we do not want to erase
     some data entered in documents, yet use the propper data.
 
-  - *acquisition_sync_value*: keep local property and
-    acquired property in sync. For example, if
-    we change the address localy, the address should be updated
-    on the acquired property.
-
   - *acquisition_append_value*: all acquired properties
     should be appended in a list
 
@@ -1169,7 +1163,7 @@ Open Questions
   Q2
 
     Define the semantics of combination of acquisition_copy_value, acquisition_mask_value,
-    acquisition_sync_value and acquisition_append_value.
+    and acquisition_append_value.
 
 Not Integrated
 
@@ -1186,7 +1180,6 @@ Not Integrated
           'acquisition_portal_type'   : ('Organisation',),
           'acquisition_copy_value'    : 0,
           'acquisition_mask_value'    : 1,
-          'acquisition_sync_value'    : 0,
           'acquisition_accessor_id'   : 'getDefaultTelephone',
           'acquisition_depends'       : None,
           'mode'        : 'w' },

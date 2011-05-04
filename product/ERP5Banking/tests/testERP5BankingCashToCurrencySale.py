@@ -161,6 +161,13 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     self.assertEqual(cash_to_currency_sale.getDestination(), None)
     self.setDocumentSourceReference(cash_to_currency_sale)
     self.stepTic()
+    # Check the default exchange rate
+    rate = cash_to_currency_sale.CurrencyExchange_getExchangeRateList(from_currency=cash_to_currency_sale.getResource(),
+                                                                      to_currency='currency_module/%s' % (cash_to_currency_sale.Baobab_getPortalReferenceCurrencyID()),
+                                                                      currency_exchange_type='sale',
+                                                                      start_date=cash_to_currency_sale.getStartDate())[0]
+    self.assertEqual(rate, 650.0)
+
 
   def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None,
       **kwd):

@@ -29,6 +29,7 @@
 
 
 """ Cache Tool module for ERP5 """
+import transaction
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
@@ -158,8 +159,13 @@ class CacheTool(BaseTool):
       self.REQUEST.RESPONSE.redirect('cache_tool_configure?manage_tabs_message=Cache factory %s cleared.' %cache_factory_id)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'clearCache')
-  def clearCache(self, cache_factory_list=(DEFAULT_CACHE_FACTORY,), REQUEST=None):
+  def clearCache(self, cache_factory_list=(DEFAULT_CACHE_FACTORY,),
+                 REQUEST=None, before_commit=False):
     """ Clear specified or default cache factory. """
+    if before_commit:
+      assert REQUEST is None
+      transaction.get().addBeforeCommitHook(self.clearCache,
+                                            (cache_factory_list,))
     ram_cache_root = self.getRamCacheRoot()
     for cf_key in cache_factory_list:
       if ram_cache_root.has_key(cf_key):

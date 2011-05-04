@@ -64,6 +64,7 @@ class TestXHTML(ERP5TypeTestCase):
   def getBusinessTemplateList():
     """  """
     return ( # dependency order
+      'erp5_core_proxy_field_legacy',
       'erp5_base',
       'erp5_trade',
 
@@ -88,6 +89,7 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_ingestion_mysql_innodb_catalog',
       'erp5_crm',
 
+      'erp5_jquery',
       'erp5_web',
       'erp5_dms',
 
@@ -243,8 +245,11 @@ class TestXHTML(ERP5TypeTestCase):
     Usually we should not have duplicates except in some rare cases 
     described in SkinsTool_getDuplicateSelectionNameDict
     """
-    duplicating_selection_name_dict = self.portal.portal_skins.SkinsTool_getDuplicateSelectionNameDict()
-    self.assertEquals(duplicating_selection_name_dict, {})
+    portal_skins = self.portal.portal_skins
+    duplicating_selection_name_dict = portal_skins.SkinsTool_getDuplicateSelectionNameDict()
+    self.assertFalse(duplicating_selection_name_dict,
+                     "Repeated listbox selection names:\n" +
+                     portal_skins.SkinsTool_checkDuplicateSelectionName())
     
   def test_PythonScriptSyntax(self):
     """ 
@@ -330,17 +335,15 @@ class TestXHTML(ERP5TypeTestCase):
     """Make sure that preference view is not duplicated."""
     preference_view_id_dict = {}
     def addPreferenceView(folder_id, view_id):
-      if not view_id in preference_view_id_dict:
-        preference_view_id_dict[view_id] = []
-      preference_view_id_dict[view_id].append('%s.%s' % (folder_id, view_id))
+      preference_view_id_dict.setdefault(view_id, []).append('%s.%s' % (folder_id, view_id))
     error_list = []
-    for object_ in self.portal.portal_skins.objectValues():
-      if object_.isPrincipiaFolderish:
-        for id_ in object_.objectIds():
+    for skin_folder in self.portal.portal_skins.objectValues():
+      if skin_folder.isPrincipiaFolderish:
+        for id_ in skin_folder.objectIds():
           if id_.startswith('Preference_view'):
-            addPreferenceView(object_.id, id_)
+            addPreferenceView(skin_folder.id, id_)
     for view_id, location_list in preference_view_id_dict.items():
-      if len(location_list)>1:
+      if len(location_list) > 1:
         error_list.extend(location_list)
     self.assertEqual(error_list, [])
 
@@ -628,9 +631,9 @@ validator = None
 # tidy or w3c may not be installed in livecd. Then we will skip xhtml validation tests.
 # create the validator object
 if validator_to_use == 'w3c':
-  validator_paths = ['/usr/share/w3c-markup-validator/cgi-bin/check',
-                     '/usr/lib/cgi-bin/check']
-  for validator_path in validator_paths:
+  default = '/usr/share/w3c-markup-validator/cgi-bin:/usr/lib/cgi-bin'
+  for path in os.environ.get('CGI_PATH', default).split(os.pathsep):
+    validator_path = os.path.join(path, 'check')
     if os.path.exists(validator_path):
       validator = W3Validator(validator_path, show_warnings)
       break

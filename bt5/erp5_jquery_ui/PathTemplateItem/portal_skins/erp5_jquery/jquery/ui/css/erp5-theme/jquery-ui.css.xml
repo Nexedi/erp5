@@ -31,9 +31,9 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*\n
- * jQuery UI CSS Framework 1.8.7\n
+ * jQuery UI CSS Framework 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -74,9 +74,9 @@
 \n
 \n
 /*\n
- * jQuery UI CSS Framework 1.8.7\n
+ * jQuery UI CSS Framework 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -325,9 +325,9 @@
 /* Overlays */\n
 .ui-widget-overlay { background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }\n
 .ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }/*\n
- * jQuery UI Resizable 1.8.7\n
+ * jQuery UI Resizable 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -344,9 +344,9 @@
 .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }\n
 .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }\n
 .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}/*\n
- * jQuery UI Selectable 1.8.7\n
+ * jQuery UI Selectable 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -354,9 +354,9 @@
  */\n
 .ui-selectable-helper { position: absolute; z-index: 100; border:1px dotted black; }\n
 /*\n
- * jQuery UI Accordion 1.8.7\n
+ * jQuery UI Accordion 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -371,10 +371,11 @@
 .ui-accordion-icons .ui-accordion-header a { padding-left: 2.2em; }\n
 .ui-accordion .ui-accordion-header .ui-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }\n
 .ui-accordion .ui-accordion-content { padding: 1em 2.2em; border-top: 0; margin-top: -2px; position: relative; top: 1px; margin-bottom: 2px; overflow: auto; display: none; zoom: 1; }\n
-.ui-accordion .ui-accordion-content-active { display: block; }/*\n
- * jQuery UI Autocomplete 1.8.7\n
+.ui-accordion .ui-accordion-content-active { display: block; }\n
+/*\n
+ * jQuery UI Autocomplete 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -386,7 +387,7 @@
 * html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */\n
 \n
 /*\n
- * jQuery UI Menu 1.8.7\n
+ * jQuery UI Menu 1.8.11\n
  *\n
  * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -425,9 +426,9 @@
 \tmargin: -1px;\n
 }\n
 /*\n
- * jQuery UI Button 1.8.7\n
+ * jQuery UI Button 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -463,17 +464,17 @@ input.ui-button { padding: .4em 1em; }\n
 /* workarounds */\n
 button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra padding in Firefox */\n
 /*\n
- * jQuery UI Dialog 1.8.7\n
+ * jQuery UI Dialog 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
  * http://docs.jquery.com/UI/Dialog#theming\n
  */\n
 .ui-dialog { position: absolute; padding: .2em; width: 300px; overflow: hidden; }\n
-.ui-dialog .ui-dialog-titlebar { padding: .5em 1em .3em; position: relative;  }\n
-.ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .2em 0; } \n
+.ui-dialog .ui-dialog-titlebar { padding: .4em 1em; position: relative;  }\n
+.ui-dialog .ui-dialog-title { float: left; margin: .1em 16px .1em 0; } \n
 .ui-dialog .ui-dialog-titlebar-close { position: absolute; right: .3em; top: 50%; width: 19px; margin: -10px 0 0 0; padding: 1px; height: 18px; }\n
 .ui-dialog .ui-dialog-titlebar-close span { display: block; margin: 1px; }\n
 .ui-dialog .ui-dialog-titlebar-close:hover, .ui-dialog .ui-dialog-titlebar-close:focus { padding: 0; }\n
@@ -484,9 +485,9 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-dialog .ui-resizable-se { width: 14px; height: 14px; right: 3px; bottom: 3px; }\n
 .ui-draggable .ui-dialog-titlebar { cursor: move; }\n
 /*\n
- * jQuery UI Slider 1.8.7\n
+ * jQuery UI Slider 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -507,9 +508,9 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }\n
 .ui-slider-vertical .ui-slider-range-min { bottom: 0; }\n
 .ui-slider-vertical .ui-slider-range-max { top: 0; }/*\n
- * jQuery UI Tabs 1.8.7\n
+ * jQuery UI Tabs 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -525,9 +526,9 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: none; }\n
 .ui-tabs .ui-tabs-hide { display: none !important; }\n
 /*\n
- * jQuery UI Datepicker 1.8.7\n
+ * jQuery UI Datepicker 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -592,9 +593,9 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
     width: 200px; /*must have*/\n
     height: 200px; /*must have*/\n
 }/*\n
- * jQuery UI Progressbar 1.8.7\n
+ * jQuery UI Progressbar 1.8.11\n
  *\n
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
+ * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
  * http://jquery.org/license\n
  *\n
@@ -605,6 +606,10 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 
 
 ]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>

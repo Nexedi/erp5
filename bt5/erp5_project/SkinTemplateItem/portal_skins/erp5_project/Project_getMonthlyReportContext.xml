@@ -50,18 +50,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.log(\'object_dict\', object_dict)\n
-\n
-context = context.asContext(object_dict=object_dict,\n
+            <value> <string>context = context.asContext(object_dict=object_dict,\n
          summary_dict=summary_dict,\n
-         column_list=column_list)\n
+         column_list=column_list,\n
+         project_dict=project_dict,\n
+         monthly_project_to_display_dict=monthly_project_to_display_dict,\n
+         is_total=is_total,\n
+         full_date_string=full_date_string)\n
 \n
 return context\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>object_dict, summary_dict, column_list, **kw</string> </value>
+            <value> <string>object_dict, summary_dict, column_list, project_dict, monthly_project_to_display_dict,is_total, full_date_string,**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

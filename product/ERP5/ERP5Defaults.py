@@ -44,6 +44,8 @@ portal_variation_type_list = ('Variation', 'Variante Tissu', 'Variante Modele',
 portal_node_type_list = ('Organisation','Person','Category','MetaNode',
     'Account')
 
+portal_entity_type_list = ('Organisation', 'Person',)
+
 portal_payment_node_type_list = ('Bank Account', 'Credit Card', )
 
 portal_invoice_type_list = ('Invoice', 'Sale Invoice', 'Sales Invoice', 'Sale Invoice Transaction',
@@ -52,6 +54,10 @@ portal_invoice_type_list = ('Invoice', 'Sale Invoice', 'Sales Invoice', 'Sale In
 portal_order_type_list = ('Order', 'Project', 'Samples Order',
                    'Packing Order','Production Order', 'Purchase Order', 'Sale Order',
                    'Sales Order', )
+
+portal_open_order_type_list = ('Open Sale Order',
+                               'Open Purchase Order',
+                               'Open Internal Order',)
 
 portal_delivery_type_list = ('Delivery',
                       'Transaction',

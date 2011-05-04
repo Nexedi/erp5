@@ -1,14 +1,34 @@
 # -*- coding: utf-8 -*-
 import base64, errno, os, select, socket, sys, time
 from threading import Thread
+from UserDict import IterableUserDict
 import Lifetime
 import transaction
-from BTrees.OIBTree import OIBTree
 from Testing import ZopeTestCase
+from ZODB.POSException import ConflictError
 from zLOG import LOG, ERROR
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
 from Products.ERP5Type.tests import backportUnittest
 from Products.ERP5Type.tests.utils import createZServer
+
+
+class DictPersistentWrapper(IterableUserDict, object):
+
+  def __metaclass__(name, base, d):
+    def wrap(attr):
+      wrapped = getattr(base[0], attr)
+      def wrapper(self, *args, **kw):
+        self._persistent_object._p_changed = 1
+        return wrapped(self, *args, **kw)
+      wrapper.__name__ = attr
+      return wrapper
+    for attr in ('clear', 'setdefault', 'update', '__setitem__', '__delitem__'):
+      d[attr] = wrap(attr)
+    return type(name, base, d)
+
+  def __init__(self, dict, persistent_object):
+    self.data = dict
+    self._persistent_object = persistent_object
 
 
 def patchActivityTool():
@@ -21,6 +41,8 @@ def patchActivityTool():
     setattr(ActivityTool, '_orig_' + name, orig_function)
     setattr(ActivityTool, name, function)
     function.__doc__ = orig_function.__doc__
+    # make life easier when inspecting the wrapper with ipython
+    function._original = orig_function
 
   # When a ZServer can't be started, the node name ends with ':' (no port).
   @patch
@@ -37,23 +59,26 @@ def patchActivityTool():
   def getNodeDict(self):
     app = self.getPhysicalRoot()
     if getattr(app, 'test_processing_nodes', None) is None:
-      app.test_processing_nodes = OIBTree()
-    return app.test_processing_nodes
+      app.test_processing_nodes = {}
+    return DictPersistentWrapper(app.test_processing_nodes, app)
 
   @patch
   def getDistributingNode(self):
-    return self.getPhysicalRoot().test_distributing_node
+    return getattr(self.getPhysicalRoot(), 'test_distributing_node', '')
 
+  # A property to catch setattr on 'distributingNode' would not work
+  # because self would lose all acquisition wrappers.
+  class SetDistributingNodeProxy(object):
+    def __init__(self, ob):
+      self._ob = ob
+    def __getattr__(self, attr):
+      m = getattr(self._ob, attr).im_func
+      return lambda *args, **kw: m(self, *args, **kw)
   @patch
   def manage_setDistributingNode(self, distributingNode, REQUEST=None):
-    # A property to catch setattr on 'distributingNode' doesn't work
-    # because self would lose all acquisition wrappers.
-    previous_node = self.distributingNode
-    try:
-      self._orig_manage_setDistributingNode(distributingNode, REQUEST=REQUEST)
-      self.getPhysicalRoot().test_distributing_node = self.distributingNode
-    finally:
-      self.distributingNode = previous_node
+    proxy = SetDistributingNodeProxy(self)
+    proxy._orig_manage_setDistributingNode(distributingNode, REQUEST=REQUEST)
+    self.getPhysicalRoot().test_distributing_node = proxy.distributingNode
 
   # When there is more than 1 node, prevent the distributing node from
   # processing activities.
@@ -67,6 +92,25 @@ def patchActivityTool():
       transaction.commit()
     else:
       self._orig_tic(processing_node, force)
+
+
+def Application_resolveConflict(self, old_state, saved_state, new_state):
+  """Solve conflicts in case several nodes register at the same time
+  """
+  new_state = new_state.copy()
+  old, saved, new = [set(state.pop('test_processing_nodes', {}).items())
+                     for state in old_state, saved_state, new_state]
+  if sorted(old_state.items()) != sorted(saved_state.items()):
+    raise ConflictError
+  new |= saved - old
+  new -= old - saved
+  new_state['test_processing_nodes'] = nodes = dict(new)
+  if len(nodes) != len(new):
+    raise ConflictError
+  return new_state
+
+from OFS.Application import Application
+Application._p_resolveConflict = Application_resolveConflict
 
 
 class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
@@ -121,10 +165,21 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
     currentNode = activity_tool.getCurrentNode()
     if distributing:
       activity_tool.manage_setDistributingNode(currentNode)
+    elif currentNode == activity_tool.getDistributingNode():
+      activity_tool.manage_setDistributingNode('')
     if processing:
       activity_tool.manage_addToProcessingList((currentNode,))
     else:
-      activity_tool.manage_removeFromProcessingList((currentNode,))
+      activity_tool.manage_delNode((currentNode,))
+
+  @classmethod
+  def unregisterNode(cls):
+    if ZopeTestCase.utils._Z2HOST is not None:
+      self = cls('unregisterNode')
+      self.app = self._app()
+      self._registerNode(distributing=0, processing=0)
+      transaction.commit()
+      self._close()
 
   def assertNoPendingMessage(self):
     """Get the last error message from error_log"""
@@ -140,7 +195,7 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
                          % error_log[-1]
       self.fail(error_message)
 
-  def tic(self, verbose=0):
+  def tic(self, verbose=0, stop_condition=lambda message_list: False):
     """Execute pending activities"""
     # Some tests like testDeferredStyle require that we use self.getPortal()
     # instead of self.portal in order to setup current skin.
@@ -151,9 +206,11 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         old_message_count = 0
         start = time.time()
       count = 1000
-      getMessageList = portal_activities.getMessageList
-      message_count = len(getMessageList(include_processing=1))
-      while message_count:
+      def getMessageList():
+        return portal_activities.getMessageList(include_processing=1)
+      message_list = getMessageList()
+      message_count = len(message_list)
+      while message_count and not stop_condition(message_list):
         if verbose and old_message_count != message_count:
           ZopeTestCase._print(' %i' % message_count)
           old_message_count = message_count
@@ -161,10 +218,12 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         if Lifetime._shutdown_phase:
           # XXX CMFActivity contains bare excepts
           raise KeyboardInterrupt
-        message_count = len(getMessageList(include_processing=1))
+        message_list = getMessageList()
+        message_count = len(message_list)
         # This prevents an infinite loop.
         count -= 1
-        if count == 0:
+        if count == 0 or (message_count and set([x.processing_node for x in 
+              message_list]).issubset(set([-2, -3]))):
           error_message = 'tic is looping forever. '
           try:
             self.assertNoPendingMessage()

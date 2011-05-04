@@ -502,6 +502,8 @@ class ActivityTool (Folder, UniqueObject):
     allowed_types = ( 'CMF Active Process', )
     security = ClassSecurityInfo()
 
+    isIndexable = False
+
     manage_options = tuple(
                      [ { 'label' : 'Overview', 'action' : 'manage_overview' }
                      , { 'label' : 'Activities', 'action' : 'manageActivities' }
@@ -534,8 +536,10 @@ class ActivityTool (Folder, UniqueObject):
       LOG('ActivityTool', 0, real_SQLDict_setPriority(src__=1, **kw))
       return real_SQLDict_setPriority(**kw)
 
-    def __init__(self):
-        return Folder.__init__(self, ActivityTool.id)
+    def __init__(self, id=None):
+        if id is None:
+          id = ActivityTool.id
+        return Folder.__init__(self, id)
 
     # Filter content (ZMI))
     def filtered_meta_types(self, user=None):
@@ -1041,14 +1045,15 @@ class ActivityTool (Folder, UniqueObject):
       finally:
         global_activity_buffer_lock.release()
       thread_activity_buffer = global_activity_buffer[my_instance_key]
-      if my_thread_key not in thread_activity_buffer:
+      try:
+        return thread_activity_buffer[my_thread_key]
+      except KeyError:
         if create_if_not_found:
-          buffer = ActivityBuffer(activity_tool=self)
+          buffer = ActivityBuffer()
         else:
           buffer = None
         thread_activity_buffer[my_thread_key] = buffer
-      activity_buffer = thread_activity_buffer[my_thread_key]
-      return activity_buffer
+        return buffer
 
     security.declarePrivate('activateObject')
     def activateObject(self, object, activity, active_process, **kw):
@@ -1421,10 +1426,13 @@ class ActivityTool (Folder, UniqueObject):
       return message_count
 
     security.declareProtected( CMFCorePermissions.ManagePortal , 'newActiveProcess' )
-    def newActiveProcess(self, **kw):
-      from ActiveProcess import addActiveProcess
-      new_id = str(self.generateNewId())
-      return addActiveProcess(self, new_id, **kw)
+    def newActiveProcess(self, REQUEST=None, **kw):
+      # note: if one wants to create an Actice Process without ERP5 products,
+      # she can call ActiveProcess.addActiveProcess
+      obj = self.newContent(portal_type="Active Process", **kw)
+      if REQUEST is not None:
+        REQUEST['RESPONSE'].redirect( 'manage_main' )
+      return obj
 
     # Active synchronisation methods
     security.declarePrivate('validateOrder')

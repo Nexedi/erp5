@@ -1,0 +1,2 @@
+#!/bin/sh
+exec %(kumo_manager_binary)s -a -l %(kumo_manager_ip)s:%(kumo_manager_port)s -o %(kumo_manager_log)s

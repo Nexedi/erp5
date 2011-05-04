@@ -1,0 +1,407 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts56806083.55</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ERP5VCS_dhtmlXCommon.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+ \n
+function dtmlXMLLoaderObject(funcObject,dhtmlObject,async){\n
+ this.xmlDoc="";\n
+ if(arguments.length==2){\n
+   this.async=true;\n
+ }else{\n
+   this.async=async;\n
+ }\n
+ this.onloadAction=funcObject||null;\n
+ this.mainObject=dhtmlObject||null;\n
+ return this;\n
+};\n
+ \n
+ dtmlXMLLoaderObject.prototype.waitLoadFunction=function(dhtmlObject){\n
+ this.check=function(){\n
+ if(dhtmlObject.onloadAction!=null){\n
+ if(!dhtmlObject.xmlDoc.readyState)dhtmlObject.onloadAction(dhtmlObject.mainObject);\n
+ else{\n
+ if(dhtmlObject.xmlDoc.readyState != 4)return false;\n
+ else dhtmlObject.onloadAction(dhtmlObject.mainObject);}\n
+}\n
+};\n
+ return this.check;\n
+};\n
+ \n
+ \n
+ dtmlXMLLoaderObject.prototype.getXMLTopNode=function(tagName){\n
+ if(this.xmlDoc.responseXML){\n
+  var temp=this.xmlDoc.responseXML.getElementsByTagName(tagName);var z=temp[0];\n
+ }else{\n
+  var z=this.xmlDoc.documentElement;\n
+ }\n
+ if(z){\n
+  return z;\n
+ }\n
+  //alert("Error: execute tree.xml to see debug !");\n
+  open(\'tree.xml\', \'_self\');\n
+  return document.createElement("DIV");\n
+}; \n
+ \n
+ dtmlXMLLoaderObject.prototype.loadXMLString=function(xmlString){\n
+ try \n
+{\n
+ var parser = new DOMParser();\n
+ this.xmlDoc = parser.parseFromString(xmlString,"text/xml");\n
+}\n
+ catch(e){\n
+ this.xmlDoc = new ActiveXObject("Microsoft.XMLDOM");\n
+ this.xmlDoc.async=this.async\n
+ this.xmlDoc.loadXML(xmlString);\n
+}\n
+ this.onloadAction(this.mainObject);\n
+}\n
+ dtmlXMLLoaderObject.prototype.loadXML=function(filePath){\n
+ try \n
+{\n
+ this.xmlDoc = new XMLHttpRequest();\n
+ this.xmlDoc.open("GET",filePath,this.async);\n
+ this.xmlDoc.onreadystatechange=new this.waitLoadFunction(this);\n
+ this.xmlDoc.send(null);\n
+}\n
+ catch(e){\n
+\n
+ if(document.implementation && document.implementation.createDocument)\n
+{\n
+ this.xmlDoc = document.implementation.createDocument("","",null);\n
+ this.xmlDoc.onload = new this.waitLoadFunction(this);\n
+}\n
+ else\n
+{\n
+ this.xmlDoc = new ActiveXObject("Microsoft.XMLDOM");\n
+ this.xmlDoc.async=this.async\n
+ this.xmlDoc.onreadystatechange=new this.waitLoadFunction(this);\n
+}\n
+ this.xmlDoc.load(filePath);\n
+}\n
+};\n
+ \n
+ \n
+function callerFunction(funcObject,dhtmlObject){\n
+ this.handler=function(e){\n
+ if(!e)e=event;\n
+ funcObject(e,dhtmlObject);\n
+ return true;\n
+};\n
+ return this.handler;\n
+};\n
+\n
+ \n
+function getAbsoluteLeft(htmlObject){\n
+ var xPos = htmlObject.offsetLeft;\n
+ var temp = htmlObject.offsetParent;\n
+ while(temp != null){\n
+ xPos+= temp.offsetLeft;\n
+ temp = temp.offsetParent;\n
+}\n
+ return xPos;\n
+}\n
+ \n
+function getAbsoluteTop(htmlObject){\n
+ var yPos = htmlObject.offsetTop;\n
+ var temp = htmlObject.offsetParent;\n
+ while(temp != null){\n
+ yPos+= temp.offsetTop;\n
+ temp = temp.offsetParent;\n
+}\n
+ return yPos;\n
+}\n
+ \n
+ \n
+ \n
+function convertStringToBoolean(inputString){if(typeof(inputString)=="string")inputString=inputString.toLowerCase();\n
+ switch(inputString){\n
+ case "1":\n
+ case "true":\n
+ case "yes":\n
+ case "y":\n
+ case 1: \n
+ case true: \n
+ return true;\n
+ break;\n
+ default: return false;\n
+}\n
+}\n
+\n
+ \n
+function getUrlSymbol(str){\n
+ if(str.indexOf("?")!=-1)\n
+ return "&"\n
+ else\n
+ return "?"\n
+}\n
+ \n
+ \n
+function dhtmlDragAndDropObject(){\n
+ this.lastLanding=0;\n
+ this.dragNode=0;\n
+ this.dragStartNode=0;\n
+ this.dragStartObject=0;\n
+ this.tempDOMU=null;\n
+ this.tempDOMM=null;\n
+ this.waitDrag=0;\n
+ if(window.dhtmlDragAndDrop)return window.dhtmlDragAndDrop;\n
+ window.dhtmlDragAndDrop=this;\n
+\n
+ return this;\n
+};\n
+ \n
+ dhtmlDragAndDropObject.prototype.removeDraggableItem=function(htmlNode){\n
+ htmlNode.onmousedown=null;\n
+ htmlNode.dragStarter=null;\n
+ htmlNode.dragLanding=null;\n
+}\n
+ dhtmlDragAndDropObject.prototype.addDraggableItem=function(htmlNode,dhtmlObject){\n
+ htmlNode.onmousedown=this.preCreateDragCopy;\n
+ htmlNode.dragStarter=dhtmlObject;\n
+ this.addDragLanding(htmlNode,dhtmlObject);\n
+}\n
+ dhtmlDragAndDropObject.prototype.addDragLanding=function(htmlNode,dhtmlObject){\n
+ htmlNode.dragLanding=dhtmlObject;\n
+}\n
+ dhtmlDragAndDropObject.prototype.preCreateDragCopy=function(e)\n
+{\n
+ if(window.dhtmlDragAndDrop.waitDrag){\n
+ window.dhtmlDragAndDrop.waitDrag=0;\n
+ document.body.onmouseup=window.dhtmlDragAndDrop.tempDOMU;\n
+ document.body.onmousemove=window.dhtmlDragAndDrop.tempDOMM;\n
+ return false;\n
+}\n
+\n
+ window.dhtmlDragAndDrop.waitDrag=1;\n
+ window.dhtmlDragAndDrop.tempDOMU=document.body.onmouseup;\n
+ window.dhtmlDragAndDrop.tempDOMM=document.body.onmousemove;\n
+ window.dhtmlDragAndDrop.dragStartNode=this;\n
+ window.dhtmlDragAndDrop.dragStartObject=this.dragStarter;\n
+ document.body.onmouseup=window.dhtmlDragAndDrop.preCreateDragCopy;\n
+ document.body.onmousemove=window.dhtmlDragAndDrop.callDrag;\n
+\n
+ if((e)&&(e.preventDefault)){e.preventDefault();return false;}\n
+ return false;\n
+};\n
+ dhtmlDragAndDropObject.prototype.callDrag=function(e){\n
+ if(!e)e=window.event;\n
+ dragger=window.dhtmlDragAndDrop;\n
+\n
+ if((e.button==0)&&(isIE()))return dragger.stopDrag();\n
+ if(!dragger.dragNode){\n
+ dragger.dragNode=dragger.dragStartObject._createDragNode(dragger.dragStartNode);\n
+ if(!dragger.dragNode)return dragger.stopDrag();\n
+ dragger.gldragNode=dragger.dragNode;\n
+ document.body.appendChild(dragger.dragNode);\n
+ document.body.onmouseup=dragger.stopDrag;\n
+ dragger.waitDrag=0;\n
+ dragger.dragNode.pWindow=window;\n
+ dragger.initFrameRoute();\n
+}\n
+\n
+\n
+ if(dragger.dragNode.parentNode!=window.document.body){\n
+ var grd=dragger.gldragNode;\n
+ if(dragger.gldragNode.old)grd=dragger.gldragNode.old;\n
+\n
+ \n
+ grd.parentNode.removeChild(grd);\n
+ var oldBody=dragger.dragNode.pWindow;\n
+ if(isIE()){\n
+ var div=document.createElement("Div");\n
+ div.innerHTML=dragger.dragNode.outerHTML;\n
+ dragger.dragNode=div.childNodes[0];}\n
+ else dragger.dragNode=dragger.dragNode.cloneNode(true);\n
+ dragger.dragNode.pWindow=window;\n
+ dragger.gldragNode.old=dragger.dragNode;\n
+ document.body.appendChild(dragger.dragNode);\n
+ oldBody.dhtmlDragAndDrop.dragNode=dragger.dragNode;\n
+}\n
+ dragger.dragNode.style.left=e.clientX+15+(dragger.fx?dragger.fx*(-1):0)+document.body.scrollLeft+"px";\n
+ dragger.dragNode.style.top=e.clientY+3+(dragger.fy?(-1)*dragger.fy:0)+document.body.scrollTop+"px";\n
+ if(!e.srcElement)var z=e.target;else z=e.srcElement;\n
+ dragger.checkLanding(z,e.clientX,e.clientY);\n
+}\n
+ \n
+ dhtmlDragAndDropObject.prototype.calculateFramePosition=function(n){\n
+ \n
+ if(window.name){\n
+ var el =parent.frames[window.name].frameElement.offsetParent;\n
+ var fx=0;\n
+ var fy=0;\n
+ while(el){fx+= el.offsetLeft;fy+= el.offsetTop;el = el.offsetParent;}\n
+ if((parent.dhtmlDragAndDrop)){var ls=parent.dhtmlDragAndDrop.calculateFramePosition(1);fx+=ls.split(\'_\')[0]*1;fy+=ls.split(\'_\')[1]*1;}\n
+ if(n)return fx+"_"+fy;\n
+ else this.fx=fx;this.fy=fy;\n
+}\n
+ return "0_0";\n
+}\n
+ dhtmlDragAndDropObject.prototype.checkLanding=function(htmlObject,x,y){\n
+\n
+ if((htmlObject)&&(htmlObject.dragLanding)){if(this.lastLanding)this.lastLanding.dragLanding._dragOut(this.lastLanding);\n
+ this.lastLanding=htmlObject;this.lastLanding=this.lastLanding.dragLanding._dragIn(this.lastLanding,this.dragStartNode,x,y);}\n
+ else{\n
+ if((htmlObject)&&(htmlObject.tagName!="BODY"))this.checkLanding(htmlObject.parentNode,x,y);\n
+ else{if(this.lastLanding)this.lastLanding.dragLanding._dragOut(this.lastLanding,x,y);this.lastLanding=0;}\n
+}\n
+}\n
+ dhtmlDragAndDropObject.prototype.stopDrag=function(e,mode){\n
+ dragger=window.dhtmlDragAndDrop;\n
+ if(!mode)\n
+{\n
+ dragger.stopFrameRoute();\n
+ var temp=dragger.lastLanding;\n
+ dragger.lastLanding=null;\n
+ if(temp)temp.dragLanding._drag(dragger.dragStartNode,dragger.dragStartObject,temp);\n
+}\n
+ dragger.lastLanding=null;\n
+ if((dragger.dragNode)&&(dragger.dragNode.parentNode==document.body))dragger.dragNode.parentNode.removeChild(dragger.dragNode);\n
+ dragger.dragNode=0;\n
+ dragger.gldragNode=0;\n
+ dragger.fx=0;\n
+ dragger.fy=0;\n
+ dragger.dragStartNode=0;\n
+ dragger.dragStartObject=0;\n
+ document.body.onmouseup=dragger.tempDOMU;\n
+ document.body.onmousemove=dragger.tempDOMM;\n
+ dragger.tempDOMU=null;\n
+ dragger.tempDOMM=null;\n
+ dragger.waitDrag=0;\n
+}\n
+ \n
+ dhtmlDragAndDropObject.prototype.stopFrameRoute=function(win){\n
+ if(win)\n
+ window.dhtmlDragAndDrop.stopDrag(1,1);\n
+ \n
+ for(var i=0;i<window.frames.length;i++)\n
+ if((window.frames[i]!=win)&&(window.frames[i].dhtmlDragAndDrop))\n
+ window.frames[i].dhtmlDragAndDrop.stopFrameRoute(window);\n
+ if((parent.dhtmlDragAndDrop)&&(parent!=window)&&(parent!=win))\n
+ parent.dhtmlDragAndDrop.stopFrameRoute(window);\n
+}\n
+ dhtmlDragAndDropObject.prototype.initFrameRoute=function(win,mode){\n
+ if(win){\n
+\n
+\n
+ window.dhtmlDragAndDrop.preCreateDragCopy();\n
+ window.dhtmlDragAndDrop.dragStartNode=win.dhtmlDragAndDrop.dragStartNode;\n
+ window.dhtmlDragAndDrop.dragStartObject=win.dhtmlDragAndDrop.dragStartObject;\n
+ window.dhtmlDragAndDrop.dragNode=win.dhtmlDragAndDrop.dragNode;\n
+ window.dhtmlDragAndDrop.gldragNode=win.dhtmlDragAndDrop.dragNode;\n
+ window.document.body.onmouseup=window.dhtmlDragAndDrop.stopDrag;\n
+ window.waitDrag=0;\n
+ if((!isIE())&&(mode))window.dhtmlDragAndDrop.calculateFramePosition();\n
+}\n
+ if((parent.dhtmlDragAndDrop)&&(parent!=window)&&(parent!=win))\n
+ parent.dhtmlDragAndDrop.initFrameRoute(window);\n
+ for(var i=0;i<window.frames.length;i++)\n
+ if((window.frames[i]!=win)&&(window.frames[i].dhtmlDragAndDrop))\n
+ window.frames[i].dhtmlDragAndDrop.initFrameRoute(window,((!win||mode)?1:0));\n
+\n
+}\n
+ \n
+\n
+\n
+ \n
+function isIE(){\n
+ if(navigator.appName.indexOf("Microsoft")!=-1)\n
+ if(navigator.userAgent.indexOf(\'Opera\')== -1)\n
+ return true;\n
+ return false;\n
+}\n
+\n
+ \n
+dtmlXMLLoaderObject.prototype.doXPath = function(xpathExp,docObj){\n
+ if(isIE()){\n
+ if(arguments.length==1){\n
+ docObj = this.xmlDoc\n
+}\n
+ return docObj.selectNodes(xpathExp);\n
+}else{\n
+ var nodeObj = docObj;\n
+ if(!docObj){\n
+ if(!this.xmlDoc.nodeName){\n
+ docObj = this.xmlDoc.responseXML\n
+}else{\n
+ docObj = this.xmlDoc;\n
+}\n
+}\n
+ if(docObj.nodeName.indexOf("document")!=-1){\n
+ nodeObj = docObj;\n
+}else{\n
+ nodeObj = docObj;\n
+ docObj = docObj.ownerDocument;\n
+ \n
+}\n
+ var rowsCol = new Array();\n
+ var col = docObj.evaluate(xpathExp,nodeObj,null,XPathResult.ANY_TYPE,null);\n
+ var thisColMemb = col.iterateNext();\n
+ while(thisColMemb){\n
+ rowsCol[rowsCol.length] = thisColMemb;\n
+ thisColMemb = col.iterateNext();\n
+}\n
+ return rowsCol;\n
+}\n
+}\n
+\n
+if(window.Node)\n
+Node.prototype.removeNode = function(removeChildren)\n
+{\n
+ var self = this;\n
+ if(Boolean(removeChildren))\n
+{\n
+ return this.parentNode.removeChild(self);\n
+}\n
+ else\n
+{\n
+ var range = document.createRange();\n
+ range.selectNodeContents(self);\n
+ return this.parentNode.replaceChild(range.extractContents(),self);\n
+}\n
+}\n
+\n
+\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>10010</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

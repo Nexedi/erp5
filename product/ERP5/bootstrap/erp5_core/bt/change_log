@@ -1,3 +1,37 @@
+2011-02-25 arnaud.fontaine
+* Proxify all the fields in BaseType_view and PreferenceType_view.
+* Fix type_interface_list which was not displayed properly in BaseType_view and PreferenceType_view.
+
+2011-02-24 arnaud.fontaine
+* Add Preference Tool Type and Preference Type portal types and their views.
+* Set Preference and System Preference portal type class to Preference Type.
+* Set Preference Tool portal type class to Preference Tool Type.
+
+2011-02-22 Kazuhiko
+* Improve and proxify ERP5Site_viewCreateModuleDialog.
+
+2011-02-02 arnaud.fontaine
+* Remove Category Acquired Membership Arity Constraint portal type in favor of Category Membership Arity Constraint and add a boolean in the view to handle both.
+* Add a boolean in Category Existence Constraint view to handle Category Acquired Existence Constraint.
+* Add missing Active Process in Activity Tools allowed_content_type.
+* constraint_portal_type for CategoryExistenceConstraint_view, CategoryMembershipArityConstraint_view and CategoryRelatedMembershipArityConstraint_view should have always been a string to allow definition with a TALES Expression.
+
+2011-02-02 nicolas.dumazet
+* Add Activity Tool and Active Processes portal types
+
+2011-02-01 nicolas.dumazet
+* Changes to dynamic_class_generation_interaction_workflow:
+* use resetDynamicDocumentsOnceAtTransactionBoundary so that several changes to portal types during the same transaction are cheaper.
+* change trigger to happen after action since it's always queued at end of transaction anyway
+* add ERP5TypeInformation._setBaseCategoryList to triggers as well so that accessors are regenerated when base categories are changed.
+
+2011-01-28 Kazuhiko
+* support 'Paths of objects whose workflow history should be kept' and 'Paths of objects that should be kept' in Business Template definition.
+* support more 'Removed but ...' and 'Modified but ...' cases in business template installation dialogue.
+
+2011-01-13 nicolas.dumazet
+* add portal types for Tools bundled in erp5_core: Notification Tool was missing
+
 2010-12-28 nicolas.dumazet
 * add test_tales_expression field to Predicate_view
 

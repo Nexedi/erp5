@@ -35,6 +35,7 @@ from Products.ERP5Type.Core.PropertyExistenceConstraint import \
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.CMFCore.Expression import Expression
 
 class AttributeEqualityConstraint(PropertyExistenceConstraint):
   """
@@ -67,7 +68,7 @@ class AttributeEqualityConstraint(PropertyExistenceConstraint):
 
   def _checkConsistency(self, obj, fixit=False):
     """
-    Check the object's consistency.
+    Check the object's consistency
     """
     attribute_name = self.getConstraintAttributeName()
 
@@ -113,3 +114,23 @@ class AttributeEqualityConstraint(PropertyExistenceConstraint):
       return [error]
 
     return []
+
+  _message_id_tuple = ('message_property_not_set',
+                       'message_invalid_attribute_value',
+                       'message_invalid_attribute_value_fixed')
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(**property_dict):
+    """
+    @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
+
+    One constraint per property is created. Filesystem definition example:
+    { 'id'            : 'title',
+      'description'   : 'Title must be "ObjectTitle"',
+      'type'          : 'AttributeEquality',
+      'title'         : 'ObjectTitle',
+      'condition'     : 'python: object.getPortalType() == 'Foo',
+    }
+    """
+    for name, value in property_dict.iteritems():
+      yield dict(name=value)

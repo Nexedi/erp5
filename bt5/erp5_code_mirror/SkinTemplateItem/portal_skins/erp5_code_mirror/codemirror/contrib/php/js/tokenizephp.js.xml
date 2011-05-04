@@ -1,0 +1,1051 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.93</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tokenizephp.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 2008-2009 Yahoo! Inc.  All rights reserved.\n
+The copyrights embodied in the content of this file are licensed by\n
+Yahoo! Inc. under the BSD (revised) open source license\n
+\n
+@author Vlad Dan Dascalescu <dandv@yahoo-inc.com>\n
+\n
+\n
+Tokenizer for PHP code\n
+\n
+References:\n
+  + http://php.net/manual/en/reserved.php\n
+  + http://php.net/tokens\n
+  + get_defined_constants(), get_defined_functions(), get_declared_classes()\n
+      executed on a realistic (not vanilla) PHP installation with typical LAMP modules.\n
+      Specifically, the PHP bundled with the Uniform Web Server (www.uniformserver.com).\n
+\n
+*/\n
+\n
+\n
+// add the forEach method for JS engines that don\'t support it (e.g. IE)\n
+// code from https://developer.mozilla.org/En/Core_JavaScript_1.5_Reference:Objects:Array:forEach\n
+if (!Array.prototype.forEach)\n
+{\n
+  Array.prototype.forEach = function(fun /*, thisp*/)\n
+  {\n
+    var len = this.length;\n
+    if (typeof fun != "function")\n
+      throw new TypeError();\n
+\n
+    var thisp = arguments[1];\n
+    for (var i = 0; i < len; i++)\n
+    {\n
+      if (i in this)\n
+        fun.call(thisp, this[i], i, this);\n
+    }\n
+  };\n
+}\n
+\n
+\n
+var tokenizePHP = (function() {\n
+  /* A map of PHP\'s reserved words (keywords, predefined classes, functions and\n
+     constants. Each token has a type (\'keyword\', \'operator\' etc.) and a style.\n
+     The style corresponds to the CSS span class in phpcolors.css.\n
+\n
+     Keywords can be of three types:\n
+     a - takes an expression and forms a statement - e.g. if\n
+     b - takes just a statement - e.g. else\n
+     c - takes an optinoal expression, but no statement - e.g. return\n
+     This distinction gives the parser enough information to parse\n
+     correct code correctly (we don\'t care that much how we parse\n
+     incorrect code).\n
+\n
+     Reference: http://us.php.net/manual/en/reserved.php\n
+  */\n
+  var keywords = function(){\n
+    function token(type, style){\n
+      return {type: type, style: style};\n
+    }\n
+    var result = {};\n
+\n
+    // for each(var element in ["...", "..."]) can pick up elements added to\n
+    // Array.prototype, so we\'ll use the loop structure below. See also\n
+    // http://developer.mozilla.org/en/Core_JavaScript_1.5_Reference/Statements/for_each...in\n
+\n
+    // keywords that take an expression and form a statement\n
+    ["if", "elseif", "while", "declare"].forEach(function(element, index, array) {\n
+      result[element] = token("keyword a", "php-keyword");\n
+    });\n
+\n
+    // keywords that take just a statement\n
+    ["do", "else", "try" ].forEach(function(element, index, array) {\n
+      result[element] = token("keyword b", "php-keyword");\n
+    });\n
+\n
+    // keywords that take an optional expression, but no statement\n
+    ["return", "break", "continue",  // the expression is optional\n
+      "new", "clone", "throw"  // the expression is mandatory\n
+    ].forEach(function(element, index, array) {\n
+      result[element] = token("keyword c", "php-keyword");\n
+    });\n
+\n
+    ["__CLASS__", "__DIR__", "__FILE__", "__FUNCTION__", "__METHOD__", "__NAMESPACE__"].forEach(function(element, index, array) {\n
+      result[element] = token("atom", "php-compile-time-constant");\n
+    });\n
+\n
+    ["true", "false", "null"].forEach(function(element, index, array) {\n
+      result[element] = token("atom", "php-atom");\n
+    });\n
+\n
+    ["and", "or", "xor", "instanceof"].forEach(function(element, index, array) {\n
+      result[element] = token("operator", "php-keyword php-operator");\n
+    });\n
+\n
+    ["class", "interface"].forEach(function(element, index, array) {\n
+      result[element] = token("class", "php-keyword");\n
+    });\n
+    ["namespace", "use", "extends", "implements"].forEach(function(element, index, array) {\n
+      result[element] = token("namespace", "php-keyword");\n
+    });\n
+\n
+    // reserved "language constructs"... http://php.net/manual/en/reserved.php\n
+    [ "die", "echo", "empty", "exit", "eval", "include", "include_once", "isset",\n
+      "list", "require", "require_once", "return", "print", "unset",\n
+      "array" // a keyword rather, but mandates a parenthesized parameter list\n
+    ].forEach(function(element, index, array) {\n
+      result[element] = token("t_string", "php-reserved-language-construct");\n
+    });\n
+\n
+    result["switch"] = token("switch", "php-keyword");\n
+    result["case"] = token("case", "php-keyword");\n
+    result["default"] = token("default", "php-keyword");\n
+    result["catch"] = token("catch", "php-keyword");\n
+    result["function"] = token("function", "php-keyword");\n
+\n
+    // http://php.net/manual/en/control-structures.alternative-syntax.php must be followed by a \':\'\n
+    ["endif", "endwhile", "endfor", "endforeach", "endswitch", "enddeclare"].forEach(function(element, index, array) {\n
+      result[element] = token("altsyntaxend", "php-keyword");\n
+    });\n
+\n
+    result["const"] = token("const", "php-keyword");\n
+\n
+    ["final", "private", "protected", "public", "global", "static"].forEach(function(element, index, array) {\n
+      result[element] = token("modifier", "php-keyword");\n
+    });\n
+    result["var"] = token("modifier", "php-keyword deprecated");\n
+    result["abstract"] = token("abstract", "php-keyword");\n
+\n
+    result["foreach"] = token("foreach", "php-keyword");\n
+    result["as"] = token("as", "php-keyword");\n
+    result["for"] = token("for", "php-keyword");\n
+\n
+    // PHP built-in functions - output of get_defined_functions()["internal"]\n
+    [ "zend_version", "func_num_args", "func_get_arg", "func_get_args", "strlen",\n
+      "strcmp", "strncmp", "strcasecmp", "strncasecmp", "each", "error_reporting",\n
+      "define", "defined", "get_class", "get_parent_class", "method_exists",\n
+      "property_exists", "class_exists", "interface_exists", "function_exists",\n
+      "get_included_files", "get_required_files", "is_subclass_of", "is_a",\n
+      "get_class_vars", "get_object_vars", "get_class_methods", "trigger_error",\n
+      "user_error", "set_error_handler", "restore_error_handler",\n
+      "set_exception_handler", "restore_exception_handler", "get_declared_classes",\n
+      "get_declared_interfaces", "get_defined_functions", "get_defined_vars",\n
+      "create_function", "get_resource_type", "get_loaded_extensions",\n
+      "extension_loaded", "get_extension_funcs", "get_defined_constants",\n
+      "debug_backtrace", "debug_print_backtrace", "bcadd", "bcsub", "bcmul", "bcdiv",\n
+      "bcmod", "bcpow", "bcsqrt", "bcscale", "bccomp", "bcpowmod", "jdtogregorian",\n
+      "gregoriantojd", "jdtojulian", "juliantojd", "jdtojewish", "jewishtojd",\n
+      "jdtofrench", "frenchtojd", "jddayofweek", "jdmonthname", "easter_date",\n
+      "easter_days", "unixtojd", "jdtounix", "cal_to_jd", "cal_from_jd",\n
+      "cal_days_in_month", "cal_info", "variant_set", "variant_add", "variant_cat",\n
+      "variant_sub", "variant_mul", "variant_and", "variant_div", "variant_eqv",\n
+      "variant_idiv", "variant_imp", "variant_mod", "variant_or", "variant_pow",\n
+      "variant_xor", "variant_abs", "variant_fix", "variant_int", "variant_neg",\n
+      "variant_not", "variant_round", "variant_cmp", "variant_date_to_timestamp",\n
+      "variant_date_from_timestamp", "variant_get_type", "variant_set_type",\n
+      "variant_cast", "com_create_guid", "com_event_sink", "com_print_typeinfo",\n
+      "com_message_pump", "com_load_typelib", "com_get_active_object", "ctype_alnum",\n
+      "ctype_alpha", "ctype_cntrl", "ctype_digit", "ctype_lower", "ctype_graph",\n
+      "ctype_print", "ctype_punct", "ctype_space", "ctype_upper", "ctype_xdigit",\n
+      "strtotime", "date", "idate", "gmdate", "mktime", "gmmktime", "checkdate",\n
+      "strftime", "gmstrftime", "time", "localtime", "getdate", "date_create",\n
+      "date_parse", "date_format", "date_modify", "date_timezone_get",\n
+      "date_timezone_set", "date_offset_get", "date_time_set", "date_date_set",\n
+      "date_isodate_set", "timezone_open", "timezone_name_get",\n
+      "timezone_name_from_abbr", "timezone_offset_get", "timezone_transitions_get",\n
+      "timezone_identifiers_list", "timezone_abbreviations_list",\n
+      "date_default_timezone_set", "date_default_timezone_get", "date_sunrise",\n
+      "date_sunset", "date_sun_info", "filter_input", "filter_var",\n
+      "filter_input_array", "filter_var_array", "filter_list", "filter_has_var",\n
+      "filter_id", "ftp_connect", "ftp_login", "ftp_pwd", "ftp_cdup", "ftp_chdir",\n
+      "ftp_exec", "ftp_raw", "ftp_mkdir", "ftp_rmdir", "ftp_chmod", "ftp_alloc",\n
+      "ftp_nlist", "ftp_rawlist", "ftp_systype", "ftp_pasv", "ftp_get", "ftp_fget",\n
+      "ftp_put", "ftp_fput", "ftp_size", "ftp_mdtm", "ftp_rename", "ftp_delete",\n
+      "ftp_site", "ftp_close", "ftp_set_option", "ftp_get_option", "ftp_nb_fget",\n
+      "ftp_nb_get", "ftp_nb_continue", "ftp_nb_put", "ftp_nb_fput", "ftp_quit",\n
+      "hash", "hash_file", "hash_hmac", "hash_hmac_file", "hash_init", "hash_update",\n
+      "hash_update_stream", "hash_update_file", "hash_final", "hash_algos", "iconv",\n
+      "ob_iconv_handler", "iconv_get_encoding", "iconv_set_encoding", "iconv_strlen",\n
+      "iconv_substr", "iconv_strpos", "iconv_strrpos", "iconv_mime_encode",\n
+      "iconv_mime_decode", "iconv_mime_decode_headers", "json_encode", "json_decode",\n
+      "odbc_autocommit", "odbc_binmode", "odbc_close", "odbc_close_all",\n
+      "odbc_columns", "odbc_commit", "odbc_connect", "odbc_cursor",\n
+      "odbc_data_source", "odbc_execute", "odbc_error", "odbc_errormsg", "odbc_exec",\n
+      "odbc_fetch_array", "odbc_fetch_object", "odbc_fetch_row", "odbc_fetch_into",\n
+      "odbc_field_len", "odbc_field_scale", "odbc_field_name", "odbc_field_type",\n
+      "odbc_field_num", "odbc_free_result", "odbc_gettypeinfo", "odbc_longreadlen",\n
+      "odbc_next_result", "odbc_num_fields", "odbc_num_rows", "odbc_pconnect",\n
+      "odbc_prepare", "odbc_result", "odbc_result_all", "odbc_rollback",\n
+      "odbc_setoption", "odbc_specialcolumns", "odbc_statistics", "odbc_tables",\n
+      "odbc_primarykeys", "odbc_columnprivileges", "odbc_tableprivileges",\n
+      "odbc_foreignkeys", "odbc_procedures", "odbc_procedurecolumns", "odbc_do",\n
+      "odbc_field_precision", "preg_match", "preg_match_all", "preg_replace",\n
+      "preg_replace_callback", "preg_split", "preg_quote", "preg_grep",\n
+      "preg_last_error", "session_name", "session_module_name", "session_save_path",\n
+      "session_id", "session_regenerate_id", "session_decode", "session_register",\n
+      "session_unregister", "session_is_registered", "session_encode",\n
+      "session_start", "session_destroy", "session_unset",\n
+      "session_set_save_handler", "session_cache_limiter", "session_cache_expire",\n
+      "session_set_cookie_params", "session_get_cookie_params",\n
+      "session_write_close", "session_commit", "spl_classes", "spl_autoload",\n
+      "spl_autoload_extensions", "spl_autoload_register", "spl_autoload_unregister",\n
+      "spl_autoload_functions", "spl_autoload_call", "class_parents",\n
+      "class_implements", "spl_object_hash", "iterator_to_array", "iterator_count",\n
+      "iterator_apply", "constant", "bin2hex", "sleep", "usleep", "flush",\n
+      "wordwrap", "htmlspecialchars", "htmlentities", "html_entity_decode",\n
+      "htmlspecialchars_decode", "get_html_translation_table", "sha1", "sha1_file",\n
+      "md5", "md5_file", "crc32", "iptcparse", "iptcembed", "getimagesize",\n
+      "image_type_to_mime_type", "image_type_to_extension", "phpinfo", "phpversion",\n
+      "phpcredits", "php_logo_guid", "php_real_logo_guid", "php_egg_logo_guid",\n
+      "zend_logo_guid", "php_sapi_name", "php_uname", "php_ini_scanned_files",\n
+      "strnatcmp", "strnatcasecmp", "substr_count", "strspn", "strcspn", "strtok",\n
+      "strtoupper", "strtolower", "strpos", "stripos", "strrpos", "strripos",\n
+      "strrev", "hebrev", "hebrevc", "nl2br", "basename", "dirname", "pathinfo",\n
+      "stripslashes", "stripcslashes", "strstr", "stristr", "strrchr", "str_shuffle",\n
+      "str_word_count", "str_split", "strpbrk", "substr_compare", "strcoll",\n
+      "substr", "substr_replace", "quotemeta", "ucfirst", "ucwords", "strtr",\n
+      "addslashes", "addcslashes", "rtrim", "str_replace", "str_ireplace",\n
+      "str_repeat", "count_chars", "chunk_split", "trim", "ltrim", "strip_tags",\n
+      "similar_text", "explode", "implode", "setlocale", "localeconv", "soundex",\n
+      "levenshtein", "chr", "ord", "parse_str", "str_pad", "chop", "strchr",\n
+      "sprintf", "printf", "vprintf", "vsprintf", "fprintf", "vfprintf", "sscanf",\n
+      "fscanf", "parse_url", "urlencode", "urldecode", "rawurlencode",\n
+      "rawurldecode", "http_build_query", "unlink", "exec", "system",\n
+      "escapeshellcmd", "escapeshellarg", "passthru", "shell_exec", "proc_open",\n
+      "proc_close", "proc_terminate", "proc_get_status", "rand", "srand",\n
+      "getrandmax", "mt_rand", "mt_srand", "mt_getrandmax", "getservbyname",\n
+      "getservbyport", "getprotobyname", "getprotobynumber", "getmyuid", "getmygid",\n
+      "getmypid", "getmyinode", "getlastmod", "base64_decode", "base64_encode",\n
+      "convert_uuencode", "convert_uudecode", "abs", "ceil", "floor", "round", "sin",\n
+      "cos", "tan", "asin", "acos", "atan", "atan2", "sinh", "cosh", "tanh", "pi",\n
+      "is_finite", "is_nan", "is_infinite", "pow", "exp", "log", "log10", "sqrt",\n
+      "hypot", "deg2rad", "rad2deg", "bindec", "hexdec", "octdec", "decbin",\n
+      "decoct", "dechex", "base_convert", "number_format", "fmod", "ip2long",\n
+      "long2ip", "getenv", "putenv", "microtime", "gettimeofday", "uniqid",\n
+      "quoted_printable_decode", "convert_cyr_string", "get_current_user",\n
+      "set_time_limit", "get_cfg_var", "magic_quotes_runtime",\n
+      "set_magic_quotes_runtime", "get_magic_quotes_gpc", "get_magic_quotes_runtime",\n
+      "import_request_variables", "error_log", "error_get_last", "call_user_func",\n
+      "call_user_func_array", "call_user_method", "call_user_method_array",\n
+      "serialize", "unserialize", "var_dump", "var_export", "debug_zval_dump",\n
+      "print_r", "memory_get_usage", "memory_get_peak_usage",\n
+      "register_shutdown_function", "register_tick_function",\n
+      "unregister_tick_function", "highlight_file", "show_source",\n
+      "highlight_string", "php_strip_whitespace", "ini_get", "ini_get_all",\n
+      "ini_set", "ini_alter", "ini_restore", "get_include_path", "set_include_path",\n
+      "restore_include_path", "setcookie", "setrawcookie", "header", "headers_sent",\n
+      "headers_list", "connection_aborted", "connection_status", "ignore_user_abort",\n
+      "parse_ini_file", "is_uploaded_file", "move_uploaded_file", "gethostbyaddr",\n
+      "gethostbyname", "gethostbynamel", "intval", "floatval", "doubleval", "strval",\n
+      "gettype", "settype", "is_null", "is_resource", "is_bool", "is_long",\n
+      "is_float", "is_int", "is_integer", "is_double", "is_real", "is_numeric",\n
+      "is_string", "is_array", "is_object", "is_scalar", "is_callable", "ereg",\n
+      "ereg_replace", "eregi", "eregi_replace", "split", "spliti", "join",\n
+      "sql_regcase", "dl", "pclose", "popen", "readfile", "rewind", "rmdir", "umask",\n
+      "fclose", "feof", "fgetc", "fgets", "fgetss", "fread", "fopen", "fpassthru",\n
+      "ftruncate", "fstat", "fseek", "ftell", "fflush", "fwrite", "fputs", "mkdir",\n
+      "rename", "copy", "tempnam", "tmpfile", "file", "file_get_contents",\n
+      "file_put_contents", "stream_select", "stream_context_create",\n
+      "stream_context_set_params", "stream_context_set_option",\n
+      "stream_context_get_options", "stream_context_get_default",\n
+      "stream_filter_prepend", "stream_filter_append", "stream_filter_remove",\n
+      "stream_socket_client", "stream_socket_server", "stream_socket_accept",\n
+      "stream_socket_get_name", "stream_socket_recvfrom", "stream_socket_sendto",\n
+      "stream_socket_enable_crypto", "stream_socket_shutdown",\n
+      "stream_copy_to_stream", "stream_get_contents", "fgetcsv", "fputcsv", "flock",\n
+      "get_meta_tags", "stream_set_write_buffer", "set_file_buffer",\n
+      "set_socket_blocking", "stream_set_blocking", "socket_set_blocking",\n
+      "stream_get_meta_data", "stream_get_line", "stream_wrapper_register",\n
+      "stream_register_wrapper", "stream_wrapper_unregister",\n
+      "stream_wrapper_restore", "stream_get_wrappers", "stream_get_transports",\n
+      "get_headers", "stream_set_timeout", "socket_set_timeout", "socket_get_status",\n
+      "realpath", "fsockopen", "pfsockopen", "pack", "unpack", "get_browser",\n
+      "crypt", "opendir", "closedir", "chdir", "getcwd", "rewinddir", "readdir",\n
+      "dir", "scandir", "glob", "fileatime", "filectime", "filegroup", "fileinode",\n
+      "filemtime", "fileowner", "fileperms", "filesize", "filetype", "file_exists",\n
+      "is_writable", "is_writeable", "is_readable", "is_executable", "is_file",\n
+      "is_dir", "is_link", "stat", "lstat", "chown", "chgrp", "chmod", "touch",\n
+      "clearstatcache", "disk_total_space", "disk_free_space", "diskfreespace",\n
+      "mail", "ezmlm_hash", "openlog", "syslog", "closelog",\n
+      "define_syslog_variables", "lcg_value", "metaphone", "ob_start", "ob_flush",\n
+      "ob_clean", "ob_end_flush", "ob_end_clean", "ob_get_flush", "ob_get_clean",\n
+      "ob_get_length", "ob_get_level", "ob_get_status", "ob_get_contents",\n
+      "ob_implicit_flush", "ob_list_handlers", "ksort", "krsort", "natsort",\n
+      "natcasesort", "asort", "arsort", "sort", "rsort", "usort", "uasort", "uksort",\n
+      "shuffle", "array_walk", "array_walk_recursive", "count", "end", "prev",\n
+      "next", "reset", "current", "key", "min", "max", "in_array", "array_search",\n
+      "extract", "compact", "array_fill", "array_fill_keys", "range",\n
+      "array_multisort", "array_push", "array_pop", "array_shift", "array_unshift",\n
+      "array_splice", "array_slice", "array_merge", "array_merge_recursive",\n
+      "array_keys", "array_values", "array_count_values", "array_reverse",\n
+      "array_reduce", "array_pad", "array_flip", "array_change_key_case",\n
+      "array_rand", "array_unique", "array_intersect", "array_intersect_key",\n
+      "array_intersect_ukey", "array_uintersect", "array_intersect_assoc",\n
+      "array_uintersect_assoc", "array_intersect_uassoc", "array_uintersect_uassoc",\n
+      "array_diff", "array_diff_key", "array_diff_ukey", "array_udiff",\n
+      "array_diff_assoc", "array_udiff_assoc", "array_diff_uassoc",\n
+      "array_udiff_uassoc", "array_sum", "array_product", "array_filter",\n
+      "array_map", "array_chunk", "array_combine", "array_key_exists", "pos",\n
+      "sizeof", "key_exists", "assert", "assert_options", "version_compare",\n
+      "str_rot13", "stream_get_filters", "stream_filter_register",\n
+      "stream_bucket_make_writeable", "stream_bucket_prepend",\n
+      "stream_bucket_append", "stream_bucket_new", "output_add_rewrite_var",\n
+      "output_reset_rewrite_vars", "sys_get_temp_dir", "token_get_all", "token_name",\n
+      "readgzfile", "gzrewind", "gzclose", "gzeof", "gzgetc", "gzgets", "gzgetss",\n
+      "gzread", "gzopen", "gzpassthru", "gzseek", "gztell", "gzwrite", "gzputs",\n
+      "gzfile", "gzcompress", "gzuncompress", "gzdeflate", "gzinflate", "gzencode",\n
+      "ob_gzhandler", "zlib_get_coding_type", "libxml_set_streams_context",\n
+      "libxml_use_internal_errors", "libxml_get_last_error", "libxml_clear_errors",\n
+      "libxml_get_errors", "dom_import_simplexml", "simplexml_load_file",\n
+      "simplexml_load_string", "simplexml_import_dom", "wddx_serialize_value",\n
+      "wddx_serialize_vars", "wddx_packet_start", "wddx_packet_end", "wddx_add_vars",\n
+      "wddx_deserialize", "xml_parser_create", "xml_parser_create_ns",\n
+      "xml_set_object", "xml_set_element_handler", "xml_set_character_data_handler",\n
+      "xml_set_processing_instruction_handler", "xml_set_default_handler",\n
+      "xml_set_unparsed_entity_decl_handler", "xml_set_notation_decl_handler",\n
+      "xml_set_external_entity_ref_handler", "xml_set_start_namespace_decl_handler",\n
+      "xml_set_end_namespace_decl_handler", "xml_parse", "xml_parse_into_struct",\n
+      "xml_get_error_code", "xml_error_string", "xml_get_current_line_number",\n
+      "xml_get_current_column_number", "xml_get_current_byte_index",\n
+      "xml_parser_free", "xml_parser_set_option", "xml_parser_get_option",\n
+      "utf8_encode", "utf8_decode", "xmlwriter_open_uri", "xmlwriter_open_memory",\n
+      "xmlwriter_set_indent", "xmlwriter_set_indent_string",\n
+      "xmlwriter_start_comment", "xmlwriter_end_comment",\n
+      "xmlwriter_start_attribute", "xmlwriter_end_attribute",\n
+      "xmlwriter_write_attribute", "xmlwriter_start_attribute_ns",\n
+      "xmlwriter_write_attribute_ns", "xmlwriter_start_element",\n
+      "xmlwriter_end_element", "xmlwriter_full_end_element",\n
+      "xmlwriter_start_element_ns", "xmlwriter_write_element",\n
+      "xmlwriter_write_element_ns", "xmlwriter_start_pi", "xmlwriter_end_pi",\n
+      "xmlwriter_write_pi", "xmlwriter_start_cdata", "xmlwriter_end_cdata",\n
+      "xmlwriter_write_cdata", "xmlwriter_text", "xmlwriter_write_raw",\n
+      "xmlwriter_start_document", "xmlwriter_end_document",\n
+      "xmlwriter_write_comment", "xmlwriter_start_dtd", "xmlwriter_end_dtd",\n
+      "xmlwriter_write_dtd", "xmlwriter_start_dtd_element",\n
+      "xmlwriter_end_dtd_element", "xmlwriter_write_dtd_element",\n
+      "xmlwriter_start_dtd_attlist", "xmlwriter_end_dtd_attlist",\n
+      "xmlwriter_write_dtd_attlist", "xmlwriter_start_dtd_entity",\n
+      "xmlwriter_end_dtd_entity", "xmlwriter_write_dtd_entity",\n
+      "xmlwriter_output_memory", "xmlwriter_flush", "gd_info", "imagearc",\n
+      "imageellipse", "imagechar", "imagecharup", "imagecolorat",\n
+      "imagecolorallocate", "imagepalettecopy", "imagecreatefromstring",\n
+      "imagecolorclosest", "imagecolordeallocate", "imagecolorresolve",\n
+      "imagecolorexact", "imagecolorset", "imagecolortransparent",\n
+      "imagecolorstotal", "imagecolorsforindex", "imagecopy", "imagecopymerge",\n
+      "imagecopymergegray", "imagecopyresized", "imagecreate",\n
+      "imagecreatetruecolor", "imageistruecolor", "imagetruecolortopalette",\n
+      "imagesetthickness", "imagefilledarc", "imagefilledellipse",\n
+      "imagealphablending", "imagesavealpha", "imagecolorallocatealpha",\n
+      "imagecolorresolvealpha", "imagecolorclosestalpha", "imagecolorexactalpha",\n
+      "imagecopyresampled", "imagegrabwindow", "imagegrabscreen", "imagerotate",\n
+      "imageantialias", "imagesettile", "imagesetbrush", "imagesetstyle",\n
+      "imagecreatefrompng", "imagecreatefromgif", "imagecreatefromjpeg",\n
+      "imagecreatefromwbmp", "imagecreatefromxbm", "imagecreatefromgd",\n
+      "imagecreatefromgd2", "imagecreatefromgd2part", "imagepng", "imagegif",\n
+      "imagejpeg", "imagewbmp", "imagegd", "imagegd2", "imagedestroy",\n
+      "imagegammacorrect", "imagefill", "imagefilledpolygon", "imagefilledrectangle",\n
+      "imagefilltoborder", "imagefontwidth", "imagefontheight", "imageinterlace",\n
+      "imageline", "imageloadfont", "imagepolygon", "imagerectangle",\n
+      "imagesetpixel", "imagestring", "imagestringup", "imagesx", "imagesy",\n
+      "imagedashedline", "imagettfbbox", "imagettftext", "imageftbbox",\n
+      "imagefttext", "imagepsloadfont", "imagepsfreefont", "imagepsencodefont",\n
+      "imagepsextendfont", "imagepsslantfont", "imagepstext", "imagepsbbox",\n
+      "imagetypes", "jpeg2wbmp", "png2wbmp", "image2wbmp", "imagelayereffect",\n
+      "imagecolormatch", "imagexbm", "imagefilter", "imageconvolution",\n
+      "mb_convert_case", "mb_strtoupper", "mb_strtolower", "mb_language",\n
+      "mb_internal_encoding", "mb_http_input", "mb_http_output", "mb_detect_order",\n
+      "mb_substitute_character", "mb_parse_str", "mb_output_handler",\n
+      "mb_preferred_mime_name", "mb_strlen", "mb_strpos", "mb_strrpos", "mb_stripos",\n
+      "mb_strripos", "mb_strstr", "mb_strrchr", "mb_stristr", "mb_strrichr",\n
+      "mb_substr_count", "mb_substr", "mb_strcut", "mb_strwidth", "mb_strimwidth",\n
+      "mb_convert_encoding", "mb_detect_encoding", "mb_list_encodings",\n
+      "mb_convert_kana", "mb_encode_mimeheader", "mb_decode_mimeheader",\n
+      "mb_convert_variables", "mb_encode_numericentity", "mb_decode_numericentity",\n
+      "mb_send_mail", "mb_get_info", "mb_check_encoding", "mb_regex_encoding",\n
+      "mb_regex_set_options", "mb_ereg", "mb_eregi", "mb_ereg_replace",\n
+      "mb_eregi_replace", "mb_split", "mb_ereg_match", "mb_ereg_search",\n
+      "mb_ereg_search_pos", "mb_ereg_search_regs", "mb_ereg_search_init",\n
+      "mb_ereg_search_getregs", "mb_ereg_search_getpos", "mb_ereg_search_setpos",\n
+      "mbregex_encoding", "mbereg", "mberegi", "mbereg_replace", "mberegi_replace",\n
+      "mbsplit", "mbereg_match", "mbereg_search", "mbereg_search_pos",\n
+      "mbereg_search_regs", "mbereg_search_init", "mbereg_search_getregs",\n
+      "mbereg_search_getpos", "mbereg_search_setpos", "mysql_connect",\n
+      "mysql_pconnect", "mysql_close", "mysql_select_db", "mysql_query",\n
+      "mysql_unbuffered_query", "mysql_db_query", "mysql_list_dbs",\n
+      "mysql_list_tables", "mysql_list_fields", "mysql_list_processes",\n
+      "mysql_error", "mysql_errno", "mysql_affected_rows", "mysql_insert_id",\n
+      "mysql_result", "mysql_num_rows", "mysql_num_fields", "mysql_fetch_row",\n
+      "mysql_fetch_array", "mysql_fetch_assoc", "mysql_fetch_object",\n
+      "mysql_data_seek", "mysql_fetch_lengths", "mysql_fetch_field",\n
+      "mysql_field_seek", "mysql_free_result", "mysql_field_name",\n
+      "mysql_field_table", "mysql_field_len", "mysql_field_type",\n
+      "mysql_field_flags", "mysql_escape_string", "mysql_real_escape_string",\n
+      "mysql_stat", "mysql_thread_id", "mysql_client_encoding", "mysql_ping",\n
+      "mysql_get_client_info", "mysql_get_host_info", "mysql_get_proto_info",\n
+      "mysql_get_server_info", "mysql_info", "mysql_set_charset", "mysql",\n
+      "mysql_fieldname", "mysql_fieldtable", "mysql_fieldlen", "mysql_fieldtype",\n
+      "mysql_fieldflags", "mysql_selectdb", "mysql_freeresult", "mysql_numfields",\n
+      "mysql_numrows", "mysql_listdbs", "mysql_listtables", "mysql_listfields",\n
+      "mysql_db_name", "mysql_dbname", "mysql_tablename", "mysql_table_name",\n
+      "mysqli_affected_rows", "mysqli_autocommit", "mysqli_change_user",\n
+      "mysqli_character_set_name", "mysqli_close", "mysqli_commit", "mysqli_connect",\n
+      "mysqli_connect_errno", "mysqli_connect_error", "mysqli_data_seek",\n
+      "mysqli_debug", "mysqli_disable_reads_from_master", "mysqli_disable_rpl_parse",\n
+      "mysqli_dump_debug_info", "mysqli_enable_reads_from_master",\n
+      "mysqli_enable_rpl_parse", "mysqli_embedded_server_end",\n
+      "mysqli_embedded_server_start", "mysqli_errno", "mysqli_error",\n
+      "mysqli_stmt_execute", "mysqli_execute", "mysqli_fetch_field",\n
+      "mysqli_fetch_fields", "mysqli_fetch_field_direct", "mysqli_fetch_lengths",\n
+      "mysqli_fetch_array", "mysqli_fetch_assoc", "mysqli_fetch_object",\n
+      "mysqli_fetch_row", "mysqli_field_count", "mysqli_field_seek",\n
+      "mysqli_field_tell", "mysqli_free_result", "mysqli_get_charset",\n
+      "mysqli_get_client_info", "mysqli_get_client_version", "mysqli_get_host_info",\n
+      "mysqli_get_proto_info", "mysqli_get_server_info", "mysqli_get_server_version",\n
+      "mysqli_get_warnings", "mysqli_init", "mysqli_info", "mysqli_insert_id",\n
+      "mysqli_kill", "mysqli_set_local_infile_default",\n
+      "mysqli_set_local_infile_handler", "mysqli_master_query",\n
+      "mysqli_more_results", "mysqli_multi_query", "mysqli_next_result",\n
+      "mysqli_num_fields", "mysqli_num_rows", "mysqli_options", "mysqli_ping",\n
+      "mysqli_prepare", "mysqli_report", "mysqli_query", "mysqli_real_connect",\n
+      "mysqli_real_escape_string", "mysqli_real_query", "mysqli_rollback",\n
+      "mysqli_rpl_parse_enabled", "mysqli_rpl_probe", "mysqli_rpl_query_type",\n
+      "mysqli_select_db", "mysqli_set_charset", "mysqli_stmt_attr_get",\n
+      "mysqli_stmt_attr_set", "mysqli_stmt_field_count", "mysqli_stmt_init",\n
+      "mysqli_stmt_prepare", "mysqli_stmt_result_metadata",\n
+      "mysqli_stmt_send_long_data", "mysqli_stmt_bind_param",\n
+      "mysqli_stmt_bind_result", "mysqli_stmt_fetch", "mysqli_stmt_free_result",\n
+      "mysqli_stmt_get_warnings", "mysqli_stmt_insert_id", "mysqli_stmt_reset",\n
+      "mysqli_stmt_param_count", "mysqli_send_query", "mysqli_slave_query",\n
+      "mysqli_sqlstate", "mysqli_ssl_set", "mysqli_stat",\n
+      "mysqli_stmt_affected_rows", "mysqli_stmt_close", "mysqli_stmt_data_seek",\n
+      "mysqli_stmt_errno", "mysqli_stmt_error", "mysqli_stmt_num_rows",\n
+      "mysqli_stmt_sqlstate", "mysqli_store_result", "mysqli_stmt_store_result",\n
+      "mysqli_thread_id", "mysqli_thread_safe", "mysqli_use_result",\n
+      "mysqli_warning_count", "mysqli_bind_param", "mysqli_bind_result",\n
+      "mysqli_client_encoding", "mysqli_escape_string", "mysqli_fetch",\n
+      "mysqli_param_count", "mysqli_get_metadata", "mysqli_send_long_data",\n
+      "mysqli_set_opt", "pdo_drivers", "socket_select", "socket_create",\n
+      "socket_create_listen", "socket_accept", "socket_set_nonblock",\n
+      "socket_set_block", "socket_listen", "socket_close", "socket_write",\n
+      "socket_read", "socket_getsockname", "socket_getpeername", "socket_connect",\n
+      "socket_strerror", "socket_bind", "socket_recv", "socket_send",\n
+      "socket_recvfrom", "socket_sendto", "socket_get_option", "socket_set_option",\n
+      "socket_shutdown", "socket_last_error", "socket_clear_error", "socket_getopt",\n
+      "socket_setopt", "eaccelerator_put", "eaccelerator_get", "eaccelerator_rm",\n
+      "eaccelerator_gc", "eaccelerator_lock", "eaccelerator_unlock",\n
+      "eaccelerator_caching", "eaccelerator_optimizer", "eaccelerator_clear",\n
+      "eaccelerator_clean", "eaccelerator_info", "eaccelerator_purge",\n
+      "eaccelerator_cached_scripts", "eaccelerator_removed_scripts",\n
+      "eaccelerator_list_keys", "eaccelerator_encode", "eaccelerator_load",\n
+      "_eaccelerator_loader_file", "_eaccelerator_loader_line",\n
+      "eaccelerator_set_session_handlers", "_eaccelerator_output_handler",\n
+      "eaccelerator_cache_page", "eaccelerator_rm_page", "eaccelerator_cache_output",\n
+      "eaccelerator_cache_result", "xdebug_get_stack_depth",\n
+      "xdebug_get_function_stack", "xdebug_print_function_stack",\n
+      "xdebug_get_declared_vars", "xdebug_call_class", "xdebug_call_function",\n
+      "xdebug_call_file", "xdebug_call_line", "xdebug_var_dump", "xdebug_debug_zval",\n
+      "xdebug_debug_zval_stdout", "xdebug_enable", "xdebug_disable",\n
+      "xdebug_is_enabled", "xdebug_break", "xdebug_start_trace", "xdebug_stop_trace",\n
+      "xdebug_get_tracefile_name", "xdebug_get_profiler_filename",\n
+      "xdebug_dump_aggr_profiling_data", "xdebug_clear_aggr_profiling_data",\n
+      "xdebug_memory_usage", "xdebug_peak_memory_usage", "xdebug_time_index",\n
+      "xdebug_start_error_collection", "xdebug_stop_error_collection",\n
+      "xdebug_get_collected_errors", "xdebug_start_code_coverage",\n
+      "xdebug_stop_code_coverage", "xdebug_get_code_coverage",\n
+      "xdebug_get_function_count", "xdebug_dump_superglobals",\n
+      "_" // alias for gettext()\n
+    ].forEach(function(element, index, array) {\n
+      result[element] = token("t_string", "php-predefined-function");\n
+    });\n
+\n
+    // output of get_defined_constants(). Differs significantly from http://php.net/manual/en/reserved.constants.php\n
+    [ "E_ERROR", "E_RECOVERABLE_ERROR", "E_WARNING", "E_PARSE", "E_NOTICE",\n
+      "E_STRICT", "E_CORE_ERROR", "E_CORE_WARNING", "E_COMPILE_ERROR",\n
+      "E_COMPILE_WARNING", "E_USER_ERROR", "E_USER_WARNING", "E_USER_NOTICE",\n
+      "E_ALL", "TRUE", "FALSE", "NULL", "ZEND_THREAD_SAFE", "PHP_VERSION", "PHP_OS",\n
+      "PHP_SAPI", "DEFAULT_INCLUDE_PATH", "PEAR_INSTALL_DIR", "PEAR_EXTENSION_DIR",\n
+      "PHP_EXTENSION_DIR", "PHP_PREFIX", "PHP_BINDIR", "PHP_LIBDIR", "PHP_DATADIR",\n
+      "PHP_SYSCONFDIR", "PHP_LOCALSTATEDIR", "PHP_CONFIG_FILE_PATH",\n
+      "PHP_CONFIG_FILE_SCAN_DIR", "PHP_SHLIB_SUFFIX", "PHP_EOL", "PHP_EOL",\n
+      "PHP_INT_MAX", "PHP_INT_SIZE", "PHP_OUTPUT_HANDLER_START",\n
+      "PHP_OUTPUT_HANDLER_CONT", "PHP_OUTPUT_HANDLER_END", "UPLOAD_ERR_OK",\n
+      "UPLOAD_ERR_INI_SIZE", "UPLOAD_ERR_FORM_SIZE", "UPLOAD_ERR_PARTIAL",\n
+      "UPLOAD_ERR_NO_FILE", "UPLOAD_ERR_NO_TMP_DIR", "UPLOAD_ERR_CANT_WRITE",\n
+      "UPLOAD_ERR_EXTENSION", "CAL_GREGORIAN", "CAL_JULIAN", "CAL_JEWISH",\n
+      "CAL_FRENCH", "CAL_NUM_CALS", "CAL_DOW_DAYNO", "CAL_DOW_SHORT", "CAL_DOW_LONG",\n
+      "CAL_MONTH_GREGORIAN_SHORT", "CAL_MONTH_GREGORIAN_LONG",\n
+      "CAL_MONTH_JULIAN_SHORT", "CAL_MONTH_JULIAN_LONG", "CAL_MONTH_JEWISH",\n
+      "CAL_MONTH_FRENCH", "CAL_EASTER_DEFAULT", "CAL_EASTER_ROMAN",\n
+      "CAL_EASTER_ALWAYS_GREGORIAN", "CAL_EASTER_ALWAYS_JULIAN",\n
+      "CAL_JEWISH_ADD_ALAFIM_GERESH", "CAL_JEWISH_ADD_ALAFIM",\n
+      "CAL_JEWISH_ADD_GERESHAYIM", "CLSCTX_INPROC_SERVER", "CLSCTX_INPROC_HANDLER",\n
+      "CLSCTX_LOCAL_SERVER", "CLSCTX_REMOTE_SERVER", "CLSCTX_SERVER", "CLSCTX_ALL",\n
+      "VT_NULL", "VT_EMPTY", "VT_UI1", "VT_I1", "VT_UI2", "VT_I2", "VT_UI4", "VT_I4",\n
+      "VT_R4", "VT_R8", "VT_BOOL", "VT_ERROR", "VT_CY", "VT_DATE", "VT_BSTR",\n
+      "VT_DECIMAL", "VT_UNKNOWN", "VT_DISPATCH", "VT_VARIANT", "VT_INT", "VT_UINT",\n
+      "VT_ARRAY", "VT_BYREF", "CP_ACP", "CP_MACCP", "CP_OEMCP", "CP_UTF7", "CP_UTF8",\n
+      "CP_SYMBOL", "CP_THREAD_ACP", "VARCMP_LT", "VARCMP_EQ", "VARCMP_GT",\n
+      "VARCMP_NULL", "NORM_IGNORECASE", "NORM_IGNORENONSPACE", "NORM_IGNORESYMBOLS",\n
+      "NORM_IGNOREWIDTH", "NORM_IGNOREKANATYPE", "DISP_E_DIVBYZERO",\n
+      "DISP_E_OVERFLOW", "DISP_E_BADINDEX", "MK_E_UNAVAILABLE", "INPUT_POST",\n
+      "INPUT_GET", "INPUT_COOKIE", "INPUT_ENV", "INPUT_SERVER", "INPUT_SESSION",\n
+      "INPUT_REQUEST", "FILTER_FLAG_NONE", "FILTER_REQUIRE_SCALAR",\n
+      "FILTER_REQUIRE_ARRAY", "FILTER_FORCE_ARRAY", "FILTER_NULL_ON_FAILURE",\n
+      "FILTER_VALIDATE_INT", "FILTER_VALIDATE_BOOLEAN", "FILTER_VALIDATE_FLOAT",\n
+      "FILTER_VALIDATE_REGEXP", "FILTER_VALIDATE_URL", "FILTER_VALIDATE_EMAIL",\n
+      "FILTER_VALIDATE_IP", "FILTER_DEFAULT", "FILTER_UNSAFE_RAW",\n
+      "FILTER_SANITIZE_STRING", "FILTER_SANITIZE_STRIPPED",\n
+      "FILTER_SANITIZE_ENCODED", "FILTER_SANITIZE_SPECIAL_CHARS",\n
+      "FILTER_SANITIZE_EMAIL", "FILTER_SANITIZE_URL", "FILTER_SANITIZE_NUMBER_INT",\n
+      "FILTER_SANITIZE_NUMBER_FLOAT", "FILTER_SANITIZE_MAGIC_QUOTES",\n
+      "FILTER_CALLBACK", "FILTER_FLAG_ALLOW_OCTAL", "FILTER_FLAG_ALLOW_HEX",\n
+      "FILTER_FLAG_STRIP_LOW", "FILTER_FLAG_STRIP_HIGH", "FILTER_FLAG_ENCODE_LOW",\n
+      "FILTER_FLAG_ENCODE_HIGH", "FILTER_FLAG_ENCODE_AMP",\n
+      "FILTER_FLAG_NO_ENCODE_QUOTES", "FILTER_FLAG_EMPTY_STRING_NULL",\n
+      "FILTER_FLAG_ALLOW_FRACTION", "FILTER_FLAG_ALLOW_THOUSAND",\n
+      "FILTER_FLAG_ALLOW_SCIENTIFIC", "FILTER_FLAG_SCHEME_REQUIRED",\n
+      "FILTER_FLAG_HOST_REQUIRED", "FILTER_FLAG_PATH_REQUIRED",\n
+      "FILTER_FLAG_QUERY_REQUIRED", "FILTER_FLAG_IPV4", "FILTER_FLAG_IPV6",\n
+      "FILTER_FLAG_NO_RES_RANGE", "FILTER_FLAG_NO_PRIV_RANGE", "FTP_ASCII",\n
+      "FTP_TEXT", "FTP_BINARY", "FTP_IMAGE", "FTP_AUTORESUME", "FTP_TIMEOUT_SEC",\n
+      "FTP_AUTOSEEK", "FTP_FAILED", "FTP_FINISHED", "FTP_MOREDATA", "HASH_HMAC",\n
+      "ICONV_IMPL", "ICONV_VERSION", "ICONV_MIME_DECODE_STRICT",\n
+      "ICONV_MIME_DECODE_CONTINUE_ON_ERROR", "ODBC_TYPE", "ODBC_BINMODE_PASSTHRU",\n
+      "ODBC_BINMODE_RETURN", "ODBC_BINMODE_CONVERT", "SQL_ODBC_CURSORS",\n
+      "SQL_CUR_USE_DRIVER", "SQL_CUR_USE_IF_NEEDED", "SQL_CUR_USE_ODBC",\n
+      "SQL_CONCURRENCY", "SQL_CONCUR_READ_ONLY", "SQL_CONCUR_LOCK",\n
+      "SQL_CONCUR_ROWVER", "SQL_CONCUR_VALUES", "SQL_CURSOR_TYPE",\n
+      "SQL_CURSOR_FORWARD_ONLY", "SQL_CURSOR_KEYSET_DRIVEN", "SQL_CURSOR_DYNAMIC",\n
+      "SQL_CURSOR_STATIC", "SQL_KEYSET_SIZE", "SQL_FETCH_FIRST", "SQL_FETCH_NEXT",\n
+      "SQL_CHAR", "SQL_VARCHAR", "SQL_LONGVARCHAR", "SQL_DECIMAL", "SQL_NUMERIC",\n
+      "SQL_BIT", "SQL_TINYINT", "SQL_SMALLINT", "SQL_INTEGER", "SQL_BIGINT",\n
+      "SQL_REAL", "SQL_FLOAT", "SQL_DOUBLE", "SQL_BINARY", "SQL_VARBINARY",\n
+      "SQL_LONGVARBINARY", "SQL_DATE", "SQL_TIME", "SQL_TIMESTAMP",\n
+      "PREG_PATTERN_ORDER", "PREG_SET_ORDER", "PREG_OFFSET_CAPTURE",\n
+      "PREG_SPLIT_NO_EMPTY", "PREG_SPLIT_DELIM_CAPTURE", "PREG_SPLIT_OFFSET_CAPTURE",\n
+      "PREG_GREP_INVERT", "PREG_NO_ERROR", "PREG_INTERNAL_ERROR",\n
+      "PREG_BACKTRACK_LIMIT_ERROR", "PREG_RECURSION_LIMIT_ERROR",\n
+      "PREG_BAD_UTF8_ERROR", "DATE_ATOM", "DATE_COOKIE", "DATE_ISO8601",\n
+      "DATE_RFC822", "DATE_RFC850", "DATE_RFC1036", "DATE_RFC1123", "DATE_RFC2822",\n
+      "DATE_RFC3339", "DATE_RSS", "DATE_W3C", "SUNFUNCS_RET_TIMESTAMP",\n
+      "SUNFUNCS_RET_STRING", "SUNFUNCS_RET_DOUBLE", "LIBXML_VERSION",\n
+      "LIBXML_DOTTED_VERSION", "LIBXML_NOENT", "LIBXML_DTDLOAD", "LIBXML_DTDATTR",\n
+      "LIBXML_DTDVALID", "LIBXML_NOERROR", "LIBXML_NOWARNING", "LIBXML_NOBLANKS",\n
+      "LIBXML_XINCLUDE", "LIBXML_NSCLEAN", "LIBXML_NOCDATA", "LIBXML_NONET",\n
+      "LIBXML_COMPACT", "LIBXML_NOXMLDECL", "LIBXML_NOEMPTYTAG", "LIBXML_ERR_NONE",\n
+      "LIBXML_ERR_WARNING", "LIBXML_ERR_ERROR", "LIBXML_ERR_FATAL",\n
+      "CONNECTION_ABORTED", "CONNECTION_NORMAL", "CONNECTION_TIMEOUT", "INI_USER",\n
+      "INI_PERDIR", "INI_SYSTEM", "INI_ALL", "PHP_URL_SCHEME", "PHP_URL_HOST",\n
+      "PHP_URL_PORT", "PHP_URL_USER", "PHP_URL_PASS", "PHP_URL_PATH",\n
+      "PHP_URL_QUERY", "PHP_URL_FRAGMENT", "M_E", "M_LOG2E", "M_LOG10E", "M_LN2",\n
+      "M_LN10", "M_PI", "M_PI_2", "M_PI_4", "M_1_PI", "M_2_PI", "M_SQRTPI",\n
+      "M_2_SQRTPI", "M_LNPI", "M_EULER", "M_SQRT2", "M_SQRT1_2", "M_SQRT3", "INF",\n
+      "NAN", "INFO_GENERAL", "INFO_CREDITS", "INFO_CONFIGURATION", "INFO_MODULES",\n
+      "INFO_ENVIRONMENT", "INFO_VARIABLES", "INFO_LICENSE", "INFO_ALL",\n
+      "CREDITS_GROUP", "CREDITS_GENERAL", "CREDITS_SAPI", "CREDITS_MODULES",\n
+      "CREDITS_DOCS", "CREDITS_FULLPAGE", "CREDITS_QA", "CREDITS_ALL",\n
+      "HTML_SPECIALCHARS", "HTML_ENTITIES", "ENT_COMPAT", "ENT_QUOTES",\n
+      "ENT_NOQUOTES", "STR_PAD_LEFT", "STR_PAD_RIGHT", "STR_PAD_BOTH",\n
+      "PATHINFO_DIRNAME", "PATHINFO_BASENAME", "PATHINFO_EXTENSION",\n
+      "PATHINFO_FILENAME", "CHAR_MAX", "LC_CTYPE", "LC_NUMERIC", "LC_TIME",\n
+      "LC_COLLATE", "LC_MONETARY", "LC_ALL", "SEEK_SET", "SEEK_CUR", "SEEK_END",\n
+      "LOCK_SH", "LOCK_EX", "LOCK_UN", "LOCK_NB", "STREAM_NOTIFY_CONNECT",\n
+      "STREAM_NOTIFY_AUTH_REQUIRED", "STREAM_NOTIFY_AUTH_RESULT",\n
+      "STREAM_NOTIFY_MIME_TYPE_IS", "STREAM_NOTIFY_FILE_SIZE_IS",\n
+      "STREAM_NOTIFY_REDIRECTED", "STREAM_NOTIFY_PROGRESS", "STREAM_NOTIFY_FAILURE",\n
+      "STREAM_NOTIFY_COMPLETED", "STREAM_NOTIFY_RESOLVE",\n
+      "STREAM_NOTIFY_SEVERITY_INFO", "STREAM_NOTIFY_SEVERITY_WARN",\n
+      "STREAM_NOTIFY_SEVERITY_ERR", "STREAM_FILTER_READ", "STREAM_FILTER_WRITE",\n
+      "STREAM_FILTER_ALL", "STREAM_CLIENT_PERSISTENT", "STREAM_CLIENT_ASYNC_CONNECT",\n
+      "STREAM_CLIENT_CONNECT", "STREAM_CRYPTO_METHOD_SSLv2_CLIENT",\n
+      "STREAM_CRYPTO_METHOD_SSLv3_CLIENT", "STREAM_CRYPTO_METHOD_SSLv23_CLIENT",\n
+      "STREAM_CRYPTO_METHOD_TLS_CLIENT", "STREAM_CRYPTO_METHOD_SSLv2_SERVER",\n
+      "STREAM_CRYPTO_METHOD_SSLv3_SERVER", "STREAM_CRYPTO_METHOD_SSLv23_SERVER",\n
+      "STREAM_CRYPTO_METHOD_TLS_SERVER", "STREAM_SHUT_RD", "STREAM_SHUT_WR",\n
+      "STREAM_SHUT_RDWR", "STREAM_PF_INET", "STREAM_PF_INET6", "STREAM_PF_UNIX",\n
+      "STREAM_IPPROTO_IP", "STREAM_IPPROTO_TCP", "STREAM_IPPROTO_UDP",\n
+      "STREAM_IPPROTO_ICMP", "STREAM_IPPROTO_RAW", "STREAM_SOCK_STREAM",\n
+      "STREAM_SOCK_DGRAM", "STREAM_SOCK_RAW", "STREAM_SOCK_SEQPACKET",\n
+      "STREAM_SOCK_RDM", "STREAM_PEEK", "STREAM_OOB", "STREAM_SERVER_BIND",\n
+      "STREAM_SERVER_LISTEN", "FILE_USE_INCLUDE_PATH", "FILE_IGNORE_NEW_LINES",\n
+      "FILE_SKIP_EMPTY_LINES", "FILE_APPEND", "FILE_NO_DEFAULT_CONTEXT",\n
+      "PSFS_PASS_ON", "PSFS_FEED_ME", "PSFS_ERR_FATAL", "PSFS_FLAG_NORMAL",\n
+      "PSFS_FLAG_FLUSH_INC", "PSFS_FLAG_FLUSH_CLOSE", "CRYPT_SALT_LENGTH",\n
+      "CRYPT_STD_DES", "CRYPT_EXT_DES", "CRYPT_MD5", "CRYPT_BLOWFISH",\n
+      "DIRECTORY_SEPARATOR", "PATH_SEPARATOR", "GLOB_BRACE", "GLOB_MARK",\n
+      "GLOB_NOSORT", "GLOB_NOCHECK", "GLOB_NOESCAPE", "GLOB_ERR", "GLOB_ONLYDIR",\n
+      "LOG_EMERG", "LOG_ALERT", "LOG_CRIT", "LOG_ERR", "LOG_WARNING", "LOG_NOTICE",\n
+      "LOG_INFO", "LOG_DEBUG", "LOG_KERN", "LOG_USER", "LOG_MAIL", "LOG_DAEMON",\n
+      "LOG_AUTH", "LOG_SYSLOG", "LOG_LPR", "LOG_NEWS", "LOG_UUCP", "LOG_CRON",\n
+      "LOG_AUTHPRIV", "LOG_PID", "LOG_CONS", "LOG_ODELAY", "LOG_NDELAY",\n
+      "LOG_NOWAIT", "LOG_PERROR", "EXTR_OVERWRITE", "EXTR_SKIP", "EXTR_PREFIX_SAME",\n
+      "EXTR_PREFIX_ALL", "EXTR_PREFIX_INVALID", "EXTR_PREFIX_IF_EXISTS",\n
+      "EXTR_IF_EXISTS", "EXTR_REFS", "SORT_ASC", "SORT_DESC", "SORT_REGULAR",\n
+      "SORT_NUMERIC", "SORT_STRING", "SORT_LOCALE_STRING", "CASE_LOWER",\n
+      "CASE_UPPER", "COUNT_NORMAL", "COUNT_RECURSIVE", "ASSERT_ACTIVE",\n
+      "ASSERT_CALLBACK", "ASSERT_BAIL", "ASSERT_WARNING", "ASSERT_QUIET_EVAL",\n
+      "STREAM_USE_PATH", "STREAM_IGNORE_URL", "STREAM_ENFORCE_SAFE_MODE",\n
+      "STREAM_REPORT_ERRORS", "STREAM_MUST_SEEK", "STREAM_URL_STAT_LINK",\n
+      "STREAM_URL_STAT_QUIET", "STREAM_MKDIR_RECURSIVE", "IMAGETYPE_GIF",\n
+      "IMAGETYPE_JPEG", "IMAGETYPE_PNG", "IMAGETYPE_SWF", "IMAGETYPE_PSD",\n
+      "IMAGETYPE_BMP", "IMAGETYPE_TIFF_II", "IMAGETYPE_TIFF_MM", "IMAGETYPE_JPC",\n
+      "IMAGETYPE_JP2", "IMAGETYPE_JPX", "IMAGETYPE_JB2", "IMAGETYPE_SWC",\n
+      "IMAGETYPE_IFF", "IMAGETYPE_WBMP", "IMAGETYPE_JPEG2000", "IMAGETYPE_XBM",\n
+      "T_INCLUDE", "T_INCLUDE_ONCE", "T_EVAL", "T_REQUIRE", "T_REQUIRE_ONCE",\n
+      "T_LOGICAL_OR", "T_LOGICAL_XOR", "T_LOGICAL_AND", "T_PRINT", "T_PLUS_EQUAL",\n
+      "T_MINUS_EQUAL", "T_MUL_EQUAL", "T_DIV_EQUAL", "T_CONCAT_EQUAL", "T_MOD_EQUAL",\n
+      "T_AND_EQUAL", "T_OR_EQUAL", "T_XOR_EQUAL", "T_SL_EQUAL", "T_SR_EQUAL",\n
+      "T_BOOLEAN_OR", "T_BOOLEAN_AND", "T_IS_EQUAL", "T_IS_NOT_EQUAL",\n
+      "T_IS_IDENTICAL", "T_IS_NOT_IDENTICAL", "T_IS_SMALLER_OR_EQUAL",\n
+      "T_IS_GREATER_OR_EQUAL", "T_SL", "T_SR", "T_INC", "T_DEC", "T_INT_CAST",\n
+      "T_DOUBLE_CAST", "T_STRING_CAST", "T_ARRAY_CAST", "T_OBJECT_CAST",\n
+      "T_BOOL_CAST", "T_UNSET_CAST", "T_NEW", "T_EXIT", "T_IF", "T_ELSEIF", "T_ELSE",\n
+      "T_ENDIF", "T_LNUMBER", "T_DNUMBER", "T_STRING", "T_STRING_VARNAME",\n
+      "T_VARIABLE", "T_NUM_STRING", "T_INLINE_HTML", "T_CHARACTER",\n
+      "T_BAD_CHARACTER", "T_ENCAPSED_AND_WHITESPACE", "T_CONSTANT_ENCAPSED_STRING",\n
+      "T_ECHO", "T_DO", "T_WHILE", "T_ENDWHILE", "T_FOR", "T_ENDFOR", "T_FOREACH",\n
+      "T_ENDFOREACH", "T_DECLARE", "T_ENDDECLARE", "T_AS", "T_SWITCH", "T_ENDSWITCH",\n
+      "T_CASE", "T_DEFAULT", "T_BREAK", "T_CONTINUE", "T_FUNCTION", "T_CONST",\n
+      "T_RETURN", "T_USE", "T_GLOBAL", "T_STATIC", "T_VAR", "T_UNSET", "T_ISSET",\n
+      "T_EMPTY", "T_CLASS", "T_EXTENDS", "T_INTERFACE", "T_IMPLEMENTS",\n
+      "T_OBJECT_OPERATOR", "T_DOUBLE_ARROW", "T_LIST", "T_ARRAY", "T_CLASS_C",\n
+      "T_FUNC_C", "T_METHOD_C", "T_LINE", "T_FILE", "T_COMMENT", "T_DOC_COMMENT",\n
+      "T_OPEN_TAG", "T_OPEN_TAG_WITH_ECHO", "T_CLOSE_TAG", "T_WHITESPACE",\n
+      "T_START_HEREDOC", "T_END_HEREDOC", "T_DOLLAR_OPEN_CURLY_BRACES",\n
+      "T_CURLY_OPEN", "T_PAAMAYIM_NEKUDOTAYIM", "T_DOUBLE_COLON", "T_ABSTRACT",\n
+      "T_CATCH", "T_FINAL", "T_INSTANCEOF", "T_PRIVATE", "T_PROTECTED", "T_PUBLIC",\n
+      "T_THROW", "T_TRY", "T_CLONE", "T_HALT_COMPILER", "FORCE_GZIP",\n
+      "FORCE_DEFLATE", "XML_ELEMENT_NODE", "XML_ATTRIBUTE_NODE", "XML_TEXT_NODE",\n
+      "XML_CDATA_SECTION_NODE", "XML_ENTITY_REF_NODE", "XML_ENTITY_NODE",\n
+      "XML_PI_NODE", "XML_COMMENT_NODE", "XML_DOCUMENT_NODE",\n
+      "XML_DOCUMENT_TYPE_NODE", "XML_DOCUMENT_FRAG_NODE", "XML_NOTATION_NODE",\n
+      "XML_HTML_DOCUMENT_NODE", "XML_DTD_NODE", "XML_ELEMENT_DECL_NODE",\n
+      "XML_ATTRIBUTE_DECL_NODE", "XML_ENTITY_DECL_NODE", "XML_NAMESPACE_DECL_NODE",\n
+      "XML_LOCAL_NAMESPACE", "XML_ATTRIBUTE_CDATA", "XML_ATTRIBUTE_ID",\n
+      "XML_ATTRIBUTE_IDREF", "XML_ATTRIBUTE_IDREFS", "XML_ATTRIBUTE_ENTITY",\n
+      "XML_ATTRIBUTE_NMTOKEN", "XML_ATTRIBUTE_NMTOKENS", "XML_ATTRIBUTE_ENUMERATION",\n
+      "XML_ATTRIBUTE_NOTATION", "DOM_PHP_ERR", "DOM_INDEX_SIZE_ERR",\n
+      "DOMSTRING_SIZE_ERR", "DOM_HIERARCHY_REQUEST_ERR", "DOM_WRONG_DOCUMENT_ERR",\n
+      "DOM_INVALID_CHARACTER_ERR", "DOM_NO_DATA_ALLOWED_ERR",\n
+      "DOM_NO_MODIFICATION_ALLOWED_ERR", "DOM_NOT_FOUND_ERR",\n
+      "DOM_NOT_SUPPORTED_ERR", "DOM_INUSE_ATTRIBUTE_ERR", "DOM_INVALID_STATE_ERR",\n
+      "DOM_SYNTAX_ERR", "DOM_INVALID_MODIFICATION_ERR", "DOM_NAMESPACE_ERR",\n
+      "DOM_INVALID_ACCESS_ERR", "DOM_VALIDATION_ERR", "XML_ERROR_NONE",\n
+      "XML_ERROR_NO_MEMORY", "XML_ERROR_SYNTAX", "XML_ERROR_NO_ELEMENTS",\n
+      "XML_ERROR_INVALID_TOKEN", "XML_ERROR_UNCLOSED_TOKEN",\n
+      "XML_ERROR_PARTIAL_CHAR", "XML_ERROR_TAG_MISMATCH",\n
+      "XML_ERROR_DUPLICATE_ATTRIBUTE", "XML_ERROR_JUNK_AFTER_DOC_ELEMENT",\n
+      "XML_ERROR_PARAM_ENTITY_REF", "XML_ERROR_UNDEFINED_ENTITY",\n
+      "XML_ERROR_RECURSIVE_ENTITY_REF", "XML_ERROR_ASYNC_ENTITY",\n
+      "XML_ERROR_BAD_CHAR_REF", "XML_ERROR_BINARY_ENTITY_REF",\n
+      "XML_ERROR_ATTRIBUTE_EXTERNAL_ENTITY_REF", "XML_ERROR_MISPLACED_XML_PI",\n
+      "XML_ERROR_UNKNOWN_ENCODING", "XML_ERROR_INCORRECT_ENCODING",\n
+      "XML_ERROR_UNCLOSED_CDATA_SECTION", "XML_ERROR_EXTERNAL_ENTITY_HANDLING",\n
+      "XML_OPTION_CASE_FOLDING", "XML_OPTION_TARGET_ENCODING",\n
+      "XML_OPTION_SKIP_TAGSTART", "XML_OPTION_SKIP_WHITE", "XML_SAX_IMPL", "IMG_GIF",\n
+      "IMG_JPG", "IMG_JPEG", "IMG_PNG", "IMG_WBMP", "IMG_XPM", "IMG_COLOR_TILED",\n
+      "IMG_COLOR_STYLED", "IMG_COLOR_BRUSHED", "IMG_COLOR_STYLEDBRUSHED",\n
+      "IMG_COLOR_TRANSPARENT", "IMG_ARC_ROUNDED", "IMG_ARC_PIE", "IMG_ARC_CHORD",\n
+      "IMG_ARC_NOFILL", "IMG_ARC_EDGED", "IMG_GD2_RAW", "IMG_GD2_COMPRESSED",\n
+      "IMG_EFFECT_REPLACE", "IMG_EFFECT_ALPHABLEND", "IMG_EFFECT_NORMAL",\n
+      "IMG_EFFECT_OVERLAY", "GD_BUNDLED", "IMG_FILTER_NEGATE",\n
+      "IMG_FILTER_GRAYSCALE", "IMG_FILTER_BRIGHTNESS", "IMG_FILTER_CONTRAST",\n
+      "IMG_FILTER_COLORIZE", "IMG_FILTER_EDGEDETECT", "IMG_FILTER_GAUSSIAN_BLUR",\n
+      "IMG_FILTER_SELECTIVE_BLUR", "IMG_FILTER_EMBOSS", "IMG_FILTER_MEAN_REMOVAL",\n
+      "IMG_FILTER_SMOOTH", "PNG_NO_FILTER", "PNG_FILTER_NONE", "PNG_FILTER_SUB",\n
+      "PNG_FILTER_UP", "PNG_FILTER_AVG", "PNG_FILTER_PAETH", "PNG_ALL_FILTERS",\n
+      "MB_OVERLOAD_MAIL", "MB_OVERLOAD_STRING", "MB_OVERLOAD_REGEX", "MB_CASE_UPPER",\n
+      "MB_CASE_LOWER", "MB_CASE_TITLE", "MYSQL_ASSOC", "MYSQL_NUM", "MYSQL_BOTH",\n
+      "MYSQL_CLIENT_COMPRESS", "MYSQL_CLIENT_SSL", "MYSQL_CLIENT_INTERACTIVE",\n
+      "MYSQL_CLIENT_IGNORE_SPACE", "MYSQLI_READ_DEFAULT_GROUP",\n
+      "MYSQLI_READ_DEFAULT_FILE", "MYSQLI_OPT_CONNECT_TIMEOUT",\n
+      "MYSQLI_OPT_LOCAL_INFILE", "MYSQLI_INIT_COMMAND", "MYSQLI_CLIENT_SSL",\n
+      "MYSQLI_CLIENT_COMPRESS", "MYSQLI_CLIENT_INTERACTIVE",\n
+      "MYSQLI_CLIENT_IGNORE_SPACE", "MYSQLI_CLIENT_NO_SCHEMA",\n
+      "MYSQLI_CLIENT_FOUND_ROWS", "MYSQLI_STORE_RESULT", "MYSQLI_USE_RESULT",\n
+      "MYSQLI_ASSOC", "MYSQLI_NUM", "MYSQLI_BOTH",\n
+      "MYSQLI_STMT_ATTR_UPDATE_MAX_LENGTH", "MYSQLI_STMT_ATTR_CURSOR_TYPE",\n
+      "MYSQLI_CURSOR_TYPE_NO_CURSOR", "MYSQLI_CURSOR_TYPE_READ_ONLY",\n
+      "MYSQLI_CURSOR_TYPE_FOR_UPDATE", "MYSQLI_CURSOR_TYPE_SCROLLABLE",\n
+      "MYSQLI_STMT_ATTR_PREFETCH_ROWS", "MYSQLI_NOT_NULL_FLAG",\n
+      "MYSQLI_PRI_KEY_FLAG", "MYSQLI_UNIQUE_KEY_FLAG", "MYSQLI_MULTIPLE_KEY_FLAG",\n
+      "MYSQLI_BLOB_FLAG", "MYSQLI_UNSIGNED_FLAG", "MYSQLI_ZEROFILL_FLAG",\n
+      "MYSQLI_AUTO_INCREMENT_FLAG", "MYSQLI_TIMESTAMP_FLAG", "MYSQLI_SET_FLAG",\n
+      "MYSQLI_NUM_FLAG", "MYSQLI_PART_KEY_FLAG", "MYSQLI_GROUP_FLAG",\n
+      "MYSQLI_TYPE_DECIMAL", "MYSQLI_TYPE_TINY", "MYSQLI_TYPE_SHORT",\n
+      "MYSQLI_TYPE_LONG", "MYSQLI_TYPE_FLOAT", "MYSQLI_TYPE_DOUBLE",\n
+      "MYSQLI_TYPE_NULL", "MYSQLI_TYPE_TIMESTAMP", "MYSQLI_TYPE_LONGLONG",\n
+      "MYSQLI_TYPE_INT24", "MYSQLI_TYPE_DATE", "MYSQLI_TYPE_TIME",\n
+      "MYSQLI_TYPE_DATETIME", "MYSQLI_TYPE_YEAR", "MYSQLI_TYPE_NEWDATE",\n
+      "MYSQLI_TYPE_ENUM", "MYSQLI_TYPE_SET", "MYSQLI_TYPE_TINY_BLOB",\n
+      "MYSQLI_TYPE_MEDIUM_BLOB", "MYSQLI_TYPE_LONG_BLOB", "MYSQLI_TYPE_BLOB",\n
+      "MYSQLI_TYPE_VAR_STRING", "MYSQLI_TYPE_STRING", "MYSQLI_TYPE_CHAR",\n
+      "MYSQLI_TYPE_INTERVAL", "MYSQLI_TYPE_GEOMETRY", "MYSQLI_TYPE_NEWDECIMAL",\n
+      "MYSQLI_TYPE_BIT", "MYSQLI_RPL_MASTER", "MYSQLI_RPL_SLAVE", "MYSQLI_RPL_ADMIN",\n
+      "MYSQLI_NO_DATA", "MYSQLI_DATA_TRUNCATED", "MYSQLI_REPORT_INDEX",\n
+      "MYSQLI_REPORT_ERROR", "MYSQLI_REPORT_STRICT", "MYSQLI_REPORT_ALL",\n
+      "MYSQLI_REPORT_OFF", "AF_UNIX", "AF_INET", "AF_INET6", "SOCK_STREAM",\n
+      "SOCK_DGRAM", "SOCK_RAW", "SOCK_SEQPACKET", "SOCK_RDM", "MSG_OOB",\n
+      "MSG_WAITALL", "MSG_PEEK", "MSG_DONTROUTE", "SO_DEBUG", "SO_REUSEADDR",\n
+      "SO_KEEPALIVE", "SO_DONTROUTE", "SO_LINGER", "SO_BROADCAST", "SO_OOBINLINE",\n
+      "SO_SNDBUF", "SO_RCVBUF", "SO_SNDLOWAT", "SO_RCVLOWAT", "SO_SNDTIMEO",\n
+      "SO_RCVTIMEO", "SO_TYPE", "SO_ERROR", "SOL_SOCKET", "SOMAXCONN",\n
+      "PHP_NORMAL_READ", "PHP_BINARY_READ", "SOCKET_EINTR", "SOCKET_EBADF",\n
+      "SOCKET_EACCES", "SOCKET_EFAULT", "SOCKET_EINVAL", "SOCKET_EMFILE",\n
+      "SOCKET_EWOULDBLOCK", "SOCKET_EINPROGRESS", "SOCKET_EALREADY",\n
+      "SOCKET_ENOTSOCK", "SOCKET_EDESTADDRREQ", "SOCKET_EMSGSIZE",\n
+      "SOCKET_EPROTOTYPE", "SOCKET_ENOPROTOOPT", "SOCKET_EPROTONOSUPPORT",\n
+      "SOCKET_ESOCKTNOSUPPORT", "SOCKET_EOPNOTSUPP", "SOCKET_EPFNOSUPPORT",\n
+      "SOCKET_EAFNOSUPPORT", "SOCKET_EADDRINUSE", "SOCKET_EADDRNOTAVAIL",\n
+      "SOCKET_ENETDOWN", "SOCKET_ENETUNREACH", "SOCKET_ENETRESET",\n
+      "SOCKET_ECONNABORTED", "SOCKET_ECONNRESET", "SOCKET_ENOBUFS", "SOCKET_EISCONN",\n
+      "SOCKET_ENOTCONN", "SOCKET_ESHUTDOWN", "SOCKET_ETOOMANYREFS",\n
+      "SOCKET_ETIMEDOUT", "SOCKET_ECONNREFUSED", "SOCKET_ELOOP",\n
+      "SOCKET_ENAMETOOLONG", "SOCKET_EHOSTDOWN", "SOCKET_EHOSTUNREACH",\n
+      "SOCKET_ENOTEMPTY", "SOCKET_EPROCLIM", "SOCKET_EUSERS", "SOCKET_EDQUOT",\n
+      "SOCKET_ESTALE", "SOCKET_EREMOTE", "SOCKET_EDISCON", "SOCKET_SYSNOTREADY",\n
+      "SOCKET_VERNOTSUPPORTED", "SOCKET_NOTINITIALISED", "SOCKET_HOST_NOT_FOUND",\n
+      "SOCKET_TRY_AGAIN", "SOCKET_NO_RECOVERY", "SOCKET_NO_DATA",\n
+      "SOCKET_NO_ADDRESS", "SOL_TCP", "SOL_UDP", "EACCELERATOR_VERSION",\n
+      "EACCELERATOR_SHM_AND_DISK", "EACCELERATOR_SHM", "EACCELERATOR_SHM_ONLY",\n
+      "EACCELERATOR_DISK_ONLY", "EACCELERATOR_NONE", "XDEBUG_TRACE_APPEND",\n
+      "XDEBUG_TRACE_COMPUTERIZED", "XDEBUG_TRACE_HTML", "XDEBUG_CC_UNUSED",\n
+      "XDEBUG_CC_DEAD_CODE", "STDIN", "STDOUT", "STDERR"\n
+    ].forEach(function(element, index, array) {\n
+      result[element] = token("atom", "php-predefined-constant");\n
+    });\n
+\n
+    // PHP declared classes - output of get_declared_classes(). Differs from http://php.net/manual/en/reserved.classes.php\n
+    [  "stdClass", "Exception", "ErrorException", "COMPersistHelper", "com_exception",\n
+      "com_safearray_proxy", "variant", "com", "dotnet", "ReflectionException",\n
+      "Reflection", "ReflectionFunctionAbstract", "ReflectionFunction",\n
+      "ReflectionParameter", "ReflectionMethod", "ReflectionClass",\n
+      "ReflectionObject", "ReflectionProperty", "ReflectionExtension", "DateTime",\n
+      "DateTimeZone", "LibXMLError", "__PHP_Incomplete_Class", "php_user_filter",\n
+      "Directory", "SimpleXMLElement", "DOMException", "DOMStringList",\n
+      "DOMNameList", "DOMImplementationList", "DOMImplementationSource",\n
+      "DOMImplementation", "DOMNode", "DOMNameSpaceNode", "DOMDocumentFragment",\n
+      "DOMDocument", "DOMNodeList", "DOMNamedNodeMap", "DOMCharacterData", "DOMAttr",\n
+      "DOMElement", "DOMText", "DOMComment", "DOMTypeinfo", "DOMUserDataHandler",\n
+      "DOMDomError", "DOMErrorHandler", "DOMLocator", "DOMConfiguration",\n
+      "DOMCdataSection", "DOMDocumentType", "DOMNotation", "DOMEntity",\n
+      "DOMEntityReference", "DOMProcessingInstruction", "DOMStringExtend",\n
+      "DOMXPath", "RecursiveIteratorIterator", "IteratorIterator", "FilterIterator",\n
+      "RecursiveFilterIterator", "ParentIterator", "LimitIterator",\n
+      "CachingIterator", "RecursiveCachingIterator", "NoRewindIterator",\n
+      "AppendIterator", "InfiniteIterator", "RegexIterator",\n
+      "RecursiveRegexIterator", "EmptyIterator", "ArrayObject", "ArrayIterator",\n
+      "RecursiveArrayIterator", "SplFileInfo", "DirectoryIterator",\n
+      "RecursiveDirectoryIterator", "SplFileObject", "SplTempFileObject",\n
+      "SimpleXMLIterator", "LogicException", "BadFunctionCallException",\n
+      "BadMethodCallException", "DomainException", "InvalidArgumentException",\n
+      "LengthException", "OutOfRangeException", "RuntimeException",\n
+      "OutOfBoundsException", "OverflowException", "RangeException",\n
+      "UnderflowException", "UnexpectedValueException", "SplObjectStorage",\n
+      "XMLReader", "XMLWriter", "mysqli_sql_exception", "mysqli_driver", "mysqli",\n
+      "mysqli_warning", "mysqli_result", "mysqli_stmt", "PDOException", "PDO",\n
+      "PDOStatement", "PDORow"\n
+    ].forEach(function(element, index, array) {\n
+      result[element] = token("t_string", "php-predefined-class");\n
+    });\n
+\n
+    return result;\n
+\n
+  }();\n
+\n
+  // Helper regexps\n
+  var isOperatorChar = /[+*&%\\/=<>!?.|-]/;\n
+  var isHexDigit = /[0-9A-Fa-f]/;\n
+  var isWordChar = /[\\w\\$_\\\\]/;\n
+\n
+  // Wrapper around phpToken that helps maintain parser state (whether\n
+  // we are inside of a multi-line comment)\n
+  function phpTokenState(inside) {\n
+    return function(source, setState) {\n
+      var newInside = inside;\n
+      var type = phpToken(inside, source, function(c) {newInside = c;});\n
+      if (newInside != inside)\n
+        setState(phpTokenState(newInside));\n
+      return type;\n
+    };\n
+  }\n
+\n
+  // The token reader, inteded to be used by the tokenizer from\n
+  // tokenize.js (through phpTokenState). Advances the source stream\n
+  // over a token, and returns an object containing the type and style\n
+  // of that token.\n
+  function phpToken(inside, source, setInside) {\n
+    function readHexNumber(){\n
+      source.next();  // skip the \'x\'\n
+      source.nextWhileMatches(isHexDigit);\n
+      return {type: "number", style: "php-atom"};\n
+    }\n
+\n
+    function readNumber() {\n
+      source.nextWhileMatches(/[0-9]/);\n
+      if (source.equals(".")){\n
+        source.next();\n
+        source.nextWhileMatches(/[0-9]/);\n
+      }\n
+      if (source.equals("e") || source.equals("E")){\n
+        source.next();\n
+        if (source.equals("-"))\n
+          source.next();\n
+        source.nextWhileMatches(/[0-9]/);\n
+      }\n
+      return {type: "number", style: "php-atom"};\n
+    }\n
+    // Read a word and look it up in the keywords array. If found, it\'s a\n
+    // keyword of that type; otherwise it\'s a PHP T_STRING.\n
+    function readWord() {\n
+      source.nextWhileMatches(isWordChar);\n
+      var word = source.get();\n
+      var known = keywords.hasOwnProperty(word) && keywords.propertyIsEnumerable(word) && keywords[word];\n
+      // since we called get(), tokenize::take won\'t get() anything. Thus, we must set token.content\n
+      return known ? {type: known.type, style: known.style, content: word} :\n
+      {type: "t_string", style: "php-t_string", content: word};\n
+    }\n
+    function readVariable() {\n
+      source.nextWhileMatches(isWordChar);\n
+      var word = source.get();\n
+      // in PHP, \'$this\' is a reserved word, but \'this\' isn\'t. You can have function this() {...}\n
+      if (word == "$this")\n
+        return {type: "variable", style: "php-keyword", content: word};\n
+      else\n
+        return {type: "variable", style: "php-variable", content: word};\n
+    }\n
+\n
+    // Advance the stream until the given character (not preceded by a\n
+    // backslash) is encountered, or the end of the line is reached.\n
+    function nextUntilUnescaped(source, end) {\n
+      var escaped = false;\n
+      while(!source.endOfLine()){\n
+        var next = source.next();\n
+        if (next == end && !escaped)\n
+          return false;\n
+        escaped = next == "\\\\" && !escaped;\n
+      }\n
+      return escaped;\n
+    }\n
+\n
+    function readSingleLineComment() {\n
+      // read until the end of the line or until ?>, which terminates single-line comments\n
+      // `<?php echo 1; // comment ?> foo` will display "1 foo"\n
+      while(!source.lookAhead("?>") && !source.endOfLine())\n
+        source.next();\n
+      return {type: "comment", style: "php-comment"};\n
+    }\n
+    /* For multi-line comments, we want to return a comment token for\n
+       every line of the comment, but we also want to return the newlines\n
+       in them as regular newline tokens. We therefore need to save a\n
+       state variable ("inside") to indicate whether we are inside a\n
+       multi-line comment.\n
+    */\n
+\n
+    function readMultilineComment(start){\n
+      var newInside = "/*";\n
+      var maybeEnd = (start == "*");\n
+      while (true) {\n
+        if (source.endOfLine())\n
+          break;\n
+        var next = source.next();\n
+        if (next == "/" && maybeEnd){\n
+          newInside = null;\n
+          break;\n
+        }\n
+        maybeEnd = (next == "*");\n
+      }\n
+      setInside(newInside);\n
+      return {type: "comment", style: "php-comment"};\n
+    }\n
+\n
+    // similar to readMultilineComment and nextUntilUnescaped\n
+    // unlike comments, strings are not stopped by ?>\n
+    function readMultilineString(start){\n
+      var newInside = start;\n
+      var escaped = false;\n
+      while (true) {\n
+        if (source.endOfLine())\n
+          break;\n
+        var next = source.next();\n
+        if (next == start && !escaped){\n
+          newInside = null;  // we\'re outside of the string now\n
+          break;\n
+        }\n
+        escaped = (next == "\\\\" && !escaped);\n
+      }\n
+      setInside(newInside);\n
+      return {\n
+        type: newInside == null? "string" : "string_not_terminated",\n
+        style: (start == "\'"? "php-string-single-quoted" : "php-string-double-quoted")\n
+      };\n
+    }\n
+\n
+    // http://php.net/manual/en/language.types.string.php#language.types.string.syntax.heredoc\n
+    // See also \'nowdoc\' on the page. Heredocs are not interrupted by the \'?>\' token.\n
+    function readHeredoc(identifier){\n
+      var token = {};\n
+      if (identifier == "<<<") {\n
+        // on our first invocation after reading the <<<, we must determine the closing identifier\n
+        if (source.equals("\'")) {\n
+          // nowdoc\n
+          source.nextWhileMatches(isWordChar);\n
+          identifier = "\'" + source.get() + "\'";\n
+          source.next();  // consume the closing "\'"\n
+        } else if (source.matches(/[A-Za-z_]/)) {\n
+          // heredoc\n
+          source.nextWhileMatches(isWordChar);\n
+          identifier = source.get();\n
+        } else {\n
+          // syntax error\n
+          setInside(null);\n
+          return { type: "error", style: "syntax-error" };\n
+        }\n
+        setInside(identifier);\n
+        token.type = "string_not_terminated";\n
+        token.style = identifier.charAt(0) == "\'"? "php-string-single-quoted" : "php-string-double-quoted";\n
+        token.content = identifier;\n
+      } else {\n
+        token.style = identifier.charAt(0) == "\'"? "php-string-single-quoted" : "php-string-double-quoted";\n
+        // consume a line of heredoc and check if it equals the closing identifier plus an optional semicolon\n
+        if (source.lookAhead(identifier, true) && (source.lookAhead(";\\n") || source.endOfLine())) {\n
+          // the closing identifier can only appear at the beginning of the line\n
+          // note that even whitespace after the ";" is forbidden by the PHP heredoc syntax\n
+          token.type = "string";\n
+          token.content = source.get();  // don\'t get the ";" if there is one\n
+          setInside(null);\n
+        } else {\n
+          token.type = "string_not_terminated";\n
+          source.nextWhileMatches(/[^\\n]/);\n
+          token.content = source.get();\n
+        }\n
+      }\n
+      return token;\n
+    }\n
+\n
+    function readOperator() {\n
+      source.nextWhileMatches(isOperatorChar);\n
+      return {type: "operator", style: "php-operator"};\n
+    }\n
+    function readStringSingleQuoted() {\n
+      var endBackSlash = nextUntilUnescaped(source, "\'", false);\n
+      setInside(endBackSlash ? "\'" : null);\n
+      return {type: "string", style: "php-string-single-quoted"};\n
+    }\n
+    function readStringDoubleQuoted() {\n
+      var endBackSlash = nextUntilUnescaped(source, "\\"", false);\n
+      setInside(endBackSlash ? "\\"": null);\n
+      return {type: "string", style: "php-string-double-quoted"};\n
+    }\n
+\n
+    // Fetch the next token. Dispatches on first character in the\n
+    // stream, or first two characters when the first is a slash.\n
+    switch (inside) {\n
+      case null:\n
+      case false: break;\n
+      case "\'":\n
+      case "\\"": return readMultilineString(inside);\n
+      case "/*": return readMultilineComment(source.next());\n
+      default: return readHeredoc(inside);\n
+    }\n
+    var ch = source.next();\n
+    if (ch == "\'" || ch == "\\"")\n
+      return readMultilineString(ch);\n
+    else if (ch == "#")\n
+      return readSingleLineComment();\n
+    else if (ch == "$")\n
+      return readVariable();\n
+    else if (ch == ":" && source.equals(":")) {\n
+      source.next();\n
+      // the T_DOUBLE_COLON can only follow a T_STRING (class name)\n
+      return {type: "t_double_colon", style: "php-operator"}\n
+    }\n
+    // with punctuation, the type of the token is the symbol itself\n
+    else if (/[\\[\\]{}\\(\\),;:]/.test(ch)) {\n
+      return {type: ch, style: "php-punctuation"};\n
+    }\n
+    else if (ch == "0" && (source.equals("x") || source.equals("X")))\n
+      return readHexNumber();\n
+    else if (/[0-9]/.test(ch))\n
+      return readNumber();\n
+    else if (ch == "/") {\n
+      if (source.equals("*"))\n
+      { source.next(); return readMultilineComment(ch); }\n
+      else if (source.equals("/"))\n
+        return readSingleLineComment();\n
+      else\n
+        return readOperator();\n
+    }\n
+    else if (ch == "<") {\n
+      if (source.lookAhead("<<", true)) {\n
+        setInside("<<<");\n
+        return {type: "<<<", style: "php-punctuation"};\n
+      }\n
+      else\n
+        return readOperator();\n
+    }\n
+    else if (isOperatorChar.test(ch))\n
+      return readOperator();\n
+    else\n
+      return readWord();\n
+  }\n
+\n
+  // The external interface to the tokenizer.\n
+  return function(source, startState) {\n
+    return tokenizer(source, startState || phpTokenState(false, true));\n
+  };\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>61238</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

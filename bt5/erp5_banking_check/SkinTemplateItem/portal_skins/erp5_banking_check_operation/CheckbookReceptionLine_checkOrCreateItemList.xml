@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -213,7 +210,7 @@ else:\n
 \n
 unique_per_account = resource.isUniquePerAccount()\n
 aggregate_list = []\n
-for i in xrange(quantity):\n
+for i in xrange(int(quantity)):\n
   if create == 1:\n
     item = module.newContent(activate_kw={\'tag\': tag, \'priority\':4})\n
     context.log(\'New Item created with Id\', item.getId())\n
@@ -282,12 +279,6 @@ return encountered_check_identifiers_dict\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>check=0, create=0, tag=None, confirm_check=0, encountered_check_identifiers_dict=None</string> </value>
         </item>
@@ -300,121 +291,8 @@ return encountered_check_identifiers_dict\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>check</string>
-                            <string>create</string>
-                            <string>tag</string>
-                            <string>confirm_check</string>
-                            <string>encountered_check_identifiers_dict</string>
-                            <string>Products.DCWorkflow.DCWorkflow</string>
-                            <string>ValidationFailed</string>
-                            <string>Products.ERP5Type.Message</string>
-                            <string>Message</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>checkbook_reception</string>
-                            <string>portal</string>
-                            <string>portal_activities</string>
-                            <string>None</string>
-                            <string>getReference</string>
-                            <string>generateReference</string>
-                            <string>validateTravelerCheckReferenceFormat</string>
-                            <string>getTravelerCheckReferenceNumber</string>
-                            <string>getTravelerCheckReferencePrefix</string>
-                            <string>generateTravelerCheckReference</string>
-                            <string>assertReferenceMatchListEmpty</string>
-                            <string>checkReferenceListUniqueness</string>
-                            <string>start_date</string>
-                            <string>destination</string>
-                            <string>line</string>
-                            <string>quantity</string>
-                            <string>resource</string>
-                            <string>reference_range_min</string>
-                            <string>resource_portal_type</string>
-                            <string>True</string>
-                            <string>is_checkbook</string>
-                            <string>module</string>
-                            <string>model_value</string>
-                            <string>model</string>
-                            <string>model_uid</string>
-                            <string>check_amount</string>
-                            <string>int</string>
-                            <string>check_quantity</string>
-                            <string>reference_to_int</string>
-                            <string>int_to_reference</string>
-                            <string>False</string>
-                            <string>destination_payment_value</string>
-                            <string>message</string>
-                            <string>ValueError</string>
-                            <string>destination_trade</string>
-                            <string>unique_per_account</string>
-                            <string>aggregate_list</string>
-                            <string>_getiter_</string>
-                            <string>xrange</string>
-                            <string>i</string>
-                            <string>item</string>
-                            <string>last_reference_value</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>range</string>
-                            <string>x</string>
-                            <string>reference_list</string>
-                            <string>reference_range_max</string>
-                            <string>destination_section</string>
-                            <string>j</string>
-                            <string>len</string>
-                            <string>item_type</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>0</int>
-                <int>0</int>
-                <none/>
-                <int>0</int>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>CheckbookReceptionLine_checkOrCreateItemList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts87699145.73</string> </value>
+            <value> <string>ts00095498.85</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -25,7 +25,6 @@
         <item>
             <key> <string>data</string> </key>
             <value> <string>$(document).ready(function(){\n
-\n
 \n
     var my_url_run_test = $(document)[0].baseURI + \'runLiveTest\'\n
     var my_url_read_test = $(document)[0].baseURI + \'readTestOutput\'\n
@@ -53,13 +52,17 @@
     });\n
     var last_call = false;\n
     var data_size = 0;\n
+    var data_textarea = undefined;\n
     get_data = function() {\n
       return $.get(my_url_read_test,\n
               {position : data_size},\n
               function(data){\n
-                //$("#" + \'live_test_output\').append(data);\n
-                jQuery("*[name=\'field_your_text_output\']")[0].defaultValue += data ;\n
-                data_size = data_size + data.length;\n
+                if ( data.length != undefined ) {\n
+                  data_size = data_size + data.length;\n
+                  data_textarea = jQuery("*[name=\'field_your_text_output\']")[0];\n
+                  data_textarea.defaultValue += data;\n
+                  data_textarea.scrollTop = data_textarea.scrollHeight;\n
+                }\n
                 if (continue_loop == true) {\n
                   setTimeout("get_data()",1000);\n
                 }\n
@@ -83,7 +86,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1647</int> </value>
+            <value> <int>1813</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

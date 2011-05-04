@@ -86,13 +86,6 @@ class BaseCategoryDocumentationHelper(DocumentationHelper):
     """
     return self.getDocumentedObject().getAcquisitionCopyValue() and 'True' or 'False'
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getAcquisitionSyncValue')
-  def getAcquisitionSyncValue(self):
-    """
-    Returns the value of acquisition sync value of the documented base category
-    """
-    return self.getDocumentedObject().getAcquisitionSyncValue() and 'True' or 'False'
-
   security.declareProtected(Permissions.AccessContentsInformation, 'getAcquisitionBaseCategoryList')
   def getAcquisitionBaseCategoryList(self):
     """

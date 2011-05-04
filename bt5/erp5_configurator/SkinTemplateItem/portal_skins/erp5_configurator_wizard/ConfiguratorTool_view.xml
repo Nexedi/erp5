@@ -96,7 +96,7 @@
                         <string>my_header</string>
                         <string>my_user_preferred_language</string>
                         <string>my_ac_key</string>
-                        <string>your_business_configuration</string>
+                        <string>business_configuration_list</string>
                       </list>
                     </value>
                 </item>
@@ -143,6 +143,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>

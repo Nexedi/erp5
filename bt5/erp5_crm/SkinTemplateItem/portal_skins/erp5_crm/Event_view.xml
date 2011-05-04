@@ -87,7 +87,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>my_source_section_title</string>
+                        <string>my_destination_section_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>

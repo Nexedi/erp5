@@ -5,4 +5,5 @@ order_workflow
 packing_list_container_workflow
 packing_list_workflow
 trade_matrix_workflow
+trade_model_cell_interaction_workflow
 trade_model_line_interaction_workflow

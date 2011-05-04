@@ -75,7 +75,7 @@
                     <key> <string>header header-left</string> </key>
                     <value>
                       <list>
-                        <string>search_bar</string>
+                        <string>your_search_bar</string>
                       </list>
                     </value>
                 </item>
@@ -83,7 +83,7 @@
                     <key> <string>main main-left</string> </key>
                     <value>
                       <list>
-                        <string>menu_box</string>
+                        <string>your_menu_box</string>
                       </list>
                     </value>
                 </item>
@@ -91,10 +91,10 @@
                     <key> <string>main main-right</string> </key>
                     <value>
                       <list>
-                        <string>favorite_box</string>
-                        <string>toolbar</string>
-                        <string>listbox</string>
-                        <string>listbox_icon</string>
+                        <string>your_favorite_box</string>
+                        <string>your_toolbar</string>
+                        <string>your_listbox</string>
+                        <string>your_listbox_icon</string>
                       </list>
                     </value>
                 </item>
@@ -102,7 +102,8 @@
                     <key> <string>navigation navigation-left</string> </key>
                     <value>
                       <list>
-                        <string>navigation_box</string>
+                        <string>your_navigation_box</string>
+                        <string>your_listbox_modification_date</string>
                       </list>
                     </value>
                 </item>
@@ -110,7 +111,8 @@
                     <key> <string>navigation navigation-right</string> </key>
                     <value>
                       <list>
-                        <string>login_box</string>
+                        <string>your_language</string>
+                        <string>your_login_box</string>
                       </list>
                     </value>
                 </item>

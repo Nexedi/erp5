@@ -1,0 +1,10 @@
+<local_roles_item>
+ <local_roles>
+  <role id='admin'>
+   <item>Owner</item>
+  </role>
+  <role id='cloudooo_group'>
+   <item>Auditor</item>
+  </role>
+ </local_roles>
+</local_roles_item>

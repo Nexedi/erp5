@@ -61,9 +61,7 @@ from Products.ERP5Type.Utils import readLocalDocument, writeLocalDocument, getLo
 from Products.ERP5Type.Utils import readLocalConstraint, writeLocalConstraint, getLocalConstraintList
 from Products.ERP5Type.InitGenerator import getProductDocumentPathList
 
-from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.Base import newTempDocumentationHelper
-from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
 
 from Products.ERP5Type import allowClassTool
 from DateTime import DateTime
@@ -223,7 +221,7 @@ if allowClassTool():
     def reimport(self, status, class_id):
       if status and self.__importer is not None:
         self.__importer(class_id)
-        _aq_reset()
+        self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
       
     def _getOb(self, key, default=_MARKER ):
       if key in self.objectIds():
@@ -257,6 +255,7 @@ if allowClassTool():
       id = 'portal_classes'
       meta_type = 'ERP5 Class Tool'
       portal_type = 'Class Tool'
+      isIndexable = False
 
       # Declarative Security
       security = ClassSecurityInfo()
@@ -551,7 +550,7 @@ class %s(XMLObject):
 
         # Clear object cache and reset _aq_dynamic after reload
         self._clearCache()
-        _aq_reset()
+        self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
 
         if REQUEST is not None and class_path is None:
           REQUEST.RESPONSE.redirect('%s/manage_editDocumentForm?class_id=%s&manage_tabs_message=Document+Reloaded+Successfully' % (self.absolute_url(), class_id))
@@ -662,7 +661,7 @@ class %s:
         # Reset _aq_dynamic after reload
         # There is no need to reset the cache in this case because
         # XXX it is not sure however that class defined propertysheets will be updated
-        _aq_reset()
+        self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editPropertySheetForm?class_id=%s&manage_tabs_message=PropertySheet+Reloaded+Successfully' % (self.absolute_url(), class_id))
 
@@ -929,7 +928,7 @@ class %s(Constraint):
         # Reset _aq_dynamic after reload
         # There is no need to reset the cache in this case because
         # XXX it is not sure however that class defined propertysheets will be updated
-        _aq_reset()
+        self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
         if REQUEST is not None:
           REQUEST.RESPONSE.redirect('%s/manage_editConstraintForm?class_id=%s&manage_tabs_message=Constraint+Reloaded+Successfully' % (self.absolute_url(), class_id))
 
@@ -1103,14 +1102,13 @@ def initialize( context ):
           XXX: this code is (almost) duplicated from ERP5Types/Base.py:asDocumentationHelper
         """
 
-        from Products.ERP5Type import document_class_registry
-        from Products.ERP5Type.dynamic.portal_type_class import _importClass
+        import erp5.portal_type
         # XXX so this is ugly, but should disappear with classes in ZODB
-        my_class = _importClass(document_class_registry[class_id])
+        my_class = getattr(erp5.portal_type, class_id)
 
         method_list = []
         property_list = []
-        dochelper = newTempDocumentationHelper(self.getPortalObject(), class_id, title=class_id,
+        dochelper = newTempDocumentationHelper(self, self.getId(), title=class_id,
                       type=my_class.__class__.__name__,
                       description=inspect.getdoc(my_class))
         try:
@@ -1192,7 +1190,7 @@ def initialize( context ):
         writeLocalConstraint(class_id, text, create=create,
                              instance_home=self._v_instance_home.getPath())
 
-      security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
+      security.declareProtected(Permissions.ManagePortal, 'readTestOutput')
       def readTestOutput(self, position=0):
         """
         Return unread part of the test result
@@ -1204,6 +1202,17 @@ def initialize( context ):
           global_stream.seek(position)
           result = global_stream.read()
         return result
+
+      security.declarePrivate('_getCommaSeparatedParameterList')
+      def _getCommaSeparatedParameterList(self, parameter_list):
+        # clean parameter_list and split it by commas if necessary
+        if not parameter_list:
+          parameter_list = ()
+        elif isinstance(parameter_list, basestring):
+          parameter_list = tuple(parameter_name.strip()
+                                 for parameter_name in parameter_list.split(',')
+                                 if parameter_name.strip())
+        return parameter_list
 
       security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
       def runLiveTest(self, test_list=None, run_only=None, debug=False,
@@ -1220,17 +1229,22 @@ def initialize( context ):
         # Allow having strings for verbose and debug
         verbose = int(verbose) and True or False
         debug = int(debug) and True or False
-        if test_list is None:
-          test_list = []
-        elif isinstance(test_list, str):
-          test_list = test_list.split(',')
+        test_list = self._getCommaSeparatedParameterList(test_list)
+        run_only = self._getCommaSeparatedParameterList(run_only)
+        if not test_list:
+          # no test to run
+          return ''
         path = os.path.join(getConfiguration().instancehome, 'tests')
         verbosity = verbose and 2 or 1
-        instance_home = getConfiguration().instancehome
         global global_stream
         global_stream = StringIO()
-        result = runLiveTest(test_list, run_only=run_only, debug=debug, path=path,
-                           stream=global_stream, verbosity=verbosity)
+        from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
+        result = runLiveTest(test_list,
+                             run_only=run_only,
+                             debug=debug,
+                             path=path,
+                             stream=global_stream,
+                             verbosity=verbosity)
         global_stream.seek(0)
         return global_stream.read()
 
@@ -1263,6 +1277,7 @@ else:
       id = 'portal_classes'
       meta_type = 'ERP5 Dummy Class Tool'
       portal_type = 'Dummy Class Tool'
+      isIndexable = False
 
       # Declarative Security
       security = ClassSecurityInfo()

@@ -1,7 +1,8 @@
 portal_domains/ung_domain
 portal_domains/ung_domain/**
+portal_domains/ung_mail_domain
+portal_domains/ung_mail_domain/**
 portal_preferences/ung_preference
 portal_preferences/ung_preference/**
-web_page_module/**
 web_site_module/ung
 web_site_module/ung/**

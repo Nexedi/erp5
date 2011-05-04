@@ -65,7 +65,6 @@ if state == \'visible\':\n
   box.invisible()\n
 elif state == \'invisible\':\n
   box.visible()\n
-return "OK"\n
 
 
 ]]></string> </value>

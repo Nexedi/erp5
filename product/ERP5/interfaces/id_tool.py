@@ -86,7 +86,7 @@ class IIdTool(Interface):
        Only id generator of type application can be selected.
 
     Example :
-       my_new_id_list = portal_ids.generateNewLengthIdList(id_group='sale_invoice',
+       my_new_id_list = portal_ids.generateNewIdList(id_group='sale_invoice',
                               default=100, id_count=3)
        # this can returns ['154', '155', '156']
     """

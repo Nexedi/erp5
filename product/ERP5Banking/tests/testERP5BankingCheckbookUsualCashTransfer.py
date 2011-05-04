@@ -34,7 +34,7 @@ from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Banking.tests.testERP5BankingCheckbookVaultTransfer \
      import TestERP5BankingCheckbookVaultTransferMixin
 from zLOG import LOG
-from transaction import get as get_transaction
+import transaction
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -177,7 +177,7 @@ class TestERP5BankingCheckbookUsualCashTransfer(TestERP5BankingCheckbookUsualCas
     # in the source
     self.createCheckbookReception()
     self.checkItemsCreated()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.createCheckbookVaultTransfer()
 

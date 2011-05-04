@@ -32,7 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
-import transaction
+from zLOG import LOG, INFO
 
 class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   """ This class will install standard ERP5 template from a repository to
@@ -59,53 +59,26 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.StandardBT5ConfiguratorItem
                     )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     bt5_id = self.getBt5Id()
-    bt5_copy_id = '%s_copy' % bt5_id
     portal = self.getPortalObject()
     template_tool = getToolByName(portal, 'portal_templates')
 
-    ## Is this standard template already gzipped?
+    installed_bt_list = template_tool.getInstalledBusinessTemplateTitleList()
     filename_bt5_id = '%s.bt5' % bt5_id
     if business_configuration.isStandardBT5(filename_bt5_id):
-      bt_url = business_configuration.getPublicUrlForBT5Id(filename_bt5_id)
-
-      business_configuration.newContent(portal_type='Link',
-                    url_string = bt_url, title = filename_bt5_id) 
+      if bt5_id not in installed_bt_list:
+        update_catalog = self.getUpdateCatalog(0)
+        bt_url = template_tool.getBusinessTemplateUrl(None, filename_bt5_id)
+        template_tool.updateBusinessTemplateFromUrl(bt_url,
+                                              update_catalog=update_catalog)
+        LOG("StandardBT5ConfiguratorItem", INFO,
+            "Install %s for %s" % (bt_url, self.getRelativeUrl()))
+      else:
+        LOG("StandardBT5ConfiguratorItem", INFO,
+             "%s is already present. Ignore installation (%s)" \
+                               % (bt5_id, self.getRelativeUrl()))
     else:
-      ## we need to make a copy of template to be able to export it
-      if not bt5_copy_id in template_tool.objectIds():
-        bt5 = template_tool.getInstalledBusinessTemplate(bt5_id)
-        template_copy = template_tool.manage_copyObjects(ids=(bt5.getId(),))
-        new_id_list = template_tool.manage_pasteObjects(template_copy)
-        new_bt5_id = new_id_list[0]['new_id']
-        template_tool.manage_renameObject(new_bt5_id, bt5_copy_id)
-      ## we are sure that we have this business template
-      self._current_bt_id = bt5_copy_id
-      return self.get_it_built(business_configuration)
+      raise ValueError("The business template %s was not found on available \
+                         sources." % bt5_id)
 
-  def get_it_built(self, business_configuration):
-    portal = self.getPortalObject()
-    template_tool = getToolByName(portal, 'portal_templates')
-    bt5_obj = self._getCurrentBT(business_configuration)
-    if bt5_obj.getBuildingState() != 'built':
-      ## build template so it can be exported
-      bt5_obj.edit()
-      bt5_obj.build()
-      # XXX Due a bug into Business Templates it is not possible build
-      # the business template and export when this have one 
-      # ActionTemplateItem. This is a TEMPORARY CHANGE and it should be
-      # removed as soon as Business Template is FIXED.
-      transaction.savepoint(optimistic=True)
-    bt5_data = template_tool.export(bt5_obj)
-    business_configuration.newContent(portal_type='File',
-                                      title = '%s.bt5' % bt5_obj.getId(),
-                                      data = bt5_data)
-
-  def _getCurrentBT(self, business_configuration):
-    """ Return current bt5 file. """
-    portal = self.getPortalObject()
-    template_tool = portal.portal_templates
-    bt5_id = self._current_bt_id
-    bt5_obj = portal.portal_templates[bt5_id]
-    return bt5_obj

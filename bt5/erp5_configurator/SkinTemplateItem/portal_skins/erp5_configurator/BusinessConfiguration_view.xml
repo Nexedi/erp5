@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
@@ -98,10 +98,13 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_reference</string>
                         <string>my_version</string>
-                        <string>my_resource_title</string>
-                        <string>my_specialise_title</string>
-                        <string>my_configuration_after_script_id</string>
+                        <string>my_configuration_state</string>
+                        <string>my_translated_simulation_state_title</string>
+                        <string>my_translated_validation_state_title</string>
+                        <string>my_default_image_absolute_url</string>
+                        <string>my_default_image_file</string>
                       </list>
                     </value>
                 </item>
@@ -109,9 +112,10 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_configuration_state</string>
-                        <string>my_translated_simulation_state_title</string>
-                        <string>my_translated_validation_state_title</string>
+                        <string>my_resource_title</string>
+                        <string>my_specialise_title</string>
+                        <string>my_configuration_after_script_id</string>
+                        <string>my_user_interface_description_file_id</string>
                         <string>my_comment</string>
                       </list>
                     </value>

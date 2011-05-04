@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -292,12 +289,6 @@ return [(\'\', \'\')] + list(vault_list)\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>vault_type=None, exclude_vault_type=None, current_url=None, user_site=1, leaf_node=1, strict_membership=0, with_base=1, all=0, base_site=None, owner_site=0,first_level=0,main_agency=0,exclude_user_site=0,user_vault=0,disable_user_site_for_manager=0</string> </value>
         </item>
@@ -310,117 +301,8 @@ return [(\'\', \'\')] + list(vault_list)\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>15</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>vault_type</string>
-                            <string>exclude_vault_type</string>
-                            <string>current_url</string>
-                            <string>user_site</string>
-                            <string>leaf_node</string>
-                            <string>strict_membership</string>
-                            <string>with_base</string>
-                            <string>all</string>
-                            <string>base_site</string>
-                            <string>owner_site</string>
-                            <string>first_level</string>
-                            <string>main_agency</string>
-                            <string>exclude_user_site</string>
-                            <string>user_vault</string>
-                            <string>disable_user_site_for_manager</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>None</string>
-                            <string>getVaultItemList</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>assignment_list</string>
-                            <string>erp5_site</string>
-                            <string>mode_test</string>
-                            <string>hasattr</string>
-                            <string>getattr</string>
-                            <string>AccessControl</string>
-                            <string>getSecurityManager</string>
-                            <string>u</string>
-                            <string>user_site_list</string>
-                            <string>_getitem_</string>
-                            <string>new_site_list</string>
-                            <string>_getiter_</string>
-                            <string>site</string>
-                            <string>site_list</string>
-                            <string>exclude_site_list</string>
-                            <string>len</string>
-                            <string>new_list</string>
-                            <string>root_site_url</string>
-                            <string>vault_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>new_vault_list</string>
-                            <string>current_category_relative_url</string>
-                            <string>current_category</string>
-                            <string>logical_path_list</string>
-                            <string>title</string>
-                            <string>list</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <int>1</int>
-                <int>1</int>
-                <int>0</int>
-                <int>1</int>
-                <int>0</int>
-                <none/>
-                <int>0</int>
-                <int>0</int>
-                <int>0</int>
-                <int>0</int>
-                <int>0</int>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Delivery_getVaultItemList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

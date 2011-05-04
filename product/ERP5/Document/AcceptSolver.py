@@ -35,7 +35,7 @@ from Products.ERP5.mixin.solver import SolverMixin
 from Products.ERP5.mixin.configurable import ConfigurableMixin
 
 class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
-  """
+  """Target solver that accepts the values from the decision on the prevision.
   """
   meta_type = 'ERP5 Accept Solver'
   portal_type = 'Accept Solver'

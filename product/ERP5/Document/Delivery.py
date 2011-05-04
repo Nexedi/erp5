@@ -324,14 +324,14 @@ class Delivery(XMLObject, ImmobilisationDelivery,
 
     #######################################################
     # Causality computation
-    security.declareProtected(Permissions.View, 'isConvergent')
+    security.declareProtected(Permissions.AccessContentsInformation, 'isConvergent')
     def isConvergent(self,**kw):
       """
         Returns 0 if the target is not met
       """
       return int(not self.isDivergent(**kw))
 
-    security.declareProtected(Permissions.View, 'isSimulated')
+    security.declareProtected(Permissions.AccessContentsInformation, 'isSimulated')
     def isSimulated(self):
       """
         Returns 1 if all movements have a delivery or order counterpart
@@ -348,7 +348,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
           # else Do we need to create a simulation movement ? XXX probably not
       return 1
 
-    security.declareProtected(Permissions.View, 'isDivergent')
+    security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
     def isDivergent(self, fast=0, **kw):
       """
         Returns 1 if the target is not met according to the current information
@@ -365,7 +365,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
           return 1
       return 0
 
-    security.declareProtected(Permissions.View, 'getDivergenceList')
+    security.declareProtected(Permissions.AccessContentsInformation, 'getDivergenceList')
     def getDivergenceList(self, **kw):
       """
       Return a list of messages that contains the divergences
@@ -387,10 +387,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       if isTransitionPossible(self, 'diverge') and \
           isTransitionPossible(self, 'converge'):
         if self.isDivergent(**kw):
-          # If delivery is not simulated (PackingList.isDivergent()
-          # returns True in such a case), we cannot solve divergence
-          # anyway.
-          if self.isSimulated() and solve_automatically and \
+          if solve_automatically and \
               isTransitionPossible(self, 'solve_automatically'):
             self.solveAutomatically()
           else:
@@ -687,22 +684,10 @@ class Delivery(XMLObject, ImmobilisationDelivery,
 #       kw['category'] = self._getMovementResourceList()
 #       return self.portal_simulation.getAvailableInventoryAssetPrice(**kw)
 
-    security.declarePrivate( '_edit' )
-    def _edit(self, REQUEST=None, force_update = 0, **kw):
-      """
-      call propagateArrowToSimulation
-      """
-      XMLObject._edit(self,REQUEST=REQUEST,force_update=force_update,**kw)
-      #self.propagateArrowToSimulation()
-      # We must expand our applied rule only if not confirmed
-      #if self.getSimulationState() in planned_order_state:
-      #  self.updateAppliedRule() # This should be implemented with the interaction tool rather than with this hard coding
-
     ##########################################################################
     # Applied Rule stuff
     @UnrestrictedMethod # XXX-JPS What is this ?
-    def updateAppliedRule(self, rule_reference=None, rule_id=None, force=0,
-                          **kw):
+    def updateAppliedRule(self, rule_reference=None, rule_id=None, **kw):
       """
       Create a new Applied Rule if none is related, or call expand
       on the existing one.
@@ -734,9 +719,9 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       else:
         raise ValueError, 'No such rule as %r is found' % rule_reference
 
-      self._createAppliedRule(rule_id, force=force, **kw)
+      self._createAppliedRule(rule_id, **kw)
 
-    def _createAppliedRule(self, rule_id, force=0, activate_kw=None, **kw):
+    def _createAppliedRule(self, rule_id, activate_kw=None, **kw):
       """
         Create a new Applied Rule is none is related, or call expand
         on the existing one.
@@ -779,12 +764,12 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       # We are now certain we have a single applied rule
       # It is time to expand it
       self.activate(activate_kw=activate_kw, **expand_activate_kw).expand(
-          applied_rule_id=my_applied_rule_id, force=force,
+          applied_rule_id=my_applied_rule_id,
           activate_kw=activate_kw, **kw)
 
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
     @UnrestrictedMethod
-    def expand(self, applied_rule_id=None, force=0, activate_kw=None,**kw):
+    def expand(self, applied_rule_id=None, activate_kw=None,**kw):
       """
         Reexpand applied rule
 
@@ -797,7 +782,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
         my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
         if my_applied_rule is not None:
           excluded_rule_path_list.append(my_applied_rule.getPath())
-          my_applied_rule.expand(force=force, activate_kw=activate_kw,**kw)
+          my_applied_rule.expand(activate_kw=activate_kw,**kw)
           # once expanded, the applied_rule must be reindexed
           # because some simulation_movement may change even
           # if there are not edited (acquisition)
@@ -817,7 +802,6 @@ class Delivery(XMLObject, ImmobilisationDelivery,
                   (applied_rule_id, self.getId()))
       self.expandRuleRelatedToMovement(
                   excluded_rule_path_list=excluded_rule_path_list,
-                  force=force,
                   activate_kw=activate_kw,
                   **kw)
 

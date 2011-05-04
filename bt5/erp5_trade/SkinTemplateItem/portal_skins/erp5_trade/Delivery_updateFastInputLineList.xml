@@ -138,7 +138,8 @@ for line in listbox:\n
     if no_inventory is False:\n
       # First defined the price\n
       line["total_price"] = 0.0\n
-      if line["quantity"] in (None, ""):\n
+      quantity = line.get(\'quantity\')\n
+      if quantity in (None, ""):\n
         line["quantity"] = 0.0\n
       if line[\'price\'] in (None,""):\n
         if variation_list:\n

@@ -30,8 +30,8 @@
               <tuple>
                 <string>ask_for_analyse</string>
                 <string>ask_for_analyse_action</string>
-                <string>ask_for_modeling</string>
-                <string>ask_for_modeling_action</string>
+                <string>ask_for_modelling</string>
+                <string>ask_for_modelling_action</string>
                 <string>invalidate</string>
                 <string>invalidate_action</string>
               </tuple>

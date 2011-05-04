@@ -30,27 +30,13 @@
 import unittest
 
 from Testing import ZopeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from DateTime import DateTime
-from Products.ERP5Type.tests.utils import LogInterceptor
-from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
-from Products.ERP5Type.tests.utils import createZODBPythonScript, \
-                                          getExtraSqlConnectionStringList
-from Products.ZSQLCatalog.ZSQLCatalog import HOT_REINDEXING_FINISHED_STATE,\
-      HOT_REINDEXING_RECORDING_STATE, HOT_REINDEXING_DOUBLE_INDEXING_STATE
-from Products.CMFActivity.Errors import ActivityFlushError
-from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
+from Products.ERP5Type.tests.utils import getExtraSqlConnectionStringList
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
-from DateTime import DateTime
 from Products.ERP5Type.tests.utils import reindex
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 
 class TestArchive(InventoryAPITestCase):
   """
@@ -61,7 +47,10 @@ class TestArchive(InventoryAPITestCase):
     return "ERP5Archive"
 
   def getBusinessTemplateList(self):
-    return InventoryAPITestCase.getBusinessTemplateList(self) + ('erp5_archive',)
+    return InventoryAPITestCase.getBusinessTemplateList(self) + (
+      'erp5_archive',
+      'erp5_full_text_myisam_catalog',
+    )
 
   # Different variables used for this test
   run_all_test = 0
@@ -71,7 +60,7 @@ class TestArchive(InventoryAPITestCase):
     self.login()
     InventoryAPITestCase.afterSetUp(self)
     # make sure there is no message any more
-    self.tic()
+    
 
   def beforeTearDown(self):
     for module in [ self.getPersonModule(),
@@ -80,7 +69,7 @@ class TestArchive(InventoryAPITestCase):
                     self.getCategoryTool().group ]:
       module.manage_delObjects(list(module.objectIds()))
     self.getPortal().portal_activities.manageClearActivities()
-    get_transaction().commit()
+    self.stepTic()
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -94,7 +83,7 @@ class TestArchive(InventoryAPITestCase):
     """
     portal = self.getPortal()
     zsql_method_id = "Base_zGetTestPath"
-    portal_skins_custom = self.getPortal().portal_skins.custom
+    portal_skins_custom = portal.portal_skins.custom
     zsql_method = getattr(portal_skins_custom, zsql_method_id, None)
     if zsql_method is None:
       portal_skins_custom.manage_addProduct['ZSQLMethods']\
@@ -149,7 +138,6 @@ class TestArchive(InventoryAPITestCase):
 
     portal = self.getPortal()
     portal_category = self.getCategoryTool()
-    portal_activities = self.getActivityTool()
     portal_archive = self.getArchiveTool()
     portal_catalog = self.getCatalogTool()
     inventory_module = portal.getDefaultModule(portal_type = "Inventory Module")
@@ -170,8 +158,7 @@ class TestArchive(InventoryAPITestCase):
     self.assertEqual(len(inventory_module.searchFolder(portal_type="Inventory")), 1)    
 
     # Flush message queue
-    get_transaction().commit()
-    self.tic()
+    self.stepTic()
 
     # Check well in catalog
     self.original_connection_id = 'erp5_sql_connection'
@@ -213,7 +200,6 @@ class TestArchive(InventoryAPITestCase):
     new_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
     new_catalog_id = 'erp5_mysql_innodb_2'
     portal_catalog.manage_renameObject(id=new_id,new_id=new_catalog_id)
-    dest_catalog = portal_catalog[new_catalog_id]
 
     # Create new catalog for archive
     self.archive_catalog_id = self.original_catalog_id + '_archive'
@@ -221,7 +207,6 @@ class TestArchive(InventoryAPITestCase):
     archive_id = portal_catalog.manage_pasteObjects(cp_data)[0]['new_id']
     archive_catalog_id = 'erp5_mysql_innodb_archive'
     portal_catalog.manage_renameObject(id=archive_id,new_id=archive_catalog_id)
-    archive_catalog = portal_catalog[archive_catalog_id]
 
     # Create an archive
     archive = portal_archive.newContent(portal_typ="Archive",
@@ -254,8 +239,7 @@ class TestArchive(InventoryAPITestCase):
                                   clear_destination_sql_catalog=True,
                                   clear_archive_sql_catalog=True)
 
-    get_transaction().commit()
-    self.tic()
+    self.stepTic()
     self.assertEqual(portal_catalog.getSQLCatalog().id, self.new_catalog_id)
     self.assertEqual(archive.getValidationState(), 'validated')
     self.assertEqual(dest.getValidationState(), 'validated')
@@ -268,8 +252,7 @@ class TestArchive(InventoryAPITestCase):
     # Create a new organisation and check it goes in both catalog and not old one
     self.organisation_1 = module.newContent(portal_type='Organisation',
                                             title="GreatTitle3")
-    get_transaction().commit()
-    self.tic()
+    self.stepTic()
     path_list = [self.organisation_1.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.original_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
@@ -294,8 +277,7 @@ class TestArchive(InventoryAPITestCase):
     self.assertEquals(100, getInventory(node_uid=self.node.getUid()))
     self.new_mvt = self._makeMovement(quantity=50, stop_date=DateTime("2006/08/06"),
                                       simulation_state='delivered',)
-    get_transaction().commit()
-    self.tic()
+    self.stepTic()
     self.assertEqual(len(self.folder.searchFolder(portal_type="Dummy Movement")), 1)
     # Check objects movement are indexed
     # not in archive and old one but in current catalog
@@ -310,9 +292,9 @@ class TestArchive(InventoryAPITestCase):
     self.pref = portal_preferences.newContent(id='user_pref',
                                               portal_type='Preference',
                                               preferred_archive=archive.getRelativeUrl())
-    get_transaction().commit()
+    self.stepTic()
     self.getPreferenceTool().recursiveReindexObject()
-    self.tic()
+    
     self.portal.portal_workflow.doActionFor(self.pref,
                                             'enable_action',
                                             wf_id='preference_workflow')
@@ -331,32 +313,27 @@ class TestArchive(InventoryAPITestCase):
 
     # go on current catalog
     self.pref.edit(preferred_archive=None)
-    get_transaction().commit()
-    self.tic()
+    self.stepTic()
 
     # unindex and reindex an older movement and check it's well reindexed    
     self.inventory.unindexObject()
-    get_transaction().commit()
-    self.tic()
+    self.stepTic()
     path_list = [self.inventory.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.archive_connection_id)
     self.inventory.reindexObject()
-    get_transaction().commit()
-    self.tic()
+    self.stepTic()
     path_list = [self.inventory.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.archive_connection_id)
     # check inventory in archive now
     self.pref.edit(preferred_archive=archive.getRelativeUrl())
-    get_transaction().commit()
-    self.tic()
+    self.stepTic()
     self.assertEquals(100, getInventory(node=self.node.getRelativeUrl()))
 
     # check if we unindex an object, it's remove in all catalog:
     module.manage_delObjects([self.organisation_1.id,])
-    get_transaction().commit()
-    self.tic()
+    self.stepTic()
     path_list = [self.organisation_1.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.archive_connection_id)

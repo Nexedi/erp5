@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>xqcolors2.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/*\n
+Copyright 2010 Mike Brevoort http://mike.brevoort.com (twitter:@mbrevoort)\n
+\n
+Licensed under the Apache License, Version 2.0 (the "License");\n
+you may not use this file except in compliance with the License.\n
+You may obtain a copy of the License at\n
+\n
+    http://www.apache.org/licenses/LICENSE-2.0\n
+\n
+Unless required by applicable law or agreed to in writing, software\n
+distributed under the License is distributed on an "AS IS" BASIS,\n
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
+See the License for the specific language governing permissions and\n
+limitations under the License.\n
+\n
+This is an indirect collective derivative of the other parses in this package\n
+\n
+*/\n
+.editbox {\n
+  margin: .4em;\n
+  padding: 0;\n
+  font-family: monospace;\n
+  font-size: 10pt;\n
+  color: black;\n
+  background-color: white;\n
+  line-height: 16px;\n
+}\n
+\n
+span.word {\n
+}\n
+\n
+span.xqueryKeyword {\n
+  color: blue; \n
+  /* font-weight: bold; */\n
+}\n
+\n
+span.xqueryComment {\n
+  color: gray;\n
+}\n
+\n
+span.xqueryModifier {\n
+  color: rgb(0,102,153);\n
+  font-weight: bold;\n
+}\n
+\n
+span.xqueryType {\n
+  color: rgb(0,135,255);\n
+  font-weight: bold;\n
+}\n
+\n
+span.xqueryAtom {\n
+  color: rgb(0,102,153);\n
+  font-weight: bold;  \n
+}\n
+\n
+span.xqueryString {\n
+  color: green;\n
+}\n
+\n
+span.xqueryRegexp {\n
+  color: rgb(128,0,64);\n
+}\n
+\n
+span.xqueryNumber {\n
+  color: rgb(255,0,0); \n
+}\n
+\n
+span.xqueryVariable {\n
+    color: red;\n
+}\n
+\n
+span.xqueryFunction {\n
+    text-decoration:underline\n
+}\n
+\n
+\n
+span.xqueryOperator {\n
+    color: DimGray;\n
+}\n
+\n
+span.xqueryPunctuation {\n
+}\n
+\n
+span.xml-tagname {\n
+    color: purple;\n
+}\n
+\n
+span.xml-attribute {\n
+    color: purple;\n
+    font-style:italic;\n
+}\n
+\n
+span.xml-attribute-value {\n
+    color: purple;\n
+    font-style:italic;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>1647</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

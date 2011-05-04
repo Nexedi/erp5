@@ -104,12 +104,12 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>\n
   <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>\n
   <td>b</td>\n
 </tr>\n
 <tr>\n
@@ -135,7 +135,7 @@
 <!-- Click on + a -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -145,27 +145,27 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-open"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-open"]</td>\n
   <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>\n
   <td>c1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//button[@class="tree-closed"]</td>\n
   <td>c10</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[4]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[4]//button[@class="tree-closed"]</td>\n
   <td>c11</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[26]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[26]//button[@class="tree-closed"]</td>\n
   <td>b</td>\n
 </tr>\n
 <tr>\n
@@ -191,7 +191,7 @@
 <!-- Click on + c1 -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -201,27 +201,27 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-open"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-open"]</td>\n
   <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//a[@class="tree-open"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-open"]</td>\n
   <td>c1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//button[@class="tree-closed"]</td>\n
   <td>c10</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[4]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[4]//button[@class="tree-closed"]</td>\n
   <td>c11</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[26]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[26]//button[@class="tree-closed"]</td>\n
   <td>b</td>\n
 </tr>\n
 <tr>\n
@@ -247,7 +247,7 @@
 <!-- Click on - a -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-open"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-open"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -257,12 +257,12 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>\n
   <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>\n
   <td>b</td>\n
 </tr>\n
 <tr>\n
@@ -293,12 +293,12 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>\n
   <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>\n
   <td>b</td>\n
 </tr>\n
 <tr>\n
@@ -324,8 +324,7 @@
 </tal:block>\n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

@@ -11,6 +11,10 @@
             <value> <string>http_cache</string> </value>
         </item>
         <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts94677358.49</string> </value>
+        </item>
+        <item>
             <key> <string>__name__</string> </key>
             <value> <string>web_page.png</string> </value>
         </item>
@@ -20,21 +24,19 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAA
-BGdBTUEAALGOfPtRkwAAACBjSFJNAAB6JQAAgIMAAPn/AACA6QAAdTAAAOpgAAA6mAAAF2+SX8VG
-AAACxUlEQVR42mLs7+//z0ABAAggFhBRUFDAsPnMTwZmpv8MfFyMDIeufWV48PIHw/fffxm+/vwD
-xL8ZvnwH0X8ZvgH5n77/Zngxx4xhwoQJDAABxAIzyU6LFUyzszAyaMmwMLz+yMXw489/BhbGfwxs
-zAwM3OwMDD+BBv75+5/h3z+EowECCG4APxcTmL71/BfDsw9/GBhBksxAkpGRASQD1MegIsYGZIEM
-+Ac3ACCAWJD9s+vKV4bnn34x6MpwMPBxMjEAHQDU+B9oKwPDnbe/GR68/cXgoMbK8PsP0FUcED0A
-AQQ34PLjnwzLz3xgCDDgYXjx8Q/D048MDO++/GEA6mcAOZgF6Ixjd78DXcPOYKfMDLcUIIDgBqw+
-84nh1WdgIP1jYvgLdOHp658Z3n3+w8DFwQz2DjPQgP3AwP308TeDjbIA3ACAAIIbcP3RD4Ztxz8w
-/P/9n8HfRohBUpKL4f33rwyHL38BBxzIIFagM779ZmD49ZeRgQuqDyCAmGAGCICMeveD4dTZDww/
-gBosdPkY/G2FGb5+BAbqix8Mpjq8DBpS7AyGStxAgxBeAAgguAucdTkYLt/jY4gIkGSw0OJlYGdi
-ZBCU5mCIcBZh4OFhYZCR42bYtOslg6IAEwMnO9xeBoAAghvgZcTN8IOBhUFfj4+Bl4MRLAaMQYbU
-IEkGUCB8/PqPQTFMkkGd+wfD5y8/GPgFOMFqAAIIbgAXGxODjz4bw7NfPxm+/wI68ec/BnZWRgZm
-VqDfOZkZmH79YHh5YjPDS7SkDBBAcAP+/mdkYP33k0GK4Q/Do7fAaL35neEHMEBFhdgYDLS5GQS+
-fwCrCw8PB9OgZFxYWMgKEEBwA5iZmRl4+PjBbGHh/wxGGoxQmf8M/4HR+uUrwt9QzWAFAAEEN4CF
-hQVnjmME6uXi4sLQDAIAAcQCEyQWIGsGAYAAAwCeAuP3tKq/lwAAAABJRU5ErkJggg==</string> </value>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz
+AAABuwAAAbsBOuzj4gAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAI3SURB
+VHjalZNLTxNRAIW/mU5boNKWl0VKeUVRKoEgaAIbFq7dQNKFOxfG/+IvcKM7V8RETMQoLIjGheKG
+h4EQkIfYGOVVa5n3XOdOAi0RTDzJyUlm5nw5mZmrCCFQFKUdGOT/tOB31zQAWTYM85llmT5M9Y2E
+BkYmp6VpGuFweBw4AWCaJqWjEqoaIhRSZflvIxXAyzCOL6qKXwz5AJXVvRAvlgxml3aIRhO0JuHe
+SD3DXVXnA1RFCcrTG1VMrUZ5/vodw1eaGBtpx3YiPJn9TL6YInfjQvDcSY+KWboNr9ZrOCx8oz+T
+pLc1wfUWQUvS4lpXD9PLLiUreOlnA2a/eFSrFm/eL5CsCdMQjzHUFmGgNUJfWkXxdD6u/zofcFiy
+iUdcbnY3c2S6FH4bHBz5aXh8PYB4VGN736ZSGmUCnXUK+3aYu6MDCG+PtY2fPHq5xvaeztXOy3ih
+ON1p9ZyvAAx21DC1sotwUzTWpnj8do6m2gieJ/iuqwgtwa3ODJVSKxckYhHuZBV2inmKjs5oXw+p
+houkGpuJVSd5ON6MsHVs2xZnLpC+3VtPS73O0w8/6M00EY+1kamDwUtFFH2TfF5lfn5+Dlg+BYDy
+79tRBw+GHLa2PuE4Dul4mtKuTjabZWZmZiuXy90HVpASQgCMmZYldF0Xlp9yol8UnucFWSgUxOLi
+opicnNz0z0A/oMie7zLAcd2Touu60hIQpGEY3sTEhJzdV1mWPj7Ol4Ob/9aynC18UaE/dsoM/H28
+ywMAAAAASUVORK5CYII=</string> </value>
         </item>
         <item>
             <key> <string>height</string> </key>
@@ -46,7 +48,7 @@ hQVnjmME6uXi4sLQDAIAAcQCEyQWIGsGAYAAAwCeAuP3tKq/lwAAAABJRU5ErkJggg==</string> </
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>847</int> </value>
+            <value> <int>698</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

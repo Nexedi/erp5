@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Contribution Predicate" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>content_type</string> </key>
+                    <value>
+                      <list>
+                        <string>application/vnd.oasis.opendocument.spreadsheet</string>
+                        <string>application/vnd.oasis.opendocument.spreadsheet-template</string>
+                        <string>application/vnd.sun.xml.calc</string>
+                        <string>application/vnd.sun.xml.calc.template</string>
+                        <string>application/vnd.stardivision.calc</string>
+                        <string>application/vnd.stardivision.chart</string>
+                        <string>application/msexcel</string>
+                        <string>application/vnd.ms-excel</string>
+                        <string>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</string>
+                        <string>application/vnd.ms-excel.sheet.macroenabled.12</string>
+                        <string>application/vnd.openxmlformats-officedocument.spreadsheetml.template</string>
+                        <string>application/vnd.ms-excel.template.macroenabled.12</string>
+                        <string>application/vnd.ms-excel.sheet.binary.macroenabled.12</string>
+                        <string>application/x-dbf</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>criterion_property</string> </key>
+            <value>
+              <tuple>
+                <string>content_type</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>destination_portal_type</string> </key>
+            <value> <string>Spreadsheet</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>spreadsheet_mimetype</string> </value>
+        </item>
+        <item>
+            <key> <string>int_index</string> </key>
+            <value> <int>20</int> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Contribution Predicate</string> </value>
+        </item>
+        <item>
+            <key> <string>test_method_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Spreadsheet by mimetype</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

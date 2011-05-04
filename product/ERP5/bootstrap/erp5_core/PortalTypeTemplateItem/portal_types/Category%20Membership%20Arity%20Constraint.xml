@@ -33,7 +33,15 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Category Membership Arity Constraint checks whether an object respects the arity</string> </value>
+            <value> <string>A Category Membership Arity Constraint checks whether an object respects the arity without or with Acquisition</string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <tuple>
+                <string>constraint</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -82,7 +90,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <none/> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -99,7 +107,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <none/> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

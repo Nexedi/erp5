@@ -1,0 +1,326 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsexml.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>/* This file defines an XML parser, with a few kludges to make it\n
+ * useable for HTML. autoSelfClosers defines a set of tag names that\n
+ * are expected to not have a closing tag, and doNotIndent specifies\n
+ * the tags inside of which no indentation should happen (see Config\n
+ * object). These can be disabled by passing the editor an object like\n
+ * {useHTMLKludges: false} as parserConfig option.\n
+ */\n
+\n
+var XMLParser = Editor.Parser = (function() {\n
+  var Kludges = {\n
+    autoSelfClosers: {"br": true, "img": true, "hr": true, "link": true, "input": true,\n
+                      "meta": true, "col": true, "frame": true, "base": true, "area": true},\n
+    doNotIndent: {"pre": true, "!cdata": true}\n
+  };\n
+  var NoKludges = {autoSelfClosers: {}, doNotIndent: {"!cdata": true}};\n
+  var UseKludges = Kludges;\n
+  var alignCDATA = false;\n
+\n
+  // Simple stateful tokenizer for XML documents. Returns a\n
+  // MochiKit-style iterator, with a state property that contains a\n
+  // function encapsulating the current state. See tokenize.js.\n
+  var tokenizeXML = (function() {\n
+    function inText(source, setState) {\n
+      var ch = source.next();\n
+      if (ch == "\074") {\n
+        if (source.equals("!")) {\n
+          source.next();\n
+          if (source.equals("[")) {\n
+            if (source.lookAhead("[CDATA[", true)) {\n
+              setState(inBlock("xml-cdata", "]]\076"));\n
+              return null;\n
+            }\n
+            else {\n
+              return "xml-text";\n
+            }\n
+          }\n
+          else if (source.lookAhead("--", true)) {\n
+            setState(inBlock("xml-comment", "--\076"));\n
+            return null;\n
+          }\n
+          else {\n
+            return "xml-text";\n
+          }\n
+        }\n
+        else if (source.equals("?")) {\n
+          source.next();\n
+          source.nextWhileMatches(/[\\w\\._\\-]/);\n
+          setState(inBlock("xml-processing", "?\076"));\n
+          return "xml-processing";\n
+        }\n
+        else {\n
+          if (source.equals("/")) source.next();\n
+          setState(inTag);\n
+          return "xml-punctuation";\n
+        }\n
+      }\n
+      else if (ch == "\046") {\n
+        while (!source.endOfLine()) {\n
+          if (source.next() == ";")\n
+            break;\n
+        }\n
+        return "xml-entity";\n
+      }\n
+      else {\n
+        source.nextWhileMatches(/[^\046\074\\n]/);\n
+        return "xml-text";\n
+      }\n
+    }\n
+\n
+    function inTag(source, setState) {\n
+      var ch = source.next();\n
+      if (ch == "\076") {\n
+        setState(inText);\n
+        return "xml-punctuation";\n
+      }\n
+      else if (/[?\\/]/.test(ch) \046\046 source.equals("\076")) {\n
+        source.next();\n
+        setState(inText);\n
+        return "xml-punctuation";\n
+      }\n
+      else if (ch == "=") {\n
+        return "xml-punctuation";\n
+      }\n
+      else if (/[\\\'\\"]/.test(ch)) {\n
+        setState(inAttribute(ch));\n
+        return null;\n
+      }\n
+      else {\n
+        source.nextWhileMatches(/[^\\s\\u00a0=\074\076\\"\\\'\\/?]/);\n
+        return "xml-name";\n
+      }\n
+    }\n
+\n
+    function inAttribute(quote) {\n
+      return function(source, setState) {\n
+        while (!source.endOfLine()) {\n
+          if (source.next() == quote) {\n
+            setState(inTag);\n
+            break;\n
+          }\n
+        }\n
+        return "xml-attribute";\n
+      };\n
+    }\n
+\n
+    function inBlock(style, terminator) {\n
+      return function(source, setState) {\n
+        while (!source.endOfLine()) {\n
+          if (source.lookAhead(terminator, true)) {\n
+            setState(inText);\n
+            break;\n
+          }\n
+          source.next();\n
+        }\n
+        return style;\n
+      };\n
+    }\n
+\n
+    return function(source, startState) {\n
+      return tokenizer(source, startState || inText);\n
+    };\n
+  })();\n
+\n
+  // The parser. The structure of this function largely follows that of\n
+  // parseJavaScript in parsejavascript.js (there is actually a bit more\n
+  // shared code than I\'d like), but it is quite a bit simpler.\n
+  function parseXML(source) {\n
+    var tokens = tokenizeXML(source), token;\n
+    var cc = [base];\n
+    var tokenNr = 0, indented = 0;\n
+    var currentTag = null, context = null;\n
+    var consume;\n
+    \n
+    function push(fs) {\n
+      for (var i = fs.length - 1; i \076= 0; i--)\n
+        cc.push(fs[i]);\n
+    }\n
+    function cont() {\n
+      push(arguments);\n
+      consume = true;\n
+    }\n
+    function pass() {\n
+      push(arguments);\n
+      consume = false;\n
+    }\n
+\n
+    function markErr() {\n
+      token.style += " xml-error";\n
+    }\n
+    function expect(text) {\n
+      return function(style, content) {\n
+        if (content == text) cont();\n
+        else {markErr(); cont(arguments.callee);}\n
+      };\n
+    }\n
+\n
+    function pushContext(tagname, startOfLine) {\n
+      var noIndent = UseKludges.doNotIndent.hasOwnProperty(tagname) || (context \046\046 context.noIndent);\n
+      context = {prev: context, name: tagname, indent: indented, startOfLine: startOfLine, noIndent: noIndent};\n
+    }\n
+    function popContext() {\n
+      context = context.prev;\n
+    }\n
+    function computeIndentation(baseContext) {\n
+      return function(nextChars, current) {\n
+        var context = baseContext;\n
+        if (context \046\046 context.noIndent)\n
+          return current;\n
+        if (alignCDATA \046\046 /\074!\\[CDATA\\[/.test(nextChars))\n
+          return 0;\n
+        if (context \046\046 /^\074\\//.test(nextChars))\n
+          context = context.prev;\n
+        while (context \046\046 !context.startOfLine)\n
+          context = context.prev;\n
+        if (context)\n
+          return context.indent + indentUnit;\n
+        else\n
+          return 0;\n
+      };\n
+    }\n
+\n
+    function base() {\n
+      return pass(element, base);\n
+    }\n
+    var harmlessTokens = {"xml-text": true, "xml-entity": true, "xml-comment": true, "xml-processing": true};\n
+    function element(style, content) {\n
+      if (content == "\074") cont(tagname, attributes, endtag(tokenNr == 1));\n
+      else if (content == "\074/") cont(closetagname, expect("\076"));\n
+      else if (style == "xml-cdata") {\n
+        if (!context || context.name != "!cdata") pushContext("!cdata");\n
+        if (/\\]\\]\076$/.test(content)) popContext();\n
+        cont();\n
+      }\n
+      else if (harmlessTokens.hasOwnProperty(style)) cont();\n
+      else {markErr(); cont();}\n
+    }\n
+    function tagname(style, content) {\n
+      if (style == "xml-name") {\n
+        currentTag = content.toLowerCase();\n
+        token.style = "xml-tagname";\n
+        cont();\n
+      }\n
+      else {\n
+        currentTag = null;\n
+        pass();\n
+      }\n
+    }\n
+    function closetagname(style, content) {\n
+      if (style == "xml-name") {\n
+        token.style = "xml-tagname";\n
+        if (context \046\046 content.toLowerCase() == context.name) popContext();\n
+        else markErr();\n
+      }\n
+      cont();\n
+    }\n
+    function endtag(startOfLine) {\n
+      return function(style, content) {\n
+        if (content == "/\076" || (content == "\076" \046\046 UseKludges.autoSelfClosers.hasOwnProperty(currentTag))) cont();\n
+        else if (content == "\076") {pushContext(currentTag, startOfLine); cont();}\n
+        else {markErr(); cont(arguments.callee);}\n
+      };\n
+    }\n
+    function attributes(style) {\n
+      if (style == "xml-name") {token.style = "xml-attname"; cont(attribute, attributes);}\n
+      else pass();\n
+    }\n
+    function attribute(style, content) {\n
+      if (content == "=") cont(value);\n
+      else if (content == "\076" || content == "/\076") pass(endtag);\n
+      else pass();\n
+    }\n
+    function value(style) {\n
+      if (style == "xml-attribute") cont(value);\n
+      else pass();\n
+    }\n
+\n
+    return {\n
+      indentation: function() {return indented;},\n
+\n
+      next: function(){\n
+        token = tokens.next();\n
+        if (token.style == "whitespace" \046\046 tokenNr == 0)\n
+          indented = token.value.length;\n
+        else\n
+          tokenNr++;\n
+        if (token.content == "\\n") {\n
+          indented = tokenNr = 0;\n
+          token.indentation = computeIndentation(context);\n
+        }\n
+\n
+        if (token.style == "whitespace" || token.type == "xml-comment")\n
+          return token;\n
+\n
+        while(true){\n
+          consume = false;\n
+          cc.pop()(token.style, token.content);\n
+          if (consume) return token;\n
+        }\n
+      },\n
+\n
+      copy: function(){\n
+        var _cc = cc.concat([]), _tokenState = tokens.state, _context = context;\n
+        var parser = this;\n
+        \n
+        return function(input){\n
+          cc = _cc.concat([]);\n
+          tokenNr = indented = 0;\n
+          context = _context;\n
+          tokens = tokenizeXML(input, _tokenState);\n
+          return parser;\n
+        };\n
+      }\n
+    };\n
+  }\n
+\n
+  return {\n
+    make: parseXML,\n
+    electricChars: "/",\n
+    configure: function(config) {\n
+      if (config.useHTMLKludges != null)\n
+        UseKludges = config.useHTMLKludges ? Kludges : NoKludges;\n
+      if (config.alignCDATA)\n
+        alignCDATA = config.alignCDATA;\n
+    }\n
+  };\n
+})();\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>8533</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts91366854.22</string> </value>
+            <value> <string>ts04498752.63</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/css</string> </value>
+            <value> <string>text/css; charset=utf-8</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -31,8 +31,6 @@
 /*     - missing docstring                                      */\n
 /*     - add dynamic properties                                 */\n
 /****************************************************************/\n
-\n
-<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\');"/>\n
 \n
 /* CSS Web layout (one column) for Gadgets */\n
 \n
@@ -54,13 +52,14 @@
 div.pad-actions{\n
    float:none;\n
 }\n
-.block {\n
+div.block {\n
   margin-top: 0.5em;\n
+   margin-bottom: 5px;\n
+\n
 }\n
 \n
 .block li {\n
   margin-left: 0.5em;\n
-  /*list-style-type:none;*/\n
 }\n
 \n
 .block h3 span.gadget_title{\n
@@ -149,12 +148,20 @@ h3.handle span.handle {\n
   border-bottom: 1px solid #FFFFFF;\n
 }\n
 \n
+/* Gadget container at bottom */\n
+div#km_left div#wrapper_bottom {\n
+  border:0 none;\n
+  clear:left;\n
+  margin:10px;\n
+}\n
+\n
+\n
 /* disable cursor for anonymous users */\n
 .portal-column-undraggable .handle{\n
   cursor: default;\n
 }\n
 \n
-/* add space between fieldsets for gadgtes */\n
+/* add space between fieldsets for gadgets */\n
 div.block fieldset > div {\n
   margin-bottom: 0.3em;\n
 }\n
@@ -163,13 +170,10 @@ div.block fieldset label{\n
   display: block;\n
 }\n
 \n
-.front_pad { /* This class is used to display gadgets in front page */\n
+/* This class is used to display gadgets in front page */\n
+.front_pad { \n
   margin: 0;\n
-  padding-top: 0px;\n
-  padding-bottom: 0px;\n
-  padding-left: 7px;\n
-  padding-right: 7px;\n
-  width: 936px; /* XXX-JPS Related to front splash and page width - should become dynamic */\n
+  padding:0 7px;\n
 }\n
 \n
 /* column gadget in bottom */\n
@@ -212,57 +216,40 @@ div.border_bottom0px{\n
 /* front page gadget tabs switcher */\n
 #tabs {\n
   overflow: hidden;\n
-  width:99%;\n
   border-bottom: none;\n
   height: 35px;\n
 }\n
 \n
 #tabs ul {\n
-\n
-\tlist-style-type: none;\n
-\tmargin:0;\n
-\tpadding:10px 0 18px 0;\n
-\theight:22px;\n
-\tdisplay: block;\n
-\toverflow:hidden;\n
-\n
+  list-style-type: none;\n
+  padding:10px 0 18px 0;\n
+  height:22px;\n
+  display: block;\n
 }\n
 \n
 #tabs ul li {\n
-\n
-\tfloat:left;\n
-\toverflow: hidden;\n
-\tmargin: 0;\n
-\tpadding: 0 0 0 10px;\n
-\theight:22px;\n
-\twidth:auto;\n
-\tbackground: url(km_img/tabs.png) no-repeat transparent;\n
-\n
+  float:left;\n
+  padding: 0 0 0 10px;\n
+  height:22px;\n
+  background: url(km_img/tabs.png) no-repeat transparent;\n
 }\n
 \n
 #tabs ul li span {\n
-\n
-\tdisplay: block;\n
-\toverflow: hidden;\n
-\tmargin: 0;\n
-\twidth:auto;\n
-\theight:22px;\n
-\tline-height:24px;\n
-\tpadding-right:40px;\n
-\tpadding-top: 0em;\n
-\tposition: relative;\n
-\n
+  display: block;\n
+  margin: 0;\n
+  height:22px;\n
+  line-height:24px;\n
+  padding-right:40px;\n
+  padding-top: 0em;\n
 }\n
 \n
 #tabs ul li span a.icon {\n
-\n
-\tfloat:right;\n
-\twidth:10px;\n
-\theight:10px;\n
-\ttext-indent:-999999px;\n
-\tposition: absolute;\n
-\ttop:5px;\n
-\n
+  float:right;\n
+  width:10px;\n
+  height:10px;\n
+  text-indent:-999999px;\n
+  position: absolute;\n
+  top:5px;\n
 }\n
 \n
 \n
@@ -277,26 +264,16 @@ a#tabs-hide:link, a#tabs-hide:active, a#tabs-hide:visited { padding: 0 10px 0 10
   padding-top: 15px;\n
   height:35px;\n
   font-weight: normal;\n
-   border: none;\n
+  border: none;\n
 }\n
 \n
 /* Gadget Navigation table */\n
-#navigation_table{\n
-  color:#9D968D;\n
-  font-weight:normal;\n
-}\n
-\n
-#navigation_table td {\n
-  background: url(km_img/tabsbg.png) repeat-x transparent;\n
-  background-position: 0 100%;\n
+#pad-navigation-wrapper{\n
+  background: url("km_img/tabsbg.png") repeat-x scroll center bottom transparent;\n
   font-size: 8pt;\n
-}\n
-\n
-table tr td, table tr.thead th {\n
-\n
-\tpadding:4px;\n
-\tvertical-align: top;\n
-\n
+  height:50px;\n
+  border-bottom: none;\n
+  color: #9D968D;\n
 }\n
 \n
 #tabs ul li{\n
@@ -385,9 +362,8 @@ table tr td, table tr.thead th {\n
   font-weight: normal;\n
 }\n
 \n
-#navigation_table a:hover, \n
-#navigation_table #tabs_switcher:hover,\n
-#navigation_table #tabs ul #add_new_tab_dialog_link:hover{color: #FFF; }\n
+#tabs_switcher:hover,\n
+#tabs ul #add_new_tab_dialog_link:hover{color: #FFF; }\n
 \n
 \n
 /* Gadget window buttons */\n
@@ -400,11 +376,39 @@ a.block-edit-form{\n
   margin-top: 4px;\n
 }\n
 \n
+a.block-refresh { \n
+  background-position: 0 0;\n
+}\n
+\n
+a.block-minimize { \n
+  background-position: -17px 0;\n
+}\n
+\n
+a.block-remove { \n
+  background-position: -34px 0;\n
+}\n
+\n
+a.block-edit-form { \n
+  background-position: -51px 0;\n
+}\n
+\n
+a.block-minimize:hover { \n
+  background-position: -17px 100%;\n
+}\n
+\n
+a.block-remove:hover { \n
+  background-position: -34px 100%;\n
+}\n
+\n
+a.block-edit-form:hover { \n
+  background-position: -51px 100%;\n
+}\n
+\n
+\n
 /* Style for showing movement between gadget columns */\n
 div.block-hover {\n
   border: 2px dashed #f00;\n
 }\n
-\n
 \n
 /* Gadget layout */\n
 .block h3.handle{\n
@@ -437,16 +441,9 @@ div.block-hover {\n
 }\n
 \n
 .gadget {\n
-\tmargin:0;\n
-\tpadding:0;\n
-\tborder:none;\n
-}\n
-\n
-/* eof gadgets */\n
-\n
-/* Gadget content */\n
-div.block {\n
-  margin-bottom: 5px;\n
+  margin:0;\n
+  padding:0;\n
+  border:none;\n
 }\n
 \n
 /* Gadget edit form */\n
@@ -499,36 +496,21 @@ div.block table.listbox button.sort_button:hover{\n
 \n
 /* Add gadgets link */\n
 #add_new_gadget_link{\n
-  margin-top:13px;\n
+  margin-top:6px;\n
   padding:0;  \n
 }\n
 \n
+#stick-gadgets,\n
+#unstick-gadgets,\n
 #add-gadgets{\n
-  border-bottom: none;\n
-  float:right;\n
-  background: url(km_img/bt-add.png) no-repeat 0 0px;\n
-  margin-top:0px;\n
-  padding:0;\n
-  width:72px;\n
-  height:18px;\n
   cursor: pointer;\n
-}\n
-\n
-#stick-gadgets span,\n
-#add-gadgets span{\n
-  display: none;\n
-}\n
-\n
-/* Stick gadget */\n
-#stick-gadgets{\n
-  border-bottom: none;\n
   float:right;\n
-  background: url(km_img/bt-stick.png) no-repeat 0 0px;\n
   margin-top:0px;\n
-  padding:0;\n
-  width:55px;\n
-  height:18px;\n
-  cursor: pointer;\n
+  padding:5px 10px;\n
+  height: auto;\n
+  width:auto;\n
+  margin-left: 5px;\n
+  border-bottom: none;\n
 }\n
 \n
 #stick-gadgets a{\n
@@ -587,7 +569,7 @@ div.portal-column-undraggable h3.handle span{\n
 \n
 /* Decrease padding for gadgets\' text */\n
 fieldset.gadget div.text{\n
-  padding: 3px;\n
+  padding: 3px 0;\n
 }\n
 \n
 /* Gadget Browser */\n
@@ -620,7 +602,8 @@ div.gadget-website-browser ul.third_level{\n
   padding-left: 1.4em;\n
 }\n
 \n
-div.gadget-website-browser a, a:link, a:active, a:visited {\n
+div.gadget-website-browser a,div.gadget-website-browser a:link,\n
+div.gadget-website-browser a:active,div.gadget-website-browser a:visited {\n
   font-weight: normal;\n
   color: inherit;\n
 }\n
@@ -663,9 +646,6 @@ div.gadget_advertisement{\n
 /* Gadget Relations  */\n
 div.gadget-relations .listbox-head-title span{\n
   color: #000;\n
-}\n
-div.gadget-relations .listbox-body{\n
-  padding-left:5px;\n
 }\n
 \n
 div.gadget-relations div.listbox-head-navigation,\n
@@ -725,7 +705,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12308</int> </value>
+            <value> <int>11966</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

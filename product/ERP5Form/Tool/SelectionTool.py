@@ -942,8 +942,11 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      domain_url = REQUEST.form.get('domain_url',None)
-      domain_depth = REQUEST.form.get('domain_depth',0)
+     
+      unfoldDomain = REQUEST.form.get('unfoldDomain', None)
+      domain_url, domain_depth = unfoldDomain.split('.', 2)
+      domain_depth = int(domain_depth)      
+      
       domain_list = list(selection.getDomainList())
       domain_list = domain_list[0:min(domain_depth, len(domain_list))]
       if isinstance(domain_url, str):
@@ -960,8 +963,11 @@ class SelectionTool( BaseTool, SimpleItem ):
       """
       selection_name = REQUEST.list_selection_name
       selection = self.getSelectionFor(selection_name, REQUEST)
-      domain_url = REQUEST.form.get('domain_url',None)
-      domain_depth = REQUEST.form.get('domain_depth',0)
+      
+      foldDomain = REQUEST.form.get('foldDomain', None)
+      domain_url, domain_depth = foldDomain.split('.', 2)
+      domain_depth = int(domain_depth)
+      
       domain_list = list(selection.getDomainList())
       domain_list = domain_list[0:min(domain_depth, len(domain_list))]
       selection.edit(domain_list=[x for x in domain_list if x != domain_url])

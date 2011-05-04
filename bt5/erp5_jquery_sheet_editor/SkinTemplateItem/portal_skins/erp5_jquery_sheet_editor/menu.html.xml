@@ -42,7 +42,6 @@
   <a menu="menuFile_menuInstance">File</a>\n
   <a menu="menuView_menuInstance">View</a>\n
   <a menu="menuEdit_menuInstance">Edit</a>\n
-  <a menu="menuStyle_menuInstance">Style</a>\n
 </div>\n
 \n
 <div id="menuFile_menuInstance" class="menu">\n
@@ -134,22 +133,6 @@
   <a onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val(), \'COUNT\'); return false;" title="Wrap with COUNT">COUNT()</a>\n
   <a onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val(), \'MAX\'); return false;" title="Wrap with MAX">MAX()</a>\n
   <a onclick="sheetInstance.getTdRange(null, sheetInstance.obj.formula().val(), \'MIN\'); return false;" title="Wrap with MIN">MIN()</a>\n
-</div>\n
-\n
-<div id="menuStyle_menuInstance" class="menu">\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleBold\'); return false;">Bold</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleItalics\'); return false;">Italics</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleUnderline\', \'styleLineThrough\'); return false;">Underline</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleLineThrough\', \'styleUnderline\'); return false;">Strikethrough</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleLeft\', \'styleCenter styleRight\'); return false;">Left</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleCenter\', \'styleLeft styleRight\'); return false;">Center</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleRight\', \'styleLeft styleCenter\'); return false;">Right</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleUpper\', \'styleCapital styleLower\'); return false;">Uppercase</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleCapital\', \'styleUpper styleLower\'); return false;">Capitalize</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleLower\', \'styleCapital styleUpper\'); return false;">Lowercase</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleTop\', \'styleMiddle styleBottom\'); return false;">Top</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleMiddle\', \'styleTop styleBottom\'); return false;">Middle</a>\n
-  <a class="cellStyleToggle" onclick="sheetInstance.cellStyleToggle(\'styleBottom\', \'styleTop styleMiddle\'); return false;">Bottom</a>\n
 </div>
 
 ]]></unicode> </value>

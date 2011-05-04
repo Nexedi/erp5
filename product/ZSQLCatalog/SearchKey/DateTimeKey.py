@@ -72,7 +72,7 @@ def castDate(value):
       value = _DateTime(value, **date_kw)
     except DateTimeError:
       delimiter_count = countDelimiters(value)
-      if delimiter_count < 3:
+      if delimiter_count is not None and delimiter_count < 2:
         split_value = value.split()
         if split_value[-1].lower() in timezone_dict:
           value = '%s %s' % (date_completion_format_dict[date_kw.get('datefmt')][delimiter_count] % (' '.join(split_value[:-1]), ), split_value[-1])
@@ -101,6 +101,8 @@ def countDelimiters(value):
   assert isinstance(value, basestring)
   # Detect if timezone was provided, to avoid counting it as in precision computation.
   split_value = value.split()
+  if not split_value:
+    return None
   if split_value[-1].lower() in timezone_dict:
     value = ' '.join(split_value[:-1])
   # Count delimiters

@@ -12,7 +12,9 @@
         </item>
         <item>
             <key> <string>_Cacheable__manager_id</string> </key>
-            <value> <string>http_cache</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -60,23 +62,21 @@
 """\n
 from zExceptions import Unauthorized\n
 \n
-translateString = context.Base_translateString\n
 doc_info = {}\n
-owner_list = context.Base_getOwnerInfoList()\n
-doc_info[\'owner\'] = \'; \'.join([owner[\'title\'] for owner in owner_list])\n
+doc_info[\'owner_list\'] = context.Base_getOwnerInfoList()\n
 \n
 if context.getModificationDate() is not None:\n
-  doc_info[\'modification_date\'] = context.WebSite_getFancyRelativeDate(context.getModificationDate())\n
+  doc_info[\'modification_date\'] = context.Base_getDiffBetweenDateAndNow(context.getModificationDate())\n
   \n
 publication_date = context.Document_getLastWorkflowStateEntryDate(state=(\'public,\'),\n
                                                                   state_name=\'validation_state\')\n
 if publication_date is not None:\n
-  doc_info[\'publication_date\'] = context.WebSite_getFancyRelativeDate(publication_date)\n
+  doc_info[\'publication_date\'] = context.Base_getDiffBetweenDateAndNow(publication_date)\n
   \n
 release_date = context.Document_getLastWorkflowStateEntryDate(state=(\'released,\'),\n
                                                               state_name=\'validation_state\')\n
 if release_date is not None:\n
-  doc_info[\'release_date\'] = context.WebSite_getFancyRelativeDate(release_date)\n
+  doc_info[\'release_date\'] = context.Base_getDiffBetweenDateAndNow(release_date)\n
   \n
 try:\n
   doc_info[\'status\'] = context.getTranslatedValidationStateTitle() or \'\'\n
@@ -108,6 +108,8 @@ try:\n
 except AttributeError:\n
   pass\n
 \n
+doc_info[\'thumbnail_url\'] = context.Base_getThumbnailAbsoluteUrl()\n
+\n
 # add web sections document belongs too\n
 if website is None:\n
   website = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
@@ -117,6 +119,7 @@ for websection in website.getWebSectionValueList(context):\n
   sections.append({\'title\': websection.getCompactTranslatedTitle(),\n
                    \'url\': websection.absolute_url()})\n
 doc_info[\'sections\'] = sections\n
+doc_info[\'url\'] = context.absolute_url()\n
 \n
 return context.Document_viewPopupTemplate(**doc_info)\n
 </string> </value>

@@ -108,7 +108,7 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>test_core</td>\n
 </tr>\n
 <tr>\n
@@ -143,8 +143,7 @@
 </tr>\n
 </tal:block>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

@@ -27,7 +27,6 @@
 ##############################################################################
 
 import cPickle
-import md5
 import unittest
 import sys
 
@@ -41,9 +40,7 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.Base import _aq_reset
 from Products.ERP5Type.tests.utils import installRealClassTool
-from Products.ERP5Type.Utils import removeLocalPropertySheet
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import getSecurityManager
 from AccessControl import Unauthorized
@@ -62,42 +59,57 @@ class PropertySheetTestCase(ERP5TypeTestCase):
   """
   def setUp(self):
     """Set up the fixture. """
-    ERP5TypeTestCase.setUp(self)
+    super(PropertySheetTestCase,self).setUp()
     installRealClassTool(self.getPortal())
 
-  def tearDown(self):
+  def beforeTearDown(self):
     """Clean up """
-    transaction.abort()
     ttool = self.getTypesTool()
-    class_tool = self.getClassTool()
     # remove all property sheet we added to type informations
-    for ti_name, psheet_list in self._added_property_sheets.items():
+    for ti_name, psheet_list in getattr(self, '_added_property_sheets',
+                                   {}).items():
       ti = ttool.getTypeInfo(ti_name)
       property_sheet_set = set(ti.getTypePropertySheetList())
       for psheet in psheet_list:
         if psheet in property_sheet_set:
           property_sheet_set.remove(psheet)
-          # physically remove property sheet, otherwise invalid property sheet
-          # could break next tests.
-          removeLocalPropertySheet(psheet)
       ti._setTypePropertySheetList(list(property_sheet_set))
+    # this is useful if somehow the interaction workflows is set
+    # wrongly. If the interaction has been called already it does nothing,
+    # but in the other hand, if isolates the test "just in case"
+    ttool.resetDynamicDocumentsOnceAtTransactionBoundary()
     transaction.commit()
-    _aq_reset()
-    ERP5TypeTestCase.tearDown(self)
-    
-  def _addProperty(self, portal_type_name, property_definition_code):
-    """quickly add a property to a type information."""
-    m = md5.new()
-    m.update(portal_type_name + property_definition_code)
-    property_sheet_name = 'TestPS%s' % m.hexdigest()
-    property_sheet_code = """
-from Products.CMFCore.Expression import Expression
-class %(property_sheet_name)s:
-  _properties = ( %(property_definition_code)s, )
-""" % locals()
-    self._addPropertySheet(portal_type_name,
-                           property_sheet_code=property_sheet_code,
-                           property_sheet_name=property_sheet_name)
+    self.tic()
+    super(PropertySheetTestCase, self).beforeTearDown()
+
+  def _addProperty(self, portal_type_name, property_sheet_id,
+                   property_id=None,
+                   commit=True, **kw):
+    """quickly add a property to a type
+
+    It always associate / create the property sheet with id
+    property_sheet_id to the portal type portal_type_name.
+
+    When property_sheet_id is passed, we create a property of this
+    id, using kw** as parameters to the constructor.
+    """
+
+    ps = self._addPropertySheet(portal_type_name,
+                                property_sheet_name=property_sheet_id)
+
+    if property_id is not None:
+      if "\n" in property_id:
+        raise ValueError("Please update this test to use ZODB property sheets")
+
+      self.assertTrue('portal_type' in kw, "You need to specify the portal_type"
+          " you want to use to create that new property")
+      property = getattr(ps, property_id, None)
+      if property is not None:
+        ps._delObject(property_id)
+
+      property = ps.newContent(reference=property_id, **kw)
+    if commit:
+      transaction.commit()
 
 class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     """Tests ERP5TypeInformation and per portal type generated accessors.
@@ -118,9 +130,15 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # all those tests does strange things with Person type, so we won't
       # filter content types to add inside Person.
       self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
+      transaction.commit()
+
+      # save workflow chain for Person type
+      self.person_chain = self.getWorkflowTool().getChainFor('Person')
 
     def beforeTearDown(self):
       transaction.abort()
+      # THIS IS UGLY, WE MUST REMOVE AS SOON AS POSSIBLE, NOT COMPATIBLE
+      # WITH LIVE TEST
       for module in [ self.getPersonModule(),
                       self.getOrganisationModule(),
                       self.getCategoryTool().region ]:
@@ -131,8 +149,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         self.getTypesTool().getTypeInfo('Person').acquire_local_roles = self.person_acquire_local_roles
         self.portal.portal_caches.clearAllCache()
 
-      transaction.commit()
-      self.tic()
+      # restore workflows for other tests
+      self.getWorkflowTool().setChainForPortalTypes(
+        ['Person'], self.person_chain)
+
+      super(TestERP5Type, self).beforeTearDown()
 
     def loginWithNoRole(self):
       uf = self.portal.acl_users
@@ -189,7 +210,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       test_string = self.getRandomString()
       business_template.setTitle(test_string)
       self.assertEquals(business_template.getTitle(), test_string)
-    
+
     # Test Dynamic Code Generation
     def test_02_AqDynamic(self):
       module = self.getPersonModule()
@@ -269,7 +290,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       portal.person_module.__class__._setLastId = _setLastId
       try:
         try:
-          o = portal.person_module.newContent(portal_type="Person", 
+          o = portal.person_module.newContent(portal_type="Person",
                                               temp_object=1)
         except WriteError:
           self.fail("Container last ID modified")
@@ -284,10 +305,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(o._p_jar, None)
 
       # Temp objects always get a dummy ID by default.
-      o = portal.person_module.newContent(portal_type="Person", 
+      o = portal.person_module.newContent(portal_type="Person",
                                           temp_object=1)
       first_id = o.getId()
-      o = portal.person_module.newContent(portal_type="Person", 
+      o = portal.person_module.newContent(portal_type="Person",
                                           temp_object=1)
       second_id = o.getId()
       self.assertEquals(first_id, second_id)
@@ -349,7 +370,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         category through getRegionRelated accessors
       """
       region_category = self.getPortal().portal_categories.region
-      
+
       category_title = "Solar System"
       category_id = "solar_system"
       category_object = region_category.newContent(
@@ -357,7 +378,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
               id = category_id,
               title = category_title, )
       category_relative_url = category_object.getRelativeUrl()
- 
+
       person_title = "Toto"
       person_id = "toto"
       person_object = self.getPersonModule().newContent(
@@ -427,6 +448,24 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue(person_object.hasActivity())
       self.tic()
 
+      # category tool, base categories, properties
+      # are likely to be handled specifically for accessor generation,
+      # since they are the first portal types to be loaded.
+      # double-check that they also have group accessors
+      category_tool = self.portal.portal_categories.aq_inner
+      method = getattr(category_tool, 'getRegionRelatedList', None)
+      self.assertNotEquals(None, method)
+
+      region_category = category_tool.region.aq_inner
+      method = getattr(region_category, 'getRegionRelatedList', None)
+      self.assertNotEquals(None, method)
+
+      property_sheet_tool = self.portal.portal_property_sheets
+      person_property_sheet = property_sheet_tool.Person.aq_inner
+      method = getattr(person_property_sheet, 'getRegionRelatedList', None)
+      self.assertNotEquals(None, method)
+
+
     def test_05_setProperty(self):
       """
         In this test we create a subobject (ie. a phone number)
@@ -463,18 +502,18 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       def _cache():
         return cached_var
-      
-      from Products.ERP5Type.Cache import CachingMethod, clearCache
+
+      from Products.ERP5Type.Cache import CachingMethod
       cache = CachingMethod(_cache, id='testing_cache')
-      
+
       self.assertEquals(cache(), cached_var)
-      
+
       # change the variable
       cached_var = 'cached_var (modified)'
       # cache hit -> still the old variable
       self.assertEquals(cache(), cached_var_orig)
-        
-      clearCache()
+
+      self.portal.portal_caches.clearCache()
       self.assertEquals(cache(), cached_var)
 
     def test_07_afterCloneScript(self):
@@ -484,13 +523,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       method_id = 'Person_afterClone'
       if method_id in custom_skin.objectIds():
         custom_skin.manage_delObjects([method_id])
-      
+
       custom_skin.manage_addProduct['PythonScripts']\
                     .manage_addPythonScript(id = method_id)
       script = custom_skin[method_id]
       script.ZPythonScript_edit('', "context.setTitle('reseted')")
       self.getPortal().changeSkin(None)
-    
+
       # copy / pasted person have their title reseted
       folder = self.getPersonModule()
       pers = folder.newContent(portal_type='Person',
@@ -499,7 +538,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       new_id = folder.manage_pasteObjects(copy_data)[0]['new_id']
       new_pers = folder[new_id]
       self.assertEquals(new_pers.getTitle(), 'reseted')
-      
+
       # we can even change subobjects in the script
       if not hasattr(pers, 'default_address'):
         pers.newContent(portal_type='Address', id='default_address')
@@ -512,7 +551,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       new_pers = folder[new_id]
       self.assertEquals(new_pers.default_address.getTitle(),
                         'address_title_reseted')
-      
+
       # of course, other portal types are not affected
       folder = self.getOrganisationModule()
       orga = folder.newContent(portal_type='Organisation',
@@ -521,12 +560,11 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       new_id = folder.manage_pasteObjects(copy_data)[0]['new_id']
       new_orga = folder[new_id]
       self.assertEquals(new_orga.getTitle(), 'something')
-      
+
     def test_08_AccessorGeneration(self):
       """Tests accessor generation doesn't generate error messages.
       """
-      from Products.ERP5Type.Base import _aq_reset
-      _aq_reset()
+      self.portal.portal_types.resetDynamicDocuments()
       self._catch_log_errors(ignored_level=INFO)
       try:
         folder = self.getOrganisationModule()
@@ -535,7 +573,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         orga.getId()
       finally:
         self._ignore_log_errors()
-    
+
     def test_09_RenameObjects(self):
       """Test object renaming.
 
@@ -561,40 +599,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       for id_ in id_list:
         new_id = '%s_new' % id_
         self.assertEquals(folder._getOb(new_id).getId(), new_id)
-
-    def test_10_ConstraintNotFound(self):
-      """
-      When a Constraint is not found while importing a PropertySheet,
-      AttributeError was raised, and generated a infinite loop.
-      This is a test to make sure this will not happens any more
-      """
-      text = """
-class TestPropertySheet:
-    \"\"\"
-        TestPropertySheet for this unit test
-    \"\"\"
-
-    _properties = (
-        {   'id'          : 'strange_property',
-            'description' : 'A local property description',
-            'type'        : 'string',
-            'mode'        : '' },
-      )
-
-    _constraints = (
-        { 'id'            : 'toto',
-          'description'   : 'define a bad constraint',
-          'type'          : 'TestConstraintNotFoundClass',
-        },
-      )
-
-"""
-      self._addPropertySheet('Organisation', property_sheet_code=text)
-      folder = self.getOrganisationModule()
-      # We check that we raise exception when we create new object
-      from Products.ERP5Type.Utils import ConstraintNotFound
-      organisation =  self.assertRaises(ConstraintNotFound, folder.newContent,
-                                        portal_type='Organisation')
 
     def test_11_valueAccessor(self):
       """
@@ -763,7 +767,7 @@ class TestPropertySheet:
       module = self.getPersonModule()
       person = module.newContent(portal_type='Person')
 
-      # Do the same tests as in test_11_valueAccessor 
+      # Do the same tests as in test_11_valueAccessor
       person.setSubject('beta')
       self.assertEquals(person.getSubject(), 'beta')
       person.setSubjectList(['alpha', 'alpha'])
@@ -792,6 +796,21 @@ class TestPropertySheet:
       self.assertEquals(result, ['alpha', 'beta'])
       self.assertEquals(person.getSubjectList(), ['alpha', 'beta'])
 
+    def test_storage_id_accessor(self):
+      self._addProperty('Person',
+          self.id(),
+          'foo_bar',
+          elementary_type='string',
+          storage_id='foo_bar_storage',
+          portal_type='Standard Property')
+      obj = self.getPersonModule().newContent(portal_type='Person')
+      obj.setFooBar('foo')
+      self.assertEquals('foo', obj.getFooBar())
+      self.assertEquals('foo', getattr(obj, 'foo_bar_storage', 'unset'))
+      obj.edit(foo_bar='bar')
+      self.assertEquals('bar', obj.getFooBar())
+      self.assertEquals('bar', getattr(obj, 'foo_bar_storage', 'unset'))
+
     def test_13_acquiredAccessor(self):
       """
       The purpose of this test is to make sure that accessor for
@@ -807,7 +826,7 @@ class TestPropertySheet:
 
       # If address not available on one organisation
       # it is found on the mapping related organisation
-      # which is one step higher in the site 
+      # which is one step higher in the site
       pass
 
     def test_15_DefaultValue(self):
@@ -816,7 +835,7 @@ class TestPropertySheet:
       """
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
-      
+
       def getFirstName(default=None):
         "dummy method to check default is passed correctly"
         return default
@@ -849,10 +868,13 @@ class TestPropertySheet:
       """Tests that the default value is returned correctly when a default
       value is defined using the property sheet.
       """
-      self._addProperty('Person', '''{'id': 'dummy_ps_prop',
-                                      'type': 'string',
-                                      'mode': 'w',
-                                      'default': 'ps_default',}''')
+      self._addProperty('Person',
+          'test_15b_DefaultValueDefinedOnPropertySheet',
+          'dummy_ps_prop',
+          elementary_type='string',
+          portal_type='Standard Property',
+          property_default='python: "ps_default"')
+
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
       # The default ps value will be returned, when using generated accessor
@@ -866,7 +888,7 @@ class TestPropertySheet:
       # None can be a default value too
       self.assertEquals(None, person.getProperty('dummy_ps_prop', None))
       self.assertEquals(None, person.getDummyPsProp(None))
-      
+
       # once the value has been set, there's no default
       value = 'a value'
       person.setDummyPsProp(value)
@@ -880,10 +902,13 @@ class TestPropertySheet:
       """Tests that the default value is returned correctly when a default
       value is defined using the property sheet, on list accesors.
       """
-      self._addProperty('Person', '''{'id': 'dummy_ps_prop',
-                                      'type': 'lines',
-                                      'mode': 'w',
-                                      'default': [1, 2, 3],}''')
+      self._addProperty('Person',
+          'test_15b_ListAccessorsDefaultValueDefinedOnPropertySheet',
+          'dummy_ps_prop',
+          elementary_type='lines',
+          portal_type='Standard Property',
+          property_default='python: [1,2,3]')
+
       module = self.getPersonModule()
       person = module.newContent(id='1', portal_type='Person')
       # default accessor and list accessors are generated
@@ -924,9 +949,11 @@ class TestPropertySheet:
     def test_16_SimpleStringAccessor(self):
       """Tests a simple string accessor.
       This is also a way to test _addProperty method """
-      self._addProperty('Person', '''{'id': 'dummy_ps_prop',
-                                      'type': 'string',
-                                      'mode': 'w',}''')
+      self._addProperty('Person',
+          'test_16_SimpleStringAccessor',
+          'dummy_ps_prop',
+          elementary_type='string',
+          portal_type='Standard Property')
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       self.assertEquals('string', person.getPropertyType('dummy_ps_prop'))
       self.assertTrue(hasattr(person, 'getDummyPsProp'))
@@ -976,7 +1003,7 @@ class TestPropertySheet:
       self.assertEquals(initial_state.title,
                         person.getTranslatedValidationStateTitle())
       self.assertTrue([initial_state.title], message_catalog._translated)
-      
+
       self.assertEquals(initial_state.getId(),
                         person.getProperty('validation_state'))
       self.assertEquals(initial_state.title,
@@ -985,7 +1012,7 @@ class TestPropertySheet:
       self.assertEquals(initial_state.title,
                         person.getProperty('translated_validation_state_title'))
       self.assertTrue([initial_state.title], message_catalog._translated)
-      
+
       # default parameter is accepted by getProperty for compatibility
       self.assertEquals(initial_state.getId(),
                         person.getProperty('validation_state', 'default'))
@@ -1012,30 +1039,32 @@ class TestPropertySheet:
       self.assertEquals(other_state.title,
                         person.getProperty('translated_validation_state_title'))
       self.assertTrue([other_state.title], message_catalog._translated)
-    
-    DEFAULT_ORGANISATION_TITLE_PROP = '''
-                      { 'id':         'organisation',
+
+    DEFAULT_ORGANISATION_TITLE_PROP = {
+                        'portal_type': 'Acquired Property',
                         'storage_id': 'default_organisation',
-                        'type':       'content',
-                        'portal_type': ('Organisation', ),
-                        'acquired_property_id': ('title', 'reference'),
-                        'mode':       'w', }'''
+                        'elementary_type':       'content',
+                        'content_portal_type': 'python: (\'Organisation\', )',
+                        'content_acquired_property_id': ('title', 'reference'), }
 
     def test_18_SimpleContentAccessor(self):
       """Tests a simple content accessor.
       This tests content accessors, for properties that have class methods.
       """
-      # For testing purposes, we add a default_organisation inside a person, 
+      # For testing purposes, we add a default_organisation inside a person,
       # and we add code to generate a 'default_organisation_title' property on
       # this person that will returns the organisation title.
-      self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_PROP)
+      self._addProperty('Person',
+          'test_18_SimpleContentAccessor',
+          'organisation',
+          **self.DEFAULT_ORGANISATION_TITLE_PROP)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       self.assertTrue(hasattr(person, 'getDefaultOrganisationTitle'))
       self.assertTrue(hasattr(person, 'setDefaultOrganisationTitle'))
       person.setDefaultOrganisationTitle('The organisation title')
       # XXX content generated properties are not in propertyMap. is it a bug ?
       #self.assertTrue(person.hasProperty('default_organisation_title'))
-      
+
       # an organisation is created inside the person.
       default_organisation = person._getOb('default_organisation', None)
       self.assertNotEquals(None, default_organisation)
@@ -1048,7 +1077,7 @@ class TestPropertySheet:
       transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
-        if m.method_id == 'immediateReindexObject' 
+        if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
       self.tic()
 
@@ -1062,11 +1091,11 @@ class TestPropertySheet:
       transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
-        if m.method_id == 'immediateReindexObject' 
+        if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
       self.tic()
 
-      # edit once again (this time, with edit method), this time no new 
+      # edit once again (this time, with edit method), this time no new
       # organisation is created, the same is edited, and reindexed
       self.assertEquals(1, len(person.objectIds()))
       self.assertFalse(person._p_changed)
@@ -1078,7 +1107,7 @@ class TestPropertySheet:
       transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
-        if m.method_id == 'immediateReindexObject' 
+        if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
       self.tic()
 
@@ -1088,8 +1117,11 @@ class TestPropertySheet:
       # _aq_dynamic generated accessors.
       # This is test is very similar to test_18_SimpleContentAccessor, but we
       # use reference instead of title, because Reference accessors are
-      # generated. 
-      self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_PROP)
+      # generated.
+      self._addProperty('Person',
+          'test_18_SimpleContentAccessorWithGeneratedAccessor',
+          'organisation',
+          **self.DEFAULT_ORGANISATION_TITLE_PROP)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       self.assertTrue(hasattr(person, 'getDefaultOrganisationReference'))
       self.assertTrue(hasattr(person, 'setDefaultOrganisationReference'))
@@ -1106,7 +1138,7 @@ class TestPropertySheet:
       transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
-        if m.method_id == 'immediateReindexObject' 
+        if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
       self.tic()
 
@@ -1120,11 +1152,11 @@ class TestPropertySheet:
       transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
-        if m.method_id == 'immediateReindexObject' 
+        if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
       self.tic()
 
-      # edit once again (this time, with edit method), this time no new 
+      # edit once again (this time, with edit method), this time no new
       # organisation is created, the same is edited, and reindexed
       self.assertEquals(1, len(person.objectIds()))
       self.assertFalse(person._p_changed)
@@ -1136,17 +1168,20 @@ class TestPropertySheet:
       transaction.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
-        if m.method_id == 'immediateReindexObject' 
+        if m.method_id == 'immediateReindexObject'
             and m.object_path == default_organisation.getPhysicalPath()]))
       self.tic()
-    
+
 
     def test_18b_ContentAccessorWithIdClash(self):
       """Tests a content setters do not set the property on acquired object
       that may have the same id, using same scenario as test_18
       Note that we only test Setter for now.
       """
-      self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_PROP)
+      self._addProperty('Person',
+          'test_18b_ContentAccessorWithIdClash',
+          'organisation',
+          **self.DEFAULT_ORGANISATION_TITLE_PROP)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       another_person = self.getPersonModule().newContent(
                                         id='default_organisation',
@@ -1163,49 +1198,50 @@ class TestPropertySheet:
       self.assertNotEquals(None, default_organisation)
       self.assertEquals('The organisation title',
                         person.getDefaultOrganisationTitle())
-    
-    DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP = '''
-          { 'id':         'organisation',
+
+    DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP = {
+            'portal_type': 'Acquired Property',
             'storage_id': 'default_organisation',
-            'type':       'content',
-            'portal_type': ('Organisation', ),
-            'acquired_property_id': ('title', ),
+            'elementary_type':       'content',
+            'content_portal_type': "python: ('Organisation', )",
+            'content_acquired_property_id': ('title', ),
             'acquisition_base_category': ( 'destination', ),
-            'acquisition_portal_type'  : ( 'Person', ),
+            'acquisition_portal_type'  : "python: ( 'Person', )",
             'acquisition_accessor_id'  : 'getDefaultOrganisationValue',
             'acquisition_copy_value'   : 0,
-            'acquisition_mask_value'   : 1,
-            'acquisition_sync_value'   : 0,
-            'acquisition_depends'      : None,
-            'mode':       'w', }'''
-    
+            'acquisition_mask_value'   : 1
+    }
+
     def test_19_AcquiredContentAccessor(self):
       """Tests an acquired content accessor.
       """
-      # For testing purposes, we add a default_organisation inside a person, 
+      # For testing purposes, we add a default_organisation inside a person,
       # and we add code to generate a 'default_organisation_title' property on
       # this person that will returns the organisation title. If this is not
       # defined, then we will acquire the default organisation title of the
       # `destination` person. This is a stupid example, but it works with
       # objects we have in our testing environnement
-      self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
+      self._addProperty('Person',
+          'test_19_AcquiredContentAccessor',
+          'organisation',
+          **self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
       # add destination base category to Person TI
       person_ti = self.getTypesTool().getTypeInfo('Person')
       base_category_list = person_ti.getTypeBaseCategoryList()
       if 'destination' not in base_category_list:
         person_ti._setTypeBaseCategoryList(base_category_list + ['destination'])
-        _aq_reset()
+        transaction.commit()
 
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       other_pers = self.getPersonModule().newContent(id='2', portal_type='Person')
       other_pers_title = 'This is the title we should acquire'
       other_pers.setDefaultOrganisationTitle(other_pers_title)
       person.setDestinationValue(other_pers)
-      
+
       # title is acquired from the other person
       self.assertEquals(other_pers_title,
                         person.getDefaultOrganisationTitle())
-      
+
       # now if we save, it should create a default_organisation inside this
       # person, but do not modify the other_pers.
       person.setDefaultOrganisationTitle('Our organisation title')
@@ -1219,13 +1255,16 @@ class TestPropertySheet:
       that may have the same id, using same scenario as test_19
       Note that we only test Setter for now.
       """
-      self._addProperty('Person', self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
+      self._addProperty('Person',
+          'test_19b_AcquiredContentAccessorWithIdClash',
+          'organisation',
+          **self.DEFAULT_ORGANISATION_TITLE_ACQUIRED_PROP)
       # add destination base category to Person TI
       person_ti = self.getTypesTool().getTypeInfo('Person')
       base_category_list = person_ti.getTypeBaseCategoryList()
       if 'destination' not in base_category_list:
         person_ti._setTypeBaseCategoryList(base_category_list + ['destination'])
-        _aq_reset()
+        transaction.commit()
 
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       another_person = self.getPersonModule().newContent(
@@ -1243,27 +1282,33 @@ class TestPropertySheet:
       self.assertNotEquals(None, default_organisation)
       self.assertEquals('The organisation title',
                         person.getDefaultOrganisationTitle())
-    
-    DEFAULT_LANGUAGE_PROP = '''
-          { 'id':         'available_language',
-            'type':       'tokens',
-            'default'     : (),
-            'acquired_property_id': ('subject', ),
+
+    DEFAULT_LANGUAGE_PROP = {
+            'portal_type' : 'Acquired Property',
+            'elementary_type':       'tokens',
+            'property_default': 'python: ()',
+            'content_acquired_property_id': ('subject', ),
             'acquisition_base_category': ( 'parent', ),
-            'acquisition_portal_type'  : ( 'Person', ),
+            'acquisition_portal_type'  : "python: ( 'Person', )",
             'acquisition_copy_value'   : 0,
             'acquisition_mask_value'   : 1,
             'acquisition_accessor_id'  : 'getAvailableLanguageList',
-            'acquisition_depends'      : None,
-            'mode':       'rw', }'''
-    
+    }
+
     def test_19c_AcquiredTokensAccessor(self):
       """Tests an acquired tokens accessor.
-         We check in particular that getDefault[Property] and 
+         We check in particular that getDefault[Property] and
          setDefault[Property] are working correctly
       """
-      self._addProperty('Person', self.DEFAULT_LANGUAGE_PROP)
-      self._addProperty('Email', self.DEFAULT_LANGUAGE_PROP)
+      self._addProperty('Person',
+          'test_19c_AcquiredTokensAccessor_Person',
+          'available_language',
+          commit=False,
+          **self.DEFAULT_LANGUAGE_PROP)
+      self._addProperty('Email',
+          'test_19c_AcquiredTokensAccessor_Email',
+          'available_language',
+          **self.DEFAULT_LANGUAGE_PROP)
 
       # Category setters (list, set, default)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
@@ -1279,24 +1324,26 @@ class TestPropertySheet:
       self.assertEquals(email.getDefaultAvailableLanguage(), 'ja')
       self.assertEquals(email.getAvailableLanguageList(), ('ja', 'fr', 'en'))
 
-    SUBORDINATION_ORGANISATION_REFERENCE = '''
-          { 'id':         'subordination_organisation_reference',
-            'type':       'string',
+    SUBORDINATION_ORGANISATION_REFERENCE = {
+            'portal_type': 'Acquired Property',
+            'elementary_type':       'string',
             'acquisition_base_category': ( 'subordination', ),
-            'acquisition_portal_type'  : ( 'Organisation', ),
+            'acquisition_portal_type'  : "python: ( 'Organisation', )",
             'acquisition_copy_value'   : 0,
             'acquisition_mask_value'   : 1,
             'acquisition_accessor_id'  : 'getReference',
-            'acquisition_depends'      : None,
-            'mode':       'rw', }'''
+    }
 
     def test_19c2_AcquiredStringAccessor(self):
       """Tests an acquired string accessor.
-         We check in particular that getDefault[Property] and 
+         We check in particular that getDefault[Property] and
          setDefault[Property] are working correctly
          This test focus on acquisition_mask_value parameter
       """
-      self._addProperty('Person', self.SUBORDINATION_ORGANISATION_REFERENCE)
+      self._addProperty('Person',
+          'test_19c2_AcquiredStringAccessor',
+          'subordination_organisation_reference',
+          **self.SUBORDINATION_ORGANISATION_REFERENCE)
 
       person = self.getPersonModule().newContent(portal_type='Person')
       organisation = self.getOrganisationModule()\
@@ -1325,25 +1372,26 @@ class TestPropertySheet:
       self.assertEquals(person.getSubordinationOrganisationReference(),
                         organisation_reference)
 
-    SUBORDINATION_ORGANISATION_SOURCE_REFERENCE = '''
-          { 'id':         'subordination_organisation_source_reference',
-            'type':       'string',
+    SUBORDINATION_ORGANISATION_SOURCE_REFERENCE = {
+            'portal_type': 'Acquired Property',
+            'elementary_type':       'string',
             'acquisition_base_category': ( 'subordination', ),
-            'acquisition_portal_type'  : ( 'Organisation', ),
+            'acquisition_portal_type'  : "python: ( 'Organisation', )",
             'acquisition_copy_value'   : 0,
             'acquisition_mask_value'   : 0,
             'acquisition_accessor_id'  : 'getSourceReference',
-            'acquisition_depends'      : None,
-            'mode':       'rw', }'''
+    }
 
     def test_19c3_AcquiredStringAccessor(self):
       """Tests an acquired string accessor.
-         We check in particular that getDefault[Property] and 
+         We check in particular that getDefault[Property] and
          setDefault[Property] are working correctly
          This test focus on acquisition_mask_value parameter
       """
       self._addProperty('Person',
-                        self.SUBORDINATION_ORGANISATION_SOURCE_REFERENCE)
+          'test_19c3_AcquiredStringAccessor',
+          'subordination_organisation_source_reference',
+          **self.SUBORDINATION_ORGANISATION_SOURCE_REFERENCE)
 
       person = self.getPersonModule().newContent(portal_type='Person')
       organisation = self.getOrganisationModule()\
@@ -1376,12 +1424,6 @@ class TestPropertySheet:
                         organisation_reference)
 
 
-    NAME_INCLUDED_PROPERTY_PERSON = '''
-          { 'id':         'name_included_in_address',
-            'type':       'boolean',
-            'default'     : True,
-            'mode':       'rw', }
-    '''
     NAME_INCLUDED_PROPERTY_EMAIL = '''
           { 'id':         'name_included_in_address',
             'type':       'boolean',
@@ -1402,8 +1444,26 @@ class TestPropertySheet:
       Boolean accessors generate both an getPropertyName and an isPropertyName
       Check in particular that both behave the same way regarding acquisition
       """
-      self._addProperty('Person', self.NAME_INCLUDED_PROPERTY_PERSON)
-      self._addProperty('Email', self.NAME_INCLUDED_PROPERTY_EMAIL)
+      self._addProperty('Person',
+          'test_19d_AcquiredBooleanAccessor_Person',
+          'name_included_in_address',
+          commit=False,
+          portal_type='Standard Property',
+          property_default="python: True",
+          elementary_type="boolean")
+      self._addProperty('Email',
+          'test_19d_AcquiredBooleanAccessor_Email',
+          'name_included_in_address',
+          'name_included_in_address',
+          content_acquired_property_id=('name_included_in_address', ),
+          acquisition_base_category=( 'parent', ),
+          acquisition_portal_type="python: ( 'Person', )",
+          acquisition_copy_value=0,
+          acquisition_mask_value=1,
+          acquisition_accessor_id='getNameIncludedInAddress',
+          portal_type='Acquired Property',
+          property_default="python: True",
+          elementary_type="boolean")
 
       person = self.getPersonModule().newContent(portal_type='Person')
       email = person.newContent(portal_type='Email')
@@ -1452,7 +1512,7 @@ class TestPropertySheet:
       self.assertEquals('obj title', obj.getTitle())
       self.assertEquals('copy title', copy.getTitle())
       self.assertEquals(obj.getId(), copy.getId())
-    
+
       # acquisition context is the same
       self.assertEquals(self.getPersonModule(), obj.getParentValue())
       self.assertEquals(self.getPersonModule(), copy.getParentValue())
@@ -1466,7 +1526,7 @@ class TestPropertySheet:
 #       new_copy = obj.asContext(gender=gender.getCategoryRelativeUrl())
 #       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
       new_copy = obj.asContext()
-      self.assertTrue(new_copy.isTempObject(), 
+      self.assertTrue(new_copy.isTempObject(),
               '%r is not a temp object' % (new_copy,))
       self.assertEquals(obj.getId(), new_copy.getId())
       new_copy.edit(gender=gender.getCategoryRelativeUrl())
@@ -1553,7 +1613,7 @@ class TestPropertySheet:
       self.assertEquals("Organisation_viewDetails",
                   portal_type_object.getDefaultViewFor(obj).getId())
 
-      # Add new action with low priority 
+      # Add new action with low priority
       # We set it no visible
       hidden_action = portal_type_object.newContent(portal_type='Action Information',
           reference="financial_view",
@@ -1567,7 +1627,7 @@ class TestPropertySheet:
 
       # Default view must not change
       self.assertEquals("Organisation_viewDetails",
-                  portal_type_object.getDefaultViewFor(obj).getId())  
+                  portal_type_object.getDefaultViewFor(obj).getId())
 
       # If no action belong to view category, getDefaultViewFor
       # should fallback to first valid Action.
@@ -1598,7 +1658,7 @@ class TestPropertySheet:
     def test_22_securityReindex(self):
       """
       Tests that the security is reindexed when a role is changed on an object.
-      
+
       Note: Turn on Person.acquire_local_roles to 0 in afterSetUp.
       """
       portal = self.portal
@@ -1664,7 +1724,7 @@ class TestPropertySheet:
 
     def test_24_relatedValueAccessor(self):
       """
-      The purpose of this test is to make sure that category related 
+      The purpose of this test is to make sure that category related
       accessors work as expected.
 
       The test is implemented for both Category and Value
@@ -1698,59 +1758,59 @@ class TestPropertySheet:
 
       # Make sure categories are reindexed
       transaction.commit()
-      self.tic() 
+      self.tic()
 
       # Related accessor
-      self.assertSameSet(alpha.getRegionRelatedList(), 
+      self.assertSameSet(alpha.getRegionRelatedList(),
                         [alpha_path, doo_path, bar_path, foo_path])
       self.assertSameSet(alpha.getRegionRelatedList(
-                                              checked_permission="View"), 
+                                              checked_permission="View"),
                         [alpha_path, doo_path, bar_path, ])
-      self.assertSameSet(alpha.getRegionRelatedList(portal_type='Person'), 
+      self.assertSameSet(alpha.getRegionRelatedList(portal_type='Person'),
                         [doo_path, bar_path, foo_path])
       self.assertSameSet(
                    alpha.getRegionRelatedList(portal_type='Person',
-                                              checked_permission="View"), 
+                                              checked_permission="View"),
                    [doo_path, bar_path, ])
 
       # Related value accessor
-      self.assertSameSet(alpha.getRegionRelatedValueList(), 
+      self.assertSameSet(alpha.getRegionRelatedValueList(),
                         [alpha, doo, bar, foo])
       self.assertSameSet(alpha.getRegionRelatedValueList(
-                                              checked_permission="View"), 
+                                              checked_permission="View"),
                         [alpha, doo, bar, ])
       self.assertSameSet(alpha.getRegionRelatedValueList(portal_type='Person'),
                         [doo, bar, foo])
       self.assertSameSet(
              alpha.getRegionRelatedValueList(portal_type='Person',
-                                             checked_permission="View"), 
+                                             checked_permission="View"),
              [doo, bar, ])
 
       # Related id accessor
-      self.assertSameSet(alpha.getRegionRelatedIdList(), 
+      self.assertSameSet(alpha.getRegionRelatedIdList(),
                         [alpha.getId(), doo.getId(), bar.getId(), foo.getId()])
       self.assertSameSet(alpha.getRegionRelatedIdList(
                                              checked_permission="View"),
                         [alpha.getId(), doo.getId(), bar.getId(), ])
-      self.assertSameSet(alpha.getRegionRelatedIdList(portal_type='Person'), 
+      self.assertSameSet(alpha.getRegionRelatedIdList(portal_type='Person'),
                         [doo.getId(), bar.getId(), foo.getId()])
       self.assertSameSet(
              alpha.getRegionRelatedIdList(portal_type='Person',
-                                          checked_permission="View"), 
+                                          checked_permission="View"),
              [doo.getId(), bar.getId(), ])
 
       # Related title accessor
       self.assertSameSet(
-            alpha.getRegionRelatedTitleList(), 
+            alpha.getRegionRelatedTitleList(),
             [alpha.getTitle(), doo.getTitle(), bar.getTitle(), foo.getTitle()])
       self.assertSameSet(alpha.getRegionRelatedTitleList(
-                                          checked_permission="View"), 
+                                          checked_permission="View"),
                         [alpha.getTitle(), doo.getTitle(), bar.getTitle(), ])
-      self.assertSameSet(alpha.getRegionRelatedTitleList(portal_type='Person'), 
+      self.assertSameSet(alpha.getRegionRelatedTitleList(portal_type='Person'),
                         [doo.getTitle(), bar.getTitle(), foo.getTitle()])
       self.assertSameSet(
-             alpha.getRegionRelatedTitleList(portal_type='Person', 
-                                             checked_permission="View"), 
+             alpha.getRegionRelatedTitleList(portal_type='Person',
+                                             checked_permission="View"),
              [doo.getTitle(), bar.getTitle(), ])
 
     def test_25_AqDynamicWithTempObject(self):
@@ -1765,7 +1825,7 @@ class TestPropertySheet:
       """
       portal = self.portal
       # Clear out all generated methods.
-      _aq_reset()
+      self.portal.portal_types.resetDynamicDocuments()
 
       # Create a new temporary person object.
       from Products.ERP5Type.Document import newTempPerson
@@ -1802,7 +1862,7 @@ class TestPropertySheet:
       self.failIf(o.isTempObject())
 
       # Clear out all generated methods.
-      _aq_reset()
+      self.portal.portal_types.resetDynamicDocuments()
 
       # This should generate workflow methods.
       self.assertEquals(o.getValidationState(), 'draft')
@@ -1823,9 +1883,10 @@ class TestPropertySheet:
       This accessor returns true if the property is set on the document.
       """
       self._addProperty('Person',
-                  ''' { 'id':         'foo_bar',
-                        'type':       'string',
-                        'mode':       'w', }''')
+          'test_26_hasAccessors',
+          'foo_bar',
+          elementary_type='string',
+          portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       self.assertTrue(hasattr(obj, 'hasFooBar'))
       self.failIf(obj.hasFooBar())
@@ -1840,7 +1901,7 @@ class TestPropertySheet:
       The test is implemented for both Category and Value
       accessors.
 
-      Test that checked_permission is well configured 
+      Test that checked_permission is well configured
       for View permission
       """
       # Create a few categories
@@ -1990,11 +2051,11 @@ class TestPropertySheet:
       foo.setRegionValue(beta)
       self.assertEquals(beta_path, foo.getRegion())
       foo.setRegionValue(None)
-      foo.setRegionValue(gamma, 
+      foo.setRegionValue(gamma,
                          checked_permission=checked_permission)
       self.assertSameSet([gamma_path], foo.getRegionList())
       foo.setRegionValue(beta)
-      foo.setRegionValue(gamma, 
+      foo.setRegionValue(gamma,
                          checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
@@ -2006,11 +2067,11 @@ class TestPropertySheet:
       # XXX setDefaultValue seems buggy when passing None
 #       foo.setDefaultRegionValue(None)
       foo.setRegionValue(None)
-      foo.setDefaultRegionValue(gamma, 
+      foo.setDefaultRegionValue(gamma,
                                 checked_permission=checked_permission)
       self.assertEquals(gamma_path, foo.getRegion())
       foo.setDefaultRegionValue(beta_path)
-      foo.setDefaultRegionValue(gamma_path, 
+      foo.setDefaultRegionValue(gamma_path,
                                 checked_permission=checked_permission)
       self.assertEquals(gamma_path, foo.getDefaultRegion())
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
@@ -2021,11 +2082,11 @@ class TestPropertySheet:
       foo.setRegion(beta_path)
       self.assertEquals(beta_path, foo.getRegion())
       foo.setRegion(None)
-      foo.setRegion(gamma_path, 
+      foo.setRegion(gamma_path,
                     checked_permission=checked_permission)
       self.assertEquals(gamma_path, foo.getRegion())
       foo.setRegion(beta_path)
-      foo.setRegion(gamma_path, 
+      foo.setRegion(gamma_path,
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
       self.assertEquals(gamma_path,
@@ -2037,11 +2098,11 @@ class TestPropertySheet:
       foo.setDefaultRegion(beta_path)
       self.assertEquals(beta_path, foo.getRegion())
       foo.setRegion(None)
-      foo.setDefaultRegion(gamma_path, 
+      foo.setDefaultRegion(gamma_path,
                     checked_permission=checked_permission)
       self.assertEquals(gamma_path, foo.getRegion())
       foo.setDefaultRegion(beta_path)
-      foo.setDefaultRegion(gamma_path, 
+      foo.setDefaultRegion(gamma_path,
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
       self.assertEquals(gamma_path,
@@ -2053,11 +2114,11 @@ class TestPropertySheet:
       foo.setRegionList([beta_path])
       self.assertEquals(beta_path, foo.getRegion())
       foo.setRegionList([])
-      foo.setRegionList([gamma_path], 
+      foo.setRegionList([gamma_path],
                     checked_permission=checked_permission)
       self.assertEquals(gamma_path, foo.getRegion())
       foo.setRegionList([beta_path])
-      foo.setRegionList([gamma_path], 
+      foo.setRegionList([gamma_path],
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
@@ -2067,11 +2128,11 @@ class TestPropertySheet:
       foo.setRegionValueList([beta])
       self.assertEquals(beta_path, foo.getRegion())
       foo.setRegionList([])
-      foo.setRegionValueList([gamma], 
+      foo.setRegionValueList([gamma],
                     checked_permission=checked_permission)
       self.assertEquals(gamma_path, foo.getRegion())
       foo.setRegionValueList([beta])
-      foo.setRegionValueList([gamma], 
+      foo.setRegionValueList([gamma],
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
@@ -2085,7 +2146,7 @@ class TestPropertySheet:
                     checked_permission=checked_permission)
       self.assertEquals(gamma_path, foo.getRegion())
       foo.setRegionSet([beta_path])
-      foo.setRegionSet([gamma_path], 
+      foo.setRegionSet([gamma_path],
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
@@ -2095,11 +2156,11 @@ class TestPropertySheet:
       foo.setRegionValueSet([beta])
       self.assertEquals(beta_path, foo.getRegion())
       foo.setRegionSet([])
-      foo.setRegionValueSet([gamma], 
+      foo.setRegionValueSet([gamma],
                     checked_permission=checked_permission)
       self.assertEquals(gamma_path, foo.getRegion())
       foo.setRegionValueSet([beta])
-      foo.setRegionValueSet([gamma], 
+      foo.setRegionValueSet([gamma],
                     checked_permission=checked_permission)
       self.assertSameSet([beta_path, gamma_path], foo.getRegionList())
 
@@ -2109,7 +2170,7 @@ class TestPropertySheet:
       self.assertFalse(foo.hasRegion())
       foo.setRegionValue(beta)
       self.assertTrue(foo.hasRegion())
-    
+
     def test_category_accessor_to_unaccessible_documents(self):
       # Category Accessors raises Unauthorized when you try to access objects
       # you cannot Access, unless you explictly pass checked_permission=
@@ -2152,7 +2213,7 @@ class TestPropertySheet:
                         foo.getRegionList())
       self.assertEquals([gamma_path],
           foo.getRegionList(checked_permission='View'))
-      
+
       # getRegionValueList raises Unauthorized if document is related to
       # private documents (as always, unless you pass checked_permission)
       self.assertRaises(Unauthorized, foo.getRegionValueList)
@@ -2160,7 +2221,7 @@ class TestPropertySheet:
       self.assertEquals([gamma],
           foo.getRegionValueList(checked_permission='View'))
 
-      # same for property accessors 
+      # same for property accessors
       self.assertRaises(Unauthorized, foo.getRegionTitleList)
       self.assertRaises(Unauthorized, foo.getRegionTitleSet)
       self.assertEquals(["Gamma System"],
@@ -2202,28 +2263,18 @@ class TestPropertySheet:
           region_category.restrictedTraverse, "beta")
 
       # Define the acquired property
-      text = """
-class TestPropertySheet:
-    \"\"\"
-        TestAcquiredAccessorPropertySheet for this unit test
-    \"\"\"
-
-    _properties = (
-        {   'id'          : 'wrapped_region_title',
-            'description' : 'The title of the region',
-            'type'        : 'string',
-            'multivalued'        : 1,
-            'acquisition_base_category'     : ('region',),
-            'acquisition_portal_type'       : ('Category', ),
-            'acquisition_copy_value'        : 0,
-            'acquisition_accessor_id'       : 'getTitle',
-            'acquisition_depends'           : None,
-            'alt_accessor_id'               : ('_categoryGetRegionTitle', ),
-            'mode'        : 'w' },
-      )
-
-"""
-      self._addPropertySheet('Person', property_sheet_code=text)
+      self._addProperty('Person',
+          'Person_test_unaccessible',
+          'wrapped_region_title',
+          portal_type='Acquired Property',
+          elementary_type='lines',
+          description='The title of the region',
+          content_acquired_property_id=('description', ),
+          acquisition_base_category=( 'region', ),
+          acquisition_portal_type="python: ( 'Category', )",
+          alt_accessor_id=('_categoryGetRegionTitle', ),
+          acquisition_copy_value=0,
+          acquisition_accessor_id='getTitle')
 
       # Create a new person, and associate it to beta and gamma.
       module = self.getPersonModule()
@@ -2243,7 +2294,7 @@ class TestPropertySheet:
           foo.getWrappedRegionTitleList(checked_permission='View'))
 
       # Remove permission from parent object, the behaviour of acessor should
-      # be kept. If you have no permission to the parent, this means that the 
+      # be kept. If you have no permission to the parent, this means that the
       # sub objects cannot be accessed too.
       gamma.getParentValue().manage_permission("View", [], acquire=0)
 
@@ -2303,9 +2354,9 @@ class TestPropertySheet:
                         logged_errors[0].getMessage())
 
     def test_list_accessors(self):
-      self._addProperty('Person', '''{'id': 'dummy',
-                                      'type': 'lines',
-                                      'mode': 'w',}''')
+      self._addProperty('Person', 'test_list_accessors', 'dummy',
+          elementary_type='lines',
+          portal_type='Standard Property')
       module = self.getPersonModule()
       # we set the property on the module, to check acquisition works as
       # expected.
@@ -2331,18 +2382,20 @@ class TestPropertySheet:
       self.assertEquals(person.getDummySet(), ['value'])
 
     def test_translated_accessors(self):
-      self._addProperty('Person', '''{'id': 'dummy',
-                                      'type': 'string',
-                                      'translatable': 1,
-                                      'translation_domain': 'erp5_ui',
-                                      'mode': 'w',}''')
+      self._addProperty('Person',
+          'test_translated_accessors',
+          'dummy',
+          elementary_type='string',
+          translatable=1,
+          translation_domain='erp5_ui',
+          portal_type='Standard Property')
       self.portal.Localizer = DummyLocalizer()
       doc = self.portal.person_module.newContent(portal_type='Person')
 
       # translated and translation domain accessors are generated
       self.assertTrue(hasattr(doc, 'getTranslatedDummy'))
       self.assertTrue(hasattr(doc, 'getDummyTranslationDomain'))
-      
+
       self.assertEquals('erp5_ui', doc.getDummyTranslationDomain())
       doc.setDummy('foo')
       self.assertEquals('foo', doc.getTranslatedDummy())
@@ -2352,6 +2405,8 @@ class TestPropertySheet:
       # we can change the translation domain on the portal type
       self.portal.portal_types.Person.changeTranslations(
                                     dict(dummy='erp5_content'))
+      transaction.commit()
+
       self.assertEquals('erp5_content', doc.getDummyTranslationDomain())
       self.assertEquals('foo', doc.getTranslatedDummy())
       self.assertEquals(['foo'],
@@ -2368,6 +2423,8 @@ class TestPropertySheet:
       self.portal.Localizer = DummyLocalizer()
       self.portal.portal_types.Person.changeTranslations(
                                     dict(dummy=None))
+      transaction.commit()
+
       doc.setDummy('foo')
       self.assertFalse(doc.getDummyTranslationDomain())
       self.assertEquals('foo', doc.getTranslatedDummy())
@@ -2400,30 +2457,44 @@ class TestPropertySheet:
     def test_aq_reset_on_portal_types_properties_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
       ti = self.getTypesTool()['Person']
-      self.assertFalse(hasattr(doc, 'getDestination'))
-      ti.edit(type_base_category_list=
-        ti.getTypeBaseCategoryList() + ['destination'])
-      self.assertTrue(hasattr(doc, 'getDestination'))
+      base_category_list = ti.getTypeBaseCategoryList()
+      # this test is poorly isolated, and the _19*_ add destination
+      # to the base categories
+      if 'destination' not in base_category_list:
+
+        self.assertFalse(hasattr(doc, 'getDestination'))
+        ti.edit(type_base_category_list=
+          base_category_list + ['destination'])
+
+        transaction.commit()
+        self.assertTrue(hasattr(doc, 'getDestination'))
+      else:
+        self.assertTrue(hasattr(doc, 'getDestination'))
+        base_category_list.remove('destination')
+        ti.edit(type_base_category_list=base_category_list)
+
+        transaction.commit()
+        self.assertFalse(hasattr(doc, 'getDestination'))
 
     def test_aq_reset_on_workflow_chain_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      ti = self.getTypesTool()['Person']
       self.assertFalse(hasattr(doc, 'getCausalityState'))
       # chain the portal type with a workflow that has 'causality_state' as
       # state variable name, this should regenerate the getCausalityState
       # accessor. This test might have to be updated whenever
       # delivery_causality_workflow changes.
-      self.portal.portal_workflow.manage_changeWorkflows(
-          default_chain='',
-          props=dict(chain_Person='delivery_causality_workflow'))
+      self.getWorkflowTool().setChainForPortalTypes(
+        ['Person'], ('delivery_causality_workflow'))
+
+      transaction.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
 
     def test_aq_reset_on_workflow_method_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      ti = self.getTypesTool()['Person']
-      self.portal.portal_workflow.manage_changeWorkflows(
-          default_chain='',
-          props=dict(chain_Person='delivery_causality_workflow'))
+      self.getWorkflowTool().setChainForPortalTypes(
+        ['Person'], ('delivery_causality_workflow'))
+
+      transaction.commit()
       self.assertTrue(hasattr(doc, 'diverge'))
 
       wf = self.portal.portal_workflow.delivery_causality_workflow
@@ -2431,20 +2502,26 @@ class TestPropertySheet:
       from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD
       wf.transitions.dummy_workflow_method.setProperties(
           title='', new_state_id='', trigger_type=TRIGGER_WORKFLOW_METHOD)
+
+      transaction.commit()
       self.assertTrue(hasattr(doc, 'dummyWorkflowMethod'))
 
       wf.transitions.deleteTransitions(['dummy_workflow_method'])
+
+      transaction.commit()
       self.assertFalse(hasattr(doc, 'dummyWorkflowMethod'))
 
     def test_aq_reset_on_workflow_state_variable_change(self):
       doc = self.portal.person_module.newContent(portal_type='Person')
-      ti = self.getTypesTool()['Person']
-      self.portal.portal_workflow.manage_changeWorkflows(
-          default_chain='',
-          props=dict(chain_Person='delivery_causality_workflow'))
+      self.getWorkflowTool().setChainForPortalTypes(
+        ['Person'], ('delivery_causality_workflow'))
+
+      transaction.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
       wf = self.portal.portal_workflow.delivery_causality_workflow
       wf.variables.setStateVar('dummy_state')
+
+      transaction.commit()
       self.assertTrue(hasattr(doc, 'getDummyState'))
 
     # ... other cases should be added here
@@ -2466,7 +2543,7 @@ class TestPropertySheet:
       ok = Ok().__of__(doc)
       self.assertEquals('returned_attr', getattr(ok, 'attr'))
       self.assertEquals(ok.aq_dynamic_calls, ['attr'])
-      
+
     def test_aq_dynamic_exception(self):
       # if an exception is raised in _aq_dynamic, it should not be hidden
       doc = self.portal.person_module.newContent(portal_type='Person')
@@ -2538,19 +2615,20 @@ class TestPropertySheet:
     def test_DefaultSecurityOnAccessors(self):
       # Test accessors are protected correctly
       self._addProperty('Person',
-                  ''' { 'id':         'foo_bar',
-                        'type':       'string',
-                        'mode':       'w', }''')
+          'test_DefaultSecurityOnAccessors',
+          'foo_bar',
+          elementary_type='string',
+          portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
 
       self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
-      
+
       # setter is protected by default with modify portal content
       obj.manage_permission(Permissions.ModifyPortalContent, [], 0)
       self.assertFalse(guarded_hasattr(obj, 'setFooBar'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
-      
+
       # getter is protected with Access content information
       obj.manage_permission(Permissions.ModifyPortalContent, ['Manager'], 1)
       obj.manage_permission(Permissions.AccessContentsInformation, [], 0)
@@ -2560,18 +2638,19 @@ class TestPropertySheet:
     def test_DefaultSecurityOnListAccessors(self):
       # Test list accessors are protected correctly
       self._addProperty('Person',
-                  ''' { 'id':         'foo_bar',
-                        'type':       'lines',
-                        'mode':       'w', }''')
+          'test_DefaultSecurityOnListAccessors',
+          'foo_bar',
+          elementary_type='lines',
+          portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       self.assertTrue(guarded_hasattr(obj, 'setFooBarList'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBarList'))
-      
+
       # setter is protected by default with modify portal content
       obj.manage_permission(Permissions.ModifyPortalContent, [], 0)
       self.assertFalse(guarded_hasattr(obj, 'setFooBarList'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBarList'))
-      
+
       # getter is protected with Access content information
       obj.manage_permission(Permissions.ModifyPortalContent, ['Manager'], 1)
       obj.manage_permission(Permissions.AccessContentsInformation, [], 0)
@@ -2618,19 +2697,20 @@ class TestPropertySheet:
       # Test accessors are protected correctly when you specify the permission
       # in the property sheet.
       self._addProperty('Person',
-                  ''' { 'id':         'foo_bar',
-                        'write_permission' : 'Set own password',
-                        'read_permission'  : 'Manage users',
-                        'type':       'string',
-                        'mode':       'w', }''')
+          'test_PropertySheetSecurityOnAccessors',
+          'foo_bar',
+          elementary_type='string',
+          write_permission='Set own password',
+          read_permission='Manage users',
+          portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
-      
+
       obj.manage_permission('Set own password', [], 0)
       self.assertFalse(guarded_hasattr(obj, 'setFooBar'))
       self.assertTrue(guarded_hasattr(obj, 'getFooBar'))
-      
+
       obj.manage_permission('Set own password', ['Manager'], 1)
       obj.manage_permission('Manage users', [], 0)
       self.assertTrue(guarded_hasattr(obj, 'setFooBar'))
@@ -2638,11 +2718,12 @@ class TestPropertySheet:
 
     def test_edit(self):
       self._addProperty('Person',
-                        ''' { 'id':         'foo_bar',
-                        'write_permission' : 'Set own password',
-                        'read_permission'  : 'Manage users',
-                        'type':       'string',
-                        'mode':       'w', }''')
+          'test_edit',
+          'foo_bar',
+          elementary_type='string',
+          write_permission='Set own password',
+          read_permission='Manage users',
+          portal_type='Standard Property')
       obj = self.getPersonModule().newContent(portal_type='Person')
       obj.edit(foo_bar="v1")
       self.assertEqual(obj.getFooBar(), "v1")
@@ -2671,12 +2752,13 @@ class TestPropertySheet:
           portal_type='Base Type')
 
       type_info = self.portal.portal_types.getTypeInfo(object_portal_type)
-      
+
       # allow this type info in Person Module
       container_type_info = self.getTypesTool().getTypeInfo('Person Module')
       container_type_info._setTypeAllowedContentTypeList(
         container_type_info.getTypeAllowedContentTypeList()
         + [object_portal_type])
+      transaction.commit()
 
       # by default this is empty, which implictly means "Add portal content",
       # the default permission
@@ -2693,7 +2775,7 @@ class TestPropertySheet:
       self.assertFalse(type_info in container.allowedContentTypes())
       self.assertRaises(Unauthorized, container.newContent,
                         portal_type=object_portal_type)
-      
+
       type_info.permission = 'Manage portal'
       container.manage_permission('Manage portal', [], 0)
       self.assertFalse(type_info in container.allowedContentTypes())
@@ -2711,7 +2793,7 @@ class TestPropertySheet:
 
       container.manage_permission('Manage portal', [], 0)
       self.assertRaises(Unauthorized, container.manage_pasteObjects, copy_data)
-    
+
 
     def testPropertyListWithMonoValuedProperty(self):
       """
@@ -2719,9 +2801,10 @@ class TestPropertySheet:
       on a mono valued property
       """
       self._addProperty('Person',
-                  ''' { 'id':         'foo_bar',
-                        'type':       'string',
-                        'mode':       'rw', }''')
+          'testPropertyListWithMonoValuedProperty',
+          'foo_bar',
+          elementary_type='string',
+          portal_type='Standard Property')
       person = self.getPersonModule().newContent(portal_type='Person')
       email = person.newContent(portal_type='Email')
       self.assertEquals(None, getattr(person, 'getFooBarList', None))
@@ -2737,7 +2820,7 @@ class TestPropertySheet:
       person.setPropertyList('foo_bar', ['bar'])
       self.assertEquals(person.getProperty('foo_bar'), 'bar')
       self.assertEquals(person.getPropertyList('foo_bar'), ['bar'])
-      self.assertRaises(TypeError, person.setPropertyList, 'foo_bar', 
+      self.assertRaises(TypeError, person.setPropertyList, 'foo_bar',
                         ['a', 'b'])
 
     def testPropertyListOnMonoValuedAcquiredProperty(self):
@@ -2746,20 +2829,22 @@ class TestPropertySheet:
       on a mono valued acquired property
       """
       self._addProperty('Person',
-                  ''' { 'id':         'foo_bar',
-                        'type':       'string',
-                        'mode':       'rw', }''')
+          'testPropertyListOnMonoValuedAcquiredProperty_Person',
+          'foo_bar',
+          commit=False,
+          elementary_type='string',
+          portal_type='Standard Property')
       self._addProperty('Email',
-                  ''' { 'id':         'foo_bar',
-                        'type':       'string',
-                        'acquired_property_id': ('description', ),
-                        'acquisition_base_category': ( 'parent', ),
-                        'acquisition_portal_type'  : ( 'Person', ),
-                        'acquisition_copy_value'   : 0,
-                        'acquisition_mask_value'   : 1,
-                        'acquisition_accessor_id'  : 'getFooBar',
-                        'acquisition_depends'      : None,
-                        'mode':       'rw', }''')
+          'testPropertyListOnMonoValuedAcquiredProperty_Email',
+          'foo_bar',
+          elementary_type='string',
+          portal_type='Acquired Property',
+          content_acquired_property_id=('description', ),
+          acquisition_base_category=( 'parent', ),
+          acquisition_portal_type="python: ( 'Person', )",
+          acquisition_copy_value=0,
+          acquisition_mask_value=1,
+          acquisition_accessor_id='getFooBar')
       person = self.getPersonModule().newContent(portal_type='Person')
       email = person.newContent(portal_type='Email')
       self.assertEquals(email.getPropertyList('foo_bar'), [None])
@@ -2778,10 +2863,10 @@ class TestPropertySheet:
       on a multi valued property
       """
       self._addProperty('Person',
-                  ''' { 'id':         'foo_bar',
-                        'type':       'string',
-                        'multivalued': 1,
-                        'mode':       'rw', }''')
+          'testPropertyListWithMultiValuedProperty',
+          'foo_bar',
+          elementary_type='lines',
+          portal_type='Standard Property')
       person = self.getPersonModule().newContent(portal_type='Person')
       # We have None, like test_list_accessors
       self.assertEquals(person.getFooBarList(), None)
@@ -2790,6 +2875,27 @@ class TestPropertySheet:
       self.assertEquals(person.getPropertyList('foo_bar'), ['foo', 'bar'])
       person.setPropertyList('foo_bar', [])
       self.assertEquals(person.getFooBarList(), [])
+
+    def testPropertyNoAcquisition(self):
+      """
+      Check that getPropertyList (and getProperty as well as
+      getPropertyList calls getProperty) do not get the property
+      defined on its parent through acquisition
+      """
+      self._addProperty('Person Module',
+                        'testPropertyListWithMultivaluedPropertyNoAcquisition',
+                        'multivalued_no_acquisition',
+                        elementary_type='lines',
+                        portal_type='Standard Property')
+
+      person_module = self.getPersonModule()
+      person_module.setPropertyList('multivalued_no_acquisition', ['foo'])
+      self.assertEquals(
+        person_module.getPropertyList('multivalued_no_acquisition'), ['foo'])
+
+      person = self.getPersonModule().newContent(portal_type='Person')
+      self.assertEquals(
+        person.getPropertyList('multivalued_no_acquisition', ['bar']), ['bar'])
 
     def testUndefinedProperties(self):
       """
@@ -2877,22 +2983,20 @@ class TestPropertySheet:
       self.assertTrue(method())
 
     def test_type_provider(self):
-      from Products.ERP5Type.Tool.TypesTool import TypeProvider
-      class DummyTypeProvider(TypeProvider):
-        id = 'dummy_type_provider'
-       # portal_type = 'Dummy Type Provider'
-      
-      self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+      self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
+
       types_tool = self.portal.portal_types
       # register our dummy type provider
       types_tool.type_provider_list = types_tool.type_provider_list + (
                                             'dummy_type_provider',)
-      
+
       # types created in our type provider are available
       dummy_type = self.portal.dummy_type_provider.newContent(
               portal_type='Base Type',
               id='Dummy Type',
-              type_factory_method_id='addFolder', )
+              type_class='Folder', )
+
+      transaction.commit()
 
       # our type is available from types tool
       self.assertNotEquals(None, types_tool.getTypeInfo('Dummy Type'))
@@ -2905,9 +3009,12 @@ class TestPropertySheet:
       # we can create instances from our type provider
       container = self.portal.newContent(portal_type='Folder', id='test_folder')
       dummy_instance = container.newContent(portal_type='Dummy Type')
-      
+
       # and use generated accessors on them
       dummy_type.edit(type_property_sheet_list=('Reference', ))
+
+      transaction.commit()
+      self.tic()
 
       dummy_instance.setReference('test')
       self.assertEquals('test', dummy_instance.getReference())
@@ -2959,6 +3066,26 @@ class TestPropertySheet:
             index_list.append(action_list.index(action))
         if len(index_list):
           portal_actions.deleteActions(selections=index_list)
+
+    def test_propertyMap_unique_properties(self):
+      portal = self.getPortalObject()
+      person = portal.person_module.newContent(portal_type='Person')
+      property_id_dict = dict()
+      non_unique_property_id_list = []
+      for property_id in [p['id'] for p in person.propertyMap()]:
+        if property_id in property_id_dict:
+          non_unique_property_id_list.append(property_id)
+        property_id_dict[property_id] = 1
+      self.assertEqual([], non_unique_property_id_list)
+
+    def testLocalProperties(self):
+      portal = self.getPortalObject()
+      person = portal.person_module.newContent(portal_type='Person')
+      person.edit(foo_property='bar')
+      self.assertEquals('bar', person.getProperty('foo_property'))
+      del person.__dict__['foo_property']
+      self.assertEquals(None, person.getProperty('foo_property'))
+      self.assertEquals(None, person.getProperty('foobar_property'))
 
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests

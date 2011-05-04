@@ -62,7 +62,7 @@ class TranslationProviderBase(object):
     """
     property_domain_dict = {}
 
-    for prop in self._getPropertyHolder()._properties:
+    for prop in self._getPropertyHolder().getAccessorHolderPropertyList():
       prop_id = prop['id']
       if prop.get('translatable') and prop_id not in property_domain_dict:
         domain_name = prop.get('translation_domain')
@@ -155,8 +155,9 @@ class TranslationProviderBase(object):
       if new_domain_name != prop_object.getDomainName():
         prop_object.edit(domain_name=new_domain_name)
 
-    from Products.ERP5Type.Base import _aq_reset
-    _aq_reset() # Reset accessor cache
+    # Reset accessor cache
+    types_tool = self.getPortalObject().portal_types
+    types_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
 
     if REQUEST is not None:
       return self.manage_editTranslationForm(REQUEST, manage_tabs_message=

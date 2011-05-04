@@ -1,3 +1,57 @@
+2011-04-12 lucas
+* Replaced links for span elements.
+
+2011-04-12 lucas
+* Login name should not be displayed.
+
+2011-04-12 lucas
+* Fixed an issue where wizard.css should be imported only once.
+
+2011-04-08 lucas
+*  Fixed expression once the last step of configuration there is no form object.
+
+2011-04-08 lucas
+* The field your_business_configuration has been renamed to fix a bug when the key was invalid, the list of business configuration wasn't being rendered.
+
+2011-04-07 lucas
+* Kept the Configuration Tool consistency, the name of the button element must be field_your_business_configuration. Then the action name must be handled by the form instead of the button.
+
+2011-04-07 lucas
+* The ConfiguratorTool_getAvailableBusinessConfigurationList must return a list of tuples following the appropriated order, such list is used to render the business configuration in the new user interface.
+
+2011-04-07 lucas
+* Removed obsolete Start button.
+
+2011-04-07 lucas
+* Load the CSS file to customize the new user interface.
+
+2011-04-07 lucas
+* Replaced the your_business_configuration list field for an editor field, which must render the new business configuration list.
+
+2011-04-07 lucas
+* Added the page template of new user interface  which must replace the old your_business_configuration list field.
+
+2011-04-07 lucas
+* Added CSS file which must be used to customize the new user interface.
+
+2011-04-07 lucas
+* Added new fields to allow to add default image in Business Configuration.
+
+2011-04-07 lucas
+* Added Embedded File as allowed content type of Business Configuration
+
+2011-04-07 lucas
+* Update XML format of PortalTypeTemplateItem.
+
+2011-04-01 lucas
+* Renamed currency_list.ods to standard_currency_list.ods
+
+2011-03-30 lucas
+* Anonymous can not view the Configurator Tool.
+
+2010-01-03 lucas
+* Moved the extension ConfigurationTemplate_readOOoCalcFile to this bt5.
+
 2010-01-01 lucas
 * Added proxy field in all forms, using base configurator field library.
 

@@ -56,31 +56,49 @@ Example::
 """
 
 import warnings
-from UserDict import IterableUserDict
-from Shared.DC.ZRDB.TM import TM
 from threading import local
+from transaction import get as get_transaction
+import transaction.interfaces
+import zope.interface
 
-class TransactionalVariable(TM, IterableUserDict):
+class TransactionalVariable(dict):
   """TransactionalVariable provides a dict-like look-n-feel.
   This class must not be used directly outside.
   """
-  _finalize = None
+  zope.interface.implements(transaction.interfaces.IDataManager)
 
-  def _begin(self, *ignored):
-    pass
+  _unregistered = True
 
-  def _finish(self, *ignored):
+  def sortKey(self):
+    return None
+
+  commit = tpc_vote = tpc_begin = tpc_abort = lambda self, transaction: None
+
+  def abort(self, txn):
+    self._unregistered = True
     self.clear()
 
-  def _abort(self, *ignored):
-    self.clear()
+  tpc_finish = abort
 
-  def __hash__(self):
-    return hash(id(self))
+  # override all methods that may add entries to the dict
 
   def __setitem__(self, key, value):
-    IterableUserDict.__setitem__(self, key, value)
-    self._register()
+    if self._unregistered:
+      get_transaction().join(self)
+      self._unregistered = False
+    return dict.__setitem__(self, key, value)
+
+  def setdefault(self, key, failobj=None):
+    if self._unregistered:
+      get_transaction().join(self)
+      self._unregistered = False
+    return dict.setdefault(self, key, failobj)
+
+  def update(self, *args, **kw):
+    if self._unregistered:
+      get_transaction().join(self)
+      self._unregistered = False
+    return dict.update(self, *args, **kw)
 
 transactional_variable_pool = local()
 
@@ -97,3 +115,25 @@ def getTransactionalVariable(context=_MARKER):
     tv = TransactionalVariable()
     transactional_variable_pool.instance = tv
     return tv
+
+
+class TransactionalResource(object):
+
+  zope.interface.implements(transaction.interfaces.IDataManager)
+
+  def __init__(self, transaction_manager=None, **kw):
+    if transaction_manager is None:
+      from transaction import manager as transaction_manager
+    self.__dict__.update(kw, transaction_manager=transaction_manager)
+    transaction_manager.get().join(self)
+
+  @classmethod
+  def registerOnce(cls, *args):
+    tv = getTransactionalVariable().setdefault(cls, set())
+    return not (args in tv or tv.add(args))
+
+  def sortKey(self):
+    return 1
+
+  abort = commit = tpc_vote = tpc_begin = tpc_finish = tpc_abort = \
+    lambda self, transaction: None

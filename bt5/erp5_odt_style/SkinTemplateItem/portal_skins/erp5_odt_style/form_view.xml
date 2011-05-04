@@ -218,7 +218,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
       <tal:block metal:define-macro="form_layout"\n
                  tal:define="dummy python: request.set(\'here\', here);\n
                              preference_tool python:here.getPortalObject().portal_preferences;\n
-                             render_text python: lambda txt, attr_dict={}: context.Base_viewFieldLibrary.my_title.render_odt(value=txt,\n
+                             render_text python: lambda txt, attr_dict={}: context.Base_viewODTStyleFieldLibrary.my_title.render_odt(value=txt,\n
                                                                                                                       REQUEST=request,\n
                                                                                                                       attr_dict=attr_dict);">\n
         <!-- standard groups -->\n
@@ -420,8 +420,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
       </tal:block>\n
     </office:text>\n
   </office:body>\n
-</office:document-content>\n
-
+</office:document-content>
 
 ]]></unicode> </value>
         </item>
@@ -451,7 +450,7 @@ bWxQSwUGAAAAAAIAAgCeAAAAhwwAAAAA</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

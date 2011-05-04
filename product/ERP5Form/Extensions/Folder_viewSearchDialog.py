@@ -233,8 +233,11 @@ def getSearchDialog(self, REQUEST=None):
   search_list = ListBoxListRenderer(
                       listbox.widget, listbox, request).getSearchColumnIdSet()
 
+  full_text_search_added = False
   for column_id, column_title in column_list:
     # is it a base category ?
+    if column_id == "SearchableText":
+      full_text_search_added = True
     short_column_id = column_id
     # strip the usuale default_ and _title that are on standard fields.
     if short_column_id.endswith('_translated_title'):
@@ -252,6 +255,7 @@ def getSearchDialog(self, REQUEST=None):
           default_search_key = 'Keyword'
         addKeywordSearchStringField(column_id, column_title,
                                     default_search_key=default_search_key)
+        continue
       else:
         addListField(short_column_id, column_title)
         continue
@@ -340,7 +344,8 @@ def getSearchDialog(self, REQUEST=None):
             ['title', 'items', 'default'])
 
 
-  addFullTextStringField('SearchableText', 'Full Text Search')
+  if not full_text_search_added:
+    addFullTextStringField('SearchableText', 'Full Text Search')
 
   # Order fields
   default_group = temp_form.group_list[0]

@@ -266,10 +266,3 @@ InventoryLine.getBaobabSourceProjectUid__roles__ = PermissionRole(Permissions.Vi
 InventoryLine.getBaobabDestinationProjectUid = lambda x: x.getDestinationProjectUid()
 InventoryLine.getBaobabDestinationProjectUid__roles__ = PermissionRole(Permissions.View)
 
-
-def getDeliveryValue(self):
-  """
-  """
-  return self
-
-Currency.getDeliveryValue = getDeliveryValue

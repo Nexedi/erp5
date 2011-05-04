@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Generic script of Entity_addEvent\n
+It creates new Event for any context which become follow_up of created Event.\n
+\n
+Connected user is source (outgoing direction)\n
+for Organisations and Persons, context is destination(_section) (for outgoing direction)\n
+\n
+Follow_up is setted up only if context is not Entity.\n
+\n
+User is redirected on Event to fill in message.\n
+"""\n
+portal = context.getPortalObject()\n
+portal_entity_type_list = portal.getPortalEntityTypeList()\n
+\n
+# Search current user ID\n
+logged_in_user_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+start_date = DateTime()\n
+\n
+person = None\n
+organisation = None\n
+if logged_in_user_value is not None:\n
+  person = logged_in_user_value.getRelativeUrl()\n
+  organisation = logged_in_user_value.getSubordination()\n
+\n
+person_relative_url = None\n
+organisation_relative_url = None\n
+follow_up = None\n
+if context.getPortalType() in portal_entity_type_list:\n
+  if context.getPortalType() == \'Person\':\n
+    person_relative_url = context.getRelativeUrl()\n
+    organisation_relative_url = context.getSubordination()\n
+  elif context.getPortalType() == \'Organisation\':\n
+    person_relative_url = None\n
+    organisation_relative_url = context.getRelativeUrl()\n
+else:\n
+  follow_up = context.getRelativeUrl()\n
+\n
+if direction == \'out\':\n
+  source_url = person\n
+  source_section_url = organisation\n
+  destination_url = person_relative_url or organisation_relative_url\n
+  destination_section_url = organisation_relative_url\n
+elif direction == \'in\':\n
+  source_url = person_relative_url or organisation_relative_url\n
+  source_section_url = organisation_relative_url\n
+  destination_url = person\n
+  destination_section_url = organisation\n
+else:\n
+  raise NotImplementedError, \'The specified direction is not handled: %r\' % (direction,)\n
+\n
+event_kw = {}\n
+event_kw[\'portal_type\'] = portal_type\n
+event_kw[\'title\'] = title\n
+event_kw[\'resource\'] = resource\n
+event_kw[\'source\'] = source_url\n
+event_kw[\'source_section\'] = source_section_url\n
+event_kw[\'destination\'] = destination_url\n
+event_kw[\'destination_section\'] = destination_section_url\n
+event_kw[\'start_date\'] = start_date\n
+event_kw[\'follow_up\'] = follow_up\n
+event_kw[\'text_content\'] = text_content\n
+\n
+# Create event\n
+module = portal.getDefaultModule(portal_type=portal_type)\n
+event = module.newContent(**event_kw)\n
+\n
+if batch_mode:\n
+  return event\n
+\n
+message = portal.Base_translateString(\'New event created.\')\n
+\n
+event.Base_redirect(keep_items={\'portal_status_message\': message})\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>title, direction, portal_type, resource, text_content=None, batch_mode=False, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_addEvent</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

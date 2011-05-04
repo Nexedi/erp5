@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>selection_name</string>
                 <string>title</string>
               </list>
             </value>
@@ -54,6 +55,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -62,7 +67,17 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>selection_name</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -104,6 +119,10 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>search_selection</string> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
@@ -113,6 +132,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: \'%s_%s_%s_selection\' % (here.getRelativeUrl().replace(\'/\', \'_\'), form.getId(), field.getId())</string> </value>
         </item>
       </dictionary>
     </pickle>

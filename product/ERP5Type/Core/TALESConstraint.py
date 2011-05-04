@@ -86,3 +86,10 @@ class TALESConstraint(ConstraintMixin):
                                   mapping=dict(error=str(e)))]
 
     return []
+
+  _message_id_tuple = ('message_expression_false',
+                       'message_expression_error')
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(expression):
+    yield dict(expression=expression)

@@ -58,17 +58,16 @@ portal = context.getPortalObject()\n
 request = context.REQUEST\n
 \n
 if request.form.has_key("key"):\n
-  webpage = context.WebSection_userFollowUpWebPage(reference=context.REQUEST.form.get("key"))\n
+  webpage = context.ERP5Site_userFollowUpWebPage(reference=context.REQUEST.form.get("key"))\n
   webpage_id = webpage.getId()\n
-  editor_name = context.Base_getEditorViewName(webpage.getPortalType())\n
-  return context.Base_redirect("/web_page_module/%s/%s" % (webpage_id, editor_name),\n
+  return context.Base_redirect("/web_page_module/%s" % webpage_id,\n
                               keep_items=dict(editable_mode=1))\n
 \n
 else:\n
   portal_type_list = request.form.get("portal_type")\n
   searchable_text = request.form.get("SearchableText")\n
   return context.Base_redirect("unfoldDomain", \n
-                               keep_items = dict(domain_url="ung_domain/all_document_list",\n
+                               keep_items = dict(domain_url="ung_domain/all_documents",\n
                                                  form_id="erp5_web_ung_layout",\n
                                                  list_selection_name="ung_document_list_selection",\n
                                                  domain_depth=0,\n

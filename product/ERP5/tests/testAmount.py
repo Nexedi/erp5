@@ -28,6 +28,7 @@
 
 import unittest
 import os
+import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -233,23 +234,35 @@ class TestMovement(ERP5TypeTestCase):
     self.login()
     self.portal = self.getPortal()
 
+    if getattr(self.portal, 'dummy_delivery_module', None) is None:
+      types_tool = self.portal.portal_types
+      types_tool.newContent(id="My Movement",
+                            type_class="Movement")
+      types_tool.newContent(id="My Delivery",
+                            type_class="Delivery",
+                            type_allowed_content_type_list=("My Movement",))
+      types_tool.newContent(id="My Delivery Module",
+                            type_class="Folder",
+                            type_allowed_content_type_list=("My Delivery",))
+
+      self.portal.newContent(id="dummy_delivery_module",
+                             portal_type="My Delivery Module")
+      transaction.commit()
+    self.delivery_module = self.portal.dummy_delivery_module
+
   def getPortalName(self):
     forced_portal_id = os.environ.get('erp5_tests_portal_id')
     if forced_portal_id:
       return str(forced_portal_id)
     return 'movement_test'
 
-  def _makeOne(self, *args, **kw):
-    from Products.ERP5.Document.Movement import Movement
-    mvt = Movement(*args, **kw)
-    from Products.ERP5.Document.Delivery import Delivery
-    delivery = Delivery('delivery').__of__(self.portal)
-    # return it wrapped in a delivery, so that it can access the types tool in
-    # _aq_dynamic, and so that getExplanationValue works as expected
-    return mvt.__of__(delivery)
+  def _makeOne(self, **kw):
+    # returns a Movement inside of a delivery
+    delivery = self.delivery_module.newContent()
+    return delivery.newContent(**kw)
 
   def testQuantity(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setQuantity(10)
     self.assertEquals(10, mvt.getQuantity())
     self.assertEquals(0, mvt.getTotalPrice())
@@ -257,7 +270,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(20, mvt.getQuantity())
   
   def testPrice(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     self.assertEquals(None, mvt.getPrice())
     mvt.setPrice(10)
     self.assertEquals(10, mvt.getPrice())
@@ -266,7 +279,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(10, mvt.getTotalPrice())
     
   def testSourceDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setSourceDebit(10)
     self.assertEquals(10, mvt.getSourceDebit())
     self.assertEquals(0, mvt.getSourceCredit())
@@ -278,7 +291,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(-20, mvt.getQuantity())
   
   def testSourceCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setSourceCredit(10)
     self.assertEquals(0, mvt.getSourceDebit())
     self.assertEquals(10, mvt.getSourceCredit())
@@ -290,7 +303,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(20, mvt.getQuantity())
   
   def testSourceDebitCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setSourceCredit(10)
     mvt.edit(source_credit=0, source_debit=10)
     self.assertEquals(10, mvt.getSourceDebit())
@@ -298,7 +311,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(-10, mvt.getQuantity())
 
   def testDestinationDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setDestinationDebit(10)
     self.assertEquals(10, mvt.getDestinationDebit())
     self.assertEquals(0, mvt.getDestinationCredit())
@@ -310,7 +323,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(20, mvt.getQuantity())
   
   def testDestinationCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setDestinationCredit(10)
     self.assertEquals(0, mvt.getDestinationDebit())
     self.assertEquals(10, mvt.getDestinationCredit())
@@ -322,7 +335,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(-20, mvt.getQuantity())
   
   def testDestinationDebitCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setDestinationCredit(10)
     mvt.edit(destination_credit=0, destination_debit=10)
     self.assertEquals(10, mvt.getDestinationDebit())
@@ -330,7 +343,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(10, mvt.getQuantity())
   
   def testSourceAssetCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(source_asset_credit=100)
     self.assertEquals(100, mvt.getSourceAssetCredit())
     self.assertEquals(0, mvt.getQuantity())
@@ -343,7 +356,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(200, mvt.getSourceCredit())
 
   def testSourceAssetDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(source_asset_debit=100)
     self.assertEquals(100, mvt.getSourceAssetDebit())
     self.assertEquals(0, mvt.getQuantity())
@@ -356,7 +369,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(200, mvt.getSourceDebit())
 
   def testEditSourceAssetDebitAndCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(source_asset_debit=100, source_asset_credit=None)
     self.assertEquals(100, mvt.getSourceAssetDebit())
     mvt.edit(source_asset_debit=None, source_asset_credit=100)
@@ -367,7 +380,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(100, mvt.getSourceAssetCredit())
 
   def testDestinationAssetCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(destination_asset_credit=100)
     self.assertEquals(100, mvt.getDestinationAssetCredit())
     self.assertEquals(0, mvt.getQuantity())
@@ -380,7 +393,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(200, mvt.getDestinationCredit())
 
   def testDestinationAssetDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(destination_asset_debit=100)
     self.assertEquals(100, mvt.getDestinationAssetDebit())
     self.assertEquals(0, mvt.getQuantity())
@@ -393,7 +406,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(200, mvt.getDestinationDebit())
   
   def testEditDestinationAssetDebitAndCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(destination_asset_debit=100, destination_asset_credit=None)
     self.assertEquals(100, mvt.getDestinationAssetDebit())
     mvt.edit(destination_asset_debit=None, destination_asset_credit=100)
@@ -404,7 +417,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(100, mvt.getDestinationAssetCredit())
 
   def testCancellationAmountGetDestinationCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setCancellationAmount(True)
     mvt.setQuantity(10)
     self.assertEquals(mvt.getQuantity(), 10)
@@ -412,7 +425,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(mvt.getDestinationCredit(), -10)
 
   def testCancellationAmountGetDestinationDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setCancellationAmount(True)
     mvt.setQuantity(-10)
     self.assertEquals(mvt.getQuantity(), -10)
@@ -420,7 +433,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(mvt.getDestinationCredit(), 0)
 
   def testCancellationAmountGetSourceCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setCancellationAmount(True)
     mvt.setQuantity(-10)
     self.assertEquals(mvt.getQuantity(), -10)
@@ -428,7 +441,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(mvt.getSourceCredit(), -10)
 
   def testCancellationAmountGetSourceDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setCancellationAmount(True)
     mvt.setQuantity(10)
     self.assertEquals(mvt.getQuantity(), 10)
@@ -436,7 +449,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(mvt.getSourceCredit(), 0)
 
   def testCancellationAmountSetDestinationCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setDestinationCredit(-10)
     self.assertTrue(mvt.isCancellationAmount())
     self.assertEquals(mvt.getDestinationDebit(), 0)
@@ -448,7 +461,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(mvt.getDestinationCredit(), 10)
 
   def testCancellationAmountSetDestinationDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setDestinationDebit(-10)
     self.assertTrue(mvt.isCancellationAmount())
     self.assertEquals(mvt.getDestinationDebit(), -10)
@@ -460,7 +473,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(mvt.getDestinationCredit(), 0)
 
   def testCancellationAmountSetDestinationDebitCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(destination_debit=-10, destination_credit=0)
     self.assertTrue(mvt.isCancellationAmount())
     self.assertEquals(mvt.getDestinationDebit(), -10)
@@ -472,7 +485,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(mvt.getDestinationCredit(), 0)
 
   def testCancellationAmountSetSourceCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setSourceCredit(-10)
     self.assertTrue(mvt.isCancellationAmount())
     self.assertEquals(mvt.getSourceDebit(), 0)
@@ -484,7 +497,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(mvt.getSourceCredit(), 10)
 
   def testCancellationAmountSetSourceDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setSourceDebit(-10)
     self.assertTrue(mvt.isCancellationAmount())
     self.assertEquals(mvt.getSourceDebit(), -10)
@@ -496,7 +509,7 @@ class TestMovement(ERP5TypeTestCase):
     self.assertEquals(mvt.getSourceCredit(), 0)
 
   def testCancellationAmountSetSourceDebitCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(source_debit=-10, source_credit=0)
     self.assertTrue(mvt.isCancellationAmount())
     self.assertEquals(mvt.getSourceDebit(), -10)
@@ -512,19 +525,34 @@ class TestAccountingTransactionLine(TestMovement):
   """Tests for Accounting Transaction Line class, which have an overloaded
   'edit' method.
   """
-  def _makeOne(self, *args, **kw):
-    from Products.ERP5.Document.AccountingTransactionLine import \
-          AccountingTransactionLine
-    mvt = AccountingTransactionLine(*args, **kw)
-    return mvt.__of__(self.portal)
+  def afterSetUp(self):
+    self.login()
+    self.portal = self.getPortal()
+
+    if getattr(self.portal, 'accounting_transaction_line_module', None) is None:
+      types_tool = self.portal.portal_types
+      types_tool.newContent(id="My Accounting Transaction Line",
+                            type_class="AccountingTransactionLine")
+      types_tool.newContent(
+          id="My Accounting Transaction Line Module",
+          type_class="Folder",
+          type_allowed_content_type_list=("My Accounting Transaction Line",))
+
+      self.portal.newContent(id="accounting_transaction_line_module",
+                             portal_type="My Accounting Transaction Line Module")
+      transaction.commit()
+    self.atl_module = self.portal.accounting_transaction_line_module
+
+  def _makeOne(self, **kw):
+    return self.atl_module.newContent(**kw)
 
   def testPrice(self):
     # price is always 1 for accounting transactions lines
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     self.assertEquals(1, mvt.getPrice())
   
   def testQuantity(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.setQuantity(10)
     self.assertEquals(10, mvt.getQuantity())
     # self.assertEquals(None, mvt.getTotalPrice()) 
@@ -533,7 +561,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(20, mvt.getQuantity())
 
   def testDefautSourceTotalAssetDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(source_debit=100)
     self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetDebit())
     self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetCredit())
@@ -544,7 +572,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(0.0, mvt.getSourceAssetCredit())
     
   def testDefautSourceTotalAssetCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(source_credit=100)
     self.assertEquals(0, mvt.getSourceInventoriatedTotalAssetDebit())
     self.assertEquals(100, mvt.getSourceInventoriatedTotalAssetCredit())
@@ -555,7 +583,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(0.0, mvt.getSourceAssetCredit())
  
   def testDefautDestinationTotalAssetDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(destination_debit=100)
     self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetDebit())
     self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetCredit())
@@ -566,7 +594,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(0.0, mvt.getDestinationAssetCredit())
     
   def testDefautDestinationTotalAssetCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(destination_credit=100)
     self.assertEquals(0, mvt.getDestinationInventoriatedTotalAssetDebit())
     self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetCredit())
@@ -577,7 +605,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(0.0, mvt.getDestinationAssetCredit())
   
   def testSourceAssetCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(source_asset_credit=100)
     self.assertEquals(100, mvt.getSourceAssetCredit())
     self.assertEquals(0, mvt.getQuantity())
@@ -594,7 +622,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(-200, mvt.getSourceInventoriatedTotalAssetPrice())
 
   def testSourceAssetDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(source_asset_debit=100)
     self.assertEquals(100, mvt.getSourceAssetDebit())
     self.assertEquals(0, mvt.getQuantity())
@@ -611,7 +639,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(200, mvt.getSourceInventoriatedTotalAssetPrice())
 
   def testDestinationAssetCredit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(destination_asset_credit=100)
     self.assertEquals(100, mvt.getDestinationAssetCredit())
     self.assertEquals(0, mvt.getQuantity())
@@ -628,7 +656,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(-200, mvt.getDestinationInventoriatedTotalAssetPrice())
 
   def testDestinationAssetDebit(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(destination_asset_debit=100)
     self.assertEquals(100, mvt.getDestinationAssetDebit())
     self.assertEquals(0, mvt.getQuantity())
@@ -645,7 +673,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(200, mvt.getDestinationInventoriatedTotalAssetPrice())
 
   def testDestinationAssetDebitCancellation(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(destination_asset_debit=-100)
     self.assertTrue(mvt.isCancellationAmount())
     self.assertEquals(-100, mvt.getDestinationAssetDebit())
@@ -655,7 +683,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(-100, mvt.getDestinationInventoriatedTotalAssetPrice())
 
   def testDestinationAssetCreditCancellation(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(destination_asset_credit=-100)
     self.assertTrue(mvt.isCancellationAmount())
     self.assertEquals(-100, mvt.getDestinationAssetCredit())
@@ -665,7 +693,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(100, mvt.getDestinationInventoriatedTotalAssetPrice())
 
   def testSourceAssetDebitCancellation(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(source_asset_debit=-100)
     self.assertTrue(mvt.isCancellationAmount())
     self.assertEquals(-100, mvt.getSourceAssetDebit())
@@ -675,7 +703,7 @@ class TestAccountingTransactionLine(TestMovement):
     self.assertEquals(-100, mvt.getSourceInventoriatedTotalAssetPrice())
 
   def testSourceAssetCreditCancellation(self):
-    mvt = self._makeOne('mvt')
+    mvt = self._makeOne()
     mvt.edit(source_asset_credit=-100)
     self.assertTrue(mvt.isCancellationAmount())
     self.assertEquals(-100, mvt.getSourceAssetCredit())

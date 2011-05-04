@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -53,80 +50,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if isinstance(site, str):\n
-  site = context.portal_categories.site.restrictedTraverse(site)\n
-\n
-orga_id = "site_%3s" %(site.getCodification())\n
-org = context.organisation_module[orga_id]\n
-\n
-return org\n
+            <value> <string>portal = context.getPortalObject()\n
+if isinstance(site, str):\n
+  site = portal.portal_categories.site.restrictedTraverse(site)\n
+return portal.organisation_module["site_%3s" % (site.getCodification(), )]\n
 </string> </value>
-        </item>
-        <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>site</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
+            <key> <string>_proxy_roles</string> </key>
             <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>site</string>
-                            <string>isinstance</string>
-                            <string>str</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>orga_id</string>
-                            <string>_getitem_</string>
-                            <string>org</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>Baobab_getAgencyForSite</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

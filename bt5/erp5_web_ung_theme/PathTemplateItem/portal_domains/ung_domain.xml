@@ -44,7 +44,9 @@
         </item>
         <item>
             <key> <string>domain_generator_method_id</string> </key>
-            <value> <string>WebPageModule_generateDomain</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -52,7 +54,7 @@
         </item>
         <item>
             <key> <string>last_id</string> </key>
-            <value> <string>13</string> </value>
+            <value> <string>30</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

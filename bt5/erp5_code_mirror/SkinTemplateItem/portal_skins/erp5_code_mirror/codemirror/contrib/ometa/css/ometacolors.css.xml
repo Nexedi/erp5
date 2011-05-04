@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.92</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ometacolors.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>html {\n
+  cursor: text;\n
+}\n
+\n
+.editbox {\n
+  margin: .4em;\n
+  padding: 0;\n
+  font-family: monospace;\n
+  font-size: 10pt;\n
+  color: black;\n
+}\n
+\n
+pre.code, .editbox {\n
+  color: #666666;\n
+}\n
+\n
+.editbox p {\n
+  margin: 0;\n
+}\n
+\n
+span.js-punctuation {\n
+  color: #666666;\n
+}\n
+\n
+span.js-operator {\n
+  color: #E1570F;\n
+}\n
+\n
+span.js-keyword {\n
+  color: #770088;\n
+}\n
+\n
+span.js-atom {\n
+  color: #228811;\n
+}\n
+\n
+span.js-variable {\n
+  color: black;\n
+}\n
+\n
+span.js-variabledef {\n
+  color: #0000FF;\n
+}\n
+\n
+span.js-localvariable {\n
+  color: #004499;\n
+}\n
+\n
+span.js-property {\n
+  color: black;\n
+}\n
+\n
+span.js-comment {\n
+  color: #AA7700;\n
+}\n
+\n
+span.js-string {\n
+  color: #AA2222;\n
+}\n
+\n
+span.ometa-binding {\n
+  color: #FF0000;\n
+}\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>642</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -55,6 +55,14 @@
  <portal_type id="Internal Packing List Module">
   <item>Internal Packing List</item>
  </portal_type>
+ <portal_type id="Internal Trade Condition">
+  <item>Internal Supply Line</item>
+  <item>Payment Condition</item>
+  <item>Trade Model Line</item>
+ </portal_type>
+ <portal_type id="Internal Trade Condition Module">
+  <item>Internal Trade Condition</item>
+ </portal_type>
  <portal_type id="Inventory">
   <item>Inventory Line</item>
  </portal_type>
@@ -75,6 +83,9 @@
  </portal_type>
  <portal_type id="Preference">
   <item>Sale Order</item>
+ </portal_type>
+ <portal_type id="Property Sheet">
+  <item>Trade Model Line Cell Consistency Constraint</item>
  </portal_type>
  <portal_type id="Purchase Order">
   <item>Payment Condition</item>

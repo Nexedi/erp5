@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -54,97 +51,36 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># return site of the user and possible counter on wich user can be assigned\n
-if context.getDestination() is None:\n
+# XXX: this script should be named "Assignment_getPossibleSiteList", as it is not used anywhere else\n
+destination_value = context.getDestinationValue()\n
+if destination_value is None:\n
   # must have an organisation defined to limit site diplayed\n
   return [[\'\', \'\']]\n
 \n
-#dest_site_title = context.getDestinationValue().getSiteTitle()\n
-\n
-site_list = context.Delivery_getVaultItemList(user_site=0, vault_type=("site", "site/surface/banque_interne/guichet", "site/surface/gros_paiement/guichet", "site/surface/gros_versement/guichet", "site/surface/operations_diverses/guichet"), first_level=1, strict_membership=1, leaf_node=0, base_site=context.getDestinationValue().getSite())\n
-# now must filter again this list to remove useless categories\n
-#site_dict = {}\n
-#for site in site_list:\n
-#  site_dict[site[0]] = site[1]\n
-#  site_split = site[0].split(\'/\')\n
-#  if dest_site_title in site_split:\n
-#    if len(site_split) == 4:\n
-#      # case of counter\n
-#      counter = "/".join(site_split[:-1])\n
-#      if not site_dict.has_key(counter):\n
-#        if not \'siege\' in site[1]:\n
-#          site_dict[counter] = \'/\'.join(site[1].split("/")[:7])\n
-#        else:\n
-#          site_dict[counter] = \'/\'.join(site[1].split("/")[:6])\n
-#    else:\n
-#      site_dict[site[0]] = site[1]\n
-\n
-#list = site_dict.items()\n
-#list.sort()\n
-#return list\n
+site_list = context.Delivery_getVaultItemList(\n
+  user_site=0,\n
+  vault_type=(\n
+    \'site\',\n
+    \'site/surface/banque_interne/guichet\',\n
+    \'site/surface/gros_paiement/guichet\',\n
+    \'site/surface/gros_versement/guichet\',\n
+    \'site/surface/operations_diverses/guichet\',\n
+  ),\n
+  first_level=1,\n
+  strict_membership=1,\n
+  leaf_node=0,\n
+  base_site=destination_value.getSite(),\n
+)\n
 return site_list\n
 </string> </value>
-        </item>
-        <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>None</string>
-                            <string>site_list</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Baobab_getPossibleUserAssignmentSiteList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

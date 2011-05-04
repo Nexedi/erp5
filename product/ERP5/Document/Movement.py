@@ -480,9 +480,9 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
                              'isConvergent')
   def isConvergent(self):
     """
-      Returns 0 if the target is not met
+      Returns true if movement is not divergent
     """
-    return int(not self.isDivergent())
+    return bool(not self.isDivergent())
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'isDivergent')
@@ -497,14 +497,14 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     """
     for simulation_movement in self.getDeliveryRelatedValueList():
       if simulation_movement.isDivergent():
-        return 1
-    return 0
+        return True
+    return False
 
   def getDivergenceList(self):
     """
     Return a list of messages that contains the divergences 
     """
-    divergence_list = [] 
+    divergence_list = []
     for simulation_movement in self.getDeliveryRelatedValueList():
       divergence_list.extend(simulation_movement.getDivergenceList())
 

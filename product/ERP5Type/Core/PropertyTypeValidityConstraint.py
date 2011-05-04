@@ -133,3 +133,8 @@ class PropertyTypeValidityConstraint(ConstraintMixin):
           obj.setProperty(property_id, oldvalue)
 
     return error_list
+
+  _message_id_tuple = ('message_unknown_type',
+                       'message_incorrect_type',
+                       'message_incorrect_type_fix_failed',
+                       'message_incorrect_type_fixed')

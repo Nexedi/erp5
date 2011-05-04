@@ -54,7 +54,7 @@ class WorkflowSecurityConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     ## NOT TESTED
     return
     table_dict = business_configuration.ConfigurationTemplate_readOOCalcFile(self.filename)

@@ -51,13 +51,14 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from ZTUtils import make_query\n
-Base_translateString = context.Base_translateString\n
-checkPerm = context.portal_membership.checkPermission\n
+portal = context.getPortalObject()\n
+Base_translateString = portal.Base_translateString\n
+checkPerm = portal.portal_membership.checkPermission\n
 \n
 if jump_from_relative_url is None:\n
   relation = context\n
 else:\n
-  relation = context.getPortalObject().restrictedTraverse(jump_from_relative_url)\n
+  relation = portal.restrictedTraverse(jump_from_relative_url)\n
 \n
 # FIXME: performance problem getting *all* related documents URL is not scalable.\n
 getter_base_name = \'\'.join([x.capitalize() for x in base_category.split(\'_\')])\n
@@ -81,10 +82,10 @@ if len(related_list) == 0:\n
 \n
 elif len(related_list) == 1:\n
   relation_found = 1\n
-  related_object = context.restrictedTraverse(related_list[0], None)\n
+  related_object = portal.restrictedTraverse(related_list[0], None)\n
   if related_object is None:\n
     # this might be a category\n
-    related_object = context.portal_categories.resolveCategory(\n
+    related_object = portal.portal_categories.resolveCategory(\n
                            "%s/%s" % (base_category, related_list[0]))\n
 \n
   if related_object is not None and checkPerm("View", related_object) :\n
@@ -109,10 +110,10 @@ elif len(related_list) == 1:\n
 else:\n
   # jump to the module if we can guess it\n
   if len(portal_type) == 1:\n
-    module_id = context.getPortalObject().getDefaultModuleId(portal_type[0], None)\n
+    module_id = portal.getDefaultModuleId(portal_type[0], None)\n
     if module_id is not None:\n
       if related:\n
-        return context.getPortalObject().getDefaultModule(portal_type[0]).Base_redirect(\n
+        return portal.getDefaultModule(portal_type[0]).Base_redirect(\n
                  \'view\', keep_items={\'default_%s_uid\' % base_category: relation.getUid(),\n
                                      \'ignore_hide_rows\': 1,\n
                                      \'reset\': 1})\n
@@ -127,10 +128,10 @@ else:\n
   # compute the list of objects we are actually authorised to view\n
   related_object_list = []\n
   for path in search_method(portal_type=portal_type) :\n
-    obj = context.getPortalObject().restrictedTraverse(path, None)\n
+    obj = portal.restrictedTraverse(path, None)\n
     if obj is None:\n
       # this might be a category\n
-      obj = context.portal_categories.resolveCategory(\n
+      obj = portal.portal_categories.resolveCategory(\n
                            "%s/%s" % (base_category, path))\n
 \n
     if obj is not None and checkPerm("View", obj):\n
@@ -140,10 +141,10 @@ else:\n
     message = Base_translateString("You are not authorised to view any related document.")\n
     relation_found = 0\n
   else :\n
-    request=context.REQUEST\n
+    request=portal.REQUEST\n
     selection_uid_list = [x.getUid() for x in related_object_list]\n
     kw = {\'uid\': selection_uid_list}\n
-    context.portal_selections.setSelectionParamsFor(\n
+    portal.portal_selections.setSelectionParamsFor(\n
                           \'Base_jumpToRelatedObjectList\', kw)\n
     request.set(\'object_uid\', context.getUid())\n
     request.set(\'uids\', selection_uid_list)\n

@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Direct Debit Mandate</type>
+  <workflow>direct_debit_mandate_validation_workflow, edit_workflow</workflow>
+ </chain>
+</workflow_chain>

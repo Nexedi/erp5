@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<form id="create_new_event" onkeypress="submitEventOnEvent(event)">\n
+  <table>\n
+   <tbody>\n
+     <tr>\n
+     <td><label i18n:translate="" i18n:domain="ui">Event Type</label></td>\n
+     <td>\n
+       <select name="portal_type">\n
+        <tal:block tal:repeat="type python: [\'Acknowledgement\', \'Fax Message\', \'Letter\',\n
+                                         \'Mail Message\', \'Note\',\'Phone Call\', \n
+                                         \'Short Message\',\'Site Message\', \'Visit\', \'Web Message\']">\n
+         <option i18n:translate="" i18n:domain="ui" tal:content="type">Portal Type</option>\n
+        </tal:block>\n
+       </select>\n
+     </td>\n
+    </tr>\n
+    <tr>\n
+      <td><label i18n:translate="" i18n:domain="ui">Title</label></td>\n
+      <td><input name="title" value="" type="text" size="30"></td>\n
+    </tr>\n
+    <tr>\n
+      <td><label i18n:translate="" i18n:domain="ui">Start Date</label></td>\n
+      <td>\n
+        <input class="start_date_field" name="start_date_month" value="" maxlength="2" type="text" size="2">/\n
+        <input class="start_date_field" name="start_date_day" value="" maxlength="2" type="text" size="2">/\n
+        <input class="start_date_field" name="start_date_year" value="2011" maxlength="4" type="text" size="4">\n
+        &nbsp;&nbsp;&nbsp;\n
+        <input class="start_date_field" name="start_date_hour" value="" maxlength="2" type="text" size="2">:\n
+        <input class="start_date_field" name="start_date_minute" value="" maxlength="2" type="text" size="2">\n
+        <br/>\n
+        <span class="date-format">MM dd yyyy HH:mm</span>\n
+      </td>\n
+    </tr>\n
+    <tr>\n
+      <td><label i18n:translate="" i18n:domain="ui">Stop Date</label></td>\n
+      <td>\n
+        <input class="stop_date_field" name="stop_date_month" value="" maxlength="2" type="text" size="2">/\n
+        <input class="stop_date_field" name="stop_date_day" value="" maxlength="2" type="text" size="2">/\n
+        <input class="stop_date_field" name="stop_date_year" value="2011" maxlength="4" type="text" size="4">\n
+        &nbsp;&nbsp;&nbsp;\n
+        <input class="stop_date_field" name="stop_date_hour" value="" maxlength="2" type="text" size="2">:\n
+        <input class="stop_date_field" name="stop_date_minute" value="" maxlength="2" type="text" size="2">\n
+        <br/>\n
+        <span class="date-format">MM dd yyyy HH:mm</span>\n
+      </td>\n
+    </tr>\n
+    <tr>\n
+      <td><label i18n:translate="" i18n:domain="ui">Text</label></td>\n
+      <td><textarea name="event_text_content" rows="2" cols="30"></textarea></td>\n
+    </tr>\n
+    <tbody>\n
+    </table>\n
+</form>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_newEvent</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

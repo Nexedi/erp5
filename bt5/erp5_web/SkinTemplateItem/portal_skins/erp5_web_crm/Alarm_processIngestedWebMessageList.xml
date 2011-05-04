@@ -53,7 +53,7 @@
             <value> <string>portal = context.getPortalObject()\n
 for path in path_list:\n
   document = portal.restrictedTraverse(path)\n
-  # Useful to reproduce Ingestion process from begining\n
+  # Useful to reproduce Ingestion process from beginning\n
   # All properties of object are considered as user input\n
   input_parameter_dict = {\'portal_type\': document.getPortalType()}\n
   for property_id in document.propertyIds():\n

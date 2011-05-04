@@ -1,7 +1,7 @@
 <allowed_content_type_list>
  <portal_type id="Component">
   <item>Component Individual Variation</item>
-  <item>Image</item>
+  <item>Embedded File</item>
   <item>Internal Supply Line</item>
   <item>Measure</item>
   <item>Purchase Supply Line</item>
@@ -26,7 +26,7 @@
   <item>Measure Cell</item>
  </portal_type>
  <portal_type id="Product">
-  <item>Image</item>
+  <item>Embedded File</item>
   <item>Internal Supply Line</item>
   <item>Measure</item>
   <item>Product Individual Variation</item>
@@ -37,6 +37,9 @@
  </portal_type>
  <portal_type id="Product Module">
   <item>Product</item>
+ </portal_type>
+ <portal_type id="Property Sheet">
+  <item>Resource Measures Consistency Constraint</item>
  </portal_type>
  <portal_type id="Purchase Supply">
   <item>Purchase Supply Line</item>

@@ -57,14 +57,6 @@
             <tal:block metal:define-slot="bottom" />\n
           </div>\n
 \n
-          <input value="Start"\n
-                 i18n:attributes="value" \n
-                 i18n:domain="ui" \n
-                 accesskey="V"\n
-                 id="dialog_submit_button" \n
-                 type="submit" \n
-                 name="Base_callDialogMethod:method"/>\n
-\n
         </tal:block>\n
       </tal:block>\n
     </tal:block>\n

@@ -54,6 +54,11 @@
 context.setSourceReference(None)\n
 context.setDestinationReference(None)\n
 context.setSolver(None)\n
+\n
+# Initialize Causality Workflow\n
+if hasattr(context, \'startBuilding\'):\n
+  context.startBuilding()\n
+  context.updateCausalityState()\n
 </string> </value>
         </item>
         <item>

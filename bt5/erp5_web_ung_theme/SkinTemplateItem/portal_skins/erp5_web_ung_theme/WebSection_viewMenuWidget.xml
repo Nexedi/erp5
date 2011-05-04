@@ -41,55 +41,62 @@
    <div class="menu_create_object">\n
         <tal:block tal:define="portal_path here/absolute_url;\n
                                url_suffix python: \'/ERP5Site_createNewWebDocument?template=\'">\n
-        <li><a id="current">Create New<img tal:attributes="src python: portal_path + \'/ung_images/arrow.png\'"></a>\n
+        <li><a id="current">\n
+              <span i18n:translate="" i18n:domain="ui">Create New</span>\n
+              <img tal:attributes="src python: portal_path + \'/ung_images/arrow.png\'"></a>\n
             <ul>\n
           <li>\n
             <a tal:attributes="href python: portal_path + url_suffix + \'web_illustration_template\'">\n
-             <img tal:attributes="src python: portal_path + \'/ung_images/svg.png\'">\n
-             Web Illustration\n
+              <img tal:attributes="src python: portal_path + \'/ung_images/svg.png\'">\n
+              <span i18n:translate="" i18n:domain="ui">Web Illustration</span>\n
             </a>\n
           </li>\n
           <li>\n
             <a tal:attributes="href python: portal_path + url_suffix + \'web_table_template\'">\n
-             <img tal:attributes="src python: portal_path + \'/ung_images/table.jpg\'">\n
-              Web Table\n
+              <img tal:attributes="src python: portal_path + \'/ung_images/table.jpg\'">\n
+              <span i18n:translate="" i18n:domain="ui">Web Table</span>\n
             </a>\n
           </li>\n
           <li>\n
             <a tal:attributes="href python: portal_path + url_suffix + \'web_page_template\'">\n
-             <img tal:attributes="src python: portal_path + \'/ung_images/document.gif\'">\n
-              Web Page\n
+              <img tal:attributes="src python: portal_path + \'/ung_images/document.gif\'">\n
+              <span i18n:translate="" i18n:domain="ui">Web Page</span>\n
             </a>\n
           </li>\n
 </ul>\n
     </li> \n
         </tal:block>\n
   </div>\n
-  <input type="submit" id="upload" name="Upload" value="Upload"/>\n
-  <div id="upload_document" title="Upload Document">\n
-  <form action="WebSection_uploadDocument" method="post" enctype="multipart/form-data">\n
-   <fieldset id="file_box">\n
-     <input type="file" size="30" name="file">\n
-     <select name="portal_type">\n
-       <option value="Web Page">Web Page</option>\n
-       <option value="Web Illustration">Web Illustration</option>\n
-       <option value="Web Table">Web Table</option>\n
-     </select>\n
-     <br />\n
-     <input type="submit" value="Submit" id="submit_document">\n
-   </fieldset>\n
-  </form> \n
-  </div>\n
-   <div class="file-selection">\n
+  <input type="submit" id="upload" name="Upload" value="Upload" i18n:translate="" i18n:domain="ui"/>\n
+    <div id="upload_document" title="Upload Document" i18n:translate="" i18n:domain="ui">\n
+      <form action="WebSection_uploadDocument" method="post" enctype="multipart/form-data">\n
+        <fieldset id="file_box">\n
+          <input id="upload-file" type="file" size="30" name="file">\n
+          <select name="portal_type">\n
+            <option value="Web Page" i18n:translate="" i18n:domain="ui">Web Page</option>\n
+            <option value="Web Illustration" i18n:translate="" i18n:domain="ui">Web Illustration</option>\n
+            <option value="Web Table" i18n:translate="" i18n:domain="ui">Web Table</option>\n
+          </select>\n
+          <br />\n
+          <input type="submit" id="submit_document" value="Submit" i18n:translate="" i18n:domain="ui">\n
+          <span id="no-input-file">Please input a file</span>\n
+        </fieldset>\n
+      </form> \n
+    </div>\n
+  <div class="file-selection">\n
    <div class="file-quick-search"></div>\n
-  <div class="file-quick-browser">\n
-  <div class="quick-search-item">ERP5</div>\n
-  <div class="quick-search-item">SANEF</div>\n
-  <div class="quick-search-item">New</div>\n
   </div>\n
+  <div class="gadget-listbox" id="gadget-listbox" title="Add Gadgets" i18n:translate="" i18n:domain="ui">\n
+    <table id="gadget-table"></table>\n
   </div>\n
-  <div class="gadget-container">\n
-       Here go the gadgets\n
+  <div class="front_pad">\n
+    <!-- XXX - Use WebSection_viewKnowledgePadColumn to display one column only -->\n
+    <div tal:content="structure python: here.ERP5Site_viewHomeAreaRenderer(mode=\'web_front\',\n
+                                                                           default_pad_group=\'\',\n
+                                                                           create_default_pad=True, \n
+                                                                           make_security_check=True,\n
+                                                                           columns=1)"\n
+             class="draggable_wrapper"/>\n
   </div>\n
 </div>
 

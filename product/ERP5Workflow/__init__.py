@@ -26,15 +26,16 @@
 #
 ##############################################################################
 """
-    ERP5Workflow is a product containing Document to create 
+    ERP5Workflow is a product containing Document to create
     workflow in the ERP5 way.
 """
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-import sys, Permissions
-this_module = sys.modules[ __name__ ]
-document_classes = updateGlobals(this_module, globals(), 
+import sys
+import Permissions
+this_module = sys.modules[__name__]
+document_classes = updateGlobals(this_module, globals(),
                                  permissions_module=Permissions)
 
 # Define object classes and tools
@@ -46,7 +47,6 @@ content_constructors = ()
 # Finish installation
 def initialize(context):
   import Document
-  from zLOG import LOG, INFO
   initializeProduct(context, this_module, globals(),
                     document_module=Document,
                     document_classes=document_classes,

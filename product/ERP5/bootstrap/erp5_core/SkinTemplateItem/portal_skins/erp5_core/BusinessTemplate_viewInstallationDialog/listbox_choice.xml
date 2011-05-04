@@ -253,7 +253,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:(cell.choice_item_list and cell.object_state != \'Removed but used\') and cell.choice_item_list[0][1] or []</string> </value>
+            <value> <string>python:(cell.choice_item_list and \' but \' not in cell.object_state) and cell.choice_item_list[0][1] or []</string> </value>
         </item>
       </dictionary>
     </pickle>

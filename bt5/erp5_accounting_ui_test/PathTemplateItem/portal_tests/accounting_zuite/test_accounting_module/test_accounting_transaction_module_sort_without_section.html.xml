@@ -113,7 +113,7 @@ Test sort for Accounting module main listbox, without section\n
 <!-- search and sort by title desc (regression) {{{ -->\n
 <tr>\n
   <td>type</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%</td>\n
 </tr>\n
 <tr>\n
@@ -229,7 +229,7 @@ Test sort for Accounting module main listbox, without section\n
 <!-- sort by reference {{{ -->\n
 <tr>\n
   <td>type</td>\n
-  <td>reference</td>\n
+  <td>listbox_reference</td>\n
   <td>%</td>\n
   <td></td>\n
 </tr>\n
@@ -283,7 +283,7 @@ Test sort for Accounting module main listbox, without section\n
 <!-- clear reference search {{{ -->\n
 <tr>\n
   <td>type</td>\n
-  <td>reference</td>\n
+  <td>listbox_reference</td>\n
   <td></td>\n
   <td></td>\n
 </tr>\n
@@ -336,8 +336,7 @@ Test sort for Accounting module main listbox, without section\n
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>

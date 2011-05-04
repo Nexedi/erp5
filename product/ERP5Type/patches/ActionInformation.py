@@ -149,6 +149,7 @@ if 1:
 ActionInformation.__init__ = __init__
 ActionInformation.getAction = getAction
 ActionInformation._getIconObject = _getIconObject
+ActionInformation._getIconExpressionObject = _getIconObject
 ActionInformation.getIconExpression = getIconExpression
 ActionInformation.setIconExpression = setIconExpression
 ActionInformation.getDescription = getDescription

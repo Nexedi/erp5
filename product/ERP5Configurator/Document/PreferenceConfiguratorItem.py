@@ -85,7 +85,7 @@ class PreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
              )
 
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     organisation_id = business_configuration.\
                                  getGlobalConfigurationAttr('organisation_id')

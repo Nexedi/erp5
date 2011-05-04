@@ -86,12 +86,8 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Purchase Trade Condition</string>
-                          <string>Purchase Trade Condition</string>
-                        </tuple>
-                        <tuple>
-                          <string>Sale Trade Condition</string>
-                          <string>Sale Trade Condition</string>
+                          <string>Internal Trade Condition</string>
+                          <string>Internal Trade Condition</string>
                         </tuple>
                       </list>
                     </value>
@@ -105,12 +101,8 @@
                           <string>All</string>
                         </tuple>
                         <tuple>
-                          <string>PurchaseTradeConditionModule_viewPurchaseTradeConditionList/listbox</string>
-                          <string>Purchase Trade Conditions</string>
-                        </tuple>
-                        <tuple>
-                          <string>SaleTradeConditionModule_viewsaleTradeConditionList/listbox</string>
-                          <string>Sale Trade Conditions</string>
+                          <string>InternalTradeConditionModule_viewInternalTradeConditionList/listbox</string>
+                          <string>Internal Trade Conditions</string>
                         </tuple>
                       </list>
                     </value>

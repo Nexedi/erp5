@@ -55,7 +55,7 @@ class ExportCustomerBT5ConfiguratorItem(XMLObject, ConfiguratorItemMixin):
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     template_tool = getToolByName(portal, 'portal_templates')
     bt5_obj = business_configuration.getSpecialiseValue()

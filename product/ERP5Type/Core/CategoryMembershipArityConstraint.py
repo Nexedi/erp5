@@ -29,12 +29,14 @@
 ##############################################################################
 
 from Products.ERP5Type.mixin.constraint import ConstraintMixin
+from Products.CMFCore.Expression import Expression
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 
 class CategoryMembershipArityConstraint(ConstraintMixin):
   """
-  This constraint checks if an object respects the arity.
+  This constraint checks if an object respects the arity (with or
+  without acquisition depending on use_acquisition value).
 
   This is only relevant for ZODB Property Sheets (filesystem Property
   Sheets rely on Products.ERP5Type.Constraint.CategoryMembershipArity
@@ -60,8 +62,12 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
                     (PropertySheet.CategoryMembershipArityConstraint,)
 
   def _calculateArity(self, obj, base_category_list, portal_type_list):
-    return len(obj.getCategoryMembershipList(base_category_list,
-                                             portal_type=portal_type_list))
+    if self.getUseAcquisition():
+      return len(obj.getAcquiredCategoryMembershipList(base_category_list,
+                                               portal_type=portal_type_list))
+    else:
+      return len(obj.getCategoryMembershipList(base_category_list,
+                                               portal_type=portal_type_list))
 
   def _checkConsistency(self, obj, fixit=0):
     """
@@ -73,7 +79,8 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
     base_category_list = self.getConstraintBaseCategoryList()
     min_arity = self.getMinArity()
     max_arity = self.getMaxArity()
-    portal_type_list = self.getConstraintPortalTypeList()
+    portal_type_list = self._getExpressionValue(obj,
+                                                self.getConstraintPortalType())
 
     # Check arity and compare it with the min and max
     arity = self._calculateArity(obj, base_category_list, portal_type_list)
@@ -102,3 +109,52 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
     return [self._generateError(obj,
                                 self._getMessage(message_id),
                                 mapping)]
+
+
+  _message_id_tuple = ('message_arity_too_small',
+                       'message_arity_not_in_range',
+                       'message_arity_with_portal_type_too_small',
+                       'message_arity_with_portal_type_not_in_range')
+
+  @staticmethod
+  def _preConvertBaseFromFilesystemDefinition(filesystem_definition_dict):
+    """
+    CategoryAcquiredMembershipArity and CategoryMembershipArity
+    filesystem Constraints have been merged into a single Document for
+    ZODB Constraint by adding 'use_acquisition' attribute
+    """
+    return dict(use_acquisition=(filesystem_definition_dict['type'] == \
+                                 'CategoryAcquiredMembershipArity'))
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(min_arity,
+                                       portal_type=(),
+                                       max_arity=None,
+                                       base_category=(),
+                                       **zodb_property_dict):
+    """
+    @see ERP5Type.mixin.constraint.ConstraintMixin._convertFromFilesystemDefinition
+
+    Filesystem definition example:
+    { 'id'            : 'source',
+      'description'   : '',
+      'type'          : 'CategoryMembershipArity',
+      'min_arity'     : '1',
+      'max_arity'     : '1',
+      'portal_type'   : ('Organisation', ),
+      'base_category' : ('source',)
+      'condition'     : 'python: object.getPortalType() == 'Foo',
+    }
+    """
+    constraint_portal_type_str = isinstance(portal_type, Expression) and \
+        portal_type.text or 'python: ' + repr(portal_type)
+
+    zodb_property_dict.update(
+      min_arity=int(min_arity),
+      constraint_portal_type=constraint_portal_type_str,
+      constraint_base_category_list=base_category)
+
+    if max_arity is not None:
+      zodb_property_dict['max_arity'] = int(max_arity)
+
+    yield zodb_property_dict

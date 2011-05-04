@@ -70,5 +70,5 @@ class BaseCategory(CMFBaseCategory, XMLObject):
       """
          Reset Accessors
       """
-      _aq_reset()
+      self.getPortalObject().portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
       CMFBaseCategory.manage_afterAdd(self, item, container)

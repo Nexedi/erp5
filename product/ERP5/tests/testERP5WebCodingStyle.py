@@ -42,6 +42,7 @@ class CodingStyle(CodingStyleTestCase):
     Return the list of required business templates.
     """
     return ('erp5_base',
+            'erp5_jquery',    
             'erp5_web',
             'erp5_ingestion_mysql_innodb_catalog',
             'erp5_ingestion',

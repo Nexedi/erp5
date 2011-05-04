@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+      <global name="Base Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -39,7 +39,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A DeliveryCell allows to define specific quantities for each variation of a resource in a delivery line.</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -53,8 +55,9 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
-                <string>order_movement</string>
+                <string>path</string>
                 <string>sale</string>
+                <string>supply_path</string>
               </tuple>
             </value>
         </item>
@@ -80,7 +83,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>OrderCell</string> </value>
+            <value> <string>OpenOrderCell</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>
@@ -99,16 +102,15 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -119,16 +121,15 @@
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
-        <tuple/>
-      </tuple>
+      <global name="TranslationInformation" module="Products.ERP5Type.TranslationProviderBase"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

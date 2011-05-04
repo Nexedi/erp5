@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
-        <tuple/>
-      </tuple>
+      <global name="StateDefinition" module="Products.DCWorkflow.States"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -25,7 +22,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>comfirmed (Checkbook Reception)</string> </value>
+            <value> <string>Confirmed (Checkbook Reception)</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>

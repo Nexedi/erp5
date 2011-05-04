@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>knowledge_pad = None\n
+            <value> <string>from json import dumps\n
+\n
+knowledge_pad = None\n
 portal = context.getPortalObject()\n
 user_pref = context.Base_getActiveGlobalKnowledgePadPreference()\n
 tag = \'%s_%s_%s\' %(portal.portal_membership.getAuthenticatedMember(),\n
@@ -117,7 +119,8 @@ if owner is not None:\n
 \n
 # set default gadgets\n
 context.ERP5Site_createDefaultKnowledgeBox(knowledge_pad, activate_kw=activate_kw)\n
-return knowledge_pad.getRelativeUrl()\n
+\n
+return dumps({\'knowledge_pad_relative_url\': knowledge_pad.getRelativeUrl()})\n
 </string> </value>
         </item>
         <item>

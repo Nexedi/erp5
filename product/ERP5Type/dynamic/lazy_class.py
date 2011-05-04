@@ -2,15 +2,23 @@
 
 import sys
 
+from Products.ERP5Type import Permissions
+from Products.ERP5Type.Accessor.Constant import Getter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Base import Base as ERP5Base
+from Products.ERP5Type.Base import PropertyHolder, initializePortalTypeDynamicWorkflowMethods
+from Products.ERP5Type.Utils import UpperCase
+from Products.ERP5Type.Core.CategoryProperty import CategoryProperty
 from ExtensionClass import ExtensionClass, pmc_init_of
 
 from zope.interface import classImplements
 from ZODB.broken import Broken, PersistentBroken
+from AccessControl import ClassSecurityInfo
 from zLOG import LOG, WARNING, BLATHER
 
 from portal_type_class import generatePortalTypeClass
+from accessor_holder import AccessorHolderType
+import persistent_migration
 
 # PersistentBroken can't be reused directly
 # because its « layout differs from 'GhostPortalType' »
@@ -19,7 +27,11 @@ ERP5BaseBroken = type('ERP5BaseBroken', (Broken, ERP5Base), dict(x
   if x[0] not in ('__dict__', '__module__', '__weakref__')))
 
 
-class GhostBaseMetaClass(ExtensionClass):
+# the meta class of a derived class must be a subclass of all of its bases:
+# since a portal type derives from both Zope Extension classes and
+# from Accessor Holders, both metaclasses are required, even if
+# only ExtensionClass is needed to run the house
+class GhostBaseMetaClass(ExtensionClass, AccessorHolderType):
   """
   Generate classes that will be used as bases of portal types to
   mark portal types as non-loaded and to force loading it.
@@ -50,6 +62,13 @@ class GhostBaseMetaClass(ExtensionClass):
       Because __bases__ is changed, the behavior of this object
       will change after the first call.
       """
+      # very special case used to bootstrap an instance:
+      # calling _setObject() requires accessing the meta_type of the
+      # object we're setting, but when creating portal_types it's way
+      # too early to load erp5.portal_type.Types Tool
+      if attr == "meta_type" and self.__class__.__name__ == "Types Tool":
+          return "ERP5 Types Tool"
+
       # Class must be loaded if '__of__' is requested because otherwise,
       # next call to __getattribute__ would lose any acquisition wrapper.
       if attr in ('__class__',
@@ -75,7 +94,7 @@ class GhostBaseMetaClass(ExtensionClass):
 
 InitGhostBase = GhostBaseMetaClass('InitGhostBase', (ERP5Base,), {})
 
-class PortalTypeMetaClass(GhostBaseMetaClass):
+class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
   """
   Meta class that is used by portal type classes
 
@@ -102,42 +121,54 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       if issubclass(type(parent), PortalTypeMetaClass):
         PortalTypeMetaClass.subclass_register.setdefault(parent, []).append(cls)
 
+    cls.workflow_method_registry = {}
+
     cls.__isghost__ = True
     super(GhostBaseMetaClass, cls).__init__(name, bases, dictionary)
 
+    # InitializeClass is evil and removes the security info. Set it up AFTER
+    # superclass initialization
+    cls.security = ClassSecurityInfo()
+
   @classmethod
-  def getSubclassList(metacls, cls):
+  def getSubclassList(meta_class, cls):
     """
     Returns classes deriving from cls
     """
-    return metacls.subclass_register.get(cls, [])
+    return meta_class.subclass_register.get(cls, [])
 
   def getAccessorHolderPropertyList(cls):
     """
-    Get all the properties as defined in the accessor holders,
+    Get unique properties, by its id, as defined in the accessor holders,
     meaningful for _propertyMap for example
 
     @see Products.ERP5Type.Base.Base._propertyMap
     """
-    property_list = []
+    cls.loadClass()
+    property_dict = {}
+
     for klass in cls.mro():
-      if klass.__module__ == 'erp5.accessor_holder':
-        property_list.extend(klass._properties)
+      if klass.__module__.startswith('erp5.accessor_holder'):
+        for property in klass._properties:
+          property_dict.setdefault(property['id'], property)
 
-    return property_list
+    return property_dict.values()
 
-  def resetAcquisitionAndSecurity(cls):
+  def resetAcquisition(cls):
     # First, fill the __get__ slot of the class
     # that has been null'ed after resetting its __bases__
     # This descriptor is the magic allowing __of__ and our
     # _aq_dynamic trick
     pmc_init_of(cls)
-    # Then, call __class_init__ on the class for security
-    InitializeClass(cls)
 
     # And we need to do the same thing on subclasses
     for subclass in PortalTypeMetaClass.getSubclassList(cls):
       pmc_init_of(subclass)
+
+  def setupSecurity(cls):
+    # note that after this call the 'security' attribute will be gone.
+    InitializeClass(cls)
+    for subclass in PortalTypeMetaClass.getSubclassList(cls):
       InitializeClass(subclass)
 
   def restoreGhostState(cls):
@@ -153,14 +184,18 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       for attr in cls.__dict__.keys():
         if attr not in ('__module__',
                         '__doc__',
+                        '__setstate__',
+                        'workflow_method_registry',
                         '__isghost__',
                         'portal_type'):
           delattr(cls, attr)
       # generate a ghostbase that derives from all previous bases
       ghostbase = GhostBaseMetaClass('GhostBase', cls.__bases__, {})
+      cls.workflow_method_registry.clear()
       cls.__bases__ = (ghostbase,)
       cls.__isghost__ = True
-      cls.resetAcquisitionAndSecurity()
+      cls.resetAcquisition()
+      cls.security = ClassSecurityInfo()
 
   def __getattr__(cls, name):
     """
@@ -178,6 +213,52 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
 
     raise AttributeError
 
+  def generatePortalTypeAccessors(cls, site, portal_type_category_list):
+    category_tool = getattr(site, 'portal_categories', None)
+    for category_id in portal_type_category_list:
+      # we need to generate only categories defined on portal type
+      CategoryProperty.applyDefinitionOnAccessorHolder(cls,
+                                                       category_id,
+                                                       category_tool)
+
+    portal_workflow = getattr(site, 'portal_workflow', None)
+    if portal_workflow is None:
+      if not getattr(site, '_v_bootstrapping', False):
+        LOG("ERP5Type.Dynamic", WARNING,
+            "Could not generate workflow methods for %s"
+            % cls.__name__)
+    else:
+      initializePortalTypeDynamicWorkflowMethods(cls, portal_workflow)
+
+    # portal type group methods, isNodeType, isResourceType...
+    from Products.ERP5Type.ERP5Type import ERP5TypeInformation
+    # XXX possible optimization:
+    # generate all methods on Base accessor holder, with all methods
+    # returning False, and redefine on portal types only those returning True,
+    # aka only those for the group they belong to
+    for group in ERP5TypeInformation.defined_group_list:
+      value = cls.__name__ in site._getPortalGroupedTypeSet(group)
+      accessor_name = 'is' + UpperCase(group) + 'Type'
+      method = ConstantGetter(accessor_name, group, value)
+      cls.registerAccessor(method, Permissions.AccessContentsInformation)
+
+    from Products.ERP5Type.Cache import initializePortalCachingProperties
+    initializePortalCachingProperties(site)
+
+  # TODO in reality much optimization can be done for all
+  # PropertyHolder methods:
+  # - workflow methods are only on the MetaType erp5.portal_type method
+  # Iterating over the complete MRO is nonsense and inefficient
+  def _getPropertyHolderItemList(cls):
+    cls.loadClass()
+    result = PropertyHolder._getPropertyHolderItemList(cls)
+    for parent in cls.mro():
+      if parent.__module__.startswith('erp5.accessor_holder'):
+        for x in parent.__dict__.items():
+          if x[0] not in PropertyHolder.RESERVED_PROPERTY_SET:
+            result.append(x)
+    return result
+
   def loadClass(cls):
     """
     - mro before load:
@@ -185,6 +266,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
     - mro after:
       erp5.portal_type.XXX, *new_bases_fetched_from_ZODB
     """
+    __traceback_info__ = cls.__name__
     # Do not load the class again if it has already been loaded
     if not cls.__isghost__:
       return
@@ -199,32 +281,57 @@ class PortalTypeMetaClass(GhostBaseMetaClass):
       raise AttributeError("Could not find a portal type class in"
                            " class hierarchy")
 
-    ERP5Base.aq_method_lock.acquire()
     portal_type = klass.__name__
+    from Products.ERP5.ERP5Site import getSite
+    site = getSite()
+    ERP5Base.aq_method_lock.acquire()
     try:
       try:
-        class_definition = generatePortalTypeClass(portal_type)
-      except AttributeError:
-        LOG("ERP5Type.Dynamic", WARNING,
-            "Could not access Portal Type Object for type %r"
-            % portal_type, error=sys.exc_info())
-        base_list = (ERP5BaseBroken, )
-        attribute_dict = {}
-        interface_list = []
-      else:
-        base_list, interface_list, attribute_dict = class_definition
+        try:
+          class_definition = generatePortalTypeClass(site, portal_type)
+        except AttributeError:
+          LOG("ERP5Type.Dynamic", WARNING,
+              "Could not access Portal Type Object for type %r"
+              % portal_type, error=sys.exc_info())
+          base_tuple = (ERP5BaseBroken, )
+          portal_type_category_list = []
+          attribute_dict = dict(_categories=[], constraints=[])
+          interface_list = []
+        else:
+          base_tuple, portal_type_category_list, \
+            interface_list, attribute_dict = class_definition
 
-      klass.__isghost__ = False
-      klass.__bases__ = base_list
+        klass.__isghost__ = False
+        klass.__bases__ = base_tuple
 
-      for key, value in attribute_dict.iteritems():
-        setattr(klass, key, value)
+        klass.resetAcquisition()
 
-      klass.resetAcquisitionAndSecurity()
-      for interface in interface_list:
-        classImplements(klass, interface)
+        for key, value in attribute_dict.iteritems():
+          setattr(klass, key, value)
+
+        if getattr(klass.__setstate__, 'im_func', None) is \
+           persistent_migration.__setstate__:
+          # optimization to reduce overhead of compatibility code
+          klass.__setstate__ = persistent_migration.Base__setstate__
+
+        for interface in interface_list:
+          classImplements(klass, interface)
+
+        # skip this during the early Base Type / Types Tool generation
+        # because they dont have accessors, and will mess up
+        # workflow methods. We KNOW that we will re-load this type anyway
+        if len(base_tuple) > 1:
+          klass.generatePortalTypeAccessors(site, portal_type_category_list)
+          # need to set %s__roles__ for generated methods
+          cls.setupSecurity()
+
+      except Exception:
+        import traceback; traceback.print_exc()
+        raise
     finally:
       ERP5Base.aq_method_lock.release()
 
 def generateLazyPortalTypeClass(portal_type_name):
-  return PortalTypeMetaClass(portal_type_name, (InitGhostBase,), {})
+  return PortalTypeMetaClass(portal_type_name,
+                             (InitGhostBase,),
+                             dict(portal_type=portal_type_name))

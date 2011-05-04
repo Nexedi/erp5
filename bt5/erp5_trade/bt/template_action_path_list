@@ -9,6 +9,7 @@ Container | view
 Delivery Cell | view
 Delivery Root Simulation Rule | view
 Delivery Simulation Rule | view
+Duplicate Inventory Constraint | view
 First Causality Movement Group | view
 Internal Order Cell | view
 Internal Order Line | price_view
@@ -39,6 +40,11 @@ Internal Packing List | payment_condition
 Internal Packing List | profile_view
 Internal Packing List | view
 Internal Packing List | view_stock
+Internal Trade Condition Module | view
+Internal Trade Condition | view
+Internal Trade Condition | view_payment
+Internal Trade Condition | view_profile
+Internal Trade Condition | view_trade_model_line_list
 Inventory Cell | view
 Inventory Line | inventory_view
 Inventory Line | price_view
@@ -184,6 +190,8 @@ Sale Trade Condition | view_payment
 Sale Trade Condition | view_profile
 Sale Trade Condition | view_trade_model_line_list
 System Preference | trade_preference
+Trade Model Line Cell Consistency Constraint | predicate
+Trade Model Line Cell Consistency Constraint | view
 Trade Model Line | predicate_view
 Trade Model Line | view
 Trade Model Path | predicate_view

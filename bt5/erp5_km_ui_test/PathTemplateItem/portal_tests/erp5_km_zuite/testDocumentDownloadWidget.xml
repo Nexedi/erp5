@@ -65,7 +65,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//span[@onclick=&quot;javascript:toggleElement(\'div\', \'download-document-format-list-menu\');&quot;]</td>\n
+  <td>//span[@onclick=&quot;javascript:$(\'div.download-document-format-list-menu\').toggle();&quot;]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -88,9 +88,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

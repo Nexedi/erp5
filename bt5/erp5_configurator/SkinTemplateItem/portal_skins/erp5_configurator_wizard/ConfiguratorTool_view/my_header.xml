@@ -94,7 +94,7 @@
                     <value> <string encoding="cdata"><![CDATA[
 
 <h2 i18n:translate=""\n
-i18n:domain="ui"> Welcome to Wizard</h2>\n
+i18n:domain="ui"> Welcome to Configurator</h2>\n
 \n
 <p i18n:translate=""\n
 i18n:domain="ui"> This tool will help you configure your fresh ERP5</p>

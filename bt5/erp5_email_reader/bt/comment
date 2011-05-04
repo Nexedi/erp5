@@ -1,0 +1,10 @@
+This is still an experimental business template.
+
+TODO:
+- finish EmailReader.py implementation
+- make a prototype for WebSite
+- make a prototype for Gadget
+- move email SQL methods to separate bt5
+- move crawler SQL methods to separate bt5 (DMS)
+- make ID generator generic (rather than ad hoc in reply script)
+- accelerate SQL (start_date)

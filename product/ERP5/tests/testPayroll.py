@@ -33,8 +33,9 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
 import transaction
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 
-class TestPayrollMixin(TestTradeModelLineMixin):
+class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
   BUSINESS_PATH_CREATION_SEQUENCE_STRING = """
                CreateBusinessProcess
                CreateBusinessLink
@@ -63,12 +64,71 @@ class TestPayrollMixin(TestTradeModelLineMixin):
   def getTitle(self):
     return "Payroll"
 
+  def setPayrollBaseAmountQuantityMethod(self, base_amount_id, text):
+    """Populate TradeModelLine_getBaseAmountQuantityMethod shared script
+
+    This helper method edits the script so that:
+    - there's no need to do any cleanup
+    - data produced by previous still behaves as expected
+    """
+    skin = self.portal.portal_skins.custom
+    script_id = self.amount_generator_line_portal_type.replace(' ', '') \
+                + '_getBaseAmountQuantityMethod'
+    test = "\nif base_application.startswith(%r):\n  " % base_amount_id
+    try:
+      old_text = '\n' + skin[script_id].body()
+    except KeyError:
+      old_text = ''
+    else:
+      skin._delObject(script_id)
+    text = "context.log('ba', base_application)\n\n" + test + '\n  '.join(text.splitlines()) + old_text
+    createZODBPythonScript(skin, script_id, "base_application", text)
+    return base_amount_id
+
+
   def afterSetUp(self):
     """Prepare the test."""
     TestTradeModelLineMixin.afterSetUp(self)
     self.createCategories()
     self.fixed_quantity = self.setBaseAmountQuantityMethod('fixed_quantity',
       "return lambda *args, **kw: 1")
+    self.setPayrollBaseAmountQuantityMethod("base_amount/payroll/base/contribution",
+                                            """\
+  def getBaseAmountQuantity(delivery_amount, base_application,
+                            variation_category_list=(), **kw):
+    if variation_category_list:
+      for variation in variation_category_list:
+        if variation.startswith('salary_range'):
+          cell = delivery_amount.getSpecialiseValue().getCell(variation)
+          if cell is not None:
+            model_slice_min = cell.getQuantityRangeMin()
+            model_slice_max = cell.getQuantityRangeMax()
+            base_application = delivery_amount.getTotalPrice(0.0)
+            if base_application <= model_slice_min:
+              # if base_application is not in the slice range, quantity is 0
+              return 0
+            elif base_application-model_slice_min > 0:
+              if base_application <= model_slice_max:
+                quantity = base_application - model_slice_min
+              elif model_slice_max:
+                quantity = model_slice_max - model_slice_min
+            return quantity
+      quantity = delivery_amount.getGeneratedAmountQuantity(base_application)
+      return quantity
+    return context.getBaseAmountQuantity(delivery_amount, base_application, **kw)
+  return getBaseAmountQuantity
+""")
+
+    self.setPayrollBaseAmountQuantityMethod("base_amount/payroll/base/income_tax",
+                                            """\
+  def getBaseAmountQuantity(delivery_amount, base_application,
+                            variation_category_list=(), **kw):
+    if variation_category_list:
+      return delivery_amount.getGeneratedAmountQuantity(base_application)
+    return context.getBaseAmountQuantity(delivery_amount, base_application, **kw)
+  return getBaseAmountQuantity
+""")
+
 
   @reindex
   def beforeTearDown(self):
@@ -77,13 +137,14 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     for module in (
       self.portal.organisation_module,
       self.portal.person_module,
+      self.portal.account_module,
       self.portal.paysheet_model_module,
       self.portal.accounting_module,
-      self.portal.business_process_module,
       self.portal.service_module,
       self.portal.portal_simulation,):
       module.manage_delObjects(list(module.objectIds()))
 
+    self.portal.business_process_module.manage_delObjects(list([x for x in self.portal.business_process_module.objectIds() if x != "erp5_default_business_process"]))
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -137,8 +198,10 @@ class TestPayrollMixin(TestTradeModelLineMixin):
             'grade/worker',
             'grade/engineer',
             'quantity_unit/time/month',
+            'product_line/base_salary',
             'product_line/labour',
             'product_line/state_insurance',
+            'product_line/payroll_tax_1',
             'use/payroll/tax',
             'use/payroll/base_salary',
             'use/payroll/output',
@@ -160,7 +223,7 @@ class TestPayrollMixin(TestTradeModelLineMixin):
            )
 
   def getBusinessTemplateList(self):
-    return TestTradeModelLineMixin.getBusinessTemplateList(self) + ('erp5_payroll', )
+    return TestTradeModelLineMixin.getBusinessTemplateList(self) + ('erp5_payroll', 'erp5_core_proxy_field_legacy')
 
   def stepCreatePriceCurrency(self, sequence):
     sequence.edit(price_currency = self.createResource('Currency',
@@ -347,32 +410,18 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     #model_line.setQuantity(0.0)
     sequence.edit(urssaf_model_line_with_slices = model_line)
 
-  def stepPaysheetCreateUrssafModelLine(self, sequence=None, **kw):
-    '''The model line created here have the same reference than the model line
-    created in stepModelCreateUrssafModelLine. This is used for line
-    overloading tests'''
-    paysheet = sequence.get('paysheet')
-    model_line = self.createModelLine(paysheet)
-    model_line.edit(title='Urssaf',
-                    reference='urssaf_model_line',
-                    trade_phase='payroll/france/urssaf',
-                    resource_value=sequence.get('urssaf_service'),
-                    variation_category_list=['contribution_share/employee',
-                                             'contribution_share/employer'],
-                    base_application_list=[ 'base_amount/payroll/base/contribution'],
-                    base_contribution_list=['base_amount/payroll/base/income_tax'])
-    sequence.edit(urssaf_model_line = model_line)
-
   def stepUrssafModelLineCreateMovements(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line')
     cell1 = model_line.newCell('contribution_share/employee',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
+                               base_application = "contribution_share/employee",
                                mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.1, contribution_share='employee', quantity=None)
     cell2 = model_line.newCell('contribution_share/employer',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
+                               base_application = "contribution_share/employer",
                                mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.5, contribution_share='employer', quantity=None)
 
@@ -381,11 +430,13 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
+        base_application = "contribution_share/employee",
         mapped_value_property_list=('quantity', 'price'))
     cell1.edit(quantity=-100.0, contribution_share='employee')
     cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
+        base_application = "contribution_share/employer",
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(quantity=-200.0, contribution_share='employer')
 
@@ -395,7 +446,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                                'salary_range/france/slice_0_to_200',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
-                               base_application='base_amount/payroll/l10n/fr/salary_range/slice_0_to_200',
+                               base_application_list=['contribution_share/employee',
+                                                      'salary_range/france/slice_0_to_200',],
                                mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.1, contribution_share='employee', quantity=None,
                salary_range='france/slice_0_to_200')
@@ -403,7 +455,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                                'salary_range/france/slice_0_to_200',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
-                               base_application='base_amount/payroll/l10n/fr/salary_range/slice_0_to_200',
+                               base_application_list=['contribution_share/employer',
+                                                      'salary_range/france/slice_0_to_200',],
                                mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.2, contribution_share='employer', quantity=None,
         salary_range='france/slice_0_to_200')
@@ -411,7 +464,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                                'salary_range/france/slice_200_to_400',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
-                               base_application='base_amount/payroll/l10n/fr/salary_range/slice_200_to_400',
+                               base_application_list=['contribution_share/employee',
+                                                      'salary_range/france/slice_200_to_400',],
                                mapped_value_property_list=('quantity', 'price'))
     cell3.edit(price=0.3, contribution_share='employee', quantity=None,
         salary_range='france/slice_200_to_400')
@@ -419,7 +473,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                                'salary_range/france/slice_200_to_400',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
-                               base_application='base_amount/payroll/l10n/fr/salary_range/slice_200_to_400',
+                               base_application_list=['contribution_share/employer',
+                                                      'salary_range/france/slice_200_to_400',],
                                mapped_value_property_list=('quantity', 'price'))
     cell4.edit(price=0.4, contribution_share='employer', quantity=None,
         salary_range='france/slice_200_to_400')
@@ -427,7 +482,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                                'salary_range/france/slice_400_to_5000',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
-                               base_application='base_amount/payroll/l10n/fr/salary_range/slice_400_to_5000',
+                               base_application_list=['contribution_share/employee',
+                                                      'salary_range/france/slice_400_to_5000',],
                                mapped_value_property_list=('quantity', 'price'))
     cell5.edit(price=0.5, contribution_share='employee', quantity=None,
         salary_range='france/slice_400_to_5000')
@@ -435,7 +491,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                                'salary_range/france/slice_400_to_5000',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
-                               base_application='base_amount/payroll/l10n/fr/salary_range/slice_400_to_5000',
+                               base_application_list=['contribution_share/employer',
+                                                      'salary_range/france/slice_400_to_5000',],
                                mapped_value_property_list=('quantity', 'price'))
     cell6.edit(price=0.6, contribution_share='employer', quantity=None,
                salary_range='france/slice_400_to_5000')
@@ -447,7 +504,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                                'salary_range/france/slice_200_to_400',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
-                               base_application='base_amount/payroll/l10n/fr/salary_range/slice_200_to_400',
+                               base_application_list=['contribution_share/employee',
+                                                      'salary_range/france/slice_200_to_400',],
                                mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.1, contribution_share='employee', quantity=None,
                salary_range='france/slice_200_to_400')
@@ -455,7 +513,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                                'salary_range/france/slice_200_to_400',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
-                               base_application='base_amount/payroll/l10n/fr/salary_range/slice_200_to_400',
+                               base_application_list=['contribution_share/employer',
+                                                      'salary_range/france/slice_200_to_400',],
                                mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.2, contribution_share='employer', quantity=None,
         salary_range='france/slice_200_to_400')
@@ -463,7 +522,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                                'salary_range/france/slice_600_to_800',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
-                               base_application='base_amount/payroll/l10n/fr/salary_range/slice_600_to_800',
+                               base_application_list=['contribution_share/employee',
+                                                      'salary_range/france/slice_600_to_800',],
                                mapped_value_property_list=('quantity', 'price'))
     cell3.edit(price=0.3, contribution_share='employee', quantity=None,
                salary_range='france/slice_600_to_800')
@@ -471,7 +531,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
                                'salary_range/france/slice_600_to_800',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
-                               base_application='base_amount/payroll/l10n/fr/salary_range/slice_600_to_800',
+                               base_application_list=['contribution_share/employer',
+                                                      'salary_range/france/slice_600_to_800',],
                                mapped_value_property_list=('quantity', 'price'))
     cell4.edit(price=0.4, contribution_share='employer', quantity=None,
                salary_range='france/slice_600_to_800')
@@ -481,11 +542,13 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
+        base_application = "contribution_share/employee",
         mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.3, contribution_share='employee', quantity=None)
     cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
+        base_application = "contribution_share/employer",
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.7, contribution_share='employer', quantity=None)
 
@@ -526,24 +589,10 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     paysheet = sequence.get('paysheet')
     paysheet_line = self.createPaysheetLine(paysheet)
     paysheet_line.edit(title='Bonus',
-                    resource_value=sequence.get('bonus_service'),
-                    variation_category_list=['contribution_share/employee',
-                                             'contribution_share/employer'],
-                    base_contribution_list=[ 'base_amount/payroll/base/contribution'])
+                       resource_value=sequence.get('bonus_service'),
+                       quantity=1000, price=1,
+                       base_contribution_list=[ 'base_amount/payroll/base/contribution'])
     sequence.edit(bonus_paysheet_line = paysheet_line)
-
-  def stepPaysheetCreateBonusPaySheetLineMovements(self, sequence=None, **kw):
-    paysheet_line = sequence.get('bonus_paysheet_line')
-    cell1 = paysheet_line.newCell('contribution_share/employee',
-        portal_type='Pay Sheet Cell',
-        base_id='movement',
-        mapped_value_property_list=('quantity', 'price'))
-    cell1.edit(quantity=1000, price=1, contribution_share='employee')
-    cell2 = paysheet_line.newCell('contribution_share/employer',
-        portal_type='Pay Sheet Cell',
-        base_id='movement',
-        mapped_value_property_list=('quantity', 'price'))
-    cell2.edit(quantity=1000, price=1, contribution_share='employer')
 
   def checkUpdateAggregatedAmountListReturn(self, paysheet,
       expected_movement_to_delete_count, expected_movement_to_add_count):
@@ -610,8 +659,8 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEqual(len(paysheet_line_list), 3)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
-        'Pay Sheet Cell')), 4) # 4 because labour line contain no movement
-                               # 2 for bonus, and 2 for urssaf
+        'Pay Sheet Cell')), 2) # 2 because labour line contain no movement
+                               # 2 for urssaf
 
   def stepCheckThereIsOnlyOnePaysheetLine(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -623,7 +672,7 @@ class TestPayrollMixin(TestTradeModelLineMixin):
   def stepCheckPaysheetLineAreCreatedUsingSlices(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
-    self.assertEqual(len(paysheet_line_list), 4)
+    self.assertEqual(len(paysheet_line_list), 2)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 6) # 6 because labour line contain no movement and
                                # because of the 3 slice and 2 contribution_shares
@@ -631,7 +680,7 @@ class TestPayrollMixin(TestTradeModelLineMixin):
   def stepCheckPaysheetLineAreCreatedUsingComplexSlices(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
-    self.assertEqual(len(paysheet_line_list), 3)
+    self.assertEqual(len(paysheet_line_list), 2)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 4) # 4 because labour line contain no movement and
                                # because of the 2 slice and 2 contribution_shares
@@ -649,7 +698,7 @@ class TestPayrollMixin(TestTradeModelLineMixin):
   def stepCheckPaysheetLineAreCreatedAfterUpdateWithLinesWithSameResource(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
-    self.assertEqual(len(paysheet_line_list), 5)
+    self.assertEqual(len(paysheet_line_list), 3)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
         'Pay Sheet Cell')), 8) # 8 because labour line contain no movement and
                                # because of the 3 slice and 2 contribution_shares
@@ -687,10 +736,7 @@ class TestPayrollMixin(TestTradeModelLineMixin):
       elif service == 'Labour':
         self.assertEqual(paysheet_line.getTotalPrice(), 3000.0)
       elif service == 'Bonus':
-        cell1 = paysheet_line.getCell('contribution_share/employee')
-        self.assertEquals(cell1.getTotalPrice(), 1000)
-        cell2 = paysheet_line.getCell('contribution_share/employer')
-        self.assertEquals(cell2.getTotalPrice(), 1000)
+        self.assertEqual(paysheet_line.getTotalPrice(), 1000.0)
       else:
         self.fail("Unknown service for line %s" % paysheet_line.getTitle())
 
@@ -899,6 +945,16 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     business_link.setSourceSectionValue(sequence.get('urssaf_roubaix'))
     business_link.setDeliveryBuilderList(('portal_deliveries/pay_sheet_builder',))
     sequence.edit(business_link=business_link)
+    # Add a trade model path
+    business_process = sequence.get('business_process')
+    urssaf_roubaix = sequence.get('urssaf_roubaix')
+    business_process.newContent(portal_type='Trade Model Path',
+                                trade_phase_list=['payroll/france/urssaf',
+                                                  'payroll/france/labour'],
+                                reference="paysheet_path",
+                                efficiency=1.0,
+                                source_section_value=urssaf_roubaix,
+                                )
 
   def stepModelSpecialiseBusinessProcess(self, sequence=None, **kw):
     model = sequence.get('model')
@@ -1120,11 +1176,13 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     cell1 = model_line.newCell('contribution_share/employee',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
+        base_application = "contribution_share/employee",
         mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.1, quantity=None, contribution_share='employee')
     cell2 = model_line.newCell('contribution_share/employer',
         portal_type='Pay Sheet Model Cell',
         base_id='movement',
+        base_application = "contribution_share/employer",
         mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.5, quantity=None, contribution_share='employer')
 
@@ -1146,12 +1204,14 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     cell1 = model_line.newCell('contribution_share/employee',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
+                               base_application = "contribution_share/employee",
                                quantity=None,
                                mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.5, contribution_share='employee')
     cell2 = model_line.newCell('contribution_share/employer',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
+                               base_application = "contribution_share/employer",
                                quantity=None,
                                mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.8, contribution_share='employer')
@@ -1174,12 +1234,14 @@ class TestPayrollMixin(TestTradeModelLineMixin):
     cell1 = model_line.newCell('contribution_share/employee',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
+                               base_application = "contribution_share/employee",
                                quantity=None,
                                mapped_value_property_list=('quantity', 'price'))
     cell1.edit(price=0.4, contribution_share='employee')
     cell2 = model_line.newCell('contribution_share/employer',
                                portal_type='Pay Sheet Model Cell',
                                base_id='movement',
+                               base_application = "contribution_share/employer",
                                quantity=None,
                                mapped_value_property_list=('quantity', 'price'))
     cell2.edit(price=0.3, contribution_share='employer')
@@ -1225,7 +1287,7 @@ class TestPayrollMixin(TestTradeModelLineMixin):
   def stepModelDelUrssafModelLine(self, sequence=None, **kw):
     model_line = sequence.get('urssaf_model_line')
     model = sequence.get('model')
-    model.manage_delObjects(model_line.getId())
+    model.manage_delObjects([model_line.getId(),])
 
   def stepCheckPaysheetLineNewAmountsAfterUpdate(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -2255,7 +2317,6 @@ class TestPayroll(TestPayrollMixin):
     sequence_string = self.COMMON_BASIC_DOCUMENT_CREATION_SEQUENCE_STRING + """
                CreateBonusService
                PaysheetCreateBonusPaySheetLine
-               PaysheetCreateBonusPaySheetLineMovements
                CheckUpdateAggregatedAmountListReturn
                PaysheetApplyTransformation
                Tic
@@ -2319,6 +2380,7 @@ class TestPayroll(TestPayrollMixin):
                       variation_base_category_list=('contribution_share',),
                       variation_category_list=('contribution_share/employee',
                                                'contribution_share/employer'))
+    self.createPayrollBusinesProcess()
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2343,6 +2405,7 @@ class TestPayroll(TestPayrollMixin):
     ps1 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 1',
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee1,
                       start_date=DateTime(2006, 1, 1),)
@@ -2370,6 +2433,7 @@ class TestPayroll(TestPayrollMixin):
     ps2 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 2',
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee2,
                       start_date=DateTime(2006, 1, 1),)
@@ -2481,6 +2545,7 @@ class TestPayroll(TestPayrollMixin):
                                                'contribution_share/employer',
                                                'salary_range/france/slice_a',
                                                'salary_range/france/slice_b'))
+    self.createPayrollBusinesProcess()
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2505,6 +2570,7 @@ class TestPayroll(TestPayrollMixin):
     ps1 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 1',
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee1,
                       start_date=DateTime(2006, 1, 1),)
@@ -2560,6 +2626,7 @@ class TestPayroll(TestPayrollMixin):
     ps2 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 2',
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee2,
                       start_date=DateTime(2006, 1, 1),)
@@ -2702,6 +2769,7 @@ class TestPayroll(TestPayrollMixin):
                       variation_base_category_list=('contribution_share',),
                       variation_category_list=('contribution_share/employee',
                                                'contribution_share/employer'))
+    self.createPayrollBusinesProcess()
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
                       title='Employer',
@@ -2730,6 +2798,7 @@ class TestPayroll(TestPayrollMixin):
     ps1 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 1',
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee1,
                       payment_condition_source_payment_value=employee1_ba,
@@ -2770,6 +2839,7 @@ class TestPayroll(TestPayrollMixin):
     ps2 = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
                       title='Employee 2',
+                      specialise_value=self.business_process,
                       destination_section_value=employer,
                       source_section_value=employee2,
                       payment_condition_source_payment_value=employee2_ba,
@@ -2841,35 +2911,36 @@ class TestPayroll(TestPayrollMixin):
             line_list[-1],
             total_price=3000 + 2000 - (2000 * .5) - (3000 * .5))
 
-  def test_AccountingLineGeneration(self):
+  def createPayrollBusinesProcess(self): 
     currency_module = self.getCurrencyModule()
     if not hasattr(currency_module, 'EUR'):
       currency_module.newContent(
           portal_type = 'Currency',
           reference = "EUR", id = "EUR", base_unit_quantity=0.001 )
+
     # create services
-    base_salary = self.portal.service_module.newContent(
+    self.base_salary = self.portal.service_module.newContent(
       portal_type='Service',
       title='Base Salary',
       product_line='base_salary',
       variation_base_category_list=('contribution_share',),
       variation_category_list=('contribution_share/employee',
                                'contribution_share/employer'))
-    bonus = self.portal.service_module.newContent(
+    self.bonus = self.portal.service_module.newContent(
       portal_type='Service',
       title='Bonus',
       product_line='base_salary',
       variation_base_category_list=('contribution_share',),
       variation_category_list=('contribution_share/employee',
                                'contribution_share/employer'))
-    deductions = self.portal.service_module.newContent(
+    self.deductions = self.portal.service_module.newContent(
       portal_type='Service',
       title='Deductions',
       product_line='base_salary',
       variation_base_category_list=('contribution_share',),
       variation_category_list=('contribution_share/employee',
                                'contribution_share/employer'))
-    tax1 = self.portal.service_module.newContent(
+    self.tax1 = self.portal.service_module.newContent(
       portal_type='Service',
       title='Tax1',
       product_line='payroll_tax_1',
@@ -2878,141 +2949,78 @@ class TestPayroll(TestPayrollMixin):
                                'contribution_share/employer'))
 
     # create accounts
-    account_payroll_wages_expense = self.portal.account_module.newContent(
+    self.account_payroll_wages_expense = self.portal.account_module.newContent(
                           portal_type='Account',
                           title='Payroll Wages (expense)',
                           account_type='expense',)
-    account_payroll_taxes_expense = self.portal.account_module.newContent(
+    self.account_payroll_taxes_expense = self.portal.account_module.newContent(
                           portal_type='Account',
                           title='Payroll Taxes (expense)',
                           account_type='expense',)
-    account_net_wages = self.portal.account_module.newContent(
+    self.account_net_wages = self.portal.account_module.newContent(
                           portal_type='Account',
                           title='Net Wages',
                           account_type='liability/payable',)
-    account_payroll_taxes = self.portal.account_module.newContent(
+    self.account_payroll_taxes = self.portal.account_module.newContent(
                           portal_type='Account',
                           title='Payroll Taxes',
                           account_type='liability/payable',)
 
-    # create an invoice transaction rule for pay sheets.
-    rule = self.portal.portal_rules.newContent(
-      portal_type='Invoice Transaction Simulation Rule',
-      title='Simulation Rule for PaySheet Accounting',
-      reference='paysheet_transaction_rule',
-      test_method_id='SimulationMovement_testInvoiceTransactionSimulationRule')
-    # matching provider for source and destination
-    for category in ('resource', 'source', 'destination',
-                     'destination_total_asset_price',
-                     'source_total_asset_price'):
-      rule.newContent(
-        portal_type='Category Membership Divergence Tester',
-        title='%s divergence tester' % category,
-        tested_property=category,
-        divergence_provider=False,
-        matching_provider=True)
-    # non-matching/non-divergence provider quantity divergence tester
-    # (i.e. only used for expand)
-    rule.newContent(
-      portal_type='Net Converted Quantity Divergence Tester',
-      title='quantity divergence tester',
-      tested_property='quantity',
-      quantity=0,
-      divergence_provider=False,
-      matching_provider=False)
-    # divergence provider for date
-    for property_id in ('start_date', 'stop_date'):
-      rule.newContent(
-        portal_type='DateTime Divergence Tester',
-        title='%s divergence tester' % property_id,
-        tested_property=property_id,
-        quantity=0,
-        divergence_provider=True,
-        matching_provider=False)
-    for category in ('source_administration', 'source_decision', 'source_function', 'source_payment', 'source_project', 'source_section', 'destination_administration', 'destination_decision', 'destination_function', 'destination_payment', 'destination_project', 'destination_section'):
-      rule.newContent(
-        portal_type='Category Membership Divergence Tester',
-        title='%s divergence tester' % category,
-        tested_property=category,
-        divergence_provider=True,
-        matching_provider=False)
-    rule.newContent(
-      portal_type='Float Divergence Tester',
-      title='price divergence tester',
-      tested_property='price',
-      quantity=0,
-      divergence_provider=True,
-      matching_provider=False)
-    rule.newContent(portal_type='Predicate',
-      title='Employee Share',
-      string_index='contribution_share',
-      int_index=1,
-      membership_criterion_base_category_list=('contribution_share',),
-      membership_criterion_category_list=('contribution_share/employee',))
-    rule.newContent(portal_type='Predicate',
-      title='Employer Share',
-      string_index='contribution_share',
-      int_index=2,
-      membership_criterion_base_category_list=('contribution_share',),
-      membership_criterion_category_list=('contribution_share/employer',))
+    self.business_process = self.createBusinessProcess()
 
-    rule.newContent(portal_type='Predicate',
-      title='Base Salary',
-      string_index='service',
-      int_index=1,
-      membership_criterion_base_category_list=('product_line',),
-      membership_criterion_category_list=('product_line/base_salary',))
-    rule.newContent(portal_type='Predicate',
-      title='Payroll Tax 1',
-      string_index='service',
-      int_index=2,
-      membership_criterion_base_category_list=('product_line',),
-      membership_criterion_category_list=('product_line/payroll_tax_1',))
-    self.stepTic()
+    kw = dict(business_process=self.business_process,
+              trade_phase='default/accounting',
+              trade_date='trade_phase/default/invoicing',
+              membership_criterion_base_category_list=['contribution_share',
+                                                       'product_line'],
+              criterion_property_dict={'portal_type': 'Simulation Movement'})
 
-    cell_list = rule.contentValues(portal_type='Accounting Rule Cell')
-    self.assertEquals(4, len(cell_list))
+    # Employee Share * Base Salary
+    self.createTradeModelPath(reference='payroll_base_1',
+       efficiency=1,
+       destination_value=self.account_payroll_wages_expense,
+       membership_criterion_category_list=['contribution_share/employee',
+                                           'product_line/base_salary'],
+       **kw)
+    self.createTradeModelPath(reference='payroll_base_2',
+       efficiency=-1,
+       destination_value=self.account_net_wages,
+       membership_criterion_category_list=['contribution_share/employee',
+                                           'product_line/base_salary'],
+       **kw)
+    # Employer Share * Payroll Tax 1
+    self.createTradeModelPath(reference='payroll_employer_tax1',
+       efficiency=1,
+       destination_value=self.account_payroll_taxes,
+       membership_criterion_category_list=['contribution_share/employer',
+                                      'product_line/payroll_tax_1'],
+       **kw)
+    self.createTradeModelPath(reference='payroll_employer_tax2',
+       efficiency=-1,
+       destination_value=self.account_payroll_taxes_expense,
+       membership_criterion_category_list=['contribution_share/employer',
+                                           'product_line/payroll_tax_1'],
+       **kw)
 
-    employee_base_salary = rule._getOb('movement_0_0')
-    self.assertEquals('Employee Share * Base Salary',
-                      employee_base_salary.getTitle())
-    employee_base_salary.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_debit=1,
-                      destination_value=account_payroll_wages_expense)
-    employee_base_salary.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_credit=1,
-                      destination_value=account_net_wages)
+    # Employee Share * Payroll Tax 1
+    self.createTradeModelPath(reference='payroll_employee_tax1',
+       efficiency=1,
+       destination_value=self.account_payroll_taxes,
+       membership_criterion_category_list=['contribution_share/employee',
+                                           'product_line/payroll_tax_1'],
+       **kw)
+    self.createTradeModelPath(reference='payroll_employee_tax2',
+       efficiency=-1,
+       destination_value=self.account_net_wages,
+       source_method_id=\
+        'SimulationMovement_generatePrevisionForEmployeeSharePaySheetMovement',
+       membership_criterion_category_list=['contribution_share/employee',
+                                           'product_line/payroll_tax_1'],
+       **kw)
 
-    employer_tax = rule._getOb('movement_1_1')
-    self.assertEquals('Employer Share * Payroll Tax 1',
-                      employer_tax.getTitle())
-    employer_tax.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_debit=1,
-                      destination_value=account_payroll_taxes)
-    employer_tax.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_credit=1,
-                      destination_value=account_payroll_taxes_expense)
-
-    employee_tax = rule._getOb('movement_0_1')
-    self.assertEquals('Employee Share * Payroll Tax 1',
-                      employee_tax.getTitle())
-    employee_tax.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_debit=1,
-                      destination_value=account_payroll_taxes)
-    employee_tax.newContent(
-                      portal_type='Accounting Rule Cell Line',
-                      destination_credit=1,
-                      generate_prevision_script_id=\
-      'SimulationMovement_generatePrevisionForEmployeeSharePaySheetMovement',
-                      destination_value=account_net_wages)
-    rule.validate()
-
+  def test_AccountingLineGeneration(self):
     # create a pay sheet
+    self.createPayrollBusinesProcess()
     eur = self.portal.currency_module.EUR
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
@@ -3030,6 +3038,7 @@ class TestPayroll(TestPayrollMixin):
 
     ps = self.portal.accounting_module.newContent(
                       portal_type='Pay Sheet Transaction',
+                      specialise_value=self.business_process,
                       price_currency_value=eur,
                       resource_value=eur,
                       title='Employee 1',
@@ -3040,7 +3049,7 @@ class TestPayroll(TestPayrollMixin):
     # base salary = 2000
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Base salary',
-                   resource_value=base_salary,
+                   resource_value=self.base_salary,
                    destination_value=employee,
                    variation_category_list=('contribution_share/employee',
                                             'contribution_share/employer'))
@@ -3060,7 +3069,7 @@ class TestPayroll(TestPayrollMixin):
     # base_salary += 100 (bonus)
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Bonus',
-                   resource_value=bonus,
+                   resource_value=self.bonus,
                    destination_value=employee,
                    variation_category_list=('contribution_share/employee',
                                             'contribution_share/employer'))
@@ -3080,7 +3089,7 @@ class TestPayroll(TestPayrollMixin):
     # base_salary -= 50 (deductions)   => base_salary == 2050
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Deduction',
-                   resource_value=deductions,
+                   resource_value=self.deductions,
                    destination_value=employee,
                    variation_category_list=('contribution_share/employee',
                                             'contribution_share/employer'))
@@ -3101,7 +3110,7 @@ class TestPayroll(TestPayrollMixin):
     #        20% for employer ( 410 )
     line = ps.newContent(portal_type='Pay Sheet Line',
                    title='Tax 1',
-                   resource_value=tax1,
+                   resource_value=self.tax1,
                    source_section_value=provider,
                    destination_value=employee,
                    variation_category_list=('contribution_share/employee',
@@ -3134,23 +3143,23 @@ class TestPayroll(TestPayrollMixin):
     self.assertEquals(len(accounting_line_list), 4)
 
     line = [l for l in accounting_line_list
-            if l.getDestinationValue() == account_payroll_wages_expense][0]
+            if l.getDestinationValue() == self.account_payroll_wages_expense][0]
     self.assertEquals(2050, line.getDestinationDebit())
     self.assertEquals(employer, line.getDestinationSectionValue())
 
     line = [l for l in accounting_line_list
-            if l.getDestinationValue() == account_net_wages][0]
+            if l.getDestinationValue() == self.account_net_wages][0]
     self.assertEquals(2050 - 205, line.getDestinationCredit())
     self.assertEquals(employer, line.getDestinationSectionValue())
     self.assertEquals(employee, line.getSourceSectionValue())
 
     line = [l for l in accounting_line_list
-            if l.getDestinationValue() == account_payroll_taxes_expense][0]
+            if l.getDestinationValue() == self.account_payroll_taxes_expense][0]
     self.assertEquals(410, line.getDestinationDebit())
     self.assertEquals(employer, line.getDestinationSectionValue())
 
     line = [l for l in accounting_line_list
-            if l.getDestinationValue() == account_payroll_taxes][0]
+            if l.getDestinationValue() == self.account_payroll_taxes][0]
     self.assertEquals(410 + 205, line.getDestinationCredit())
     self.assertEquals(employer, line.getDestinationSectionValue())
     self.assertEquals(provider, line.getSourceSectionValue())

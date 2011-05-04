@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
+group_id = context.getGlobalConfigurationAttr(\'group_id\')\n
+function_id = \'company/manager\'\n
+\n
+# this configuration save must be executed at the end\n
+configuration_save.setIntIndex(2000)\n
+\n
+# web site module security\n
+# we will not provide web_site_module for now.\n
+configuration_save.addConfigurationItem("Permission Configurator Item",\n
+                                        filename="standard_module_permission_access.ods")\n
+\n
+# Catalog Keyword Search Keys are for now hardcoded.\n
+configuration_save.addConfigurationItem("Catalog Keyword Key Configurator Item",\n
+                                        key_list=(\'description\', \'title\', \'catalog.description\', \'catalog.title\'))\n
+\n
+# Customize portal type information.\n
+# this is nice, maybe we want to add more constraint during this configuration ?\n
+configuration_save.addConfigurationItem("Portal Type Configurator Item",\n
+                                        target_portal_type=\'Purchase Order\',\n
+                                        add_propertysheet_list=(\'TradeOrder\',))\n
+configuration_save.addConfigurationItem("Portal Type Configurator Item",\n
+                                        target_portal_type=\'Sale Order\',\n
+                                        add_propertysheet_list=(\'TradeOrder\',))\n
+configuration_save.addConfigurationItem("Portal Type Configurator Item",\n
+                                        target_portal_type=\'Inventory\',\n
+                                        add_propertysheet_list=(\'InventoryConstraint\',))\n
+\n
+# These must be last\n
+configuration_save.addConfigurationItem("Export Customer BT5 Configurator Item")\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>configuration_save_url=None, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>BusinessConfiguration_displayConsultingDownload</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

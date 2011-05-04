@@ -46,7 +46,7 @@ from zLOG import LOG
 
 class ERP5ShopOrderConduit(ERP5Conduit):
   """
-  This conduit is used in the synchronisation process of Storever and ERP5 to convert
+  This conduit is used in the synchronization process of Storever and ERP5 to convert
   a Storever Shop Order to a ERP5 Sale Order.
   Don't forget to add this base categories in portal_category :
       'hd_size', 'memory_size', 'optical_drive', 'keyboard_layout', 'cpu_type'
@@ -297,7 +297,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
   security.declarePrivate('updateObjProperty')
   def updateObjProperty(self, object, property, kw, key):
     """
-    This function update the property of an object with a given value stored in a dictionnary. This function help the Conduit to make decision about the synchronisation of values.
+    This function update the property of an object with a given value stored in a dictionnary. This function help the Conduit to make decision about the synchronization of values.
 
     Example of call : self.updateObjProperty(person_object, 'DefaultAddressStreetAddress', kw, 'address')
 
@@ -505,7 +505,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
 #         # TODO : do the same things for each single information
 #         # TODO : before doing something working well in every case, copy the previou value in the comment field to traceback the modification and let me evaluate the solidity of my algorithm
 #         # TODO : perhaps it's possible to factorize the code using a generic function
-        # Synchronise the street address
+        # Synchronize the street address
 
         # Solution (d'apres seb)
         # machin = getattr (object, methos)
@@ -706,7 +706,7 @@ class ERP5ShopOrderConduit(ERP5Conduit):
       # Create a nice title (without discontinued) from the product title
       product_title = self.niceTitle(kw['product_title'])
 
-      # Synchronise every data
+      # Synchronize every data
       product_object.setDescription(kw['product_description'])
       product_object.setTitle(product_title)
 #       # TODO : I don't know where to put this value,

@@ -5,8 +5,14 @@
  <portal_type id="Accounting Transaction">
   <item>AccountingTransactionConstraint</item>
  </portal_type>
+ <portal_type id="Accounting Transaction Line">
+  <item>AccountingTransactionLineConstraint</item>
+ </portal_type>
  <portal_type id="Balance Transaction">
   <item>AccountingTransactionConstraint</item>
+ </portal_type>
+ <portal_type id="Balance Transaction Line">
+  <item>AccountingTransactionLineConstraint</item>
  </portal_type>
  <portal_type id="Cash Register">
   <item>BankAccount</item>
@@ -14,13 +20,22 @@
  <portal_type id="Internal Invoice Transaction">
   <item>AccountingTransactionConstraint</item>
  </portal_type>
+ <portal_type id="Internal Invoice Transaction Line">
+  <item>AccountingTransactionLineConstraint</item>
+ </portal_type>
  <portal_type id="Payment Transaction">
   <item>AccountingTransactionConstraint</item>
  </portal_type>
  <portal_type id="Purchase Invoice Transaction">
   <item>AccountingTransactionConstraint</item>
  </portal_type>
+ <portal_type id="Purchase Invoice Transaction Line">
+  <item>AccountingTransactionLineConstraint</item>
+ </portal_type>
  <portal_type id="Sale Invoice Transaction">
   <item>AccountingTransactionConstraint</item>
+ </portal_type>
+ <portal_type id="Sale Invoice Transaction Line">
+  <item>AccountingTransactionLineConstraint</item>
  </portal_type>
 </property_sheet_list>

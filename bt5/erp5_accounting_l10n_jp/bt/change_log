@@ -1,3 +1,6 @@
+2011-01-05 yusei
+* Fix some mistakes on Lease(リース) and Tegata(裏書譲渡手形と割引手形).
+
 2010-09-13 yusei
 * Fix printout format of B/S report and make its scripts simple.
 * Implement P/L report.

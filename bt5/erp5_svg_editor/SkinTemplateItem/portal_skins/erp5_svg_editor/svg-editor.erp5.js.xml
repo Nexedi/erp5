@@ -44,22 +44,22 @@
                              url: "getTextContent",\n
                              async: false\n
                             }).responseText;\n
-  svg_canvas.setSvgString(text_content);\n
+  text_content != "" ? svg_canvas.setSvgString(text_content) : null;\n
 }\n
 \n
 $(document).ready(function(){\n
   $("button.save").click(function(event){\n
-    svg_canvas = window.frames["svgframe"].svgCanvas;\n
+    event.preventDefault();\n
+    var svg_canvas = window.frames["svgframe"].svgCanvas;\n
     $.ajax({\n
-      type: "POST",\n
-      url: "Base_setTextContentWrapper",\n
-      data: "text=" + svg_canvas.getSvgString(),\n
-   });\n
+       type: "POST",\n
+       url: "Base_setTextContentWrapper",\n
+       data: "text=" + svg_canvas.getSvgString(),\n
+       success: function(){\n
+         window.location.reload();\n
+       }\n
+    });\n
   });\n
-  var text_content = $.ajax({\n
-                             url: "getTextContent",\n
-                             async: false\n
-                            }).responseText;\n
   $("iframe#svgframe").css("border", "0px");\n
 })</unicode> </value>
         </item>

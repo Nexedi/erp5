@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
@@ -29,30 +30,21 @@
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Utils import convertToUpperCase
-from Products.CMFCore.utils import getToolByName
-from Products.ERP5SyncML.SyncCode import SyncCode
-from Products.ERP5SyncML.Subscription import Subscription
-from Acquisition import aq_base, aq_inner, aq_chain, aq_acquire
-from ZODB.POSException import ConflictError
+import difflib
 
 from zLOG import LOG
 
-class VCardConduit(ERP5Conduit, SyncCode):
+class VCardConduit(ERP5Conduit):
   """
   A conduit is in charge to read data from a particular structure,
   and then to save this data in another structure.
 
-  VCardConduit is a peace of code to update VCards from text stream
+  VCardConduit is a piece of code to update VCards from text stream
   """
 
 
   # Declarative security
   security = ClassSecurityInfo()
-
-  security.declareProtected(Permissions.AccessContentsInformation, '__init__')
-  def __init__(self):
-    self.args = {}
 
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
@@ -69,7 +61,8 @@ class VCardConduit(ERP5Conduit, SyncCode):
     portal_type = 'Person' #the VCard can just use Person
     if sub_object is None:
 
-      new_object, reset_local_roles, reset_workflow = ERP5Conduit.constructContent(self, object, object_id, portal_type)
+      new_object, reset_local_roles, reset_workflow =\
+        ERP5Conduit.constructContent(self, object, object_id, portal_type)
     else: #if the object exist, it juste must be update
       new_object = sub_object
     #LOG('addNode', 0, 'new_object:%s, sub_object:%s' % (new_object, sub_object)) 
@@ -109,7 +102,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
     """
     return the a list of CTType capabilities supported
     """
-    return self.MEDIA_TYPE.values()
+    return ('text/xml', 'text/vcard', 'text/x-vcard',)
 
   def getCapabilitiesVerCTList(self, capabilities_ct_type):
     """
@@ -117,8 +110,8 @@ class VCardConduit(ERP5Conduit, SyncCode):
     """
     #add here the other version supported
     verCTTypeList = {}
-    verCTTypeList[self.MEDIA_TYPE['TEXT_VCARD']]=('3.0',)
-    verCTTypeList[self.MEDIA_TYPE['TEXT_XVCARD']]=('2.1',)
+    verCTTypeList['text/vcard'] = ('3.0',)
+    verCTTypeList['text/x-vcard'] = ('2.1',)
     return verCTTypeList[capabilities_ct_type]
 
   def getPreferedCapabilitieVerCT(self):
@@ -132,7 +125,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
     """
     return the prefered capabilitie VerCT
     """
-    prefered_type = self.MEDIA_TYPE['TEXT_XVCARD']
+    prefered_type = 'text/x-vcard'
     return prefered_type
   
   def changePropertyEncoding(self, property_parameters_list, 
@@ -143,7 +136,7 @@ class VCardConduit(ERP5Conduit, SyncCode):
     encoding=''
 
     for item in property_parameters_list :
-      if item.has_key('ENCODING'):
+      if ENCODING in item:
         encoding = item['ENCODING']
 
     property_value_list_well_incoded=[]
@@ -218,3 +211,28 @@ class VCardConduit(ERP5Conduit, SyncCode):
     #LOG('edit_dict =',0,edit_dict)
     return edit_dict
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'replaceIdFromXML')
+  def replaceIdFromXML(self, xml, attribute_name, new_id, as_string=True):
+    """
+      Return the Same vlue
+    """
+    return xml
+
+  def getContentType(self):
+    """Content-Type of binded data
+    """
+    return 'text/vcard'
+
+  def generateDiff(self, old_data, new_data):
+    """return unified diff for plain-text documents
+    """
+    diff = '\n'.join(difflib.unified_diff(old_data.splitlines(),
+                                          new_data.splitlines()))
+    return diff
+
+
+  def applyDiff(self, original_data, diff):
+    """Use difflib to patch original_data
+    """
+    raise NotImplementedError('patch unified diff')

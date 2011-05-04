@@ -50,81 +50,29 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.JSONEncoder import encodeInJson as dumps\n
+            <value> <string>from json import dumps\n
+\n
+if context.portal_membership.isAnonymousUser():\n
+  return dumps(None)\n
 \n
 portal_preferences = context.portal_preferences\n
-print dumps(dict(preference=portal_preferences.getActivePreference().getRelativeUrl(), \n
-             system_preference=portal_preferences.getActiveSystemPreference().getRelativeUrl()))\n
+preference = portal_preferences.getActivePreference()\n
 \n
-return printed\n
+preference_dict = {}\n
+\n
+if preference:\n
+  preference_dict["preference"] = preference.getRelativeUrl()\n
+\n
+return dumps(preference_dict)\n
 </string> </value>
-        </item>
-        <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>Products.ERP5Type.JSONEncoder</string>
-                            <string>encodeInJson</string>
-                            <string>dumps</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal_preferences</string>
-                            <string>dict</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getPreferencePathList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

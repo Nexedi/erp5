@@ -53,7 +53,7 @@
             <value> <string>"""\n
   Migrate Object Classes based on upgrade signature\n
 """\n
-class_signature_list = context.ERP5Site_getUpgraderSignature(\'upgrade_object_class_list\')\n
+class_signature_list = context.ERP5Site_getUpgraderSignature().get(\'upgrade_object_class_list\', [])\n
 \n
 portal = context.getPortalObject()\n
 message_list = []\n
@@ -76,83 +76,12 @@ return message_list\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>upgrade=0</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>upgrade</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>class_signature_list</string>
-                            <string>portal</string>
-                            <string>message_list</string>
-                            <string>test_only</string>
-                            <string>_getiter_</string>
-                            <string>object_class</string>
-                            <string>folder</string>
-                            <string>test_before</string>
-                            <string>from_class</string>
-                            <string>to_class</string>
-                            <string>test_after</string>
-                            <string>folder_object</string>
-                            <string>getattr</string>
-                            <string>test_before_method</string>
-                            <string>test_after_method</string>
-                            <string>result</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_upgradeObjectClass</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

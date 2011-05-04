@@ -33,7 +33,7 @@ import email.Header
 import transaction
 
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.ERP5Type.tests.utils import DummyMailHost, FileUpload
+from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
                                                        _getConversionServerDict
 from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
@@ -54,27 +54,21 @@ meeting_module
 organisation_module
 person_module
 sale_opportunity_module
+portal_categories/resource
+portal_categories/function
 """.strip().splitlines()
 
 class BaseTestCRM(ERP5TypeTestCase):
 
   def afterSetUp(self):
     super(BaseTestCRM, self).afterSetUp()
-    # add a dummy mailhost not to send real messages
-    self.oldMailHost = getattr(self.portal, 'MailHost', None)
-    if self.oldMailHost is not None:
-      self.portal.manage_delObjects(['MailHost'])
-      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+    self.portal.MailHost.reset()
 
   def beforeTearDown(self):
     transaction.abort()
-    # restore the original MailHost
-    if self.oldMailHost is not None:
-      self.portal.manage_delObjects(['MailHost'])
-      self.portal._setObject('MailHost', DummyMailHost('MailHost'))
     # clear modules if necessary
     for module_name in clear_module_name_list:
-      module = getattr(self.portal, module_name)
+      module = self.portal.unrestrictedTraverse(module_name)
       module.manage_delObjects(list(module.objectIds()))
 
     self.stepTic()
@@ -122,7 +116,7 @@ class TestCRM(BaseTestCRM):
       self.assertEqual(related_event.getTitle(), 'New Title')
       self.assertEqual(related_event.getDescription(), 'New Desc')
       self.assertEqual(related_event.getFollowUpValue(), ticket)
- 
+
   def test_Event_CreateRelatedEventUnauthorized(self):
     # test that we don't get Unauthorized error when invoking the "Create
     # Related Event" without add permission on the module,
@@ -134,7 +128,7 @@ class TestCRM(BaseTestCRM):
                       portal_type='Letter',
                       title='New Title',
                       description='New Desc')
-    
+
   def test_Ticket_CreateRelatedEvent(self):
     # test action to create a related event from a ticket
     event_module_url = self.portal.event_module.absolute_url()
@@ -171,7 +165,7 @@ class TestCRM(BaseTestCRM):
                            title='New Title',
                            description='New Desc',
                            direction='incoming')
-   
+
   def test_PersonModule_CreateRelatedEventSelectionParams(self):
     # create related event from selected persons.
     person_module = self.portal.person_module
@@ -318,7 +312,7 @@ class TestCRM(BaseTestCRM):
       transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
-      
+
     # if create_event option is true, it create a new event.
     for portal_type in event_type_list:
       ticket = self.portal.meeting_module.newContent(portal_type='Meeting',
@@ -387,6 +381,62 @@ class TestCRM(BaseTestCRM):
                                         new_support_request.getReference())
 
 
+  @expectedFailure
+  def test_Event_getResourceItemList(self):
+    """Event_getResourceItemList returns
+    category item list with base category in path, just
+    like resource.getCategoryChildItemList(base=True) does.
+    This is not the expected behaviour because it
+    duplicates the base_category in categories_list:
+      - resource/resource/my_category_id
+    This test checks that relative_url return
+    by Event_getResourceItemList are consistent.
+    Check also the support of backward compatibility to not break UI
+    if resource is already defined with base_category
+    in its relative_url value.
+    """
+    # create resource categories.
+    resource = self.portal.portal_categories.resource
+    for i in range(3):
+      resource.newContent(portal_type='Category',
+                          title='Title%s' % i,
+                          id=i)
+    # create a person like a resource to declare it as a resource
+    person = self.portal.person_module.newContent(portal_type='Person')
+    # Configure system preference.
+    portal_preferences = self.portal.portal_preferences
+    system_preference = portal_preferences.getActiveSystemPreference()
+    if system_preference is None:
+      system_preference = portal_preferences.newContent(
+                                              portal_type='System Preference')
+      system_preference.enable()
+    resource_list = [category.getRelativeUrl() \
+                                      for category in resource.contentValues()]
+    resource_list.append(person.getRelativeUrl())
+    system_preference.setPreferredEventResourceList(resource_list)
+    transaction.commit()
+    self.tic()
+    # Then create One event and play with it
+    portal_type = 'Visit'
+    module = self.portal.getDefaultModule(portal_type)
+    event = module.newContent(portal_type=portal_type,
+                              resource='0')
+    self.assertTrue(event.getResourceValue() is not None)
+    self.assertTrue(event.getResource() in\
+                       [item[1] for item in event.Event_getResourceItemList()])
+    # Check Backward compatibility support
+    # When base_category value is stored in categories_list
+    # resource/resource/my_category_id instead of resource/my_category_id
+    event.setResource('resource/0')
+    self.assertTrue(event.getResourceValue() is not None)
+    self.assertTrue(event.getResource() in\
+                       [item[1] for item in event.Event_getResourceItemList()])
+
+    # Check that relation with an object which
+    # is not a Category works.
+    event.setResourceValue(person)
+    self.assertTrue(event.getResource() in\
+                       [item[1] for item in event.Event_getResourceItemList()])
 
 class TestCRMMailIngestion(BaseTestCRM):
   """Test Mail Ingestion for standalone CRM.
@@ -1275,7 +1325,7 @@ class TestCRMMailSend(BaseTestCRM):
     filename = 'sample_attachment.txt'
     # txt
     document_txt = add_document(filename,
-                                self.portal.person_module['me'], 'File')
+                                self.portal.person_module['me'], 'Embedded File')
 
     transaction.commit()
     self.tic()
@@ -1334,7 +1384,7 @@ class TestCRMMailSend(BaseTestCRM):
     # gif
     filename = 'sample_attachment.gif'
     document_gif = add_document(filename,
-                                self.portal.person_module['me'], 'Image')
+                                self.portal.person_module['me'], 'Embedded File')
 
     transaction.commit()
     self.tic()
@@ -1408,6 +1458,147 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEquals(new_event.getTitle(), real_title)
     self.assertEquals(new_event.getTextContent(), real_content)
 
+  def test_Base_addEvent(self):
+    """Check Base_addEvent script with a logged in user.
+    """
+    # create categories.
+    resource = self.portal.portal_categories.resource
+    for i in range(3):
+      resource.newContent(portal_type='Category',
+                          title='Title%s' % i,
+                          id=i)
+    self.portal.portal_categories.function.newContent(portal_type='Category',
+                                                      id='crm_agent')
+    # create user and configure security settings
+    portal_type_list = self.portal.getPortalEventTypeList()\
+                       + self.portal.getPortalEntityTypeList()\
+                       + ('Event Module',)
+    for portal_type in portal_type_list:
+      portal_type_object = getattr(self.portal.portal_types, portal_type)
+      portal_type_object.newContent(id='manager_role',
+                                    portal_type='Role Information',
+                                    role_name_list=('Manager',),
+                                    role_category_list='function/crm_agent')
+      portal_type_object.updateRoleMapping()
+    user = self.createSimpleUser('Agent', 'crm_agent', 'crm_agent')
+    transaction.commit()
+    self.tic()
+    try:
+      # create entites
+      organisation_portal_type = 'Organisation'
+      person_portal_type = 'Person'
+      my_company = self.portal.getDefaultModule(organisation_portal_type)\
+                              .newContent(portal_type=organisation_portal_type,
+                                          title='Software provider')
+      organisation = self.portal.getDefaultModule(organisation_portal_type)\
+                              .newContent(portal_type=organisation_portal_type,
+                                          title='Soap Service Express')
+      person = self.portal.getDefaultModule(person_portal_type).newContent(
+                              portal_type=person_portal_type,
+                              first_name='John',
+                              last_name='Doe',
+                              default_email_text='john.doe@example.com',
+                              default_career_subordination_value=organisation)
+      another_person = self.portal.getDefaultModule(person_portal_type)\
+                  .newContent(portal_type=person_portal_type,
+                              first_name='Jane',
+                              last_name='Doe',
+                              default_email_text='jane.doe@example.com',
+                              default_career_subordination_value=organisation)
+      user.setDefaultCareerSubordinationValue(my_company)
+      # log in user
+      self.login('crm_agent')
+
+      ### Incoming on Person ###
+      # Submit the dialog on person
+      title = 'Incoming email'
+      direction = 'in'
+      portal_type = 'Note'
+      resource = resource['1'].getCategoryRelativeUrl()
+      person.Base_addEvent(title, direction, portal_type, resource)
+
+      # Index Event
+      transaction.commit()
+      self.tic()
+
+      # check created Event
+      event = person.getSourceRelatedValue()
+      self.assertEquals(event.getTitle(), title)
+      self.assertEquals(event.getResource(), resource)
+      self.assertTrue(event.hasStartDate())
+      self.assertEquals(event.getSource(), person.getRelativeUrl())
+      self.assertEquals(event.getSourceSection(),
+                        organisation.getRelativeUrl())
+      self.assertEquals(event.getDestination(), user.getRelativeUrl())
+      self.assertEquals(event.getDestinationSection(), user.getSubordination())
+
+      ### Outgoing on Person ###
+      # Check another direction
+      title = 'Outgoing email'
+      direction = 'out'
+      another_person.Base_addEvent(title, direction, portal_type, resource)
+
+      # Index Event
+      transaction.commit()
+      self.tic()
+
+      # check created Event
+      event = another_person.getDestinationRelatedValue()
+      self.assertEquals(event.getTitle(), title)
+      self.assertEquals(event.getResource(), resource)
+      self.assertTrue(event.hasStartDate())
+      self.assertEquals(event.getDestination(),
+                        another_person.getRelativeUrl())
+      self.assertEquals(event.getDestinationSection(),
+                        organisation.getRelativeUrl())
+      self.assertEquals(event.getSource(), user.getRelativeUrl())
+      self.assertEquals(event.getSourceSection(), user.getSubordination())
+
+      ### Outgoing on Organisation ###
+      # check on Organisation
+      event = organisation.Base_addEvent(title, direction,
+                                         portal_type, resource)
+
+      # Index Event
+      transaction.commit()
+      self.tic()
+
+      # check created Event
+      event = organisation.getDestinationSectionRelatedValue()
+      self.assertEquals(event.getTitle(), title)
+      self.assertEquals(event.getResource(), resource)
+      self.assertTrue(event.hasStartDate())
+      self.assertEquals(event.getDestination(),
+                        organisation.getRelativeUrl())
+      self.assertEquals(event.getDestinationSection(),
+                        organisation.getRelativeUrl())
+      self.assertEquals(event.getSource(), user.getRelativeUrl())
+      self.assertEquals(event.getSourceSection(), user.getSubordination())
+
+      ### Outgoing on Career ###
+      # Now check Base_addEvent on any document (follow_up)
+      career = person.default_career
+      career.Base_addEvent(title, direction, portal_type, resource)
+
+      # Index Event
+      transaction.commit()
+      self.tic()
+
+      # check created Event
+      event = career.getFollowUpRelatedValue()
+      self.assertEquals(event.getTitle(), title)
+      self.assertEquals(event.getResource(), resource)
+      self.assertTrue(event.hasStartDate())
+      self.assertEquals(event.getSource(), user.getRelativeUrl())
+      self.assertEquals(event.getSourceSection(), user.getSubordination())
+    finally:
+      # clean up created roles on portal_types
+      for portal_type in portal_type_list:
+        portal_type_object = getattr(self.portal.portal_types, portal_type)
+        portal_type_object._delObject('manager_role')
+        portal_type_object.updateRoleMapping()
+      transaction.commit()
+      self.tic()
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -7,6 +7,7 @@ Container Line
 Delivery Cell
 Delivery Root Simulation Rule
 Delivery Simulation Rule
+Duplicate Inventory Constraint
 First Causality Movement Group
 Internal Order
 Internal Order Cell
@@ -16,6 +17,8 @@ Internal Packing List
 Internal Packing List Cell
 Internal Packing List Line
 Internal Packing List Module
+Internal Trade Condition
+Internal Trade Condition Module
 Inventory
 Inventory Cell
 Inventory Line
@@ -53,4 +56,5 @@ Sale Trade Condition
 Sale Trade Condition Module
 Trade Model Cell
 Trade Model Line
+Trade Model Line Cell Consistency Constraint
 Trade Model Path

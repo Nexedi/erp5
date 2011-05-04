@@ -50,11 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Reset references on copied transactions.\n
+            <value> <string>"""Reset references on copied transactions and initialize causality workflow.\n
 """\n
 context.setSourceReference(None)\n
 context.setReference(None)\n
 context.setDestinationReference(None)\n
+context.setSolver(None)\n
+\n
+# Initialize Causality Workflow\n
+if hasattr(context, \'startBuilding\'):\n
+  context.startBuilding()\n
+  context.updateCausalityState()\n
 </string> </value>
         </item>
         <item>

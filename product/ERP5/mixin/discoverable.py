@@ -28,9 +28,9 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo, getSecurityManager
+from ZODB.POSException import ConflictError
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 import os
 import re
@@ -44,6 +44,8 @@ VALID_ORDER_KEY_LIST = ('user_login', 'content', 'filename', 'file_name',
                         'input')
 
 CONTENT_INFORMATION_FORMAT = '_idiscoverable_content_information'
+
+class ConversionError(Exception):pass
 
 class DiscoverableMixin(CachedConvertableMixin):
   """
@@ -178,8 +180,7 @@ class DiscoverableMixin(CachedConvertableMixin):
       # through to portal_contribution_registry
       # to guess destination portal_type against all properties.
       # If returned portal_type is different, then reingest.
-      registry = getToolByName(self.getPortalObject(),
-                              'portal_contribution_registry')
+      registry = self.getPortalObject().portal_contribution_registry
       portal_type = registry.findPortalTypeName(context=self)
       if portal_type != self.getPortalType():
         return self.migratePortalType(portal_type)
@@ -213,7 +214,7 @@ class DiscoverableMixin(CachedConvertableMixin):
     # XXX should be cached in a transactional cache, because this method
     # might be called several times by a single call of
     # portal_contribution_registry.findPortalTypeName().
-    mime, content = self.convert(None)
+    content = self.getData()
     if not content:
       return
     if magic is not None:
@@ -261,7 +262,12 @@ class DiscoverableMixin(CachedConvertableMixin):
     the document title.
     """
     result = {}
-    html = self.asEntireHTML()
+    try:
+      html = self.asEntireHTML()
+    except ConflictError:
+      raise
+    except:
+      return result
     if not html:
       return result
     title_list = re.findall(self.title_parser, str(html))

@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts94923500.39</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ui-bg_gloss-wave_55_5c9ccc_500x100.png</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">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</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>100</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>3457</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ui-bg_gloss-wave_55_5c9ccc_500x100.png</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>500</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

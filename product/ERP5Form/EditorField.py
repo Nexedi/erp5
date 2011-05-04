@@ -28,6 +28,7 @@
 ##############################################################################
 
 from Products.Formulator import Widget, Validator
+from Products.Formulator.Widget import render_element
 from Products.Formulator.Field import ZMIField
 from Products.Formulator.DummyField import fields
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -129,7 +130,10 @@ class EditorWidget(Widget.TextAreaWidget):
     """
     if value is None:
       value = ''
-    return value
+    return render_element("div",
+                          css_class=field.get_value('css_class'),
+                          contents=value,
+                          extra=field.get_value('extra'))
 
 EditorWidgetInstance = EditorWidget()
 

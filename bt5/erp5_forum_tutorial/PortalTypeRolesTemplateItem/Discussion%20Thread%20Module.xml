@@ -1,0 +1,12 @@
+<type_roles>
+  <role id='Author'>
+   <property id='title'>User</property>
+   <property id='description'>Forum Administrators and Users are allowed to access the module and create threads.</property>
+   <multi_property id='category'>function/forum/administrator</multi_property>
+   <multi_property id='category'>function/forum/user</multi_property>
+  </role>
+  <role id='Auditor'>
+   <property id='title'>Visitor Forum</property>
+   <multi_property id='category'>function/forum/visitor</multi_property>
+  </role>
+</type_roles>

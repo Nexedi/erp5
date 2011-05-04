@@ -166,6 +166,10 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     self.assertRaises(ValidationFailed, self.getWorkflowTool().doActionFor,
                       transmission_sheet, 'emit_action')
 
+  def checkAccountTypeConsistency(self, account, fixit=1):
+    self.assertEquals(1, len([x for x in account.checkConsistency(fixit=1)
+           if x.class_name.find('Account Type Constraint')>=0]))
+
   def test_AccountTypeConstaintForExpense(self):
     account = self._getAccount('account',
                                gap='fr/m9/6/60/602/6022/60225',
@@ -176,7 +180,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     account = self._getAccount('account',
                                gap='fr/m9/6/60/602/6022/60225',
                                account_type='equity')
-    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.checkAccountTypeConsistency(account)
     self.assertEquals('expense', account.getAccountType())
 
   def test_AccountTypeConstaintForPayable(self):
@@ -189,7 +193,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     account = self._getAccount('payable_account',
                                gap='fr/m9/4/40',
                                account_type='equity')
-    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.checkAccountTypeConsistency(account)
     self.assertEquals('liability/payable', account.getAccountType())
 
   def test_AccountTypeConstaintForClass4(self):
@@ -207,7 +211,7 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
     account = self._getAccount('class4_account',
                                gap='fr/m9/4/44',
                                account_type='equity')
-    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.checkAccountTypeConsistency(account)
     self.failUnless(account.getAccountType() in ('liability/payable',
                                                  'asset/receivable'))
 
@@ -216,25 +220,25 @@ class TestAccounting_l10n_M9(ERP5TypeTestCase):
   def test_AccountTypeConstaintFixFor4718(self):
     account = self._getAccount('4718',
                                gap='fr/m9/4/47/471/4718', )
-    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.checkAccountTypeConsistency(account)
     self.assertEquals('liability/payable', account.getAccountType())
   
   def test_AccountTypeConstaintFixFor4721(self):
     account = self._getAccount('4721',
                                gap='fr/m9/4/47/472/4721', )
-    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.checkAccountTypeConsistency(account)
     self.assertEquals('asset/receivable', account.getAccountType())
 
   def test_AccountTypeConstaintFixFor4731(self):
     account = self._getAccount('4731',
                                gap='fr/m9/4/47/473/4731', )
-    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.checkAccountTypeConsistency(account)
     self.assertEquals('asset/receivable', account.getAccountType())
 
   def test_AccountTypeConstaintFixFor4735(self):
     account = self._getAccount('4735',
                                gap='fr/m9/4/47/473/4735', )
-    self.assertEquals(1, len(account.checkConsistency(fixit=1)))
+    self.checkAccountTypeConsistency(account)
     self.assertEquals('liability/payable', account.getAccountType())
     
 def test_suite():

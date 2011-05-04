@@ -6,8 +6,6 @@
   <value>1</value>
  </item>
  <item key="_filter_expression_archive" type="str">
-  <value>python: isMovement</value>
- </item>
- <item key="_filter_type_archive" type="tuple">
+  <value>python: context.providesIMovement()</value>
  </item>
 </catalog_method>

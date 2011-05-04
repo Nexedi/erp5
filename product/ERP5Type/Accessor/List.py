@@ -250,12 +250,14 @@ class ListGetter(Base.Getter):
             list_value = evaluateTales(instance=instance, value=list_value)
           else:
             return list_value
-        if type(list_value) is TupleType:
+        # Even if it is already a list, return a copy as callers
+        # expect to be able to modify it on place
+        if isinstance(list_value, (list, tuple, set)):
           return list(list_value) # Make sure we return a list rather than a tuple
         return list_value
       if default is None:
         return None # nothing was defined as default so None is the appropriate value
-      if type(default) is TupleType:
+      if isinstance(default, (list, tuple, set)):
         return list(default) # Make sure we return a list rather than a tuple
       return default
 

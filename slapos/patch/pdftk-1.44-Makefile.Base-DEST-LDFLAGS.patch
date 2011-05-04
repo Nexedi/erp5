@@ -1,0 +1,33 @@
+--- pdftk-1.44-dist.original/pdftk/Makefile.Base	2010-10-28 23:19:18.000000000 +0200
++++ pdftk-1.44-dist/pdftk/Makefile.Base	2011-03-29 13:51:25.000000000 +0200
+@@ -35,22 +35,24 @@
+ 	$(MAKE) -f Makefile -iC $(JAVALIBPATH) all
+ 
+ attachments.o : attachments.cc attachments.h pdftk.h $(JAVALIB)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(JAVALIBPATH) attachments.cc -c
++	$(CXX) $(CPPFLAGS) $(LDFLAGS) $(CXXFLAGS) -I$(JAVALIBPATH) attachments.cc -c
+ 
+ report.o : report.cc report.h pdftk.h $(JAVALIB)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(JAVALIBPATH) report.cc -c
++	$(CXX) $(CPPFLAGS) $(LDFLAGS) $(CXXFLAGS) -I$(JAVALIBPATH) report.cc -c
+ 
+ pdftk.o : pdftk.cc pdftk.h attachments.h report.h $(JAVALIB) $(GCJ_LOCAL_LIB_FULL)
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(JAVALIBPATH) pdftk.cc -c
++	$(CXX) $(CPPFLAGS) $(LDFLAGS) $(CXXFLAGS) -I$(JAVALIBPATH) pdftk.cc -c
+ 
+ pdftk : pdftk.o attachments.o report.o $(JAVALIB) $(GCJ_LOCAL_LIB_FULL)
+-	$(CXX) $(CXXFLAGS) attachments.o report.o pdftk.o $(JAVALIB) $(GCJ_LOCAL_LIB_FULL) $(LDLIBS) -o pdftk
++	$(CXX) $(CXXFLAGS) $(LDFLAGS) attachments.o report.o pdftk.o $(JAVALIB) $(GCJ_LOCAL_LIB_FULL) $(LDLIBS) -o pdftk
+ 
+ install:
+-	/usr/bin/install pdftk /usr/local/bin 
++	mkdir -p ${DEST}/bin
++	/usr/bin/install pdftk ${DEST}/bin
+ 
+ uninstall:
+-	$(RM) $(RMFLAGS) /usr/local/bin/pdftk
++	$(RM) $(RMFLAGS) ${DEST}/pdftk
++	rmdir ${DEST}
+ 
+ clean:
+ 	$(RM) $(RMFLAGS) *.o

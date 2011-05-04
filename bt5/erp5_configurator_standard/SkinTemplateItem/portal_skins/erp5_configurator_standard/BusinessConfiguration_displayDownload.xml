@@ -56,15 +56,34 @@ group_id = context.getGlobalConfigurationAttr(\'group_id\')\n
 # setup Rules\n
 configuration_save.addConfigurationItem("Rule Configurator Item")\n
 \n
+# setup Business Process\n
+configuration_save.addConfigurationItem("Business Process Configurator Item",\n
+                                         title="General Business Process",\n
+                                         reference="erp5_default_business_process")\n
+\n
+# setup Sale Trade Condition\n
+configuration_save.addConfigurationItem("Sale Trade Condition Configurator Item",\n
+                                         title="General Sale Trade Condition",\n
+                                         reference="STC-General")\n
+\n
+# setup Purchase Trade Condition\n
+configuration_save.addConfigurationItem("Purchase Trade Condition Configurator Item",\n
+                                         title="General Purchase Trade Condition",\n
+                                         reference="PTC-General")\n
+\n
 # setup default security\n
 configuration_save.addConfigurationItem("Role Configurator Item", \n
-                                        filename="portal_types_roles_standard.sxc",\n
+                                        filename="standard_portal_types_roles.ods",\n
                                         group_id = \'group/%s\' %group_id)\n
+\n
+# setup Solvers\n
+for property_dict in context.BusinessConfiguration_getSolverPropertyDict().itervalues():\n
+  configuration_save.addConfigurationItem("Solver Configurator Item", **property_dict)\n
 \n
 # web site module security\n
 # we will not provide web_site_module for now.\n
 configuration_save.addConfigurationItem("Permission Configurator Item",\n
-                                        filename="module_permission_access.sxc")\n
+                                        filename="standard_module_permission_access.ods")\n
 \n
 # Catalog Keyword Search Keys are for now hardcoded.\n
 configuration_save.addConfigurationItem("Catalog Keyword Key Configurator Item",\n
@@ -102,66 +121,8 @@ configuration_save.addConfigurationItem("Export Customer BT5 Configurator Item")
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>configuration_save_url=None, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>configuration_save_url</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>configuration_save</string>
-                            <string>group_id</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -170,12 +131,6 @@ configuration_save.addConfigurationItem("Export Customer BT5 Configurator Item")
         <item>
             <key> <string>title</string> </key>
             <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

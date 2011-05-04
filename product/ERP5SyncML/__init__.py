@@ -1,6 +1,7 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2002 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2010 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jean-Paul Smets-Solanes <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -30,27 +31,34 @@
     and extended local roles management
 """
 
+import sys, Permissions, os
+from App.Common import package_home
+this_module = sys.modules[ __name__ ]
+product_path = package_home( globals() )
+this_module._dtmldir = os.path.join( product_path, 'dtml' )
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-import sys, Permissions
-this_module = sys.modules[ __name__ ]
-document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
 
-# Define object classes and tools
-import SynchronizationTool, Publication, Subscription
-object_classes = (Subscription.Subscription, Publication.Publication,Publication.Subscriber)
-portal_tools = (SynchronizationTool.SynchronizationTool,)
-content_classes = ()
-content_constructors = ()
+document_classes = updateGlobals(this_module, globals(),
+                                 permissions_module=Permissions)
 
-# Finish installation
+import PropertySheet
+import interfaces
+
 def initialize( context ):
+  # Import Product Components
+  from Tool import SynchronizationTool
   import Document
+  # Define documents, classes, constructors and tools
+  object_classes = ()
+  content_constructors = ()
+  content_classes = ()
+  portal_tools = (SynchronizationTool.SynchronizationTool,)
+  # Do initialization step
   initializeProduct(context, this_module, globals(),
-                         document_module = Document,
-                         document_classes = document_classes,
-                         object_classes = object_classes,
-                         portal_tools = portal_tools,
-                         content_constructors = content_constructors,
-                         content_classes = content_classes)
-
+                    document_module=Document,
+                    document_classes=document_classes,
+                    object_classes=object_classes,
+                    portal_tools=portal_tools,
+                    content_constructors=content_constructors,
+                    content_classes=content_classes)

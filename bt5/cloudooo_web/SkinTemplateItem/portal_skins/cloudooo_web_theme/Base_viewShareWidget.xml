@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block replace="nothing">\n
+  <!--\n
+  This widget displays download widget of a document.\n
+ \n
+  -->\n
+</tal:block>\n
+\n
+<div class="share-document-list-container"\n
+     tal:define="document_url context/Document_getPermanentUrl;\n
+                 document_title context/getTitle" i18n:domain="ui">\n
+    <ul>\n
+     <li class="separator">\n
+        <a i18n:translate=\'\' \n
+           tal:attributes="href python: \'./Document_viewSendLinkByEmailDialog?cancel_url=%s\' % (document_url)">\n
+        Email \n
+        </a>\n
+      </li>\n
+      <li class="separator">\n
+        <a i18n:translate=\'\' \n
+           tal:attributes="href python: \'http://www.facebook.com/share.php?u=%s&t=%s\' % (document_url,document_title)">\n
+        Facebook \n
+        </a>\n
+      </li>\n
+      <li class="separator">\n
+        <a i18n:translate=\'\' \n
+           tal:attributes="href python: \'http://www.twitter.com/home?status=%s%s%s\' % (document_title,\'%20-%20\',document_url)">\n
+        Twitter \n
+        </a>\n
+      </li>\n
+\n
+    </ul>\n
+</div>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Base_viewShareWidget</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

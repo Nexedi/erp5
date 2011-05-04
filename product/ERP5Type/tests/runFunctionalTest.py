@@ -136,7 +136,7 @@ class FunctionalTestRunner:
     # Try to use long timeout, this is needed when there is many
     # activities runing
     try:
-      f = urllib2.urlopen(request, timeout=3600)
+      f = urllib2.urlopen(request, timeout=3600*4)
     except TypeError:
       f = urllib2.urlopen(request)
     file_content = f.read()

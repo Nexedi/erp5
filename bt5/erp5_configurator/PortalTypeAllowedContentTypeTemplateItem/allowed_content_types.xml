@@ -1,6 +1,7 @@
 <allowed_content_type_list>
  <portal_type id="Business Configuration">
   <item>Configuration Save</item>
+  <item>Embedded File</item>
   <item>File</item>
   <item>Link</item>
  </portal_type>
@@ -8,11 +9,13 @@
   <item>Business Configuration</item>
  </portal_type>
  <portal_type id="Categories Spreadsheet Configurator Item">
-  <item>Spreadsheet</item>
+  <item>Embedded File</item>
+  <item>File</item>
  </portal_type>
  <portal_type id="Configuration Save">
   <item>Account Configurator Item</item>
   <item>Accounting Period Configurator Item</item>
+  <item>Business Process Configurator Item</item>
   <item>Catalog Keyword Key Configurator Item</item>
   <item>Categories Spreadsheet Configurator Item</item>
   <item>Category Configurator Item</item>
@@ -25,10 +28,13 @@
   <item>Portal Type Configurator Item</item>
   <item>Portal Type Roles Spreadsheet Configurator Item</item>
   <item>Preference Configurator Item</item>
+  <item>Purchase Trade Condition Configurator Item</item>
   <item>Role Configurator Item</item>
   <item>Rule Configurator Item</item>
+  <item>Sale Trade Condition Configurator Item</item>
   <item>Service Configurator Item</item>
   <item>Site Property Configurator Item</item>
+  <item>Solver Configurator Item</item>
   <item>Standard BT5 Configurator Item</item>
   <item>System Preference Configurator Item</item>
   <item>Workflow Security Configurator Item</item>
@@ -45,6 +51,6 @@
   <item>Telephone</item>
  </portal_type>
  <portal_type id="Portal Type Roles Spreadsheet Configurator Item">
-  <item>Spreadsheet</item>
+  <item>Embedded File</item>
  </portal_type>
 </allowed_content_type_list>

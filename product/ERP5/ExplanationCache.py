@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import types
 from zLOG import LOG
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Cache import transactional_cached
@@ -116,16 +115,13 @@ class ExplanationCache:
       simulation_movement_id = simulation_movement.getId()
       insert_movement = True
       for path_id in container_path:
-        LOG('path_dict', 0, repr(path_dict))
-        LOG('local_path_dict', 0, repr(local_path_dict))
         local_path_dict = local_path_dict.setdefault(path_id, {})
-        if type(local_path_dict) is not types.DictType:
+        if not isinstance(local_path_dict, dict):
           # A movement was already inserted
           insert_movement = False
           break
       if insert_movement:
         local_path_dict[simulation_movement_id] = simulation_movement
-      LOG('path_dict result', 0, repr(path_dict))
 
     # For each delivery movement
     for movement in self._getDeliveryMovementList():
@@ -134,20 +130,17 @@ class ExplanationCache:
         updatePathDict(simulation_movement)
     
     # Build result by browsing path_dict and
-    # assembling path '/erp5/portal_simulation/1/34/23/43%'
+    # assembling path '/erp5/portal_simulation/1/34/23/43/%'
     result = []
     def browsePathDict(prefix, local_path_dict):
-      LOG('browsePathDict result in', 0, repr(result))
-      LOG('browsePathDict local_path_dict in', 0, repr(local_path_dict))
       for key, value in local_path_dict.items():
-        if type(value) is not types.DictType:
+        if not isinstance(value, dict):
           # We have a real root
           result.append('%s/%s' % (prefix, key))
           result.append('%s/%s/%%' % (prefix, key))
           # XXX-JPS here we must add all parent movements XXX-JPS
         else:
           browsePathDict('%s/%s' % (prefix, key), value) # Recursing with string append is slow XXX-JPS
-      LOG('browsePathDict result out', 0, repr(result))
 
     # path_dict is typically like this:
     #  {'': {'erp5': {'portal_simulation': {'3': {'4': <SimulationMovement at /erp5/portal_simulation/3/4>}}}}}
@@ -208,12 +201,23 @@ class ExplanationCache:
         # all simulation movements from a site
         if kw.get('path', None) is None:
           kw['path'] = self.getSimulationPathPatternList() # XXX-JPS Explicit Query is better
-        if kw.get('explanation_uid', None) is None:
-          kw['explanation_uid'] = self.getRootExplanationUidList()
-        LOG('lookup movements', 0, repr(kw))
+        # XXX-Seb It seems incompatible with the way explanation is working
+        # Indeed, the explanation is not the same all other the simulation tree
+        #      path                explanation
+        # portal_simulation/91/1 testing_folder/17
+        # portal_simulation/91/1/1 testing_folder/17
+        # portal_simulation/91/1/1/1 testing_folder/18
+        # portal_simulation/91/1/1/1/1 testing_folder/18
+        # portal_simulation/91/1/1/1/1/1 testing_folder/17
+        #if kw.get('explanation_uid', None) is None:
+        #  kw['explanation_uid'] = self.getRootExplanationUidList()
+        catalog_kw = kw.copy()
+        if catalog_kw.has_key('trade_phase'):
+          catalog_kw['trade_phase_relative_url'] = catalog_kw['trade_phase']
+          del catalog_kw['trade_phase']
         self.simulation_movement_cache[kw_tuple] = \
                self.portal_catalog(portal_type="Simulation Movement",
-                                   **kw)
+                                   **catalog_kw)
         
     return self.simulation_movement_cache[kw_tuple]
 
@@ -250,14 +254,16 @@ class ExplanationCache:
 
     # Build a list of path patterns which apply to current business_link
     path_list = self.getSimulationPathPatternList()
-    path_list = map(lambda x:x[0:-1], path_list) # Remove trailing %
+    path_list = [x for x in path_list if x[-1] != '%'] # Remove trailing %
     path_set = set()
     for simulation_movement in \
         self.getBusinessLinkRelatedSimulationMovementValueList(business_link):
       simulation_path = simulation_movement.getPath()
       for path in path_list:
         if simulation_path.startswith(path):
-          path_set.add(path) # Only keep a path pattern which matches current simulation movement
+          # Only keep a path pattern which matches current simulation movement
+          path_set.add(path)
+          path_set.add("%s/%%" % path)
 
     # Lookup in cache based on path_tuple
     path_tuple = tuple(path_set) # XXX-JPS is the order guaranteed here ?
@@ -341,12 +347,11 @@ class ExplanationCache:
     # XXX-JPS this is only useful for production (MRP) in reality
     # whenever trade model path define time constraints within the same
     # movement generator (ie. transformation with multiple phases)
-    path_list = business_process.getTradeModelPathValueList(trade_phase=trade_phase)
-    LOG('path_list', 0, '%s' % trade_phase)
+    path_list = business_process.getTradeModelPathValueList(trade_phase=trade_phase, context=business_process)
     if not len(path_list):
       raise ValueError('No Trade Model Path defines a reference data.')
 
-    path = path_list[0] 
+    path = path_list[0]
     # XXX-JPS - for now take arbitrary one
     # but we should in reality some way to configure this
     start_date, stop_date = business_process.getExpectedTradeModelPathStartAndStopDate(

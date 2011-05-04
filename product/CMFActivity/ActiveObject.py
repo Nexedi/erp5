@@ -45,6 +45,8 @@ STOP_STATE = -4
 # Special state which allows to select positive nodes
 POSITIVE_NODE_STATE = 'Positive Node State'
 
+_DEFAULT_ACTIVATE_PARAMETER_KEY = 'default_activate_parameter'
+
 class ActiveObject(ExtensionClass.Base):
   """Active Object Mixin Class.
 
@@ -98,14 +100,9 @@ class ActiveObject(ExtensionClass.Base):
           kw[k] = v
 
     # Get default parameters from a transactional variable.
-    tv = getTransactionalVariable()
-    key = ('default_activate_parameter', id(aq_base(self)))
-    try:
-      for k, v in tv[key].iteritems():
-        if k not in kw:
-          kw[k] = v
-    except KeyError:
-      pass
+    new_kw = self.getDefaultActivateParameterDict()
+    new_kw.update(kw) # kw values takes precedence
+    kw = new_kw # replace it to takes into account default activate parameters
 
     if kw.get('group_id', '') is None:
       raise ValueError, "Cannot defined a group_id with value None"
@@ -169,35 +166,31 @@ class ActiveObject(ExtensionClass.Base):
       return None # Do nothing if no portal_activities
     return activity_tool.getActiveProcess()
 
-  def setDefaultActivateParameters(self, **kw):
+  def setDefaultActivateParameters(self, placeless=False, **kw):
     # This method sets the default keyword parameters to activate. This is
     # useful when you need to specify special parameters implicitly (e.g. to
     # reindexObject).
     tv = getTransactionalVariable()
-    key = ('default_activate_parameter', id(aq_base(self)))
+    if placeless:
+      key = (_DEFAULT_ACTIVATE_PARAMETER_KEY, )
+    else:
+      key = (_DEFAULT_ACTIVATE_PARAMETER_KEY, id(aq_base(self)))
     tv[key] = kw
 
   def getDefaultActivateParameterDict(self, inherit_placeless=True):
     # This method returns default activate parameters to self.
-    # The result can be either a dict object or None.
+    # The result is a dict object.
+    default = {}
     tv = getTransactionalVariable()
     if inherit_placeless:
-      placeless = tv.get(('default_activate_parameter', ))
-      if placeless is not None:
-        placeless = placeless.copy()
+      placeless = tv.get((_DEFAULT_ACTIVATE_PARAMETER_KEY,), default)
     else:
-      placeless = None
-    local = tv.get(('default_activate_parameter', id(aq_base(self))))
-    if local is None:
-      result = placeless
-    else:
-      if placeless is None:
-        result = local.copy()
-      else:
-        # local defaults takes precedence over placeless defaults.
-        result = {}
-        result.update(placeless)
-        result.update(local)
+      placeless = default
+    local = tv.get((_DEFAULT_ACTIVATE_PARAMETER_KEY, id(aq_base(self))),
+                   default)
+    result = placeless.copy()
+    # local defaults takes precedence over placeless defaults.
+    result.update(local)
     return result
 
   def getActivityRuntimeEnvironment(self):

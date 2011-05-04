@@ -28,7 +28,9 @@
 ##############################################################################
 
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
+from Products.ERP5Type import Permissions
 from AccessControl import ClassSecurityInfo
+from StringIO import StringIO
 
 # Declarative security
 security = ClassSecurityInfo()
@@ -42,11 +44,12 @@ class ERP5DocumentConduit(ERP5Conduit):
 
   # Declarative security
   security = ClassSecurityInfo()
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getGidFromObject')
   def getGidFromObject(self, object):
     """
     return the Gid generate with the reference, object, language of the object
     """
     return "%s-%s-%s" %\
              (object.getReference(), object.getVersion(), object.getLanguage())
-
 

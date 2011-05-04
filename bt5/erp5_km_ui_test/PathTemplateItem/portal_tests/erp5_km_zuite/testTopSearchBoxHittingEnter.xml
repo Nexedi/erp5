@@ -108,15 +108,13 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//ul[@class=\'breadcrumb\']/li[3]/a</td>\n
-  <td>test page</td>\n
+  <td>test page for KM</td>\n
 </tr>\n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

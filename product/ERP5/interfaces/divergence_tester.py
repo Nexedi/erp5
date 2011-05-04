@@ -99,8 +99,8 @@ class IDivergenceTester(Interface):
   def compare(prevision_movement, decision_movement):
     """
     Returns True if prevision_movement and delivery_movement
-    match. Returns False else. The method is asymmetric and
-    the order of parameter matters. For example, a sourcing
+    match. Returns False otherwise. The method is asymmetric and
+    the order of parameters matters. For example, a sourcing
     rule may use a tester which makes sure that movements are
     delivered no sooner than 2 weeks before production but
     no later than the production date.
@@ -116,8 +116,8 @@ class IDivergenceTester(Interface):
 
   def getUpdatablePropertyDict(prevision_movement, decision_movement):
     """
-    Returns a list of properties to update on decision_movement
-    prevision_movement so that next call to compare returns True.
+    Returns a mapping of properties to update on decision_movement so that next
+    call to compare against prevision_movement returns True.
 
     prevision_movement -- a simulation movement (prevision)
 

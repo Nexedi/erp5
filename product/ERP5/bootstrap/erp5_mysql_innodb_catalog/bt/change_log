@@ -1,3 +1,13 @@
+2011-04-14 yusei
+* Add datetime key to effective_date and expiration_date on versioning table. They were missing.
+
+2011-02-28 Ivan
+* Deprecate 'advanced_search_text' &'quick_search_text' scriptable key
+* Add 'search_text' scriptable key
+
+2011-02-04 Nicolas
+* add children_reference related column
+
 2010-11-08 Kazuhiko
 * support cataloging multiple subjects.
 * subject related tables are moved from erp5_ingestion_mysql_innodb_catalog.

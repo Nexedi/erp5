@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
  This script allows to create a new Discussion Thread.\n
 """\n
 MARKER = [\'\', None, []]\n
@@ -93,9 +95,10 @@ discussion_post.submit()\n
 if send_notification_text not in (\'\', None):\n
   # we can send notifications\n
   email_list = []\n
-  notification_list = send_notification_text.split(\'\\r\\n\')\n
+  notification_list = send_notification_text.split(\'\\n\')\n
   for notification in notification_list:\n
-    if \'@\' in notification:\n
+    # XXX: proper email validation?\n
+    if \'@\' in notification and \'.\' in notification:\n
       # user specified an email\n
       email_list.append(notification)\n
     else:\n
@@ -111,18 +114,16 @@ New forum post has been created at this url:\n
 \n
 ${url}""" \n
   email_body = context.Base_translateString(email_template, mapping={\'url\':discussion_thread.absolute_url()})\n
+  email_list = filter(lambda x: x not in (None , \'\',) and \'@\' in x, email_list)\n
+  # XXX: use activities & portal_notifications\n
   for email_to in email_list:\n
-    mail_headers = """\n
-To: %s\n
-From: %s\n
-Subject: %s\n
-Date: %s"""  %(email_to, email_from, email_subject, DateTime().rfc822())\n
-    mail_source =\'%s\\n\\n%s\' %(mail_headers, email_body)\n
-    context.MailHost.send(mail_source)\n
+    context.MailHost.send(email_body, email_to, email_from, email_subject)\n
 \n
 return discussion_thread.Base_redirect(form_id,\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

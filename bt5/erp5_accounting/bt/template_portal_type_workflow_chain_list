@@ -2,6 +2,7 @@ Account | account_workflow
 Account | edit_workflow
 Accounting Period | accounting_period_workflow
 Accounting Period | edit_workflow
+Accounting Transaction Balance Constraint | dynamic_class_generation_interaction_workflow
 Accounting Transaction Line | delivery_movement_causality_interaction_workflow
 Accounting Transaction Line | delivery_movement_simulation_interaction_workflow
 Accounting Transaction Line | edit_workflow
@@ -17,6 +18,7 @@ Balance Transaction | edit_workflow
 Cash Register | edit_workflow
 Cash Register | validation_workflow
 Internal Invoice Transaction | accounting_workflow
+Internal Invoice Transaction | edit_workflow
 Invoice Root Simulation Rule | edit_workflow
 Invoice Root Simulation Rule | rule_validation_workflow
 Payment Simulation Rule | edit_workflow

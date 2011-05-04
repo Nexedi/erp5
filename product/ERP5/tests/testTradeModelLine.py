@@ -37,7 +37,7 @@ from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import simple_decorator
 from DateTime import DateTime
-from Products.ERP5Type.tests.utils import createZODBPythonScript
+from Products.ERP5Type.tests.utils import createZODBPythonScript, updateCellList
 
 
 def save_result_as(name):
@@ -92,11 +92,11 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
 
   def afterSetUp(self):
     UserDict.__init__(self)
-    return TestBPMMixin.afterSetUp(self)
+    return super(TestTradeModelLineMixin, self).afterSetUp()
 
   def beforeTearDown(self):
     UserDict.clear(self)
-    return TestBPMMixin.beforeTearDown(self)
+    return super(TestTradeModelLineMixin, self).beforeTearDown()
 
   def clone(self, document):
     parent = document.getParentValue()
@@ -125,12 +125,35 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
                                base_unit_quantity=self.base_unit_quantity)
 
   @save_result_as('business_process')
-  def createBusinessProcess(self, business_link_list=(), **kw):
+  def createBusinessProcess(self, **kw):
     business_process = super(TestTradeModelLineMixin,
         self).createBusinessProcess(**kw)
-    for business_link in business_link_list:
-      link = self.createBusinessLink(business_process, **business_link)
-      self['business_link/' + link.getTradePhaseId()] = link
+    if self.business_link_portal_type is not None:
+      business_link_list = [
+        dict(reference='discount',
+             trade_phase='default/discount',
+             predecessor='trade_state/invoiced',
+             # should successor be trade_state/discounted? There is no
+             # such trade_state category
+             successor='trade_state/accounted',
+        ),
+        dict(reference='tax',
+             trade_phase='default/tax',
+             predecessor='trade_state/invoiced',
+             # should successor be trade_state/taxed? There IS such a
+             # trade_state category, but the rule that wants to match
+             # the Simulation Movement that has this link as causality
+             # is default_invoice_transaction_rule, the same as for
+             # default/discount, so I'll use the same successor as
+             # above. Besides, we'd have to create a new business_link
+             # just to get back to accounted, and match it with (or
+             # create a new) a portal_rule.
+             successor='trade_state/accounted',
+        ),
+      ]
+      for business_link in business_link_list:
+        link = self.createBusinessLink(business_process, **business_link)
+        self['business_link/' + link.getTradePhaseId()] = link
     return business_process
 
   @save_result_as('trade_condition')
@@ -180,9 +203,12 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
       order.newContent(portal_type=self.order_line_portal_type, **line_kw)
     return order
 
+  def getAggregatedAmountList(self, amount_generator, *args, **kw):
+    return amount_generator.getAggregatedAmountList(*args, **kw)
+
   def getAggregatedAmountDict(self, amount_generator, partial_check=False,
                               **expected_amount_dict):
-    amount_list = amount_generator.getAggregatedAmountList()
+    amount_list = self.getAggregatedAmountList(amount_generator)
     amount_dict = {}
     for amount in amount_list:
       reference = amount.getReference()
@@ -399,8 +425,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         if total_price:
           sm = result_dict.pop(use)
           self.assertEqual(str(sm.getTotalPrice()), str(total_price))
-          self.assertEqual(2, len(sm.getCausalityValueList()))
-          self.assertEqual(0, len(sm.getCausalityValueList(
+          self.assertEqual(3, len(sm.getCausalityValueList()))
+          self.assertEqual(1, len(sm.getCausalityValueList(
             portal_type=self.business_link_portal_type)))
           self.assertEqual(1, len(sm.getCausalityValueList(
             portal_type=self.trade_model_path_portal_type)))
@@ -466,8 +492,9 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     taxed = self.createProductTaxed()
     discounted = self.createProductDiscounted()
     taxed_discounted = self.createProductDiscountedTaxed()
+    business_process = self.createBusinessProcess()
     trade_condition = self.createTradeCondition(
-      self.createBusinessProcess(), (
+      business_process, (
       dict(price=self.default_discount_ratio,
            base_application='base_amount/discount',
            base_contribution='base_amount/tax',
@@ -515,7 +542,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
                        order['taxed_discounted']):
         self.checkComposition(movement, [trade_condition], {
           self.trade_model_path_portal_type: 11,
-          self.business_link_portal_type: 5,
+          self.business_link_portal_type: 7,
           "Trade Model Line": 2})
 
       self.checkAggregatedAmountList(order)
@@ -766,10 +793,70 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     for movement in order, order['taxed'], order['discounted']:
       self.checkComposition(movement, [trade_condition], {
         self.trade_model_path_portal_type: 11,
-        self.business_link_portal_type: 5,
+        self.business_link_portal_type: 7,
         "Trade Model Line": 5})
 
     self.checkAggregatedAmountList(order)
+
+  def test_03_VariatedModelLine(self):
+    base_amount = self.setBaseAmountQuantityMethod('tax', """\
+def getBaseAmountQuantity(delivery_amount, base_application,
+                          variation_category_list=(), **kw):
+  if variation_category_list:
+    quantity = delivery_amount.getGeneratedAmountQuantity(base_application)
+    tax_range, = variation_category_list
+    if tax_range == 'tax_range/0_200':
+      return min(quantity, 200)
+    else:
+      assert tax_range == 'tax_range/200_inf'
+      return max(0, quantity - 200)
+  return context.getBaseAmountQuantity(delivery_amount, base_application, **kw)
+return getBaseAmountQuantity""")
+    business_process = self.createBusinessProcess()
+    trade_condition = self.createTradeCondition(business_process, (
+      dict(price=0.3,
+           base_application=base_amount,
+           reference='tax1',
+           int_index=10),
+      dict(base_application=base_amount,
+           base_contribution='base_amount/total_tax',
+           reference='tax2',
+           int_index=20),
+      dict(base_application='base_amount/total_tax',
+           base_contribution='base_amount/total',
+           reference='tax3',
+           int_index=30),
+      ))
+    def createCells(line, matrix, base_application=(), base_contribution=()):
+      range_list = [set() for x in iter(matrix).next()]
+      for index in matrix:
+        for x, y in zip(range_list, index):
+          x.add(y)
+      line.setCellRange(*range_list)
+      for index, price in matrix.iteritems():
+        line.newCell(mapped_value_property='price', price=price,
+          base_application_list=[index[i] for i in base_application],
+          base_contribution_list=[index[i] for i in base_contribution],
+          *index)
+    createCells(self['trade_model_line/tax2'], {
+      ('tax_range/0_200', 'tax_share/A'): .1,
+      ('tax_range/0_200', 'tax_share/B'): .2,
+      ('tax_range/200_inf', 'tax_share/A'): .3,
+      ('tax_range/200_inf', 'tax_share/B'): .4,
+      }, base_application=(0,), base_contribution=(1,))
+    createCells(self['trade_model_line/tax3'], {
+      ('tax_share/A',): .5,
+      ('tax_share/B',): .6,
+      }, base_application=(0,))
+    from Products.ERP5Type.Document import newTempAmount
+    for x in ((100, 30, 10, 20, 5, 12),
+              (500, 150, 20, 90, 40, 120, 55, 96)):
+      amount = newTempAmount(self.portal, '_',
+                            quantity=x[0], price=1,
+                            base_contribution=base_amount)
+      amount_list = trade_condition.getGeneratedAmountList((amount,))
+      self.assertEqual(sorted(x[1:]),
+                       sorted(y.getTotalPrice() for y in amount_list))
 
   def test_tradeModelLineWithFixedPrice(self):
     """
@@ -789,7 +876,7 @@ return lambda *args, **kw: 1""")
     order = self.createOrder(trade_condition, (
       dict(),
       ))
-    self.assertEqual([], order.getAggregatedAmountList())
+    self.assertEqual([], self.getAggregatedAmountList(order))
     for line in trade_condition.objectValues():
       line.setBaseApplication(fixed_quantity)
     amount_list = order.getAggregatedAmountList()

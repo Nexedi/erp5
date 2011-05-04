@@ -102,6 +102,7 @@ class TestConversionInSimulation(AccountingTestCase):
     _(category_tool.trade_phase, ['default'])
     _(category_tool.trade_phase.default,
       ['accounting', 'delivery', 'invoicing', 'discount', 'tax', 'payment'])
+    _(category_tool.product_line, ['apparel'])
 
   def _solveDivergence(self, obj, property, decision, group='line'):
     """
@@ -139,6 +140,10 @@ class TestConversionInSimulation(AccountingTestCase):
         currency.manage_delObjects([x.getId() for x in
                 currency.objectValues(
                   portal_type='Currency Exchange Line')])
+    if getattr(self, 'business_process', None) is not None:
+      self.business_process.getParentValue()._delObject(
+        self.business_process.getId()
+      )
     transaction.commit()
     self.tic()
     super(TestConversionInSimulation, self).beforeTearDown()
@@ -158,6 +163,8 @@ class TestConversionInSimulation(AccountingTestCase):
       need to be installed to run the test on.
     """
     return ('erp5_base',
+            # XXX erp5_core is still not clean. Remove when not needed
+            'erp5_core_proxy_field_legacy',
             'erp5_pdm',
             'erp5_simulation',
             'erp5_trade',
@@ -178,8 +185,20 @@ class TestConversionInSimulation(AccountingTestCase):
         self.portal.portal_workflow.doActionFor(account, 'validate_action')
 
   def createBusinessProcess(self, resource=None):
-    self.business_process = business_process = \
-      self.portal.business_process_module.newContent()
+    module = self.portal.business_process_module
+    name = self.__class__.__name__ + '_' + self._testMethodName
+    self.business_process = business_process = module.newContent(
+      name,
+      reference=name,
+    )
+    # copy business links from the default erp5 Business Process
+    source = module['erp5_default_business_process']
+    business_link_id_list = [obj.getId()
+                             for obj in source.objectValues()
+                             if obj.getPortalType() == 'Business Link']
+    business_process.manage_pasteObjects(
+      source.manage_copyObjects(business_link_id_list)
+    )
     trade_phase = self.getCategoryTool().trade_phase
     kw = dict(portal_type='Trade Model Path',
               trade_date='trade_phase/default/order')
@@ -247,7 +266,7 @@ class TestConversionInSimulation(AccountingTestCase):
     x_curr_ex_line.validate()
     self.createBusinessProcess(currency)
     transaction.commit()
-    self.tic()#execute transactio
+    self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Client',

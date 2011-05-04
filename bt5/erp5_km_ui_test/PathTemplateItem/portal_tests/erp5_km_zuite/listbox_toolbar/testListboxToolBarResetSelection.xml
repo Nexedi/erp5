@@ -60,7 +60,7 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td>%NO_SUCH_DOC_TITLE_EXISTS%</td>\n
 </tr>\n
 <tr>\n
@@ -80,7 +80,7 @@
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
-  <td>title</td>\n
+  <td>listbox_title</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

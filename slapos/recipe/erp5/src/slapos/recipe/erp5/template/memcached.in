@@ -1,0 +1,2 @@
+#!/bin/sh
+exec %(memcached_binary)s -p %(memcached_port)s -U %(memcached_port)s -l %(memcached_ip)s

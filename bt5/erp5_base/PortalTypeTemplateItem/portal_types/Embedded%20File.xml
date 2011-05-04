@@ -53,6 +53,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <tuple>
+                <string>embedded_document</string>
                 <string>file_document</string>
                 <string>my_document</string>
               </tuple>
@@ -109,7 +110,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <none/> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -132,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <none/> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

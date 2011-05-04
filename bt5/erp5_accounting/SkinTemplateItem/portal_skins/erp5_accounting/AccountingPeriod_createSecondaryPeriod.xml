@@ -52,6 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+from DateTime import DateTime\n
 from Products.ERP5Type.DateUtils import addToDate\n
 from Products.ERP5Type.Message import translateString\n
 \n
@@ -62,12 +63,19 @@ if frequency == \'quarterly\':\n
 date = context.getStartDate()\n
 while date < context.getStopDate():\n
   end_date = addToDate(date, dict(month=month_added))\n
+  # recreate a DateTime to have it in the proper timezone\n
+  start_date = DateTime(date.year(), date.month(), date.day())\n
+  stop_date = DateTime((end_date - 1).year(),\n
+                       (end_date - 1).month(),\n
+                       (end_date - 1).day())\n
+\n
   period = context.newContent(portal_type=\'Accounting Period\',\n
-                     start_date=date,\n
-                     stop_date=end_date - 1,)\n
+                              start_date=start_date,\n
+                              stop_date=stop_date)\n
 \n
   if frequency == \'quarterly\':\n
-    period.setShortTitle(\'%s-%s\' % (date.strftime(\'%Y %m\'), (end_date - 1).strftime(\'%m\')))\n
+    period.setShortTitle(\'%s-%s\' % (\n
+      date.strftime(\'%Y %m\'), (end_date - 1).strftime(\'%m\')))\n
   else:\n
     period.setShortTitle(date.strftime(\'%Y-%m\'))\n
     period.setTitle(str(translateString(date.strftime(\'%B\'))))\n
@@ -77,7 +85,7 @@ while date < context.getStopDate():\n
 \n
   date = end_date\n
   \n
-return context.Base_redirect(form_id, \n
+return context.Base_redirect(form_id,\n
      keep_items=dict(portal_status_message=translateString(\'Accounting periods created.\')))\n
 
 

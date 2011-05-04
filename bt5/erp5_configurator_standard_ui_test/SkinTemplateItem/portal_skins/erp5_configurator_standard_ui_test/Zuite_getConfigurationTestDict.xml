@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+  Return the configuration used during test.\n
+\n
+  There is a difference between configuration and upgrader for\n
+  this values. This informations should be unified later but\n
+  for now it is better keep the difference here.\n
+"""\n
+from DateTime import DateTime\n
+\n
+configuration_dict = {\n
+        \'configuration_key\': \'a\', # XXX: fill as appropriate for test env\n
+        \'customer_organisation_title\': \'Nexedi SA\',\n
+        \'customer_organisation_email\': \'webproject-report@erp5.org\',\n
+        \'customer_organisation_telephone\': \'+123 234 567 891\',\n
+        \'customer_organisation_street_address\': \'270 bd Clémenceau, 59700 Marcq-en-Baroeul\',\n
+        \'customer_organisation_city\': \'Lille\',\n
+        \'customer_organisation_zip_code\': \'59700\',\n
+        \'customer_organisation_region\': \'France\',\n
+        \'customer_organisation_region_category\': \'europe/western_europe/france\',\n
+        \'customer_company_employees_number\': 1, # employees\n
+        \'customer_user1_first_name\': \'Ivan\',\n
+        \'customer_user1_last_name\': \'Petrov\',\n
+        \'customer_user1_reference\': \'PERSON_USER_REFERENCE\',\n
+        \'customer_user1_used_reference\' : \'PERSON_RESERVED_REFERENCE\',\n
+        \'customer_user1_password\' : \'secret\',\n
+        \'customer_user1_function\': \'Company/Manager\',\n
+        \'customer_user1_email\': \'webproject-report@erp5.org\',\n
+        \'customer_organisation_currency\' : \'Euro\',\n
+        \'customer_datetime_format\': \'Day / Month / Year\',\n
+\n
+# XXX FIXME The follow configuration are not related to configuration itself\n
+# but related to system or inicial setup. Split this script later in order\n
+# To have a clean definition of what is the User Configuration Values only.\n
+        "functional_test_username" : "ERP5TypeTestCase",\n
+        "functional_test_password" : "",\n
+\n
+        "business_configuration_id": "STANDARD_CONFIGURATOR_TEST",\n
+        \'bt_repository_list\':[\'http://www.erp5.org/dists/snapshot/bt5/\'],\n
+\n
+        # More configurations\n
+        "oood_hostname": "localhost",\n
+        "oood_port": 8008,\n
+        }\n
+\n
+return configuration_dict\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_getConfigurationTestDict</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -59,7 +59,8 @@ class TestBudget(ERP5TypeTestCase):
     """Return the list of required business templates.
     We'll use erp5_accounting_ui_test to have some content
     """
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
             'erp5_invoicing', 'erp5_simplified_invoicing',
             'erp5_accounting_ui_test', 'erp5_budget')
 
@@ -406,8 +407,26 @@ class TestBudget(ERP5TypeTestCase):
                   portal_type='Accounting Transaction Line',
                   source_value=self.portal.account_module.fixed_assets,
                   source_credit=100)
-    atransaction.stop()
+    atransaction.confirm()
 
+    # a confirmed transaction engages budget
+    transaction.commit()
+    self.tic()
+
+    self.assertEquals(dict(), budget_line.getConsumedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): -100.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): 100.0},
+        budget_line.getEngagedBudgetDict())
+
+    self.assertEquals(
+      {('source/account_module/fixed_assets', 'account_type/asset'): 102.0,
+       ('source/account_module/goods_purchase', 'account_type/expense'): -99.0},
+        budget_line.getAvailableBudgetDict())
+
+    atransaction.stop()
+    # a stopped transaction consumes budget
     transaction.commit()
     self.tic()
 

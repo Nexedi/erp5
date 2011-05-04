@@ -9,9 +9,14 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delegated_message_list</string> </key>
+            <value>
               <list>
-                <string>display_width</string>
-                <string>title</string>
+                <string>external_validator_failed</string>
               </list>
             </value>
         </item>
@@ -25,7 +30,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <value> <string>The provided id must end with the "_property" suffix.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -73,12 +78,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>display_width</string> </key>
-                    <value> <int>20</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_view_mode_id_as_reference</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -87,10 +88,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>ID</string> </value>
                 </item>
               </dictionary>
             </value>

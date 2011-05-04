@@ -522,6 +522,7 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
+    mail_dict = decode_email(messageText)
     self.assertEquals('Portal Administrator <site@example.invalid>', mfrom)
     self.assertEquals(['userA@example.invalid'], mto)
     
@@ -530,6 +531,8 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     self.assertEquals(1, len(event_list))
     
     event = event_list[0]
+    self.assertEquals(mail_dict['headers']['message-id'],
+                      event.getSourceReference())
     self.assertEquals('Mail Message', event.getPortalTypeName())
     self.assertEquals('Subject', event.getTitle())
     self.assertEquals('Message', event.getTextContent())

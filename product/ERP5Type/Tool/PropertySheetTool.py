@@ -27,19 +27,22 @@
 #
 ##############################################################################
 
-import sys
 import transaction
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Accessor import Translation
+from Products.ERP5Type.UnrestrictedMethod import unrestricted_apply
 from Products.CMFCore.utils import getToolByName
-from Products.CMFCore.Expression import Expression
-from Products.ERP5Type.Base import Base, PropertyHolder
-from Products.ERP5Type.Utils import setDefaultClassProperties, setDefaultProperties
+from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
+from zExceptions import BadRequest
 
-from zLOG import LOG, ERROR, INFO
+from zLOG import LOG, INFO, WARNING
+
+KNOWN_BROKEN_PROPERTY_SHEET_DICT = {
+  'InventoryConstraint': 'erp5_trade',
+}
 
 class PropertySheetTool(BaseTool):
   """
@@ -53,6 +56,37 @@ class PropertySheetTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def _isBootstrapRequired(self):
+    return not self.has_key('BaseType')
+
+  def _bootstrap(self):
+    bt_name = 'erp5_property_sheets'
+    from Products.ERP5.ERP5Site import ERP5Generator
+    ERP5Generator.bootstrap(self, bt_name, 'PropertySheetTemplateItem', (
+      'BaseType',
+      'BusinessTemplate',
+      'Folder',
+      'SimpleItem',
+      'Version',
+      'Comment',
+      # the following ones are required to upgrade an existing site
+      'Reference',
+      'BaseCategory',
+      'SQLIdGenerator',
+    ))
+    def install():
+      from ZPublisher.BaseRequest import RequestContainer
+      from Products.ERP5Type.Globals import get_request
+      portal = self.getPortalObject()
+      # BusinessTemplate.install needs a request
+      template_tool = portal.aq_base.__of__(portal.aq_parent.__of__(
+        RequestContainer(REQUEST=get_request()))).portal_templates
+      if template_tool.getInstalledBusinessTemplate(bt_name) is None:
+        from Products.ERP5.ERP5Site import getBootstrapBusinessTemplateUrl
+        url = getBootstrapBusinessTemplateUrl(bt_name)
+        template_tool.download(url).install()
+    transaction.get().addBeforeCommitHook(unrestricted_apply, (install,))
+
   security.declarePublic('getTranslationDomainNameList')
   def getTranslationDomainNameList(self):
     return (['']+
@@ -62,217 +96,66 @@ class PropertySheetTool(BaseTool):
             [Translation.TRANSLATION_DOMAIN_CONTENT_TRANSLATION]
             )
 
-  @staticmethod
-  def _guessFilesystemPropertyPortalType(attribute_dict):
-    """
-    Guess the Portal Type of a filesystem-based Property Sheet from
-    the attributes of the given property
-    """
-    for key in attribute_dict:
-      if key.startswith('acqui') or \
-         key in ('alt_accessor_id',
-                 # Specific to 'content' type
-                 'portal_type',
-                 'translation_acquired_property'):
-        return 'Acquired Property'
-
-    return 'Standard Property'
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'createPropertySheetFromFilesystemClass')
-  def createPropertySheetFromFilesystemClass(self, klass):
-    """
-    Create a new Property Sheet in portal_property_sheets from a given
-    filesystem-based Property Sheet definition.
-    """
-    new_property_sheet = self.newContent(id=klass.__name__,
-                                         portal_type='Property Sheet')
-
-    types_tool = self.getPortalObject().portal_types
-
-    for attribute_dict in getattr(klass, '_properties', []):
-      # The property could be either a Standard or an Acquired
-      # Property
-      portal_type_class = types_tool.getPortalTypeClass(
-        self._guessFilesystemPropertyPortalType(attribute_dict))
-
-      # Create the new property and set its attributes
-      portal_type_class.importFromFilesystemDefinition(new_property_sheet,
-                                                       attribute_dict)
-
-    for category in getattr(klass, '_categories', []):
-      # A category may be a TALES Expression rather than a plain
-      # string
-      portal_type = isinstance(category, Expression) and \
-        'Dynamic Category Property' or 'Category Property'
-
-      portal_type_class = types_tool.getPortalTypeClass(portal_type)
-
-      # Create the new category
-      portal_type_class.importFromFilesystemDefinition(new_property_sheet,
-                                                       category)
-
-    return new_property_sheet
-
   security.declareProtected(Permissions.ManagePortal,
                             'createAllPropertySheetsFromFilesystem')
-  def createAllPropertySheetsFromFilesystem(self, REQUEST=None):
+  def createAllPropertySheetsFromFilesystem(self, erase_existing=False,
+                                            REQUEST=None):
     """
     Create Property Sheets in portal_property_sheets from _all_
     filesystem Property Sheets
-
-    XXX: only meaningful for testing?
+    Returns the list of PropertySheet names which failed being imported.
     """
     from Products.ERP5Type import PropertySheet
 
+    failed_import = []
+    append = failed_import.append
     # Get all the filesystem Property Sheets
     for name, klass in PropertySheet.__dict__.iteritems():
-      if name[0] == '_':
+      # If the Property Sheet is a string, it means that the Property
+      # Sheets has either been already migrated or it is not available
+      # (perhaps defined in a bt5 not installed yet?)
+      if name[0] == '_' or isinstance(klass, basestring):
         continue
 
-      if name in self.portal_property_sheets.objectIds():
+      if name in self.objectIds():
+        if not erase_existing:
+          continue
+
         self.portal_property_sheets.deleteContent(name)
-        transaction.commit()
 
       LOG("Tool.PropertySheetTool", INFO,
           "Creating %s in portal_property_sheets" % repr(name))
 
-      self.createPropertySheetFromFilesystemClass(klass)
-      transaction.commit()
+      try:
+        PropertySheetDocument.importFromFilesystemDefinition(self, klass)
+      except BadRequest:
+        if name in KNOWN_BROKEN_PROPERTY_SHEET_DICT:
+          LOG('PropertySheetTool', WARNING, 'Failed to import %s with error:' % (
+            name, ), error=True)
+          # Don't fail, this property sheet is known to have been broken in the
+          # past, this site might be upgrading from such broken version.
+          append(name)
+        else:
+          raise
 
-    if REQUEST is not None:
-      return self.REQUEST.RESPONSE.redirect(
-        '%s?portal_status_message=' \
-        'Property Sheets successfully imported from filesystem to ZODB.' % \
-        self.absolute_url())
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'exportPropertySheetToFilesystemDefinitionTuple')
-  def exportPropertySheetToFilesystemDefinitionTuple(self, property_sheet):
-    """
-    Export a given ZODB Property Sheet to its filesystem definition as
-    tuple (properties, categories, constraints)
-
-    XXX: Move this code and the accessor generation code (from Utils)
-         within their respective documents
-    """
-    properties = []
-    constraints = []
-    categories = []
-
-    for property in property_sheet.contentValues():
-      portal_type = property.getPortalType()
-      property_definition = property.exportToFilesystemDefinition()
-
-      if portal_type == "Category Property" or \
-         portal_type == "Dynamic Category Property":
-        categories.append(property_definition)
-
-      elif portal_type.endswith('Constraint'):
-        constraints.append(property_definition)
-
-      else:
-        properties.append(property_definition)
-
-    return (properties, categories, constraints)
-
-  def _createCommonPropertySheetAccessorHolder(self,
-                                               property_holder,
-                                               property_sheet_id,
-                                               accessor_holder_module_name):
-    """
-    Create a new accessor holder class from the given Property Holder
-    within the given accessor holder module (when the migration will
-    be finished, there should only be one accessor holder module)
-    """
-    setDefaultClassProperties(property_holder)
-
-    try:
-      setDefaultProperties(property_holder, portal=self.getPortalObject())
-    except:
-      LOG("Tool.PropertySheetTool", ERROR,
-          "Could not generate accessor holder class for %s (module=%s)" % \
-          (property_sheet_id, accessor_holder_module_name),
-          error=sys.exc_info())
-
-      raise
-
-    # Create the new accessor holder class and set its module properly
-    accessor_holder_class = type(property_sheet_id, (object,), dict(
-      __module__ = accessor_holder_module_name,
-      constraints = property_holder.constraints,
-      # The following attributes have been defined only because they
-      # are being used in ERP5Type.Utils when getting all the
-      # property_sheets of the property_holder (then, they are added
-      # to the local properties, categories and constraints lists)
-      _properties = property_holder._properties,
-      # Necessary for getBaseCategoryList
-      _categories = property_holder._categories,
-      _constraints = property_holder._constraints
-      ))
-
-    # Set all the accessors (defined by a tuple) from the Property
-    # Holder to the new accessor holder class (code coming from
-    # createAccessor in Base.PropertyHolder)
-    for id, fake_accessor in property_holder._getItemList():
-      if not isinstance(fake_accessor, tuple):
-        continue
-
-      if fake_accessor is ('Base._doNothing',):
-        # Case 1 : a workflow method only
-        accessor = Base._doNothing
-      else:
-        # Case 2 : a workflow method over an accessor
-        (accessor_class, accessor_args, key) = fake_accessor
-        accessor = accessor_class(id, key, *accessor_args)
-
-      # Add the accessor to the accessor holder
-      setattr(accessor_holder_class, id, accessor)
-
-    return accessor_holder_class
-
-  security.declarePrivate('createFilesystemPropertySheetAccessorHolder')
-  def createFilesystemPropertySheetAccessorHolder(self, property_sheet):
-    """
-    Create a new accessor holder from the given filesystem Property
-    Sheet (the accessors are created through a Property Holder)
-
-    XXX: Workflows?
-    XXX: Remove as soon as the migration is finished
-    """
-    property_holder = PropertyHolder()
-
-    property_holder._properties = getattr(property_sheet, '_properties', [])
-    property_holder._categories = getattr(property_sheet, '_categories', [])
-    property_holder._constraints = getattr(property_sheet, '_constraints', [])
-
-    return self._createCommonPropertySheetAccessorHolder(
-      property_holder,
-      property_sheet.__name__,
-      'erp5.filesystem_accessor_holder')
-
-  security.declarePrivate('createZodbPropertySheetAccessorHolder')
-  def createZodbPropertySheetAccessorHolder(self, property_sheet):
-    """
-    Create a new accessor holder from the given ZODB Property Sheet
-    (the accessors are created through a Property Holder)
-
-    XXX: Workflows?
-    """
-    definition_tuple = \
-      self.exportPropertySheetToFilesystemDefinitionTuple(property_sheet)
-
-    property_holder = PropertyHolder()
-
-    # Prepare the Property Holder
-    property_holder._properties, \
-      property_holder._categories, \
-      property_holder._constraints = definition_tuple
-
-    return self._createCommonPropertySheetAccessorHolder(
-      property_holder,
-      property_sheet.getId(),
-      'erp5.accessor_holder')
+    if REQUEST is None:
+      return failed_import
+    else:
+      portal = self.getPortalObject()
+      base_message = 'Property Sheets successfully imported from ' \
+        'filesystem to ZODB.'
+      mapping = {}
+      if failed_import:
+        base_message += ' These property sheets failed to be imported: ' \
+          '$failed_import . You must update the following business ' \
+          'templates to have fixed version of these property sheets: ' \
+          '$business_templates'
+        mapping['failed_import'] = ', '.join(failed_import)
+        mapping['business_templates'] = ', '.join(set(
+          KNOWN_BROKEN_PROPERTY_SHEET_DICT[x] for x in failed_import))
+      message = portal.Base_translateString(base_message, mapping=mapping)
+      return self.Base_redirect('view',
+                                keep_items={'portal_status_message': message})
 
   security.declareProtected(Permissions.ManagePortal,
                             'getPropertyAvailablePermissionList')

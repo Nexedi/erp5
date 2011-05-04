@@ -1,0 +1,541 @@
+msgid ""
+msgstr "Project-Id-Version: ERP5 Localized Content\n"
+"POT-Creation-Date: 2011-01-29 17:01+CET\n"
+"PO-Revision-Date: 2011-01-29 17:01+CET\n"
+"Last-Translator:  <>\n"
+"Language-Team: ru <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "1"
+msgstr ""
+
+msgid "10"
+msgstr ""
+
+msgid "103"
+msgstr ""
+
+msgid "11"
+msgstr ""
+
+msgid "12"
+msgstr ""
+
+msgid "131"
+msgstr ""
+
+msgid "2"
+msgstr ""
+
+msgid "3"
+msgstr ""
+
+msgid "34"
+msgstr ""
+
+msgid "4"
+msgstr ""
+
+msgid "5"
+msgstr ""
+
+msgid "6"
+msgstr ""
+
+msgid "68"
+msgstr ""
+
+msgid "7"
+msgstr ""
+
+msgid "8"
+msgstr ""
+
+msgid "9"
+msgstr ""
+
+msgid "A"
+msgstr ""
+
+msgid "Accounted"
+msgstr ""
+
+msgid "Adopt Solver"
+msgstr ""
+
+msgid "Alarm"
+msgstr ""
+
+msgid "Asset"
+msgstr "Актив"
+
+msgid "BPM Sale Packing List Builder"
+msgstr ""
+
+msgid "Bank"
+msgstr "Банк"
+
+msgid "Business Link"
+msgstr ""
+
+msgid "Business Path"
+msgstr ""
+
+msgid "Business Process"
+msgstr ""
+
+msgid "Carrier 1"
+msgstr ""
+
+msgid "Cash"
+msgstr "Денежные Средства"
+
+msgid "Client A"
+msgstr ""
+
+msgid "Client B"
+msgstr ""
+
+msgid "Collected VAT"
+msgstr "НДС к Уплате"
+
+msgid "Content Medium"
+msgstr ""
+
+msgid "Credential Recovery"
+msgstr ""
+
+msgid "Credential Request"
+msgstr ""
+
+msgid "Credential Update"
+msgstr ""
+
+msgid "Credential Update Module"
+msgstr ""
+
+msgid "Custom"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Default Site Preference"
+msgstr ""
+
+msgid "Default Trade Condition"
+msgstr ""
+
+msgid "Delivered"
+msgstr ""
+
+msgid "Delivery"
+msgstr ""
+
+msgid "Delivery Root Simulation Rule"
+msgstr ""
+
+msgid "EUR"
+msgstr ""
+
+msgid "Equity"
+msgstr "Капитал"
+
+msgid "Erp5 Express Default Customer Preference"
+msgstr ""
+
+msgid "Expense"
+msgstr "Расходы"
+
+msgid "Hour"
+msgstr ""
+
+msgid "Income"
+msgstr "Доходы"
+
+msgid "Internal Order"
+msgstr ""
+
+msgid "Internal Order Module"
+msgstr ""
+
+msgid "Invoice"
+msgstr ""
+
+msgid "Invoice Root Simulation Rule"
+msgstr ""
+
+msgid "Invoice Simulation Rule"
+msgstr ""
+
+msgid "Invoice Transaction Simulation Rule"
+msgstr ""
+
+msgid "Invoiced"
+msgstr ""
+
+msgid "Liability"
+msgstr "Пассив"
+
+msgid "Live Test Order"
+msgstr ""
+
+msgid "Minute"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Morphology"
+msgstr "Состав"
+
+msgid "MySQL"
+msgstr ""
+
+msgid "New"
+msgstr ""
+
+msgid "New Default Delivery Simulation Rule"
+msgstr ""
+
+msgid "New Default Order Root Simulation Rule"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "OSOE SupCom"
+msgstr ""
+
+msgid "Open Order Subscription Item Rule"
+msgstr ""
+
+msgid "Open Sale Order"
+msgstr ""
+
+msgid "Open Sale Order Cell"
+msgstr ""
+
+msgid "Open Sale Order Line"
+msgstr ""
+
+msgid "Open Sale Order Module"
+msgstr ""
+
+msgid "Oracle"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
+msgid "Ordered"
+msgstr ""
+
+msgid "Packing List"
+msgstr ""
+
+msgid "Paid"
+msgstr ""
+
+msgid "Payable"
+msgstr "Кредиторы"
+
+msgid "Payment"
+msgstr ""
+
+msgid "Payment Simulation Rule"
+msgstr ""
+
+msgid "Production Reduction Solver"
+msgstr ""
+
+msgid "Purchase Invoice Builder"
+msgstr ""
+
+msgid "Quarter"
+msgstr ""
+
+msgid "Receivable"
+msgstr "Дебиторы"
+
+msgid "Refundable VAT"
+msgstr "НДС к Возмещению"
+
+msgid "Request for 10 Virtual Machines"
+msgstr ""
+
+msgid "Rule Tool"
+msgstr ""
+
+msgid "Sale Order"
+msgstr ""
+
+msgid "Sale Packing List"
+msgstr ""
+
+msgid "Sale Packing List Builder"
+msgstr ""
+
+msgid "Sale Supply"
+msgstr ""
+
+msgid "Sale Supply Cell"
+msgstr ""
+
+msgid "Sale Supply Line"
+msgstr ""
+
+msgid "Sale Trade Condition"
+msgstr ""
+
+msgid "Second"
+msgstr ""
+
+msgid "Session Cache"
+msgstr ""
+
+msgid "Solver Type"
+msgstr ""
+
+msgid "Standard 1 Core Machine"
+msgstr ""
+
+msgid "Standard 1 Core VM"
+msgstr ""
+
+msgid "Standard 1 Core VM Monthly Hosting"
+msgstr ""
+
+msgid "Subscription Item"
+msgstr ""
+
+msgid "Subscription Item Root Simulation Rule"
+msgstr ""
+
+msgid "Supplier A"
+msgstr ""
+
+msgid "Supplier B"
+msgstr ""
+
+msgid "TioLive Premium Hosting"
+msgstr ""
+
+msgid "TioLive Premium Monthly Hosting"
+msgstr ""
+
+msgid "TioLive VM Order"
+msgstr ""
+
+msgid "TioLive VMS"
+msgstr ""
+
+msgid "Toto"
+msgstr ""
+
+msgid "Trade"
+msgstr ""
+
+msgid "Trade Model Path"
+msgstr ""
+
+msgid "Trade Model Simulation Rule"
+msgstr ""
+
+msgid "VIFIB"
+msgstr ""
+
+msgid "VM Hosting"
+msgstr ""
+
+msgid "VM1"
+msgstr ""
+
+msgid "VM2"
+msgstr ""
+
+msgid "VM3"
+msgstr ""
+
+msgid "VM4"
+msgstr ""
+
+msgid "ViFIB Internet Hosting"
+msgstr ""
+
+msgid "ViFiB Client"
+msgstr ""
+
+msgid "ViFiB Client A"
+msgstr ""
+
+msgid "ViFiB Client Trade Condition"
+msgstr ""
+
+msgid "ViFiB Custom Conditions"
+msgstr ""
+
+msgid "ViFiB Instance Setup"
+msgstr ""
+
+msgid "ViFiB Open Order"
+msgstr ""
+
+msgid "Virtual Machine Setup"
+msgstr ""
+
+msgid "Week"
+msgstr ""
+
+msgid "Windows XP"
+msgstr ""
+
+msgid "Wire Transfer"
+msgstr "Банковский Перевод"
+
+msgid "Year"
+msgstr ""
+
+msgid "account"
+msgstr ""
+
+msgid "accounting"
+msgstr ""
+
+msgid "cash on delivery"
+msgstr "Наложенный Платеж"
+
+msgid "default"
+msgstr ""
+
+msgid "default_subscription_item_rule"
+msgstr ""
+
+msgid "deliver"
+msgstr ""
+
+msgid "delivery"
+msgstr ""
+
+msgid "discount"
+msgstr ""
+
+msgid "erp5_accounting"
+msgstr ""
+
+msgid "erp5_administration"
+msgstr ""
+
+msgid "erp5_base"
+msgstr ""
+
+msgid "erp5_bpm"
+msgstr ""
+
+msgid "erp5_core"
+msgstr ""
+
+msgid "erp5_credential"
+msgstr ""
+
+msgid "erp5_invoicing"
+msgstr ""
+
+msgid "erp5_odt_style"
+msgstr ""
+
+msgid "erp5_simulation"
+msgstr ""
+
+msgid "erp5_simulation_test"
+msgstr ""
+
+msgid "erp5_trade"
+msgstr ""
+
+msgid "erp5_xhtml_style"
+msgstr ""
+
+msgid "invoice"
+msgstr ""
+
+msgid "invoicing"
+msgstr ""
+
+msgid "object_action"
+msgstr ""
+
+msgid "object_add"
+msgstr ""
+
+msgid "object_button"
+msgstr ""
+
+msgid "object_dialog"
+msgstr ""
+
+msgid "object_exchange"
+msgstr ""
+
+msgid "object_fast_input"
+msgstr ""
+
+msgid "object_icon"
+msgstr ""
+
+msgid "object_jump"
+msgstr ""
+
+msgid "object_list"
+msgstr ""
+
+msgid "object_print"
+msgstr ""
+
+msgid "object_report"
+msgstr ""
+
+msgid "object_search"
+msgstr ""
+
+msgid "object_view"
+msgstr ""
+
+msgid "object_web_view"
+msgstr ""
+
+msgid "order"
+msgstr ""
+
+msgid "pay"
+msgstr ""
+
+msgid "payment"
+msgstr ""
+
+msgid "portal_ids"
+msgstr ""
+
+msgid "portal_rules"
+msgstr ""
+
+msgid "quantity divergence tester"
+msgstr ""
+
+msgid "sfdfssffds"
+msgstr ""
+
+msgid "stop_date divergence tester"
+msgstr ""
+
+msgid "tax"
+msgstr ""
+
+msgid "toto"
+msgstr ""
+
+msgid "vifib_open_trade"
+msgstr ""

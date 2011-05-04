@@ -41,17 +41,26 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
-\n
+div.listbox-content-fixed-width,\n
+div.listbox-tree{\n
+  width: auto;\n
+}\n
 /* Listbox action bar at bottom */\n
 div.listbox-action-widget {\n
   float:none;\n
 }\n
+div.listbox-action-widget span.description {\n
+  font-size:12px;\n
+}\n
+\n
+.listbox_actions_title{\n
+  display: none;\n
+}\n
 \n
 div.listbox-action-widget div.bottom_actions{\n
   float:left;\n
-  background-color:#E0DFD1;\n
-  padding-left:0.5em;\n
-  padding-bottom:0.2em;\n
+  background-color:transparent;\n
+  padding:0em\n
 }\n
 \n
 /* Title of the bar */\n
@@ -75,13 +84,8 @@ div.buttons_group {\n
 /* Buttons */\n
 div.listbox-action-widget button, \n
 div.listbox-action-widget a.button {\n
-  background-image: url(km_img/button_background.png) ;\n
-  background-position: 100% 0;\n
-  background-color: inherit;\n
   border:0 none;\n
-  color:#5F5A55;\n
   cursor:pointer;\n
-  height:27px;\n
   float:left;\n
   margin-right:3px;\n
   margin-bottom:3px;\n
@@ -108,8 +112,7 @@ div.listbox-action-widget span.image{\n
   height:20px;\n
   width:20px;\n
   margin-top:3px;\n
-  z-index:2;\n
-  left:-5px;\n
+  left:-3px;\n
 }\n
 \n
 /* Description of botton */\n
@@ -121,9 +124,6 @@ div.listbox-action-widget span.description{\n
 div.listbox-action-widget button > span, \n
 div.listbox-action-widget a > span{\n
   display:block;\n
-  background-color:inherit;\n
-  background-image:url(km_img/button_background.png);\n
-  background-position:0 0;\n
   display:block;\n
   height:27px;\n
   left:-8px;\n
@@ -280,7 +280,82 @@ div.listbox-page-navigation button.listbox_next_page span.image {\n
 div.listbox-page-navigation button.listbox_last_page span.image {\n
   background-image:url(km_img/2rightarrowv.png);\n
 }\n
-
+\n
+/* Listbox preview */\n
+div.search-details, \n
+span.found{\n
+  padding-top: 5px;\n
+}\n
+\n
+/* Search listbox pop up styling */\n
+span.search_result_title{\n
+  color: #1111CC;\n
+}\n
+\n
+span.found{\n
+  color: #000000;\n
+}\n
+\n
+.section, \n
+.owner {\n
+  border-bottom: 1px solid #e9e9e9;\n
+  margin-right:5px;\n
+}\n
+\n
+a.section-link,\n
+a.owner-link,\n
+a.history-link{\n
+  margin-left: 5px;\n
+}\n
+\n
+div.search-details .reference-link,\n
+div.search-details .version,\n
+div.search-details .language{\n
+  color: #228822;\n
+}\n
+\n
+div.listbox-search-mode div.maximal-width{\n
+  width: 80%;\n
+}\n
+#listbox-preview-connector{\n
+  height:27px;\n
+  position:absolute;\n
+  left:-10px;\n
+  width:10px;\n
+  top:82px; /* in the middle of #listbox-preview */\n
+  display:inline;\n
+  background: url("km_img/left-arrow-connector.png");\n
+}\n
+\n
+#listbox-preview{\n
+  position:relative;\n
+  top:35px; /* will be adjusted by JS */\n
+  width:18%;\n
+  padding-left:5px;\n
+  padding-bottom:15px;\n
+  padding-top:10px;\n
+  background-color:white;\n
+  float:left;\n
+  border:1px solid black;\n
+  -moz-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+  -webkit-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+  min-height:180px;\n
+}\n
+\n
+/* forum */\n
+.discussion-thread-listbox table.listbox{\n
+  border-collapse: separate;\n
+}\n
+.discussion-thread-listbox table.listbox tbody tr:hover td{\n
+  background-color:#FFF;\n
+}\n
+.discussion-thread-listbox table.listbox tbody tr{\n
+  margin-bottom:5px;\n
+}\n
+\n
+.discussion-thread-listbox table.listbox thead{\n
+  display: none;\n
+}
 
 ]]></unicode> </value>
         </item>
@@ -298,7 +373,7 @@ div.listbox-page-navigation button.listbox_last_page span.image {\n
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

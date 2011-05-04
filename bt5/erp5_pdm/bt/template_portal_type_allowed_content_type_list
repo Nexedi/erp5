@@ -1,6 +1,6 @@
 Component Module | Component
 Component | Component Individual Variation
-Component | Image
+Component | Embedded File
 Component | Internal Supply Line
 Component | Measure
 Component | Purchase Supply Line
@@ -13,7 +13,7 @@ Internal Supply | Internal Supply Line
 Internal Supply | Supply Line
 Measure | Measure Cell
 Product Module | Product
-Product | Image
+Product | Embedded File
 Product | Internal Supply Line
 Product | Measure
 Product | Product Individual Variation
@@ -21,6 +21,7 @@ Product | Purchase Supply Line
 Product | Quantity Unit Conversion Group
 Product | Sale Supply Line
 Product | Supply Line
+Property Sheet | Resource Measures Consistency Constraint
 Purchase Supply Line | Predicate
 Purchase Supply Line | Purchase Supply Cell
 Purchase Supply Module | Purchase Supply

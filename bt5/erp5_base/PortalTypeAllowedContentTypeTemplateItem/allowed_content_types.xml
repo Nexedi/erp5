@@ -90,9 +90,8 @@
   <item>Credit Card</item>
   <item>Document</item>
   <item>Email</item>
+  <item>Embedded File</item>
   <item>Fax</item>
-  <item>File</item>
-  <item>Image</item>
   <item>Link</item>
   <item>Telephone</item>
  </portal_type>
@@ -107,9 +106,8 @@
   <item>Chat Address</item>
   <item>Credit Card</item>
   <item>Email</item>
+  <item>Embedded File</item>
   <item>Fax</item>
-  <item>File</item>
-  <item>Image</item>
   <item>Link</item>
   <item>Telephone</item>
  </portal_type>
@@ -121,5 +119,8 @@
  </portal_type>
  <portal_type id="Rounding Tool">
   <item>Rounding Model</item>
+ </portal_type>
+ <portal_type id="Solver Tool">
+  <item>Solver Type</item>
  </portal_type>
 </allowed_content_type_list>

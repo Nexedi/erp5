@@ -31,7 +31,6 @@
 from warnings import warn
 from Products.PythonScripts.Utility import allow_class
 
-class MovementRejected(Exception) : pass
 class FakeMovementError(Exception) : pass
 class MovementGroupError(Exception) : pass
 

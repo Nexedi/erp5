@@ -1,0 +1,501 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>tokenizexquery.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright 2010 Mike Brevoort http://mike.brevoort.com (twitter:@mbrevoort)\n
+\n
+Licensed under the Apache License, Version 2.0 (the "License");\n
+you may not use this file except in compliance with the License.\n
+You may obtain a copy of the License at\n
+\n
+    http://www.apache.org/licenses/LICENSE-2.0\n
+\n
+Unless required by applicable law or agreed to in writing, software\n
+distributed under the License is distributed on an "AS IS" BASIS,\n
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
+See the License for the specific language governing permissions and\n
+limitations under the License.\n
+\n
+This is an indirect collective derivative of the other parses in this package\n
+\n
+*/\n
+\n
+// A tokenizer for xQuery, looks at the source stream and tokenizes, applying\n
+// metadata to be able to apply the proper CSS classes in the parser.\n
+\n
+var tokenizeXquery = (function() {\n
+    // Advance the stream until the given character (not preceded by a\n
+    // backslash) is encountered, or the end of the line is reached.\n
+    function nextUntilUnescaped(source, end) {\n
+        var escaped = false;\n
+        while (!source.endOfLine()) {\n
+            var next = source.next();\n
+            if (next == end && !escaped)\n
+            return false;\n
+            escaped = !escaped && next == "\\\\";\n
+            console.debug(escaped);\n
+        }\n
+        return escaped;\n
+    }\n
+\n
+    // A map of Xquery\'s keywords. The a/b/c keyword distinction is\n
+    // very rough, but it gives the parser enough information to parse\n
+    // correct code correctly (we don\'t care that much how we parse\n
+    // incorrect code). The style information included in these objects\n
+    // is used by the highlighter to pick the correct CSS style for a\n
+    // token.\n
+    var keywords = function() {\n
+        function result(type, style) {\n
+            return {\n
+                type: type,\n
+                style: style\n
+            };\n
+        }\n
+\n
+        var allKeywords = {};\n
+        var keywordsList = {};\n
+        \n
+        // an array of all of the keywords that will be used by default, otherwise keywords will be more specifically specified and overridden below\n
+        var allKeywordsArray = new Array(\'after\',\'ancestor\',\'ancestor-or-self\',\'and\',\'as\',\'ascending\',\'assert\',\'attribute\',\'before\',\'by\',\'case\',\'cast\',\'child\',\'comment\',\'comment\',\'declare\',\'default\',\'define\',\'descendant\',\'descendant-or-self\',\'descending\',\'document-node\',\'element\',\'element\',\'else\',\'eq\',\'every\',\'except\',\'external\',\'following\',\'following-sibling\',\'follows\',\'for\',\'function\',\'if\',\'import\',\'in\',\'instance\',\'intersect\',\'item\',\'let\',\'module\',\'namespace\',\'node\',\'node\',\'of\',\'only\',\'or\',\'order\',\'parent\',\'precedes\',\'preceding\',\'preceding-sibling\',\'processing-instruction\',\'ref\',\'return\',\'returns\',\'satisfies\',\'schema\',\'schema-element\',\'self\',\'some\',\'sortby\',\'stable\',\'text\',\'then\',\'to\',\'treat\',\'typeswitch\',\'union\',\'variable\',\'version\',\'where\',\'xquery\');\n
+\n
+        for(var i in allKeywordsArray) {\n
+            allKeywords[allKeywordsArray[i]] = result("keyword", "xqueryKeyword");\n
+        }\n
+\n
+        /* This next bit is broken down this was for future indentation support */\n
+        // keywords that take a parenthised expression, and then a statement (if)\n
+        keywordsList[\'xqueryKeywordA\'] = new Array(\'if\', \'switch\', \'while\', \'for\');\n
+\n
+        // keywords that take just a statement (else)\n
+        keywordsList[\'xqueryKeywordB\'] = new Array(\'else\', \'then\', \'try\', \'finally\');\n
+\n
+        // keywords that optionally take an expression, and form a statement (return)\n
+        keywordsList[\'xqueryKeywordC\'] = new Array(\'element\', \'attribute\', \'let\', \'implements\', \'import\', \'module\', \'namespace\', \'return\', \'super\', \'this\', \'throws\', \'where\');\n
+\n
+        keywordsList[\'xqueryOperator\'] = new Array(\'eq\', \'ne\', \'lt\', \'le\', \'gt\', \'ge\');\n
+\n
+        for (var keywordType in keywordsList) {\n
+            for (var i = 0; i < keywordsList[keywordType].length; i++) {\n
+                allKeywords[keywordsList[keywordType][i]] = result(keywordType, "xqueryKeyword");\n
+            }\n
+        }\n
+\n
+        keywordsList = {};\n
+\n
+        keywordsList[\'xqueryAtom\'] = new Array(\'null\', \'fn:false()\', \'fn:true()\');\n
+        for (var keywordType in keywordsList) {\n
+            for (var i = 0; i < keywordsList[keywordType].length; i++) {\n
+                allKeywords[keywordsList[keywordType][i]] = result(keywordType, keywordType);\n
+            }\n
+        }\n
+\n
+        keywordsList = {};\n
+        keywordsList[\'xqueryModifier\'] = new Array(\'xquery\', \'ascending\', \'descending\');\n
+        keywordsList[\'xqueryType\'] = new Array(\'xs:string\', \'xs:float\', \'xs:decimal\', \'xs:double\', \'xs:integer\', \'xs:boolean\', \'xs:date\', \'xs:dateTime\', \'xs:time\', \'xs:duration\', \'xs:dayTimeDuration\', \'xs:time\', \'xs:yearMonthDuration\', \'numeric\', \'xs:hexBinary\', \'xs:base64Binary\', \'xs:anyURI\', \'xs:QName\', \'xs:byte\',\'xs:boolean\',\'xs:anyURI\',\'xf:yearMonthDuration\');\n
+        for (var keywordType in keywordsList) {\n
+            for (var i = 0; i < keywordsList[keywordType].length; i++) {\n
+                allKeywords[keywordsList[keywordType][i]] = result(\'function\', keywordType);\n
+            }\n
+        }\n
+\n
+        allKeywords = objectConcat(allKeywords, {\n
+            "catch": result("catch", "xqueryKeyword"),\n
+            "for": result("for", "xqueryKeyword"),\n
+            "case": result("case", "xqueryKeyword"),\n
+            "default": result("default", "xqueryKeyword"),\n
+            "instanceof": result("operator", "xqueryKeyword")\n
+        });\n
+\n
+        // ------------------- xquery keywords\n
+        var keywordsList = {};\n
+\n
+        // keywords that optionally take an expression, and form a statement (return)\n
+        keywordsList[\'xqueryKeywordC\'] = new Array(\'assert\', \'property\');\n
+        for (var i = 0; i < keywordsList[\'xqueryKeywordC\'].length; i++) {\n
+            allKeywords[keywordsList[\'xqueryKeywordC\'][i]] = result("xqueryKeywordC", "xqueryKeyword");\n
+        }\n
+\n
+        // other xquery keywords\n
+        allKeywords = objectConcat(allKeywords, {\n
+            "as": result("operator", "xqueryKeyword"),\n
+            "in": result("operator", "xqueryKeyword"),\n
+            "at": result("operator", "xqueryKeyword"),\n
+            "declare": result("function", "xqueryKeyword"),\n
+            "function": result("function", "xqueryKeyword")\n
+        });\n
+        return allKeywords;\n
+    } ();\n
+\n
+    // there are some special cases where ordinarily text like xs:string() would\n
+    // look like a function call when it is really a type, etc.\n
+    function specialCases(source, word) {\n
+        if (word in {\n
+            "fn:true": "",\n
+            "fn:false": ""\n
+        } && source.lookAhead("()", false)) {\n
+            source.next();\n
+            source.next();\n
+            source.get();\n
+            return {\n
+                type: "function",\n
+                style: "xqueryAtom",\n
+                content: word + "()"\n
+            };\n
+        }\n
+        else if (word in {\n
+            "node": "",\n
+            "item": "",\n
+            "text": ""\n
+        } && source.lookAhead("()", false)) {\n
+            source.next();\n
+            source.next();\n
+            source.get();\n
+            return {\n
+                type: "function",\n
+                style: "xqueryType",\n
+                content: word + "()"\n
+            };\n
+        }\n
+        else if (source.lookAhead("(")) {\n
+            return {\n
+                type: "function",\n
+                style: "xqueryFunction",\n
+                content: word\n
+            };\n
+        }\n
+        else return null;\n
+    }\n
+\n
+    // Some helper regexp matchers.\n
+    var isOperatorChar = /[=+\\-*&%!?@\\/]/; \n
+    var isDigit = /[0-9]/;\n
+    var isHexDigit = /^[0-9A-Fa-f]$/;\n
+    var isWordChar = /[\\w\\:\\-\\$_]/;\n
+    var isVariableChar = /[\\w\\$_-]/;\n
+    var isXqueryVariableChar = /[\\w\\.()\\[\\]{}]/;\n
+    var isPunctuation = /[\\[\\]{}\\(\\),;\\.]/;\n
+    var isStringDelimeter = /^[\\/\'"]$/;\n
+    var isRegexpDelimeter = /^[\\/\'$]/;\n
+    var tagnameChar = /[<\\w\\:\\-\\/_]/;\n
+\n
+    // Wrapper around xqueryToken that helps maintain parser state (whether\n
+    // we are inside of a multi-line comment and whether the next token\n
+    // could be a regular expression).\n
+    function xqueryTokenState(inside, regexp) {\n
+        return function(source, setState) {\n
+            var newInside = inside;\n
+            var type = xqueryToken(inside, regexp, source,\n
+            function(c) {\n
+                newInside = c;\n
+            });\n
+            var newRegexp = type.type == "operator" || type.type == "xqueryKeywordC" || type.type == "xqueryKeywordC" || type.type.match(/^[\\[{}\\(,;:]$/);\n
+            if (newRegexp != regexp || newInside != inside)\n
+            setState(xqueryTokenState(newInside, newRegexp));\n
+            return type;\n
+        };\n
+    }\n
+\n
+    // The token reader, inteded to be used by the tokenizer from\n
+    // tokenize.js (through xqueryTokenState). Advances the source stream\n
+    // over a token, and returns an object containing the type and style\n
+    // of that token.\n
+    function xqueryToken(inside, regexp, source, setInside) {\n
+        function readHexNumber() {\n
+            setInside(null);\n
+            source.next();\n
+            // skip the \'x\'\n
+            source.nextWhileMatches(isHexDigit);\n
+            return {\n
+                type: "number",\n
+                style: "xqueryNumber"\n
+            };\n
+        }\n
+\n
+        function readNumber() {\n
+            setInside(null);\n
+            source.nextWhileMatches(isDigit);\n
+            if (source.equals(".")) {\n
+                source.next();\n
+\n
+                // read ranges\n
+                if (source.equals("."))\n
+                source.next();\n
+\n
+                source.nextWhileMatches(isDigit);\n
+            }\n
+            if (source.equals("e") || source.equals("E")) {\n
+                source.next();\n
+                if (source.equals("-"))\n
+                source.next();\n
+                source.nextWhileMatches(isDigit);\n
+            }\n
+            return {\n
+                type: "number",\n
+                style: "xqueryNumber"\n
+            };\n
+        }\n
+        // Read a word, look it up in keywords. If not found, it is a\n
+        // variable, otherwise it is a keyword of the type found.\n
+        function readWord() {\n
+            //setInside(null);\n
+            source.nextWhileMatches(isWordChar);\n
+            var word = source.get();\n
+            var specialCase = specialCases(source, word);\n
+            if (specialCase) return specialCase;\n
+            var known = keywords.hasOwnProperty(word) && keywords.propertyIsEnumerable(word) && keywords[word];\n
+            if (known) return {\n
+                type: known.type,\n
+                style: known.style,\n
+                content: word\n
+            }\n
+            return {\n
+                type: "word",\n
+                style: "word",\n
+                content: word\n
+            };\n
+        }\n
+\n
+\n
+        // read regexp like /\\w{1}:\\\\.+\\\\.+/\n
+        function readRegexp() {\n
+            // go to the end / not \\/\n
+            nextUntilUnescaped(source, "/");\n
+\n
+            return {\n
+                type: "regexp",\n
+                style: "xqueryRegexp"\n
+            };\n
+        }\n
+\n
+        // Mutli-line comments are tricky. We want to return the newlines\n
+        // embedded in them as regular newline tokens, and then continue\n
+        // returning a comment token for every line of the comment. So\n
+        // some state has to be saved (inside) to indicate whether we are\n
+        // inside a (: :) sequence.\n
+        function readMultilineComment(start) {\n
+            var newInside = "(:";\n
+            var maybeEnd = (start == ":");\n
+            while (true) {\n
+                if (source.endOfLine())\n
+                break;\n
+                var next = source.next();\n
+                if (next == ")" && maybeEnd) {\n
+                    newInside = null;\n
+                    break;\n
+                }\n
+                maybeEnd = (next == ":");\n
+            }\n
+            setInside(newInside);\n
+            return {\n
+                type: "comment",\n
+                style: "xqueryComment"\n
+            };\n
+        }\n
+\n
+        function readOperator() {\n
+            if (ch == "=")\n
+            setInside("=")\n
+            else if (ch == "~")\n
+            setInside("~")\n
+            else if (ch == ":" && source.equals("=")) {\n
+                setInside(null);\n
+                source.nextWhileMatches(/[:=]/);\n
+                var word = source.get();\n
+                return {\n
+                    type: "operator",\n
+                    style: "xqueryOperator",\n
+                    content: word\n
+                };\n
+            }\n
+            else setInside(null);\n
+\n
+            return {\n
+                type: "operator",\n
+                style: "xqueryOperator"\n
+            };\n
+        }\n
+\n
+        // read a string, but look for embedded expressions wrapped in curly\n
+        // brackets. \n
+        function readString(quote) {\n
+            var newInside = quote;\n
+            var previous = "";\n
+            while (true) {\n
+                if (source.endOfLine())\n
+                break;\n
+                if(source.lookAhead("{", false)) {\n
+                    newInside = quote + "{";\n
+                    break;\n
+                }    \n
+                var next = source.next();\n
+                if (next == quote && previous != "\\\\") {\n
+                    newInside = null;\n
+                    break;\n
+                }\n
+                previous = next;\n
+            }\n
+            setInside(newInside);\n
+            return {\n
+                type: "string",\n
+                style: "xqueryString"\n
+            };\n
+        }\n
+        \n
+        // Given an expression end by a closing curly bracket, mark the } as\n
+        // punctuation an resume the string processing by setting "inside" to\n
+        // the type of string it\'s embedded in. \n
+        // This is known because the readString() function sets inside to the \n
+        // quote type then an open curly bracket like "{  or \'{\n
+        function readExpressionEndInString(inside) {\n
+            var quote = inside.substr(0,1);\n
+            setInside(quote);\n
+            return { type: ch, style: "xqueryPunctuation"};            \n
+        }\n
+\n
+        function readVariable() {\n
+            //setInside(null);\n
+            source.nextWhileMatches(isVariableChar);\n
+            var word = source.get();\n
+            return {\n
+                type: "variable",\n
+                style: "xqueryVariable",\n
+                content: word\n
+            };\n
+        }\n
+\n
+        // read an XML Tagname, both closing and opening\n
+        function readTagname(lt) {\n
+            var tagtype = (source.lookAhead("/", false)) ? "xml-tag-close": "xml-tag-open";\n
+            source.nextWhileMatches(tagnameChar);\n
+            var word = source.get();\n
+            if (source.lookAhead(">", false)) {\n
+                source.next();\n
+            }\n
+            return {\n
+                type: tagtype,\n
+                style: "xml-tagname",\n
+                content: word\n
+            };\n
+        }\n
+\n
+        // Fetch the next token. Dispatches on first character in the stream\n
+        // what follows is a big if statement that makes decisions based on the \n
+        // character, the following character and the inside variable\n
+\n
+        if (inside == "\\"" || inside == "\'")\n
+            return readString(inside);\n
+            \n
+        var ch = source.next();\n
+        if (inside && inside.indexOf("{") == 1 && ch == "}") {\n
+            return readExpressionEndInString(inside);\n
+        }    \n
+        if (inside == "(:")\n
+            return readMultilineComment(ch);\n
+        else if (ch == "\\"" || ch == "\'")\n
+            return readString(ch);\n
+\n
+\n
+        // test if this is range\n
+        else if (ch == "." && source.equals(".")) {\n
+            source.next();\n
+            return {\n
+                type: "..",\n
+                style: "xqueryOperator"\n
+            };\n
+        }\n
+\n
+        else if (ch == "(" && source.equals(":")) {\n
+            source.next();\n
+            return readMultilineComment(ch);\n
+        }\n
+        else if (ch == "$")\n
+            return readVariable();\n
+        else if (ch == ":" && source.equals("="))\n
+            return readOperator();\n
+\n
+        // with punctuation, the type of the token is the symbol itself\n
+        else if (isPunctuation.test(ch))\n
+            return {\n
+                type: ch,\n
+                style: "xqueryPunctuation"\n
+            };\n
+        else if (ch == "0" && (source.equals("x") || source.equals("X")))\n
+            return readHexNumber();\n
+        else if (isDigit.test(ch))\n
+            return readNumber();\n
+\n
+        else if (ch == "~") {\n
+            setInside("~");\n
+            // prepare to read slashy string like ~ /\\w{1}:\\\\.+\\\\.+/\n
+            return readOperator(ch);\n
+        }\n
+        else if (isOperatorChar.test(ch)) {\n
+            return readOperator(ch);            \n
+        }\n
+        // some xml handling stuff\n
+        else if (ch == "<")\n
+            return readTagname(ch);\n
+        else if (ch == ">")\n
+            return {\n
+                type: "xml-tag",\n
+                style: "xml-tagname"\n
+            };\n
+        else\n
+            return readWord();\n
+    }\n
+\n
+    // returns new object = object1 + object2\n
+    function objectConcat(object1, object2) {\n
+        for (var name in object2) {\n
+            if (!object2.hasOwnProperty(name)) continue;\n
+            if (object1.hasOwnProperty(name)) continue;\n
+            object1[name] = object2[name];\n
+        }\n
+        return object1;\n
+    }\n
+\n
+    // The external interface to the tokenizer.\n
+    return function(source, startState) {\n
+        return tokenizer(source, startState || xqueryTokenState(false, true));\n
+    };\n
+})();
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>17333</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

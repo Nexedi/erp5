@@ -76,16 +76,47 @@ assert at_date\n
 section = context.getParentValue()\n
 section_currency = section.getPriceCurrency()\n
 section_currency_precision = section.getPriceCurrencyValue().getQuantityPrecision()\n
-section_category = section.getGroup(base=True)\n
 \n
-# we use Base_getSectionUidListForSectionCategory as the only API to get the\n
-# organisation member of that "accounting entity"\n
-for section_uid in \\\n
-    portal.Base_getSectionUidListForSectionCategory(section_category):\n
-  \n
-  section = portal.portal_catalog.getObject(uid=section_uid)\n
 \n
-  balance_transaction = portal.accounting_module.newContent(\n
+# we have two distinct cases:\n
+#  * child organisations does not have accounting periods, we create balance\n
+#    transactions for each of those sections.\n
+#  * child organisations have valid accounting periods, we will create balance\n
+#    transactions for the sections when we close their respective periods\n
+\n
+def isIndenpendantSection(section):\n
+  for ap in section.contentValues(\n
+              portal_type=\'Accounting Period\',\n
+              checked_permission=\'View\'):\n
+    if ap.getSimulationState() in (\'started\', \'stopped\', \'delivered\'):\n
+      return True\n
+  return False\n
+\n
+def getDependantSectionList(group, main_section):\n
+  section_list = []\n
+  recurse = True\n
+  for section in group.getGroupRelatedValueList(\n
+                            portal_type=\'Organisation\',\n
+                            strict_membership=True,\n
+                            checked_permission=\'View\'):\n
+    if section != main_section:\n
+      if isIndenpendantSection(section):\n
+        recurse = False\n
+      else:\n
+        section_list.append(section)\n
+  if recurse:\n
+    for subgroup in group.contentValues():\n
+      section_list.extend(getDependantSectionList(subgroup, main_section))\n
+\n
+  return section_list\n
+      \n
+group_value = section.getGroupValue()\n
+section_list = [section]\n
+if group_value is not None:\n
+  section_list.extend(getDependantSectionList(group_value, section))\n
+\n
+def createBalanceTransaction(section):\n
+  return portal.accounting_module.newContent(\n
                           activate_kw=activate_kw,\n
                           portal_type=\'Balance Transaction\',\n
                           start_date=(at_date + 1).earliestTime(),\n
@@ -93,6 +124,10 @@ for section_uid in \\\n
                           destination_section_value=section,\n
                           resource=section_currency,\n
                           causality_value=context)\n
+\n
+for section in section_list:\n
+  section_uid = section.getUid()\n
+  balance_transaction = None\n
 \n
   group_by_node_node_category_list = []\n
   group_by_mirror_section_node_category_list = []\n
@@ -148,6 +183,8 @@ for section_uid in \\\n
         raise ValueError(\'Using multiple currencies on profit and loss account \'\n
                          \'is not supported\')\n
       profit_and_loss_quantity += total_price\n
+      if balance_transaction is None:\n
+        balance_transaction = createBalanceTransaction(section)\n
       balance_transaction.newContent(\n
           id=\'%03d\' % line_count,\n
           portal_type=\'Balance Transaction Line\',\n
@@ -165,6 +202,8 @@ for section_uid in \\\n
       \n
       if inventory.node_relative_url != profit_and_loss_account:\n
         profit_and_loss_quantity += total_price\n
+        if balance_transaction is None:\n
+          balance_transaction = createBalanceTransaction(section)\n
         balance_transaction.newContent(\n
           id=\'%03d\' % line_count,\n
           portal_type=\'Balance Transaction Line\',\n
@@ -190,6 +229,8 @@ for section_uid in \\\n
     line_count += 1\n
 \n
     if inventory.resource_uid != section_currency_uid:\n
+      if balance_transaction is None:\n
+        balance_transaction = createBalanceTransaction(section)\n
       balance_transaction.newContent(\n
         id=\'%03d\' % line_count,\n
         portal_type=\'Balance Transaction Line\',\n
@@ -203,6 +244,8 @@ for section_uid in \\\n
       if total_price != quantity:\n
         raise ValueError(\'Different price: %s != %s \' % (\n
                           total_price, quantity))\n
+      if balance_transaction is None:\n
+        balance_transaction = createBalanceTransaction(section)\n
       balance_transaction.newContent(\n
         id=\'%03d\' % line_count,\n
         portal_type=\'Balance Transaction Line\',\n
@@ -230,6 +273,8 @@ for section_uid in \\\n
     line_count += 1\n
 \n
     if inventory.resource_uid != section_currency_uid:\n
+      if balance_transaction is None:\n
+        balance_transaction = createBalanceTransaction(section)\n
       balance_transaction.newContent(\n
         id=\'%03d\' % line_count,\n
         portal_type=\'Balance Transaction Line\',\n
@@ -243,6 +288,8 @@ for section_uid in \\\n
       if total_price != quantity:\n
         raise ValueError(\'Different price: %s != %s \' % (\n
                           total_price, quantity))\n
+      if balance_transaction is None:\n
+        balance_transaction = createBalanceTransaction(section)\n
       balance_transaction.newContent(\n
         id=\'%03d\' % line_count,\n
         portal_type=\'Balance Transaction Line\',\n
@@ -250,6 +297,10 @@ for section_uid in \\\n
         destination=inventory.node_relative_url,\n
         destination_payment_uid=inventory.payment_uid,\n
         quantity=total_price)\n
+\n
+  if balance_transaction is None:\n
+    # we did not have any transaction for this section\n
+    continue\n
 \n
   # add a final line for p&l\n
   balance_transaction.newContent(\n

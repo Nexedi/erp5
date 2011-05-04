@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>current_site = context.Item_getCurrentOriginValue(at_date=at_date)\n
+            <value> <string>current_site = context.Item_getCurrentOriginValue(**kw)\n
 if current_site is not None:\n
   return current_site.getSourceTitle()\n
 return None\n
@@ -58,7 +58,7 @@ return None\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

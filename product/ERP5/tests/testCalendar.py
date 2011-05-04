@@ -52,7 +52,7 @@ class TestCalendar(ERP5ReportTestCase):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base', 'erp5_calendar')
+    return ('erp5_base', 'erp5_calendar', 'erp5_core_proxy_field_legacy')
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -95,6 +95,9 @@ class TestCalendar(ERP5ReportTestCase):
     self._addPropertySheet('Leave Request Period', 'CalendarPeriodConstraint')
     self._addPropertySheet('Presence Request Period', 'CalendarPeriodConstraint')
     self._addPropertySheet('Group Presence Period', 'CalendarPeriodConstraint')
+
+    # regenerate accessors after category changes & portal type changes
+    transaction.commit()
 
   def beforeTearDown(self):
     transaction.abort()

@@ -56,6 +56,7 @@ class TestERP5Discussion(ERP5TypeTestCase):
             'erp5_dms',
             'erp5_knowledge_pad',
             'erp5_rss_style',
+            'erp5_jquery',
             'erp5_discussion', )
 
   def login(self):
@@ -90,9 +91,8 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.stepCreateThread();
     self.stepTic()
 
-  @expectedFailure
   def test_02_createDiscussionPost(self):
-    """Create a disucssion post inscite a discussion thread"""
+    """Create a disucssion post inside a discussion thread"""
 
     thread = self.stepCreateThread();
     post = self.stepCreatePost(thread);

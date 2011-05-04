@@ -35,7 +35,11 @@ import random
 import socket
 import sys
 import transaction
+import ZODB
 import zLOG
+from App.config import getConfiguration
+from ZConfig.matcher import SectionValue
+from Zope2.Startup.datatypes import ZopeDatabase
 import Products.ERP5Type
 from Products.MailHost.MailHost import MailHost
 from email import message_from_string
@@ -54,25 +58,23 @@ class FileUpload(file):
     self.headers = {}
 
 # dummy objects
-class DummyMailHost(MailHost):
+class DummyMailHostMixin(object):
   """Dummy Mail Host that doesn't really send messages and keep a copy in
   _last_message attribute.
-  To use it, you have to replace existing mailhost in afterSetUp:
-    
-    if 'MailHost' in portal.objectIds():
-      portal.manage_delObjects(['MailHost'])
-    portal._setObject('MailHost', DummyMailHost('MailHost'))
   """
   _last_message = ()
   _previous_message = ()
   _message_list = []
-  def _send( self, mfrom, mto, messageText, immediate=False ):
-    """Record message in _last_message."""
-    self._previous_message = self._last_message
-    self._last_message = (mfrom, mto, messageText)
-    self._message_list.append(self._last_message)
 
-  def _decodeMessage(self, messageText):
+  @classmethod
+  def _send(cls, mfrom, mto, messageText, immediate=False):
+    """Record message in _last_message."""
+    cls._previous_message = cls._last_message
+    cls._last_message = (mfrom, mto, messageText)
+    cls._message_list.append(cls._last_message)
+
+  @staticmethod
+  def _decodeMessage(messageText):
     """ Decode message"""
     message_text = messageText
     for part in message_from_string(messageText).walk():
@@ -81,15 +83,26 @@ class DummyMailHost(MailHost):
         message_text = part.get_payload(decode=1)
     return message_text
 
-  def getMessageList(self, decode=True):
+  @classmethod
+  def getMessageList(cls, decode=True):
     """ Return message list"""
     if decode:
-      return [ (m[0], m[1], self._decodeMessage(m[2])) for m in self._message_list]
-    return self._message_list
+      return [(m[0], m[1], cls._decodeMessage(m[2])) for m in cls._message_list]
+    return cls._message_list
 
-  def getLastLog(self):
+  @classmethod
+  def getLastLog(cls):
     """ Return last message """
-    return self._last_message
+    return cls._last_message
+
+  @classmethod
+  def reset(cls):
+    cls._last_message = ()
+    cls._previous_message = ()
+    cls._message_list = []
+
+class DummyMailHost(DummyMailHostMixin, MailHost):
+  pass
 
 
 class DummyTranslationService:
@@ -229,7 +242,7 @@ def _recreateMemcachedTool(portal):
   from Products.ERP5Type.Tool import MemcachedTool
   reload(MemcachedTool)
   portal.manage_delObjects(['portal_memcached'])
-  portal._setObject('portal_memcached', MemcachedTool.MemcachedTool())
+  portal.newContent(id='portal_memcached', portal_type="Memcached Tool")
 
 # test runner shared functions
 def getMySQLArguments():
@@ -244,8 +257,14 @@ def getMySQLArguments():
   host = ''
   db, user = connection_string.split(' ', 1)
 
+  sock = ''
   if ' ' in user: # look for user password
-    user, password = user.split()
+    sp = user.split()
+    if len(sp) == 2:
+      user, password = sp
+    elif len(sp) == 3:
+      user, password, sock = sp
+      sock = '--socket=%s' % sock
     password = '-p%s' % password
 
   if "@" in db: # look for hostname
@@ -256,7 +275,7 @@ def getMySQLArguments():
     else:
       host = '-h %s' % host
 
-  return '-u %s %s %s %s' % (user, password, host, db)
+  return '-u %s %s %s %s %s' % (user, password, host, db, sock)
 
 def getExtraSqlConnectionStringList():
   """Return list of extra available SQL connection string
@@ -321,6 +340,34 @@ def createZServer(log=os.devnull, zserver_type='http'):
       if e[0] != errno.EADDRINUSE:
         raise
       hs.close()
+
+class DbFactory(ZopeDatabase):
+
+  def __init__(self, name, storage=None, **kw):
+    ZopeDatabase.__init__(self, SectionValue({'container_class': None,
+                                              'mount_points': [],
+                                             }, name, None))
+    if storage is not None:
+      self.open = lambda database_name, databases: ZODB.DB(storage,
+        database_name=database_name, databases=databases, **kw)
+    getConfiguration().dbtab.db_factories[name] = self
+
+  @staticmethod
+  def get(*args, **kw):
+    return getConfiguration().dbtab.getDatabaseFactory(*args, **kw)
+
+  def addMountPoint(self, *mount_points):
+    dbtab = getConfiguration().dbtab
+    self.config.mount_points += mount_points
+    for mount_point in self.getVirtualMountPaths():
+      dbtab.mount_paths[mount_point] = self.name
+
+  def close(self):
+    dbtab = getConfiguration().dbtab
+    for mount_point in self.getVirtualMountPaths():
+      del dbtab.mount_paths[mount_point]
+    del dbtab.db_factories[self.name]
+    dbtab.databases.pop(self.name).close()
 
 # decorators
 @simple_decorator

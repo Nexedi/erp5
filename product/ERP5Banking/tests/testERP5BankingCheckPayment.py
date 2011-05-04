@@ -29,6 +29,7 @@
 
 # import requested python module
 import os
+import transaction
 from zLOG import LOG
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -292,7 +293,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
       self.workflow_tool.doActionFor(new_payment, 'plan_action', 
                                      wf_id='check_payment_workflow')
     self.assertEqual(new_payment.getSimulationState(), 'planned')
-    get_transaction().commit()
+    transaction.commit()
     if will_fail:
       message = self.assertWorkflowTransitionFails(new_payment,
                          'check_payment_workflow', 'confirm_action')
@@ -302,7 +303,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
       if insuffisient_balance:
         self.assertTrue(message.find('Bank account is not sufficient')>=0)
       self.assertEqual(new_payment.getSimulationState(), 'planned')
-      get_transaction().commit()
+      transaction.commit()
       self.workflow_tool.doActionFor(new_payment, 'reject_action', 
                                      wf_id='check_payment_workflow')
       self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
@@ -313,7 +314,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
                         new_payment, 'confirm_action', 
                         wf_id='check_payment_workflow')
       self.assertEqual(new_payment.getSimulationState(), 'confirmed')
-      get_transaction().commit()
+      transaction.commit()
       if check_pay_will_fail:
         self.stepInputCashDetails(check_payment=new_payment)
         message = self.assertWorkflowTransitionFails(new_payment,

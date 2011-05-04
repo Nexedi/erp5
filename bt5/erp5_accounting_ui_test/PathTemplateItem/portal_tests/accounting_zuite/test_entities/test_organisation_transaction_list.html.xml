@@ -181,7 +181,7 @@ from http://localhost:9080/erp5/Entity_viewAccountingTransactionList/listbox?for
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>specific_reference</td>\n
+  <td>listbox_specific_reference</td>\n
   <td>${specific_reference}</td>\n
 </tr>\n
 <tr>\n
@@ -221,8 +221,7 @@ from http://localhost:9080/erp5/Entity_viewAccountingTransactionList/listbox?for
 </tbody></table>\n
 </body>\n
 </html> <!-- vim: syntax=html foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>

@@ -157,7 +157,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:[(here.Base_translateString(x.getSolverActionTitle()), x.getId()) for x in cell.searchDeliverySolverList()]</string> </value>
+            <value> <string>python:[(here.Base_translateString(x.getSolverActionTitle() or \'\'), x.getId()) for x in cell.searchDeliverySolverList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -94,7 +94,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Force the fast search to a defined portal type. Else we display a list of portal type.</string> </value>
+                    <value> <string>Define list of available portal type</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -136,7 +136,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [[x,  x] for x in context.getPortalDocumentTypeList()]</string> </value>
+            <value> <string>python: [[context.Base_translateString(x),  x] for x in context.getPortalDocumentTypeList()]</string> </value>
         </item>
       </dictionary>
     </pickle>

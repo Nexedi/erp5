@@ -1,0 +1,91 @@
+From: Arnaud Fontaine <arnaud.fontaine@nexedi.com>
+Date: Mon, 7 Mar 2011 13:02:05 +0900
+Subject: [PATCH] Pass CPPFLAGS when building modules in Python 2.4
+
+In contrary to Python 2.6, when building Python 2.4 modules, CPPFLAGS 
+specified to configure script is not passed at all. This patch backports
+the fix from Python 2.6.
+
+--- Makefile.pre.in	2006-10-09 02:41:25.000000000 +0900
++++ Makefile.pre.in	2011-03-07 14:58:34.368000777 +0900
+@@ -56,7 +56,10 @@
+ OPT=		@OPT@
+ BASECFLAGS=	@BASECFLAGS@
+ CFLAGS=		$(BASECFLAGS) $(OPT)
+-CPPFLAGS=	-I. -I$(srcdir)/Include
++# Both CPPFLAGS and LDFLAGS need to contain the shell's value for setup.py to
++# be able to build extension modules using the directories specified in the
++# environment variables
++CPPFLAGS=	-I. -I$(srcdir)/Include @CPPFLAGS@
+ LDFLAGS=	@LDFLAGS@
+ LDLAST=		@LDLAST@
+ SGI_ABI=	@SGI_ABI@
+--- setup.py	2006-10-09 02:41:25.000000000 +0900
++++ setup.py	2011-03-07 14:53:36.208000779 +0900
+@@ -3,7 +3,7 @@
+ 
+ __version__ = "$Revision: 52231 $"
+ 
+-import sys, os, getopt, imp, re
++import sys, os, getopt, imp, re, optparse
+ 
+ from distutils import log
+ from distutils import sysconfig
+@@ -243,6 +243,39 @@
+         add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+         add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+ 
++        # Add paths specified in the environment variables LDFLAGS and
++        # CPPFLAGS for header and library files.
++        # We must get the values from the Makefile and not the environment
++        # directly since an inconsistently reproducible issue comes up where
++        # the environment variable is not set even though the value were passed
++        # into configure and stored in the Makefile (issue found on OS X 10.3).
++        for env_var, arg_name, dir_list in (
++                ('LDFLAGS', '-L', self.compiler.library_dirs),
++                ('CPPFLAGS', '-I', self.compiler.include_dirs)):
++            env_val = sysconfig.get_config_var(env_var)
++            if env_val:
++                # To prevent optparse from raising an exception about any
++                # options in env_val that is doesn't know about we strip out
++                # all double dashes and any dashes followed by a character
++                # that is not for the option we are dealing with.
++                #
++                # Please note that order of the regex is important!  We must
++                # strip out double-dashes first so that we don't end up with
++                # substituting "--Long" to "-Long" and thus lead to "ong" being
++                # used for a library directory.
++                env_val = re.sub(r'(^|\s+)-(-|(?!%s))' % arg_name[1],
++                                 ' ', env_val)
++                parser = optparse.OptionParser()
++                # Make sure that allowing args interspersed with options is
++                # allowed
++                parser.allow_interspersed_args = True
++                parser.error = lambda msg: None
++                parser.add_option(arg_name, dest="dirs", action="append")
++                options = parser.parse_args(env_val.split())[0]
++                if options.dirs:
++                    for directory in reversed(options.dirs):
++                        add_dir_to_list(dir_list, directory)
++
+         # Add paths to popular package managers on OS X/darwin
+         if sys.platform == "darwin":
+             # Fink installs into /sw by default
+--- Lib/optparse.py	2006-05-29 03:15:43.000000000 +0900
++++ Lib/optparse.py	2011-03-07 21:20:17.192000789 +0900
+@@ -69,7 +69,13 @@
+ import sys, os
+ import types
+ import textwrap
+-from gettext import gettext as _
++
++try:
++    from gettext import gettext
++except ImportError:
++    def gettext(message):
++        return message
++_ = gettext
+ 
+ def _repr(self):
+     return "<%s at 0x%x: %s>" % (self.__class__.__name__, id(self), self)
+

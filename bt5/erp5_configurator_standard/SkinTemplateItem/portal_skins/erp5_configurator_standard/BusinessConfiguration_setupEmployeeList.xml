@@ -78,7 +78,7 @@ else:\n
       new_key = key.replace("field_your_", "")\n
       employee_kw[new_key] = kw[key][employee_counter]\n
     # add an emlpoyee\n
-    function= employee_kw.pop(\'function\', None)\n
+    function = employee_kw.pop(\'function\', None)\n
     employee_kw.pop(\'password_confirm\', None)\n
     configuration_save.addConfigurationItem("Person Configurator Item", \n
                                             organisation_id = organisation_id,\n
@@ -88,74 +88,8 @@ else:\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>**kw</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>None</string>
-                            <string>configuration_save_url</string>
-                            <string>context</string>
-                            <string>configuration_save</string>
-                            <string>organisation_id</string>
-                            <string>group_id</string>
-                            <string>company_employees_number</string>
-                            <string>$list0</string>
-                            <string>_getiter_</string>
-                            <string>i</string>
-                            <string>form_keys</string>
-                            <string>key</string>
-                            <string>function</string>
-                            <string>_apply_</string>
-                            <string>range</string>
-                            <string>employee_counter</string>
-                            <string>employee_kw</string>
-                            <string>new_key</string>
-                            <string>_getitem_</string>
-                            <string>_write_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -164,12 +98,6 @@ else:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Setup company employees</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

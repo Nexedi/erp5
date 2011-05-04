@@ -21,7 +21,7 @@
             </value>
         </item>
         <item>
-            <key> <string>effective_date</string> </key>
+            <key> <string>description</string> </key>
             <value>
               <none/>
             </value>
@@ -42,11 +42,11 @@
         </item>
         <item>
             <key> <string>short_title</string> </key>
-            <value> <string>割引手形</string> </value>
+            <value> <string>リース債権</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>割引手形</string> </value>
+            <value> <string>リース債権</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -62,6 +62,7 @@ if preference is None\\\n
   p.enable()\n
   preference = p\n
 \n
+message = context.Base_translateString("Templated created.")\n
 \n
 # if the preference already contains a template with the same name, making\n
 # another template will replace it\n
@@ -70,6 +71,7 @@ for existing_template in preference.contentValues(\n
     portal_type=context.getPortalType()):\n
   if existing_template.getTitle() == document_title:\n
     preference.manage_delObjects(ids=[existing_template.getId()])\n
+    message = context.Base_translateString("Templated updated.")\n
     break\n
 \n
 parent = context.getParentValue()\n
@@ -80,10 +82,10 @@ paste_info, = preference.manage_pasteObjects(cb_copy_data=cp, is_indexable=False
 template = getattr(preference, paste_info[\'new_id\'])\n
 template.makeTemplate()\n
 \n
-context.portal_caches.clearCacheFactory(\'erp5_ui_medium\')\n
+context.portal_caches.clearCacheFactory(\'erp5_ui_short\')\n
 \n
 return context.Base_redirect(form_id,\n
-                             keep_items=dict(portal_status_message=context.Base_translateString("Templated made.")),\n
+                             keep_items=dict(portal_status_message=message),\n
                              **kw)\n
 </string> </value>
         </item>

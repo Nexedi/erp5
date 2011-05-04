@@ -81,7 +81,7 @@ dQEAAAAA</string> </value>
               from_date python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);\n
               from_date_previous_period python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date_previous_period);\n
               portal_type here/getPortalAccountingMovementTypeList;\n
-              date_formatter nocall:here/Base_viewFieldLibrary/my_date/render_pdf;\n
+              date_formatter nocall:here/Base_viewAccountingReport/my_date/render_pdf;\n
               section_uid python: context.Base_getSectionUidListForSectionCategory(request["section_category"], request["section_category_strict"]);\n
               financial_section python:context.getPortalObject().portal_categories.financial_section;\n
               getInventory python: lambda **kw:context.portal_simulation.getInventoryAssetPrice(section_uid=section_uid, simulation_state=request["simulation_state"], function=request.get("function") or None, project=request.get("project") or None, at_date=at_date, from_date=from_date, portal_type=portal_type, **kw);\n
@@ -885,8 +885,7 @@ dQEAAAAA</string> </value>
     </office:spreadsheet>\n
   </office:body>\n
 </office:document-content><!-- vim: filetype=xml tw=1000 foldmethod=marker\n
--->\n
-
+-->
 
 ]]></unicode> </value>
         </item>
@@ -912,7 +911,7 @@ dQEAAAAA</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

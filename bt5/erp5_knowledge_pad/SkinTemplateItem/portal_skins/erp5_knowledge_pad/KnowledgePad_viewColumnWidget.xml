@@ -39,7 +39,14 @@
 <tal:block tal:define="layout python: options[\'section_layout\'];\n
                        real_context python: options.get(\'real_context\', None);\n
                        cancel_url python: options.get(\'cancel_url\', None);\n
-                       isAnon python: here.portal_membership.isAnonymousUser();\n
+                       is_anonymous_user python: here.portal_membership.isAnonymousUser();\n
+                       dummy python: request.set(\'is_gadget_mode\', \'1\');\n
+                       current_web_section python: context.REQUEST.get(\'current_web_section\', here);\n
+                       current_web_section python: test(current_web_section.getPortalType()==\'Web Site\', real_context, current_web_section);\n
+                       current_web_section python: test(real_context.getPortalType() in (\'ERP5 Site\', \'Web Site\',), real_context, current_web_section); \n
+                       context_url current_web_section/absolute_url;\n
+                       is_knowledge_pad_template_used python: request.get(\'is_knowledge_pad_template_used\', 0);\n
+                       is_anonymous_knowledge_pad_used python: request.get(\'is_anonymous_knowledge_pad_used\', 0);\n
                        visibility_css_dict python: {\'visible\': \'block\',\n
                                                    \'invisible\': \'none\'};">\n
 \n
@@ -47,47 +54,34 @@
   <tal:block \n
         tal:condition="python: getattr(here, box_id, None) is not None"\n
         tal:define="box python: getattr(here, box_id);\n
-                    box_dom_id python: \'%s\' %box.getRelativeUrl().replace(\'/\', \'_\');\n
+                    box_relative_url box/getRelativeUrl;\n
+                    box_dom_id python: \'%s\' %box_relative_url.replace(\'/\', \'_\');\n
                     view_form_dom_id python: \'%s_content\' %box_dom_id;\n
                     edit_form_dom_id python: \'%s_edit_form\' %box_dom_id;\n
                     gadget_title_dom_id python: \'%s_gadget_title\' %box_dom_id;\n
                     gadget python: box.getSpecialiseValue();\n
                     gadget_state python: gadget.getValidationState();\n
-                    dummy python: request.set(\'is_gadget_mode\', \'1\');\n
-                    dummy python: request.set(\'box_relative_url\', box.getRelativeUrl());\n
+                    dummy python: request.set(\'box_relative_url\', box_relative_url);\n
+                    dummy python: request.form.update(dict(box_relative_url=box_relative_url));\n
                     edit_form_id gadget/getEditFormId;\n
                     view_form_id gadget/getViewFormId;\n
                     render_type gadget/getRenderType;\n
                     is_asynchronous_gadget python: render_type == \'asynchronous\';\n
-                    current_web_section python: context.REQUEST.get(\'current_web_section\',\n
-                                                                    here);\n
-                    current_web_section python:  \n
-                       test(current_web_section.getPortalType()==\'Web Site\',\n
-                                                     real_context, current_web_section);\n
-                    current_web_section python:  \n
-                       test(real_context.getPortalType() in (\'ERP5 Site\', \'Web Site\',),\n
-                                                     real_context, current_web_section); \n
-                    isKnowledgePadTemplateUsed python:\n
-                       request.get(\'is_knowledge_pad_template_used\', 0);\n
-                    isAnonymousKnowledgePadUsed python:\n
-                       request.get(\'is_anonymous_knowledge_pad_used\', 0);">\n
+                    is_gadget_visible python: gadget is not None and gadget_state!=\'invisible\';">\n
 \n
-\n
-\n
-    <div class="block" \n
-      tal:condition="python: gadget is not None and gadget_state==\'invisible\'"\n
-      tal:attributes="id box_dom_id"\n
-      style="display:none;"></div>\n
-\n
+    <!-- Render gadget as hidden one -->\n
+    <div tal:condition="not: is_gadget_visible"\n
+         tal:attributes="id box_dom_id"\n
+         class="block invisible-gadget"></div>\n
 \n
     <!-- Show only public gadgets -->\n
     <div class="block" \n
-      tal:condition="python: gadget is not None and gadget_state!=\'invisible\'"\n
-      tal:attributes="id box_dom_id">\n
+         tal:condition="is_gadget_visible"\n
+         tal:attributes="id box_dom_id">\n
 \n
       <h3 class="handle">\n
         <span class="handle">\n
-        <tal:block tal:condition="python: not (isAnon or isAnonymousKnowledgePadUsed)">\n
+        <tal:block tal:condition="python: not (is_anonymous_user or is_anonymous_knowledge_pad_used)">\n
           <a class="clickable-block block-remove" \n
              i18n:translate="" \n
              i18n:domain="ui"\n
@@ -112,13 +106,12 @@
       </h3>\n
 \n
         <div class="minimize_wrapper"\n
-             tal:attributes="style python: \'display: %s\'\n
-                         %visibility_css_dict.get(box.getValidationState(), \'block\')">\n
+             tal:attributes="style python: \'display: %s\' %visibility_css_dict.get(box.getValidationState(), \'block\')">\n
 \n
           <!-- Edit form -->\n
           <div class="edit-form" \n
-               tal:condition="python: not isAnon and edit_form_id is not None and box is not None and\n
-                                      not isAnonymousKnowledgePadUsed and not isKnowledgePadTemplateUsed"\n
+               tal:condition="python: not is_anonymous_user and edit_form_id is not None and box is not None and\n
+                                      not is_anonymous_knowledge_pad_used and not is_knowledge_pad_template_used"\n
                tal:attributes="id edit_form_dom_id"\n
                style="display: none;">\n
 \n
@@ -130,26 +123,23 @@
               </tal:block>\n
 \n
               <tal:block tal:condition="python: edit_form_object is not None"\n
-                         tal:define="box_relative_url python: box.getRelativeUrl();\n
-                                     box_dom_id python: box_relative_url.replace(\'/\', \'_\');\n
-                                     form_fields_main_prefix python: \'gadget_preference_%s_field\' %box_dom_id;">\n
+                         tal:define="form_fields_main_prefix python: \'gadget_preference_%s_field\' %box_dom_id;">\n
 \n
                 <!-- render edit gadget preferences form -->\n
                 <span tal:replace="structure python: edit_form_object(key_prefix=form_fields_main_prefix)"/>\n
 \n
                 <tal:block tal:condition="not: is_asynchronous_gadget">\n
 \n
-                      <input type="hidden" \n
-                             name="cancel_url" \n
-                             tal:attributes="value cancel_url;\n
-                               name python: \'%s_cancel_url\' %form_fields_main_prefix"/>\n
-                      <button type="submit"\n
-                              i18n:translate="" \n
-                              i18n:domain="ui"\n
-                              tal:attributes="onclick python: \n
-                                \'submitSynchronousGadgetPreferenceForm(\\\'%s\\\',\\\'%s\\\')\' \n
-                                  %(form_fields_main_prefix, box_relative_url);\n
-                                              id string: submit_button_${box_dom_id};">Save</button>\n
+                  <input type="hidden" \n
+                         name="cancel_url" \n
+                         tal:attributes="value cancel_url;\n
+                                         name string: \'${form_fields_main_prefix}_cancel_url\'"/>\n
+\n
+                  <button type="submit"\n
+                          i18n:translate="" \n
+                          i18n:domain="ui"\n
+                          tal:attributes="onclick string:submitSynchronousGadgetPreferenceForm(\'${form_fields_main_prefix}\',\'${box_relative_url}\');\n
+                                          id string: submit_button_${box_dom_id};">Save</button>\n
 \n
                 </tal:block>\n
 \n
@@ -158,15 +148,14 @@
                   <button type="button" \n
                           i18n:translate="" \n
                           i18n:domain="ui"\n
-                          tal:attributes="onclick python: \n
-                                 \'submitAsynchronousGadgetPreferenceForm(\n
-                                    \\\'%s\\\', \\\'%s\\\', \\\'%s\\\', \\\'%s\\\', \\\'%s\\\')\'\n
-                                    %(edit_form_dom_id, \n
-                                      view_form_id, \n
-                                      box_relative_url, \n
-                                      view_form_dom_id,\n
-                                      form_fields_main_prefix);\n
-                                          id string: submit_button_${box_dom_id};">Save</button>\n
+                          tal:attributes="onclick string:submitAsynchronousGadgetPreferenceForm(\n
+                                   \'${edit_form_dom_id}\', \n
+                                   \'${view_form_id}\', \n
+                                   \'${box_relative_url}\', \n
+                                   \'${view_form_dom_id}\', \n
+                                   \'${form_fields_main_prefix}\');\n
+                                 id string:submit_button_${box_dom_id};">Save</button>\n
+\n
 \n
                 </tal:block>\n
               </tal:block>\n
@@ -191,23 +180,22 @@
                    tal:define="view_form_object python: getattr(real_context, view_form_id);">\n
 \n
                 <!-- Synchronous Gadget -->\n
-                <div tal:condition="python: not is_asynchronous_gadget"\n
+                <div tal:condition="not: is_asynchronous_gadget"\n
                      tal:attributes="id view_form_dom_id"\n
                      class="box_inner_content" \n
                      tal:content="structure python: view_form_object(box=box)"/>\n
  \n
                 <!-- Asynchronous Gadget -->\n
-                <tal:block tal:condition="python: is_asynchronous_gadget">\n
+                <tal:block tal:condition="is_asynchronous_gadget">\n
                   <div tal:attributes="id view_form_dom_id" \n
                        class="box_inner_content"\n
                        i18n:translate="" \n
                        i18n:domain="ui">Loading ...</div>\n
                     <script type="text/javascript"\n
                             tal:content="structure python:\n
-                                  here.KnowledgePad_generateAjaxCall(\'%s/%s\' %(current_web_section.absolute_url(),view_form_id),\n
+                                  here.KnowledgePad_generateAjaxCall(\'%s/%s\' %(context_url, view_form_id),\n
                                                                    box,\n
-                                                                   view_form_dom_id,\n
-                                                                   ignore_security_check=1)"/>\n
+                                                                   view_form_dom_id)"/>\n
                 </tal:block>\n
               </div>\n
 \n
@@ -217,8 +205,7 @@
   </div>\n
   </tal:block>\n
 </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -236,7 +223,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

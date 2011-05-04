@@ -63,7 +63,7 @@ class SupplyChain(Path, XMLObject):
   # Class variable
   supply_link_portal_type="Supply Link"
 
-  security.declareProtected(Permissions.View, 'getLastLink')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getLastLink')
   def getLastLink(self):
     """
       Return the SupplyLink representing the last ridge of the 
@@ -87,7 +87,7 @@ class SupplyChain(Path, XMLObject):
             str(self.getRelativeUrl())
     return result
 
-  security.declareProtected(Permissions.View,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getNextSupplyLinkList')
   def getNextSupplyLinkList(self, current_supply_link):
     """
@@ -111,7 +111,7 @@ class SupplyChain(Path, XMLObject):
       return next_production_list
     return next_supply_link_list
 
-  security.declareProtected(Permissions.View,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getNextProductionSupplyLinkList')
   def getNextProductionSupplyLinkList(self, current_supply_link):
     """
@@ -122,7 +122,7 @@ class SupplyChain(Path, XMLObject):
     next_supply_link_list = self.getNextSupplyLinkList(current_supply_link)
     return [x for x in next_supply_link_list if x.isProductionSupplyLink()]
     
-  security.declareProtected(Permissions.View,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getNextProductionIndustrialPhaseList')
   def getNextProductionIndustrialPhaseList(self, current_supply_link):
     """
@@ -136,7 +136,7 @@ class SupplyChain(Path, XMLObject):
     ind_phase_dict.pop(None, None)
     return ind_phase_dict.keys()
 
-  security.declareProtected(Permissions.View,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPreviousSupplyLinkList')
   def getPreviousSupplyLinkList(self, current_supply_link):
     """
@@ -165,7 +165,7 @@ class SupplyChain(Path, XMLObject):
       return previous_production_list
     return previous_supply_link_list
 
-  security.declareProtected(Permissions.View,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPreviousProductionSupplyLinkList')
   def getPreviousProductionSupplyLinkList(self, current_supply_link, 
                                           recursive=False, all=False,
@@ -219,7 +219,7 @@ class SupplyChain(Path, XMLObject):
     # Return result
     return transformation_link_list
 
-  security.declareProtected(Permissions.View,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPreviousPackingListSupplyLinkList')
   def getPreviousPackingListSupplyLinkList(self, current_supply_link, 
                                            recursive=False, all=False,
@@ -286,7 +286,7 @@ class SupplyChain(Path, XMLObject):
     ind_phase_list = ind_phase_dict.keys()
     return ind_phase_list
 
-  security.declareProtected(Permissions.View,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPreviousProductionIndustrialPhaseList')
   def getPreviousProductionIndustrialPhaseList(self, current_supply_link,
                                                all=False):
@@ -299,7 +299,7 @@ class SupplyChain(Path, XMLObject):
                                    "getPreviousProductionSupplyLinkList",
                                    all=all)
 
-  security.declareProtected(Permissions.View,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPreviousPackingListIndustrialPhaseList')
   def getPreviousPackingListIndustrialPhaseList(self, current_supply_link):
     """
@@ -311,7 +311,7 @@ class SupplyChain(Path, XMLObject):
                                    "getPreviousPackingListSupplyLinkList",
                                    include_current=True)
 
-  security.declareProtected(Permissions.View,
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'test')
   def test(self, current_supply_link, movement):
     """

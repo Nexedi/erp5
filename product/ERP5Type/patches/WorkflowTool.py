@@ -110,14 +110,17 @@ class ExclusionTuple(tuple):
   """
   pass
 
-def getValidCriterionDict(worklist_match_dict, acceptable_key_dict,
+def getValidCriterionDict(worklist_match_dict, sql_catalog,
                           workflow_worklist_key):
   valid_criterion_dict = {}
   metadata = None
+  isValidColumn = sql_catalog.isValidColumn
   for criterion_id, criterion_value in worklist_match_dict.iteritems():
-    if criterion_id in acceptable_key_dict:
+    if isValidColumn(criterion_id):
       if isinstance(criterion_value, tuple):
         criterion_value = list(criterion_value)
+      elif isinstance(criterion_value, (str, int, long)):
+        criterion_value = [criterion_value]
       assert criterion_id not in valid_criterion_dict
       valid_criterion_dict[criterion_id] = criterion_value
     elif criterion_id == WORKLIST_METADATA_KEY:
@@ -141,7 +144,7 @@ def updateWorklistSetDict(worklist_set_dict, workflow_worklist_key, valid_criter
     worklist_set_dict[worklist_set_dict_key]\
       [workflow_worklist_key] = valid_criterion_dict
 
-def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
+def groupWorklistListByCondition(worklist_dict, sql_catalog,
                                  getSecurityUidListAndRoleColumnDict=None):
   """
     Get a list of dict of WorklistVariableMatchDict grouped by compatible
@@ -158,9 +161,12 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
          'workflow_B': {'worklist_BA': {'baz': (6, )}
                        }
         }
-        acceptable_key_dict:
-        {'foo': None,
-         'baz': None}
+
+      Allowed columns are:
+      sql_catalog.isValidColumn('foo') is True
+      sql_catalog.isValidColumn('baz') is True
+      sql_catalog.isValidColumn('bar') is False
+
       Output a 2-tuple:
         (
           [{'workflow_A/worklist_AA': {'foo': (1, 2)}
@@ -182,7 +188,7 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
       if getSecurityUidListAndRoleColumnDict is None:
         valid_criterion_dict, metadata = getValidCriterionDict(
           worklist_match_dict=worklist_match_dict,
-          acceptable_key_dict=acceptable_key_dict,
+          sql_catalog=sql_catalog,
           workflow_worklist_key=workflow_worklist_key)
         if metadata is not None:
           metadata_dict[workflow_worklist_key] = metadata
@@ -216,7 +222,7 @@ def groupWorklistListByCondition(worklist_dict, acceptable_key_dict,
             role_column_dict.iteritems():
           valid_criterion_dict, metadata = getValidCriterionDict(
             worklist_match_dict=worklist_match_dict,
-            acceptable_key_dict=acceptable_key_dict,
+            sql_catalog=sql_catalog,
             workflow_worklist_key=workflow_worklist_key)
           if metadata is not None:
             metadata_dict[workflow_worklist_key] = metadata
@@ -320,13 +326,8 @@ def getWorklistListQuery(grouped_worklist_dict):
       criterion_value_to_worklist_dict = \
         criterion_value_to_worklist_dict_dict.setdefault(criterion_value, {})
       criterion_value_to_worklist_dict[worklist_id] = None
-  total_criterion_id_list = total_criterion_id_dict.keys()
-  def criterion_id_cmp(criterion_id_a, criterion_id_b):
-    return cmp(max([len(x) for x in \
-                    total_criterion_id_dict[criterion_id_a].itervalues()]),
-               max([len(x) for x in \
-                    total_criterion_id_dict[criterion_id_b].itervalues()]))
-  total_criterion_id_list.sort(criterion_id_cmp)
+  total_criterion_id_list = sorted(total_criterion_id_dict, key=lambda y: max(
+    len(x) for x in total_criterion_id_dict[y].itervalues()))
   query = generateNestedQuery(priority_list=total_criterion_id_list,
                               criterion_dict=total_criterion_id_dict)
   assert query is not None
@@ -467,16 +468,12 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
     def _getWorklistActionList():
       worklist_result_dict = {}
       sql_catalog = portal_catalog.getSQLCatalog()
-      acceptable_key_dict = sql_catalog.getColumnMap().copy()
-      for related_key in sql_catalog.getSQLCatalogRelatedKeyList():
-        related_key = related_key.split('|')
-        acceptable_key_dict[related_key[0].strip()] = related_key[1].strip()
       # Get a list of dict of WorklistVariableMatchDict grouped by compatible
       # conditions
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
-          acceptable_key_dict=acceptable_key_dict,
+          sql_catalog=sql_catalog,
           getSecurityUidListAndRoleColumnDict=\
             getSecurityUidListAndRoleColumnDict)
       if src__:
@@ -487,42 +484,11 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           getWorklistListQuery(grouped_worklist_dict=grouped_worklist_dict)
         group_by_expression = ', '.join(total_criterion_id_list)
         assert COUNT_COLUMN_TITLE not in total_criterion_id_list
-        getRelatedTableMapDict = getattr(query, 'getRelatedTableMapDict', None)
-        if getRelatedTableMapDict is None:
-          # If required mapping method is not present on the query, assume it
-          # handles column mapping properly, and build a bare select
-          # expression.
-          select_expression = select_expression_prefix + ', ' \
-                              + group_by_expression
-        else:
-          # We must compute alias names ourselves because we need to know them
-          # in order to compute 'select_expression'.
-          related_table_map_dict = query.getRelatedTableMapDict()
-          # In order to support related keys, the select expression must be
-          # completely explicited, to avoid conflicts.
-          select_expression = [select_expression_prefix]
-          for criterion_id in total_criterion_id_list:
-            mapped_key = acceptable_key_dict[criterion_id]
-            if use_cache: # no support for related keys
-              select_expression.append(criterion_id)
-              continue
-            elif isinstance(mapped_key, str): # related key
-              mapped_key = mapped_key.split('/')
-              related_table_map_dict[criterion_id] = table_alias_list = tuple(
-                (table_id, '%s_%s' % (criterion_id, i))
-                for i, table_id in enumerate(mapped_key[0].split(',')))
-              table_id, column_id = table_alias_list[-1][1], mapped_key[1]
-            else: # normal column
-              if len(mapped_key) == 1:
-                table_id = mapped_key[0]
-              else:
-                table_id = 'catalog'
-                assert table_id in mapped_key
-              column_id = criterion_id
-            select_expression.append('%s.%s as %s'
-                                     % (table_id, column_id, criterion_id))
-          query.getRelatedTableMapDict = lambda: related_table_map_dict
-          select_expression = ', '.join(select_expression)
+        # If required mapping method is not present on the query, assume it
+        # handles column mapping properly, and build a bare select
+        # expression.
+        select_expression = select_expression_prefix + ', ' \
+                            + group_by_expression
         try:
           catalog_brain_result = search_result(
                                       select_expression=select_expression,
@@ -547,14 +513,13 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
           for key, value in grouped_worklist_result.iteritems():
             worklist_result_dict[key] = value + worklist_result_dict.get(key, 0)
       if not src__:
-        action_list = generateActionList(worklist_metadata=worklist_metadata,
-                                         worklist_result=worklist_result_dict,
-                                         portal_url=portal_url)
-        def get_action_ident(action):
-          return '/'.join((action['workflow_id'], action['worklist_id']))
-        def action_cmp(action_a, action_b):
-          return cmp(get_action_ident(action_a), get_action_ident(action_b))
-        action_list.sort(action_cmp)
+        action_list = sorted(
+          generateActionList(
+            worklist_metadata=worklist_metadata,
+            worklist_result=worklist_result_dict,
+            portal_url=portal_url),
+          key=lambda x: '/'.join((x['workflow_id'], x['worklist_id'])),
+        )
       return action_list
     user = str(_getAuthenticatedUser(self))
     if src__:
@@ -609,9 +574,6 @@ def WorkflowTool_refreshWorklistCache(self):
       portal_catalog = getToolByName(self, 'portal_catalog')
       search_result = portal_catalog.unrestrictedSearchResults
       sql_catalog = portal_catalog.getSQLCatalog()
-      acceptable_key_dict = sql_catalog.getColumnMap()
-      # XXX: those hardcoded lists should be grabbed from the table dynamicaly
-      # (and cached).
       table_column_id_set = ImmutableSet(
           [COUNT_COLUMN_TITLE] + self.Base_getWorklistTableColumnIDList())
       security_column_id_list = ['security_uid'] + \
@@ -620,7 +582,7 @@ def WorkflowTool_refreshWorklistCache(self):
       (worklist_list_grouped_by_condition, worklist_metadata) = \
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
-          acceptable_key_dict=acceptable_key_dict)
+          sql_catalog=sql_catalog)
       assert COUNT_COLUMN_TITLE in table_column_id_set
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
         # Generate the query for this worklist_list

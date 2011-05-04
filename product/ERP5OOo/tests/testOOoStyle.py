@@ -47,7 +47,8 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
   content_type = None
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_ods_style', 'erp5_odt_style',)
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base', 'erp5_ods_style', 'erp5_odt_style',)
 
   def afterSetUp(self):
     if not self.skin:
@@ -71,7 +72,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     person_module.pers.setCareerRole(None)
 
     if person_module.pers._getOb('img', None) is None:
-      person_module.pers.newContent(portal_type='Image', id='img')
+      person_module.pers.newContent(portal_type='Embedded File', id='img')
 
     if person_module._getOb('pers_without_image', None) is None:
       person = person_module.newContent(
@@ -97,7 +98,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def publish(self, *args, **kw):
     kw['handle_errors'] = not debug
-    return ERP5TypeTestCase.publish(self, *args, **kw)
+    return super(TestOOoStyle, self).publish(*args, **kw)
 
   def _validate(self, odf_file_data):
     error_list = self.validator.validate(odf_file_data)

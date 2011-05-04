@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -71,8 +68,8 @@ if dictionaries:\n
 else:\n
   from Products.ERP5Type.Document import newTempBase\n
 \n
-from DateTime import DateTime\n
-begin = DateTime()\n
+#from DateTime import DateTime\n
+#begin = DateTime()\n
 \n
 if from_date is not None:\n
   if from_date == at_date:\n
@@ -189,8 +186,8 @@ if column_names == 1:\n
   column_list.append((\'general_total_price\', \'General TotalPrice\'))\n
   return column_list\n
 \n
-end = DateTime()\n
-context.log(\'before sql time:\',(end-begin)*86400)\n
+#end = DateTime()\n
+#context.log(\'before sql time:\',(end-begin)*86400)\n
 #context.log(\'node_category\',vault)\n
 #context.log(\'inventory_kw\',inventory_kw)\n
 display_simulation_state = 0\n
@@ -210,8 +207,8 @@ else: \n
 #                                                                , ignore_variation=0,src__=1\n
 #                                                               ,**inventory_kw\n
 #                                                              ))\n
-end = DateTime()\n
-context.log(\'sql request time:\',(end-begin)*86400)\n
+#end = DateTime()\n
+#context.log(\'sql request time:\',(end-begin)*86400)\n
 \n
 if summarise:\n
   total_quantity = 0\n
@@ -268,8 +265,8 @@ for vault_inventory in vault_inventory_list:\n
   resource_dict[resource] = 1\n
 \n
 \n
-end = DateTime()\n
-context.log(\'after first big loop:\',(end-begin)*86400)\n
+#end = DateTime()\n
+#context.log(\'after first big loop:\',(end-begin)*86400)\n
 \n
 #context.log(\'resource_dict\',resource_dict)\n
 #context.log(\'vault_inventory_dict\',vault_inventory_dict)\n
@@ -282,8 +279,8 @@ if vault_report_type == \'history\':\n
     for line in catalog_result_list:\n
       cache_dict[\'cache_explanation\'][line.uid] = line\n
 \n
-end = DateTime()\n
-context.log(\'after getting data into catalog:\',(end-begin)*86400)\n
+#end = DateTime()\n
+#context.log(\'after getting data into catalog:\',(end-begin)*86400)\n
 i = 0\n
 \n
 append = total_inventory_list.append\n
@@ -341,8 +338,8 @@ for resource in resource_dict.keys():\n
     append(newTempBase(context, "new_%03i" % i, **tmp_dict))\n
     i += 1\n
 \n
-end = DateTime()\n
-context.log(\'after second big loop:\',(end-begin)*86400)\n
+#end = DateTime()\n
+#context.log(\'after second big loop:\',(end-begin)*86400)\n
 \n
 def sort_base_price(a,b):\n
   return -cmp(a.base_price,b.base_price)\n
@@ -358,12 +355,6 @@ return repr([x for x in total_inventory_list])\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>vault=None,at_date=None,from_date=None,vault_report_type=None,column_names=0,resource_portal_type=(\'Banknote\',\'Coin\'), only_positive=0, banknote_quantity_divisor=None, summarise=False, excluded_variation_list=None, all_state=0, only_last_date=0, dictionaries=False, **kw</string> </value>
         </item>
@@ -376,154 +367,8 @@ return repr([x for x in total_inventory_list])\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>13</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>vault</string>
-                            <string>at_date</string>
-                            <string>from_date</string>
-                            <string>vault_report_type</string>
-                            <string>column_names</string>
-                            <string>resource_portal_type</string>
-                            <string>only_positive</string>
-                            <string>banknote_quantity_divisor</string>
-                            <string>summarise</string>
-                            <string>excluded_variation_list</string>
-                            <string>all_state</string>
-                            <string>only_last_date</string>
-                            <string>dictionaries</string>
-                            <string>kw</string>
-                            <string>newTempBase</string>
-                            <string>Products.ERP5Type.Document</string>
-                            <string>DateTime</string>
-                            <string>begin</string>
-                            <string>None</string>
-                            <string>getTitleFromCategoryUrl</string>
-                            <string>resource_dict</string>
-                            <string>vault_dict</string>
-                            <string>vault_inventory_dict</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>vault_url_list</string>
-                            <string>same_type</string>
-                            <string>ValueError</string>
-                            <string>_getiter_</string>
-                            <string>vault_url</string>
-                            <string>_write_</string>
-                            <string>cartesianProduct</string>
-                            <string>total_inventory_list</string>
-                            <string>inventory_kw</string>
-                            <string>_getitem_</string>
-                            <string>len</string>
-                            <string>kw_has_cash_status</string>
-                            <string>kw_has_emission_letter</string>
-                            <string>cash_status_list</string>
-                            <string>emission_letter_list</string>
-                            <string>cash_status_parameter</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>emission_letter_parameter</string>
-                            <string>full_variation_list_of_list</string>
-                            <string>inv_append</string>
-                            <string>variation_list</string>
-                            <string>variation_text_list</string>
-                            <string>variation</string>
-                            <string>variation_text</string>
-                            <string>column_list</string>
-                            <string>end</string>
-                            <string>display_simulation_state</string>
-                            <string>_apply_</string>
-                            <string>vault_inventory_list</string>
-                            <string>total_quantity</string>
-                            <string>total_price</string>
-                            <string>vault_inventory</string>
-                            <string>_inplacevar_</string>
-                            <string>abs</string>
-                            <string>explanation_uid_list</string>
-                            <string>explanation_append</string>
-                            <string>node_relative_url</string>
-                            <string>must_continue</string>
-                            <string>excluded_variation</string>
-                            <string>resource</string>
-                            <string>explanation_uid</string>
-                            <string>cache_dict</string>
-                            <string>catalog_result_list</string>
-                            <string>line</string>
-                            <string>i</string>
-                            <string>resource_portal_type_cache_dict</string>
-                            <string>movement</string>
-                            <string>resource_url</string>
-                            <string>current_resource_portal_type</string>
-                            <string>resource_value</string>
-                            <string>tmp_dict</string>
-                            <string>general_total_price</string>
-                            <string>resource_in_vault</string>
-                            <string>KeyError</string>
-                            <string>round</string>
-                            <string>sort_base_price</string>
-                            <string>repr</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-                <int>0</int>
-                <tuple>
-                  <string>Banknote</string>
-                  <string>Coin</string>
-                </tuple>
-                <int>0</int>
-                <none/>
-                <int>0</int>
-                <none/>
-                <int>0</int>
-                <int>0</int>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>CounterModule_getVaultTransactionList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

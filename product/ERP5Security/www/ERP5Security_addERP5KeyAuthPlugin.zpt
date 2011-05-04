@@ -39,6 +39,20 @@
   <tr>
     <td align="left" valign="top">
     <div class="form-label">
+    Cipher
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <select name="cipher">
+    <tal:block tal:repeat="c python:[('AES', 'AES'), ('Cesar', 'Cesar (DO NOT USE)')]">
+      <option value="value" tal:attributes="value python:c[0]" tal:content="python:c[1]" />
+    </tal:block>
+    </select>
+    </td>
+  </tr>
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
     Cookie Name
     </div>
     </td>

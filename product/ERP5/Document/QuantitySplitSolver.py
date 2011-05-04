@@ -37,8 +37,10 @@ from Products.ERP5.mixin.configurable import ConfigurableMixin
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
-  """
-  QUESTION: is a solver a process ? (ie. subprocess of Solver Process)
+  """Target solver that split the prevision based on quantity.
+
+  It creates another prevision movement with the delta quantity between decision
+  and prevision.
   """
   meta_type = 'ERP5 Quantity Split Solver'
   portal_type = 'Quantity Split Solver'

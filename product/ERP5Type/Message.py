@@ -36,7 +36,7 @@ except ImportError:
   # on Zope 2.12, though we should try to see if it works on 2.8 as well
   import zLOG, sys
   zLOG.LOG('Products.ERP5Type.Messages',
-      zLOG.ERROR,
+      zLOG.INFO,
       'Products.PageTemplates.GlobalTranslationService has been removed. '
       'Using alternative implementation',)
   import zope.i18n
@@ -146,10 +146,18 @@ class Message(Persistent):
       from Products.ERP5.ERP5Site import getSite
       request = Globals.get_request()
       translation_service = getGlobalTranslationService()
+      if self.mapping:
+        unicode_mapping = {}
+        for k, v in self.mapping.iteritems():
+          if isinstance(v, str):
+            v = v.decode('utf-8')
+          unicode_mapping[k] = v
+      else:
+        unicode_mapping = self.mapping
       translated_message = translation_service.translate(
                                              self.domain,
                                              message,
-                                             mapping=self.mapping,
+                                             mapping=unicode_mapping,
                                              context=getSite(request),
                                              default=self.default)
       if translated_message is not None:

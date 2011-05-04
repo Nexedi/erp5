@@ -53,7 +53,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     return "MemcachedTool"
 
   def setUp(self):
-    ERP5TypeTestCase.setUp(self)
+    super(TestMemcachedTool, self).setUp()
     installRealMemcachedTool(self.getPortal())
     memcached_tool = self.getPortal().portal_memcached
     #create Memcache Plugin
@@ -201,8 +201,8 @@ class TestMemcachedTool(ERP5TypeTestCase):
     transaction.commit()
     self.assertEquals(tested_dict.get(key), value)
     transaction.commit()
-    # Sleep 10s
-    time.sleep(self.expiration_time)
+    # Sleep epliration_time + 1 second to be sure that it is well expired
+    time.sleep(self.expiration_time + 1)
     # now value should have expired
     self.assertRaises(KeyError, tested_dict.__getitem__, key)
 

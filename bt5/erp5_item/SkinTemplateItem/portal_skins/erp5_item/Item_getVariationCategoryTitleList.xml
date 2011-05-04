@@ -50,24 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
-portal = context.getPortalObject()\n
-\n
-kw[\'at_date\'] = DateTime()\n
-kw[\'item\'] = context.getRelativeUrl()\n
-\n
-last_affectation_list = portal.portal_simulation.getCurrentTrackingList(**kw)\n
-\n
-if kw.get(\'src__\',0):\n
-  return last_affectation_list\n
-\n
-if not last_affectation_list:\n
-  # Falback in Future inventory\n
-  last_affectation_list = portal.portal_simulation.getFutureTrackingList(**kw)\n
-\n
+            <value> <string>last_affectation_list = context.Item_getAffectationList(**kw)\n
 if len(last_affectation_list):\n
   last_affectation = last_affectation_list[0]\n
   if last_affectation.delivery_uid is not None:\n
+    portal = context.getPortalObject()\n
     movement = portal.portal_catalog.getObject(last_affectation.delivery_uid)\n
     variation_list = [x[0] for x in movement.getVariationCategoryItemList()]\n
     variation = \',\'.join(variation_list)\n
@@ -78,7 +65,7 @@ return []\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>current=1,**kw</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

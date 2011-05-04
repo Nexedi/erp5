@@ -54,6 +54,11 @@
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/createKMWebSite" />\n
 \n
 <tr>\n
+  <td>setTimeout</td>\n
+  <td>60000</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/web_site_module/km_test_web_site</td>\n
   <td></td>\n
@@ -157,11 +162,15 @@
 <!--  XXX: add "Profile" gadget -->\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
+<tr>\n
+  <td>setTimeout</td>\n
+  <td>30000</td>\n
+  <td></td>\n
+</tr>\n
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

@@ -111,8 +111,6 @@ class OpenOrderRule(DeliveryRule):
             **property_dict
             )
 
-      # Mark that expand finished.
-      applied_rule.setLastExpandSimulationState(order.getSimulationState())
     # Pass to base class
     Rule.expand(self, applied_rule, force=force, **kw)
 

@@ -53,12 +53,12 @@ class SitePropertyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
-                    , PropertySheet.SitePropertyConfiguratorItem )
+                    , PropertySheet.ConfiguratorItem )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     id_list = []
-    for id, value, prop_type in self.getSitePropertyList():
+    for id, value, prop_type in self.getConfigurationList():
       if portal.hasProperty(id):
         portal._delProperty(id)
       portal._setProperty(id, value, type=prop_type)

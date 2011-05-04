@@ -31,6 +31,7 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from zLOG import LOG, WARNING, PANIC
 from Products.ERP5Type.interfaces import ITypeProvider, ITypesTool
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 
 class ComposedObjectIds(object):
@@ -97,6 +98,40 @@ class TypesTool(TypeProvider):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  def _isBootstrapRequired(self):
+    if not self.has_key('Standard Property'):
+      return True
+    # bootstrap is not required, but we may have a few bugfixes to apply
+    # so that the user can upgrade Business Templates
+    property_sheet_type = self.get('Property Sheet')
+    try:
+      if property_sheet_type.aq_base.type_class != 'PropertySheet':
+        property_sheet_type.type_class = 'PropertySheet'
+    except AttributeError:
+      pass
+    try:
+      script = self.getPortalObject().portal_workflow \
+        .dynamic_class_generation_interaction_workflow.scripts \
+        .DynamicClassGeneration_resetDynamicDocuments
+      new = '.resetDynamicDocumentsOnceAtTransactionBoundary('
+      if new not in script._body:
+        script._body = script._body.replace('.resetDynamicDocuments(', new)
+        script._makeFunction()
+    except AttributeError:
+      pass
+    return False
+
+  def _bootstrap(self):
+    from Products.ERP5.ERP5Site import ERP5Generator
+    ERP5Generator.bootstrap(self, 'erp5_core', 'PortalTypeTemplateItem', (
+      'Business Template',
+      'Standard Property',
+      'Acquired Property',
+      'Dummy Class Tool',
+      # the following ones are required to upgrade an existing site
+      'Category Property',
+    ))
 
   def listContentTypes(self, container=None):
     """List content types from all providers
@@ -249,11 +284,35 @@ class TypesTool(TypeProvider):
 
       return res
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'resetDynamicDocumentsOnceAtTransactionBoundary')
+  def resetDynamicDocumentsOnceAtTransactionBoundary(self):
+    """
+    Schedule a single reset at the end of the transaction, only once.
+    The idea behind this is that a reset is (very) costly and that we want
+    to do it as little often as possible.
+    Moreover, doing it twice in a transaction is useless (but still twice
+    as costly).
+    And lastly, WorkflowMethods are not yet clever enough to allow this
+    possibility, as they schedule interactions depending on an instance path:
+    calling two times a setter on two different portal types during the
+    same transaction would call twice resetDynamicDocuments without this
+    TransactionalVariable check
+    """
+    tv = getTransactionalVariable()
+    key = 'TypesTool.resetDynamicDocumentsOnceAtTransactionBoundary'
+    if key not in tv:
+      tv[key] = None
+      transaction.get().addBeforeCommitHook(self.resetDynamicDocuments)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'resetDynamicDocuments')
   def resetDynamicDocuments(self):
-    """Resets all dynamic documents: force reloading erp.* classes"""
+    """Resets all dynamic documents: force reloading erp.* classes
+
+    WARNING: COSTLY! Please double-check that
+    resetDynamicDocumentsOnceAtTransactionBoundary can't be used instead.
+    """
     synchronizeDynamicModules(self, force=True)
 
   security.declareProtected(Permissions.AddPortalContent,
@@ -326,43 +385,60 @@ class TypesTool(TypeProvider):
       trashbin = UnrestrictedMethod(trash_tool.newTrashBin)(self.id)
       trashbin._setOb(old_types_tool.id, old_types_tool)
 
-  def _migrateToPortalTypeClass(self):
-    for type_definition in self.contentValues():
-      type_definition._migrateToPortalTypeClass()
-    return super(TypesTool, self)._migrateToPortalTypeClass()
-
 # Compatibility code to access old "ERP5 Role Information" objects.
 OldRoleInformation = imp.new_module('Products.ERP5Type.RoleInformation')
 sys.modules[OldRoleInformation.__name__] = OldRoleInformation
 from OFS.SimpleItem import SimpleItem
 OldRoleInformation.RoleInformation = SimpleItem
 
+def _eventLessSetObject(container):
+  _setObject = container._setObject
+  def wrapper(*args, **kw):
+    try:
+      return _setObject(suppress_events=True, *args, **kw)
+    except TypeError:
+      return _setObject(*args, **kw)
+  return wrapper
+
 class OldTypesTool(OFSFolder):
 
   id = 'cmf_portal_types'
 
   def _migratePortalType(self, types_tool, old_type):
-    if old_type.__class__ is not ERP5TypeInformation:
+    import erp5
+    BaseType = getattr(erp5.portal_type, 'Base Type')
+    type_id = old_type.id
+    if old_type.__class__ is not BaseType:
       LOG('OldTypesTool._migratePortalType', WARNING,
           "Can't convert %r (meta_type is %r)."
           % (old_type, old_type.meta_type))
       return
-    new_type = ERP5TypeInformation(old_type.id, uid=None)
-    types_tool._setObject(new_type.id, new_type, set_owner=0)
-    new_type = types_tool[new_type.id]
-    for k, v in  old_type.__dict__.iteritems():
-      if k == '_actions':
-        for action in v:
-          new_type._importOldAction(action)
-      elif k == '_roles':
-        for role in v:
-          new_type._importRole(role.__getstate__())
-      elif k not in ('uid', 'isIndexable'):
-        if k == '_property_domain_dict':
-          v = dict((k, t.__class__(property_name=t.property_name,
-                                   domain_name=t.domain_name))
-                   for k, t in v.iteritems())
-        setattr(new_type, k, v)
+    new_type = BaseType(type_id, uid=None)
+    _eventLessSetObject(types_tool)(type_id, new_type, set_owner=0)
+    new_type = types_tool[type_id]
+    def generateNewId():
+      new_id = str(int(new_type.__dict__.get('last_id', 0)) + 1)
+      new_type.last_id = new_id
+      return new_id
+    try:
+      new_type.generateNewId = generateNewId
+      new_type._setObject = _eventLessSetObject(new_type)
+      for k, v in old_type.__dict__.iteritems():
+        if k == '_actions':
+          for action in v:
+            new_type._importOldAction(action)
+        elif k == '_roles':
+          for role in v:
+            new_type._importRole(role.__getstate__())
+        elif k not in ('uid', 'isIndexable'):
+          if k == '_property_domain_dict':
+            v = dict((k, t.__class__(property_name=t.property_name,
+                                     domain_name=t.domain_name))
+                     for k, t in v.iteritems())
+          setattr(new_type, k, v)
+    finally:
+      del new_type.generateNewId
+      del new_type._setObject
 
   def _migrateTypesTool(self, parent):
     # 'parent' has no acquisition wrapper so migration must be done without
@@ -374,30 +450,22 @@ class OldTypesTool(OFSFolder):
         break
     types_tool = TypesTool()
     types_tool.__ac_local_roles__ = self.__ac_local_roles__.copy()
-    try:
-      setattr(parent, self.id, self)
-      object_info['id'] = self.id
-      del parent.portal_types
-      parent._setObject(TypesTool.id, types_tool, set_owner=0)
-      types_tool = types_tool.__of__(parent)
-      if not parent.portal_categories.hasObject('action_type'):
-        # Required to generate ActionInformation.getActionType accessor.
-        from Products.ERP5Type.Document.BaseCategory import BaseCategory
-        action_type = BaseCategory('action_type')
-        action_type.uid = None
-        parent.portal_categories._setObject(action_type.id, action_type)
-      for type_info in self.objectValues():
-        self._migratePortalType(types_tool, type_info)
-      types_tool.activate()._finalizeMigration()
-    except:
-      transaction.abort()
-      LOG('OldTypesTool', PANIC, 'Could not convert portal_types: ',
-          error=sys.exc_info())
-      raise # XXX The exception may be hidden by acquisition code
-            #     (None returned instead)
-    else:
-      LOG('OldTypesTool', WARNING, "... portal_types converted.")
-      return types_tool
+    setattr(parent, self.id, self)
+    object_info['id'] = self.id
+    del parent.portal_types
+    _eventLessSetObject(parent)(TypesTool.id, types_tool, set_owner=0)
+    types_tool = types_tool.__of__(parent)
+    if not parent.portal_categories.hasObject('action_type'):
+      # Required to generate ActionInformation.getActionType accessor.
+      import erp5
+      action_type = getattr(erp5.portal_type, 'Base Category')('action_type')
+      action_type.uid = None
+      parent.portal_categories._setObject(action_type.id, action_type)
+    for type_info in self.objectValues():
+      self._migratePortalType(types_tool, type_info)
+    types_tool.activate()._finalizeMigration()
+    LOG('OldTypesTool', WARNING, "... portal_types converted.")
+    return types_tool
 
   def __of__(self, parent):
     base_self = aq_base(self) # Is it required ?

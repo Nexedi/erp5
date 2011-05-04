@@ -113,12 +113,16 @@ class TestTaskReportDivergenceMixin(TestTaskMixin):
 
   def stepAcceptDateDecision(self, sequence=None, **kw):
     task_report = sequence.get('task_report')
-    # XXX This is not really cool, when we will have nice api, it is required
-    # to use it
-    self.getPortal().portal_deliveries\
-        .task_report_builder.solveDeliveryGroupDivergence(
-        task_report.getRelativeUrl(),
-        property_dict={'start_date':[self.datetime + 15]})
+    solver_process_tool = self.portal.portal_solver_processes
+    solver_process = solver_process_tool.newSolverProcess(task_report)
+    solver_decision, = [x for x in solver_process.contentValues()
+      if x.getCausalityValue().getTestedProperty() == 'start_date']
+    # use Quantity Accept Solver.
+    solver_decision.setSolverValue(self.portal.portal_solvers['Accept Solver'])
+    # configure for Accept Solver.
+    solver_decision.updateConfiguration(tested_property_list=['start_date'], **kw)
+    solver_process.buildTargetSolverList()
+    solver_process.solve()
 
   def stepCheckCommentStillOnTaskReport(self, sequence=None, **kw):
     """
@@ -151,7 +155,6 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
     """
     return 1
 
-  @newSimulationExpectedFailure
   def test_01_TestReportLineChangeQuantity(self, quiet=quiet, run=run_all_test):
     """
       Change the quantity on an delivery line, then
@@ -174,7 +177,6 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
 
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_02_TestReportListChangeDestination(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list
@@ -198,7 +200,6 @@ class TestTaskReportDivergence(TestTaskReportDivergenceMixin, ERP5TypeTestCase) 
 
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_03_TaskReportChangeStartDate(self, quiet=quiet, run=run_all_test):
     """
       Test generation of delivery list

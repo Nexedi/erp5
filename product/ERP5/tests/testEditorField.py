@@ -64,7 +64,8 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     Return the list of required business templates.
     """
-    return ('erp5_base',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base',
             'erp5_web',
             'erp5_ingestion',
             'erp5_ingestion_mysql_innodb_catalog',
@@ -175,7 +176,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     html_text = to_utf8(html_text)
     text_content = document.asStrippedHTML()
-    match_string1 = """<div class="input">%s</div>""" % text_content
+    match_string1 = """<div class="input"><div class="page" >\n%s</div></div>""" % text_content
     match_string2 = """<div class="field page"""
     if html_text.find(match_string1) == -1:
       print html_text

@@ -26,7 +26,6 @@ from ZPublisher import BeforeTraverse
 from ZPublisher.BaseRequest import RequestContainer
 from AccessControl import ClassSecurityInfo
 from Products.CMFDefault.Portal import CMFSite
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Core.Folder import FolderMixIn
 from Acquisition import aq_base
@@ -35,7 +34,6 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Cache import CachingMethod, CacheCookieMixin
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
-from Products.ERP5.Document.BusinessTemplate import BusinessTemplate
 from Products.ERP5Type.Log import log as unrestrictedLog
 from Products.CMFActivity.Errors import ActivityPendingError
 import ERP5Defaults
@@ -138,6 +136,14 @@ def getCatalogStorageList(*args, **kw):
           title = item
         result.append((item, title))
   return result
+
+def addERP5Tool(portal, id, portal_type):
+  if portal.hasObject(id):
+    return
+  import erp5.portal_type
+  klass = getattr(erp5.portal_type, portal_type)
+  obj = klass()
+  portal._setObject(id, obj)
 
 class ReferCheckerBeforeTraverseHook:
   """This before traverse hook checks the HTTP_REFERER argument in the request
@@ -294,11 +300,10 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     if getattr(aq_base(ob), '_updateInternalRelatedContent', None) is not None:
       # Make sure there is no activities pending on that object
       try:
-        portal_activities = getToolByName(self, 'portal_activities')
+        portal_activities = self.portal_activities
       except AttributeError:
-        # There is no activity tool
-        portal_activities = None
-      if portal_activities is not None:
+        pass
+      else:
         if portal_activities.countMessage(path=ob.getPath())>0:
           raise ActivityPendingError, 'Sorry, pending activities prevent ' \
                          +  'changing id at this current stage'
@@ -312,6 +317,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     # Rename the object
     return CMFSite.manage_renameObject(self, id=id, new_id=new_id,
                                        REQUEST=REQUEST)
+
 
   def _getAcquireLocalRoles(self):
     """
@@ -520,9 +526,12 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         type_list.sort(key=lambda x:translate('ui', x))
       return tuple(type_list)
 
-    localizer_tool = getToolByName(self, 'Localizer')
-    language = localizer_tool.get_selected_language()
-    # language should be cached in Transaction Cache if performance issue
+    if enable_sort:
+      # language should be cached in Transaction Cache if performance issue
+      localizer_tool = self.Localizer
+      language = localizer_tool.get_selected_language()
+    else:
+      localizer_tool = language = None
 
     getTypeList = CachingMethod(getTypeList,
                                 id=(('_getPortalGroupedTypeList', language), group,
@@ -665,6 +674,15 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
            self._getPortalConfiguration('portal_order_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalOpenOrderTypeList')
+  def getPortalOpenOrderTypeList(self):
+    """
+      Return open order types.
+    """
+    return self._getPortalGroupedTypeList('open_order') or \
+           self._getPortalConfiguration('portal_open_order_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalDeliveryTypeList')
   def getPortalDeliveryTypeList(self):
     """
@@ -756,6 +774,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
            self._getPortalConfiguration('portal_supply_type_list')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalConstraintTypeList')
+  def getPortalConstraintTypeList(self):
+    """
+      Return rule types.
+    """
+    return self._getPortalGroupedTypeList('constraint')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                               'getPortalRuleTypeList')
   def getPortalRuleTypeList(self):
     """
@@ -778,6 +804,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       Return document types.
     """
     return self._getPortalGroupedTypeList('document')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                              'getPortalEmbeddedDocumentTypeList')
+  def getPortalEmbeddedDocumentTypeList(self):
+    """
+      Return embedded document types.
+    """
+    return self._getPortalGroupedTypeList('embedded_document')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getPortalWebDocumentTypeList')
@@ -1258,6 +1292,15 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self._getPortalGroupedTypeList('movement_group')
 
   security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPortalEntityTypeList')
+  def getPortalEntityTypeList(self):
+    """
+    Returns Entity types.
+    """
+    return self._getPortalGroupedTypeList('entity') or\
+           self._getPortalConfiguration('portal_entity_type_list')
+
+  security.declareProtected(Permissions.AccessContentsInformation,
                             'getDefaultModuleId')
   def getDefaultModuleId(self, portal_type, default=MARKER):
     """
@@ -1276,7 +1319,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
         module_id = expected_module_id
       # then look for module where the type is allowed
       else:
-        for expected_module_id in portal_object.objectIds(spec=('ERP5 Folder',)):
+        for expected_module_id in portal_object.objectIds(('ERP5 Folder',)):
           module = portal_object._getOb(expected_module_id, None)
           if module is not None:
             if portal_type in self.portal_types[module.getPortalType()].\
@@ -1389,32 +1432,24 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     if self.getERP5SiteGlobalId() in [None, '']:
       self.erp5_site_global_id = global_id
 
-  security.declareProtected(Permissions.ManagePortal, 'migrateToPortalTypeClass')
+  security.declareProtected(Permissions.ManagePortal,
+                            'migrateToPortalTypeClass')
   def migrateToPortalTypeClass(self):
-    """Compatibility code that allows migrating a site to portal type classes.
-    
-    We consider that a Site is migrated if its Types Tool is migrated
-    (it will always be migrated last)"""
-    # XXX do we want to call this automatically? Where? (note that it's likely
-    # to fail as portal types are usually not perfectly configured, and it
-    # requires user action to fix issues)
-    if self.portal_types.__class__.__module__ == 'erp5.portal_type':
-      # nothing to do
-      return
-
-    # note that the site itself is not migrated (ERP5Site is not a portal type)
-    # only the tools and top level modules are.
-    # Normally, PersistentMigrationMixin should take care of the rest.
-    id_list = self.objectIds()
-
-    # make sure that Types Tool is migrated last
-    id_list.remove('portal_types')
-    id_list.append('portal_types')
-    for id in id_list:
-      method = getattr(self[id], '_migrateToPortalTypeClass', None)
-      if method is None:
-        continue
-      method()
+    from Products.ERP5Type.dynamic.persistent_migration import PickleUpdater
+    from Products.ERP5Type.Tool.BaseTool import BaseTool
+    PickleUpdater(self)
+    for tool in self.objectValues():
+      if isinstance(tool, BaseTool):
+        tool_id = tool.id
+        if tool_id != 'portal_property_sheets':
+          if tool_id in ('portal_categories', ):
+            tool = tool.activate()
+          tool.migrateToPortalTypeClass(tool_id not in (
+            'portal_activities', 'portal_simulation', 'portal_templates',
+            'portal_trash'))
+          if tool_id in ('portal_trash',):
+            for obj in tool.objectValues():
+              obj.migrateToPortalTypeClass()
 
 Globals.InitializeClass(ERP5Site)
 
@@ -1453,7 +1488,6 @@ class PortalGenerator:
         addCMFCoreTool('CMF Catalog', None)
         addCMFCoreTool('CMF Member Data Tool', None)
         addCMFCoreTool('CMF Skins Tool', None)
-        addCMFCoreTool('CMF Types Tool', None)
         addCMFCoreTool('CMF Undo Tool', None)
         addCMFCoreTool('CMF URL Tool', None)
         addCMFCoreTool('CMF Workflow Tool', None)
@@ -1549,6 +1583,13 @@ class ERP5Generator(PortalGenerator):
     # Make sure reindex will not be called until business templates
     # will be installed
     setattr(portal, 'isIndexable', ConstantGetter('isIndexable', value=False))
+
+    # This is only used to refine log level.
+    # Has no functional use, and should never have any:
+    # if you use it for something else than a logging-oriented hint,
+    # trolls *will* chase you and haunt you in your dreams
+    portal._v_bootstrapping = True
+
     parent._setObject(id, portal)
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
@@ -1571,40 +1612,49 @@ class ERP5Generator(PortalGenerator):
     p._setProperty('management_page_charset', 'UTF-8', 'string')
     self.setup(p, create_userfolder, create_activities=create_activities,
         reindex=reindex, **kw)
+
+    p._v_bootstrapping = False
+
     return p
 
-  def setupLastTools(self, p, create_activities=True, **kw):
+  @classmethod
+  def bootstrap(cls, context, bt_name, item_name, content_id_list):
+    cwd = os.getcwd()
+    try:
+      os.chdir(getBootstrapBusinessTemplateUrl(bt_name))
+      from Products.ERP5.Document.BusinessTemplate import quote
+      traverse = context.unrestrictedTraverse
+      for root, dirs, files in os.walk(os.path.join(item_name, context.id)):
+        container_path = root.split(os.sep)[2:]
+        load = traverse(container_path)._importObjectFromFile
+        if container_path:
+          id_set = set(x[:-4] for x in files if x[-4:] == '.xml')
+        else:
+          id_set = set(quote(x) for x in content_id_list
+                                if not context.hasObject(x))
+        dirs[:] = id_set.intersection(dirs)
+        for file in id_set:
+          load(os.path.join(root, file + '.xml'),
+                verify=False, set_owner=False, suppress_events=True)
+    finally:
+      os.chdir(cwd)
+
+  def setupLastTools(self, p, **kw):
     """
     Set up finals tools
     We want to set the activity tool only at the end to
     make sure that we do not put un the queue the full reindexation
     """
-    # Add Activity Tool
-    if create_activities and not p.hasObject('portal_activities'):
-      addTool = p.manage_addProduct['CMFActivity'].manage_addTool
-      addTool('CMF Activity Tool', None) # Allow user to select active/passive
-      # Initialize Activities
-      p.portal_activities.manageClearActivities(keep=0)
-
-    # Add several other tools, only at the end in order
-    # to make sure that they will be reindexed
-    addTool = p.manage_addProduct['ERP5'].manage_addTool
-    if not p.hasObject('portal_rules'):
-      addTool('ERP5 Rule Tool', None)
-    if not p.hasObject('portal_simulation'):
-      addTool('ERP5 Simulation Tool', None)
-    if not p.hasObject('portal_deliveries'):
-      addTool('ERP5 Delivery Tool', None)
-    if not p.hasObject('portal_orders'):
-      addTool('ERP5 Order Tool', None)
-
+    addERP5Tool(p, 'portal_rules', 'Rule Tool')
+    addERP5Tool(p, 'portal_simulation', 'Simulation Tool')
+    addERP5Tool(p, 'portal_deliveries', 'Delivery Tool')
+    addERP5Tool(p, 'portal_orders', 'Order Tool')
 
   def setupTemplateTool(self, p, **kw):
     """
     Setup the Template Tool. Security must be set strictly.
     """
-    addTool = p.manage_addProduct['ERP5'].manage_addTool
-    addTool('ERP5 Template Tool', None)
+    addERP5Tool(p, 'portal_templates', 'Template Tool')
     context = p.portal_templates
     permission_list = context.possible_permissions()
     for permission in permission_list:
@@ -1616,18 +1666,17 @@ class ERP5Generator(PortalGenerator):
     """
     if not 'portal_actions' in p.objectIds():
       PortalGenerator.setupTools(self, p)
-      p._delObject('portal_types')
 
     # It is better to remove portal_catalog
     # which is ZCatalog as soon as possible,
     # because the API is not the completely same as ERP5Catalog,
     # and ZCatalog is useless for ERP5 after all.
     update = kw.get('update', 0)
-    portal_catalog = getToolByName(p, 'portal_catalog', None)
-    if portal_catalog is not None and \
-       portal_catalog.meta_type != 'ZSQLCatalog' and \
-       not update:
-      p._delObject('portal_catalog')
+    try:
+      if p.portal_catalog.meta_type != 'ZSQLCatalog' and not update:
+        p._delObject('portal_catalog')
+    except AttributeError:
+      pass
 
     # Add CMF Report Tool
     if not p.hasObject('portal_report'):
@@ -1638,51 +1687,26 @@ class ERP5Generator(PortalGenerator):
         pass
 
     # Add ERP5 Tools
-    addTool = p.manage_addProduct['ERP5'].manage_addTool
-    if not p.hasObject('portal_categories'):
-      addTool('ERP5 Categories', None)
-    if not p.hasObject('portal_ids'):
-      addTool('ERP5 Id Tool', None)
+    addERP5Tool(p, 'portal_categories', 'Category Tool')
+    addERP5Tool(p, 'portal_ids', 'Id Tool')
     if not p.hasObject('portal_templates'):
       self.setupTemplateTool(p)
-    if not p.hasObject('portal_trash'):
-      addTool('ERP5 Trash Tool', None)
-    if not p.hasObject('portal_alarms'):
-      addTool('ERP5 Alarm Tool', None)
-    if not p.hasObject('portal_domains'):
-      addTool('ERP5 Domain Tool', None)
-    if not p.hasObject('portal_tests'):
-      addTool('ERP5 Test Tool', None)
-    if not p.hasObject('portal_password'):
-      addTool('ERP5 Password Tool', None)
-    if not p.hasObject('portal_acknowledgements'):
-      addTool('ERP5 Acknowledgement Tool', None)
+    addERP5Tool(p, 'portal_trash', 'Trash Tool')
+    addERP5Tool(p, 'portal_alarms', 'Alarm Tool')
+    addERP5Tool(p, 'portal_domains', 'Domain Tool')
+    addERP5Tool(p, 'portal_tests', 'Test Tool')
+    addERP5Tool(p, 'portal_password', 'Password Tool')
+    addERP5Tool(p, 'portal_acknowledgements', 'Acknowledgement Tool')
 
     # Add ERP5Type Tool
-    addTool = p.manage_addProduct['ERP5Type'].manage_addTool
-    if not p.hasObject('portal_caches'):
-      addTool('ERP5 Cache Tool', None)
-    if not p.hasObject('portal_memcached'):
-      addTool('ERP5 Memcached Tool', None)
-    if not p.hasObject('portal_types'):
-      addTool('ERP5 Types Tool', None)
-    if not p.hasObject('portal_property_sheets'):
-      addTool('ERP5 Property Sheet Tool', None)
-
-    try:
-      addTool = p.manage_addProduct['ERP5Subversion'].manage_addTool
-      if not p.hasObject('portal_subversion'):
-        addTool('ERP5 Subversion Tool', None)
-    except AttributeError:
-      pass
+    addERP5Tool(p, 'portal_caches', 'Cache Tool')
+    addERP5Tool(p, 'portal_memcached', 'Memcached Tool')
 
     # Add ERP5Type Tools
-    addTool = p.manage_addProduct['ERP5Type'].manage_addTool
-    if not p.hasObject('portal_classes'):
-      if allowClassTool():
-        addTool('ERP5 Class Tool', None)
-      else:
-        addTool('ERP5 Dummy Class Tool', None)
+    if allowClassTool():
+      addERP5Tool(p, 'portal_classes', 'Class Tool')
+    else:
+      addERP5Tool(p, 'portal_classes', 'Dummy Class Tool')
 
     # Add ERP5 SQL Catalog Tool
     addTool = p.manage_addProduct['ERP5Catalog'].manage_addTool
@@ -1736,17 +1760,12 @@ class ERP5Generator(PortalGenerator):
       pass
 
     # Add ERP5Form Tools
-    addTool = p.manage_addProduct['ERP5Form'].manage_addTool
-    if not p.hasObject('portal_selections'):
-      addTool('ERP5 Selections', None)
-    if not p.hasObject('portal_preferences'):
-      addTool('ERP5 Preference Tool', None)
+    addERP5Tool(p, 'portal_selections', 'Selection Tool')
+    addERP5Tool(p, 'portal_preferences', 'Preference Tool')
 
     try:
       # Add ERP5SyncML Tools
-      addTool = p.manage_addProduct['ERP5SyncML'].manage_addTool
-      if not p.hasObject('portal_synchronizations'):
-        addTool('ERP5 Synchronizations', None)
+      addERP5Tool(p, 'portal_synchronizations', 'Synchronization Tool')
     except AttributeError:
       pass
 
@@ -1754,7 +1773,7 @@ class ERP5Generator(PortalGenerator):
     if not 'Localizer' in p.objectIds():
       addLocalizer = p.manage_addProduct['Localizer'].manage_addLocalizer
       addLocalizer('', ('en',))
-    localizer = getToolByName(p, 'Localizer')
+    localizer = p.Localizer
     addMessageCatalog = localizer.manage_addProduct['Localizer']\
                                       .manage_addMessageCatalog
     if 'erp5_ui' not in localizer.objectIds():
@@ -1836,7 +1855,7 @@ class ERP5Generator(PortalGenerator):
         return minimalpath(os.path.join(package_path, subdir))
     import Products.CMFDefault
 
-    ps = getToolByName(p, 'portal_skins')
+    ps = p.portal_skins
     # get the layer directories actually present
     for cmfdefault_skin_layer in self.CMFDEFAULT_FOLDER_LIST:
       reg_key = generateKey(Products.CMFDefault,
@@ -1846,7 +1865,7 @@ class ERP5Generator(PortalGenerator):
   def setupDefaultSkins(self, p):
     from Products.CMFCore.DirectoryView import addDirectoryViews
     from Products.CMFActivity import cmfactivity_globals
-    ps = getToolByName(p, 'portal_skins')
+    ps = p.portal_skins
     self.addCMFDefaultDirectoryViews(p)
     addDirectoryViews(ps, 'skins', cmfactivity_globals)
     ps.manage_addProduct['OFSP'].manage_addFolder(id='external_method')
@@ -1877,32 +1896,16 @@ class ERP5Generator(PortalGenerator):
     """
     Set up workflows for business templates
     """
-    tool = getToolByName(p, 'portal_workflow', None)
-    if tool is None:
-      return
-    for wf_id in ('business_template_building_workflow',
-                  'business_template_installation_workflow'):
-      if wf_id in tool.objectIds():
-        tool.manage_delObjects([wf_id])
-    bootstrap_dir = getBootstrapDirectory()
-    business_template_building_workflow = os.path.join(
-                                 bootstrap_dir,
-                                 'business_template_building_workflow.xml')
-    tool._importObjectFromFile(business_template_building_workflow)
-    business_template_installation_workflow = os.path.join(
-                                 bootstrap_dir,
-                                 'business_template_installation_workflow.xml')
-    tool._importObjectFromFile(business_template_installation_workflow)
-    tool.setChainForPortalTypes( ( 'Business Template', ),
-                                 ( 'business_template_building_workflow',
-                                   'business_template_installation_workflow' ) )
+    workflow_list = ['business_template_building_workflow',
+                     'business_template_installation_workflow']
+    tool = p.portal_workflow
+    tool.manage_delObjects(filter(tool.hasObject, workflow_list))
+    self.bootstrap(tool, 'erp5_core', 'WorkflowTemplateItem', workflow_list)
+    tool.setChainForPortalTypes(('Business Template',), workflow_list)
 
   def setupIndex(self, p, **kw):
     # Make sure all tools and folders have been indexed
     if not kw.get('reindex', 1):
-      return
-    skins_tool = getToolByName(p, 'portal_skins', None)
-    if skins_tool is None:
       return
     # When no SQL connection was define on the site,
     # we don't want to make it crash
@@ -2009,17 +2012,16 @@ class ERP5Generator(PortalGenerator):
     if not update:
       self.setupPermissions(p)
       self.setupDefaultSkins(p)
-
-    # ERP5 Design Choice is that all content should be user defined
-    # Content is disseminated through business templates
-    self.setupPortalTypes(p)
+      assert not p.hasObject('portal_activities')
+      addERP5Tool(p, 'portal_activities', 'Activity Tool')
+      # Initialize Activities
+      p.portal_activities.manageClearActivities(keep=0)
 
     if not p.hasObject('content_type_registry'):
       self.setupMimetypes(p)
-    if not update:
-      self.setupWorkflow(p)
 
     if not update:
+      self.setupWorkflow(p)
       self.setupERP5Core(p,**kw)
 
     # Make sure the cache is initialized
@@ -2032,27 +2034,14 @@ class ERP5Generator(PortalGenerator):
     if not update:
       self.setupIndex(p, **kw)
 
-  def setupPortalTypes(self, p):
-    """
-    Install the portal_type of Business Template
-    """
-    tool = getToolByName(p, 'portal_types', None)
-    if tool is None:
-      return
-    for t in (BusinessTemplate, ):
-      t = t.factory_type_information
-      if not tool.hasObject(t['id']):
-        tool._setObject(t['id'], ERP5TypeInformation(uid=None, **t))
-
   def setupERP5Core(self,p,**kw):
     """
     Install the core part of ERP5
     """
-    template_tool = getToolByName(p, 'portal_templates', None)
-    if template_tool is None:
-      return
+    template_tool = p.portal_templates
     if template_tool.getInstalledBusinessTemplate('erp5_core') is None:
-      for bt in ('erp5_core', p.erp5_catalog_storage, 'erp5_xhtml_style'):
+      for bt in ('erp5_property_sheets', 'erp5_core', p.erp5_catalog_storage,
+                 'erp5_xhtml_style'):
         if not bt:
           continue
         url = getBootstrapBusinessTemplateUrl(bt)

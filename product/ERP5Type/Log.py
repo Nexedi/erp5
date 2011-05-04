@@ -29,10 +29,11 @@
 from zLOG import LOG, INFO
 from traceback import extract_stack
 
-def log(description, content = '', level = INFO):
+marker_ = []
+def log(description, content=marker_, level=INFO):
     """Put a log message. This method is supposed to be used by
     restricted environment, such as Script (Python)."""
-    if not content: # allow for content only while keeping interface
+    if content is marker_: # allow for content only while keeping interface
         description, content = content, description
     st = extract_stack()
     head = []

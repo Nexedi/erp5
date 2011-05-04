@@ -645,7 +645,9 @@ class ERP5Form(ZMIForm, ZopePageTemplate):
                               form=self,
                               key_prefix=key_prefix,
                               options=kwargs,
-                              here=obj )
+                              here=obj,
+                              context=obj,
+                            )
         return pt.pt_render(extra_context=extra_context)
 
     def _exec(self, bound_names, args, kw):

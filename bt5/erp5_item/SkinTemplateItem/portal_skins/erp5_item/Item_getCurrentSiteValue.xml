@@ -50,27 +50,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
+            <value> <string>portal = context.getPortalObject()\n
+last_affectation_list = context.Item_getAffectationList(**kw)\n
 \n
-if at_date is None:\n
-  at_date = DateTime()\n
-\n
-last_affectation_list = context.portal_simulation.getCurrentTrackingList(\n
-                            item=context.getRelativeUrl(), at_date=at_date)\n
-\n
-if len(last_affectation_list) == 0:\n
-  return None\n
-\n
-if last_affectation_list[0].node_uid is not None:\n
-  site = context.portal_catalog.getObject(last_affectation_list[0].node_uid)\n
-  return site\n
+if last_affectation_list and last_affectation_list[0].node_uid is not None:\n
+  return portal.portal_catalog.getObject(last_affectation_list[0].node_uid)\n
 \n
 return None\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None</string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

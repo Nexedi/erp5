@@ -10,15 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>search</string>
-                <string>title</string>
-                <string>count_method</string>
                 <string>columns</string>
-                <string>selection_name</string>
                 <string>portal_types</string>
-                <string>select</string>
-                <string>lines</string>
-                <string>hide_rows_on_no_search_criterion</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -69,18 +64,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>lines</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -115,12 +98,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_view_mode_listbox</string> </value>
                 </item>
@@ -140,14 +117,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>search</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
-                    <key> <string>select</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>selection_name</string> </key>
                     <value> <string>knowledge_pad_view_knowledge_box_list_selection</string> </value>
                 </item>
@@ -161,45 +130,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreference(\'preferred_hide_rows_on_no_search_criterion\', False)</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: preferences.getPreference(\'preferred_listbox_list_mode_line_count\', 30)</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>countFolder</string> </value>
         </item>
       </dictionary>
     </pickle>

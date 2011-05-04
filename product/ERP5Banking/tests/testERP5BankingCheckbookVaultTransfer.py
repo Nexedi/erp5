@@ -31,7 +31,7 @@
 import os
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
-from transaction import get as get_transaction
+import transaction
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -71,7 +71,7 @@ class TestERP5BankingCheckbookVaultTransferMixin(TestERP5BankingMixin):
                                    wf_id='checkbook_reception_workflow')
     self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action', 
                                    wf_id='checkbook_reception_workflow')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
   def createCheckbookReceptionWithTravelerCheck(self, sequence=None, 

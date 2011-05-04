@@ -28,14 +28,8 @@
 ##############################################################################
 
 import unittest
-import transaction
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from zLOG import LOG
-from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.utils import DummyMailHost
-from DateTime import DateTime
 
 class TestTemplateTool(ERP5TypeTestCase):
   """
@@ -60,10 +54,18 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEquals(len(bt_list), 1)
     erp5_base = bt_list[0].getObject()
     erp5_base.edit(revision=int(erp5_base.getRevision()) - 10)
-    self.templates_tool.updateRepositoryBusinessTemplateList(["http://www.erp5.org/dists/snapshot/bt5/",])
-    self.assertEqual(len(self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)), 1)
+    self.templates_tool.updateRepositoryBusinessTemplateList(\
+                 ["http://www.erp5.org/dists/snapshot/bt5/",])
+
+    updatable_bt_list = self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)
+    self.assertEqual(
+           [i.title for i in updatable_bt_list if i.title == "erp5_base"], 
+           ["erp5_base"])
     erp5_base.replace()
-    self.assertEqual(len(self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)), 0)
+    updatable_bt_list = self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)
+    self.assertEqual(
+           [i.title for i in updatable_bt_list if i.title == "erp5_base"],
+           [])
 
 
 def test_suite():

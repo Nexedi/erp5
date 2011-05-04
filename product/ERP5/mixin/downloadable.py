@@ -40,7 +40,7 @@ class DownloadableMixin:
 
   ### Content processing methods
   security.declareProtected(Permissions.View, 'index_html')
-  @fill_args_from_request
+  @fill_args_from_request('display', 'quality', 'resolution', 'frame')
   def index_html(self, REQUEST, RESPONSE, format=_MARKER, **kw):
     """
       We follow here the standard Zope API for files and images
@@ -80,6 +80,7 @@ class DownloadableMixin:
       format = None
     self._checkConversionFormatPermission(format, **kw)
     mime, data = self.convert(format, **kw)
+    output_format = None
     if not format:
       # Guess the format from original mimetype
       mimetypes_registry = getToolByName(self.getPortalObject(),
@@ -102,7 +103,7 @@ class DownloadableMixin:
       RESPONSE.setHeader('Content-Type', mime)
     if output_format not in (VALID_TEXT_FORMAT_LIST + VALID_IMAGE_FORMAT_LIST):
       # need to return it as attachment
-      filename = self.getStandardFileName(format=format)
+      filename = self.getStandardFilename(format=format)
       RESPONSE.setHeader('Content-Disposition',
                          'attachment; filename="%s"' % filename)
       RESPONSE.setHeader('Accept-Ranges', 'bytes')

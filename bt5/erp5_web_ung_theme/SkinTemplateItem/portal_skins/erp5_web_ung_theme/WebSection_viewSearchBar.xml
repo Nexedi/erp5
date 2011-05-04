@@ -36,11 +36,11 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="website here/getWebSiteValue;\n
+<tal:block tal:define="websection here/getWebSectionValue;\n
                        enctype string:multipart/form-data;\n
-                       portal_path python:website.absolute_url();\n
+                       portal_path python:websection.absolute_url();\n
                        has_editor python: here.absolute_url() != portal_path;">\n
-<a class="ung_docs" tal:attributes="href python: portal_path + \'/unfoldDomain?domain_url=ung_domain/all_document_list&\' + \n
+<a class="ung_docs" tal:attributes="href python: portal_path + \'/unfoldDomain?domain_url=ung_domain/all_documents&\' + \n
                                                                \'form_id=erp5_web_ung_layout&\' + \n
                                                                \'list_selection_name=ung_document_list_selection&\' + \n
                                                                \'domain_depth:int=0&reset:int=1\'">\n
@@ -65,14 +65,15 @@
     <div id="more_property">\n
      <label for="short_title">Short Title:</label>\n
      <input type="text" class="short_title" id="short_title" name="short_title" value=""><br>\n
-     <label for="name">Reference:</label>\n
-     <input type="text" class="reference" id="reference" name="reference" value=""><br>\n
      <label for="version">Version:</label>\n
      <input type="text" class="version" id="version" name="version" value=""><br>\n
      <label for="language">Language:</label>\n
      <input type="text" class="language" id="language" name="language" value=""><br>\n
-     <label for="language">Sort Index:</label>\n
+     <label for="sort_index">Sort Index:</label>\n
      <input type="text" class="sort_index" id="sort_index" name="sort_index" value=""><br>\n
+     <label for="keyword_list">Keywords:</label>\n
+     <textarea id="keyword_list" rows="2" cols="20" value="">\n
+     </textarea> \n
     </div>\n
     <p class="more_properties" id="more_properties">Edit More Properties</p>\n
     <p class="hide_properties" id="hide_properties">Hide Properties</p>\n

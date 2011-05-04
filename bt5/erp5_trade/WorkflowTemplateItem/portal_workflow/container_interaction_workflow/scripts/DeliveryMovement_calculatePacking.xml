@@ -53,13 +53,15 @@
             <value> <string>object = state_change[\'object\']\n
 delivery = object.getExplanationValue()\n
 \n
+activate_kw = dict()\n
 if getattr(delivery, \'calculatePacking\', None) is not None:\n
   try:\n
     container = object.getContainerValue()\n
-    path_and_method_id = container.getPath(), \'recursiveImmediateReindexObject\'\n
+    activate_kw[\'after_path_and_method_id\'] = (container.getPath(),\n
+                                         \'recursiveImmediateReindexObject\')\n
   except AttributeError:\n
-    path_and_method_id = None\n
-  delivery.activate(after_path_and_method_id=path_and_method_id).calculatePacking()\n
+    pass\n
+  delivery.activate(**activate_kw).calculatePacking()\n
 </string> </value>
         </item>
         <item>

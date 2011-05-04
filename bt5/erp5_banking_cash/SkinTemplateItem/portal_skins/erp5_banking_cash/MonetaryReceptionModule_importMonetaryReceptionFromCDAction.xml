@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -386,12 +383,6 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>import_file=None, file_data=None, batch=0, **kw</string> </value>
         </item>
@@ -404,83 +395,8 @@ return url_redirection(message_dict[\'message\' ],delivery_id=message_dict[\'del
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>import_file</string>
-                            <string>file_data</string>
-                            <string>batch</string>
-                            <string>kw</string>
-                            <string>message_dict</string>
-                            <string>isSameSet</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>reference_currency_id</string>
-                            <string>DateTime</string>
-                            <string>today_date</string>
-                            <string>import_tag</string>
-                            <string>create_movement</string>
-                            <string>split_head</string>
-                            <string>destination_uid</string>
-                            <string>resource_value</string>
-                            <string>split_lines</string>
-                            <string>None</string>
-                            <string>request</string>
-                            <string>url_redirection</string>
-                            <string>CD_file_line_list</string>
-                            <string>_getitem_</string>
-                            <string>split_head_result_dict</string>
-                            <string>ValueError</string>
-                            <string>destination</string>
-                            <string>destination_value</string>
-                            <string>split_line_result_dict</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>MonetaryReceptionModule_importMonetaryReceptionFromCDAction</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

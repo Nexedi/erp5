@@ -47,27 +47,6 @@ def ERP5Site_editERP5SiteProperty(self, prop, value):
   method(prop, value)
   return True
 
-def ERP5Site_verifyProductPathUpgrade(self):
-  """
-    Due activities concurrency, it is needed that the upgrade process
-    only proceed after restart be sucessfully done. 
-
-    This script make sure that the process will wait for the
-    Prodcuts be upgraded to proceed.
-
-    This method is not elegant solution but it is essential part 
-    between restart zope and update Activities.
-  """
-  # check if the products are already updated.
-  if len(self.ERP5Site_upgradeProductPath()) > 0:
-    # Wait at least 20 seconds before try again
-    # This will prevent the activities be invoked
-    # too early.
-    sleep(20)
-    # Force failure for restart the activity
-    raise 
-  return
-
 def ERP5Site_restartZopeInstance(self):
   """
     Zope must be restart after update the Products or Software
@@ -124,53 +103,6 @@ def ERP5Site_clearActivities(self):
   os.remove(flag_fs_path)
   return
 
-def ERP5Site_upgradeMySQLCharset(self, upgrade=0):
-  """
-    Update the catalog charset running a external command.
-  """
-  from subprocess import Popen, PIPE
-  portal = self.getPortalObject()
-  message_list = []
-  database = portal.erp5_sql_connection.connection_string.split(' ')[0]
-  connection_string = ''
-  if '@' in database:
-    # This means the format database@hostname:port was used.
-    connection_string += ' -u root '
-    database_name , hostname = database.split("@")
-    if ":" in hostname:
-      new_hostname, port = hostname.split(":")
-      hostname = new_hostname
-      connection_string += ' --port=%s ' % port
-    connection_string += ' --host=%s ' % hostname
-    database = database_name
-
-  message = "ERP5Site_verifyMySQLCharset: Invalid configuration for: %s (%s)"
-  command = "echo \"show variables like '%%char%%'\" | mysql %s %s -Ns" % (connection_string, database)
-  stdout, stderr = Popen(command, stderr=PIPE, stdout=PIPE, 
-                         close_fds=True, shell=True).communicate()
-  for line in stdout.split("\n"):
-    if not line.strip(" ") == "" and \
-       not ('character_set_filesystem' in line and 'binary' in line) and \
-       not ('character_sets_dir' in line) and \
-       not ('utf8' in line and 'character_set_filesystem' not in line):
-      message_list.append(message % (database, line.replace("\t", " = ")))
-
-  if not upgrade:
-    return message_list
-  
-  if len(message_list) > 0:
-    message_list = ["Upgrade was required to ERP5Site_verifyMySQLCharset."]
-    SQL = portal.ERP5Site_getUpgradeCatalogCharsetSQL(context=portal)
-    command = "echo '%s' | mysql %s " % (SQL, connection_string)
-    stdout, stderr = Popen(command, stderr=PIPE, stdout=PIPE, 
-                           close_fds=True, shell=True).communicate()
-
-    message_list.append("Upgrade Executed required to ERP5Site_upgradeMySQLCharset.")
-    message_list.append("ERP5Site_upgraadeMySQLCharset STDERR: %s" % stderr) 
-    message_list.append("ERP5Site_upgradeMySQLCharset STDOUT: %s" % stdout)
-
-  return message_list 
-
 def ERP5Site_runVerificationScript(self, method_id):
   """ Run a Python Script return the method. This should avoid raise error, 
       even one intergrity verification script raise error, and provide good
@@ -186,29 +118,6 @@ def ERP5Site_runVerificationScript(self, method_id):
     return 'Script %s fail to run, Exception: %s , message: %s .' % (method_id, e.__class__, e )
   if len(integrity_result) > 0:
     return '%s : \n - %s ' % (method_id, '\n - '.join(integrity_result))
-  
-def TemplateTool_reinstallBT5(self, bt5_title, update_catalog=0):
-  """This method get the installed Business Template,
-  then reinstall it to overwrite all local changes.
-  """
-  portal = self.getPortalObject()
-  portal_templates = portal.portal_templates
-  installed_bt5 = portal_templates.getInstalledBusinessTemplate(bt5_title)
-  BusinessTemplate_getModifiedObject = \
-      aq_base(getattr(portal, 'BusinessTemplate_getModifiedObject', None))
-  if BusinessTemplate_getModifiedObject is None:
-    portal.changeSkin('View')
-    BusinessTemplate_getModifiedObject = \
-      aq_base(portal.BusinessTemplate_getModifiedObject)
-
-  install_kw = {}
-  listbox_object_list = BusinessTemplate_getModifiedObject.__of__(installed_bt5)()
-  for listbox_line in listbox_object_list:
-    install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
-  # Call reinstall
-  installed_bt5.reinstall(object_to_update=install_kw,
-                          update_catalog=update_catalog)
-  log("Reinstalled %s" % (bt5_title,))
 
 def ERP5Site_changeAuthoredDocumentListOwnership(self, old_owner, new_owner):
   """

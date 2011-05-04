@@ -21,7 +21,8 @@ class HyperLinkWidget(LabelWidget):
         return render_element("a",
                               href=field.get_value('href'),
                               css_class=field.get_value('css_class'),
-                              contents=field.get_value('default'))
+                              contents=field.get_value('default'),
+                              extra=field.get_value('extra'))
 
 HyperLinkWidgetInstance = HyperLinkWidget()
 

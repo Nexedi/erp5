@@ -69,15 +69,3 @@ class InvoiceCell(DeliveryCell):
       # Never accountable
       return 0
 
-#    security.declareProtected(Permissions.View, 'isDivergent')
-#    def isDivergent(self):
-#      """
-#        Returns 1 if the target is not met according to the current information
-#        After and edit, the isOutOfTarget will be checked. If it is 1,
-#        a message is emitted
-#
-#        emit targetUnreachable !
-#      """
-#      # Never divergent
-#      return 0
-

@@ -1,3 +1,6 @@
+2011-03-28 Kazuhiko
+* we should have at most only one published/released/shared document for each reference/language, i.e. we should not have both published and released document with the same reference/language at the same time.
+
 2010-07-08 mohamadou
 * revert the last commit, setting permission on this state breaks some sites security.
 

@@ -32,12 +32,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
 from AccessControl import SpecialUsers
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
-
-
 class TestERP5Workflow(ERP5TypeTestCase):
   """
     Tests ERP5 Workflow.
@@ -164,6 +158,35 @@ class TestERP5Workflow(ERP5TypeTestCase):
     t1.execute(doc)
     self.assertEquals(['called {}'], called)
     # FIXME: not passing parameter to an after script is probably too
+    # restrictive
+
+  def test_BeforeScript(self):
+    workflow = self.workflow_module.newContent(
+                                portal_type='Workflow',
+                                state_base_category='current_state')
+    s1 = workflow.newContent(portal_type='State',
+                             title='State 1')
+    s2 = workflow.newContent(portal_type='State',
+                             title='State 2')
+    t1 = workflow.newContent(portal_type='Transition',
+                             title='Transition 1',
+                             before_script_id='Document_testBeforeScript'
+                             )
+    s1.setDestinationValue(t1)
+    t1.setDestinationValue(s2)
+    workflow.setSourceValue(s1)
+
+    doc = self.portal.newContent(portal_type='Folder', id='test_doc')
+
+    called = []
+    def Document_testBeforeScript(**kw):
+      called.append('called %s' % kw)
+    doc.Document_testBeforeScript = Document_testBeforeScript
+
+    workflow.initializeDocument(doc)
+    t1.execute(doc)
+    self.assertEquals(['called {}'], called)
+    # FIXME: not passing parameter to an before script is probably too
     # restrictive
 
   def test_WorkflowSecurity(self):

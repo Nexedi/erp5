@@ -63,7 +63,8 @@ class TestOrderMixin(SubcontentReindexingWrapper):
   def getBusinessTemplateList(self):
     """
     """
-    return ('erp5_base','erp5_pdm', 'erp5_simulation', 'erp5_trade',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base','erp5_pdm', 'erp5_simulation', 'erp5_trade',
             'erp5_apparel', 'erp5_project', 'erp5_simulation_test',
             'erp5_administration')
 
@@ -268,8 +269,12 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     portal = self.getPortal()
     order_module = portal.getDefaultModule(portal_type=self.order_portal_type)
     order = order_module.newContent(portal_type=self.order_portal_type)
+    test_name = "%s.%s.%s" % (self.__class__.__module__,
+                              self.__class__.__name__,
+                              self._testMethodName)
+      
     order.edit(
-      title = "Order%s" % order.getId(),
+      title = "Order%s (%s)" % (order.getId(), test_name),
       start_date = self.datetime + 10,
       stop_date = self.datetime + 20,
       specialise = self.business_process,
@@ -796,8 +801,6 @@ class TestOrderMixin(SubcontentReindexingWrapper):
       applied_rule = related_applied_rule_list[0].getObject()
       sequence.edit(applied_rule=applied_rule)
       self.failUnless(applied_rule is not None)
-      self.failUnless(order_state, \
-                      applied_rule.getLastExpandSimulationState())
 
       # Test if applied rule has a specialise value with passed rule_reference
       portal_rules = getToolByName(order, 'portal_rules')

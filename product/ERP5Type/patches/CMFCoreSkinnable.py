@@ -181,6 +181,8 @@ class SkinDataCleanup:
 
   def __del__(self):
     tid = self.tid
+    if SKINDATA is None:
+      return
     skindata = SKINDATA.get(tid)
     if skindata is not None:
       if self.hashSkinData(skindata) == self.skindata_id:

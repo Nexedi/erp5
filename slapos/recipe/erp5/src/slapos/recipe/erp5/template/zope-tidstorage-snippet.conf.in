@@ -1,0 +1,6 @@
+
+# TIDStorage connection
+<product-config TIDStorage>
+  backend-ip %(host)s
+  backend-port %(port)s
+</product-config>

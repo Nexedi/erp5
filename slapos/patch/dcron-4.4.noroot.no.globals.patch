@@ -1,0 +1,157 @@
+# Patch for making dcron usable without root user, as a local service
+diff -ru dcron-4.4.org/chuser.c dcron-4.4/chuser.c
+--- dcron-4.4.org/chuser.c	2010-01-18 16:27:31.000000000 +0100
++++ dcron-4.4/chuser.c	2011-04-01 11:19:19.000000000 +0200
+@@ -14,47 +14,6 @@
+ int
+ ChangeUser(const char *user, char *dochdir)
+ {
+-	struct passwd *pas;
+-
+-	/*
+-	 * Obtain password entry and change privilages
+-	 */
+-
+-	if ((pas = getpwnam(user)) == 0) {
+-		printlogf(LOG_ERR, "failed to get uid for %s\n", user);
+-		return(-1);
+-	}
+-	setenv("USER", pas->pw_name, 1);
+-	setenv("HOME", pas->pw_dir, 1);
+-	setenv("SHELL", "/bin/sh", 1);
+-
+-	/*
+-	 * Change running state to the user in question
+-	 */
+-
+-	if (initgroups(user, pas->pw_gid) < 0) {
+-		printlogf(LOG_ERR, "initgroups failed: %s %s\n", user, strerror(errno));
+-		return(-1);
+-	}
+-	if (setregid(pas->pw_gid, pas->pw_gid) < 0) {
+-		printlogf(LOG_ERR, "setregid failed: %s %d\n", user, pas->pw_gid);
+-		return(-1);
+-	}
+-	if (setreuid(pas->pw_uid, pas->pw_uid) < 0) {
+-		printlogf(LOG_ERR, "setreuid failed: %s %d\n", user, pas->pw_uid);
+-		return(-1);
+-	}
+-	if (dochdir) {
+-		/* try to change to $HOME */
+-		if (chdir(pas->pw_dir) < 0) {
+-			printlogf(LOG_ERR, "chdir failed: %s %s\n", user, pas->pw_dir);
+-			/* dochdir is a backup directory, usually /tmp */
+-			if (chdir(dochdir) < 0) {
+-				printlogf(LOG_ERR, "chdir failed: %s %s\n", user, dochdir);
+-				return(-1);
+-			}
+-		}
+-	}
+-	return(pas->pw_uid);
++  return getpwnam(user);
+ }
+ 
+diff -ru dcron-4.4.org/crontab.c dcron-4.4/crontab.c
+--- dcron-4.4.org/crontab.c	2010-01-18 16:27:31.000000000 +0100
++++ dcron-4.4/crontab.c	2011-04-01 11:19:19.000000000 +0200
+@@ -316,9 +316,6 @@
+ 
+ 	close(filedes[0]);
+ 
+-	if (ChangeUser(user, NULL) < 0)
+-		exit(0);
+-
+ 	fd = open(file, O_RDONLY);
+ 	if (fd < 0) {
+ 		printlogf(0, "unable to open %s: %s", file, strerror(errno));
+@@ -344,8 +341,6 @@
+ 		const char *ptr;
+ 		char visual[SMALL_BUFFER];
+ 
+-		if (ChangeUser(user, TMPDIR) < 0)
+-			exit(0);
+ 		if ((ptr = getenv("EDITOR")) == NULL || strlen(ptr) >= sizeof(visual))
+ 			if ((ptr = getenv("VISUAL")) == NULL || strlen(ptr) >= sizeof(visual))
+ 				ptr = PATH_VI;
+diff -ru dcron-4.4.org/job.c dcron-4.4/job.c
+--- dcron-4.4.org/job.c	2010-01-18 16:27:31.000000000 +0100
++++ dcron-4.4/job.c	2011-04-01 11:19:19.000000000 +0200
+@@ -62,14 +62,6 @@
+ 		 * Change running state to the user in question
+ 		 */
+ 
+-		if (ChangeUser(file->cf_UserName, TempDir) < 0) {
+-			printlogf(LOG_ERR, "unable to ChangeUser (user %s %s)\n",
+-					file->cf_UserName,
+-					line->cl_Description
+-					);
+-			exit(0);
+-		}
+-
+ 		/* from this point we are unpriviledged */
+ 
+ 		if (DebugOpt)
+@@ -295,14 +287,6 @@
+ 		 * by the mailing and we already verified the mail file.
+ 		 */
+ 
+-		if (ChangeUser(file->cf_UserName, TempDir) < 0) {
+-			printlogf(LOG_ERR, "unable to ChangeUser to send mail (user %s %s)\n",
+-					file->cf_UserName,
+-					line->cl_Description
+-					);
+-			exit(0);
+-		}
+-
+ 		/* from this point we are unpriviledged */
+ 
+ 		/*
+diff -ru dcron-4.4.org/Makefile dcron-4.4/Makefile
+--- dcron-4.4.org/Makefile	2010-01-18 16:27:31.000000000 +0100
++++ dcron-4.4/Makefile	2011-04-01 11:19:35.000000000 +0200
+@@ -3,7 +3,6 @@
+ 
+ # these variables can be configured by e.g. `make SCRONTABS=/different/path`
+ PREFIX = /usr/local
+-CRONTAB_GROUP = wheel
+ SCRONTABS = /etc/cron.d
+ CRONTABS = /var/spool/cron/crontabs
+ CRONSTAMPS = /var/spool/cron/cronstamps
+@@ -20,10 +19,10 @@
+ 
+ 
+ SHELL = /bin/sh
+-INSTALL = install -o root
++INSTALL = install
+ INSTALL_PROGRAM = $(INSTALL) -D
+-INSTALL_DATA = $(INSTALL) -D -m0644 -g root
+-INSTALL_DIR = $(INSTALL) -d -m0755 -g root
++INSTALL_DATA = $(INSTALL) -D -m0644
++INSTALL_DIR = $(INSTALL) -d -m0755
+ CFLAGS ?= -O2
+ CFLAGS += -Wall -Wstrict-prototypes
+ SRCS = main.c subs.c database.c job.c concat.c chuser.c
+@@ -44,7 +43,6 @@
+ 	echo "SBINDIR = $(SBINDIR)" >> config
+ 	echo "BINDIR = $(BINDIR)" >> config
+ 	echo "MANDIR = $(MANDIR)" >> config
+-	echo "CRONTAB_GROUP = $(CRONTAB_GROUP)" >> config
+ 	echo "SCRONTABS = $(SCRONTABS)" >> config
+ 	echo "CRONTABS = $(CRONTABS)" >> config
+ 	echo "CRONSTAMPS = $(CRONSTAMPS)" >> config
+@@ -62,13 +60,10 @@
+ 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $(DEFS) $< -o $@
+ 
+ install:
+-	$(INSTALL_PROGRAM) -m0700 -g root crond $(DESTDIR)$(SBINDIR)/crond
+-	$(INSTALL_PROGRAM) -m4750 -g $(CRONTAB_GROUP) crontab $(DESTDIR)$(BINDIR)/crontab
++	$(INSTALL_PROGRAM) -m0755 crond $(DESTDIR)$(SBINDIR)/crond
++	$(INSTALL_PROGRAM) -m4750 crontab $(DESTDIR)$(BINDIR)/crontab
+ 	$(INSTALL_DATA) crontab.1 $(DESTDIR)$(MANDIR)/man1/crontab.1
+ 	$(INSTALL_DATA) crond.8 $(DESTDIR)$(MANDIR)/man8/crond.8
+-	$(INSTALL_DIR) $(DESTDIR)$(SCRONTABS)
+-	$(INSTALL_DIR) $(DESTDIR)$(CRONTABS)
+-	$(INSTALL_DIR) $(DESTDIR)$(CRONSTAMPS)
+ 
+ clean: force
+ 	rm -f *.o $(PROTOS)

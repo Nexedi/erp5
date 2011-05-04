@@ -34,7 +34,17 @@ SyntaxError, DateError, TimeError, localtime, time
 
 STATE_KEY = 'str'
 
+try:
+  original_DateTime__setstate__ = DateTimeKlass.__setstate__
+except AttributeError:
+  # BBB: Running on Zope < 2.11
+  def original_DateTime__setstate__(self, state):
+    dikt = self.__dict__
+    dikt.clear()
+    dikt.update(state)
+
 def DateTime__setstate__(self, state):
+  self.__dict__.clear()
   if isinstance(state, tuple):
     t, tz = state
     ms = (t - math.floor(t))
@@ -44,7 +54,7 @@ def DateTime__setstate__(self, state):
     self._parse_args(yr, mo, dy, hr, mn, sc, tz, t, d, s)
   elif len(state) != 1 or STATE_KEY not in state:
     # For original pickle representation
-    self.__dict__.update(state)
+    original_DateTime__setstate__(self, state)
   else:
     # For r15569 implementation
     self._parse_args(state[STATE_KEY])

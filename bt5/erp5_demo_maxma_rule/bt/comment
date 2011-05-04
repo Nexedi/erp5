@@ -1,0 +1,2 @@
+Due activity-race, the rules should be present before install erp5_demo_maxma_sample, because it contains simulation movements with workflows history. This case provokes the simulation be re-expanded and raising errors due missing (or not indexed) rules.
+

@@ -56,29 +56,27 @@
 \n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
-portal = context.getPortalObject()\n
-result = {\'group_list\': [],\n
-          \'site_list\': [],\n
-          }\n
-person = portal.ERP5Site_getAuthenticatedMemberPersonValue(user_name=user_name)\n
-if person is None:\n
-  return result\n
+def getPersonCareerDict(user_name):\n
+  portal = context.getPortalObject()\n
+  result = {\'group_list\': [],\n
+            \'site_list\': [],\n
+            }\n
+  person = portal.ERP5Site_getAuthenticatedMemberPersonValue(user_name=user_name)\n
+  if person is None:\n
+    return result\n
 \n
-def getPersonCareerDict(username):\n
-  person = portal.restrictedTraverse(person_relative_url)\n
   group = person.getGroup()\n
   organisation = person.getSubordinationValue()\n
   if group is not None:\n
-    result[\'group_list\']=[group]\n
+    result[\'group_list\'] = [group]\n
   if organisation is not None:\n
-    result[\'site_list\']=[organisation.getSite()]\n
+    result[\'site_list\'] = organisation.getSiteList()\n
   return result\n
 \n
-person_relative_url = person.getRelativeUrl()\n
 getPersonCareerDict = CachingMethod(getPersonCareerDict,\n
                                     ("ERP5Site_getPersonCareerDict",),\n
-                                    cache_factory=\'erp5_ui_short\')\n
-return getPersonCareerDict(person_relative_url)\n
+                                    cache_factory=\'erp5_content_short\')\n
+return getPersonCareerDict(user_name)\n
 </string> </value>
         </item>
         <item>

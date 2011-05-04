@@ -1,3 +1,12 @@
+2011-04-14 yusei
+* Remove old unnecessary tales expression from relation string fields.
+
+2011-04-04 yusei
+* Fix tales expression on property "enabled" of my_view_mode_payment_date. This field cannot be displayed.
+
+2011-03-30 nicolas
+* Add internal trade conditions
+
 2010-10-21 yusei
 * Add reset movement price action to returned sale packing list.
 

@@ -56,7 +56,7 @@
 \n
 message_list = []\n
 \n
-portal_type_property_sheet_list = context.ERP5Site_getUpgraderSignature("portal_type_property_sheet_list")\n
+portal_type_property_sheet_list = context.ERP5Site_getUpgraderSignature().get(\'portal_type_property_sheet_list\', [])\n
 \n
 for expected_property_sheet, portal_type_id_list in portal_type_property_sheet_list:\n
 \n
@@ -66,86 +66,23 @@ for expected_property_sheet, portal_type_id_list in portal_type_property_sheet_l
   for pt in portal_type_list:\n
     property_sheet_list = pt.getTypePropertySheetList()\n
     if expected_property_sheet not in pt.getTypePropertySheetList():\n
-      message_list.append("%s doesn\'t has %s associated." % (pt.getId(), expected_property_sheet))\n
       if upgrade:\n
         property_sheet_list.append(expected_property_sheet)\n
         pt.setTypePropertySheet(property_sheet_list)\n
         message_list.append("Associate PropertySheet %s into Portal Type %s." % (expected_property_sheet,pt.getId()))\n
+      else:\n
+        message_list.append("%s doesn\'t has %s associated." % (pt.getId(), expected_property_sheet))\n
 \n
 return message_list\n
 </string> </value>
-        </item>
-        <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>upgrade=0</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>upgrade</string>
-                            <string>message_list</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal_type_property_sheet_list</string>
-                            <string>_getiter_</string>
-                            <string>expected_property_sheet</string>
-                            <string>portal_type_id_list</string>
-                            <string>portal_type_list</string>
-                            <string>portal_type_to_fix</string>
-                            <string>pt</string>
-                            <string>property_sheet_list</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_upgradePortalTypePropertySheet</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -36,6 +36,9 @@ from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Utils import deprecated, createExpressionContext
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.dynamic.accessor_holder import getPropertySheetValueList, \
+    getAccessorHolderList
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 
@@ -45,6 +48,23 @@ from sys import exc_info
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
+def getCurrentUserIdOrAnonymousToken():
+  """Return connected user_id or simple token for
+  Anonymous users in scope of transaction.
+  """
+  tv = getTransactionalVariable()
+  USER_ID_KEY = '_user_id'
+  ANONYMOUS_OWNER_ROLE_VALUE = 'Anonymous Owner'
+  try:
+    return tv[USER_ID_KEY]
+  except KeyError:
+    user = getSecurityManager().getUser()
+    if user is not None:
+      user_id = user.getId()
+    else:
+      user_id = ANONYMOUS_OWNER_ROLE_VALUE
+    tv[USER_ID_KEY] = user_id
+    return user_id
 
 class LocalRoleAssignorMixIn(object):
     """Mixin class used by type informations to compute and update local roles
@@ -155,7 +175,8 @@ class LocalRoleAssignorMixIn(object):
 
     def _importRole(self, role_property_dict):
       """Import a role from a BT or from an old portal type"""
-      from Products.ERP5Type.Document.RoleInformation import RoleInformation
+      import erp5
+      RoleInformation = getattr(erp5.portal_type, 'Role Information')
       role = RoleInformation(self.generateNewId())
       for k, v in role_property_dict.iteritems():
         if k == 'condition':
@@ -175,7 +196,6 @@ class LocalRoleAssignorMixIn(object):
         setattr(role, k, v)
       role.uid = None
       return self[self._setObject(role.id, role, set_owner=0)]
-
 
 class ERP5TypeInformation(XMLObject,
                           FactoryTypeInformation,
@@ -239,7 +259,7 @@ class ERP5TypeInformation(XMLObject,
     # with great care.
     defined_group_list = (
       # Framework
-      'alarm', 'rule',
+      'alarm', 'rule', 'constraint',
       # ERP5 UBM (5 Classes)
       'resource', 'node', 'item',
       'path', # movement is generated from all *_movement group above.
@@ -248,9 +268,10 @@ class ERP5TypeInformation(XMLObject,
       'abstract',
       # Trade
       'discount', 'payment_condition', 'payment_node',
-      'supply', 'supply_path', 'inventory_movement', 
+      'supply', 'supply_path', 'inventory_movement',
       'delivery', 'delivery_movement',
       'order', 'order_movement',
+      'open_order',
       'container', 'container_line',
       'inventory',
       # Different Aspects of Supplier-Customer relation
@@ -264,7 +285,7 @@ class ERP5TypeInformation(XMLObject,
       # CRM
       'event', 'ticket',
       # DMS
-      'document', 'web_document', 'file_document',
+      'document', 'web_document', 'file_document', 'embedded_document',
       'recent_document', 'my_document', 'template_document',
       'crawler_index',
       # Solvers and simulation
@@ -282,6 +303,8 @@ class ERP5TypeInformation(XMLObject,
       'budget_variation',
       # Module
       'module',
+      # Base
+      'entity',
       # LEGACY - needs a warning - XXX-JPS
       'tax_movement',
     )
@@ -329,13 +352,17 @@ class ERP5TypeInformation(XMLObject,
 
     security.declarePublic('constructInstance')
     def constructInstance(self, container, id, created_by_builder=0,
-                          temp_object=0, *args, **kw ):
+                          temp_object=0, compute_local_role=None,
+                          notify_workflow=True, *args, **kw ):
       """
       Build a "bare" instance of the appropriate type in
       'container', using 'id' as its id.
       Call the init_script for the portal_type.
       Returns the object.
       """
+      if compute_local_role is None:
+        # If temp object, set to False
+        compute_local_role = not temp_object
       if not temp_object and not self.isConstructionAllowed(container):
         raise AccessControl_Unauthorized('Cannot create %s' % self.getId())
 
@@ -347,6 +374,10 @@ class ERP5TypeInformation(XMLObject,
 
       if temp_object:
         ob = ob.__of__(container)
+        # Setup only Owner local role on Document like
+        # container._setObject(set_owner=True) does.
+        user_id = getCurrentUserIdOrAnonymousToken()
+        ob.manage_setLocalRoles(user_id, ['Owner'])
         for ignore in ('activate_kw', 'is_indexable', 'reindex_kw'):
           kw.pop(ignore, None)
       else:
@@ -370,16 +401,13 @@ class ERP5TypeInformation(XMLObject,
 
       # Portal type has to be set before setting other attributes
       # in order to initialize aq_dynamic
-      if hasattr(ob, '_setPortalTypeName'):
-        #ob._setPortalTypeName(self.getId())
-        # XXX rafael: if we use _set because it is trigger by interaction
-        # workflow and it is annoyning without security setted
-        ob.portal_type = self.getId()
+      ob.portal_type = self.getId()
 
-      if not temp_object:
+      if compute_local_role:
         # Do not reindex object because it's already done by manage_afterAdd
         self.updateLocalRolesOnDocument(ob, reindex=False)
 
+      if notify_workflow:
         # notify workflow after generating local roles, in order to prevent
         # Unauthorized error on transition's condition
         workflow_tool = getToolByName(portal, 'portal_workflow', None)
@@ -387,6 +415,7 @@ class ERP5TypeInformation(XMLObject,
           for workflow in workflow_tool.getWorkflowsFor(ob):
             workflow.notifyCreated(ob)
 
+      if not temp_object:
         init_script = self.getTypeInitScriptId()
         if init_script:
           # Acquire the init script in the context of this object
@@ -396,9 +425,8 @@ class ERP5TypeInformation(XMLObject,
       return ob
 
     def _getPropertyHolder(self):
-      ob = self.constructTempInstance(self, self.getId())
-      ob._aq_dynamic('id')
-      return ob.aq_portal_type[ob._aq_key()]
+      import erp5.portal_type as module
+      return getattr(module, self.getId())
 
     security.declarePrivate('updatePropertySheetDefinitionDict')
     def updatePropertySheetDefinitionDict(self, definition_dict):
@@ -427,6 +455,23 @@ class ERP5TypeInformation(XMLObject,
       """Getter for 'type_base_category' property"""
       return list(self.base_category_list)
 
+    def getTypePropertySheetValueList(self):
+      type_property_sheet_list = self.getTypePropertySheetList()
+      if not type_property_sheet_list:
+        return []
+
+      return getPropertySheetValueList(self.getPortalObject(),
+                                       type_property_sheet_list)
+
+    def getAccessorHolderList(self):
+      type_property_sheet_value_list = self.getTypePropertySheetValueList()
+      if not type_property_sheet_value_list:
+        return []
+
+      return getAccessorHolderList(self.getPortalObject(),
+                                   self.getPortalType(),
+                                   type_property_sheet_value_list)
+
     # XXX these methods, _baseGetTypeClass, getTypeMixinList, and
     # getTypeInterfaceList, are required for a bootstrap issue that
     # the portal type class Base Type is required for _aq_dynamic on
@@ -435,6 +480,11 @@ class ERP5TypeInformation(XMLObject,
     # explicitly.
     def _baseGetTypeClass(self):
       return getattr(aq_base(self), 'type_class', None)
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'getTypeFactoryMethodId')
+    def getTypeFactoryMethodId(self):
+      return getattr(aq_base(self), 'factory', ())
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTypeMixinList')
@@ -499,26 +549,7 @@ class ERP5TypeInformation(XMLObject,
       """
       Returns the list of properties which are specific to the portal type.
       """
-      return self.constructTempInstance(self, self.getId()).propertyMap()
-
-    def _edit(self, *args, **kw):
-      """
-        Method overload
-
-        Reset _aq_dynamic if property_sheet definition has changed)
-
-        XXX This is only good in single thread mode.
-            In ZEO environment, we should call portal_activities
-            in order to implement a broadcast update
-            on production hosts
-      """
-      property_list = 'factory', 'property_sheet_list', 'base_category_list'
-      previous_state = [getattr(aq_base(self), x) for x in property_list]
-      result = XMLObject._edit(self, *args, **kw)
-      if previous_state != [getattr(aq_base(self), x) for x in property_list]:
-        from Products.ERP5Type.Base import _aq_reset
-        _aq_reset()
-      return result
+      return self.__class__.propertyMap()
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'PrincipiaSearchSource')
@@ -539,7 +570,8 @@ class ERP5TypeInformation(XMLObject,
       ec = createExpressionContext(ob)
       other_action = None
       for action in self.getActionList():
-        if action['id'] == view or action['category'].endswith('_' + view):
+        if action['id'] == view or (action['category'] is not None and
+                                    action['category'].endswith('_' + view)):
           if action.test(ec):
             break
         elif other_action is None:
@@ -598,7 +630,12 @@ class ERP5TypeInformation(XMLObject,
       return self.objectValues(meta_type='ERP5 Action Information')
 
     def getIcon(self):
-      return self.getTypeIcon()
+      try:
+        return self.getTypeIcon()
+      except AttributeError:
+        # do not fail if the property is missing: getTypeIcon is used in the ZMI
+        # and we always want to display the ZMI no matter what
+        return ''
 
     def getTypeInfo(self, *args):
       if args:
@@ -689,7 +726,8 @@ class ERP5TypeInformation(XMLObject,
 
       This is used to update an existing site or to import a BT.
       """
-      from Products.ERP5Type.Document.ActionInformation import ActionInformation
+      import erp5.portal_type
+      ActionInformation = getattr(erp5.portal_type, 'Action Information')
       old_action = old_action.__getstate__()
       action_type = old_action.pop('category', None)
       action = ActionInformation(self.generateNewId())
@@ -727,6 +765,5 @@ class ERP5TypeInformation(XMLObject,
           continue
         setattr(old_action, k, v)
       return old_action
-
 
 InitializeClass( ERP5TypeInformation )

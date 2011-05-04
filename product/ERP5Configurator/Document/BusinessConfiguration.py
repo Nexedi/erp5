@@ -68,13 +68,14 @@ class BusinessConfiguration(Item):
                     , PropertySheet.BusinessConfiguration
                     , PropertySheet.Comment
                     , PropertySheet.Version
+                    , PropertySheet.DefaultImage
                     )
 
   security.declareProtected(Permissions.View, 'isInitialConfigurationState')
   def isInitialConfigurationState(self):
     """ Check if the Business Configuration is on initial workflow state
     """
-    workflow =  self.getResourceValue()
+    workflow = self.getResourceValue()
     if workflow is not None:
       return self.getCurrentState() == workflow.getSource()
     return None
@@ -91,6 +92,18 @@ class BusinessConfiguration(Item):
     """
     return self.getCurrentStateTitle() == END_STATE_TITLE
 
+  security.declareProtected(Permissions.ModifyPortalContent, \
+      'initializeWorkflow')
+  def initializeWorkflow(self):
+    """ Initialize Related Workflow"""
+    workflow = self.getResourceValue()
+    if workflow is not None and \
+      (self.getResource() not in self.workflow_history):
+      if len(self.objectValues("ERP5 Configuration Save")) > 0:
+        raise ValueError("Business Configuration Cannot be initialized, \
+                          it contains one or more Configurator Save")
+      workflow.initializeDocument(self)
+
   security.declareProtected(Permissions.View, 'getNextTransition')
   def getNextTransition(self):
     """ Return next transition. """
@@ -100,10 +113,10 @@ class BusinessConfiguration(Item):
     transition_list = current_state.getAvailableTransitionList(self)
     transition_number = len(transition_list)
     if transition_number > 1:
-      raise TypeError, "More than one transition is available."
+      raise TypeError("More than one transition is available.")
     elif transition_number == 0:
       return None
-    
+
     return transition_list[0]
 
   security.declarePrivate('_executeTransition')
@@ -111,29 +124,31 @@ class BusinessConfiguration(Item):
                         form_kw=None,
                         request_kw=None):
     """ Execute the transition. """
-    root_conf_save = None
     if form_kw is None:
       form_kw = {}
     current_state = self.getCurrentStateValue()
     transition = self.getNextTransition()
-    next_state = self.unrestrictedTraverse(transition.getDestination())
     ## it's possible that we have already saved a configuration save object 
     ## in workflow_history for this state so we use it
-    root_conf_save = self._getConfSaveForStateFromWorkflowHistory()
-    if root_conf_save is None:
+    configuration_save = self._getConfSaveForStateFromWorkflowHistory()
+    if configuration_save is None:
       ## we haven't saved any configuration save for this state so create new one
-      root_conf_save = self.newContent(portal_type='Configuration Save')
+      configuration_save = self.newContent(portal_type='Configuration Save')
     else:
       ## we have already created configuration save for this state
       ## so remove from it already existing configuration items
-      if root_conf_save!=self: ## don't delete ourselves
-        existing_conf_items = root_conf_save.objectIds()
+      if configuration_save != self:  # don't delete ourselves
+        existing_conf_items = configuration_save.objectIds()
         existing_conf_items = map(None, existing_conf_items)
-        root_conf_save.manage_delObjects(existing_conf_items)
-    ## save ...
-    root_conf_save.edit(**form_kw)
+        configuration_save.manage_delObjects(existing_conf_items)
+
+    modified_form_kw = {}
+    for k in form_kw.keys():
+      if form_kw[k].__class__.__name__ != 'FileUpload':
+        modified_form_kw[k] = form_kw[k]
+    configuration_save.edit(**modified_form_kw) 
     ## Add some variables so we can get use them in workflow after scripts
-    form_kw['configuration_save_url'] = root_conf_save.getRelativeUrl()
+    form_kw['configuration_save_url'] = configuration_save.getRelativeUrl()
     form_kw['transition'] = transition.getRelativeUrl()
     current_state.executeTransition(transition, self, form_kw=form_kw)
 
@@ -147,7 +162,6 @@ class BusinessConfiguration(Item):
       transition = self.getNextTransition()
     while transition is not None:
       form_id = transition.getTransitionFormId()
-      current_state = self.getCurrentStateValue()
       if self.isDownloadConfigurationState():
         ## exec next transition for this business configuration 
         self._executeTransition()
@@ -188,10 +202,10 @@ class BusinessConfiguration(Item):
         template_html = form()
         for form_counter in range(0, forms_number):
           form_html = self.Base_mainConfiguratorFormTemplate(
-                                  current_form_number = form_counter + 1, 
-                                  max_form_numbers = forms_number,
-                                  form_title = form.title,                               
-                                  form_html = template_html)
+                                  current_form_number=form_counter + 1,
+                                  max_form_numbers=forms_number,
+                                  form_title=form.title,                               
+                                  form_html=template_html)
           html_forms.append(form_html)
     else:
       if not isMultiEntryTransition:
@@ -207,18 +221,18 @@ class BusinessConfiguration(Item):
         for form_counter in range(0, forms_number):
           ## fill REQUEST with data as it will be used to render form
           for field in field_ids:
-            field_value = getattr(context, "field_%s" %field.id, None)
+            field_value = getattr(context, "field_%s" % field.id, None)
             if field_value is not None and len(field_value) > form_counter:
               field_value = field_value[form_counter]
               self.REQUEST.set(field.id, field_value)
             else:
               self.REQUEST.set(field.id, '')
           form_html = self.Base_mainConfiguratorFormTemplate( \
-                             current_form_number = form_counter +1, \
-                             max_form_numbers = forms_number, \
-                             form_html = getattr(context, form_id)())
+                             current_form_number=form_counter + 1,\
+                             max_form_numbers=forms_number,\
+                             form_html=getattr(context, form_id)())
           html_forms.append(form_html)
-    if html_forms!=[]:
+    if html_forms != []:
       html = "\n".join(html_forms)
     title = form.title  
     return html, title
@@ -238,7 +252,7 @@ class BusinessConfiguration(Item):
       if transition._checkPermission(self) and \
            transition.getTransitionFormId() is not None:
         return  self._displayNextForm(context=conf_save, transition=transition)
-  
+
   security.declarePrivate('_validateNextForm')
   def _validateNextForm(self, **kw):
     """ Validate the form displayed to the user. """
@@ -268,8 +282,7 @@ class BusinessConfiguration(Item):
     next_state = self.unrestrictedTraverse(transition.getDestination())
     workflow_history = current_state.getWorkflowHistory(self)
     for wh in workflow_history:
-      wh_state = self.unrestrictedTraverse(wh['current_state'])
-      if wh_state == next_state:
+      if next_state == self.unrestrictedTraverse(wh['current_state']):
         configuration_save = self.unrestrictedTraverse(wh['configuration_save_url'])
     return configuration_save
 
@@ -281,7 +294,8 @@ class BusinessConfiguration(Item):
     for wh in workflow_history:
       wh_state = self.unrestrictedTraverse(wh['current_state'])
       for wh_transition in wh_state.getAvailableTransitionList(self):
-        if wh_transition.getTransitionFormId() is not None and wh_transition!=transition:
+        if wh_transition.getTransitionFormId() is not None and \
+           wh_transition != transition:
           return True
     return False
 
@@ -338,7 +352,7 @@ class BusinessConfiguration(Item):
       self._global_configuration_attributes[key] = value
 
   security.declareProtected(Permissions.View, 'getGlobalConfigurationAttr')
-  def getGlobalConfigurationAttr(self, key, default = None):
+  def getGlobalConfigurationAttr(self, key, default=None):
     """ Get global business configuration attribute. """
     global_configuration_attributes = getattr(self, '_global_configuration_attributes', {})
     return global_configuration_attributes.get(key, default)
@@ -349,52 +363,56 @@ class BusinessConfiguration(Item):
       Get list of built business templates in a Wizard format.
     """
     bt5_file_list = []
-    portal = self.getPortalObject()
     for bt_link in self.contentValues(portal_type="Link"):
-      bt5_item = dict(bt5_id = bt_link.getUrlString(), 
-                      bt5_filedata = "")
+      bt5_item = dict(bt5_id=bt_link.getUrlString(), 
+                      bt5_filedata="")
       bt5_file_list.append(bt5_item)
 
     for bt_file in self.contentValues(portal_type="File"):
-      bt5_item = dict(bt5_id = bt_file.getId(),
-                      bt5_filedata = bt_file.getData())
+      bt5_item = dict(bt5_id=bt_file.getId(),
+                      bt5_filedata=bt_file.getData())
       bt5_file_list.append(bt5_item)
     return bt5_file_list
 
   ############# Instance and Business Configuration ########################
   security.declareProtected(Permissions.ModifyPortalContent, 'buildConfiguration')
-  def buildConfiguration(self):
+  def buildConfiguration(self, execute_after_setup_script=1):
     """ 
       Build list of business templates according to already saved 
       Configuration Saves (i.e. user input).
       This is the actual implementation which can be used from workflow 
       actions and Configurator requets
     """
-    bt5_file_list = []
+    kw = dict(tag="start_configuration_%s" % self.getId(), 
+              after_method_id=["recursiveImmediateReindexObject",
+                               'immediateReindexObject'])
     start = time.time()
-    bc_id = self.getId()
     LOG("CONFIGURATOR", INFO, 
         'Build process started for %s' % self.getRelativeUrl())
-    conf_item_list = []
     # build
-    for conf_save in self._getConfigurationStack():
+    for configuration_save in self._getConfigurationStack():
       # XXX: check which items are configure-able
-      conf_item_list = [x for x in conf_save.contentValues()]
-      conf_item_list.sort(lambda x,y: cmp(x.getIntId(), y.getIntId()))
-      for conf_item in conf_item_list:
-        conf_save_id = conf_save.getId()
-        configuration_item_object = conf_item
-        LOG('CONFIGURATOR', INFO, 'Building --> %s' % conf_item)
-        start_build = time.time()
-        build_result = conf_item.build(self)
-        LOG('CONFIGURATOR', INFO, 'Built    --> %s (%.02fs)' \
-                          % (conf_item, time.time()-start_build))
-       
-    # save list of generated or reused bt5 ids in bc
+      configuration_item_list = [x for x in configuration_save.contentValues()]
+      configuration_item_list.sort(lambda x, y: cmp(x.getIntId(), y.getIntId()))
+      for configurator_item in configuration_item_list:
+        configurator_item.activate(**kw).build(self.getRelativeUrl())
+        kw["after_tag"] = kw["tag"]
+        kw["tag"] = "configurator_item_%s_%s" % (configurator_item.getId(),
+                                                 configurator_item.getUid())
+
     LOG('CONFIGURATOR', INFO, 
-        'Build process started for %s ended after %.02fs' 
-          %(self.getRelativeUrl(), time.time()-start))
-    return bt5_file_list
+        'Build process started for %s ended after %.02fs' % (self.getRelativeUrl(),
+                                                             time.time() - start))
+
+    if execute_after_setup_script:
+      kw["tag"] = "final_configuration_step_%s" % self.getId()
+      kw["after_method_id"] = ["build", 'immediateReindexObject', \
+                               "recursiveImmediateReindexObject"]
+
+      self.activate(**kw).ERP5Site_afterConfigurationSetup()
+
+    if self.portal_workflow.isTransitionPossible(self, 'install'):
+      self.activate(after_tag=kw["tag"]).install()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'resetBusinessConfiguration')
   def resetBusinessConfiguration(self):
@@ -403,7 +421,7 @@ class BusinessConfiguration(Item):
       Remove all traces from user input (i.e. Configuration Saves, workflow history).
     """
     object_ids = []
-    for obj in self.contentValues(filter = {'portal_type': ['Configuration Save', 'File', 'Link']}):
+    for obj in self.contentValues(filter={'portal_type': ['Configuration Save', 'File', 'Link']}):
       object_ids.append(obj.getId())
     self.manage_delObjects(object_ids)
     del self.workflow_history
@@ -424,51 +442,3 @@ class BusinessConfiguration(Item):
         .getRepositoryBusinessTemplateList():
       bt5_title_list.append(bt5.getTitle())
     return bt5_title in bt5_title_list
-
-  def getPublicUrlForBT5Id(self, bt5_id):
-    """ Generate publicly accessible URL for business template """
-    portal = self.getPortalObject()
-    return portal.portal_templates.getBusinessTemplateUrl(None, bt5_id)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'installConfiguration')
-  def installConfiguration(self, execute_after_setup_script = 1):
-    """ 
-      Install in remote instance already built list of business templates 
-      which are saved in the Business Configuration.
-    """
-    kw = dict(tag="start")
-    bt5_file_list = []
-    portal = self.getPortalObject()
-    for bt_link in self.contentValues(portal_type="Link"):
-      portal.portal_templates.activate(**kw).updateBusinessTemplateFromUrl(
-                                        bt_link.getUrlString())
-      LOG("Business COnfiguration", INFO,
-          "Install %s to %s" % (bt_link.getUrlString(), self.getRelativeUrl()))
-      kw["after_tag"] = kw["tag"]
-      kw["tag"] = bt_link.getTitle()
-
-    for bt_file in self.contentValues(portal_type="File"):
-      if bt_file.getTitle("").replace(".bt5", "") == self.getSpecialiseTitle():
-        bt5_io = StringIO(str(bt_file.getData()))
-
-        # XXX FIXME (lucas): Why FAIL on the log message? 
-        LOG("Business Configuration", INFO, 
-            "[FAIL] Import of bt5 file (%s - %s)" % \
-                                      (bt_file.getId(), bt_file.getTitle()))
-
-        bc = portal.portal_templates.importFile(import_file=bt5_io,
-                                         batch_mode=1)
-        bc.activate(**kw).install()
-        kw["after_tag"] = kw["tag"]
-        kw["tag"] = bt_file.getTitle()
-
-    if execute_after_setup_script:
-      customer_template = self.getSpecialiseValue()
-      customer_template_relative_url = customer_template.getRelativeUrl()
-      self.activate(**kw).ERP5Site_afterConfigurationSetup(
-                customer_template_relative_url=customer_template_relative_url,
-                alter_preferences=True)
-      LOG("Business Configuration", INFO,
-          "After setup script called (force) for %s : %s" %
-                    (self.getRelativeUrl(), self.getSpecialise()))
-

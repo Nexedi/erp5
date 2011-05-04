@@ -58,6 +58,7 @@
 */\n
 \n
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\');\n
+                   viewable_area_maximal_width python:here.getLayoutProperty(\'layout_viewable_area_maximal_width\', \'1000\');\n
                    menu_opacity python:here.getLayoutProperty(\'layout_navigation_menu_opacity\', \'0.80\');\n
                    menu_width python:here.getLayoutProperty(\'layout_navigation_menu_width\', \'145px\');\n
                    menu_indent python:here.getLayoutProperty(\'layout_navigation_menu_indent\', \'155px\');\n
@@ -108,20 +109,17 @@ button {\n
 }\n
 \n
 table {\n
-\tborder: 1px solid #ecebe2;\n
+  border: 1px solid #ecebe2;\n
+  font-size:9pt;\n
 }\n
 \n
 a:link, \n
 a:active, \n
-a:visited { \n
-  color: #9d968d; \n
-  font-weight:bold; \n
-  text-decoration: none;\n
-\n
-}\n
-\n
+a:visited,\n
 a:hover { \n
   color: #000; \n
+  font-weight:normal; \n
+  text-decoration: none;\n
 }\n
 \n
 .transition_message{\n
@@ -141,14 +139,15 @@ fieldset.hidden_fieldset { \n
   display: none;\n
 }\n
 \n
-\n
-/* ## XHTML basis elements ########################### end ### */\n
-\n
-/* ## main elements ################################## start # */\n
-\n
+#main_content{\n
+  width:auto;\n
+}\n
+#main_form{\n
+  height: 100%;\n
+}\n
 #mainwrapper {\n
   min-height: 100%;\n
-  width:952px;\n
+  width:<tal:block tal:replace="viewable_area_maximal_width">1000</tal:block>px;\n
   margin: 0 auto;\n
 }\n
 \n
@@ -173,18 +172,13 @@ fieldset.hidden_fieldset { \n
   padding-top: 5px;\n
 }\n
 \n
-#main_form {\n
-  height:100%;\n
-}\n
-\n
 #wrapper_right{\n
-\tfloat: left;\n
-\twidth:22.5%;\n
-\tposition:relative;\n
-\tmargin-left: 19px;\n
-\tpadding-top: 10px;\n
+  float: left;\n
+  width:22.5%;\n
+  position:relative;\n
+  margin-left: 19px;\n
+  padding-top: 4px;\n
 }\n
-\n
 \n
 #km_left {\n
   float: left;\n
@@ -198,16 +192,8 @@ fieldset.hidden_fieldset { \n
 \n
 #km_left .text,\n
 #km_front .text {\n
-\tpadding:10px;\n
-\twidth: auto;\n
-}\n
-\n
-/* Gadget container at bottom */\n
-div#km_left div#wrapper_bottom {\n
-  border:0 none;\n
-  clear:left;\n
-  font-size:0.7em;\n
-  margin:10px;\n
+  padding:10px;\n
+  width: auto;\n
 }\n
 \n
 div#main_content fieldset.bottom label {\n
@@ -223,76 +209,41 @@ div#wrapper_headline div.header_title {\n
   width: auto;\n
 }\n
 \n
-.content .field label, \n
-.content .field .input {\n
-  width: 100%;\n
-  padding-left:10px;\n
-}\n
-\n
-\n
-.content .field label {\n
-  width:30%;\n
-  float:left;\n
-}\n
-\n
-.content .error .input {\n
-  border:2px solid #FF4400;\n
-}\n
-\n
-.content .field .error {\n
-  background-color:inherit;\n
-  color:#FF4400;\n
-}\n
-\n
-fieldset.left{\n
-\toverflow: hidden;\n
-}\n
-\n
-div.input > input {\n
-  max-width:320px;\n
-}\n
-\n
-/* ## main elements ################################### end ### */\n
-\n
-/* ## navigation ###################################### start # */\n
-\n
+/* Top navigation */\n
 #menu {\n
-\twidth:100%;\n
-\theight:40px;\n
-\tmargin:0em;\n
-\tpadding:0px;\n
-        padding-top: 4px;\n
-\tborder-style: none;\n
-\tborder-width:1px 1px 0;\n
-        font-size: 9pt;\n
+  width:100%;\n
+  height:40px;\n
+  margin:0em;\n
+  padding:0px;\n
+  padding-top: 4px;\n
+  border-style: none;\n
+  border-width:1px 1px 0;\n
+  font-size: 9pt;\n
 }\n
 \n
 #wrapper_path {\n
-\tfloat:left;\n
-\twidth: 100%;\n
+  float:left;\n
+  width: 100%;\n
 }\n
 \n
 #menu ul {\n
-\tfloat:left;\n
-\tlist-style-type: none;\n
-\tmargin:0;\n
-\tpadding:0;\n
+  float:left;\n
+  list-style-type: none;\n
+  margin:0;\n
+  padding:0;\n
 }\n
 \n
 #menu .navbar {\n
-\twidth:70%;\n
+  width:70%;\n
 }\n
 \n
 #menu ul li {\n
-\n
-\tmargin:0;\n
-\tpadding:0;\n
-\tfloat:left;\n
-\theight:100%;\n
-\n
+  margin:0;\n
+  padding:0;\n
+  float:left;\n
+  height:100%;\n
 }\n
 \n
-/* Top menu collapse root element */\n
 #menu ul li.collapse-menu{\n
   background: url(km_img/collapse-down-arrow.gif) no-repeat transparent right 10px;\n
   padding-right: 0px;\n
@@ -304,42 +255,41 @@ div.input > input {\n
 }\n
 \n
 #menu .meta {\n
-\tfloat:right;\n
-\twidth:auto;\n
-\tmargin-right: 10px;\n
+  float:right;\n
+  width:auto;\n
+  margin-right: 10px;\n
 }\n
 \n
 .tools {\n
-\tfloat: left;\n
-\tdisplay: block;\n
-\tclear: both;\n
-\twidth:100%;\n
-\tpadding: 5px 0;\n
-        height: 20px;\n
+  float: left;\n
+  display: block;\n
+  clear: both;\n
+  width:100%;\n
+  padding: 5px 0;\n
+  height: 20px;\n
 }\n
 \n
-\n
 #menu ul li a:link, #menu ul li a:active, #menu ul li a:visited {\n
-\theight:100%;\n
-\tline-height:30px;\n
-\tfloat:left;\n
+  height:100%;\n
+  line-height:30px;\n
+  float:left;\n
 }\n
 \n
 #menu ul li #home-link:link, #menu ul li #home-link:active, #menu ul li #home-link:visited {\n
-\ttext-indent: -99999px;\n
-\tdisplay:block;\n
-\theight:20px;\n
-\twidth:8px;\n
-\tposition: relative;\n
-\ttop: 0px;\n
-\tmargin:5px 0 5px 5px;\n
+  text-indent: -99999px;\n
+  display:block;\n
+  height:20px;\n
+  width:8px;\n
+  position: relative;\n
+  top: 0px;\n
+  margin:5px 0 5px 5px;\n
 }\n
 \n
 #menu #login-logout-link:link, #menu #login-logout-link:active, #menu #login-logout-link:visited {\n
-\theight:20px;\n
-\tposition: relative;\n
-\tline-height: 20px;\n
-\tpadding-left:25px;\n
+  height:20px;\n
+  position: relative;\n
+  line-height: 20px;\n
+  padding-left:25px;\n
 }\n
 \n
 /* Login & Logout links */\n
@@ -348,13 +298,13 @@ div.user-information{\n
 }\n
 \n
 ul.breadcrumb {\n
-\tlist-style-type: none;\n
-\tmargin:0 0 0 5px;\n
-\tpadding:0;\n
-\twidth:auto;\n
-\theight:100%;\n
-\tfloat: left;\n
-\tposition: relative;\n
+  list-style-type: none;\n
+  margin:0 0 0 5px;\n
+  padding:0;\n
+  width:auto;\n
+  height:100%;\n
+  float: left;\n
+  position: relative;\n
 }\n
 \n
 ul.breadcrumb li {\n
@@ -364,24 +314,19 @@ ul.breadcrumb li {\n
   color:#686868;\n
 }\n
 \n
-div.breadcrumb{\n
-  float:left;\n
+div.breadcrumb,\n
+div.language-selection {\n
   width: auto;\n
 }\n
-\n
-div.language-selection{\n
-  float:right;\n
-  width: auto;\n
-}\n
-\n
 \n
 ul.widget_management_box,\n
 ul.language_box{\n
-\tfloat:right;\n
-\tmargin:0;\n
-\tpadding: 0;\n
-\tposition: relative;\n
-\tlist-style-type: none!important;\n
+  float:right;\n
+  width:auto;\n
+  margin:0;\n
+  padding: 0;\n
+  position: relative;\n
+  list-style-type: none!important;\n
 }\n
 \n
 ul.widget_management_box li{\n
@@ -390,9 +335,8 @@ ul.widget_management_box li{\n
 }\n
 \n
 ul.language_box li {\n
-\tfloat:left;\n
-\tmargin: 0 2px;\n
-\n
+  float:left;\n
+  margin: 0 2px;\n
 }\n
 \n
 ul.language_box{\n
@@ -435,16 +379,9 @@ ul.widget_management_box a {\n
   float:left;\n
 }\n
 \n
-\n
 .box {\n
   width: auto;\n
 }\n
-\n
-/* ## navigation ###################################### end ### */\n
-\n
-\n
-/* ## element "boxes" ################################# start # */\n
-\n
 \n
 div#mainwrapper div#wrapper_right fieldset.widget div.field label:after {content: ":"}\n
 div#mainwrapper div#wrapper_right div.gadget fieldset.widget{\n
@@ -457,37 +394,34 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 }\n
 \n
 #km_left .document > .content{\n
-\tfloat:left;\n
-\tmargin: 10px;\n
-\tbackground-color: #fff;\n
-\tborder:1px solid #c0bfb3;\n
+  float:left;\n
+  margin: 10px;\n
+  background-color: #fff;\n
+  border:1px solid #c0bfb3;\n
 }\n
 \n
-/* ## element "boxes" ################################ end ### */\n
-\n
-/* ## element "footer" ############################### start # */\n
-\n
+/* Footer */\n
 #wrapper_footer {\n
-\tclear:both;\n
-\twidth: 100%;\n
-\toverflow: hidden;\n
-\tposition: relative;\n
-\tmargin-top: -4.6em;\n
-\tpadding-bottom: 20px;\n
-\tborder-top:1px solid #fcfbfb;\n
-\tbackground-color:#9d968d;\n
-\tcolor:#eae9df;\n
-        font-size:8pt;\n
+  clear:both;\n
+  width: 100%;\n
+  overflow: hidden;\n
+  position: relative;\n
+  margin-top: -4.6em;\n
+  padding-bottom: 20px;\n
+  border-top:1px solid #fcfbfb;\n
+  background-color:#9d968d;\n
+  color:#eae9df;\n
+  font-size:8pt;\n
 }\n
 \n
 #wrapper_footer ul {\n
-\tlist-style-type: none;\n
-\tmargin:0 auto;\n
-\tpadding: 11px 20px;\n
+  list-style-type: none;\n
+  margin:0 auto;\n
+  padding: 11px 20px;\n
 }\n
 \n
 #footer {\n
-  width:952px;\n
+  width:<tal:block tal:replace="viewable_area_maximal_width">1000</tal:block>px; \n
   margin: 0 auto;\n
 }\n
 \n
@@ -502,9 +436,30 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
   text-align: right;\n
 }\n
 \n
-/* ## element "footer" ############################### end ### */\n
+/* Forms */\n
+.content .field label, \n
+.content .field .input {\n
+  width: 100%;\n
+  padding-left:10px;\n
+}\n
 \n
-/* ## forms ########################################## start # */\n
+.content .field label {\n
+  width:30%;\n
+  float:left;\n
+}\n
+\n
+.content .error .input {\n
+  border:2px solid #FF4400;\n
+}\n
+\n
+.content .field .error {\n
+  background-color:inherit;\n
+  color:#FF4400;\n
+}\n
+\n
+fieldset.left{\n
+  overflow: hidden;\n
+}\n
 \n
 form p,\n
 .bottom_actions{\n
@@ -527,11 +482,10 @@ form p,\n
 }\n
 \n
 .meta .search_button {\n
-\twidth: 20px;\n
-\theight: 20px;\n
-\tmargin:5px 0 5px 5px;\n
-\tcursor:pointer;\n
-\n
+  width: 20px;\n
+  height: 20px;\n
+  margin:5px 0 5px 5px;\n
+  cursor:pointer;\n
 }\n
 \n
 .meta div.input > select {\n
@@ -558,14 +512,14 @@ div.search_text{\n
 }\n
 \n
 .meta input.search_button {\n
-\tborder:none;\n
-\tmargin:0;\n
-\tpadding:0;\n
-\twidth:20px;\n
-\theight:20px;\n
-\tbackground: url(km_img/bt-qsearch.gif) no-repeat transparent;\n
-\tdisplay:block;\n
-\ttext-indent:-999999px;\n
+  border:none;\n
+  margin:0;\n
+  padding:0;\n
+  width:20px;\n
+  height:20px;\n
+  background: url(km_img/bt-qsearch.gif) no-repeat transparent;\n
+  display:block;\n
+  text-indent:-999999px;\n
 }\n
 \n
 #menu .navbar fieldset,\n
@@ -577,144 +531,6 @@ fieldset.left .field,\n
 fieldset.right .field {\n
   margin: 5px 0;\n
   float: left;\n
-}\n
-\n
-/* ## forms ########################################## end ### */\n
-\n
-/* ## buttons ######################################### start # */\n
-\n
-a.bt-edit:link, \n
-a.bt-edit:active, \n
-a.bt-edit:visited {\n
-\theight:24px;\n
-\twidth:auto;\n
-\tdisplay:block;\n
-\tpadding-left:10px;\n
-\tmargin: 0 0 5px 0;\n
-}\n
-\n
-a.bt-edit:link strong, \n
-a.bt-edit:active strong, \n
-a.bt-edit:visited strong {\n
-\theight:100%;\n
-\twidth:auto;\n
-\tdisplay:block;\n
-\tline-height:24px;\n
-\twhite-space: nowrap;\n
-}\n
-\n
-a.bt-edit strong img {\n
-\tposition: relative;\n
-\ttop:2px;\n
-}\n
-\n
-button#bt-clone {\n
-  margin-top: 1em;\n
-}\n
-\n
-button.formbt {\n
-\twidth: auto;\n
-\theight:35px;\n
-\tcursor: pointer;\n
-\tborder:none;\n
-\tpadding: 0 20px 0 0;\n
-\tmargin: 0 5px 0 0;\n
-\tposition: relative;\n
-\toverflow: visible;\n
-}\n
-\n
-button::-moz-focus-inner{\n
-  border:none;\n
-}\n
-\n
-button.formbt > span {\n
-\tdisplay:block;\n
-\twidth:100%;\n
-\theight:35px;\n
-\tmargin:0;\n
-\tpadding:0 0 0 5px;\n
-\tline-height:35px;\n
-\tposition: relative;\n
-\tleft:-2px;\n
-\twhite-space: nowrap;\n
-}\n
-\n
-a.bt-download:link, \n
-a.bt-download:active, \n
-a.bt-download:visited,\n
-a.bt-rss:link, \n
-a.bt-rss:active, \n
-a.bt-rss:visited {\n
-\tpadding-right:15px;\n
-\tposition: absolute;\n
-\tright:10px;\n
-\ttop:10px;\n
-}\n
-\n
-button.bt-med {\n
-\twidth: auto;\n
-\theight:24px;\n
-\tcursor: pointer;\n
-\tborder:none;\n
-\tpadding: 0 20px 0 0;\n
-\tmargin: 0 5px 0 0;\n
-\tposition: relative;\n
-\toverflow: visible;\n
-}\n
-\n
-button.bt-med span {\n
-\tdisplay:block;\n
-\twidth:100%;\n
-\theight:24px;\n
-\tmargin:0;\n
-\tpadding:0 0 0 10px;\n
-\tline-height:24px;\n
-\tposition: relative;\n
-\tleft:-2px;\n
-\twhite-space: nowrap;\n
-}\n
-\n
-button.bt-med span img {\n
-\tdisplay:inline;\n
-\tposition: relative;\n
-\ttop:3px;\n
-\tmargin-right:5px;\n
-}\n
-\n
-.bt-small {\n
-\tdisplay:block;\n
-\twidth: auto;\n
-\theight:18px;\n
-\tcursor: pointer;\n
-\tborder:none;\n
-\tpadding: 0 15px 0 0;\n
-\tmargin: -2px 2px 0 2px;\n
-\tposition: relative;\n
-\toverflow: visible;\n
-}\n
-\n
-.bt-small span {\n
-\tdisplay:block;\n
-\twidth:100%;\n
-\theight:18px;\n
-\tmargin:0;\n
-\tpadding:0 0 0 10px;\n
-\tline-height:18px;\n
-\tposition: relative;\n
-\tleft:-2px;\n
-\twhite-space: nowrap;\n
-}\n
-\n
-.bt-small span img {\n
-\tdisplay:inline;\n
-\tmargin-right:2px;\n
-}\n
-\n
-/* ## buttons ######################################### end ### */\n
-\n
-\n
-.input input[type=image] {\n
-  width: auto !important;\n
 }\n
 \n
 .bottom_actions {\n
@@ -754,7 +570,7 @@ fieldset.left{\n
 \n
 div.required label{\n
   background-image:url("km_img/required_mark.png");\n
-  background-position:left center;\n
+  background-position:0 0.5em;\n
   background-repeat:no-repeat;\n
   padding-left: 10px;\n
 }\n
@@ -771,6 +587,9 @@ div.document div.content div.text blockquote, pre{\n
 \n
 div.document div.content div.text a{\n
   color: #686868;\n
+}\n
+div.document div.content div.text a:hover{\n
+  color: #000000;\n
 }\n
 \n
 /* Web Toolbar */\n
@@ -858,31 +677,13 @@ div.actions button {\n
   right: 0;\n
 }\n
 \n
-/* Search Popup window */\n
-div.search_popup {\n
-  background-color: #FFFFFF;\n
-  border: 1px solid black;\n
-  display: none;\n
-  left: 500px;\n
-  padding: 10px;\n
-  position: fixed;\n
-  top: 130px;\n
-  width: 150px;\n
-  z-index: 100;\n
-}\n
-\n
-/* Search listbox styling */\n
-div.searchDetails, span.found{\n
-  padding-top: 5px;\n
-}\n
-\n
 /* Download Document in various format widget */\n
 div.download-document-format-list-container{\n
   color:#000000;\n
-  left:525px;\n
+  left:560px;\n
   top:0px;\n
   position:absolute;\n
-  z-index:200; /* Collapse menu z-index is 100 */\n
+  z-index:3; /* Collapse menu z-index is 1 */\n
   width:200px;\n
 }\n
 div.download-document-format-list-container span{\n
@@ -999,83 +800,76 @@ div.pdf-preview-navigation img.last{\n
   color:#fff;\n
 }\n
 \n
-\n
-\n
-/* splash.css */\n
-/* ## home banner #################################### start ## */\n
-\n
 .homebanner {\n
-\tbackground: url(community_img/homebanner.jpg) no-repeat transparent;\n
-\tcolor:#fff;\n
-\ttext-shadow: 0 1px 0 #006686;\n
+  background: url(community_img/homebanner.jpg) no-repeat transparent;\n
+  color:#fff;\n
+  text-shadow: 0 1px 0 #006686;\n
 }\n
 \n
 .homebanner h2 {\n
-\ttext-shadow: 0 3px 0 #0d7dab;\n
+  text-shadow: 0 3px 0 #0d7dab;\n
 }\n
 \n
 .homebanner ul li {\n
-\tlist-style-image: none;\n
-\tlist-style-type: none;\n
-\tbackground: url(community_img/bannerbullet.png) no-repeat transparent;\n
+  list-style-image: none;\n
+  list-style-type: none;\n
+  background: url(community_img/bannerbullet.png) no-repeat transparent;\n
 }\n
 \n
 .button-why:link, .button-why:active, .button-why:visited {\n
-\tbackground: url(community_img/bannerbuttons.png) no-repeat transparent;\n
+  background: url(community_img/bannerbuttons.png) no-repeat transparent;\n
 }\n
 .button-why:hover {\n
-\tbackground-position: 0 100%;\n
+  background-position: 0 100%;\n
 }\n
 \n
 .button-try:link, .button-try:active, .button-try:visited {\n
-\tbackground: url(community_img/bannerbuttons.png) no-repeat transparent;\n
-\tbackground-position: -158px 0;\n
+  background: url(community_img/bannerbuttons.png) no-repeat transparent;\n
+  background-position: -158px 0;\n
 }\n
 .button-try:hover {\n
-\tbackground-position: -158px 100%;\n
+  background-position: -158px 100%;\n
 }\n
 \n
-/* ## home banner #################################### start ## */\n
-\n
 .homebanner {\n
-\tdisplay: block;\n
-\twidth: 924px;\n
-\theight: 283px;\n
-        margin:10px 14px 10px;\n
+  display: block;\n
+  width: 924px;\n
+  height: 283px;\n
+  margin:10px 14px 10px;\n
 }\n
 \n
 .homebanner h2 {\n
-\tpadding:25px;\n
-\tmargin:0;\n
+  padding:25px;\n
+  margin:0;\n
 }\n
 \n
 .homebanner h4 {\n
-\tposition: absolute;\n
-\tbottom: 20px;\n
-\tright:25px;\n
-\tpadding:0;\n
-\tmargin:0;\n
+  position: absolute;\n
+  bottom: 20px;\n
+  right:25px;\n
+  padding:0;\n
+  margin:0;\n
 }\n
 \n
 .homebanner img {\n
-\tposition: absolute;\n
-\ttop: 89px;\n
-\tright:1px;\n
+  position: absolute;\n
+  top: 89px;\n
+  right:1px;\n
 }\n
 \n
 .homebanner ul {\n
-\tposition: absolute;\n
-\ttop:101px;\n
-\tleft:5px;\n
-\tmargin:0;\n
-\tpadding:0 30px;\n
-\twidth: 200px;\n
+  position: absolute;\n
+  top:101px;\n
+  left:5px;\n
+  margin:0;\n
+  padding:0 30px;\n
+  width: 200px;\n
 }\n
 \n
 .homebanner ul li {\n
-\tmargin:0;\n
-\tpadding: 7px 10px 7px 30px;\n
-\tdisplay: block;\n
+  margin:0;\n
+  padding: 7px 10px 7px 30px;\n
+  display: block;\n
 }\n
 \n
 .button-why:link, \n
@@ -1084,45 +878,33 @@ div.pdf-preview-navigation img.last{\n
 .button-try:link, \n
 .button-try:active, \n
 .button-try:visited {\n
-\twidth:158px;\n
-\theight:47px;\n
-\tdisplay: block;\n
-\tposition: absolute;\n
-\tbottom:0;\n
-\tleft:25px;\n
-\ttext-indent: -999999px;\n
-\n
+  width:158px;\n
+  height:47px;\n
+  display: block;\n
+  position: absolute;\n
+  bottom:0;\n
+  left:25px;\n
+  text-indent: -999999px;\n
 }\n
 \n
 .button-try:link, .button-try:active, .button-try:visited  {\n
-\tleft: 180px;\n
-\n
+  left: 180px;\n
 }\n
 \n
-/* ## home banner ##################################### end ### */\n
-\n
-/* color.css  */\n
-\n
-\n
-\n
 ::selection {\n
-\tbackground:#aaa;\n
-\tcolor:#000;\n
+  background:#aaa;\n
+  color:#000;\n
 }\n
 \n
 ::-moz-selection{\n
-\tbackground:#aaa;\n
-\tcolor:#000;\n
+  background:#aaa;\n
+  color:#000;\n
 }\n
-\n
-/*.breadcrumb_separator {\n
-  margin-bottom:2px;\n
-}*/\n
 \n
 fieldset.left h4,\n
 fieldset.center h4,\n
 fieldset.right h4 {\n
-\tbackground-color:#efeee8;\n
+  background-color:#efeee8;\n
 }\n
 \n
 .document > .content ul li {\n
@@ -1148,24 +930,17 @@ table th button {\n
 }\n
 \n
 table tbody tr td {\n
-\tborder-top: 1px solid #ecebe2;\n
-\tbackground-color: #FFFFFF;\n
-\t-webkit-transition-property: background;\n
-\t-webkit-transition-duration: 0.2s;\n
-\t-webkit-transition-timing-function: linear;\n
+  border-top: 1px solid #ecebe2;\n
+  background-color: #FFFFFF;\n
+  -webkit-transition-property: background;\n
+  -webkit-transition-duration: 0.2s;\n
+  -webkit-transition-timing-function: linear;\n
 }\n
-\n
-.section {\n
-\tborder-bottom: 1px solid #e9e9e9;\n
-}\n
-\n
-\n
-/* ## link styling ################################### start # */\n
 \n
 #header a:link, #header a:active, #header a:visited {\n
-\tcolor:#fff;\n
-\tfont-weight:bold;\n
-\ttext-shadow: 0 1px 0 #a8a799;\n
+  color:#fff;\n
+  font-weight:bold;\n
+  text-shadow: 0 1px 0 #a8a799;\n
 }\n
 \n
 #header .meta div a:link, #header .meta div a:active, #header .meta div a:visited {\n
@@ -1177,11 +952,11 @@ table tbody tr td {\n
 }\n
 \n
 #header ul.breadcrumb li a:link, #header ul.breadcrumb li a:active, #header ul.breadcrumb li a:visited {\n
-\tcolor:#686868;\n
+  color:#686868;\n
 }\n
 \n
 #header ul.breadcrumb li a:hover {\n
-\tcolor:#FFF;\n
+  color:#FFF;\n
 }\n
 \n
 #footer a:link, #footer a:active, #footer a:visited,\n
@@ -1192,159 +967,30 @@ table tbody tr td {\n
 \n
 #footer a:hover, #footer ul li a:hover { color:#fff; }\n
 \n
-/* ## link styling ################################### end ### */\n
-\n
+/* Top menu */\n
 #menu ul li #home-link:link, \n
 #menu ul li #home-link:active, \n
 #menu ul li #home-link:visited {\n
-\tbackground: url(km_img/home.gif) no-repeat transparent;\n
+  background: url(km_img/home.gif) no-repeat transparent;\n
 }\n
 \n
 #menu ul li #home-link:hover {\n
-\tbackground-position: 0 100%;\n
+  background-position: 0 100%;\n
 }\n
 \n
-#menu #login-logout-link:link, #menu #login-logout-link:active, #menu #login-logout-link:visited {\n
+#login-logout-link:link, #login-logout-link:active, #login-logout-link:visited {\n
   background: url(km_img/login.gif) no-repeat transparent;\n
   background-position: 0 -3px;\n
 }\n
 \n
-#menu #login-logout-link:hover {\n
-\tbackground-position: 0 -23px;\n
+#login-logout-link:hover {\n
+  background-position: 0 -23px;\n
 }\n
 \n
-/* ## navigation ###################################### end ### */\n
-\n
-a.bt-download:link, a.bt-download:active, a.bt-download:visited {\n
-\tbackground: url(km_img/icon-save.png) no-repeat transparent;\n
-}\n
-\n
-a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
-\tbackground: url(km_img/icon-rss.png) no-repeat transparent;\n
-}\n
-\n
-a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
-a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited {\n
-\tbackground-position: 100% 50%;\n
-\tcolor:#000;\n
-}\n
-\n
-/* ## buttons ######################################### start # */\n
-\n
-a.block-refresh { background-position: 0 0; }\n
-\n
-a.block-minimize { background-position: -17px 0 !important; }\n
-\n
-a.block-remove { background-position: -34px 0 !important; }\n
-\n
-a.block-edit-form { background-position: -51px 0 !important; }\n
-\n
-a.block-refresh:hover { background-position: 0 100% !important; }\n
-\n
-a.block-minimize:hover { background-position: -17px 100% !important; }\n
-\n
-a.block-remove:hover { background-position: -34px 100% !important; }\n
-\n
-a.block-edit-form:hover { background-position: -51px 100% !important; }\n
-\n
-a.bt-edit:link, a.bt-edit:active, a.bt-edit:visited {\n
-\tbackground: url(km_img/bt-edit.png) no-repeat transparent;\n
-}\n
-\n
-a.bt-edit:link strong, a.bt-edit:active strong,\n
-a.bt-edit:visited strong {\n
-\tbackground: url(km_img/bt-edit.png) no-repeat transparent;\n
-\tbackground-position: 100% 0;\n
-\tcolor:#828282;\n
-}\n
-\n
-a.bt-edit:hover {\n
-\tbackground-position: 0 100%;\n
-}\n
-\n
-a.bt-edit:hover strong {\n
-\tcolor:#4f4f4f;\n
-\tbackground-position: 100% 100%;\n
-}\n
-\n
-button.formbt, button.bt-med span, .bt-small span { color:#828282; }\n
-button.formbt:hover span, button.bt-med:hover span, .bt-small:hover span { color:#4f4f4f; }\n
-\n
-button.formbt, button.formbt > span { background: url(km_img/formbt.png) no-repeat transparent; }\n
-\n
-button.bt-med, button.bt-med span { \n
-  background: url(km_img/button-med.png) no-repeat transparent; \n
-  background-color: #E9E9E9;\n
-}\n
-\n
-.bt-small, .bt-small span { background: url(km_img/button-small.png) no-repeat transparent; }\n
-\n
-button.formbt, button.bt-med, .bt-small { background-position: 100% 0; }\n
-\n
-button.formbt:hover, button.bt-med:hover, .bt-small:hover { background-position: 100% 100%; }\n
-\n
-button.formbt:hover span, button.bt-med:hover span, .bt-small:hover span { background-position: 0 100%; }\n
-\n
-button#input-save-view span.image {background: url(km_img/bt-save2.png) no-repeat transparent;}\n
-button#input-save-edit span.image {background: url(km_img/bt-save.png) no-repeat transparent;}\n
-\n
-button#input-save-edit span.image,\n
-button#input-save-view span.image {\n
-  position: relative;\n
-  margin:8px;\n
-  float: left;\n
-  width: 19px;\n
-  height: 18px;\n
-}\n
-\n
-/* ## buttons ######################################### end ### */\n
-\n
-\n
-/* ## form styling #################################### start # */\n
+/* Form styling */\n
 .meta input.search_button:hover,\n
 .search_button:hover {\n
 \tbackground-position: 0 100%;\n
-}\n
-\n
-\n
-/* ## form styling #################################### end ### */\n
-\n
-/* Search pop up styling */\n
-div.popup_row .reference{\n
-  color: inherit;\n
-}\n
-\n
-/* Search listbox styling */\n
-span.search_result_title{\n
-  color: #1111CC;\n
-}\n
-\n
-span.search_result_portal_type{\n
-  color: inherit;\n
-}\n
-\n
-span.found{\n
-  color: #000000;\n
-}\n
-\n
-span.found em{\n
-  font-weight: bold;\n
-}\n
-\n
-div.searchDetails a.section-link{\n
-  color: inherit;\n
-}\n
-\n
-div.searchDetails a.reference-link{\n
-  color: #228822;\n
-}\n
-\n
-div.searchDetails a.owner-link{\n
-  color: inherit;\n
-}\n
-\n
-div.searchDetails a.modification-date-link{\n
-  color: inherit;\n
 }\n
 \n
 /* workflow states  colors*/\n
@@ -1354,7 +1000,8 @@ div.searchDetails a.modification-date-link{\n
  .published-state, .released-state, .shared-state { \n
   color: green; \n
 }\n
-.hidden-state{\n
+.hidden-state,\n
+.deleted-state{\n
   color:red;\n
 }\n
 .archived-state{\n
@@ -1362,51 +1009,40 @@ div.searchDetails a.modification-date-link{\n
 }\n
 \n
 \n
-/* pulldown.css */\n
-\n
+/* Collapse down navigation */\n
 #menu ul.nav li{\n
-  z-index:110;\n
+  z-index:1;\n
 }\n
 \n
 #menu ul.nav li a, #menu ul.nav li a:visited {\n
-\n
   display:block;\n
   text-decoration:none;\n
   text-align:center;\n
   padding: 0 8px;\n
 }\n
 \n
-\n
 #menu ul.nav {\n
-\n
   padding:0;\n
   margin:0;\n
   list-style: none;\n
 }\n
 \n
 #menu ul.nav li {\n
-\n
   float:left;\n
   position:relative;\n
-\n
 }\n
 \n
 #menu ul.nav li ul {\n
-\n
   display: none;\n
-\n
 }\n
 \n
 #menu ul.nav li:hover a {\n
-\n
   background-color: #a8a799;\n
   color:#fff;\n
   text-shadow: 0 1px 0 #7a7964;\n
-\n
 }\n
 \n
 #menu ul.nav li:hover ul {\n
-\n
   display:block;\n
   position:absolute;\n
   top:0;\n
@@ -1414,11 +1050,9 @@ div.searchDetails a.modification-date-link{\n
   left:0;\n
   width:205px;\n
   opacity: <tal:block tal:replace="menu_opacity">0.80</tal:block>;\n
-\n
 }\n
 \n
 #menu ul.nav li:hover ul li a {\n
-\n
   text-align:left;\n
   display:block;\n
   background:#818363;\n
@@ -1430,14 +1064,12 @@ div.searchDetails a.modification-date-link{\n
   -webkit-transition-property: background;\n
     -webkit-transition-duration: 0.1s;\n
     -webkit-transition-timing-function: ease-in;\n
-\n
 }\n
 \n
 #menu ul.nav li:hover ul li a:hover { background:#37391e; }\n
 #menu ul.nav li:hover ul li a.workflow_title:hover { background:#818363; }\n
 \n
 #menu ul.nav li:hover ul li:hover ul {\n
-\n
   display:block;\n
   position:absolute;\n
   left:<tal:block tal:replace="menu_indent">155px</tal:block>;\n
@@ -1445,7 +1077,6 @@ div.searchDetails a.modification-date-link{\n
   margin:0;\n
   padding:0;\n
   opacity: <tal:block tal:replace="menu_opacity">0.80</tal:block>;\n
-\n
 }\n
 \n
 #menu ul.nav li:hover ul li:hover ul.left { left:-105px; }\n
@@ -1473,39 +1104,193 @@ div.searchDetails a.modification-date-link{\n
 \n
 div.collapse-menu-root{\n
   display:block;\n
-  z-index:111;\n
+  z-index:2;\n
 }\n
-\n
-/* type.css */\n
-table tr td, table tr th, table tr th button {\n
-\n
-\tfont-size:9pt;\n
-\n
-}\n
-\n
-.saveView, .saveEdit { text-indent:15px; font-size:10pt; }\n
-\n
-/* ## link styling ################################### start # */\n
-\n
-a.bt-edit strong { font-size:8pt; }\n
-\n
-a.status:link, a.status:active, a.status:visited, .status { font-weight:normal; }\n
-\n
-a.bt-download:link, a.bt-download:active, a.bt-download:visited,\n
-a.bt-rss:link, a.bt-rss:active, a.bt-rss:visited { font-weight: normal; font-size:9pt; }\n
-\n
-.bt-small { font-weight:normal; font-size:7pt; }\n
-\n
-/* ## link styling ################################### end ### */\n
-\n
-\n
 \n
 div#wrapper_headline span.header_title {\n
   font-size:1.2em;\n
   font-weight:bold;\n
 }\n
 \n
+/* Bottom toolbar */\n
+li.toolboxSection > div{\n
+  bottom:0px;\n
+}\n
 \n
+/* Buttons */\n
+button#bt-clone {\n
+  margin-top: 1em;\n
+}\n
+\n
+button.formbt {\n
+  width: auto;\n
+  height:35px;\n
+  cursor: pointer;\n
+  border:none;\n
+  padding: 0 20px 0 0;\n
+  margin: 0 5px 0 0;\n
+  position: relative;\n
+  overflow: visible;\n
+}\n
+\n
+button.formbt > span {\n
+  display:block;\n
+  width:100%;\n
+  height:35px;\n
+  margin:0;\n
+  padding:0 0 0 5px;\n
+  line-height:35px;\n
+  position: relative;\n
+  left:-2px;\n
+  white-space: nowrap;\n
+}\n
+\n
+button.bt-med {\n
+  width: auto;\n
+  height:26px;\n
+  cursor: pointer;\n
+  border:none;\n
+  padding: 0 20px 0 0;\n
+  margin: 0 5px 0 0;\n
+  position: relative;\n
+  overflow: visible;\n
+}\n
+\n
+button.bt-med span {\n
+  display:block;\n
+  width:100%;\n
+  height:24px;\n
+  margin:0;\n
+  padding:0 0 0 10px;\n
+  line-height:24px;\n
+  position: relative;\n
+  left:-2px;\n
+  white-space: nowrap;\n
+}\n
+\n
+button.bt-med span img {\n
+  display:inline;\n
+  position: relative;\n
+  top:3px;\n
+  margin-right:5px;\n
+}\n
+\n
+.bt-small {\n
+  display:block;\n
+  width: auto;\n
+  height:18px;\n
+  cursor: pointer;\n
+  border:none;\n
+  padding: 0 15px 0 0;\n
+  margin: -2px 2px 0 2px;\n
+  position: relative;\n
+  overflow: visible;\n
+}\n
+\n
+.bt-small span {\n
+  display:block;\n
+  width:100%;\n
+  height:18px;\n
+  margin:0;\n
+  padding:0 0 0 10px;\n
+  line-height:18px;\n
+  position: relative;\n
+  left:-2px;\n
+  white-space: nowrap;\n
+}\n
+\n
+.bt-small span img {\n
+  display:inline;\n
+  margin-right:2px;\n
+}\n
+\n
+button#input-save-edit span.image,\n
+button#input-save-view span.image {\n
+  position: relative;\n
+  margin:8px;\n
+  float: left;\n
+  width: 19px;\n
+  height: 18px;\n
+}\n
+\n
+button#input-save-view span.image {\n
+  background: url(km_img/button-save-view.png) no-repeat transparent;\n
+}\n
+\n
+button#input-save-edit span.image {\n
+  background: url(km_img/button-save-edit.png) no-repeat transparent;\n
+}\n
+\n
+div.listbox-action-widget button, \n
+div.listbox-action-widget a.button,\n
+div.listbox-action-widget button > span, \n
+div.listbox-action-widget a > span,\n
+button.formbt, \n
+button.formbt > span,\n
+button.bt-med, \n
+button.bt-med span,\n
+a.bt-small,\n
+#stick-gadgets,\n
+#unstick-gadgets,\n
+#add-gadgets {\n
+  background:transparent;\n
+  background-color:#A8A799;\n
+  color: white;\n
+  -webkit-border-radius:4px;\n
+  -moz-border-radius:4px;\n
+  border-radius:4px;\n
+  font-size: 12px;\n
+  font-weight: normal;\n
+}\n
+\n
+#stick-gadgets:hover,\n
+#unstick-gadgets:hover,\n
+#add-gadgets:hover,\n
+button.formbt:hover span,\n
+button.bt-med:hover span,\n
+a.bt-small:hover{\n
+  color: #828282;\n
+}\n
+\n
+button.formbt {\n
+  height:auto;\n
+  margin-left:5px;\n
+  padding:0 10px 0 0;\n
+}\n
+\n
+button.formbt > span{\n
+  height:auto;\n
+  padding:0;\n
+}\n
+\n
+/* Pop up ui */\n
+.ui-dialog-titlebar{\n
+  text-align:right;\n
+}\n
+.ui-dialog-title{\n
+  font-weight: bold;\n
+  display:block;\n
+  float:left;\n
+  font-size:16px;\n
+}\n
+.ui-icon-closethick{\n
+  text-transform: uppercase;\n
+}\n
+.ui-dialog{\n
+  position:absolute;\n
+  background: white;\n
+  padding:10px;\n
+  border:1px solid #C0BFB3;\n
+  -moz-border-radius:4px 4px 4px 4px;\n
+  -webkit-border-radius:4px 4px 4px 4px;\n
+  border-radius:4px 4px 4px 4px;\n
+  -moz-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+  -webkit-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+  box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
+}\n
+#jquery_erp5_dialog  h1 a{\n
+  display:none;\n
+}\n
 \n
 </tal:block>
 

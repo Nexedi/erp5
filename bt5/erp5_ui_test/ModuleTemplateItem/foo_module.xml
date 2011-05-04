@@ -122,9 +122,6 @@
    <name>Add ERP5Form Tools</name>
   </permission>
   <permission type='list'>
-   <name>Add ERP5Subversion Tools</name>
-  </permission>
-  <permission type='list'>
    <name>Add ERP5SyncML Tools</name>
   </permission>
   <permission type='list'>

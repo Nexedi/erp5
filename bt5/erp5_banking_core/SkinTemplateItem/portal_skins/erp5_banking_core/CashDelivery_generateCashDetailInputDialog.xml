@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -65,7 +62,6 @@
 from Products.ERP5Type.Cache import CachingMethod\n
 portal = context.getPortalObject()\n
 precision = 0\n
-\n
 if listbox is None:\n
   # This is the first time.\n
   cash_status_list          = cash_detail_dict[\'cash_status_list\']\n
@@ -474,167 +470,12 @@ else :\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox=None,cash_detail_dict=None, rendering_vault=None, fast_input_title=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>4</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>listbox</string>
-                            <string>cash_detail_dict</string>
-                            <string>rendering_vault</string>
-                            <string>fast_input_title</string>
-                            <string>kw</string>
-                            <string>Products.ERP5Type.Cache</string>
-                            <string>CachingMethod</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal</string>
-                            <string>precision</string>
-                            <string>None</string>
-                            <string>_getitem_</string>
-                            <string>cash_status_list</string>
-                            <string>emission_letter_list</string>
-                            <string>variation_list</string>
-                            <string>operation_currency</string>
-                            <string>line_portal_type</string>
-                            <string>column_base_category</string>
-                            <string>read_only</string>
-                            <string>int</string>
-                            <string>check_float</string>
-                            <string>currency_cash_portal_type</string>
-                            <string>target_total_price</string>
-                            <string>False</string>
-                            <string>use_inventory</string>
-                            <string>list</string>
-                            <string>generic_prioritized_sort</string>
-                            <string>prioritized_banknote_emission_letter_list</string>
-                            <string>prioritized_coin_cash_status_list</string>
-                            <string>prioritized_coin_emission_letter_list</string>
-                            <string>banknote_emission_letter_sort</string>
-                            <string>coin_emission_letter_sort</string>
-                            <string>coin_cash_status_sort</string>
-                            <string>banknote_cash_status_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>x</string>
-                            <string>coin_cash_status_list</string>
-                            <string>banknote_emission_letter_list</string>
-                            <string>coin_emission_letter_list</string>
-                            <string>currency</string>
-                            <string>getCurrencyCashRelativeUrlList</string>
-                            <string>currency_cash_url_list</string>
-                            <string>currency_cash_list</string>
-                            <string>len</string>
-                            <string>new_currency_cash_list</string>
-                            <string>variation</string>
-                            <string>currency_cash</string>
-                            <string>axis_list_dict</string>
-                            <string>axis_dict</string>
-                            <string>total_price</string>
-                            <string>inventory_dict</string>
-                            <string>inventory_list</string>
-                            <string>inventory</string>
-                            <string>resource_id</string>
-                            <string>resource_list</string>
-                            <string>currency_cash_id</string>
-                            <string>cash_delivery_line</string>
-                            <string>line_number</string>
-                            <string>currency_dict</string>
-                            <string>resource_price</string>
-                            <string>cell_dict_dict</string>
-                            <string>cell_list</string>
-                            <string>cell</string>
-                            <string>category1</string>
-                            <string>category2</string>
-                            <string>column_category</string>
-                            <string>key</string>
-                            <string>_write_</string>
-                            <string>key_list</string>
-                            <string>cell_dict</string>
-                            <string>total_quantity</string>
-                            <string>enumerate</string>
-                            <string>counter</string>
-                            <string>column</string>
-                            <string>quantity</string>
-                            <string>_inplacevar_</string>
-                            <string>price</string>
-                            <string>col_key</string>
-                            <string>other_parameter_list</string>
-                            <string>_apply_</string>
-                            <string>other_parameter</string>
-                            <string>columne_base_list</string>
-                            <string>max_lines</string>
-                            <string>column_base_list</string>
-                            <string>line_counter_dict</string>
-                            <string>line</string>
-                            <string>resource_key</string>
-                            <string>new_line_list</string>
-                            <string>max</string>
-                            <string>next_listbox_key</string>
-                            <string>resource_value</string>
-                            <string>lines_to_add</string>
-                            <string>xrange</string>
-                            <string>num</string>
-                            <string>new_line</string>
-                            <string>column_nb</string>
-                            <string>str</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>CashDelivery_generateCashDetailInputDialog</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

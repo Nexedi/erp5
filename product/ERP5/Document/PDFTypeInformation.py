@@ -745,5 +745,26 @@ class PDFTypeInformation(ERP5TypeInformation):
                                                  'mode':'w'})
     ERP5TypeInformation.updatePropertySheetDefinitionDict(self, definition_dict)
 
+  def getTypePropertySheetValueList(self):
+    property_sheet_list = super(PDFTypeInformation,
+                                self).getTypePropertySheetValueList()
 
+    try:
+      parsed_scribus_iterator = self._getParsedScribusFile().itervalues()
+    except AttributeError:
+      return property_sheet_list
 
+    property_sheet = self.getPortalObject().portal_property_sheets.newContent(
+      id=self.__name__.replace(' ', ''),
+      portal_type='Property Sheet',
+      temp_object=True)
+
+    for page_content in parsed_scribus_iterator:
+      for field_name, fields_values in page_content:
+        property_sheet.newContent(reference=field_name[3:],
+                                  elementary_type=fields_values["data_type"],
+                                  portal_type='Standard Property',
+                                  temp_object=True)
+
+    property_sheet_list.append(property_sheet)
+    return property_sheet_list

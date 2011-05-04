@@ -38,36 +38,33 @@
 
 <div id="page_wrapper"\n
     tal:define="layout here/KnowledgePad_getBoxColumnLayout;\n
-                 real_context python: options.get(\'real_context\', None);\n
-                 cancel_url python: options.get(\'cancel_url\', None);\n
-                 isAnon python: here.portal_membership.isAnonymousUser();\n
-                 is_tab_empty python: (len(layout)==1 and len(layout[0])==0) or\n
-                                     (len(layout)==3 and len(layout[0]+layout[1]+layout[2])==0);\n
-                 columns python: options.get(\'columns\', 3);\n
-                 column_css_class python: test(isAnon, \n
-                                            \'portal-column portal-column-undraggable\', \n
-                                            \'portal-column\');">\n
+                real_context python: options.get(\'real_context\', None);\n
+                cancel_url python: options.get(\'cancel_url\', None);\n
+                is_anonymous_user python: here.portal_membership.isAnonymousUser();\n
+                is_tab_empty here/KnowledgePad_isEmpty;\n
+                columns python: options.get(\'columns\', 3);\n
+                column_css_class python: test(is_anonymous_user, \n
+                                              \'portal-column portal-column-undraggable\', \n
+                                              \'portal-column\');">\n
 \n
     <!-- No gadgets message -->\n
     <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget_message"/> \n
 \n
     <!-- Render pad columns -->\n
     <tal:block tal:repeat="column_index python: range(0, columns)">\n
-      <div tal:attributes="class column_css_class;\n
-                          id string:portal-column-${column_index}"\n
-           tal:condition="python: columns>=1+column_index">\n
+      <div tal:condition="python: columns>=1+column_index"\n
+           tal:attributes="class column_css_class;\n
+                          id string:portal-column-${column_index}">\n
 \n
         <tal:block tal:condition="python: len(layout)>=1+column_index"\n
                    tal:replace="structure python:\n
                                here.KnowledgePad_viewColumnWidget(section_layout=layout[column_index],\n
-                                                                real_context=real_context,\n
-                                                                cancel_url=cancel_url)"/>\n
-\n
+                                                                  real_context=real_context,\n
+                                                                  cancel_url=cancel_url)"/>\n
       </div>\n
     </tal:block>\n
 \n
-</div>\n
-
+</div>
 
 ]]></unicode> </value>
         </item>
@@ -85,7 +82,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

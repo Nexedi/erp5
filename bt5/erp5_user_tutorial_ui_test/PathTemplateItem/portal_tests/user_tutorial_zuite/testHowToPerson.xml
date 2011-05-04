@@ -1,0 +1,394 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>How-To Person</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">How-To Person</td></tr>\n
+</thead><tbody>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_setUpPersonTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Init Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span>\n
+\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Persons</td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Add Person</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="transition_message"]</td>\n
+  <td>Object created.</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//li[@class="selected"]/a/span</td>\n
+  <td>View</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_first_name"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_first_name\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_last_name"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_last_name\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_career_subordination_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_organisation_title\']"></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_default_email_text"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_email\']"></td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="subfield_field_my_career_role_list_default:list"]</td>\n
+  <td>Client</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_career_function"]</td>\n
+  <td>Marketing/Manager</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="information_area"]</td>\n
+  <td>Input data has errors. Please look at the error messages below.</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="error"]</td>\n
+  <td>No such document was found.</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="subfield_field_my_career_subordination_title_relation"]</td>\n
+  <td>Add Organisation</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextNotPresent</td>\n
+  <td>Input data has errors. Please look at the error messages below.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Details</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Validate</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//li[@class="selected"]/a/span</td>\n
+  <td>Details</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="transition_message"]</td>\n
+  <td>Status changed.</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=View</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@title="The current state of the document."]/div[1]</td>\n
+  <td>Validated</td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Persons</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[1]</td>\n
+  <td>ERP5</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[2]</td>\n
+  <td>Persons</td>\n
+</tr>\n
+<tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'person_howto_title\']],), enter_object=True)"/>\n
+<tr>\n
+  <td>pause</td>\n
+  <td>5000</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Create second person -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Persons</td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Add Person</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="transition_message"]</td>\n
+  <td>Object created.</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//li[@class="selected"]/a/span</td>\n
+  <td>View</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_first_name"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_first_name2\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_last_name"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_last_name2\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_career_subordination_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="subfield_field_my_career_role_list_default:list"]</td>\n
+  <td>Client</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_default_email_text"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_email2\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_career_function"]</td>\n
+  <td>Marketing/Manager</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Details</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Validate</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//li[@class="selected"]/a/span</td>\n
+  <td>Details</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="transition_message"]</td>\n
+  <td>Status changed.</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=View</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@title="The current state of the document."]/div[1]</td>\n
+  <td>Validated</td>\n
+</tr>\n
+<!-- Check sorting by email-->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/person_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'default_email_text\', here.Zuite_getHowToInfo()[\'person_howto_email\']],), enter_object=False)"/>\n
+<tr>\n
+  <td>verifyTextNotPresent</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_email2\']"></td>\n
+  <td></td>\n
+</tr>\n
+<tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'default_email_text\', here.Zuite_getHowToInfo()[\'person_howto_email2\']],), enter_object=False)"/>\n
+<tr>\n
+  <td>verifyTextNotPresent</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_email\']"></td>\n
+  <td></td>\n
+</tr>\n
+\n
+<!-- Check sorting by title-->\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/person_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'person_howto_title\']],), enter_object=False)"/>\n
+<tr>\n
+  <td>verifyTextNotPresent</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_title2\']"></td>\n
+  <td></td>\n
+</tr>\n
+<tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'person_howto_title2\']],), enter_object=False)"/>\n
+<tr>\n
+  <td>verifyTextNotPresent</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_title\']"></td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_tearDownPersonTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Clean Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
+\n
+</tbody>\n
+</table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testHowToPerson</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

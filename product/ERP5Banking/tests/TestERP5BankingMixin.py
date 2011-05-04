@@ -28,7 +28,7 @@
 
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from transaction import get as get_transaction
+import transaction
 
 def isSameSet(a, b):
   for i in a:
@@ -51,7 +51,8 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       the unit test framework in order to know which business templates
       need to be installed to run the test on.
     """
-    return ('erp5_base',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base',
             'erp5_pdm',
             'erp5_trade',
             'erp5_accounting',
@@ -153,7 +154,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
 
     if self.PAS_installed:
       # reindexing is required for the security to work
-      get_transaction().commit()
+      transaction.commit()
       self.tic()
 
 
@@ -531,6 +532,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     self.analyste_sref = self.banking.newContent(id='analyste_sref', portal_type='Category', codification='ASREF')
     self.gestionnaire_devise_a = self.banking.newContent(id='gestionnaire_cours_devise_a', portal_type='Category', codification='GCA')
     self.gestionnaire_devise_b = self.banking.newContent(id='gestionnaire_cours_devise_b', portal_type='Category', codification='GCB')
+    self.comptable_inter_site = self.banking.newContent(id='comptable_inter_site', portal_type='Category', codification='FXFIS')
 
     # get the base category group
     self.group_base_category = getattr(self.category_tool, 'group')
@@ -770,9 +772,32 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # the erp5 site
     self.portal = self.getPortal()
 
-    # XXX: should be done by erp5_banking_core business template
+    # Make sure movement table does not exist
+    sql_connection = self.getSQLConnection()
+    sql_connection.manage_test("DROP TABLE IF EXISTS movement")
+    # Delete also all ZSQL Methods related to movement table
     catalog = self.portal.portal_catalog.getSQLCatalog()
-    catalog.sql_catalog_role_keys = ()
+    catalog.manage_delObjects(ids=["z0_drop_movement",
+                                   "z0_uncatalog_movement",
+                                   "z_catalog_movement_list",
+                                   "z_create_movement",
+                                   ])
+    # Update properties of catalog
+    sql_catalog_object_list = list(catalog.sql_catalog_object_list)
+    sql_uncatalog_object = list(catalog.sql_uncatalog_object)
+    sql_clear_catalog = list(catalog.sql_clear_catalog)
+    sql_search_tables = list(catalog.sql_search_tables)
+
+    sql_catalog_object_list.remove("z_catalog_movement_list")
+    sql_uncatalog_object.remove("z0_uncatalog_movement")
+    sql_clear_catalog.remove("z0_drop_movement")
+    sql_clear_catalog.remove("z_create_movement")
+    sql_search_tables.remove("movement")
+
+    catalog.sql_catalog_object_list = tuple(sql_catalog_object_list)
+    catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+    catalog.sql_clear_catalog = tuple(sql_clear_catalog)
+    catalog.sql_search_tables = tuple(sql_search_tables)
 
     # the default currency for the site
     if not self.portal.hasProperty('reference_currency_id'):

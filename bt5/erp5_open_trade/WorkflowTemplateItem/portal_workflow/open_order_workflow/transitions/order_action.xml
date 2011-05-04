@@ -24,7 +24,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>marks the document as it has been ordered to the customer or it has been ordered by the supplier</string> </value>
+            <value> <string>Marks the document as it has been ordered to the customer or it has been ordered by the supplier</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -67,7 +67,6 @@
               <tuple>
                 <string>Assignee</string>
                 <string>Assignor</string>
-                <string>Manager</string>
               </tuple>
             </value>
         </item>

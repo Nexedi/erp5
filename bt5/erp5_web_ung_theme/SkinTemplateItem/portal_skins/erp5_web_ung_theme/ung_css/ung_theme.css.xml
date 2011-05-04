@@ -1,0 +1,1159 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ung_theme.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* No margins, take all screen */\n
+\n
+body {\n
+  background: #fff !important;\n
+  width:100%;\n
+  height:100%;\n
+  margin: 0;\n
+  padding: 0;\n
+  font-family: arial,sans-serif;\n
+  display:inline-block;\n
+  font-weight:normal;\n
+  overflow-x: hidden;\n
+}\n
+\n
+/* Hidden input */\n
+fieldset#hidden_fieldset,\n
+ div#upload_document,\n
+ div#edit_document {\t \n
+  display: none;\n
+}\n
+\n
+/* Header classes */\n
+\n
+div.navigation {\n
+  font-family: arial,sans-serif;\n
+  padding: 5px;\n
+  height: 15px;\n
+  border-bottom: 1px solid #C9D7F1;\n
+  font-size: 13px;\n
+}\n
+\n
+div.navigation fieldset.widget {\n
+  border: 0px;\n
+  padding-top: 0.6%; \n
+  margin: -0.60%;\n
+  width: 96%;\n
+}\n
+\n
+div.navigation-right { \n
+  float: right;\n
+  margin-top: -16px;\n
+}\n
+\n
+div.header-user { \n
+  text-align: right;\n
+  font-size: 13px;\n
+  margin-right:1%;\n
+  margin-top:-1.7%;\n
+}\n
+\n
+div.main-action-area {\n
+  margin-top: 0.7%;\n
+}\n
+\n
+/* Main action classes */\n
+\n
+div.main-action-area {\n
+  padding: 8px;\n
+  height: 30px;\n
+}\n
+\n
+div.logo-area {\n
+  float: left;\n
+  padding-right: 10px;\n
+}\n
+\n
+div.search-action-area {\n
+  float: left;\n
+}\n
+\n
+div.share-action-area {\n
+  text-align: right;\n
+}\n
+\n
+/* Main classes */\n
+\n
+div.main-right {\n
+  width:82%;\n
+  float:right;\n
+  border-left: 4px solid #BBCCFF;\n
+}\n
+\n
+div.main-right div.main-content {\n
+  width: 100%;\n
+  height: 100%;\n
+  background-color: #fff;\n
+  vertical-align: middle;\n
+}\n
+\n
+div.main-right div.main-status {\n
+  padding: 5px;\n
+  height: 22px;\n
+  vertical-align: middle;\n
+  font-size: 18px;\n
+  font-style: bold;\n
+}\n
+\n
+div.gadget-column {\n
+  margin-left:-4px;\n
+}\n
+\n
+div.gadget-column div.file-selection {\n
+  background-color:#fff;\n
+  margin:15px -4px -4px;\n
+}\n
+\n
+div.gadget-column div.file-selection div.file-quick-browser,\n
+  div.gadget-column div.file-selection div.file-quick-search {\n
+  padding-top: 5px;\n
+  padding-bottom: 5px;\n
+  border-bottom: 1px solid #DDD;\n
+  width:14.3em;\n
+}\n
+\n
+div.quick-search-item, td.listbox-table-domain-tree-cell a {\n
+  padding-left: 15px;\n
+  font-size: 13px;\n
+  line-height: 19px;\n
+  cursor: pointer;\n
+  text-decoration: none;\n
+  color: #000000;\n
+}\n
+\n
+div.quick-search-item:hover,\n
+ table.listbox-table-domain-tree tbody tr:hover {\n
+  background-color: #DAE6F6;\n
+}\n
+\n
+/* ERP5 Forms*/\n
+\n
+div.field label, \n
+ span.headline,  \n
+ a.listbox_title,  \n
+ div.actions, div.actions, \n
+ legend.group_title, fieldset.left {\n
+  display:none;\n
+}\n
+\n
+fieldset.bottom {\n
+  position: relative;\n
+  border:0px;\n
+  padding:0px;\n
+  list-style: none;\n
+}\n
+\n
+div.listbox-content table.listbox tbody tr td {\n
+  vertical-align: middle;\n
+  padding:2.2px;\n
+}\n
+\n
+div.listbox-content tr {\n
+  font-size:13px;\n
+  empty-cells:show;\n
+  white-space:nowrap;\n
+  padding-top: 1px;\n
+  border-bottom: 1px solid #D1D1D1;\n
+}\n
+\n
+tr.DataA:hover, tr.DataB:hover {\n
+  background-color: #DAE6F6;\n
+}\n
+\n
+div.listbox-content a img, div.main-content a img {\n
+  border:0px;\n
+}\n
+\n
+div.listbox-content td.listbox-table-data-cell a img {\n
+  margin-right: -8px;\n
+}\n
+div.main-right div.main-status a {\n
+  float:right;\n
+  font-size:14px;\n
+  padding-right:1%;\n
+  padding-top:0.3%;\n
+}\n
+\n
+.sort-button {\n
+  border:0px;\n
+  background: url("ung_images/href_background.gif");\n
+}\n
+\n
+.listbox {\n
+  border-collapse: collapse;\n
+}\n
+\n
+.listbox th {\n
+  border-right: 1px solid #bbccff;\n
+}\n
+\n
+thead {\n
+  font-family: serif;\n
+  font-style: normal;\n
+  font-variant: normal;\n
+  font-weight: normal;\n
+  font-size: medium;\n
+  line-height: 100%;\n
+  word-spacing: normal;\n
+  letter-spacing: normal;\n
+  background: url("ung_images/href_background.gif");\n
+}\n
+\n
+.listbox-table-select-cell {\n
+  width:0.5%;\n
+}\n
+\n
+.listbox-table-header-cell {\n
+  text-align:left;\n
+}\n
+\n
+div.listbox-content a, a:visited, a:focus {\n
+  background-color: inherit;\n
+  color:#002E3F;\n
+  text-decoration:none;\n
+}\n
+\n
+div.listbox-content a:hover {\n
+  background-color:inherit;\n
+  color:#3D6474;\n
+  text-decoration:underline;\n
+}\n
+\n
+img.sort-button-desc {\n
+  background: url("ung_images/icon_desc.gif") no-repeat;\n
+  width:10px;\n
+  margin:1px -10px; \n
+}\n
+\n
+img.sort-button-asc {\n
+  background: url("ung_images/icon_asc.gif") no-repeat;\n
+  width:10px;\n
+  margin:1px -10px;\n
+}\n
+\n
+.jSheetControls_formula {\n
+  width: 90% !important;\n
+}\n
+\n
+iframe#svgframe, fieldset.widget {\n
+  border: 0px;\n
+}\n
+\n
+iframe#svgframe {\n
+  width: 100%;\n
+}\n
+\n
+div#wrapper_toolbar {\n
+  background: #E3E9FF no-repeat;\n
+  height:35px;  \n
+}\n
+\n
+button.clone {\n
+  background-image: url(\'<dtml-var expr="portal_url()">/images/fileclone.png\');\n
+  border: 0 none;\n
+  height:22px;\n
+  width:23px;\n
+}\n
+\n
+div#wrapper_toolbar fieldset.widget div.field div.input {\n
+  margin-top:-2px;\n
+}\n
+\n
+div#wrapper_header div.navigation-right {\n
+  float: right;\n
+  margin-top: -5.2em;\n
+}\n
+\n
+div#wrapper_header div.field fieldset {\n
+  border:0px;\n
+}\n
+\n
+div#wrapper_header div.field a[name="document_title"], \n
+ div#wrapper_header div.field a[name="document_state"] {\n
+  margin-left:22px;\n
+  font-size:15px;\n
+}\n
+\n
+div#wrapper_header div.field a[name="document_state"] {\n
+  color:#525f94;\n
+  font-size:13px !important;\n
+}\n
+\n
+div.header-bottom {\n
+  margin-left:-7px;\n
+  margin-top:6px;\n
+  width:100%;\n
+}\n
+\n
+div.header-right {\n
+  float: right;\n
+  margin-top: -38px;\n
+  height: 18px;\n
+  width: 41.3%;;\n
+}\n
+\n
+div.main-left, div.main-right, div.main {\n
+  height: 45em;\n
+  margin-top: -0.6em;\n
+}\n
+\n
+div.main {\n
+ margin-top: 0.5em;\n
+ height: auto;\n
+}\n
+button.delete {\n
+  margin-top: 6px;\n
+  margin-left: 6px;\n
+}\n
+\n
+div.favorite-box {\n
+  margin-top:-6px;\n
+  margin-left:-16px;\n
+}\n
+\n
+table.listbox {\n
+  margin-left: -12px;\n
+  background: #eff3fa;\n
+}\n
+\n
+div.main-right fieldset.widget div.field:last-child img {\n
+  display:none;\n
+}\n
+\n
+div.header-right div.input a {\n
+  color:#A7A2A2;\n
+  font-size:13px;\n
+}\n
+\n
+a.ung_docs img {\n
+  border:0 none;\n
+  left:-7px;\n
+  position:relative;\n
+  top:9px;\n
+}\n
+\n
+div.main-left {\n
+  margin-left:-4px;\n
+  width: 18%;\n
+  float:left;\n
+  background-color: #DAE6F6;\n
+  height:4em;\n
+  border: 0;\n
+}\n
+\n
+div.favorite {\n
+  background-color: #BBCCFF;\n
+  height:27px; \n
+  margin-top:-5px;\n
+  padding-top:8px;\n
+}\n
+\n
+div.favorite a {\n
+  font-size: 14px;\n
+  float: right;\n
+  margin-right: 5px;\n
+}\n
+div.toolbar, div.favorite {\n
+  margin-left:-12px;\n
+  border-collapse: collapse;\n
+}\n
+\n
+div.toolbar {\n
+  background-color: #E3E9FF;\n
+  height:27px; \n
+  padding-bottom:5px;\n
+}\n
+\n
+div.content {\n
+  background:none repeat scroll 0 0 #DAE6F6;\n
+  border-bottom:4px solid #BBCCFF;\n
+  border-top:4px solid #BBCCFF;\n
+}\n
+\n
+div.main-right div.content {\n
+  height:27em;\n
+}\n
+\n
+div.listbox-body div.main-right tbody {\n
+  height:25.35em;\n
+  overflow-x:hidden;\n
+  overflow-y:auto;\n
+}\n
+\n
+div.header-left {\n
+  margin-left:1px;\n
+  margin-top:-4px;\n
+}\n
+\n
+.sort-button span {\n
+ color:#112abb;\n
+}\n
+ \n
+div.navigation-left a {\n
+ margin-left:7px;\n
+}\n
+\n
+div.navigation-right a {\n
+ margin-left:2px;\n
+}\n
+\n
+div.main-right fieldset.widget{\n
+  padding:0;\n
+  margin-left:12px;\n
+  margin-top:5px;\n
+}\n
+\n
+div.bottom_actions button {\n
+  display:none;\n
+}\n
+\n
+div.toolbar button, div.gadget-action input#upload {\n
+  color: #333333;\n
+  border: 1px solid #BBBBBB;\n
+  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
+  -moz-border-radius: 4px;\n
+}\n
+\n
+.menu_create_object {\n
+  color:#8e8e8e;\n
+  margin-top:-5px;\n
+}\n
+\n
+div#select_language {\n
+  color: #20C;\n
+}\n
+.menu_create_object, div#select_language {\n
+  font-family: arial,sans-serif;\n
+  font-size:14px;\n
+  list-style:none outside none;\n
+  white-space:nowrap;\n
+}\n
+.menu_create_object img {\n
+  border:0px;  \n
+}\n
+\n
+.menu_create_object li a#current {\n
+  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
+  width: 78px;\n
+  height: 19px;\n
+  color: #333333;\n
+  border:1px solid #BBBBBB;\n
+  padding-left:2px;\n
+  padding-right:14px;\n
+  text-align:justify;\n
+  -moz-border-radius: 4px;\n
+}\n
+\n
+.menu_create_object ul, div#select_language ul {\n
+  list-style:none;\n
+  margin:0;\n
+  padding:0;\n
+}\n
+\n
+span#available_language {\n
+  text-decoration: underline;\n
+}\n
+div#select_language li span {\n
+  text-color: #20C;\n
+  cursor: pointer;\n
+}\n
+.menu_create_object li {\n
+  float:left;\n
+  margin-left: 0.5em;\n
+  position:relative;\n
+  top: 0.5em;\n
+  text-decoration:none;\n
+}\n
+\n
+.menu_create_object li a, div#select_language li a {\n
+  display:block;\n
+  text-decoration:none;\n
+}\n
+\n
+.menu_create_object li a:hover, div#select_language li a:hover {\n
+  color:#000000;\n
+  text-decoration:none;\n
+}\n
+\n
+.menu_create_object li:hover ul, div#select_language li:hover ul {\n
+  display:block;\n
+}\n
+\n
+div#select_language li li {\n
+  background:none repeat scroll 0 0 #FFFFFF;\n
+  border-left: 1px solid #C9D7F1;\n
+  border-right: 1px solid #C9D7F1;\n
+}\n
+\n
+.menu_create_object li li, {\n
+  display:block;\n
+  margin-left:0;\n
+}\n
+\n
+.menu_create_object p {\n
+  clear:left;\n
+}\n
+\n
+div#select_language li ul {\n
+  width:70px;\n
+}\n
+\n
+.menu_create_object li ul {\n
+  border:1px solid #D1D1D1;\n
+  background-color: #FFF;\n
+}\n
+.menu_create_object li ul, div#select_language li ul {\n
+  display:none;\n
+  height:auto;\n
+  filter:alpha(opacity=95);\n
+  position:absolute;\n
+  z-index:200;\n
+}\n
+\n
+.menu_create_object li ul a, div#select_language li ul a {\n
+  display:block;\n
+  font-size:14px;\n
+  font-style:normal;\n
+  margin-left:4px;\n
+  margin-top:-5px;\n
+  padding:0 21px 0 1px;\n
+  text-align:left;\n
+  color:#002E3F;\n
+  text-decoration:none;\n
+  line-height:28px;\n
+}\n
+\n
+div.gadget-column input#upload {\n
+  left:1em;\n
+  position:relative;\n
+  top:0.5em;\n
+}\n
+\n
+.menu_create_object li li:hover, div#select_language li li:hover {\n
+  background-color: #DAE6F6;\n
+}\n
+\n
+.menu_create_object li a#current img {\n
+  margin-left:3px;\n
+  position:relative;\n
+  top:2px;\n
+}\n
+\n
+.action_menu {\n
+  float:right;\n
+  margin-right:5em;\n
+  width:25%;\n
+}\n
+\n
+.action_menu li {\n
+  list-style:none outside none;\n
+}\n
+\n
+.action_menu li ul {\n
+  background: none repeat scroll 0 0 #FFFFFF;\n
+  border: 1px solid #D1D1D1;\n
+  display: none;\n
+  height: 76px;\n
+  position: relative;\n
+  margin-top:3px;\n
+  width: 143px;\n
+  z-index: 200;\n
+}\n
+\n
+.action_menu li a:hover {\n
+  color:#000000;\n
+  text-decoration:none;\n
+}\n
+\n
+.action_menu li ul li {\n
+  margin: -26px 0px -24px -40px;\n
+  height: 23px;\n
+  text-align:center;\n
+}\n
+\n
+.action_menu li:hover ul {\n
+  display:block;\n
+}\n
+\n
+.action_menu a#change_state {\n
+  color: #333333;\n
+  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
+  border: 1px solid #D1D1D1;\n
+  padding:2px;\n
+}\n
+\n
+.action_menu li ul li h6 {\n
+  color: #333333;\n
+  font-size: 12px;\n
+  padding-top:4px;\n
+  font-weight:lighter;\n
+}\n
+\n
+.action_menu li ul li:hover {\n
+  background: #f3f3f3;\n
+}\n
+\n
+button.save {\n
+  background-image:url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
+  border:1px solid #D1D1D1;\n
+  height:21px;\n
+  color:#333333;\n
+}\n
+\n
+button.edit {\n
+  border:1px solid #D1D1D1;\n
+  float:right;\n
+  margin-top:-1.6em;\n
+  background-image:url(\'<dtml-var expr="portal_url()">/ung_images/button_background.png\');\n
+  color:#333333;\n
+}\n
+\n
+div#wrapper_header div.field a[name="document_title"]:hover {\n
+  background:none repeat scroll 0 0 #FFFFD6;\n
+  border:1px solid #AAAAAA;\n
+}\n
+\n
+div#wrapper_header div.field a[name="document_title"] {\n
+  color:#060605;\n
+  padding:3px;\n
+  text-decoration:none;\n
+}\n
+\n
+div#edit_document fieldset label {\n
+  font-size: 12px;\n
+}\n
+\n
+div.ui-dialog-titlebar {\n
+  height:15px;\n
+}\n
+\n
+div#edit_document fieldset {\n
+  border:0 none;\n
+  height:72px;\n
+  margin-left:-1em;\n
+  margin-top:-0.5em;\n
+  width:379px;\n
+}\n
+\n
+div#edit_document {\n
+  height:80px;\n
+  width:368px;\n
+  overflow:hidden;\n
+}\n
+\n
+div#edit_document fieldset input {\n
+  margin-top:6px;\n
+  font-size:13px;\n
+  width: 95%;\n
+}\n
+\n
+div.ui-dialog {\n
+ background: #C1D9FF;\n
+}\n
+\n
+div#edit_document fieldset label {\n
+  font-size: 12px;\n
+}\n
+\n
+span#ui-dialog-title-edit_document, \n
+ span#ui-dialog-title-upload_document,\n
+ span#ui-dialog-title-gadget-listbox{\n
+  font-size:17px;\n
+  margin-left:-8px;\n
+  margin-top:-3px;\n
+  font:bold 12pt Arial,Sans-serif;\n
+  color: #222222 !important;\n
+}\n
+\n
+div.ui-dialog-titlebar {\n
+  height:15px;\n
+  border: 0px;\n
+  background: #E0EDFE;\n
+  -moz-border-radius:1px 1px 1px 1px;\n
+}\n
+\n
+button#save_document, button#cancel_document {\n
+  font-size:11px;\n
+  margin-top:0.7em;\n
+}\n
+\n
+.ui-dialog .ui-dialog-buttonpane {\n
+  background:none repeat scroll 0 0 #C1D9FF;\n
+  border-top:0 none;\n
+  width: 5.6em;\n
+  padding:0 !important;\n
+}\n
+\n
+.ui-button-text-only .ui-button-text {\n
+  padding:0.2em 0.3em !important;\n
+}\n
+\n
+.ui-button .ui-button-text {\n
+  line-height:1em !important;\n
+}\n
+\n
+.ui-dialog .ui-dialog-buttonpane button {\n
+  margin:0 0.4em 0.5em 0 !important;\n
+}\n
+\n
+span.ui-button-text {\n
+ font-size: 12px;\n
+}\n
+\n
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {\n
+ float:none !important;\n
+ width:104px;\n
+ height:21px;\n
+ margin-top:-10px;\n
+}\n
+\n
+div.listbox-navigation {\n
+  float:right;\n
+  font-size:13px;\n
+  margin-top:6px;\n
+  min-width:10%;\n
+  margin-right:5px;\n
+}\n
+\n
+div.listbox-navigation input {\n
+  height: 18px;\n
+  width: 20px;\n
+}\n
+\n
+div.listbox-header-box {\n
+  height:0px;\n
+}\n
+\n
+div.listbox-number-of-records{\n
+  float: right;\n
+  font-size: 12px;\n
+  margin-right: 12em;\n
+  margin-top: -18px;\n
+  min-width: 30%;\n
+}\n
+\n
+div.listbox-navigation button.listbox_last_page,\n
+  div.listbox-navigation button.listbox_next_page, \n
+  div.listbox-navigation button.listbox_previous_page, \n
+  div.listbox-navigation button.listbox_first_page {\n
+  height:20px;\n
+  border: 0px;\n
+}\n
+\n
+div.listbox-navigation button.listbox_previous_page,\n
+  div.listbox-navigation button.listbox_next_page {\n
+  margin: 0px;\n
+  width:12px;\n
+}\n
+\n
+div.listbox-navigation button.listbox_last_page, \n
+  div.listbox-navigation button.listbox_first_page {\n
+  margin: 0px;\n
+  width:18px;\n
+}\n
+\n
+div.listbox-navigation button.listbox_next_page {\n
+  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/next_page.png\');\n
+}\n
+\n
+div.listbox-navigation button.listbox_last_page {\n
+  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/last_page.png\');\n
+}\n
+\n
+div.listbox-navigation button.listbox_first_page {\n
+  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/first_page.png\');\n
+}\n
+\n
+div.listbox-navigation button.listbox_previous_page {\n
+  background-image: url(\'<dtml-var expr="portal_url()">/ung_images/previous_page.png\');\n
+}\n
+\n
+div.listbox-navigation button.listbox_previous_page, \n
+ div.listbox-navigation button.listbox_first_page,\n
+ div.listbox-navigation button.listbox_last_page,\n
+ div.listbox-navigation button.listbox_next_page {\n
+ background-repeat:no-repeat;\n
+}\n
+\n
+p#more_properties, p#hide_properties {\n
+  font-size: 12px;\n
+}\n
+\n
+p#more_properties:hover, p#hide_properties:hover {\n
+  color:#525f94;\n
+}\n
+a#left_message, a#right_message {\n
+  display: none;\n
+  color: #FD0A0A;\n
+}\n
+\n
+div.listbox-domain-tree-container select {\n
+  display:none;\n
+}\n
+\n
+div.listbox-tree {\n
+  font-size: 13px;\n
+  width: 98.7%;\n
+  overflow: hidden;\n
+  height: 233px;\n
+}\n
+\n
+div.listbox-tree-mode-selection {\n
+  display:none;\n
+}\n
+\n
+table.listbox-table-domain-tree {\n
+  width: 100%;\n
+}\n
+\n
+a.domain_selected {\n
+  float:left !important;\n
+  font-size: 15px !important;\n
+}\n
+\n
+div#upload_document {\n
+  height: 58px !important;\n
+  width: 390px !important;\n
+  font-size: 12px;\n
+}\n
+fieldset#file_box {\n
+  border: 0px !important;\n
+  margin-left: -17px;\n
+  margin-top: -4px;\n
+}\n
+input#submit_document {\n
+  background: url("images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
+  border: 1px solid #3D6474;\n
+  color: #555555;\n
+  font-weight: normal;\n
+  -moz-border-radius: 4px 4px 4px 4px;\n
+  margin-top: 3px;\n
+}\n
+\n
+a#loading_message {\n
+  display: none;\n
+}\n
+\n
+iframe#field_my_text_content___Frame {\n
+  height: 489px !important;\n
+}\n
+\n
+div#login-box {\n
+  font-family: Arial,Helvetica,sans-serif;\n
+  font-size: 12px;\n
+  margin: 0;\n
+  padding: 23px 23px 0 0;\n
+  float:right;\n
+  width: 23%;\n
+}\n
+\n
+div#login-box input {\n
+  vertical-align: middle; \n
+}\n
+\n
+div#login-box input.submit {\n
+  margin-top: 6px;\n
+}\n
+\n
+div#preference_dialog {\n
+  display:none;\n
+  width: 308px !important;\n
+  font-size: 14px;\n
+}\n
+\n
+fieldset.center.editable, fieldset.right.editable {\n
+  border: 0;\n
+  padding: 0.15em 0.35em 0.400em;\n
+  font-size: 14px;\n
+  margin-left: -11px;\n
+}\n
+\n
+fieldset.center.editable div.field label, \n
+ fieldset.right.editable div.field label {\n
+  display: block;\n
+}\n
+\n
+span#ui-dialog-title-preference_dialog {\n
+  margin: 0;\n
+  margin-top: -2px;\n
+  margin-left: -10px;\n
+  font-size: 15px;\n
+  color: #222222 !important;\n
+}\n
+\n
+div#preference_dialog div.field {\n
+  padding-bottom: 1px;\n
+  padding-top: 1px;\n
+}\n
+\n
+div.header-right fieldset.widget {\n
+  height: 29px;\n
+}\n
+\n
+div.header-right fieldset.widget span#sharing_url {\n
+  padding-top: 2px;\n
+  font-size: 11px;\n
+}\n
+\n
+div.gadget-listbox {\n
+  display: none;\n
+}\n
+\n
+table#gadget-table tbody tr img {\n
+  float: right;\n
+}\n
+\n
+table#gadget-table tbody tr {\n
+  font-size: 15px;\n
+}\n
+\n
+table#gadget-table {\n
+  width: 100%;\n
+}\n
+\n
+div.gadget-action div.front_pad {\n
+  font-size: 10px;\n
+}\n
+h3.handle {\n
+  color: #222222 !important;\n
+  background: white !important;\n
+  font-size: 13px !important;\n
+  border-bottom: 0px !important;\n
+}\n
+\n
+div.block div.content {\n
+  border-top: 0px !important;\n
+  border-bottom: 1px solid #DDDDDD !important;\n
+}\n
+\n
+div.portal-column {\n
+  width: 100% !important;\n
+}\n
+\n
+div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left,\n
+  div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left label {\n
+  display: inline !important;\n
+}\n
+\n
+div.edit-form button {\n
+  margin-top: -0.3em !important;\n
+}\n
+\n
+div.edit-form {\n
+  padding-left: 0 !important;\n
+}\n
+\n
+h3.handle span.handle {\n
+  background: white !important;\n
+}\n
+\n
+a.block-minimize {\n
+  background-image: url("../ung_images/icon_minimize.png") !important;\n
+}\n
+\n
+a.block-remove {\n
+  background-image: url("../ung_images/icon_remove.png") !important;\n
+}\n
+\n
+a.block-edit-form {\n
+  background-image: url("../ung_images/icon_edit.png") !important;\n
+}\n
+\n
+table#navigation_table td#tab-switcher-container,\n
+ table#navigation_table td#tab-list-container {\n
+  display: none !important;\n
+}\n
+\n
+div#add_new_gadget_link {\n
+  border-bottom: 0px;\n
+  padding-top: 5px;\n
+  width: 50% !important;\n
+}\n
+\n
+div.front_pad div#page_wrapper {\n
+  margin: -0.5em 0 0 !important;\n
+}\n
+\n
+#add-gadgets{\n
+ font-size: 11px;\n
+}\n
+\n
+form#ung_preference,\n
+ form#system_preference,\n
+ form#erp5_preference {\n
+  margin:0px;\n
+  padding: 0px;\n
+}\n
+\n
+div.edit-form {\n
+  background-color: #FFF !important;\n
+  border: 0 none !important;\n
+}\n
+\n
+table.gadget tbody tr:first-child {\n
+  display: none !important;\n
+}\n
+\n
+div.edit-form {\n
+  height: 176px !important;\n
+}\n
+\n
+div#edit_document.ui-dialog-content {\n
+  background-color: #FFFFFF;\n
+}\n
+\n
+.ui-widget textarea {\n
+  font-size: 13px !important;\n
+}\n
+\n
+div#tabs, div#pad-navigation-wrapper div#tabs_switcher.tab {\n
+  display: none !important;\n
+}\n
+\n
+div#pad-navigation-wrapper {\n
+  border: 0px !important;\n
+}\n
+\n
+img[alt="calendar_logo_box"] {\n
+  margin-top: 10px;\n
+}\n
+\n
+div#preference_dialog select {\n
+  border: 0px;\n
+}\n
+\n
+a.your_listbox_title {\n
+  display: none;\n
+}\n
+\n
+table#field_table,\n
+ table#new-account-table,\n
+ table#create-new-user {\n
+  border: 1px solid #C3D9FF;\n
+  width: 78%;\n
+}\n
+\n
+table#field_table tbody,\n
+ table#new-account-table tbody,\n
+ table#create-new-user tbody {\n
+  background: #E8EEFA;\n
+}\n
+\n
+table#field_table tbody label {\n
+  font-size: 10pt;\n
+  float: right;\n
+}\n
+\n
+table#new-account-table table td,\n
+ table#create-new-user td {\n
+  font-size: 10pt;\n
+}\n
+\n
+td#new-account-form {\n
+  text-decoration: underline;\n
+  color: #00C;\n
+  font-weight: bold;\n
+  cursor: pointer;\n
+}\n
+\n
+table#create-new-user {\n
+  display:none;\n
+  margin-top: -22px;\n
+}\n
+\n
+td#form-message {\n
+  color: #EC1D1D;\n
+  display: none;\n
+}\n
+\n
+div#advertisement h2 {\n
+  font-size: 15pt;\n
+}\n
+\n
+div#advertisement b {\n
+  font-size: 12px !important;  \n
+}\n
+\n
+div.footer {\n
+  text-align: center;\n
+  margin-top: 40px;\n
+  font-size: 10pt;\n
+}\n
+\n
+div.header-left h2 {\n
+  font-size: 14pt;\n
+}\n
+\n
+form#create-user table tbody tr:last-child td {\n
+  color: #20C;\n
+  text-decoration: underline;\n
+  font-size: 8pt;\n
+  cursor: pointer;\n
+}\n
+\n
+select[name="field_your_language"] {\n
+  background-color: transparent;\n
+  border: 0 none;\n
+}\n
+\n
+div.navigation-right fieldset.widget div {\n
+  float: left;\n
+}\n
+\n
+span.date-format {\n
+  font-style: italic;\n
+}\n
+\n
+span#no-input-file {\n
+  display: none;\n
+  color: #f61717;\n
+}\n
+\n
+.tree-open, .tree-closed {\n
+  border: none;\n
+  background: #FFF;\n
+  cursor: pointer;\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

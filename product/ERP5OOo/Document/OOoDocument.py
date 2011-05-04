@@ -300,34 +300,34 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     is_html = 0
     requires_pdf_first = 0
     original_format = format
+    allowed_format_list = self.getTargetFormatList()
     if format == 'base-data':
       return self.getBaseContentType(), str(self.getBaseData())
     if format == 'pdf':
-      format_list = [x for x in self.getTargetFormatList()
+      format_list = [x for x in allowed_format_list
                                           if x.endswith('pdf')]
       format = format_list[0]
     elif format in VALID_IMAGE_FORMAT_LIST:
-      format_list = [x for x in self.getTargetFormatList()
+      format_list = [x for x in allowed_format_list
                                           if x.endswith(format)]
       if len(format_list):
         format = format_list[0]
       else:
         # We must fist make a PDF which will be used to produce an image out of it
         requires_pdf_first = 1
-        format_list = [x for x in self.getTargetFormatList()
+        format_list = [x for x in allowed_format_list
                                           if x.endswith('pdf')]
         format = format_list[0]
     elif format == 'html':
-      format_list = [x for x in self.getTargetFormatList()
+      format_list = [x for x in allowed_format_list
                               if x.startswith('html') or x.endswith('html')]
       format = format_list[0]
       is_html = 1
     elif format in ('txt', 'text', 'text-content'):
-      format_list = self.getTargetFormatList()
       # if possible, we try to get utf8 text. ('enc.txt' will encode to utf8)
-      if 'enc.txt' in format_list:
+      if 'enc.txt' in allowed_format_list:
         format = 'enc.txt'
-      elif format not in format_list:
+      elif format not in allowed_format_list:
         #Text conversion is not supported by oood, do it in other way
         if not self.hasConversion(format=original_format):
           #Do real conversion for text

@@ -98,9 +98,22 @@ Options:
                              Port number used to connect to conversion server
                              (Oood), the value will be stored at default preference.
                              By default 8008 is used.
-  --use_dummy_mail_host      Replace the MailHost by DummyMailHost.
-                             This prevent the instance send emails.
-                             By default Original MailHost is used.
+  --volatile_memcached_server_hostname=STRING
+                             Hostname used to connect to volatile memcached server,
+                             this value will stored on portal_memcached.
+                             By default localhost is used.
+  --volatile_memcached_server_port=STRING
+                             Port number used to connect to volatile memcached server,
+                             the value will be stored on portal_memcached.
+                             By default 11211 is used.
+  --persistent_memcached_server_hostname=STRING
+                             Hostname used to connect to persistent memcached server,
+                             this value will stored on portal_memcached.
+                             By default localhost is used.
+  --persistent_memcached_server_port=STRING
+                             Port number used to connect to persistent memcached server,
+                             the value will be stored on portal_memcached.
+                             By default 12121 is used.
   --random_activity_priority=[SEED]
                              Force activities to have a random priority, to make
                              random failures (due to bad activity dependencies)
@@ -115,6 +128,8 @@ Options:
                              Make ZServer listen on given host:port
                              If used with --activity_node=, this can be a
                              comma-separated list of addresses.
+  --neo_storage              Use a volatile NEO storage instead of a DemoStorage
+                             (not compatible with --save or --load).
   --products_path=path,path  Comma-separated list of products paths locations
                              which shall be used in test environment.
   --sys_path=path,path       Comma-separated list of paths which will be used to
@@ -366,6 +381,11 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   cfg = App.config.getConfiguration()
   cfg.testinghome = instance_home
   cfg.instancehome = instance_home
+  try:
+    from Zope2.Startup.datatypes import DBTab
+    cfg.dbtab = DBTab({}, {})
+  except ImportError: # Zope 2.8
+    pass
   App.config.setConfiguration(cfg)
 
   if WIN:
@@ -460,22 +480,27 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
       assert False
     layer.onsetup = assertFalse
 
+    from Products.ERP5Type.tests.utils import DbFactory
+    root_db_name, = cfg.dbtab.databases.keys()
+    DbFactory(root_db_name).addMountPoint('/')
+
   TestRunner = backportUnittest.TextTestRunner
 
   import Lifetime
   from ZEO.ClientStorage import ClientStorage
-  from Zope2.custom_zodb import \
-      save_mysql, zeo_server_pid, zeo_client_pid_list, Storage
+  from Zope2.custom_zodb import Storage, save_mysql, \
+      node_pid_list, neo_cluster, zeo_server_pid
   def shutdown(signum, frame, signum_set=set()):
     Lifetime.shutdown(0)
     signum_set.add(signum)
-    if zeo_client_pid_list is None and len(signum_set) > 1:
+    if node_pid_list is None and len(signum_set) > 1:
       # in case of ^C, a child should also receive a SIGHUP from the parent,
       # so we merge the first 2 different signals in a single exception
       signum_set.remove(signal.SIGHUP)
     else:
       raise KeyboardInterrupt
-  signal.signal(signal.SIGINT, shutdown)
+  if signal.getsignal(signal.SIGINT) is not signal.SIG_IGN:
+    signal.signal(signal.SIGINT, shutdown)
   signal.signal(signal.SIGHUP, shutdown)
 
   try:
@@ -485,7 +510,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
                       or not load)
     if zeo_server_pid == 0:
       suite = ZEOServerTestCase('asyncore_loop')
-    elif zeo_client_pid_list is None or not test_list:
+    elif node_pid_list is None or not test_list:
       suite = ProcessingNodeTestCase('processing_node')
       if not (dummy or load):
         _print('WARNING: either --save or --load should be used because static'
@@ -515,37 +540,28 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
       if run_only:
         ERP5TypeTestLoader.filter_test_list = None
 
-    if not isinstance(Storage, ClientStorage):
-      # Remove nodes that were registered during previous execution.
-      # Set an empty dict (instead of delete the property)
-      # in order to avoid conflicts on / when several ZEO clients registers.
-      from BTrees.OIBTree import OIBTree
-      app = ZopeTestCase.app()
-      app.test_processing_nodes = OIBTree()
-      import transaction
-      transaction.commit()
-      ZopeTestCase.close(app)
-      del app
-
-    if zeo_client_pid_list is None:
+    if node_pid_list is None:
       result = suite()
     else:
       if not test_list:
         root_logger.handlers.append(loghandler.StreamHandler(sys.stderr))
-      _print('done (%.3fs)' % (time.time() - _start))
+      _print('done (%.3fs)\n' % (time.time() - _start))
       result = TestRunner(verbosity=verbosity).run(suite)
   finally:
+    ProcessingNodeTestCase.unregisterNode()
     Storage.close()
-    if zeo_client_pid_list is not None:
+    if node_pid_list is not None:
       # Wait that child processes exit. Stop ZEO storage (if any) after all
       # other nodes disconnected.
-      for pid in zeo_client_pid_list:
+      for pid in node_pid_list:
         os.kill(pid, signal.SIGHUP)
-      for pid in zeo_client_pid_list:
+      for pid in node_pid_list:
         os.waitpid(pid, 0)
       if zeo_server_pid:
         os.kill(zeo_server_pid, signal.SIGHUP)
         os.waitpid(zeo_server_pid, 0)
+      if neo_cluster:
+        neo_cluster.stop()
 
   if save:
     os.chdir(instance_home)
@@ -572,7 +588,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
           if e.errno != errno.ENOENT:
             raise
         os.rename(static_dir, backup_path)
-    elif zeo_client_pid_list is not None:
+    elif node_pid_list is not None:
       _print('WARNING: No static files saved. You will have to do it manually.')
 
   return result
@@ -585,7 +601,15 @@ def usage(stream, msg=None):
   program = os.path.basename(sys.argv[0])
   print >>stream, __doc__ % {"program": program}
 
-def main():
+def main(argument_list=None):
+  if argument_list is None:
+    argument_list = []
+  # as this method can be used as entry point extend real sys.argv with
+  # passed argument list
+  old_argv = sys.argv[:]
+  sys.argv = [old_argv[0]]
+  sys.argv.extend(argument_list)
+  sys.argv.extend(old_argv[1:])
   try:
     opts, args = getopt.getopt(sys.argv[1:],
         "hpvD", ["help", "verbose", "profile", "portal_id=", "data_fs_path=",
@@ -594,6 +618,10 @@ def main():
         "cmf_activity_sql_connection_string=",
         "conversion_server_port=", 
         "conversion_server_hostname=",
+        "volatile_memcached_server_port=", 
+        "volatile_memcached_server_hostname=",
+        "persistent_memcached_server_port=", 
+        "persistent_memcached_server_hostname=",
         "erp5_catalog_storage=",
         "save",
         "load",
@@ -602,7 +630,6 @@ def main():
         "enable_full_indexing=",
         "run_only=",
         "update_only=",
-        "use_dummy_mail_host",
         "update_business_templates",
         "random_activity_priority=",
         "activity_node=",
@@ -610,6 +637,7 @@ def main():
         "zeo_client=",
         "zeo_server=",
         "zserver=",
+        "neo_storage",
         "products_path=",
         "sys_path=",
         "instance_home=",
@@ -681,6 +709,14 @@ def main():
       os.environ["conversion_server_hostname"] = arg
     elif opt == "--conversion_server_port":
       os.environ["conversion_server_port"] = arg
+    elif opt == "--volatile_memcached_server_hostname":
+      os.environ["volatile_memcached_server_hostname"] = arg
+    elif opt == "--volatile_memcached_server_port":
+      os.environ["volatile_memcached_server_port"] = arg
+    elif opt == "--persistent_memcached_server_hostname":
+      os.environ["persistent_memcached_server_hostname"] = arg
+    elif opt == "--persistent_memcached_server_port":
+      os.environ["persistent_memcached_server_port"] = arg
     elif opt == "--live_instance":
       live_instance_path = arg or real_instance_home
       # following line is only for static files
@@ -690,8 +726,6 @@ def main():
       os.environ["erp5_dump_sql"] = "0"
       os.environ["erp5_tests_data_fs_path"] = os.path.join(
                                       live_instance_path, 'var', 'Data.fs')
-    elif opt == "--use_dummy_mail_host":
-      os.environ["use_dummy_mail_host"] = "1"
     elif opt == "--random_activity_priority":
       os.environ["random_activity_priority"] = arg or \
         str(random.randrange(0, 1<<16))
@@ -703,6 +737,8 @@ def main():
       os.environ["zeo_server"] = arg
     elif opt == "--zserver":
       os.environ["zserver"] = arg
+    elif opt == "--neo_storage":
+      os.environ["neo_storage"] = ""
     elif opt == "--products_path":
       os.environ["PRODUCTS_PATH"] = arg
     elif opt == "--sys_path":

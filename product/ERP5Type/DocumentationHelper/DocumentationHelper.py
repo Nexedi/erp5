@@ -73,6 +73,7 @@ class TempObjectLibrary(object):
       temp_object = container.newContent(portal_type=portal_type,
                                          id=portal_type,
                                          temp_object=1)
+
       self.portal_type_dict[portal_type] = temp_object
     return temp_object
 
@@ -297,12 +298,7 @@ class DocumentationHelper(Implicit):
     return self.view()
 
   def _getPropertyHolder(self):
-    property_holder = None
-    key = self.getPortalType(), self.getDocumentedObject().__class__
-    if not(Base.aq_portal_type.has_key(key)):
-      self.getDocumentedObject().initializePortalTypeDynamicProperties()
-    property_holder =  Base.aq_portal_type[key]
-    return property_holder
+    return self.getDocumentedObject().__class__
 
 
 InitializeClass(DocumentationHelper)

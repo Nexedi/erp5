@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+ It is expected that some objects has some state in the after upgrade finish.\n
+ This alarm verify and upgrade the objects that were defined in signature.\n
+"""\n
+from Products.ERP5Type.Log import log\n
+portal_templates = context.portal_templates\n
+validation_dict = context.ERP5Site_getUpgraderSignature().get(\'object_action_dict\', {})\n
+param_not_provided = "PARAM_NOT_PROVIDED"\n
+\n
+# get list of title of bt5 that are installed.\n
+installed_bt5_title_list = [t.getTitle() for t in portal_templates.getInstalledBusinessTemplateList()]\n
+\n
+# get the list of keys that correspond to a valid business template.\n
+upgradable_list = []\n
+for k in validation_dict.keys():\n
+  if k in installed_bt5_title_list:\n
+    upgradable_list.extend(validation_dict[k])\n
+\n
+message_list = []\n
+for definition in upgradable_list:\n
+  if len(definition) == 5:\n
+    path, method_id, expected_state, action, param_list = definition\n
+  else:\n
+    path, method_id, expected_state, action = definition\n
+    param_list = param_not_provided\n
+  sub_message_list = []\n
+  try:\n
+    obj = context.restrictedTraverse(path)\n
+  except KeyError:\n
+    obj = None\n
+    log("Unable to find %s" % path)\n
+  if obj is not None:\n
+    method = getattr(obj, method_id, None)\n
+    if method is not None and method() == expected_state:\n
+      sub_message_list.append("Upgrade is required for Object List (%s object is in %s state, action %s.)" %\n
+                (path, expected_state, action))\n
+      if int(upgrade) == 1:\n
+        action_method = getattr(obj, action , None)\n
+        if action_method is not None:\n
+          if param_list == param_not_provided:\n
+            action_method()\n
+          else:\n
+            action_method(*param_list)\n
+          sub_message_list.append("[UPDATED]")\n
+      message_list.append(\' \'.join(sub_message_list))\n
+    \n
+return message_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>upgrade=0</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ERP5Site_upgradeObjectList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

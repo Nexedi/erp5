@@ -1,0 +1,377 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+  <title tal:content="template/getId"/>\n
+</head>\n
+<body>\n
+  <table cellpadding="1" cellspacing="1" border="1">\n
+    <thead>\n
+      <tr><td rowspan="1" colspan="3" tal:content="template/getId"/></tr>\n
+    </thead><tbody>\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/init" />\n
+      <tal:block metal:use-macro="here/Zuite_CommonTemplateForUNG/macros/login" />\n
+      <tr>\n
+        <td>verifyTextNotPresent</td>\n
+        <td>Text Format</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="settings"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//input[@name=\'field_my_preferred_text_editor\']")</td>\n
+        <td>3000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>Text Format</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyTextPresent</td>\n
+        <td>FCK Editor</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>check</td>\n
+        <td>//input[@value=\'fck_editor\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>check</td>\n
+        <td>//input[@value=\'text/html\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//html/body/div[3]/div[11]/div/button[1]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="settings"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//input[@name=\'field_my_preferred_text_editor\']")</td>\n
+        <td>3000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyAttribute</td>\n
+        <td>//input[@value=\'fck_editor\']@checked</td>\n
+        <td>checked</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyAttribute</td>\n
+        <td>//input[@value=\'text/html\']@checked</td>\n
+        <td>checked</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="settings"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//input[@name=\'field_my_preferred_text_editor\']")</td>\n
+        <td>3000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>check</td>\n
+        <td>//input[@value=\'text_area\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>check</td>\n
+        <td>//input[@value=\'text/plain\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//html/body/div[3]/div[11]/div/button[1]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="settings"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//input[@name=\'field_my_preferred_text_editor\']")</td>\n
+        <td>3000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyAttribute</td>\n
+        <td>//input[@value=\'text/plain\']@checked</td>\n
+        <td>checked</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyAttribute</td>\n
+        <td>//input[@value=\'text_area\']@checked</td>\n
+        <td>checked</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//span[@class=\'ui-icon ui-icon-closethick\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/WebSite_logout</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//td[@id="new-account-form"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="firstname"]</td>\n
+        <td>Another</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="lastname"]</td>\n
+        <td>User</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="email"]</td>\n
+        <td>example2@example.com</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="login_name"]</td>\n
+        <td>ung_user2</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="password"]</td>\n
+        <td>1234</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>//input[@name="confirm"]</td>\n
+        <td>1234</td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//input[@value="Create Account"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForPageToLoad</td>\n
+        <td>30000</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>__ac_name</td>\n
+        <td>ung_user2</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>__ac_password</td>\n
+        <td>1234</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//input[@type="submit"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="settings"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//input[@name=\'field_my_preferred_text_editor\']")</td>\n
+        <td>3000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>check</td>\n
+        <td>//input[@value=\'fck_editor\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>check</td>\n
+        <td>//input[@value=\'text/html\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//html/body/div[3]/div[11]/div/button[1]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="settings"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//input[@name=\'field_my_preferred_text_editor\']")</td>\n
+        <td>3000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>check</td>\n
+        <td>//input[@value=\'fck_editor\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>check</td>\n
+        <td>//input[@value=\'text/html\']</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="settings"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//input[@name=\'field_my_preferred_text_editor\']")</td>\n
+        <td>3000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//html/body/div[3]/div[11]/div/button[1]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="settings"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//input[@name=\'field_my_preferred_text_editor\']")</td>\n
+        <td>3000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyAttribute</td>\n
+        <td>//input[@value=\'fck_editor\']@checked</td>\n
+        <td>checked</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyAttribute</td>\n
+        <td>//input[@value=\'text/html\']@checked</td>\n
+        <td>checked</td>\n
+      </tr>\n
+      <tr>\n
+        <td>openAndWait</td>\n
+        <td>${ung_url}/WebSite_logout</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>__ac_name</td>\n
+        <td>test_user</td>\n
+      </tr>\n
+      <tr>\n
+        <td>type</td>\n
+        <td>__ac_password</td>\n
+        <td>test_user</td>\n
+      </tr>\n
+      <tr>\n
+        <td>clickAndWait</td>\n
+        <td>//input[@type="submit"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>click</td>\n
+        <td>//a[@id="settings"]</td>\n
+        <td></td>\n
+      </tr>\n
+      <tr>\n
+        <td>waitForCondition</td>\n
+        <td>selenium.isElementPresent("//input[@name=\'field_my_preferred_text_editor\']")</td>\n
+        <td>3000</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyAttribute</td>\n
+        <td>//input[@value=\'text_area\']@checked</td>\n
+        <td>checked</td>\n
+      </tr>\n
+      <tr>\n
+        <td>verifyAttribute</td>\n
+        <td>//input[@value=\'text/plain\']@checked</td>\n
+        <td>checked</td>\n
+      </tr>\n
+    </tbody>\n
+  </table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testUNGSettings</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

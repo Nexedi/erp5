@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>How-To Create Events in Campaigns</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">How-To Create Events in Campaigns</td></tr>\n
+</thead><tbody>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_setUpCreateEventTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Init Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span>\n
+\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Campaigns</td>\n
+</tr>\n
+<tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'create_event_howto_campaign_title\']],), enter_object=True)"/>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[2]</td>\n
+  <td>Campaigns</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_campaign_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Create New Event</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_portal_type"]</td>\n
+  <td>Mail Message</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_your_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_event_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//textarea[@name="field_your_description"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_event_description\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//input[@name="field_your_direction" and @value="outgoing"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="transition_message"]</td>\n
+  <td>Created and associated a new Mail Message to the ticket.</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_my_default_follow_up_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_campaign_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="field_my_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_event_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_source_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_person_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//textarea[@name="field_my_destination_title_list"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_person2_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//input[@name="field_my_content_type" and @value="text/plain"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//textarea[@name="field_my_text_content"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_event_content\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>storeAttribute</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]@href</td>\n
+  <td>event_url</td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${event_url}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Preview</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_event_content\']"></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//span[contains(text(),\'View\')]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//input[@name="field_my_default_follow_up_title"]/../a</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[2]</td>\n
+  <td>Campaigns</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_campaign_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="listbox-current-page-total-number"]</td>\n
+  <td>1 records</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[1]/</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_event_title\']" ></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_tearDownCreateEventTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Clean Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
+\n
+</tbody>\n
+</table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testHowToCreateEvent</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

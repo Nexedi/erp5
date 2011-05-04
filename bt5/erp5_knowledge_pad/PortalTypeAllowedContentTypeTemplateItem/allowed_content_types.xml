@@ -1,9 +1,13 @@
 <allowed_content_type_list>
  <portal_type id="Gadget">
-  <item>Image</item>
+  <item>Embedded File</item>
  </portal_type>
  <portal_type id="Gadget Tool">
   <item>Gadget</item>
+ </portal_type>
+ <portal_type id="Gadget Type">
+  <item>Action Information</item>
+  <item>Embedded File</item>
  </portal_type>
  <portal_type id="Knowledge Pad">
   <item>Knowledge Box</item>
@@ -13,5 +17,8 @@
  </portal_type>
  <portal_type id="Preference">
   <item>Knowledge Pad</item>
+ </portal_type>
+ <portal_type id="Types Tool">
+  <item>Gadget Type</item>
  </portal_type>
 </allowed_content_type_list>

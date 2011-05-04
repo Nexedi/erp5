@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>Test Dynamic Domain Tree</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">Test Dynamic Domain Tree</td></tr>\n
+</thead><tbody>\n
+<!-- Domain tree are not avalaible in mobile skin \n
+     So this part is skipped -->\n
+<tal:block tal:condition="python: context.TestTool_getSkinName()!=\'Mobile\'">\n
+\n
+<tal:block metal:use-macro="here/ListBoxZuite_CommonTemplate/macros/init" />\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/FooModule_viewListboxAsDomainTreeDialog</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>setDomainTreeMode:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>field_your_id</td>\n
+\t<td>test_id</td>\n
+</tr>\n
+<tr>\n
+\t<td>type</td>\n
+\t<td>field_your_title</td>\n
+\t<td>test_title</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>unfoldDomain:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_your_id</td>\n
+\t<td>test_id</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_your_title</td>\n
+\t<td>test_title</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>foldDomain:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_your_id</td>\n
+\t<td>test_id</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_your_title</td>\n
+\t<td>test_title</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'unfoldDomain:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_your_id</td>\n
+\t<td>test_id</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_your_title</td>\n
+\t<td>test_title</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>foldDomain:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>listbox_nextPage:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_your_id</td>\n
+\t<td>test_id</td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyValue</td>\n
+\t<td>field_your_title</td>\n
+\t<td>test_title</td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>listbox_firstPage:method</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>setFlatListMode:method</td>\n
+\t<td></td>\n
+</tr>\n
+\n
+</tal:block>\n
+</tbody></table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testDomainTreeDialogFormValuesKept</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

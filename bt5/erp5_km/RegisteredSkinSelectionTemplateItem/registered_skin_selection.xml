@@ -1,5 +1,9 @@
 <registered_skin_selection>
  <skin_folder_selection>
+  <skin_folder>erp5_jquery</skin_folder>
+  <skin_selection>KM</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
   <skin_folder>erp5_km</skin_folder>
   <skin_selection>KM</skin_selection>
  </skin_folder_selection>

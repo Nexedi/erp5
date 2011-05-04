@@ -65,7 +65,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   <tal:block metal:use-macro="here/main_template/macros/master">\n
     <tal:block metal:fill-slot="main">\n
       <div class="front_pad">\n
-        <div tal:content="structure python: here.ERP5Site_viewHomeAreaRenderer(mode= \'web_front\', default_pad_group=\'\')"\n
+        <div tal:content="structure python: here.ERP5Site_viewHomeAreaRenderer(mode=\'web_front\', \n
+                                                                               default_pad_group=\'\',\n
+                                                                               create_default_pad=True, \n
+                                                                               make_security_check=True)"\n
              class="draggable_wrapper"/>\n
       </div>\n
     </tal:block>\n
@@ -88,7 +91,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

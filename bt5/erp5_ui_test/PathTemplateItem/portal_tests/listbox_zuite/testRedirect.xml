@@ -385,18 +385,18 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>\n
   <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>\n
   <td>b</td>\n
 </tr>\n
 <!-- Click on "+ a" link -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -406,28 +406,28 @@
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-open"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-open"]</td>\n
   <td>a</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[2]//button[@class="tree-closed"]</td>\n
   <td>a1</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[3]//button[@class="tree-closed"]</td>\n
   <td>a2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyText</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[4]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[4]//button[@class="tree-closed"]</td>\n
   <td>b</td>\n
 </tr>\n
 <!-- END of inspired code -->\n
 <tr>\n
   <td>verifyAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}/foo_module/0/unfoldDomain*" />\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />\n
   <td></td>\n
 </tr>\n
 </tal:block>\n

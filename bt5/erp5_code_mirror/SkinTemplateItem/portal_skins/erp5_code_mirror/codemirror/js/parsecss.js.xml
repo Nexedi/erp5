@@ -1,0 +1,203 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsecss.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/* Simple parser for CSS */\n
+\n
+var CSSParser = Editor.Parser = (function() {\n
+  var tokenizeCSS = (function() {\n
+    function normal(source, setState) {\n
+      var ch = source.next();\n
+      if (ch == "@") {\n
+        source.nextWhileMatches(/\\w/);\n
+        return "css-at";\n
+      }\n
+      else if (ch == "/" && source.equals("*")) {\n
+        setState(inCComment);\n
+        return null;\n
+      }\n
+      else if (ch == "<" && source.equals("!")) {\n
+        setState(inSGMLComment);\n
+        return null;\n
+      }\n
+      else if (ch == "=") {\n
+        return "css-compare";\n
+      }\n
+      else if (source.equals("=") && (ch == "~" || ch == "|")) {\n
+        source.next();\n
+        return "css-compare";\n
+      }\n
+      else if (ch == "\\"" || ch == "\'") {\n
+        setState(inString(ch));\n
+        return null;\n
+      }\n
+      else if (ch == "#") {\n
+        source.nextWhileMatches(/\\w/);\n
+        return "css-hash";\n
+      }\n
+      else if (ch == "!") {\n
+        source.nextWhileMatches(/[ \\t]/);\n
+        source.nextWhileMatches(/\\w/);\n
+        return "css-important";\n
+      }\n
+      else if (/\\d/.test(ch)) {\n
+        source.nextWhileMatches(/[\\w.%]/);\n
+        return "css-unit";\n
+      }\n
+      else if (/[,.+>*\\/]/.test(ch)) {\n
+        return "css-select-op";\n
+      }\n
+      else if (/[;{}:\\[\\]]/.test(ch)) {\n
+        return "css-punctuation";\n
+      }\n
+      else {\n
+        source.nextWhileMatches(/[\\w\\\\\\-_]/);\n
+        return "css-identifier";\n
+      }\n
+    }\n
+\n
+    function inCComment(source, setState) {\n
+      var maybeEnd = false;\n
+      while (!source.endOfLine()) {\n
+        var ch = source.next();\n
+        if (maybeEnd && ch == "/") {\n
+          setState(normal);\n
+          break;\n
+        }\n
+        maybeEnd = (ch == "*");\n
+      }\n
+      return "css-comment";\n
+    }\n
+\n
+    function inSGMLComment(source, setState) {\n
+      var dashes = 0;\n
+      while (!source.endOfLine()) {\n
+        var ch = source.next();\n
+        if (dashes >= 2 && ch == ">") {\n
+          setState(normal);\n
+          break;\n
+        }\n
+        dashes = (ch == "-") ? dashes + 1 : 0;\n
+      }\n
+      return "css-comment";\n
+    }\n
+\n
+    function inString(quote) {\n
+      return function(source, setState) {\n
+        var escaped = false;\n
+        while (!source.endOfLine()) {\n
+          var ch = source.next();\n
+          if (ch == quote && !escaped)\n
+            break;\n
+          escaped = !escaped && ch == "\\\\";\n
+        }\n
+        if (!escaped)\n
+          setState(normal);\n
+        return "css-string";\n
+      };\n
+    }\n
+\n
+    return function(source, startState) {\n
+      return tokenizer(source, startState || normal);\n
+    };\n
+  })();\n
+\n
+  function indentCSS(inBraces, inRule, base) {\n
+    return function(nextChars) {\n
+      if (!inBraces || /^\\}/.test(nextChars)) return base;\n
+      else if (inRule) return base + indentUnit * 2;\n
+      else return base + indentUnit;\n
+    };\n
+  }\n
+\n
+  // This is a very simplistic parser -- since CSS does not really\n
+  // nest, it works acceptably well, but some nicer colouroing could\n
+  // be provided with a more complicated parser.\n
+  function parseCSS(source, basecolumn) {\n
+    basecolumn = basecolumn || 0;\n
+    var tokens = tokenizeCSS(source);\n
+    var inBraces = false, inRule = false, inDecl = false;;\n
+\n
+    var iter = {\n
+      next: function() {\n
+        var token = tokens.next(), style = token.style, content = token.content;\n
+\n
+        if (style == "css-hash")\n
+          style = token.style =  inRule ? "css-colorcode" : "css-identifier";\n
+        if (style == "css-identifier") {\n
+          if (inRule) token.style = "css-value";\n
+          else if (!inBraces && !inDecl) token.style = "css-selector";\n
+        }\n
+\n
+        if (content == "\\n")\n
+          token.indentation = indentCSS(inBraces, inRule, basecolumn);\n
+\n
+        if (content == "{")\n
+          inBraces = true;\n
+        else if (content == "}")\n
+          inBraces = inRule = inDecl = false;\n
+        else if (content == ";")\n
+          inRule = inDecl = false;\n
+        else if (inBraces && style != "css-comment" && style != "whitespace")\n
+          inRule = true;\n
+        else if (!inBraces && style == "css-at" && content != "@media")\n
+          inDecl = true;\n
+\n
+        return token;\n
+      },\n
+\n
+      copy: function() {\n
+        var _inBraces = inBraces, _inRule = inRule, _tokenState = tokens.state;\n
+        return function(source) {\n
+          tokens = tokenizeCSS(source, _tokenState);\n
+          inBraces = _inBraces;\n
+          inRule = _inRule;\n
+          return iter;\n
+        };\n
+      }\n
+    };\n
+    return iter;\n
+  }\n
+\n
+  return {make: parseCSS, electricChars: "}"};\n
+})();\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4460</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

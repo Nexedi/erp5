@@ -56,17 +56,25 @@ class AmountGeneratorLine(MappedValue, XMLMatrix, Amount,
                             'getCellAggregateKey')
   def getCellAggregateKey(self):
     """Define a key in order to aggregate amounts at cell level"""
-    return (self.getResource(),
-            self.getVariationText()) # Variation UID, Hash ?
+    resource = self.getResource()
+    if resource:
+      return (resource, self.getVariationText()) # Variation UID, Hash ?
+    # For a pure intermediate line, we need another way to prevent merging:
+    # do not merge if base_application or base_contribution is variated.
+    return frozenset(self.getBaseApplicationList() +
+                     self.getBaseContributionList())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getBaseAmountQuantity')
   @classmethod
-  def getBaseAmountQuantity(cls, delivery_amount, base_application, rounding):
+  def getBaseAmountQuantity(cls, delivery_amount, base_application,
+                            variation_category_list=(), **kw):
     """Default method to compute quantity for the given base_application"""
-    value = delivery_amount.getGeneratedAmountQuantity(base_application)
+    value = delivery_amount.getGeneratedAmountQuantity(
+      base_application, variation_category_list)
     delivery_amount = delivery_amount.getObject()
     if base_application in delivery_amount.getBaseContributionList():
+      assert not variation_category_list
       value += cls._getBaseAmountQuantity(delivery_amount)
     return value
 

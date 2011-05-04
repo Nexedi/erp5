@@ -36,7 +36,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.utils import LogInterceptor
-import os, hotshot
+import os
 
 # Define variable to chek if performance are good or not
 # XXX These variable are specific to the testing environment
@@ -107,7 +107,7 @@ LISTBOX_COEF=0.00173                # 0.02472
 #   LISTBOX_COEF : 0.02472 -> 0.001725
 DO_TEST = 1
 
-# set 1 to get hotshot profiler's result (unit_test/tests/<func_name>)
+# set 1 to get profiler's result (unit_test/tests/<func_name>)
 PROFILE=0
 
 class TestPerformance(ERP5TypeTestCase, LogInterceptor):
@@ -202,14 +202,15 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
                           '%.4f < %.4f < %.4f' % (min, req_time, max))
 
     def profile(self, func, suffix=''):
+        from cProfile import Profile
         prof_file = '%s%s' % (func.__name__, suffix)
         try:
             os.unlink(prof_file)
         except OSError:
             pass
-        prof = hotshot.Profile(prof_file)
+        prof = Profile()
         prof.runcall(func)
-        prof.close()
+        prof.dump_stats(prof_file)
 
     def test_00_viewBarObject(self, quiet=quiet, run=run_all_test,
                               min=None, max=None):

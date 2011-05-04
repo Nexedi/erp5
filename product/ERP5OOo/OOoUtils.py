@@ -201,6 +201,8 @@ class OOoBuilder(Implicit):
       warn('content_type argument must be passed explicitely', FutureWarning)
       content_type = mimetypes.guess_type(name)[0]
     self.addManifest(name, content_type)
+    # we need to explicitly update manifest file
+    self.updateManifest()
     self.replace(name, image)
     is_legacy = ('oasis.opendocument' not in self.getMimeType())
     return "%s%s" % (is_legacy and '#' or '', name,)

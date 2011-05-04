@@ -1,17 +1,20 @@
 Account Module | jump_active_accounting_pref
 Account Module | view
+Account Type Constraint Line | view
+Account Type Constraint | view
 Account | grouping_reference_fast_input
 Account | jump_active_accounting_pref
 Account | jump_to_accounting
 Account | transaction_list
 Account | view
-Accounting Period | create_initial_balance_transaction
 Accounting Period | create_secondary_periods
 Accounting Period | jump_related_balance_transaction
 Accounting Period | view
 Accounting Rule Cell Line | view
 Accounting Rule Cell | view
 Accounting Rule Cell | view_destination
+Accounting Transaction Balance Constraint | predicate
+Accounting Transaction Balance Constraint | view
 Accounting Transaction Line | destination_view
 Accounting Transaction Line | view
 Accounting Transaction Module | account_statement_export

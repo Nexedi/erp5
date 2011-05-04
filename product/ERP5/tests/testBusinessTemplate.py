@@ -31,19 +31,15 @@ import unittest
 import logging
 import transaction
 
-from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from AccessControl.SecurityManagement import newSecurityManager
 from Acquisition import aq_base
 from OFS.SimpleItem import SimpleItem
-from zLOG import LOG
 from App.config import getConfiguration
 from Products.ERP5Type.tests.Sequence import SequenceList
 from urllib import pathname2url
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
-from Products.ERP5Type.Tool.TypesTool import TypeProvider
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 import shutil
@@ -54,49 +50,18 @@ import string
 import tempfile
 import glob
 
-from MethodObject import Method
-from Persistence import Persistent
-
-WORKFLOW_TYPE = 'erp5_workflow' 
-
-class DummyTypeProvider(TypeProvider):
-  id = 'dummy_type_provider'
+WORKFLOW_TYPE = 'erp5_workflow'
 
 from Products.MimetypesRegistry.common import MimeTypeException
 from Products.PortalTransforms.Transform import Transform
 Transform_tr_init = Transform._tr_init
 Transform_manage_beforeDelete = Transform.manage_beforeDelete
 
-class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
-  """
-    Test these operations:
-
-    - Create a template
-
-    - Install a template
-
-    - Uninstall a template
-
-    - Upgrade a template
-  """
-  run_all_test = 1
-  quiet = 1
-
+class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_csv_style',
             )
-
-  def getTitle(self):
-    return "Business Template"
-
-  def enableActivityTool(self):
-    """
-    You can override this.
-    Return if we should create (1) or not (0) an activity tool.
-    """
-    return 1
-
   ## Ignore errors from PortalTransforms (e.g. missing binaries)
 
   def _catch_log_errors(self):
@@ -126,7 +91,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def afterSetUp(self):
     self.login()
     portal = self.getPortal()
-    catalog_tool = self.getCatalogTool()
     # create the fake catalog table
     sql_connection = self.getSQLConnection()
     sql = 'create table if not exists `fake_catalog` (`toto` BIGINT)'
@@ -139,7 +103,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         'any' in content_type_registry.predicate_ids):
       content_type_registry.removePredicate('any')
       transaction.commit()
-    pw = self.getWorkflowTool()
 
   def beforeTearDown(self):
     """Remove objects created in tests."""
@@ -193,14 +156,32 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     for business_template in self.getTemplateTool().contentValues():
       if business_template.getTitle() == 'geek template':
         self.getTemplateTool().manage_delObjects([business_template.getId()])
+    self.stepRemoveAllTrashBins()
+    catalog = self.portal.portal_catalog.erp5_mysql_innodb
+    for method_id in ('z_fake_method', 'z_another_fake_method'):
+      if method_id in catalog.objectIds():
+        catalog.manage_delObjects([method_id])
+      sql_uncatalog_object = list(catalog.sql_uncatalog_object)
+      if method_id in sql_uncatalog_object:
+        sql_uncatalog_object.remove(method_id)
+        sql_uncatalog_object.sort()
+        catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
+      if method_id in catalog.filter_dict:
+        del catalog.filter_dict[method_id]
+    for obj_id in ('another_file', 'test_document', 'dummy_type_provider'):
+      if obj_id in self.portal.objectIds():
+        self.portal.manage_delObjects([obj_id])
+    types_tool = self.portal.portal_types
+    registered_type_provider_list = list(types_tool.type_provider_list)
+    if 'dummy_type_provider' in registered_type_provider_list:
+      registered_type_provider_list.remove('dummy_type_provider')
+      types_tool.type_provider_list = tuple(registered_type_provider_list)
+    property_sheet_tool = self.getPortalObject().portal_property_sheets
+    for property_sheet in ('UnitTest',):
+      if property_sheet in property_sheet_tool.objectIds():
+        property_sheet_tool.manage_delObjects([property_sheet])
     transaction.commit()
     self._ignore_log_errors()
-
-  def login(self):
-    uf = self.getPortal().acl_users
-    uf._doAddUser('seb', '', ['Manager'], [])
-    user = uf.getUserById('seb').__of__(uf)
-    newSecurityManager(None, user)
 
   def getBusinessTemplate(self,title):
     """
@@ -212,8 +193,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         return bt
     return None
 
-  def stepUseCoreBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepUseCoreBusinessTemplate(self, sequence=None, **kw):
     """
     Define erp5_core as current bt
     """
@@ -221,8 +201,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failIf(core_bt is None)
     sequence.edit(current_bt=core_bt)
 
-  def stepCopyCoreBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepCopyCoreBusinessTemplate(self, sequence=None, **kw):
     """
     Copy erp5_core as new Business Template
     """
@@ -237,16 +216,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(new_bt.getTitle(), 'erp5_core')
     sequence.edit(copy_bt=new_bt)
 
-  def stepUseCopyCoreBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepUseCopyCoreBusinessTemplate(self, sequence=None, **kw):
     """
     Define erp5_core as current bt
     """
     bt = sequence.get('copy_bt')
     sequence.edit(current_bt=bt, export_bt=bt)
 
-  def stepBuildCopyCoreBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepBuildCopyCoreBusinessTemplate(self, sequence=None, **kw):
     """
     Build copied core bt
     """
@@ -254,8 +231,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(bt.getTitle(), 'erp5_core')
     bt.build()
 
-  def stepInstallCopyCoreBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepInstallCopyCoreBusinessTemplate(self, sequence=None, **kw):
     """
     Install copied core bt
     """
@@ -264,8 +240,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(bt.getInstallationState(), 'not_installed')
     bt.install()
 
-  def stepCheckOriginalAndCopyBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepCheckOriginalAndCopyBusinessTemplate(self, sequence=None, **kw):
     original_bt = sequence.get('current_bt')
     copy_bt = sequence.get('copy_bt')
     self.assertEquals(original_bt.getBuildingState(), 'built')
@@ -278,40 +253,35 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.failIf(copy_obj is None)
       self.failIfDifferentSet(original_obj.getKeys(), copy_obj.getKeys())
 
-  def stepUseExportBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepUseExportBusinessTemplate(self, sequence=None, **kw):
     """
     Define export_bt as current bt
     """
     bt = sequence.get('export_bt')
     sequence.edit(current_bt=bt)
 
-  def stepUseSecondBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepUseSecondBusinessTemplate(self, sequence=None, **kw):
     """
     Define second_export_bt as current bt
     """
     bt = sequence.get('second_export_bt')
     sequence.edit(current_bt=bt)
 
-  def stepUseDependencyBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepUseDependencyBusinessTemplate(self, sequence=None, **kw):
     """
       Define dependency_bt as current bt
     """
     bt = sequence.get('dependency_bt')
     sequence.edit(current_bt=bt)
 
-  def stepUseImportBusinessTemplate(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepUseImportBusinessTemplate(self, sequence=None, **kw):
     """
     Define import_bt as current bt
     """
     bt = sequence.get('import_bt')
     sequence.edit(current_bt=bt)
 
-  def stepCheckPreinstallReturnSomething(self, sequence=None,
-                                        sequence_list=None, **kw):
+  def stepCheckPreinstallReturnSomething(self, sequence=None, **kw):
     """
     In case of upgrade preinstall call must return at least one element
     which is marked as new/updated/removed
@@ -319,56 +289,46 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('current_bt', None)
     self.assertNotEquals(len(bt.preinstall()), 0)
 
-  def stepCheckCatalogPreinstallReturnCatalogMethod(self, sequence=None,
-                                        sequence_list=None, **kw):
-    """
-    In case of upgrade preinstall call must return at least one element
-    which is marked as new/updated/removed
-    """
+  def stepCheckCatalogPreinstallReturnCatalogMethod(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
     self.assertEquals(bt.preinstall(), {'portal_catalog/erp5_mysql_innodb/z_fake_method': ['Modified', 'CatalogMethod']})
 
-  def stepCheckInstalledInstallationState(self, sequence=None,
-                                        sequence_list=None, **kw):
+  def stepCheckInstalledInstallationState(self, sequence=None, **kw):
     """
     Check if installation state is installed
     """
     bt = sequence.get('current_bt', None)
     self.assertEquals(bt.getInstallationState(), 'installed')
 
-  def stepCheckNotInstalledInstallationState(self, sequence=None,
-                                        sequence_list=None, **kw):
+  def stepCheckNotInstalledInstallationState(self, sequence=None, **kw):
     """
     Check if installation state is not_installed
     """
     bt = sequence.get('current_bt')
     self.assertEquals(bt.getInstallationState(), 'not_installed')
 
-  def stepCheckReplacedInstallationState(self, sequence=None,
-                                        seqeunce_list=None, **kw):
+  def stepCheckReplacedInstallationState(self, sequence=None, seqeunce_list=None, **kw):
     """
     Check if installation state is replaced
     """
     bt = sequence.get('current_bt')
     self.assertEquals(bt.getInstallationState(), 'replaced')
 
-  def stepCheckModifiedBuildingState(self, sequence=None,
-                                     sequence_list=None, **kw):
+  def stepCheckModifiedBuildingState(self, sequence=None, **kw):
     """
     Check if the building state is modified.
     """
     bt = sequence.get('current_bt')
     self.assertEquals(bt.getBuildingState(), 'modified')
 
-  def stepCheckBuiltBuildingState(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def stepCheckBuiltBuildingState(self, sequence=None, **kw):
     """
     Check if the building state is built.
     """
     bt = sequence.get('current_bt')
     self.assertEquals(bt.getBuildingState(), 'built')
 
-  def stepCheckTools(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckTools(self, sequence=None, **kw):
     """
     Check presence of tools
     """
@@ -379,7 +339,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(self.getCatalogTool() is not None)
     self.failUnless(self.getTrashTool() is not None)
 
-  def stepCheckSkinsLayers(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckSkinsLayers(self, sequence=None, **kw):
     """
     Check skins layers
     """
@@ -398,14 +358,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         self.failIf('erp5_core' not in selection)
         self.failIf('erp5_csv_style' not in selection)
 
-  def stepCheckNoTrashBin(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckNoTrashBin(self, sequence=None, **kw):
     """
     Check if there is no trash bins
     """
     trash = self.getTrashTool()
     self.assertEquals(len(trash.objectIds()), 0)
 
-  def stepRemoveAllTrashBins(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveAllTrashBins(self, sequence=None, **kw):
     """
     Remove all trash bins
     """
@@ -415,7 +375,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       trash.deleteContent(id)
     self.failIf(len(trash.objectIds()) > 0)
 
-  def stepCheckTrashBin(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckTrashBin(self, sequence=None, **kw):
     """
     Check trash bin presence
     """
@@ -426,7 +386,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(bt_id not in trash_ids[0])
 
   # portal types
-  def stepCreatePortalType(self, sequence=None, sequence_list=None, **kw):
+  def stepCreatePortalType(self, sequence=None, **kw):
     """
     Create Portal Type
     """
@@ -452,7 +412,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       module_ptype_base_category_list=module_type.getTypeBaseCategoryList(),
       module_ptype_property_sheet_list=module_type.getTypePropertySheetList())
 
-  def stepModifyPortalTypeInBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepModifyPortalTypeInBusinessTemplate(self, sequence=None, **kw):
     """
     Modify Portal Type
     * remove Geek Object and add Geek Module in allowed_content_type
@@ -476,7 +436,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   module_ptype_base_category_list=['source'],
                   module_ptype_property_sheet_list=[])
 
-  def stepAddPortalTypeToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddPortalTypeToBusinessTemplate(self, sequence=None, **kw):
     """
     Add types to business template
     """
@@ -487,10 +447,9 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     ptype_ids.append(sequence.get('module_ptype_id', ''))
     self.assertEqual(len(ptype_ids), 2)
     bt.edit(template_portal_type_id_list=ptype_ids)
-    self.stepFillPortalTypesFields(sequence=sequence, sequence_list=sequence_list, **kw)
+    self.stepFillPortalTypesFields(sequence=sequence, **kw)
 
-  def stepAddDuplicatedPortalTypeToBusinessTemplate(self, sequence=None,
-                                                    sequence_list=None, **kw):
+  def stepAddDuplicatedPortalTypeToBusinessTemplate(self, sequence=None, **kw):
     """
     Add duplicated portal type to business template
     """
@@ -501,7 +460,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(ptype_ids), 1)
     bt.edit(template_portal_type_id_list=ptype_ids)
 
-  def stepRemovePortalType(self, sequence=None, sequence_list=None, **kw):
+  def stepRemovePortalType(self, sequence=None, **kw):
     """
     Remove PortalType
     """
@@ -514,10 +473,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is None)
 
-  def stepRemoveFirstAction(self, sequence=None, sequence_list=None, **kw):
-    """
-    Remove PortalType
-    """
+  def stepRemoveFirstAction(self, sequence=None, **kw):
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
     action_id = sequence.get('first_action_id')
@@ -526,7 +482,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                             if x.getReference() == action_id]
     object_type._delObject(action_id)
 
-  def stepCheckPortalTypeExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckPortalTypeExists(self, sequence=None, **kw):
     """
     Check presence of portal type
     """
@@ -548,7 +504,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is not None)
 
-  def stepCheckPortalTypeRemoved(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckPortalTypeRemoved(self, sequence=None, **kw):
     """
     Check non presence of portal type
     """
@@ -560,18 +516,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is None)
 
-  def stepCheckDuplicatedPortalTypeRemoved(self, sequence=None,
-                                           sequence_list=None, **kw):
+  def stepCheckDuplicatedPortalTypeRemoved(self, sequence=None, **kw):
     """
     Check non presence of portal type
     """
     pt = self.getTypeTool()
     object_id = sequence.get('object_ptype_id')
-    module_id = sequence.get('module_ptype_id')
     object_type = pt._getOb(object_id, None)
     self.failUnless(object_type is None)
 
-  def stepFillPortalTypesFields(self, sequence=None, sequence_list=None, **kw):
+  def stepFillPortalTypesFields(self, sequence=None, **kw):
     """
     Fill portal types properties field in business template
     """
@@ -579,7 +533,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(bt is not None)
     bt.getPortalTypesProperties()
 
-  def stepFillWrongPortalTypesFields(self, sequence=None, sequence_list=None, **kw):
+  def stepFillWrongPortalTypesFields(self, sequence=None, **kw):
     """
     Fill portal types properties field in business template with wrong values
     """
@@ -591,7 +545,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.setProperty('template_portal_type_allowed_content_type', bt_allowed_content_type_list)
 
   # module
-  def stepCreateModuleAndObjects(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateModuleAndObjects(self, sequence=None, **kw):
     """
     Create Module with objects
     """
@@ -613,7 +567,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       module_object_list.append(object)
     sequence.edit(module_object_id_list=module_object_list)
 
-  def stepAddModuleToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddModuleToBusinessTemplate(self, sequence=None, **kw):
     """
     Add module to business template
     """
@@ -622,7 +576,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(module_id is not None)
     bt.edit(template_module_id_list=[module_id])
 
-  def stepCreateModuleObjects(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateModuleObjects(self, sequence=None, **kw):
     """
     Create objects into module
     """
@@ -637,7 +591,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       module_object_list.append(object.getId())
     sequence.edit(module_object_id_list=module_object_list)
 
-  def stepRemoveModule(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveModule(self, sequence=None, **kw):
     """
     Remove Module
     """
@@ -646,7 +600,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     portal.manage_delObjects([module_id])
     self.failIf(portal._getOb(module_id, None) is not None)
 
-  def stepCheckModuleExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckModuleExists(self, sequence=None, **kw):
     """
     Check presence of module
     """
@@ -655,7 +609,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     new_module = portal._getOb(module_id, None)
     self.failIf(new_module is None)
 
-  def stepCheckModulePermissions(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckModulePermissions(self, sequence=None, **kw):
     """
     Check specific permissions defined on module do no get acquired flag
     """
@@ -676,7 +630,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       else:
         self.assertNotEqual(perm["selected"], "SELECTED")
 
-  def stepCheckModuleObjectsExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckModuleObjectsExists(self, sequence=None, **kw):
     """
     Check presence of objects in module
     """
@@ -689,7 +643,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       object = module._getOb(object_id, None)
       self.failUnless(object is not None)
 
-  def stepCheckModuleObjectsRemoved(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckModuleObjectsRemoved(self, sequence=None, **kw):
     """
     Check non presence of objects in module
     """
@@ -702,7 +656,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       object = module._getOb(object_id, None)
       self.failUnless(object is None)
 
-  def stepCheckModuleRemoved(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckModuleRemoved(self, sequence=None, **kw):
     """
     Check non presence of module
     """
@@ -711,7 +665,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failIf(portal._getOb(module_id, None) is not None)
 
   # skins folder
-  def stepCreateSkinFolder(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateSkinFolder(self, sequence=None, **kw):
     """
     Create a skin folder
     """
@@ -727,7 +681,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         selection.append('erp5_geek')
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
 
-  def stepCreateAnotherSkinFolder(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateAnotherSkinFolder(self, sequence=None, **kw):
     """
     Create another skin folder
     """
@@ -743,7 +697,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         selection.append('erp5_nerd')
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
 
-  def stepCreateStaticSkinFolder(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateStaticSkinFolder(self, sequence=None, **kw):
     """
     Create a skin folder not managed by the bt5
     """
@@ -757,10 +711,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       selection = selection.split(',')
       if 'erp5_static' not in selection:
         selection.append('erp5_static')
-      ps.manage_skinLayers(skinpath=tuple(selection), skinname=skin_name, 
+      ps.manage_skinLayers(skinpath=tuple(selection), skinname=skin_name,
                            add_skin=1)
 
-  def stepCreateSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateSkinSubFolder(self, sequence=None, **kw):
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
     self.failUnless(skin_folder is not None)
@@ -769,7 +723,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(skin_subfolder is not None)
     sequence.edit(skin_subfolder_id=skin_subfolder.getId())
 
-  def stepCheckSkinSubFolderExists(self, sequence=None,sequence_list=None, **kw):
+  def stepCheckSkinSubFolderExists(self, sequence=None, **kw):
     """
     Check presence of skin sub folder
     """
@@ -781,7 +735,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     skin_subfolder = skin_folder._getOb(subskin_id, None)
     self.failUnless(skin_subfolder is not None)
 
-  def stepCreateNewForm(self, sequence=None, sequence_list=None):
+  def stepCreateNewForm(self, sequence=None):
     """Create a new ERP5 Form in a skin folder."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
@@ -805,7 +759,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       group_dict[group] = id_list
     sequence.edit(form_id=form_id, group_dict=group_dict)
 
-  def stepCreateNewFormIntoErp5Nerd(self, sequence=None, sequence_list=None):
+  def stepCreateNewFormIntoErp5Nerd(self, sequence=None):
     """Create a new ERP5 Form in a skin folder."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_nerd', None)
@@ -830,7 +784,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence.edit(another_form_id=form_id)
 
 
-  def stepRemoveForm(self, sequence=None, sequence_list=None):
+  def stepRemoveForm(self, sequence=None):
     """Remove an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
@@ -842,7 +796,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     form = skin_folder._getOb(form_id, None)
     self.assertEquals(form, None)
 
-  def stepAddFormField(self, sequence=None, sequence_list=None):
+  def stepAddFormField(self, sequence=None):
     """Add a field to an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
@@ -865,8 +819,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       group_dict[group] = id_list
     sequence.edit(group_dict=group_dict, field_id=field.getId())
 
-  def stepModifyFormTitle(self, sequence=None, sequence_list=None):
-    """Add a field to an ERP5 Form."""
+  def stepModifyFormTitle(self, sequence=None):
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
     self.assertNotEquals(skin_folder, None)
@@ -886,8 +839,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence.edit(group_dict=group_dict, field_id=field.getId(),
                   form_title=form_title)
 
-  def stepRevertFormTitle(self, sequence=None, sequence_list=None):
-    """Add a field to an ERP5 Form."""
+  def stepRevertFormTitle(self, sequence=None):
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
     self.assertNotEquals(skin_folder, None)
@@ -896,8 +848,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     form_title = 'Second Form Title'
     form.title = form_title
 
-  def stepCheckFormTitle(self, sequence=None, sequence_list=None):
-    """Add a field to an ERP5 Form."""
+  def stepCheckFormTitle(self, sequence=None):
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
     self.assertNotEquals(skin_folder, None)
@@ -905,7 +856,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     form = skin_folder._getOb(form_id, None)
     self.assertEquals('First Form Title', form.title)
 
-  def stepCheckFormIsRemoved(self, sequence=None, sequence_list=None):
+  def stepCheckFormIsRemoved(self, sequence=None):
     """Check the form is exist in erp5_geek."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
@@ -914,7 +865,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     form = skin_folder._getOb(form_id, None)
     self.assertEquals(form, None)
 
-  def stepCheckFormIsNotRemovedFromErp5Nerd(self, sequence=None, sequence_list=None):
+  def stepCheckFormIsNotRemovedFromErp5Nerd(self, sequence=None):
     """Check the form is not exist in erp5_nerd."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_nerd', None)
@@ -924,7 +875,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEquals(form, None)
 
 
-  def stepRemoveFormField(self, sequence=None, sequence_list=None):
+  def stepRemoveFormField(self, sequence=None):
     """Remove a field from an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
@@ -938,7 +889,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     form.manage_delObjects([field_id])
     self.assertRaises(AttributeError, form.get_field, field_id)
 
-  def stepCheckFormGroups(self, sequence=None, sequence_list=None):
+  def stepCheckFormGroups(self, sequence=None):
     """Check the groups of an ERP5 Form."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_geek', None)
@@ -955,7 +906,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         id_list.append(field.getId())
       self.assertEquals(group_dict[group], id_list)
 
-  def stepCheckFieldTitleIsNotRemovedFromErp5Nerd(self, sequence=None, sequence_list=None):
+  def stepCheckFieldTitleIsNotRemovedFromErp5Nerd(self, sequence=None):
     """Check that field title is not removed form erp5_nerd."""
     ps = self.getSkinsTool()
     skin_folder = ps._getOb('erp5_nerd', None)
@@ -966,7 +917,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     title_field =form._getOb('my_title', None)
     self.assertNotEquals(title_field, None)
 
-  def stepCreateNewObjectInSkinSubFolder(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateNewObjectInSkinSubFolder(self, sequence=None, **kw):
     """
     Create a new object in skin subfolder
     """
@@ -983,7 +934,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(zsql_method is not None)
     sequence.edit(zsql_method_id = method_id)
 
-  def stepRemoveSkinFolder(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveSkinFolder(self, sequence=None, **kw):
     """
     Remove Skin folder
     """
@@ -999,16 +950,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
 
 
-  def stepRemoveFileFromSkinFolder(self, sequence=None, sequence_list=None, **kw):
-    """
-    Remove file from Skin folder
-    """
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    # TODO 
-
-  def stepCheckSkinFolderExists(self, sequence=None,sequence_list=None, **kw):
+  def stepCheckSkinFolderExists(self, sequence=None, **kw):
     """
     Check presence of skin folder
     """
@@ -1017,7 +959,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     skin_folder = ps._getOb(skin_id, None)
     self.failUnless(skin_folder is not None)
 
-  def stepCheckSkinFolderRemoved(self, sequence=None,sequence_list=None, **kw):
+  def stepCheckSkinFolderRemoved(self, sequence=None, **kw):
     """
     Check non presence of skin folder
     """
@@ -1026,7 +968,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     skin_folder = ps._getOb(skin_id, None)
     self.failUnless(skin_folder is None)
 
-  def stepAddSkinFolderToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddSkinFolderToBusinessTemplate(self, sequence=None, **kw):
     """
     Add skin folder to business template
     """
@@ -1036,10 +978,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failIfEqual(skin_id, '')
     bt.edit(template_skin_id_list=[skin_id])
 
-  def stepAddAnotherSkinFolderToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Add skin folder to business template
-    """
+  def stepAddAnotherSkinFolderToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
     skin_id = sequence.get('another_skin_folder_id', '')
@@ -1051,8 +990,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_skin_id_list=template_skin_id_list)
 
 
-  def stepAddRegistredSelectionToBusinessTemplate(self, sequence=None, 
-                                                  sequence_list=None, **kw):
+  def stepAddRegistredSelectionToBusinessTemplate(self, sequence=None, **kw):
     """
     Add registered selection to business template
     """
@@ -1061,8 +999,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_registered_skin_selection_list = \
         ('%s | Foo' % sequence.get('skin_folder_id'), ))
 
-  def stepEditRegistredSelectionToBusinessTemplate(self, sequence=None, 
-                                                  sequence_list=None, **kw):
+  def stepEditRegistredSelectionToBusinessTemplate(self, sequence=None, **kw):
     """
     Add registered selection to business template
     """
@@ -1072,7 +1009,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         ('%s | Foo' % sequence.get('skin_folder_id'),
          '%s | Bar' % sequence.get('skin_folder_id'),))
 
-  def stepAddPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddPathToBusinessTemplate(self, sequence=None, **kw):
     """
     Add a path to business template
     """
@@ -1081,7 +1018,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_path_list=['geek_path',])
 
   # Base Category
-  def stepCreateBaseCategory(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateBaseCategory(self, sequence=None, **kw):
     """
     Create Base category
     """
@@ -1092,7 +1029,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence.edit(base_category_uid=base_category.getUid(),)
 
   # Content Type Registry
-  def stepAddEntryToContentTypeRegistry(self, sequence=None, sequence_list=None, **kw):
+  def stepAddEntryToContentTypeRegistry(self, sequence=None, **kw):
     """
     Add entry to content type registry
     """
@@ -1101,37 +1038,36 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     ctr.assignTypeName('test', 'What Not')
     ctr.getPredicate('test').extensions = ('abc', 'def')
 
-  def stepCheckContentTypeRegistryHasNewEntry(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckContentTypeRegistryHasNewEntry(self, sequence=None, **kw):
     """
       Check that we can find new type name in ctr
     """
     ctr = getattr(self.getPortal(), 'content_type_registry')
     self.failUnless(ctr.findTypeName('bzzz.def', None, None) == 'What Not')
 
-  def stepAddContentTypeRegistryAsPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddContentTypeRegistryAsPathToBusinessTemplate(self, sequence=None, **kw):
     """
       Add Content Type Registry to Business template
     """
-    bc_id = sequence.get('bc_id')
     bt = sequence.get('current_bt')
     path = 'content_type_registry'
     bt.edit(template_path_list=[path])
 
-  def stepRemoveContentTypeRegistryNewEntry(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveContentTypeRegistryNewEntry(self, sequence=None, **kw):
     """
       Remove new entry from content_type_registry
     """
     ctr = getattr(self.getPortal(), 'content_type_registry')
     ctr.removePredicate('test')
 
-  def stepCheckContentTypeRegistryHasNoNewEntry(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckContentTypeRegistryHasNoNewEntry(self, sequence=None, **kw):
     """
       Check that we can not find new type name in ctr anymore
     """
     ctr = getattr(self.getPortal(), 'content_type_registry')
     self.failUnless(ctr.findTypeName('bzzz.def', None, None) is None)
 
-  def stepAddBaseCategoryToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddBaseCategoryToBusinessTemplate(self, sequence=None, **kw):
     """
     Add Base category to Business template
     """
@@ -1139,16 +1075,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt = sequence.get('current_bt')
     bt.edit(template_base_category_list=[bc_id,])
 
-  def stepAddBaseCategoryAsPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Add Base category to Business template
-    """
+  def stepAddBaseCategoryAsPathToBusinessTemplate(self, sequence=None, **kw):
     bc_id = sequence.get('bc_id')
     bt = sequence.get('current_bt')
     path = 'portal_categories/'+bc_id
     bt.edit(template_path_list=[path])
 
-  def stepRemoveBaseCategory(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveBaseCategory(self, sequence=None, **kw):
     """
     Remove Base category
     """
@@ -1158,7 +1091,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     base_category = pc._getOb(bc_id, None)
     self.failUnless(base_category is None)
 
-  def stepCheckBaseCategoryExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckBaseCategoryExists(self, sequence=None, **kw):
     """
     Check presence of Base category
     """
@@ -1167,7 +1100,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     base_category = pc._getOb(bc_id, None)
     self.failUnless(base_category is not None)
 
-  def stepCheckBaseCategoryRemoved(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckBaseCategoryRemoved(self, sequence=None, **kw):
     """
     Check non presence of Base category
     """
@@ -1176,7 +1109,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     base_category = pc._getOb(bc_id, None)
     self.failUnless(base_category is None)
 
-  def stepSaveBaseCategoryUid(self, sequence=None, sequence_list=None, **kw):
+  def stepSaveBaseCategoryUid(self, sequence=None, **kw):
     """
     Check uid has not changed after an upgrade
     """
@@ -1185,7 +1118,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     base_category = pc._getOb(bc_id, None)
     sequence.edit(bc_uid = base_category.getUid())
 
-  def stepCheckBaseCategoryUid(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckBaseCategoryUid(self, sequence=None, **kw):
     """
     Check uid has not changed after an upgrade
     """
@@ -1196,7 +1129,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(bc_uid, base_category.getUid())
 
   # categories
-  def stepCreateCategories(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateCategories(self, sequence=None, **kw):
     """
     Create categories into a base category
     """
@@ -1211,7 +1144,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       category_list.append(category.getId())
     sequence.edit(category_id_list=category_list)
 
-  def stepAddCategoriesAsPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddCategoriesAsPathToBusinessTemplate(self, sequence=None, **kw):
     """
     Add Categories in path with the joker *
     """
@@ -1220,7 +1153,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     path = 'portal_categories/'+bc_id+'/*'
     bt.edit(template_path_list=[path])
 
-  def stepCheckCategoriesExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckCategoriesExists(self, sequence=None, **kw):
     """
     Check presence of categories
     """
@@ -1233,7 +1166,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       category = base_category._getOb(category_id, None)
       self.failUnless(category is not None)
 
-  def stepCheckCategoriesRemoved(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckCategoriesRemoved(self, sequence=None, **kw):
     """
     Check non-presence of categories
     """
@@ -1246,10 +1179,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       category = base_category._getOb(category_id, None)
       self.failUnless(category is None)
 
-  def stepRemoveCategories(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check presence of categories
-    """
+  def stepRemoveCategories(self, sequence=None, **kw):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
@@ -1261,7 +1191,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.failUnless(category is None)
 
   # sub categories
-  def stepCreateSubCategories(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateSubCategories(self, sequence=None, **kw):
     """
     Add sub category to a category
     """
@@ -1285,7 +1215,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   parent_category_id=category.getId(), \
                   subcategory_uid_dict=subcategory_uid_dict)
 
-  def stepModifySubCategories(self, sequence=None, sequence_list=None, **kw):
+  def stepModifySubCategories(self, sequence=None, **kw):
     """
       Modify the title some subcategories
     """
@@ -1299,7 +1229,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       subcategory = category._getOb(subcategory_id, None)
       subcategory.edit(title='foo')
 
-  def stepAddSubCategoriesAsPathToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddSubCategoriesAsPathToBusinessTemplate(self, sequence=None, **kw):
     """
     Add All Categories in path with the joker **
     """
@@ -1308,10 +1238,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     path = 'portal_categories/'+bc_id+'/**'
     bt.edit(template_path_list=[path])
 
-  def stepCheckSubCategoriesExists(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check presence of categories
-    """
+  def stepCheckSubCategoriesExists(self, sequence=None, **kw):
     bc_id = sequence.get('bc_id')
     pc = self.getCategoryTool()
     base_category = pc._getOb(bc_id, None)
@@ -1325,7 +1252,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.failUnless(subcategory is not None)
       self.assertEquals(subcategory.getTitle(), 'toto')
 
-  def stepCheckUidSubCategories(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckUidSubCategories(self, sequence=None, **kw):
     """
     Check Uid on base category and the sub categories
     """
@@ -1344,7 +1271,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
            subcategory_uid_dict[subcategory_id])
 
   # workflow
-  def stepCreateWorkflow(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateWorkflow(self, sequence=None, **kw):
     """
     Create a workflow
     """
@@ -1362,7 +1289,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     props['chain_Geek Object'] = wf_id
     pw.manage_changeWorkflows('', props=props)
 
-  def stepModifyWorkflowChain(self, sequence=None, sequence_list=None, **kw):
+  def stepModifyWorkflowChain(self, sequence=None, **kw):
     """
     Modify the workflow chain not by business template installation
     """
@@ -1378,7 +1305,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     props['chain_Base Category'] = 'edit_workflow,%s' % wf_id
     pw.manage_changeWorkflows('', props=props)
 
-  def stepSaveWorkflowChain(self, sequence=None, sequence_list=None, **kw):
+  def stepSaveWorkflowChain(self, sequence=None, **kw):
     """
     Save the workflow chain as it is
     """
@@ -1390,7 +1317,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         props['chain_%s' % id] = ','.join(wf_ids)
     pw.manage_changeWorkflows('', props=props)
 
-  def stepCheckWorkflowChainRemoved(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckWorkflowChainRemoved(self, sequence=None, **kw):
     """
     Check if the workflowChain has been removed
     """
@@ -1401,7 +1328,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         if id == "Geek Object":
           self.assertEqual(len(wf_ids), 0)
 
-  def stepCheckWorkflowChainExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckWorkflowChainExists(self, sequence=None, **kw):
     """
     Check if the workflowChain has been added
     """
@@ -1414,7 +1341,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
           present = 1
     self.assertEqual(present, 1)
 
-  def stepAddWorkflowToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAppendWorkflowToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    wf_ids = list(bt.getTemplateWorkflowIdList())
+    wf_ids.append(sequence.get('workflow_id', ''))
+    self.assertEqual(len(wf_ids), 2)
+    bt.edit(template_workflow_id_list=wf_ids)
+
+  def stepAddWorkflowToBusinessTemplate(self, sequence=None, **kw):
     """
     Add workflow to business template
     """
@@ -1425,25 +1360,26 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(len(wf_ids), 1)
     bt.edit(template_workflow_id_list=wf_ids)
 
-  def stepAddWorkflowChainToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Add workflow to business template
-    """
+  def stepAppendWorkflowChainToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    wf_chain_ids = list(bt.getTemplatePortalTypeWorkflowChainList())
+    wf_chain_ids.append('Geek Object | %s' % sequence.get('workflow_id', ''))
+    bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
+
+  def stepAddWorkflowChainToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
     wf_chain_ids = ['Geek Object | %s' % sequence.get('workflow_id', '')]
     bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
 
-  def stepAddRemovedWorkflowChainToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Add workflow to business template
-    """
+  def stepAddRemovedWorkflowChainToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('current_bt', None)
     self.failUnless(bt is not None)
     wf_chain_ids = ['Geek Object | -%s' % sequence.get('workflow_id', '')]
     bt.edit(template_portal_type_workflow_chain_list=wf_chain_ids)
 
-  def stepRemoveWorkflow(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveWorkflow(self, sequence=None, **kw):
     """
     Remove Workflow
     """
@@ -1463,7 +1399,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         props['chain_%s' % id] = ','.join(wf_ids)
     pw.manage_changeWorkflows('', props=props)
 
-  def stepCheckWorkflowExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckWorkflowExists(self, sequence=None, **kw):
     """
     Check presence of Workflow
     """
@@ -1472,7 +1408,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     workflow = pw._getOb(wf_id, None)
     self.failUnless(workflow is not None)
 
-  def stepCheckWorkflowRemoved(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckWorkflowRemoved(self, sequence=None, **kw):
     """
     Check non presence of Workflow
     """
@@ -1481,7 +1417,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     workflow = pw._getOb(wf_id, None)
     self.failUnless(workflow is None)
 
-  def stepCheckWorkflowBackup(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckWorkflowBackup(self, sequence=None, **kw):
     """
     Check workflow and its subobjects has been well backup in portal trash
     """
@@ -1492,7 +1428,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEqual(len(bin.portal_workflow_items[wf_id].objectIds()), 0)
 
   # Actions
-  def stepCreateFirstAction(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateFirstAction(self, sequence=None, **kw):
     """
     Create action
     """
@@ -1507,7 +1443,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                          float_index=2.0)
     sequence.edit(first_action_id='become_geek')
 
-  def stepCreateEmptyAction(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateEmptyAction(self, sequence=None, **kw):
     """
     Create an empty action
     """
@@ -1519,7 +1455,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                          action_permission_list=(),
                          float_index=1.2)
 
-  def stepCreateSecondAction(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateSecondAction(self, sequence=None, **kw):
     """
     Create a second action
     """
@@ -1534,7 +1470,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                          float_index=1.5)
     sequence.edit(second_action_id='become_nerd')
 
-  def stepCheckFirstActionExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckFirstActionExists(self, sequence=None, **kw):
     """
     Check presence of action
     """
@@ -1545,7 +1481,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(action_id in [x.getReference()
       for x in object_pt.getActionInformationList()])
 
-  def stepCheckFirstActionNotExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckFirstActionNotExists(self, sequence=None, **kw):
     """
     Check non-presence of action
     """
@@ -1556,7 +1492,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertFalse(action_id in [x.getReference()
       for x in object_pt.getActionInformationList()])
 
-  def stepCheckSecondActionExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckSecondActionExists(self, sequence=None, **kw):
     """
     Check presence of the second action
     """
@@ -1567,7 +1503,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertTrue(action_id in [x.getReference()
       for x in object_pt.getActionInformationList()])
 
-  def stepCheckSecondActionNotExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckSecondActionNotExists(self, sequence=None, **kw):
     """
     Check non-presence of optional action
     """
@@ -1578,7 +1514,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertFalse(action_id in [x.getReference()
       for x in object_pt.getActionInformationList()])
 
-  def stepAddSecondActionToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddSecondActionToBusinessTemplate(self, sequence=None, **kw):
     """
     Add Second Action to business template
     """
@@ -1589,7 +1525,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_action_path=['%s | %s' %(object_id, action_id)])
 
   # Catalog Method
-  def stepCreateCatalogMethod(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateCatalogMethod(self, sequence=None, **kw):
     """
     Create ZSQL Method into catalog
     """
@@ -1619,10 +1555,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog.filter_dict[method_id]['type'] = []
 
 
-  def stepCreateUpdateCatalogMethod(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create ZSQL Method into catalog
-    """
+  def stepCreateUpdateCatalogMethod(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     self.failUnless(catalog is not None)
@@ -1648,10 +1581,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog.filter_dict[method_id]['expression_cache_key'] = 'portal_type',
     catalog.filter_dict[method_id]['type'] = []
 
-  def stepCreateNewCatalogMethod(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create ZSQL Method into catalog
-    """
+  def stepCreateNewCatalogMethod(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     method_id = "z_another_fake_method"
@@ -1667,10 +1597,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sql_uncatalog_object.sort()
     catalog.sql_uncatalog_object = tuple(sql_uncatalog_object)
 
-  def stepChangePreviousCatalogMethod(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create ZSQL Method into catalog
-    """
+  def stepChangePreviousCatalogMethod(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     method_id = sequence.get('zsql_method_id')
@@ -1679,17 +1606,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     previous_method.title='toto'
     self.assertEquals(previous_method.title,'toto')
 
-  def stepCheckCatalogMethodChangeKept(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create ZSQL Method into catalog
-    """
+  def stepCheckCatalogMethodChangeKept(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     method_id = sequence.get('zsql_method_id')
     previous_method = catalog._getOb(method_id,None)
     self.assertEquals(previous_method.title,'toto')
 
-  def stepAddCatalogMethodToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddCatalogMethodToBusinessTemplate(self, sequence=None, **kw):
     """
     Add catalog method into the business template
     """
@@ -1701,7 +1625,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog_id = pc.getSQLCatalog().id
     bt.edit(template_catalog_method_id_list=[catalog_id+'/'+method_id])
 
-  def stepRemoveCatalogMethodToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveCatalogMethodToBusinessTemplate(self, sequence=None, **kw):
     """
     Remove catalog method into the business template
     """
@@ -1715,7 +1639,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     current_method_list.remove(catalog_id+'/'+method_id)
     business_template.edit(template_catalog_method_id_list=current_method_list)
 
-  def stepAddNewCatalogMethodToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddNewCatalogMethodToBusinessTemplate(self, sequence=None, **kw):
     """
     Add catalog method into the business template
     """
@@ -1729,7 +1653,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_catalog_method_id_list=[catalog_id+'/'+method_id,
             catalog_id+'/'+another_method_id])
 
-  def stepCheckCatalogMethodExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckCatalogMethodExists(self, sequence=None, **kw):
     """
     Check presence of ZSQL Method in catalog
     """
@@ -1748,10 +1672,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(filter_dict['expression_cache_key'], ('portal_type',))
     self.assertEqual(filter_dict['type'], ())
 
-  def stepCheckUpdatedCatalogMethodExists(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check presence of ZSQL Method in catalog
-    """
+  def stepCheckUpdatedCatalogMethodExists(self, sequence=None, **kw):
     pc = self.getCatalogTool()
     catalog = pc.getSQLCatalog()
     self.failUnless(catalog is not None)
@@ -1767,7 +1688,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEqual(filter_dict['expression_cache_key'], ('portal_type',))
     self.assertEqual(filter_dict['type'], ())
 
-  def stepCheckCatalogMethodRemoved(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckCatalogMethodRemoved(self, sequence=None, **kw):
     """
     Check non-presence of ZSQL Method in catalog
     """
@@ -1782,7 +1703,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # check filter
     self.failUnless(method_id not in catalog.filter_dict.keys())
 
-  def stepRemoveCatalogMethod(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveCatalogMethod(self, sequence=None, **kw):
     """
     Remove ZSQL Method from catalog
     """
@@ -1804,7 +1725,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(method_id not in catalog.filter_dict.keys())
 
   # Related key, Result key and table, and others
-  def stepCreateKeysAndTable(self, sequence=list, sequence_list=None, **kw):
+  def stepCreateKeysAndTable(self, sequence=list, **kw):
     """
     Create some keys and tables
     """
@@ -1973,7 +1894,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog.sql_search_tables = tuple(sql_search_tables)
     self.failUnless(result_table not in catalog.sql_search_tables)
 
-  def stepAddKeysAndTableToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddKeysAndTableToBusinessTemplate(self, sequence=None, **kw):
     """
     Add some related, result key and tables to Business Temlpate
     """
@@ -2018,7 +1939,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
             template_catalog_local_role_key_list=[local_role_key],
             )
 
-  def stepRemoveKeysAndTable(self, sequence=list, sequence_list=None, **kw):
+  def stepRemoveKeysAndTable(self, sequence=list, **kw):
     """
     Remove some keys and tables
     """
@@ -2122,7 +2043,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     catalog.sql_catalog_local_role_keys = tuple(sql_catalog_local_role_keys)
     self.failUnless(local_role_key not in catalog.sql_catalog_local_role_keys)
 
-  def stepCheckKeysAndTableExists(self, sequence=list, sequence_list=None, **kw):
+  def stepCheckKeysAndTableExists(self, sequence=list, **kw):
     """
     Check presence of some keys and tables
     """
@@ -2178,7 +2099,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # local_role key
     self.failUnless(local_role_key in catalog.sql_catalog_local_role_keys)
 
-  def stepCheckKeysAndTableRemoved(self, sequence=list, sequence_list=None, **kw):
+  def stepCheckKeysAndTableRemoved(self, sequence=list, **kw):
     """
     Check non-presence of some keys and tables
     """
@@ -2235,7 +2156,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(local_role_key not in catalog.sql_catalog_local_role_keys)
 
   # Roles
-  def stepCreateRole(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateRole(self, sequence=None, **kw):
     """
     Create a role
     """
@@ -2247,7 +2168,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(new_role in p.__ac_roles__)
     sequence.edit(role=new_role)
 
-  def stepRemoveRole(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveRole(self, sequence=None, **kw):
     """
     Remove a role
     """
@@ -2259,7 +2180,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     p.__ac_roles__ = tuple(role_list)
     self.failUnless(role not in p.__ac_roles__)
 
-  def stepAddRoleToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddRoleToBusinessTemplate(self, sequence=None, **kw):
     """
     Add Role to Business Template
     """
@@ -2269,7 +2190,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(bt is not None)
     bt.edit(template_role_list=[role])
 
-  def stepCheckRoleExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckRoleExists(self, sequence=None, **kw):
     """
     Check presence of role
     """
@@ -2278,7 +2199,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     p = self.getPortal()
     self.failUnless(role in p.__ac_roles__)
 
-  def stepCheckRoleRemoved(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckRoleRemoved(self, sequence=None, **kw):
     """
     Check non-presence of role
     """
@@ -2288,7 +2209,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(role not in p.__ac_roles__)
 
   # Local Roles
-  def stepCreateLocalRoles(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateLocalRoles(self, sequence=None, **kw):
     """
     Create local roles
     """
@@ -2302,7 +2223,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(module.__ac_local_roles__, new_local_roles)
     sequence.edit(local_roles=new_local_roles)
 
-  def stepRemoveLocalRoles(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveLocalRoles(self, sequence=None, **kw):
     """
     Remove local roles
     """
@@ -2314,7 +2235,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     new_local_roles = sequence.get('local_roles')
     self.assertNotEquals(module.__ac_local_roles__, new_local_roles)
 
-  def stepAddLocalRolesToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddLocalRolesToBusinessTemplate(self, sequence=None, **kw):
     """
     Add Local Roles to Business Template
     """
@@ -2323,7 +2244,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(bt is not None)
     bt.edit(template_local_roles_list=[module_id])
 
-  def stepCheckLocalRolesExists(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckLocalRolesExists(self, sequence=None, **kw):
     """
     Check presence of local roles
     """
@@ -2334,10 +2255,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(module is not None)
     self.assertEquals(module.__ac_local_roles__, new_local_roles)
 
-  def stepCheckModuleLocalRolesInCatalogBeforeUpdate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check presence of local roles
-    """
+  def stepCheckModuleLocalRolesInCatalogBeforeUpdate(self, sequence=None, **kw):
     p = self.getPortal()
     module_id = sequence.get('module_id')
     module = p._getOb(module_id, None)
@@ -2348,10 +2266,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     result = [(x.uid, x.role) for x in result]
     sequence.edit(local_roles_catalog_result=result)
 
-  def stepCheckModuleLocalRolesInCatalogAfterUpdate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check presence of local roles
-    """
+  def stepCheckModuleLocalRolesInCatalogAfterUpdate(self, sequence=None, **kw):
     p = self.getPortal()
     module_id = sequence.get('module_id')
     before_update_local_roles = sequence.get('local_roles_catalog_result')
@@ -2363,7 +2278,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     for line in result:
       self.assertTrue((line.uid, line.role) not in before_update_local_roles)
 
-  def stepCheckLocalRolesRemoved(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckLocalRolesRemoved(self, sequence=None, **kw):
     """
     Check non-presence of local roles
     """
@@ -2376,7 +2291,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 
   # Document, Property Sheet, Extension And Test
   # they use the same class so only one test is required for them
-  def stepCreatePropertySheet(self, sequence=None, sequence_list=None, **kw):
+  def stepCreatePropertySheet(self, sequence=None, **kw):
     """
     Create a Property Sheet
     """
@@ -2393,7 +2308,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(os.path.exists(file_path))
     sequence.edit(ps_title=ps_title, ps_path=file_path, ps_data=ps_data)
 
-  def stepAddPropertySheetToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepAddPropertySheetToBusinessTemplate(self, sequence=None, **kw):
     """
     Add Property Sheet to Business Template
     """
@@ -2403,12 +2318,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(ps_title is not None)
     bt.edit(template_property_sheet_id_list=[ps_title])
 
-  def stepCheckPropertySheetMigration(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckPropertySheetMigration(self, sequence=None, **kw):
     """
     Check migration of Property Sheets from the Filesystem to ZODB
     """
     property_sheet_tool = self.getPortalObject().portal_property_sheets
-    self.failUnless('UnitTest' in property_sheet_tool)
+    self.failUnless('UnitTest' in property_sheet_tool.objectIds())
 
     property_list = property_sheet_tool.UnitTest.contentValues()
 
@@ -2420,24 +2335,45 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Remove Property Sheet
     """
+    ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
     self.failUnless(ps_path is not None)
     self.failUnless(os.path.exists(ps_path))
     os.remove(ps_path)
     self.failIf(os.path.exists(ps_path))
+    return
+    # Property Sheet will not be installed in file sytem
+    self.failIf(os.path.exists(ps_path))
+    # Property Sheet will be installed in ZODB
+    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+    self.portal.portal_property_sheets.manage_delObjects([ps_title])
+    self.failIf(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+
+  def stepRemovePropertySheetFromZODB(self, sequence=None, sequencer_list=None, **kw):
+    """
+    Remove Property Sheet from ZODB
+    """
+    ps_title = sequence.get('ps_title', None)
+    ps_path = sequence.get('ps_path', None)
+    self.failUnless(ps_path is not None)
+    # Property Sheet will not be installed in file sytem
+    self.failIf(os.path.exists(ps_path))
+    # Property Sheet will be installed in ZODB
+    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
+    self.portal.portal_property_sheets.manage_delObjects([ps_title])
+    self.failIf(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   def stepCheckPropertySheetExists(self, sequence=None, sequencer_list=None, **kw):
     """
     Check presence of Property Sheet
     """
+    ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    ps_data = sequence.get('ps_data', None)
     self.failUnless(ps_path is not None)
-    self.failUnless(os.path.exists(ps_path))
-    # check data in property sheet
-    f = file(ps_path, 'r')
-    data = f.read()
-    self.assertEqual(data, ps_data)
+    # Property Sheet will not be installed in file sytem
+    self.failIf(os.path.exists(ps_path))
+    # Property Sheet will be installed in ZODB
+    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   def stepCheckPropertySheetRemoved(self, sequence=None, sequencer_list=None, **kw):
     """
@@ -2447,18 +2383,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(ps_path is not None)
     self.failIf(os.path.exists(ps_path))
 
-  def stepCheckMigratedPropertySheetRemoved(self,
-                                            sequence=None,
-                                            sequencer_list=None,
-                                            **kw):
+  def stepCheckMigratedPropertySheetRemoved(self, sequence=None, **kw):
     """
     Check deletion of migrated Property Sheet
     """
     ps_id = sequence.get('ps_title', None)
     self.failIf(ps_id is None)
-    self.failIf(ps_id in self.getPortalObject().portal_property_sheets)
+    self.failIf(ps_id in self.getPortalObject().portal_property_sheets.objectIds())
 
-  def stepCreateUpdatedPropertySheet(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateUpdatedPropertySheet(self, sequence=None, **kw):
     """
     Create a Property Sheet
     """
@@ -2479,106 +2412,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     Check presence of Property Sheet
     """
+    ps_title = sequence.get('ps_title', None)
     ps_path = sequence.get('ps_path', None)
-    ps_data = sequence.get('ps_data_u', None)
     self.failUnless(ps_path is not None)
-    self.failUnless(os.path.exists(ps_path))
-    # check data in property sheet
-    f = file(ps_path, 'r')
-    data = f.read()
-    self.assertEqual(data, ps_data)
-
-  # Test Constraint
-  def stepCreateConstraint(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create a Constraint
-    """
-    ct_title = 'UnitTest'
-    ct_data =  ' \nclass UnitTest: \n  """ \n  Fake constraint for unit test \n \
-    """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
-    cfg = getConfiguration()
-    file_path = os.path.join(cfg.instancehome, 'Constraint', ct_title+'.py')
-    if os.path.exists(file_path):
-      os.remove(file_path)
-    f = file(file_path, 'w')
-    f.write(ct_data)
-    f.close()
-    self.failUnless(os.path.exists(file_path))
-    sequence.edit(ct_title=ct_title, ct_path=file_path, ct_data=ct_data)
-
-  def stepAddConstraintToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Add Constraint to Business Template
-    """
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    ct_title = sequence.get('ct_title', None)
-    self.failUnless(ct_title is not None)
-    bt.edit(template_constraint_id_list=[ct_title])
-
-  def stepRemoveConstraint(self, sequence=None, sequencer_list=None, **kw):
-    """
-    Remove Constraint
-    """
-    ct_path = sequence.get('ct_path', None)
-    self.failUnless(ct_path is not None)
-    self.failUnless(os.path.exists(ct_path))
-    os.remove(ct_path)
-    self.failIf(os.path.exists(ct_path))
-
-  def stepCheckConstraintExists(self, sequence=None, sequencer_list=None, **kw):
-    """
-    Check presence of Constraint
-    """
-    ct_path = sequence.get('ct_path', None)
-    ct_data = sequence.get('ct_data', None)
-    self.failUnless(ct_path is not None)
-    self.failUnless(os.path.exists(ct_path))
-    # check data in property sheet
-    f = file(ct_path, 'r')
-    data = f.read()
-    self.assertEqual(data, ct_data)
-
-  def stepCheckConstraintRemoved(self, sequence=None, sequencer_list=None, **kw):
-    """
-    Check presence of Constraint
-    """
-    ct_path = sequence.get('ct_path', None)
-    self.failUnless(ct_path is not None)
-    self.failIf(os.path.exists(ct_path))
-
-  def stepCreateUpdatedConstraint(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create a Constraint
-    """
-    ct_title = 'UnitTest'
-    ct_data =  ' \nclass UnitTest2: \n  """ \n  Second Fake constraint for unit test \n \
-    """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
-    cfg = getConfiguration()
-    file_path = os.path.join(cfg.instancehome, 'Constraint', ct_title+'.py')
-    if os.path.exists(file_path):
-      os.remove(file_path)
-    f = file(file_path, 'w')
-    f.write(ct_data)
-    f.close()
-    self.failUnless(os.path.exists(file_path))
-    sequence.edit(ct_data_u=ct_data)
-
-  def stepCheckUpdatedConstraintExists(self, sequence=None, sequencer_list=None, **kw):
-    """
-    Check presence of Constraint
-    """
-    ct_path = sequence.get('ct_path', None)
-    ct_data = sequence.get('ct_data_u', None)
-    self.failUnless(ct_path is not None)
-    self.failUnless(os.path.exists(ct_path))
-    # check data in property sheet
-    f = file(ct_path, 'r')
-    data = f.read()
-    self.assertEqual(data, ct_data)
+    # Property Sheet will not be installed in file sytem
+    self.failIf(os.path.exists(ps_path))
+    # Property Sheet will be installed in ZODB
+    self.failUnless(getattr(self.portal.portal_property_sheets, ps_title, None) is not None)
 
   # Busines templates
-  def stepImportBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepImportBusinessTemplate(self, sequence=None, **kw):
     """
     Import Business Template from a dir
     """
@@ -2596,23 +2439,20 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(import_bt.getPortalType(), 'Business Template')
     sequence.edit(import_bt=import_bt)
 
-  def stepAddExtraSlashesToTemplatePath(self, sequence=None, sequence_list=None, **kw):
+  def stepAddExtraSlashesToTemplatePath(self, sequence=None, **kw):
     """Add extra slashes to the template path for testing.
     """
     template_path = sequence.get('template_path')
     sequence.edit(template_path = template_path + '//')
 
-  def stepInstallBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepInstallBusinessTemplate(self, sequence=None, **kw):
     """
-    Install importzed business template
+    Install imported business template
     """
     import_bt = sequence.get('import_bt')
     import_bt.install(force=1)
 
-  def stepReinstallBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Install importzed business template
-    """
+  def stepReinstallBusinessTemplate(self, sequence=None, **kw):
     import_bt = sequence.get('current_bt')
     listbox_object_list = import_bt.BusinessTemplate_getModifiedObject()
     install_kw = {}
@@ -2620,25 +2460,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       install_kw[listbox_line.object_id] = listbox_line.choice_item_list[0][1]
     import_bt.reinstall(object_to_update=install_kw)
 
-  def stepCheckBeforeReinstall(self, sequence=None, sequence_list=None, **kw):
-    """
-    """
+  def stepCheckBeforeReinstall(self, sequence=None, **kw):
     import_bt = sequence.get('current_bt')
     diff_list = import_bt.BusinessTemplate_getModifiedObject()
     self.assertTrue('portal_types/Geek Object/become_geek'
                     in [line.object_id for line in diff_list])
 
-  def stepInstallCurrentBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Install importzed business template
-    """
+  def stepInstallCurrentBusinessTemplate(self, sequence=None, **kw):
     import_bt = sequence.get('current_bt')
     import_bt.install(force=1)
 
-  def stepInstallWithoutForceBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Install importzed business template
-    """
+  def stepInstallWithoutForceBusinessTemplate(self, sequence=None, **kw):
     import_bt = sequence.get('import_bt')
     object_list = import_bt.preinstall()
     install_object_dict = {}
@@ -2656,10 +2488,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     import_bt.install(force=0, object_to_update=install_object_dict,
                       update_catalog=1)
 
-  def stepInstallWithRemoveCheckedBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Install importzed business template
-    """
+  def stepInstallWithRemoveCheckedBusinessTemplate(self, sequence=None, **kw):
     import_bt = sequence.get('import_bt')
     object_list = import_bt.preinstall()
     install_object_dict = {}
@@ -2677,28 +2506,21 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     import_bt.install(force=0, object_to_update=install_object_dict,
                       update_catalog=1)
 
-  def stepInstallDuplicatedBusinessTemplate(self, sequence=None,
-                                            sequence_list=None, **kw):
-    """
-    Install importzed business template
-    """
+  def stepInstallDuplicatedBusinessTemplate(self, sequence=None, **kw):
     import_bt = sequence.get('import_bt')
     pt_id = sequence.get('object_ptype_id')
     object_to_update = {
       'portal_types/%s' % pt_id: 'install'}
     import_bt.install(object_to_update=object_to_update)
 
-  def stepPartialCatalogMethodInstall(self, sequence=None, sequence_list=None, **kw):
-    """
-    Install importzed business template
-    """
+  def stepPartialCatalogMethodInstall(self, sequence=None, **kw):
     import_bt = sequence.get('import_bt')
     pc = self.getCatalogTool()
     catalog_id = pc.getSQLCatalog().id
     object_to_update = {'portal_catalog/'+catalog_id+'/z_another_fake_method':'install'}
     import_bt.install(object_to_update=object_to_update)
 
-  def stepCreateNewBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateNewBusinessTemplate(self, sequence=None, **kw):
     """
     Create a new Business Template
     """
@@ -2711,7 +2533,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   description='bt for unit_test')
     sequence.edit(export_bt=template)
 
-  def stepCreateSecondBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepCreateSecondBusinessTemplate(self, sequence=None, **kw):
     """
     Create a second Business Template
     """
@@ -2724,8 +2546,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   description='bt for unit_test')
     sequence.edit(second_export_bt=template)
 
-  def stepCreateDuplicatedBusinessTemplate(self, sequence=None,
-                                           sequence_list=None, **kw):
+  def stepCreateDuplicatedBusinessTemplate(self, sequence=None, **kw):
     """
     Create a new Business Template which will duplicate
     the configuration.
@@ -2741,37 +2562,31 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         export_bt=template,
         previous_bt=sequence.get('current_bt'))
 
-  def stepBuildBusinessTemplateFail(self, sequence=None, sequence_list=None, **kw):
-    """
-    Build Business Template
-    """
+  def stepBuildBusinessTemplateFail(self, sequence=None, **kw):
     template = sequence.get('current_bt')
     self.assertRaises(AttributeError,
                       template.build)
 
-  def stepCheckBuildWithBadPortalTypeFailed(self, sequence=None, sequence_list=None, **kw):
-    """
-    Build Business Template
-    """
+  def stepCheckBuildWithBadPortalTypeFailed(self, sequence=None, **kw):
     template = sequence.get('current_bt')
     self.assertRaises(ValueError,
                       template.build)
 
-  def stepBuildBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepBuildBusinessTemplate(self, sequence=None, **kw):
     """
     Build Business Template
     """
     template = sequence.get('current_bt')
     template.build()
 
-  def stepEditBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepEditBusinessTemplate(self, sequence=None, **kw):
     """
     Edit Business Template
     """
     template = sequence.get('current_bt')
     template.edit()
 
-  def stepSaveBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepSaveBusinessTemplate(self, sequence=None, **kw):
     """
     Export Business Template
     """
@@ -2786,7 +2601,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     sequence.edit(template_path=template_path)
     self.failUnless(os.path.exists(template_path))
 
-  def stepCheckObjectPropertiesInBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckObjectPropertiesInBusinessTemplate(self, sequence=None, **kw):
     """
     Check that ac_local_roles, uid and _owner are set to None
     """
@@ -2811,7 +2626,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
           if hasattr(aq_base(data), 'uid'):
             self.failUnless(data.uid is None)
 
-  def stepCheckUnindexActivityPresence(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckUnindexActivityPresence(self, sequence=None, **kw):
     """
     Check if we have activity for unindex
     """
@@ -2820,7 +2635,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                      and m.kw.get('uid') is not None ]
     self.assertEquals(len(message_list), 0)
 
-  def stepCheckFolderReindexActivityPresence(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckFolderReindexActivityPresence(self, sequence=None, **kw):
     """
     Check if we have activity for Folder_reindexAll.
     """
@@ -2829,12 +2644,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertNotEquals(len(message_list), 0)
 
 
-  def stepCheckPathNotUnindexAfterBuild(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckPathNotUnindexAfterBuild(self, sequence=None, **kw):
     """
     Check that after a build, not unindex has been done
     """
     bc_id = sequence.get('bc_id')
-    bt = sequence.get('current_bt')
     path = 'portal_categories/'+bc_id
     category_id_list = sequence.get('category_id_list')
     portal = self.getPortal()
@@ -2845,27 +2659,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       catalog_ob_list = [x.getObject() for x in portal.portal_catalog(uid=cat.getUid())]
       self.failUnless(len(catalog_ob_list) > 0)
 
-  def stepSetUpdateWorkflowFlagInBusinessTemplate(self, sequence=None, sequence_list=None):
+  def stepSetUpdateToolFlagInBusinessTemplate(self, sequence=None):
     """
     Set flag for update in Business Template
     """
-    template_tool = self.getTemplateTool()
-    bt = sequence.get('current_bt')
-    self.assertEqual(bt.getTitle(),'erp5_core')
-    bt.edit(template_update_business_template_workflow=1)
-    self.assertEqual(bt.getTemplateUpdateBusinessTemplateWorkflow(), 1)
-
-  def stepSetUpdateToolFlagInBusinessTemplate(self, sequence=None, sequence_list=None):
-    """
-    Set flag for update in Business Template
-    """
-    template_tool = self.getTemplateTool()
     bt = sequence.get('current_bt')
     self.assertEqual(bt.getTitle(),'erp5_core')
     bt.edit(template_update_tool=1)
     self.assertEqual(bt.getTemplateUpdateTool(), 1)
 
-  def stepRemoveBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepRemoveBusinessTemplate(self, sequence=None, **kw):
     """
     Remove current Business Template
     """
@@ -2875,22 +2678,18 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     bt = template_tool._getOb(bt_id, None)
     self.failUnless(bt is None)
 
-  def stepUninstallBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
+  def stepUninstallBusinessTemplate(self, sequence=None, **kw):
     """
     Uninstall current Business Template
     """
     bt = sequence.get('current_bt')
     bt.uninstall()
 
-  def stepUninstallPreviousBusinessTemplate(self, sequence=None,
-                                            sequence_list=None, **kw):
-    """
-    Uninstall current Business Template
-    """
+  def stepUninstallPreviousBusinessTemplate(self, sequence=None, **kw):
     bt = sequence.get('previous_bt')
     bt.uninstall()
 
-  def stepClearBusinessTemplateField(self, sequence=None, sequence_list=None, **kw):
+  def stepClearBusinessTemplateField(self, sequence=None, **kw):
     """
     Clear business template field
     """
@@ -2914,22 +2713,15 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
         prop_dict[pid[:-5]] = ()
     bt.edit(**prop_dict)
 
-  def stepRemoveSimulationTool(self, sequence=None, sequence_list=None, **kw):
-    """
-    Remove Trash Tool from site
-    """
+  def stepRemoveSimulationTool(self, sequence=None, **kw):
     p = self.getPortal()
     p.manage_delObjects(['portal_simulation'])
     self.failUnless(p._getOb('portal_simulation', None) is None)
 
-  def stepCheckSimulationToolExists(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check presence of trash tool
-    """
+  def stepCheckSimulationToolExists(self, sequence=None, **kw):
     self.failUnless(self.getSimulationTool() is not None)
 
-  def stepCheckSubobjectsNotIncluded(self, sequence=None,
-                                     sequence_list=None, **kw):
+  def stepCheckSubobjectsNotIncluded(self, sequence=None, **kw):
     """Check subobjects are not included in the base category.
     """
     base_category_id = sequence.get('bc_id')
@@ -2940,25 +2732,25 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(base_category_obj is not None)
     self.assertEquals(len(base_category_obj.objectIds()), 0)
 
-  def stepCheckInitialRevision(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckInitialRevision(self, sequence=None, **kw):
     """ Check if revision of a new bt is an empty string
     """
     bt = sequence.get('current_bt')
     self.assertEqual(bt.getRevision(), '')
 
-  def stepCheckFirstRevision(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckFirstRevision(self, sequence=None, **kw):
     """ Check if revision of the bt is 1
     """
     bt = sequence.get('current_bt')
     self.assertEqual(bt.getRevision(), '1')
 
-  def stepCheckSecondRevision(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckSecondRevision(self, sequence=None, **kw):
     """ Check if revision of the bt is 2
     """
     bt = sequence.get('current_bt')
     self.assertEqual(bt.getRevision(), '2')
 
-  def stepCheckNoMissingDependencies(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckNoMissingDependencies(self, sequence=None, **kw):
     """ Check if bt has no missing dependency
     """
     missing_dep = False
@@ -2969,7 +2761,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       missing_dep = True
     self.failUnless(not missing_dep)
 
-  def stepCheckMissingDependencies(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckMissingDependencies(self, sequence=None, **kw):
     """ Check if bt has missing dependency
     """
     missing_dep = False
@@ -2980,16 +2772,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       missing_dep = True
     self.failUnless(missing_dep)
 
-  def stepAddDependency(self, sequence=None, sequence_list=None, **kw):
+  def stepAddDependency(self, sequence=None, **kw):
     """ Add a dependency to the business template
     """
     bt = sequence.get('current_bt')
     bt.setDependencyList(['dependency_bt',])
 
-  def stepCreateDependencyBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-      Create a new Business Template
-    """
+  def stepCreateDependencyBusinessTemplate(self, sequence=None, **kw):
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type='Business Template')
     self.failUnless(template.getBuildingState() == 'draft')
@@ -2999,17 +2788,492 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                   description='bt for unit_test')
     sequence.edit(dependency_bt=template)
 
+  def stepSetSkinFolderRegistredSelections(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._setProperty(
+          'business_template_registered_skin_selections', ('Foo',),
+          type='tokens')
+
+  def stepSetSkinFolderRegistredSelections2(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._updateProperty(
+          'business_template_registered_skin_selections', ('Foo', 'Bar',))
+
+  def stepCreateSkinSelection(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    ps.manage_skinLayers(skinpath=('erp5_core',), skinname='Foo', add_skin=1)
+
+  def stepSetStaticSkinFolderRegistredSelections(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('static_skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._setProperty(
+          'business_template_registered_skin_selections', ('Foo',),
+          type='tokens')
+    selection = ps.getSkinPath('Foo')
+    selection = selection.split(',')
+    if skin_id not in selection:
+      selection.append(skin_id)
+      ps.manage_skinLayers(skinpath=tuple(selection),
+                           skinname='Foo', add_skin=1)
+
+  def stepCheckSkinSelectionAdded(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    # a new skin selection is added
+    self.assertTrue('Foo' in ps.getSkinSelections())
+    # and it contains good layers
+    layers = ps.getSkinPath('Foo').split(',')
+    self.assertTrue(skin_id in layers, layers)
+    self.assertTrue('erp5_core' in layers, layers)
+    self.assertFalse('erp5_xhtml_style' in layers, layers)
+    skin_folder = ps._getOb(skin_id, None)
+    skin_selection_list = skin_folder.getProperty(
+        'business_template_registered_skin_selections', ())
+    self.assertTrue('Foo' in skin_selection_list)
+
+  def stepCheckStaticSkinSelection(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    static_skin_id = sequence.get('static_skin_folder_id')
+    # a new skin selection is added
+    self.assertTrue('Foo' in ps.getSkinSelections())
+    # and it contains good layers
+    layers = ps.getSkinPath('Foo').split(',')
+    self.assertTrue(skin_id in layers, layers)
+    self.assertTrue('erp5_core' in layers, layers)
+    self.assertFalse('erp5_xhtml_style' in layers, layers)
+    self.assertTrue(static_skin_id in layers, layers)
+
+  def stepCreateCustomWorkflow(self, sequence=None, **kw):
+    """
+    Create a custom workflow
+    """
+    wf_id = 'custom_geek_workflow'
+    pw = self.getWorkflowTool()
+    addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
+    workflow = pw._getOb(wf_id, None)
+    self.failUnless(workflow is not None)
+    sequence.edit(workflow_id=workflow.getId())
+    cbt = pw._chains_by_type
+    props = {}
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        props['chain_%s' % id] = ','.join(wf_ids)
+    key = 'chain_Geek Object'
+    if props.has_key(key):
+      props[key] = '%s,%s' % (props[key], wf_id)
+    else:
+      props[key] = wf_id
+    pw.manage_changeWorkflows('', props=props)
+
+  def stepCreateCustomBusinessTemplate(self, sequence=None, **kw):
+    """
+    Create a custom Business Template
+    """
+    pt = self.getTemplateTool()
+    template = pt.newContent(portal_type='Business Template')
+    self.failUnless(template.getBuildingState() == 'draft')
+    self.failUnless(template.getInstallationState() == 'not_installed')
+    template.edit(title='custom geek template',
+                  version='1.0',
+                  description='custom bt for unit_test')
+    sequence.edit(export_bt=template)
+
+  def stepCheckCustomWorkflowChain(self, sequence=None, **kw):
+    """
+    Check custom workflow chain
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+    self.assertEqual(present, 1)
+    self.assertSameSet(cbt['Geek Object'],
+                       ('geek_workflow', 'custom_geek_workflow'))
+
+  def stepCheckOriginalWorkflowChain(self, sequence=None, **kw):
+    """
+    Check original workflow chain
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+    self.assertEqual(present, 1)
+    self.assertSameSet(cbt['Geek Object'],
+                       ('geek_workflow', ))
+
+  def stepCheckEmptyWorkflowChain(self, sequence=None, **kw):
+    """
+    Check that workflow chain is empty
+    """
+    present = 0
+    pw = self.getWorkflowTool()
+    cbt = pw._chains_by_type
+    if cbt is not None:
+      for id, wf_ids in cbt.items():
+        if id == "Geek Object":
+          present = 1
+          break
+    if present:
+      self.assertEqual(0, len(wf_ids))
+
+  def stepCopyBusinessTemplate(self, sequence=None, **kw):
+    """
+    Copy business template
+    """
+    portal = self.getPortalObject()
+    template_tool = portal.portal_templates
+    import_bt = sequence.get('current_bt')
+    cb_data = template_tool.manage_copyObjects([import_bt.getId()])
+    copied, = template_tool.manage_pasteObjects(cb_data)
+    sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
+
+  def stepRemoveWorkflowFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Remove workflow to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    current_twi = list(bt.getTemplateWorkflowIdList())
+    current_twi.remove(sequence.get('workflow_id', ''))
+    bt.edit(template_workflow_id_list=current_twi)
+
+  def stepRemoveWorkflowChainFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Remove workflow chain to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    workflow_id = sequence.get('workflow_id', '')
+    new_value = []
+    workflow_chain_list = list(bt.getTemplatePortalTypeWorkflowChainList())
+    for workflow_chain in workflow_chain_list:
+      portal_type, wkflow_id = workflow_chain.split(' | ')
+      if wkflow_id != workflow_id:
+        new_value.append(workflow_chain)
+    bt.edit(template_portal_type_workflow_chain_list=new_value)
+
+  def stepCreatePortalTypeRole(self, sequence=None, **kw):
+    """
+    Create portal type role
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_pt = pt._getOb(object_id)
+    object_pt.newContent(portal_type='Role Information',
+      title='Geek Role Definition',
+      description='A definition with non ascii chars éàè',
+      role_name_list=('geek_role_definition',),
+      role_category_list=('group/g1','function/f1'),
+      role_base_category_script_id='Base Category Script',
+      role_base_category_list=('group','site'))
+
+    sequence.edit(portal_type_role='geek_role_definition')
+
+  def stepAddPortalTypeRolesToBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add type role to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    ptype_ids = []
+    ptype_ids.append(sequence.get('object_ptype_id', ''))
+    ptype_ids.append(sequence.get('module_ptype_id', ''))
+    self.assertEqual(len(ptype_ids), 2)
+    bt.edit(template_portal_type_roles_list=ptype_ids)
+
+  def stepCheckPortalTypeRoleExists(self, sequence=None, **kw):
+    """
+    Cehck that portal type role exist
+    """
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    role, = pt[object_id].getRoleInformationList()
+    self.assertEqual('Geek Role Definition', role.getTitle())
+    self.assertEqual(['geek_role_definition'], role.getRoleNameList())
+    self.assertEqual('A definition with non ascii chars éàè', role.getDescription())
+    self.assertEqual(['group/g1','function/f1'], role.getRoleCategoryList())
+    self.assertEqual(['group','site'], role.getRoleBaseCategoryList())
+    self.assertEqual('Base Category Script', role.getRoleBaseCategoryScriptId())
+
+  def stepModifyPortalType(self, sequence=None, **kw):
+    """
+    Modify Portal Type
+    """
+    pt = self.getTypeTool()
+    object_type = pt._getOb('Geek Object', None)
+    object_type.title = 'Modified %s' % object_type.title
+
+  def stepUnmodifyPortalType(self, sequence=None, **kw):
+    """
+    Unmodify Portal Type
+    """
+    pt = self.getTypeTool()
+    object_type = pt._getOb('Geek Object', None)
+    object_type.title = object_type.title[len('Modified '):]
+
+  def stepCheckModifiedPortalTypeExists(self, sequence=None, **kw):
+    """
+    Check presence of modified portal type
+    """
+    self.stepCheckPortalTypeExists(sequence=sequence, **kw)
+    pt = self.getTypeTool()
+    object_id = sequence.get('object_ptype_id')
+    object_type = pt._getOb(object_id, None)
+    self.failUnless(object_type.title.startswith('Modified '))
+
+  def stepCreateFakeZODBScript(self, sequence=None, **kw):
+    """Create a Script inside portal_skins
+    """
+    grain_of_sand = ''.join([random.choice(string.ascii_letters) for i in xrange(10)])
+    python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
+    skin_folder_id = 'custom'
+    if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
+        self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
+                                                                 id=python_script_id)
+    sequence.set('python_script_id', python_script_id)
+    sequence.set('skin_folder_id', skin_folder_id)
+
+  def stepAddCustomSkinFolderToBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add types to business template
+    """
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    template_skin_id_list = list(bt.getProperty('template_skin_id_list'))
+    template_skin_id_list.append('custom')
+    bt.edit(template_skin_id_list=template_skin_id_list)
+
+  def stepCheckFakeScriptIsDeleted(self, sequence=None, **kw):
+    """Check that script inside ZODB is deleted by BT reinstallation
+    """
+    python_script_id = sequence.get('python_script_id')
+    skin_folder_id = sequence.get('skin_folder_id')
+    folder = self.portal.portal_skins[skin_folder_id]
+    self.assertTrue(python_script_id not in folder.objectIds())
+
+  def stepSetOldSitePropertyValue(self, sequence=None, **kw):
+    """Set the old value to a site property."""
+    sequence.set('site_property_value', 'old')
+
+  def stepSetNewSitePropertyValue(self, sequence=None, **kw):
+    """Set the new value to a site property."""
+    sequence.set('site_property_value', 'new')
+
+  def stepCreateSiteProperty(self, sequence=None, **kw):
+    """Create a site property."""
+    portal = self.getPortal()
+    portal._setProperty('a_property', sequence.get('site_property_value'))
+
+  def stepModifySiteProperty(self, sequence=None, **kw):
+    """Modify a site property."""
+    portal = self.getPortal()
+    portal._updateProperty('a_property', sequence.get('site_property_value'))
+
+  def stepCheckSiteProperty(self, sequence=None, **kw):
+    """Check a site property."""
+    portal = self.getPortal()
+    self.assertEquals(portal.getProperty('a_property'),
+                      sequence.get('site_property_value'))
+
+  def stepCheckSitePropertyRemoved(self, sequence=None, **kw):
+    """Check if a site property is removed."""
+    portal = self.getPortal()
+    self.failIf(portal.hasProperty('a_property'))
+
+  def stepAddSitePropertyToBusinessTemplate(self, sequence=None, **kw):
+    """Add a site property into a business template."""
+    bt = sequence.get('current_bt', None)
+    self.failUnless(bt is not None)
+    bt.edit(template_site_property_id_list=('a_property',))
+
+  def stepCheckSkinSelectionRemoved(self, sequence=None, **kw):
+    """
+    Check that a skin selection has been removed.
+    """
+    self.assertTrue('Foo' not in self.portal.portal_skins.getSkinSelections())
+
+  def stepCheckSkinSelectionNotRemoved(self, sequence=None, **kw):
+    """
+    Check that a skin selection has not been removed.
+    """
+    self.assertTrue('Foo' in self.portal.portal_skins.getSkinSelections())
+
+  def stepUserDisableSkinSelectionRegistration(self, sequence=None, **kw):
+    """
+    Simulate User disabling skin registration from UI.
+    """
+    self.app.REQUEST.set('your_register_skin_selection', 0)
+
+  def stepUserSelectSkinToBeChanged(self, sequence=None, **kw):
+    """
+    User selects skin to be changed from UI.
+    """
+    select_skin_to_be_changed_list = self.portal.portal_skins.getSkinSelections()[:1]
+    select_skin_not_to_be_changed_list = self.portal.portal_skins.getSkinSelections()[1:]
+    sequence.edit(select_skin_to_be_changed_list = select_skin_to_be_changed_list, \
+                  select_skin_not_to_be_changed_list = select_skin_not_to_be_changed_list)
+    self.app.REQUEST.set('your_skin_layer_list', select_skin_to_be_changed_list)
+
+  def stepCheckUserSelectedSkinToBeChanged(self, sequence=None, **kw):
+    """
+    Check that only selected to be changed skins are affected.
+    """
+    skin_folder_id = sequence.get('skin_folder_id')
+    select_skin_to_be_changed_list = sequence.get('select_skin_to_be_changed_list')
+    select_skin_not_to_be_changed_list = sequence.get('select_skin_not_to_be_changed_list')
+    for skin_name in select_skin_to_be_changed_list:
+      self.assertTrue(skin_folder_id in self.portal.portal_skins.getSkinPath(skin_name))
+    for skin_name in select_skin_not_to_be_changed_list:
+      self.assertTrue(skin_folder_id not in self.portal.portal_skins.getSkinPath(skin_name))
+
+  def stepCheckSkinFolderPriorityOn(self, sequence=None, **kw):
+    """
+    Check skin folder priority
+    """
+    ps = self.portal.portal_skins
+    for skin in ps.getSkinSelections():
+      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[0])
+      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[1])
+
+  def stepCheckSkinFolderPriorityOff(self, sequence=None, **kw):
+    """
+    Check skin folder priority off
+    """
+    ps = self.portal.portal_skins
+    for skin in ps.getSkinSelections():
+      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[0])
+      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[1])
+
+  def stepUserDisableSkinFolderPriority(self, sequence=None, **kw):
+    """
+    User chooses skin folder priority off from UI
+    """
+    self.app.REQUEST.set('your_reorder_skin_selection', 0)
+
+  def stepSetExistingSkinFolderPriority(self, sequence=None, **kw):
+    """
+    Set exisitng skin priority for test
+    """
+    skin_folder = self.portal.portal_skins['erp5_core']
+    if not skin_folder.hasProperty('business_template_skin_layer_priority'):
+      skin_folder.manage_addProperty('business_template_skin_layer_priority', \
+                                     10000.0, 'float')
+
+  def stepSetBusinessTemplateSkinFolderPriority(self, sequence=None, **kw):
+    """
+    Set skin folder priority.
+    """
+    skin_folder_id = sequence.get('skin_folder_id')
+    skin_folder = self.portal.portal_skins[skin_folder_id]
+    skin_folder.manage_addProperty('business_template_skin_layer_priority', 9999.0, 'float')
+
+  def stepModifySkinFolder(self, sequence=None, **kw):
+    """
+    Modify the skin folder
+    """
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._setProperty(
+                    'business_template_skin_layer_priority',
+                    99, type='float')
+    # Make sure it is really set.
+    self.assertEquals(
+        99, skin_folder.getProperty('business_template_skin_layer_priority'))
+
+  def stepUnmodifySkinFolder(self, sequence=None, **kw):
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    skin_folder._delProperty('business_template_skin_layer_priority')
+    self.assertEquals(
+        None, skin_folder.getProperty('business_template_skin_layer_priority'))
+
+  def stepCheckModifiedSkinFolderExists(self, sequence=None, **kw):
+    """
+    Check modified skin folder
+    """
+    ps = self.getSkinsTool()
+    skin_id = sequence.get('skin_folder_id')
+    skin_folder = ps._getOb(skin_id, None)
+    self.assertEquals(
+        99, skin_folder.getProperty('business_template_skin_layer_priority'))
+
+  def stepCheckDocumentPropertySheetSameName(self, sequence=None, **kw):
+    self.assertEqual(sequence['ps_title'], sequence['document_title'])
+    self.assertEqual(os.path.basename(sequence['document_path']),
+        os.path.basename(sequence['ps_path']))
+
+  def stepRemovePropertySheetFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add Property Sheet to Business Template
+    """
+    sequence['current_bt'].edit(template_property_sheet_id_list=[])
+
+  def stepCreateAllPropertySheetsFromFilesystem(self, sequence=None, **kw):
+    self.portal.portal_property_sheets.createAllPropertySheetsFromFilesystem()
+
+  def stepRemovePropertySheetZodbOnly(self, sequence=None, **kw):
+    """
+    Remove Property Sheet, but only from ZODB
+    """
+    self.portal.portal_property_sheets.manage_delObjects([sequence['ps_title']])
+
+  def stepCheckDraftBuildingState(self, sequence=None, **kw):
+    self.assertEquals(sequence['current_bt'].getBuildingState(), 'draft')
+
+  def stepSimulateAndCopyPrePropertySheetMigrationBusinessTemplate(self, sequence=None, **kw):
+    portal = self.getPortalObject()
+    template_tool = portal.portal_templates
+    current_bt = sequence['current_bt']
+    cb_data = template_tool.manage_copyObjects([current_bt.getId()])
+    copied, = template_tool.manage_pasteObjects(cb_data)
+    current = current_bt._property_sheet_item._objects.copy()
+    current_bt._property_sheet_item._objects = PersistentMapping()
+    for k,v in current.iteritems():
+      k = k.lstrip('portal_property_sheets/')
+      current_bt._property_sheet_item._objects[k] = v
+    sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
+
+
+class TestBusinessTemplate(BusinessTemplateMixin):
+  """
+    Test these operations:
+
+    - Create a template
+
+    - Install a template
+
+    - Uninstall a template
+
+    - Upgrade a template
+  """
+
+  def getTitle(self):
+    return "Business Template"
+
   # tests
   def test_Title(self):
     """Tests the Title of the Template Tool."""
     self.assertEquals('Template Tool', self.getTemplateTool().Title())
 
-  def test_01_checkNewSite(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Check New Site'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_01_checkNewSite(self):
+    """Test Check New Site"""
     sequence_list = SequenceList()
     sequence_string = '\
                        UseCoreBusinessTemplate  \
@@ -3019,15 +3283,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinsLayers \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of portal types
-  def test_02_BusinessTemplateWithPortalTypes(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Portal Types'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_02_BusinessTemplateWithPortalTypes(self):
+    """Test Business Template With Portal Types"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3090,14 +3350,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_021_BusinessTemplateWithPortalTypesAndWrongValues(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Portal Types and Bad Values'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_021_BusinessTemplateWithPortalTypesAndWrongValues(self):
+    """Test Business Template With Portal Types and Bad Values"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3114,15 +3370,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveAllTrashBins \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of skins
-  def test_03_BusinessTemplateWithSkins(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Skin Folder'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_03_BusinessTemplateWithSkins(self):
+    """Test Business Template With Skin Folder"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -3158,15 +3410,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinFolderRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of workflow
-  def test_04_BusinessTemplateWithWorkflow(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Workflow'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_04_BusinessTemplateWithWorkflow(self):
+    """Test Business Template With Workflow"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3204,14 +3452,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_041_BusinessTemplateWithWorkflowRemoved(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Remove Of Workflow'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_041_BusinessTemplateWithWorkflowRemoved(self):
+    """Test Business Template With Remove Of Workflow"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3273,14 +3517,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveWorkflowChain \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_042_BusinessTemplateWithWorkflowRemoved(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Remove Of Workflow'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_042_BusinessTemplateWithWorkflowRemoved(self):
+    """Test Business Template With Remove Of Workflow"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3342,14 +3582,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        SaveWorkflowChain \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_043_BusinessTemplateWithWorkflowChainRemoved(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Remove Of Workflow Chain'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_043_BusinessTemplateWithWorkflowChainRemoved(self):
+    """Test Business Template With Remove Of Workflow Chain"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3411,15 +3647,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowChainRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of module
-  def test_05_BusinessTemplateWithModule(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Module'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_05_BusinessTemplateWithModule(self):
+    """Test Business Template With Module"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3463,15 +3695,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of categories
-  def test_06_BusinessTemplateWithBaseCategory(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Base Category'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_06_BusinessTemplateWithBaseCategory(self):
+    """Test Business Template With Base Category"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateBaseCategory \
@@ -3522,14 +3750,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBaseCategoryRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_06_BusinessTemplateReInstallWithBaseCategory(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template reinstall after removing Base Category'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_06_BusinessTemplateReInstallWithBaseCategory(self):
+    """Test Business Template reinstall after removing Base Category"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateBaseCategory \
@@ -3553,15 +3777,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPreinstallReturnSomething \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of actions
-  def test_07_BusinessTemplateWithOneAction(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With One Action'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_07_BusinessTemplateWithOneAction(self):
+    """Test Business Template With One Action"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3600,14 +3820,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_07_BusinessTemplateWithEmptyAction(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template Upgrade With Empty Action'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_07_BusinessTemplateWithEmptyAction(self):
+    """Test Business Template Upgrade With Empty Action"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3645,14 +3861,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_08_BusinessTemplateWithTwoActions(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Two Actions'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_08_BusinessTemplateWithTwoActions(self):
+    """Test Business Template With Two Actions"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -3694,14 +3906,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_09_BusinessTemplateWithPath(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With A Simple Path'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_09_BusinessTemplateWithPath(self):
+    """Test Business Template With A Simple Path"""
     sequence_list = SequenceList()
     # a simple path
     sequence_string = '\
@@ -3738,14 +3946,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckBaseCategoryRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_091_BusinessTemplateDoNotUnindexObject(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template Do Not Unindex Object At Build'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_091_BusinessTemplateDoNotUnindexObject(self):
+    """Test Business Template Do Not Unindex Object At Build"""
     sequence_list = SequenceList()
     # a simple path
     sequence_string = '\
@@ -3768,14 +3972,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        '
 
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_10_BusinessTemplateWithPathAndJoker1(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Path And Joker *'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_10_BusinessTemplateWithPathAndJoker1(self):
+    """Test Business Template With Path And Joker *"""
     sequence_list = SequenceList()
     # path with subobjects
     sequence_string = '\
@@ -3814,14 +4014,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBaseCategory \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_101_BusinessTemplateUninstallWithPathAndJoker1Removed(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template Uninstall With Path And Joker * Removed'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_101_BusinessTemplateUninstallWithPathAndJoker1Removed(self):
+    """Test Business Template Uninstall With Path And Joker * Removed"""
     sequence_list = SequenceList()
     # path with subobjects
     sequence_string = '\
@@ -3861,14 +4057,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBaseCategory \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_11_BusinessTemplateWithPathAndJoker2(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Path And Joker **'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_11_BusinessTemplateWithPathAndJoker2(self):
+    """Test Business Template With Path And Joker **"""
     sequence_list = SequenceList()
     # path with subobject recursively
     sequence_string = '\
@@ -3909,10 +4101,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBaseCategory \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_111_BusinessTemplateWithContentTypeRegistry(self, quiet=quiet, run=run_all_test):
-    """
+  def test_111_BusinessTemplateWithContentTypeRegistry(self):
+    """Test Business Template With Content Type Registry As Path
+
       Test if content_type_registry is propertly exported and installed within
       business template (as path).
       This test shows that there is a slight issue - when the bt that brought
@@ -3921,11 +4114,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       The sequence string does not do CheckNoTrashBin after installing
       template because there is the old registry (I think) and it is ok.
     """
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Content Type Registry As Path'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     # a simple path
     sequence_string = '\
@@ -3962,14 +4150,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckNotInstalledInstallationState \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_12_BusinessTemplateWithCatalogMethod(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Catalog Method, Related Key, Result Key And Table'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_12_BusinessTemplateWithCatalogMethod(self):
+    """Test Business Template With Catalog Method, Related Key, Result Key And Table"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -4012,14 +4196,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckCatalogMethodRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_121_BusinessTemplateWithUpdateOfCatalogMethod(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template Update With Catalog Method, Related Key, Result Key And Table'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_121_BusinessTemplateWithUpdateOfCatalogMethod(self):
+    """Test Business Template Update With Catalog Method, Related Key, Result Key And Table"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -4094,14 +4274,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckCatalogMethodRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_122_BusinessTemplateWithRemoveCatalogMethod(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template remove a Catalog Method'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_122_BusinessTemplateWithRemoveCatalogMethod(self):
+    """Test Business Template remove a Catalog Method"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -4145,14 +4321,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckCatalogMethodRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_13_BusinessTemplateWithRole(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Role'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_13_BusinessTemplateWithRole(self):
+    """Test Business Template With Role"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateRole \
@@ -4188,14 +4360,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckRoleRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_14_BusinessTemplateWithLocalRoles(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Local Roles'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_14_BusinessTemplateWithLocalRoles(self):
+    """Test Business Template With Local Roles"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -4239,14 +4407,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_15_BusinessTemplateWithPropertySheet(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Property Sheet'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_15_BusinessTemplateWithPropertySheet(self):
+    """Test Business Template With Property Sheet"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePropertySheet \
@@ -4282,19 +4446,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPropertySheetRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  @expectedFailure
-  def test_151_BusinessTemplateWithPropertySheetMigration(self, quiet=quiet,
-                                                          run=run_all_test):
-    if not run:
-      return
-
-    if not quiet:
-      message = 'Test Business Template With Property Sheet Migration'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-
+  def test_151_BusinessTemplateWithPropertySheetMigration(self):
+    """Test Business Template With Property Sheet Migration"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePropertySheet \
@@ -4331,14 +4486,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckMigratedPropertySheetRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_155_BusinessTemplateUpdateWithPropertySheet(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Property Sheet'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_155_BusinessTemplateUpdateWithPropertySheet(self):
+    """Test Business Template With Property Sheet"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePropertySheet \
@@ -4368,7 +4519,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckNoTrashBin \
                        CheckSkinsLayers \
                        CheckPropertySheetExists \
-                       RemovePropertySheet \
+                       RemovePropertySheetFromZODB \
                        CreateUpdatedPropertySheet \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
@@ -4399,125 +4550,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowChainRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_156_BusinessTemplateWithConstraint(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Constraint'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-    sequence_list = SequenceList()
-    sequence_string = '\
-                       CreateConstraint \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddConstraintToBusinessTemplate \
-                       CheckModifiedBuildingState \
-                       CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       RemoveConstraint \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
-                       Tic \
-                       CheckInstalledInstallationState \
-                       CheckBuiltBuildingState \
-                       CheckNoTrashBin \
-                       CheckSkinsLayers \
-                       CheckConstraintExists \
-                       UninstallBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckConstraintRemoved \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_157_BusinessTemplateUpdateWithConstraint(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Constraint'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
-    sequence_list = SequenceList()
-    sequence_string = '\
-                       CreateConstraint \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddConstraintToBusinessTemplate \
-                       CheckModifiedBuildingState \
-                       CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       RemoveConstraint \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
-                       Tic \
-                       CheckInstalledInstallationState \
-                       CheckBuiltBuildingState \
-                       CheckNoTrashBin \
-                       CheckSkinsLayers \
-                       CheckConstraintExists \
-                       RemoveConstraint \
-                       CreateUpdatedConstraint \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddConstraintToBusinessTemplate \
-                       CheckModifiedBuildingState \
-                       CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CreateConstraint \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       InstallBusinessTemplate \
-                       Tic \
-                       CheckUpdatedConstraintExists \
-                       UninstallBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckConstraintRemoved \
-                       CheckWorkflowChainRemoved \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-
-  def test_16_BusinessTemplateWithAllItems(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With All Items'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_16_BusinessTemplateWithAllItems(self):
+    """Test Business Template With All Items"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -4608,14 +4644,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinsLayers \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_17_SubobjectsAfterUpgradOfBusinessTemplate(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Upgrade Of Business Template Keeps Subobjects'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_17_SubobjectsAfterUpgradOfBusinessTemplate(self):
+    """Test Upgrade Of Business Template Keeps Subobjects"""
     sequence_list = SequenceList()
     # check if subobjects in module and catalog still remains after an update
     sequence_string = '\
@@ -4686,14 +4718,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinsLayers \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_18_upgradeBusinessTemplateWithAllItems(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Upgrade Business Template With All Items'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_18_upgradeBusinessTemplateWithAllItems(self):
+    """Test Upgrade Business Template With All Items"""
     sequence_list = SequenceList()
     # by default action is backup, so everything will be replace
     sequence_string = '\
@@ -4806,20 +4834,16 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveCatalogMethod \
                        RemoveKeysAndTable \
                        RemoveRole \
-                       RemovePropertySheet \
+                       RemovePropertySheetFromZODB \
                        RemoveBusinessTemplate \
                        RemoveAllTrashBins \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test specific to erp5_core
-  def test_19_checkUpdateBusinessTemplateWorkflow(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Check Update of Business Template Workflows is working'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_19_checkUpdateBusinessTemplateWorkflow(self):
+    """Test Check Update of Business Template Workflows is working"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -4839,7 +4863,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CopyCoreBusinessTemplate \
                        UseCopyCoreBusinessTemplate  \
                        ClearBusinessTemplateField \
-                       SetUpdateWorkflowFlagInBusinessTemplate \
                        AddPortalTypeToBusinessTemplate \
                        FillPortalTypesFields \
                        AddModuleToBusinessTemplate \
@@ -4895,17 +4918,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveCatalogMethod \
                        RemoveKeysAndTable \
                        RemoveRole \
-                       RemovePropertySheet \
+                       RemovePropertySheetFromZODB \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_20_checkUpdateTool(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Check Update of Tool is working'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_20_checkUpdateTool(self):
+    """Test Check Update of Tool is working"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -4992,17 +5011,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveCatalogMethod \
                        RemoveKeysAndTable \
                        RemoveRole \
-                       RemovePropertySheet \
+                       RemovePropertySheetFromZODB \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_21_CategoryIncludeSubobjects(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Category includes subobjects'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_21_CategoryIncludeSubobjects(self):
+    """Test Category includes subobjects"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateBaseCategory \
@@ -5017,15 +5032,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSubobjectsNotIncluded \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of portal types
-  def test_22_RevisionNumberIsIncremented(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test is revision number is incremented with the bt is built'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_22_RevisionNumberIsIncremented(self):
+    """Test is revision number is incremented with the bt is built"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -5041,14 +5052,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_23_CheckNoDependencies(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test if a new Business Template has no dependencies'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_23_CheckNoDependencies(self):
+    """Test if a new Business Template has no dependencies"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -5059,14 +5066,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_24_CheckMissingDependency(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test if a exception is raised when a dependency is missing'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_24_CheckMissingDependency(self):
+    """Test if a exception is raised when a dependency is missing"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -5078,14 +5081,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
 		       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_25_CheckNoMissingDependency(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test if the dependency problem is fixed when the dependency is installed'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_25_CheckNoMissingDependency(self):
+    """Test if the dependency problem is fixed when the dependency is installed"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -5116,15 +5115,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of skins
-  def test_26_ImportWithDoubleSlashes(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Importing Business Template With Double Slashes'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_26_ImportWithDoubleSlashes(self):
+    """Test Importing Business Template With Double Slashes"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -5161,14 +5156,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinFolderRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_27_CheckInstallWithBackup(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test if backup works during installation of a bt with subfolder in skin folder'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_27_CheckInstallWithBackup(self):
+    """Test if backup works during installation of a bt with subfolder in skin folder"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -5191,14 +5182,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_28_CheckBuildWithUnexistingPath(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test if build fails when one of the paths does not exist'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_28_CheckBuildWithUnexistingPath(self):
+    """Test if build fails when one of the paths does not exist"""
     sequence_list = SequenceList()
     sequence_string = '\
     		       CreatePortalType \
@@ -5210,14 +5197,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_29_CheckUninstallRemovedSkinFolder(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test if uninstall works even when the skin folder has already been removed from the site'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_29_CheckUninstallRemovedSkinFolder(self):
+    """Test if uninstall works even when the skin folder has already been removed from the site"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -5238,15 +5221,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_30_CheckInstalledCatalogProperties(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test if installing some new catalog properties overwrites '\
-                'existing ones'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_30_CheckInstalledCatalogProperties(self):
+    """Test if installing some new catalog properties overwrites existing ones"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -5268,14 +5246,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveCatalogLocalConfiguration \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_31_BusinessTemplateWithCatalogMethod(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test that we keep local changes if we specify a list of objects to update'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_31_BusinessTemplateWithCatalogMethod(self):
+    """Test that we keep local changes if we specify a list of objects to update"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateCatalogMethod \
@@ -5311,15 +5285,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        RemoveKeysAndTable \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_32_BusinessTemplateWithDuplicatedPortalTypes(self, quiet=quiet,
-                                                        run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With Duplicated Portal Types'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_32_BusinessTemplateWithDuplicatedPortalTypes(self):
+    """Test Business Template With Duplicated Portal Types"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -5362,78 +5331,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UninstallPreviousBusinessTemplate \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def stepSetSkinFolderRegistredSelections(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    skin_folder._setProperty(
-          'business_template_registered_skin_selections', ('Foo',),
-          type='tokens')
-
-  def stepSetSkinFolderRegistredSelections2(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    skin_folder._updateProperty(
-          'business_template_registered_skin_selections', ('Foo', 'Bar',))
-
-  def stepCreateSkinSelection(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    ps.manage_skinLayers(skinpath=('erp5_core',), skinname='Foo', add_skin=1)
-
-  def stepSetStaticSkinFolderRegistredSelections(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('static_skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    skin_folder._setProperty(
-          'business_template_registered_skin_selections', ('Foo',),
-          type='tokens')
-    selection = ps.getSkinPath('Foo')
-    selection = selection.split(',')
-    if skin_id not in selection:
-      selection.append(skin_id)
-      ps.manage_skinLayers(skinpath=tuple(selection), 
-                           skinname='Foo', add_skin=1)
-
-  def stepCheckSkinSelectionAdded(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_paths = ps.getSkinPaths()
-    # a new skin selection is added
-    self.assertTrue('Foo' in ps.getSkinSelections())
-    # and it contains good layers
-    layers = ps.getSkinPath('Foo').split(',')
-    self.assertTrue(skin_id in layers, layers)
-    self.assertTrue('erp5_core' in layers, layers)
-    self.assertFalse('erp5_xhtml_style' in layers, layers)
-    skin_folder = ps._getOb(skin_id, None)
-    skin_selection_list = skin_folder.getProperty(
-        'business_template_registered_skin_selections', ())
-    self.assertTrue('Foo' in skin_selection_list)
-
-  def stepCheckStaticSkinSelection(self, sequence=None, **kw):
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    static_skin_id = sequence.get('static_skin_folder_id')
-    skin_paths = ps.getSkinPaths()
-    # a new skin selection is added
-    self.assertTrue('Foo' in ps.getSkinSelections())
-    # and it contains good layers
-    layers = ps.getSkinPath('Foo').split(',')
-    self.assertTrue(skin_id in layers, layers)
-    self.assertTrue('erp5_core' in layers, layers)
-    self.assertFalse('erp5_xhtml_style' in layers, layers)
-    self.assertTrue(static_skin_id in layers, layers)
-
-  def test_33_BusinessTemplateWithNewSkinSelection(self, quiet=quiet,
-                                                        run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template With New Skin Selection'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_33_BusinessTemplateWithNewSkinSelection(self):
+    """Test Business Template With New Skin Selection"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -5454,14 +5355,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinSelectionAdded \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_34_UpgradeForm(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Upgrade Form'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_34_UpgradeForm(self):
+    """Test Upgrade Form"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -5498,14 +5395,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckFormGroups \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_34_UpgradeFormAttribute(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Upgrade Form'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_34_UpgradeFormAttribute(self):
+    """Test Upgrade Form"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -5540,21 +5433,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckFormGroups \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_34_RemoveForm(self, quiet=quiet, run=run_all_test):
-    """
+  def test_34_RemoveForm(self):
+    """Test Upgrade Form
+
     - Add a form into the skin folders of erp5_geek and erp5_nerd
     - Remove the form from erp5_geek
     - Check that the form is removed from erp5_geek
     - Check that the form is not removed from erp5_nerd
     - Check that the title field is not removed from erp5_nerd
     """
-    if not run: return
-    if not quiet:
-      message = 'Test Upgrade Form'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
@@ -5598,7 +5487,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckTrashBin \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   def test_getInstalledBusinessTemplate(self):
     self.assertNotEquals(None, self.getPortal()\
@@ -5613,7 +5502,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     for bt in bt5_list:
       self.failUnless(bt in another_bt_list)
 
-    self.assertEquals(bt5_list, 
+    self.assertEquals(bt5_list,
                       templates_tool._getInstalledBusinessTemplateList())
 
   def test_getInstalledBusinessTemplateTitleList(self):
@@ -5690,21 +5579,42 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
   def test_updateBusinessTemplateFromUrl_simple(self):
     """
      Test updateBusinessTemplateFromUrl method
+
+     By default if a new business template has revision >= previous one
+     the new bt5 is not installed, only imported.
     """
     template_tool = self.portal.portal_templates
     old_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+    # change revision to an old revision
+    old_bt.setRevision(0.0001)
     url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_csv_style'
     template_tool.updateBusinessTemplateFromUrl(url)
     new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
-
     self.assertNotEquals(old_bt, new_bt)
     self.assertEquals('erp5_csv_style', new_bt.getTitle())
+
+    # Test Another time with definning an ID
     old_bt = new_bt
+    old_bt.setRevision(0.0002)
     template_tool.updateBusinessTemplateFromUrl(url, id="new_erp5_csv_style")
     new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
     self.assertNotEquals(old_bt, new_bt)
     self.assertEquals('erp5_csv_style', new_bt.getTitle())
     self.assertEquals('new_erp5_csv_style', new_bt.getId())
+
+    # Test if the new instance with same revision is not installed.
+    old_bt = new_bt
+    template_tool.updateBusinessTemplateFromUrl(url, id="not_installed_bt5")
+    new_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
+    self.assertEquals(old_bt, new_bt)
+    self.assertEquals('erp5_csv_style', new_bt.getTitle())
+    self.assertEquals('new_erp5_csv_style', new_bt.getId())
+    not_installed_bt5 = getattr(template_tool, "not_installed_bt5", None)
+    self.assertNotEquals(not_installed_bt5, None)
+    self.assertEquals('erp5_csv_style', not_installed_bt5.getTitle())
+    self.assertEquals(not_installed_bt5.getInstallationState(),
+                      "not_installed")
+    self.assertEquals(not_installed_bt5.getRevision(), new_bt.getRevision())
 
   def test_updateBusinessTemplateFromUrl_keep_list(self):
     """
@@ -5714,7 +5624,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_core'
     # don't install test_file
     keep_original_list = ( 'portal_skins/erp5_test/test_file', )
-    template_tool.updateBusinessTemplateFromUrl(url, 
+    template_tool.updateBusinessTemplateFromUrl(url,
                                    keep_original_list=keep_original_list)
     bt = template_tool.getInstalledBusinessTemplate('test_core')
     self.assertNotEquals(None, bt)
@@ -5729,12 +5639,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     """
     from Products.ERP5Type.tests.utils import createZODBPythonScript
     portal = self.getPortal()
-    
+
     createZODBPythonScript(portal.portal_skins.custom,
                                    'BT_dummyA',
                                    'scripts_params=None',
                                    '# Script body\n'
-                                   'return context.setDescription("MODIFIED")') 
+                                   'return context.setDescription("MODIFIED")')
 
     createZODBPythonScript(portal.portal_skins.custom,
                                    'BT_dummyB',
@@ -5754,7 +5664,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     before_triggered_bt5_id_list = ['BT_dummyA', 'BT_dummyB']
     after_triggered_bt5_id_list = ['BT_dummyC']
     template_tool.updateBusinessTemplateFromUrl(url,
-                                   before_triggered_bt5_id_list=before_triggered_bt5_id_list, 
+                                   before_triggered_bt5_id_list=before_triggered_bt5_id_list,
                                    after_triggered_bt5_id_list=after_triggered_bt5_id_list)
     bt = template_tool.getInstalledBusinessTemplate('test_html_style')
     self.assertNotEquals(None, bt)
@@ -5762,95 +5672,50 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(bt.getChangeLog(), 'MODIFIED')
     self.assertEquals(portal.getTitle(), 'MODIFIED')
 
-  def stepCreateCustomWorkflow(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create a custom workflow
-    """
-    wf_id = 'custom_geek_workflow'
-    pw = self.getWorkflowTool()
-    addWorkflowByType(pw, WORKFLOW_TYPE, wf_id)
-    workflow = pw._getOb(wf_id, None)
-    self.failUnless(workflow is not None)
-    sequence.edit(workflow_id=workflow.getId())
-    cbt = pw._chains_by_type
-    props = {}
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        props['chain_%s' % id] = ','.join(wf_ids)
-    key = 'chain_Geek Object'
-    if props.has_key(key):
-      props[key] = '%s,%s' % (props[key], wf_id)
-    else:
-      props[key] = wf_id
-    pw.manage_changeWorkflows('', props=props)
-
-  def stepCreateCustomBusinessTemplate(self, sequence=None,
-                                       sequence_list=None, **kw):
-    """
-    Create a custom Business Template
-    """
+  def test_updateBusinessTemplateFromUrl_stringCastingBug(self):
     pt = self.getTemplateTool()
     template = pt.newContent(portal_type='Business Template')
     self.failUnless(template.getBuildingState() == 'draft')
     self.failUnless(template.getInstallationState() == 'not_installed')
-    template.edit(title='custom geek template',
+    title = 'install_casting_to_int_bug_check'
+    template.edit(title=title,
                   version='1.0',
-                  description='custom bt for unit_test')
-    sequence.edit(export_bt=template)
+                  description='bt for unit_test')
+    transaction.commit()
 
-  def stepCheckCustomWorkflowChain(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check custom workflow chain
-    """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-    self.assertEqual(present, 1)
-    self.assertSameSet(cbt['Geek Object'],
-                       ('geek_workflow', 'custom_geek_workflow'))
+    template.build()
+    transaction.commit()
 
-  def stepCheckOriginalWorkflowChain(self, sequence=None,
-                                     sequence_list=None, **kw):
-    """
-    Check original workflow chain
-    """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-    self.assertEqual(present, 1)
-    self.assertSameSet(cbt['Geek Object'],
-                       ('geek_workflow', ))
+    cfg = getConfiguration()
+    template_path = os.path.join(cfg.instancehome, 'tests', '%s' % (title,))
+    # remove previous version of bt it exists
+    if os.path.exists(template_path):
+      shutil.rmtree(template_path)
+    template.export(path=template_path, local=1)
+    self.failUnless(os.path.exists(template_path))
 
-  def stepCheckEmptyWorkflowChain(self, sequence=None,
-                                  sequence_list=None, **kw):
-    """
-    Check that workflow chain is empty
-    """
-    present = 0
-    pw = self.getWorkflowTool()
-    cbt = pw._chains_by_type
-    if cbt is not None:
-      for id, wf_ids in cbt.items():
-        if id == "Geek Object":
-          present = 1
-          break
-    if present:
-      self.assertEqual(0, len(wf_ids))
+    # setup version '9'
+    first_revision = '9'
+    open(os.path.join(template_path, 'bt', 'revision'), 'w').write(first_revision)
+    pt.updateBusinessTemplateFromUrl(template_path)
+    new_bt = pt.getInstalledBusinessTemplate(title)
+    
+    self.assertEqual(new_bt.getRevision(), first_revision)
 
-  def test_34_RemovePartialWorkflowChain(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Remove Chain'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+    # setup revision '11', becasue: '11' < '9' (string comp), but 11 > 9 (int comp)
+    second_revision = '11'
+    self.assertTrue(second_revision < first_revision)
+    self.assertTrue(int(second_revision) > int(first_revision))
+
+    open(os.path.join(template_path, 'bt', 'revision'), 'w').write(second_revision)
+    pt.updateBusinessTemplateFromUrl(template_path)
+    newer_bt = pt.getInstalledBusinessTemplate(title)
+
+    self.assertNotEqual(new_bt, newer_bt)
+    self.assertEqual(newer_bt.getRevision(), second_revision)
+
+  def test_34_RemovePartialWorkflowChain(self):
+    """Test Remove Chain"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -5906,52 +5771,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowChainExists \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def stepCopyBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Copy business template
-    """
-    portal = self.getPortalObject()
-    template_tool = portal.portal_templates
-    import_bt = sequence.get('current_bt')
-    cb_data = template_tool.manage_copyObjects([import_bt.getId()])
-    copied, = template_tool.manage_pasteObjects(cb_data)
-    sequence.edit(current_bt=template_tool._getOb(copied['new_id']))
-
-  def stepRemoveWorkflowFromBusinessTemplate(self, sequence=None,
-                                             sequence_list=None, **kw):
-    """
-    Remove workflow to business template
-    """
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    current_twi = list(bt.getTemplateWorkflowIdList())
-    current_twi.remove(sequence.get('workflow_id', ''))
-    bt.edit(template_workflow_id_list=current_twi)
-
-  def stepRemoveWorkflowChainFromBusinessTemplate(self, sequence=None,
-                                                  sequence_list=None, **kw):
-    """
-    Remove workflow chain to business template
-    """
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    workflow_id = sequence.get('workflow_id', '')
-    new_value = []
-    workflow_chain_list = list(bt.getTemplatePortalTypeWorkflowChainList())
-    for workflow_chain in workflow_chain_list:
-      portal_type, wkflow_id = workflow_chain.split(' | ')
-      if wkflow_id != workflow_id:
-        new_value.append(workflow_chain)
-    bt.edit(template_portal_type_workflow_chain_list=new_value)
-
-  def test_35_UpdatePartialWorkflowChain(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Update Workflow Chain'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_35_UpdatePartialWorkflowChain(self):
+    """Test Update Workflow Chain"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -6017,59 +5840,86 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckWorkflowChainExists \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def stepCreatePortalTypeRole(self, sequence=None, sequence_list=None, **kw):
-    """
-    Create portal type role
-    """
-    pt = self.getTypeTool()
-    object_id = sequence.get('object_ptype_id')
-    object_pt = pt._getOb(object_id)
-    object_pt.newContent(portal_type='Role Information',
-      title='Geek Role Definition',
-      description='A definition with non ascii chars éàè',
-      role_name_list=('geek_role_definition',),
-      role_category_list=('group/g1','function/f1'),
-      role_base_category_script_id='Base Category Script',
-      role_base_category_list=('group','site'))
+  def test_35a_UpdatePartialWorkflowChainWithRemove(self):
+    """Check that chains are correctly removed during update
+    
+    When previous business template defined that object is associated
+    with workflows A, B and that new one says that only A association
+    is required check that after installing only A will be on workflow
+    chains."""
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreatePortalType \
+                       CreateWorkflow \
+                       CheckOriginalWorkflowChain \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddWorkflowToBusinessTemplate \
+                       AddWorkflowChainToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveWorkflow \
+                       CheckEmptyWorkflowChain \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       CheckOriginalWorkflowChain \
+                       Tic \
+                       \
+                       CopyBusinessTemplate \
+                       Tic \
+                       \
+                       CreateCustomWorkflow \
+                       CheckCustomWorkflowChain \
+                       AppendWorkflowToBusinessTemplate \
+                       AppendWorkflowChainToBusinessTemplate \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveWorkflow \
+                       CheckOriginalWorkflowChain \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       \
+                       CheckCustomWorkflowChain \
+                       \
+                       CopyBusinessTemplate \
+                       Tic \
+                       \
+                       RemoveWorkflowFromBusinessTemplate \
+                       RemoveWorkflowChainFromBusinessTemplate \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       SaveBusinessTemplate \
+                       ImportBusinessTemplate \
+                       Tic \
+                       UseImportBusinessTemplate \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckOriginalWorkflowChain \
+                       CheckWorkflowChainExists \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
-    sequence.edit(portal_type_role='geek_role_definition')
-
-  def stepAddPortalTypeRolesToBusinessTemplate(self, sequence=None,
-                                              sequence_list=None, **kw):
-    """
-    Add type role to business template
-    """
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    ptype_ids = []
-    ptype_ids.append(sequence.get('object_ptype_id', ''))
-    ptype_ids.append(sequence.get('module_ptype_id', ''))
-    self.assertEqual(len(ptype_ids), 2)
-    bt.edit(template_portal_type_roles_list=ptype_ids)
-
-  def stepCheckPortalTypeRoleExists(self, sequence=None,
-                                    sequence_list=None, **kw):
-    """
-    Cehck that portal type role exist
-    """
-    pt = self.getTypeTool()
-    object_id = sequence.get('object_ptype_id')
-    role, = pt[object_id].getRoleInformationList()
-    self.assertEqual('Geek Role Definition', role.getTitle())
-    self.assertEqual(['geek_role_definition'], role.getRoleNameList())
-    self.assertEqual('A definition with non ascii chars éàè', role.getDescription())
-    self.assertEqual(['group/g1','function/f1'], role.getRoleCategoryList())
-    self.assertEqual(['group','site'], role.getRoleBaseCategoryList())
-    self.assertEqual('Base Category Script', role.getRoleBaseCategoryScriptId())
-
-  def test_36_CheckPortalTypeRoles(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Portal Type Roles'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_36_CheckPortalTypeRoles(self):
+    """Test Portal Type Roles"""
     sequence_list = SequenceList()
     sequence_string = '\
                        CreatePortalType \
@@ -6106,42 +5956,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def stepModifyPortalType(self, sequence=None, sequence_list=None, **kw):
-    """
-    Modify Portal Type
-    """
-    pt = self.getTypeTool()
-    object_type = pt._getOb('Geek Object', None)
-    object_type.title = 'Modified %s' % object_type.title
-
-  def stepUnmodifyPortalType(self, sequence=None, sequence_list=None, **kw):
-    """
-    Unmodify Portal Type
-    """
-    pt = self.getTypeTool()
-    object_type = pt._getOb('Geek Object', None)
-    object_type.title = object_type.title[len('Modified '):]
-
-  def stepCheckModifiedPortalTypeExists(self, sequence=None,
-                                        sequence_list=None, **kw):
-    """
-    Check presence of modified portal type
-    """
-    self.stepCheckPortalTypeExists(sequence=sequence,
-                                   sequence_list=sequence_list, **kw)
-    pt = self.getTypeTool()
-    object_id = sequence.get('object_ptype_id')
-    object_type = pt._getOb(object_id, None)
-    self.failUnless(object_type.title.startswith('Modified '))
-
-  def test_37_UpdatePortalType(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Update Portal Type'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_37_UpdatePortalType(self):
+    """Test Update Portal Type"""
     sequence_list = SequenceList()
 
     sequence_string = '\
@@ -6190,46 +6008,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckPortalTypeRoleExists \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def stepCreateFakeZODBScript(self, sequence=None, sequence_list=None, **kw):
-    """Create a Script inside portal_skins
-    """
-    grain_of_sand = ''.join([random.choice(string.ascii_letters) for i in xrange(10)])
-    python_script_id = 'ERP5Site_dummyScriptWhichRandomId%s' % grain_of_sand
-    skin_folder_id = 'custom'
-    if getattr(self.portal.portal_skins, skin_folder_id, None) is None:
-        self.portal.portal_skins.manage_addProduct['OFSP'].manage_addFolder(skin_folder_id)
-    skin_folder = self.portal.portal_skins[skin_folder_id]
-    skin_folder.manage_addProduct['PythonScripts'].manage_addPythonScript(
-                                                                 id=python_script_id)
-    sequence.set('python_script_id', python_script_id)
-    sequence.set('skin_folder_id', skin_folder_id)
-
-  def stepAddCustomSkinFolderToBusinessTemplate(self, sequence=None, sequence_list=None, **kw):
-    """
-    Add types to business template
-    """
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    template_skin_id_list = list(bt.getProperty('template_skin_id_list'))
-    template_skin_id_list.append('custom')
-    bt.edit(template_skin_id_list=template_skin_id_list)
-
-  def stepCheckFakeScriptIsDeleted(self, sequence=None, sequence_list=None, **kw):
-    """Check that script inside ZODB is deleted by BT reinstallation
-    """
-    python_script_id = sequence.get('python_script_id')
-    skin_folder_id = sequence.get('skin_folder_id')
-    folder = self.portal.portal_skins[skin_folder_id]
-    self.assertTrue(python_script_id not in folder.objectIds())
-
-  def test_38_CheckReinstallation(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Reinstallation'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_38_CheckReinstallation(self):
+    """Test Reinstallation"""
     sequence_list = SequenceList()
 
     sequence_string = '\
@@ -6259,132 +6041,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckFakeScriptIsDeleted \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def stepSetOldSitePropertyValue(self, sequence=None, sequence_list=None, **kw):
-    """Set the old value to a site property."""
-    sequence.set('site_property_value', 'old')
-
-  def stepSetNewSitePropertyValue(self, sequence=None, sequence_list=None, **kw):
-    """Set the new value to a site property."""
-    sequence.set('site_property_value', 'new')
-
-  def stepCreateSiteProperty(self, sequence=None, sequence_list=None, **kw):
-    """Create a site property."""
-    portal = self.getPortal()
-    portal._setProperty('a_property', sequence.get('site_property_value'))
-
-  def stepModifySiteProperty(self, sequence=None, sequence_list=None, **kw):
-    """Modify a site property."""
-    portal = self.getPortal()
-    portal._updateProperty('a_property', sequence.get('site_property_value'))
-
-  def stepCheckSiteProperty(self, sequence=None, sequence_list=None, **kw):
-    """Check a site property."""
-    portal = self.getPortal()
-    self.assertEquals(portal.getProperty('a_property'),
-                      sequence.get('site_property_value'))
-
-  def stepCheckSitePropertyRemoved(self, sequence=None, sequence_list=None, **kw):
-    """Check if a site property is removed."""
-    portal = self.getPortal()
-    self.failIf(portal.hasProperty('a_property'))
-
-  def stepAddSitePropertyToBusinessTemplate(self, sequence=None, sequence_list=None,
-                                            **kw):
-    """Add a site property into a business template."""
-    bt = sequence.get('current_bt', None)
-    self.failUnless(bt is not None)
-    bt.edit(template_site_property_id_list=('a_property',))
-
-  def stepCheckSkinSelectionRemoved(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check that a skin selection has been removed.
-    """
-    self.assertTrue('Foo' not in self.portal.portal_skins.getSkinSelections())
-
-  def stepCheckSkinSelectionNotRemoved(self, sequence=None, 
-                                       sequence_list=None, **kw):
-    """
-    Check that a skin selection has not been removed.
-    """
-    self.assertTrue('Foo' in self.portal.portal_skins.getSkinSelections())
-
-  def stepUserDisableSkinSelectionRegistration(self, sequence=None, sequence_list=None, **kw):
-    """
-    Simulate User disabling skin registration from UI.
-    """
-    self.app.REQUEST.set('your_register_skin_selection', 0)
-
-  def stepUserSelectSkinToBeChanged(self, sequence=None, sequence_list=None, **kw):
-    """
-    User selects skin to be changed from UI.
-    """
-    select_skin_to_be_changed_list = self.portal.portal_skins.getSkinSelections()[:1]
-    select_skin_not_to_be_changed_list = self.portal.portal_skins.getSkinSelections()[1:]
-    sequence.edit(select_skin_to_be_changed_list = select_skin_to_be_changed_list, \
-                  select_skin_not_to_be_changed_list = select_skin_not_to_be_changed_list)
-    self.app.REQUEST.set('your_skin_layer_list', select_skin_to_be_changed_list)
-
-  def stepCheckUserSelectedSkinToBeChanged(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check that only selected to be changed skins are affected.
-    """
-    skin_folder_id = sequence.get('skin_folder_id')
-    select_skin_to_be_changed_list = sequence.get('select_skin_to_be_changed_list')
-    select_skin_not_to_be_changed_list = sequence.get('select_skin_not_to_be_changed_list')
-    for skin_name in select_skin_to_be_changed_list:
-      self.assertTrue(skin_folder_id in self.portal.portal_skins.getSkinPath(skin_name))
-    for skin_name in select_skin_not_to_be_changed_list:
-      self.assertTrue(skin_folder_id not in self.portal.portal_skins.getSkinPath(skin_name))
-
-  def stepCheckSkinFolderPriorityOn(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check skin folder priority
-    """
-    ps = self.portal.portal_skins
-    for skin in ps.getSkinSelections():
-      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[0])
-      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[1])
-
-  def stepCheckSkinFolderPriorityOff(self, sequence=None, sequence_list=None, **kw):
-    """
-    Check skin folder priority off
-    """
-    ps = self.portal.portal_skins
-    for skin in ps.getSkinSelections():
-      self.assertEquals('erp5_geek', ps.getSkinPath(skin).split(',')[0])
-      self.assertEquals('erp5_core', ps.getSkinPath(skin).split(',')[1])
-
-  def stepUserDisableSkinFolderPriority(self, sequence=None, sequence_list=None, **kw):
-    """
-    User chooses skin folder priority off from UI
-    """
-    self.app.REQUEST.set('your_reorder_skin_selection', 0)
-
-  def stepSetExistingSkinFolderPriority(self, sequence=None, sequence_list=None, **kw):
-    """
-    Set exisitng skin priority for test
-    """
-    skin_folder = self.portal.portal_skins['erp5_core']
-    if not skin_folder.hasProperty('business_template_skin_layer_priority'):
-      skin_folder.manage_addProperty('business_template_skin_layer_priority', \
-                                     10000.0, 'float')
-
-  def stepSetBusinessTemplateSkinFolderPriority(self, sequence=None, sequence_list=None, **kw):
-    """
-    Set skin folder priority.
-    """
-    skin_folder_id = sequence.get('skin_folder_id')
-    skin_folder = self.portal.portal_skins[skin_folder_id]
-    skin_folder.manage_addProperty('business_template_skin_layer_priority', 9999.0, 'float')
-
-  def test_39_CheckSiteProperties(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Site Properties'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_39_CheckSiteProperties(self):
+    """Test Site Properties"""
     sequence_list = SequenceList()
     sequence_string = '\
                        SetOldSitePropertyValue \
@@ -6421,12 +6081,12 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSitePropertyRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
   # test of uid
-  def test_40_BusinessTemplateUidOfCategoriesUnchanged(self, quiet=quiet, run=run_all_test):
-    """  
-      Test that the uids of categories are unchanged during their reinstall
+  def test_40_BusinessTemplateUidOfCategoriesUnchanged(self):
+    """Test that the uids of categories are unchanged during their reinstall
+
       Add sub categories with the title 'toto' and save their uid in a dict
       Create business template with the sub categories in path_template_list
       The sub categories title are changed in 'foo'
@@ -6434,11 +6094,6 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       Check the old sub categories with' toto' as title
       And check if the uid of sub categories is unchanged
     """
-    if not run: return
-    if not quiet:
-      message = 'Test that the uids of categories are unchanged during their reinstall'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateBaseCategory \
@@ -6467,15 +6122,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        UninstallBusinessTemplate \
                       '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_158_BusinessTemplateSkinSelectionRemove(self, quiet=quiet,
-                                                        run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template Uninstall With Skin Selection'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_158_BusinessTemplateSkinSelectionRemove(self):
+    """Test Business Template Uninstall With Skin Selection"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        SetSkinFolderRegistredSelections \
@@ -6495,15 +6145,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinSelectionRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_158_BusinessTemplateSkinSelectionRemoveOnlyIfUnused(self, quiet=quiet,
-                                                               run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template Uninstall With an used Skin Selection'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_158_BusinessTemplateSkinSelectionRemoveOnlyIfUnused(self):
+    """Test Business Template Uninstall With an used Skin Selection"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        CreateStaticSkinFolder \
@@ -6526,15 +6171,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinSelectionNotRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_159_BusinessTemplateNotRegisterSkin(self, quiet=quiet,
-                                                        run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template will not register existing Skin'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_159_BusinessTemplateNotRegisterSkin(self):
+    """Test Business Template will not register existing Skin"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        SetSkinFolderRegistredSelections \
@@ -6553,15 +6193,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinSelectionRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_160_BusinessTemplateChangeOnlySelectedSkin(self, quiet=quiet,
-                                                        run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template will change only selected skins'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_160_BusinessTemplateChangeOnlySelectedSkin(self):
+    """Test Business Template will change only selected skins"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        CreateNewBusinessTemplate \
@@ -6578,15 +6213,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckUserSelectedSkinToBeChanged \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_161_BusinessTemplateCheckSkinPriorityOrderingEnabled(self, quiet=quiet,
-                                                        run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template will reorder skins path in Skin'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_161_BusinessTemplateCheckSkinPriorityOrderingEnabled(self):
+    """Test Business Template will reorder skins path in Skin"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        SetBusinessTemplateSkinFolderPriority \
@@ -6604,15 +6234,10 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinFolderPriorityOn \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_162_BusinessTemplateCheckSkinPriorityOrderingDisabled(self, quiet=quiet,
-                                                        run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Business Template will not reorder skins path in Skin'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_162_BusinessTemplateCheckSkinPriorityOrderingDisabled(self):
+    """Test Business Template will not reorder skins path in Skin"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
                        SetBusinessTemplateSkinFolderPriority \
@@ -6631,133 +6256,83 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                        CheckSkinFolderPriorityOff \
                        '
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def stepModifySkinFolder(self, sequence=None,sequence_list=None, **kw):
-    """
-    Modify the skin folder
-    """
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    skin_folder._setProperty(
-                    'business_template_skin_layer_priority',
-                    99, type='float')
-    # Make sure it is really set.
-    self.assertEquals(
-        99, skin_folder.getProperty('business_template_skin_layer_priority'))
-
-  def stepUnmodifySkinFolder(self, sequence=None,sequence_list=None, **kw):
-    """
-    Modify the skin folder
-    """
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    skin_folder._delProperty('business_template_skin_layer_priority')
-    self.assertEquals(
-        None, skin_folder.getProperty('business_template_skin_layer_priority'))
-
-  def stepCheckModifiedSkinFolderExists(self, sequence=None,
-                                        sequence_list=None, **kw):
-    """
-    Check modified skin folder
-    """
-    ps = self.getSkinsTool()
-    skin_id = sequence.get('skin_folder_id')
-    skin_folder = ps._getOb(skin_id, None)
-    self.assertEquals(
-        99, skin_folder.getProperty('business_template_skin_layer_priority'))
-
-  def test_163_UpdateSkinFolderWithRegisteredSkinSelection(
-                                  self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Update Skin Folder'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_163_UpdateSkinFolderWithRegisteredSkinSelection(self):
+    """Test Update Skin Folder"""
     sequence_list = SequenceList()
+    sequence_list.addSequenceString("""
+      CreateSkinFolder
+      SetSkinFolderRegistredSelections
+      CreateNewBusinessTemplate
+      UseExportBusinessTemplate
+      AddSkinFolderToBusinessTemplate
+      AddRegistredSelectionToBusinessTemplate
+      BuildBusinessTemplate
+      SaveBusinessTemplate
+      RemoveSkinFolder
+      RemoveBusinessTemplate
+      RemoveAllTrashBins
 
-    sequence_string = '\
-                       CreateSkinFolder \
-                       SetSkinFolderRegistredSelections \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddSkinFolderToBusinessTemplate \
-                       AddRegistredSelectionToBusinessTemplate \
-                       BuildBusinessTemplate \
-                       SaveBusinessTemplate \
-                       RemoveSkinFolder \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       InstallBusinessTemplate \
-                       Tic \
-                       CheckSkinSelectionAdded \
-                       \
-                       ModifySkinFolder \
-                       \
-                       CopyBusinessTemplate \
-                       Tic \
-                       EditBusinessTemplate \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       SaveBusinessTemplate \
-                       \
-                       UnmodifySkinFolder \
-                       \
-                       ImportBusinessTemplate \
-                       Tic \
-                       UseImportBusinessTemplate \
-                       InstallWithoutForceBusinessTemplate \
-                       Tic \
-                       \
-                       CheckModifiedSkinFolderExists \
-                       CheckSkinSelectionAdded \
-                       \
-                       SetSkinFolderRegistredSelections2 \
-                       CopyBusinessTemplate \
-                       EditRegistredSelectionToBusinessTemplate \
-                       BuildBusinessTemplate \
-                       InstallCurrentBusinessTemplate \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+      ImportBusinessTemplate
+      UseImportBusinessTemplate
+      InstallBusinessTemplate
+      Tic
+      CheckSkinSelectionAdded
+
+      ModifySkinFolder
+
+      CopyBusinessTemplate
+      Tic
+      EditBusinessTemplate
+      BuildBusinessTemplate
+      CheckBuiltBuildingState
+      SaveBusinessTemplate
+
+      UnmodifySkinFolder
+
+      ImportBusinessTemplate
+      Tic
+      UseImportBusinessTemplate
+      InstallWithoutForceBusinessTemplate
+      Tic
+
+      CheckModifiedSkinFolderExists
+      CheckSkinSelectionAdded
+
+      SetSkinFolderRegistredSelections2
+      CopyBusinessTemplate
+      EditRegistredSelectionToBusinessTemplate
+      BuildBusinessTemplate
+      InstallCurrentBusinessTemplate
+      Tic
+    """)
+    sequence_list.play(self)
 
   @expectedFailure
-  def test_164_checkCopyBuild(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Check basic copy and build is working'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_164_checkCopyBuild(self):
+    """Test Check basic copy and build is working"""
     sequence_list = SequenceList()
-    sequence_string = '\
-                       UseCoreBusinessTemplate \
-                       CopyCoreBusinessTemplate \
-                       BuildCopyCoreBusinessTemplate \
-                       CheckOriginalAndCopyBusinessTemplate \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.addSequenceString("""
+      UseCoreBusinessTemplate
+      CopyCoreBusinessTemplate
+      BuildCopyCoreBusinessTemplate
+      CheckOriginalAndCopyBusinessTemplate
+      Tic
+    """)
+    sequence_list.play(self)
 
-  def test_165_checkCopyBuildInstall(self, quiet=quiet, run=run_all_test):
-    if not run: return
-    if not quiet:
-      message = 'Test Check basic copy, build and installation is working'
-      ZopeTestCase._print('\n%s ' % message)
-      LOG('Testing... ', 0, message)
+  def test_165_checkCopyBuildInstall(self):
+    """Test Check basic copy, build and installation is working"""
     sequence_list = SequenceList()
-    sequence_string = '\
-                       UseCoreBusinessTemplate \
-                       CopyCoreBusinessTemplate \
-                       BuildCopyCoreBusinessTemplate \
-                       InstallCopyCoreBusinessTemplate \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.addSequenceString("""
+      UseCoreBusinessTemplate
+      CopyCoreBusinessTemplate
+      BuildCopyCoreBusinessTemplate
+      InstallCopyCoreBusinessTemplate
+      Tic
+    """)
+    sequence_list.play(self)
 
   def test_167_InstanceAndRelatedClassDefinedInSameBT(self):
     # This test does too much since we don't modify objects anymore during
@@ -6810,14 +6385,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       SimpleItem._getCopy = SimpleItem_getCopy
     # check the previously existing instance now behaves as the overriden class
     self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
-
-  def test_168_DocumentUninstallIsEffective(self):
-    portal = self.portal
-    # Test_167 above needs to have been run
-    if not getattr(getattr(portal, 'some_file', None),
-                   'isClassOverriden',
-                   False):
-      self.test_167_InstanceAndRelatedClassDefinedInSameBT()
+    # test uninstall is effective
     self.uninstallBusinessTemplate('test_bt')
     # check both File instances no longer behave like being overriden
     self.assertFalse(getattr(portal.another_file, 'isClassOverriden', False))
@@ -6829,17 +6397,17 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     # How to define an existing and use INSTANCE_HOME_REPOSITORY?
     url_list = [ 'https://svn.erp5.org/repos/public/erp5/trunk/bt5',
                  'http://www.erp5.org/dists/snapshot/bt5',
-                 'http://www.erp5.org/dists/release/5.4.5/bt5', 
-                 "INSTANCE_HOME_REPOSITORY", 
+                 'http://www.erp5.org/dists/release/5.4.5/bt5',
+                 "INSTANCE_HOME_REPOSITORY",
                  'file:///opt/does/not/exist']
-    
+
     exist_bt5 = 'erp5_base'
     not_exist_bt5 = "erp5_not_exist"
     template_tool = self.portal.portal_templates
     getBusinessTemplateUrl = template_tool.getBusinessTemplateUrl
 
     # Test Exists
-    self.assertEquals(getBusinessTemplateUrl(url_list, exist_bt5), 
+    self.assertEquals(getBusinessTemplateUrl(url_list, exist_bt5),
                   'https://svn.erp5.org/repos/public/erp5/trunk/bt5/erp5_base')
     self.assertEquals(getBusinessTemplateUrl(url_list[1:], exist_bt5),
                       'http://www.erp5.org/dists/snapshot/bt5/erp5_base.bt5')
@@ -6860,7 +6428,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     self.assertEquals(getBusinessTemplateUrl(url_list[4:], not_exist_bt5), None)
 
   def test_type_provider(self):
-    self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+    self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
     type_provider = self.portal.dummy_type_provider
     types_tool = self.portal.portal_types
 
@@ -6931,14 +6499,14 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     finally:
       shutil.rmtree(export_dir)
 
-    # uninstall the workflow chain 
+    # uninstall the workflow chain
     pw._chains_by_type = cbt
     # unregister type provider
     types_tool.type_provider_list = registered_type_provider_list
     # uninstall the type provider (this will also uninstall the contained types)
     self.portal.manage_delObjects(['dummy_type_provider'])
     self.stepTic()
-    
+
     new_bt.install()
     try:
       type_provider = self.portal._getOb('dummy_type_provider', None)
@@ -6952,7 +6520,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       # is available from types tool
       self.assertTrue('Dummy Type' in [ti.getId() for
                       ti in types_tool.listTypeInfo()])
-      
+
       dummy_type = types_tool.getTypeInfo('Dummy Type')
       self.assertNotEquals(None, dummy_type)
       # all the configuration from the type is still here
@@ -6964,13 +6532,13 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       action_list = dummy_type.contentValues(portal_type='Action Information')
       self.assertEquals(['View'], [action.getTitle() for action in action_list])
       self.assertEquals(['view'], [action.getReference() for action in action_list])
-      
+
       role_list = dummy_type.contentValues(portal_type='Role Information')
       self.assertEquals(['Dummy Role Definition'],
                         [role.getTitle() for role in role_list])
-      
+
       self.assertEquals(('edit_workflow',), pw.getChainFor('Dummy Type'))
-      
+
       # and our type can be used
       instance = self.portal.newContent(portal_type='Dummy Type',
                                         id='test_document')
@@ -6984,7 +6552,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       self.assertFalse('dummy_type_provider' in types_tool.type_provider_list)
 
   def test_type_provider_2(self):
-    self.portal._setObject('dummy_type_provider', DummyTypeProvider())
+    self.portal.newContent(id='dummy_type_provider', portal_type="Types Tool")
     type_provider = self.portal.dummy_type_provider
     types_tool = self.portal.portal_types
 
@@ -7055,7 +6623,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
           permission='',
           category='object_view')
     action_idx = len(self.portal.portal_actions._actions)
-    
+
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
                           title='test_bt',
@@ -7077,7 +6645,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                         url='file:/%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
-    
+
     # manually uninstall the action
     self.portal.portal_actions.deleteActions(selections=[action_idx])
     self.stepTic()
@@ -7119,7 +6687,7 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
                         url='file:/%s' % export_dir)
     finally:
       shutil.rmtree(export_dir)
-    
+
     # modify the document
     self.portal.exported_path.setTitle('Modified')
     self.stepTic()
@@ -7143,11 +6711,11 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
       Copy, build and export a business template into the same transaction.
 
       Make sure all objects can be exported, when build() and export() are
-      into the same transaction. 
+      into the same transaction.
 
-      NOTES: 
+      NOTES:
        - it works for some business templates. (e.g. erp5_base)
-       - the object which does not have ._p_jar property is always an 
+       - the object which does not have ._p_jar property is always an
          ActionTemplateItem.
     """
     portal = self.getPortalObject()
@@ -7177,7 +6745,487 @@ class TestBusinessTemplate(ERP5TypeTestCase, LogInterceptor):
     new_bt5_obj.build()
     template_tool.export(new_bt5_obj)
 
+  def test_BusinessTemplateWithTest(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateTest \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddTestToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveTest \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckTestExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckTestRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+class TestDocumentTemplateItem(BusinessTemplateMixin):
+  document_title = 'UnitTest'
+  document_data = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'"""
+  document_data_updated = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'
+  def updated(self):
+    pass"""
+  document_base_path = os.path.join(getConfiguration().instancehome, 'Document')
+  template_property = 'template_document_id_list'
+
+  def stepCreateDocument(self, sequence=None, **kw):
+    file_path = os.path.join(self.document_base_path, self.document_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(self.document_data)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(document_title=self.document_title, document_path=file_path,
+        document_data=self.document_data)
+
+  def stepCreateUpdatedDocument(self, sequence=None, **kw):
+    file_path = os.path.join(self.document_base_path, self.document_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(self.document_data_updated)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(document_title=self.document_title, document_path=file_path,
+        document_data_updated=self.document_data_updated)
+
+  def stepAddDocumentToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence['current_bt']
+    bt.edit(**{self.template_property: [sequence['document_title']]})
+
+  def stepRemoveDocument(self, sequence=None, **kw):
+    document_path = sequence['document_path']
+    os.remove(document_path)
+    self.failIf(os.path.exists(document_path))
+
+  def stepCheckDocumentExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['document_path']))
+    self.assertEqual(file(sequence['document_path']).read(),
+        sequence['document_data'])
+
+  def stepCheckUpdatedDocumentExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['document_path']))
+    self.assertEqual(file(sequence['document_path']).read(),
+        sequence['document_data_updated'])
+
+  def stepCheckDocumentRemoved(self, sequence=None, **kw):
+    self.failIf(os.path.exists(sequence['document_path']))
+
+  def test_BusinessTemplateWithDocument(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckDocumentExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckDocumentRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_BusinessTemplateUpdateWithDocument(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckDocumentExists \
+                       RemoveDocument \
+                       CreateUpdatedDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CreateDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckUpdatedDocumentExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckDocumentRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_BusinessTemplateWithDocumentNonExistingBefore(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       \
+                       CreateDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckDocumentExists \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckDocumentRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_BusinessTemplateWithDocumentPropertySheetMigrated(self):
+    """Checks that if Business Template defines Document and PropertySheet
+    Document is not removed after Property Sheet was migrated and Business Template
+    was updated"""
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreatePropertySheet \
+                       CheckDocumentPropertySheetSameName \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       AddPropertySheetToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemovePropertySheet \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckDocumentExists \
+                       CheckPropertySheetExists \
+                       \
+                       SimulateAndCopyPrePropertySheetMigrationBusinessTemplate \
+                       Tic \
+                       \
+                       CreateAllPropertySheetsFromFilesystem \
+                       Tic \
+                       CheckPropertySheetRemoved \
+                       CheckPropertySheetMigration \
+                       \
+                       CheckDraftBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveBusinessTemplate \
+                       Tic \
+                       CreatePropertySheet \
+                       RemovePropertySheetZodbOnly \
+                       Tic \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckPropertySheetMigration \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckDocumentExists \
+                       CheckPropertySheetRemoved \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+class TestConstraintTemplateItem(TestDocumentTemplateItem):
+  document_title = 'UnitTest'
+  document_data = ' \nclass UnitTest: \n  """ \n  Fake constraint for unit test \n \
+    """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
+  document_data_updated = ' \nclass UnitTest2: \n  """ \n  Second Fake constraint for unit test \n \
+    """ \n  _properties = ( \n  ) \n  _categories = ( \n  ) \n\n'
+  document_base_path = os.path.join(getConfiguration().instancehome, 'Constraint')
+  template_property = 'template_constraint_id_list'
+
+class TestExtensionTemplateItem(TestDocumentTemplateItem):
+  document_title = 'UnitTest'
+  document_data = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'"""
+  document_data_updated = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'
+  def updated(self):
+    pass"""
+  document_base_path = os.path.join(getConfiguration().instancehome, 'Extensions')
+  template_property = 'template_extension_id_list'
+
+class TestTestTemplateItem(TestDocumentTemplateItem):
+  document_title = 'UnitTest'
+  document_data = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'"""
+  document_data_updated = """class UnitTest:
+  meta_type = 'ERP5 Unit Test'
+  portal_type = 'Unit Test'
+  def updated(self):
+    pass"""
+  document_base_path = os.path.join(getConfiguration().instancehome, 'tests')
+  template_property = 'template_test_id_list'
+
+  def stepCreateTest(self, sequence=None, **kw):
+    test_title = 'UnitTest'
+    test_data = """class UnitTest:
+  pass"""
+    cfg = getConfiguration()
+    file_path = os.path.join(cfg.instancehome, 'tests', test_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(test_data)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(test_title=test_title, test_path=file_path,
+        test_data=test_data)
+
+  def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence['current_bt']
+    bt.edit(template_test_id_list=[sequence['test_title']])
+
+  def stepRemoveTest(self, sequence=None, **kw):
+    test_path = sequence['test_path']
+    os.remove(test_path)
+    self.failIf(os.path.exists(test_path))
+
+  def stepCheckTestExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['test_path']))
+
+  def stepCheckTestRemoved(self, sequence=None, **kw):
+    self.failIf(os.path.exists(sequence['test_path']))
+
+  def stepCheckDocumentTestSameName(self, sequence=None, **kw):
+    self.assertEqual(sequence['test_title'], sequence['document_title'])
+    self.assertEqual(os.path.basename(sequence['document_path']),
+        os.path.basename(sequence['test_path']))
+
+  def stepRemoveTestFromBusinessTemplate(self, sequence=None, **kw):
+    """
+    Add Property Sheet to Business Template
+    """
+    sequence['current_bt'].edit(template_test_id_list=[])
+
+  def test_BusinessTemplateWithDocumentTestRemoved(self):
+    """Checks that if Business Template defines Document and Test
+    Document is not removed"""
+    self.document_base_path = os.path.join(getConfiguration().instancehome, 'Document')
+    self.template_property = 'template_document_id_list'
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreateTest \
+                       CheckDocumentTestSameName \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       AddTestToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemoveTest \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckDocumentExists \
+                       CheckTestExists \
+                       \
+                       CopyBusinessTemplate \
+                       Tic \
+                       \
+                       RemoveTestFromBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckTestRemoved \
+                       CheckDocumentExists \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestBusinessTemplate))
+  suite.addTest(unittest.makeSuite(TestConstraintTemplateItem))
+  suite.addTest(unittest.makeSuite(TestDocumentTemplateItem))
+  suite.addTest(unittest.makeSuite(TestExtensionTemplateItem))
+  suite.addTest(unittest.makeSuite(TestTestTemplateItem))
   return suite

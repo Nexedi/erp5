@@ -156,6 +156,13 @@ def initialize( context ):
     FieldRegistry.registerField(HyperLinkField.HyperLinkField,
                                 'www/LinkField.gif')
 
+    import VideoField
+    FieldRegistry.registerField(VideoField.VideoField,
+                                'www/StringField.gif')
+    import AudioField
+    FieldRegistry.registerField(AudioField.AudioField,
+                                'www/StringField.gif')
+
     # register help for the product
     context.registerHelp()
     # register field help for all fields

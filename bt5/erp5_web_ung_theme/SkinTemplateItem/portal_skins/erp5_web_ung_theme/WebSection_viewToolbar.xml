@@ -37,8 +37,11 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <div class="toolbar">\n
-<button title="Delete" name="WebSection_deleteObjectList:method" type="submit" class="delete">Delete</button>\n
-<button title="Change State" name="#" type="submit" class="change_state">Change State</button>\n
+  <button name="WebSection_deleteObjectList:method" \n
+          type="submit" class="delete"\n
+          i18n:translate="" i18n:domain="ui">Delete</button>\n
+  <button name="#" type="submit" class="change_state"\n
+          i18n:translate="" i18n:domain="ui">Change State</button>\n
 </div>
 
 ]]></unicode> </value>

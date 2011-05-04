@@ -15,6 +15,25 @@
                     <value>
                       <list>
                         <string>text/plain</string>
+                        <string>application/vnd.oasis.opendocument.text</string>
+                        <string>application/vnd.oasis.opendocument.text-template</string>
+                        <string>application/vnd.oasis.opendocument.text-web</string>
+                        <string>application/vnd.oasis.opendocument.text-master</string>
+                        <string>application/vnd.sun.xml.writer</string>
+                        <string>application/vnd.sun.xml.writer.template</string>
+                        <string>application/vnd.sun.xml.writer.global</string>
+                        <string>application/vnd.stardivision.writer</string>
+                        <string>application/msword</string>
+                        <string>application/vnd.ms-word</string>
+                        <string>application/x-doc</string>
+                        <string>application/rtf</string>
+                        <string>text/rtf</string>
+                        <string>application/vnd.wordperfect</string>
+                        <string>application/wordperfect</string>
+                        <string>application/vnd.openxmlformats-officedocument.wordprocessingml.document</string>
+                        <string>application/vnd.ms-word.document.macroenabled.12</string>
+                        <string>application/vnd.openxmlformats-officedocument.wordprocessingml.template</string>
+                        <string>application/vnd.ms-word.template.macroenabled.12</string>
                       </list>
                     </value>
                 </item>

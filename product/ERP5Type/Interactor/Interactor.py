@@ -28,7 +28,6 @@
 ##############################################################################
 
 from MethodObject import Method
-from Products.ERP5Type.Base import _aq_reset
 
 """
   Current implementation uses callable objects.

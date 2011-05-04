@@ -110,6 +110,7 @@
                         <string>my_incoterm</string>
                         <string>my_delivery_mode</string>
                         <string>my_specialise_title</string>
+                        <string>my_causality_title</string>
                       </list>
                     </value>
                 </item>

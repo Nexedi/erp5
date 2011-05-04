@@ -1,0 +1,8 @@
+<zodb_db %(storage_name)s>
+  mount-point %(mount_point)s
+  <zeoclient>
+    server %(address)s
+    storage %(storage_name)s
+    name %(storage_name)s
+  </zeoclient>
+</zodb_db>

@@ -1,0 +1,8 @@
+<type_roles>
+  <role id='Assignee'>
+   <property id='title'>Cloudooo Contributor</property>
+   <property id='description'>Person with same reference as document is an auditor</property>
+   <property id='base_category_script'>ERP5Type_getSecurityCategoryFromContent</property>
+   <multi_property id='base_category'>contributor</multi_property>
+  </role>
+</type_roles>

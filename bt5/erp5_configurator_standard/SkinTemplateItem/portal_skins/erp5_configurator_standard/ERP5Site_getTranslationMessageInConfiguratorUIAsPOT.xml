@@ -170,8 +170,8 @@ for i in python_script_list:\n
 #\n
 # Currency List\n
 #\n
-for row in context.ConfigurationTemplate_readOOCalcFile(\'currency_list.sxc\'):\n
-  add_message(row[\'currency\'], portal_url.getRelativeContentURL(context.portal_skins.erp5_generator[\'currency_list.sxc\']))\n
+for row in context.ConfigurationTemplate_readOOCalcFile(\'standard_currency_list.ods\'):\n
+  add_message(row[\'currency\'], portal_url.getRelativeContentURL(context.portal_skins.erp5_generator[\'standard_currency_list.ods\']))\n
 \n
 \n
 #\n
@@ -205,108 +205,12 @@ return printed\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>_print_</string>
-                            <string>_print</string>
-                            <string>message_dict</string>
-                            <string>FUNC_NAME_LIST</string>
-                            <string>safe_get_value</string>
-                            <string>add_message</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal_url</string>
-                            <string>form_list</string>
-                            <string>field_list</string>
-                            <string>page_template_list</string>
-                            <string>python_script_list</string>
-                            <string>True</string>
-                            <string>iterate</string>
-                            <string>False</string>
-                            <string>_getiter_</string>
-                            <string>message</string>
-                            <string>path</string>
-                            <string>document</string>
-                            <string>None</string>
-                            <string>_getitem_</string>
-                            <string>ui_description</string>
-                            <string>page_dict</string>
-                            <string>i</string>
-                            <string>accounting_period_description</string>
-                            <string>Base_findStaticTranslationText</string>
-                            <string>m</string>
-                            <string>Base_getFunctionFirstArgumentValue</string>
-                            <string>source</string>
-                            <string>func_name</string>
-                            <string>call_func_name</string>
-                            <string>row</string>
-                            <string>format</string>
-                            <string>MESSAGE_TEMPLATE</string>
-                            <string>message_list</string>
-                            <string>comment_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>comment</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_getTranslationMessageInConfiguratorUIAsPOT</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

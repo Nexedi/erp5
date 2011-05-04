@@ -98,7 +98,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     return "ERP5Catalog"
 
   def getBusinessTemplateList(self):
-    return ('erp5_base',)
+    return ('erp5_full_text_myisam_catalog', 'erp5_base',)
 
   # Different variables used for this test
   run_all_test = 1
@@ -1248,10 +1248,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     self.failUnless(erp5_sql_deferred_connection is not None)
     self.assertEquals('Z MySQL Deferred Database Connection',
                       erp5_sql_deferred_connection.meta_type)
-    for method in ['z0_drop_fulltext',
-                   'z0_uncatalog_fulltext',
-                   'z_catalog_fulltext_list',
-                   'z_create_fulltext', ]:
+    for method in ['z0_uncatalog_fulltext',
+                   'z_catalog_fulltext_list']:
       self.assertEquals('erp5_sql_deferred_connection',
                 getattr(self.getCatalogTool().getSQLCatalog(),
                               method).connection_id)
@@ -4308,18 +4306,21 @@ VALUES
     self.assertEqual(count, module_len)
 
   def test_getParentUid(self, quiet=quiet):
-    from Products.ERP5Type.Document.Person import Person
-    from Products.ERP5Type.Document.Assignment import Assignment
+    from Products.ERP5.Document.Assignment import Assignment
+    import erp5.portal_type
     person_module = self.getPersonModule()
 
-    person = Person(person_module.generateNewId())
+    person_id = person_module.generateNewId()
+    person = erp5.portal_type.Person(person_id)
     person.setDefaultReindexParameters(activate_kw={'after_tag': self.id()})
-    person = person_module[person_module._setObject(person.id, person)]
+    person = person_module[person_module._setObject(person_id, person)]
     self.assertFalse('uid' in person.__dict__)
     person.uid = None
-    assignment = Assignment(person.generateNewId())
+
+    assignment_id = person.generateNewId()
+    assignment = erp5.portal_type.Assignment(assignment_id)
     assignment.setDefaultReindexParameters(activate_kw={'tag': self.id()})
-    assignment = person[person._setObject(assignment.id, assignment)]
+    assignment = person[person._setObject(assignment_id, assignment)]
     self.assertFalse('uid' in assignment.__dict__)
     assignment.uid = None
     transaction.commit()

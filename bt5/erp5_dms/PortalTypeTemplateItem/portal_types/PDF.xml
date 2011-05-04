@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+      <global name="Base Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -31,7 +31,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value> <string>pdf_icon.gif</string> </value>
+            <value> <string>pdf_icon.png</string> </value>
         </item>
         <item>
             <key> <string>content_meta_type</string> </key>
@@ -90,7 +90,6 @@
               <tuple>
                 <string>title</string>
                 <string>description</string>
-                <string>id</string>
                 <string>reference</string>
                 <string>version</string>
                 <string>short_title</string>
@@ -104,6 +103,22 @@
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>PDFDocument</string> </value>
+        </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
@@ -115,7 +130,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <none/> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -132,7 +147,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <string>erp5_content</string> </value>
+            <value> <none/> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

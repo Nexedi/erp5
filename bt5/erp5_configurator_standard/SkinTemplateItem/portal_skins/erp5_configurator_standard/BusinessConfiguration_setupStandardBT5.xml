@@ -52,81 +52,44 @@
             <key> <string>_body</string> </key>
             <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
 \n
-# specify is bt5 is a public or not\n
-bt5_installation_list = ((\'erp5_configurator_standard_categories\', True,),\n
-                         )\n
+bt5_installation_list = (\'erp5_simulation\',\n
+                         \'erp5_dhtml_style\',\n
+                         \'erp5_jquery\',\n
+                         \'erp5_jquery_ui\',\n
+                         \'erp5_xhtml_jquery_style\',\n
+                         \'erp5_web\',\n
+                         \'erp5_ingestion_mysql_innodb_catalog\',\n
+                         \'erp5_ingestion\',\n
+                         \'erp5_dms\',\n
+                         \'erp5_crm\', \n
+                         \'erp5_pdm\',\n
+                         \'erp5_trade\',\n
+                         \'erp5_knowledge_pad\',\n
+                         \'erp5_accounting\',\n
+                         \'erp5_tax_resource\',\n
+                         \'erp5_discount_resource\',\n
+                         \'erp5_invoicing\',\n
+                         \'erp5_configurator_standard_categories\',\n
+                         \'erp5_trade_knowledge_pad\',\n
+                         \'erp5_crm_knowledge_pad\',\n
+                         \'erp5_simplified_invoicing\',\n
+                         \'erp5_ods_style\',\n
+                         \'erp5_odt_style\',\n
+                         \'erp5_ooo_import\',\n
+                        )\n
+\n
+bt5_update_catalog = (\'erp5_ingestion_mysql_innodb_catalog\', )\n
 \n
 for name in bt5_installation_list:\n
   configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
-                                          bt5_id=name[0],\n
-                                          is_public=name[1])\n
+                                          title=name, bt5_id=name,\n
+                                          update_catalog=(name in bt5_update_catalog)\n
+                                          )\n
 </string> </value>
-        </item>
-        <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>configuration_save_url=None, **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>configuration_save_url</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>configuration_save</string>
-                            <string>True</string>
-                            <string>bt5_installation_list</string>
-                            <string>_getiter_</string>
-                            <string>name</string>
-                            <string>_getitem_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -135,12 +98,6 @@ for name in bt5_installation_list:\n
         <item>
             <key> <string>title</string> </key>
             <value> <string>Setup standard ERP5 business templates</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -54,7 +54,7 @@
 \n
 return [\n
   (translateString(\'Tasks\'), \'Project_viewTaskList\'),\n
-  (translateString(\'Tasks Reports\'), \'Project_viewTaskReportList\' ),\n
+  (translateString(\'Tasks Reports and Tasks\'), \'Project_viewTaskReportList\' ),\n
   (translateString(\'Tasks Summary\'), \'Project_viewSummaryList\'),\n
 ]\n
 </string> </value>

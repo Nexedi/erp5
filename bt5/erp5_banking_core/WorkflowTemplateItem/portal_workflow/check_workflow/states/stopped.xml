@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="StateDefinition" module="Products.DCWorkflow.States"/>
-        <tuple/>
-      </tuple>
+      <global name="StateDefinition" module="Products.DCWorkflow.States"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -47,10 +44,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -61,11 +55,11 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
                 <item>
@@ -77,19 +71,19 @@
                 <item>
                     <key> <string>Modify portal content</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Manager</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>View</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
-                      </list>
+                      </tuple>
                     </value>
                 </item>
               </dictionary>

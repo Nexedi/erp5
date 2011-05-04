@@ -104,7 +104,7 @@ class Telephone(Coordinate, Base):
     # +(0)1-11111111/111" or +(0)1-11111111/ or +(0)1-11111111
     "\+\(0\)(?P<area>\d+)\-(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
 
-    # Missing Country and Area 
+    # Missing Country and Area
     # +(0)-11111111/111" or +(0)-11111111/ or +(0)-11111111
     "\+\(0\)\-(?P<number>[\d\ ]*)(?:\/)?(?P<ext>\d+|)",
 
@@ -125,20 +125,20 @@ class Telephone(Coordinate, Base):
 
     # This regex is to handle two inputs very similar
     # but with different behavior
-    # 111 11 11/111 or 111 11 11 or 111 11 11 
+    # 111 11 11/111 or 111 11 11 or 111 11 11
     # will result in {'area':'', 'number':'111 11 11', 'ext':'111 or empty'}
     #
-    # 111-11 11/111 or 111-11 11 or 111-11 11 
-    # will result in {'area':'111', 'number':'11 11', 'ext':'111 or empty'} 
+    # 111-11 11/111 or 111-11 11 or 111-11 11
+    # will result in {'area':'111', 'number':'11 11', 'ext':'111 or empty'}
     "^(?:0)?((?P<area>\d+)-)?(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
 
     # Area, Number, Extension*
-    # It is a common input in France 
+    # It is a common input in France
     # and in Japan but with different behavior.
     # 011-111-1111/111 or 011-111-1111/ or 011-111-1111
     # will result in {'area':'11', 'number':'111-1111', \
     #                  'ext':'111 or empty'} <= France
-    # will result in {'area':'011', 'number':'111-1111', 
+    # will result in {'area':'011', 'number':'111-1111',
     #                  'ext':'111 or empty'} <= Japan
     # so we have here two regex:
     # To France: "^0(?P<area>\d+)-(?P<number>[\d\-\ ]*)(?:\/)?(?P<ext>\d+|)$",
@@ -148,14 +148,14 @@ class Telephone(Coordinate, Base):
     # Area, Number, Extension*
     # It is a common input in France and in Japan but with different behavior.
     # 011(111)1111/111 or 011(111)1111/ or 011(111)1111
-    # will result in {'area':'11', 'number':'111)1111', 
+    # will result in {'area':'11', 'number':'111)1111',
     #                  'ext':'111 or empty'} <= France
-    # will result in {'area':'011', 'number':'111)1111', 
+    # will result in {'area':'011', 'number':'111)1111',
     #                  'ext':'111 or empty'} <= Japan
     # so we have here two regex:
-    #To France: 
+    #To France:
     # "^0(?P<area>\d+)\((?P<number>[\d\)\(\ \-]*)(?:\/)?(?P<ext>\d+|)$",
-    #To Japan: 
+    #To Japan:
     # "^(?P<area>\d+)\((?P<number>[\d\)\(\ \-]*)(?:\/)?(?P<ext>\d+|)$",
     "^0(?P<area>\d+)\((?P<number>[\d\)\(\ \-]*)(?:\/)?(?P<ext>\d+|)$",
 
@@ -188,7 +188,7 @@ class Telephone(Coordinate, Base):
     # Missing country
     # 111/111-1111/111 or 111/111-1111/ or 111/111-1111
     "(?P<area>\d+)\/(?P<number>[\d\ \-]*)(?:\/)?(?P<ext>\d+|)",
-    
+
     # Country, area, number, extension*
     # Hyphen between country and area.
     # +11-1 11 11 01 11/111 or +11-1 11 11 01 11/ or +11-1 11 11 01 11
@@ -230,21 +230,21 @@ class Telephone(Coordinate, Base):
     # + (111) 111-111/111 or + (111) 111-111/  or + (111) 111-111
     "\+(?P<spaces>[\ ]*)\((?P<country>\d+)\)\ (?P<number>[\d\ \-\.]*)(?:\/)?(?P<ext>\d+|)"
   ]
-  
+
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   def fromText(self, coordinate_text):
     """ See ICoordinate.fromText """
     method = self._getTypeBasedMethod('fromText')
     if method is not None:
       return method(text=coordinate_text)
-    
+
     if coordinate_text is None:
       coordinate_text = ''
 
     # Removing the spaces of the begin and end.
     coordinate_text = str(coordinate_text).strip()
-    
-    # This regexp get the coordinate text 
+
+    # This regexp get the coordinate text
     # and extract number and letters
     input_regex_without_markup = '[0-9A-Za-z]'
     input_without_markup = ''.join(re.findall(input_regex_without_markup,\
@@ -262,7 +262,7 @@ class Telephone(Coordinate, Base):
         from zLOG import LOG, WARNING
         msg = "Doesn't exist a regex to handle this telephone: ", \
                                                                coordinate_text
-        LOG('Telephone.fromText', WARNING, msg) 
+        LOG('Telephone.fromText', WARNING, msg)
         number_dict = {'number' : input_without_markup}
     else:
       number_dict = {'number' : coordinate_text}
@@ -279,7 +279,7 @@ class Telephone(Coordinate, Base):
         (extension in ['', None])):
       country = area = city = number = extension = ''
     else:
-      # Trying to get the country and area from dict, 
+      # Trying to get the country and area from dict,
       # but if it fails must be get from preference
       preference_tool = self.portal_preferences
       if country in ['', None]:
@@ -304,13 +304,13 @@ class Telephone(Coordinate, Base):
     self.edit(telephone_country = country,
               telephone_area = area,
               telephone_city = city,
-              telephone_number = number, 
+              telephone_number = number,
               telephone_extension = extension)
-   
+
   security.declareProtected(Permissions.ModifyPortalContent, '_setText')
   _setText = fromText
 
-  security.declareProtected(Permissions.View, 'asText')
+  security.declareProtected(Permissions.AccessContentsInformation, 'asText')
   def asText(self):
     """
       Returns the telephone number in standard format
@@ -318,20 +318,20 @@ class Telephone(Coordinate, Base):
     script = self._getTypeBasedMethod('asText')
     if script is not None:
       return script()
-    
+
     country = self.getTelephoneCountry('')
     area = self.getTelephoneArea('')
     city = self.getTelephoneCity('')
     number = self.getTelephoneNumber('')
     extension = self.getTelephoneExtension('')
-   
-    # If country, area, number, extension are blank 
+
+    # If country, area, number, extension are blank
     # the method should to return blank.
     if ((country == '') and \
         (area == '') and \
         (city == '') and \
         (number == '') and \
-        (extension == '')): 
+        (extension == '')):
       return ''
 
     # Define the notation
@@ -341,7 +341,7 @@ class Telephone(Coordinate, Base):
       notation = notation.replace('<area>',area)
       if city == "":
         notation = notation.replace('<city>-', '')
-      else:        
+      else:
         notation = notation.replace('<city>',city)
       notation = notation.replace('<number>',number)
       notation = notation.replace('<ext>',extension)
@@ -366,7 +366,7 @@ class Telephone(Coordinate, Base):
     telephone_area = self.getTelephoneArea()
     if telephone_area is not None:
       url_string += telephone_area
-      
+
     telephone_city = self.getTelephoneCity()
     if telephone_city is not None:
       url_string += telephone_city
@@ -379,10 +379,10 @@ class Telephone(Coordinate, Base):
       return None
     return 'tel:%s' % (url_string.replace(' ',''))
 
-  security.declareProtected(Permissions.View, 'getText')
+  security.declareProtected(Permissions.AccessContentsInformation, 'getText')
   getText = asText
 
-  security.declareProtected(Permissions.View, 'standardTextFormat')
+  security.declareProtected(Permissions.AccessContentsInformation, 'standardTextFormat')
   def standardTextFormat(self):
     """
       Returns the standard text formats for telephone numbers

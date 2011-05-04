@@ -21,3 +21,7 @@ Budget | transfer_line_list_view
 Budget | view
 Category Budget Variation | view
 Node Budget Variation | view
+Transaction Quantity Value Feasability Constraint | predicate
+Transaction Quantity Value Feasability Constraint | view
+Transaction Quantity Value Validity Constraint | predicate
+Transaction Quantity Value Validity Constraint | view

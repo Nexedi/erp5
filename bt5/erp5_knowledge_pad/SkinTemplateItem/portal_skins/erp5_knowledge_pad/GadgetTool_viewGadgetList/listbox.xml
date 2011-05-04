@@ -10,10 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
+                <string>meta_types</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -87,6 +86,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>portal_type</string>
+                          <string>Portal Type</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>
@@ -102,6 +105,17 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>meta_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>ERP5 Gadget</string>
+                          <string>ERP5 Gadget</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>portal_type</string> </key>
                     <value>
                       <list>
@@ -111,21 +125,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>portal_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>Gadget</string>
-                          <string>Gadget</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>gadget_tool_view_gadget_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

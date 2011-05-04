@@ -183,6 +183,16 @@
                         <string>my_non_discountable_additional_price_quantity_step_list</string>
                         <string>matrixbox_max_stock</string>
                         <string>my_portal_variation_base_category_list</string>
+                        <string>my_service_individual_variations_listbox</string>
+                        <string>my_view_mode_industrial_phase</string>
+                        <string>my_view_mode_transformation_content_listbox</string>
+                        <string>my_view_mode_efficiency</string>
+                        <string>my_view_mode_int_index</string>
+                        <string>my_view_mode_transformation_listbox_quantity_unit</string>
+                        <string>my_view_mode_transformation_resource_title</string>
+                        <string>my_view_mode_template_transformation_title_list</string>
+                        <string>my_view_mode_transformation_variation_base_category_list</string>
+                        <string>my_view_mode_version</string>
                       </list>
                     </value>
                 </item>

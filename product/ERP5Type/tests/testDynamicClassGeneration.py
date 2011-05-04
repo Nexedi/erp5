@@ -28,12 +28,15 @@
 #
 ##############################################################################
 
+import gc
 import unittest
 import transaction
 
+from persistent import Persistent
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
+from Products.ERP5Type.Core.PropertySheet import PropertySheet as PropertySheetDocument
 
 from zope.interface import Interface, implementedBy
 
@@ -41,75 +44,101 @@ class TestPortalTypeClass(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return 'erp5_base',
 
-  def testImportNonMigratedPerson(self):
+  def testMigrateOldObject(self):
     """
-    Import a .xml containing a Person created with an old
-    Products.ERP5Type.Document.Person.Person type
-    """
-    person_module = self.portal.person_module
-    self.importObjectFromFile(person_module, 'non_migrated_person.xml')
-    transaction.commit()
-
-    non_migrated_person = person_module.non_migrated_person
-    # check that object unpickling instanciated a new style object
-    person_class = self.portal.portal_types.getPortalTypeClass('Person')
-    self.assertEquals(non_migrated_person.__class__, person_class)
-
-  @expectedFailure
-  def testImportNonMigratedDocumentUsingContentClass(self):
-    """
-    Import a .xml containing a Base Type with old Document path
-    Products.ERP5Type.ERP5Type.ERP5TypeInformation
-
-    This Document class is different because it's a content_class,
-    i.e. it was not in Products.ERP5Type.Document.** but was
-    imported directly as such.
-    """
-    self.importObjectFromFile(self.portal, 'Category.xml')
-    transaction.commit()
-
-    non_migrated_type = self.portal.Category
-    # check that object unpickling instanciated a new style object
-    base_type_class = self.portal.portal_types.getPortalTypeClass('Base Type')
-    self.assertEquals(non_migrated_type.__class__, base_type_class)
-
-  def testMigrateOldObjectFromZODB(self):
-    """
-    Load an object with ERP5Type.Document.Person.Person from the ZODB
-    and check that migration works well
+    Check migration of persistent objects with old classes
+    like Products.ERP5(Type).Document.Person.Person
     """
     from Products.ERP5Type.Document.Person import Person
+    person_module = self.portal.person_module
+    connection = person_module._p_jar
+    newId = self.portal.person_module.generateNewId
 
-    # remove temporarily the migration
-    from Products.ERP5Type.Utils import PersistentMigrationMixin
-    PersistentMigrationMixin.migrate = 0
+    def unload(id):
+      oid = person_module._tree[id]._p_oid
+      person_module._tree._p_deactivate()
+      connection._cache.invalidate(oid)
+      gc.collect()
+      # make sure we manage to remove the object from memory
+      assert connection._cache.get(oid, None) is None
+      return oid
 
-    person_module = self.getPortal().person_module
-    obj_id = "this_object_is_old"
-    old_object = Person(obj_id)
-    person_module._setObject(obj_id, old_object)
-    old_object = person_module._getOb(obj_id)
+    def check(migrated):
+      klass = old_object.__class__
+      self.assertEqual(klass.__module__,
+        migrated and 'erp5.portal_type' or 'Products.ERP5.Document.Person')
+      self.assertEqual(klass.__name__, 'Person')
+      self.assertEqual(klass.__setstate__ is Persistent.__setstate__, migrated)
 
+    # Import a .xml containing a Person created with an old
+    # Products.ERP5Type.Document.Person.Person type
+    self.importObjectFromFile(person_module, 'non_migrated_person.xml')
     transaction.commit()
-    self.assertEquals(old_object.__class__.__module__, 'Products.ERP5Type.Document.Person')
-    self.assertEquals(old_object.__class__.__name__, 'Person')
+    unload('non_migrated_person')
+    old_object = person_module.non_migrated_person
+    # object unpickling should have instanciated a new style object directly
+    check(1)
 
-    self.assertTrue(hasattr(old_object.__class__, '__setstate__'))
-
-    # unload/deactivate the object
-    old_object._p_invalidate()
-
+    obj_id = newId()
+    person_module._setObject(obj_id, Person(obj_id))
+    transaction.commit()
+    unload(obj_id)
+    old_object = person_module[obj_id]
     # From now on, everything happens as if the object was a old, non-migrated
-    # object with an old Products.ERP5Type.Document.Person.Person
-
-    # now turn on migration
-    PersistentMigrationMixin.migrate = 1
-
+    # object with an old Products.ERP5(Type).Document.Person.Person
+    check(0)
     # reload the object
     old_object._p_activate()
+    check(1)
+    # automatic migration is not persistent
+    old_object = None
+    # (note we get back the object directly from its oid to make sure we test
+    # the class its pickle and not the one in its container)
+    old_object = connection.get(unload(obj_id))
+    check(0)
 
-    self.assertEquals(old_object.__class__.__module__, 'erp5.portal_type')
-    self.assertEquals(old_object.__class__.__name__, 'Person')
+    try:
+      from ZODB import __version__
+
+    except ImportError: # recent ZODB
+      # Test persistent migration
+      old_object.migrateToPortalTypeClass()
+      old_object = None
+      transaction.commit()
+      old_object = connection.get(unload(obj_id))
+      check(1)
+      # but the container still have the old class
+      old_object = None
+      unload(obj_id)
+      old_object = person_module[obj_id]
+      check(0)
+
+      # Test persistent migration of containers
+      obj_id = newId()
+      person_module._setObject(obj_id, Person(obj_id))
+      transaction.commit()
+      unload(obj_id)
+      person_module.migrateToPortalTypeClass()
+      transaction.commit()
+      unload(obj_id)
+      old_object = person_module[obj_id]
+      check(1)
+      # not recursive by default
+      old_object = None
+      old_object = connection.get(unload(obj_id))
+      check(0)
+
+      # Test recursive migration
+      old_object = None
+      unload(obj_id)
+      person_module.migrateToPortalTypeClass(True)
+      transaction.commit()
+      old_object = connection.get(unload(obj_id))
+      check(1)
+
+    else: # Zope 2.8
+      # compatibility code not implemented
+      self.assertRaises(AssertionError, old_object.migrateToPortalTypeClass)
 
   def testChangeMixin(self):
     """
@@ -190,21 +219,6 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     self.portal.portal_types.resetDynamicDocuments()
     newDocument(portal_type='Folder')
 
-  def testPropertyGenerationOnTempPortalType(self):
-    portal = self.portal
-    temp = portal.organisation_module.newContent('temp_portal_type',
-                                                 'Organisation',
-                                                 temp_object=True)
-    temp.setCorporateName('foobar')
-    synchronizeDynamicModules(portal, force=True)
-
-    # check what is happening if aq_dynamic is called on the
-    # temp portal type first
-    accessor = temp._aq_dynamic('getCorporateName')
-    self.failIfEqual(accessor, None)
-    self.assertEquals(accessor(), 'foobar')
-    self.assertEquals(temp.__class__.__module__, 'erp5.temp_portal_type')
-
   def testInterfaces(self):
     types_tool = self.portal.portal_types
 
@@ -283,6 +297,32 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # but it changes as soon as the class is loaded
     module_class.loadClass()
     self.assertFalse(issubclass(module_class, Folder))
+
+  def testAttributeValueComputedFromAccessorHolderList(self):
+    """
+    Check that attributes such as constraints and _categories,
+    containing respectively all the constraints and categories define
+    on their Property Sheets, loads the portal type class as some
+    static getters (for example getInstanceBaseCategoryList() use
+    _categories directly)
+    """
+    import erp5.portal_type
+
+    synchronizeDynamicModules(self.portal, force=True)
+    self.assertTrue(erp5.portal_type.Person.__isghost__)
+    self.assertTrue('constraints' not in erp5.portal_type.Person.__dict__)
+
+    getattr(erp5.portal_type.Person, 'constraints')
+    self.assertTrue(not erp5.portal_type.Person.__isghost__)
+    self.assertTrue('constraints' in erp5.portal_type.Person.__dict__)
+
+    synchronizeDynamicModules(self.portal, force=True)
+    self.assertTrue(erp5.portal_type.Person.__isghost__)
+    self.assertTrue('_categories' not in erp5.portal_type.Person.__dict__)
+
+    getattr(erp5.portal_type.Person, '_categories')
+    self.assertTrue(not erp5.portal_type.Person.__isghost__)
+    self.assertTrue('_categories' in erp5.portal_type.Person.__dict__)
 
 class TestZodbPropertySheet(ERP5TypeTestCase):
   """
@@ -418,21 +458,23 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       portal_type='Content Existence Constraint',
       constraint_portal_type='python: ("Content Existence Constraint")')
 
-  def _newCategoryMembershipArityConstraint(self, reference, portal_type):
+  def _newCategoryMembershipArityConstraint(self,
+                                            reference,
+                                            use_acquisition=False):
     """
     Create a new Category Membership Arity Constraint within test
-    Property Sheet, allowing testing of Category Acquired Membership
-    Arity Constraint too
+    Property Sheet (with or without acquisition)
     """
     self.getPortal().portal_categories.newContent(
       id=reference, portal_type='Base Category')
 
     self.test_property_sheet.newContent(
       reference=reference,
-      portal_type=portal_type,
+      portal_type='Category Membership Arity Constraint',
       min_arity=1,
       max_arity=1,
-      constraint_portal_type=('Test Migration',),
+      use_acquisition=use_acquisition,
+      constraint_portal_type="python: ('Test Migration',)",
       constraint_base_category=(reference,))
 
   def _newCategoryRelatedMembershipArityConstraint(self):
@@ -446,7 +488,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       portal_type='Category Related Membership Arity Constraint',
       min_arity=1,
       max_arity=1,
-      constraint_portal_type=('Test Migration',),
+      constraint_portal_type="python: ('Test Migration',)",
       constraint_base_category=('gender',))
 
   def _newTALESConstraint(self):
@@ -501,17 +543,16 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # Sheet
       self._newContentExistenceConstraint()
 
-      # Create a Category Membership Arity Constraint in the test
-      # Property Sheet
+      # Create a Category Membership Arity Constraint without
+      # acquisition in the test Property Sheet
       self._newCategoryMembershipArityConstraint(
-        'test_category_membership_arity_constraint',
-        'Category Membership Arity Constraint')
+        'test_category_membership_arity_constraint')
 
-      # Create a Category Acquired Membership Arity Constraint in the
-      # test Property Sheet
+      # Create a Category Membership Arity Constraint with acquisition
+      # in the test Property Sheet
       self._newCategoryMembershipArityConstraint(
-        'test_category_acquired_membership_arity_constraint',
-        'Category Acquired Membership Arity Constraint')
+        'test_category_membership_arity_constraint_with_acquisition',
+        use_acquisition=True)
 
       # Create a Category Related Membership Arity Constraint in the
       # test Property Sheet
@@ -546,7 +587,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
         type_class='Folder',
         type_property_sheet_list=('TestMigration',),
         type_base_category_list=('test_category_existence_constraint',),
-        type_allowed_content_type_list=('Content Existence Constraint',))
+        type_filter_content_type=False)
 
     # Create a test module, meaningful to force generation of
     # TestMigration accessor holders and check the constraints
@@ -608,14 +649,16 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
       # The accessor holder will be generated once the new Person will
       # be created as Person type has test Property Sheet
-      self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
+      self.failIfHasAttribute(erp5.accessor_holder.property_sheet,
+                              'TestMigration')
 
       new_person = portal.person_module.newContent(
         id='testAssignZodbPropertySheet', portal_type='Person')
 
-      self.assertHasAttribute(erp5.accessor_holder, 'TestMigration')
+      self.assertHasAttribute(erp5.accessor_holder.property_sheet,
+                              'TestMigration')
 
-      self.assertTrue(erp5.accessor_holder.TestMigration in \
+      self.assertTrue(erp5.accessor_holder.property_sheet.TestMigration in \
                       erp5.portal_type.Person.mro())
 
       # Check that the accessors have been properly created for all
@@ -690,7 +733,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       new_person = portal.person_module.newContent(
         id='testAssignZodbPropertySheet', portal_type='Person')
 
-      self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
+      self.failIfHasAttribute(erp5.accessor_holder.property_sheet, 'TestMigration')
       self.failIfHasAttribute(new_person, 'getTestStandardPropertyAssign')
 
     finally:
@@ -700,15 +743,18 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
   def _checkAddPropertyToZodbPropertySheet(self,
                                           new_property_function,
                                           added_accessor_name):
-    import erp5.accessor_holder
+    import erp5.accessor_holder.property_sheet
 
-    self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
+    self.failIfHasAttribute(erp5.accessor_holder.property_sheet,
+                            'TestMigration')
 
     new_property_function('add')
     self._forceTestAccessorHolderGeneration()
 
-    self.assertHasAttribute(erp5.accessor_holder, 'TestMigration')
-    self.assertHasAttribute(erp5.accessor_holder.TestMigration,
+    self.assertHasAttribute(erp5.accessor_holder.property_sheet,
+                            'TestMigration')
+
+    self.assertHasAttribute(erp5.accessor_holder.property_sheet.TestMigration,
                             added_accessor_name)
 
   def testAddStandardPropertyToZodbPropertySheet(self):
@@ -751,15 +797,18 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                                              change_setter_func,
                                              new_value,
                                              changed_accessor_name):
-    import erp5.accessor_holder
+    import erp5.accessor_holder.property_sheet
 
-    self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
+    self.failIfHasAttribute(erp5.accessor_holder.property_sheet,
+                            'TestMigration')
 
     change_setter_func(new_value)
     self._forceTestAccessorHolderGeneration()
 
-    self.assertHasAttribute(erp5.accessor_holder, 'TestMigration')
-    self.assertHasAttribute(erp5.accessor_holder.TestMigration,
+    self.assertHasAttribute(erp5.accessor_holder.property_sheet,
+                            'TestMigration')
+
+    self.assertHasAttribute(erp5.accessor_holder.property_sheet.TestMigration,
                             changed_accessor_name)
 
   def testChangeStandardPropertyOfZodbPropertySheet(self):
@@ -811,7 +860,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     Delete the given property from the test Property Sheet and check
     whether its corresponding accessor is not there anymore
     """
-    import erp5.accessor_holder
+    import erp5.accessor_holder.property_sheet
 
     self.failIfHasAttribute(erp5.accessor_holder, 'TestMigration')
 
@@ -820,8 +869,8 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self.test_property_sheet.deleteContent(property_id)
     self._forceTestAccessorHolderGeneration()
 
-    self.assertHasAttribute(erp5.accessor_holder, 'TestMigration')
-    self.failIfHasAttribute(erp5.accessor_holder.TestMigration,
+    self.assertHasAttribute(erp5.accessor_holder.property_sheet, 'TestMigration')
+    self.failIfHasAttribute(erp5.accessor_holder.property_sheet.TestMigration,
                             accessor_name)
 
   def testDeleteStandardPropertyFromZodbPropertySheet(self):
@@ -957,7 +1006,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                           ('test_category_membership_arity_constraint/'\
                            'Test Migration',))
 
-  def testCategoryAcquiredMembershipArityConstraint(self):
+  def testCategoryMembershipArityConstraintWithAcquisition(self):
     """
     Take the test module and check whether the Category Acquired
     Membership Arity Constraint is there. Until a Base Category is set
@@ -966,9 +1015,9 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     XXX: Test with acquisition?
     """
     self._checkConstraint(
-      'test_category_acquired_membership_arity_constraint',
+      'test_category_membership_arity_constraint_with_acquisition',
       self.test_module.setCategoryList,
-      ('test_category_acquired_membership_arity_constraint/Test Migration',))
+      ('test_category_membership_arity_constraint_with_acquisition/Test Migration',))
 
   def testCategoryRelatedMembershipArityConstraint(self):
     """
@@ -1013,208 +1062,107 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                           self.test_module.setTitle,
                           'my_property_type_validity_constraint_title')
 
-from Products.CMFCore.Expression import Expression
-
-class TestZodbImportFilesystemPropertySheet(ERP5TypeTestCase):
-  """
-  Check that importing filesystem Property Sheets into ZODB the same
-  properties and their values
-  """
-  # The following fields of properties are no longer defined in ZODB
-  # Property Sheets because they have been deprecated
-  deprecated_field_name_tuple = ('mode',
-                                 'select_variable',
-                                 'label',
-                                 'acquisition_depends',
-                                 'acquisition_sync_value')
-
-  def afterSetUp(self):
-    # Mapping between the field name of a property and the default
-    # value as defined in StandardProperty and AcquiredProperty,
-    # meaningful because exporting a property relies on accessor which
-    # returns the default value if the field value is not set
-    self.filesystem_field_default_value_dict = {}
-
-    from Products.ERP5Type.PropertySheet import StandardProperty, AcquiredProperty
-    for property_dict in StandardProperty._properties + AcquiredProperty._properties:
-      try:
-        self.filesystem_field_default_value_dict[property_dict['id']] = \
-            property_dict['default']
-      except KeyError:
-        # Some fields may not defined a default value (such as 'id')
-        continue
-
-  def _checkPropertyField(self,
-                          property_sheet_name,
-                          field_name,
-                          filesystem_value,
-                          zodb_value):
+  def testAddEmptyProperty(self):
     """
-    Check whether the given filesystem property value and the given
-    ZODB property value are equal
+    When users create properties in a PropertySheet, the property is
+    first empty. Check that accessor generation can cope with such
+    invalid properties
     """
-    if isinstance(zodb_value, (list, tuple)):
-      self.failIfDifferentSet(
-        zodb_value, filesystem_value,
-        msg="%s: %s: filesystem value: %s, ZODB value: %s" % \
-          (property_sheet_name, field_name, filesystem_value, zodb_value))
+    property_sheet_tool = self.portal.portal_property_sheets
+    arrow = property_sheet_tool.Arrow
+    person_module = self.portal.person_module
+    person = person_module.newContent(portal_type="Person")
 
-    else:
-      # In ZODB Property Sheets, we have to get the TALES Expression
-      # as a string for properties, which used to be Expression in
-      # filesystem Property Sheets or are now Expression (because they
-      # used to be defined as Python types, such as tuple or int...)
-      if isinstance(zodb_value, Expression):
-        # In filesystem Property Sheets, acquisition_portal_type and
-        # portal_type, might be instances of Expression
-        if isinstance(filesystem_value, Expression):
-          zodb_value = zodb_value.text
-          filesystem_value = filesystem_value.text
-        # Otherwise, just convert the filesystem value to a TALES
-        # Expression string
-        else:
-          zodb_value = zodb_value.text
-          filesystem_value = 'python: ' + repr(filesystem_value)
+    # Action -> add Acquired Property
+    arrow.newContent(portal_type="Acquired Property")
+    # a user is doing this, so commit after each request
+    transaction.commit()
 
-      self.failUnlessEqual(
-        zodb_value, filesystem_value,
-        msg="%s: %s: filesystem value: %s, ZODB value: %s" % \
-          (property_sheet_name, field_name, filesystem_value,
-           zodb_value))
+    accessor = getattr(property_sheet_tool, "setTitle", None)
+    # sites used to break at this point
+    self.assertNotEquals(None, accessor)
+    # try to create a Career, which uses Arrow Property Sheet
+    try:
+      person.newContent(portal_type="Career")
+    except Exception:
+      # Arrow property holder could not be created from the
+      # invalid Arrow Property Sheet
+      self.fail("Creating an empty Acquired Property raises an error")
 
-  def _checkPropertyDefinitionTuple(self,
-                                    property_sheet_name,
-                                    filesystem_property_tuple,
-                                    zodb_property_tuple):
+    arrow.newContent(portal_type="Category Property")
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except Exception:
+      self.fail("Creating an empty Category Property raises an error")
+
+    dynamic_category = arrow.newContent(portal_type="Dynamic Category Property")
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except Exception:
+      self.fail("Creating an empty Dynamic Category Property raises an error")
+
+    arrow.newContent(portal_type="Property Existence Constraint")
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except Exception:
+      self.fail("Creating an empty Constraint raises an error")
+
+  def testAddInvalidProperty(self):
     """
-    Check whether all properties have been properly converted from
-    the filesystem to the ZODB Property Sheet
+    Check that setting an invalid TALES Expression as a property
+    attribute value does not raise any error
+
+    XXX: For now, this test fails because the accessors generation
+    going through Utils does catch errors when evaluating TALES
+    Expression, but this will be addressed in per-property document
+    accessors generation
     """
-    # Check whether all the properties are present in the given ZODB
-    # Property Sheet
-    self.assertEqual(
-      len(filesystem_property_tuple), len(zodb_property_tuple),
-      msg="%s: too many properties: filesystem: %s, ZODB: %s" % \
-      (property_sheet_name, filesystem_property_tuple, zodb_property_tuple))
+    arrow = self.portal.portal_property_sheets.Arrow
+    person = self.portal.person_module.newContent(portal_type="Person")
 
-    # Map filesystem property IDs to their definition
-    filesystem_property_id_dict = {}
-    for property_dict in filesystem_property_tuple:
-      filesystem_property_id_dict[property_dict['id']] = property_dict
+    # be really nasty, and test that code is still foolproof (this
+    # None value should never appear in an expression... unless the
+    # method has a mistake)
+    dynamic_category = arrow.newContent(
+      portal_type="Dynamic Category Property",
+      category_expression='python: ["foo", None, "region"]')
 
-    # Check each property defined in ZODB against the filesystem dict
-    # defined before
-    for zodb_property_dict in zodb_property_tuple:
-      # Meaningful to ensure that there is no missing field within a
-      # property
-      validated_field_counter = 0
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except Exception:
+      self.fail("Creating a Category Expression with None as one of the "\
+                "category ID raises an error")
 
-      filesystem_property_dict = \
-         filesystem_property_id_dict[zodb_property_dict['id']]
+    # Action -> add Acquired Property
+    arrow.newContent(portal_type="Acquired Property",
+                     acquisition_portal_type="python: ('foo', None)",
+                     content_portal_type="python: ('goo', None)")
+    # a user is doing this, so commit after each request
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except Exception:
+      self.fail("Creating an Acquired Property with invalid TALES expression "\
+                "raises an error")
 
-      # Check each property field
-      for field_name, zodb_value in zodb_property_dict.iteritems():
-        if field_name in filesystem_property_dict:
-          self._checkPropertyField(property_sheet_name,
-                                   field_name,
-                                   filesystem_property_dict[field_name],
-                                   zodb_value)
-        # As we are using accessors when exporting the ZODB Property
-        # Sheet to its filesystem definition, there may be additional
-        # fields set to their default value
-        elif field_name in self.filesystem_field_default_value_dict:
-          self.assertEqual(
-            self.filesystem_field_default_value_dict[field_name],
-            zodb_value,
-            msg="%s: Wrong default value %s for %s" % \
-                (property_sheet_name, zodb_value, field_name))
-
-        validated_field_counter += 1
-
-      if len(filesystem_property_dict) != validated_field_counter:
-        missing_field_name_list = [
-          k for k in filesystem_property_dict \
-          if k not in zodb_property_dict and \
-             k not in self.deprecated_field_name_tuple ]
-
-        self.assertTrue(
-          len(missing_field_name_list) == 0,
-          msg="%s: missing fields: %s: filesystem: %s, ZODB: %s" % \
-          (property_sheet_name, missing_field_name_list,
-           filesystem_property_dict, zodb_property_dict))
-
-  def _checkCategoryTuple(self,
-                          property_sheet_name,
-                          filesystem_category_tuple,
-                          zodb_category_tuple):
-    """
-    Check whether all categories have been properly converted
-    """
-    # There should be the same number of categories
-    self.assertEqual(
-      len(filesystem_category_tuple), len(zodb_category_tuple),
-      msg="%s: Missing/added categories: filesystem: %s, ZODB: %s" % \
-      (property_sheet_name, filesystem_category_tuple, zodb_category_tuple))
-
-    # Some Categories are instance of Expression, so compute a list of
-    # categories as strings
-    zodb_category_list = [
-      isinstance(category, Expression) and category.text or category \
-      for category in zodb_category_tuple ]
-
-    # Now, compare filesystem categories with ZODB
-    for category in filesystem_category_tuple:
-      if isinstance(category, Expression):
-        category = category.text
-
-      self.assertTrue(
-        category in zodb_category_list,
-        msg="%s: Missing category %s: ZODB: %s" % \
-        (property_sheet_name, category, zodb_category_list))
-
-  def testZodbImportPropertySheet(self):
-    """
-    Create Property Sheets on portal_property_sheets from their
-    definition on the filesystem and then test that they are
-    equivalent
-
-    TODO: Constraints
-    """
-    portal = self.getPortalObject().portal_property_sheets
-
-    from Products.ERP5Type import PropertySheet
-    # Get all the property sheets defined on the filesystem
-    for name, klass in PropertySheet.__dict__.iteritems():
-      if name[0] == '_' or isinstance(klass, basestring):
-        continue
-      filesystem_property_sheet = klass
-      property_sheet_name = name
-
-      # Rename the filesystem Property Sheet class to avoid clashing
-      # with existing Property Sheets in portal_property_sheets
-      filesystem_property_sheet.__name__ = "%s_%s" % \
-          (self.__class__.__name__, property_sheet_name)
-
-      zodb_property_sheet = portal.createPropertySheetFromFilesystemClass(
-        filesystem_property_sheet)
-
-      zodb_property_tuple, zodb_category_tuple, zodb_constraint_tuple = \
-          portal.exportPropertySheetToFilesystemDefinitionTuple(
-              zodb_property_sheet)
-
-      self._checkPropertyDefinitionTuple(property_sheet_name,
-                                         getattr(filesystem_property_sheet,
-                                                 '_properties', []),
-                                         zodb_property_tuple)
-
-      self._checkCategoryTuple(property_sheet_name,
-                               getattr(filesystem_property_sheet,
-                                       '_categories', []),
-                               zodb_category_tuple)
+    # Check invalid syntax in TALES Expression, we check only for
+    # DynamicCategoryProperty because it's exactly the same function
+    # called for StandardProperty and AcquiredProperty, namely
+    # evaluateExpressionFromString
+    dynamic_category.setCategoryExpression('python: [')
+    transaction.commit()
+    try:
+      person.newContent(portal_type="Career")
+    except Exception:
+      self.fail("Creating a Category Expression with syntax error raises "\
+                "an error")
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPortalTypeClass))
   suite.addTest(unittest.makeSuite(TestZodbPropertySheet))
-  suite.addTest(unittest.makeSuite(TestZodbImportFilesystemPropertySheet))
   return suite

@@ -74,7 +74,9 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     Return the list of required business templates.
     """
-    return ('erp5_base',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_base',
+            'erp5_jquery',    
             'erp5_web',
             'erp5_ingestion',
             'erp5_ingestion_mysql_innodb_catalog',
@@ -724,7 +726,7 @@ return True
     self.assertTrue(len(large_image) > len(small_image))
 
   def _test_document_publication_workflow(self, portal_type, transition):
-    ERP5TypeTestCase.login(self)
+    super(TestERP5WebWithDms, self).login()
     document = self.portal.web_page_module.newContent(portal_type=portal_type)
     self.portal.portal_workflow.doActionFor(document, transition)
 

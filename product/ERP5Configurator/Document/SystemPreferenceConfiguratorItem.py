@@ -70,8 +70,6 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
              'preferred_sale_opportunity_resource_list',
              'preferred_support_request_resource_list',
              # DMS
-             'preferred_ooodoc_server_address',
-             'preferred_ooodoc_server_port_number',
              'preferred_conversion_cache_factory',
              'preferred_document_email_ingestion_address',
              'preferred_document_reference_method_id',
@@ -80,6 +78,8 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
              'preferred_document_classification',
              'preferred_synchronous_metadata_discovery',
              'preferred_redirect_to_document',
+             'preferred_ooodoc_server_address',
+             'preferred_ooodoc_server_port_number',
              # PDM
              'preferred_product_individual_variation_base_category_list',
              'preferred_component_individual_variation_base_category_list',
@@ -94,9 +94,11 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
              )
 
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
-    preference = portal.portal_preferences._getOb(self.object_id, None)
+    portal_preferences = portal.portal_preferences
+    preference = portal_preferences._getOb(self.object_id, None)
+    activated_preference = portal_preferences.getActiveSystemPreference()
     if preference is None:
       preference = portal.portal_preferences.newContent(
                                portal_type = 'System Preference',
@@ -108,12 +110,12 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     # XXX this have to be translated in user language.
     preference_dict = {}
 
-    marker = []
     for preference_name in self._getPreferenceNameList():
       preference_value = getattr(self, preference_name,
-                     preference.getProperty(preference_name, marker))
-      if preference_value is not marker:
-        preference_dict[preference_name] = preference_value
+                     preference.getProperty(preference_name))
+      if preference_value is None and activated_preference is not None:
+        preference_value = activated_preference.getProperty(preference_name)
+      preference_dict[preference_name] = preference_value
 
     preference.edit(**preference_dict)
     bt5_obj = business_configuration.getSpecialiseValue()

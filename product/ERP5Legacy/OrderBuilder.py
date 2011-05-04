@@ -29,6 +29,7 @@
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type.Base import Base
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.Document.Amount import Amount
@@ -330,18 +331,19 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       # XXX in the case of Order Builder, the movement is not always
       # related to simulation, thus it might not have the delivery category.
       # Possibly, this code should be overridden by DeliveryBuilder.
-      if getattr(aq_base(movement), 'getDeliveryValue', None) is not None:
-        delivery_movement = movement.getDeliveryValue()
+      try:
+        delivery = movement.getDeliveryValue()
+      except AttributeError:
+        pass
       else:
-        delivery_movement = None
-      if delivery_movement is not None:
-        delivery = delivery_movement.getRootDeliveryValue()
-        try:
-          instance_list.remove(delivery)
-        except ValueError:
-          pass
-        else:
-          instance_list.insert(0, delivery)
+        while isinstance(delivery, Base):
+          try:
+            instance_list.remove(delivery)
+          except ValueError:
+            pass
+          else:
+            instance_list.insert(0, delivery)
+          delivery = delivery.getParentValue()
       for instance_to_update in instance_list:
         result, property_dict = self._test(
           instance_to_update, movement_group_node_list, divergence_list)

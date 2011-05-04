@@ -31,7 +31,6 @@
 from Products.Formulator import Widget, Validator
 from Products.Formulator.Field import ZMIField
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.Utility import allow_class
 from Products.ERP5Type.Message import translateString
 from AccessControl import ClassSecurityInfo
@@ -59,19 +58,20 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
   - one search button which updates the field and sets a relation
   - creates object if not there
   """
-  local_property_names = ['update_method', 'jump_method', 'allow_jump', 
-                          'base_category', 'portal_type', 'allow_creation', 
-                          'container_getter_id', 'catalog_index',
-                          'relation_setter_id', 'relation_form_id', 'columns', 
-                          'sort', 'parameter_list','list_method', 
-                          'first_item', 'items', 'proxy_listbox_ids', 
+  local_property_names = ['update_method', 'jump_method', 'allow_jump',
+                          'base_category', 'portal_type', 'allow_creation',
+                          'container_getter_id', 'context_getter_id',
+                          'catalog_index',
+                          'relation_setter_id', 'relation_form_id', 'columns',
+                          'sort', 'parameter_list','list_method',
+                          'first_item', 'items', 'proxy_listbox_ids',
                           'size', 'extra_item',
                           ]
 
   property_names = Widget.LinesTextAreaWidget.property_names + \
                    Widget.TextWidget.property_names + \
                    local_property_names
-    
+
   # XXX Field to remove...
   update_method = fields.StringField('update_method',
                              title='Update Method',
@@ -119,6 +119,13 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
                              title='Container Getter Method',
                              description=(
       "The method to call to get a container object."),
+                             default="",
+                             required=0)
+
+  context_getter_id = fields.StringField('context_getter_id',
+                             title='Context Getter Method',
+                             description=(
+      "The method to call to get the context."),
                              default="",
                              required=0)
 
@@ -200,6 +207,16 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
 
   default_widget_rendering_instance = Widget.LinesTextAreaWidgetInstance
 
+  def _getContextValue(self, field, REQUEST):
+    """Return result of evaluated method
+    defined by context_getter_id or here.
+    """
+    context_getter_id =  field.get_value('context_getter_id')
+    here = REQUEST['here']
+    if context_getter_id:
+      return getattr(here, context_getter_id)()
+    return here
+
   def _generateRenderValueList(self, field, key, value_list, REQUEST):
     result_list = []
     need_validation = 0
@@ -233,13 +250,13 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
         need_validation = 1
       # If we get a empty string, display nothing !
       if value != '':
-        result_list.append((Widget.TextWidgetInstance, relation_field_id, 
+        result_list.append((Widget.TextWidgetInstance, relation_field_id,
                             relation_item_list, value, i))
     if not need_validation:
       ###################################
       # Main field
       ###################################
-      result_list = [(Widget.LinesTextAreaWidgetInstance, None, [], 
+      result_list = [(Widget.LinesTextAreaWidgetInstance, None, [],
                       value_list, None)]
     return result_list
 
@@ -290,7 +307,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     ####################################
     if (value == field.get_value('default')):
       # XXX Default rendering with value...
-      relation_html_string = self.render_relation_link(field, value, 
+      relation_html_string = self.render_relation_link(field, value,
                                                        REQUEST)
       if relation_html_string != '':
         html_string += '&nbsp;&nbsp;%s' % relation_html_string
@@ -305,8 +322,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     Render read only field.
     """
     html_string = ''
-    here = REQUEST['here']
-    portal_url = getToolByName(here, 'portal_url')
+    here = self._getContextValue(field, REQUEST)
+    portal_url = here.getPortalObject().portal_url
     portal_url_string = portal_url()
     if (value not in ((), [], None, '')) and \
         field.get_value('allow_jump'):
@@ -318,10 +335,12 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
         kw[k] = v
       accessor_name = 'get%sValueList' % ''.join([part.capitalize() for part in base_category.split('_')])
       jump_reference_list = getattr(here, accessor_name)(portal_type=portal_type, filter=kw)
-      for jump_reference in jump_reference_list:
+      if not isinstance(value, (list, tuple)):
+        value = value,
+      for jump_reference, display_value in zip(jump_reference_list, value):
         string_list.append('<a href="%s">%s</a>' % \
                 (jump_reference.absolute_url(),
-                  jump_reference.getTitle()))
+                 display_value))
       html_string = '<br />'.join(string_list)
     else:
       html_string = self.default_widget_rendering_instance.render_view(field,
@@ -338,8 +357,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     """
     Render wheel used to display a listbox
     """
-    here = REQUEST['here']
-    portal_url = getToolByName(here, 'portal_url')
+    here = self._getContextValue(field, REQUEST)
+    portal_url = here.getPortalObject().portal_url
     portal_url_string = portal_url()
     portal_selections_url_string = here.portal_url.getRelativeContentURL(here.portal_selections)
     if sub_index is None:
@@ -358,8 +377,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
     Render link to the related object.
     """
     html_string = ''
-    here = REQUEST['here']
-    portal_url = getToolByName(here, 'portal_url')
+    here = self._getContextValue(field, REQUEST)
+    portal_url = here.getPortalObject().portal_url
     portal_url_string = portal_url()
     if (value not in ((), [], None, '')) and \
         field.get_value('allow_jump'):
@@ -375,8 +394,8 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
       html_string += '<a href="%s/%s?field_id=%s&amp;form_id=%s%s">' \
                        '<img src="%s/images/jump.png" alt="jump" />' \
                      '</a>' % \
-                (here.absolute_url(), 
-                 field.get_value('jump_method'), 
+                (here.absolute_url(),
+                 field.get_value('jump_method'),
                  field.id, field.aq_parent.id,
                  selection_name_html,
                  portal_url_string)
@@ -386,10 +405,11 @@ class MultiRelationEditor:
     """
       A class holding all values required to update a relation
     """
-    def __init__(self, field_id, base_category, 
-                 portal_type_list, 
-                 portal_type_item, key, relation_setter_id, 
-                 relation_editor_list):
+    def __init__(self, field_id, base_category,
+                 portal_type_list,
+                 portal_type_item, key, relation_setter_id,
+                 relation_editor_list,
+                 context_getter_id):
       self.field_id = field_id
       self.base_category = base_category
       self.portal_type_list = portal_type_list
@@ -397,6 +417,7 @@ class MultiRelationEditor:
       self.key = key
       self.relation_setter_id = relation_setter_id
       self.relation_editor_list = relation_editor_list
+      self.context_getter_id = context_getter_id
 
     def __call__(self, REQUEST):
       if self.relation_editor_list != None:
@@ -421,7 +442,10 @@ class MultiRelationEditor:
       return self.__dict__
 
     def edit(self, o):
-      if self.relation_editor_list != None:
+      if self.relation_editor_list is not None:
+        if self.context_getter_id:
+          o = getattr(o, self.context_getter_id)()
+        portal = o.getPortalObject()
 
         relation_object_list = []
         for value, uid, display_text, relation_key, item_key in \
@@ -434,11 +458,9 @@ class MultiRelationEditor:
               portal_module = None
               for p_item in self.portal_type_item:
                 if p_item[0] == portal_type:
-                  portal_module = o.getPortalObject().getDefaultModuleId(
-                                                            p_item[0])
+                  portal_module = portal.getDefaultModuleId(p_item[0])
               if portal_module is not None:
-                portal_module_object = getattr(o.getPortalObject(), 
-                                               portal_module)
+                portal_module_object = getattr(portal, portal_module)
                 kw ={}
                 kw[self.key] = value.replace('%', '')
                 kw['portal_type'] = portal_type
@@ -447,7 +469,7 @@ class MultiRelationEditor:
               else:
                 raise 
             else:
-              relation_object_list.append(o.portal_catalog.getObject(uid))
+              relation_object_list.append(portal.portal_catalog.getObject(uid))
 
         # Edit relation
         if self.relation_setter_id:
@@ -539,7 +561,7 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
     # Get some tool
     catalog_index = field.get_value('catalog_index')
     portal_type_list = [x[0] for x in field.get_value('portal_type')]
-    portal_catalog = getToolByName(field, 'portal_catalog')
+    portal_catalog = field.getPortalObject().portal_catalog
 
     ####################################
     # Check list input
@@ -780,11 +802,13 @@ class MultiRelationStringFieldValidator(Validator.LinesValidator):
       base_category = field.get_value('base_category')
       portal_type_item = field.get_value('portal_type')
       relation_setter_id = field.get_value('relation_setter_id')
+      context_getter_id = field.get_value('context_getter_id')
       return self.editor(field.id, 
                          base_category,
                          portal_type_list, 
                          portal_type_item, catalog_index, 
-                         relation_setter_id, relation_editor_list)
+                         relation_setter_id, relation_editor_list,
+                         context_getter_id)
 
 MultiRelationStringFieldWidgetInstance = MultiRelationStringFieldWidget()
 MultiRelationStringFieldValidatorInstance = MultiRelationStringFieldValidator()

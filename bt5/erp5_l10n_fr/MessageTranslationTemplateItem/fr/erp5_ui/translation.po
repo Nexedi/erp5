@@ -81,14 +81,29 @@ msgstr "${template_title} (Modèle)"
 msgid "${this_portal_type} related to ${that_portal_type} : ${that_title}."
 msgstr "${this_portal_type} lié au ${that_portal_type} : ${that_title}."
 
+msgid "${timedif} day ago"
+msgstr "Il y a ${timedif} jour"
+
 msgid "${timedif} days ago"
 msgstr "Il y a ${timedif} jours"
 
-msgid "${timedif} min ago"
+msgid "${timedif} hour ago"
+msgstr "Il y a ${timedif} heure"
+
+msgid "${timedif} hours ago"
+msgstr "Il y a ${timedif} heures"
+
+msgid "${timedif} minute ago"
+msgstr "Il y a ${timedif} minute"
+
+msgid "${timedif} minutes ago"
 msgstr "Il y a ${timedif} minutes"
 
-msgid "${timedif}h ago"
-msgstr "Il y a ${timedif} heures"
+msgid "${timedif} second ago"
+msgstr "Il y a ${timedif} second"
+
+msgid "${timedif} seconds ago"
+msgstr "Il y a ${timedif} seconds"
 
 msgid "${transaction_title} (Transaction Reference = ${transaction_reference}, Creation Date = ${creation_date}  Currency = ${currency_title})"
 msgstr "${transaction_title} (Référence de la transaction= ${transaction_reference}, Date de création = ${creation_date}  Devise = ${currency_title})"
@@ -658,7 +673,7 @@ msgid "All"
 msgstr "Tous"
 
 msgid "All Accounting Transactions for this organisation during the period have to be closed first."
-msgstr "Toutes les écritures de l'organisation pendant cette période doivent être préalablement validées."
+msgstr "Toutes les écritures de l'organisation pendant cette période doivent être préalablement clôturées."
 
 msgid "All Documents"
 msgstr "Tous les documents"
@@ -1017,7 +1032,7 @@ msgstr "Croissant"
 msgid "Ask For Analyse"
 msgstr "Demander l'analyse"
 
-msgid "Ask For Modeling"
+msgid "Ask For Modelling"
 msgstr "Demander l'étude de modélisme"
 
 msgid "Ask For Prototyping"
@@ -1182,6 +1197,9 @@ msgstr "Disponible"
 msgid "Available Budget"
 msgstr "Budget disponible"
 
+msgid "Available Budget (${resource_title})"
+msgstr "Budget disponible (${resource_title})"
+
 msgid "BBAN"
 msgstr "N° de compte complet"
 
@@ -1259,6 +1277,9 @@ msgstr "Code établ."
 
 msgid "Bank Country Code"
 msgstr "Code pays"
+
+msgid "Bank Organisation"
+msgstr "Banque"
 
 msgid "Bank account must be defined for bank type accounts"
 msgstr "Le compte en banque doit être spécifié pour les lignes mouvementant des comptes de type Banque"
@@ -2418,6 +2439,9 @@ msgstr "Contraintes"
 msgid "Consumed Budget"
 msgstr "Budget consommé"
 
+msgid "Consumed Budget (${resource_title})"
+msgstr "Budget consommé (${resource_title})"
+
 msgid "Consumption"
 msgstr "Consommation"
 
@@ -2666,6 +2690,9 @@ msgstr "Champ d'exploration"
 
 msgid "Create Default Web Page"
 msgstr "Créer une page web par défaut"
+
+msgid "Create Direct Debit Mandate"
+msgstr "Créer un mandat bancaire"
 
 msgid "Create Document"
 msgstr "Créer un document"
@@ -2925,6 +2952,9 @@ msgstr "Courant"
 msgid "Current Budget"
 msgstr "Budget courant"
 
+msgid "Current Budget (${resource_title})"
+msgstr "Budget courant (${resource_title})"
+
 msgid "Current Description"
 msgstr "Description actuelle"
 
@@ -3038,6 +3068,9 @@ msgstr "La date n'est pas dans une période comptable ouverte pour la section so
 
 msgid "Date must be defined"
 msgstr "La date doit être définie"
+
+msgid "Date of Signature"
+msgstr "Date de signature"
 
 msgid "Date transaction takes effect"
 msgstr "La date à laquelle la transaction est effective."
@@ -3676,6 +3709,15 @@ msgstr "Recherche"
 msgid "Dimension"
 msgstr "Valeur Mesure"
 
+msgid "Direct Debit Mandate"
+msgstr "Mandat bancaire"
+
+msgid "Direct Debit Mandates"
+msgstr "Mandats bancaires"
+
+msgid "Direct debit mandate created."
+msgstr "Mandat bancaire crée."
+
 msgid "Direction"
 msgstr "Direction"
 
@@ -4240,6 +4282,9 @@ msgstr "Engagé"
 msgid "Engaged Budget"
 msgstr "Budget engagé"
 
+msgid "Engaged Budget (${resource_title})"
+msgstr "Budget engagé (${resource_title})"
+
 msgid "English"
 msgstr "Anglais"
 
@@ -4344,6 +4389,21 @@ msgstr "L'évènement a été assigné et attend d'être traité par un utilisat
 
 msgid "Events in this state are outgoing events which were posted. Some events may be delivered later, whenever the recipient confirms he received them."
 msgstr "Les évènements dans cet état ont été envoyés au destinataire."
+
+msgid "Events to Declare"
+msgstr "Evènements à déclarer"
+
+msgid "Events to Receive"
+msgstr "Evènements à recevoir"
+
+msgid "Events to Send"
+msgstr "Evènements à envoyer"
+
+msgid "Events to Treat"
+msgstr "Evènements à traiter"
+
+msgid "Events to Validate"
+msgstr "Evènements à valider"
 
 msgid "Everybody"
 msgstr "Tout le monde"
@@ -5260,6 +5320,9 @@ msgstr "Date de début initiale"
 msgid "Initial Budget"
 msgstr "Budget initial"
 
+msgid "Initial Budget (${resource_title})"
+msgstr "Budget initial (${resource_title})"
+
 msgid "Initial Credit Balance"
 msgstr "Solde créditeur initial"
 
@@ -5341,6 +5404,18 @@ msgstr "Lignes de commande interne"
 msgid "Internal Orders"
 msgstr "Commandes internes"
 
+msgid "Internal Orders to Check"
+msgstr "Commandes internes à examiner"
+
+msgid "Internal Orders to Confirm"
+msgstr "Commandes internes à confirmer"
+
+msgid "Internal Orders to Offer"
+msgstr "Commandes internes à proposer"
+
+msgid "Internal Orders to Validate"
+msgstr "Commandes internes à valider"
+
 msgid "Internal Packing List"
 msgstr "Livraison interne"
 
@@ -5362,11 +5437,35 @@ msgstr "Mouvements de livraison interne"
 msgid "Internal Packing Lists"
 msgstr "Livraisons internes"
 
+msgid "Internal Packing Lists Workflow"
+msgstr "Workflow des livraisons internes"
+
+msgid "Internal Packing Lists to Confirm"
+msgstr "Livraisons internes à confirmer"
+
+msgid "Internal Packing Lists to Declare Delivered"
+msgstr "Livraisons internes à déclarer livrées"
+
+msgid "Internal Packing Lists to Prepare"
+msgstr "Livraisons internes à préparer"
+
+msgid "Internal Packing Lists to Receive"
+msgstr "Livraisons internes à recevoir"
+
+msgid "Internal Packing Lists to Ship"
+msgstr "Livraisons internes à expédier"
+
 msgid "Internal Reference"
 msgstr "Référence interne"
 
 msgid "International Form"
 msgstr "Mode international"
+
+msgid "Invalid BIC."
+msgstr "BIC invalide."
+
+msgid "Invalid IBAN."
+msgstr "IBAN invalide."
 
 msgid "Invalidate"
 msgstr "Invalider"
@@ -5502,6 +5601,9 @@ msgstr "Règle de facturation"
 
 msgid "Item"
 msgstr "Objet"
+
+msgid "Item Tracking"
+msgstr "Traçabilité"
 
 msgid "Item Type List"
 msgstr "Types d'objets"
@@ -5818,6 +5920,9 @@ msgstr "Créer un modèle"
 msgid "Manage Business Templates"
 msgstr "Gérer les Business Templates"
 
+msgid "Mandate End Date"
+msgstr "Date de fin du mandat"
+
 msgid "Manual Price"
 msgstr "Prix manuel"
 
@@ -6013,7 +6118,7 @@ msgstr "Ligne de modèle"
 msgid "Model Line Calculation Script"
 msgstr "Script de calcul"
 
-msgid "Modeling"
+msgid "Modelling"
 msgstr "Etude Modélisme"
 
 msgid "Modification Date"
@@ -6081,6 +6186,12 @@ msgstr "Plus de nouvelles..."
 
 msgid "More tasks..."
 msgstr "Plus de taches..."
+
+msgid "More than 1 month"
+msgstr "Il y a plus de 1 mois"
+
+msgid "More than 1 year"
+msgstr "Il y a plus de 1 an"
 
 msgid "Motive"
 msgstr "Motif"
@@ -6404,6 +6515,9 @@ msgstr "Notification de l'alarme"
 msgid "November"
 msgstr "Novembre"
 
+msgid "Now"
+msgstr "Maintenant"
+
 msgid "Number"
 msgstr "Numéro"
 
@@ -6527,8 +6641,29 @@ msgstr "Campagnes en cours"
 msgid "Open Meetings"
 msgstr "Réunions en cours"
 
+msgid "Open Order"
+msgstr "Commande ouverte"
+
+msgid "Open Order Line"
+msgstr "Ligne de commande ouverte"
+
+msgid "Open Order Workflow"
+msgstr "Workflow des commandes ouvertes"
+
 msgid "Open Project"
 msgstr "Ouvrir le projet"
+
+msgid "Open Sale Order"
+msgstr "Commande ouverte de vente"
+
+msgid "Open Sale Order Line"
+msgstr "Ligne de commande ouverte de vente"
+
+msgid "Open Sale Order Lines"
+msgstr "Lignes de commande ouverte de vente"
+
+msgid "Open Sale Orders"
+msgstr "Commandes ouvertes de vente"
 
 msgid "Open Support Requests"
 msgstr "Demandes d'assistance en cours"
@@ -8867,11 +9002,20 @@ msgstr "Module des livraisons de vente"
 msgid "Sale Packing List Movements"
 msgstr "Mouvements de livraison de vente"
 
+msgid "Sale Packing List Workflow"
+msgstr "Workflow des livraisons de vente"
+
+msgid "Sale Packing List to Confirm"
+msgstr "Livraisons de vente à confirmer"
+
 msgid "Sale Packing List to Prepare"
 msgstr "Livraisons de vente à préparer"
 
 msgid "Sale Packing List to Process"
 msgstr "Livraisons de vente à créer"
+
+msgid "Sale Packing List to Receive"
+msgstr "Livraisons de vente à recevoir"
 
 msgid "Sale Packing List to Ship"
 msgstr "Livraisons de vente à expédier"
@@ -8989,6 +9133,9 @@ msgstr "Entité"
 
 msgid "Section Account"
 msgstr "Compte"
+
+msgid "Section Accounting Currency"
+msgstr "Devise de comptabilité de la section"
 
 msgid "Section Bank Account"
 msgstr "Compte en banque"
@@ -9623,6 +9770,9 @@ msgstr "Association entre la colonne du tableur et la propriété"
 msgid "Spreadsheet Name"
 msgstr "Nom de la feuille de calcul"
 
+msgid "Start"
+msgstr "Démarrer"
+
 msgid "Start Accounting Period"
 msgstr "Démarrer la période comptable"
 
@@ -9750,7 +9900,7 @@ msgid "Stock per Variation"
 msgstr "Stock par variante"
 
 msgid "Stop"
-msgstr "Terminer l'étape de carrière"
+msgstr "Terminer"
 
 msgid "Stop Accounting Period"
 msgstr "Cloturer la période comptable"
@@ -11259,6 +11409,9 @@ msgstr "Montant des lignes sélectionnées"
 msgid "Total for class ${account_class}"
 msgstr "Total pour la classe ${account_class}"
 
+msgid "Tracking"
+msgstr "Traçabilité"
+
 msgid "Trade"
 msgstr "Négoce"
 
@@ -11727,7 +11880,7 @@ msgstr "Valider le message"
 msgid "Validate Message [transition in notification_message_workflow]"
 msgstr "Valider le message"
 
-msgid "Validate Modeling"
+msgid "Validate Modelling"
 msgstr "Valider le modélisme"
 
 msgid "Validate Pricing"
@@ -12081,6 +12234,9 @@ msgstr "Année"
 msgid "Year / Month / Day"
 msgstr "Année / Mois / Jour"
 
+msgid "Yesterday"
+msgstr "Hier"
+
 msgid "You already have such gadgets."
 msgstr "Ce gadget existe déja."
 
@@ -12167,6 +12323,9 @@ msgstr "Votre réf."
 
 msgid "Your account was successfully created."
 msgstr "Votre compte a été créé avec succès."
+
+msgid "Your message has been successfully submitted."
+msgstr "Votre message a été envoyé avec succès."
 
 msgid "Your report is attached.\n"
 msgstr "Votre rapport est en pièce jointes.\n"

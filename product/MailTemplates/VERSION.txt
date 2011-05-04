@@ -1,1 +1,1 @@
-Mail Templates 5.4.7
+MailTemplates 5.4.7

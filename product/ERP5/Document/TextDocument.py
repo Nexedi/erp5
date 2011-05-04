@@ -36,6 +36,8 @@ from Products.ERP5.Document.Document import Document, ConversionError, _MARKER, 
 from Products.ERP5.Document.File import File
 from Products.ERP5Type.WebDAVSupport import TextContent
 import re
+from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
+import cStringIO
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
@@ -114,7 +116,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
 
       return text
 
-    security.declareProtected(Permissions.View, 'asSubjectText')
+    security.declareProtected(Permissions.AccessContentsInformation, 'asSubjectText')
     def asSubjectText(self, substitution_method_parameter_dict=None, safe_substitute=True, **kw):
       """
         Converts the subject of the document to a textual representation.
@@ -153,7 +155,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
           kw['charset'] = convert_kw['encoding'] = charset
         if not self.hasConversion(**kw):
           portal_transforms = portal.portal_transforms
-          filename = self.getStandardFilename(format=format)
+          filename = self.getFilename()
           if mime_type == 'text/html':
             mime_type = 'text/x-html-safe'
           result = portal_transforms.convertToData(mime_type, text_content,
@@ -166,6 +168,16 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                   'portal_transforms failed to convert '
                                   'from %r to %s: %r' % 
                                   (src_mimetype, mime_type, self))
+
+          if format in VALID_IMAGE_FORMAT_LIST:
+            # do resize by temporary image
+            temp_image = self.portal_contributions.newContent(
+                                       portal_type='Image',
+                                       file=cStringIO.StringIO(),
+                                       filename=self.getId(),
+                                       temp_object=1)
+            temp_image._setData(result)
+            mime, result = temp_image.convert(**kw)
           self.setConversion(result, original_mime_type, **kw)
         else:
           mime_type, result = self.getConversion(**kw)

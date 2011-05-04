@@ -34,7 +34,6 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
-from Products.ERP5Type.tests.utils import DummyMailHost
 from DateTime import DateTime
 
 class TestPasswordTool(ERP5TypeTestCase):
@@ -52,11 +51,8 @@ class TestPasswordTool(ERP5TypeTestCase):
 
 
   def afterSetUp(self):
-    portal = self.getPortal()
-    if 'MailHost' in portal.objectIds():
-      portal.manage_delObjects(['MailHost'])
-    portal._setObject('MailHost', DummyMailHost('MailHost'))
-    portal.email_from_address = 'site@example.invalid'
+    self.portal.email_from_address = 'site@example.invalid'
+    self.portal.MailHost.reset()
     self.portal.portal_caches.clearAllCache()
 
   def beforeTearDown(self):
@@ -70,7 +66,7 @@ class TestPasswordTool(ERP5TypeTestCase):
 
   def getUserFolder(self):
     """Returns the acl_users. """
-    return self.getPortal().acl_users
+    return self.portal.acl_users
 
   def _assertUserExists(self, login, password):
     """Checks that a user with login and password exists and can log in to the
@@ -126,7 +122,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     Check existence of password tool
     """
     self._assertUserExists('userA', 'passwordA')
-    
+
   def stepCheckUserLoginWithNewPassword(self, sequence=None, sequence_list=None, **kw):
     """
     Check existence of password tool
@@ -307,7 +303,7 @@ class TestPasswordTool(ERP5TypeTestCase):
                       'ModifyExpirationDate ' \
                       'GoToRandomAddress Tic '  \
                       'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
-                      
+
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
@@ -330,7 +326,7 @@ class TestPasswordTool(ERP5TypeTestCase):
                       'CheckNoRequestRemains ' \
                       'GoToRandomAddressTwice Tic '  \
                       'CheckUserLogin CheckUserNotLoginWithBadPassword ' \
-                      
+
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)
 
@@ -353,7 +349,7 @@ class TestPasswordTool(ERP5TypeTestCase):
 
     self._assertUserExists('userA', 'passwordA')
     self._assertUserExists('userB', 'passwordB')
-    
+
     self.assertEquals(0, len(self.portal.portal_password._password_request_dict))
     self.portal.portal_password.mailPasswordResetRequest(user_login="userA")
     self.assertEquals(1, len(self.portal.portal_password._password_request_dict))
@@ -405,7 +401,7 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.tic()
 
     self._assertUserExists('userZ ', 'passwordZ')
-    
+
     self.assertEquals(0, len(self.portal.portal_password._password_request_dict))
     # No reset should be send if trailing space is not entered
     self.portal.portal_password.mailPasswordResetRequest(user_login="userZ")

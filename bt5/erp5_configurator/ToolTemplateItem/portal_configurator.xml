@@ -2,10 +2,20 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ConfiguratorTool" module="Products.ERP5Configurator.Tool.ConfiguratorTool"/>
+      <global name="Configurator Tool" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>portal_configurator</string> </value>

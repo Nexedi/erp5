@@ -1,0 +1,278 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts87948228.94</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>parsexquery.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/x-javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright 2010 Mike Brevoort http://mike.brevoort.com (twitter:@mbrevoort)\n
+\n
+Licensed under the Apache License, Version 2.0 (the "License");\n
+you may not use this file except in compliance with the License.\n
+You may obtain a copy of the License at\n
+\n
+    http://www.apache.org/licenses/LICENSE-2.0\n
+\n
+Unless required by applicable law or agreed to in writing, software\n
+distributed under the License is distributed on an "AS IS" BASIS,\n
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n
+See the License for the specific language governing permissions and\n
+limitations under the License.\n
+\n
+This is an indirect collective derivative of the other parses in this package\n
+\n
+*/\n
+\n
+// The XQuery parser uses the xquery tokenizer in tokenizexquery.js. Given the\n
+// stream of tokens, it makes decisions to override the tokens styles by evaluating\n
+// it\'s context with respect to the other tokens. \n
+\n
+var XqueryParser = Editor.Parser = (function() {\n
+    function xqueryLexical(startColumn, currentToken, align, previousToken, encloseLevel) {\n
+        this.startColumn = startColumn;\n
+        this.currentToken = currentToken;\n
+        if (align != null)\n
+        this.align = align;\n
+        this.previousToken = previousToken;\n
+        this.encloseLevel = encloseLevel;\n
+    }\n
+\n
+    // Xquery indentation rules.\n
+    function indentXquery(lexical) {\n
+        return function(firstChars, curIndent, direction) {\n
+            // test if this is next row after the open brace\n
+            if (lexical.encloseLevel !== 0 && firstChars === "}") {\n
+                return lexical.startColumn - indentUnit;\n
+            }\n
+\n
+            return lexical.startColumn;\n
+        };\n
+    }\n
+\n
+    function parseXquery(source) {\n
+        var tokens = tokenizeXquery(source);\n
+\n
+        var column = 0;\n
+        // tells the first non-whitespace symbol from the\n
+        // start of row.\n
+        var previousToken = null;\n
+        var previousTokens = [];\n
+        //mb\n
+        var align = false;\n
+        // tells if the text after the open brace\n
+        var encloseLevel = 0;\n
+        // tells curent opened braces quantity\n
+        var cc = [statements];\n
+        var consume,\n
+        marked;\n
+\n
+        var iter = {\n
+            next: function() {\n
+                var token = tokens.next();\n
+\n
+                // since attribute and elements can be named the same, assume the\n
+                // following word of each is a variable\n
+                if (previousToken && (previousToken.content == "attribute" || previousToken.content == "element") && previousToken.type == "xqueryKeywordC") {\n
+                    token.type = "variable";\n
+                    token.style = "xqueryVariable";\n
+                }\n
+\n
+                else if (previousToken && previousToken.content == "xquery" && token.content == "version") {\n
+                    //token.type="variable";\n
+                    token.style = "xqueryModifier";\n
+                }\n
+\n
+                else if (token.type == "word" && (getPrevious(3).style == "xml-attribute" || previousToken.type == "xml-tag-open") &&\n
+                previousToken.content.substring(previousToken.content.length - 1) != ">") {\n
+                    token.style = "xml-attribute";\n
+                }\n
+                else if (previousToken && previousToken.content == "=" && previousTokens.length > 2\n
+                && getPrevious(2).style == "xml-attribute") {\n
+                    token.style = "xml-attribute-value";\n
+                }\n
+                else if(token.type == "string" && previousToken.type == "}") {\n
+                    // looking for expressions within a string and detecting if the expression is within an attribute\n
+                    var i=0;\n
+                    while(i++ < previousTokens.length-1) {\n
+                        if(getPrevious(i).style == "xml-attribute-value" ) {\n
+                            token.style = "xml-attribute-value";\n
+                            break;\n
+                        } \n
+                        else if(getPrevious(i).type == "string") {\n
+                            break;\n
+                        }                            \n
+                    }\n
+                }    \n
+                else if(token.type == "string") {\n
+                    // brute force check for strings inside XML TODO... something else\n
+                    var i=0;\n
+                    var closeCount = 0;\n
+                    while(i++ < previousTokens.length-1) {\n
+                        var prev = getPrevious(i);                  \n
+                        if(prev.type == "xml-tag-open") {\n
+                            if(closeCount == 0) {\n
+                                token.style = "word";\n
+                                break;\n
+                            } else {\n
+                                closeCount--;\n
+                            }\n
+                        }    \n
+                        else if(prev.type == "xml-tag-close") {\n
+                            closeCount++;\n
+                        }\n
+                        else if(prev.content == ":=" || prev.content == "return" || prev.content == "{")\n
+                            break;\n
+                    }\n
+                }\n
+                else if(getPrevious(2).content == "module" && getPrevious(1).content == "namespace") \n
+                    token.style="xqueryFunction";\n
+                else if(token.content == "=" && getPrevious(1).style == "xml-attribute")\n
+                    token.style="xml-attribute"\n
+\n
+                if (token.type == "whitespace") {\n
+                    if (token.value == "\\n") {\n
+                        // test if this is end of line\n
+                        if (previousToken !== null) {\n
+                            if (previousToken.type === "{") {\n
+                                // test if there is open brace at the end of line\n
+                                align = true;\n
+                                column += indentUnit;\n
+                                encloseLevel++;\n
+                            }\n
+                            else\n
+                            if (previousToken.type === "}") {\n
+                                // test if there is close brace at the end of line\n
+                                align = false;\n
+                                if (encloseLevel > 0) {\n
+                                    encloseLevel--;\n
+                                }\n
+                                else {\n
+                                    encloseLevel = 0;\n
+                                }\n
+                            }\n
+                            var lexical = new xqueryLexical(column, token, align, previousToken, encloseLevel);\n
+                            token.indentation = indentXquery(lexical);\n
+                        }\n
+                    }\n
+                    else\n
+                    column = token.value.length;\n
+                }\n
+\n
+                // maintain the previous tokens array so that it doesn\'t continue to leak\n
+                // keep only the last 5000\n
+                if(previousTokens.length > 5000) previousTokens.shift();\n
+\n
+                while (true) {\n
+                    consume = marked = false;\n
+                    // Take and execute the topmost action.\n
+                    cc.pop()(token.type, token.content);\n
+                    if (consume) {\n
+                        // Marked is used to change the style of the current token.\n
+                        if (marked)\n
+                        token.style = marked;\n
+                        // Here we differentiate between local and global variables.\n
+                        previousToken = token;\n
+                        previousTokens[previousTokens.length] = token;\n
+                        return token;\n
+                    }\n
+                }\n
+\n
+            },\n
+\n
+            copy: function() {\n
+                var _cc = cc.concat([]),\n
+                _tokenState = tokens.state,\n
+                _column = column;\n
+\n
+                return function copyParser(_source) {\n
+                    cc = _cc.concat([]);\n
+                    column = indented = _column;\n
+                    tokens = tokenizeXquery(_source, _tokenState);\n
+                    return iter;\n
+                };\n
+\n
+            },\n
+\n
+        };\n
+\n
+        function statements(type) {\n
+            return pass(statement, statements);\n
+        }\n
+\n
+        function statement(type) {\n
+            cont();\n
+        }\n
+\n
+        function push(fs) {\n
+            for (var i = fs.length - 1; i >= 0; i--)\n
+            cc.push(fs[i]);\n
+        }\n
+\n
+        function cont() {\n
+            push(arguments);\n
+            consume = true;\n
+        }\n
+\n
+        function pass() {\n
+            push(arguments);\n
+            consume = false;\n
+        }\n
+        \n
+\n
+        function getPrevious(numberFromCurrent) {\n
+            var l = previousTokens.length;\n
+            if (l - numberFromCurrent >= 0)\n
+            return previousTokens[l - numberFromCurrent];\n
+            else\n
+            return {\n
+                type: "",\n
+                style: "",\n
+                content: ""\n
+            };\n
+        }\n
+\n
+        return iter;\n
+\n
+\n
+    }\n
+    return {\n
+        make: parseXquery\n
+    };\n
+})();
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9006</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

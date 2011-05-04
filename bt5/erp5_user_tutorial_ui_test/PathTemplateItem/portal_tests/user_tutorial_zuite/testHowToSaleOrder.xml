@@ -1,0 +1,806 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+      xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+<head>\n
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
+<title>How-to Sale Order / Packing List / Invoices / Payment (expected failure)</title>\n
+</head>\n
+<body>\n
+<table cellpadding="1" cellspacing="1" border="1">\n
+<thead>\n
+<tr><td rowspan="1" colspan="3">How-to Sale Order / Packing List / Invoices / Payment (expected failure)</td></tr>\n
+</thead><tbody>\n
+\n
+<tr>\n
+  <td>assertTextPresent</td>\n
+  <td>SKIP TO RUN THIS TEST UNTIL THIS TEST BE REFACTORED TO USE NEW SIMULATION.</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
+\n
+<tr>\n
+  <td>openAndWait</td>\n
+  <td>${base_url}/Zuite_setUpSaleOrderTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Init Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span>\n
+\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Sale Orders</td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Add Sale Order</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="transition_message"]</td>\n
+  <td>Object created.</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//li[@class="selected"]/a/span</td>\n
+  <td>View</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_product_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_source_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_source_decision_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_order"]</td>\n
+  <td>Normal</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_price_currency"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_currency_tag\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_price_currency"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_currency_tag\']">EUR</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_delivery_mode"]</td>\n
+  <td>AIR</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_destination_section_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation2_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_destination_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation2_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_destination_decision_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation2_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_start_date_year"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'now\'].strftime(\'%Y\')"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_start_date_month"]</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_start_date_day"]</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_stop_date_year"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'now\'].strftime(\'%Y\')"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_stop_date_month"]</td>\n
+  <td>12</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_stop_date_day"]</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Payment</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_payment_condition_payment_mode"]</td>\n
+  <td>Credit Card</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_payment_condition_trade_date"]</td>\n
+  <td>Invoice</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_payment_condition_payment_term"]</td>\n
+  <td>30</td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//input[@name="field_my_payment_condition_payment_end_of_month"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Profile</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_source_administration_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_destination_administration_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_person_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Add Sale Order Line</td>\n
+</tr>\n
+<tr>\n
+  <td>waitForElementPresent</td>\n
+  <td>//input[@name=\'field_my_title\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>storeAttribute</td>\n
+  <td>//div[@id="breadcrumb"]/a[4]@href</td>\n
+  <td>waitactivities</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${waitactivities}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_product_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_reference"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_product_reference\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_resource_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_product_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_quantity"]</td>\n
+  <td>100000</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_quantity_unit"]</td>\n
+  <td>Unit/Piece</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_price"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextNotPresent</td>\n
+  <td>Input data has errors. Please look at the error messages below.</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[1]</td>\n
+  <td>ERP5</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[2]</td>\n
+  <td>Sale Orders</td>\n
+</tr>\n
+<!--\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_product_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[4]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_product_title\']"></td>\n
+</tr>\n
+-->\n
+<tr>\n
+  <td>storeAttribute</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]@href</td>\n
+  <td>waitconfirm</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${waitconfirm}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Confirm Order</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+  <td>Confirmed</td>\n
+</tr>\n
+<tr>\n
+  <td>storeAttribute</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]@href</td>\n
+  <td>product</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${product}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_jump"]</td>\n
+  <td>Related Sale Packing List</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[1]</td>\n
+  <td>ERP5</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[2]</td>\n
+  <td>Sale Packing Lists</td>\n
+</tr>\n
+<!--\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_product_title\']"></td>\n
+</tr>\n
+-->\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Ship Packing List</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+  <td>Shipped</td>\n
+</tr>\n
+<tr>\n
+  <td>storeAttribute</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]@href</td>\n
+  <td>wait</td>\n
+</tr>\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">\n
+Wait for activities</span>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${wait}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Deliver Packing List</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+  <td>Delivered</td>\n
+</tr>\n
+<tr>\n
+  <td>storeAttribute</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]@href</td>\n
+  <td>spl</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${spl}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_jump"]</td>\n
+  <td>Related Sale Invoice Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[1]</td>\n
+  <td>ERP5</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[2]</td>\n
+  <td>Accounting</td>\n
+</tr>\n
+<!--\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_product_title\']"></td>\n
+</tr>\n
+-->\n
+<tr>\n
+  <td>storeAttribute</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]@href</td>\n
+  <td>invoice</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${invoice}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Journalise Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+  <td>Journalised</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${invoice}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Post Transaction to General Ledger</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+  <td>Posted to General Ledger</td>\n
+</tr>\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/organisation_module/view</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[2]</td>\n
+  <td>Organisations</td>\n
+</tr>\n
+<tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'sale_howto_organisation_title\']],), enter_object=True)"/>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Add Bank Account</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="transition_message"]</td>\n
+  <td>Object created.</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_title"]</td>\n
+  <td>Main account</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_source_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation3_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_start_date_year"]</td>\n
+  <td>2000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_start_date_month"]</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_start_date_day"]</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_stop_date_year"]</td>\n
+  <td>3000</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_stop_date_month"]</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="subfield_field_my_stop_date_day"]</td>\n
+  <td>01</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_price_currency"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_currency_tag\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>click</td>\n
+  <td>//input[@name="field_my_overdraft_facility"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_bank_account_number"]</td>\n
+  <td>0123456789</td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_bank_account_key"]</td>\n
+  <td>0123456789</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="information_area"]</td>\n
+  <td>Input data has errors. Please look at the error messages below.</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//span[@class="error"]</td>\n
+  <td>No such document was found.</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="subfield_field_my_source_title_relation"]</td>\n
+  <td>Add Organisation</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>field_my_source_title</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation3_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Validate</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation_title\']"></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//span[text()="Financial Information"]/../</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//li[@class="selected"]/a/span</td>\n
+  <td>Financial Information</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>1 records</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_module"]</td>\n
+  <td>Sale Packing Lists</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//div[@id="breadcrumb"]/a[2]</td>\n
+  <td>Sale Packing Lists</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td tal:content="python: \'link=\' + here.Zuite_getHowToInfo()[\'sale_howto_product_title\']"></td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_jump"]</td>\n
+  <td>Related Sale Invoice Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//li[@class="selected"]/a/span</td>\n
+  <td>Accounting View</td>\n
+</tr>\n
+<tr>\n
+  <td>storeAttribute</td>\n
+  <td>//div[@id="breadcrumb"]/a[3]@href</td>\n
+  <td>acc</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${acc}</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Create Related Payment</td>\n
+</tr>\n
+<span tal:condition="python:\'51 - Bank\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_node"]</td>\n
+  <td>51 - Bank</td>\n
+</tr>\n
+</span>\n
+<span tal:condition="python:\'512 - Banques\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_node"]</td>\n
+  <td>512 - Banques</td>\n
+</tr>\n
+</span>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_payment_mode"]</td>\n
+  <td>Credit Card</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_payment"]</td>\n
+  <td>  0123456789 0123456789 - Main account</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_title"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_payment_title\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@name="Base_edit:method"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name="select_action"]</td>\n
+  <td>Confirm Transaction</td>\n
+</tr>\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>//button[@id="dialog_submit_button"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyText</td>\n
+  <td>//label[normalize-space(text())=\'State\']/../div</td>\n
+  <td>Confirmed</td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>\n
+\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/Zuite_tearDownSaleOrderTest</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Clean Ok</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+\n
+</tbody>\n
+</table>\n
+</body>\n
+</html>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>testHowToSaleOrder</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

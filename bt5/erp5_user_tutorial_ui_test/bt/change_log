@@ -1,0 +1,55 @@
+28-03-2011 lucas
+- Replaced the email for a valid one.
+
+24-03-2011 lucas
+- Make the test testHowToPersonAndOrganisationLinking independent of ERP5 front page.
+
+24-03-2011 lucas
+- Make the test testHowToPerson independent of ERP5 front page.
+
+24-03-2011 lucas
+- Make the test testHowToOutgoingEvent independent of ERP5 front page.
+
+24-03-2011 lucas
+- Added verification before creating an Organisation.
+
+24-03-2011 lucas
+- Fixed the listbox element name.
+
+22-03-2011 lucas
+- Added expected failure in the title of the testHowToSaleOrder.
+
+22-03-2011 lucas
+- Added TODO.
+
+22-03-2011 lucas
+- Added a skip on the beginning of the testHowToSaleOrder.
+
+22-03-2011 lucas
+- Fixed tests titles by adding the prefix How-to. It will be easier to identify where such tests comes from in case of failure.
+
+22-03-2011 lucas
+- Make the test testHowToInstanceI18N independent of ERP5 front page.
+- Fixed the listbox element name.
+
+22-03-2011 lucas
+- Fixed the listbox element name.
+
+21-03-2011 lucas
+- Tests uses select_module list box instead of front page.
+
+28-01-2011 lucas
+- Fixed testHowToIncomingEvent
+- Fixed testHowToInstanceI18N
+- Fixed testHowToOrganisation
+- Fixed testHowToOutgoingEvent
+- Fixed testHowToPerson
+
+27-01-2011 lucas
+- Fixed testHowToCampaign.
+- Fixed testHowToCreateEvent.
+- Fixed testHowToFullTextSearch
+
+26-01-2011 lucas
+- Applied some name convention.
+- All the test Page Templates is now rendering without error.

@@ -32,7 +32,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-from Products.ERP5Type.Base import _aq_reset
+
+import transaction
 
 try:
   from transaction import get as get_transaction
@@ -89,7 +90,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     # we also enable 'destination' category on organisations
     self._organisation_categories = organisation_ti.getTypeBaseCategoryList()
     organisation_ti._setTypeBaseCategoryList(self._organisation_categories
-                                             + ['destination'])
+                                             + ['destination', 'resource'])
 
     # Make persons.
     person_module = self.getPersonModule()
@@ -143,7 +144,6 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionMaskValue(0)
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
-      portal_categories[bc].setAcquisitionSyncValue(1)
       portal_categories[bc].setAcquisitionObjectIdList(['default_career'])
     for bc in ('gender', ):
       if not hasattr(portal_categories, bc):
@@ -152,13 +152,19 @@ class TestCMFCategory(ERP5TypeTestCase):
       portal_categories[bc].setAcquisitionMaskValue(0)
       portal_categories[bc].setAcquisitionCopyValue(0)
       portal_categories[bc].setAcquisitionAppendValue(0)
-      portal_categories[bc].setAcquisitionSyncValue(1)
       portal_categories[bc].setFallbackBaseCategoryList(['subordination'])
+    for bc in ('resource', ):
+      if not hasattr(portal_categories, bc):
+        portal_categories.newContent(portal_type='Base Category',id=bc)
+      portal_categories[bc].setAcquisitionPortalTypeList("python: []")
+      portal_categories[bc].setAcquisitionMaskValue(0)
+      portal_categories[bc].setAcquisitionCopyValue(0)
+      portal_categories[bc].setAcquisitionAppendValue(0)
 
   def beforeTearDown(self):
     """Clean up."""
     # categories
-    for bc in ('region', 'subordination', 'gender'):
+    for bc in ('region', 'subordination', 'gender', 'resource'):
       bc_obj = self.getPortal().portal_categories[bc]
       bc_obj.manage_delObjects()
     # type informations
@@ -976,13 +982,8 @@ class TestCMFCategory(ERP5TypeTestCase):
   def test_31_assert_raise_if_base_category_is_missing(self):
     #First remove Base Category
     self.portal.portal_categories.manage_delObjects(['region'])
-    get_transaction().commit()
-    self.tic()
-    #call _aq_reset to regenerate Accessors
-    _aq_reset()
     obj = self.portal.person_module.newContent(portal_type='Person')
     get_transaction().commit()
-    self.tic()
     try:
       #Setters
       self.assertRaises(AttributeError, getattr, obj, 'setRegion')
@@ -999,7 +1000,6 @@ class TestCMFCategory(ERP5TypeTestCase):
       #add Base Category
       self.portal.portal_categories.newContent(id='region', portal_type='Base Category')
     get_transaction().commit()
-    self.tic()
     #check Method exists after base_category creation
     #Setters
     self.assertTrue(getattr(obj, 'setRegion') is not None)
@@ -1019,6 +1019,67 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertNotEquals([], list(category_tool.objectIds()))
     self.assertNotEquals([], list(category_tool.searchFolder()))
 
+  def test_duplicate_base_category_id_in_categories_list_properties(self):
+    """check that stored values like 'region/region/west' on categories property
+    are cleaned up by Getters to avoid accessing base_category through
+    implicit Acquisition.
+
+    Even if region is a sub Category of Base Category region,
+    Relative Url must be stripped.
+    """
+    portal_categories = self.getCategoriesTool()
+    organisation = self.getOrganisationModule().newContent(
+                                                  portal_type='Organisation',
+                                                  region='region/europe/west')
+    person = self.getPersonModule().newContent(portal_type='Person',
+                              default_career_subordination_value=organisation)
+    self.assertTrue(organisation.hasRegion())
+    self.assertEquals(organisation.getRegion(), 'europe/west')
+    self.assertEquals(organisation.getRegionList(), ['europe/west'])
+    old_west_region = organisation.getRegionValue()
+    self.assertEquals(old_west_region.getPortalType(), 'Category')
+
+    # Check acquired categories
+    self.assertEquals(person.getRegion(), 'europe/west')
+    self.assertEquals(person.getRegionList(), ['europe/west'])
+
+    region_base_category = portal_categories.region
+    new_region = region_base_category.newContent(portal_type='Category',
+                                                 id='region')
+    new_region = new_region.newContent(portal_type='Category', id='europe')
+    new_region = new_region.newContent(portal_type='Category', id='west')
+
+    self.assertEquals(organisation.getRegion(), 'europe/west')
+    self.assertEquals(organisation.getRegionList(), ['europe/west'])
+    self.assertEquals(organisation.getRegionValue().getPortalType(), 'Category')
+    self.assertEquals(organisation.getRegionValue(), old_west_region)
+
+    self.assertEquals(person.getRegion(), 'europe/west')
+    self.assertEquals(person.getRegionList(), ['europe/west'])
+
+    # Let's continue with resource because its ID conflict with 
+    # "traversing namespaces" names
+    resource_value = portal_categories.resource.newContent(portal_type='Category', id='id1')
+    organisation.setResource('resource/id1')
+    self.assertEquals(organisation.getResource(), 'id1')
+    self.assertEquals(organisation.getResourceValue(), resource_value)
+    self.assertEquals(organisation.getResourceList(), ['id1'])
+    self.assertEquals(organisation.getResourceValue(portal_type='Category'),
+                      resource_value)
+    self.assertEquals(organisation.getResourceValueList(portal_type='Category'),
+                      [resource_value])
+
+    # Check other public methods of CategoryTool
+    self.assertEquals(portal_categories.getCategoryMembershipList(organisation,
+                                           'resource', portal_type='Category'),
+                      ['id1'])
+    self.assertEquals(portal_categories.getSingleCategoryMembershipList(
+                                                    organisation, 'resource',
+                                                    portal_type='Category'),
+                      ['id1'])
+    # Check indexation
+    transaction.commit()
+    self.tic()
 
 def test_suite():
   suite = unittest.TestSuite()

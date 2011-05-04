@@ -1,6 +1,8 @@
 Experimental theme to provide an UNG experience as part of an ERP5 web site.
 
+* Is needed create one System Preference object and add validate_state on Criterion Properties field
+* Is needed enable "Add Portal Content" to Authenticated users in knowledge_pad_module
+
 TODO: 
 - Define naming conventions for jquery 
-- Clean up the javascript code
 - SpreadSheet Formula is ignored when the document is uploaded

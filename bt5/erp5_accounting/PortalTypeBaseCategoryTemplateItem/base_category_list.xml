@@ -2,6 +2,10 @@
  <portal_type id="Account Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Account Type Constraint Line">
+  <item>account_type</item>
+  <item>gap</item>
+ </portal_type>
  <portal_type id="Accounting Transaction Module">
   <item>business_application</item>
  </portal_type>

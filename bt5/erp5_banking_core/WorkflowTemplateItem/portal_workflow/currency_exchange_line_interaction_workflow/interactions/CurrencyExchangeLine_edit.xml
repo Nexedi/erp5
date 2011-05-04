@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
-        <tuple/>
-      </tuple>
+      <global name="InteractionDefinition" module="Products.ERP5.Interaction"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -60,7 +57,6 @@
             <value>
               <list>
                 <string>_setPriceCurrencyValue</string>
-                <string>setPriceCurrencyValue</string>
               </list>
             </value>
         </item>
@@ -71,9 +67,7 @@
         <item>
             <key> <string>portal_type_filter</string> </key>
             <value>
-              <list>
-                <string>Currency Exchange Line</string>
-              </list>
+              <none/>
             </value>
         </item>
         <item>

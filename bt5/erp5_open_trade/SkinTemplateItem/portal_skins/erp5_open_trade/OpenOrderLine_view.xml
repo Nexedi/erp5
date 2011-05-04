@@ -77,9 +77,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -93,13 +91,7 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_int_index</string>
-                        <string>listbox_reference</string>
-                        <string>listbox_quantity</string>
-                        <string>listbox_quantity_unit</string>
-                        <string>listbox_price</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -112,7 +104,6 @@
                         <string>my_resource_title</string>
                         <string>my_aggregate_title_list</string>
                         <string>my_variation_category_list</string>
-                        <string>my_amortisation_method</string>
                         <string>my_source_trade_title_list</string>
                         <string>my_base_contribution_list</string>
                       </list>

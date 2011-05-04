@@ -51,28 +51,16 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>""" Get (in seconds) authentication expire interval for an user. """\n
-from zExceptions import Unauthorized\n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
-def getMaxUserInactivityDuration(user_name=None):\n
-  expire_interval = None\n
-  portal_preferences = context.portal_preferences\n
-  try:\n
-    active_preference = portal_preferences.getActivePreference()\n
-  except Unauthorized:\n
-    # when logging for first time through login_form user is still anonymous \n
-    # and so getActivePreference is not accessible. Try to get default preference\n
-    # for an ERP5 site \n
-    active_preference = getattr(portal_preferences, \'default_site_preference\', None)\n
-  if active_preference  is not None:\n
-    expire_interval = active_preference.getPreferredMaxUserInactivityDuration()\n
-  return expire_interval\n
+def getMaxUserInactivityDuration():\n
+  return context.portal_preferences.getPreferredMaxUserInactivityDuration()\n
 \n
 getMaxUserInactivityDuration = CachingMethod( \\\n
                                  getMaxUserInactivityDuration, \\\n
-                                 "ERP5Site_getMaxUserInactivityDuration", \\\n
+                                 "ERP5Site_getMaxUserInactivityDuration_%s" % (user_name, ), \\\n
                                  cache_factory=\'erp5_ui_medium\')\n
-return getMaxUserInactivityDuration(user_name)\n
+return getMaxUserInactivityDuration()\n
 </string> </value>
         </item>
         <item>

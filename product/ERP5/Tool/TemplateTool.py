@@ -333,19 +333,20 @@ class TemplateTool (BaseTool):
             prop_path = posixpath.join(tar.members[0].name, 'bt', pid)
             try:
               info = tar.getmember(prop_path)
+              value = tar.extractfile(info).read()
             except KeyError:
-              continue
-            value = tar.extractfile(info).read()
+              value = None
             if value is 'None':
               # At export time, we used to export non-existent properties:
               #   str(obj.getProperty('non-existing')) == 'None'
               # Discard them
               continue
-            if prop_type == 'text' or prop_type == 'string' \
-                                   or prop_type == 'int':
-              prop_dict[pid] = value
-            elif prop_type == 'lines' or prop_type == 'tokens':
-              prop_dict[pid[:-5]] = value.splitlines()
+            if prop_type in ('text', 'string'):
+              prop_dict[pid] = value or ''
+            elif prop_type in ('int', 'boolean'):
+              prop_dict[pid] = value or 0
+            elif prop_type in ('lines', 'tokens'):
+              prop_dict[pid[:-5]] = (value or '').splitlines()
           prop_dict.pop('id', '')
           bt.edit(**prop_dict)
           # import all other files from bt
@@ -673,7 +674,7 @@ class TemplateTool (BaseTool):
     def diffObjectAsHTML(self, REQUEST, **kw):
       """
         Convert diff into a HTML format before reply
-        This is compatible with ERP5Subversion look and feel but
+        This is compatible with ERP5VCS look and feel but
         it is preferred in future we use more difflib python library.
       """
       return DiffFile(self.diffObject(REQUEST, **kw)).toHTML()
@@ -966,23 +967,68 @@ class TemplateTool (BaseTool):
                               'sortBusinessTemplateList')
     def sortBusinessTemplateList(self, bt_list):
       """
-       Sort a list of bt according to dependencies
+      Sort a list of business template in repositories according to
+      dependencies
+
+      bt_list : list of (repository, id) tuple.
       """
-      result_list = []
-      for repository, id in bt_list:
-        dependency_list = self.getDependencyList((repository, id))
-        dependency_list.append((repository, id))
-        for dependency in dependency_list:
-          if dependency[0] == 'meta':
-            provider_list = self.getProviderList(dependency[1])
-            dependency = self.findProviderInBTList(provider_list, bt_list)
-          if dependency not in result_list:
-            result_list.append(dependency)
-      return result_list
+      def isDepend(a, b):
+        # return True if a depends on b.
+        dependency_list = [x.split(' ')[0] for x in a['dependency_list']]
+        provision_list = list(b['provision_list']) + [b['title']]
+        for i in provision_list:
+          if i in dependency_list:
+            return True
+          return False
+
+      sorted_bt_list = []
+      for repository, bt_id in bt_list:
+        bt = [x for x in self.repository_dict[repository] \
+              if x['id'] == bt_id][0]
+        for j in range(len(sorted_bt_list)):
+          if isDepend(sorted_bt_list[j][1], bt):
+            sorted_bt_list.insert(j, (repository, bt))
+            break
+        else:
+           sorted_bt_list.append((repository, bt))
+      sorted_bt_list = [(repository, bt['id']) for repository, bt \
+                        in sorted_bt_list]
+      return sorted_bt_list
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'sortDownloadedBusinessTemplateList')
+    def sortDownloadedBusinessTemplateList(self, id_list):
+      """
+      Sort a list of already downloaded business templates according to
+      dependencies
+
+      id_list : list of business template's id in portal_templates.
+      """
+      def isDepend(a, b):
+        # return True if a depends on b.
+        dependency_list = [x.split(' ')[0] for x in a.getDependencyList()]
+        provision_list = list(b.getProvisionList()) + [b.getTitle()]
+        for i in provision_list:
+          if i in dependency_list:
+            return True
+          return False
+
+      sorted_bt_list = []
+      for bt_id in id_list:
+        bt = self._getOb(bt_id)
+        for j in range(len(sorted_bt_list)):
+          if isDepend(sorted_bt_list[j], bt):
+            sorted_bt_list.insert(j, bt)
+            break
+        else:
+           sorted_bt_list.append(bt)
+      sorted_bt_list = [bt.getId() for bt in sorted_bt_list]
+      return sorted_bt_list
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryBusinessTemplateList' )
-    def getRepositoryBusinessTemplateList(self, update_only=False, **kw):
+    def getRepositoryBusinessTemplateList(self, update_only=False,
+                                          newest_only=False, **kw):
       """Get the list of Business Templates in repositories.
       """
       version_state_title_dict = { 'new' : 'New', 'present' : 'Present',
@@ -992,7 +1038,7 @@ class TemplateTool (BaseTool):
       template_list = []
 
       template_item_list = []
-      if update_only:
+      if update_only or newest_only:
         # First of all, filter Business Templates in repositories.
         template_item_dict = {}
         for repository, property_dict_list in self.repository_dict.items():
@@ -1016,20 +1062,23 @@ class TemplateTool (BaseTool):
                    and property_dict['revision'] \
                    and int(previous_property_dict['revision']) < int(property_dict['revision']):
                       template_item_dict[title] = (repository, property_dict)
-        # Next, select only updated business templates.
-        for repository, property_dict in template_item_dict.values():
-          installed_bt = \
-              self.getInstalledBusinessTemplate(property_dict['title'], strict=True)
-          if installed_bt is not None:
-            diff_version = self.compareVersions(installed_bt.getVersion(),
-                                                property_dict['version'])
-            if diff_version < 0:
-              template_item_list.append((repository, property_dict))
-            elif diff_version == 0 \
-                 and installed_bt.getRevision() \
-                 and property_dict['revision'] \
-                 and int(installed_bt.getRevision()) < int(property_dict['revision']):
-                   template_item_list.append((repository, property_dict))
+        if update_only:
+          # Next, select only updated business templates.
+          for repository, property_dict in template_item_dict.values():
+            installed_bt = \
+                self.getInstalledBusinessTemplate(property_dict['title'], strict=True)
+            if installed_bt is not None:
+              diff_version = self.compareVersions(installed_bt.getVersion(),
+                                                  property_dict['version'])
+              if diff_version < 0:
+                template_item_list.append((repository, property_dict))
+              elif diff_version == 0 \
+                   and installed_bt.getRevision() \
+                   and property_dict['revision'] \
+                   and int(installed_bt.getRevision()) < int(property_dict['revision']):
+                     template_item_list.append((repository, property_dict))
+        else:
+          template_item_list = template_item_dict.values()
       else:
         for repository, property_dict_list in self.repository_dict.items():
           for property_dict in property_dict_list:
@@ -1056,7 +1105,7 @@ class TemplateTool (BaseTool):
           installed_version = ''
           installed_revision = ''
         version_state_title = version_state_title_dict[version_state]
-        uid = b64encode(cPickle.dumps((repository, id)))
+        uid = self.encodeRepositoryBusinessTemplateUid(repository, id)
         obj = newTempBusinessTemplate(self, 'temp_' + uid,
                                       version_state = version_state,
                                       version_state_title = version_state_title,
@@ -1166,15 +1215,29 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
             'updateBusinessTemplateFromUrl')
     def updateBusinessTemplateFromUrl(self, download_url, id=None,
-                                         keep_original_list=[],
-                                         before_triggered_bt5_id_list=[],
-                                         after_triggered_bt5_id_list=[],
+                                         keep_original_list=None,
+                                         before_triggered_bt5_id_list=None,
+                                         after_triggered_bt5_id_list=None,
                                          update_catalog=0,
                                          reinstall=False,
-                                         active_process=None):
+                                         active_process=None,
+                                         force_keep_list=None):
       """ 
         This method download and install a bt5, from a URL.
+
+        keep_original_list can be used to make paths not touched at all
+
+        force_keep_list can be used to force path to be modified or removed
+        even if template system proposes not touching it
       """
+      if keep_original_list is None:
+        keep_original_list = []
+      if before_triggered_bt5_id_list is None:
+        before_triggered_bt5_id_list = []
+      if after_triggered_bt5_id_list is None:
+        after_triggered_bt5_id_list = []
+      if force_keep_list is None:
+        force_keep_list = []
       if active_process is None:
         installed_dict = {}
         def log(msg):
@@ -1193,40 +1256,74 @@ class TemplateTool (BaseTool):
       BusinessTemplate_getModifiedObject = \
         aq_base(getattr(self, 'BusinessTemplate_getModifiedObject'))
 
-      listbox_object_list = BusinessTemplate_getModifiedObject.__of__(imported_bt5)()
-      if reinstall:
-        log('Reinstall all items')
-        install_kw = dict.fromkeys(imported_bt5.getItemsList(), 'install')
-      else:
+      if not reinstall:
+        listbox_object_list = BusinessTemplate_getModifiedObject.__of__(imported_bt5)()
         install_kw = {}
-      for listbox_line in listbox_object_list:
-        item = listbox_line.object_id
-        state = listbox_line.object_state
-        removed = state.startswith('Removed')
-        if removed:
-          # The following condition could not be used to automatically decide
-          # if an item must be kept or not. For example, this would not work
-          # for items installed by PortalTypeWorkflowChainTemplateItem.
-          maybe_moved = installed_dict.get(listbox_line.object_id, '')
-          log('%s: %s%s' % (state, item,
-            maybe_moved and ' (moved to %s ?)' % maybe_moved))
-        else:
-          installed_dict[item] = bt_title
-        # if a bt5 item is removed we may still want to keep it
-        if ((removed or state in ('Modified', 'New'))
-            and item in keep_original_list):
-          install_kw[item] = 'nothing'
-          log("Keep %r" % item)
-        else:
-          install_kw[item] = listbox_line.choice_item_list[0][1]
+        previous_bt5 = self.getInstalledBusinessTemplate(bt_title)
+        if previous_bt5 is not None:
+          try:
+            imported_revision = int(imported_bt5.getRevision())
+          except ValueError:
+            imported_revision = None
+          try:
+            previous_revision = int(previous_bt5.getRevision())
+          except ValueError:
+            previous_revision = None
+          if imported_revision is not None and imported_revision is not None \
+              and (imported_revision <= previous_revision):
+            log("%s is already installed with revision %r, which is same or "
+                "newer revision then new revision %r." % (bt_title,
+                  previous_bt5.getRevision(), imported_bt5.getRevision()))
+            return imported_bt5
+
+        for listbox_line in listbox_object_list:
+          item = listbox_line.object_id
+          state = listbox_line.object_state
+          if state.startswith('Removed'):
+            # The following condition could not be used to automatically decide
+            # if an item must be kept or not. For example, this would not work
+            # for items installed by PortalTypeWorkflowChainTemplateItem.
+            maybe_moved = installed_dict.get(listbox_line.object_id, '')
+            log('%s: %s%s' % (state, item,
+              maybe_moved and ' (moved to %s ?)' % maybe_moved))
+          else:
+            installed_dict[item] = bt_title
+          # Calculate keep logic, by following the default
+          keep = False
+          in_force_keep_list = True
+          if state in ('Modified but should be kept',
+              'Removed but should be kept') and item not in force_keep_list:
+            # For actions which suggest that item shall be kept and item is not
+            # explicitely forced, keep the default -- do nothing
+            keep = True
+            in_force_keep_list = False
+
+          in_keep_original_list = False
+          if item in keep_original_list:
+            # If item is forced to be untouched, do not touch it
+            keep = True
+            in_keep_original_list = True
+
+          if in_force_keep_list and in_keep_original_list:
+            log('Item %r is in force_keep_list and keep_original_list, as '
+                'keep_original_list has precedence item is NOT MODIFIED' % item)
+
+          if keep == True:
+            install_kw[item] = 'nothing'
+          else:
+            install_kw[item] = listbox_line.choice_item_list[0][1]
 
       # Run before script list
       for before_triggered_bt5_id in before_triggered_bt5_id_list:
         log('Execute %r' % before_triggered_bt5_id)
         imported_bt5.unrestrictedTraverse(before_triggered_bt5_id)()
 
-      imported_bt5.install(object_to_update=install_kw,
-                           update_catalog=update_catalog)
+      if reinstall:
+        imported_bt5.install(force=True,
+                             update_catalog=update_catalog)
+      else:
+        imported_bt5.install(object_to_update=install_kw,
+                             update_catalog=update_catalog)
 
       # Run After script list
       for after_triggered_bt5_id in after_triggered_bt5_id_list:

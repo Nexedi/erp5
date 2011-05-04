@@ -1,2 +1,6 @@
+2011-03-01 gabriel
+* Add roles to allow erp5 user manage events in Event Module
+* Initial commit to testUNGSecurity
+
 2010-12-27 gabriel
 * Moved all roles from erp5_web_ung_core for this bt5

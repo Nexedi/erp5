@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>portal = context.getPortalObject()\n
+howto_dict = portal.Zuite_getHowToInfo()\n
+\n
+# delete Person\n
+person_list = portal.portal_catalog(portal_type=\'Person\',\n
+                                    title=howto_dict[\'full_text_person_title\'],\n
+                                    reference=howto_dict[\'full_text_person_reference\'],\n
+                                    local_roles=\'Owner\')\n
+if person_list:\n
+  portal.person_module.manage_delObjects([person_list[0].getObject().getId()])\n
+\n
+# delete Organisation\n
+organisation_list = portal.portal_catalog(portal_type=\'Organisation\',\n
+                                          title=howto_dict[\'full_text_organisation_title\'],\n
+                                          local_roles=\'Owner\')\n
+if organisation_list:\n
+  portal.organisation_module.manage_delObjects([organisation_list[0].getObject().getId()])\n
+\n
+# delete Currency\n
+currency = portal.portal_catalog.getResultValue(portal_type=\'Currency\',\n
+                                                title=howto_dict[\'dig_currency_title\'],\n
+                                                local_roles=\'Owner\')\n
+\n
+if currency is not None:\n
+  portal.currency_module.manage_delObjects([currency.getId()])\n
+\n
+return "Clean Ok"\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_tearDownFullTextSearchTest</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -68,10 +68,9 @@ class TradeModelCell(TradeModelLine):
       """
       return 0
 
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'getPrice')
-    def getPrice(self):
-      return self._baseGetPrice()
+    def getQuantity(self):
+      """Overridden getter to return None instead 0 if undefined"""
+      return self._baseGetQuantity(None)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTotalPrice')

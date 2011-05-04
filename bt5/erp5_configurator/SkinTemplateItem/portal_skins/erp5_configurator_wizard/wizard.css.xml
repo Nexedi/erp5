@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts02634727.61</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>wizard.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>.business_configuration_list {\n
+  display: block;\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+}\n
+\n
+.box {\n
+  background: #eaf8fc;\n
+  background-image: -moz-linear-gradient(#fff, #d4e8ec);\n
+  background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #d4e8ec),color-stop(1, #fff));\n
+\n
+  -moz-border-radius: 15px;\n
+  border-radius: 15px;\n
+\n
+  border-width: 1px;\n
+  border-style: solid;\n
+  border-color: #c4d9df #a4c3ca #83afb7;\n
+  width: 250px;\n
+  height: 300px;\n
+  padding: 10px;\n
+  margin: 15px 20px 5px;\n
+  overflow: hidden; /* Clear floats */\n
+}\n
+\n
+.box span#business-configuration-title, span#business-configuration-title:hover {\n
+  display: block;\n
+  background-color: transparent;\n
+  width: 100%;\n
+  text-align: center;\n
+\n
+  font-family:arial, sans-serif;\n
+  font-size:12px;\n
+  font-weight:bold;\n
+  letter-spacing:1px;\n
+  list-style-type:none;\n
+  margin-bottom:10px;\n
+\n
+  text-transform:uppercase;\n
+\n
+}\n
+\n
+.box span:hover {\n
+  background-color: transparent;\n
+}\n
+\n
+.box img {\n
+  background-color: transparent;\n
+  padding:1px;\n
+  border:2px solid #ccc;\n
+  height: 150px;\n
+  max-width: 225px;\n
+  margin-top: 10px;\n
+  display: block;\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+}\n
+\n
+.box img:hover {\n
+  border: 2px solid #d4e8ec;\n
+}\n
+\n
+.box span#span-business-configuration-description {\n
+  background-color: transparent;\n
+  font-size: 10px;\n
+  float: left;\n
+  padding-top: 15px;\n
+}\n
+\n
+.box button {\n
+  display: block;\n
+  margin-top: 65px;\n
+  margin-left: auto;\n
+  margin-right: auto;\n
+\n
+  font-family: Arial, Helvetica, sans-serif;\n
+  font-size: 22px;\n
+  color: #ffffff;\n
+  padding: 5px 35px;\n
+  background: -moz-linear-gradient(\n
+    top,\n
+    #fff3db 0%,\n
+    #ffc821 25%,\n
+    #ff3c00);\n
+  background: -webkit-gradient(\n
+    linear, left top, left bottom, \n
+    from(#fff3db),\n
+    color-stop(0.25, #ffc821),\n
+    to(#ff3c00));\n
+  border-radius: 6px;\n
+  -moz-border-radius: 6px;\n
+  -webkit-border-radius: 6px;\n
+  border: 1px solid #b85f00;\n
+  -moz-box-shadow:\n
+    0px 1px 3px rgba(000,000,000,0.5),\n
+    inset 0px -1px 0px rgba(255,255,255,0.7);\n
+  -webkit-box-shadow:\n
+    0px 1px 3px rgba(000,000,000,0.5),\n
+    inset 0px -1px 0px rgba(255,255,255,0.7);\n
+  text-shadow:\n
+    0px -1px 1px rgba(000,000,000,0.3),\n
+    0px 1px 0px rgba(255,255,255,0.3);\n
+}\n
+\n
+.box button:hover {\n
+  border: 1px solid #d4e8ec;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2234</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

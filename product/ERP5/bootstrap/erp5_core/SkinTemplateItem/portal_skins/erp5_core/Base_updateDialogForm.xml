@@ -71,8 +71,11 @@ for k in kw.keys():\n
         i+=1\n
       request.set(k,listbox)\n
   else:\n
-    request.set(\'my_%s\' % k, v)\n
+    request.set(\'your_%s\' % k, v)\n
     request.set(\'%s\' % k, v)\n
+    # for backward compatibility, we keep my_ for dialog\n
+    # using old naming conventions\n
+    request.set(\'my_%s\' % k, v)\n
 </string> </value>
         </item>
         <item>

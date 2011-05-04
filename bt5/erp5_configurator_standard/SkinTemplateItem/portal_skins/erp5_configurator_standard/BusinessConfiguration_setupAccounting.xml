@@ -96,12 +96,6 @@ configuration_save.addConfigurationItem("Accounting Period Configurator Item",\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>configuration_save_url=None, accounting_plan=\'\', period_start_date=None, period_stop_date=None, period_title=None, **kw</string> </value>
         </item>
@@ -114,79 +108,8 @@ configuration_save.addConfigurationItem("Accounting Period Configurator Item",\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>5</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>configuration_save_url</string>
-                            <string>accounting_plan</string>
-                            <string>period_start_date</string>
-                            <string>period_stop_date</string>
-                            <string>period_title</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>configuration_save</string>
-                            <string>gap_info_list</string>
-                            <string>None</string>
-                            <string>selected_gap_info</string>
-                            <string>_getiter_</string>
-                            <string>gap_info</string>
-                            <string>_getitem_</string>
-                            <string>AssertionError</string>
-                            <string>group_id</string>
-                            <string>accounting_transaction_simulation_state_list</string>
-                            <string>gap_account_map</string>
-                            <string>item</string>
-                            <string>_apply_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <none/>
-                <string></string>
-                <none/>
-                <none/>
-                <none/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>BusinessConfiguration_setupAccounting</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

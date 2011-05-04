@@ -964,14 +964,16 @@ class ZCatalog(Folder, Persistent, Implicit):
     return obj_list
 
   def getMetadataForUid(self, rid, sql_catalog_id=None):
-    """return the correct metadata for the cataloged uid"""
+    # !!! do not use docstring here (CVE-2011-0720).
+    # return the correct metadata for the cataloged uid
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       return catalog.getMetadataForUid(int(rid))
     return {}
 
   def getIndexDataForUid(self, rid, sql_catalog_id=None):
-    """return the current index contents for the specific uid"""
+    # !!! do not use docstring here (CVE-2011-0720).
+    # return the current index contents for the specific uid
     catalog = self.getSQLCatalog(sql_catalog_id)
     if catalog is not None:
       return catalog.getIndexDataForUid(rid)
@@ -1218,12 +1220,11 @@ class ZCatalog(Folder, Persistent, Implicit):
       pass
 
   def resolve_path(self, path):
-    """
-    Attempt to resolve a url into an object in the Zope
-    namespace. The url may be absolute or a catalog path
-    style url. If no object is found, None is returned.
-    No exceptions are raised.
-    """
+    # !!! do not use docstring here (CVE-2011-0720).
+    # Attempt to resolve a url into an object in the Zope
+    # namespace. The url may be absolute or a catalog path
+    # style url. If no object is found, None is returned.
+    # No exceptions are raised.
     try: 
       return self.unrestrictedTraverse(path)
     except ConflictError:

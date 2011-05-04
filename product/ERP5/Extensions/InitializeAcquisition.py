@@ -110,7 +110,6 @@ def setBaseAcquisition(self):
     pc[bc].setAcquisitionMaskValue(0)
     pc[bc].setAcquisitionCopyValue(0)
     pc[bc].setAcquisitionAppendValue(0)
-    pc[bc].setAcquisitionSyncValue(1)
     pc[bc].setAcquisitionObjectIdList(['default_career'])
   # Immobilisation acquisition
   for bc in ('input_account', 'output_account', 'immobilisation_account',

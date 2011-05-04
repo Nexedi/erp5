@@ -60,14 +60,8 @@ def special_extract_tb(tb, limit = None):
         if co == Sequence.play.func_code:
           if line is None:
             line = ''
-          line += '\n    Current Sequence:'
           sequence = f.f_locals['self']
-          for idx, step in enumerate(sequence._step_list):
-            if idx == sequence._played_index:
-              line += '\n    > %s' % step._method_name
-            else:
-              line += '\n      %s' % step._method_name
-
+          line += '\n    Current Sequence:\n%s' % sequence.asText()
         list.append((filename, lineno, name, line))
         tb = tb.tb_next
         n = n+1
@@ -104,6 +98,24 @@ class Sequence:
     self._dict = {}
     self._played_index = 0
     self._context = context
+
+  def __getitem__(self, key):
+    return self._dict[key]
+
+  def __setitem__(self, key, value):
+    self._dict[key] = value
+
+  def asText(self):
+    """
+    Representation of the current Sequence. Useful for debuggers.
+    """
+    line_list = []
+    for idx, step in enumerate(self._step_list):
+      if idx == self._played_index:
+        line_list.append('    > %s' % step._method_name)
+      else:
+        line_list.append('      %s' % step._method_name)
+    return '\n'.join(line_list)
 
   def play(self, context, sequence=None, sequence_number=0, quiet=0):
     if not quiet:

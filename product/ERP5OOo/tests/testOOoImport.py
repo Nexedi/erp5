@@ -31,7 +31,6 @@ import unittest
 import os
 
 import transaction
-from zLOG import LOG
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -39,15 +38,10 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import install_product_quiet
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5OOo.OOoUtils import OOoParser
-from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Form.PreferenceTool import Priority
 from DateTime import DateTime
-import transaction
 
 ZopeTestCase.installProduct('Sessions', quiet=install_product_quiet)
-
-person_current_id = 1
-
 
 class FileUploadTest(file):
 
@@ -106,17 +100,23 @@ class TestOOoImportMixin(ERP5TypeTestCase):
     if not portal_categories[function_bc].has_key('manager'):
       portal_categories[function_bc].newContent(id='manager', portal_type='Category', title='Manager')
 
+    self.portal.portal_caches.clearCache()
     transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
-    region = self.portal.portal_categories.region
-    region.manage_delObjects(list(region.objectIds()))
+    transaction.commit()
+    self.tic()
+    for parent in [
+        self.portal.currency_module,
+        self.portal.organisation_module,
+        self.portal.person_module,
+        self.portal.portal_categories.function,
+        self.portal.portal_categories.gender,
+        self.portal.portal_categories.region,
+        ]:
+      parent.deleteContent(list(parent.objectIds()))
     self.portal.portal_preferences.manage_delObjects([self.pref.getId()])
-    gender = self.portal.portal_categories.gender
-    function  = self.portal.portal_categories.function
-    gender.manage_delObjects(list(gender.objectIds()))
-    function.manage_delObjects(list(function.objectIds()))
 
     transaction.commit()
     self.tic()
@@ -126,9 +126,6 @@ class TestOOoImport(TestOOoImportMixin):
     ERP5  test import object list from OOo Document
   """
 
-  # pseudo constants
-  RUN_ALL_TEST = 1
-  QUIET = 0
   ##################################
   ##  ZopeTestCase Skeleton
   ##################################
@@ -151,9 +148,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportRawDataFile(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_list.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -175,10 +169,7 @@ class TestOOoImport(TestOOoImportMixin):
 
   def stepCheckImportedPersonList(self, sequence=None, sequence_list=None,
                                   num=101, **kw):
-    global person_current_id
-    person_module = self.getPortal().person_module
-    person_list = [person_module[str(i + person_current_id)] \
-                   for i in range(num)]
+    person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -191,18 +182,14 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual(
       sorted(['john.doe%s@foo.com' % (i) for i in range(num)]),
       sorted([person_list[i].getDefaultEmailText() for i in range(num)]))
-    person_current_id = person_current_id+num
 
   def stepCheckImportedPersonListBlank(self, sequence=None, sequence_list=None, **kw):
     return self.stepCheckImportedPersonList(sequence=sequence,
                                             sequence_list=sequence_list, **kw)
 
   def stepCheckImportedPersonListCategory(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
     num = 10
-    person_module = self.getPortal().person_module
-    person_list = [person_module[str(i + person_current_id)] \
-                   for i in range(num)]
+    person_list = self.getPortal().person_module.objectValues()
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -221,7 +208,6 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual(
       sorted(['France' for i in range(num)]),
       sorted([person_list[i].getRegionTitle() for i in range(num)]))
-    person_current_id = person_current_id+num
 
   def stepCheckAuthorImportedPersonList(self, sequence=None, sequence_list=None, **kw):
     return self.stepCheckImportedPersonListCategory(sequence=sequence,
@@ -229,11 +215,8 @@ class TestOOoImport(TestOOoImportMixin):
                                                     **kw)
 
   def stepCheckImportedPersonListFreeText(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
     num = 10
-    person_module = self.getPortal().person_module
-    person_list = [person_module[str(i + person_current_id)] \
-                   for i in range(num)]
+    person_list = self.getPortal().person_module.objectValues() 
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -246,14 +229,10 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual(
       sorted(['Director' for i in range(num)]),
       sorted([person_list[i].getFunctionFreeText() for i in range(num)]))
-    person_current_id = person_current_id+num
 
   def stepCheckImportedPersonListAccentuated(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
     num = 10
-    person_module = self.getPortal().person_module
-    person_list = [person_module[str(i + person_current_id)] \
-                   for i in range(num)]
+    person_list = self.getPortal().person_module.objectValues() 
     self.assertEqual(
       sorted(['John Doe é %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -266,7 +245,6 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual(
       sorted(['director' for i in range(num)]),
       sorted([person_list[i].getFunction() for i in range(num)]))
-    person_current_id = person_current_id+num
 
   def stepCheckXLSImportedPersonList(self, sequence=None, sequence_list=None, **kw):
     return self.stepCheckImportedPersonList(sequence=sequence,
@@ -274,11 +252,8 @@ class TestOOoImport(TestOOoImportMixin):
                                             num=10, **kw)
 
   def stepCheckImportedPersonListWithDates(self, sequence=None, sequence_list=None, **kw):
-    global person_current_id
     num = 10
-    person_module = self.getPortal().person_module
-    person_list = [person_module[str(i + person_current_id)] \
-                   for i in range(num)]
+    person_list = self.getPortal().person_module.objectValues() 
     self.assertEqual(
       sorted(['John Doe %s' % (i) for i in range(num)]),
       sorted([person_list[i].getTitle() for i in range(num)]))
@@ -291,7 +266,6 @@ class TestOOoImport(TestOOoImportMixin):
     self.assertEqual(
       sorted([DateTime('2008/02/%02d %s' % (i+1, 'GMT')) for i in range(num)]),
       sorted([person_list[i].getStartDate() for i in range(num)]))
-    person_current_id = person_current_id+num
 
   def stepCheckImportFloatsAndPercentage(self, sequence=None, sequence_list=None, **kw):
     num = 10
@@ -353,9 +327,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportFileWithBlankLine(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_list_blank_line.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -380,9 +351,6 @@ class TestOOoImport(TestOOoImportMixin):
                       id='france')
 
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -400,9 +368,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportFileWithDates(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_with_dates.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -422,8 +387,6 @@ class TestOOoImport(TestOOoImportMixin):
     """
     f = makeFileUpload('import_float_and_percentage.ods')
     currency_module = self.getPortal().currency_module
-    currency_module.manage_delObjects([id for id in currency_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Currency.title'},
@@ -435,9 +398,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportOrganisation(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_organisation_list.ods')
     organisation_module = self.getPortal().organisation_module
-    #purge existing persons
-    organisation_module.manage_delObjects([id for id in organisation_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Organisation.title'},
@@ -468,9 +428,6 @@ class TestOOoImport(TestOOoImportMixin):
 
     f = makeFileUpload('import_data_with_categories.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -488,9 +445,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportFileWithFreeText(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_with_categories.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -506,9 +460,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportFileWithAccentuatedText(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_accentuated_text.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -524,9 +475,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportXLSFile(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_list.xls')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -542,9 +490,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportBigFile_1(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_big_file_1.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
     { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -560,9 +505,6 @@ class TestOOoImport(TestOOoImportMixin):
   def stepImportBigFile_2(self, sequence=None, sequence_list=None, **kw):
     f = makeFileUpload('import_data_big_file_2.ods')
     person_module = self.getPortal().person_module
-    #purge existing persons
-    person_module.manage_delObjects([id for id in person_module.getObjectIds()])
-    transaction.commit(); self.tic()
     listbox=(
      { 'listbox_key': '001',
       'portal_type_property_list':'Person.title'},
@@ -577,9 +519,8 @@ class TestOOoImport(TestOOoImportMixin):
 
   ##  Tests
   ##################################
-  def test_01_ImportFileLine(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_01_ImportFileLine(self):
     # Simulate import of OOo file Base_importFile for Person Module.
-    if not run: return
     sequence_list = SequenceList()
     step_list = [ 'stepImportRawDataFile'
                  ,'stepCheckActivitiesCount'
@@ -588,12 +529,10 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_02_ImportFileBlankLine(self, quiet=QUIET, run=RUN_ALL_TEST):
+  def test_02_ImportFileBlankLine(self):
     #Simulate import of an OOo file with blank lines.
-    #self.logMessage('Simulate import of an OOo file with blank lines')
-    if not run: return
     sequence_list = SequenceList()
     step_list = [  'stepImportFileWithBlankLine'
                   ,'Tic'
@@ -601,20 +540,17 @@ class TestOOoImport(TestOOoImportMixin):
                  ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_03_ImportNoMapping(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_03_ImportNoMapping(self):
     sequence_list = SequenceList()
     step_list = [ 'stepImportFileNoMapping'
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_04_ImportFileWithCategory(self, quiet=QUIET, run=RUN_ALL_TEST):
-    #self.logMessage('Simulate import of an OOo file with blank lines')
-    if not run: return
+  def test_04_ImportFileWithCategory(self):
     sequence_list = SequenceList()
     step_list = [  'stepImportFileWithCategory'
                   ,'Tic'
@@ -622,11 +558,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_05_ImportOrganisation(self, quiet=QUIET, run=RUN_ALL_TEST):
-   #self.logMessage('Simulate import of an OOo file with blank lines')
-    if not run: return
+  def test_05_ImportOrganisation(self):
     sequence_list = SequenceList()
     step_list = [  'stepImportOrganisation'
                   ,'Tic'
@@ -634,11 +568,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_06_AuthorImportFile(self, quiet=QUIET, run=RUN_ALL_TEST):
-    #self.logMessage('Simulate import of an OOo file with blank lines')
-    if not run: return
+  def test_06_AuthorImportFile(self):
     sequence_list = SequenceList()
     step_list = [  'stepAuthorImportFile'
                   ,'Tic'
@@ -646,10 +578,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_07_ImportFileWithFreeText(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_07_ImportFileWithFreeText(self):
     sequence_list = SequenceList()
     step_list = [  'stepImportFileWithFreeText'
                   ,'Tic'
@@ -657,10 +588,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_08_ImportFileWithAccentuatedText(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_08_ImportFileWithAccentuatedText(self):
     sequence_list = SequenceList()
     step_list = [  'stepImportFileWithAccentuatedText'
                   ,'Tic'
@@ -668,10 +598,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_09_ImportXLSFile(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_09_ImportXLSFile(self):
     sequence_list = SequenceList()
     step_list = [ 'stepImportXLSFile'
                  ,'Tic'
@@ -679,10 +608,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_10_ImportFileWithDates(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_10_ImportFileWithDates(self):
     sequence_list = SequenceList()
     step_list = [ 'stepImportFileWithDates'
                  ,'Tic'
@@ -690,10 +618,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_11_ImportFloatAndPercentage(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_11_ImportFloatAndPercentage(self):
     sequence_list = SequenceList()
     step_list = [ 'stepImportFloatsAndPercentage'
                  ,'Tic'
@@ -701,10 +628,9 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  def test_12_ImportBigFile_1(self, quiet=QUIET, run=RUN_ALL_TEST):
-    if not run: return
+  def test_12_ImportBigFile_1(self):
     sequence_list = SequenceList()
     step_list = [  'stepImportBigFile_1'
                   ,'Tic'
@@ -712,21 +638,17 @@ class TestOOoImport(TestOOoImportMixin):
                 ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
+    sequence_list.play(self)
 
-  '''
-  def test_12_ImportBigFile_2(self, quiet=QUIET, run=RUN_ALL_TEST):
-    #self.logMessage('Simulate import of an OOo file with blank lines')
-    if not run: return
-    sequence_list = SequenceList()
-    step_list = [  'stepImportBigFile_2'
-                  ,'Tic'
-                  ,'stepCheckImportedPersonList_2'
-                ]
-    sequence_string = ' '.join(step_list)
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self, quiet=quiet)
-  '''
+#  def test_12_ImportBigFile_2(self):
+#    sequence_list = SequenceList()
+#    step_list = [  'stepImportBigFile_2'
+#                  ,'Tic'
+#                  ,'stepCheckImportedPersonList_2'
+#                ]
+#    sequence_string = ' '.join(step_list)
+#    sequence_list.addSequenceString(sequence_string)
+#    sequence_list.play(self)
 
   # CategoryTool_importCategoryFile tests
   def test_CategoryTool_importCategoryFile(self):
@@ -750,7 +672,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_CategoryTool_importCategoryFileDeletionSupport(self):
     # tests simple use of CategoryTool_importCategoryFile script
     region = self.portal.portal_categories.region
-    dummy_region = region.newContent(id='dummy_region')
+    region.newContent(id='dummy_region')
     transaction.commit()
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
@@ -772,7 +694,7 @@ class TestOOoImport(TestOOoImportMixin):
   def test_CategoryTool_importCategoryFileExpirationSupport(self):
     # tests simple use of CategoryTool_importCategoryFile script
     region = self.portal.portal_categories.region
-    dummy_region = region.newContent(id='dummy_region')
+    region.newContent(id='dummy_region')
     transaction.commit()
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
@@ -1053,7 +975,7 @@ class TestOOoImportWeb(TestOOoImportMixin):
     """Import category file with expiration request, and do it again to be
     sure that expired categories will not be expired again."""
     region = self.portal.portal_categories.region
-    dummy_region = region.newContent(id='dummy_region')
+    region.newContent(id='dummy_region')
     dummy_expired_region = region.newContent(id='dummy_expired_region')
     dummy_expired_region.expire()
     transaction.commit()

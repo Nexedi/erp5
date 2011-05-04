@@ -106,10 +106,6 @@
                           <string>FAX</string>
                         </tuple>
                         <tuple>
-                          <string>default_address_text</string>
-                          <string>Address</string>
-                        </tuple>
-                        <tuple>
                           <string>gender_translated_title</string>
                           <string>Gender</string>
                         </tuple>
@@ -138,8 +134,8 @@
                           <string>Nationality</string>
                         </tuple>
                         <tuple>
-                          <string>default_address_text</string>
-                          <string>Address</string>
+                          <string>child_address_SearchableText</string>
+                          <string>Address (Full Text)</string>
                         </tuple>
                         <tuple>
                           <string>marital_status_translated_title</string>
@@ -315,10 +311,6 @@ Role & Region
                           <string>FAX</string>
                         </tuple>
                         <tuple>
-                          <string>default_address_text</string>
-                          <string>Address</string>
-                        </tuple>
-                        <tuple>
                           <string>description</string>
                           <string>Description</string>
                         </tuple>
@@ -343,8 +335,8 @@ Role & Region
                           <string>Email</string>
                         </tuple>
                         <tuple>
-                          <string>default_address_text</string>
-                          <string>Address</string>
+                          <string>child_address_SearchableText</string>
+                          <string>Address (Full Text)</string>
                         </tuple>
                         <tuple>
                           <string>marital_status_translated_title</string>
@@ -403,10 +395,6 @@ Role & Region
                         <tuple>
                           <string>default_fax_text</string>
                           <string>FAX</string>
-                        </tuple>
-                        <tuple>
-                          <string>default_address_text</string>
-                          <string>Address</string>
                         </tuple>
                         <tuple>
                           <string>description</string>

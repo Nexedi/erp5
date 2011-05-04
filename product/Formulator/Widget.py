@@ -16,12 +16,14 @@ DRAW_URI = 'urn:oasis:names:tc:opendocument:xmlns:drawing:1.0'
 TEXT_URI = 'urn:oasis:names:tc:opendocument:xmlns:text:1.0'
 FORM_URI = 'urn:oasis:names:tc:opendocument:xmlns:form:1.0'
 OFFICE_URI = 'urn:oasis:names:tc:opendocument:xmlns:office:1.0'
+STYLE_URI = 'urn:oasis:names:tc:opendocument:xmlns:style:1.0'
 
 NSMAP = {
           'draw': DRAW_URI,
           'text': TEXT_URI,
           'form': FORM_URI,
           'office': OFFICE_URI,
+          'style': STYLE_URI,
         }
 
 EForm = ElementMaker(namespace=FORM_URI, nsmap=NSMAP)
@@ -217,6 +219,8 @@ class Widget:
     if isinstance(value, str):
       #required by lxml
       value = value.decode('utf-8')
+    if value is None:
+      value = ''
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = value
     text_node.attrib.update(attr_dict)
@@ -239,6 +243,8 @@ class Widget:
     if isinstance(value, str):
       #required by lxml
       value = value.decode('utf-8')
+    if value is None:
+      value = ''
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = value
     text_node.attrib.update(attr_dict)
@@ -280,6 +286,8 @@ class Widget:
     if isinstance(value, str):
       #required by lxml
       value = value.decode('utf-8')
+    if value is None:
+      value = ''
     draw_frame_tag_name = '{%s}%s' % (DRAW_URI, 'frame')
     draw_frame_node = Element(draw_frame_tag_name, nsmap=NSMAP)
     draw_frame_attribute_list = attr_dict.get(draw_frame_tag_name)
@@ -553,6 +561,17 @@ class CheckBoxWidget(Widget):
     if as_string:
       return etree.tostring(text_node)
     return text_node
+
+  def render_odg_view(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """Convert boolean value into integer (1/0) then into string.
+    """
+    if value is None:
+      value = False
+    value = str(int(value))
+    return Widget.render_odg_view(self, field, value, as_string, ooo_builder,
+                                  REQUEST, render_prefix, attr_dict,
+                                  local_name)
 
 CheckBoxWidgetInstance = CheckBoxWidget()
 
@@ -1466,8 +1485,10 @@ class DateTimeWidget(Widget):
     # Is it still usefull to test the None value,
     # as DateTimeField should be considerer as the other field
     # and get an empty string as default value?
-    if value in (None, ''):
-      return ''
+    if not isinstance(value, DateTime):
+      if value is None:
+        value = ''
+      return value
 
     use_ampm = field.get_value('ampm_time_style')
     use_timezone = field.get_value('timezone_style')
@@ -1553,17 +1574,18 @@ class DateTimeWidget(Widget):
     if not value and field.get_value('default_now'):
       value = DateTime()
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
-    # http://www.w3.org/TR/2004/REC-xmlschema-2-20041028/#dateTime
-    attr_dict['{%s}date-value' % OFFICE_URI] = value.ISO8601()
-    # According http://wiki.services.openoffice.org/wiki/Documentation/How_Tos/Calc:_Date_%26_Time_functions
-    # default offset is 30/12/1899
-    number_of_second_in_day = 86400 #24 * 60 * 60
-    timestamp = float(value)
-    # XXX Works only if the timezone is the same in OpenOffice
-    ooo_offset_timestamp = float(DateTime(1899, 12, 30))
-    days_value = (timestamp - ooo_offset_timestamp) / number_of_second_in_day
-    attr_dict['{%s}formula' % TEXT_URI] = 'ooow:%f' % days_value
-    text_node.attrib.update(attr_dict)
+    if value:
+      # http://www.w3.org/TR/2004/REC-xmlschema-2-20041028/#dateTime
+      attr_dict['{%s}date-value' % OFFICE_URI] = value.ISO8601()
+      # According http://wiki.services.openoffice.org/wiki/Documentation/How_Tos/Calc:_Date_%26_Time_functions
+      # default offset is 30/12/1899
+      number_of_second_in_day = 86400 #24 * 60 * 60
+      timestamp = float(value)
+      # XXX Works only if the timezone is the same in OpenOffice
+      ooo_offset_timestamp = float(DateTime(1899, 12, 30))
+      days_value = (timestamp - ooo_offset_timestamp) / number_of_second_in_day
+      attr_dict['{%s}formula' % TEXT_URI] = 'ooow:%f' % days_value
+      text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
     return text_node
@@ -1734,10 +1756,24 @@ class IntegerWidget(TextWidget) :
     text_node = Element('{%s}%s' % (TEXT_URI, local_name), nsmap=NSMAP)
     text_node.text = str(value)
     attr_dict['{%s}value' % OFFICE_URI] = str(value)
+    formula_attribute_name = '{%s}formula' % TEXT_URI
+    if formula_attribute_name in attr_dict:
+      del attr_dict[formula_attribute_name]
     text_node.attrib.update(attr_dict)
     if as_string:
       return etree.tostring(text_node)
     return text_node
+
+  def render_odg_view(self, field, value, as_string, ooo_builder, REQUEST,
+                      render_prefix, attr_dict, local_name):
+    """convert interger into string then use TextWidget renderer
+    """
+    if isinstance(value, int):
+      # convert into string
+      value = str(value)
+    return TextWidget.render_odg_view(self, field, value, as_string,
+                                      ooo_builder, REQUEST, render_prefix, 
+                                      attr_dict, local_name)
 
 IntegerWidgetInstance = IntegerWidget()
 class FloatWidget(TextWidget):

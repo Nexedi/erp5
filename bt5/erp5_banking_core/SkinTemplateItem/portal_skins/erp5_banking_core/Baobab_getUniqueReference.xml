@@ -2,10 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -102,7 +99,7 @@ if reference in (None, \'\') or not str(reference).startswith(application_id):\n
   # this make reference look strange when using different script to\n
   # generate reference based on criteria the user can play with\n
   baobab_id_group = (application_id, codification, year)\n
-  new_id = context.portal_ids.generateNewLengthId(id_group = baobab_id_group)\n
+  new_id = context.portal_ids.generateNewLengthId(id_group = baobab_id_group,  default=1)\n
 \n
   # affectation\n
   reference = "%s-%s-%s-%s" % (application_id, codification, year, new_id)\n
@@ -113,82 +110,12 @@ return reference\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>reference</string>
-                            <string>AttributeError</string>
-                            <string>application_id</string>
-                            <string>N_</string>
-                            <string>None</string>
-                            <string>str</string>
-                            <string>date</string>
-                            <string>message</string>
-                            <string>year</string>
-                            <string>source</string>
-                            <string>codification</string>
-                            <string>site</string>
-                            <string>site_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>site_value</string>
-                            <string>baobab_id_group</string>
-                            <string>new_id</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Baobab_getUniqueReference</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

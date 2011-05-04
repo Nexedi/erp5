@@ -1,5 +1,11 @@
+erp5_full_text_myisam_catalog
+erp5_ingestion_mysql_innodb_catalog
+erp5_core_proxy_field_legacy
 erp5_web
 erp5_dms
 erp5_jquery_sheet_editor
 erp5_svg_editor
 erp5_xinha_editor
+erp5_knowledge_pad
+erp5_crm
+erp5_jquery_plugin_wdcalendar

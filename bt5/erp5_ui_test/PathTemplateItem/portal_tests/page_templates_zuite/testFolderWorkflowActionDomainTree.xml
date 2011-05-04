@@ -124,7 +124,7 @@
 <!-- Click on the \'a\' domain tree -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//a[@class="tree-closed"]</td>\n
+  <td>//table[@class="listbox-table-domain-tree"]//tr[1]//button[@class="tree-closed"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -273,8 +273,7 @@ script. -->\n
 \n
 \n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

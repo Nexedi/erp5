@@ -1,0 +1,4 @@
+business_configuration_module/default_maxma_demo_configuration
+business_configuration_module/default_maxma_demo_configuration/default_image
+workflow_module/maxma_demo_configuration_workflow
+workflow_module/maxma_demo_configuration_workflow/**

@@ -61,10 +61,10 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
-                    , PropertySheet.CategoriesSpreadsheetConfiguratorItem
+                    , PropertySheet.ConfiguratorItem
                     )
 
-  def build(self, business_configuration):
+  def _build(self, business_configuration):
     portal = self.getPortalObject()
     ctool = portal.portal_categories
 
@@ -102,19 +102,19 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       # TODO use a invalid_spreadsheet_error_handler to report invalid
       # spreadsheet messages (see http://svn.erp5.org?rev=24908&view=rev )
       aq_self._category_cache = self.Base_getCategoriesSpreadSheetMapping(
-                    UnrestrictedStringIO(self.getDefaultCategoriesSpreadsheetData()))
+                    UnrestrictedStringIO(self.getDefaultConfigurationSpreadsheetData()))
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                           'setDefaultCategoriesSpreadsheetFile')
-  def setDefaultCategoriesSpreadsheetFile(self, *args, **kw):
+                           'setDefaultConfigurationSpreadsheetFile')
+  def setDefaultConfigurationSpreadsheetFile(self, *args, **kw):
     """Reset the spreadsheet cache."""
-    self._setDefaultCategoriesSpreadsheetFile(*args, **kw)
+    self._setDefaultConfigurationSpreadsheetFile(*args, **kw)
     self._category_cache = None
     self.reindexObject()
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                           'setCategoriesSpreadsheetFile')
-  setCategoriesSpreadsheetFile = setDefaultCategoriesSpreadsheetFile
+                           'setConfigurationSpreadsheetFile')
+  setConfigurationSpreadsheetFile = setDefaultConfigurationSpreadsheetFile
 
   security.declareProtected(Permissions.AccessContentsInformation,
                            'getCategoryTitleItemList')

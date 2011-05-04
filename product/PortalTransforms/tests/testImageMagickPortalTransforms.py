@@ -17,7 +17,7 @@ os.environ['LC_ALL'] = 'C'
 
 class ImageMagickTransformsTest(ERP5TypeTestCase, ZopeTestCase.Functional):
     def afterSetUp(self):
-        ERP5TypeTestCase.afterSetUp(self)
+        super(ImageMagickTransformsTest, self).afterSetUp()
         self.pt = self.portal.portal_transforms
 
     def test_image_to_bmp(self):

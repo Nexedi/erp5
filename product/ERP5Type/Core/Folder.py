@@ -114,7 +114,7 @@ class FolderMixIn(ExtensionClass.Base):
   def newContent(self, id=None, portal_type=None, id_group=None,
           default=None, method=None, container=None, created_by_builder=0,
           activate_kw=None, is_indexable=None, temp_object=0, reindex_kw=None,
-          **kw):
+          compute_local_role=None, notify_workflow=True,  **kw):
     """Creates a new content.
     This method is public, since TypeInformation.constructInstance will perform
     the security check.
@@ -161,7 +161,9 @@ class FolderMixIn(ExtensionClass.Base):
                            temp_object=temp_object or temp_container,
                            activate_kw=activate_kw,
                            reindex_kw=reindex_kw,
-                           is_indexable=is_indexable
+                           is_indexable=is_indexable,
+                           compute_local_role=compute_local_role,
+                           notify_workflow=notify_workflow,
                            ) # **kw) removed due to CMF bug
       # TODO :the **kw makes it impossible to create content not based on
       # ERP5TypeInformation, because factory method often do not support
@@ -1523,11 +1525,13 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
       if getattr(aq_base(o), 'makeTemplateInstance', None) is not None:
         o.makeTemplateInstance()
 
-  def _delObject(self, id, dp=1):
+  def _delObject(self, id, dp=1, suppress_events=True):
     """
       _delObject is redefined here in order to make sure
       we do not do silent except while we remove objects
       from catalog
+
+      Note that we always suppress / do not use events.
     """
     object = self._getOb(id)
     object.manage_beforeDelete(object, self)
@@ -1590,11 +1594,16 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
         Patched, as ERP5 Type does not provide getExprContext which is used in
         CMF 2.2
     """
+    icon = 'misc_/OFSP/dtmldoc.gif'
     ti = self.getTypeInfo()
     url = self.getPortalObject().portal_url()
-    if ti is None:
-      return '%s/misc_/OFSP/dtmldoc.gif' % url
-    return '%s/%s' % (url, ti.getTypeIcon())
+    if ti is not None:
+      try:
+        icon = ti.getTypeIcon()
+      except AttributeError:
+        # do not fail in case of accessor is not available
+        pass
+    return '%s/%s' % (url, icon)
 
 # We browse all used class from btree and hbtree and set not implemented
 # class if one method defined on a class is not defined on other, thus if

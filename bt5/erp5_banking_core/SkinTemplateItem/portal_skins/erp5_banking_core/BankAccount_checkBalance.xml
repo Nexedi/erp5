@@ -2,28 +2,13 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <tuple>
-        <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
-        <tuple/>
-      </tuple>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>Python_magic</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>Script_magic</string> </key>
             <value> <int>3</int> </value>
-        </item>
-        <item>
-            <key> <string>__ac_local_roles__</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_bind_names</string> </key>
@@ -74,38 +59,37 @@
 payment_value = context.restrictedTraverse(payment)\n
 \n
 if not payment_value.BankAccount_isOpened():\n
-  return {\'error_code\':2} # closed account\n
+  return {\'error_code\': 2} # closed account\n
 \n
 account_balance = payment_value.BankAccount_getAvailablePosition(src__=src__)\n
 if src__:\n
   return account_balance\n
 # XXX: BankAccount_getAvailablePosition returns position as a string for some reason...\n
-account_balance = float(account_balance)\n
+raw_account_balance = account_balance = float(account_balance)\n
+if round_balance:\n
+  account_balance = round(account_balance, payment_value.getPriceCurrencyValue().getQuantityPrecision())\n
 \n
-if account_balance - quantity < 0 :\n
-  return {\'error_code\':1, \'balance\':account_balance} # insufficient balance\n
+if account_balance - quantity < 0:\n
+  # insufficient balance\n
+  return {\n
+    \'error_code\': 1,\n
+    \'balance\': account_balance,\n
+    \'raw_balance\': raw_account_balance,\n
+  }\n
 \n
 payment_value.serialize()\n
-return {\'error_code\':0, \'balance\':account_balance} # ok\n
+return {\n
+  \'error_code\': 0,\n
+  \'balance\': account_balance,\n
+  \'raw_balance\': raw_account_balance,\n
+}\n
 
 
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>_filepath</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>payment, quantity, src__=0</string> </value>
+            <value> <string>payment, quantity, round_balance=True, src__=0</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -116,62 +100,8 @@ return {\'error_code\':0, \'balance\':account_balance} # ok\n
             </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>payment</string>
-                            <string>quantity</string>
-                            <string>src__</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>payment_value</string>
-                            <string>account_balance</string>
-                            <string>float</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <int>0</int>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>BankAccount_checkBalance</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

@@ -6,6 +6,9 @@ Web Illustration | send_email
 Web Illustration | view
 Web Illustration | view_editor
 Web Illustration | web_view
+Web Page | view
+Web Page | view_editor
+Web Page | web_view
 Web Table | list
 Web Table | local_permission
 Web Table | related

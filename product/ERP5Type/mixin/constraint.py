@@ -37,8 +37,9 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import UpperCase, createExpressionContext
 from Products.CMFCore.Expression import Expression
+from Products.ERP5Type.id_as_reference import IdAsReferenceMixin
 
-class ConstraintMixin(Predicate):
+class ConstraintMixin(IdAsReferenceMixin('_constraint'), Predicate):
   """
   Mixin Constraint implementation (only relevant for ZODB Property
   sheets, use Products.ERP5Type.Constraint instead for filesystem
@@ -52,12 +53,16 @@ class ConstraintMixin(Predicate):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  # IDs of error messages defined in each Constraint, only used when
+  # importing or exporting from/to filesystem Constraint
+  _message_id_tuple = ()
+
   __allow_access_to_unprotected_subobjects__ = 1
   implements( IConstraint, )
 
   property_sheets = (PropertySheet.SimpleItem,
-                     PropertySheet.Predicate,
-                     PropertySheet.Reference)
+                     PropertySheet.Reference,
+                     PropertySheet.Predicate)
 
   def _getMessage(self, message_id):
     """
@@ -96,18 +101,6 @@ class ConstraintMixin(Predicate):
     """
     return self.checkConsistency(obj, fixit=1, **kw)
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'exportToFilesystemDefinition')
-  def exportToFilesystemDefinition(self):
-    """
-    Return a temporary copy of the constraint object (with acquisition
-    wrapping removed) in order to maintain compatibility and be able
-    to use setDefaultProperties
-
-    XXX: remove as soon as the code is stable
-    """
-    return self.asContext()
-
   def _getExpressionValue(self, obj, expression_string):
     """
     Get the Python value from an Expression string, but check before
@@ -118,3 +111,89 @@ class ConstraintMixin(Predicate):
       return None
 
     return Expression(expression_string)(createExpressionContext(obj))
+
+  @staticmethod
+  def _preConvertBaseFromFilesystemDefinition(filesystem_definition_dict):
+    """
+    Call before actually converting the attributes common to all
+    constraints
+    """
+    return dict()
+
+  @staticmethod
+  def _convertFromFilesystemDefinition(*args, **kw):
+    """
+    Convert a filesystem property dict to a ZODB Property dict which
+    will be given to newContent().
+
+    Only attributes specific to this constraint will be given as
+    parameters, e.g. not the ones common to all constraints such as
+    'id', 'description', 'type' and 'condition' and error messages
+    defined in '_message_id_tuple' class attribute.
+
+    @see importFromFilesystemDefinition
+    """
+    yield dict()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'importFromFilesystemDefinition')
+  @classmethod
+  def importFromFilesystemDefinition(cls, context, filesystem_definition_dict):
+    """
+    Import the filesystem definition to a ZODB Constraint, without its
+    condition as it is now a Predicate and has to be converted
+    manually.
+
+    Several ZODB Constraints may be created to handle Constraints such
+    as Attribute Equality which defines an attribute name and its
+    expected value, thus ending up creating one ZODB Constraint per
+    attribute/expected value
+    """
+    # Copy the dictionnary as it is going to be modified to remove all
+    # the common properties in order to have a dictionnary containing
+    # only properties specific to the current constraint
+    filesystem_definition_copy_dict = filesystem_definition_dict.copy()
+
+    # This dict only contains definition attributes common to *all*
+    # ZODB Constraints
+    base_constraint_definition_dict = \
+        cls._preConvertBaseFromFilesystemDefinition(filesystem_definition_copy_dict)
+
+    base_constraint_definition_dict['portal_type'] = cls.portal_type
+
+    base_constraint_definition_dict['id'] = \
+        filesystem_definition_copy_dict.pop('id') + \
+          cls.getIdAsReferenceSuffix()
+
+    base_constraint_definition_dict['description'] = \
+        filesystem_definition_copy_dict.pop('description', '')
+
+    if 'condition' in filesystem_definition_copy_dict:
+      base_constraint_definition_dict['test_tales_expression'] = \
+          filesystem_definition_copy_dict.pop('condition')
+
+    # The type is meaningless for ZODB Constraints as it is the portal
+    # type itself
+    filesystem_definition_copy_dict.pop('type')
+
+    # Add specific error messages defined on the constraint document
+    for message_name in cls._message_id_tuple:
+      if message_name in filesystem_definition_copy_dict:
+        base_constraint_definition_dict[message_name] = \
+            filesystem_definition_copy_dict.pop(message_name)
+
+    # Call the method defined in the Constraint document which returns
+    # N dictionnaries containing only attributes specific to the
+    # Constraint
+    constraint_definition_generator = \
+        cls._convertFromFilesystemDefinition(**filesystem_definition_copy_dict)
+
+    # Create all the constraint in the current ZODB Property Sheet
+    for constraint_definition_dict in constraint_definition_generator:
+      constraint_definition_dict.update(base_constraint_definition_dict)
+      context.newContent(**constraint_definition_dict)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'applyOnAccessorHolder')
+  def applyOnAccessorHolder(self, accessor_holder, expression_context, portal):
+    accessor_holder.constraints.append(self.asContext().aq_base)

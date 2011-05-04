@@ -55,16 +55,6 @@ class Bug(Ticket):
                       , PropertySheet.Bug
                       )
 
-    def SearchableText(self):
-      """ Used by the catalog for basic full text indexing """
-      full_text = []
-      for message in self.contentValues(portal_type='Bug Line'):
-        full_text.append(message.getTextContent(""))
-
-      return """ %s %s %s """ % ( self.getTitle(),
-                                  self.getDescription(),
-                                  ' '.join(full_text))
-
     def manage_afterClone(self, item):
       Ticket.manage_afterClone(self, item)
       # delete existing bug lines

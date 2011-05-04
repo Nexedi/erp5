@@ -29,15 +29,9 @@
 
 """A wrapper module for simplejson or json."""
 
-try:
-  from simplejson import dumps, loads
-except ImportError:
-  try:
-    from json import dumps, loads
-  except ImportError:
-    def dumps(*args, **kw):
-      raise RuntimeError('You must install simplejson to use Products.ERP5Type.JSON.dumps.')
-    def loads(*args, **kw):
-      raise RuntimeError('You must install simplejson to use Products.ERP5Type.JSON.loads.')
+from Products.ERP5Type.Utils import deprecated
+import json
 
-
+deprecated = deprecated("%r is deprecated; use 'json' instead." % __name__)
+dumps = deprecated(json.dumps)
+loads = deprecated(json.loads)

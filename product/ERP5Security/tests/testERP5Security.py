@@ -33,12 +33,11 @@
 import unittest
 import transaction
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
-                                                     get_request
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from zLOG import LOG
-from Products.ERP5Type.Cache import clearCache
 from Products.PluggableAuthService import PluggableAuthService
 from zope.interface.verify import verifyClass
 from DateTime import DateTime
@@ -422,6 +421,16 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     """Called after setup completed.
     """
     self.portal = self.getPortal()
+    # create a security configuration script
+    skin_folder = self.portal.portal_skins.custom
+    if 'ERP5Type_getSecurityCategoryMapping' not in skin_folder.objectIds():
+      createZODBPythonScript(
+        skin_folder, 'ERP5Type_getSecurityCategoryMapping', '',
+        """return ((
+          'ERP5Type_getSecurityCategoryFromAssignment',
+          context.getPortalObject().getPortalAssignmentBaseCategoryList()
+          ),)
+        """)
     # configure group, site, function categories
     for bc in ['group', 'site', 'function']:
       base_cat = self.getCategoryTool()[bc]
@@ -486,7 +495,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     """List of BT to install. """
-    return ('erp5_base',)
+    return ('erp5_base', 'erp5_web', 'erp5_ingestion', 'erp5_dms',)
 
   def test_RolesManagerInterfaces(self):
     """Tests group manager plugin respects interfaces."""
@@ -703,6 +712,15 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     assignment = loginable_person.newContent(portal_type='Assignment',
                                              function='another_subcat')
     assignment.open()
+    portal_types = portal.portal_types
+    for portal_type in ('Person Module', 'Person', 'Web Site Module', 'Web Site',
+                        'Web Page'):
+      type_information = portal_types[portal_type]
+      type_information.newContent(
+        portal_type='Role Information',
+        role_name=('Auditor', 'Assignee'),
+        role_category='function/another_subcat')
+      type_information.updateRoleMapping()
     self.stepTic()
 
     # encrypt & decrypt works
@@ -722,6 +740,45 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     response = self.publish('%s?__ac_key=%s' %(base_url, key))
     self.assertEqual(response.getStatus(), 200)
     self.assertTrue(reference in response.getBody())
+
+    # check if key authentication works other page than front page
+    person_module = portal.person_module
+    base_url = person_module.absolute_url(relative=1)
+    response = self.publish(base_url)
+    self.assertEqual(response.getStatus(), 302)
+    self.assertTrue('location' in response.headers.keys())
+    self.assertTrue('%s/login_form?came_from=' % portal.getId(), response.headers['location'])
+    response = self.publish('%s?__ac_key=%s' %(base_url, key))
+    self.assertEqual(response.getStatus(), 200)
+    self.assertTrue(reference in response.getBody())
+
+    # check if key authentication works with web_mode too
+    web_site = portal.web_site_module.newContent(portal_type='Web Site')
+    web_page = portal.web_page_module.newContent(portal_type='Web Page', reference='ref')
+    web_page.release()
+    self.stepTic()
+    base_url = web_site.absolute_url(relative=1)
+    response = self.publish(base_url)
+    self.assertEqual(response.getStatus(), 302)
+    self.assertTrue('location' in response.headers.keys())
+    self.assertTrue('%s/login_form?came_from=' % portal.getId(), response.headers['location'])
+    # web site access
+    response = self.publish('%s?__ac_key=%s' %(base_url, key))
+    self.assertEqual(response.getStatus(), 200)
+    # web page access by path
+    response = self.publish('%s/%s?__ac_key=%s' %(base_url, web_page.getRelativeUrl(),
+                                                  key))
+    self.assertEqual(response.getStatus(), 200)
+    # web page access by reference
+    response = self.publish('%s/%s?__ac_key=%s' %(base_url, web_page.getReference(),
+                                                  key))
+    self.assertEqual(response.getStatus(), 200)
+    response = self.publish('%s/%s?__ac_name=%s&__ac_password=%s' % (
+      base_url, web_page.getReference(), reference, 'guest'))
+    self.assertEqual(response.getStatus(), 200)
+    response = self.publish('%s/%s?__ac_name=%s&__ac_password=%s' % (
+      base_url, web_page.getReference(), 'ERP5TypeTestCase', ''))
+    self.assertEqual(response.getStatus(), 200)
 
   def testERP5ExternalAuthenticationPlugin(self):
     """

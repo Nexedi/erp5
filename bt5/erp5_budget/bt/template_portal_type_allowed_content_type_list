@@ -7,3 +7,5 @@ Budget Transaction Module | Budget Transaction
 Budget Transfer | Budget Transfer Line
 Budget | Budget Line
 Budget | Budget Transfer Line
+Property Sheet | Transaction Quantity Value Feasability Constraint
+Property Sheet | Transaction Quantity Value Validity Constraint

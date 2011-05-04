@@ -216,6 +216,12 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
     # check that its destination is guichet_1
     self.assertEqual(self.cash_to_currency_purchase.getDestination(), None)
     self.setDocumentSourceReference(self.cash_to_currency_purchase)
+    # check default exchange rate
+    rate = self.cash_to_currency_purchase.CurrencyExchange_getExchangeRateList(from_currency=self.cash_to_currency_purchase.getResource(),
+                                                                               to_currency='currency_module/%s' % (self.cash_to_currency_purchase.Baobab_getPortalReferenceCurrencyID()),
+                                                                               currency_exchange_type='purchase',
+                                                                               start_date=self.cash_to_currency_purchase.getStartDate())[0]
+    self.assertEqual(rate, 650.0)
     # Check carrefully the script CurrencyPurchase_getQuantity
     script = self.cash_to_currency_purchase.CurrencyPurchase_getQuantity
     self.assertEqual(script(), 65000)

@@ -1,7 +1,7 @@
 <hidden_content_type_list>
  <portal_type id="Check Deposit">
-  <item>Outgoing Check Deposit Line</item>
   <item>Incoming Check Deposit Line</item>
+  <item>Outgoing Check Deposit Line</item>
  </portal_type>
  <portal_type id="Check Payment">
   <item>Banking Operation Line</item>
@@ -20,8 +20,8 @@
   <item>Checkbook Delivery Line</item>
  </portal_type>
  <portal_type id="Stop Payment">
-  <item>Checkbook Delivery Line</item>
   <item>Banking Operation Line</item>
+  <item>Checkbook Delivery Line</item>
  </portal_type>
  <portal_type id="Traveler Check Purchase">
   <item>Checkbook Delivery Line</item>
