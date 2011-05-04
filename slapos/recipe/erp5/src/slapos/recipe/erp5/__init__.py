@@ -568,6 +568,7 @@ class Recipe(BaseSlapRecipe):
     pidfile = os.path.join(self.run_directory, 'tidstorage.pid')
     timestamp_file_path = os.path.join(self.log_directory,
           'repozo_tidstorage_timestamp.log')
+    # shared configuration file
     tidstorage_config = self.createConfigurationFile('tidstorage.py',
         self.substituteTemplate(self.getTemplateFilename('tidstorage.py.in'),
           dict(
@@ -580,6 +581,7 @@ class Recipe(BaseSlapRecipe):
         logfile=logfile,
         pidfile=pidfile
       )))
+    # TID server
     tidstorage_server = zc.buildout.easy_install.scripts([('tidstoraged',
       __name__ + '.execute', 'execute')], self.ws, sys.executable,
       self.wrapper_directory, arguments=[
@@ -589,7 +591,19 @@ class Recipe(BaseSlapRecipe):
           self.killpidfromfile + ' ' + pidfile + ' SIGHUP')
     self.path_list.append(tidstorage_config)
     self.path_list.append(tidstorage_server)
-    raise NotImplementedError
+
+    # repozo wrapper
+    tidstorage_repozo = zc.buildout.easy_install.scripts([('tidstorage_repozo',
+      __name__ + '.execute', 'execute')], self.ws, sys.executable,
+      self.bin_directory, arguments=[
+        self.options['tidstorage_repozo_binary'], '--config', tidstorage_config,
+      '--repozo', self.options['repozo_binary']])[0]
+    self.path_list.append(tidstorage_repozo)
+
+    # and backup configuration
+    tidstorage_repozo_cron = os.path.join(self.cron_d, 'tidstorage_repozo')
+    open(tidstorage_repozo_cron, 'w').write('0 0 * * * %s' % tidstorage_repozo)
+    self.path_list.append(tidstorage_repozo_cron)
 
   def installZope(self, ip, port, name, zodb_configuration_string,
       with_timerservice=False):
