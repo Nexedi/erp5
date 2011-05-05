@@ -335,7 +335,7 @@ if listbox is None:\n
       \n
   if check_float == 0:\n
     precision = 4\n
-  other_parameter_list = (operation_currency, line_portal_type, read_only, column_base_category, use_inventory, fast_input_title, target_total_price, check_float)\n
+  other_parameter_list = (operation_currency, line_portal_type, read_only, column_base_category, use_inventory, fast_input_title[0], target_total_price, check_float)\n
   context.Base_updateDialogForm(listbox=listbox\n
                                 , calculated_price=total_price\n
                                 , empty_line_number=0\n
