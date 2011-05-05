@@ -1,3 +1,14 @@
+diff --git a/Makefile b/Makefile
+index dbb15d5..852a627 100644
+--- a/Makefile
++++ b/Makefile
+@@ -137,5 +137,5 @@ $(TARGET): xtrabackup.o $(INNODBOBJS) $(MYSQLOBJS)
+ clean:
+ 	rm -f *.o xtrabackup_* 
+ install:
+-	install -m 755 innobackupex-1.5.1 $(BIN_DIR)
++	install -m 755 innobackupex-1.5.1 $(BIN_DIR)/innobackupex
+ 	install -m 755 xtrabackup_*  $(BIN_DIR)
 diff --git a/utils/build.sh b/utils/build.sh
 index 3f0cee7..ae0f35b 100755
 --- a/utils/build.sh
