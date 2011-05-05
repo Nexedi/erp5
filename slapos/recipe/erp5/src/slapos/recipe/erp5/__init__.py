@@ -55,7 +55,7 @@ class Recipe(BaseSlapRecipe):
     self.requirements, self.ws = self.egg.working_set([__name__])
     # self.cron_d is a directory, where cron jobs can be registered
     self.cron_d = self.installCrond()
-    self.logrotate_d = self.installLogrotate()
+    self.logrotate_d, self.logrotate_backup = self.installLogrotate()
     self.killpidfromfile = zc.buildout.easy_install.scripts(
         [('killpidfromfile', __name__ + '.killpidfromfile',
           'killpidfromfile')], self.ws, sys.executable, self.bin_directory)[0]
@@ -134,6 +134,7 @@ class Recipe(BaseSlapRecipe):
     logrotate_d = os.path.abspath(os.path.join(self.etc_directory,
       'logrotate.d'))
     self._createDirectory(logrotate_d)
+    logrotate_backup = self.createBackupDirectory('logrotate')
     logrotate_conf = self.createConfigurationFile("logrotate.conf",
         "include %s" % logrotate_d)
     logrotate_cron = os.path.join(self.cron_d, 'logrotate')
@@ -141,7 +142,7 @@ class Recipe(BaseSlapRecipe):
     open(logrotate_cron, 'w').write('0 0 * * * %s -s %s %s' %
         (self.options['logrotate_binary'], state_file, logrotate_conf))
     self.path_list.extend([logrotate_d, logrotate_conf, logrotate_cron])
-    return logrotate_d
+    return logrotate_d, logrotate_backup
 
   def registerLogRotation(self, name, log_file_list, postrotate_script):
     """Register new log rotation requirement"""
@@ -149,7 +150,7 @@ class Recipe(BaseSlapRecipe):
         self.substituteTemplate(self.getTemplateFilename(
           'logrotate_entry.in'),
           dict(file_list=' '.join(['"'+q+'"' for q in log_file_list]),
-            postrotate=postrotate_script)))
+            postrotate=postrotate_script, olddir=self.logrotate_backup)))
 
   def linkBinary(self):
     """Links binaries to instance's bin directory for easier exposal"""
