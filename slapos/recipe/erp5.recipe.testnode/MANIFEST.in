@@ -1,0 +1,2 @@
+include CHANGES.txt
+recursive-include src/erp5/recipe/testnode *.in
