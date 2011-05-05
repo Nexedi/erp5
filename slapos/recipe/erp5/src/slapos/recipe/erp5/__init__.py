@@ -560,7 +560,7 @@ class Recipe(BaseSlapRecipe):
     # destination
     for k, v in known_tid_storage_identifier_dict.copy().iteritems():
       # generate unique name for each backup
-      name = '_'.join(['_'.join([str(q) for q in k[0]]), k[1]])
+      name = '_'.join(['_'.join([str(q) for q in k[0][0]]), k[1]])
       destination = os.path.join(backup_base_path, name)
       self._createDirectory(destination)
       known_tid_storage_identifier_dict[str(k)] = (v[0], destination, v[1])
