@@ -710,22 +710,24 @@ class Recipe(BaseSlapRecipe):
         pkg_resources.resource_string(__name__,
           'template/apache.zope.conf.in') % apache_conf)
 
-  def installLoginApache(self, ip, port, backend, key, certificate):
+  def installLoginApache(self, ip, port, backend, key, certificate,
+      suffix=''):
     ssl_template = """SSLEngine on
 SSLCertificateFile %(login_certificate)s
 SSLCertificateKeyFile %(login_key)s
 SSLRandomSeed startup builtin
 SSLRandomSeed connect builtin
 """
-    apache_conf = self._getApacheConfigurationDict('login_apache', ip, port)
+    apache_conf = self._getApacheConfigurationDict('login_apache'+suffix, ip,
+        port)
     apache_conf['server_name'] = '%s' % apache_conf['ip']
     apache_conf['ssl_snippet'] = ssl_template % dict(
         login_certificate=certificate, login_key=key)
-    apache_config_file = self._writeApacheConfiguration('login_apache',
+    apache_config_file = self._writeApacheConfiguration('login_apache'+suffix,
         apache_conf, backend)
     self.path_list.append(apache_config_file)
     self.path_list.extend(zc.buildout.easy_install.scripts([(
-      'login_apache',
+      'login_apache'+suffix,
         __name__ + '.apache', 'runApache')], self.ws,
           sys.executable, self.wrapper_directory, arguments=[
             dict(
