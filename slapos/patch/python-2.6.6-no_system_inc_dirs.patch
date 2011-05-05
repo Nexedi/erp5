@@ -1,0 +1,27 @@
+--- Python-2.6.6/setup.py~	2010-12-11 12:05:13.000000000 +0100
++++ Python-2.6.6/setup.py	2011-03-05 13:33:04.556662701 +0100
+@@ -411,7 +411,7 @@
+             '/lib64', '/usr/lib64',
+             '/lib', '/usr/lib',
+             ]
+-        inc_dirs = self.compiler.include_dirs + ['/usr/include']
++        inc_dirs = self.compiler.include_dirs
+         exts = []
+         missing = []
+ 
+@@ -818,15 +818,6 @@
+         # construct a list of paths to look for the header file in on
+         # top of the normal inc_dirs.
+         db_inc_paths = [
+-            '/usr/include/db4',
+-            '/usr/local/include/db4',
+-            '/opt/sfw/include/db4',
+-            '/usr/include/db3',
+-            '/usr/local/include/db3',
+-            '/opt/sfw/include/db3',
+-            # Fink defaults (http://fink.sourceforge.net/)
+-            '/sw/include/db4',
+-            '/sw/include/db3',
+         ]
+         # 4.x minor number specific paths
+         for x in gen_db_minor_ver_nums(4):
