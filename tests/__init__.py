@@ -45,7 +45,7 @@ class ERP5(_ERP5):
 
   def getTestList(self):
     test_list = []
-    for test_path in glob.glob('Products/*/tests/test*.py') + \
+    for test_path in glob.glob('product/*/tests/test*.py') + \
                      glob.glob('bt5/*/TestTemplateItem/test*.py'):
       test_case = test_path.split(os.sep)[-1][:-3] # remove .py
       product = test_path.split(os.sep)[-3]
