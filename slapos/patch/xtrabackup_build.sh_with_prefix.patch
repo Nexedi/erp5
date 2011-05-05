@@ -1,0 +1,120 @@
+diff --git a/utils/build.sh b/utils/build.sh
+index 3f0cee7..ae0f35b 100755
+--- a/utils/build.sh
++++ b/utils/build.sh
+@@ -21,12 +21,13 @@ function usage()
+ {
+     echo "Build an xtrabackup binary against the specified InnoDB flavor."
+     echo
+-    echo "Usage: `basename $0` CODEBASE"
++    echo "Usage: `basename $0` CODEBASE PREFIX"
+     echo "where CODEBASE can be one of the following values or aliases:"
+     echo "  innodb51_builtin | 5.1	build against built-in InnoDB in MySQL 5.1"
+     echo "  innodb55         | 5.5	build against InnoDB in MySQL 5.5"
+     echo "  xtradb51         | xtradb   build against Percona Server with XtraDB 5.1"
+     echo "  xtradb55         | xtradb55 build against Percona Server with XtraDB 5.5"
++    echo "where PREFIX is abolute path for install location"
+     exit -1
+ }
+ 
+@@ -92,9 +93,10 @@ function build_xtrabackup()
+     echo "Building XtraBackup"
+     mkdir $build_dir
+     cp $top_dir/Makefile $top_dir/xtrabackup.c $build_dir
++    cp $top_dir/innobackupex $build_dir/innobackupex-1.5.1
+ 
+     cd $build_dir
+-    $MAKE_CMD $xtrabackup_target
++    $MAKE_CMD PREFIX=$1 $xtrabackup_target
+     cd $top_dir
+ }
+ 
+@@ -103,11 +105,36 @@ function build_tar4ibd()
+     echo "Building tar4ibd"
+     unpack_and_patch libtar-1.2.11.tar.gz tar4ibd_libtar-1.2.11.patch
+     cd libtar-1.2.11
+-    ./configure
++    ./configure --prefix=$1
+     $MAKE_CMD
+     cd $topdir
+ }
+ 
++function install_server()
++{
++    echo "Installing the server"
++    cd $server_dir
++    $MAKE_CMD install
++    cd $top_dir
++}
++
++function install_xtrabackup()
++{
++    echo "Installing XtraBackup"
++    echo $build_dir
++    cd $build_dir
++    $MAKE_CMD PREFIX=$1 install
++    cd $top_dir
++}
++
++function install_tar4ibd()
++{
++    echo "Installing tar4ibd"
++    cd libtar-1.2.11
++    $MAKE_CMD install
++    cd $topdir
++}
++
+ ################################################################################
+ # Do all steps to build the server, xtrabackup and tar4ibd
+ # Expects the following variables to be set before calling:
+@@ -136,9 +163,15 @@ function build_all()
+ 
+     build_server
+ 
+-    build_xtrabackup
++    build_xtrabackup $1
++
++    build_tar4ibd $1
++
++    install_server
+ 
+-    build_tar4ibd
++    install_xtrabackup $1
++
++    install_tar4ibd
+ }
+ 
+ if ! test -f xtrabackup.c
+@@ -148,6 +181,10 @@ then
+ fi
+ 
+ type=$1
++prefix=$2
++if [ "x$prefix" == "x" ] ; then
++  usage
++fi
+ top_dir=`pwd`
+ 
+ case "$type" in
+@@ -161,9 +198,10 @@ case "$type" in
+ 	    --with-plugins=innobase \
+ 	    --with-zlib-dir=bundled \
+ 	    --enable-shared \
+-	    --with-extra-charsets=complex"
++	    --with-extra-charsets=complex \
++      --prefix=$2"
+ 
+-	build_all
++	build_all $2
+ 	;;
+ 
+ "innodb55" | "5.5")
+@@ -225,7 +263,7 @@ case "$type" in
+ 
+ 	build_server
+ 
+-	build_xtrabackup
++	build_xtrabackup 
+ 
+ 	build_tar4ibd
+ 	;;
