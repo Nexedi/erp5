@@ -614,10 +614,11 @@ class Recipe(BaseSlapRecipe):
     return dict(host=ip, port=port)
 
   def installZope(self, ip, port, name, zodb_configuration_string,
-      with_timerservice=False, tidstorage_config=None):
+      with_timerservice=False, tidstorage_config=None, thread_amount=1):
     # Create zope configuration file
     zope_config = dict(
         products=self.options['products'],
+        thread_amount=thread_amount
     )
     zope_config['zodb_configuration_string'] = zodb_configuration_string
     zope_config['instance'] = self.erp5_directory

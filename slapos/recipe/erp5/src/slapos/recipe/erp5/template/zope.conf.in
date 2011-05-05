@@ -19,7 +19,7 @@ instancehome $INSTANCE
 debug-mode off
 
 # One thread is safe enough
-zserver-threads 1
+zserver-threads %(thread_amount)s
 
 # File location
 pid-filename %(pid-filename)s
