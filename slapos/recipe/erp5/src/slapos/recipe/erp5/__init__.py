@@ -551,19 +551,19 @@ class Recipe(BaseSlapRecipe):
     """Install TidStorage with all required backup tools
 
       known_tid_storage_identifier_dict is a dictionary of:
-      ((ip, port), storagename): (filestorage path, url for serialize)
+      (((ip, port),), storagename): (filestorage path, url for serialize)
       url for serialize will be merged with access_url by internal tidstorage
 
       """
     backup_base_path = self.createBackupDirectory('zodb')
     # it is time to fill known_tid_storage_identifier_dict with backup
     # destination
-    for k, v in known_tid_storage_identifier_dict.iteritems():
+    for k, v in known_tid_storage_identifier_dict.copy().iteritems():
       # generate unique name for each backup
       name = '_'.join(['_'.join([str(q) for q in k[0]]), k[1]])
       destination = os.path.join(backup_base_path, name)
       self._createDirectory(destination)
-      known_tid_storage_identifier_dict[k] = (v[0], destination, v[1])
+      known_tid_storage_identifier_dict[str(k)] = (v[0], destination, v[1])
     logfile = os.path.join(self.log_directory, 'tidstorage.log')
     pidfile = os.path.join(self.run_directory, 'tidstorage.pid')
     statusfile = os.path.join(self.log_directory, 'tidstorage.tid')
