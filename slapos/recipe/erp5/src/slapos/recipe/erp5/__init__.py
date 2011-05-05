@@ -558,12 +558,13 @@ class Recipe(BaseSlapRecipe):
     backup_base_path = self.createBackupDirectory('zodb')
     # it is time to fill known_tid_storage_identifier_dict with backup
     # destination
+    formatted_storage_dict = dict()
     for k, v in known_tid_storage_identifier_dict.copy().iteritems():
       # generate unique name for each backup
       name = '_'.join(['_'.join([str(q) for q in k[0][0]]), k[1]])
       destination = os.path.join(backup_base_path, name)
       self._createDirectory(destination)
-      known_tid_storage_identifier_dict[str(k)] = (v[0], destination, v[1])
+      formatted_storage_dict[str(k)] = (v[0], destination, v[1])
     logfile = os.path.join(self.log_directory, 'tidstorage.log')
     pidfile = os.path.join(self.run_directory, 'tidstorage.pid')
     statusfile = os.path.join(self.log_directory, 'tidstorage.tid')
@@ -573,8 +574,7 @@ class Recipe(BaseSlapRecipe):
     tidstorage_config = self.createConfigurationFile('tidstorage.py',
         self.substituteTemplate(self.getTemplateFilename('tidstorage.py.in'),
           dict(
-        known_tid_storage_identifier_dict=pprint.pformat(
-          known_tid_storage_identifier_dict),
+        known_tid_storage_identifier_dict=pprint.pformat(formatted_storage_dict),
         base_url='%s/%%s/serialize' % access_url,
         host=ip,
         port=port,
