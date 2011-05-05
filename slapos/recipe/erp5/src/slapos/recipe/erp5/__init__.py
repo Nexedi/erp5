@@ -605,7 +605,11 @@ class Recipe(BaseSlapRecipe):
 
     # and backup configuration
     tidstorage_repozo_cron = os.path.join(self.cron_d, 'tidstorage_repozo')
-    open(tidstorage_repozo_cron, 'w').write('0 0 * * * %s' % tidstorage_repozo)
+    open(tidstorage_repozo_cron, 'w').write('''0 0 * * * %(tidstorage_repozo)s
+0 0 * * * cp -f %(tidstorage_tid)s %(tidstorage_tid_backup)s'''%dict(
+      tidstorage_repozo=tidstorage_repozo,
+      tidstorage_tid=statusfile,
+      tidstorage_tid_backup=os.path.join(backup_base_path, 'tidstorage.tid')))
     self.path_list.append(tidstorage_repozo_cron)
     return dict(host=ip, port=port)
 
