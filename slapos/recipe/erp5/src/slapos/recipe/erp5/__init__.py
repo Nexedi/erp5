@@ -566,6 +566,7 @@ class Recipe(BaseSlapRecipe):
       known_tid_storage_identifier_dict[k] = (v[0], destination, v[1])
     logfile = os.path.join(self.log_directory, 'tidstorage.log')
     pidfile = os.path.join(self.run_directory, 'tidstorage.pid')
+    statusfile = os.path.join(self.log_directory, 'tidstorage.tid')
     timestamp_file_path = os.path.join(self.log_directory,
           'repozo_tidstorage_timestamp.log')
     # shared configuration file
@@ -579,7 +580,8 @@ class Recipe(BaseSlapRecipe):
         port=port,
         timestamp_file_path=timestamp_file_path,
         logfile=logfile,
-        pidfile=pidfile
+        pidfile=pidfile,
+        statusfile=statusfile
       )))
     # TID server
     tidstorage_server = zc.buildout.easy_install.scripts([('tidstoraged',
