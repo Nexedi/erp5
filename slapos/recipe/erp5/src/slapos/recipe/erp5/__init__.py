@@ -146,15 +146,11 @@ class Recipe(BaseSlapRecipe):
 
   def registerLogRotation(self, name, log_file_list, postrotate_script):
     """Register new log rotation requirement"""
-    if getattr(self, 'logrotate_d', None) is not None:
-      open(os.path.join(self.logrotate_d, name), 'w').write(
+    open(os.path.join(self.logrotate_d, name), 'w').write(
         self.substituteTemplate(self.getTemplateFilename(
           'logrotate_entry.in'),
           dict(file_list=' '.join(['"'+q+'"' for q in log_file_list]),
             postrotate=postrotate_script, olddir=self.logrotate_backup)))
-    else:
-      self.logger.warning('No log rotation configured for %r, as log rotate '
-          'is not configured' % name)
 
   def linkBinary(self):
     """Links binaries to instance's bin directory for easier exposal"""
