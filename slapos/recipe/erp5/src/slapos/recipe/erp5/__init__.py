@@ -741,6 +741,7 @@ SSLRandomSeed connect builtin
 
   def installMysqlServer(self, ip, port, database='erp5', user='user',
       test_database='test_erp5', test_user='test_user', template_filename=None):
+    backup_directory = self.createBackupDirectory('mysql')
     if template_filename is None:
       template_filename = self.getTemplateFilename('my.cnf.in')
     error_log = os.path.join(self.log_directory, 'mysqld.log')
