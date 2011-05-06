@@ -1,6 +1,7 @@
 import glob, os, subprocess
 # test_suite is provided by 'run_test_suite'
 from test_suite import ERP5TypeTestSuite
+import sys
 
 class _ERP5(ERP5TypeTestSuite):
   realtime_output = False
