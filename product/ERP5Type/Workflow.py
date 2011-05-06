@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import zLOG
 from Products.ERP5Type import Permissions
 from App.special_dtml import HTMLFile
 from Acquisition import aq_inner
