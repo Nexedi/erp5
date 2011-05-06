@@ -740,7 +740,9 @@ SSLRandomSeed connect builtin
     return 'https://[%(ip)s]:%(port)s' % apache_conf
 
   def installMysqlServer(self, ip, port, database='erp5', user='user',
-      test_database='test_erp5', test_user='test_user'):
+      test_database='test_erp5', test_user='test_user', template_filename=None):
+    if template_filename is None:
+      template_filename = self.getTemplateFilename('my.cnf.in')
     error_log = os.path.join(self.log_directory, 'mysqld.log')
     slow_query_log = os.path.join(self.log_directory, 'mysql-slow.log')
     mysql_conf = dict(
@@ -770,7 +772,7 @@ SSLRandomSeed connect builtin
     self._createDirectory(mysql_conf['data_directory'])
 
     mysql_conf_path = self.createConfigurationFile("my.cnf",
-        self.substituteTemplate(self.getTemplateFilename('my.cnf.in'),
+        self.substituteTemplate(template_filename,
           mysql_conf))
 
     mysql_script_list = []
