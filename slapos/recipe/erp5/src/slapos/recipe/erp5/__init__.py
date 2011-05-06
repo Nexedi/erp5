@@ -817,7 +817,7 @@ SSLRandomSeed connect builtin
     incremental_backup = os.path.join(backup_directory, 'incremental')
     self._createDirectory(full_backup)
     self._createDirectory(incremental_backup)
-    innobackupex_argument_list = [self.options['innobackupex_binary'], '--defaults-file=%s' % mysql_conf_path, '--socket=%s' %mysql_conf['socket'].strip(), '--user=root']
+    innobackupex_argument_list = [self.options['perl_binary'], self.options['innobackupex_binary'], '--defaults-file=%s' % mysql_conf_path, '--socket=%s' %mysql_conf['socket'].strip(), '--user=root']
     environment = dict(PATH=':'.join([self.bin_directory] + os.environ['PATH'].split(':')))
     innobackupex_incremental = zc.buildout.easy_install.scripts([('innobackupex_incremental',
       __name__ + '.execute', 'executee')], self.ws,
