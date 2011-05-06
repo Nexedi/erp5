@@ -18,6 +18,9 @@
  <portal_type id="Preference">
   <item>Knowledge Pad</item>
  </portal_type>
+ <portal_type id="System Preference">
+  <item>Knowledge Pad</item>
+ </portal_type>
  <portal_type id="Types Tool">
   <item>Gadget Type</item>
  </portal_type>
