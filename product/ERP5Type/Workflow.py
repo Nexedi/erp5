@@ -85,9 +85,9 @@ def _generateWorkflowConstructors(factory_info):
   # The form
   def manage_addWorkflowForm(dispatcher, REQUEST, RESPONSE):
     """Form to add a type-specific workflow to portal_workflow"""
-    kw = dict(workflow_factory_title=workflow_factory_title,
-              form_action=constructor_action_name)
-    return manage_addWorkflowFormDtml(None, dispatcher, REQUEST, **kw)
+    return manage_addWorkflowFormDtml(None, dispatcher, REQUEST,
+      workflow_factory_title=workflow_factory_title,
+      form_action=constructor_action_name)
   
   # The action of the form
   @postonly
