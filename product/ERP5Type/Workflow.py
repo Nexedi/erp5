@@ -143,56 +143,68 @@ def setupERP5Workflow(wf):
   """Sets up an DC Workflow with defaults variables needed by ERP5.
   """
   wf.setProperties(title='ERP5 Default Workflow')
+  states = wf.states
+  addState = states.addState
   for state_id, state_title in (('draft', 'Draft'),):
-    wf.states.addState(state_id)
-    wf.states[state_id].title = state_title
-  for v in ('action', 'actor', 'comment', 'history', 'time',
-            'error_message', 'portal_type'):
-    wf.variables.addVariable(v)
+    addState(state_id)
+    states[state_id].title = state_title
+  states.setInitialState('draft')
+
+  variables = wf.variables
+  addVariable = variables.addVariable
+  for v, property_dict in (
+        ('action', {
+            'description': 'Transition id',
+            'default_expr': 'transition/getId|nothing',
+            'for_status': 1,
+            'update_always': 1,
+          }),
+        ('actor', {
+            'description': 'Name of the user who performed transition',
+            'default_expr': 'user/getUserName',
+            'for_status': 1,
+            'update_always': 1,
+          }),
+        ('comment', {
+            'description': 'Comment about transition',
+            'default_expr': "python:state_change.kwargs.get('comment', '')",
+            'for_status': 1,
+            'update_always': 1,
+          }),
+        ('history', {
+            'description': 'Provides access to workflow history',
+            'default_expr': 'state_change/getHistory',
+          }),
+        ('time', {
+            'description': 'Transition timestamp',
+            'default_expr': 'state_change/getDateTime',
+            'for_status': 1,
+            'update_always': 1,
+          }),
+        ('error_message', {
+            'description': 'Error message if validation failed',
+            'for_status': 1,
+            'update_always': 1,
+          }),
+        ('portal_type', {
+            'description': 'Portal type (used as filter for worklists)',
+            'for_catalog': 1,
+          }),
+      ):
+    addVariable(v)
+    variables[v].setProperties(**property_dict)
+
+  addManagedPermission = wf.addManagedPermission
   for perm in (Permissions.AccessContentsInformation,
                Permissions.View,
                Permissions.AddPortalContent,
                Permissions.ModifyPortalContent,
                Permissions.DeleteObjects):
-    wf.addManagedPermission(perm)
+    addManagedPermission(perm)
 
-  wf.states.setInitialState('draft')
   # set by default the state variable to simulation_state.
   # anyway, a default workflow needs to be configured.
-  wf.variables.setStateVar('simulation_state')
-
-  vdef = wf.variables['action']
-  vdef.setProperties(description='The last transition',
-                     default_expr='transition/getId|nothing',
-                     for_status=1, update_always=1)
-
-  vdef = wf.variables['actor']
-  vdef.setProperties(description='The name of the user who performed '
-                     'the last transition',
-                     default_expr='user/getUserName',
-                      for_status=1, update_always=1)
-
-  vdef = wf.variables['comment']
-  vdef.setProperties(description='Comments about the last transition',
-               default_expr="python:state_change.kwargs.get('comment', '')",
-               for_status=1, update_always=1)
-
-  vdef = wf.variables['history']
-  vdef.setProperties(description='Provides access to workflow history',
-                     default_expr="state_change/getHistory")
-
-  vdef = wf.variables['time']
-  vdef.setProperties(description='Time of the last transition',
-                     default_expr="state_change/getDateTime",
-                     for_status=1, update_always=1)
-
-  vdef = wf.variables['error_message']
-  vdef.setProperties(description='Error message if validation failed',
-                     for_status=1, update_always=1)
-  
-  vdef = wf.variables['portal_type']
-  vdef.setProperties(description='portal type (use as filter for worklists)',
-                     for_catalog=1)
+  variables.setStateVar('simulation_state')
 
 def createERP5Workflow(id):
   """Creates an ERP5 Workflow """
@@ -203,3 +215,4 @@ def createERP5Workflow(id):
 addWorkflowFactory(createERP5Workflow,
                    id='erp5_workflow',
                    title='ERP5-style pre-configured DCWorkflow')
+
