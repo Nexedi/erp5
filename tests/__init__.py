@@ -55,7 +55,8 @@ class ERP5(_ERP5):
         continue
       # skip some tests
       if test_case.startswith('testLive') or test_case.startswith('testVifib') \
-         or test_case in ('testPerformance', 'testSimulationPerformance'):
+         or test_case in ('testPerformance', 'testSimulationPerformance',
+                          'testAccounting_l10n_fr_m9'):
         continue
       test_list.append(test_case)
     return test_list
