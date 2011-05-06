@@ -58,10 +58,11 @@ def addWorkflowFactory(factory, id, title):
     assert not _workflow_factories.get(id), (
         'Workflow factory with id %r already exists.' % id)
 
-    factory_info = dict(factory=factory,
-                        id=id,
-                        title=title)
-    _workflow_factories[id] = factory_info
+    _workflow_factories[id] = {
+      'factory': factory,
+      'id': id,
+      'title': title,
+    }
     # register with CMF 1 if it's still there
     baseAddWorkflowFactory(factory, id, title)
 
@@ -78,8 +79,8 @@ def _generateWorkflowConstructors(factory_info):
   workflow_factory_id = factory_info['id']
   workflow_factory_title = factory_info['title']
   # the method names (last url segments)
-  constructor_form_name=FACTORY_FORM_PREFIX + workflow_factory_id
-  constructor_action_name=FACTORY_ACTION_PREFIX + workflow_factory_id
+  constructor_form_name = FACTORY_FORM_PREFIX + workflow_factory_id
+  constructor_action_name = FACTORY_ACTION_PREFIX + workflow_factory_id
 
   # The form
   def manage_addWorkflowForm(dispatcher, REQUEST, RESPONSE):
@@ -102,9 +103,10 @@ def _generateWorkflowConstructors(factory_info):
     return workflow
 
   # The constructors
-  constructors = [(constructor_form_name, manage_addWorkflowForm),
-                  (constructor_action_name, manage_addWorkflow)]
-  return constructors
+  return [
+    (constructor_form_name, manage_addWorkflowForm),
+    (constructor_action_name, manage_addWorkflow),
+  ]
 
 def addWorkflowByType(container, workflow_factory_id, workflow_id):
   """ Add a workflow with name 'workflow_id' from factory identified by
@@ -112,21 +114,20 @@ def addWorkflowByType(container, workflow_factory_id, workflow_id):
   """
   # This functionality could be inside the generated manage_addWorkflow above,
   # but is placed here to be easily used directly from Python code.
-  workflow_factory = _workflow_factories[workflow_factory_id]['factory']
-  workflow = workflow_factory(workflow_id)
-  container._setObject(workflow_id, workflow)
+  container._setObject(workflow_id,
+    _workflow_factories[workflow_factory_id]['factory'](workflow_id))
   return aq_inner(container.restrictedTraverse(workflow_id))
 
 def registerWorkflowFactory(context, factory_info):
   """ Register a workflow factory as a Zope2 style object factory that is only
   addable to portal_workflow"""
-  constructors = _generateWorkflowConstructors(factory_info)
-  permission = Permissions.ManagePortal
-  context.registerClass(DCWorkflowDefinition, # this class is only used here for its interfaces
-                        meta_type=factory_info['title'],
-                        constructors=constructors,
-                        permission=permission,
-                        visibility=None)
+  context.registerClass(
+    DCWorkflowDefinition, # this class is only used here for its interfaces
+    meta_type=factory_info['title'],
+    constructors=_generateWorkflowConstructors(factory_info),
+    permission=Permissions.ManagePortal,
+    visibility=None,
+  )
 
 def registerAllWorkflowFactories(context):
   """register workflow factories during product initialization
