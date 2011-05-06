@@ -818,11 +818,15 @@ SSLRandomSeed connect builtin
     incremental_backup = os.path.join(backup_directory, 'incremental')
     self._createDirectory(full_backup)
     self._createDirectory(incremental_backup)
-    innobackupex_argument_list = [self.options['perl_binary'], self.options['innobackupex_binary'], '--defaults-file=%s' % mysql_conf_path, '--socket=%s' %mysql_conf['socket'].strip(), '--user=root']
-    environment = dict(PATH=':'.join([self.bin_directory] + os.environ['PATH'].split(':')))
-    innobackupex_incremental = zc.buildout.easy_install.scripts([('innobackupex_incremental',
-      __name__ + '.execute', 'executee')], self.ws,
-      sys.executable, self.bin_directory, arguments=[
+    innobackupex_argument_list = [self.options['perl_binary'],
+        self.options['innobackupex_binary'],
+        '--defaults-file=%s' % mysql_conf_path,
+        '--socket=%s' %mysql_conf['socket'].strip(), '--user=root']
+    environment = dict(
+        PATH=':'.join([self.bin_directory] + os.environ['PATH'].split(':')))
+    innobackupex_incremental = zc.buildout.easy_install.scripts([(
+      'innobackupex_incremental', __name__ + '.execute', 'executee')],
+      self.ws, sys.executable, self.bin_directory, arguments=[
         innobackupex_argument_list + ['--incremental'],
         environment])[0]
     self.path_list.append(innobackupex_incremental)
@@ -832,10 +836,11 @@ SSLRandomSeed connect builtin
         innobackupex_argument_list,
         environment])[0]
     self.path_list.append(innobackupex_full)
-    backup_controller = zc.buildout.easy_install.scripts([('innobackupex_controller',
-      __name__ + '.innobackupex', 'controller')], self.ws,
-      sys.executable, self.bin_directory, arguments=[innobackupex_incremental,
-        innobackupex_full, full_backup, incremental_backup])[0]
+    backup_controller = zc.buildout.easy_install.scripts([
+      ('innobackupex_controller', __name__ + '.innobackupex', 'controller')],
+      self.ws, sys.executable, self.bin_directory,
+      arguments=[innobackupex_incremental, innobackupex_full, full_backup,
+        incremental_backup])[0]
     self.path_list.append(backup_controller)
     mysql_backup_cron = os.path.join(self.cron_d, 'mysql_backup')
     open(mysql_backup_cron, 'w').write('0 0 * * * ' + backup_controller)
