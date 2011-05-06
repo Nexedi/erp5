@@ -202,4 +202,4 @@ def createERP5Workflow(id):
 
 addWorkflowFactory(createERP5Workflow,
                    id='erp5_workflow',
-                   title='ERP5-style empty workflow')
+                   title='ERP5-style pre-configured DCWorkflow')
