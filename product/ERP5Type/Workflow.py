@@ -56,7 +56,7 @@ def addWorkflowFactory(factory, id, title):
     in the Workflow Tool.
     """
     assert not _workflow_factories.get(id), (
-        'Workflow with id %r already exists.' % id)
+        'Workflow factory with id %r already exists.' % id)
 
     factory_info = dict(factory=factory,
                         id=id,
