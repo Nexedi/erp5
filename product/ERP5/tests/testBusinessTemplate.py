@@ -4258,9 +4258,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckNotInstalledInstallationState \
                        CheckPreinstallReturnSomething \
                        CheckCatalogPreinstallReturnCatalogMethod \
-		       Tic \
+                       Tic \
                        InstallWithoutForceBusinessTemplate \
-		       CheckFolderReindexActivityPresence \
+                       CheckFolderReindexActivityPresence \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -5039,17 +5039,17 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test is revision number is incremented with the bt is built"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateNewBusinessTemplate \
-		       UseExportBusinessTemplate \
-		       CheckInitialRevision \
+                       UseExportBusinessTemplate \
+                       CheckInitialRevision \
                        BuildBusinessTemplate \
                        CheckBuiltBuildingState \
-		       stepCheckFirstRevision \
-		       BuildBusinessTemplate \
-		       stepCheckSecondRevision \
+                       stepCheckFirstRevision \
+                       BuildBusinessTemplate \
+                       stepCheckSecondRevision \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
+                       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -5058,12 +5058,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test if a new Business Template has no dependencies"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateNewBusinessTemplate \
-		       UseExportBusinessTemplate \
+                       UseExportBusinessTemplate \
                        CheckNoMissingDependencies \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
+                       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -5072,13 +5072,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test if a exception is raised when a dependency is missing"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateNewBusinessTemplate \
-		       UseExportBusinessTemplate \
+                       UseExportBusinessTemplate \
                        AddDependency \
                        CheckMissingDependencies \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
+                       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -5087,9 +5087,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test if the dependency problem is fixed when the dependency is installed"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateNewBusinessTemplate \
-		       UseExportBusinessTemplate \
+                       UseExportBusinessTemplate \
                        AddDependency \
                        CheckMissingDependencies \
                        CreateDependencyBusinessTemplate \
@@ -5162,7 +5162,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test if backup works during installation of a bt with subfolder in skin folder"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateSkinFolder \
                        CheckSkinFolderExists \
                        CreateSkinSubFolder \
@@ -5188,7 +5188,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test if build fails when one of the paths does not exist"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddPathToBusinessTemplate \
@@ -5373,7 +5373,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        InstallWithoutForceBusinessTemplate \
-		       CheckFolderReindexActivityPresence \
+                       CheckFolderReindexActivityPresence \
                        Tic \
                        \
                        CheckFormGroups \
@@ -5387,9 +5387,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
-		       Tic \
+                       Tic \
                        InstallWithoutForceBusinessTemplate \
-		       CheckFolderReindexActivityPresence \
+                       CheckFolderReindexActivityPresence \
                        Tic \
                        \
                        CheckFormGroups \

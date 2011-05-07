@@ -48,4 +48,4 @@ class CategoryRelatedMembershipStateConstraint(CategoryMembershipStateConstraint
     class to simply surcharge it.
     """
     return obj._getRelatedValueList(base_category, 
-		                    portal_type=portal_type_list)
+                                    portal_type=portal_type_list)

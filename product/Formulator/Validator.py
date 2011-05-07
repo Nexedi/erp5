@@ -567,7 +567,7 @@ class FileValidator(Validator):
     def validate(self, field, key, REQUEST):
         value = REQUEST.get(key, None) 
         if field.get_value('required') and value in (None, ''):
-	          self.raise_error('required_not_found', field)
+                  self.raise_error('required_not_found', field)
         return value
     
 FileValidatorInstance = FileValidator()

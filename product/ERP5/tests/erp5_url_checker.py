@@ -137,9 +137,9 @@ class URLOpener(FancyURLopener):
 
 class Checker(URLOpener):
 
-  # This seems necessary for exceptions	
+  # This seems necessary for exceptions
   type = 'http'
-	
+
   def CheckUrl(self, url=None):
     try:
       thread = Thread(target=self.SearchUrl,args=(url,))

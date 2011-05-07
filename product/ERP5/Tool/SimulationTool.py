@@ -973,7 +973,7 @@ class SimulationTool(BaseTool):
 
       mirror_section_category - only take rows in stock table which 
                                 mirror_section_uid is member of
-				mirror_section_category
+                                mirror_section_category
 
       node_filter     - only take rows in stock table which node_uid
                         matches node_filter
@@ -1851,7 +1851,7 @@ class SimulationTool(BaseTool):
 
       TODO:
         - make sure getInventoryHistoryList can return
-	  cumulative values calculated by SQL (JPS)
+          cumulative values calculated by SQL (JPS)
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_getInventoryHistoryList(

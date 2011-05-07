@@ -44,19 +44,19 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
   Unit test for the cash exchange module
   Source =  destination
   Initial cash detail :
-	5 banknotes of 10000
-    	12 coin of 200
-    	24 banknotes of 5000
-	0 coin of 100
+        5 banknotes of 10000
+        12 coin of 200
+        24 banknotes of 5000
+        0 coin of 100
 
   Ordered by Assignor
   Confirmed by Assignee
   Delivered by DestinationAssignee
   Final cash detail :
-	0 banknotes of 10000
-    	0 coin of 200
-    	34 banknotes of 5000
-	24 coin of 100
+        0 banknotes of 10000
+        0 coin of 200
+        34 banknotes of 5000
+        24 coin of 100
 
   """
 
@@ -503,7 +503,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
     # define the sequence
     sequence_string = 'Tic CheckObjects Tic CheckInitialInventoryGuichet_1 ' \
                     + 'CheckInitialInventoryGuichet_2 ' \
-		    + 'CreateCashExchange ' \
+                    + 'CreateCashExchange ' \
                     + 'CreateValidIncomingLine CheckSubTotal ' \
                     + 'CreateValidOutgoingLine ' \
                     + 'Tic CheckTotal ' \
@@ -512,7 +512,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
                     + 'DeliverFails Tic ' \
                     + 'DeleteResetInventory Tic ' \
                     + 'DeliverCashExchange Tic ' \
-		    + 'CheckFinalInventoryGuichet_1 ' \
+                    + 'CheckFinalInventoryGuichet_1 ' \
                     + 'CheckFinalInventoryGuichet_2'
     sequence_list.addSequenceString(sequence_string)
     # play the sequence

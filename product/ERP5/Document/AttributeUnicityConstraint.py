@@ -35,7 +35,7 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.Utils import createExpressionContext
 from Products.ERP5Type.Core.PropertyExistenceConstraint import \
-		PropertyExistenceConstraint
+                PropertyExistenceConstraint
 from Products.ZSQLCatalog.SQLCatalog import Query, NegatedQuery
 
 class AttributeUnicityConstraint(PropertyExistenceConstraint):

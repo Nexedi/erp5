@@ -186,7 +186,7 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
     self.money_deposit = self.money_deposit_module.newContent(
                             id='money_deposit', 
                             portal_type='Money Deposit',
-									          destination_payment_value = self.bank_account_1,
+                            destination_payment_value = self.bank_account_1,
                             resource_value = self.currency_1,
                             description='test',
                             source_total_asset_price=20000.0)

@@ -86,8 +86,8 @@ class TestSessionTool(ERP5TypeTestCase):
     session_cache_factory = getattr(portal_caches, SESSION_CACHE_FACTORY)
     # remove current cache plugin
     session_cache_factory.manage_delObjects(list(session_cache_factory.objectIds()))
-    cache_plugin = session_cache_factory.newContent(portal_type=portal_type) 	 
-    cache_plugin.setCacheDuration(storage_duration) 	 
+    cache_plugin = session_cache_factory.newContent(portal_type=portal_type)
+    cache_plugin.setCacheDuration(storage_duration)
     cache_plugin.setIntIndex(0)
     if portal_type == 'Distributed Ram Cache':
       cache_plugin.edit(specialise='portal_memcached/default_memcached_plugin')

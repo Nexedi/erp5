@@ -568,16 +568,16 @@ class TestBug(ERP5TypeTestCase):
     if not run: return
     sequence_list = SequenceList()
     step_list = [ 'stepCreateBug'
-		, 'stepCheckBugInit'
-		, 'stepOpenBug'
-                , 'stepTic'
-		, 'stepAssignBug'
-		, 'stepTic'
-		, 'stepResolveBug'
-		, 'stepTic'
+                , 'stepCheckBugInit'
                 , 'stepOpenBug'
                 , 'stepTic'
-		]
+                , 'stepAssignBug'
+                , 'stepTic'
+                , 'stepResolveBug'
+                , 'stepTic'
+                , 'stepOpenBug'
+                , 'stepTic'
+                ]
     sequence_string = ' '.join(step_list)
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self, quiet=quiet)

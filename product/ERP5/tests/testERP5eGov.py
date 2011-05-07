@@ -159,8 +159,8 @@ class TestEgov(ERP5TypeTestCase):
     """
     transaction.abort()
     for module in [ self.getPersonModule(),
-		    self.getOrganisationModule(),
-		      ]:
+                    self.getOrganisationModule(),
+                      ]:
       module.manage_delObjects(list(module.objectIds()))
 
     vat_portal_type = self.portal.portal_types.getTypeInfo('Vat Declaration')
@@ -327,8 +327,7 @@ class TestEgov(ERP5TypeTestCase):
     type_allowed_content_type_list.append('PDF')
     vat_declaration.getTypeInfo().setTypeAllowedContentTypeList(type_allowed_content_type_list)
     vat_declaration.getTypeInfo().setTypeHiddenContentTypeList(type_allowed_content_type_list)
-    vat_declaration.newContent(portal_type='PDF', 
-		           title='Justificatif numero 1')
+    vat_declaration.newContent(portal_type='PDF', title='Justificatif numero 1')
     self.tic()
     transaction.commit()
     missing_file = vat_declaration.PDFDocument_getRequirementCount()

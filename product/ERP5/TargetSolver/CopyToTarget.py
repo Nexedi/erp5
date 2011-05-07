@@ -153,7 +153,7 @@ class CopyToTarget(TargetSolver):
     simulation_movement.setSource(delivery.getSource())
     simulation_movement.setDestinationSection(delivery.getDestinationSection())
     simulation_movement.setSourceSection(delivery.getSourceSection())
-		
+
     simulation_movement.edit(**value_dict)
       
     if parent_movement is not None and not parent_movement.isFrozen():

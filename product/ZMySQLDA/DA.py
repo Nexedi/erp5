@@ -193,6 +193,6 @@ misc_={'conn': ImageFile(
     os.path.join(SHARED_DC_ZRDB_LOCATION,'www','DBAdapterFolder_icon.gif'))}
 
 for icon in ('table', 'view', 'stable', 'what',
-	     'field', 'text','bin','int','float',
-	     'date','time','datetime'):
+             'field', 'text','bin','int','float',
+             'date','time','datetime'):
     misc_[icon]=ImageFile(os.path.join('icons','%s.gif') % icon, globals())
