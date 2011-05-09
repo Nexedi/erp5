@@ -29,6 +29,7 @@ setup(
       'zc.recipe.egg',
       'setuptools',
       'slapos.lib.recipe',
+      'Zope2',
       ],
     namespace_packages = ['slapos', 'slapos.recipe'],
     entry_points = {'zc.buildout': ['default = %s:Recipe' % name]},

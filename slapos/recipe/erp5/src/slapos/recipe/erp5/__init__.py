@@ -465,8 +465,11 @@ class Recipe(BaseSlapRecipe):
       'lib',
       'tests',
       'Products',
+      'etc',
       ):
       self._createDirectory(os.path.join(self.erp5_directory, directory))
+    self._createDirectory(os.path.join(self.erp5_directory, 'etc',
+      'package-includes'))
     return user, password
 
   def installERP5Site(self, user, password, zope_access, mysql_conf,
@@ -614,12 +617,21 @@ class Recipe(BaseSlapRecipe):
     return dict(host=ip, port=port)
 
   def installZope(self, ip, port, name, zodb_configuration_string,
-      with_timerservice=False, tidstorage_config=None, thread_amount=1):
+      with_timerservice=False, tidstorage_config=None, thread_amount=1,
+      with_deadlockdebugger=True):
     # Create zope configuration file
     zope_config = dict(
         products=self.options['products'],
         thread_amount=thread_amount
     )
+    # configure default Zope2 zcml
+    open(os.path.join(self.erp5_directory, 'etc', 'site.zcml'), 'w').write(
+        pkg_resources.resource_string('Zope2', 'utilities/skel/etc/site.zcml'))
+    if with_deadlockdebugger:
+      open(os.path.join(self.erp5_directory, 'etc', 'package-includes', 'deadlockdebugger-configure.zcml'), 'w').write('''<configure>
+  <include package="zope.applicationcontrol"/>
+  <include package="z3c.deadlockdebugger"/>
+</configure>''')
     zope_config['zodb_configuration_string'] = zodb_configuration_string
     zope_config['instance'] = self.erp5_directory
     zope_config['event_log'] = os.path.join(self.log_directory,
