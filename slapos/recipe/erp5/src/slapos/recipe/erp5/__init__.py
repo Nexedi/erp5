@@ -513,8 +513,6 @@ class Recipe(BaseSlapRecipe):
     zeo_number = 0
     for zeo_server in sorted(self._zeo_storage_dict.iterkeys()):
       zeo_number += 1
-      server_dir = os.path.join(zodb_dir, str(zeo_number))
-      self._createDirectory(server_dir)
       zeo_event_log = os.path.join(self.log_directory, 'zeo-%s.log'% zeo_number)
       zeo_pid = os.path.join(self.run_directory, 'zeo-%s.pid'% zeo_number)
       self.registerLogRotation('zeo-%s' % zeo_number, [zeo_event_log],
@@ -525,11 +523,9 @@ class Recipe(BaseSlapRecipe):
         zeo_event_log=zeo_event_log,
         zeo_pid=zeo_pid,
       )
-      storage_number = 0
       storage_definition_list = []
       for storage_name in sorted(self._zeo_storage_dict[zeo_server]):
-        storage_number += 1
-        path = os.path.join(server_dir, 'zodb_%s.fs' % storage_number)
+        path = os.path.join(zodb_dir, '%s.fs' % storage_name)
         storage_definition_list.append("""<filestorage %(storage_name)s>
   path %(path)s
 </filestorage>"""% dict(storage_name=storage_name, path=path))
@@ -563,12 +559,12 @@ class Recipe(BaseSlapRecipe):
     # it is time to fill known_tid_storage_identifier_dict with backup
     # destination
     formatted_storage_dict = dict()
-    for k, v in known_tid_storage_identifier_dict.copy().iteritems():
+    for key, v in known_tid_storage_identifier_dict.copy().iteritems():
       # generate unique name for each backup
-      name = '_'.join(['_'.join([str(q) for q in k[0][0]]), k[1]])
-      destination = os.path.join(backup_base_path, name)
+      storage_name = key[1]
+      destination = os.path.join(backup_base_path, storage_name)
       self._createDirectory(destination)
-      formatted_storage_dict[str(k)] = (v[0], destination, v[1])
+      formatted_storage_dict[str(key)] = (v[0], destination, v[1])
     logfile = os.path.join(self.log_directory, 'tidstorage.log')
     pidfile = os.path.join(self.run_directory, 'tidstorage.pid')
     statusfile = os.path.join(self.log_directory, 'tidstorage.tid')
