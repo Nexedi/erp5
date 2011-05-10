@@ -29,9 +29,7 @@
 #
 ##############################################################################
 
-import errno, glob, json, os, re, shutil
-from base64 import b64encode, b64decode
-from DateTime import DateTime
+import errno, glob, os, re, shutil
 from ZTUtils import make_query
 from Products.ERP5Type.Message import translateString
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
@@ -54,22 +52,6 @@ class Subversion(WorkingCopy):
     WorkingCopy.__init__(self, path)
     if path and not os.path.exists(os.path.join(self.working_copy, '.svn')):
       raise NotAWorkingCopyError(self.working_copy)
-
-  def _getCookie(self, name, default=None):
-    try:
-      return json.loads(b64decode(self.REQUEST[name]))
-    except StandardError:
-      return default
-
-  def _setCookie(self, name, value, days=30):
-    portal = self.getPortalObject()
-    request = portal.REQUEST
-    value = b64encode(json.dumps(value))
-    request.set(name, value)
-    if days:
-      expires = (DateTime() + days).toZone('GMT').rfc822()
-      request.RESPONSE.setCookie(name, value, path=portal.absolute_url_path(),
-                                 expires=expires)
 
   def setLogin(self, realm, user, password):
     """Set login information.

@@ -61,6 +61,9 @@
               <list>
                 <string>left</string>
                 <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -69,10 +72,28 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>realm_txt</string>
+                        <string>remote_url</string>
                         <string>your_user</string>
                         <string>your_password</string>
                         <string>your_auth</string>
@@ -90,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_viewSvnLogin</string> </value>
+            <value> <string>BusinessTemplate_viewGitLogin</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

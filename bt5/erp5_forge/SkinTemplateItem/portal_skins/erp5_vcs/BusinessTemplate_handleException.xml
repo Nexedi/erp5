@@ -50,7 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5VCS.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
+            <value> <string>from Products.ERP5VCS.Git import GitLoginError\n
+from Products.ERP5VCS.SubversionClient import SubversionSSLTrustError, SubversionLoginError\n
 \n
 try:\n
   raise exception\n
@@ -62,6 +63,10 @@ except SubversionLoginError, e:\n
   message = \'Server needs authentication, no cookie found\'\n
   kw = dict(realm=e.getRealm(), username=context.getVcsTool().getPreferredUsername())\n
   method = \'BusinessTemplate_viewSvnLogin\'\n
+except GitLoginError, e:\n
+  message = str(e)\n
+  kw = dict(remote_url=context.getVcsTool().getRemoteUrl())\n
+  method = \'BusinessTemplate_viewGitLogin\'\n
 \n
 context.REQUEST.set(\'portal_status_message\', message)\n
 return getattr(context.asContext(**kw), method)(caller=caller, caller_kw=caller_kw)\n

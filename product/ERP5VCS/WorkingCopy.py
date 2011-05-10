@@ -29,13 +29,15 @@
 #
 ##############################################################################
 
-import errno, os, re, shutil
+import errno, json, os, re, shutil
+from base64 import b64encode, b64decode
 from tempfile import gettempdir
 import transaction
 from AccessControl import Unauthorized
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Acquisition import aq_base, Implicit
 from App.config import getConfiguration
+from DateTime import DateTime
 from ZTUtils import make_query
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
 from Products.ERP5Type.Utils import simple_decorator
@@ -140,6 +142,22 @@ class WorkingCopy(Implicit):
         return real_path
     raise Unauthorized("Unauthorized access to path %r."
                        " It is NOT in your Zope home instance." % path)
+
+  def _getCookie(self, name, default=None):
+    try:
+      return json.loads(b64decode(self.REQUEST[name]))
+    except StandardError:
+      return default
+
+  def _setCookie(self, name, value, days=30):
+    portal = self.getPortalObject()
+    request = portal.REQUEST
+    value = b64encode(json.dumps(value))
+    request.set(name, value)
+    if days:
+      expires = (DateTime() + days).toZone('GMT').rfc822()
+      request.RESPONSE.setCookie(name, value, path=portal.absolute_url_path(),
+                                 expires=expires)
 
   # path is the path in svn working copy
   # return edit_path in zodb to edit it
