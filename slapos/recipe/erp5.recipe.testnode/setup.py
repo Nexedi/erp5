@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 name = "erp5.recipe.testnode"
-version = '1.0'
+version = '1.0-dev-1'
 
 def read(name):
   return open(name).read()
