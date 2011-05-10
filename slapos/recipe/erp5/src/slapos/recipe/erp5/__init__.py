@@ -628,7 +628,8 @@ class Recipe(BaseSlapRecipe):
     open(os.path.join(self.erp5_directory, 'etc', 'site.zcml'), 'w').write(
         pkg_resources.resource_string('Zope2', 'utilities/skel/etc/site.zcml'))
     if with_deadlockdebugger:
-      open(os.path.join(self.erp5_directory, 'etc', 'package-includes', 'deadlockdebugger-configure.zcml'), 'w').write('''<configure>
+      open(os.path.join(self.erp5_directory, 'etc', 'package-includes',
+      'deadlockdebugger-configure.zcml'), 'w').write('''<configure>
   <include package="zope.applicationcontrol"/>
   <include package="z3c.deadlockdebugger"/>
 </configure>''')
