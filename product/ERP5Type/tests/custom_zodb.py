@@ -115,6 +115,8 @@ def forkNodes():
       break
     node_pid_list.append(pid)
 
+cluster = True
+
 if neo_storage:
   if load or save or zeo_client:
     raise Exception("--neo_storage conflicts with --load/save/zeo_client")
@@ -144,6 +146,8 @@ else:
     elif activity_node is not None:
       # run ZEO server but no need to fork
       zeo_server_pid = 0
+    else:
+      cluster = False
 
     if save:
       Storage = FileStorage(data_fs_path)

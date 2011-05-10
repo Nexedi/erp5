@@ -487,7 +487,6 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   TestRunner = backportUnittest.TextTestRunner
 
   import Lifetime
-  from ZEO.ClientStorage import ClientStorage
   from Zope2.custom_zodb import Storage, save_mysql, \
       node_pid_list, neo_cluster, zeo_server_pid
   def shutdown(signum, frame, signum_set=set()):
