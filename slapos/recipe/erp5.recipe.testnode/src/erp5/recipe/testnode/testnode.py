@@ -5,6 +5,7 @@ import signal
 import slapos.slap
 import subprocess
 import sys
+import socket
 from SlapOSControler import SlapOSControler
 
 
