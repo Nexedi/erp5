@@ -59,6 +59,7 @@ slapos_controler = None
 def run(args):
   config = args[0]
   slapgrid = None
+  branch = config.get('branch', None)
   supervisord_pid_file = os.path.join(config['instance_root'], 'var', 'run',
         'supervisord.pid')
   subprocess.check_call([config['git_binary'],
@@ -74,27 +75,33 @@ def run(args):
   # Write our own software.cfg to use the local repository
   custom_profile_path = os.path.join(config['working_directory'], 'software.cfg')
   config['custom_profile_path'] = custom_profile_path
-  if not os.path.exists(custom_profile_path):
-    # create a profile in order to use the repository we already have
-    custom_profile = open(custom_profile_path, 'w')
-    profile_content = """
+  
+  # create a profile in order to use the repository we already have
+  custom_profile = open(custom_profile_path, 'w')
+  profile_content = """
 [buildout]
 extends = %(software_config_path)s
 
-[%(repository_name)s_repository]
+[%(repository_name)s]
 repository = %(repository_path)s
 """ %     {'software_config_path': os.path.join(repository_path,
-                                            config['profile_url']),
-      'repository_name': repository_name,
-      'repository_path' : repository_path}
-    custom_profile.write(profile_content)
-    custom_profile.close()
+                                          config['profile_url']),
+    'repository_name': repository_name,
+    'repository_path' : repository_path}
+  if branch is not None:
+    profile_content += "\nbranch = %s" % branch
+  custom_profile.write(profile_content)
+  custom_profile.close()
   try:
     while True:
       # Make sure we have local repository
       if not os.path.exists(repository_path):
-        subprocess.check_call([config['git_binary'],
-                'clone', config['vcs_repository'], repository_path])
+        parameter_list = [config['git_binary'], 'clone',
+                          config['vcs_repository']]
+        if branch is not None:
+          parameter_list.extend(['-b',branch])
+        parameter_list.append(repository_path)
+        subprocess.check_call(parameter_list)
         # XXX this looks like to not wait the end of the command
       # Make sure we have local repository
       updater = Updater(repository_path, git_binary=config['git_binary'])
@@ -104,7 +111,6 @@ repository = %(repository_path)s
         time.sleep(120)
         continue
       previous_revision = revision
-
 
       print config
       portal_url = config['test_suite_master_url']
@@ -137,6 +143,7 @@ repository = %(repository_path)s
         if run_software:
           # this should be always true later, but it is too slow for now
           slapos_controler.runSoftwareRelease(config,
+            environment=config['environment'],
             process_group_pid_list=process_group_pid_list,
             )
           run_software = False

@@ -85,6 +85,7 @@ class Recipe(BaseSlapRecipe):
               working_directory=CONFIG['working_directory'],
               vcs_repository=self.parameter_dict.get('vcs_repository'),
               node_quantity=self.parameter_dict.get('node_quantity', '1'),
+              branch=self.parameter_dict.get('branch', None),
               test_suite_master_url=self.parameter_dict.get(
                                 'test_suite_master_url', None),
               test_suite_name=self.parameter_dict.get('test_suite_name'),
@@ -96,6 +97,7 @@ class Recipe(BaseSlapRecipe):
               # environment of running bot
               bot_environment=self.parameter_dict.get('bot_environment', ''),
               partition_reference=CONFIG['partition_reference'],
+              environment=dict(PATH=os.environ['PATH']),
             )
           ]))
 
