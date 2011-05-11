@@ -339,7 +339,7 @@ class Git(WorkingCopy):
           # TODO: find a solution if there are other local changes
           # TODO: solve conflicts on */bt/revision automatically
           try:
-            self.git(merge, '@{u}')
+            self.git(merge, '@{u}', env=env)
           except GitError, e:
             # XXX: how to know how it failed ?
             try:
