@@ -121,12 +121,13 @@ class Recipe(BaseSlapRecipe):
     home_directory = os.path.join(*os.path.split(self.bin_directory)[0:-1])
     print "home_directory : %r" % home_directory
     git_dict.setdefault("git_server_name", "git.erp5.org")
-    netrc_file = open(os.path.join(home_directory, '.netrc'), 'w')
-    netrc_file.write("""
-machine %(git_server_name)s
-login %(vcs_username)s
-password %(vcs_password)s""" % git_dict)
-    netrc_file.close()
+    if git_dict.get('vcs_username', None) is not None:
+      netrc_file = open(os.path.join(home_directory, '.netrc'), 'w')
+      netrc_file.write("""
+  machine %(git_server_name)s
+  login %(vcs_username)s
+  password %(vcs_password)s""" % git_dict)
+      netrc_file.close()
 
   def installLocalRepository(self):
     if self.parameter_dict.get('vcs_repository').endswith('git'):
