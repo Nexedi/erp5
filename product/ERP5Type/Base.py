@@ -1643,7 +1643,7 @@ class Base( CopyContainer,
     """
     uid = getattr(aq_base(self), 'uid', None)
     if uid is None:
-      self.uid = self.portal_catalog.newUid()
+      self.uid = self.getPortalObject().portal_catalog.newUid()
       uid = getattr(aq_base(self), 'uid', None)
       if uid is None:
         raise DeferredCatalogError('Could neither access uid nor generate it', self)
