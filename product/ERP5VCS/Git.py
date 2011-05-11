@@ -91,6 +91,7 @@ class Git(WorkingCopy):
     login_list.append((remote_url, user, password))
     self._setCookie(self._login_cookie_name, login_list)
 
+  security.declarePrivate('remote_git')
   def remote_git(self, *args, **kw):
     try:
       env = kw['env']
