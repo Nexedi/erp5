@@ -352,8 +352,10 @@ class Git(WorkingCopy):
             reset += 1
           # retry to push everything
           self.remote_git(*push_args)
-    except GitError, e:
+    except (GitError, GitLoginError), e:
       self.git('reset', '--soft', '@{%u}' % reset)
+      if isinstance(e, GitLoginError):
+        raise
       portal_status_message = str(e)
     else:
       head = self.git('rev-parse', '--short', 'HEAD')
