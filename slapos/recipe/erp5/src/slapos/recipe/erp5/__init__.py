@@ -613,7 +613,8 @@ class Recipe(BaseSlapRecipe):
     return dict(host=ip, port=port)
 
   def installZope(self, ip, port, name, zodb_configuration_string,
-      with_timerservice=False, tidstorage_config=None, thread_amount=1):
+      with_timerservice=False, tidstorage_config=None, thread_amount=1,
+      with_deadlockdebugger=True):
     # Create zope configuration file
     zope_config = dict(
         products=self.options['products'],
@@ -659,6 +660,11 @@ class Recipe(BaseSlapRecipe):
       zope_conf_content += self.substituteTemplate(
           self.getTemplateFilename('zope-tidstorage-snippet.conf.in'),
           tidstorage_config)
+    if with_deadlockdebugger:
+      zope_conf_content += self.substituteTemplate(
+          self.getTemplateFilename('zope-deadlockdebugger-snippet.conf.in'),
+          dict(dump_url='/manage_debug_threads',
+            secret=self.generatePassword()))
 
     zope_conf_path = self.createConfigurationFile("%s.conf" % name,
         zope_conf_content)

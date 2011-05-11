@@ -1,0 +1,7 @@
+
+# DeadlockDebugger configuration
+<product-config DeadlockDebugger>
+  dump_url %(dump_url)s
+  secret %(secret)s
+</product-config>
+
