@@ -82,9 +82,8 @@ types_tool = portal.portal_types\n
 portal_type_list = portal.ERP5Site_getUpgraderSignature().get(\'update_role_portal_type_list\', [])\n
 \n
 for pt in portal_type_list:\n
-  portal_type_document = types_tool.getTypeInfo(pt)\n
-  if portal_type_document is not None:\n
-    portal_type_document.updateRoleMapping()\n
+  # Note: Raises on purpose\n
+  types_tool[pt].updateRoleMapping()\n
 \n
 message_list.append(\n
             "Update Local Roles for security groups for: \\n\\t%s" % \\\n
