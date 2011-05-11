@@ -25,9 +25,14 @@ please check the event.log for ERROR message.
 Configuration
 -------------
 
-You must edit the file custom.py for your needs. You have to change
-ACTIVATED to True, and change SECRET. You may change the URL that's
-intercepted by the hook to do the dump.
+You must edit your zope.conf file and add product configuration:
+
+<product-config deadlockdebugger>
+  dump_url /manage_debug_threads
+  secret mysecretkey
+</product-config>
+
+secret is optional.
 
 Usage
 -----
@@ -42,7 +47,7 @@ A secret is needed because Zope doesn't do any access control on the URL
 (it is intercepted too early), and the thread traceback dump may return
 sensitive information about the requests being executed. If you know
 your Zope will only be accessed by authorized persons anyway, you can
-set SECRET to the empty string, and just call::
+set secret to the empty string, and just call::
 
   http://yourzopesite:8080/manage_debug_threads
 

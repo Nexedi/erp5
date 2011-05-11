@@ -28,10 +28,8 @@ import traceback
 import time
 from cStringIO import StringIO
 
-from zLOG import LOG, DEBUG
-
-import custom
-
+from zLOG import LOG, DEBUG, ERROR
+from App.config import getConfiguration
 
 def dump_threads():
     """Dump running threads
@@ -74,9 +72,15 @@ def dump_threads():
     res.append("End of dump")
     return '\n'.join(res)
 
-dump_url = custom.DUMP_URL
-if custom.SECRET:
-    dump_url += '?'+custom.SECRET
+config = getConfiguration()
+deadlockdebugger = config.product_config.get('deadlockdebugger')
+dump_url = ''
+secret = ''
+dump_url = deadlockdebugger['dump_url']
+secret = deadlockdebugger.get('secret', '')
+
+if dump_url and secret:
+    dump_url += '?'+secret
 
 def match(self, request):
     uri = request.uri

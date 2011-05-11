@@ -22,23 +22,29 @@
 This adds a ZServer hook so that if a special URL is called, a full dump
 with tracebacks of the running python threads will be made.
 
-You MUST configure the file custom.py before use.
+You MUST configure zope.conf before use.
 """
 
-import custom
 from zLOG import LOG, INFO, ERROR
+from App.config import getConfiguration
 
 try:
     import threadframe
 except ImportError:
     LOG('DeadlockDebugger', ERROR, "Incorrectly installed threadframe module")
 else:
-    if not custom.ACTIVATED:
-        LOG('DeadlockDebugger', INFO,
-            "Not activated, you must change ACTIVATED in custom.py")
-    elif custom.SECRET == 'secret':
-        LOG('DeadlockDebugger', ERROR,
-            "Not activated, you must change SECRET in custom.py")
+    config = getConfiguration()
+    deadlockdebugger = config.product_config.get('deadlockdebugger')
+    dump_url = ''
+    secret = ''
+    if deadlockdebugger is None:
+        LOG('DeadlockDebugger', ERROR, 'Missing configuration statement '
+          '<product-config deadlockdebugger>, not activated')
     else:
-        import dumper
-        LOG('DeadlockDebugger', INFO, "Installed")
+        if not 'dump_url' in deadlockdebugger:
+            LOG('DeadlockDebugger', ERROR, 'Please configure dump_url and '
+                'optionally secret in <product-config deadlockdebugger>, not '
+                'activated')
+        else:
+            import dumper
+            LOG('DeadlockDebugger', INFO, "Installed")
