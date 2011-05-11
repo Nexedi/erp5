@@ -127,7 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>preferences/getPreferredVcsPushMode</string> </value>
+            <value> <string>python: preferences.getPreferredVcsPushMode() and not here.getVcsTool().getAheadCount()</string> </value>
         </item>
       </dictionary>
     </pickle>

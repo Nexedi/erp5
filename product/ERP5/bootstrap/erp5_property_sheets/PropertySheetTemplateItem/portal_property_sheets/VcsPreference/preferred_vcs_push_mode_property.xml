@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Set default value of "Push" checkbox in dialog to commit changes to a DVCS working copy</string> </value>
+            <value> <string>Set default value of "Push" checkbox in dialog to commit changes to a DVCS working copy, when there is no local commit</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
