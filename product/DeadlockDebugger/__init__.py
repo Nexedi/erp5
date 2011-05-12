@@ -34,17 +34,18 @@ except ImportError:
     LOG('DeadlockDebugger', ERROR, "Incorrectly installed threadframe module")
 else:
     config = getConfiguration()
-    deadlockdebugger = config.product_config.get('deadlockdebugger')
-    dump_url = ''
-    secret = ''
-    if deadlockdebugger is None:
-        LOG('DeadlockDebugger', ERROR, 'Missing configuration statement '
-          '<product-config deadlockdebugger>, not activated')
-    else:
-        if not 'dump_url' in deadlockdebugger:
-            LOG('DeadlockDebugger', ERROR, 'Please configure dump_url and '
-                'optionally secret in <product-config deadlockdebugger>, not '
-                'activated')
+    if getattr(config, 'product_config', None) is not None:
+        deadlockdebugger = config.product_config.get('deadlockdebugger')
+        dump_url = ''
+        secret = ''
+        if deadlockdebugger is None:
+            LOG('DeadlockDebugger', ERROR, 'Missing configuration statement '
+              '<product-config deadlockdebugger>, not activated')
         else:
-            import dumper
-            LOG('DeadlockDebugger', INFO, "Installed")
+            if not 'dump_url' in deadlockdebugger:
+                LOG('DeadlockDebugger', ERROR, 'Please configure dump_url and '
+                    'optionally secret in <product-config deadlockdebugger>, not '
+                    'activated')
+            else:
+                import dumper
+                LOG('DeadlockDebugger', INFO, "Installed")
