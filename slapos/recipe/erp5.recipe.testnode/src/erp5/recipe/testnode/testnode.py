@@ -85,7 +85,7 @@ extends = %(software_config_path)s
 [%(repository_name)s]
 repository = %(repository_path)s
 """ %     {'software_config_path': os.path.join(repository_path,
-                                          config['profile_url']),
+                                          config['profile_path']),
     'repository_name': repository_name,
     'repository_path' : repository_path}
   if branch is not None:
@@ -126,7 +126,7 @@ repository = %(repository_path)s
         assert master.getProtocolRevision() == 1
         test_result = safeRpcCall(master.createTestResult,
           config['test_suite_name'], revision, [],
-          False)
+          False, config['test_suite_title'])
       print "testnode, test_result : %r" % (test_result,)
       if test_result:
         test_result_path, test_revision = test_result
@@ -142,10 +142,14 @@ repository = %(repository_path)s
           process_group_pid_list=process_group_pid_list)
         if run_software:
           # this should be always true later, but it is too slow for now
-          slapos_controler.runSoftwareRelease(config,
+          status_dict = slapos_controler.runSoftwareRelease(config,
             environment=config['environment'],
             process_group_pid_list=process_group_pid_list,
             )
+          if status_dict['status_code'] != 0:
+            safeRpcCall(master.reportTaskFailure,
+              test_result_path, status_dict, config['test_suite_title'])
+            continue
           run_software = False
 
         # create instances, it should take some seconds only

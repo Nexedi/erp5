@@ -73,7 +73,7 @@ class Recipe(BaseSlapRecipe):
               ipv4_address=self.getLocalIPv4Address(),
               ipv6_address=self.getGlobalIPv6Address(),
               master_url=CONFIG['master_url'],
-              profile_url=self.parameter_dict['profile_url'],
+              profile_path=self.parameter_dict['profile_path'],
               proxy_database=CONFIG['proxy_database'],
               proxy_port=CONFIG['proxy_port'],
               slapgrid_partition_binary=self.options['slapgrid_partition_binary'],
@@ -89,8 +89,7 @@ class Recipe(BaseSlapRecipe):
               test_suite_master_url=self.parameter_dict.get(
                                 'test_suite_master_url', None),
               test_suite_name=self.parameter_dict.get('test_suite_name'),
-              #slave_name=self.parameter_dict['slave_name'],
-              #slave_password=self.parameter_dict['slave_password'],
+              test_suite_title=self.parameter_dict.get('test_suite_title'),
               bin_directory=self.bin_directory,
               foo='bar',
               # botenvironemnt is splittable string of key=value to substitute

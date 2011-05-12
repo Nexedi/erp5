@@ -56,16 +56,15 @@ class SlapOSControler(object):
       slapgrid = subprocess.Popen([config['slapgrid_software_binary'], '-v', '-c',
         #'--buildout-parameter',"'-U -N' -o",
         config['slapos_config']],
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         close_fds=True, preexec_fn=os.setsid)
       process_group_pid_list.append(slapgrid.pid)
       slapgrid.wait()
-      if slapgrid.returncode == 0:
-        print 'Software installed properly'
-        break
-      else:
-        raise ValueError("Slapgrid software failed")
-      print 'Problem with software installation, trying again'
-      time.sleep(600)
+      stdout, stderr = slapgrid.communicate()
+      status_dict = {'status_code':slapgrid.returncode,
+                     'stdout':stdout,
+                     'stderr':stderr}
+      return status_dict
 
   def runComputerPartition(self, config, process_group_pid_list=None):
     print "SlapOSControler.runSoftwareRelease"
