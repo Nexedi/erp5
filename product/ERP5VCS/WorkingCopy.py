@@ -232,24 +232,6 @@ class WorkingCopy(Implicit):
       file.close()
     return revision
 
-  def getLastChangelog(self):
-    """Return last changelog of a business template
-    """
-    changelog = ""
-    try:
-      f = open(os.path.join(self.working_copy, 'bt', 'change_log'))
-      try:
-        for line in f:
-          if not line.strip():
-            break
-          changelog += line
-      finally:
-        f.close()
-    except IOError, e:
-      if e.errno != errno.ENOENT:
-        raise
-    return changelog
-
   def hasDiff(self, path):
     try:
       hasDiff = aq_base(self).__hasDiff
