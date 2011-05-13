@@ -6383,6 +6383,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     finally:
       BaseTemplateItem.removeProperties = BaseTemplateItem_removeProperties
       SimpleItem._getCopy = SimpleItem_getCopy
+      gc.enable()
     # check the previously existing instance now behaves as the overriden class
     self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
     # test uninstall is effective
