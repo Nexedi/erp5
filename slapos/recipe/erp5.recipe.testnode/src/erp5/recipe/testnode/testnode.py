@@ -109,9 +109,10 @@ repository = %(repository_path)s
       updater = Updater(repository_path, git_binary=config['git_binary'])
       updater.checkout()
       revision = updater.getRevision()
-      if not(retry_software) and previous_revision == revision:
+      if previous_revision == revision:
         time.sleep(120)
-        continue
+        if not(retry_software):
+          continue
       retry_software = False
       previous_revision = revision
 

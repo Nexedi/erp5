@@ -5,7 +5,6 @@ class SlapOSControler(object):
 
   def __init__(self, config, process_group_pid_list=None):
     self.config = config
-    self.process_group_pid_list = []
     # By erasing everything, we make sure that we are able to "update"
     # existing profiles. This is quite dirty way to do updates...
     if os.path.exists(config['proxy_database']):
@@ -53,17 +52,26 @@ class SlapOSControler(object):
       cpu_count = os.sysconf("SC_NPROCESSORS_ONLN")
       os.putenv('MAKEFLAGS', '-j%s' % cpu_count)
       os.environ['PATH'] = environment['PATH']
+      stdout = open(os.path.join(
+                    config['instance_root'],'.runSoftwareRelease_out'),
+                    'w+')
+      stderr = open(os.path.join(
+                    config['instance_root'],'.runSoftwareRelease_err'),
+                    'w+')
       slapgrid = subprocess.Popen([config['slapgrid_software_binary'], '-v', '-c',
         #'--buildout-parameter',"'-U -N' -o",
         config['slapos_config']],
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        stdout=stdout, stderr=stderr,
         close_fds=True, preexec_fn=os.setsid)
       process_group_pid_list.append(slapgrid.pid)
       slapgrid.wait()
-      stdout, stderr = slapgrid.communicate()
+      stdout.seek(0)
+      stderr.seek(0)
       status_dict = {'status_code':slapgrid.returncode,
-                     'stdout':stdout,
-                     'stderr':stderr}
+                     'stdout':stdout.read(),
+                     'stderr':stderr.read()}
+      stdout.close()
+      stderr.close()
       return status_dict
 
   def runComputerPartition(self, config, process_group_pid_list=None):
