@@ -3,7 +3,7 @@ from xml_marshaller import xml_marshaller
 
 class SlapOSControler(object):
 
-  def __init__(self, config, process_group_pid_list=None):
+  def __init__(self, config, process_group_pid_set=None):
     self.config = config
     # By erasing everything, we make sure that we are able to "update"
     # existing profiles. This is quite dirty way to do updates...
@@ -11,7 +11,7 @@ class SlapOSControler(object):
       os.unlink(config['proxy_database'])
     proxy = subprocess.Popen([config['slapproxy_binary'],
       config['slapos_config']], close_fds=True, preexec_fn=os.setsid)
-    process_group_pid_list.append(proxy.pid)
+    process_group_pid_set.add(proxy.pid)
     # XXX: dirty, giving some time for proxy to being able to accept
     # connections
     time.sleep(2)
@@ -46,7 +46,7 @@ class SlapOSControler(object):
  'reference': config['computer_id'],
  'software_root': config['software_root']}))
 
-  def runSoftwareRelease(self, config, environment, process_group_pid_list=None):
+  def runSoftwareRelease(self, config, environment, process_group_pid_set=None):
     print "SlapOSControler.runSoftwareRelease"
     while True:
       cpu_count = os.sysconf("SC_NPROCESSORS_ONLN")
@@ -63,10 +63,11 @@ class SlapOSControler(object):
         config['slapos_config']],
         stdout=stdout, stderr=stderr,
         close_fds=True, preexec_fn=os.setsid)
-      process_group_pid_list.append(slapgrid.pid)
+      process_group_pid_set.add(slapgrid.pid)
       slapgrid.wait()
       stdout.seek(0)
       stderr.seek(0)
+      process_group_pid_set.remove(slapgrid.pid)
       status_dict = {'status_code':slapgrid.returncode,
                      'stdout':stdout.read(),
                      'stderr':stderr.read()}
@@ -74,7 +75,7 @@ class SlapOSControler(object):
       stderr.close()
       return status_dict
 
-  def runComputerPartition(self, config, process_group_pid_list=None):
+  def runComputerPartition(self, config, process_group_pid_set=None):
     print "SlapOSControler.runSoftwareRelease"
     slap = slapos.slap.slap()
     slap.registerOpenOrder().request(self.software_profile,
@@ -82,7 +83,8 @@ class SlapOSControler(object):
         partition_parameter_kw=config['instance_dict'])
     slapgrid = subprocess.Popen([config['slapgrid_partition_binary'],
       config['slapos_config'], '-c', '-v'], close_fds=True, preexec_fn=os.setsid)
-    process_group_pid_list.append(slapgrid.pid)
+    process_group_pid_set.add(slapgrid.pid)
     slapgrid.wait()
+    process_group_pid_set.remove(slapgrid.pid)
     if slapgrid.returncode != 0:
       raise ValueError('Slapgrid instance failed')
