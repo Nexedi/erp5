@@ -190,7 +190,7 @@ class LocalRoleAssignorMixIn(object):
         elif k == 'id':
           k, v = 'role_name', tuple(x.strip() for x in v.split(';'))
         elif k in ('base_category', 'category'):
-          k, v = 'role_' + k, tuple(x.strip() for x in v)
+          k, v = 'role_' + k, tuple(y for y in (x.strip() for x in v) if y)
         elif k == 'base_category_script':
           k = 'role_base_category_script_id'
         setattr(role, k, v)
