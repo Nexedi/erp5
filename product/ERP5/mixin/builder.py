@@ -277,27 +277,39 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   def _test(self, instance, movement_group_node_list,
                     divergence_list):
     result = True
-    new_property_dict = {}
+    new_property_dict_list = []
     for movement_group_node in movement_group_node_list:
       tmp_result, tmp_property_dict = movement_group_node.test(
         instance, divergence_list)
       if not tmp_result:
         result = tmp_result
-      new_property_dict.update(tmp_property_dict)
-    return result, new_property_dict
+      new_property_dict_list.append(tmp_property_dict)
+    return result, new_property_dict_list
+
+  @staticmethod
+  def _getSortedPropertyDict(property_dict_list):
+    # Sort the edit keywords according to the order of their movement
+    # groups. This is important so that, for example, the 'resource'
+    # is already set on a movement before trying to set the
+    # 'variation_category' or 'variation_property' pseudo properties,
+    # which rely on the resource being set to discover which
+    # categories/properties to set
+    # XXX-Leo: in the future: using an ordered_dict would be nice,
+    # but this would have to be respected on Base._edit()
+    edit_order = []
+    property_dict = {'edit_order': edit_order}
+    for d in property_dict_list:
+      for k,v in d.iteritems():
+        if k in property_dict:
+          raise DuplicatedPropertyDictKeysError(k)
+        property_dict[k] = v
+        edit_order.append(k)
+    return property_dict
 
   def _findUpdatableObject(self, instance_list, movement_group_node_list,
                            divergence_list):
     instance = None
-    property_dict = {}
-    if not len(instance_list):
-      for movement_group_node in movement_group_node_list:
-        for k,v in movement_group_node.getGroupEditDict().iteritems():
-          if k in property_dict:
-            raise DuplicatedPropertyDictKeysError(k)
-          else:
-            property_dict[k] = v
-    else:
+    if instance_list:
       # we want to check the original delivery first.
       # so sort instance_list by that current is exists or not.
       try:
@@ -311,12 +323,15 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       except AttributeError:
         pass
       for instance_to_update in instance_list:
-        result, property_dict = self._test(
+        result, property_dict_list = self._test(
           instance_to_update, movement_group_node_list, divergence_list)
         if result:
           instance = instance_to_update
           break
-    return instance, property_dict
+    else:
+      property_dict_list = [movement_group_node.getGroupEditDict()
+                            for movement_group_node in movement_group_node_list]
+    return instance, self._getSortedPropertyDict(property_dict_list)
 
   @UnrestrictedMethod
   def buildDeliveryList(self, movement_group_node,
