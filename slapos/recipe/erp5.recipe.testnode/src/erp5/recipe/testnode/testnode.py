@@ -6,6 +6,7 @@ import slapos.slap
 import subprocess
 import sys
 import socket
+import pprint
 from SlapOSControler import SlapOSControler
 
 
@@ -92,6 +93,7 @@ repository = %(repository_path)s
     profile_content += "\nbranch = %s" % branch
   custom_profile.write(profile_content)
   custom_profile.close()
+  retry_software = False
   try:
     while True:
       # Make sure we have local repository
@@ -107,9 +109,10 @@ repository = %(repository_path)s
       updater = Updater(repository_path, git_binary=config['git_binary'])
       updater.checkout()
       revision = updater.getRevision()
-      if previous_revision == revision:
+      if not(retry_software) and previous_revision == revision:
         time.sleep(120)
         continue
+      retry_software = False
       previous_revision = revision
 
       print config
@@ -140,17 +143,16 @@ repository = %(repository_path)s
         # Now prepare the installation of SlapOS
         slapos_controler = SlapOSControler(config,
           process_group_pid_list=process_group_pid_list)
-        if run_software:
-          # this should be always true later, but it is too slow for now
-          status_dict = slapos_controler.runSoftwareRelease(config,
-            environment=config['environment'],
-            process_group_pid_list=process_group_pid_list,
-            )
-          if status_dict['status_code'] != 0:
-            safeRpcCall(master.reportTaskFailure,
-              test_result_path, status_dict, config['test_suite_title'])
-            continue
-          run_software = False
+        # this should be always true later, but it is too slow for now
+        status_dict = slapos_controler.runSoftwareRelease(config,
+          environment=config['environment'],
+          process_group_pid_list=process_group_pid_list,
+          )
+        if status_dict['status_code'] != 0:
+          safeRpcCall(master.reportTaskFailure,
+            test_result_path, status_dict, config['test_suite_title'])
+          retry_software = True
+          continue
 
         # create instances, it should take some seconds only
         slapos_controler.runComputerPartition(config,
