@@ -25,6 +25,15 @@ zserver-threads %(thread_amount)s
 pid-filename %(pid-filename)s
 lock-filename %(lock-filename)s
 
+# Temporary storage database (for sessions)
+<zodb_db temporary>
+     <temporarystorage>
+       name temporary storage for sessioning
+     </temporarystorage>
+     mount-point /temp_folder
+     container-class Products.TemporaryFolder.TemporaryContainer
+</zodb_db>
+
 # Logging configuration
 <eventlog>
   <logfile>
