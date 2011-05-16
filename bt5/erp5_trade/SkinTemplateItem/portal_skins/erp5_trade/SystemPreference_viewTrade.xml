@@ -104,6 +104,7 @@
                     <value>
                       <list>
                         <string>my_preferred_sale_use_list</string>
+                        <string>my_preferred_internal_use_list</string>
                         <string>my_preferred_purchase_use_list</string>
                         <string>my_preferred_packing_use_list</string>
                         <string>my_preferred_price_ratio_use_list</string>
