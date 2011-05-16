@@ -102,11 +102,7 @@ repository = %(repository_path)s
           os.killpg(pgpid, signal.SIGTERM)
         except:
           pass
-      while True:
-        try:
-          process_group_pid_set.pop()
-        except KeyError:
-          break
+      process_group_pid_set.clear()
       # Make sure we have local repository
       if not os.path.exists(repository_path):
         parameter_list = [config['git_binary'], 'clone',
