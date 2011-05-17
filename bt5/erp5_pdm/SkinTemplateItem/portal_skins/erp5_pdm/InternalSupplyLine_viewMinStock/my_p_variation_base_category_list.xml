@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>view_separator</string>
-                <string>title</string>
                 <string>items</string>
+                <string>title</string>
+                <string>view_separator</string>
               </list>
             </value>
         </item>
@@ -72,6 +72,14 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>view_separator</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -86,6 +94,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewPDMFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -117,7 +131,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getVariationRangeBaseCategoryItemList(omit_optional_variation=1)</string> </value>
+            <value> <string>python: here.getVariationRangeBaseCategoryItemList(omit_optional_variation=1, display_id=\'translated_title\')</string> </value>
         </item>
       </dictionary>
     </pickle>
