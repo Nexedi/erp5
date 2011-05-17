@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 name = "slapos.recipe.erp5"
-version = '1.1-dev-8'
+version = '1.1-dev-9'
 
 def read(name):
   return open(name).read()
