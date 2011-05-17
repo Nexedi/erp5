@@ -34,14 +34,11 @@ from Products.Formulator.Errors import ValidationError
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import DTMLFile
-
 import CaptchasDotNet
-
 import string
 import random
 import md5
 import time
-
 from zope.interface import Interface
 from zope.interface import implements
 
