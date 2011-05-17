@@ -599,7 +599,7 @@ class Recipe(BaseSlapRecipe):
       __name__ + '.execute', 'execute')], self.ws, sys.executable,
       self.bin_directory, arguments=[
         self.options['tidstorage_repozo_binary'], '--config', tidstorage_config,
-      '--repozo', self.options['repozo_binary', '-z']])[0]
+      '--repozo', self.options['repozo_binary'], '-z'])[0]
     self.path_list.append(tidstorage_repozo)
 
     # and backup configuration
