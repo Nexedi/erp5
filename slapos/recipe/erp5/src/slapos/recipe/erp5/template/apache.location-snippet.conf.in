@@ -1,0 +1,5 @@
+<Location %(location)s>
+  Order Deny,Allow
+  Deny from all
+  Allow from %(allow_string)s
+</Location>

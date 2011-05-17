@@ -696,12 +696,18 @@ class Recipe(BaseSlapRecipe):
       apache_conf['pid_file'] + ' SIGUSR1')
     return apache_conf
 
-  def _writeApacheConfiguration(self, prefix, apache_conf, backend):
+  def _writeApacheConfiguration(self, prefix, apache_conf, backend,
+      location_access_mapping=None):
+    if location_access_mapping is None:
+      location_access_mapping = {}
     rewrite_rule_template = \
         "RewriteRule (.*) http://%(backend)s$1 [L,P]"
     path_template = pkg_resources.resource_string(__name__,
       'template/apache.zope.conf.path.in')
-    path = path_template % dict(path='/')
+    if location_access_mapping is None:
+      path = path_template % dict(path='/')
+    else:
+      path = ''
     d = dict(
           path=path,
           backend=backend,
@@ -714,12 +720,17 @@ class Recipe(BaseSlapRecipe):
       path_enable=path,
       rewrite_rule=rewrite_rule
     ))
-    return self.createConfigurationFile(prefix + '.conf',
-        pkg_resources.resource_string(__name__,
-          'template/apache.zope.conf.in') % apache_conf)
+    apache_conf_string = pkg_resources.resource_string(__name__,
+          'template/apache.zope.conf.in') % apache_conf
+    location_template = pkg_resources.resource_string(__name__,
+          'template/apache.location-snippet.conf.in')
+    for location, allow_string in location_access_mapping.iteritems():
+      apache_conf_string += '\n' + location_template % dict(location=location,
+          allow_string=allow_string) + '\n'
+    return self.createConfigurationFile(prefix + '.conf', apache_conf_string)
 
   def installLoginApache(self, ip, port, backend, key, certificate,
-      suffix=''):
+      suffix='', location_access_mapping=None):
     ssl_template = """SSLEngine on
 SSLCertificateFile %(login_certificate)s
 SSLCertificateKeyFile %(login_key)s
@@ -732,7 +743,7 @@ SSLRandomSeed connect builtin
     apache_conf['ssl_snippet'] = ssl_template % dict(
         login_certificate=certificate, login_key=key)
     apache_config_file = self._writeApacheConfiguration('login_apache'+suffix,
-        apache_conf, backend)
+        apache_conf, backend, location_access_mapping)
     self.path_list.append(apache_config_file)
     self.path_list.extend(zc.buildout.easy_install.scripts([(
       'login_apache'+suffix,
