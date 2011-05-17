@@ -647,8 +647,7 @@ class Recipe(BaseSlapRecipe):
     zope_config['products'] = '\n'.join(prefixed_products)
     zope_config['address'] = '%s:%s' % (ip, port)
     zope_config['tmp_directory'] = self.tmp_directory
-    zope_config['path'] = ':'.join([self.bin_directory] +
-        os.environ['PATH'].split(':'))
+    zope_config['path'] = self.bin_directory
 
     zope_wrapper_template_location = self.getTemplateFilename('zope.conf.in')
     zope_conf_content = self.substituteTemplate(
@@ -837,8 +836,7 @@ SSLRandomSeed connect builtin
         self.options['innobackupex_binary'],
         '--defaults-file=%s' % mysql_conf_path,
         '--socket=%s' %mysql_conf['socket'].strip(), '--user=root']
-    environment = dict(
-        PATH=':'.join([self.bin_directory] + os.environ['PATH'].split(':')))
+    environment = dict(PATH='%s' % self.bin_directory)
     innobackupex_incremental = zc.buildout.easy_install.scripts([(
       'innobackupex_incremental', __name__ + '.execute', 'executee')],
       self.ws, sys.executable, self.bin_directory, arguments=[
