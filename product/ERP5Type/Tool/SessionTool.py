@@ -89,14 +89,6 @@ class RamSession(Session):
     """ Update current aquisition context. """
     self._aq_context = aq_context
 
-# disabled as session should be dictionary like 
-#  def __getattr__(self, key, default=_marker):
-#    if key in self.data:
-#      return self.__getitem__(key)
-#    if default is not _marker:
-#      return default
-#    raise AttributeError, key
-
   def __getitem__(self, key):
     if key in self.data:
       value = self.data[key]
