@@ -33,6 +33,7 @@ import hashlib
 import sys
 import zc.buildout
 import zc.recipe.egg
+import ConfigParser
 
 # Taken from Zope2 egg
 def write_inituser(fn, user, password):
@@ -61,6 +62,7 @@ class Recipe(BaseSlapRecipe):
           'killpidfromfile')], self.ws, sys.executable, self.bin_directory)[0]
     self.path_list.append(self.killpidfromfile)
     ca_conf = self.installCertificateAuthority()
+
     memcached_conf = self.installMemcached(ip=self.getLocalIPv4Address(),
         port=11000)
     kumo_conf = self.installKumo(self.getLocalIPv4Address())
@@ -76,10 +78,10 @@ class Recipe(BaseSlapRecipe):
           zodb_configuration_string=self.substituteTemplate(
             self.getTemplateFilename('zope-zodb-snippet.conf.in'),
             dict(zodb_root_path=zodb_root_path)), with_timerservice=True)
+    key, certificate = self.requestCertificate('Login Based Access')
     apache_conf = dict(
         apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
-          port=13000, backend=zope_access, key=ca_conf['login_key'],
-          certificate=ca_conf['login_certificate']))
+          port=13000, backend=zope_access, key=key, certificate=certificate))
     self.installERP5Site(user, password, zope_access, mysql_conf, 
              conversion_server_conf, memcached_conf, kumo_conf, self.site_id)
     self.installTestRunner(ca_conf, mysql_conf, conversion_server_conf,
@@ -320,64 +322,62 @@ class Recipe(BaseSlapRecipe):
     self.path_list.append(wrapper)
     return cron_d
 
+  def requestCertificate(self, name):
+    hash = hashlib.sha512(name).hexdigest()
+    key = os.path.join(self.ca_private, hash + self.ca_key_ext)
+    certificate = os.path.join(self.ca_certs, hash + self.ca_crt_ext)
+    parser = ConfigParser.RawConfigParser()
+    parser.add_section('certificate')
+    parser.set('certificate', 'name', name)
+    parser.set('certificate', 'key_file', key)
+    parser.set('certificate', 'certificate_file', certificate)
+    parser.write(open(os.path.join(self.ca_request_dir, hash), 'w'))
+    return key, certificate
+
   def installCertificateAuthority(self, ca_country_code='XX',
       ca_email='xx@example.com', ca_state='State', ca_city='City',
       ca_company='Company'):
-    config = dict(
-      ca_dir=os.path.join(self.data_root_directory, 'ca'))
-    login_key = os.path.join(config['ca_dir'], 'private', 'login.key')
-    login_certificate = os.path.join(config['ca_dir'], 'certs', 'login.crt')
-    key_auth_key = os.path.join(config['ca_dir'], 'private', 'keyauth.key')
-    key_auth_certificate = os.path.join(config['ca_dir'], 'certs',
-        'keyauth.crt')
-
-    config.update(
-      ca_certificate=os.path.join(config['ca_dir'], 'cacert.pem'),
-      ca_key=os.path.join(config['ca_dir'], 'private', 'cakey.pem'),
-      ca_crl=os.path.join(config['ca_dir'], 'crl'),
-      login_key=login_key,
-      login_certificate=login_certificate,
-      key_auth_key=key_auth_key,
-      key_auth_certificate=key_auth_certificate,
-    )
-    self._createDirectory(config['ca_dir'])
-    for d in ['certs', 'crl', 'newcerts', 'private']:
-      self._createDirectory(os.path.join(config['ca_dir'], d))
+    self.ca_dir = os.path.join(self.data_root_directory, 'ca')
+    self._createDirectory(self.ca_dir)
+    self.ca_request_dir = os.path.join(self.ca_dir, 'requests')
+    self._createDirectory(self.ca_request_dir)
+    config = dict(ca_dir=self.ca_dir, request_dir=self.ca_request_dir)
+    self.ca_private = os.path.join(self.ca_dir, 'private')
+    self.ca_certs = os.path.join(self.ca_dir, 'certs')
+    self.ca_crl = os.path.join(self.ca_dir, 'crl')
+    self.ca_newcerts = os.path.join(self.ca_dir, 'newcerts')
+    self.ca_key_ext = '.key'
+    self.ca_crt_ext = '.crt'
+    for d in [self.ca_private, self.ca_crl, self.ca_newcerts, self.ca_certs]:
+      self._createDirectory(d)
     for f in ['crlnumber', 'serial']:
-      if not os.path.exists(os.path.join(config['ca_dir'], f)):
-        open(os.path.join(config['ca_dir'], f), 'w').write('01')
-    if not os.path.exists(os.path.join(config['ca_dir'], 'index.txt')):
-      open(os.path.join(config['ca_dir'], 'index.txt'), 'w').write('')
-    config['openssl_configuration'] = os.path.join(config['ca_dir'],
-        'openssl.cnf')
+      if not os.path.exists(os.path.join(self.ca_dir, f)):
+        open(os.path.join(self.ca_dir, f), 'w').write('01')
+    if not os.path.exists(os.path.join(self.ca_dir, 'index.txt')):
+      open(os.path.join(self.ca_dir, 'index.txt'), 'w').write('')
+    openssl_configuration = os.path.join(self.ca_dir, 'openssl.cnf')
     config.update(
-        working_directory=config['ca_dir'],
+        working_directory=self.ca_dir,
         country_code=ca_country_code,
         state=ca_state,
         city=ca_city,
         company=ca_company,
         email_address=ca_email,
     )
-    self._writeFile(config['openssl_configuration'],
-        pkg_resources.resource_string(__name__,
-          'template/openssl.cnf.ca.in') % config)
+    self._writeFile(openssl_configuration, pkg_resources.resource_string(
+      __name__, 'template/openssl.cnf.ca.in') % config)
     self.path_list.extend(zc.buildout.easy_install.scripts([
       ('certificate_authority',
         __name__ + '.certificate_authority', 'runCertificateAuthority')],
         self.ws, sys.executable, self.wrapper_directory, arguments=[dict(
-          openssl_configuration=config['openssl_configuration'],
+          openssl_configuration=openssl_configuration,
           openssl_binary=self.options['openssl_binary'],
-          ca_certificate=os.path.join(config['ca_dir'], 'cacert.pem'),
-          ca_key=os.path.join(config['ca_dir'], 'private', 'cakey.pem'),
-          ca_crl=os.path.join(config['ca_dir'], 'crl'),
-          login_key=os.path.join(config['ca_dir'], 'private', 'login.key'),
-          login_certificate=login_certificate,
-          key_auth_key=key_auth_key,
-          key_auth_certificate=key_auth_certificate,
+          certificate=os.path.join(self.ca_dir, 'cacert.pem'),
+          key=os.path.join(self.ca_private, 'cakey.pem'),
+          crl=os.path.join(self.ca_crl),
+          request_dir=self.ca_request_dir
           )]))
     return dict(
-      login_key=login_key, login_certificate=login_certificate,
-      key_auth_key=key_auth_key, key_auth_certificate=key_auth_certificate,
       ca_certificate=os.path.join(config['ca_dir'], 'cacert.pem'),
       ca_crl=os.path.join(config['ca_dir'], 'crl'),
       certificate_authority_path=config['ca_dir']

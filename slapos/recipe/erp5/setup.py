@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 #    "."], stdout=subprocess.PIPE).communicate()[0]))
 
 name = "slapos.recipe.erp5"
-version = '1.1-dev-178'
+version = '1.1-dev-179'
 
 def read(name):
   return open(name).read()
