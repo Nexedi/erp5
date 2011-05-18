@@ -14,7 +14,7 @@ class SlapOSControler(object):
     process_group_pid_set.add(proxy.pid)
     # XXX: dirty, giving some time for proxy to being able to accept
     # connections
-    time.sleep(2)
+    time.sleep(10)
     slap = slapos.slap.slap()
     slap.initializeConnection(config['master_url'])
     # register software profile
