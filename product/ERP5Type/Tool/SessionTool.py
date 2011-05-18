@@ -215,7 +215,8 @@ class SessionTool(BaseTool):
         session._updateSessionId(session_id)
       if session_duration is None:
         # set session duration (this is used from backend storage machinery for expire purposes)
-        session_duration = self.portal_caches[SESSION_CACHE_FACTORY].objectValues()[0].cache_duration
+        cache_plugin = self.portal_caches[SESSION_CACHE_FACTORY].objectValues()[0]
+        session_duration = cache_plugin.getCacheDuration()
       session._updateSessionDuration(session_duration)
       storage_plugin.set(session_id, SESSION_SCOPE, session, session_duration)
     else:

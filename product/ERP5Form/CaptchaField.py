@@ -143,28 +143,21 @@ class CaptchaWidget(Widget.TextWidget):
   """
     A widget that displays a Captcha.
   """
-  
-  def __init__(self):
-    # Associate a captcha key and (the right answer, the generation date)
-    self.__captcha_cache = {}
 
-  def add_captcha(self, key, value):
-    # First, cleanup the cache
-    cleanup_time = time.time() - 3600
-    for item in self.__captcha_cache.items():
-      if item[1][1] < cleanup_time:
-        del(self.__captcha_cache[item[0]])
-    # Then add the value if needed
-    if self.__captcha_cache.has_key(key):
+  def add_captcha(self, portal_sessions, key, value):
+    session = portal_sessions[key]
+    if session.has_key(key):
       return False
-    self.__captcha_cache[key] = (str(value), time.time())
-    return True
-  
-  def validate_answer(self, key, value):
-    if not(self.__captcha_cache.has_key(key)):
+    session[key] = value
+    return True    
+    
+  def validate_answer(self, portal_sessions, key, value):
+    session = portal_sessions[key]
+    if not(session.has_key(key)):
       return False
-    result = (self.__captcha_cache[key][0] == value)
-    del(self.__captcha_cache[key]) # Forbid several use of the same captcha.
+    result = (session[key] == value)
+    # Forbid several use of the same captcha.
+    del(session[key])
     return result
     
   property_names = Widget.Widget.property_names + ['captcha_type']
@@ -185,11 +178,11 @@ class CaptchaWidget(Widget.TextWidget):
     """
     captcha_key = None
     captcha_field = None
-    
     captcha_type = field.get_value("captcha_type")
     provider = CaptchaProviderFactory.getProvider(captcha_type)
     (captcha_key, captcha_answer) = provider.generate(field)
-    while not(self.add_captcha(md5.new(captcha_key).hexdigest(), captcha_answer)):
+    portal_sessions = field.getPortalObject().portal_sessions  
+    while not(self.add_captcha(portal_sessions, md5.new(captcha_key).hexdigest(), captcha_answer)):
       (captcha_key, captcha_answer) = provider.generate(field)
     captcha_field = provider.getHTML(field, captcha_key)
     
@@ -222,8 +215,8 @@ class CaptchaValidator(Validator.Validator):
   def validate(self, field, key, REQUEST):
     value = REQUEST.get(key, None)
     cache_key = REQUEST.get("__captcha_" + key + "__")
-    
-    if not(CaptchaWidgetInstance.validate_answer(cache_key, value)):
+    portal_sessions = field.getPortalObject().portal_sessions
+    if not(CaptchaWidgetInstance.validate_answer(portal_sessions, cache_key, value)):
       self.raise_error('wrong_captcha', field)
     return value
 
