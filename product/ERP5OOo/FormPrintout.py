@@ -290,6 +290,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     # End of temporary implementation
     if not format:
       if REQUEST is not None and not batch_mode:
+        REQUEST.RESPONSE.setHeader('Content-Length', len(printout))
         REQUEST.RESPONSE.setHeader('Content-Type','%s' % content_type)
         REQUEST.RESPONSE.setHeader('Content-disposition',
                                    'inline;filename="%s%s"' % \
