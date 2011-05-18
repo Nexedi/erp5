@@ -972,28 +972,69 @@ class TemplateTool (BaseTool):
 
       bt_list : list of (repository, id) tuple.
       """
-      def isDepend(a, b):
-        # return True if a depends on b.
-        dependency_list = [x.split(' ')[0] for x in a['dependency_list']]
-        provision_list = list(b['provision_list']) + [b['title']]
-        for i in provision_list:
-          if i in dependency_list:
-            return True
-          return False
-
       sorted_bt_list = []
+
+      # Calculate the dependency graph
+      dependency_dict = {}
+      provition_dict = {}
+      repository_dict = {}
+      undependent_list = []
+
       for repository, bt_id in bt_list:
+        repository_dict[bt_id] = repository
         bt = [x for x in self.repository_dict[repository] \
               if x['id'] == bt_id][0]
-        for j in range(len(sorted_bt_list)):
-          if isDepend(sorted_bt_list[j][1], bt):
-            sorted_bt_list.insert(j, (repository, bt))
-            break
-        else:
-           sorted_bt_list.append((repository, bt))
-      sorted_bt_list = [(repository, bt['id']) for repository, bt \
-                        in sorted_bt_list]
-      return sorted_bt_list
+        dependency_dict[bt_id] = [x.split(' ')[0] for x in bt['dependency_list']]
+        if not dependency_dict[bt_id]:
+          del dependency_dict[bt_id]
+        for provision in list(bt['provision_list']):
+          provition_dict[provision] = bt_id
+        undependent_list.append(bt_id)
+
+      # Calculate the reverse dependency graph
+      reverse_dependency_dict = {}
+      for bt_id, dependency_id_list in dependency_dict.items():
+        update_dependency_id_list = []
+        for dependency_id in dependency_id_list:
+
+          # Get ride of provision id
+          if dependency_id in provition_dict:
+            dependency_id = provition_dict[dependency_id]
+          update_dependency_id_list.append(dependency_id)
+
+          # Fill incoming edge dict
+          if dependency_id in reverse_dependency_dict:
+            reverse_dependency_dict[dependency_id].append(bt_id)
+          else:
+            reverse_dependency_dict[dependency_id] = [bt_id]
+
+          # Remove from free node list
+          try:
+            undependent_list.remove(dependency_id)
+          except ValueError:
+            pass
+
+        dependency_dict[bt_id] = update_dependency_id_list
+
+      # Let's sort the bt5!
+      while undependent_list:
+        bt_id = undependent_list.pop(0)
+        sorted_bt_list.insert(0, (repository_dict[bt_id], bt_id))
+        for dependency_id in dependency_dict.get(bt_id, []):
+
+          local_dependency_list = reverse_dependency_dict[dependency_id]
+          local_dependency_list.remove(bt_id)
+          if local_dependency_list:
+            reverse_dependency_dict[dependency_id] = local_dependency_list
+          else:
+            del reverse_dependency_dict[dependency_id]
+            undependent_list.append(dependency_id)
+
+      if len(sorted_bt_list) != len(bt_list):
+        raise NotImplementedError, \
+          "Circular dependencies on %s" % reverse_dependency_dict.keys()
+      else:
+        return sorted_bt_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'sortDownloadedBusinessTemplateList')
