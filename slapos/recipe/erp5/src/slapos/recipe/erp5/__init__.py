@@ -730,16 +730,11 @@ class Recipe(BaseSlapRecipe):
 
   def installBackendApache(self, ip, port, backend, key, certificate,
       suffix='', access_control_string=None):
-    ssl_template = """SSLEngine on
-SSLCertificateFile %(login_certificate)s
-SSLCertificateKeyFile %(login_key)s
-SSLRandomSeed startup builtin
-SSLRandomSeed connect builtin
-"""
     apache_conf = self._getApacheConfigurationDict('login_apache'+suffix, ip,
         port)
     apache_conf['server_name'] = '%s' % apache_conf['ip']
-    apache_conf['ssl_snippet'] = ssl_template % dict(
+    apache_conf['ssl_snippet'] = pkg_resources.resource_string(__name__,
+        'template/apache.ssl-snippet.conf.in') % dict(
         login_certificate=certificate, login_key=key)
     apache_config_file = self._writeApacheConfiguration('login_apache'+suffix,
         apache_conf, backend, access_control_string)
