@@ -1,12 +1,12 @@
 from setuptools import setup, find_packages
 
-def getGitIteration():
-  import subprocess
-  return str(int(subprocess.Popen(["git", "rev-list", "--count", "HEAD", "--",
-    "."], stdout=subprocess.PIPE).communicate()[0]))
+#def getGitIteration():
+#  import subprocess
+#  return str(int(subprocess.Popen(["git", "rev-list", "--count", "HEAD", "--",
+#    "."], stdout=subprocess.PIPE).communicate()[0]))
 
 name = "slapos.recipe.erp5"
-version = '1.1-dev-' + getGitIteration()
+version = '1.1-dev-178'
 
 def read(name):
   return open(name).read()
