@@ -80,7 +80,7 @@ class Recipe(BaseSlapRecipe):
             dict(zodb_root_path=zodb_root_path)), with_timerservice=True)
     key, certificate = self.requestCertificate('Login Based Access')
     apache_conf = dict(
-        apache_login=self.installLoginApache(ip=self.getGlobalIPv6Address(),
+        apache_login=self.installBackendApache(ip=self.getGlobalIPv6Address(),
           port=13000, backend=zope_access, key=key, certificate=certificate))
     self.installERP5Site(user, password, zope_access, mysql_conf, 
              conversion_server_conf, memcached_conf, kumo_conf, self.site_id)
@@ -724,7 +724,7 @@ class Recipe(BaseSlapRecipe):
           'template/apache.zope.conf.in') % apache_conf
     return self.createConfigurationFile(prefix + '.conf', apache_conf_string)
 
-  def installLoginApache(self, ip, port, backend, key, certificate,
+  def installBackendApache(self, ip, port, backend, key, certificate,
       suffix='', access_control_string=None):
     ssl_template = """SSLEngine on
 SSLCertificateFile %(login_certificate)s
