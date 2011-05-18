@@ -300,8 +300,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
     tmp_ooo.edit(data=printout,
                  base_data=printout,
-                 fname=self.title_or_id(),
-                 source_reference=self.title_or_id(),
+                 filename=self.title_or_id(),
                  content_type=content_type,
                  base_content_type=content_type)
     mime, data = tmp_ooo.convert(format)
