@@ -39,6 +39,10 @@ from Products.ERP5VCS.WorkingCopy import \
 # TODO: write a similar helper for 'nt' platform
 GIT_ASKPASS = os.path.join(os.path.dirname(__file__), 'bin', 'git_askpass')
 
+class GitInstallationError(EnvironmentError):
+  """Raised when an installation is broken"""
+  pass
+
 class GitError(EnvironmentError):
   def __init__(self, err, out, returncode):
     EnvironmentError.__init__(self, err)
@@ -61,7 +65,18 @@ class Git(WorkingCopy):
   def _git(self, *args, **kw):
     kw.setdefault('cwd', self.working_copy)
     argv = ['git']
-    return subprocess.Popen(argv + list(args), **kw)
+    try:
+      return subprocess.Popen(argv + list(args), **kw)
+    except OSError, e:
+      import sys
+      from zLOG import LOG, WARNING
+      LOG('Git', WARNING,
+          'will not work as the executable cannot be executed, perhaps not '
+          'in the Zope PATH or because of permissions.',
+          error=sys.exc_info())
+
+      raise GitInstallationError("git command cannot be executed: %s" % \
+                                   e.strerror)
 
   security.declarePrivate('git')
   def git(self, *args, **kw):
