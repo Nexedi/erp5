@@ -724,6 +724,10 @@ class Recipe(BaseSlapRecipe):
           'template/apache.zope.conf.in') % apache_conf
     return self.createConfigurationFile(prefix + '.conf', apache_conf_string)
 
+  def installFrontendZopeApache(self, name, path, backend_url, backend_path,
+      port, key, certificate, access_control_string=None):
+    pass
+
   def installBackendApache(self, ip, port, backend, key, certificate,
       suffix='', access_control_string=None):
     ssl_template = """SSLEngine on
