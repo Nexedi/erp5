@@ -159,6 +159,11 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
                      'inline;filename="Foo_viewAsPrintout.odt"')
     self._validate(odf_document)
+    pdf_document = foo_printout.index_html(REQUEST=request, format='pdf')
+    self.assertEqual(request.RESPONSE.getHeader('content-type'),
+                     'application/pdf')
+    self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
+                     'attachment;filename="Foo_viewAsPrintout.pdf"')
 
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
