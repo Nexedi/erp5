@@ -730,17 +730,17 @@ class Recipe(BaseSlapRecipe):
 
   def installBackendApache(self, ip, port, backend, key, certificate,
       suffix='', access_control_string=None):
-    apache_conf = self._getApacheConfigurationDict('login_apache'+suffix, ip,
+    apache_conf = self._getApacheConfigurationDict('backend_apache'+suffix, ip,
         port)
     apache_conf['server_name'] = '%s' % apache_conf['ip']
     apache_conf['ssl_snippet'] = pkg_resources.resource_string(__name__,
         'template/apache.ssl-snippet.conf.in') % dict(
         login_certificate=certificate, login_key=key)
-    apache_config_file = self._writeApacheConfiguration('login_apache'+suffix,
+    apache_config_file = self._writeApacheConfiguration('backend_apache'+suffix,
         apache_conf, backend, access_control_string)
     self.path_list.append(apache_config_file)
     self.path_list.extend(zc.buildout.easy_install.scripts([(
-      'login_apache'+suffix,
+      'backend_apache'+suffix,
         __name__ + '.apache', 'runApache')], self.ws,
           sys.executable, self.wrapper_directory, arguments=[
             dict(
