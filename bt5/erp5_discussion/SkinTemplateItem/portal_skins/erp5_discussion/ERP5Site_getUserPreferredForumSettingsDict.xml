@@ -65,7 +65,7 @@ def getPreferredForumSignature(username):\n
                                        preference_state=\'enabled\')\n
   if preference is not None:\n
     result[\'preferred_forum_signature\'] = preference.getProperty(\'preferred_forum_signature\', None)\n
-    result[\'preferred_forum_quote_original_message\'] = preference.getProperty(\'preferred_forum_quote_original_message\', False)\n
+    result[\'preferred_forum_quote_original_message\'] = preference.getProperty(\'preferred_forum_quote_original_message\', True)\n
   return result\n
   \n
 getPreferredForumSignature = CachingMethod(getPreferredForumSignature,\n
