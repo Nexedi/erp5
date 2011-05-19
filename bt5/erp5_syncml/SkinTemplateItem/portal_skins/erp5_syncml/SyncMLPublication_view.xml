@@ -102,8 +102,8 @@
                         <string>my_conduit_module_id</string>
                         <string>my_list_method_id</string>
                         <string>my_xml_binding_generator_method_id</string>
-                        <string>my_synchronization_id_generator_method_id</string>
                         <string>my_gid_generator_method_id</string>
+                        <string>my_synchronization_id_generator_method_id</string>
                         <string>my_content_type</string>
                         <string>my_authentication_type</string>
                         <string>my_authentication_format</string>
