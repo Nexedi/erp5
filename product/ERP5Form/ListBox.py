@@ -1732,7 +1732,7 @@ class ListBoxRenderer:
         processed_value = editable_field.render_view(value=original_value)
 
       if not isinstance(processed_value, unicode):
-        processed_value = unicode(str(processed_value), self.getEncoding())
+        processed_value = unicode(str(processed_value), self.getEncoding(), 'replace')
 
       value_list.append((original_value, processed_value))
 
@@ -2323,7 +2323,7 @@ class ListBoxRendererLine:
       if processed_value is None:
         processed_value = u''
       elif not isinstance(processed_value, unicode):
-        processed_value = unicode(str(processed_value), renderer.getEncoding())
+        processed_value = unicode(str(processed_value), renderer.getEncoding(), 'replace')
 
       value_list.append((original_value, processed_value))
 
