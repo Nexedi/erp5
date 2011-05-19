@@ -101,6 +101,7 @@ SQL Non Continuous Increasing Id Generator | view
 Standard Property | view
 String Attribute Match Constraint | predicate
 String Attribute Match Constraint | view
+System Preference | captcha
 System Preference | view
 TALES Constraint | predicate
 TALES Constraint | view
