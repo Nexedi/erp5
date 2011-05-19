@@ -34,14 +34,7 @@ import sys
 import zc.buildout
 import zc.recipe.egg
 import ConfigParser
-
-# Taken from Zope2 egg
-def write_inituser(fn, user, password):
-  fp = open(fn, "w")
-  pw = binascii.b2a_base64(hashlib.sha1(password).digest())[:-1]
-  fp.write('%s:{SHA}%s\n' % (user, pw))
-  fp.close()
-  os.chmod(fn, 0600)
+from Zope2.utilities.mkzopeinstance import write_inituser
 
 
 class Recipe(BaseSlapRecipe):
@@ -452,8 +445,8 @@ class Recipe(BaseSlapRecipe):
     password = self.generatePassword()
     # XXX Unhardcoded me please
     user = 'zope'
-    write_inituser(os.path.join(self.erp5_directory, "inituser"),
-        user, password)
+    write_inituser(
+        os.path.join(self.erp5_directory, "inituser"), user, password)
 
     self._createDirectory(self.erp5_directory)
     for directory in (
