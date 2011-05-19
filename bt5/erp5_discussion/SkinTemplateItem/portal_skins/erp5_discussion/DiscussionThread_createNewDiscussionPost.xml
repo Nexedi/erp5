@@ -66,7 +66,8 @@ discussion_post = context.newContent(\n
                     source_value = person,\n
                     predecessor_value = predecessor,\n
                     version = version,\n
-                    language = language)\n
+                    language = language,\n
+                    text_format = \'text/html\')\n
 \n
 # depending on security model Post can be submited for review\n
 portal_status_message = "New post created in background."\n

@@ -56,7 +56,7 @@
 portal = context.getPortalObject()\n
 \n
 author = context.getSourceValue()\n
-result = {\'author_url\': \'#\',\n
+result = {\'author_url\': None,\n
           \'author_signature\': None,\n
           \'author_title\': context.Base_translateString(\'Unknown User\')}\n
 \n
@@ -67,6 +67,10 @@ if author is not None:\n
 \n
 return result\n
 </string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

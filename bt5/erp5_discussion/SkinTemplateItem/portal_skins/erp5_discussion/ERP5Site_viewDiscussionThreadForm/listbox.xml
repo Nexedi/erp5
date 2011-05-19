@@ -280,6 +280,14 @@
                           <string></string>
                         </tuple>
                         <tuple>
+                          <string>author</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>last_post</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>ListBox_getDiscussionThreadUrl</string>
                         </tuple>
