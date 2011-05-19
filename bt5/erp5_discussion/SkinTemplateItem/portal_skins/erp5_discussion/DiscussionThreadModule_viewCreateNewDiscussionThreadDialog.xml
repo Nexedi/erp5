@@ -83,9 +83,7 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -99,10 +97,6 @@
                     <value>
                       <list>
                         <string>your_title</string>
-                        <string>my_reference</string>
-                        <string>my_classification</string>
-                        <string>my_group_list</string>
-                        <string>my_site_list</string>
                       </list>
                     </value>
                 </item>
@@ -110,7 +104,6 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_subject_list</string>
                         <string>your_send_notification_text</string>
                       </list>
                     </value>
