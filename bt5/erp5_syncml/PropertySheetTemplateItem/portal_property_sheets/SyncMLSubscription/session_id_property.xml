@@ -41,7 +41,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>4</string> </value>
+            <value> <string>session_id_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>

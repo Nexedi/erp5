@@ -27,21 +27,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/boolean</string>
+                <string>elementary_type/string</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>is_activity_enabled</string> </value>
+            <value> <string>list_method_id</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Use portal activity (Asynchronous)</string> </value>
+            <value> <string>Method to return object list</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>1</string> </value>
+            <value> <string>list_method_id_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
@@ -50,10 +50,6 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
-        </item>
-        <item>
-            <key> <string>property_default</string> </key>
-            <value> <string>python: 0</string> </value>
         </item>
       </dictionary>
     </pickle>

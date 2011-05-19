@@ -27,21 +27,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/string</string>
+                <string>elementary_type/date</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>xml_binding_generator_method_id</string> </value>
+            <value> <string>last_anchor</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Method id to generate XML binding</string> </value>
+            <value> <string>Last synchronization date</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>2</string> </value>
+            <value> <string>last_anchor_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>

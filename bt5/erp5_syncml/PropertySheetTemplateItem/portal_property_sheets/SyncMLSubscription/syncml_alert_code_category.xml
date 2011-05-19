@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>18</string> </value>
+            <value> <string>syncml_alert_code_category</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

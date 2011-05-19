@@ -27,21 +27,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/string</string>
+                <string>elementary_type/boolean</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>authentication_type</string> </value>
+            <value> <string>is_activity_enabled</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The type of the authentication</string> </value>
+            <value> <string>Use portal activity (Asynchronous)</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>15</string> </value>
+            <value> <string>is_activity_enabled_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value> <string>python: \'syncml:auth-basic\'</string> </value>
+            <value> <string>python: 0</string> </value>
         </item>
       </dictionary>
     </pickle>

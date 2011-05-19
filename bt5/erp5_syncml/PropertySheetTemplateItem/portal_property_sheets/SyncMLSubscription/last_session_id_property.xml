@@ -27,21 +27,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/date</string>
+                <string>elementary_type/int</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>next_anchor</string> </value>
+            <value> <string>last_session_id</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Next synchronization date</string> </value>
+            <value> <string>Incremental counter of exchanged messages since begining of synchronization session</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>10</string> </value>
+            <value> <string>last_session_id_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>

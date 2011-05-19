@@ -33,15 +33,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>conduit_module_id</string> </value>
+            <value> <string>subscription_url_string</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Conduit used to handle documents</string> </value>
+            <value> <string>subscription url value</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>11</string> </value>
+            <value> <string>subscription_url_string_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>

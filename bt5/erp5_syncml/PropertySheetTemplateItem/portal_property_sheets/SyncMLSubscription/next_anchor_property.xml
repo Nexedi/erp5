@@ -27,21 +27,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/string</string>
+                <string>elementary_type/date</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>list_method_id</string> </value>
+            <value> <string>next_anchor</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Method to return object list</string> </value>
+            <value> <string>Next synchronization date</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>3</string> </value>
+            <value> <string>next_anchor_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>

@@ -27,21 +27,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/string</string>
+                <string>elementary_type/int</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>gid_generator_method_id</string> </value>
+            <value> <string>last_message_id</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Method id usefull to generate object\'s GID</string> </value>
+            <value> <string>Last Message ID</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>17</string> </value>
+            <value> <string>last_message_id_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>

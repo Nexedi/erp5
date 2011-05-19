@@ -33,15 +33,15 @@
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>last_sent_message</string> </value>
+            <value> <string>authentication_type</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Last sent Message</string> </value>
+            <value> <string>The type of the authentication</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>8</string> </value>
+            <value> <string>authentication_type_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
@@ -50,6 +50,10 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: \'syncml:auth-basic\'</string> </value>
         </item>
       </dictionary>
     </pickle>

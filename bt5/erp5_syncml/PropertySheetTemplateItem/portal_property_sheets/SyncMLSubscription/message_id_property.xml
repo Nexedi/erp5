@@ -27,21 +27,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/string</string>
+                <string>elementary_type/int</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>subscription_url_string</string> </value>
+            <value> <string>message_id</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>subscription url value</string> </value>
+            <value> <string>Incremental counter of exchanged messages since begining of synchronization session</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>13</string> </value>
+            <value> <string>message_id_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
@@ -50,6 +50,10 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: 0</string> </value>
         </item>
       </dictionary>
     </pickle>

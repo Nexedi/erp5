@@ -27,21 +27,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/int</string>
+                <string>elementary_type/boolean</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>last_session_id</string> </value>
+            <value> <string>is_synchronized_with_erp5_portal</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Incremental counter of exchanged messages since begining of synchronization session</string> </value>
+            <value> <string>Synchronize with another ERP5 portal</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>5</string> </value>
+            <value> <string>is_synchronized_with_erp5_portal_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
@@ -50,6 +50,10 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>property_default</string> </key>
+            <value> <string>python: True</string> </value>
         </item>
       </dictionary>
     </pickle>

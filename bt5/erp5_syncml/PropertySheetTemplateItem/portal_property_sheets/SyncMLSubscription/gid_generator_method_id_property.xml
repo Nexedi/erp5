@@ -27,21 +27,21 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>elementary_type/date</string>
+                <string>elementary_type/string</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>last_anchor</string> </value>
+            <value> <string>gid_generator_method_id</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Last synchronization date</string> </value>
+            <value> <string>Method id usefull to generate object\'s GID</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>9</string> </value>
+            <value> <string>gid_generator_method_id_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
