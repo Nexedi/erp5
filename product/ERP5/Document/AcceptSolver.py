@@ -88,3 +88,17 @@ class AcceptSolver(ConfigurablePropertySolverMixin):
         simulation_movement.recordProperty(property_id)
       simulation_movement.setProperty(property_id, value)
     simulation_movement.expand(activate_kw=activate_kw)
+
+  def updateConfiguration(self, **kw):
+    # This method is called once for each 'Solver Decision' of a
+    # 'Solver Process' that maps into this solver for the same
+    # Simulation Movement, so we need to take care not to lose
+    # information by overwriting.
+    configuration = self._getConfigurationPropertyDict()
+    tested_property_list = configuration.get('tested_property_list', None)
+    if tested_property_list is not None:
+      tested_property_set = set(tested_property_list).union(
+        kw.get('tested_property_list', ())
+      )
+      kw['tested_property_list'] = list(tested_property_set)
+    super(AcceptSolver, self).updateConfiguration(**kw)
