@@ -973,6 +973,7 @@ class TemplateTool (BaseTool):
       bt_list : list of (repository, id) tuple.
       """
       sorted_bt_list = []
+      title_id_mapping = {}
 
       # Calculate the dependency graph
       dependency_dict = {}
@@ -981,15 +982,17 @@ class TemplateTool (BaseTool):
       undependent_list = []
 
       for repository, bt_id in bt_list:
-        repository_dict[bt_id] = repository
         bt = [x for x in self.repository_dict[repository] \
               if x['id'] == bt_id][0]
-        dependency_dict[bt_id] = [x.split(' ')[0] for x in bt['dependency_list']]
-        if not dependency_dict[bt_id]:
-          del dependency_dict[bt_id]
+        bt_title = bt['title']
+        repository_dict[bt_title] = repository
+        dependency_dict[bt_title] = [x.split(' ')[0] for x in bt['dependency_list']]
+        title_id_mapping[bt_title] = bt_id
+        if not dependency_dict[bt_title]:
+          del dependency_dict[bt_title]
         for provision in list(bt['provision_list']):
-          provition_dict[provision] = bt_id
-        undependent_list.append(bt_id)
+          provition_dict[provision] = bt_title
+        undependent_list.append(bt_title)
 
       # Calculate the reverse dependency graph
       reverse_dependency_dict = {}
@@ -1019,7 +1022,9 @@ class TemplateTool (BaseTool):
       # Let's sort the bt5!
       while undependent_list:
         bt_id = undependent_list.pop(0)
-        sorted_bt_list.insert(0, (repository_dict[bt_id], bt_id))
+        if bt_id not in repository_dict:
+          continue
+        sorted_bt_list.insert(0, (repository_dict[bt_id], title_id_mapping[bt_id]))
         for dependency_id in dependency_dict.get(bt_id, []):
 
           local_dependency_list = reverse_dependency_dict[dependency_id]
