@@ -97,115 +97,119 @@ repository = %(repository_path)s
   try:
     while True:
       # kill processes from previous loop if any
-      for pgpid in process_group_pid_set:
-        try:
-          os.killpg(pgpid, signal.SIGTERM)
-        except:
-          pass
-      process_group_pid_set.clear()
-      # Make sure we have local repository
-      if not os.path.exists(repository_path):
-        parameter_list = [config['git_binary'], 'clone',
-                          config['vcs_repository']]
-        if branch is not None:
-          parameter_list.extend(['-b',branch])
-        parameter_list.append(repository_path)
-        subprocess.check_call(parameter_list)
-        # XXX this looks like to not wait the end of the command
-      # Make sure we have local repository
-      updater = Updater(repository_path, git_binary=config['git_binary'])
-      updater.checkout()
-      revision = updater.getRevision()
-      if previous_revision == revision:
-        time.sleep(120)
-        if not(retry_software):
-          continue
-      retry_software = False
-      previous_revision = revision
+      try:
+        for pgpid in process_group_pid_set:
+          try:
+            os.killpg(pgpid, signal.SIGTERM)
+          except:
+            pass
+        process_group_pid_set.clear()
+        # Make sure we have local repository
+        if not os.path.exists(repository_path):
+          parameter_list = [config['git_binary'], 'clone',
+                            config['vcs_repository']]
+          if branch is not None:
+            parameter_list.extend(['-b',branch])
+          parameter_list.append(repository_path)
+          subprocess.check_call(parameter_list)
+          # XXX this looks like to not wait the end of the command
+        # Make sure we have local repository
+        updater = Updater(repository_path, git_binary=config['git_binary'])
+        updater.checkout()
+        revision = updater.getRevision()
+        if previous_revision == revision:
+          time.sleep(120)
+          if not(retry_software):
+            continue
+        retry_software = False
+        previous_revision = revision
 
-      print config
-      portal_url = config['test_suite_master_url']
-      test_result_path = None
-      test_result = (test_result_path, revision)
-      if portal_url:
-        if portal_url[-1] != '/':
-          portal_url += '/'
-        portal = xmlrpclib.ServerProxy("%s%s" %
-                     (portal_url, 'portal_task_distribution'),
-                     allow_none=1)
-        master = portal.portal_task_distribution
-        assert master.getProtocolRevision() == 1
-        test_result = safeRpcCall(master.createTestResult,
-          config['test_suite_name'], revision, [],
-          False, config['test_suite_title'])
-      print "testnode, test_result : %r" % (test_result,)
-      if test_result:
-        test_result_path, test_revision = test_result
-        if revision != test_revision:
-          # other testnodes on other boxes are already ready to test another
-          # revision
-          updater = Updater(repository_path, git_binary=config['git_binary'],
-                            revision=test_revision)
-          updater.checkout()
-
-        # Now prepare the installation of SlapOS
-        slapos_controler = SlapOSControler(config,
-          process_group_pid_set=process_group_pid_set)
-        # this should be always true later, but it is too slow for now
-        status_dict = slapos_controler.runSoftwareRelease(config,
-          environment=config['environment'],
-          process_group_pid_set=process_group_pid_set,
-          )
-        if status_dict['status_code'] != 0:
-          safeRpcCall(master.reportTaskFailure,
-            test_result_path, status_dict, config['test_suite_title'])
-          retry_software = True
-          continue
-
-        # create instances, it should take some seconds only
-        slapos_controler.runComputerPartition(config,
-                process_group_pid_set=process_group_pid_set)
-
-        # update repositories downloaded by buildout. Later we should get
-        # from master a list of repositories
-        repository_path_list = glob(os.path.join(config['software_root'],
-                                '*', 'parts', 'git_repository', '*'))
-        assert len(repository_path_list) >= 0
-        for repository_path in repository_path_list:
-          updater = Updater(repository_path, git_binary=config['git_binary'])
-          updater.checkout()
-          if os.path.split(repository_path)[-1] == repository_name:
-            # redo checkout with good revision, the previous one is used
-            # to pull last code
+        print config
+        portal_url = config['test_suite_master_url']
+        test_result_path = None
+        test_result = (test_result_path, revision)
+        if portal_url:
+          if portal_url[-1] != '/':
+            portal_url += '/'
+          portal = xmlrpclib.ServerProxy("%s%s" %
+                      (portal_url, 'portal_task_distribution'),
+                      allow_none=1)
+          master = portal.portal_task_distribution
+          assert master.getProtocolRevision() == 1
+          test_result = safeRpcCall(master.createTestResult,
+            config['test_suite_name'], revision, [],
+            False, config['test_suite_title'])
+        print "testnode, test_result : %r" % (test_result,)
+        if test_result:
+          test_result_path, test_revision = test_result
+          if revision != test_revision:
+            # other testnodes on other boxes are already ready to test another
+            # revision
             updater = Updater(repository_path, git_binary=config['git_binary'],
-                              revision=revision)
+                              revision=test_revision)
             updater.checkout()
-          # calling dist/externals is only there for backward compatibility,
-          # the code will be removed soon
-          if os.path.exists(os.path.join(repository_path, 'dist/externals.py')):
-            process = subprocess.Popen(['dist/externals.py'],
-                      cwd=repository_path)
-            process.wait()
 
-        partition_path = os.path.join(config['instance_root'],
-                                      config['partition_reference'])
-        run_test_suite_path = os.path.join(partition_path, 'bin',
-                                           'runTestSuite')
-        if not os.path.exists(run_test_suite_path):
-          raise ValueError('No %r provided' % run_test_suite_path)
+          # Now prepare the installation of SlapOS
+          slapos_controler = SlapOSControler(config,
+            process_group_pid_set=process_group_pid_set)
+          # this should be always true later, but it is too slow for now
+          status_dict = slapos_controler.runSoftwareRelease(config,
+            environment=config['environment'],
+            process_group_pid_set=process_group_pid_set,
+            )
+          if status_dict['status_code'] != 0:
+            safeRpcCall(master.reportTaskFailure,
+              test_result_path, status_dict, config['test_suite_title'])
+            retry_software = True
+            continue
 
-        run_test_suite_revision = revision
-        if isinstance(revision, tuple):
-          revision = ','.join(revision)
-        run_test_suite = subprocess.Popen([run_test_suite_path,
-                         '--test_suite', config['test_suite_name'],
-                         '--revision', revision,
-                         '--node_quantity', config['node_quantity'],
-                         '--master_url', config['test_suite_master_url'],
-                         ], )
-        process_group_pid_set.add(run_test_suite.pid)
-        run_test_suite.wait()
-        process_group_pid_set.remove(run_test_suite.pid)
+          # create instances, it should take some seconds only
+          slapos_controler.runComputerPartition(config,
+                  process_group_pid_set=process_group_pid_set)
+
+          # update repositories downloaded by buildout. Later we should get
+          # from master a list of repositories
+          repository_path_list = glob(os.path.join(config['software_root'],
+                                  '*', 'parts', 'git_repository', '*'))
+          assert len(repository_path_list) >= 0
+          for repository_path in repository_path_list:
+            updater = Updater(repository_path, git_binary=config['git_binary'])
+            updater.checkout()
+            if os.path.split(repository_path)[-1] == repository_name:
+              # redo checkout with good revision, the previous one is used
+              # to pull last code
+              updater = Updater(repository_path, git_binary=config['git_binary'],
+                                revision=revision)
+              updater.checkout()
+            # calling dist/externals is only there for backward compatibility,
+            # the code will be removed soon
+            if os.path.exists(os.path.join(repository_path, 'dist/externals.py')):
+              process = subprocess.Popen(['dist/externals.py'],
+                        cwd=repository_path)
+              process.wait()
+
+          partition_path = os.path.join(config['instance_root'],
+                                        config['partition_reference'])
+          run_test_suite_path = os.path.join(partition_path, 'bin',
+                                            'runTestSuite')
+          if not os.path.exists(run_test_suite_path):
+            raise ValueError('No %r provided' % run_test_suite_path)
+
+          run_test_suite_revision = revision
+          if isinstance(revision, tuple):
+            revision = ','.join(revision)
+          run_test_suite = subprocess.Popen([run_test_suite_path,
+                          '--test_suite', config['test_suite_name'],
+                          '--revision', revision,
+                          '--node_quantity', config['node_quantity'],
+                          '--master_url', config['test_suite_master_url'],
+                          ], )
+          process_group_pid_set.add(run_test_suite.pid)
+          run_test_suite.wait()
+          process_group_pid_set.remove(run_test_suite.pid)
+      except SubprocessError:
+        time.sleep(120)
+        continue
 
   finally:
     # Nice way to kill *everything* generated by run process -- process
