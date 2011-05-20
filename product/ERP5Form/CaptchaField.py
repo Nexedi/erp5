@@ -67,7 +67,6 @@ class CaptchasDotNetProvider(object):
   def getImageGenerator (self, field):
     captchas_client = field.get_value("captcha_dot_net_client") or "demo"
     captchas_secret = field.get_value("captcha_dot_net_secret") or "secret"
-    print "--", captchas_client, captchas_secret
     return CaptchasDotNet.CaptchasDotNet(client = captchas_client, secret = captchas_secret)
   
   def generate(self, field):
