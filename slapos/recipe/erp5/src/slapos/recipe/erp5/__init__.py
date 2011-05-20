@@ -330,6 +330,7 @@ class Recipe(BaseSlapRecipe):
   def installCertificateAuthority(self, ca_country_code='XX',
       ca_email='xx@example.com', ca_state='State', ca_city='City',
       ca_company='Company'):
+    backup_path = self.createBackupDirectory('ca')
     self.ca_dir = os.path.join(self.data_root_directory, 'ca')
     self._createDirectory(self.ca_dir)
     self.ca_request_dir = os.path.join(self.ca_dir, 'requests')
@@ -370,6 +371,15 @@ class Recipe(BaseSlapRecipe):
           crl=os.path.join(self.ca_crl),
           request_dir=self.ca_request_dir
           )]))
+    # configure backup
+    backup_cron = os.path.join(self.cron_d, 'ca_rdiff_backup')
+    open(backup_cron, 'w').write(
+        '''0 0 * * * %(rdiff_backup)s %(source)s %(destination)s'''%dict(
+          rdiff_backup=self.options['rdiff_backup_binary'],
+          source=self.ca_dir,
+          destination=backup_path))
+    self.path_list.append(backup_cron)
+
     return dict(
       ca_certificate=os.path.join(config['ca_dir'], 'cacert.pem'),
       ca_crl=os.path.join(config['ca_dir'], 'crl'),
