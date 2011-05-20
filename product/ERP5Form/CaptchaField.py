@@ -34,6 +34,7 @@ from Products.Formulator.Errors import ValidationError
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import DTMLFile
+from Products.Formulator.TALESField import TALESField
 import CaptchasDotNet
 import string
 import random
@@ -66,6 +67,7 @@ class CaptchasDotNetProvider(object):
   def getImageGenerator (self, field):
     captchas_client = field.get_value("captcha_dot_net_client") or "demo"
     captchas_secret = field.get_value("captcha_dot_net_secret") or "secret"
+    print "--", captchas_client, captchas_secret
     return CaptchasDotNet.CaptchasDotNet(client = captchas_client, secret = captchas_secret)
   
   def generate(self, field):
@@ -77,19 +79,26 @@ class CaptchasDotNetProvider(object):
     image_generator = self.getImageGenerator(field)
     return image_generator.image(captcha_key, "__captcha_" + md5.new(captcha_key).hexdigest())
 
+  # dynamic fields
+  _dynamic_property_list = [dict(id='captcha_dot_net_client',
+                                 title='Captchas.net client login',
+                                 description='Your login on captchas.net to get the pictures.',
+                                 default="demo",
+                                 size=32,
+                                 required=0),
+                            dict(id='captcha_dot_net_secret',
+                                 title='Captchas.net client secret',
+                                 description='Your secret on captchas.net to get the pictures.',
+                                 default="secret",
+                                 size=32,
+                                 required=0)]
   def getExtraPropertyList(self):
-    return [fields.StringField('captcha_dot_net_client',
-                               title='Captchas.net client login',
-                               description='Your login on captchas.net to get the pictures.',
-                               default="demo",
-                               size=32,
-                               required=0),
-            fields.PasswordField('captcha_dot_net_secret',
-                               title='Captchas.net client secret',
-                               description='Your secret on captchas.net to get the pictures.',
-                               default="secret",
-                               size=32,
-                               required=0)]
+    return [fields.StringField(**self._dynamic_property_list[0]),
+            fields.PasswordField(**self._dynamic_property_list[1])]    
+
+  def getExtraTalesPropertyList(self):
+    return [TALESField(**self._dynamic_property_list[0]),
+            TALESField(**self._dynamic_property_list[1])]                           
 
 class NumericCaptchaProvider(object):
 
@@ -120,6 +129,9 @@ class NumericCaptchaProvider(object):
     return "<span class=\"%s\">%s</span>" % (field.get_value('css_class'), calculus_text)
 
   def getExtraPropertyList(self):
+    return []
+
+  def getExtraTalesPropertyList(self):
     return []
 
 class CaptchaProviderFactory(object):
@@ -164,9 +176,7 @@ class CaptchaWidget(Widget.TextWidget):
 
   captcha_type = fields.ListField('captcha_type',
                                    title='Captcha type',
-                                   description=(
-        "The type of captcha you want to use."
-        ""),
+                                   description=("The type of captcha you want to use."),
                                    default=CaptchaProviderFactory.getDefaultProvider(),
                                    required=1,
                                    size=1,
@@ -314,4 +324,57 @@ class CaptchaField(ZMIField):
     extraPropertyList = captcha_provider.getExtraPropertyList()
     self.__extraPropertyList = [x.id for x in extraPropertyList]
     return extraPropertyList
-    
+
+
+
+  security.declareProtected('View management screens', 'manage_talesForm')
+  manage_talesForm = DTMLFile('dtml/captchaFieldTales', globals())
+
+  security.declareProtected('Change Formulator Forms', 'manage_tales')
+  def manage_tales(self, REQUEST):
+    """Change TALES expressions.
+    """
+    result = {}
+    # add dynamic form fields for captcha
+    #captcha_provider = CaptchaProviderFactory.getProvider(self.get_value("captcha_type"))
+    for field in self.getCaptchaCustomTalesPropertyList():
+      try:
+        # validate the form and get results
+        result[field.id] = field.validate(REQUEST)
+      except ValidationError, err:
+        if REQUEST:
+          message = "Error: %s - %s" % (err.field.get_value('title'),
+                                        err.error_text)
+          return self.manage_talesForm(self, REQUEST,
+                                  manage_tabs_message=message)
+        else:
+          raise
+      
+    # standard tales form fields
+    try:
+      # validate the form and get results
+      result.update(self.tales_form.validate(REQUEST))
+    except ValidationError, err:
+      if REQUEST:
+        message = "Error: %s - %s" % (err.field.get_value('title'),
+                                      err.error_text)
+        return self.manage_talesForm(self,REQUEST,
+                                     manage_tabs_message=message)
+      else:
+        raise
+    self._edit_tales(result)
+
+    if REQUEST:
+      message="Content changed."
+      return self.manage_talesForm(self, REQUEST,
+                                   manage_tabs_message=message)
+                                     
+  def getCaptchaCustomTalesPropertyList(self):
+    if hasattr(self, "__extraTalesPropertyList"):
+      return self.__extraTalesPropertyList
+    captcha_type = ZMIField.get_value(self, "captcha_type")
+    captcha_provider = CaptchaProviderFactory.getProvider(captcha_type)
+    extraPropertyList = captcha_provider.getExtraTalesPropertyList()
+    self.__extraTalesPropertyList = [x.id for x in extraPropertyList]
+    return extraPropertyList                                     
+  
