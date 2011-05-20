@@ -510,6 +510,19 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
       (line,   mapped_value,   mapped_value,),
       )
       )
+    four_dimension = (
+      ((tab,tab),
+      (        column,         column,),
+      (line,   mapped_value,   mapped_value,),
+      (line,   mapped_value,   mapped_value,),
+      ),
+      ((tab,tab),
+      (        column,         column,),
+      (line,   mapped_value,   mapped_value,),
+      (line,   mapped_value,   mapped_value,),
+      )
+      )
+
   """
   def get_range_id_list(range_list):
     if not range_list:
@@ -567,12 +580,13 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
     elif dimension==3:
       table_list = table
       for table in table_list:
-        tab = table[0][0]
+        tab_list = list(table[0])
+        tab_list.reverse()
         column = table[1]
         for table_line in table[2:]:
           row = table_line[0]
           for index, item in enumerate(table_line[1:]):
-            data_list.append(([row, column[index], tab], getMappedValueDict(item)))
+            data_list.append(([row, column[index]] + tab_list, getMappedValueDict(item)))
 
     for category_list, mapped_value_dict in data_list:
       cell = line.newCell(portal_type=cell_type,
