@@ -2275,28 +2275,24 @@ class ListBoxRendererLine:
             original_value = getattr(brain, alias)
             processed_value = original_value
           else:
-            if obj is not None:
+            try:
+              # Get the trailing part.
               try:
-                # Get the trailing part.
-                try:
-                  property_id = sql[sql.rindex('.') + 1:]
-                except ValueError:
-                  property_id = sql
+                property_id = sql[sql.rindex('.') + 1:]
+              except ValueError:
+                property_id = sql
 
-                try:
-                  original_value = obj.getProperty(property_id, _marker)
-                  if original_value is _marker:
-                    raise AttributeError, property_id
-                  processed_value = original_value
-                except AttributeError:
-                  original_value = getattr(obj, property_id, None)
-                  processed_value = original_value
-              except (AttributeError, KeyError, Unauthorized):
-                original_value = None
-                processed_value = 'Could not evaluate %s' % property_id
-            else:
+              try:
+                original_value = obj.getProperty(property_id, _marker)
+                if original_value is _marker:
+                  raise AttributeError, property_id
+                processed_value = original_value
+              except AttributeError:
+                original_value = getattr(obj, property_id, None)
+                processed_value = original_value
+            except (AttributeError, KeyError, Unauthorized):
               original_value = None
-              processed_value = 'Object does not exist'
+              processed_value = 'Could not evaluate %s' % property_id
 
       # If the value is callable, evaluate it.
       if callable(original_value):
