@@ -88,6 +88,19 @@ class ConfigurablePropertySolverMixin(SolverMixin,
                     , PropertySheet.TargetSolver
                     )
 
+  def updateConfiguration(self, **kw):
+    # This method is called once for each 'Solver Decision' of a
+    # 'Solver Process' that maps into this solver for the same
+    # Simulation Movement, so we need to take care not to lose
+    # information by overwriting.
+    configuration = self._getConfigurationPropertyDict()
+    tested_property_list = configuration.get('tested_property_list')
+    if tested_property_list is not None:
+      tested_property_set = set(tested_property_list)
+      tested_property_set.update(kw.get('tested_property_list', ()))
+      kw['tested_property_list'] = list(tested_property_set)
+    super(ConfigurablePropertySolverMixin, self).updateConfiguration(**kw)
+
   def getTestedPropertyList(self):
     configuration_dict = self.getConfigurationPropertyDict()
     tested_property_list = configuration_dict.get('tested_property_list')
