@@ -7,6 +7,18 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_identity_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_range_criterion</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
             <key> <string>constraint_property</string> </key>
             <value>
               <tuple>
@@ -24,7 +36,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>8</string> </value>
+            <value> <string>xml_binding_generator_method_id_constraint</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -33,6 +45,36 @@
         <item>
             <key> <string>test_tales_expression</string> </key>
             <value> <string>python: object.getSyncmlAlertCode() != "one_way_from_server"</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
         </item>
       </dictionary>
     </pickle>
