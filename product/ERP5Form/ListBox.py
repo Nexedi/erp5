@@ -2197,7 +2197,8 @@ class ListBoxRendererLine:
     """
     # If this is a report line without statistics, just return an empty result.
     renderer = self.renderer
-    if self.getObject() is None:
+    obj = self.getObject()
+    if obj is None:
       return [(None, '')] * len(renderer.getSelectedColumnList())
 
     # Otherwise, evaluate each column.
@@ -2250,7 +2251,6 @@ class ListBoxRendererLine:
             processed_value = original_value
       else:
         # This is an usual line.
-        obj = None # Only evaluate if needed
         brain = self.getBrain()
 
         # Use a widget, if any.
@@ -2265,7 +2265,6 @@ class ListBoxRendererLine:
                               editable_field.get_tales)
           tales = get_tales('default')
           if tales:
-            obj = self.getObject()
             original_value = editable_field.__of__(obj).get_value('default',
                                                         cell=brain)
             processed_value = original_value
@@ -2276,7 +2275,6 @@ class ListBoxRendererLine:
             original_value = getattr(brain, alias)
             processed_value = original_value
           else:
-            obj = self.getObject()
             if obj is not None:
               try:
                 # Get the trailing part.
