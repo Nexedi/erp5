@@ -50,18 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>solver_process = context.Delivery_getSolverProcess()\n
-# XXX should omit \'solved\' decision?\n
-return solver_process.SolverProcess_getSolverDecisionList()\n
+            <value> <string># XXX currently we create a Solver Process and build Solver Decision in it if missing.\n
+# But for better performance, Solver Process and Solver Decision should be created beforehand\n
+# by causality workflow when a delivery becomes divergent.\n
+for solver_process in context.getSolverValueList():\n
+  if solver_process.getValidationState() == \'draft\':\n
+    solver_process.buildSolverDecisionList(context)\n
+    break\n
+else:\n
+  solver_process = context.getPortalObject().portal_solver_processes.newSolverProcess(context)\n
+\n
+return solver_process\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_getSolverDecisionList</string> </value>
+            <value> <string>Delivery_getSolverProcess</string> </value>
         </item>
       </dictionary>
     </pickle>
