@@ -85,10 +85,27 @@ class EssendexGateway(XMLObject):
       """Page result is like Key=value in text format. 
          We transform it to a more powerfull dictionnary"""
       result = dict()
+      index = 0
+      
+      #Read all lines
       for line in page.readlines():
-        parts = line.split('=')
-        #Remove \n et \r from value
-        result[parts[0]] = urllib.unquote(parts[1].replace('\r','').replace('\n',''))
+        
+        #Look is the line have multi key/value
+        parts = line.split('&')        
+        if len(parts) == 1:          
+          data = parts[0].split('=')
+          #Remove \n et \r from value
+          result[data[0]] = urllib.unquote(data[1].replace('\r','').replace('\n',''))
+          
+        else:
+          #Mutil values
+          subresult = {}
+          for part in parts:
+            data = part.split('=')
+            result[data[0]] = urllib.unquote(data[1].replace('\r','').replace('\n',''))           
+          result[index] = subresult
+          #Increment index for next          
+          index += 1
 
       return result
       
@@ -274,7 +291,7 @@ class EssendexGateway(XMLObject):
     security.declareProtected(Permissions.ManagePortal, 'notifyDelivery')
     def notifyDelivery(self, xml):
       """Handle delivery info
-        root: lxml Element"""
+        xml: lxml Element"""
       """      
       <MessageDelivered>
         <Id>{guid-of-push-notification}</Id>
@@ -293,3 +310,54 @@ class EssendexGateway(XMLObject):
                             portal_type="Short Message",
                             destination_reference=xml['MessageId'],
                             delivery_date=xml['OccurredAt'])
+
+    def pullLastMessageList(self, start_date=None, stop_date=None)
+      """Get last messsages on the gateway"""
+      
+      if start_date is not None or stop_date is not None:
+        base_url = self.api_url + "/GetInboxMessage.aspx"                
+      else:
+        base_url = self.api_url + "/GetLatestInboxMessages.aspx"
+
+      params = {'Username': self.getGatewayUser(),
+                'Password': self.getGatewayPassword(),
+                'Account': self.getGatewayAccount(),
+                'PlainText': 1,
+                }
+      if start_date is not None:
+        params['StartDate'] = start_date.strftime('%d/%m/%Y %H:%M:%S')
+      
+      if stop_date is not None:
+        params['EndDate'] = stop_date.strftime('%d/%m/%Y %H:%M:%S')
+                
+      if self.isSimulationMode():
+        params['Test'] = 1
+        LOG("EssendexGateway", INFO, params)
+        
+      params = urllib.urlencode(params)
+      page = urllib.urlopen(base_url, params)
+      result = self._fetchPageAsDict(page)
+
+      if result['Result'] == "OK":
+        #Push all message        
+        type_mapping = {'Text': 'text/plain'}
+        for key, value in result:
+          if type(key) == int:
+            self.activate(activity='SQLQueue').SMSTool_pushNewSMS(
+                              message_id=value['ID'],
+                              sender=parsePhoneNumber(value['Originator']),
+                              recipient=parsePhoneNumber(value['Recipient']),
+                              text_content=value['Body'],
+                              message_type=type_mapping[value['Type']],
+                              #To take in case value['ReceivedAt'], equal to "2011-05-03 10:23:16Z"
+                              reception_date=DateTime())
+      elif result['Result'] == "Test":
+        #Do nothing, we have log params
+      elif result['Result'] == "Error":
+        #we get an error when call the gateway
+        raise SMSGatewayError, urllib.unquote(result.get('Message', "Impossible to get last message list"))
+
+
+    
+    
+   
