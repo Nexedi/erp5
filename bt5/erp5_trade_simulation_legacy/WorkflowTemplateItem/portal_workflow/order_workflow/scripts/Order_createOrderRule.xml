@@ -51,34 +51,16 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>order = state_change[\'object\']\n
-order_path = order.getPath()\n
-path_and_method_id = (order_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-expand_tag = order_path + \'_expand\'\n
-tag = order_path + \'_updateAppliedRule\'\n
-\n
-priority = 3\n
-\n
-activate_kw = { \n
-  \'tag\': expand_tag,\n
-  \'priority\': priority,\n
-}\n
-order.activate(\n
-    after_path_and_method_id=path_and_method_id,\n
-    after_tag=expand_tag,\n
-    tag=tag,\n
-    priority=priority,\n
-    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
-\n
-order.activate(after_tag=(tag, expand_tag)).Delivery_buildOnComposedDocument()\n
+order.Delivery_updateSimulation()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>state_change, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Order_buildPackingList</string> </value>
+            <value> <string>Order_createOrderRule</string> </value>
         </item>
       </dictionary>
     </pickle>
