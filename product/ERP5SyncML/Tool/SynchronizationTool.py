@@ -2201,10 +2201,12 @@ class SynchronizationTool(BaseTool):
               xml_object = conduit.replaceIdFromXML(xml_object, 'id',
                                                     object.getId(),
                                                     as_string=True)
-            else:
+            elif conduit.getContentType() == 'text/xml':
               # no previous, this is the first synchronization
               # store xml view from object as it has been provided.
               xml_object = etree.tostring(data_subnode)
+            else:
+              xml_object = data_subnode
             signature.setTemporaryData(xml_object)
             if conflict_list:
               status_code = 'conflict'
