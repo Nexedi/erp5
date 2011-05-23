@@ -102,7 +102,7 @@ class EssendexGateway(XMLObject):
           subresult = {}
           for part in parts:
             data = part.split('=')
-            result[data[0]] = urllib.unquote(data[1].replace('\r','').replace('\n',''))           
+            subresult[data[0]] = urllib.unquote(data[1].replace('\r','').replace('\n',''))           
           result[index] = subresult
           #Increment index for next          
           index += 1
@@ -116,6 +116,11 @@ class EssendexGateway(XMLObject):
       # Check that phone number can not be something not existing
       assert not(phone.startswith('99000'))
       return phone
+      
+    security.declarePrivate("_parsePhoneNumber")
+    def _parsePhoneNumber(self,number):
+      """Convert phone number for erp5 compliance"""
+      return "+%s(%s)-%s" % (number[0:2],0,number[2:])
 
     security.declareProtected(Permissions.ManagePortal, 'send')
     def send(self, text,recipient,sender=None, sender_title=None, 
@@ -270,20 +275,12 @@ class EssendexGateway(XMLObject):
         <To>{phone number of the recipient of the inbound message (the
         virtual number of the esendex account in use)}</To>
       </InboundMessage>
-      """   
-
-      #Convert phone as erp5 compliant
-      def parsePhoneNumber(number):
-        #XXX: Should register well formatted number or brut number ?
-        #return number
-        return "+%s(%s)-%s" % (number[0:2],0,number[2:])
-        
-
+      """          
       #Create the new sms in activities      
       self.activate(activity='SQLQueue').SMSTool_pushNewSMS(
                               message_id=xml['MessageId'],
-                              sender=parsePhoneNumber(xml['From']),
-                              recipient=parsePhoneNumber(xml['To']),
+                              sender=self._parsePhoneNumber(xml['From']),
+                              recipient=self._parsePhoneNumber(xml['To']),
                               text_content=xml['MessageText'],
                               message_type='text/plain',
                               reception_date=DateTime())
@@ -341,19 +338,18 @@ class EssendexGateway(XMLObject):
       if result['Result'] == "OK":
         #Push all message        
         type_mapping = {'Text': 'text/plain'}
-        for key, value in result:
+        for key, value in result.items():
           if type(key) == int:
             self.activate(activity='SQLQueue').SMSTool_pushNewSMS(
                               message_id=value['ID'],
-                              sender=parsePhoneNumber(value['Originator']),
-                              recipient=parsePhoneNumber(value['Recipient']),
+                              sender=self._parsePhoneNumber(value['Originator']),
+                              recipient=self._parsePhoneNumber(value['Recipient']),
                               text_content=value['Body'],
                               message_type=type_mapping[value['Type']],
                               #To take in case value['ReceivedAt'], equal to "2011-05-03 10:23:16Z"
                               reception_date=DateTime())
       elif result['Result'] == "Test":
-        #Do nothing, we have log params
-        pass
+        LOG("EssendexGateway", INFO, result)
       elif result['Result'] == "Error":
         #we get an error when call the gateway
         raise SMSGatewayError, urllib.unquote(result.get('Message', "Impossible to get last message list"))
