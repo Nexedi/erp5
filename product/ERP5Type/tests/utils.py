@@ -532,6 +532,18 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
     else:
       return range_list
 
+  def getSortedCategoryList(line, base_id, category_list):
+    category_dict = {}
+    for category in category_list:
+      category_dict[category.split('/')[0]] = category
+    result = []
+    index_list = line.index[base_id].keys()
+    index_list.sort()
+    for index in index_list:
+      base_category = line.index[base_id][index].keys()[0].split('/')[0]
+      result.append(category_dict[base_category])
+    return result
+    
   for cell_dict in cell_dict_list:
     base_id = cell_dict['base_id']
     if callable(cell_range_method):
@@ -589,6 +601,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
             data_list.append(([row, column[index]] + tab_list, getMappedValueDict(item)))
 
     for category_list, mapped_value_dict in data_list:
+      category_list = getSortedCategoryList(line, base_id, category_list)
       cell = line.newCell(portal_type=cell_type,
                           base_id=base_id,
                           *category_list)
