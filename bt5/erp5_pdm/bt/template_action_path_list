@@ -99,6 +99,7 @@ Transformation | jump_to_related_transformation
 Transformation | optional_resource_view
 Transformation | update_variation_list
 Transformation | view
+Transformation | view_stock
 Transformation | view_transformation_assorted_component
 Transformation | view_transformation_component
 Transformation | view_transformation_operation
