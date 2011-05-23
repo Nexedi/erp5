@@ -1,6 +1,8 @@
---- pdftk-1.44-dist.original/pdftk/Makefile.Base	2010-10-28 23:19:18.000000000 +0200
-+++ pdftk-1.44-dist/pdftk/Makefile.Base	2011-03-29 13:51:25.000000000 +0200
-@@ -35,22 +35,24 @@
+diff --git a/pdftk/Makefile.Base b/pdftk/Makefile.Base
+index 0bedd04..36a439e 100644
+--- a/pdftk/Makefile.Base
++++ b/pdftk/Makefile.Base
+@@ -35,22 +35,24 @@ javalib :
  	$(MAKE) -f Makefile -iC $(JAVALIBPATH) all
  
  attachments.o : attachments.cc attachments.h pdftk.h $(JAVALIB)
@@ -22,7 +24,7 @@
  install:
 -	/usr/bin/install pdftk /usr/local/bin 
 +	mkdir -p ${DEST}/bin
-+	/usr/bin/install pdftk ${DEST}/bin
++	install pdftk ${DEST}/bin
  
  uninstall:
 -	$(RM) $(RMFLAGS) /usr/local/bin/pdftk
