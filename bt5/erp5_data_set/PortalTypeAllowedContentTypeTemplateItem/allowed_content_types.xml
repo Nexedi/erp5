@@ -1,0 +1,9 @@
+<allowed_content_type_list>
+ <portal_type id="Data Set">
+  <item>Purchase Supply Line</item>
+  <item>Sale Supply Line</item>
+ </portal_type>
+ <portal_type id="Data Set Module">
+  <item>Data Set</item>
+ </portal_type>
+</allowed_content_type_list>

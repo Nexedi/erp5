@@ -1,0 +1,5 @@
+testShaCacheSecurity
+testShaDirSecurity
+testShaDirExternal
+testShaCacheExternal
+ShaSecurityMixin

@@ -1,0 +1,18 @@
+<registered_skin_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_web_download_theme</skin_folder>
+  <skin_selection>SHADIR</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_web_shacache_core</skin_folder>
+  <skin_selection>SHADIR</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_web_shadir</skin_folder>
+  <skin_selection>SHADIR</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_xhtml_style</skin_folder>
+  <skin_selection>SHADIR</skin_selection>
+ </skin_folder_selection>
+</registered_skin_selection>

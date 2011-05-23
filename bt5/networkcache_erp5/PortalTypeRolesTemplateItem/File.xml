@@ -1,0 +1,7 @@
+<type_roles>
+  <role id='Auditor'>
+   <property id='title'>Any From ShaCache Group</property>
+   <property id='description'>Any user which has a valid assignment where the group is shacache must have Auditor role.</property>
+   <multi_property id='category'>group/shacache</multi_property>
+  </role>
+</type_roles>

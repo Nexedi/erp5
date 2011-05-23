@@ -1,0 +1,15 @@
+2011-05-26 Lucas
+* Removed _setSuperSecurityManager, security must be defined.
+
+2011-05-26 Lucas
+* Added basic tests for shadir implementation.
+
+2011-05-26 Lucas
+* SHADIR must handle POST from any client supporting application/json content type.
+For each POST method for an unknown PATH it must create a Data Set (if does not exists), store the DATA in DMS, and set the follow up relation from such document to the Data Set.
+
+2011-05-25 Lucas
+* Depends of erp5_data_set business template.
+
+2011-05-24 Lucas
+* Initial import.
