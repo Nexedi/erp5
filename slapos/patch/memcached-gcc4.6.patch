@@ -1,0 +1,36 @@
+diff --git a/items.c b/items.c
+index e7f01ea..9fc6704 100644
+--- a/items.c
++++ b/items.c
+@@ -450,9 +450,7 @@ void do_item_stats_sizes(ADD_STAT add_stats, void *c) {
+         for (i = 0; i < num_buckets; i++) {
+             if (histogram[i] != 0) {
+                 char key[8];
+-                int klen = 0;
+-                klen = snprintf(key, sizeof(key), "%d", i * 32);
+-                assert(klen < sizeof(key));
++                assert(snprintf(key, sizeof(key), "%d", i * 32) < sizeof(key));
+                 APPEND_STAT(key, "%u", histogram[i]);
+             }
+         }
+diff --git a/memcached.c b/memcached.c
+index 750c8b3..0913b77 100644
+--- a/memcached.c
++++ b/memcached.c
+@@ -4627,8 +4627,6 @@ int main (int argc, char **argv) {
+ 
+     /* create the listening socket, bind it, and init */
+     if (settings.socketpath == NULL) {
+-        int udp_port;
+-
+         const char *portnumber_filename = getenv("MEMCACHED_PORT_FILENAME");
+         char temp_portnumber_filename[PATH_MAX];
+         FILE *portnumber_file = NULL;
+@@ -4658,7 +4656,6 @@ int main (int argc, char **argv) {
+          * then daemonise if needed, then init libevent (in some cases
+          * descriptors created by libevent wouldn't survive forking).
+          */
+-        udp_port = settings.udpport ? settings.udpport : settings.port;
+ 
+         /* create the UDP listening socket and bind it */
+         errno = 0;
