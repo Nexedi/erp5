@@ -311,7 +311,7 @@ class EssendexGateway(XMLObject):
                             destination_reference=xml['MessageId'],
                             delivery_date=xml['OccurredAt'])
 
-    def pullLastMessageList(self, start_date=None, stop_date=None)
+    def pullLastMessageList(self, start_date=None, stop_date=None):
       """Get last messsages on the gateway"""
       
       if start_date is not None or stop_date is not None:
@@ -353,11 +353,10 @@ class EssendexGateway(XMLObject):
                               reception_date=DateTime())
       elif result['Result'] == "Test":
         #Do nothing, we have log params
+        pass
       elif result['Result'] == "Error":
         #we get an error when call the gateway
         raise SMSGatewayError, urllib.unquote(result.get('Message', "Impossible to get last message list"))
 
-
-    
     
    
