@@ -540,8 +540,9 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
     index_list = line.index[base_id].keys()
     index_list.sort()
     for index in index_list:
-      base_category = line.index[base_id][index].keys()[0].split('/')[0]
-      result.append(category_dict[base_category])
+      if line.index[base_id][index]:
+        base_category = line.index[base_id][index].keys()[0].split('/')[0]
+        result.append(category_dict[base_category])
     return result
     
   for cell_dict in cell_dict_list:
