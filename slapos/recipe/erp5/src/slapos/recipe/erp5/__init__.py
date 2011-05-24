@@ -801,7 +801,8 @@ class Recipe(BaseSlapRecipe):
     return 'https://[%(ip)s]:%(port)s' % apache_conf
 
   def installMysqlServer(self, ip, port, database='erp5', user='user',
-      test_database='test_erp5', test_user='test_user', template_filename=None):
+      test_database='test_erp5', test_user='test_user', template_filename=None,
+      parallel_test_database_amount=100):
     backup_directory = self.createBackupDirectory('mysql')
     if template_filename is None:
       template_filename = self.getTemplateFilename('my.cnf.in')
@@ -824,7 +825,7 @@ class Recipe(BaseSlapRecipe):
         mysql_test_user=test_user,
         mysql_parallel_test_dict=[
             ('test_%i' % x,)*2 + (self.generatePassword(),) \
-                 for x in xrange(0,100)],
+                 for x in xrange(0,parallel_test_database_amount)],
     )
     self.registerLogRotation('mysql', [error_log, slow_query_log],
         '%(mysql_binary)s --no-defaults -B --user=root '
