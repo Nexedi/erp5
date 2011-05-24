@@ -76,6 +76,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
+                <string>delivery_builder/portal_deliveries/purchase_invoice_builder</string>
                 <string>delivery_builder/portal_deliveries/sale_invoice_builder</string>
                 <string>trade_phase/default/invoicing</string>
                 <string>predecessor/trade_state/delivered</string>
