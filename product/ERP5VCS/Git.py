@@ -264,7 +264,8 @@ class Git(WorkingCopy):
 
   def update(self, keep=False):
     if self.getAheadCount():
-      raise NotImplementedError
+      raise NotImplementedError("I don't know how to update a working copy"\
+                                "with local commits")
     if not keep:
       self.clean()
       self.remote_git('pull', '--ff-only')
