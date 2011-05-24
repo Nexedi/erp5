@@ -123,9 +123,14 @@ class EssendexGateway(XMLObject):
       return "+%s(%s)-%s" % (number[0:2],0,number[2:])
    
     security.declarePrivate("_parsePhoneNumber")
-    def _parseDate(self, datestring)
-      """Convert a string to a DateTime"""
+    def _parseDate(self, string):
+      """Convert a string (like 2011-05-03 10:23:16Z) to a DateTime"""
+      return DateTime(string.replace('Z', ' GTM+2'))
 
+    def _convertTimeDeltaToSeconds(self, timedelta):
+      """ Convert a timedelta to seconds """
+      return timedelta.seconds + (timedelta.days * 24 * 60 * 60) 
+    
     security.declareProtected(Permissions.ManagePortal, 'send')
     def send(self, text,recipient,sender=None, sender_title=None, 
               message_type="text",test=False,**kw):
@@ -343,17 +348,20 @@ class EssendexGateway(XMLObject):
       if result['Result'] == "OK":
         #Push all message        
         type_mapping = {'Text': 'text/plain'}
+        now == DateTime()
         for key, value in result.items():
           if type(key) == int:
-            self.activate(activity='SQLQueue',2).SMSTool_pushNewSMS(
-                              message_id=value['ID'],
-                              sender=self._parsePhoneNumber(value['Originator']),
-                              recipient=self._parsePhoneNumber(value['Recipient']),
-                              text_content=value['Body'],
-                              message_type=type_mapping[value['Type']],
-                              #To take in case value['ReceivedAt'], equal to "2011-05-03 10:23:16Z"
-                              reception_date=DateTime(),
-                              mode="pull")
+            reception_date = self._parseDate(value['ReceivedAt'])
+            #Take only message received more than 10s
+            if self._convertTimeDeltaToSeconds(now - reception_date) > 10:
+              self.activate(activity='SQLQueue',priority=2).SMSTool_pushNewSMS(
+                                message_id=value['ID'],
+                                sender=self._parsePhoneNumber(value['Originator']),
+                                recipient=self._parsePhoneNumber(value['Recipient']),
+                                text_content=value['Body'],
+                                message_type=type_mapping[value['Type']],                              
+                                reception_date=reception_date,
+                                mode="pull")
       elif result['Result'] == "Test":
         LOG("EssendexGateway", INFO, result)
       elif result['Result'] == "Error":
