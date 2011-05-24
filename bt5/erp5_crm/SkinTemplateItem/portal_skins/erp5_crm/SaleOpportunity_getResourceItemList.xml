@@ -50,36 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-This script returns the list of items based on the preferred\n
-resources for events. It is intended to be used\n
-by ListField instances.\n
-"""\n
-from zExceptions import Unauthorized\n
-from Products.ERP5Type.Cache import CachingMethod\n
-portal = context.getPortalObject()\n
-\n
-def getResourceItemList():\n
-  result = [(\'\', \'\')]\n
-  url_list = portal.portal_preferences.getPreferredSaleOpportunityResourceList()\n
-  for url in url_list:\n
-    try:\n
-      resource_value = portal.restrictedTraverse(url, None)\n
-      if resource_value is not None:\n
-        if resource_value.getPortalType() == \'Category\':\n
-          category_relative_url = resource_value.getCategoryRelativeUrl()\n
-        else:\n
-          category_relative_url = resource_value.getRelativeUrl()\n
-        result.append((resource_value.getTranslatedTitle(), category_relative_url))\n
-    except Unauthorized:\n
-      pass\n
-  return result\n
-\n
-getResourceItemList = CachingMethod(getResourceItemList, \n
-      id=(script.id, context.Localizer.get_selected_language()), \n
-      cache_factory=\'erp5_ui_long\')\n
-                                 \n
-return getResourceItemList()\n
+            <value> <string>return context.Ticket_getResourceItemList()\n
 </string> </value>
         </item>
         <item>
