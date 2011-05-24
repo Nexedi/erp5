@@ -121,6 +121,10 @@ class EssendexGateway(XMLObject):
     def _parsePhoneNumber(self,number):
       """Convert phone number for erp5 compliance"""
       return "+%s(%s)-%s" % (number[0:2],0,number[2:])
+   
+    security.declarePrivate("_parsePhoneNumber")
+    def _parseDate(self, datestring)
+      """Convert a string to a DateTime"""
 
     security.declareProtected(Permissions.ManagePortal, 'send')
     def send(self, text,recipient,sender=None, sender_title=None, 
@@ -277,13 +281,14 @@ class EssendexGateway(XMLObject):
       </InboundMessage>
       """          
       #Create the new sms in activities      
-      self.activate(activity='SQLQueue').SMSTool_pushNewSMS(
+      self.activate(activity='SQLQueue', priority=1).SMSTool_pushNewSMS(
                               message_id=xml['MessageId'],
                               sender=self._parsePhoneNumber(xml['From']),
                               recipient=self._parsePhoneNumber(xml['To']),
                               text_content=xml['MessageText'],
                               message_type='text/plain',
-                              reception_date=DateTime())
+                              reception_date=DateTime(),
+                              mode="push")
 
     security.declareProtected(Permissions.ManagePortal, 'notifyDelivery')
     def notifyDelivery(self, xml):
@@ -340,14 +345,15 @@ class EssendexGateway(XMLObject):
         type_mapping = {'Text': 'text/plain'}
         for key, value in result.items():
           if type(key) == int:
-            self.activate(activity='SQLQueue').SMSTool_pushNewSMS(
+            self.activate(activity='SQLQueue',2).SMSTool_pushNewSMS(
                               message_id=value['ID'],
                               sender=self._parsePhoneNumber(value['Originator']),
                               recipient=self._parsePhoneNumber(value['Recipient']),
                               text_content=value['Body'],
                               message_type=type_mapping[value['Type']],
                               #To take in case value['ReceivedAt'], equal to "2011-05-03 10:23:16Z"
-                              reception_date=DateTime())
+                              reception_date=DateTime(),
+                              mode="pull")
       elif result['Result'] == "Test":
         LOG("EssendexGateway", INFO, result)
       elif result['Result'] == "Error":
