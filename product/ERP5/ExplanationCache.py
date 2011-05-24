@@ -216,7 +216,7 @@ class ExplanationCache:
           catalog_kw['trade_phase_relative_url'] = catalog_kw['trade_phase']
           del catalog_kw['trade_phase']
         self.simulation_movement_cache[kw_tuple] = \
-               self.portal_catalog(portal_type="Simulation Movement",
+               self.portal_catalog.unrestrictedSearchResults(portal_type="Simulation Movement",
                                    **catalog_kw)
         
     return self.simulation_movement_cache[kw_tuple]
@@ -229,7 +229,7 @@ class ExplanationCache:
     simulation_movement_list = self.getSimulationMovementValueList()
     simulation_movement_uid_list = map(lambda x:x.uid, simulation_movement_list) 
     # We could use related keys instead of 2 queries
-    business_link_list = self.portal_catalog(
+    business_link_list = self.portal_catalog.unrestrictedSearchResults(
                       portal_type=business_type_list,
                       causality_related_uid=simulation_movement_uid_list,
                       **kw)
