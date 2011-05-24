@@ -16,9 +16,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Use values to filter list of resource for Meetings</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

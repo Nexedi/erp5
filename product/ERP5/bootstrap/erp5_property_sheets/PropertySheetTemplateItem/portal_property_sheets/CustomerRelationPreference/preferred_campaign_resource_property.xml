@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Preferred resources to count the different kinds of Events</string> </value>
+            <value> <string>Preferred resource for campaigns</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
