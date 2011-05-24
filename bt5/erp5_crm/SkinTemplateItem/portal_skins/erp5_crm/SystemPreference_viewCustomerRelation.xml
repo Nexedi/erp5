@@ -87,7 +87,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_preferred_event_use_list</string>
                         <string>my_preferred_event_resource_list</string>
+                        <string>my_preferred_event_resource</string>
                         <string>my_preferred_event_assessment_form_id_list</string>
                         <string>my_preferred_event_sender_email</string>
                       </list>
@@ -97,10 +99,18 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_preferred_sale_opportunity_use_list</string>
                         <string>my_preferred_sale_opportunity_resource_list</string>
+                        <string>my_preferred_sale_opportunity_resource</string>
+                        <string>my_preferred_campaign_use_list</string>
                         <string>my_preferred_campaign_resource_list</string>
+                        <string>my_preferred_campaign_resource</string>
+                        <string>my_preferred_support_request_use_list</string>
                         <string>my_preferred_support_request_resource_list</string>
+                        <string>my_preferred_support_request_resource</string>
+                        <string>my_preferred_meeting_use_list</string>
                         <string>my_preferred_meeting_resource_list</string>
+                        <string>my_preferred_meeting_resource</string>
                       </list>
                     </value>
                 </item>
