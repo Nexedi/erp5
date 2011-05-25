@@ -55,7 +55,8 @@
   The default behaviour is to receive messages so that they\n
   are marked as \'New\' and appear in the worklist.\n
 """\n
-context.receive()\n
+portal = context.getPortalObject()\n
+portal_workflow = portal.portal_workflow\n
 \n
 # Forwarded mail\n
 forwarded_mail = False\n
@@ -97,6 +98,93 @@ if forwarded_mail is True:\n
   if entity_list:\n
     source = entity_list[0].getRelativeUrl()\n
     context.setSource(source)\n
+\n
+if context.getPortalType() == \'Web Message\' and\\\n
+   context.getSourceCarrierValue() is not None and\\\n
+   context.getSourceCarrierValue().getPortalType() in (\'Web Message\', \'Web Section\',):\n
+  # Read information about user and create person and/or related Organisation if any\n
+  email_text = context.getSourcePersonDefaultEmailText()\n
+  if email_text:\n
+    person_portal_type = \'Person\'\n
+    organisation_portal_type = \'Organisation\'\n
+    person = None\n
+    organisation = None\n
+    if context.getSourcePersonFirstName() or context.getSourcePersonLastName():\n
+      person_email = portal.portal_catalog.getResultValue(\n
+                          url_string={\'query\': email_text, \'key\':\'ExactMatch\'},\n
+                          portal_type=\'Email\',\n
+                          parent_portal_type=person_portal_type,\n
+                          parent_title=\'%s %s\' % (context.getSourcePersonFirstName(\'\'),\n
+                                                  context.getSourcePersonLastName(\'\')))\n
+      if person_email is not None:\n
+        person = person_email.getParentValue()\n
+    if context.getSourceOrganisationTitle():\n
+      organisation_email = portal.portal_catalog.getResultValue(\n
+                          url_string={\'query\': email_text, \'key\':\'ExactMatch\'},\n
+                          portal_type=\'Email\',\n
+                          parent_portal_type=organisation_portal_type,\n
+                          parent_title=context.getSourceOrganisationTitle(\'\'))\n
+      if organisation_email is not None:\n
+        organisation = organisation_email.getParentValue()\n
+    if person is None and (context.getSourcePersonFirstName() or context.getSourcePersonLastName()):\n
+      person_module = portal.getDefaultModule(person_portal_type)\n
+      person = person_module.newContent(portal_type=person_portal_type,\n
+                                        first_name=context.getSourcePersonFirstName(),\n
+                                        last_name=context.getSourcePersonLastName(),\n
+                                        default_email_text=email_text,\n
+                                        default_telephone_text=context.getSourcePersonDefaultTelephoneText())\n
+    if organisation is None and context.getSourceOrganisationTitle():\n
+      organisation_module = portal.getDefaultModule(organisation_portal_type)\n
+      organisation = organisation_module.newContent(portal_type=organisation_portal_type,\n
+                                                    title=context.getSourceOrganisationTitle())\n
+      if person is None:\n
+        organisation.setDefaultEmailText(email_text)\n
+    if person is not None and organisation is not None and organisation.getRelativeUrl() not in person.getSubordinationList():\n
+      subordination_list = person.getSubordinationList()\n
+      subordination_list.append(organisation.getRelativeUrl())\n
+      person.setDefaultCareerSubordinationList(subordination_list)\n
+    if person is not None and portal_workflow.isTransitionPossible(person, \'validate\'):\n
+      person.validate()\n
+    if organisation is not None and portal_workflow.isTransitionPossible(organisation, \'validate\'):\n
+      organisation.validate()\n
+    if person is not None:\n
+      context.setSourceValue(person)\n
+    elif organisation is not None:\n
+      context.setSourceValue(organisation)\n
+    else:\n
+      raise ValueError(\'At least one Person or one Organisation must be set as sender\')\n
+\n
+  # Associate a ticket for incoming Web Messages from Contact-Us form\n
+\n
+  ticket_portal_type = \'Support Request\'\n
+  ticket_module = portal.getDefaultModule(ticket_portal_type)\n
+\n
+  ticket = ticket_module.newContent(portal_type=ticket_portal_type,\n
+                                    destination_decision=context.getSource(),\n
+                                    title=context.getTitle(),\n
+                                    resource=portal.portal_preferences.getPreferredSupportRequestResource(),\n
+                                    source_section=portal.portal_preferences.getPreferredSection(),\n
+                                    start_date=DateTime())\n
+\n
+  follow_up_list = context.getFollowUpList()\n
+  if ticket.getRelativeUrl() not in follow_up_list:\n
+    follow_up_list.append(ticket.getRelativeUrl())\n
+    context.setFollowUpList(follow_up_list)\n
+  ticket.submit()\n
+\n
+# BBB support 2 workflows\n
+# event_workflow\n
+if portal_workflow.isTransitionPossible(context, \'receive\'):\n
+  context.receive()\n
+if portal_workflow.isTransitionPossible(context, \'acknowledge_event\'):\n
+  portal_workflow.doActionFor(context, \'acknowledge_action\',\n
+                              create_event=False)\n
+\n
+# event_simulation_workflow\n
+if portal_workflow.isTransitionPossible(context, \'stop\'):\n
+  context.stop()\n
+if portal_workflow.isTransitionPossible(context, \'deliver\'):\n
+  context.deliver()\n
 </string> </value>
         </item>
         <item>
