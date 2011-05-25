@@ -87,20 +87,20 @@ for account_uid in account_uids:\n
   else:\n
     closed_date = None\n
   if parent_value.getPortalType() == \'Organisation\':\n
-    activity = parent_value.getActivity()\n
+    parent_activity = parent_value.getActivity()\n
   else:\n
-    activity = None\n
+    parent_activity = None\n
   inv_account_dict[account_uid] = {\n
-    state_title: account_state,\n
-    closed_date: closed_date,\n
-    account_reference: account.getReference(),\n
-    internal_bank_account_number: account.getInternalBankAccountNumber(),\n
-    state: account.getValidationState(),\n
-    activity: parent_activity,\n
-    account_owner: parent_value.getTitle(),\n
-    currency_title: account.getPriceCurrencyTitle(),\n
-    bic_code: account.getBicCode(None),\n
-    transaction_list: [],\n
+    \'state_title\': account_state,\n
+    \'closed_date\': closed_date,\n
+    \'account_reference\': account.getReference(),\n
+    \'internal_bank_account_number\': account.getInternalBankAccountNumber(),\n
+    \'state\': account.getValidationState(),\n
+    \'activity\': parent_activity,\n
+    \'account_owner\': parent_value.getTitle(),\n
+    \'currency_title\': account.getPriceCurrencyTitle(),\n
+    \'bic_code\': account.getBicCode(None),\n
+    \'transaction_list\': [],\n
   }\n
 \n
 # Current inventory\n
