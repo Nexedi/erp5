@@ -802,13 +802,15 @@ class Recipe(BaseSlapRecipe):
 
   def installMysqlServer(self, ip, port, database='erp5', user='user',
       test_database='test_erp5', test_user='test_user', template_filename=None,
-      parallel_test_database_amount=100):
+      parallel_test_database_amount=100, mysql_conf=None):
+    if mysql_conf is None:
+      mysql_conf = {}
     backup_directory = self.createBackupDirectory('mysql')
     if template_filename is None:
       template_filename = self.getTemplateFilename('my.cnf.in')
     error_log = os.path.join(self.log_directory, 'mysqld.log')
     slow_query_log = os.path.join(self.log_directory, 'mysql-slow.log')
-    mysql_conf = dict(
+    mysql_conf.update(
         ip=ip,
         data_directory=os.path.join(self.data_root_directory,
           'mysql'),
