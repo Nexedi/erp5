@@ -125,7 +125,26 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     self.portal.portal_alarms.fetch_incoming_web_message_list.activeSense()
     transaction.commit()
     self.tic()
-    self.assertEquals(event.getSimulationState(), 'new')
+    self.assertEquals(event.getSimulationState(), 'acknowledged')
+    ticket = event.getFollowUpValue()
+    self.assertTrue(ticket is not None)
+    self.assertEquals(ticket.getSimulationState(), 'submitted')
+    person = event.getSourceValue()
+    self.assertTrue(person is not None)
+    self.assertEquals(person.getFirstName(),
+                      form_kw['source_person_first_name'])
+    self.assertEquals(person.getLastName(),
+                      form_kw['source_person_last_name'])
+    self.assertEquals(person.getDefaultEmailText(),
+                      form_kw['source_person_default_email_text'])
+    self.assertTrue(form_kw['source_person_default_telephone_text'] in\
+                    person.getDefaultTelephoneText())
+    self.assertEquals(person.getValidationState(), 'validated')
+    organisation = person.getSubordinationValue()
+    self.assertTrue(organisation is not None)
+    self.assertEquals(organisation.getValidationState(), 'validated')
+    self.assertEquals(organisation.getTitle(),
+                      form_kw['source_organisation_title'])
 
   def test_02_Contact_Us_with_Aunthenticated_user(self):
     """Test creation of Web Message with Authenticted User
@@ -159,7 +178,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     self.portal.portal_alarms.fetch_incoming_web_message_list.activeSense()
     transaction.commit()
     self.tic()
-    self.assertEquals(event.getSimulationState(), 'new')
+    self.assertEquals(event.getSimulationState(), 'acknowledged')
 
 def test_suite():
   suite = unittest.TestSuite()
