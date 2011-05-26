@@ -61,7 +61,8 @@ portal = context.getPortalObject()\n
 \n
 sql_kw = {\'portal_type\': portal.getPortalResourceTypeList(),\n
           \'use_uid\': portal.portal_categories.getCategoryUid(portal.portal_preferences.getPreferredEventUse(), base_category=\'use\'),\n
-          \'validation_state\': \'validated\'}\n
+          \'validation_state\': \'validated\',\n
+          \'sort_on\': \'title\'}\n
 \n
 def getResourceItemList():\n
   return [(\'\', \'\')] + [(result.getTitle(), result.getRelativeUrl()) for result in portal.portal_catalog(**sql_kw)]\n
