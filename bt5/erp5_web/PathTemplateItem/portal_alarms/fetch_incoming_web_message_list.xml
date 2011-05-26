@@ -33,9 +33,7 @@ Web Message can be created by Anonymous Users</string> </value>
         <item>
             <key> <string>periodicity_hour</string> </key>
             <value>
-              <tuple>
-                <int>7</int>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
