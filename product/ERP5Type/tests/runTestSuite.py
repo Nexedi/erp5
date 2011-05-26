@@ -5,17 +5,23 @@ from ERP5TypeTestSuite import ERP5TypeTestSuite
 
 def makeSuite(node_quantity=None, test_suite=None, revision=None,
               db_list=None):
+  # BBB tests (plural form) is only checked for backward compatibility
   for k in sys.modules.keys():
-    if k == 'tests' or k.startswith('tests.'):
+    if k in ('tests', 'test',) or k.startswith('tests.') or k.startswith('test.'):
       del sys.modules[k]
-  module_name, class_name = ('tests.' + \
-        test_suite).rsplit('.', 1)
-
-  try:
-    suite_class = getattr(__import__(module_name, None, None, [class_name]),
-                          class_name)
-  except (AttributeError, ImportError):
-    raise
+  singular_succeed = True
+  while True:
+    module_name, class_name = ('%s.%s' % (singular_succeed and 'test' or 'tests',
+                                          test_suite)).rsplit('.', 1)
+    try:
+      suite_class = getattr(__import__(module_name, None, None, [class_name]),
+                            class_name)
+    except (AttributeError, ImportError):
+      if not singular_succeed:
+        raise
+      singular_succeed = False
+    else:
+      break
   suite = suite_class(revision=revision,
                       max_instance_count=node_quantity,
                       mysql_db_list=db_list.split(','),
