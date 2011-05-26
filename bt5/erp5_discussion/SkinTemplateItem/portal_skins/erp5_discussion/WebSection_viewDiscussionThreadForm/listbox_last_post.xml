@@ -19,7 +19,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_author</string> </value>
+            <value> <string>listbox_last_post</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -118,7 +118,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Post Author</string> </value>
+                    <value> <string>Last Post Author</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -128,16 +128,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-        <tuple/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: cell.getParentValue().DiscussionThread_viewAuthorWidget()</string> </value>
+            <value> <string>python: cell.DiscussionThread_viewLastPostWidget()</string> </value>
         </item>
       </dictionary>
     </pickle>

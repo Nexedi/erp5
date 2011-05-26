@@ -67,18 +67,27 @@ if group_list in MARKER:\n
   group_list = user_assignment_dict[\'group_list\']\n
 if site_list in MARKER:\n
   site_list = user_assignment_dict[\'site_list\']\n
+\n
+# set predicate settings for current Web Section\n
+membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
+multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()\n
+reference = title.replace(\' \', \'-\')\n
+create_kw = dict(title = title,\n
+                 source_value = person,\n
+                 reference = reference,\n
+                 version = version,\n
+                 language = language,\n
+                 description=description,\n
+                 subject_list=subject_list,\n
+                 classification=classification,\n
+                 group_list=group_list,\n
+                 site_list=site_list)\n
+for base_category in multimembership_criterion_base_category_list:\n
+  create_kw[\'%s_list\' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]\n
+\n
 discussion_thread = portal.discussion_thread_module.newContent(\n
                       portal_type = "Discussion Thread",\n
-                      title = title,\n
-                      source_value = person,\n
-                      version = version,\n
-                      language = language,\n
-                      description=description,\n
-                      subject_list=subject_list,\n
-                      classification=classification,\n
-                      group_list=group_list,\n
-                      site_list=site_list,\n
-                      reference=reference)\n
+                      **create_kw)\n
 discussion_post = discussion_thread.newContent(\n
                       portal_type = "Discussion Post",\n
                       title = title,\n
@@ -131,7 +140,7 @@ return discussion_thread.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>DiscussionThreadModule_createNewDiscussionThread</string> </value>
+            <value> <string>WebSection_createNewDiscussionThread</string> </value>
         </item>
       </dictionary>
     </pickle>
