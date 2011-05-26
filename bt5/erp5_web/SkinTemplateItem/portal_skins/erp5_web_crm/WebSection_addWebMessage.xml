@@ -87,7 +87,7 @@ module.activate(tag=tag, activity=\'SQLQueue\').EventModule_addWebMessage(**edit
 portal.portal_alarms.fetch_incoming_web_message_list.activate(after_tag=tag).activeSense()\n
 \n
 portal_status_message = translate(\'Your message has been successfully submitted.\')\n
-context.getParentValue().Base_redirect(keep_items={\'portal_status_message\': portal_status_message})\n
+context.getWebSectionValue().getParentValue().Base_redirect(keep_items={\'portal_status_message\': portal_status_message})\n
 </string> </value>
         </item>
         <item>
