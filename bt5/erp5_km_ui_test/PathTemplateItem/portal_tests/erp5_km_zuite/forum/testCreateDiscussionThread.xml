@@ -93,6 +93,29 @@
   <td>New discussion created</td>\n
   <td></td>\n
 </tr>\n
+\n
+<tr>\n
+\t<td>click</td>\n
+\t<td>//li[@id=\'action-document-toolbox\']/h3</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>document.forms[0].elements[\'Base_doAction:method\'][1]</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>clickAndWait</td>\n
+\t<td>dialog_submit_button</td>\n
+\t<td></td>\n
+</tr>\n
+<tr>\n
+\t<td>verifyTextPresent</td>\n
+\t<td>Status changed.</td>\n
+\t<td></td>\n
+</tr>\n
+\n
+\n
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>\n
 <tr>\n
   <td>open</td>\n
