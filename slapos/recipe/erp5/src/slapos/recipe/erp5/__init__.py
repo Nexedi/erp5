@@ -222,7 +222,7 @@ class Recipe(BaseSlapRecipe):
     return dict(memcached_url='%s:%s' %
         (config['memcached_ip'], config['memcached_port']),
         memcached_ip=config['memcached_ip'],
-        memcached_port=config['memcached_ip'])
+        memcached_port=config['memcached_port'])
 
   def installTestRunner(self, ca_conf, mysql_conf, conversion_server_conf,
                         memcached_conf, kumo_conf):
