@@ -69,7 +69,7 @@ edit_kw = {\'portal_type\': portal_type,\n
            \'text_content\': text_content,\n
            \'content_type\': \'text/plain\',\n
            \'resource\': resource,\n
-           \'source_carrier\': context.getRelativeUrl(),\n
+           \'source_carrier\': context.getWebSectionValue().getRelativeUrl(),\n
           }\n
 connected_user = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 if connected_user is not None:\n
@@ -78,10 +78,13 @@ if connected_user is not None:\n
 # We do not call portal_contribution for two reasons:\n
 # 1- Metadata discovery will be run by alarms with allowed user to access other documents.\n
 # 2- A proxy role can not wrap portal_contributions calls and disallow Anonymous user to create the document.\n
-module.activate(activity=\'SQLQueue\').EventModule_addWebMessage(**edit_kw)\n
+tag = \'incoming_web_message\'\n
+module.activate(tag=tag, activity=\'SQLQueue\').EventModule_addWebMessage(**edit_kw)\n
 \n
-# An alarm will lately run discoverMetadata on created event, then \n
+# Trig explicitely alarm which will run discoverMetadata on created event, then \n
 # Fill in discoverable properties (sender, recipient, ...) and change workflow states.\n
+# XXX hardcoded id, must be picked up by reference and version API\n
+portal.portal_alarms.fetch_incoming_web_message_list.activate(after_tag=tag).activeSense()\n
 \n
 portal_status_message = translate(\'Your message has been successfully submitted.\')\n
 context.getParentValue().Base_redirect(keep_items={\'portal_status_message\': portal_status_message})\n

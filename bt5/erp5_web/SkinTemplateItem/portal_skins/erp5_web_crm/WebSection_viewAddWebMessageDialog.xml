@@ -86,7 +86,10 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_source_organisation_title</string>
+                        <string>your_title</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -98,9 +101,7 @@
                         <string>your_source_person_last_name</string>
                         <string>your_source_person_default_email_text</string>
                         <string>your_source_person_telephone_text</string>
-                        <string>your_source_organisation_title</string>
                         <string>your_resource</string>
-                        <string>your_title</string>
                         <string>your_text_content</string>
                         <string>your_captcha</string>
                       </list>
