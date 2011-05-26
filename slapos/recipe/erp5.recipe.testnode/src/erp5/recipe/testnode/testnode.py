@@ -198,12 +198,19 @@ repository = %(repository_path)s
           run_test_suite_revision = revision
           if isinstance(revision, tuple):
             revision = ','.join(revision)
-          run_test_suite = subprocess.Popen([run_test_suite_path,
-                          '--test_suite', config['test_suite_name'],
-                          '--revision', revision,
-                          '--node_quantity', config['node_quantity'],
-                          '--master_url', config['test_suite_master_url'],
-                          ], )
+          # Deal with Shebang size limitation
+          file_object = open(run_test_suite_path, 'r')
+          line = file_object.readline()
+          file_object.close()
+          invocation_list = []
+          if line[:2] == '#!':
+            invocation_list = line[2:].split()
+          invocation_list.extend([run_test_suite_path,
+                                  '--test_suite', config['test_suite_name'],
+                                  '--revision', revision,
+                                  '--node_quantity', config['node_quantity'],
+                                  '--master_url', config['test_suite_master_url']])
+          run_test_suite = subprocess.Popen(invocation_list)
           process_group_pid_set.add(run_test_suite.pid)
           run_test_suite.wait()
           process_group_pid_set.remove(run_test_suite.pid)
