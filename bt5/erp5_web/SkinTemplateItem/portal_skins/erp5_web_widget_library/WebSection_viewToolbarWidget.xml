@@ -239,55 +239,11 @@
         </div>\n
       </fieldset>\n
 \n
-      <script type="text/javascript" tal:content="string:\n
-        // preload action icons\n
-        if (document.images) {\n
-          clone_icon = new Image();\n
-          new_icon   = new Image();\n
-          clone_icon.src = \'$portal_url/admin_toolbox_clone_document.png\';\n
-          new_icon.src   = \'$portal_url/admin_toolbox_new_document.png\';\n
-        }\n
-\n
-        function setCreationMode (sel) {\n
-          // default is cloning\n
-          var action      = \'clone\';\n
-          var action_name = \'Clone &amp; Edit\';\n
-          var icon        = \'admin_toolbox_clone_document.png\';\n
-          var name        = \'Base_cloneContent:method\';\n
-          var clone_display = \'inline\';\n
-          var new_title   = \'\';\n
-\n
-          // a portal type is given, so create a new document\n
-          var portal_type = sel.options[sel.selectedIndex].value;\n
-          if (portal_type != \'None\') {\n
-            action      = \'new\'\n
-            action_name = \'Create New &amp; Edit\';\n
-            icon        = \'admin_toolbox_new_document.png\';\n
-            name        = \'Base_newContent:method\';\n
-            clone_display = \'none\';\n
-            new_title   = \'Create New Document\';\n
-          }\n
-\n
-          // update action dependent values\n
-          document.getElementById(\'create_new_document_title\').innerHTML = new_title;\n
-          document.getElementById(\'clone_document_title\'     ).style.display = clone_display;\n
-          document.getElementById(\'duplicate_document_action\').innerHTML = action_name;\n
-\n
-          // replace the action icon\n
-          document.getElementById(\'clone_action_icon\').src = eval(action + \'_icon.src\');\n
-\n
-          // update action button title\n
-          var button   = document.getElementById(\'clone_action_button\');\n
-          button.title = action_name;\n
-          button.name  = name;\n
-        }\n
-      " />\n
     </div>\n
   </li>\n
 \n
   <!-- Module panel.\n
-       Some modules that should be useful for web management will be listed.\n
-  -->\n
+       Some modules that should be useful for web management will be listed.-->\n
   <li class="toolboxSection" id="select-module-toolbox">\n
     <h3 class="menu_title" i18n:translate="" i18n:domain="ui">Module</h3>\n
     <div class="menu">\n
@@ -304,7 +260,10 @@
     </div>\n
   </li>\n
 </ul>\n
-<script type="text/javascript" src="erp5_web_toolbar.js" tal:attributes="src string:$portal_url/erp5_web_toolbar.js"></script>\n
+\n
+<script type="text/javascript" \n
+        tal:attributes="src string:$portal_url/erp5_web_toolbar.js"></script>\n
+\n
 </tal:block>
 
 ]]></unicode> </value>
