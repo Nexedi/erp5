@@ -1,3 +1,6 @@
+2011-05-27 arnaud.fontaine
+* Fix stock listbox and add a new column 'order'.
+
 2011-04-14 yusei
 * Remove old unnecessary tales expression from relation string fields.
 
