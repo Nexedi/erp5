@@ -1,5 +1,0 @@
-# Path enabled
-<Location %(path)s>
-  Order Allow,Deny
-  Allow from all
-</Location>
