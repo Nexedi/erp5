@@ -1,4 +1,5 @@
 import re, imp, sys, threading, os, shlex, subprocess, shutil
+import traceback
 
 # The content of this file might be partially moved to an egg
 # in order to allows parallel tests without the code of ERP5
@@ -143,8 +144,17 @@ class TestSuite(object):
     command = format_command(*args, **kw)
     print '\n$ ' + command
     sys.stdout.flush()
-    p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE, env=env)
+    try:
+      p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
+                           stderr=subprocess.PIPE, env=env)
+    except Exception:
+      # Catch any exception here, to warn user instead of beeing silent,
+      # by generating fake error result
+      result = dict(status_code=-1,
+                    command=command,
+                    stderr=traceback.format_exc(),
+                    stdout='')
+      raise SubprocessError(result)
     if self.realtime_output:
       stdout, stderr = subprocess_capture(p, quiet)
     else:
