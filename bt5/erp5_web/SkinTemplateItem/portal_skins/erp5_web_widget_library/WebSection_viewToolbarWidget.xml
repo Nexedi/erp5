@@ -160,8 +160,9 @@
        XXX - This is not so good to create new content in a section\n
              Behaviour should be to create content in section / site\n
   -->\n
-  <li class="toolboxSection" id="clone-document-toolbox"\n
-       tal:condition="python:here.isDocument">\n
+  <li class="toolboxSection" \n
+      id="clone-document-toolbox"\n
+      tal:condition="python:here.isDocument()">\n
     <h3 class="menu_title">\n
       <span id="create_new_document_title"></span>\n
       <span id="clone_document_title">\n
@@ -322,7 +323,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
