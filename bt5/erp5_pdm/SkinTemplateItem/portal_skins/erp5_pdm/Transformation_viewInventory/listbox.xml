@@ -131,14 +131,6 @@
                           <string>Variation</string>
                         </tuple>
                         <tuple>
-                          <string>getQuantity</string>
-                          <string>Order Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>order_quantity_unit</string>
-                          <string>Order Quantity Unit</string>
-                        </tuple>
-                        <tuple>
                           <string>getCurrentInventory</string>
                           <string>Current</string>
                         </tuple>
@@ -151,7 +143,7 @@
                           <string>Future</string>
                         </tuple>
                         <tuple>
-                          <string>getQuantityUnit</string>
+                          <string>quantity_unit_item</string>
                           <string>Unit</string>
                         </tuple>
                       </list>
@@ -186,10 +178,6 @@
                     <key> <string>editable_columns</string> </key>
                     <value>
                       <list>
-                        <tuple>
-                          <string>order_quantity_unit</string>
-                          <string>Order Quantity Unit</string>
-                        </tuple>
                         <tuple>
                           <string>variation_category_item_list</string>
                           <string>Variation</string>

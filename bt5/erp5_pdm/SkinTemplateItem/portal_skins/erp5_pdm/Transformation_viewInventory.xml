@@ -82,7 +82,7 @@
                     <value>
                       <list>
                         <string>listbox_variation_category_item_list</string>
-                        <string>listbox_order_quantity_unit</string>
+                        <string>listbox_quantity_unit_item</string>
                       </list>
                     </value>
                 </item>
