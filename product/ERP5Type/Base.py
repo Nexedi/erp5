@@ -2862,7 +2862,7 @@ class Base( CopyContainer,
       guid += '_' + self.portal_url.getPortalPath()
       guid += '_' + str(self.uid)
       guid += '_' + str(random.randrange(1,2147483600))
-    setattr(self,'guid',guid)
+      setattr(self, 'guid', guid)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getGuid')
   def getGuid(self):
