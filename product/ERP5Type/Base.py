@@ -2855,7 +2855,7 @@ class Base( CopyContainer,
      full dns name + portal_name + uid + random
      the guid should be defined only one time for each object
     """
-    if not hasattr(self, 'guid'):
+    if self.getGuid() is None:
       guid = ''
       # Set the dns name
       guid += gethostbyaddr(gethostname())[0]
@@ -2869,7 +2869,7 @@ class Base( CopyContainer,
     """
     Get the global and unique id
     """
-    return getattr(self,'guid',None)
+    return getattr(aq_base(self), 'guid', None)
 
   # Type Casting
   def _getTypeBasedMethod(self, method_id, fallback_script_id=None,
