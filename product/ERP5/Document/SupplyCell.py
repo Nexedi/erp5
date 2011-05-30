@@ -65,3 +65,16 @@ class SupplyCell(Path):
       """A cell cannot have cell content itself.
       """
       return 0
+
+    # Override getQuantityUnitXXX to negate same methods defined in
+    # Amount class. Because cell must acquire quantity unit from line
+    # not from resource.
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getQuantityUnitValue')
+    def getQuantityUnitValue(self):
+      return self.getParentValue().getQuantityUnitValue()
+
+    security.declareProtected( Permissions.AccessContentsInformation,
+                               'getQuantityUnit')
+    def getQuantityUnit(self):
+      return self.getParentValue().getQuantityUnit()
