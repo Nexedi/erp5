@@ -328,6 +328,15 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
           )
     sequence.edit(delivery_line_list=delivery_line_list)
 
+  def stepCreateVariatedNonDefaultQuantityUnitPackingListLine(
+    self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a line not variated
+    """
+    self.stepCreateVariatedPackingListLine(sequence, sequence_list, **kw)
+    delivery_line = sequence.get('delivery_line_list')[-1]
+    delivery_line.setQuantityUnitValue(self.portal.portal_categories.quantity_unit.unit.drum)
+
   def stepDeliverPackingList(self, sequence=None,
                                       sequence_list=None, **kw):
     # Switch to "started" state
@@ -1778,6 +1787,20 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     self.checkVariatedInventory(variation_category_list=variation_category_list,
                                 quantity=quantity,sequence=sequence)
 
+  def stepTestInitialVariatedNonDefaultQuantityUnitInventory(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test Inventory Module behavior
+    """
+    resource = sequence.get('resource')
+    variation_category_list = sequence.get('variation_1')
+    quantity = 100
+    self.checkVariatedInventory(variation_category_list=variation_category_list,
+                                quantity=quantity,sequence=sequence)
+    variation_category_list = sequence.get('variation_2')
+    quantity = 300
+    self.checkVariatedInventory(variation_category_list=variation_category_list,
+                                quantity=quantity,sequence=sequence)
+
   def stepTestVariatedInventoryAfterInventory(self, sequence=None, sequence_list=None, **kw):
     """
       Test Inventory Module behavior
@@ -1926,6 +1949,31 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
                        '
     sequence_list.addSequenceString(sequence_string)
 
+    sequence_list.play(self)
+
+  def test_04_InventoryModuleWithVariationAndMultiQuantityUnit(self, quiet=0, run=run_all_test):
+    """
+      Test InventoryModule behavior with product which has
+      variation and multiple quantity units.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    sequence_string = 'stepCreateOrganisationsForModule \
+                       stepCreateVariatedMultipleQuantityUnitResource \
+                       stepTic \
+                       stepCreatePackingListForModule \
+                       stepTic \
+                       stepCreateVariatedNonDefaultQuantityUnitPackingListLine \
+                       stepTic \
+                       stepDeliverPackingList \
+                       stepTic \
+                       stepTestInitialVariatedNonDefaultQuantityUnitInventory \
+                       stepCreateSingleVariatedInventory \
+                       stepTic \
+                       stepTestVariatedInventoryAfterInventory \
+                       '
+    sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
 def test_suite():
