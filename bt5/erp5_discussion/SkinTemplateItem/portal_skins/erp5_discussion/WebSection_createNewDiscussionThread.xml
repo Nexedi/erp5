@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
  This script allows to create a new Discussion Thread.\n
 """\n
 MARKER = [\'\', None, []]\n
@@ -103,36 +101,44 @@ discussion_post.submit()\n
 \n
 if send_notification_text not in (\'\', None):\n
   # we can send notifications\n
-  email_list = []\n
+  person_list = []\n
   notification_list = send_notification_text.split(\'\\n\')\n
   for notification in notification_list:\n
-    # XXX: proper email validation?\n
-    if \'@\' in notification and \'.\' in notification:\n
-      # user specified an email\n
-      email_list.append(notification)\n
+    # we can assume user wanted to specify Person\'s title\n
+    person_list.extend(portal.portal_catalog(portal_type=\'Person\',\n
+                                             title=notification,\n
+                                             default_email_text=\'!=\'))\n
+  if len(person_list):\n
+    #Get message from catalog\n
+    notification_reference = \'forum-new-thread\'\n
+    notification_message = context.NotificationTool_getDocumentValue(notification_reference, \'en\')\n
+    if notification_message is None:\n
+      raise ValueError, \'Unable to found Notification Message with reference "%s".\' % notification_reference\n
+\n
+    notification_mapping_dict = {\'subject\': discussion_thread.getTitle(),\n
+                                 \'url\': discussion_thread.absolute_url(),\n
+                                 \'sender\': portal.email_from_name }\n
+    #Preserve HTML else convert to text\n
+    if notification_message.getContentType() == "text/html":\n
+      mail_text = notification_message.asEntireHTML(\n
+        substitution_method_parameter_dict={\'mapping_dict\':notification_mapping_dict})\n
     else:\n
-      # we can assume user wanted to specify Person\'s title\n
-      person_list = portal.portal_catalog(portal_type=\'Person\',\n
-                                          title=notification)\n
-      email_list.extend([x.getDefaultEmailText() for x in person_list])\n
-  email_from = portal.email_from_address\n
-  email_subject = "New forum post"\n
-  email_template = """\n
-\n
-New forum post has been created at this url:\n
-\n
-${url}""" \n
-  email_body = context.Base_translateString(email_template, mapping={\'url\':discussion_thread.absolute_url()})\n
-  email_list = filter(lambda x: x not in (None , \'\',) and \'@\' in x, email_list)\n
-  # XXX: use activities & portal_notifications\n
-  for email_to in email_list:\n
-    context.MailHost.send(email_body, email_to, email_from, email_subject)\n
+      mail_text = notification_message.asText(\n
+        substitution_method_parameter_dict={\'mapping_dict\':notification_mapping_dict})\n
+    sender = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+    #Send email\n
+    for recipient in person_list:\n
+      portal.portal_notifications.sendMessage(\n
+        sender=sender,\n
+        recipient=recipient,\n
+        subject=notification_message.getTitle(),\n
+        message=mail_text,\n
+        message_text_format=notification_message.getContentType(),\n
+        store_as_event=True)\n
 \n
 return discussion_thread.Base_redirect(form_id,\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
