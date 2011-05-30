@@ -400,6 +400,10 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
   border:1px solid #c0bfb3;\n
 }\n
 \n
+.information_area{\n
+  background-color: #FF654A;\n
+}\n
+\n
 /* Footer */\n
 #wrapper_footer {\n
   clear:both;\n
@@ -643,7 +647,8 @@ div.web-toolbar div.menu label{\n
 div.web-toolbar div.menu input{\n
   margin-left:0.5em;\n
 }\n
-div.web-toolbar div.menu button{\n
+div.web-toolbar div.menu button,\n
+div.web-toolbar div.menu a{\n
   color: #FFFFFF!important;\n
   background-color: transparent;\n
   padding-left: 1em;\n
@@ -1310,7 +1315,7 @@ button.formbt > span{\n
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
