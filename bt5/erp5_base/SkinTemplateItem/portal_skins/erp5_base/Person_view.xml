@@ -92,6 +92,7 @@
                       <list>
                         <string>my_first_name</string>
                         <string>my_last_name</string>
+                        <string>my_destination_reference</string>
                         <string>my_career_subordination_title</string>
                         <string>my_gender</string>
                         <string>my_career_role_list</string>
