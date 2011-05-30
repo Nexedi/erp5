@@ -568,6 +568,8 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
     inventory_line = inventory.objectValues(portal_type='Inventory Line')[0]
+    # Set non-default quantity unit to make sure that conversion correctly
+    # works and converted value is applied to stock.
     inventory_line.setQuantityUnitValue(self.portal.portal_categories.quantity_unit.unit.drum)
     self.createVariatedInventoryLine(start_date=date,
                   sequence=sequence, quantity=quantity)
