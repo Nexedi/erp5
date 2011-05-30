@@ -101,7 +101,7 @@
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>document.forms[0].elements[\'Base_doAction:method\'][1]</td>\n
+\t<td>//a[@class=\'menu-link\' and @title=\'Publish Document\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n

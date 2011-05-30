@@ -66,7 +66,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@title=\'Documents\']</td>\n
+  <td>//a[@class=\'menu-link\' and @title=\'Documents\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -76,7 +76,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@title=\'Add Drawing\']</td>\n
+  <td>//a[@class=\'menu-link\' and @title=\'Add Drawing\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -116,7 +116,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//button[@title=\'Release Document\']</td>\n
+  <td>//a[@class=\'menu-link\' and @title=\'Release Document\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -183,9 +183,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
