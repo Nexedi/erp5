@@ -14,7 +14,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_birthday</string> </value>
+            <value> <string>my_date_of_birth</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -71,7 +71,7 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_birthday</string> </value>
+                    <value> <string>my_view_mode_date_of_birth</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
