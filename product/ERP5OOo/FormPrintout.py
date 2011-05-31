@@ -975,6 +975,10 @@ class ODTStrategy(ODFStrategy):
       style_value = target_node.attrib.get(style_attribute_id)
       if style_value:
         attr_dict.update({style_attribute_id: style_value})
+      display_attribute_id = '{%s}display' % TEXT_URI
+      display_value = target_node.attrib.get(display_attribute_id)
+      if display_value:
+        attr_dict.update({display_attribute_id: display_value})
       formula_attribute_id = '{%s}formula' % TEXT_URI
       formula_value = target_node.attrib.get(formula_attribute_id)
       if formula_value:
