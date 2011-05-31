@@ -1085,7 +1085,7 @@ class ODGStrategy(ODFStrategy):
 
   def _replaceXmlByForm(self, element_tree, form, here, extra_context,
                         ooo_builder, iteration_index=0):
-    field_list = form.get_fields(include_disabled=1)
+    field_list = form.get_fields()
     for (count, field) in enumerate(field_list):
       text_xpath = '//draw:frame[@draw:name="%s"]' % field.id
       node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)
