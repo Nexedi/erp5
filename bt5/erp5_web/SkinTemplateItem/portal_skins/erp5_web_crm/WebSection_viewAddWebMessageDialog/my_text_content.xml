@@ -56,6 +56,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>enabled</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -71,6 +79,10 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -122,7 +134,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/is_web_section_default_document | nothing</string> </value>
+            <value> <string>not:here/getUrlString</string> </value>
         </item>
       </dictionary>
     </pickle>
