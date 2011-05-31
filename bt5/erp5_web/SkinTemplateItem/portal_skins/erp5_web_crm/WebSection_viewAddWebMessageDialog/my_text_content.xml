@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>css_class</string>
+                <string>description</string>
                 <string>enabled</string>
                 <string>title</string>
               </list>
@@ -82,6 +83,10 @@
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>hidden_label</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
