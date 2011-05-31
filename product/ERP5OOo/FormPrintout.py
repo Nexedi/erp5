@@ -907,7 +907,7 @@ class ODTStrategy(ODFStrategy):
     ooo_builder -- the OOoBuilder object which have an ODF document.
     iteration_index -- the index which is used when iterating the group of items using ReportSection.
     """
-    field_list = form.get_fields(include_disabled=1)
+    field_list = form.get_fields()
     REQUEST = here.REQUEST
     for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):
