@@ -459,6 +459,9 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 .content .field .error {\n
   background-color:inherit;\n
   color:#FF4400;\n
+  display: block;\n
+  padding-left:10px;\n
+  margin-left: 32%;\n
 }\n
 \n
 fieldset.left{\n
@@ -1315,7 +1318,7 @@ button.formbt > span{\n
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>iso-8859-15</string> </value>
+            <value> <string>utf-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
