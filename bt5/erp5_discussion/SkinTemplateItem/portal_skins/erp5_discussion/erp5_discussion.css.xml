@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts06927933.02</string> </value>
+            <value> <string>ts06928671.63</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -43,10 +43,12 @@
 \n
 .discussion-post-header .thumbnail{\n
   width:14%;\n
+  margin:4px;\n
 }\n
 \n
 .discussion-post-header .title{\n
   width:85%;\n
+  margin-top:4px;\n
 }\n
 \n
 a.discussion-post-title{\n
@@ -93,7 +95,7 @@ blockquote {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>913</int> </value>
+            <value> <int>945</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

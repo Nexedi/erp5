@@ -98,6 +98,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_include</string>
                       </list>
                     </value>
                 </item>

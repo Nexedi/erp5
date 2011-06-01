@@ -36,11 +36,6 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<!-- XXX: include only once not for every post item -->\n
-\n
-<script src="erp5_discussion.js" type="text/javascript"></script>\n
-<link href="erp5_discussion.css" rel="stylesheet" type="text/css">\n
-\n
 <tal:block tal:define="discussion_post_object here/getObject;\n
                  author_dict discussion_post_object/DiscussionPost_getAuthorDict;\n
                  author_url author_dict/author_url;\n
@@ -58,7 +53,7 @@
                  isUserAllowedToPost python: discussion_post_object.getParentValue().DiscussionThread_isUserAllowedToPost()">\n
 \n
   <div class="discussion-post-header"\n
-       tal:attributes="style python: test(is_author_thumbnai_available, \'height:96px\',\'\')">\n
+       tal:attributes="style python: test(is_author_thumbnai_available, \'height:104px\',\'\')">\n
 \n
     <div class="thumbnail"\n
           tal:condition="is_author_thumbnai_available">\n
