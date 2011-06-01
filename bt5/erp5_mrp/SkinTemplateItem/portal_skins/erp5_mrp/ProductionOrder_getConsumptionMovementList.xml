@@ -50,44 +50,66 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""Returns list of resources\' inventories used in consumption for production\n
+            <value> <string>"""Returns list of resources\' inventories used in consumption for production\n
 \n
 Args:\n
  - omit_order_resources [default: 1]\n
    Do not show resources, which are on order lines.\n
 """\n
-\n
-from Products.ZSQLCatalog.SQLCatalog import Query\n
-from Products.ZSQLCatalog.SQLCatalog import NegatedQuery\n
-\n
-simulation_tool = context.getPortalObject().portal_simulation\n
-kw = {}\n
-\n
 if omit_order_resources:\n
-  ignored_resource_uid_list = [q.getResourceUid() for q in context.getMovementList() \\\n
-      if q.getResourceUid() is not None]\n
+  from Products.ZSQLCatalog.SQLCatalog import Query\n
+  from Products.ZSQLCatalog.SQLCatalog import NegatedQuery\n
 \n
-  kw[\'query\'] = NegatedQuery(\n
-      Query(operator=\'IN\',**{\'stock.resource_uid\':ignored_resource_uid_list})\n
-      )\n
+  ignored_resource_uid_list = [q.getResourceUid() for q in context.getMovementList() if q.getResourceUid() is not None]\n
+  kwargs[\'query\'] = NegatedQuery(Query(operator=\'IN\',**{\'stock.resource_uid\': ignored_resource_uid_list}))\n
 \n
-kw[\'explanation_uid\'] = [context.getUid()] + [q.getUid() for q in \\\n
-  context.getCausalityRelatedValueList(portal_type=context.getPortalDeliveryTypeList())]\n
+kwargs[\'group_by_date\'] = 1\n
+kwargs[\'group_by_node\'] = 1\n
+kwargs[\'group_by_variation\'] = 1\n
+kwargs[\'group_by_resource\'] = 1\n
+kwargs[\'section_uid\'] = context.getDestinationSectionUid()\n
 \n
-kw[\'group_by_date\'] = 1\n
-kw[\'group_by_node\'] = 1\n
-kw[\'group_by_variation\'] = 1\n
-kw[\'group_by_resource\'] = 1\n
-kwargs.update(**kw)\n
-if kwargs.get(\'src__\',0) == 1:\n
-  return simulation_tool.getFutureInventoryList(*args,**kwargs)\n
-# XXX: below filtering to be replaced by HAVING expression\n
-return [q for q in simulation_tool.getFutureInventoryList(*args,**kwargs) if q.inventory < 0.0]\n
-
-
-]]></string> </value>
+inventory_dict = {}\n
+for inventory in context.portal_simulation.getFutureInventoryList(*args,**kwargs):\n
+  inventory_dict[inventory.getResourceUid(), \\\n
+                 tuple(sorted(inventory.getVariationCategoryList())), \\\n
+                 inventory.getDestination()] = inventory\n
+\n
+result_list = inventory_dict.values()\n
+consumption_dict = {}\n
+for movement in context.getMovementList():\n
+  movement_quantity_unit = movement.getQuantityUnit()\n
+  movement_quantity = movement.getQuantity()\n
+  movement_destination = movement.getDestination()\n
+\n
+  for material in movement.getSpecialiseValue().objectValues():\n
+    material_resource_uid = material.getResourceUid()\n
+    if not material_resource_uid:\n
+      continue\n
+\n
+    inventory_dict_key = material_resource_uid, \\\n
+        tuple(sorted(material.getVariationCategoryList())), \\\n
+        movement_destination\n
+\n
+    try:\n
+      obj = inventory_dict[inventory_dict_key]\n
+    except KeyError:\n
+      obj = material\n
+      result_list.append(obj)\n
+\n
+    material_quantity_unit = material.getQuantityUnit()\n
+    if movement_quantity_unit == material_quantity_unit:\n
+      quantity = material.getQuantity()\n
+    else:\n
+      quantity = material.getResourceValue().convertQuantity(material.getQuantity(),\n
+                                                             material_quantity_unit,\n
+                                                             movement_quantity_unit)\n
+\n
+    consumption_dict[obj.getUid()] = quantity * movement_quantity\n
+\n
+context.REQUEST.set(\'consumption_dict\', consumption_dict)\n
+return result_list\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

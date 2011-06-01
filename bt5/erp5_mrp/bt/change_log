@@ -1,3 +1,6 @@
+2011-06-01 arnaud.fontaine
+* Fix ProductionOrder_viewMaterialConsumption and display materials even when not in the inventory.
+
 2011-05-23 tatuya
 * Fix the issue that the Stock view on Production Order does not show anything.
 
