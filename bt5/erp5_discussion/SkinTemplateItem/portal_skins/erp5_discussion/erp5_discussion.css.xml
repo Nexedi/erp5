@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts89832986.24</string> </value>
+            <value> <string>ts06927933.02</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -28,25 +28,41 @@
  ERP5 discussion forum.\n
 */\n
 \n
-div.discussion-post-header{\n
+.discussion-post-header{\n
   background-color: #efefef;\n
   color:#000000;\n
   padding: 3px;  \n
-  margin: 0em; \n
+  margin: 0em;\n
+  height: 20px;\n
 }\n
 \n
-div.discussion-post-body-container{\n
+.discussion-post-header .thumbnail,\n
+.discussion-post-creator .title{\n
+  float:left;\n
+}\n
+\n
+.discussion-post-header .thumbnail{\n
+  width:14%;\n
+}\n
+\n
+.discussion-post-header .title{\n
+  width:85%;\n
+}\n
+\n
+a.discussion-post-title{\n
+  font-weight: bold;\n
+}\n
+\n
+.discussion-post-body-container{\n
   float: left;\n
   margin-left: 10px;\n
   margin-top: 10px;\n
   margin-bottom: 10px;\n
-}\n
-\n
-div.discussion-post-body{\n
   color: black;\n
 }\n
 \n
-div.discussion-post-author-signature-container{\n
+\n
+.discussion-post-author-signature-container{\n
   margin-left:10px; \n
   margin-bottom:1em; \n
   color:#aaa;\n
@@ -66,7 +82,10 @@ blockquote {\n
   margin:5px;\n
   padding:10px 15px;\n
 }\n
-</string> </value>
+\n
+.discussion-post-actions{\n
+ float:left;\n
+}</string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -74,7 +93,7 @@ blockquote {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>659</int> </value>
+            <value> <int>913</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -19,6 +19,7 @@
                 <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
+                <string>url_columns</string>
               </list>
             </value>
         </item>
@@ -156,6 +157,17 @@
                 <item>
                     <key> <string>title</string> </key>
                     <value> <string>Discussion Posts</string> </value>
+                </item>
+                <item>
+                    <key> <string>url_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>getSummaryAsHTML</string>
+                          <string></string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
               </dictionary>
             </value>
