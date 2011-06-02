@@ -64,11 +64,16 @@ def getOrderStr(movement_list, resource_value):\n
     order_str += \'%s%.f%s\' % (movement_idx and \', \' or \'\', quantity,\n
                               quantity_unit_value.getShortTitle())\n
 \n
-    sum_quantity += resource_value.convertQuantity(quantity,\n
-                                                   movement.getQuantityUnit(),\n
-                                                   resource_value.getDefaultQuantityUnit())\n
+    converted_quantity = resource_value.convertQuantity(quantity,\n
+                                                        movement.getQuantityUnit(),\n
+                                                        resource_value.getDefaultQuantityUnit())\n
 \n
-  if movement_idx > 0:\n
+    if converted_quantity:\n
+      sum_quantity += converted_quantity\n
+\n
+  if not sum_quantity:\n
+    return None\n
+  elif movement_idx > 0:\n
     order_str += \' \' + context.Base_translateString(\'(${quantity}${quantity_unit} total)\',\n
                                                     mapping={\'quantity\': sum_quantity,\n
                                                              \'quantity_unit\': resource_value.getShortTitle()})\n
@@ -110,8 +115,12 @@ if movement_dict:\n
                                          getAvailableInventory=str,\n
                                          inventory=\'\')\n
 \n
-      order_dict[movement.getUid()] = getOrderStr([movement], resource_value)\n
       line_list.append(temp_movement)\n
+      order_str = getOrderStr([movement], resource_value)\n
+      if not order_str:\n
+        continue\n
+\n
+      order_dict[movement.getUid()] = order_str\n
 \n
 context.REQUEST.set(\'order_dict\', order_dict)\n
 \n

@@ -1,3 +1,6 @@
+2011-06-02 arnaud.fontaine
+* Fix issue on stock listbox when there is no unit conversion defined.
+
 2011-05-27 arnaud.fontaine
 * Fix stock listbox and add a new column 'order'.
 
