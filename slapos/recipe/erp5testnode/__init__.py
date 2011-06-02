@@ -83,35 +83,23 @@ class Recipe(BaseSlapRecipe):
               git_binary=self.options['git_binary'],
               software_root=CONFIG['software_root'],
               working_directory=CONFIG['working_directory'],
-              vcs_repository=self.parameter_dict.get('vcs_repository'),
+              vcs_repository_list=eval(self.parameter_dict.get('vcs_repository_list'),),
               node_quantity=self.parameter_dict.get('node_quantity', '1'),
-              branch=self.parameter_dict.get('branch', None),
               test_suite_master_url=self.parameter_dict.get(
                                 'test_suite_master_url', None),
               test_suite_name=self.parameter_dict.get('test_suite_name'),
               test_suite_title=self.parameter_dict.get('test_suite_title'),
+              project_title=self.parameter_dict.get('project_title'),
               bin_directory=self.bin_directory,
-              foo='bar',
               # botenvironemnt is splittable string of key=value to substitute
               # environment of running bot
               bot_environment=self.parameter_dict.get('bot_environment', ''),
               partition_reference=CONFIG['partition_reference'],
               environment=dict(PATH=os.environ['PATH']),
+              vcs_authentication_list=self.parameter_dict.get(
+                     'vcs_authentication_list')
             )
           ]))
-
-  def installLocalSvn(self):
-    svn_dict = dict(svn_binary = self.options['svn_binary'])
-    svn_dict.update(self.parameter_dict)
-    self._writeExecutable(os.path.join(self.bin_directory, 'svn'), """\
-#!/bin/sh
-%(svn_binary)s --username %(svn_username)s --password %(svn_password)s \
---non-interactive --trust-server-cert --no-auth-cache "$@" """% svn_dict)
-
-    svnversion = os.path.join(self.bin_directory, 'svnversion')
-    if os.path.lexists(svnversion):
-      os.unlink(svnversion)
-    os.symlink(self.options['svnversion_binary'], svnversion)
 
   def installLocalGit(self):
     git_dict = dict(git_binary = self.options['git_binary'])
@@ -122,19 +110,18 @@ class Recipe(BaseSlapRecipe):
     home_directory = os.path.join(*os.path.split(self.bin_directory)[0:-1])
     print "home_directory : %r" % home_directory
     git_dict.setdefault("git_server_name", "git.erp5.org")
-    if git_dict.get('vcs_username', None) is not None:
+    if git_dict.get('vcs_authentication_list', None) is not None:
       netrc_file = open(os.path.join(home_directory, '.netrc'), 'w')
-      netrc_file.write("""
-  machine %(git_server_name)s
-  login %(vcs_username)s
-  password %(vcs_password)s""" % git_dict)
+      for vcs_authentication_dict in git_dict['vcs_authentication_list']:
+        netrc_file.write("""
+machine %(host)s
+login %(user_name)s
+password %(password)s
+""" % vcs_authentication_dict)
       netrc_file.close()
 
   def installLocalRepository(self):
-    if self.parameter_dict.get('vcs_repository').endswith('git'):
-      self.installLocalGit()
-    else:
-      self.installLocalSvn()
+    self.installLocalGit()
 
   def installLocalZip(self):
     zip = os.path.join(self.bin_directory, 'zip')
