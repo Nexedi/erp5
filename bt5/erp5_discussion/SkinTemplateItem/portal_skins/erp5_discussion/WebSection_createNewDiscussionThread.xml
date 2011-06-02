@@ -97,7 +97,6 @@ discussion_post = discussion_thread.newContent(\n
 # depending on security model Thread and Post can be directly published or shared\n
 portal_status_message = "New discussion created. Your post will be reviewed for approval."\n
 discussion_thread.submit()\n
-discussion_post.submit()\n
 \n
 if send_notification_text not in (\'\', None):\n
   # we can send notifications\n

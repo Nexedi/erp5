@@ -76,7 +76,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>my_rss_link</string>
                       </list>
                     </value>
                 </item>
@@ -100,6 +99,7 @@
                       <list>
                         <string>my_title</string>
                         <string>my_include</string>
+                        <string>my_rss_link</string>
                       </list>
                     </value>
                 </item>
