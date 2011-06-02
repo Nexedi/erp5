@@ -1,3 +1,6 @@
+2011-06-02 arnaud.fontaine
+* Fix quantity unit conversion on ProductionOrder_viewMaterialConsumption.
+
 2011-06-01 arnaud.fontaine
 * Fix ProductionOrder_viewMaterialConsumption and display materials even when not in the inventory.
 

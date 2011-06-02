@@ -78,7 +78,6 @@ for inventory in context.portal_simulation.getFutureInventoryList(*args,**kwargs
 result_list = inventory_dict.values()\n
 consumption_dict = {}\n
 for movement in context.getMovementList():\n
-  movement_quantity_unit = movement.getQuantityUnit()\n
   movement_quantity = movement.getQuantity()\n
   movement_destination = movement.getDestination()\n
 \n
@@ -91,21 +90,23 @@ for movement in context.getMovementList():\n
         tuple(sorted(material.getVariationCategoryList())), \\\n
         movement_destination\n
 \n
+    quantity = material.getQuantity()\n
+\n
     try:\n
       obj = inventory_dict[inventory_dict_key]\n
     except KeyError:\n
       obj = material\n
       result_list.append(obj)\n
-\n
-    material_quantity_unit = material.getQuantityUnit()\n
-    if movement_quantity_unit == material_quantity_unit:\n
-      quantity = material.getQuantity()\n
     else:\n
-      quantity = material.getResourceValue().convertQuantity(material.getQuantity(),\n
-                                                             material_quantity_unit,\n
-                                                             movement_quantity_unit)\n
+      inventory_quantity_unit = obj.getQuantityUnit()\n
+      quantity_unit = material.getQuantityUnit()\n
+      if quantity_unit != inventory_quantity_unit:\n
+        quantity = material.getResourceValue().convertQuantity(quantity,\n
+                                                               quantity_unit,\n
+                                                               inventory_quantity_unit)\n
 \n
-    consumption_dict[obj.getUid()] = quantity * movement_quantity\n
+    if quantity:\n
+      consumption_dict[obj.getUid()] = quantity * movement_quantity\n
 \n
 context.REQUEST.set(\'consumption_dict\', consumption_dict)\n
 return result_list\n
