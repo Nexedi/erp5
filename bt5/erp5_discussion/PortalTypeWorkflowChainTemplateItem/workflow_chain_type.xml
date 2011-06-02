@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Discussion Post</type>
-  <workflow>edit_workflow, embeddedt_workflow</workflow>
+  <workflow>edit_workflow, embedded_workflow</workflow>
  </chain>
  <chain>
   <type>Discussion Thread</type>
