@@ -11,14 +11,18 @@
             <value> <string>global</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Draft Campaigns (%(count)s)</string> </value>
+            <value> <string>Campaigns to Submit (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-campaign_module?simulation_state=draft&portal_type=%(portal_type)s&local_roles=%(local_roles)s&reset=1
+campaign_module?simulation_state=draft&portal_type:list=%(portal_type)s&local_roles:list=%(local_roles)s&reset:int=1
 
 ]]></string> </value>
         </item>
@@ -47,13 +51,7 @@ campaign_module?simulation_state=draft&portal_type=%(portal_type)s&local_roles=%
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.DCWorkflow.Guard</string>
-          <string>Guard</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -70,18 +68,12 @@ campaign_module?simulation_state=draft&portal_type=%(portal_type)s&local_roles=%
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
