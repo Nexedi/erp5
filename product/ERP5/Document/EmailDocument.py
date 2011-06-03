@@ -165,6 +165,37 @@ class EmailDocument(TextDocument):
       self._v_message = result
     return result
 
+  def _getMessageTextPart(self):
+    """
+    Return the main text part of the message data
+
+    Based on rfc: http://tools.ietf.org/html/rfc2046#section-5.1.4)
+    """
+    # Default value if no text is found
+    found_part = None
+
+    part_list = [self._getMessage()]
+    while part_list:
+      part = part_list.pop(0)
+      if part.is_multipart():
+        if part.get_content_subtype() == 'alternative':
+          # Try to get the favourite text format defined on preference
+          preferred_content_type = self.getPortalObject().portal_preferences.\
+                                         getPreferredTextFormat('text/html')
+          favourite_part = None
+          for subpart in part.get_payload():
+            if subpart.get_content_type() == preferred_content_type:
+              part_list.insert(0, subpart)
+            else:
+              part_list.append(subpart)
+        else:
+          part_list.extend(part.get_payload())
+      elif part.get_content_maintype() == 'text':
+        found_part = part
+        break
+
+    return found_part
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isSupportBaseDataConversion')
   def isSupportBaseDataConversion(self):
@@ -409,12 +440,6 @@ class EmailDocument(TextDocument):
     """
     Returns the content of the email as text. This is useful
     to display the content of an email.
-
-    According to rfc, (http://tools.ietf.org/html/rfc2046#section-5.1.4)
-    getTextContent should return html part of multipart/alternative couple
-    If multipart/mixed, the html part is an attachement. So return the
-    main content (text/plain).
-    TODO: add support for legacy objects
     """
     self._checkConversionFormatPermission(None)
     if not self.hasFile() or self._baseGetTextContent() is not None:
@@ -425,49 +450,39 @@ class EmailDocument(TextDocument):
       else:
         return self._baseGetTextContent(default)
 
-    # find from mail message
-    text_result = None
-    html_result = None
-    is_alternative = False
-    for part in self._getMessage().walk():
-      if part.is_multipart():
-        if part.get_content_type() == 'multipart/alternative':
-          is_alternative = True
-        else:
-          is_alternative = False
-      elif part.get_content_type() == 'text/plain' and not is_alternative:
+    else:
+      part = self._getMessageTextPart()
+      if part is None:
+        text_result = ""
+      else:
         part_encoding = part.get_content_charset()
         message_text = part.get_payload(decode=1)
-        if part_encoding != 'utf-8':
-          try:
-            if part_encoding is not None:
-              text_result = message_text.decode(part_encoding).encode('utf-8')
-            else:
-              text_result = message_text.decode().encode('utf-8')
-          except (UnicodeDecodeError, LookupError), error_message:
-            LOG('EmailDocument.getTextContent', INFO, 
-                'Failed to decode %s TEXT message of %s with error: %s' % 
-                (part_encoding, self.getPath(), error_message))
-            codec = guessEncodingFromText(message_text,
-                                          content_type=part.get_content_type())
-            if codec is not None:
-              try:
-                text_result = message_text.decode(codec).encode('utf-8')
-              except (UnicodeDecodeError, LookupError):
-                text_result = repr(message_text)
-            else:
-              text_result = repr(message_text)
+        if part.get_content_type() == 'text/html':
+          mime, text_result = self.convert(format='html',
+                                           text_content=message_text,
+                                           charset=part_encoding)
         else:
-          text_result = message_text
-        break
-      elif part.get_content_type() == 'text/html' and is_alternative:
-        part_encoding = part.get_content_charset()
-        part_html = part.get_payload(decode=1)
-        # Invoke Document class HTML stripper
-        mime, text_result = self.convert(format='html',
-                                         text_content=part_html,
-                                         charset=part_encoding)
-        break
+          if part_encoding != 'utf-8':
+            try:
+              if part_encoding is not None:
+                text_result = message_text.decode(part_encoding).encode('utf-8')
+              else:
+                text_result = message_text.decode().encode('utf-8')
+            except (UnicodeDecodeError, LookupError), error_message:
+              LOG('EmailDocument.getTextContent', INFO, 
+                  'Failed to decode %s TEXT message of %s with error: %s' % 
+                  (part_encoding, self.getPath(), error_message))
+              codec = guessEncodingFromText(message_text,
+                                            content_type=part.get_content_type())
+              if codec is not None:
+                try:
+                  text_result = message_text.decode(codec).encode('utf-8')
+                except (UnicodeDecodeError, LookupError):
+                  text_result = repr(message_text)
+              else:
+                text_result = repr(message_text)
+          else:
+            text_result = message_text
 
     if default is _MARKER:
       return text_result
@@ -486,17 +501,12 @@ class EmailDocument(TextDocument):
         return TextDocument.getContentType(self)
       else:
         return TextDocument.getContentType(self, default)
-    is_alternative = False
-    for part in self._getMessage().walk():
-      if part.is_multipart():
-        if part.get_content_type() == 'multipart/alternative':
-          is_alternative = True
-        else:
-          is_alternative = False
-      elif part.get_content_type() == 'text/html' and is_alternative:
-        return 'text/html'
-    return 'text/plain'
-
+    else:
+      part = self._getMessageTextPart()
+      if part is None:
+        return 'text/plain'
+      else:
+        return part.get_content_type()
 
   email_parser = re.compile('[ ;,<>\'"]*([^<> ;,\'"]+?\@[^<> ;,\'"]+)[ ;,<>\'"]*',re.IGNORECASE)
   security.declareProtected(Permissions.AccessContentsInformation, 'getContentURLList')
