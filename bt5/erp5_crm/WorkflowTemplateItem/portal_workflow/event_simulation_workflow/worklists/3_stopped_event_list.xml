@@ -16,19 +16,19 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sent Events to Declare (%(count)s)</string> </value>
+            <value> <string>Received Events to Deliver (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-event_module/view?simulation_state=started&local_roles:list=%(local_roles)s&portal_type:list=%(portal_type)s&reset:int=1
+event_module/view?simulation_state=stopped&local_roles:list=%(local_roles)s&portal_type=%(portal_type)s&reset=1&is_assigned_event:int=1
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Started Events</string> </value>
+            <value> <string>Stopped Events</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -38,7 +38,7 @@ event_module/view?simulation_state=started&local_roles:list=%(local_roles)s&port
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>3_started_event_list</string> </value>
+            <value> <string>3_stopped_event_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -59,8 +59,8 @@ event_module/view?simulation_state=started&local_roles:list=%(local_roles)s&port
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignor</string>
                 <string>Assignee</string>
+                <string>Assignor</string>
               </tuple>
             </value>
         </item>
@@ -81,7 +81,7 @@ event_module/view?simulation_state=started&local_roles:list=%(local_roles)s&port
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>started</string>
+                        <string>stopped</string>
                       </tuple>
                     </value>
                 </item>
