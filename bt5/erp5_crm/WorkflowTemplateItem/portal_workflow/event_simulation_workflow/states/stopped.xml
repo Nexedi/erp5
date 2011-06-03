@@ -32,8 +32,6 @@
                 <string>create_ticket_action</string>
                 <string>deliver</string>
                 <string>deliver_action</string>
-                <string>respond</string>
-                <string>respond_action</string>
               </tuple>
             </value>
         </item>
