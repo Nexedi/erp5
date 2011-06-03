@@ -161,7 +161,6 @@ if context.getPortalType() == \'Web Message\' and\\\n
 \n
   ticket = ticket_module.newContent(portal_type=ticket_portal_type,\n
                                     destination_decision=context.getSource(),\n
-                                    title=context.getTitle(),\n
                                     resource=portal.portal_preferences.getPreferredSupportRequestResource(),\n
                                     source_section=portal.portal_preferences.getPreferredSection(),\n
                                     start_date=DateTime())\n
