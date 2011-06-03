@@ -3,6 +3,7 @@ Currency Exchange Cell | price_currency
 Currency Exchange Line | price_currency
 Currency Module | business_application
 Notification Message Module | business_application
+Notification Message | specialise
 Organisation Module | business_application
 Person Module | business_application
 Query Module | business_application

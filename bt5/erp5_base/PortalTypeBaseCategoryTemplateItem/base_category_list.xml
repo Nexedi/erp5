@@ -9,6 +9,9 @@
  <portal_type id="Currency Module">
   <item>business_application</item>
  </portal_type>
+ <portal_type id="Notification Message">
+  <item>specialise</item>
+ </portal_type>
  <portal_type id="Notification Message Module">
   <item>business_application</item>
  </portal_type>
