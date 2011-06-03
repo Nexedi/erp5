@@ -442,7 +442,7 @@ class EmailDocument(TextDocument):
     to display the content of an email.
     """
     self._checkConversionFormatPermission(None)
-    if not self.hasFile() or self._baseGetTextContent() is not None:
+    if not self.hasFile():
       # Return the standard text content if no file was provided
       # Or standard text content is not empty.
       if default is _MARKER:
