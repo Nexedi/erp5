@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<div tal:condition="python: context.getPortalType() == \'Mail Message\'" class="error" i18n:translate="" i18n:domain="erp5_ui">\n
+<h2>Warning</h2>An email will be sent to <span i18n:name="mto" tal:replace="python: \', \'.join([recipient.getDefaultEmailText() for recipient in context.getDestinationValueList()])"/>\n
+</div>\n
+\n
+<!-- XXX merge note: below this line is project specific -->\n
+<div tal:condition="python: context.getPortalType() == \'Letter\'" class="error" i18n:translate="" i18n:domain="erp5_ui">\n
+<h2>Warning</h2>An email with attached Letter will be sent to <span i18n:name="mto" tal:replace="python: \', \'.join([recipient.getDefaultEmailText() for recipient in context.getDestinationValueList()])"/>\n
+</div>\n
+\n
+<div tal:condition="python: context.getPortalType() == \'Short Message\' and context.getResource().startswith(\'resource/event\')" class="error" i18n:translate="" i18n:domain="erp5_ui">\n
+<h2>Warning</h2>An sms will be sent to <span i18n:name="mto" tal:replace="python: \', \'.join([recipient.getTitle() for recipient in context.getDestinationValueList()])"/>\n
+</div>\n
+\n
+<div tal:condition="python: context.getPortalType() == \'Short Message\' and not context.getResource().startswith(\'resource/event\')" i18n:translate="" i18n:domain="erp5_ui">\n
+No sms will be sent.<br />\n
+Only message with resource <span i18n:name="resource" tal:replace="python: \', \'.join([cat.getTranslatedTitle() for cat in context.portal_categories.resource.event.objectValues()])"/> are sent.\n
+</div>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Event_viewStartWorkflowActionWarningRenderer</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
