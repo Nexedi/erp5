@@ -42,6 +42,12 @@ def safeRpcCall(function, *args):
 def main():
   parser = argparse.ArgumentParser(description='Run a test suite.')
   parser.add_argument('--test_suite', help='The test suite name')
+  parser.add_argument('--test_suite_title', help='The test suite title',
+                      default=None)
+  parser.add_argument('--test_node_title', help='The test node title',
+                      default=None)
+  parser.add_argument('--project_title', help='The project title',
+                      default=None)
   parser.add_argument('--revision', help='The revision to test',
                       default='dummy_revision')
   parser.add_argument('--node_quantity', help='Number of parallel tests to run',
@@ -69,6 +75,7 @@ def main():
     assert master.getProtocolRevision() == 1
   else:
     master = DummyTaskDistributionTool()
+  test_suite_title = args.test_suite_title or args.test_suite
   revision = args.revision
   if ',' in revision:
     revision = revision.split(',')
@@ -78,7 +85,8 @@ def main():
                     db_list=args.db_list)
   test_result = safeRpcCall(master.createTestResult,
     args.test_suite, revision, suite.getTestList(),
-    suite.allow_restart)
+    suite.allow_restart, test_suite_title, args.test_node_title,
+    args.project_title)
   if test_result:
     test_result_path, test_revision = test_result
     while suite.acquire():
