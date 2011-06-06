@@ -61,6 +61,7 @@ response = module.newContent(portal_type=response_event_portal_type,\n
                              resource=response_event_resource,\n
                              title=response_event_title,\n
                              text_content=response_event_text_content,\n
+                             start_date=response_event_start_date,\n
                              causality_value=context,\n
                              follow_up_list=context.getFollowUpList(),\n
                              content_type=context.getContentType())\n
@@ -80,7 +81,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=None, response_event_portal_type=None, response_event_resource=None,  response_event_title=None, response_event_text_content=None, response_workflow_action=None, **kw</string> </value>
+            <value> <string>form_id=None, response_event_portal_type=None, response_event_resource=None,  response_event_title=None, response_event_text_content=None, response_event_start_date=None, response_workflow_action=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
