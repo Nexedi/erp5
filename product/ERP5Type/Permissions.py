@@ -48,6 +48,7 @@ UndoChanges = permissions.UndoChanges
 ChangePermissions = permissions.ChangePermissions
 ViewManagementScreens = permissions.ViewManagementScreens
 ManageProperties = permissions.ManageProperties
+ManageUsers = permissions.ManageUsers
 FTPAccess = permissions.FTPAccess
 ImportExportObjects = ac_permissions.import_export_objects
 UseMailhostServices = ac_permissions.use_mailhost_services
