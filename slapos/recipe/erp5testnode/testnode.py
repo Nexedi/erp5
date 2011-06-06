@@ -224,6 +224,7 @@ branch = %(branch)s
           invocation_list.extend([run_test_suite_path,
                                   '--test_suite', config['test_suite'],
                                   '--revision', revision,
+                                  '--test_suite_title', test_suite_title,
                                   '--node_quantity', config['node_quantity'],
                                   '--master_url', config['test_suite_master_url']])
           run_test_suite = subprocess.Popen(invocation_list)
