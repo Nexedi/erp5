@@ -7,6 +7,7 @@
   <item>CredentialRequest</item>
  </portal_type>
  <portal_type id="Credential Update">
+  <item>CredentialRequest</item>
   <item>DefaultImage</item>
  </portal_type>
  <portal_type id="Person">
