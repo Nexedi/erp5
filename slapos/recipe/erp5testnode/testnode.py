@@ -152,8 +152,8 @@ branch = %(branch)s
           master = portal.portal_task_distribution
           assert master.getProtocolRevision() == 1
           test_result = safeRpcCall(master.createTestResult,
-            config['test_suite_name'], revision, [],
-            False, config['test_suite'],
+            config['test_suite'], revision, [],
+            False, test_suite_title,
             config['test_node_title'], config['project_title'])
         print "testnode, test_result : %r" % (test_result,)
         if test_result:
@@ -178,7 +178,7 @@ branch = %(branch)s
             )
           if status_dict['status_code'] != 0:
             safeRpcCall(master.reportTaskFailure,
-              test_result_path, status_dict, test_suite_title)
+              test_result_path, status_dict, config['test_node_title'])
             retry_software = True
             continue
 
