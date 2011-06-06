@@ -94,7 +94,7 @@ repository = %(repository_path)s
 branch = %(branch)s
 """ %  {'buildout_section_id': buildout_section_id,
         'repository_path' : repository_path,
-        'branch' : vcs_repository.get('branch','')}
+        'branch' : vcs_repository.get('branch','master')}
 
   custom_profile = open(custom_profile_path, 'w')
   custom_profile.write(profile_content)
