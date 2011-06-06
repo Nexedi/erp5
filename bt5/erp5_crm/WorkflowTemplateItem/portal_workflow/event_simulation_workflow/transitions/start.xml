@@ -11,6 +11,10 @@
             <value> <string>workflow</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string></string> </value>
         </item>
@@ -46,7 +50,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Generate</string> </value>
+            <value> <string>Send</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
