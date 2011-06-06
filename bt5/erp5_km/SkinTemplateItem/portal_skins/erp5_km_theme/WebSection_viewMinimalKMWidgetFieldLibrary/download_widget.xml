@@ -314,7 +314,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: not request.get("dialog_mode", False) and request.get("current_web_document", context).isDocument()</string> </value>
+            <value> <string>python: not request.get("dialog_mode", False) and request.get("current_web_document", context).isDocument() and len(context.getTargetFormatItemList())</string> </value>
         </item>
       </dictionary>
     </pickle>
