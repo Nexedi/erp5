@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+      <global name="Base Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -189,6 +189,10 @@
             <key> <string>title</string> </key>
             <value> <string></string> </value>
         </item>
+        <item>
+            <key> <string>type_class</string> </key>
+            <value> <string>XMLObject</string> </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
@@ -206,7 +210,9 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <none/> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -229,7 +235,9 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <none/> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

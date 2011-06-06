@@ -50,18 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-MARKER = (\'\', None,)\n
+            <value> <string>MARKER = (\'\', None,)\n
 visible_state_list = [\'visible\', \'public\']\n
-isAnon = context.portal_membership.isAnonymousUser()\n
 \n
 knowledge_pads = context.ERP5Site_getKnowledgePadListForUser(mode=mode,\n
                                                              default_pad_group=default_pad_group)\n
-if isAnon and len(knowledge_pads)>=1:\n
-  # for anonymous we return the first one found \n
-  return knowledge_pads[0], knowledge_pads\n
-\n
 # use info from REQUEST\n
 active_pad, knowledge_pads = \\\n
     context.ERP5Site_getActiveKnowledgePadForUserFromRequest(knowledge_pads,\n
@@ -104,9 +97,7 @@ for knowledge_pad in knowledge_pads:\n
     return knowledge_pad, knowledge_pads\n
 \n
 return None, knowledge_pads\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

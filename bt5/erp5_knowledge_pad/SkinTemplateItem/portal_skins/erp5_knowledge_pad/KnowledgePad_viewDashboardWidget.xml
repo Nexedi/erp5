@@ -40,7 +40,9 @@
     tal:define="layout here/KnowledgePad_getBoxColumnLayout;\n
                 real_context python: options.get(\'real_context\', None);\n
                 cancel_url python: options.get(\'cancel_url\', None);\n
-                is_anonymous_user python: here.portal_membership.isAnonymousUser();\n
+                isAnonymousKnowledgePadUsed python: request.get(\'is_anonymous_knowledge_pad_used\',False);\n
+                isAnon python: here.portal_membership.isAnonymousUser();\n
+                is_anonymous_user python: isAnon or isAnonymousKnowledgePadUsed;\n
                 is_tab_empty here/KnowledgePad_isEmpty;\n
                 columns python: options.get(\'columns\', 3);\n
                 column_css_class python: test(is_anonymous_user, \n
@@ -49,7 +51,7 @@
 \n
     <!-- No gadgets message -->\n
     <span metal:use-macro="container/Base_viewKnowledgePadMacroLibrary/macros/add_new_gadget_message"/> \n
-\n
+    \n
     <!-- Render pad columns -->\n
     <tal:block tal:repeat="column_index python: range(0, columns)">\n
       <div tal:condition="python: columns>=1+column_index"\n
