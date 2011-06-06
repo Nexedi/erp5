@@ -50,56 +50,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  This script creates a new event with given metadata and\n
-  attaches it to the current ticket.\n
+            <value> <string>"""Resource lister from a ticket\n
 """\n
 portal = context.getPortalObject()\n
-translateString = portal.Base_translateString\n
-module = portal.getDefaultModule(portal_type)\n
+portal_type = portal.getPortalEventTypeList()[0]\n
 \n
-if portal_type not in module.getVisibleAllowedContentTypeList():\n
-  return context.Base_redirect(form_id,\n
-                               keep_items=dict(\n
-       portal_status_message=translateString("You do not have permission to add new event.")))\n
+event = portal.getDefaultModule(portal_type).newContent(portal_type=portal_type,\n
+                                                         temp_object=True)\n
 \n
-current_user = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-\n
-# Create a new event\n
-event = module.newContent(portal_type=portal_type, \n
-                          title=title,\n
-                          text_content=text_content,\n
-                          content_type=portal.portal_preferences.getPreferredTextEditor() and \'text/html\' or \'text/plain\',\n
-                          resource=resource,\n
-                          start_date=DateTime(),\n
-                          follow_up=context.getRelativeUrl())\n
-\n
-# Trigger appropriate workflow action\n
-if direction == \'incoming\':\n
-  event.setDestinationValue(current_user)\n
-  # Support event_workflow and event_simulation_workflow\n
-  if portal.portal_workflow.isTransitionPossible(event, \'receive\'):\n
-    event.receive()\n
-  if portal.portal_workflow.isTransitionPossible(event, \'stop\'):\n
-    event.stop()\n
-else:\n
-  event.setSourceValue(current_user)\n
-  event.plan()\n
-\n
-# Redirect to event\n
-portal_status_message = translateString(\n
-  "Created and associated a new ${portal_type} to the ticket.", \n
-  mapping=dict(portal_type = translateString(portal_type)))\n
-return event.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message), **kw)\n
+return event.Event_getResourceItemList()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', portal_type=None, title=None, resource=None, text_content=None,direction=None, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Ticket_newEvent</string> </value>
+            <value> <string>Ticket_getEventResourceItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

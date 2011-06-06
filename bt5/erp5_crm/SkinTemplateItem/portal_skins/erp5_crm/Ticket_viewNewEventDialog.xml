@@ -74,7 +74,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_text_content</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -87,9 +89,9 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>your_portal_type</string>
                         <string>your_title</string>
-                        <string>your_description</string>
+                        <string>your_portal_type</string>
+                        <string>your_resource</string>
                         <string>your_direction</string>
                       </list>
                     </value>
