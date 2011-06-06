@@ -87,8 +87,9 @@ class Recipe(BaseSlapRecipe):
               node_quantity=self.parameter_dict.get('node_quantity', '1'),
               test_suite_master_url=self.parameter_dict.get(
                                 'test_suite_master_url', None),
-              test_suite_name=self.parameter_dict.get('test_suite_name'),
+              test_suite=self.parameter_dict.get('test_suite'),
               test_suite_title=self.parameter_dict.get('test_suite_title'),
+              test_node_title=self.parameter_dict.get('test_node_title'),
               project_title=self.parameter_dict.get('project_title'),
               bin_directory=self.bin_directory,
               # botenvironemnt is splittable string of key=value to substitute

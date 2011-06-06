@@ -101,6 +101,7 @@ branch = %(branch)s
   custom_profile.close()
   config['repository_path'] = repository_path
   sys.path.append(repository_path)
+  test_suite_title = config['test_suite_title'] or config['test_suite']
 
   retry_software = False
   try:
@@ -152,7 +153,8 @@ branch = %(branch)s
           assert master.getProtocolRevision() == 1
           test_result = safeRpcCall(master.createTestResult,
             config['test_suite_name'], revision, [],
-            False, config['test_suite_title'], config['project_title'])
+            False, config['test_suite'],
+            config['test_node_title'], config['project_title'])
         print "testnode, test_result : %r" % (test_result,)
         if test_result:
           test_result_path, test_revision = test_result
@@ -176,7 +178,7 @@ branch = %(branch)s
             )
           if status_dict['status_code'] != 0:
             safeRpcCall(master.reportTaskFailure,
-              test_result_path, status_dict, config['test_suite_title'])
+              test_result_path, status_dict, test_suite_title)
             retry_software = True
             continue
 
@@ -220,7 +222,7 @@ branch = %(branch)s
           if line[:2] == '#!':
             invocation_list = line[2:].split()
           invocation_list.extend([run_test_suite_path,
-                                  '--test_suite', config['test_suite_name'],
+                                  '--test_suite', config['test_suite'],
                                   '--revision', revision,
                                   '--node_quantity', config['node_quantity'],
                                   '--master_url', config['test_suite_master_url']])
