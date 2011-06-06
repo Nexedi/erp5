@@ -165,8 +165,8 @@ if context.getPortalType() == \'Web Message\' and\\\n
                                     source_section=portal.portal_preferences.getPreferredSection(),\n
                                     start_date=DateTime())\n
   # if event as no recipient read it from ticket\n
-  if not event.hasDestination():\n
-    event.setDestination(ticket.getSourceSection())\n
+  if not context.hasDestination():\n
+    context.setDestination(ticket.getSourceSection())\n
 \n
   # Associate ticket to current event\n
   follow_up_list = context.getFollowUpList()\n
