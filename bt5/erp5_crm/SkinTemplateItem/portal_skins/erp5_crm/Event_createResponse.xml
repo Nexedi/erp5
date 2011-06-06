@@ -68,7 +68,8 @@ response = module.newContent(portal_type=response_event_portal_type,\n
 \n
 message = portal.Base_translateString(\'Response Created.\')\n
 if response_workflow_action == \'send\':\n
-  response.start()\n
+  # use doActionFor to initialise workflow variable\n
+  portal.portal_workflow.doActionFor(response, \'start_action\', send_mail=True)\n
   return context.Base_redirect(form_id, keep_items={\'portal_status_message\': message})\n
 elif response_workflow_action == \'plan\':\n
   response.plan()\n
