@@ -12,6 +12,7 @@
               <list>
                 <string>first_item</string>
                 <string>items</string>
+                <string>orientation</string>
                 <string>title</string>
               </list>
             </value>
@@ -90,19 +91,23 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Send Event</string>
+                          <string>Send it immediately</string>
                           <string>send</string>
                         </tuple>
                         <tuple>
-                          <string>Plan Event</string>
+                          <string>Plan it at the given date</string>
                           <string>plan</string>
                         </tuple>
                         <tuple>
-                          <string>Redirect on Draft event</string>
+                          <string>Edit it as a Draft</string>
                           <string>draft</string>
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>orientation</string> </key>
+                    <value> <string>horizontal</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -110,7 +115,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Which Action ?</string> </value>
+                    <value> <string>Action to be triggered on the Response Event</string> </value>
                 </item>
               </dictionary>
             </value>

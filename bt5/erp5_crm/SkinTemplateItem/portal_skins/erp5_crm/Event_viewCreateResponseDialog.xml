@@ -74,6 +74,7 @@
                     <value>
                       <list>
                         <string>your_response_event_text_content</string>
+                        <string>your_response_workflow_action</string>
                       </list>
                     </value>
                 </item>
@@ -84,7 +85,6 @@
                         <string>your_response_event_title</string>
                         <string>your_response_event_portal_type</string>
                         <string>your_response_event_resource</string>
-                        <string>your_response_workflow_action</string>
                       </list>
                     </value>
                 </item>
