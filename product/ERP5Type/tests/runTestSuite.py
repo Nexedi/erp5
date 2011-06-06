@@ -77,8 +77,6 @@ def main():
     master = DummyTaskDistributionTool()
   test_suite_title = args.test_suite_title or args.test_suite
   revision = args.revision
-  if ',' in revision:
-    revision = revision.split(',')
   suite = makeSuite(test_suite=args.test_suite,
                     node_quantity=args.node_quantity,
                     revision=revision,
