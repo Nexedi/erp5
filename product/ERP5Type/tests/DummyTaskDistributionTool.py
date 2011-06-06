@@ -5,7 +5,8 @@ class DummyTaskDistributionTool(object):
   def __init__(self):
     self.lock = threading.Lock()
 
-  def createTestResult(self, name, revision, test_name_list, allow_restart):
+  def createTestResult(self, name, revision, test_name_list, allow_restart,
+      *args):
     self.test_name_list = list(test_name_list)
     return None, revision
 
