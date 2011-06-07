@@ -1,3 +1,6 @@
+2011-06-07 yusei
+* Stop displaying non-dated production order in planning box. It is useless.
+
 2011-06-02 arnaud.fontaine
 * Fix quantity unit conversion on ProductionOrder_viewMaterialConsumption.
 
