@@ -147,7 +147,7 @@ class Updater(object):
       # edit .git/info/sparse-checkout if you want sparse checkout
       if revision:
         if type(revision) is str:
-          h = self._git_find_rev('r' + revision)
+          h = revision
         else:
           h = revision[1]
         if h != self._git('rev-parse', 'HEAD'):
