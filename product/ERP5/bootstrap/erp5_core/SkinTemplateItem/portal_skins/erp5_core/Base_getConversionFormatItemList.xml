@@ -63,6 +63,14 @@ return  [(\'\', \'\')] + td.getTargetFormatItemList()\n
             <value> <string>base_content_type</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Auditor</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Base_getConversionFormatItemList</string> </value>
         </item>
