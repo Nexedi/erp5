@@ -621,7 +621,8 @@ class MainForm(Form):
       super(MainForm, self).submit(label=label, name=name, index=index,
                                    *args, **kwargs)
 
-  def submitSelect(self, select_name, submit_name, label=None, value=None):
+  def submitSelect(self, select_name, submit_name, label=None, value=None,
+                   select_index=None, control_index=None):
     """
     Get the select control whose name attribute is C{select_name},
     then select the option control specified either by its C{label} or
@@ -639,6 +640,10 @@ class MainForm(Form):
     I{Add a contact} but not I{Address}.  A word is defined as one or
     more alphanumeric characters or the underline.
 
+    C{select_index} and C{control_index} have the same meaning as in
+    zope.testbrowser, namely to select a particular select or control
+    when the C{label} or C{value} is ambiguous.
+
     @param select_name: Select control name
     @type select_name: str
     @param submit_name: Submit control name
@@ -647,11 +652,15 @@ class MainForm(Form):
     @type label: str
     @param value: Value of the option control
     @type value: str
+    @param select_index: Index of the select if multiple matches
+    @type select_index: int
+    @param control_index: Index of the control if multiple matches
+    @type control_index: int
 
     @raise LookupError: The select, option or submit control could not
                         be found
     """
-    select_control = self.getControl(name=select_name)
+    select_control = self.getControl(name=select_name, index=select_index)
 
     # zope.testbrowser checks for a whole word but it is also useful
     # to match the end of the option control value string because in
@@ -668,7 +677,9 @@ class MainForm(Form):
     self.browser._logger.debug("select_id='%s', label='%s', value='%s'" % \
                                  (select_name, label, value))
 
-    select_control.getControl(label=label, value=value).selected = True
+    select_control.getControl(label=label, value=value,
+                              index=control_index).selected = True
+
     self.submit(name=submit_name)
 
   def submitLogin(self):
@@ -697,22 +708,24 @@ class MainForm(Form):
 
     self.browser._is_logged_in = True
 
-  def submitSelectFavourite(self, label=None, value=None):
+  def submitSelectFavourite(self, label=None, value=None, **kw):
     """
     Select and submit a favourite, given either by its label (such as
     I{Log out}) or value (I{/logout}). See L{submitSelect}.
     """
-    self.submitSelect('select_favorite', 'Base_doFavorite:method', label, value)
+    self.submitSelect('select_favorite', 'Base_doFavorite:method', label, value,
+                      **kw)
 
-  def submitSelectModule(self, label=None, value=None):
+  def submitSelectModule(self, label=None, value=None, **kw):
     """
     Select and submit a module, given either by its label (such as
     I{Currencies}) or value (such as I{/glossary_module}). See
     L{submitSelect}.
     """
-    self.submitSelect('select_module', 'Base_doModule:method', label, value)
+    self.submitSelect('select_module', 'Base_doModule:method', label, value,
+                      **kw)
 
-  def submitSelectLanguage(self, label=None, value=None):
+  def submitSelectLanguage(self, label=None, value=None, **kw):
     """
     Select and submit a language, given either by its label (such as
     I{English}) or value (such as I{en}). See L{submitSelect}.
@@ -750,22 +763,24 @@ class ContextMainForm(MainForm):
    - doContextReport
    - doContextExchange
   """
-  def submitJump(self, label=None, value=None):
+  def submitSelectJump(self, label=None, value=None, **kw):
     """
     Select and submit a jump, given either by its label (such as
     I{Queries}) or value (such as
     I{/person_module/Base_jumpToRelatedObject?portal_type=Foo}). See
     L{submitSelect}.
     """
-    self.submitSelect('select_jump', 'Base_doJump:method', label, value)
+    self.submitSelect('select_jump', 'Base_doJump:method', label, value,
+                      **kw)
 
-  def submitSelectAction(self, label=None, value=None):
+  def submitSelectAction(self, label=None, value=None, **kw):
     """
     Select and submit an action, given either by its label (such as
     I{Add Person}) or value (such as I{add} and I{add Person}). See
     L{submitSelect}.
     """
-    self.submitSelect('select_action', 'Base_doAction:method', label, value)
+    self.submitSelect('select_action', 'Base_doAction:method', label, value,
+                      **kw)
 
   def submitCut(self):
     """
@@ -836,7 +851,7 @@ class ContextMainForm(MainForm):
     self.submit(name='Base_doSelect:method')
 
   def submitSelectWorkflow(self, label=None, value=None,
-                           script_id='viewWorkflowActionDialog'):
+                           script_id='viewWorkflowActionDialog', **kw):
     """
     Select and submit a workflow action, given either by its label
     (such as I{Create User}) or value (such as I{create_user_action}
@@ -851,12 +866,14 @@ class ContextMainForm(MainForm):
     """
     try:
       self.submitSelect('select_action', 'Base_doAction:method', label,
-                        value and '%s?workflow_action=%s' % (script_id, value))
+                        value and '%s?workflow_action=%s' % (script_id, value),
+                        **kw)
 
     except LookupError:
       self.submitSelect('select_action', 'Base_doAction:method', label,
                         value and '%s?field_my_workflow_action=%s' % (script_id,
-                                                                      value))
+                                                                      value),
+                        **kw)
 
   def submitDialogCancel(self):
     """
