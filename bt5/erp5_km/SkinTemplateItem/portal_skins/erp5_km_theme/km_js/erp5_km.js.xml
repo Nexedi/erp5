@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts07451662.42</string> </value>
+            <value> <string>ts07454479.45</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -249,11 +249,14 @@ function highlight_search_word(){\n
   query_array = queryStringToArray(document.referrer)\n
   search_text = query_array["search_text"]\n
   if (search_text!=undefined){\n
-    container = $("div.content")\n
+    document_body = $("#main_content div.document div.page")\n
+    headline = $("#main_content div.document span.headline")\n
     // multiple words\n
     search_word_list = search_text.split("%20")\n
     for(var i=0; i<search_word_list.length; i++) {\n
-      container.highlight(search_word_list[i], "highlight")\n
+      document_body.highlight(search_word_list[i], "highlight")\n
+      headline.highlight(search_word_list[i], "highlight")\n
+      \n
     }\n
   }\n
 }\n
@@ -270,7 +273,7 @@ $(document).ready(initialize_form);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8097</int> </value>
+            <value> <int>8256</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
