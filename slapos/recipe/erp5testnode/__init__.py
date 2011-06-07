@@ -97,8 +97,8 @@ class Recipe(BaseSlapRecipe):
               bot_environment=self.parameter_dict.get('bot_environment', ''),
               partition_reference=CONFIG['partition_reference'],
               environment=dict(PATH=os.environ['PATH']),
-              vcs_authentication_list=self.parameter_dict.get(
-                     'vcs_authentication_list')
+              vcs_authentication_list=eval(self.parameter_dict.get(
+                     'vcs_authentication_list')),
             )
           ]))
 
@@ -112,8 +112,9 @@ class Recipe(BaseSlapRecipe):
     print "home_directory : %r" % home_directory
     git_dict.setdefault("git_server_name", "git.erp5.org")
     if git_dict.get('vcs_authentication_list', None) is not None:
+      vcs_authentication_list = eval(git_dict['vcs_authentication_list'])
       netrc_file = open(os.path.join(home_directory, '.netrc'), 'w')
-      for vcs_authentication_dict in git_dict['vcs_authentication_list']:
+      for vcs_authentication_dict in vcs_authentication_list:
         netrc_file.write("""
 machine %(host)s
 login %(user_name)s
