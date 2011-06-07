@@ -54,7 +54,13 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return (
+      'erp5_full_text_myisam_catalog',
       'erp5_base',
+      'erp5_jquery',
+      'erp5_ingestion_mysql_innodb_catalog',
+      'erp5_ingestion',
+      'erp5_web',
+      'erp5_crm',
       'erp5_credential')
 
   def afterSetUp(self):
@@ -62,6 +68,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.createCategories()
     self.enableAlarm()
     self.validateNotificationMessages()
+    self.setUpSystemPreference()
     # add a dummy mailhost not to send real messages
     if 'MailHost' in self.portal.objectIds():
       self.portal.manage_delObjects(['MailHost'])
@@ -82,6 +89,21 @@ class TestERP5Credential(ERP5TypeTestCase):
     for notification_message in notification_message_module.contentValues():
       if notification_message.getValidationState() == 'draft':
         notification_message.validate()
+
+  def setUpSystemPreference(self):
+    portal_preferences = self.getPreferenceTool()
+    preference = getattr(portal_preferences, 'test_site_preference', None)
+    if preference is None:
+      preference = preference = portal_preferences.newContent(portal_type='System Preference',
+                                                              title='Default Site Preference',
+                                                              id='test_site_preference')
+      self.stepTic()
+    if preference.getPreferenceState() == 'disabled':
+       preference.enable()
+    preference.edit(preferred_credential_request_automatic_approval=True,
+                    preferred_credential_recovery_automatic_approval=True,
+                    preferred_organisation_credential_update_automatic_approval=True,
+                    preferred_person_credential_update_automatic_approval=True)
 
   @reindex
   def createCategories(self):
@@ -711,6 +733,98 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def _createCredentialRequest(self, first_name="Gabriel",
+                               last_name="Monnerat",
+                               reference="gabriel",
+                               password="123",
+                               default_email_text="gabriel@test.com"):
+    self.logout()
+    self.portal.ERP5Site_registerCredentialRequest(first_name=first_name,
+                                                   last_name=last_name,
+                                                   reference=reference,
+                                                   password=password,
+                                                   career_subordination_title="",
+                                                   default_email_text=default_email_text,
+                                                   default_telephone_text="223344",
+                                                   default_address_street_address="Test Street",
+                                                   default_address_city="Campos",
+                                                   default_address_zip_code="28024030")
+    self.login("ERP5TypeTestCase")
+    self.stepTic()
+
+  def stepCreateCredentialRequestSample(self, sequence=None,
+      sequence_list=None, **kw):
+    credential_reference = "credential_reference"
+    self._createCredentialRequest(reference=credential_reference)
+    sequence.edit(credential_reference=credential_reference)
+
+  def stepCheckIfMailMessageWasPosted(self, sequence=None,
+      sequence_list=None, **kw):
+    credential_reference = sequence["credential_reference"]
+    portal_catalog = self.portal.portal_catalog
+    credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
+                                                       reference=credential_reference)
+    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
+                                                 follow_up=credential_reference)
+    self.assertEquals(mail_message.getSimulationState(), "started")
+    self.assertTrue("key=%s" % mail_message.getReference() in mail_message.getTextContent())
+
+  def testMailMessagePosted(self):
+    """ Test if the Mail Message was posted correctly """
+    sequence_list = SequenceList()
+    sequence_string = 'CreateCredentialRequestSample '\
+                      'CheckIfMailMessageWasPosted '\
+    
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def test_MailFromMailMessageEvent(self):
+    """ """
+    self._createCredentialRequest(first_name="Vifib", 
+                                 last_name="Test",
+                                 reference="vifibtest")
+    portal_catalog = self.portal.portal_catalog
+    credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
+                                                       reference="vifibtest",
+                                                       first_name="Vifib",
+                                                       last_name="Test")
+    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
+                                                 follow_up=credential_request)
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, message_text = last_message
+    self.assertEquals(mfrom, 'Portal Administrator <postmaster@localhost>')
+    self.assertEquals(['Vifib Test <gabriel@test.com>'], mto)
+    self.assertNotEquals(re.search("Subject\:.*Welcome", message_text), None)
+    self.assertNotEquals(re.search("Hello\ Vifib\ Test\,", message_text), None)
+    self.assertNotEquals(re.search("key\=..%s" % mail_message.getReference(), message_text), None)
+
+  def testERP5Site_activeLogin(self):
+    """ Test if the script WebSection_activeLogin will create one user
+    correctly """
+    self._createCredentialRequest()
+    portal_catalog = self.portal.portal_catalog
+    credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
+                                                       reference="gabriel")
+    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
+                                                 follow_up=credential_request)
+    self.logout()
+    self.portal.ERP5Site_activeLogin(mail_message.getReference())
+    self.login("ERP5TypeTestCase")
+    self.stepTic()
+    person = portal_catalog.getResultValue(reference="gabriel", portal_type="Person")
+    self.assertEquals(person.getValidationState(), "validated")
+
+  def testERP5Site_registerCredentialRequest(self):
+    """ Test if the script ERP5Site_registerCredentialRequest will create one
+    Credential Request correctly """
+    self._createCredentialRequest()
+    portal_catalog = self.portal.portal_catalog
+    credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
+                                                       reference="gabriel")
+    self.assertEquals(credential_request.getFirstName(), "Gabriel")
+    self.assertEquals(credential_request.getDefaultEmailText(), "gabriel@test.com")
 
   def test_xx_checkCredentialQuestionIsNotCaseSensitive(self):
     '''
