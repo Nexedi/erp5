@@ -58,8 +58,10 @@ request = context.REQUEST\n
 portal = context.getPortalObject()\n
 list_mode = request.get(\'list_mode\', False)\n
 dialog_mode = request.get(\'dialog_mode\', False)\n
+isAnonymousKnowledgePadUsed = request.get(\'is_anonymous_knowledge_pad_used\', False)\n
 \n
 if portal.portal_membership.isAnonymousUser() or \\\n
+  isAnonymousKnowledgePadUsed or \\\n
   list_mode == True or \\\n
   dialog_mode == True:\n
   return False\n
