@@ -2,7 +2,9 @@ notification_message_module/20100928-1F79
 notification_message_module/20100928-212A
 notification_message_module/20100928-7459
 notification_message_module/20110426-1B7D
+notification_message_module/erp5_subscription_notification
 portal_alarms/accept_submitted_credentials
 portal_categories/question
 portal_categories/question/credential
 portal_categories/question/credential/**
+web_page_module/erp5-Contract
