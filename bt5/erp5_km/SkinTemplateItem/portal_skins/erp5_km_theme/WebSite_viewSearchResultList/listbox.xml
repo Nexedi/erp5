@@ -10,7 +10,6 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>count_method</string>
                 <string>css_class</string>
                 <string>default_display_style</string>
                 <string>display_style_list</string>
@@ -62,10 +61,6 @@
             <key> <string>tales</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value>
@@ -123,12 +118,6 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
-                <item>
-                    <key> <string>count_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
                 <item>
                     <key> <string>css_class</string> </key>
                     <value> <string>hiddenLabel</string> </value>
@@ -194,7 +183,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -255,19 +244,6 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>WebSite_countFullTextSearchResultList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
