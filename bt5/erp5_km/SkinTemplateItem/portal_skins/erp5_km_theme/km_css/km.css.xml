@@ -1300,6 +1300,11 @@ button.formbt > span{\n
   display:none;\n
 }\n
 \n
+/* Search words highliting */\n
+.highlight{\n
+  background-color: yellow;\n
+}\n
+\n
 </tal:block>
 
 ]]></unicode> </value>
@@ -1318,7 +1323,7 @@ button.formbt > span{\n
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
