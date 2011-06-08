@@ -160,151 +160,151 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
 
 
   def getUserFolder(self):
-    return getattr(self.getPortal(), 'acl_users', None)
+    return self.getPortal().acl_users
 
   def getPersonModule(self):
-    return getattr(self.getPortal(), 'person_module', None)
+    return self.getPortal().person_module
 
   def getOrganisationModule(self):
-    return getattr(self.getPortal(), 'organisation_module', None)
+    return self.getPortal().organisation_module
 
   def getCurrencyCashModule(self):
-    return getattr(self.getPortal(), 'currency_cash_module', None)
+    return self.getPortal().currency_cash_module
 
   def getCashInventoryModule(self):
-    return getattr(self.getPortal(), 'cash_inventory_module', None)
+    return self.getPortal().cash_inventory_module
 
   def getBankAccountInventoryModule(self):
-    return getattr(self.getPortal(), 'bank_account_inventory_module', None)
+    return self.getPortal().bank_account_inventory_module
 
   def getCurrencyModule(self):
-    return getattr(self.getPortal(), 'currency_module', None)
+    return self.getPortal().currency_module
 
   def getCategoryTool(self):
-    return getattr(self.getPortal(), 'portal_categories', None)
+    return self.getPortal().portal_categories
 
   def getWorkflowTool(self):
-    return getattr(self.getPortal(), 'portal_workflow', None)
+    return self.getPortal().portal_workflow
 
   def getSimulationTool(self):
-    return getattr(self.getPortal(), 'portal_simulation', None)
+    return self.getPortal().portal_simulation
 
   def getCheckPaymentModule(self):
-    return getattr(self.getPortal(), 'check_payment_module', None)
+    return self.getPortal().check_payment_module
 
   def getStopPaymentModule(self):
-    return getattr(self.getPortal(), 'stop_payment_module', None)
+    return self.getPortal().stop_payment_module
 
   def getCheckDepositModule(self):
-    return getattr(self.getPortal(), 'check_deposit_module', None)
+    return self.getPortal().check_deposit_module
 
   def getCheckbookModule(self):
-    return getattr(self.getPortal(), 'checkbook_module', None)
+    return self.getPortal().checkbook_module
 
   def getCheckbookModelModule(self):
-    return getattr(self.getPortal(), 'checkbook_model_module', None)
+    return self.getPortal().checkbook_model_module
 
   def getCheckbookReceptionModule(self):
-    return getattr(self.getPortal(), 'checkbook_reception_module', None)
+    return self.getPortal().checkbook_reception_module
 
   def getCheckbookVaultTransferModule(self):
-    return getattr(self.getPortal(), 'checkbook_vault_transfer_module', None)
+    return self.getPortal().checkbook_vault_transfer_module
 
   def getCheckbookUsualCashTransferModule(self):
-    return getattr(self.getPortal(), 'checkbook_usual_cash_transfer_module', None)
+    return self.getPortal().checkbook_usual_cash_transfer_module
 
   def getCheckbookDeliveryModule(self):
-    return getattr(self.getPortal(), 'checkbook_delivery_module', None)
+    return self.getPortal().checkbook_delivery_module
 
   def getCheckbookMovementModule(self):
-    return getattr(self.getPortal(), 'checkbook_movement_module', None)
+    return self.getPortal().checkbook_movement_module
 
   def getCheckModule(self):
-    return getattr(self.getPortal(), 'check_module', None)
+    return self.getPortal().check_module
 
   def getAccountingDateModule(self):
-    return getattr(self.getPortal(), 'accounting_date_module', None)
+    return self.getPortal().accounting_date_module
 
   def getCounterDateModule(self):
-    return getattr(self.getPortal(), 'counter_date_module', None)
+    return self.getPortal().counter_date_module
 
   def getCounterModule(self):
-    return getattr(self.getPortal(), 'counter_module', None)
+    return self.getPortal().counter_module
 
   def getCashMovementModule(self):
-    return getattr(self.getPortal(), 'cash_movement_new_not_emitted_module')
+    return self.getPortal().cash_movement_new_not_emitted_module
 
   def getMonetaryReceptionModule(self):
-    return getattr(self.getPortal(), 'monetary_reception_module')
+    return self.getPortal().monetary_reception_module
 
   def getMonetaryIssueModule(self):
-    return getattr(self.getPortal(), 'monetary_issue_module', None)
+    return self.getPortal().monetary_issue_module
 
   def getAccountingCancellationModule(self):
-    return getattr(self.getPortal(), 'accounting_cancellation_module', None)
+    return self.getPortal().accounting_cancellation_module
 
   def getCashBalanceRegulationModule(self):
-    return getattr(self.getPortal(), 'cash_balance_regulation_module', None)
+    return self.getPortal().cash_balance_regulation_module
 
   def getCashSortingModule(self):
-    return getattr(self.getPortal(), 'cash_sorting_module', None)
+    return self.getPortal().cash_sorting_module
 
   def getCashExchangeModule(self):
-    return getattr(self.getPortal(), 'cash_exchange_module', None)
+    return self.getPortal().cash_exchange_module
 
   def getCashToCurrencyPurchaseModule(self):
-    return getattr(self.getPortal(), 'cash_to_currency_purchase_module', None)
+    return self.getPortal().cash_to_currency_purchase_module
 
   def getClassificationSurveyModule(self):
-    return getattr(self.getPortal(), 'classification_survey_module', None)
+    return self.getPortal().classification_survey_module
 
   def getCounterRenderingModule(self):
-    return getattr(self.getPortal(), 'counter_rendering_module', None)
+    return self.getPortal().counter_rendering_module
 
   def getDestructionSurveyModule(self):
-    return getattr(self.getPortal(), 'destruction_survey_module', None)
+    return self.getPortal().destruction_survey_module
 
   def getForeignCashReceptionModule(self):
-    return getattr(self.getPortal(), 'foreign_cash_reception_module', None)
+    return self.getPortal().foreign_cash_reception_module
 
   def getInternalMoneyDepositModule(self):
-    return getattr(self.getPortal(), 'internal_money_deposit_module', None)
+    return self.getPortal().internal_money_deposit_module
 
   def getInternalMoneyPaymentModule(self):
-    return getattr(self.getPortal(), 'internal_money_payment_module', None)
+    return self.getPortal().internal_money_payment_module
 
   def getMonetaryDestructionModule(self):
-    return getattr(self.getPortal(), 'monetary_destruction_module', None)
+    return self.getPortal().monetary_destruction_module
 
   def getMonetaryRecallModule(self):
-    return getattr(self.getPortal(), 'monetary_recall_module', None)
+    return self.getPortal().monetary_recall_module
 
   def getMonetarySurveyModule(self):
-    return getattr(self.getPortal(), 'monetary_survey_module', None)
+    return self.getPortal().monetary_survey_module
 
   def getMoneyDepositModule(self):
-    return getattr(self.getPortal(), 'money_deposit_module', None)
+    return self.getPortal().money_deposit_module
 
   def getMoneyDepositRenderingModule(self):
-    return getattr(self.getPortal(), 'money_deposit_rendering_module', None)
+    return self.getPortal().money_deposit_rendering_module
 
   def getMutilatedBanknoteModule(self):
-    return getattr(self.getPortal(), 'mutilated_banknote_module', None)
+    return self.getPortal().mutilated_banknote_module
 
   def getTravelerCheckPurchaseModule(self):
-    return getattr(self.getPortal(), 'traveler_check_purchase_module', None)
+    return self.getPortal().traveler_check_purchase_module
 
   def getTravelerCheckSaleModule(self):
-    return getattr(self.getPortal(), 'traveler_check_sale_module', None)
+    return self.getPortal().traveler_check_sale_module
 
   def getUsualCashRenderingModule(self):
-    return getattr(self.getPortal(), 'usual_cash_rendering_module', None)
+    return self.getPortal().usual_cash_rendering_module
 
   def getUsualCashTransferModule(self):
-    return getattr(self.getPortal(), 'usual_cash_transfer_module', None)
+    return self.getPortal().usual_cash_transfer_module
 
   def getVaultTransferModule(self):
-    return getattr(self.getPortal(), 'vault_transfer_module', None)
+    return self.getPortal().vault_transfer_module
 
   def createCurrency(self, currency_list=(('EUR', 'Euro', 1/652., 1/650., 'USD'), ('USD', 'USD', 652, 650., 'EUR')), only_currency=False):
     # create the currency document for euro inside the currency module
