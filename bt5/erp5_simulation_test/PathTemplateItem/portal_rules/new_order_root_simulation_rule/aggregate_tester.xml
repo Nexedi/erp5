@@ -18,7 +18,7 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>aggregate_list</string>
+                <string>aggregate</string>
               </tuple>
             </value>
         </item>
