@@ -77,7 +77,11 @@ XXX: PDF pagination should be similar to OOo one (using iframe). This part shoul
     </a>\n
 \n
     <!-- Current Thumbnail / Total Thumbnails -->\n
-    <span tal:content="python:current_thumbnail_index+1"/> / <span tal:content="all_thunmbnails"/>\n
+    <input name="selection_index"\n
+           size="1"\n
+           tal:attributes="value python:current_thumbnail_index+1"\n
+           onkeypress="return redirectPDFPage(event, this)"/>\n
+    / <span tal:content="all_thunmbnails"/>\n
 \n
     <a tal:omit-tag="hide_right_side_links"\n
        tal:attributes="href string:${base_url}?selection_index=${next_thunmbnail_index}">\n
@@ -102,8 +106,7 @@ XXX: PDF pagination should be similar to OOo one (using iframe). This part shoul
 \n
   </div>\n
 \n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -121,7 +124,7 @@ XXX: PDF pagination should be similar to OOo one (using iframe). This part shoul
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
