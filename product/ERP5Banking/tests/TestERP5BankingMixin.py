@@ -216,9 +216,6 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
   def getCheckbookDeliveryModule(self):
     return self.getPortal().checkbook_delivery_module
 
-  def getCheckbookMovementModule(self):
-    return self.getPortal().checkbook_movement_module
-
   def getCheckModule(self):
     return self.getPortal().check_module
 
