@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts07454479.45</string> </value>
+            <value> <string>ts07528717.77</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -251,11 +251,13 @@ function highlight_search_word(){\n
   if (search_text!=undefined){\n
     document_body = $("#main_content div.document div.page")\n
     headline = $("#main_content div.document span.headline")\n
+    title = $("#wrapper_headline div.header_title")\n
     // multiple words\n
     search_word_list = search_text.split("%20")\n
     for(var i=0; i<search_word_list.length; i++) {\n
       document_body.highlight(search_word_list[i], "highlight")\n
       headline.highlight(search_word_list[i], "highlight")\n
+      title.highlight(search_word_list[i], "highlight")\n
       \n
     }\n
   }\n
@@ -273,7 +275,7 @@ $(document).ready(initialize_form);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8256</int> </value>
+            <value> <int>8364</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
