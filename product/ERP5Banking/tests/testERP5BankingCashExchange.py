@@ -74,13 +74,6 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
     """
     return "ERP5BankingCashExchange"
 
-  def getCashExchangeModule(self):
-    """
-    Return the Cash Exchange Module
-    """
-    return getattr(self.getPortal(), 'cash_exchange_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

@@ -73,13 +73,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
     """
     return "ERP5BankingCashBalanceRegulation"
   
-  def getCashBalanceRegulationModule(self):
-    """
-    Return the Cash Balance Regulation Module
-    """
-    return getattr(self.getPortal(), 'cash_balance_regulation_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

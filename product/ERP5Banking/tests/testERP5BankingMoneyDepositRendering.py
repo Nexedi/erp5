@@ -84,13 +84,6 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin):
     """
     return "ERP5BankingMoneyDepositRendering"
 
-  def getMoneyDepositRenderingModule(self):
-    """
-    Return the Cash Transer Module
-    """
-    return getattr(self.getPortal(), 'money_deposit_rendering_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

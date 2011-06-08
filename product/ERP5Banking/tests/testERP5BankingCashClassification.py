@@ -52,13 +52,6 @@ class TestERP5BankingCashClassification(TestERP5BankingMixin):
     """
     return "ERP5BankingCashClassification"
 
-  def getCashSortingModule(self):
-    """
-    Return the Cash Sorting Module
-    """
-    return getattr(self.getPortal(), 'cash_sorting_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

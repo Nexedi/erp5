@@ -85,13 +85,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     """
     return "ERP5BankingMonetaryDestruction"
 
-  def getMonetaryDestructionModule(self):
-    """
-    Return the Monetary Destruction Module
-    """
-    return getattr(self.getPortal(), 'monetary_destruction_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

@@ -42,14 +42,6 @@ os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 class TestERP5BankingTravelerCheckSaleMixin(TestERP5BankingMixin):
 
-  def getTravelerCheckSaleModule(self):
-    """
-    Return the Traveler Check Sale Module
-    """
-    return getattr(self.getPortal(), 'traveler_check_sale_module', None)
-
-
-
   def createCheckbookUsualCashTransferWithTravelerCheck(self, sequence=None, 
                                  sequence_list=None, **kwd):
     """

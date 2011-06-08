@@ -62,13 +62,6 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
     """
     return "ERP5BankingForeignCashReception"
 
-  def getForeignCashReceptionModule(self):
-    """
-    Return the Cash Inventory Module
-    """
-    return getattr(self.getPortal(), 'foreign_cash_reception_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

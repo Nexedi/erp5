@@ -53,12 +53,6 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     """
     return "ERP5BankingMutilatedBanknote"
 
-  def getMutilatedBanknoteModule(self):
-    """
-    Return the Cash Transer Module
-    """
-    return getattr(self.getPortal(), 'mutilated_banknote_module', None)
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

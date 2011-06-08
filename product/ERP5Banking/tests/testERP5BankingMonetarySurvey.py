@@ -54,13 +54,6 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin):
     """
     return "ERP5BankingMonetarySurvey"
 
-  def getMonetarySurveyModule(self):
-    """
-    Return the Cash Transer Module
-    """
-    return getattr(self.getPortal(), 'monetary_survey_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

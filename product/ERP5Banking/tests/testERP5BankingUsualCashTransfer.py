@@ -84,13 +84,6 @@ class TestERP5BankingUsualCashTransfer(TestERP5BankingMixin):
     """
     return "ERP5BankingUsualCashTransfer"
 
-  def getUsualCashTransferModule(self):
-    """
-    Return the Cash Transer Module
-    """
-    return getattr(self.getPortal(), 'usual_cash_transfer_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

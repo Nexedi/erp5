@@ -43,9 +43,6 @@ class TestERP5BankingAccountingDate(TestERP5BankingMixin):
   def getTitle(self):
     return "ERP5BankingAccountingDate"
 
-  def getAccountingDateModule(self):
-    return getattr(self.getPortal(), 'accounting_date_module')
-
   def getBaobab_checkAccountingDateOpen(self):
     return getattr(self.getPortal(), 'Baobab_checkAccountingDateOpen')
 

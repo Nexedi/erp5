@@ -55,13 +55,6 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
       Return the title of the test
     """
     return "ERP5BankingMoneyDeposit"
-  
-  def getMoneyDepositModule(self):
-    """
-    Return the Money Deposit Module
-    """
-    return getattr(self.getPortal(), 'money_deposit_module', None)
-
 
   def afterSetUp(self):
     """

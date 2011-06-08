@@ -52,13 +52,6 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin):
     """
     return "ERP5BankingInternalMoneyDeposit"
   
-  def getInternalMoneyDepositModule(self):
-    """
-    Return the Internal Money Deposit Module
-    """
-    return getattr(self.getPortal(), 'internal_money_deposit_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

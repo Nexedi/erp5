@@ -52,13 +52,6 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
     """
     return "ERP5BankingClassificationSurvey"
 
-  def getClassificationSurveyModule(self):
-    """
-    Return the Classification Survey Module
-    """
-    return getattr(self.getPortal(), 'classification_survey_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

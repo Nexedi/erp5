@@ -48,14 +48,6 @@ class TestERP5BankingAccountingCancellation(TestERP5BankingMixin):
   RUN_ALL_TEST = 1 # we want to run all test
   QUIET = 0 # we don't want the test to be quiet
 
-
-  def getAccountingCancellationModule(self):
-    """
-    Return the Check Payment Module
-    """
-    return getattr(self.getPortal(), 'accounting_cancellation_module', None)
-
-
   def getTitle(self):
     """
       Return the title of the test

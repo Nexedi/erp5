@@ -56,12 +56,6 @@ class TestERP5BankingCheckDeposit(TestERP5BankingMixin):
     """
     return "ERP5BankingCheckDeposit"
 
-  def getCheckDepositModule(self):
-    """
-    Return the check deposit module
-    """
-    return getattr(self.getPortal(), 'check_deposit_module', None)
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

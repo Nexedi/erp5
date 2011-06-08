@@ -73,13 +73,6 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
     """
     return "ERP5BankingCashToCurrencyPurchase"
 
-  def getCashToCurrencyPurchaseModule(self):
-    """
-    Return the Cash To Currency Purchase Module
-    """
-    return getattr(self.getPortal(), 'cash_to_currency_purchase_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

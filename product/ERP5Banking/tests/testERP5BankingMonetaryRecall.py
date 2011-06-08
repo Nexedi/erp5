@@ -84,13 +84,6 @@ class TestERP5BankingMonetaryRecall(TestERP5BankingMixin):
     """
     return "ERP5BankingMonetaryRecall"
 
-  def getMonetaryRecallModule(self):
-    """
-    Return the Monetary Recall Module
-    """
-    return getattr(self.getPortal(), 'monetary_recall_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

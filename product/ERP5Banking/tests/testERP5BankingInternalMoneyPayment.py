@@ -52,13 +52,6 @@ class TestERP5BankingInternalMoneyPayment(TestERP5BankingMixin):
     """
     return "ERP5BankingInternalMoneyPayment"
   
-  def getInternalMoneyPaymentModule(self):
-    """
-    Return the Internal Money Payment Module
-    """
-    return getattr(self.getPortal(), 'internal_money_payment_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data
