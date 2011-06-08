@@ -93,7 +93,7 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
         # Copy at same level
         rule = applied_rule.getSpecialiseValue()
         kw = _getPropertyDict(simulation_movement,
-                  property_id_set=rule.getUpdatablePropertyIdSet())
+                  updating_tester_list=rule._getUpdatingTesterList())
         kw.update({'portal_type':simulation_movement.getPortalType(),
                    'id':new_id,
                    'delivery':None,

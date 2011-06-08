@@ -41,7 +41,7 @@ class IMovementCollectionUpdater(Interface):
   an IMovementCollectionDiff.
   """
   def getMovementCollectionDiff(context, rounding=False, movement_generator=None,
-                                property_id_set=None):
+                                updating_tester_list=None):
     """
     Return a IMovementCollectionDiff by comparing movements
     the list of movements of context and the list of movements
@@ -54,14 +54,14 @@ class IMovementCollectionUpdater(Interface):
                           (if not specified, a context implicit 
                           IMovementGenerator will be used)
 
-    property_id_set -- an optional list of properties that we
-                       care on movements. This allows to improve
+    updating_tester_list -- an optional list of testers used to get properties
+                       that we care on movements. This allows to improve
                        performance by not looking at properties
                        we don't care
     """
 
   def updateMovementCollection(context, rounding=False, movement_generator=None,
-                               property_id_set=None):
+                               updating_tester_list=None):
     """
     Invoke getMovementCollectionDiff and update context with 
     the resulting IMovementCollectionDiff.
@@ -73,8 +73,8 @@ class IMovementCollectionUpdater(Interface):
                           (if not specified, a context implicit 
                           IMovementGenerator will be used)
 
-    property_id_set -- an optional list of properties that we
-                       care on movements. This allows to improve
+    updating_tester_list -- an optional list of testers used to get properties
+                       that we care on movements. This allows to improve
                        performance by not looking at properties
                        we don't care
     """

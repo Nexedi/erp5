@@ -193,15 +193,6 @@ class RuleMixin(Predicate):
       return False
     return super(RuleMixin, self).test(*args, **kw)
 
-  @caching_instance_method(id="Rule.getUpdatablePropertyIdSet",
-    cache_factory='erp5_content_long',
-    cache_id_generator=lambda method_id, document: document.getUid())
-  def getUpdatablePropertyIdSet(self):
-    property_id_set = set()
-    [property_id_set.update(x.getTestedPropertyList()) for x in \
-                           self._getUpdatingTesterList()]
-    return property_id_set
-
   def expand(self, applied_rule, **kw):
     """
     Expand this applied rule to create new documents inside the
@@ -217,7 +208,7 @@ class RuleMixin(Predicate):
     #            although rounding in simulation is not recommended at all
     self.updateMovementCollection(applied_rule,
                     movement_generator=self._getMovementGenerator(applied_rule),
-                    property_id_set=self.getUpdatablePropertyIdSet())
+                    updating_tester_list=self._getUpdatingTesterList())
     # And forward expand
     for movement in applied_rule.getMovementList():
       movement.expand(**kw)

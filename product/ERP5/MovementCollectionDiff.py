@@ -41,12 +41,12 @@ class MovementCollectionDiff(object):
   # Declarative interfaces
   zope.interface.implements(interfaces.IMovementCollectionDiff,)
 
-  def __init__(self, property_id_set=None):
+  def __init__(self, updating_tester_list=None):
     self._deletable_movement_list = []
     self._new_movement_list = []
     self._updatable_movement_list = []
     self._property_dict_dict = {}
-    self._property_id_set = property_id_set
+    self._updating_tester_list = updating_tester_list
 
   def getDeletableMovementList(self):
     """
@@ -89,9 +89,9 @@ class MovementCollectionDiff(object):
     """
     property_dict = self._property_dict_dict.get(movement)
     if property_dict is None:
-      if self._property_id_set is not None:
+      if self._updating_tester_list is not None:
         property_dict = _getPropertyDict(movement,
-              property_id_set=self._property_id_set)
+              updating_tester_list=self._updating_tester_list)
       else:
         property_dict = _getPropertyList(movement)
         property_dict.update(_getCategoryList(movement, acquire=False))
@@ -116,11 +116,11 @@ def _getPropertyAndCategoryList(document):
   property_dict.update(_getCategoryList(document))
   return property_dict
 
-def _getPropertyDict(document, property_id_set=None):
-  assert property_id_set is not None
+def _getPropertyDict(document, updating_tester_list=None):
+  assert updating_tester_list is not None
   property_dict = {}
-  for property_id in property_id_set:
-    property_dict[property_id] = document.getProperty(property_id)
+  for tester in updating_tester_list:
+    property_dict.update(tester.getUpdatablePropertyDict(document, None))
   return property_dict
 
 def _getPropertyList(document, acquire=True):
