@@ -11,7 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>meta_types</string>
+                <string>selection_name</string>
                 <string>title</string>
               </list>
             </value>
@@ -105,17 +105,6 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>meta_types</string> </key>
-                    <value>
-                      <list>
-                        <tuple>
-                          <string>ERP5 Gadget</string>
-                          <string>ERP5 Gadget</string>
-                        </tuple>
-                      </list>
-                    </value>
-                </item>
-                <item>
                     <key> <string>portal_type</string> </key>
                     <value>
                       <list>
@@ -125,6 +114,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>gadget_tool_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
