@@ -77,7 +77,7 @@ XXX: PDF pagination should be similar to OOo one (using iframe). This part shoul
     </a>\n
 \n
     <!-- Current Thumbnail / Total Thumbnails -->\n
-    <input name="selection_index"\n
+    <input name="pdf_selection_index"\n
            size="1"\n
            tal:attributes="value python:current_thumbnail_index+1"\n
            onkeypress="return redirectPDFPage(event, this)"/>\n
