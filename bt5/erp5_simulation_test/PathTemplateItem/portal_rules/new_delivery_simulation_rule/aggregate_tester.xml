@@ -30,7 +30,7 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
-                <string>aggregate</string>
+                <string>aggregate_list</string>
               </tuple>
             </value>
         </item>
