@@ -66,9 +66,9 @@
       <a tal:attributes="href url">\n
         <span class="search_result_title"\n
               tal:content="title"/>\n
+      </a>\n
         <span class="search_result_portal_type"\n
               tal:content="portal_type"/>\n
-      </a>\n
 \n
       <img src="km_img/find.png" \n
            tal:attributes="onClick string:togglePreview(\'${uid}\', \'${path}\')"\n
