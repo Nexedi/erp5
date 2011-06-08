@@ -722,7 +722,8 @@ class TestERP5Credential(ERP5TypeTestCase):
                                last_name="Monnerat",
                                reference="gabriel",
                                password="123",
-                               default_email_text="gabriel@test.com"):
+                               default_email_text="gabriel@test.com",
+                               role="client"):
     self.logout()
     self.portal.ERP5Site_registerCredentialRequest(first_name=first_name,
                                                    last_name=last_name,
@@ -733,7 +734,8 @@ class TestERP5Credential(ERP5TypeTestCase):
                                                    default_telephone_text="223344",
                                                    default_address_street_address="Test Street",
                                                    default_address_city="Campos",
-                                                   default_address_zip_code="28024030")
+                                                   default_address_zip_code="28024030",
+                                                   role=role)
     self.login("ERP5TypeTestCase")
     self.stepTic()
 
@@ -760,12 +762,12 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_string = 'stepSetCredentialRequestAutomaticApprovalPreferences '\
                       'CreateCredentialRequestSample '\
                       'CheckIfMailMessageWasPosted '\
-		      'stepUnSetCredentialAutomaticApprovalPreferences'\
+                      'stepUnSetCredentialAutomaticApprovalPreferences'\
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_MailFromMailMessageEvent(self):
+  def testMailFromMailMessageEvent(self):
     """ """
     self.stepSetCredentialRequestAutomaticApprovalPreferences()
     self._createCredentialRequest(first_name="Vifib", 
@@ -803,6 +805,11 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.login("ERP5TypeTestCase")
     self.stepTic()
     person = portal_catalog.getResultValue(reference="gabriel", portal_type="Person")
+    assignment_list = person.objectValues(portal_type="Assignment")
+    self.assertNotEquals(assignment_list, [])
+    self.assertEquals(len(assignment_list), 1)
+    assignment = assignment_list[0]
+    self.assertEquals(assignment.getValidationState(), "open")
     self.assertEquals(person.getValidationState(), "validated")
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
@@ -817,6 +824,30 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(credential_request.getFirstName(), "Gabriel")
     self.assertEquals(credential_request.getDefaultEmailText(), "gabriel@test.com")
     self.stepUnSetCredentialAutomaticApprovalPreferences()
+
+  def testOverwriteBase_getDefaultAssignmentArgumentDict(self):
+    portal_catalog = self.portal.portal_catalog
+    portal_skins = self.getSkinsTool()
+    script = portal_skins.erp5_credential.Base_getDefaultAssignmentArgumentDict
+    self.login("ERP5TypeTestCase")
+    script.ZPythonScript_edit("**kw",
+              "return dict(role_list=['internal',], function_list=['member',])")
+    self.logout()
+    self.stepSetCredentialRequestAutomaticApprovalPreferences()
+    self._createCredentialRequest(role=None)
+    credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
+                                                       reference="gabriel")
+    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
+                                                 follow_up=credential_request)
+    self.logout()
+    self.portal.ERP5Site_activeLogin(mail_message.getReference())
+    self.login("ERP5TypeTestCase")
+    self.stepTic()
+    person = portal_catalog.getResultValue(reference="gabriel", portal_type="Person")
+    assignment_list = person.objectValues(portal_type="Assignment")
+    assignment = assignment_list[0]
+    self.assertEquals(assignment.getFunction(), "member")
+    self.assertEquals(assignment.getRole(), "internal")
 
   def test_xx_checkCredentialQuestionIsNotCaseSensitive(self):
     '''
