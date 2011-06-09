@@ -125,6 +125,7 @@ portal_actions | bt_tool
 portal_actions | category_tool
 portal_actions | create_module
 portal_actions | make_template
+portal_actions | portal_alarms_action
 portal_actions | property_sheet_tool
 portal_actions | types_tool
 portal_membership | login
