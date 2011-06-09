@@ -120,7 +120,11 @@ def _getPropertyDict(document, updating_tester_list=None):
   assert updating_tester_list is not None
   property_dict = {}
   for tester in updating_tester_list:
-    property_dict.update(tester.getUpdatablePropertyDict(document, None))
+    property_dict.update(tester.getExpandablePropertyDict(document))
+  # causality and trade phase are controled by business process, not rules,
+  # so they are not availables as part of updating tester list
+  for property_id in ("causality", "trade_phase"):
+    property_dict.update(**{property_id: document.getPropertyList(property_id)})
   return property_dict
 
 def _getPropertyList(document, acquire=True):

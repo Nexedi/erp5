@@ -124,6 +124,14 @@ class IEquivalenceTester(Interface):
     decision_movement -- a delivery movement (decision)
     """
 
+  def getExpandablePropertyDict(input_movement):
+    """
+    Returns a list of properties coming from input movement to
+    update on simulation movement
+
+    input_movement -- a prevision movement
+    """
+
   def update(prevision_movement, decision_movement):
     """
     Updates decision_movement with properties from
