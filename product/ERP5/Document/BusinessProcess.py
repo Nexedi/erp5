@@ -683,14 +683,14 @@ class BusinessProcess(Path, XMLObject):
                           amount.getRelativeUrl())
 
     # Build a list of temp movements
-    from Products.ERP5Type.Document import newTempMovement
+    from Products.ERP5Type.Document import newTempSimulationMovement
     result = []
     id_index = 0
     base_id = amount.getId()
     if update_property_dict is None: update_property_dict = {}
     for trade_model_path in self.getTradeModelPathValueList(context=amount, trade_phase=trade_phase):
       id_index += 1
-      movement = newTempMovement(trade_model_path, '%s_%s' % (base_id, id_index))
+      movement = newTempSimulationMovement(trade_model_path, '%s_%s' % (base_id, id_index))
       kw = self._getPropertyAndCategoryDict(explanation, amount, trade_model_path, delay_mode=delay_mode)
       try:
         kw['trade_phase'], = \
