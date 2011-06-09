@@ -42,29 +42,21 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
+<!-- XXX: read depth from gadget preferences -->\n
 <div class="gadget-website-browser"\n
-     tal:define="\n
-                 section_list python:here.contentValues(portal_type=\'Web Section\', sort_on=\'int_index\');\n
-                 section_list python:filter(lambda x:x.isVisible(), section_list);\n
-                 half_count python:len(section_list) / 2">\n
+     tal:define="depth python: 10;\n
+                 include_subsection python: 1;\n
+                 collapse_depth python: 1;\n
+                 section_list python: here.WebSection_getSiteMapTree(depth=depth, include_subsection=include_subsection)">\n
 \n
-  <tal:block tal:repeat="section python:section_list[0:half_count]">\n
-    <tal:block metal:use-macro="container/Base_viewKnowledgeManagementMacroLibrary/macros/renderer">Macro goes here</tal:block>   \n
-  </tal:block>\n
-  \n
-  <tal:block tal:repeat="section python:section_list[half_count:]">\n
-    <tal:block metal:use-macro="container/Base_viewKnowledgeManagementMacroLibrary/macros/renderer">Macro goes here</tal:block>\n
-  </tal:block>\n
+  <tal:block tal:content="structure python: here.WebSection_viewSubsectionRenderer(section_list = section_list, \n
+                                                                                   collapse_depth=collapse_depth)"/>\n
 \n
   <tal:block tal:condition="python: len(section_list)==0">\n
     <p i18n:domain="erp5_ui" i18n:translate=""> No subsections found. </p>\n
   </tal:block>\n
-  \n
-</div>\n
-\n
-\n
-\n
-
+ \n
+</div>
 
 ]]></unicode> </value>
         </item>
@@ -82,7 +74,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
