@@ -99,6 +99,7 @@
                         <string>my_source_section_title</string>
                         <string>my_source_decision_title</string>
                         <string>my_destination_title</string>
+                        <string>my_source_administration_title</string>
                       </list>
                     </value>
                 </item>
