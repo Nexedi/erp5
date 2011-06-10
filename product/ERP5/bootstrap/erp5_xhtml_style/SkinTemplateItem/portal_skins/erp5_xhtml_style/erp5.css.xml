@@ -476,6 +476,10 @@ a, a:visited, a:focus {\n
   text-decoration: none;\n
 }\n
 \n
+.relationfieldlink {\n
+  text-decoration: underline;\n
+}\n
+\n
 a:hover {\n
   background-color: inherit;\n
   color: <dtml-var link_hover_color>;\n

@@ -338,7 +338,7 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
       if not isinstance(value, (list, tuple)):
         value = value,
       for jump_reference, display_value in zip(jump_reference_list, value):
-        string_list.append('<a href="%s">%s</a>' % \
+        string_list.append('<a class="relationfieldlink" href="%s">%s</a>' % \
                 (jump_reference.absolute_url(),
                  display_value))
       html_string = '<br />'.join(string_list)
