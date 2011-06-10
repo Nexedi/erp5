@@ -70,6 +70,31 @@ search_text = kw[\'search_text\']\n
 parsed_dict = context.Base_parseSearchString(search_text)\n
 search_string = parsed_dict[\'searchabletext\']\n
 \n
+# extend query\n
+if all_versions is None:\n
+    all_versions = context.getLayoutProperty(\'layout_all_versions\', default=False)\n
+if all_languages is None:\n
+  all_languages = context.getLayoutProperty(\'layout_all_languages\', default=False)\n
+\n
+# Build the list of parameters\n
+if not language:\n
+  language = portal.Localizer.get_selected_language()\n
+\n
+if not all_languages:\n
+  kw[\'language\'] = language\n
+\n
+if validation_state is None:\n
+  # XXX hardcoded validation state list.\n
+  # Use predicate or layout property instead\n
+  validation_state = (\'released\', \'released_alive\', \'published\', \n
+                      \'published_alive\', \'shared\', \'shared_alive\', \n
+                      \'public\', \'validated\')\n
+kw[\'validation_state\'] = validation_state\n
+\n
+if \'sort_on\' not in kw:\n
+  # XXX Do not sort by default, as it increases query time\n
+  kw[\'sort_on\'] = [(\'int_index\', \'DESC\'), (\'reference\', \'DESC\')]\n
+\n
 if list_style != \'search\':\n
   return context.portal_catalog(**kw)\n
 else:\n
@@ -140,7 +165,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>language=None, validation_state=None, all_languages=None, all_versions=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
