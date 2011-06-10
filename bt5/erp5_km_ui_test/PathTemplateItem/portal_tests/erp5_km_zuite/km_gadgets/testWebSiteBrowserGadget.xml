@@ -137,47 +137,47 @@
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'box_inner_content\']/div/ul[1]/li/a[@title=\'Section 1\']</td>\n
+  <td>//span[@title=\'Section 1\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'box_inner_content\']/div/ul[1]/ul/li[1]/a[@title=\'Section 1.1\']</td>\n
+  <td>//a[@title=\'Section 1.1\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'box_inner_content\']/div/ul[1]/ul/li[2]/a[@title=\'Section 1.2\']</td>\n
+  <td>//a[@title=\'Section 1.2\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'box_inner_content\']/div/ul[2]/li/a[@title=\'Section 2\']</td>\n
+  <td>//span[@title=\'Section 2\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'box_inner_content\']/div/ul[2]/ul/li[1]/a[@title=\'Section 2.1\']</td>\n
+  <td>//a[@title=\'Section 2.1\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'box_inner_content\']/div/ul[2]/ul/li[2]/a[@title=\'Section 2.2\']</td>\n
+  <td>//a[@title=\'Section 2.2\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'box_inner_content\']/div/ul[3]/li/a[@title=\'Section 3\']</td>\n
+  <td>//span[@title=\'Section 3\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'box_inner_content\']/div/ul[3]/ul/li[1]/a[@title=\'Section 3.1\']</td>\n
+  <td>//a[@title=\'Section 3.1\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
   <td>waitForElementPresent</td>\n
-  <td>//div[@class=\'box_inner_content\']/div/ul[3]/ul/li[2]/a[@title=\'Section 3.2\']</td>\n
+  <td>//a[@title=\'Section 3.2\']</td>\n
   <td></td>\n
 </tr>\n
 \n
