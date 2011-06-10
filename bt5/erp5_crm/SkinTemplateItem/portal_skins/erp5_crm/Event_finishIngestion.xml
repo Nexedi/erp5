@@ -181,7 +181,7 @@ if context.getPortalType() == \'Web Message\' and\\\n
 # event_workflow\n
 if portal_workflow.isTransitionPossible(context, \'receive\'):\n
   context.receive()\n
-if len(context.setFollowUpList()) > 0 and \\\n
+if len(context.getFollowUpList()) > 0 and \\\n
    portal_workflow.isTransitionPossible(context, \'acknowledge_event\'):\n
   portal_workflow.doActionFor(context, \'acknowledge_action\',\n
                               create_event=False)\n
