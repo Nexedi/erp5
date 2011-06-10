@@ -133,7 +133,7 @@ if send_notification_text not in (\'\', None):\n
         subject=notification_message.getTitle(),\n
         message=mail_text,\n
         message_text_format=notification_message.getContentType(),\n
-        store_as_event=True)\n
+        store_as_event=False)\n
 \n
 return discussion_thread.Base_redirect(form_id,\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
