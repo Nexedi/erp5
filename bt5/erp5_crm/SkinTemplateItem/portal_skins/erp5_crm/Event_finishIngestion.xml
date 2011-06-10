@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
   This script is invoked at the end of ingestion process.\n
   The default behaviour is to receive messages so that they\n
   are marked as \'New\' and appear in the worklist.\n
@@ -179,7 +181,8 @@ if context.getPortalType() == \'Web Message\' and\\\n
 # event_workflow\n
 if portal_workflow.isTransitionPossible(context, \'receive\'):\n
   context.receive()\n
-if portal_workflow.isTransitionPossible(context, \'acknowledge_event\'):\n
+if len(context.setFollowUpList()) > 0 and \\\n
+   portal_workflow.isTransitionPossible(context, \'acknowledge_event\'):\n
   portal_workflow.doActionFor(context, \'acknowledge_action\',\n
                               create_event=False)\n
 \n
@@ -188,7 +191,9 @@ if portal_workflow.isTransitionPossible(context, \'stop\'):\n
   context.stop()\n
 if portal_workflow.isTransitionPossible(context, \'deliver\'):\n
   context.deliver()\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
