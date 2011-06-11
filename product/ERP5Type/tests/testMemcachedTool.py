@@ -34,6 +34,8 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import installRealMemcachedTool
+from Products.ERP5Type.tests.ERP5TypeTestCase import\
+    _getVolatileMemcachedServerDict
 import time
 
 class TestMemcachedTool(ERP5TypeTestCase):
@@ -57,17 +59,18 @@ class TestMemcachedTool(ERP5TypeTestCase):
     installRealMemcachedTool(self.getPortal())
     memcached_tool = self.getPortal().portal_memcached
     #create Memcache Plugin
+    url_string = "%(hostname)s:%(port)s" % _getVolatileMemcachedServerDict()
     if getattr(memcached_tool, 'default_memcached_plugin', None) is None:
       memcached_tool.newContent(id='default_memcached_plugin',
                                 portal_type='Memcached Plugin',
                                 int_index=0,
-                                url_string='127.0.0.1:11211')
+                                url_string=url_string)
     if getattr(memcached_tool, 'memcached_plugin_with_expiration', None) is None:
       memcached_tool.newContent(id='memcached_plugin_with_expiration',
                                 portal_type='Memcached Plugin',
                                 int_index=1,
                                 expiration_time=self.expiration_time,
-                                url_string='127.0.0.1:11211')
+                                url_string=url_string)
 
     transaction.commit()
     self.tic()
