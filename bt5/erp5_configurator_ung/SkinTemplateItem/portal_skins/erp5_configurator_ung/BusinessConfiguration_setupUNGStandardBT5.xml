@@ -77,7 +77,7 @@ bt5_installation_list = (\'erp5_ingestion_mysql_innodb_catalog\',\n
                          \'erp5_jquery_sheet_editor\',\n
                          \'erp5_xinha_editor\',\n
                          \'erp5_svg_editor\',\n
-                         \'erp5_mail_reader\',\n
+                         \'erp5_email_reader\',\n
                          \'erp5_web_ung_core\',\n
                          \'erp5_web_ung_theme\',\n
                          \'erp5_web_ung_role\')\n

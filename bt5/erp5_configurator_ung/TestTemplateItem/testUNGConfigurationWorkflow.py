@@ -58,7 +58,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
                        'erp5_jquery_sheet_editor',
                        'erp5_xinha_editor',
                        'erp5_svg_editor',
-                       'erp5_mail_reader',
+                       'erp5_email_reader',
                        'erp5_web_ung_core',
                        'erp5_web_ung_theme',
                        'erp5_web_ung_role')
