@@ -971,7 +971,6 @@ class TestKMSearch(TestKMMixIn):
     kw = {"list_style": "search",
           "search_text": "Sphinx search tool page"}
     search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
-    #import pdb; pdb.set_trace()
     self.assertEqual(1, len(search_result_list))
     self.assertTrue(isinstance(search_result_list[0], TempBase))
     self.assertEqual(self.web_page.getRelativeUrl(), search_result_list[0].path)
@@ -1126,6 +1125,6 @@ class TestKMSearch(TestKMMixIn):
 
 def test_suite():
   suite = unittest.TestSuite()
-  #suite.addTest(unittest.makeSuite(TestKM))
+  suite.addTest(unittest.makeSuite(TestKM))
   suite.addTest(unittest.makeSuite(TestKMSearch))
   return suite
