@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ticket_listbox_start_date</string> </value>
+            <value> <string>ticket_listbox_delivery_stop_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Start Date</string> </value>
+                    <value> <string>Stop Date</string> </value>
                 </item>
               </dictionary>
             </value>
