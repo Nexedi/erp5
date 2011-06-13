@@ -82,7 +82,7 @@ bt5_installation_list = (\'erp5_ingestion_mysql_innodb_catalog\',\n
                          \'erp5_web_ung_theme\',\n
                          \'erp5_web_ung_role\')\n
 \n
-bt5_update_catalog = (\'erp5_ingestion_mysql_innodb_catalog\', )\n
+bt5_update_catalog = (\'erp5_ingestion_mysql_innodb_catalog\', \'erp5_email_reader\')\n
 \n
 for name in bt5_installation_list:\n
   configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
