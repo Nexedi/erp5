@@ -941,7 +941,11 @@ class TestKMSearch(TestKMMixIn):
       # add some test data
       self.web_page = portal.web_page_module.newContent(id=web_page_id,
                                                         portal_type='Web Page', 
-                                                        text_content="Sphinx search tool page")
+                                                        text_content="Sphinx search tool page",
+                                                        language='en',
+                                                        version='001',
+                                                        reference='sphinx-search-tool-page')
+      self.web_page.publish()
       self.stepTic()
 
       # reindex site
@@ -962,12 +966,12 @@ class TestKMSearch(TestKMMixIn):
     self.setupSphinx()
     portal = self.portal
     website = self.portal.web_site_module.km_test_web_site
-    
     self.changeSkin('KM')
     # in search mode we do NOT access a ZODB object
     kw = {"list_style": "search",
           "search_text": "Sphinx search tool page"}
     search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
+    #import pdb; pdb.set_trace()
     self.assertEqual(1, len(search_result_list))
     self.assertTrue(isinstance(search_result_list[0], TempBase))
     self.assertEqual(self.web_page.getRelativeUrl(), search_result_list[0].path)
@@ -1122,6 +1126,6 @@ class TestKMSearch(TestKMMixIn):
 
 def test_suite():
   suite = unittest.TestSuite()
-  suite.addTest(unittest.makeSuite(TestKM))
+  #suite.addTest(unittest.makeSuite(TestKM))
   suite.addTest(unittest.makeSuite(TestKMSearch))
   return suite
