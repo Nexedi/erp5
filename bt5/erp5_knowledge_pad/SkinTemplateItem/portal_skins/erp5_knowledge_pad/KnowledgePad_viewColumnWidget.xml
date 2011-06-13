@@ -126,7 +126,8 @@
                          tal:define="form_fields_main_prefix python: \'gadget_preference_%s_field\' %box_dom_id;">\n
 \n
                 <!-- render edit gadget preferences form -->\n
-                <span tal:replace="structure python: edit_form_object(key_prefix=form_fields_main_prefix)"/>\n
+                <div class="edit-form-content"\n
+                     tal:content="structure python: edit_form_object(key_prefix=form_fields_main_prefix)"/>\n
 \n
                 <tal:block tal:condition="not: is_asynchronous_gadget">\n
 \n
@@ -138,7 +139,10 @@
                   <button type="submit"\n
                           i18n:translate="" \n
                           i18n:domain="ui"\n
-                          tal:attributes="onclick string:submitSynchronousGadgetPreferenceForm(\'${form_fields_main_prefix}\',\'${box_relative_url}\');\n
+                          tal:attributes="onclick string:submitSynchronousGadgetPreferenceForm(\n
+                                                           \'${form_fields_main_prefix}\',\n
+                                                           \'${box_relative_url}\',\n
+                                                           \'${edit_form_id}\');\n
                                           id string: submit_button_${box_dom_id};">Save</button>\n
 \n
                 </tal:block>\n
@@ -153,7 +157,8 @@
                                    \'${view_form_id}\', \n
                                    \'${box_relative_url}\', \n
                                    \'${view_form_dom_id}\', \n
-                                   \'${form_fields_main_prefix}\');\n
+                                   \'${form_fields_main_prefix}\',\n
+                                   \'${edit_form_id}\');\n
                                  id string:submit_button_${box_dom_id};">Save</button>\n
 \n
 \n
