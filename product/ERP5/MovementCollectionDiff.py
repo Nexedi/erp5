@@ -87,7 +87,9 @@ class MovementCollectionDiff(object):
     to update an existing movement or to
     create a new movement.
     """
+    # for updatable movement, property_dict is already calculated.
     property_dict = self._property_dict_dict.get(movement)
+    # for new movement, property_dict should be calculated here.
     if property_dict is None:
       if self._updating_tester_list is not None:
         property_dict = _getPropertyDict(movement,
