@@ -61,7 +61,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # Set some variables :
     self.initDefaultVariable()
     # the cahs transfer module
-    self.cash_movement_module = self.getCashMovementModule()
+    self.cash_movement_module = self.getCashMovementNewNotEmittedModule()
     self.monetary_reception_module = self.getMonetaryReceptionModule()
     self.createManagerAndLogin()
     self.current_date = DateTime()

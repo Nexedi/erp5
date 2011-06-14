@@ -229,6 +229,9 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     return self.getPortal().counter_module
 
   def getCashMovementModule(self):
+    return self.getPortal().cash_movement_module
+
+  def getCashMovementNewNotEmittedModule(self):
     return self.getPortal().cash_movement_new_not_emitted_module
 
   def getMonetaryReceptionModule(self):
