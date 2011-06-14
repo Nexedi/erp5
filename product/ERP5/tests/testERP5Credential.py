@@ -581,6 +581,7 @@ class TestERP5Credential(ERP5TypeTestCase):
       match_obj = re.search(rawstr, line)
       if match_obj is not None:
         url = line[line.find('http:'):]
+    url = url.strip()
     self.assertNotEquals(url, None)
     response = self.publish(url)
     parameters = cgi.parse_qs(urlparse(url)[4])
@@ -589,17 +590,14 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.logout()
     # before changing, check that the user exists with 'secret' password
     self._assertUserExists('barney', 'secret')
-
     self.portal.portal_password.changeUserPassword(user_login="barney",
                                                    password="new_password",
                                                    password_confirmation="new_password",
                                                    password_key=key)
     transaction.commit()
     self.tic()
-
     # reset the cache
     self.portal.portal_caches.clearAllCache()
-
     # check we cannot login anymore with the previous password 'secret'
     self._assertUserDoesNotExists('barney', 'secret')
 
