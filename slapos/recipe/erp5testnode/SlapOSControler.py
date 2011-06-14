@@ -54,6 +54,7 @@ class SlapOSControler(object):
     stdout = open(os.path.join(
                   config['instance_root'],'.runSoftwareRelease_out'),
                   'w+')
+    stdout.write("SlapOSControler.runSoftwareRelease")
     stderr = open(os.path.join(
                   config['instance_root'],'.runSoftwareRelease_err'),
                   'w+')
