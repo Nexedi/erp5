@@ -178,24 +178,24 @@ branch = %(branch)s
                                 revision=repository_revision.split('-')[1])
               updater.checkout()
 
-          # Now prepare the installation of SlapOS
+          # Now prepare the installation of SlapOS and create instance
           slapos_controler = SlapOSControler(config,
             process_group_pid_set=process_group_pid_set)
-          stdout, stderr = getInputOutputFileList(config, "runSoftwareRelease")
-          status_dict = slapos_controler.runSoftwareRelease(config,
-            environment=config['environment'],
-            process_group_pid_set=process_group_pid_set,
-            stdout=stdout, stderr=stderr
-            )
+          for method_name in ("runSoftwareRelease", "runComputerPartition"):
+            stdout, stderr = getInputOutputFileList(config, method_name)
+            slapos_method = getattr(slapos_controler, method_name)
+            status_dict = slapos_method(config,
+              environment=config['environment'],
+              process_group_pid_set=process_group_pid_set,
+              stdout=stdout, stderr=stderr
+              )
+            if status_dict['status_code'] != 0:
+              break
           if status_dict['status_code'] != 0:
             safeRpcCall(master.reportTaskFailure,
               test_result_path, status_dict, config['test_node_title'])
             retry_software = True
             continue
-
-          # create instances, it should take some seconds only
-          slapos_controler.runComputerPartition(config,
-                  process_group_pid_set=process_group_pid_set)
 
           partition_path = os.path.join(config['instance_root'],
                                         config['partition_reference'])

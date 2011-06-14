@@ -76,9 +76,15 @@ class SlapOSControler(object):
         partition_reference='testing partition',
         partition_parameter_kw=config['instance_dict'])
     slapgrid = subprocess.Popen([config['slapgrid_partition_binary'],
-      config['slapos_config'], '-c', '-v'], close_fds=True, preexec_fn=os.setsid)
+      config['slapos_config'], '-c', '-v'],
+      stdout=stdout, stderr=stderr,
+      close_fds=True, preexec_fn=os.setsid)
     process_group_pid_set.add(slapgrid.pid)
     slapgrid.wait()
     process_group_pid_set.remove(slapgrid.pid)
-    if slapgrid.returncode != 0:
-      raise ValueError('Slapgrid instance failed')
+    status_dict = {'status_code':slapgrid.returncode,
+                    'stdout':stdout.read(),
+                    'stderr':stderr.read()}
+    stdout.close()
+    stderr.close()
+    return status_dict
