@@ -52,6 +52,7 @@
                 <string>source_payment</string>
                 <string>destination_payment</string>
                 <string>price_currency</string>
+                <string>specialise</string>
               </tuple>
             </value>
         </item>

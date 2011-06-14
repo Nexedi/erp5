@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>PackingList_buildInvoice</string> </value>
+            <value> <string>PurchasePackingList_buildInvoice</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>

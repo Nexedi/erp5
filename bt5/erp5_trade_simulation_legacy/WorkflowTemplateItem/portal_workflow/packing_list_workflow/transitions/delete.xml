@@ -20,11 +20,11 @@
         </item>
         <item>
             <key> <string>after_script_name</string> </key>
-            <value> <string>PackingList_buildInvoice</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Declares a packing list as received and creates the related accounting transaction</string> </value>
+            <value> <string>Delete a document in ERP5</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
@@ -34,11 +34,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>stop</string> </value>
+            <value> <string>delete</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string>stopped</string> </value>
+            <value> <string>deleted</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>
@@ -46,7 +46,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Receive Packing List</string> </value>
+            <value> <string>Delete</string> </value>
         </item>
         <item>
             <key> <string>trigger_type</string> </key>
