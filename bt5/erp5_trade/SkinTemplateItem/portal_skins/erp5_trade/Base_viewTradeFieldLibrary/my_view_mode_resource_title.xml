@@ -175,6 +175,10 @@
                           <string>Sales</string>
                         </tuple>
                         <tuple>
+                          <string>ERP5Site_viewInternalResourceList/listbox</string>
+                          <string>Internal</string>
+                        </tuple>
+                        <tuple>
                           <string>ERP5Site_viewPurchaseResourceList/listbox</string>
                           <string>Purchase</string>
                         </tuple>
