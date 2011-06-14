@@ -98,7 +98,7 @@ class Recipe(BaseSlapRecipe):
               partition_reference=CONFIG['partition_reference'],
               environment=dict(PATH=os.environ['PATH']),
               vcs_authentication_list=eval(self.parameter_dict.get(
-                     'vcs_authentication_list')),
+                     'vcs_authentication_list', 'None')),
             )
           ]))
 
