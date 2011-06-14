@@ -110,7 +110,7 @@
                         <string>my_int_index</string>
                         <string>my_frozen_state_list</string>
                         <string>my_successor</string>
-                        <string>my_delivery_builder</string>
+                        <string>my_delivery_builder_list</string>
                       </list>
                     </value>
                 </item>
