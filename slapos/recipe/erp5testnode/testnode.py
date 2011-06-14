@@ -55,6 +55,16 @@ def safeRpcCall(function, *args):
       time.sleep(retry)
       retry += retry >> 1
 
+def getInputOutputFileList(config, command_name)
+  stdout = open(os.path.join(
+                config['instance_root'],'.%s_out' % command_name),
+                'w+')
+  stdout.write("%s\n" command_name)
+  stderr = open(os.path.join(
+                config['instance_root'],'.%s_err' % command_name),
+                'w+')
+  return (stdout, stderr)
+
 slapos_controler = None
 
 def run(args):
@@ -171,10 +181,11 @@ branch = %(branch)s
           # Now prepare the installation of SlapOS
           slapos_controler = SlapOSControler(config,
             process_group_pid_set=process_group_pid_set)
-          # this should be always true later, but it is too slow for now
+          stdout, stderr = getInputOutputFileList(config, "runSoftwareRelease")
           status_dict = slapos_controler.runSoftwareRelease(config,
             environment=config['environment'],
             process_group_pid_set=process_group_pid_set,
+            stdout=stdout, stderr=stderr
             )
           if status_dict['status_code'] != 0:
             safeRpcCall(master.reportTaskFailure,

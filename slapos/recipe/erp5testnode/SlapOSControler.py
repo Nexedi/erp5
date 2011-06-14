@@ -46,18 +46,12 @@ class SlapOSControler(object):
  'reference': config['computer_id'],
  'software_root': config['software_root']}))
 
-  def runSoftwareRelease(self, config, environment, process_group_pid_set=None):
+  def runSoftwareRelease(self, config, environment, process_group_pid_set=None,
+                         stdout=None, stderr=None):
     print "SlapOSControler.runSoftwareRelease"
     cpu_count = os.sysconf("SC_NPROCESSORS_ONLN")
     os.putenv('MAKEFLAGS', '-j%s' % cpu_count)
     os.environ['PATH'] = environment['PATH']
-    stdout = open(os.path.join(
-                  config['instance_root'],'.runSoftwareRelease_out'),
-                  'w+')
-    stdout.write("SlapOSControler.runSoftwareRelease")
-    stderr = open(os.path.join(
-                  config['instance_root'],'.runSoftwareRelease_err'),
-                  'w+')
     slapgrid = subprocess.Popen([config['slapgrid_software_binary'], '-v', '-c',
       #'--buildout-parameter',"'-U -N' -o",
       config['slapos_config']],
