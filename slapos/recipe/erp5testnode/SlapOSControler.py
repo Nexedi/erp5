@@ -69,7 +69,9 @@ class SlapOSControler(object):
     stderr.close()
     return status_dict
 
-  def runComputerPartition(self, config, process_group_pid_set=None):
+  def runComputerPartition(self, config, environment,
+                           process_group_pid_set=None,
+                           stdout=None, stderr=None):
     print "SlapOSControler.runSoftwareRelease"
     slap = slapos.slap.slap()
     slap.registerOpenOrder().request(self.software_profile,
@@ -81,6 +83,8 @@ class SlapOSControler(object):
       close_fds=True, preexec_fn=os.setsid)
     process_group_pid_set.add(slapgrid.pid)
     slapgrid.wait()
+    stdout.seek(0)
+    stderr.seek(0)
     process_group_pid_set.remove(slapgrid.pid)
     status_dict = {'status_code':slapgrid.returncode,
                     'stdout':stdout.read(),
