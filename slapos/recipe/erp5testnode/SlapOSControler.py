@@ -48,32 +48,31 @@ class SlapOSControler(object):
 
   def runSoftwareRelease(self, config, environment, process_group_pid_set=None):
     print "SlapOSControler.runSoftwareRelease"
-    while True:
-      cpu_count = os.sysconf("SC_NPROCESSORS_ONLN")
-      os.putenv('MAKEFLAGS', '-j%s' % cpu_count)
-      os.environ['PATH'] = environment['PATH']
-      stdout = open(os.path.join(
-                    config['instance_root'],'.runSoftwareRelease_out'),
-                    'w+')
-      stderr = open(os.path.join(
-                    config['instance_root'],'.runSoftwareRelease_err'),
-                    'w+')
-      slapgrid = subprocess.Popen([config['slapgrid_software_binary'], '-v', '-c',
-        #'--buildout-parameter',"'-U -N' -o",
-        config['slapos_config']],
-        stdout=stdout, stderr=stderr,
-        close_fds=True, preexec_fn=os.setsid)
-      process_group_pid_set.add(slapgrid.pid)
-      slapgrid.wait()
-      stdout.seek(0)
-      stderr.seek(0)
-      process_group_pid_set.remove(slapgrid.pid)
-      status_dict = {'status_code':slapgrid.returncode,
-                     'stdout':stdout.read(),
-                     'stderr':stderr.read()}
-      stdout.close()
-      stderr.close()
-      return status_dict
+    cpu_count = os.sysconf("SC_NPROCESSORS_ONLN")
+    os.putenv('MAKEFLAGS', '-j%s' % cpu_count)
+    os.environ['PATH'] = environment['PATH']
+    stdout = open(os.path.join(
+                  config['instance_root'],'.runSoftwareRelease_out'),
+                  'w+')
+    stderr = open(os.path.join(
+                  config['instance_root'],'.runSoftwareRelease_err'),
+                  'w+')
+    slapgrid = subprocess.Popen([config['slapgrid_software_binary'], '-v', '-c',
+      #'--buildout-parameter',"'-U -N' -o",
+      config['slapos_config']],
+      stdout=stdout, stderr=stderr,
+      close_fds=True, preexec_fn=os.setsid)
+    process_group_pid_set.add(slapgrid.pid)
+    slapgrid.wait()
+    stdout.seek(0)
+    stderr.seek(0)
+    process_group_pid_set.remove(slapgrid.pid)
+    status_dict = {'status_code':slapgrid.returncode,
+                    'stdout':stdout.read(),
+                    'stderr':stderr.read()}
+    stdout.close()
+    stderr.close()
+    return status_dict
 
   def runComputerPartition(self, config, process_group_pid_set=None):
     print "SlapOSControler.runSoftwareRelease"
