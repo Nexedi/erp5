@@ -1,3 +1,6 @@
+2011-06-15 yusei
+* production order movement may not have specialise category value.
+
 2011-06-07 yusei
 * Stop displaying non-dated production order in planning box. It is useless.
 

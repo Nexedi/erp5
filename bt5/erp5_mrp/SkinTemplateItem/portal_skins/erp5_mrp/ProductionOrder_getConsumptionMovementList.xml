@@ -81,7 +81,13 @@ for movement in context.getMovementList():\n
   movement_quantity = movement.getQuantity()\n
   movement_destination = movement.getDestination()\n
 \n
-  for material in movement.getSpecialiseValue().objectValues():\n
+  transformation = movement.getSpecialiseValue()\n
+  if transformation is not None:\n
+    transformation_line_list = transformation.objectValues()\n
+  else:\n
+    transformation_line_list = ()\n
+\n
+  for material in transformation_line_list:\n
     material_resource_uid = material.getResourceUid()\n
     if not material_resource_uid:\n
       continue\n
