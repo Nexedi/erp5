@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.mixin.solver import SolverMixin
 from Products.ERP5.mixin.configurable import ConfigurableMixin
-from Products.ERP5.MovementCollectionDiff import _getPropertyDict
+from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
   """Target solver that split the prevision based on quantity.
@@ -91,9 +91,7 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           split_index += 1
           new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
         # Copy at same level
-        rule = applied_rule.getSpecialiseValue()
-        kw = _getPropertyDict(simulation_movement,
-                  updating_tester_list=rule._getUpdatingTesterList())
+        kw = _getPropertyAndCategoryList(simulation_movement)
         kw.update({'portal_type':simulation_movement.getPortalType(),
                    'id':new_id,
                    'delivery':None,

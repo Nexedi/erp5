@@ -212,10 +212,3 @@ class EquivalenceTesterMixin:
     tested_property = self.getTestedProperty()
     return {tested_property: self._getTestedPropertyValue(prevision_movement,
                                                           tested_property)}
-
-  def getExpandablePropertyDict(self, input_movement):
-    """
-    By default, the result of getUpdatableMovement is doing exactly what
-    we need
-    """
-    return self.getUpdatablePropertyDict(input_movement, None)

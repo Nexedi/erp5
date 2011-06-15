@@ -41,12 +41,11 @@ class MovementCollectionDiff(object):
   # Declarative interfaces
   zope.interface.implements(interfaces.IMovementCollectionDiff,)
 
-  def __init__(self, updating_tester_list=None):
+  def __init__(self):
     self._deletable_movement_list = []
     self._new_movement_list = []
     self._updatable_movement_list = []
     self._property_dict_dict = {}
-    self._updating_tester_list = updating_tester_list
 
   def getDeletableMovementList(self):
     """
@@ -91,13 +90,11 @@ class MovementCollectionDiff(object):
     property_dict = self._property_dict_dict.get(movement)
     # for new movement, property_dict should be calculated here.
     if property_dict is None:
-      if self._updating_tester_list is not None:
-        property_dict = _getPropertyDict(movement,
-              updating_tester_list=self._updating_tester_list)
-      else:
-        property_dict = _getPropertyList(movement)
-        property_dict.update(_getCategoryList(movement, acquire=False))
-    return property_dict
+      property_dict = _getPropertyList(movement)
+      property_dict.update(_getCategoryList(movement, acquire=False))
+      return property_dict
+    else:
+      return property_dict
 
   def addUpdatableMovement(self, movement, property_dict):
     """
@@ -116,17 +113,6 @@ def _getPropertyAndCategoryList(document):
   property_dict = {}
   property_dict.update(_getPropertyList(document))
   property_dict.update(_getCategoryList(document))
-  return property_dict
-
-def _getPropertyDict(document, updating_tester_list=None):
-  assert updating_tester_list is not None
-  property_dict = {}
-  for tester in updating_tester_list:
-    property_dict.update(tester.getExpandablePropertyDict(document))
-  # causality and trade phase are controled by business process, not rules,
-  # so they are not availables as part of updating tester list
-  for property_id in ("causality", "trade_phase"):
-    property_dict.update(**{property_id: document.getPropertyList(property_id)})
   return property_dict
 
 def _getPropertyList(document, acquire=True):

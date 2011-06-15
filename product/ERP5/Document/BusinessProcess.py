@@ -701,17 +701,9 @@ class BusinessProcess(Path, XMLObject):
       movement._edit(**kw)
       business_link = self.getBusinessLinkValueList(trade_phase=trade_phase,
                                                     context=movement)
-      # we have to exclude trade model path and business link in causality list
-      # because original amount might come from another generatedAmountList
-      # calculation
-      causality_list = [trade_model_path.getRelativeUrl()] \
-          + [x.getRelativeUrl() for x in business_link]
-      excluded_portal_type_set = set(self.getPortalTradeModelPathTypeList()
-                                     + self.getPortalBusinessLinkTypeList())
-      for causality_value in movement.getCausalityValueList():
-        if not(causality_value.getPortalType() in excluded_portal_type_set):
-          causality_list.append(causality_value.getRelativeUrl())
-      movement._setCausalityList(causality_list)
+      movement._setCausalityList([trade_model_path.getRelativeUrl()]
+        + [x.getRelativeUrl() for x in business_link]
+        + movement.getCausalityList())
       result.append(movement)
 
     if not explanation.getSpecialiseValue().getSameTotalQuantity():

@@ -51,8 +51,7 @@ class MovementCollectionUpdaterMixin:
 
   # Implementation of IMovementCollectionUpdater
   def getMovementCollectionDiff(self, context, rounding=False,
-                                movement_generator=None,
-                                updating_tester_list=None):
+                                movement_generator=None):
     """
     Return a IMovementCollectionDiff by comparing movements
     the list of movements of context and the list of movements
@@ -64,8 +63,6 @@ class MovementCollectionUpdaterMixin:
     movement_generator -- an optional IMovementGenerator
                           (if not specified, a context implicit
                           IMovementGenerator will be used)
-
-    updating_tester_list -- a list of testers used to build updatable dicts
     """
     # We suppose here that we have an IMovementCollection in hand
     decision_movement_list = context.getMovementList()
@@ -141,8 +138,7 @@ class MovementCollectionUpdaterMixin:
         prevision_to_decision_map.append((prevision_movement, map_list))
 
     # Third, time to create the diff
-    movement_collection_diff = MovementCollectionDiff(
-                                   updating_tester_list=updating_tester_list)
+    movement_collection_diff = MovementCollectionDiff()
     for (prevision_movement, decision_movement_list) in prevision_to_decision_map:
       self._extendMovementCollectionDiff(movement_collection_diff, prevision_movement,
                                          decision_movement_list)
@@ -150,8 +146,7 @@ class MovementCollectionUpdaterMixin:
     return movement_collection_diff
 
   def updateMovementCollection(self, context, rounding=False,
-                               movement_generator=None,
-                               updating_tester_list=None):
+                               movement_generator=None):
     """
     Invoke getMovementCollectionDiff and update context with
     the resulting IMovementCollectionDiff.
@@ -162,12 +157,9 @@ class MovementCollectionUpdaterMixin:
     movement_generator -- an optional IMovementGenerator
                           (if not specified, a context implicit
                           IMovementGenerator will be used)
-
-    updating_tester_list -- a list of testers used to build updatable dicts
     """
     movement_diff = self.getMovementCollectionDiff(context,
-                 rounding=rounding, movement_generator=movement_generator,
-                 updating_tester_list=updating_tester_list)
+                 rounding=rounding, movement_generator=movement_generator)
 
     # Apply Diff
     for movement in movement_diff.getDeletableMovementList():

@@ -31,7 +31,6 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, interfaces
-from Products.ERP5Type.Cache import caching_instance_method
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
@@ -206,9 +205,7 @@ class RuleMixin(Predicate):
     # Update movements
     #  NOTE-JPS: it is OK to make rounding a standard parameter of rules
     #            although rounding in simulation is not recommended at all
-    self.updateMovementCollection(applied_rule,
-                    movement_generator=self._getMovementGenerator(applied_rule),
-                    updating_tester_list=self._getUpdatingTesterList())
+    self.updateMovementCollection(applied_rule, movement_generator=self._getMovementGenerator(applied_rule))
     # And forward expand
     for movement in applied_rule.getMovementList():
       movement.expand(**kw)
