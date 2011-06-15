@@ -142,6 +142,9 @@ class Subversion(WorkingCopy):
   def getRemoteComment(self):
     return 'r%s' % self.info()['revision']
 
+  def export(self, path, url):
+    return self._getClient().export(path, url)
+
   def log(self, path):
     """return log of a file or dir
     """
