@@ -90,9 +90,7 @@ class MovementCollectionDiff(object):
     property_dict = self._property_dict_dict.get(movement)
     # for new movement, property_dict should be calculated here.
     if property_dict is None:
-      property_dict = _getPropertyList(movement)
-      property_dict.update(_getCategoryList(movement, acquire=False))
-      return property_dict
+      return _getPropertyAndCategoryList(movement)
     else:
       return property_dict
 
