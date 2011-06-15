@@ -79,7 +79,6 @@ class DownloadableMixin:
       return self.view()
     if format is _MARKER:
       format = None
-    self._checkConversionFormatPermission(format, **kw)
     if not self.checkConversionFormatPermission(format, **kw):
       raise Forbidden('You are not allowed to get this document in this ' \
                       'format')
