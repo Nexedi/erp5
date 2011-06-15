@@ -32,6 +32,7 @@ from Products.ERP5Type.Utils import fill_args_from_request
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
 import warnings
+from zExceptions import Forbidden
 
 _MARKER = []
 
@@ -79,6 +80,9 @@ class DownloadableMixin:
     if format is _MARKER:
       format = None
     self._checkConversionFormatPermission(format, **kw)
+    if not self.checkConversionFormatPermission(format, **kw):
+      raise Forbidden('You are not allowed to get this document in this ' \
+                      'format')
     mime, data = self.convert(format, **kw)
     output_format = None
     if not format:
