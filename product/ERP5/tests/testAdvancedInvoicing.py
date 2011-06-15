@@ -398,15 +398,17 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
   def afterSetUp(self):
     super(TestAdvancedSaleInvoice, self).afterSetUp()
     # register builders for advanced invoicing.
-    business_process = self.portal.business_process_module.erp5_default_business_process
-    business_process.invoice.setDeliveryBuilderList([
-      'portal_deliveries/advanced_purchase_invoice_builder',
-      'portal_deliveries/advanced_sale_invoice_builder',
-      ])
-    business_process.account.setDeliveryBuilderList([
-      'portal_deliveries/advanced_purchase_invoice_transaction_builder',
-      'portal_deliveries/advanced_sale_invoice_transaction_builder',
-      ])
+    business_process = self.portal.unrestrictedTraverse(
+      'business_process_module/erp5_default_business_process', None)
+    if business_process is not None:
+      business_process.invoice.setDeliveryBuilderList([
+          'portal_deliveries/advanced_purchase_invoice_builder',
+          'portal_deliveries/advanced_sale_invoice_builder',
+          ])
+      business_process.account.setDeliveryBuilderList([
+          'portal_deliveries/advanced_purchase_invoice_transaction_builder',
+          'portal_deliveries/advanced_sale_invoice_transaction_builder',
+          ])
     # This is quite ugly, we should use late import/export functions of generators
     self.portal.erp5_sql_transactionless_connection.manage_test(
      "delete from portal_ids where \
