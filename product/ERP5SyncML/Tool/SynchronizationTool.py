@@ -1110,8 +1110,13 @@ class SynchronizationTool(BaseTool):
     subscription.initLastMessageId()
 
     # save the actual user to use it in all the session:
-    user = getSecurityManager().getUser()
-    subscription._edit(zope_user=user.getId())
+    user_id = getSecurityManager().getUser().getId()
+    user_folder = self.getPortalObject().acl_users
+    user = user_folder.getUserById(user_id)
+    if user is None:
+      raise ValueError, "Current logged user %s cannot be found in user folder, \
+                 synchronization cannot work with this kind of user"
+    subscription._edit(zope_user=user_id)
     if subscription.getAuthenticationState() != 'logged_in':
       subscription.login()
 
