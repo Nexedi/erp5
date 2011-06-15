@@ -445,8 +445,8 @@ class TemplateTool (BaseTool):
       svn_checkout_tmp_dir = mkdtemp()
       svn_checkout_dir = os.path.join(svn_checkout_tmp_dir, 'bt')
       try:
-        import pysvn
-        pysvn.Client().export(url, svn_checkout_dir)
+        from Products.ERP5VCS.WorkingCopy import getVcsTool
+        getVcsTool('svn').__of__(self).export(url, svn_checkout_dir)
         return self._download_local(svn_checkout_dir, bt_id)
       finally:
         shutil.rmtree(svn_checkout_tmp_dir)
