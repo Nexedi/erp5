@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Approval Requested</string> </value>
+            <value> <string>Submitted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
