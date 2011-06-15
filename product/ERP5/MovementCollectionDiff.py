@@ -118,50 +118,31 @@ def _getPropertyAndCategoryList(document):
 def _getPropertyList(document, acquire=True):
   property_map = document.getPropertyMap()
   bad_property_list = ['id', 'uid', 'categories_list', 'last_id',]
-  # we don't want acquired properties without acquisition_mask_value
-  for x in property_map:
-    if x.has_key('acquisition_base_category') and not x.get('acquisition_mask_value', 0):
-      bad_property_list.append(x['id'])
-
-  default_value_dict = dict([(x['id'], x.get('default', None)) \
-                             for x in property_map])
+  document_dict = document.__dict__
+  property_dict = {}
   getPropertyList = document.getPropertyList
   getProperty = document.getProperty
-  getter_list_type_dict = {
-    True:getPropertyList,
-    False:getProperty
-    }
-  getter_dict = dict([(x['id'],
-                       getter_list_type_dict[x['type'] in list_types and not x['id'].endswith('_list')]) \
-                      for x in property_map])
-
-  def filter_property_func(x):
-    key, value = x
-    if key in bad_property_list:
-      return False
-    default = default_value_dict[key]
-    if value == default:
-      return False
-    if not acquire and not document.hasProperty(key):
-      return False
-    if isinstance(value, (list, tuple)) and \
-         isinstance(default, (list, tuple)) and \
-         tuple(value) == tuple(default):
-      return False
-    return True
-
-  return dict(filter(filter_property_func,
-                     [(x, getter_dict[x](x)) for x in \
-                      document.getPropertyIdList()]))
+  for x in property_map:
+    property_id = x['id']
+    if property_id in bad_property_list:
+      continue
+    # we care already stored property only
+    elif (x['storage_id'] or property_id) not in document_dict:
+      continue
+    # we don't want acquired properties without acquisition_mask_value
+    elif x.has_key('acquisition_base_category') and not x.get('acquisition_mask_value', 0):
+      continue
+    elif x['type'] in list_types and not property_id.endswith('_list'):
+      property_dict[property_id] = getPropertyList(property_id)
+    else:
+      property_dict[property_id] = getProperty(property_id)
+  return property_dict
 
 def _getCategoryList(document, acquire=True):
   bad_category_list = ['solver', ]
+  # we care already stored category only
+  document_category_set = set([x.split('/',1)[0] for x in \
+                                 document.getCategoryList()])
   getPropertyList = document.getPropertyList
-  def filter_category_func(x):
-    return len(x[1]) != 0 and x[0] not in bad_category_list and \
-           (acquire or document.hasProperty(x[0]))
-
-  return dict(filter(filter_category_func,
-                     [(x, getPropertyList(x)) for x in \
-                      document.getBaseCategoryList()]))
-    
+  return dict([(x, getPropertyList(x)) for x in document_category_set \
+                 if x not in bad_category_list])
