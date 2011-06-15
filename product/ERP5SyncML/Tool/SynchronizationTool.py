@@ -1115,7 +1115,7 @@ class SynchronizationTool(BaseTool):
     user = user_folder.getUserById(user_id)
     if user is None:
       raise ValueError, "Current logged user %s cannot be found in user folder, \
-                 synchronization cannot work with this kind of user"
+                 synchronization cannot work with this kind of user" %(user_id,)
     subscription._edit(zope_user=user_id)
     if subscription.getAuthenticationState() != 'logged_in':
       subscription.login()
