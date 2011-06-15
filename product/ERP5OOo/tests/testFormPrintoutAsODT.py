@@ -1161,13 +1161,13 @@ return []
     printout = foo_printout(REQUEST=self.portal.REQUEST)
     #test_output = open("/tmp/test_99_OOoConversion.pdf", "w")
     #test_output.write(printout.data)
-    self.assertEqual('application/pdf', guessMime(printout.data))
+    self.assertEqual('application/pdf', guessMime(printout))
 
     self.portal.REQUEST.set('format', 'doc')
     printout = foo_printout(REQUEST=self.portal.REQUEST)
     #test_output = open("/tmp/test_99_OOoConversion.doc", "w")
     #test_output.write(printout.data)
-    self.assertEqual('application/msword', guessMime(printout.data))
+    self.assertEqual('application/msword', guessMime(printout))
 
   def test_09_FieldReplacement(self, validate=False):
     """test field in ODF Documents"""
