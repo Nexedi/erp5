@@ -698,7 +698,7 @@ class BusinessProcess(Path, XMLObject):
       except ValueError:
         pass
       kw.update(update_property_dict)
-      movement._edit(**kw)
+      movement._edit(force_update=True, **kw)
       business_link = self.getBusinessLinkValueList(trade_phase=trade_phase,
                                                     context=movement)
       movement._setCausalityList([trade_model_path.getRelativeUrl()]
