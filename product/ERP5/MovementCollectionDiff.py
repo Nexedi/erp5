@@ -125,7 +125,7 @@ def _getPropertyList(document, acquire=True):
     if property_id in bad_property_list:
       continue
     # we care already stored property only
-    elif (x['storage_id'] or property_id) not in document_dict:
+    elif (x.get('storage_id') or property_id) not in document_dict:
       continue
     # we don't want acquired properties without acquisition_mask_value
     elif x.has_key('acquisition_base_category') and not x.get('acquisition_mask_value', 0):
