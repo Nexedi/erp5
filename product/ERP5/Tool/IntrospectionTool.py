@@ -71,15 +71,16 @@ class IntrospectionTool(LogMixin, BaseTool):
       Returns menu items for a given user
     """
     portal = self.getPortalObject()
-    is_portal_manager = getToolByName(portal, 
-      'portal_membership').checkPermission(Permissions.ManagePortal, self)
+    is_portal_manager = portal.portal_membership.checkPermission(\
+      Permissions.ManagePortal, self)
+
     downgrade_authenticated_user = user_name is not _MARKER and is_portal_manager
     if downgrade_authenticated_user:
       # downgrade to desired user
       original_security_manager = _setSuperSecurityManager(self, user_name)
 
     # call the method implementing it
-    erp5_menu_dict = getToolByName(portal, 'portal_actions').listFilteredActionsFor(portal)
+    erp5_menu_dict = portal.portal_actions.listFilteredActionsFor(portal)
 
     if downgrade_authenticated_user:
       # restore original Security Manager
@@ -99,8 +100,9 @@ class IntrospectionTool(LogMixin, BaseTool):
       Returns module items for a given user
     """
     portal = self.getPortalObject()
-    is_portal_manager = getToolByName(portal, 
-      'portal_membership').checkPermission(Permissions.ManagePortal, self)
+    is_portal_manager = portal.portal_membership.checkPermission(
+      Permissions.ManagePortal, self)
+
     downgrade_authenticated_user = user_name is not _MARKER and is_portal_manager
     if downgrade_authenticated_user:
       # downgrade to desired user
