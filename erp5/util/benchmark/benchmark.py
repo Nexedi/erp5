@@ -39,7 +39,8 @@ class ArgumentType(object):
     return path
 
   @classmethod
-  def objectFromModule(cls, module_name, object_name=None, callable_object=False):
+  def objectFromModule(cls, module_name, object_name=None,
+                       callable_object=False):
     if module_name.endswith('.py'):
       module_name = module_name[:-3]
 
@@ -229,7 +230,7 @@ from erp5.utils.test_browser.browser import Browser
 
 class BenchmarkProcess(multiprocessing.Process):
   def __init__(self, exit_msg_queue, nb_users, user_index,
-               argument_namespace, *args, **kwargs):
+               argument_namespace, publish_method, *args, **kwargs):
     self._exit_msg_queue = exit_msg_queue
     self._nb_users = nb_users
     self._user_index = user_index
@@ -245,6 +246,7 @@ class BenchmarkProcess(multiprocessing.Process):
 
     self._current_repeat = 1
     self._current_result = BenchmarkResult()
+    self._publish_method = publish_method
 
     super(BenchmarkProcess, self).__init__(*args, **kwargs)
 
@@ -348,6 +350,9 @@ class BenchmarkProcess(multiprocessing.Process):
           self.runBenchmarkSuiteList()
           self._current_repeat += 1
 
+          if self._current_repeat == 5 and self._publish_method:
+            self._publish_method(self._result_filename, result_file.tell())
+
       except StopIteration, e:
         exit_msg = str(e)
         exit_status = 1
@@ -356,6 +361,10 @@ class BenchmarkProcess(multiprocessing.Process):
         self._logger.error(traceback.format_exc())
         exit_msg = "An error occured, see: %s" % self._log_filename
         exit_status = 2
+
+      else:
+        if self._publish_method:
+          self._publish_method(self._result_filename, result_file.tell())
 
     self._exit_msg_queue.put(exit_msg)
     sys.exit(exit_status)

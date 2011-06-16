@@ -33,7 +33,7 @@ import os
 
 from benchmark import ArgumentType
 
-def parseArguments():
+def parseArguments(argv):
   parser = argparse.ArgumentParser(description='Run ERP5 benchmarking suites.')
 
   # Optional arguments
@@ -105,7 +105,7 @@ def parseArguments():
                       metavar='BENCHMARK_SUITES',
                       help='Benchmark suite modules')
 
-  namespace = parser.parse_args()
+  namespace = parser.parse_args(argv)
 
   namespace.user_tuple = ArgumentType.objectFromModule(namespace.user_info_filename,
                                                        object_name='user_tuple')
@@ -130,13 +130,14 @@ import multiprocessing
 
 from benchmark import BenchmarkProcess
 
-def runConstantBenchmark(argument_namespace, nb_users):
+def runConstantBenchmark(argument_namespace, nb_users, publish_method):
   process_list = []
 
   exit_msg_queue = multiprocessing.Queue(nb_users)
 
   for user_index in range(nb_users):
-    process = BenchmarkProcess(exit_msg_queue, nb_users, user_index, argument_namespace)
+    process = BenchmarkProcess(exit_msg_queue, nb_users, user_index, argument_namespace,
+                               publish_method)
     process_list.append(process)
 
   for process in process_list:
@@ -171,13 +172,13 @@ def runConstantBenchmark(argument_namespace, nb_users):
 
     sys.exit(1)
 
-def runBenchmark():
-  argument_namespace = parseArguments()
+def runBenchmark(publish_method=None, argv=None):
+  argument_namespace = parseArguments(argv)
 
   if isinstance(argument_namespace.users, tuple):
     nb_users, max_users = argument_namespace.users
     while True:
-      runConstantBenchmark(argument_namespace, nb_users)
+      runConstantBenchmark(argument_namespace, nb_users, publish_method)
 
       if nb_users == max_users:
         break
@@ -186,7 +187,20 @@ def runBenchmark():
                      max_users)
 
   else:
-    runConstantBenchmark(argument_namespace, argument_namespace.users)
+    runConstantBenchmark(argument_namespace, argument_namespace.users,
+                         publish_method)
+
+from slapos.tool.nosqltester import NoSQLTester
+
+class BenchmarkTester(NoSQLTester):
+  def run_tester(self):
+    runBenchmark(self.send_result_availability_notification,
+                 self.params['argv'])
+
+from slapos.tool.nosqltester import main
+
+def runTester():
+  main(klass=BenchmarkTester)
 
 if __name__ == '__main__':
   runBenchmark()
