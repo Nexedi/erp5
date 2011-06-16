@@ -50,35 +50,64 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\']\n
-delivery_path = delivery.getPath()\n
-path_and_method_id = (delivery_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-expand_tag = delivery_path + \'_expand\'\n
-tag = delivery_path + \'_updateAppliedRule\'\n
+            <value> <string>delivery = sci[\'object\']\n
+delivery_portal_type = delivery.getPortalType()\n
+portal_deliveries = sci.getPortal().portal_deliveries\n
 \n
-priority = 3\n
-\n
-activate_kw = { \n
-  \'tag\': expand_tag,\n
-  \'priority\': priority,\n
+builder_by_portal_type = {\n
+  \'Sale Invoice Transaction\':\n
+      \'sale_invoice_transaction_trade_model_builder\',\n
+  \'Purchase Invoice Transaction\':\n
+      \'purchase_invoice_transaction_trade_model_builder\',\n
 }\n
-delivery.activate(\n
-    after_path_and_method_id=path_and_method_id,\n
-    after_tag=expand_tag,\n
-    tag=tag,\n
-    priority=priority,\n
-    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 \n
-delivery.activate(after_tag=(tag, expand_tag)).Delivery_buildOnComposedDocument()\n
+if delivery_portal_type not in builder_by_portal_type:\n
+  return \n
+\n
+builder = getattr(portal_deliveries,\n
+                  builder_by_portal_type[delivery_portal_type],\n
+                  None)\n
+\n
+path = delivery.getPath()\n
+tag = \'%s_updateAppliedRule\' % path\n
+expand_tag = \'%s_expand\' % path\n
+build_tag = \'invoice_transaction_build_trade_model_%s\' % delivery.getRelativeUrl()\n
+build_accounting_tag = \'invoice_transaction_build_accounting_%s\' % delivery.getRelativeUrl()\n
+\n
+delivery.activate(tag=tag, after_tag=expand_tag).Delivery_updateAppliedRule(activate_kw=dict(tag=expand_tag))\n
+\n
+if builder is not None:\n
+  explanation_uid_list = [delivery.getUid(), ]\n
+  packing_list = delivery.getCausalityValue(\n
+                             portal_type=(\'Sale Packing List\',\n
+                                          \'Purchase Packing List\'))\n
+  if packing_list is not None:\n
+    explanation_uid_list.append(packing_list.getUid())\n
+    order = packing_list.getCausalityValue(\n
+                             portal_type=(\'Sale Order\',\n
+                                          \'Purchase Order\'))\n
+    if order is not None:\n
+      explanation_uid_list.append(order.getUid())\n
+\n
+  builder.activate(\n
+      activity=\'SQLQueue\',\n
+      after_tag=(tag, expand_tag),\n
+      tag=build_tag,\n
+      activate_kw=dict(tag=build_tag)).build(activate_kw=dict(tag=build_tag),\n
+                                             explanation_uid=explanation_uid_list)\n
+\n
+  # set the object in building state.\n
+  delivery.startBuilding()\n
+  delivery.activate(after_tag=(build_tag, build_accounting_tag)).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>sci</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_Build</string> </value>
+            <value> <string>buildTradeModelLineList</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""Validate Transaction Lines for source and destination section.\n
+\n
+XXX why proxy role ???\n
+"""\n
+\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import translateString\n
+\n
+transaction = state_change[\'object\']\n
+portal = transaction.getPortalObject()\n
+bank_account_portal_type = portal.getPortalPaymentNodeTypeList()\n
+section_portal_type_list = [\'Person\', \'Organisation\']\n
+invalid_state_list = [\'invalidated\', \'deleted\']\n
+\n
+# first of all, validate the transaction itself\n
+container.validateTransaction(state_change)\n
+\n
+\n
+# Check that all lines uses open accounts, and doesn\'t use invalid third\n
+# parties or bank accounts\n
+for line in transaction.contentValues(filter=dict(\n
+       portal_type=transaction.getPortalAccountingMovementTypeList())):\n
+\n
+  for account, third_party, bank_account in (\n
+    ( line.getSourceValue(portal_type=\'Account\'),\n
+      line.getDestinationSectionValue(portal_type=section_portal_type_list),\n
+      line.getSourcePaymentValue(portal_type=bank_account_portal_type),),\n
+    ( line.getDestinationValue(portal_type=\'Account\'),\n
+      line.getSourceSectionValue(portal_type=section_portal_type_list),\n
+      line.getDestinationPaymentValue(portal_type=bank_account_portal_type),),\n
+    ):\n
+\n
+    if account is not None and account.getValidationState() != \'validated\':\n
+      raise ValidationFailed, translateString(\n
+          "Account ${account_title} is not validated.",\n
+           mapping=dict(account_title=unicode(\n
+              account.Account_getFormattedTitle(), \'utf8\')))\n
+      \n
+    if third_party is not None and\\\n
+        third_party.getValidationState() in invalid_state_list:\n
+      raise ValidationFailed, translateString(\n
+          "Third party ${third_party_name} is invalid.",\n
+           mapping=dict(third_party_name=unicode(\n
+                      third_party.getTitle(), \'utf8\')))\n
+      \n
+    if bank_account is not None:\n
+      if bank_account.getValidationState() in invalid_state_list:\n
+        raise ValidationFailed, translateString(\n
+            "Bank Account ${bank_account_reference} is invalid.",\n
+             mapping=dict(bank_account_reference=unicode(\n
+                            bank_account.getReference(), \'utf8\')))\n
+      \n
+      if account is not None:\n
+        # also check that currencies are consistent if we use this quantity for\n
+        # accounting.\n
+        bank_account_currency = bank_account.getProperty(\'price_currency\')\n
+        if bank_account_currency is not None and \\\n
+              bank_account_currency != line.getResource():\n
+          raise ValidationFailed, translateString(\n
+            "Bank Account ${bank_account_reference} "\n
+            "uses ${bank_account_currency} as default currency.",\n
+            mapping=dict(bank_account_reference=unicode(bank_account.getReference(), \'utf8\'),\n
+                         bank_account_currency=unicode(bank_account.getPriceCurrencyReference(), \'utf8\')))\n
+\n
+  source_currency = None\n
+  source_section = line.getSourceSectionValue()\n
+  if source_section is not None:\n
+    source_currency = source_section.getProperty(\'price_currency\')\n
+\n
+  if source_currency == line.getResource():\n
+    if ((line.getSourceCredit() !=\n
+         line.getSourceInventoriatedTotalAssetCredit()) or (\n
+         line.getSourceDebit() !=\n
+         line.getSourceInventoriatedTotalAssetDebit())):\n
+      raise ValidationFailed(translateString(\n
+              "Source conversion should not be set."))\n
+\n
+  destination_currency = None\n
+  destination_section = line.getDestinationSectionValue()\n
+  if destination_section is not None:\n
+    destination_currency = destination_section.getProperty(\'price_currency\')\n
+\n
+  if destination_currency == line.getResource():\n
+    if ((line.getDestinationCredit() !=\n
+         line.getDestinationInventoriatedTotalAssetCredit()) or (\n
+         line.getDestinationDebit() !=\n
+         line.getDestinationInventoriatedTotalAssetDebit())):\n
+      raise ValidationFailed(translateString(\n
+              "Destination conversion should not be set."))\n
+\n
+# Delete empty lines\n
+transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateTransactionLines</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

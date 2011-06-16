@@ -50,35 +50,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>delivery = state_change[\'object\']\n
-delivery_path = delivery.getPath()\n
-path_and_method_id = (delivery_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-expand_tag = delivery_path + \'_expand\'\n
-tag = delivery_path + \'_updateAppliedRule\'\n
+            <value> <string>portal = sci.getPortal()\n
 \n
-priority = 3\n
+# if we allow grouping with different quantities, we cannot group here\n
+# (because the script will group everything)\n
+if portal.portal_preferences.getPreference(\n
+               \'preferred_grouping_with_different_quantities\', 0):\n
+  return\n
 \n
-activate_kw = { \n
-  \'tag\': expand_tag,\n
-  \'priority\': priority,\n
-}\n
-delivery.activate(\n
-    after_path_and_method_id=path_and_method_id,\n
-    after_tag=expand_tag,\n
-    tag=tag,\n
-    priority=priority,\n
-    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
-\n
-delivery.activate(after_tag=(tag, expand_tag)).Delivery_buildOnComposedDocument()\n
+sci[\'object\'].AccountingTransaction_guessGroupedLines()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string>sci</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Delivery_Build</string> </value>
+            <value> <string>guessGroupingReference</string> </value>
         </item>
       </dictionary>
     </pickle>

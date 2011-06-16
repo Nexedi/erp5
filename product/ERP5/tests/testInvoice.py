@@ -1034,14 +1034,17 @@ class TestInvoiceMixin(TestPackingListMixin):
       self.tic()
     except RuntimeError, exc:
       invoice = sequence.get('invoice')
-      it_builder = self.portal.portal_deliveries.sale_invoice_transaction_builder
       # check which activities are failing
       self.assertTrue(str(exc).startswith('tic is looping forever.'),
           '%s does not start with "tic is looping forever."' % str(exc))
       msg_list = ['/'.join(x.object_path) for x in
           self.getActivityTool().getMessageList()]
-      self.assertTrue(it_builder.getPath() in msg_list, '%s in %s' %
-          (it_builder.getPath(), msg_list))
+      self.assertTrue(invoice.getPath() in msg_list, '%s in %s' %
+          (invoice.getPath(), msg_list))
+      method_id_list = [x.method_id for x in
+          self.getActivityTool().getMessageList()]
+      self.assertTrue('Delivery_buildOnComposedDocument' in method_id_list, '%s in %s' %
+          ('Delivery_buildOnComposedDocument', method_id_list))
       # flush failing activities
       activity_tool = self.getActivityTool()
       activity_tool.manageClearActivities(keep=0)
