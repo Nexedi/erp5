@@ -44,7 +44,12 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type import tarfile
 from cgi import escape
 
+import logging
+
 _MARKER = []
+
+event_log = logging.getLogger()
+access_log = logging.getLogger("access")
 
 class IntrospectionTool(LogMixin, BaseTool):
   """
@@ -161,34 +166,18 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     return ''
 
-  security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
-  def getAccessLog(self, compressed=1, REQUEST=None):
-    """
-      Get the Access Log.
-    """
-    if REQUEST is not None:
-      response = REQUEST.RESPONSE
-    else:
-      return "FAILED"
-
-    return self._getLocalFile(REQUEST, response, 
-                               file_path='log/Z2.log', 
-                               compressed=compressed) 
-
-  security.declareProtected(Permissions.ManagePortal, 'getEventLog')
-  def getEventLog(self, compressed=1, REQUEST=None):
+  def __getEventLogPath(self):
     """
       Get the Event Log.
     """
-    if REQUEST is not None:
-      response = REQUEST.RESPONSE
-    else:
-      return "FAILED"
+    return event_log.handlers[0].baseFilename
 
-    return self._getLocalFile(REQUEST, response,
-                               file_path='log/event.log',
-                               compressed=compressed)
 
+  def __getAccessLogPath(self):
+    """
+      Get the Event Log.
+    """
+    return access_log.handlers[0].baseFilename
 
   def _tailFile(self, file_name, line_number=10):
     """
@@ -232,10 +221,44 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     Tail the Event Log.
     """
-    return escape(self._tailFile('log/event.log', 50))
+    return escape(self._tailFile(self.__getEventLogPath(), 50))
 
+  security.declareProtected(Permissions.ManagePortal, 'tailAccessLog')
+  def tailAccessLog(self):
+    """
+    Tail the Event Log.
+    """
+    return escape(self._tailFile(self.__getAccessLogPath(), 50))
 
   security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
+  def getAccessLog(self, compressed=1, REQUEST=None):
+    """
+      Get the Access Log.
+    """
+    if REQUEST is not None:
+      response = REQUEST.RESPONSE
+    else:
+      return "FAILED"
+
+    return self._getLocalFile(REQUEST, response,
+                               file_path=self.__getAccessLogPath(),
+                               compressed=compressed)
+
+  security.declareProtected(Permissions.ManagePortal, 'getEventLog')
+  def getEventLog(self, compressed=1, REQUEST=None):
+    """
+      Get the Event Log.
+    """
+    if REQUEST is not None:
+      response = REQUEST.RESPONSE
+    else:
+      return "FAILED"
+
+    return self._getLocalFile(REQUEST, response,
+                               file_path=self.__getEventLogPath(),
+                               compressed=compressed)
+
+  security.declareProtected(Permissions.ManagePortal, 'getDataFs')
   def getDataFs(self,  compressed=1, REQUEST=None):
     """
       Get the Data.fs.
