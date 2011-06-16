@@ -50,7 +50,7 @@
             <value>
               <tuple>
                 <string>trade_phase/default/accounting</string>
-                <string>trade_date/trade_phase/default/accounting</string>
+                <string>trade_date/trade_phase/default/invoicing</string>
               </tuple>
             </value>
         </item>
@@ -85,7 +85,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>13</string> </value>
+            <value> <string>account_path</string> </value>
         </item>
         <item>
             <key> <string>int_index</string> </key>
@@ -126,14 +126,6 @@
             <key> <string>string_index</string> </key>
             <value>
               <none/>
-            </value>
-        </item>
-        <item>
-            <key> <string>test_method_id</string> </key>
-            <value>
-              <tuple>
-                <string>isAccountingMovementType</string>
-              </tuple>
             </value>
         </item>
         <item>
