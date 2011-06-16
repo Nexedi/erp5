@@ -89,6 +89,13 @@ def parseArguments(argv):
                       help='Repeat the benchmark suite N times '
                            '(default: infinite)')
 
+  parser.add_argument('--user-index',
+                      type=int,
+                      default=0,
+                      metavar='INDEX',
+                      help='Index of the first user within userInfo '
+                           '(default: 0)')
+
   # Mandatory arguments
   parser.add_argument('url',
                       type=ArgumentType.ERP5UrlType,
@@ -120,6 +127,7 @@ def parseArguments(argv):
   max_nb_users = isinstance(namespace.users, tuple) and namespace.users[1] or \
       namespace.users
 
+  namespace.user_tuple = namespace.user_tuple[namespace.user_index:]
   if max_nb_users > len(namespace.user_tuple):
     raise argparse.ArgumentTypeError("Not enough users in the given file")
 
