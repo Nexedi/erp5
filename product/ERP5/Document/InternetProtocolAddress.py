@@ -57,6 +57,7 @@ class InternetProtocolAddress(Base, Coordinate):
                       )
 
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'asText')
   def asText(self):
     """
     Return the address as a complete formatted string.
@@ -73,6 +74,7 @@ class InternetProtocolAddress(Base, Coordinate):
       result = '\n'.join(tmp)
     return result
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   @deprecated
   def fromText(self, coordinate_text):
     """
