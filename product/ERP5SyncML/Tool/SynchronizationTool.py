@@ -2513,7 +2513,7 @@ class SynchronizationTool(BaseTool):
     if not finished:
       domain.activate(activity='SQLQueue',
                       tag=domain.getId(),
-                      priority=self.PRIORITY).activateSyncModif(**kw)
+                      priority=ACTIVITY_PRIORITY).activateSyncModif(**kw)
     else:
       cmd_id = result['cmd_id']
       cmd_id_before_getsyncmldata = kw['cmd_id_before_getsyncmldata']
