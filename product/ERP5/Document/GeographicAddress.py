@@ -37,91 +37,91 @@ from Products.ERP5.Document.Coordinate import Coordinate
 import string
 
 class GeographicAddress(Coordinate, Base):
+  """
+      A geographic address holds a complete set of
+      geographic coordinates including street, number,
+      city, zip code, region.
+
+      Geographic address is a terminating leaf
+      in the OFS. It can not contain anything.
+
+      Geographic address inherits from Base and
+      from the mix-in Coordinate
+  """
+  meta_type = 'ERP5 Geographic Address'
+  portal_type = 'Address'
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.SimpleItem
+                    , PropertySheet.SortIndex
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Coordinate
+                    , PropertySheet.GeographicAddress
+                    )
+
+
+  def _splitCoordinateText(self, coordinate_text):
+    """return street_address, zip_code, city tuple parsed from string
     """
-        A geographic address holds a complete set of
-        geographic coordinates including street, number,
-        city, zip code, region.
+    line_list = coordinate_text.splitlines()
+    street_address = zip_code = city = ''
+    zip_city = None
+    if len(line_list) > 1:
+      street_address = ''.join(line_list[0:-1])
+      zip_city = line_list[-1].split()
+    elif len(line_list):
+      street_address = ''
+      zip_city = line_list[-1].split()
+    if zip_city:
+      zip_code = zip_city[0]
+      if len(zip_city) > 1:
+        city = ''.join(zip_city[1:])
+    return street_address, zip_code, city
 
-        Geographic address is a terminating leaf
-        in the OFS. It can not contain anything.
-
-        Geographic address inherits from Base and
-        from the mix-in Coordinate
+  security.declareProtected(Permissions.AccessContentsInformation, 'asText')
+  def asText(self):
     """
-    meta_type = 'ERP5 Geographic Address'
-    portal_type = 'Address'
-    add_permission = Permissions.AddPortalContent
+      Returns the address as a complete formatted string
+      with street address, zip, and city
+    """
+    result = Coordinate.asText(self)
+    if result is None:
+      if self.hasData():
+        street_address, city, zip_code = self._splitCoordinateText(self.getData(''))
+      else:
+        street_address = self.getStreetAddress('')
+        city = self.getCity('')
+        zip_code = self.getZipCode('')
+      result = '%s\n%s %s' % (street_address, city, zip_code,)
+    if not result.strip():
+      return ''
+    return result
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  @deprecated
+  def fromText(self, coordinate_text):
+    """Save given data then continue parsing 
+    (deprecated because computed values are stored)
+    """
+    self._setData(coordinate_text)
+    street_address, city, zip_code = self._splitCoordinateText(coordinate_text)
+    self.setStreetAddress(street_address)
+    self.setZipCode(zip_code)
+    self.setCity(city)
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.SortIndex
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.Coordinate
-                      , PropertySheet.GeographicAddress
-                      )
-
-
-    def _splitCoordinateText(self, coordinate_text):
-        """return street_address, zip_code, city tuple parsed from string
-        """
-        line_list = coordinate_text.splitlines()
-        street_address = zip_code = city = ''
-        zip_city = None
-        if len(line_list) > 1:
-          street_address = ''.join(line_list[0:-1])
-          zip_city = line_list[-1].split()
-        elif len(line_list):
-          street_address = ''
-          zip_city = line_list[-1].split()
-        if zip_city:
-          zip_code = zip_city[0]
-          if len(zip_city) > 1:
-            city = ''.join(zip_city[1:])
-        return street_address, zip_code, city
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'asText')
-    def asText(self):
-        """
-          Returns the address as a complete formatted string
-          with street address, zip, and city
-        """
-        result = Coordinate.asText(self)
-        if result is None:
-          if self.hasData():
-            street_address, city, zip_code = self._splitCoordinateText(self.getData(''))
-          else:
-            street_address = self.getStreetAddress('')
-            city = self.getCity('')
-            zip_code = self.getZipCode('')
-          result = '%s\n%s %s' % (street_address, city, zip_code,)
-        if not result.strip():
-          return ''
-        return result
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
-    @deprecated
-    def fromText(self, coordinate_text):
-        """Save given data then continue parsing 
-        (deprecated because computed values are stored)
-        """
-        self._setData(coordinate_text)
-        street_address, city, zip_code = self._splitCoordinateText(coordinate_text)
-        self.setStreetAddress(street_address)
-        self.setZipCode(zip_code)
-        self.setCity(city)
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'standardTextFormat')
-    def standardTextFormat(self):
-        """
-          Returns the standard text format for geographic addresses
-        """
-        return ("""\
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'standardTextFormat')
+  def standardTextFormat(self):
+    """
+      Returns the standard text format for geographic addresses
+    """
+    return ("""\
 c/o Jean-Paul Sartre
 43, avenue Kleber
 75118 Paris Cedex 5

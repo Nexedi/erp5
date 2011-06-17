@@ -115,20 +115,20 @@ class Coordinate(Base):
     ### Mix-in methods
     security.declareProtected( Permissions.View, 'view' )
     def view(self):
-        """
-            Return the default view even if index_html is overridden.
-        """
-        return self()
+      """
+          Return the default view even if index_html is overridden.
+      """
+      return self()
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'asText' )
     def asText(self):
-        """
-            returns the coordinate as a text string
-        """
-        script = self._getTypeBasedMethod('asText')
-        if script is not None:
-          return script()
+      """
+          returns the coordinate as a text string
+      """
+      script = self._getTypeBasedMethod('asText')
+      if script is not None:
+        return script()
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getText')
@@ -141,13 +141,13 @@ class Coordinate(Base):
     security.declareProtected( Permissions.ModifyPortalContent, 'fromText' )
     @deprecated
     def fromText(self, coordinate_text):
-        """
-             modifies the coordinate according to the input text
-             must be implemented by subclasses
-        """
-        script = self._getTypeBasedMethod('fromText')
-        if script is not None:
-          return script(text=coordinate_text)
+      """
+            modifies the coordinate according to the input text
+            must be implemented by subclasses
+      """
+      script = self._getTypeBasedMethod('fromText')
+      if script is not None:
+        return script(text=coordinate_text)
 
     security.declareProtected(Permissions.ModifyPortalContent, '_setText')
     def _setText(self, value):
@@ -159,69 +159,69 @@ class Coordinate(Base):
     security.declareProtected( Permissions.AccessContentsInformation,
                                'standardTextFormat')
     def standardTextFormat(self):
-        """
-        Returns the standard text formats for telephone numbers
-        """
-        pass
+      """
+      Returns the standard text formats for telephone numbers
+      """
+      pass
 
     security.declarePrivate( '_writeFromPUT' )
     def _writeFromPUT( self, body ):
-        headers = {}
-        headers, body = parseHeadersBody(body, headers)
-        lines = body.split( '\n' )
-        self.edit( lines[0] )
-        headers['Format'] = self.COORDINATE_FORMAT
-        new_subject = keywordsplitter(headers)
-        headers['Subject'] = new_subject or self.Subject()
-        haveheader = headers.has_key
-        for key, value in self.getMetadataHeaders():
-            if key != 'Format' and not haveheader(key):
-                headers[key] = value
+      headers = {}
+      headers, body = parseHeadersBody(body, headers)
+      lines = body.split( '\n' )
+      self.edit( lines[0] )
+      headers['Format'] = self.COORDINATE_FORMAT
+      new_subject = keywordsplitter(headers)
+      headers['Subject'] = new_subject or self.Subject()
+      haveheader = headers.has_key
+      for key, value in self.getMetadataHeaders():
+        if key != 'Format' and not haveheader(key):
+          headers[key] = value
 
-        self._editMetadata(title=headers['Title'],
-                          subject=headers['Subject'],
-                          description=headers['Description'],
-                          contributors=headers['Contributors'],
-                          effective_date=headers['Effective_date'],
-                          expiration_date=headers['Expiration_date'],
-                          format=headers['Format'],
-                          language=headers['Language'],
-                          rights=headers['Rights'],
-                          )
+      self._editMetadata(title=headers['Title'],
+                        subject=headers['Subject'],
+                        description=headers['Description'],
+                        contributors=headers['Contributors'],
+                        effective_date=headers['Effective_date'],
+                        expiration_date=headers['Expiration_date'],
+                        format=headers['Format'],
+                        language=headers['Language'],
+                        rights=headers['Rights'],
+                        )
 
     ## FTP handlers
     security.declareProtected( Permissions.ModifyPortalContent, 'PUT')
     def PUT(self, REQUEST, RESPONSE):
-        """
-            Handle HTTP / WebDAV / FTP PUT requests.
-        """
-        if not NoWL:
-            self.dav__init(REQUEST, RESPONSE)
-            self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
-        body = REQUEST.get('BODY', '')
-        try:
-            self._writeFromPUT( body )
-            RESPONSE.setStatus(204)
-            return RESPONSE
-        except ResourceLockedError, msg:
-            get_transaction().abort()
-            RESPONSE.setStatus(423)
-            return RESPONSE
+      """
+          Handle HTTP / WebDAV / FTP PUT requests.
+      """
+      if not NoWL:
+        self.dav__init(REQUEST, RESPONSE)
+        self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+      body = REQUEST.get('BODY', '')
+      try:
+        self._writeFromPUT( body )
+        RESPONSE.setStatus(204)
+        return RESPONSE
+      except ResourceLockedError, msg:
+        get_transaction().abort()
+        RESPONSE.setStatus(423)
+        return RESPONSE
 
     security.declareProtected( Permissions.View, 'manage_FTPget' )
     def manage_FTPget(self):
-        """
-            Get the coordinate as text for WebDAV src / FTP download.
-        """
-        hdrlist = self.getMetadataHeaders()
-        hdrtext = formatRFC822Headers( hdrlist )
-        bodytext = '%s\n\n%s' % ( hdrtext, self.asText() )
+      """
+          Get the coordinate as text for WebDAV src / FTP download.
+      """
+      hdrlist = self.getMetadataHeaders()
+      hdrtext = formatRFC822Headers( hdrlist )
+      bodytext = '%s\n\n%s' % ( hdrtext, self.asText() )
 
-        return bodytext
+      return bodytext
 
     security.declareProtected( Permissions.View, 'get_size' )
     def get_size( self ):
-        """
-            Used for FTP and apparently the ZMI now too
-        """
-        return len(self.manage_FTPget())
+      """
+          Used for FTP and apparently the ZMI now too
+      """
+      return len(self.manage_FTPget())
