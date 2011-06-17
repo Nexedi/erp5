@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="BusinessLink" module="Products.ERP5.Document.BusinessLink"/>
+      <global name="Business Link" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
