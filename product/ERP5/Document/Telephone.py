@@ -232,7 +232,9 @@ class Telephone(Coordinate, Base):
     # + (111) 111-111/111 or + (111) 111-111/  or + (111) 111-111
     "\+(?P<spaces>[\ ]*)\((?P<country>\d+)\)\ (?P<number>[\d\ \-\.]*)(?:\/)?(?P<ext>\d+|)"
   ]
+  compiled_regex_list = [re.compile(pattern) for pattern in regex_list]
 
+  compiled_input_regex_without_markup = re.compile('[0-9A-Za-z]')
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   def fromText(self, coordinate_text):
     """ See ICoordinate.fromText """
@@ -248,15 +250,14 @@ class Telephone(Coordinate, Base):
 
     # This regexp get the coordinate text
     # and extract number and letters
-    input_regex_without_markup = '[0-9A-Za-z]'
-    input_without_markup = ''.join(re.findall(input_regex_without_markup,\
-                                              coordinate_text))
+    input_without_markup = ''.join(self.compiled_input_regex_without_markup.\
+                                                      findall(coordinate_text))
     # Test if coordinate_text has or not markups.
     if len(coordinate_text) > len(input_without_markup):
       number_match = None
       for regex in self._getRegexList():
-        possible_number_match = re.match(regex, coordinate_text)
-        if possible_number_match not in [None]:
+        possible_number_match = regex.match(coordinate_text)
+        if possible_number_match is not None:
           number_match = possible_number_match
           number_dict = number_match.groupdict()
           break
@@ -403,4 +404,4 @@ class Telephone(Coordinate, Base):
     """
       Returns the regex list that will be used by fromText method.
     """
-    return self.regex_list
+    return self.compiled_regex_list
