@@ -46,14 +46,6 @@ class ICoordinate(Interface):
     """
     pass
 
-  def fromText(coordinate_text):
-    """
-      modifies the coordinate according to the input text.
-    This method usually tries to lookup a skin named ${PortalType}_fromText and
-    to use this script to modify the properties of this document.
-    """
-    pass
-
   def standardTextFormat():
     """
       returns a string which defines the standard
