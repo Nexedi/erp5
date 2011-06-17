@@ -388,112 +388,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>relative_url</string>
-                          <string>Path</string>
-                        </tuple>
-                        <tuple>
-                          <string>portal_type</string>
-                          <string>Type</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_title</string>
-                          <string>Source</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Destination</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_title</string>
-                          <string>Variation</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Quantity Unit</string>
-                        </tuple>
-                        <tuple>
                           <string>categories_list</string>
                           <string>Categories</string>
                         </tuple>
                         <tuple>
-                          <string>causality_state</string>
-                          <string>Causality State</string>
-                        </tuple>
-                        <tuple>
-                          <string>causality</string>
-                          <string>Causality</string>
-                        </tuple>
-                        <tuple>
-                          <string>order</string>
-                          <string>Order</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery</string>
-                          <string>Delivery</string>
-                        </tuple>
-                        <tuple>
-                          <string>source_section_title</string>
-                          <string>Source Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_section_title</string>
-                          <string>Destination Section</string>
-                        </tuple>
-                        <tuple>
-                          <string>price</string>
-                          <string>Price</string>
-                        </tuple>
-                        <tuple>
-                          <string>price_currency_reference</string>
-                          <string>Currency</string>
-                        </tuple>
-                        <tuple>
                           <string>showDict</string>
                           <string>Dict</string>
-                        </tuple>
-                        <tuple>
-                          <string>start_date</string>
-                          <string>Start Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>stop_date</string>
-                          <string>Stop Date</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise</string>
-                          <string>Specialise</string>
-                        </tuple>
-                        <tuple>
-                          <string>simulation_state</string>
-                          <string>Simulation State</string>
-                        </tuple>
-                        <tuple>
-                          <string>order_ratio</string>
-                          <string>Order Ratio</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery_ratio</string>
-                          <string>Delivery Ratio</string>
-                        </tuple>
-                        <tuple>
-                          <string>delivery_error</string>
-                          <string>Delivery Error</string>
-                        </tuple>
-                        <tuple>
-                          <string>specialise_title</string>
-                          <string>Specialise Title</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_text</string>
-                          <string>Variation Text</string>
                         </tuple>
                       </list>
                     </value>
@@ -519,32 +419,12 @@
                           <string>Type</string>
                         </tuple>
                         <tuple>
-                          <string>specialise</string>
+                          <string>specialise_title</string>
                           <string>Specialise</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
-                          <string>Source</string>
-                        </tuple>
-                        <tuple>
-                          <string>destination_title</string>
-                          <string>Destination</string>
-                        </tuple>
-                        <tuple>
-                          <string>resource_title</string>
-                          <string>Resource</string>
-                        </tuple>
-                        <tuple>
-                          <string>variation_title</string>
-                          <string>Variation</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity</string>
-                          <string>Quantity</string>
-                        </tuple>
-                        <tuple>
-                          <string>quantity_unit</string>
-                          <string>Quantity Unit</string>
+                          <string>causality</string>
+                          <string>Causality</string>
                         </tuple>
                       </list>
                     </value>
