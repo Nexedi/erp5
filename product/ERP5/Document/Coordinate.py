@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import deprecated
 from Products.CMFDefault.utils import formatRFC822Headers
 import re
 
@@ -136,9 +137,9 @@ class Coordinate(Base):
       calls asText
       """
       return self.asText()
-      
 
     security.declareProtected( Permissions.ModifyPortalContent, 'fromText' )
+    @deprecated
     def fromText(self, coordinate_text):
         """
              modifies the coordinate according to the input text

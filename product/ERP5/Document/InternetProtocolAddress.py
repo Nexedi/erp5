@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 
@@ -72,6 +73,7 @@ class InternetProtocolAddress(Base, Coordinate):
       result = '\n'.join(tmp)
     return result
 
+  @deprecated
   def fromText(self, coordinate_text):
     """
     Try to import data from text.

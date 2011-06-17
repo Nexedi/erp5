@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 import re

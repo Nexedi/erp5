@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 
@@ -80,6 +81,7 @@ class GeographicAddress(Coordinate, Base):
         return result
 
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+    @deprecated
     def fromText(self, coordinate_text):
         """
           Tries to recognize the coordinate_text to update

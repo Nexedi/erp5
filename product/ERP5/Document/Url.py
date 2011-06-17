@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import deprecated
 from Products.ERP5.Document.Coordinate import Coordinate
 from Products.ERP5.mixin.url import UrlMixin, no_crawl_protocol_list,\
                             no_host_protocol_list, default_protocol_dict
@@ -71,6 +72,7 @@ class Url(Coordinate, Base, UrlMixin):
     return self.getUrlString()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  @deprecated
   def fromText(self, text):
     """
     Sets url_string a.k.a. scheme-specific-part of a URL
