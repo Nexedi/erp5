@@ -37,6 +37,8 @@ from Products.ERP5.mixin.url import UrlMixin, no_crawl_protocol_list,\
                             no_host_protocol_list, default_protocol_dict
 from zLOG import LOG
 
+_marker = object()
+
 class Url(Coordinate, Base, UrlMixin):
   """
   A Url is allows to represent in a standard way coordinates
@@ -69,7 +71,9 @@ class Url(Coordinate, Base, UrlMixin):
     users just enter www.erp5.com or info@erp5.com rather than
     http://www.erp5.com or mailto:info@erp5.com
     """
-    return self.getUrlString()
+    if self.hasData():
+      return self.getData('')
+    return self.getUrlString('')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   @deprecated
@@ -77,6 +81,7 @@ class Url(Coordinate, Base, UrlMixin):
     """
     Sets url_string a.k.a. scheme-specific-part of a URL
     """
+    self._setData(text)
     self.setUrlString(text)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -87,6 +92,21 @@ class Url(Coordinate, Base, UrlMixin):
     of this method is unknown.
     """
     return ("http://www.erp5.org", "mailto:info@erp5.org")
+
+
+  def getUrlString(self, default=_marker):
+    if not self.hasUrlString():
+      if default is _marker:
+        return self.getData()
+      else:
+        return self.getData(default)
+    else:
+      if default is _marker:
+        return self._baseGetUrlString()
+      else:
+        return self._baseGetUrlString(default)
+
+
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
   def send(self, from_url=None, to_url=None, msg=None,

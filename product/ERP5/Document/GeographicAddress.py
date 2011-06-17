@@ -66,16 +66,39 @@ class GeographicAddress(Coordinate, Base):
                       )
 
 
+    def _splitCoordinateText(self, coordinate_text):
+        """return street_address, zip_code, city tuple parsed from string
+        """
+        line_list = coordinate_text.splitlines()
+        street_address = zip_code = city = ''
+        zip_city = None
+        if len(line_list) > 1:
+          street_address = ''.join(line_list[0:-1])
+          zip_city = line_list[-1].split()
+        elif len(line_list):
+          street_address = ''
+          zip_city = line_list[-1].split()
+        if zip_city:
+          zip_code = zip_city[0]
+          if len(zip_city) > 1:
+            city = ''.join(zip_city[1:])
+        return street_address, zip_code, city
+
     security.declareProtected(Permissions.AccessContentsInformation, 'asText')
     def asText(self):
         """
           Returns the address as a complete formatted string
-          with street address, zip, city and region
+          with street address, zip, and city
         """
         result = Coordinate.asText(self)
         if result is None:
-          result = ('%s\n%s %s') % (self.getStreetAddress() or '',
-                      self.getCity() or '', self.getZipCode() or '')
+          if self.hasData():
+            street_address, city, zip_code = self._splitCoordinateText(self.getData(''))
+          else:
+            street_address = self.getStreetAddress('')
+            city = self.getCity('')
+            zip_code = self.getZipCode('')
+          result = '%s\n%s %s' % (street_address, city, zip_code,)
         if not result.strip():
           return ''
         return result
@@ -83,29 +106,14 @@ class GeographicAddress(Coordinate, Base):
     security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
     @deprecated
     def fromText(self, coordinate_text):
+        """Save given data then continue parsing 
+        (deprecated because computed values are stored)
         """
-          Tries to recognize the coordinate_text to update
-          this address
-          XXX fromText will be removed.
-          Instead, store text value as user filled in text attribute,
-          then display text value through a configurable output filter, suitable
-          for all addresses patterns.
-        """
-        lines = string.split(coordinate_text, '\n')
-        self.setStreetAddress('')
-        self.setZipCode('')
-        self.setCity('')
-        zip_city = None
-        if len(lines ) > 1:
-          self.setStreetAddress(lines[0:-1])
-          zip_city = string.split(lines[-1])
-        elif len(lines ) > 0:
-          self.setStreetAddress('')
-          zip_city = string.split(lines[-1])
-        if zip_city:
-          self.setZipCode(zip_city[0])
-          if len(zip_city) > 1:
-            self.setCity(string.join(zip_city[1:]))
+        self._setData(coordinate_text)
+        street_address, city, zip_code = self._splitCoordinateText(coordinate_text)
+        self.setStreetAddress(street_address)
+        self.setZipCode(zip_code)
+        self.setCity(city)
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'standardTextFormat')

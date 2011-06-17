@@ -56,6 +56,16 @@ class InternetProtocolAddress(Base, Coordinate):
                       , PropertySheet.InternetProtocolAddress
                       )
 
+  def _splitCoordinateText(self, coordinate_text):
+    property_id_list = [i['id'] for i in PropertySheet.InternetProtocolAddress._properties]
+    kw_dict = {}
+    for line in coordinate_text.split('\n'):
+      if not ':' in line:
+        continue
+      name, value = line.split(':', 1)
+      if name in property_id_list:
+        kw_dict[name] = value
+    return kw_dict
 
   security.declareProtected(Permissions.AccessContentsInformation, 'asText')
   def asText(self):
@@ -64,32 +74,33 @@ class InternetProtocolAddress(Base, Coordinate):
     """
     result = Coordinate.asText(self)
     if result is None:
-      tmp = []
-      for prop in PropertySheet.InternetProtocolAddress._properties:
-        property_id = prop['id']
-        getter_name = 'get%s' % convertToUpperCase(property_id)
-        getter_method = getattr(self, getter_name)
-        value = getter_method() or ''
-        tmp.append('%s:%s' % (property_id, value))
-      result = '\n'.join(tmp)
+      if self.hasData():
+        result = '\n'.join(('%s:%s' % (k, v) for k, v in\
+                                    self._splitCoordinateText(self.getData())))
+      else:
+        tmp = []
+        for prop in PropertySheet.InternetProtocolAddress._properties:
+          property_id = prop['id']
+          getter_name = 'get%s' % convertToUpperCase(property_id)
+          getter_method = getattr(self, getter_name)
+          value = getter_method() or ''
+          tmp.append('%s:%s' % (property_id, value))
+        result = '\n'.join(tmp)
     return result
 
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   @deprecated
   def fromText(self, coordinate_text):
+    """Save given data then continue parsing 
+    (deprecated because computed values are stored)
     """
-    Try to import data from text.
-    """
-    property_id_list = [i['id'] for i in PropertySheet.InternetProtocolAddress._properties]
+    self._setData(coordinate_text)
+    kw_dict = self._splitCoordinateText(coordinate_text)
 
-    for line in coordinate_text.split('\n'):
-      if not ':' in line:
-        continue
-      name, value = line.split(':', 1)
-      if name in property_id_list:
-        setter_name = 'set%s' % convertToUpperCase(name)
-        setter_method = getattr(self, setter_name)
-        setter_method(value)
+    for name, value in kw_dict.iteritems():
+      setter_name = 'set%s' % convertToUpperCase(name)
+      setter_method = getattr(self, setter_name)
+      setter_method(value)
 
   def standardTextFormat(self):
     """
