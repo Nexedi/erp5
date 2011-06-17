@@ -1222,7 +1222,9 @@ class TemplateTool (BaseTool):
       business_template_url_dict = {}
       for bt in self.getRepositoryBusinessTemplateList():
         url, name = self.decodeRepositoryBusinessTemplateUid(bt.getUid())
-        business_template_url_dict[name[:-4]] = {
+        if name.endswith('.bt5'):
+          name = name[:-4]
+        business_template_url_dict[name] = {
           'url':  '%s/%s' % (url, name),
           'revision': bt.getRevision()
           }
