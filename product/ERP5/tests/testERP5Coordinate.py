@@ -58,6 +58,34 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
+  def test_data_coordinate_text_property(self):
+    """Check New Coordinate API:
+    asText compute printable value
+    setData store user value
+    getData return user value
+    """
+    person = self.getPersonModule().newContent(portal_type='Person')
+    # check telephone
+    telephone = person.newContent(portal_type='Telephone')
+    self.assertEquals(telephone.getCoordinateText(), None)
+    self.assertEquals(telephone.getCoordinateText(''), '')
+    phone_number = '0320595959'
+    telephone.setCoordinateText(phone_number)
+    self.assertEquals(telephone.getCoordinateText(), phone_number)
+    self.assertEquals(telephone.asText(), '+(0)-' + phone_number)
+
+    # check address
+    address = person.newContent(portal_type='Address')
+    self.assertEquals(address.getCoordinateText(), None)
+    self.assertEquals(address.getCoordinateText(''), '')
+    address_text = """15 flower street
+75016 PARIS"""
+    address.setCoordinateText(address_text)
+    self.assertEquals(address.getCoordinateText(), address_text)
+    self.assertEquals(address.asText(), address_text)
+
+
+  # Old API check backward compatibility
   def test_TelephoneAsText(self):
     # Test asText method
     pers = self.getPersonModule().newContent(portal_type='Person')
