@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>data_property</string> </value>
+            <value> <string>coordinate_text_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
