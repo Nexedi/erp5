@@ -53,6 +53,7 @@ class Url(Coordinate, Base, UrlMixin):
   # Default Properties
   property_sheets = (   PropertySheet.Base
                       , PropertySheet.SimpleItem
+                      , PropertySheet.Coordinate
                       , PropertySheet.Url
                       , PropertySheet.SortIndex
                       )

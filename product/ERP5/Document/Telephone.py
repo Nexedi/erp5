@@ -63,6 +63,7 @@ class Telephone(Coordinate, Base):
                     , PropertySheet.SimpleItem
                     , PropertySheet.CategoryCore
                     , PropertySheet.SortIndex
+                    , PropertySheet.Coordinate
                     , PropertySheet.Telephone
                     )
   # This is a list of regex.

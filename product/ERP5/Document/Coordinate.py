@@ -88,6 +88,7 @@ class Coordinate(Base):
     # Declarative properties
     property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
+                      , PropertySheet.Coordinate
                       )
 
     ### helper methods
