@@ -236,9 +236,15 @@ class BenchmarkProcess(multiprocessing.Process):
     self._user_index = user_index
     self._argument_namespace = argument_namespace
 
-    filename_path_prefix = self.getFilenamePrefix()
-    self._result_filename = "%s.csv" % filename_path_prefix
-    self._log_filename = "%s.log" % filename_path_prefix
+    filename_prefix = self.getFilenamePrefix()
+
+    self._result_filename = "%s.csv" % filename_prefix
+    self._result_filename_path = os.path.join(
+      self._argument_namespace.report_directory, self._result_filename)
+
+    self._log_filename = "%s.log" % filename_prefix
+    self._log_filename_path = os.path.join(
+      self._argument_namespace.report_directory, self._log_filename)
 
     # Initialized when running the test
     self._csv_writer = None
@@ -257,12 +263,10 @@ class BenchmarkProcess(multiprocessing.Process):
     fmt = "%%s-%%drepeat-%%0%ddusers-process%%0%dd" % \
         (len(str(max_nb_users)), len(str(self._nb_users)))
 
-    return os.path.join(
-      self._argument_namespace.report_directory,
-      fmt % (self._argument_namespace.filename_prefix,
-             self._argument_namespace.repeat,
-             self._nb_users,
-             self._user_index))
+    return fmt % (self._argument_namespace.filename_prefix,
+                  self._argument_namespace.repeat,
+                  self._nb_users,
+                  self._user_index)
 
   def stopGracefully(self, *args, **kwargs):
     raise StopIteration, "Interrupted by user"
@@ -273,7 +277,7 @@ class BenchmarkProcess(multiprocessing.Process):
 
     return Browser(*info_list,
                    is_debug=self._argument_namespace.enable_debug,
-                   log_filename=self._log_filename,
+                   log_filename=self._log_filename_path,
                    is_legacy_listbox=self._argument_namespace.is_legacy_listbox)
 
   def runBenchmarkSuiteList(self):
@@ -306,7 +310,7 @@ class BenchmarkProcess(multiprocessing.Process):
           self._logger.info("Stopping as mean is greater than maximum "
                             "global average")
 
-          raise StopIteration, "See: %s" % self._log_filename
+          raise StopIteration, "See: %s" % self._log_filename_path
 
       self._current_result.exitSuite()
 
@@ -318,7 +322,7 @@ class BenchmarkProcess(multiprocessing.Process):
     self._csv_writer.writerow(result_list)
 
   def getLogger(self):
-    logging.basicConfig(filename=self._log_filename, filemode='w',
+    logging.basicConfig(filename=self._log_filename_path, filemode='w',
                         level=self._argument_namespace.enable_debug and \
                           logging.DEBUG or logging.INFO)
 
@@ -340,7 +344,7 @@ class BenchmarkProcess(multiprocessing.Process):
     exit_msg = None
 
     # Create the result CSV file
-    with open(self._result_filename, 'wb') as result_file:
+    with open(self._result_filename_path, 'wb') as result_file:
       self._csv_writer = csv.writer(result_file, delimiter=',',
                                     quoting=csv.QUOTE_MINIMAL)
 
@@ -359,7 +363,7 @@ class BenchmarkProcess(multiprocessing.Process):
 
       except:
         self._logger.error(traceback.format_exc())
-        exit_msg = "An error occured, see: %s" % self._log_filename
+        exit_msg = "An error occured, see: %s" % self._log_filename_path
         exit_status = 2
 
       else:
