@@ -272,7 +272,7 @@ class BenchmarkProcess(multiprocessing.Process):
         tuple(self._argument_namespace.user_tuple[self._user_index])
 
     return Browser(*info_list,
-                   is_debug=self._argument_namespace.is_debug,
+                   is_debug=self._argument_namespace.enable_debug,
                    log_filename=self._log_filename,
                    is_legacy_listbox=self._argument_namespace.is_legacy_listbox)
 
@@ -319,7 +319,7 @@ class BenchmarkProcess(multiprocessing.Process):
 
   def getLogger(self):
     logging.basicConfig(filename=self._log_filename, filemode='w',
-                        level=self._argument_namespace.is_debug and \
+                        level=self._argument_namespace.enable_debug and \
                           logging.DEBUG or logging.INFO)
 
     return logging.getLogger('erp5.utils.benchmark')
