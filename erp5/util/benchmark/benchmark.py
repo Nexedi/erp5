@@ -355,6 +355,8 @@ class BenchmarkProcess(multiprocessing.Process):
           self._current_repeat += 1
 
           if self._current_repeat == 5 and self._publish_method:
+            result_file.flush()
+            os.fsync(result_file.fileno())
             self._publish_method(self._result_filename, result_file.tell())
 
       except StopIteration, e:
@@ -368,6 +370,8 @@ class BenchmarkProcess(multiprocessing.Process):
 
       else:
         if self._publish_method:
+          result_file.flush()
+          os.fsync(result_file.fileno())
           self._publish_method(self._result_filename, result_file.tell())
 
     self._exit_msg_queue.put(exit_msg)
