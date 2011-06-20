@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'parent_specialise_portal_type\'] = (\'Payment Rule\', \'Payment Simulation Rule\')\n
+            <value> <string>kw[\'parent_specialise_reference\'] = \'default_payment_rule\'\n
 kw[\'portal_type\'] = \'Simulation Movement\'\n
 kw[\'grand_parent_simulation_state\'] = [\'started\']\n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
