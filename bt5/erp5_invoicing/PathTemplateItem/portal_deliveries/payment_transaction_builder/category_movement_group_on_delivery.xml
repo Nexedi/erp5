@@ -43,12 +43,17 @@
                 <string>destination_section</string>
                 <string>payment_mode</string>
                 <string>resource</string>
+                <string>specialise</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
             <value> <string>category_movement_group_on_delivery</string> </value>
+        </item>
+        <item>
+            <key> <string>update_always</string> </key>
+            <value> <int>0</int> </value>
         </item>
       </dictionary>
     </pickle>
