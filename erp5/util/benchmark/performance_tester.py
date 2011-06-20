@@ -38,14 +38,12 @@ import xmlrpclib
 from benchmark import ArgumentType, BenchmarkProcess
 
 class PerformanceTester(object):
-  def __init__(self, publish_method=None, namespace=None):
+  def __init__(self, namespace=None):
     if not namespace:
       self._argument_namespace = self._parse_arguments(argparse.ArgumentParser(
           description='Run ERP5 benchmarking suites.'))
     else:
       self._argument_namespace = namespace
-
-    self._publish_method = publish_method
 
   @staticmethod
   def _add_parser_arguments(parser):
