@@ -151,7 +151,7 @@ class Browser(ExtendedTestBrowser):
                erp5_site_id,
                username,
                password,
-               log_filename=None,
+               log_file=None,
                is_debug=False,
                is_legacy_listbox=False):
     """
@@ -166,8 +166,8 @@ class Browser(ExtendedTestBrowser):
     @param username: Username to be used to log into ERP5
     @type username: str
     @param password: Password to be used to log into ERP5
-    @param log_filename: Log filename (stderr if none given)
-    @type log_filename: str
+    @param log_file: Log file object (stderr if none given)
+    @type log_file: file
     @param is_debug: Enable or disable debugging (disable by default)
     @type is_debug: bool
     @param is_legacy_listbox: Use legacy listbox
@@ -189,10 +189,8 @@ class Browser(ExtendedTestBrowser):
 
     # Only display WARNING message if debugging is not enabled
     logging_level = is_debug and logging.DEBUG or logging.WARNING
-    if log_filename:
-      logging.basicConfig(filename=log_filename, level=logging_level)
-    else:
-      logging.basicConfig(stream=sys.stderr, level=logging_level)
+    stream = log_file and log_file or sys.stderr
+    logging.basicConfig(stream=stream, level=logging_level)
 
     self._logger = logging.getLogger('erp5.utils.test_browser')
     self._is_legacy_listbox = is_legacy_listbox
