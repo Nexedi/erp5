@@ -765,6 +765,12 @@ class BusinessProcess(Path, XMLObject):
             trade_model_path.getArrowCategoryDict(context=amount).iteritems():
       property_dict[base_category] = category_url_list
 
+    # More categories
+    for base_category in ('delivery_mode', 'incoterm', 'payment_mode'):
+      value = trade_model_path.getPropertyList(base_category)
+      if len(value) > 0:
+        property_dict[base_category] = amount.getPropertyList(base_category) + value
+
     # Amount quantities - XXX-JPS maybe we should consider handling unit conversions here
     # and specifying units
     if trade_model_path.getQuantity():
