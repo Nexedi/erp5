@@ -163,21 +163,36 @@ class BenchmarkResultStatistic(object):
   def standard_deviation(self):
     return math.sqrt(self._variance_sum / self.n)
 
+import abc
+
 class BenchmarkResult(object):
+  __metaclass__ = abc.ABCMeta
+
   def __init__(self):
     self._stat_list = []
     self._suite_idx = 0
     self._result_idx = 0
-    self._result_list = []
+    self.result_list = []
+    self._all_result_list = []
     self._first_iteration = True
     self._current_suite_name = None
     self._result_idx_checkpoint_list = []
+    self.label_list = []
+    self.logger = self._getLogger()
+
+  @abc.abstractmethod
+  def _getLogger(self):
+    pass
+
+  @abc.abstractmethod
+  def __enter__(self):
+    return self
 
   def enterSuite(self, name):
     self._current_suite_name = name
 
   def __call__(self, label, value):
-    self._result_list.append(value)
+    self.result_list.append(value)
     if self._first_iteration:
       self._stat_list.append(BenchmarkResultStatistic(self._current_suite_name,
                                                       label))
@@ -185,29 +200,19 @@ class BenchmarkResult(object):
     self._stat_list[self._result_idx].add(value)
     self._result_idx += 1
 
-  def exitSuite(self):
-    if self._first_iteration:
-      self._result_idx_checkpoint_list.append(self._result_idx)
-    else:
-      expected_result_idx = self._result_idx_checkpoint_list[self._suite_idx]
-      while self._result_idx != expected_result_idx:
-        self._result_list.append(0)
-        self._stat_list[self._result_idx].add(0)
-        self._result_idx += 1
-
-    self._suite_idx += 1
-
   def getLabelList(self):
-    self._first_iteration = False
     return [ stat.full_label for stat in self._stat_list ]
 
-  def getResultList(self):
+  def iterationFinished(self):
+    self._all_result_list.append(self.result_list)
+    if self._first_iteration:
+      self.label_list = self.getLabelList()
+
+    self.logger.debug("RESULTS: %s" % self.result_list)
+    self.result_list = []
+    self._first_iteration = False
     self._suite_idx = 0
     self._result_idx = 0
-
-    result_list = self._result_list
-    self._result_list = []
-    return result_list
 
   def getStatList(self):
     return self._stat_list
@@ -218,43 +223,50 @@ class BenchmarkResult(object):
 
     return self._stat_list[start_index:self._result_idx]
 
-import multiprocessing
-import csv
-import traceback
-import os
-import logging
-import signal
-import sys
+  def exitSuite(self):
+    if self._first_iteration:
+      self._result_idx_checkpoint_list.append(self._result_idx)
+    else:
+      expected_result_idx = self._result_idx_checkpoint_list[self._suite_idx]
+      while self._result_idx != expected_result_idx:
+        self.result_list.append(0)
+        self._stat_list[self._result_idx].add(0)
+        self._result_idx += 1
 
-from erp5.utils.test_browser.browser import Browser
+    self._suite_idx += 1
 
-class BenchmarkProcess(multiprocessing.Process):
-  def __init__(self, exit_msg_queue, nb_users, user_index,
-               argument_namespace, publish_method, *args, **kwargs):
-    self._exit_msg_queue = exit_msg_queue
+  @abc.abstractmethod
+  def flush(self):
+    self._all_result_list = []
+
+  @abc.abstractmethod
+  def __exit__(self, exc_type, exc_value, traceback):
+    return True
+
+class CSVBenchmarkResult(BenchmarkResult):
+  def __init__(self, argument_namespace, nb_users, user_index):
+    self._argument_namespace = argument_namespace
     self._nb_users = nb_users
     self._user_index = user_index
-    self._argument_namespace = argument_namespace
 
     filename_prefix = self.getFilenamePrefix()
 
-    self._result_filename = "%s.csv" % filename_prefix
-    self._result_filename_path = os.path.join(
-      self._argument_namespace.report_directory, self._result_filename)
+    self.result_filename = "%s.csv" % filename_prefix
+    self.result_filename_path = os.path.join(
+      self._argument_namespace.report_directory, self.result_filename)
 
-    self._log_filename = "%s.log" % filename_prefix
-    self._log_filename_path = os.path.join(
-      self._argument_namespace.report_directory, self._log_filename)
+    self.log_filename = "%s.log" % filename_prefix
+    self.log_filename_path = os.path.join(
+      self._argument_namespace.report_directory, self.log_filename)
 
-    # Initialized when running the test
-    self._csv_writer = None
-    self._browser = None
+    super(CSVBenchmarkResult, self).__init__()
 
-    self._current_repeat = 1
-    self._current_result = BenchmarkResult()
-    self._publish_method = publish_method
+  def _getLogger(self):
+    logging.basicConfig(filename=self.log_filename_path, filemode='w',
+                        level=self._argument_namespace.enable_debug and \
+                          logging.DEBUG or logging.INFO)
 
-    super(BenchmarkProcess, self).__init__(*args, **kwargs)
+    return logging.getLogger('erp5.utils.benchmark')
 
   def getFilenamePrefix(self):
     max_nb_users = isinstance(self._argument_namespace.users, int) and \
@@ -268,25 +280,78 @@ class BenchmarkProcess(multiprocessing.Process):
                   self._nb_users,
                   self._user_index)
 
+  def __enter__(self):
+    self._result_file = open(self.result_filename_path, 'wb')
+    self._csv_writer = csv.writer(self._result_file, delimiter=',',
+                                  quoting=csv.QUOTE_MINIMAL)
+
+    return self
+
+  def flush(self):
+    if self._result_file.tell() == 0:
+      self._csv_writer.writerow(self.label_list)
+
+    self._csv_writer.writerows(self._all_result_list)
+    self._result_file.flush()
+    os.fsync(self._result_file.fileno())
+
+    super(CSVBenchmarkResult, self).flush()
+
+  def __exit__(self, exc_type, exc_value, traceback):
+    self.flush()
+    self._result_file.close()
+
+    if exc_type:
+      msg = "An error occured, see: %s" % self.log_filename_path
+      if isinstance(exc_type, StopIteration):
+        raise StopIteration, msg
+      else:
+        raise RuntimeError, msg
+
+import multiprocessing
+import csv
+import traceback
+import os
+import logging
+import signal
+import sys
+
+from erp5.utils.test_browser.browser import Browser
+
+class BenchmarkProcess(multiprocessing.Process):
+  def __init__(self, exit_msg_queue, result_klass, argument_namespace,
+               nb_users, user_index, *args, **kwargs):
+    self._exit_msg_queue = exit_msg_queue
+    self._result_klass = result_klass
+    self._argument_namespace = argument_namespace
+    self._nb_users = nb_users
+    self._user_index = user_index
+
+    # Initialized when running the test
+    self._browser = None
+    self._current_repeat = 1
+
+    super(BenchmarkProcess, self).__init__(*args, **kwargs)
+
   def stopGracefully(self, *args, **kwargs):
     raise StopIteration, "Interrupted by user"
 
-  def getBrowser(self):
+  def getBrowser(self, log_filename_path):
     info_list = tuple(self._argument_namespace.url) + \
         tuple(self._argument_namespace.user_tuple[self._user_index])
 
     return Browser(*info_list,
                    is_debug=self._argument_namespace.enable_debug,
-                   log_filename=self._log_filename_path,
+                   log_filename=log_filename_path,
                    is_legacy_listbox=self._argument_namespace.is_legacy_listbox)
 
-  def runBenchmarkSuiteList(self):
+  def runBenchmarkSuiteList(self, result):
     for target_idx, target in enumerate(self._argument_namespace.benchmark_suite_list):
       self._logger.debug("EXECUTE: %s" % target)
-      self._current_result.enterSuite(target.__name__)
+      result.enterSuite(target.__name__)
 
       try:
-        target(self._current_result, self._browser)
+        target(result, self._browser)
       except:
         msg = "%s: %s" % (target, traceback.format_exc())
         if self._current_repeat == 1:
@@ -295,7 +360,7 @@ class BenchmarkProcess(multiprocessing.Process):
 
         self._logger.warning(msg)
 
-      for stat in self._current_result.getCurrentSuiteStatList():
+      for stat in result.getCurrentSuiteStatList():
         mean = stat.mean
 
         self._logger.info("%s: min=%.3f, mean=%.3f (+/- %.3f), max=%.3f" % \
@@ -310,32 +375,24 @@ class BenchmarkProcess(multiprocessing.Process):
           self._logger.info("Stopping as mean is greater than maximum "
                             "global average")
 
-          raise StopIteration, "See: %s" % self._log_filename_path
+          raise StopIteration
 
-      self._current_result.exitSuite()
+      result.exitSuite()
 
-    if self._current_repeat == 1:
-      self._csv_writer.writerow(self._current_result.getLabelList())
-
-    result_list = self._current_result.getResultList()
-    self._logger.debug("RESULTS: %s" % result_list)
-    self._csv_writer.writerow(result_list)
-
-  def getLogger(self):
-    logging.basicConfig(filename=self._log_filename_path, filemode='w',
-                        level=self._argument_namespace.enable_debug and \
-                          logging.DEBUG or logging.INFO)
-
-    return logging.getLogger('erp5.utils.benchmark')
+    result.iterationFinished()
 
   def run(self):
-    self._logger = self.getLogger()
+    result_instance = self._result_klass(self._argument_namespace,
+                                         self._nb_users,
+                                         self._user_index)
+
+    self._logger = result_instance.logger
 
     if self._argument_namespace.repeat != -1:
       signal.signal(signal.SIGTERM, self.stopGracefully)
 
     try:
-      self._browser = self.getBrowser()
+      self._browser = self.getBrowser(result_instance.log_filename_path)
     except:
       self._logger.error(traceback.format_exc())
       raise
@@ -344,35 +401,23 @@ class BenchmarkProcess(multiprocessing.Process):
     exit_msg = None
 
     # Create the result CSV file
-    with open(self._result_filename_path, 'wb') as result_file:
-      self._csv_writer = csv.writer(result_file, delimiter=',',
-                                    quoting=csv.QUOTE_MINIMAL)
-
-      try:
+    try:
+      with result_instance as result:
         while self._current_repeat != (self._argument_namespace.repeat + 1):
           self._logger.info("Iteration: %d" % self._current_repeat)
-          self.runBenchmarkSuiteList()
+          self.runBenchmarkSuiteList(result)
           self._current_repeat += 1
 
-          if self._current_repeat == 5 and self._publish_method:
-            result_file.flush()
-            os.fsync(result_file.fileno())
-            self._publish_method(self._result_filename, result_file.tell())
+          if self._current_repeat == 100:
+            result.flush()
 
-      except StopIteration, e:
-        exit_msg = str(e)
-        exit_status = 1
+    except StopIteration, e:
+      exit_msg = str(e)
+      exit_status = 1
 
-      except:
-        self._logger.error(traceback.format_exc())
-        exit_msg = "An error occured, see: %s" % self._log_filename_path
-        exit_status = 2
-
-      else:
-        if self._publish_method:
-          result_file.flush()
-          os.fsync(result_file.fileno())
-          self._publish_method(self._result_filename, result_file.tell())
+    except Exception, e:
+      exit_msg = e
+      exit_status = 2
 
     self._exit_msg_queue.put(exit_msg)
     sys.exit(exit_status)

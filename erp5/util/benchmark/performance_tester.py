@@ -150,14 +150,20 @@ class PerformanceTester(object):
     PerformanceTester._check_parsed_arguments(namespace)
     return namespace
 
+  def getResultClass(self):
+    from benchmark import CSVBenchmarkResult
+    return CSVBenchmarkResult
+
   def _run_constant(self, nb_users):
     process_list = []
     exit_msg_queue = multiprocessing.Queue(nb_users)
+    result_class = self.getResultClass()
 
     for user_index in range(nb_users):
-      process = BenchmarkProcess(exit_msg_queue, nb_users, user_index,
-                                 self._argument_namespace,
-                                 self._publish_method)
+      process = BenchmarkProcess(exit_msg_queue, result_class,
+                                 self._argument_namespace, nb_users,
+                                 user_index)
+
       process_list.append(process)
 
     for process in process_list:
