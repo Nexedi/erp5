@@ -10,6 +10,8 @@
 #
 # ChangeLog:
 #
+# 2010-06-20: Add ssl choice.
+#
 # 2010-01-15: Adapt to ERP5 : a lot of code had to be removed or changed.
 #            Most of the work must be done in another class.
 #
@@ -34,7 +36,8 @@ class CaptchasDotNet:
                   alphabet = 'abcdefghkmnopqrstuvwxyz',
                   letters = 6,
                   width = 240,
-                  height = 80
+                  height = 80,
+                  use_ssl = False,
                   ):
         self.__client = client
         self.__secret = secret
@@ -42,6 +45,7 @@ class CaptchasDotNet:
         self.__letters = letters
         self.__width = width
         self.__height = height
+        self.__protocol = use_ssl and 'https' or 'http'
 
     # Return a random string
     def random_string (self):
@@ -59,9 +63,8 @@ class CaptchasDotNet:
         # Return the random string.
         return random_string
 
-    def image_url (self, random, base = 'http://image.captchas.net/'):
-        url = base
-        url += '?client=%s&amp;random=%s' % (self.__client, random)
+    def image_url (self, random, base = 'image.captchas.net/'):      
+        url = '%s://%s?client=%s&amp;random=%s' % (self.__protocol,base,self.__client,random)
         if self.__alphabet != "abcdefghijklmnopqrstuvwxyz":
             url += '&amp;alphabet=%s' % self.__alphabet
         if self.__letters != 6:
@@ -72,9 +75,8 @@ class CaptchasDotNet:
             url += '&amp;height=%s' % self.__height
         return url
 
-    def audio_url (self, random, base = 'http://audio.captchas.net/'):
-        url = base
-        url += '?client=%s&amp;random=%s' % (self.__client, random)
+    def audio_url (self, random, base = 'audio.captchas.net/'):
+        url = '%s://%s?client=%s&amp;random=%s' % (self.__protocol,base,self.__client,random)
         if self.__alphabet != "abcdefghijklmnopqrstuvwxyz":
             url += '&amp;alphabet=%s' % self.__alphabet
         if self.__letters != 6:
@@ -85,15 +87,15 @@ class CaptchasDotNet:
         return '''
         <a href="http://captchas.net"><img
             style="border: none; vertical-align: bottom"
-            id="%s" src="%s" width="%d" height="%d"
+            id="%(id)s" src="%(source)s" width="%(width)d" height="%(height)d"
             alt="The CAPTCHA image" /></a>
         <script type="text/javascript">
           <!--
           function captchas_image_error (image) 
           {
             if (!image.timeout) return true;
-            image.src = image.src.replace (/^http:\/\/image\.captchas\.net/, 
-                                           'http://image.backup.captchas.net');
+            image.src = image.src.replace (/^%(protocol)s:\/\/image\.captchas\.net/, 
+                                           '%(protocol)s://image.backup.captchas.net');
             return captchas_image_loaded (image);
           }
 
@@ -105,16 +107,20 @@ class CaptchasDotNet:
             return true;
           }
 
-          var image = document.getElementById ('%s');
+          var image = document.getElementById ('%(id)s');
           image.onerror = function() {return captchas_image_error (image);};
           image.onload = function() {return captchas_image_loaded (image);};
           image.timeout 
             = window.setTimeout(
-               "captchas_image_error (document.getElementById ('%s'))",
+               "captchas_image_error (document.getElementById ('%(id)s'))",
                10000);
           image.src = image.src;
           //-->      
-        </script>''' % (id, self.image_url (random), self.__width, self.__height, id, id)
+        </script>''' % ( {'id':id, 
+                          'source': self.image_url(random), 
+                          'width': self.__width, 
+                          'height': self.__height,
+                          'protocol': self.__protocol})
         
     def get_answer (self, random ):
         # The format of the password.

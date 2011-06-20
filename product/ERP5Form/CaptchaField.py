@@ -67,7 +67,10 @@ class CaptchasDotNetProvider(object):
   def getImageGenerator (self, field):
     captchas_client = field.get_value("captcha_dot_net_client") or "demo"
     captchas_secret = field.get_value("captcha_dot_net_secret") or "secret"
-    return CaptchasDotNet.CaptchasDotNet(client = captchas_client, secret = captchas_secret)
+    captchas_use_ssl = field.get_value("captcha_dot_net_use_ssl") or False
+    return CaptchasDotNet.CaptchasDotNet(client = captchas_client, 
+                                        secret = captchas_secret, 
+                                        use_ssl = captchas_use_ssl)
   
   def generate(self, field):
     image_generator = self.getImageGenerator(field)
@@ -90,14 +93,22 @@ class CaptchasDotNetProvider(object):
                                  description='Your secret on captchas.net to get the pictures.',
                                  default="secret",
                                  size=32,
+                                 required=0),
+                            dict(id='captcha_dot_net_use_ssl',
+                                 title='Captchas.net ssl connection',
+                                 description='Use secured connection with the service',
+                                 default=0,                                 
                                  required=0)]
+
   def getExtraPropertyList(self):
     return [fields.StringField(**self._dynamic_property_list[0]),
-            fields.PasswordField(**self._dynamic_property_list[1])]    
+            fields.PasswordField(**self._dynamic_property_list[1]),
+            fields.CheckBoxField(**self._dynamic_property_list[2])]    
 
   def getExtraTalesPropertyList(self):
     return [TALESField(**self._dynamic_property_list[0]),
-            TALESField(**self._dynamic_property_list[1])]                           
+            TALESField(**self._dynamic_property_list[1]),
+            TALESField(**self._dynamic_property_list[2])]                          
 
 class NumericCaptchaProvider(object):
 
