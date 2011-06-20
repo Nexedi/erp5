@@ -284,6 +284,28 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.tic()
     self.logout()
 
+  def stepCheckAssignmentAfterActiveLogin(self, sequence):
+    portal_catalog = self.portal.portal_catalog
+    reference = sequence["reference"]
+    assignment_function = sequence["assignment_function"]
+    assignment_role = sequence["assignment_role"]
+    credential_request = portal_catalog.getResultValue(portal_type="Credential Request",
+                                                       reference=reference)
+    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
+                                                 follow_up=credential_request)
+    self.stepTic()
+    self.logout()
+    self.portal.ERP5Site_activeLogin(mail_message.getReference())
+    self.login("ERP5TypeTestCase")
+    self.stepTic()
+    person = portal_catalog.getResultValue(reference=reference,
+                                           portal_type="Person")
+    assignment_list = person.objectValues(portal_type="Assignment")
+    self.assertEquals(len(assignment_list), 1)
+    assignment = assignment_list[0]
+    self.assertEquals(assignment.getFunction(), assignment_function)
+    self.assertEquals(assignment.getRole(), assignment_role)
+
   def getUserFolder(self):
     """Returns the acl_users. """
     return self.getPortal().acl_users
@@ -830,46 +852,22 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(credential_request.getDefaultEmailText(), "gabriel@test.com")
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
+
   def testBase_getDefaultAssignmentArgumentDict(self):
-    portal_catalog = self.portal.portal_catalog
     self.stepSetCredentialRequestAutomaticApprovalPreferences()
     self.stepSetCredentialAssignmentPropertyList()
     self._createCredentialRequest()
-    credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
-                                                       reference="gabriel")
-    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
-                                                 follow_up=credential_request)
-    self.stepTic()
-    self.logout()
-    self.portal.ERP5Site_activeLogin(mail_message.getReference())
-    self.login("ERP5TypeTestCase")
-    self.stepTic()
-    person = portal_catalog.getResultValue(reference="gabriel", portal_type="Person")
-    assignment_list = person.objectValues(portal_type="Assignment")
-    self.assertEquals(len(assignment_list), 1)
-    assignment = assignment_list[0]
-    self.assertEquals(assignment.getFunction(), "member")
-    self.assertEquals(assignment.getRole(), "internal")
+    sequence = dict(reference="gabriel",
+                    assignment_function="member",
+                    assignment_role="internal")
+    self.stepCheckAssignmentAfterActiveLogin(sequence)
     self.stepSetCredentialAssignmentPropertyList(dict(role_list=["client",],
-                                                    function_list=["agent"]))
+                                                    function_list=["agent",]))
     self._createCredentialRequest(reference="credential_user")
-    credential_request = portal_catalog.getResultValue(portal_type="Credential Request",
-                                                       reference="credential_user")
-    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
-                                                 follow_up=credential_request)
-    self.stepTic()
-    self.logout()
-    self.portal.ERP5Site_activeLogin(mail_message.getReference())
-    self.login("ERP5TypeTestCase")
-    self.stepTic()
-    person = portal_catalog.getResultValue(reference="credential_user",
-                                           portal_type="Person")
-    assignment_list = person.objectValues(portal_type="Assignment")
-    self.assertEquals(len(assignment_list), 1)
-    assignment = assignment_list[0]
-    self.assertEquals(assignment.getFunction(), "agent")
-    self.assertEquals(assignment.getRole(), "client")
-
+    sequence = dict(reference="credential_user",
+                    assignment_function="agent",
+                    assignment_role="client")
+    self.stepCheckAssignmentAfterActiveLogin(sequence)
 
   def test_xx_checkCredentialQuestionIsNotCaseSensitive(self):
     '''
