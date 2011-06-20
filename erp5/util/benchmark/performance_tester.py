@@ -176,6 +176,8 @@ class PerformanceTester(object):
 
           i = 0
           continue
+        else:
+          msg = None
 
       if msg is not None:
         error_message_set.add(msg)
