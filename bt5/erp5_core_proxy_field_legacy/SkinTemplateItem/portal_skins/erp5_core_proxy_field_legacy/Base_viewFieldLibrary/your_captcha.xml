@@ -12,6 +12,7 @@
               <list>
                 <string>captcha_dot_net_client</string>
                 <string>captcha_dot_net_secret</string>
+                <string>captcha_dot_net_use_ssl</string>
               </list>
             </value>
         </item>
@@ -21,6 +22,7 @@
               <list>
                 <string>captcha_dot_net_client</string>
                 <string>captcha_dot_net_secret</string>
+                <string>captcha_dot_net_use_ssl</string>
               </list>
             </value>
         </item>
@@ -111,6 +113,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>captcha_dot_net_use_ssl</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>captcha_type</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -164,6 +170,10 @@
                 <item>
                     <key> <string>captcha_dot_net_secret</string> </key>
                     <value> <string>secret</string> </value>
+                </item>
+                <item>
+                    <key> <string>captcha_dot_net_use_ssl</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>captcha_type</string> </key>
