@@ -28,31 +28,47 @@
 #
 ##############################################################################
 
-from slapos.tool.nosqltester import NoSQLTester
+from benchmark import CSVBenchmarkResult
+
+class CSVScalabilityBenchmarkResult(CSVBenchmarkResult):
+  def flush(self):
+    super(CSVScalabilityBenchmarkResult, self).flush()
+    self._argument_namespace.notify_method(self._result_filename,
+                                           self._result.tell())
+
 from erp5.utils.benchmark.performance_tester import PerformanceTester
 
-class ScalabilityTester(NoSQLTester):
+class ScalabilityTester(PerformanceTester):
+  def preRun(self):
+    pass
+
+  def getResultClass(self):
+    if not self._argument_namespace.erp5_publish_url:
+      return CSVScalabilityBenchmarkResult
+
+    return super(ScalabilityTester, self).getResultClass()
+
+from slapos.tool.nosqltester import NoSQLTester
+
+class RunScalabilityTester(NoSQLTester):
   def __init__(self):
-    super(ScalabilityTester, self).__init__()
+    super(RunScalabilityTester, self).__init__()
 
   def _add_parser_arguments(self, parser):
-    super(ScalabilityTester, self)._add_parser_arguments(parser)
-    PerformanceTester._add_parser_arguments(parser)
+    super(RunScalabilityTester, self)._add_parser_arguments(parser)
+    ScalabilityTester._add_parser_arguments(parser)
 
   def _parse_arguments(self, parser):
-    namespace = super(ScalabilityTester, self)._parse_arguments(parser)
-    PerformanceTester._check_parsed_arguments(namespace)
+    namespace = super(RunScalabilityTester, self)._parse_arguments(parser)
+    ScalabilityTester._check_parsed_arguments(namespace)
+    namespace.notify_method = self.send_result_availability_notification
     return namespace
 
   def run_tester(self):
-    performance_tester = PerformanceTester(
-      self.send_result_availability_notification,
-      self.argument_namespace)
-
-    performance_tester.run()
+    ScalabilityTester(self.argument_namespace).run()
 
 def main():
-  ScalabilityTester().run()
+  RunScalabilityTester().run()
 
 if __name__ == '__main__':
   main()
