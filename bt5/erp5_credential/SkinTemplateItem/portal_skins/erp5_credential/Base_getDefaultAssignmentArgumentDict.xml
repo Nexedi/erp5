@@ -51,11 +51,14 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  This is script is used by ERP5Site_registerCredentialRequest to be overwritten \n
-  for each project that you want create one Credential Request or Person \n
-  with specific role and function\n
+  Returns the function list and role list according to the properties \n
+  selected in System Preference enabled\n
 """\n
-return dict(role_list=[], function_list=[])\n
+portal_preferences = context.getPortalObject().portal_preferences\n
+function_list = portal_preferences.getPreferredCredentialAssignmentFunctionList()\n
+role_list = portal_preferences.getPreferredCredentialAssignmentRoleList()\n
+\n
+return dict(role_list=role_list, function_list=function_list)\n
 </string> </value>
         </item>
         <item>
