@@ -32,6 +32,8 @@ import argparse
 import os
 import sys
 import multiprocessing
+import datetime
+import xmlrpclib
 
 from benchmark import ArgumentType, BenchmarkProcess
 
@@ -106,6 +108,15 @@ class PerformanceTester(object):
                         help='Index of the first user within userInfo '
                              '(default: 0)')
 
+    parser.add_argument('--erp5-publish-url',
+                        metavar='ERP5_PUBLISH_URL',
+                        help='ERP5 URL to publish the results to '
+                             '(default: disabled, thus writing to CSV files)')
+
+    parser.add_argument('--erp5-publish-project',
+                        metavar='ERP5_PUBLISH_PROJECT',
+                        help='ERP5 publish project')
+
     # Mandatory arguments
     parser.add_argument('url',
                         type=ArgumentType.ERP5UrlType,
@@ -132,6 +143,7 @@ class PerformanceTester(object):
       object_benchmark_suite_list.append(ArgumentType.objectFromModule(benchmark_suite,
                                                                        callable_object=True))
 
+    namespace.benchmark_suite_name_list = namespace.benchmark_suite_list
     namespace.benchmark_suite_list = object_benchmark_suite_list
 
     max_nb_users = isinstance(namespace.users, tuple) and namespace.users[1] or \
@@ -140,6 +152,11 @@ class PerformanceTester(object):
     namespace.user_tuple = namespace.user_tuple[namespace.user_index:]
     if max_nb_users > len(namespace.user_tuple):
       raise argparse.ArgumentTypeError("Not enough users in the given file")
+
+    if (namespace.erp5_publish_url and not namespace.erp5_publish_project) or \
+       (not namespace.erp5_publish_url and namespace.erp5_publish_project):
+      raise argparse.ArgumentTypeError("Publish ERP5 URL and project must "
+                                       "be specified")
 
     return namespace
 
@@ -151,13 +168,41 @@ class PerformanceTester(object):
     return namespace
 
   def getResultClass(self):
-    from benchmark import CSVBenchmarkResult
-    return CSVBenchmarkResult
+    if self._argument_namespace.erp5_publish_url:
+      from benchmark import ERP5BenchmarkResult
+      return ERP5BenchmarkResult
+    else:
+      from benchmark import CSVBenchmarkResult
+      return CSVBenchmarkResult
+
+  def preRun(self):
+    if not self._argument_namespace.erp5_publish_url:
+      return
+
+    test_result_module = xmlrpclib.ServerProxy(
+      self._argument_namespace.erp5_publish_url, verbose=True, allow_none=True)
+
+    # TODO: range of users?
+    benchmark_result = test_result_module.TestResultModule_addBenchmarkResult(
+      '%d repeat with %d concurrent users' % (self._argument_namespace.repeat,
+                                              self._argument_namespace.users),
+      self._argument_namespace.erp5_publish_project,
+      datetime.datetime.now())
+
+    try:
+      benchmark_result_id = benchmark_result['id']
+    except:
+      raise RuntimeError, "Cannot create the benchmark result"
+
+    self._argument_namespace.erp5_publish_url += \
+        'test_result_module/%s' % benchmark_result_id
 
   def _run_constant(self, nb_users):
     process_list = []
     exit_msg_queue = multiprocessing.Queue(nb_users)
+
     result_class = self.getResultClass()
+    self.preRun()
 
     for user_index in range(nb_users):
       process = BenchmarkProcess(exit_msg_queue, result_class,

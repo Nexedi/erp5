@@ -168,7 +168,14 @@ import abc
 class BenchmarkResult(object):
   __metaclass__ = abc.ABCMeta
 
-  def __init__(self):
+  def __init__(self, argument_namespace, nb_users, user_index):
+    self._argument_namespace = argument_namespace
+    self._nb_users = nb_users
+    self._user_index = user_index
+
+    self._log_level = self._argument_namespace.enable_debug and \
+        logging.DEBUG or logging.INFO
+
     self._stat_list = []
     self._suite_idx = 0
     self._result_idx = 0
@@ -180,11 +187,10 @@ class BenchmarkResult(object):
     self.label_list = []
     self.logger = self._getLogger()
 
-  @abc.abstractmethod
   def _getLogger(self):
-    pass
+    logging.basicConfig(stream=self.log_file, level=self._log_level)
+    return logging.getLogger('erp5.utils.benchmark')
 
-  @abc.abstractmethod
   def __enter__(self):
     return self
 
@@ -241,32 +247,24 @@ class BenchmarkResult(object):
 
   @abc.abstractmethod
   def __exit__(self, exc_type, exc_value, traceback):
+    self.flush()
     return True
 
 class CSVBenchmarkResult(BenchmarkResult):
   def __init__(self, argument_namespace, nb_users, user_index):
-    self._argument_namespace = argument_namespace
-    self._nb_users = nb_users
-    self._user_index = user_index
-
     filename_prefix = self.getFilenamePrefix()
 
     self.result_filename = "%s.csv" % filename_prefix
     self.result_filename_path = os.path.join(
-      self._argument_namespace.report_directory, self.result_filename)
+      argument_namespace.report_directory, self.result_filename)
 
-    self.log_filename = "%s.log" % filename_prefix
-    self.log_filename_path = os.path.join(
-      self._argument_namespace.report_directory, self.log_filename)
+    self._log_filename = "%s.log" % filename_prefix
+    self._log_filename_path = os.path.join(
+      argument_namespace.report_directory, self._log_filename)
+
+    self.log_file = open(self._log_filename_path, 'w')
 
     super(CSVBenchmarkResult, self).__init__()
-
-  def _getLogger(self):
-    logging.basicConfig(filename=self.log_filename_path, filemode='w',
-                        level=self._argument_namespace.enable_debug and \
-                          logging.DEBUG or logging.INFO)
-
-    return logging.getLogger('erp5.utils.benchmark')
 
   def getFilenamePrefix(self):
     max_nb_users = isinstance(self._argument_namespace.users, int) and \
@@ -298,15 +296,53 @@ class CSVBenchmarkResult(BenchmarkResult):
     super(CSVBenchmarkResult, self).flush()
 
   def __exit__(self, exc_type, exc_value, traceback):
-    self.flush()
+    super(CSVBenchmarkResult, self).__exit__(exc_type, exc_value, traceback)
     self._result_file.close()
 
     if exc_type:
-      msg = "An error occured, see: %s" % self.log_filename_path
+      msg = "An error occured, see: %s" % self._log_filename_path
       if isinstance(exc_type, StopIteration):
         raise StopIteration, msg
       else:
         raise RuntimeError, msg
+
+from cStringIO import StringIO
+
+import xmlrpclib
+
+class ERP5BenchmarkResult(BenchmarkResult):
+  def __init__(self, *args, **kwargs):
+    self.log_file = StringIO()
+    self._log_buffer_list = []
+
+    super(ERP5BenchmarkResult, self).__init__(*args, **kwargs)
+
+  def iterationFinished(self):
+    super(ERP5BenchmarkResult, self).iterationFinished()
+
+    # TODO: garbage?
+    self._log_buffer_list.append(self.log_file.getvalue())
+    self.log_file.seek(0)
+
+  def flush(self):
+    benchmark_result = xmlrpclib.ServerProxy(
+      self._argument_namespace.erp5_publish_url,
+      verbose=True,
+      allow_none=True)
+
+    benchmark_result.BenchmarkResult_addResultLineList(
+      self._argument_namespace.user_tuple[self._user_index][0],
+      self._argument_namespace.repeat,
+      self._nb_users,
+      self._argument_namespace.benchmark_suite_name_list,
+      self.getLabelList(),
+      self._all_result_list,
+      self._log_buffer_list)
+
+    super(ERP5BenchmarkResult, self).flush()
+
+  def __exit__(self, exc_type, exc_value, traceback):
+    super(ERP5BenchmarkResult, self).__exit__(exc_type, exc_value, traceback)
 
 import multiprocessing
 import csv
@@ -336,13 +372,13 @@ class BenchmarkProcess(multiprocessing.Process):
   def stopGracefully(self, *args, **kwargs):
     raise StopIteration, "Interrupted by user"
 
-  def getBrowser(self, log_filename_path):
+  def getBrowser(self, log_file):
     info_list = tuple(self._argument_namespace.url) + \
         tuple(self._argument_namespace.user_tuple[self._user_index])
 
     return Browser(*info_list,
                    is_debug=self._argument_namespace.enable_debug,
-                   log_filename=log_filename_path,
+                   log_file=log_file,
                    is_legacy_listbox=self._argument_namespace.is_legacy_listbox)
 
   def runBenchmarkSuiteList(self, result):
@@ -392,7 +428,7 @@ class BenchmarkProcess(multiprocessing.Process):
       signal.signal(signal.SIGTERM, self.stopGracefully)
 
     try:
-      self._browser = self.getBrowser(result_instance.log_filename_path)
+      self._browser = self.getBrowser(result_instance.log_file)
     except:
       self._logger.error(traceback.format_exc())
       raise
