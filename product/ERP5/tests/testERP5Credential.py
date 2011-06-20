@@ -235,14 +235,23 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.tic()
     self.logout()
 
-  def stepSetCredentialRequestAutomaticApprovalPreferences(self, sequence=None,
-      sequence_list=None, **kw):
+  def stepSetCredentialRequestAutomaticApprovalPreferences(self, sequence=None):
     self.login()
     preference = self._getPreference()
     preference.edit(preferred_credential_request_automatic_approval=True)
     self._enablePreference()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
+    self.logout()
+
+  def stepSetCredentialAssignmentPropertyList(self, sequence={}):
+    role_list = sequence.get("role_list", ["internal",])
+    function_list = sequence.get("function_list", ["member",])
+    self.login()
+    preference = self._getPreference()
+    preference.edit(preferred_credential_assignment_role_list=role_list,
+                    preferred_credential_assignment_function_list=function_list)
+    self._enablePreference()
+    self.stepTic()
     self.logout()
 
   def stepSetOrganisationCredentialUpdateAutomaticApprovalPreferences(self, sequence=None,
@@ -720,8 +729,7 @@ class TestERP5Credential(ERP5TypeTestCase):
                                last_name="Monnerat",
                                reference="gabriel",
                                password="123",
-                               default_email_text="gabriel@test.com",
-                               role="client"):
+                               default_email_text="gabriel@test.com"):
     self.logout()
     self.portal.ERP5Site_registerCredentialRequest(first_name=first_name,
                                                    last_name=last_name,
@@ -732,8 +740,7 @@ class TestERP5Credential(ERP5TypeTestCase):
                                                    default_telephone_text="223344",
                                                    default_address_street_address="Test Street",
                                                    default_address_city="Campos",
-                                                   default_address_zip_code="28024030",
-                                                   role=role)
+                                                   default_address_zip_code="28024030")
     self.login("ERP5TypeTestCase")
     self.stepTic()
 
@@ -823,29 +830,46 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(credential_request.getDefaultEmailText(), "gabriel@test.com")
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
-  def testOverwriteBase_getDefaultAssignmentArgumentDict(self):
+  def testBase_getDefaultAssignmentArgumentDict(self):
     portal_catalog = self.portal.portal_catalog
-    portal_skins = self.getSkinsTool()
-    script = portal_skins.erp5_credential.Base_getDefaultAssignmentArgumentDict
-    self.login("ERP5TypeTestCase")
-    script.ZPythonScript_edit("**kw",
-              "return dict(role_list=['internal',], function_list=['member',])")
-    self.logout()
     self.stepSetCredentialRequestAutomaticApprovalPreferences()
-    self._createCredentialRequest(role=None)
+    self.stepSetCredentialAssignmentPropertyList()
+    self._createCredentialRequest()
     credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
                                                        reference="gabriel")
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
                                                  follow_up=credential_request)
+    self.stepTic()
     self.logout()
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
     self.login("ERP5TypeTestCase")
     self.stepTic()
     person = portal_catalog.getResultValue(reference="gabriel", portal_type="Person")
     assignment_list = person.objectValues(portal_type="Assignment")
+    self.assertEquals(len(assignment_list), 1)
     assignment = assignment_list[0]
     self.assertEquals(assignment.getFunction(), "member")
     self.assertEquals(assignment.getRole(), "internal")
+    self.stepSetCredentialAssignmentPropertyList(dict(role_list=["client",],
+                                                    function_list=["agent"]))
+    self._createCredentialRequest(reference="credential_user")
+    credential_request = portal_catalog.getResultValue(portal_type="Credential Request",
+                                                       reference="credential_user")
+    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
+                                                 follow_up=credential_request)
+    self.stepTic()
+    self.logout()
+    self.portal.ERP5Site_activeLogin(mail_message.getReference())
+    self.login("ERP5TypeTestCase")
+    self.stepTic()
+    person = portal_catalog.getResultValue(reference="credential_user",
+                                           portal_type="Person")
+    assignment_list = person.objectValues(portal_type="Assignment")
+    self.assertEquals(len(assignment_list), 1)
+    assignment = assignment_list[0]
+    self.assertEquals(assignment.getFunction(), "agent")
+    self.assertEquals(assignment.getRole(), "client")
+
 
   def test_xx_checkCredentialQuestionIsNotCaseSensitive(self):
     '''
