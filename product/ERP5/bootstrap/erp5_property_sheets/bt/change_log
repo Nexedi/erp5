@@ -1,3 +1,6 @@
+2011-06-20 Kazuhiko
+* add delivery_mode category in TradeModelPath.
+
 2011-04-24 Kazuhiko
 * remove 'id' from BaseType/searchable_text_property_id_property's default.
 
