@@ -292,22 +292,7 @@ class IntrospectionTool(LogMixin, BaseTool):
                                 cache_factory='erp5_content_long')
     return  cached_loadExternalConfig()
 
-  security.declareProtected(Permissions.ManagePortal, '_getZopeConfigurationFile')
-  def _getZopeConfigurationFile(self, relative_path="", mode="r"):
     """
-     Get a configuration file from the instance using relative path
-    """
-    if ".." in relative_path or relative_path.startswith("/"):
-      raise Unauthorized("In Relative Path, you cannot use .. or startwith / for security reason.")
-
-    instance_home = getConfiguration().instancehome
-    file_path = os.path.join(instance_home, relative_path)
-    if not os.path.exists(file_path):
-      raise IOError, 'The file: %s does not exist.' % file_path
-
-    return open(file_path, mode)
-    
-
   security.declareProtected(Permissions.ManagePortal, 'getSoftwareHome')
   def getSoftwareHome(self):
     """
