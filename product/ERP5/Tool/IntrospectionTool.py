@@ -292,20 +292,17 @@ class IntrospectionTool(LogMixin, BaseTool):
                                 cache_factory='erp5_content_long')
     return  cached_loadExternalConfig()
 
+  security.declareProtected(Permissions.ManagePortal, '_getSoftwareHome')
+  def _getSoftwareHome(self):
     """
-  security.declareProtected(Permissions.ManagePortal, 'getSoftwareHome')
-  def getSoftwareHome(self):
-    """
-      EXPERIMENTAL - DEVELOPMENT
-
       Get the value of SOFTWARE_HOME for zopectl startup script
       or from zope.conf (whichever is most relevant)
     """
     return getConfiguration().softwarehome
 
 
-  security.declareProtected(Permissions.ManagePortal, 'getPythonExecutable')
-  def getPythonExecutable(self):
+  security.declareProtected(Permissions.ManagePortal, '_getPythonExecutable')
+  def _getPythonExecutable(self):
     """
       Get the value of PYTHON for zopectl startup script
       or from zope.conf (whichever is most relevant)
@@ -353,8 +350,8 @@ class IntrospectionTool(LogMixin, BaseTool):
   #  config_file.close()
   #  return 
 
-  security.declareProtected(Permissions.ManagePortal, 'getProductPathList')
-  def getProductPathList(self):
+  security.declareProtected(Permissions.ManagePortal, '_getProductPathList')
+  def _getProductPathList(self):
     """
       Get the value of SOFTWARE_HOME for zopectl startup script
       or from zope.conf (whichever is most relevant)
