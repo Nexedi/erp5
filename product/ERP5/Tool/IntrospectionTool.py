@@ -30,6 +30,7 @@
 import os
 import sys
 import tempfile
+import json
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.CMFCore.utils import getToolByName
@@ -446,4 +447,17 @@ class IntrospectionTool(LogMixin, BaseTool):
            external_connection_dict=self._getExternalConnectionDict(), 
            business_template_dict=self._getBusinessTemplateRevisionDict(), 
            business_template_repository_list=business_template_repository_list)
+
+  security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureAsJSON')
+  def getSystemSignatureAsJSON(self, REQUEST=None):
+    """
+      Returns the information as JSON. 
+
+      THIS merhod could be a decorator or use a some other clever way to convert
+      the getSystemSignatureDict
+    """
+    if REQUEST is not None:
+      REQUEST.set("Content-Type", "application/json")
+    return json.dumps(self.getSystemSignatureDict())
+
 InitializeClass(IntrospectionTool)
