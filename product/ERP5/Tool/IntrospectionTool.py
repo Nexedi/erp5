@@ -357,6 +357,55 @@ class IntrospectionTool(LogMixin, BaseTool):
     return get_system_version_dict()
 
   security.declareProtected(Permissions.ManagePortal,
+      '_getExternalConnectionDict')
+  def _getExternalConnectionDict(self):
+    """ Return a dictionary with all connections from ERP5 to an External
+        Service, this may include MySQL, Memcached, Kumofs, Ldap or any other.
+
+        The standard format is:
+	  {'relative_url/method_or_property_id' : method_value_output,}.
+    """
+    connection_dict = {}
+    portal = self.getPortalObject()
+
+    def collect_information_by_method(document, method_id):
+      method_object = getattr(document, method_id, None)
+      key = "%s/%s" % (document.getRelativeUrl(), method_id)
+      connection_dict[key] = method_object()
+
+    portal = self.getPortalObject()
+
+    # Collect information from portal memcached
+    for plugin in portal.portal_memcached.objectValues():
+      collect_information_by_method(plugin, "getUrlString")
+
+    system_preference = \
+       portal.portal_preferences.getActiveSystemPreference()
+
+    if system_preference is not None:
+      # Conversion Server information
+      collect_information_by_method(system_preference, 
+                         'getPreferredOoodocServerAddress')
+      collect_information_by_method(system_preference,
+                         'getPreferredOoodocServerPortNumber')
+
+    def collect_information_by_property(document, property_id):
+      key = "%s/%s" % (document.getId(), property_id)
+      connection_dict[key] = str(getattr(document, property_id, None))
+
+    # Collect information related to Mail Server.
+    collect_information_by_property(self.MailHost,'smtp_host')
+    collect_information_by_property(self.MailHost,'smtp_port')
+
+    # Collect information related to Databases. ie.: MySQL, LDap?
+    for conn in self.objectValues(["CMFActivity Database Connection", 
+                                   "Z MySQL Database Connection", 
+                                   "Z MySQL Deferred Database Connection"]):
+
+      collect_information_by_property(conn,'connection_string')
+
+    return connection_dict
+
   security.declareProtected(Permissions.ManagePortal, 
       '_getBusinessTemplateRevisionDict')
   def _getBusinessTemplateRevisionDict(self):
