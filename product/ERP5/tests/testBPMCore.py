@@ -409,12 +409,8 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     context_movement.setSourceValue(source_node)
     context_movement.setSourceSectionValue(source_section_node)
     self.assertEquals(None, business_path.getSourceValue())
-    self.assertEquals([source_node],
-                      business_path.getSourceValueList(context=context_movement))
     self.assertEquals([source_node.getRelativeUrl()],
-                      business_path.getSourceList(context=context_movement))
-    self.assertEquals(source_node.getRelativeUrl(),
-      business_path.getSource(context=context_movement, default='something'))
+                      business_path.getArrowCategoryDict(context=context_movement)['source'])
 
   def test_BusinessPathDynamicCategoryAccessProviderBusinessLinkPrecedence(self):
     movement_node = self.portal.organisation_module.newContent(
@@ -428,10 +424,8 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     context_movement = self.createMovement()
     context_movement.setSourceValue(movement_node)
     self.assertEquals(path_node, business_path.getSourceValue())
-    self.assertEquals(path_node,
-                      business_path.getSourceValue(context=context_movement))
-    self.assertEquals([path_node],
-                      business_path.getSourceValueList(context=context_movement))
+    self.assertEquals([path_node.getRelativeUrl()],
+                      business_path.getArrowCategoryDict(context=context_movement)['source'])
 
   def test_BusinessPathDynamicCategoryAccessProviderEmptyMovement(self):
     business_path = self.createTradeModelPath()
@@ -439,12 +433,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
 
     context_movement = self.createMovement()
     self.assertEquals(None, business_path.getSourceValue())
-    self.assertEquals(None,
-                      business_path.getSourceValue(context=context_movement))
-    self.assertEquals(None,
-                      business_path.getSource(context=context_movement))
-    self.assertEquals('something',
-      business_path.getSource(context=context_movement, default='something'))
+    self.assertFalse(business_path.getArrowCategoryDict(context=context_movement).has_key('source'))
 
   def test_BusinessState_getRemainingTradePhaseList(self):
     """
