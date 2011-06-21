@@ -97,10 +97,11 @@ class BusinessConfiguration(Item):
   def initializeWorkflow(self):
     """ Initialize Related Workflow"""
     workflow = self.getResourceValue()
-    workflow_history = getattr(self, 'workflow_history', None)
-    if workflow is not None and \
-      workflow_history is not None and \
-      (self.getResource() not in workflow_history):
+    workflow_history = getattr(self, 'workflow_history', {})
+    if workflow is None:
+      return
+
+    if self.getResource() not in workflow_history:
       if len(self.objectValues("ERP5 Configuration Save")) > 0:
         raise ValueError("Business Configuration Cannot be initialized, \
                           it contains one or more Configurator Save")
