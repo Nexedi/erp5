@@ -92,6 +92,7 @@
                         <string>my_view_mode_contact_listbox</string>
                         <string>my_view_mode_contact_listbox_int_index</string>
                         <string>my_view_mode_contact_listbox_title</string>
+                        <string>my_view_mode_role</string>
                       </list>
                     </value>
                 </item>
