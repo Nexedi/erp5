@@ -187,7 +187,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     if not os.path.exists(log_file):
       raise IOError, 'The file: %s does not exist.' % log_file
 
-    char_per_line=75
+    char_per_line = 75
 
     tailed_file = open(log_file,'r')
     while 1:
@@ -204,7 +204,7 @@ class IntrospectionTool(LogMixin, BaseTool):
       if (len(lines) > (line_number + 1)) or at_start:
         break
       # The lines are bigger than we thought
-      char_per_line = char_per_line * 1.3 # Inc for retry
+      char_per_line = char_per_line * 1.3  # Inc for retry
 
     tailed_file.close()
 
@@ -214,7 +214,6 @@ class IntrospectionTool(LogMixin, BaseTool):
       start = 0
 
     return "\n".join(lines[start:len(lines)])
-
 
   security.declareProtected(Permissions.ManagePortal, 'tailEventLog')
   def tailEventLog(self):
@@ -259,7 +258,7 @@ class IntrospectionTool(LogMixin, BaseTool):
                                compressed=compressed)
 
   security.declareProtected(Permissions.ManagePortal, 'getDataFs')
-  def getDataFs(self,  compressed=1, REQUEST=None):
+  def getDataFs(self, compressed=1, REQUEST=None):
     """
       Get the Data.fs.
     """
