@@ -318,45 +318,6 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     return getConfiguration().softwarehome
 
-  #security.declareProtected(Permissions.ManagePortal, 'setSoftwareHome')
-  #def setSoftwareHome(self, relative_path):
-  #  """
-  #    EXPERIMENTAL - DEVELOPMENT
-
-  #    Set the value of SOFTWARE_HOME for zopectl startup script
-  #    or from zope.conf (whichever is most relevant)
-
-  #    Rationale: multiple versions of ERP5 / Zope can be present
-  #    at the same time on the same system
-
-  #    WARNING: the list of possible path should be protected 
-  #    if possible (ex. /etc/erp5/software_home)
-  #  """
-  #  config = self._loadExternalConfig()
-  #  allowed_path_list = config.get("main", "zopehome").split("\n")
-  #  base_zope_path = config.get("base", "base_zope_path").split("\n")
-  #  path = "%s/%s/lib/python" % (base_zope_path,relative_path)
-  #
-  #  if path not in allowed_path_list:
-  #    raise Unauthorized("You are setting one Unauthorized path as Zope Home.")
-
-  #  config_file = self._getZopeConfigurationFile("bin/zopectl")
-  #  new_file_list = []
-  #  for line in config_file:
-  #    if line.startswith("SOFTWARE_HOME="):
-  #      # Only comment the line, so it can easily reverted 
-  #      new_file_list.append("#%s" % (line))
-  #      new_file_list.append('SOFTWARE_HOME="%s"\n' % (path))
-  #    else:
-  #      new_file_list.append(line)
-
-  #  config_file.close()
-
-  #  # reopen file for write
-  #  config_file = self._getZopeConfigurationFile("bin/zopectl", "w")
-  #  config_file.write("".join(new_file_list))
-  #  config_file.close()
-  #  return 
 
   security.declareProtected(Permissions.ManagePortal, 'getPythonExecutable')
   def getPythonExecutable(self):
