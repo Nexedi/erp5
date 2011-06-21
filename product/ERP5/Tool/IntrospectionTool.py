@@ -316,39 +316,6 @@ class IntrospectionTool(LogMixin, BaseTool):
     # Not possible get configuration from the zopecl
     return None
     
-  #security.declareProtected(Permissions.ManagePortal, 'setPythonExecutable')
-  #def setPythonExecutable(self, path):
-  #  """
-  #    Set the value of PYTHON for zopectl startup script
-  #    or from zope.conf (whichever is most relevant)
-
-  #    Rationale: some day Zope will no longer use python2.4
-
-  #    WARNING: the list of possible path should be protected 
-  #    if possible (ex. /etc/erp5/python)
-  #  """
-  #  config = self._loadExternalConfig()
-  #  allowed_path_list = config.get("main", "python").split("\n")
-
-  #  if path not in allowed_path_list:
-  #    raise Unauthorized("You are setting one Unauthorized path as Python.")
-
-  #  config_file = self._getZopeConfigurationFile("bin/zopectl")
-  #  new_file_list = []
-  #  for line in config_file:
-  #    if line.startswith("PYTHON="):
-  #      # Only comment the line, so it can easily reverted 
-  #      new_file_list.append("#%s" % (line))
-  #      new_file_list.append('PYTHON="%s"\n' % (path))
-  #    else:
-  #      new_file_list.append(line)
-
-  #  config_file.close()    
-  #  # reopen file for write
-  #  config_file = self._getZopeConfigurationFile("bin/zopectl", "w")
-  #  config_file.write("".join(new_file_list))
-  #  config_file.close()
-  #  return 
 
   security.declareProtected(Permissions.ManagePortal, '_getProductPathList')
   def _getProductPathList(self):
