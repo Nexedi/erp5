@@ -318,16 +318,10 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     return getConfiguration().products
 
-
-  #
-  #   Library signature
-  #
-  # XXX this function can be cached to prevent disk access.
-  security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureDict')
-  def getSystemSignatureDict(self):
+  security.declareProtected(Permissions.ManagePortal, '_getSystemVersionDict')
+  def _getSystemVersionDict(self):
     """
       Returns a dictionnary with all versions of installed libraries
-
       {
          'python': '2.4.3'
        , 'pysvn': '1.2.3'
@@ -335,32 +329,33 @@ class IntrospectionTool(LogMixin, BaseTool):
       }
       NOTE: consider using autoconf / automake tools ?
     """
-    def tuple_to_format_str(t):
-       return '.'.join([str(i) for i in t])
-    from Products import ERP5 as erp5_product
-    erp5_product_path =  erp5_product.__file__.split("/")[:-1]
-    try:
-      erp5_v = open("/".join((erp5_product_path) + ["VERSION.txt"])).read().strip()
-      erp5_version = erp5_v.replace("ERP5 ", "")
-    except:
-       erp5_version = None
+    def cached_getSystemVersionDict():
+      import pkg_resources
+      def tuple_to_format_str(t):
+         return '.'.join([str(i) for i in t])
 
-    from App import version_txt
-    zope_version = tuple_to_format_str(version_txt.getZopeVersion()[:3])
+      version_dict = {}
+      for dist in pkg_resources.working_set:
+        version_dict[dist.key] = dist.version
 
-    from sys import version_info
-    # Get only x.x.x numbers.
-    py_version = tuple_to_format_str(version_info[:3])
-    try:
-      import pysvn
-      # Convert tuple to x.x.x format
-      pysvn_version =  tuple_to_format_str(pysvn.version)
-    except:
-      pysvn_version = None
-    
-    return { "python" : py_version , "pysvn"  : pysvn_version ,
-             "erp5"   : erp5_version, "zope"   : zope_version
-           }
+      from Products import ERP5 as erp5_product
+      erp5_product_path = erp5_product.__file__.split("/")[:-1]
+      try:
+        erp5_v = open("/".join((erp5_product_path) + ["VERSION.txt"])).read().strip()
+        erp5_version = erp5_v.replace("ERP5 ", "")
+      except:
+         erp5_version = None
+
+      version_dict["ProductS.ERP5"] = erp5_version
+      return version_dict
+
+    get_system_version_dict = CachingMethod(
+                  cached_getSystemVersionDict,
+                  id='IntrospectionTool__getSystemVersionDict',
+                  cache_factory='erp5_content_long')
+
+    return get_system_version_dict()
+
   security.declareProtected(Permissions.ManagePortal,
       '_getActivityDict')
   def _getActivityDict(self):
