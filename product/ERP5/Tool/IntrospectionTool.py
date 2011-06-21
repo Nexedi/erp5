@@ -357,6 +357,17 @@ class IntrospectionTool(LogMixin, BaseTool):
     return get_system_version_dict()
 
   security.declareProtected(Permissions.ManagePortal,
+  security.declareProtected(Permissions.ManagePortal, 
+      '_getBusinessTemplateRevisionDict')
+  def _getBusinessTemplateRevisionDict(self):
+    """ Return a Dictionary of installed business templates and their revisions
+    """
+    business_template_dict = {}
+    for installed in self.portal_templates.getInstalledBusinessTemplateList():
+       business_template_dict[installed.getTitle()] = installed.getRevision()
+    return business_template_dict
+
+  security.declareProtected(Permissions.ManagePortal,
       '_getActivityDict')
   def _getActivityDict(self):
     """ Return a Dictionary with the snapshot with the status of activities. 
