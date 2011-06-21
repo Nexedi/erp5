@@ -33,7 +33,6 @@ import tempfile
 import json
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from AccessControl.SecurityManagement import setSecurityManager
@@ -301,7 +300,6 @@ class IntrospectionTool(LogMixin, BaseTool):
       or from zope.conf (whichever is most relevant)
     """
     return getConfiguration().softwarehome
-
 
   security.declareProtected(Permissions.ManagePortal, '_getPythonExecutable')
   def _getPythonExecutable(self):
