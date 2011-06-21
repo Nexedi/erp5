@@ -241,6 +241,17 @@ class PreferenceTool(BaseTool):
     return template_list
 
   security.declareProtected(Permissions.ManagePortal,
+                            'createActiveSystemPreference')
+  def createActiveSystemPreference(self):
+    """ Create a System Preference and enable it if there is no other
+        enabled System Preference in present.
+    """
+    if self.getActiveSystemPreference() is not None:
+      raise ValueError("Another Active Preference already exists.")
+    system_preference = self.newContent(portal_type='System Preference')
+    system_preference.enable()
+
+  security.declareProtected(Permissions.ManagePortal,
                             'createPreferenceForUser')
   def createPreferenceForUser(self, username, enable=True):
     """Creates a preference for a given user, and optionnally enable the
