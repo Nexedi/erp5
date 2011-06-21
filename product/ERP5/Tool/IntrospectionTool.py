@@ -429,4 +429,21 @@ class IntrospectionTool(LogMixin, BaseTool):
     activity_dict['total'] = len(self.portal_activities.getMessageList())
     return activity_dict
 
+  security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureDict')
+  def getSystemSignatureDict(self):
+    """ Returns a dictionary with all informations related to the instance.
+    This information can report what resources (memcache, mysql, zope,
+    python, libraries) the instance is using. Also, what business templates are
+    installed.
+
+    Such information is usefull to detect changes in the system, into upgrader, 
+    slapos and/or to build Introspection Reports.
+    """
+    business_template_repository_list = self.portal_templates.getRepositoryList()
+    return dict(
+           activity_dict=self._getActivityDict(),
+           version_dict=self._getSystemVersionDict(), 
+           external_connection_dict=self._getExternalConnectionDict(), 
+           business_template_dict=self._getBusinessTemplateRevisionDict(), 
+           business_template_repository_list=business_template_repository_list)
 InitializeClass(IntrospectionTool)
