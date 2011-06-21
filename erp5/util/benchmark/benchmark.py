@@ -185,11 +185,14 @@ class BenchmarkResult(object):
     self._current_suite_name = None
     self._result_idx_checkpoint_list = []
     self.label_list = []
-    self.logger = self._getLogger()
+    self._logger = None
 
-  def _getLogger(self):
-    logging.basicConfig(stream=self.log_file, level=self._log_level)
-    return logging.getLogger('erp5.utils.benchmark')
+  def getLogger(self):
+    if not self._logger:
+      logging.basicConfig(stream=self.log_file, level=self._log_level)
+      return logging.getLogger('erp5.utils.benchmark')
+
+    return self._logger
 
   def __enter__(self):
     return self
@@ -214,7 +217,7 @@ class BenchmarkResult(object):
     if self._first_iteration:
       self.label_list = self.getLabelList()
 
-    self.logger.debug("RESULTS: %s" % self.result_list)
+    self.getLogger().debug("RESULTS: %s" % self.result_list)
     self.result_list = []
     self._first_iteration = False
     self._suite_idx = 0
@@ -251,22 +254,22 @@ class BenchmarkResult(object):
     return True
 
 class CSVBenchmarkResult(BenchmarkResult):
-  def __init__(self, argument_namespace, nb_users, user_index):
-    filename_prefix = self.getFilenamePrefix()
+  def __init__(self, *args, **kwargs):
+    super(CSVBenchmarkResult, self).__init__(*args, **kwargs)
+
+    filename_prefix = self._getFilenamePrefix()
 
     self.result_filename = "%s.csv" % filename_prefix
     self.result_filename_path = os.path.join(
-      argument_namespace.report_directory, self.result_filename)
+      self._argument_namespace.report_directory, self.result_filename)
 
     self._log_filename = "%s.log" % filename_prefix
     self._log_filename_path = os.path.join(
-      argument_namespace.report_directory, self._log_filename)
+      self._argument_namespace.report_directory, self._log_filename)
 
     self.log_file = open(self._log_filename_path, 'w')
 
-    super(CSVBenchmarkResult, self).__init__()
-
-  def getFilenamePrefix(self):
+  def _getFilenamePrefix(self):
     max_nb_users = isinstance(self._argument_namespace.users, int) and \
         self._argument_namespace.users or self._argument_namespace.users[1]
 
@@ -301,6 +304,7 @@ class CSVBenchmarkResult(BenchmarkResult):
 
     if exc_type:
       msg = "An error occured, see: %s" % self._log_filename_path
+      self.getLogger().error("%s: %s\n%s" % (exc_type, exc_value, traceback))
       if isinstance(exc_type, StopIteration):
         raise StopIteration, msg
       else:
@@ -422,7 +426,7 @@ class BenchmarkProcess(multiprocessing.Process):
                                          self._nb_users,
                                          self._user_index)
 
-    self._logger = result_instance.logger
+    self._logger = result_instance.getLogger()
 
     if self._argument_namespace.repeat != -1:
       signal.signal(signal.SIGTERM, self.stopGracefully)

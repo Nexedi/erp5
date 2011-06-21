@@ -274,9 +274,6 @@ class PerformanceTester(object):
       error_message_set, exit_status = self._run_constant(
         self._argument_namespace.users)
 
-
-    import pdb
-    pdb.Pdb(stdin=open('/dev/stdin', 'r+'), stdout=open('/dev/stdout', 'r+')).set_trace()   
     self.postRun(error_message_set)
     return error_message_set, exit_status
 
