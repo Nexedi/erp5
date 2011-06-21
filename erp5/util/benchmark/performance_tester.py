@@ -185,6 +185,7 @@ class PerformanceTester(object):
       '%d repeat with %d concurrent users' % (self._argument_namespace.repeat,
                                               self._argument_namespace.users),
       self._argument_namespace.erp5_publish_project,
+      ' '.join(sys.argv),
       datetime.datetime.now())
 
     try:
@@ -195,12 +196,26 @@ class PerformanceTester(object):
     self._argument_namespace.erp5_publish_url += \
         'test_result_module/%s' % benchmark_result_id
 
+  def postRun(self, error_message_set):
+    if not self._argument_namespace.erp5_publish_url:
+      return
+
+    if error_message_set:
+      result = 'FAIL'
+    else:
+      result = 'PASS'
+
+    benchmark_result = xmlrpclib.ServerProxy(
+      self._argument_namespace.erp5_publish_url,
+      verbose=True, allow_none=True)
+
+    benchmark_result.BenchmarkResult_completed(result, error_message_set)
+
   def _run_constant(self, nb_users):
     process_list = []
     exit_msg_queue = multiprocessing.Queue(nb_users)
 
     result_class = self.getResultClass()
-    self.preRun()
 
     for user_index in range(nb_users):
       process = BenchmarkProcess(exit_msg_queue, result_class,
@@ -238,30 +253,39 @@ class PerformanceTester(object):
       i += 1
 
     if error_message_set:
-      for error_message in error_message_set:
-        print >>sys.stderr, "ERROR: %s" % error_message
+      return (error_message_set, 1)
 
-      return 1
-
-    return 0
+    return ((), 0)
 
   def run(self):
+    error_message_set, exit_status = (), 0
+    self.preRun()
+
     if isinstance(self._argument_namespace.users, tuple):
       nb_users, max_users = self._argument_namespace.users
       while True:
-        self._run_constant(nb_users)
-        if nb_users == max_users:
+        error_message_set, exit_status = self._run_constant(nb_users)
+        if exit_status != 0 or nb_users == max_users:
           break
 
         nb_users = min(nb_users + self._argument_namespace.users_range_increment,
                        max_users)
-
-      return 0
     else:
-      return self._run_constant(self._argument_namespace.users)
+      error_message_set, exit_status = self._run_constant(
+        self._argument_namespace.users)
+
+
+    import pdb
+    pdb.Pdb(stdin=open('/dev/stdin', 'r+'), stdout=open('/dev/stdout', 'r+')).set_trace()   
+    self.postRun(error_message_set)
+    return error_message_set, exit_status
 
 def main():
-  sys.exit(PerformanceTester().run())
+  error_message_set, exit_status = PerformanceTester().run()
+  for error_message in error_message_set:
+    print >>sys.stderr, "ERROR: %s" % error_message
+
+  sys.exit(exit_status)
 
 if __name__ == '__main__':
   main()

@@ -42,6 +42,9 @@ class ScalabilityTester(PerformanceTester):
   def preRun(self):
     pass
 
+  def postRun(self):
+    pass
+
   def getResultClass(self):
     if not self._argument_namespace.erp5_publish_url:
       return CSVScalabilityBenchmarkResult
