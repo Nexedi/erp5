@@ -28,6 +28,7 @@
 ##############################################################################
 
 import os
+import sys
 import tempfile
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
@@ -307,15 +308,7 @@ class IntrospectionTool(LogMixin, BaseTool):
       Get the value of PYTHON for zopectl startup script
       or from zope.conf (whichever is most relevant)
     """
-    config_file = self._getZopeConfigurationFile("bin/zopectl")
-    new_file_list = []
-    for line in config_file:
-      if line.startswith("PYTHON="):
-        return line.replace("PYTHON=","")
-
-    # Not possible get configuration from the zopecl
-    return None
-    
+    return sys.executable
 
   security.declareProtected(Permissions.ManagePortal, '_getProductPathList')
   def _getProductPathList(self):
