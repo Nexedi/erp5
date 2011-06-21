@@ -508,5 +508,17 @@ class IntrospectionTool(LogMixin, BaseTool):
     return { "python" : py_version , "pysvn"  : pysvn_version ,
              "erp5"   : erp5_version, "zope"   : zope_version
            }
+  security.declareProtected(Permissions.ManagePortal,
+      '_getActivityDict')
+  def _getActivityDict(self):
+    """ Return a Dictionary with the snapshot with the status of activities. 
+        failures (-2 and -3) and running. 
+    """
+    activity_dict = {}
+    # XXX Maybe this is not so efficient check. Performance Optimization 
+    # should be consider.
+    activity_dict['failure'] = len(self.portal_activities.getMessageList(processing_node=-2))
+    activity_dict['total'] = len(self.portal_activities.getMessageList())
+    return activity_dict
 
 InitializeClass(IntrospectionTool)
