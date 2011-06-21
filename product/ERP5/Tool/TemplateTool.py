@@ -436,7 +436,7 @@ class TemplateTool (BaseTool):
           # this looks like a subversion repository, try to check it out
           LOG('ERP5', INFO, 'TemplateTool doing a svn checkout of %s' % url)
           return self._download_svn(url, bt_id)
-
+        
         return self._download_local(file_path, bt_id)
       finally:
         os.remove(temppath)
@@ -1231,7 +1231,7 @@ class TemplateTool (BaseTool):
       return business_template_url_dict
 
     security.declareProtected(Permissions.ManagePortal,
-        'installBusinessTemplatesFromRepositories' )
+        'installBusinessTemplatesFromRepositories')
     def installBusinessTemplatesFromRepositories(self, template_list,
         only_newer=True, update_catalog=_MARKER):
       """Installs template_list from configured repositories by default only newest"""
