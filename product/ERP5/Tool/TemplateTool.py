@@ -1134,6 +1134,7 @@ class TemplateTool (BaseTool):
       for repository, property_dict in template_item_list:
         property_dict = property_dict.copy()
         id = property_dict['id']
+        filename = property_dict['id']
         del property_dict['id']
         version = property_dict['version']
         version_state = 'new'
@@ -1155,6 +1156,7 @@ class TemplateTool (BaseTool):
         obj = newTempBusinessTemplate(self, 'temp_' + uid,
                                       version_state = version_state,
                                       version_state_title = version_state_title,
+                                      filename = filename,
                                       installed_version = installed_version,
                                       installed_revision = installed_revision,
                                       repository = repository, **property_dict)
@@ -1225,7 +1227,7 @@ class TemplateTool (BaseTool):
         if name.endswith('.bt5'):
           name = name[:-4]
         business_template_url_dict[name] = {
-          'url':  '%s/%s' % (url, name),
+          'url':  '%s/%s' % (url, bt.filename),
           'revision': bt.getRevision()
           }
       return business_template_url_dict
