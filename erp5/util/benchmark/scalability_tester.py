@@ -39,10 +39,10 @@ class CSVScalabilityBenchmarkResult(CSVBenchmarkResult):
 from erp5.utils.benchmark.performance_tester import PerformanceTester
 
 class ScalabilityTester(PerformanceTester):
-  def preRun(self):
+  def preRun(self, *args, **kwargs):
     pass
 
-  def postRun(self):
+  def postRun(self, *args, **kwargs):
     pass
 
   def getResultClass(self):
