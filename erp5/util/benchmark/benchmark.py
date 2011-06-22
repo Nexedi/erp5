@@ -259,9 +259,9 @@ class CSVBenchmarkResult(BenchmarkResult):
 
     filename_prefix = self._getFilenamePrefix()
 
-    self.result_filename = "%s.csv" % filename_prefix
-    self.result_filename_path = os.path.join(
-      self._argument_namespace.report_directory, self.result_filename)
+    self._result_filename = "%s.csv" % filename_prefix
+    self._result_filename_path = os.path.join(
+      self._argument_namespace.report_directory, self._result_filename)
 
     self._log_filename = "%s.log" % filename_prefix
     self._log_filename_path = os.path.join(
@@ -282,7 +282,7 @@ class CSVBenchmarkResult(BenchmarkResult):
                   self._user_index)
 
   def __enter__(self):
-    self._result_file = open(self.result_filename_path, 'wb')
+    self._result_file = open(self._result_filename_path, 'wb')
     self._csv_writer = csv.writer(self._result_file, delimiter=',',
                                   quoting=csv.QUOTE_MINIMAL)
 
