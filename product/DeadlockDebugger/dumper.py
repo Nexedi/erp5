@@ -70,7 +70,10 @@ def dump_threads():
 
     frames = None
     res.append("End of dump")
-    return '\n'.join(res)
+    result = '\n'.join(res)
+    if isinstance(result, unicode):
+      result = result.encode('utf-8')
+    return result
 
 config = getConfiguration()
 deadlockdebugger = config.product_config.get('deadlockdebugger')
