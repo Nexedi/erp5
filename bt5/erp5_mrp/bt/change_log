@@ -1,4 +1,7 @@
 2011-06-22 yusei
+* Fix material consumption tab. Sort result as user can easily understand.
+
+2011-06-22 yusei
 * Fix bug on production order material consumption tab.
 
 2011-06-15 yusei

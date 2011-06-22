@@ -113,6 +113,14 @@ for movement in movement_list:\n
     if quantity:\n
       consumption_dict[obj.getUid()] = quantity * (movement.getQuantity() or 0)\n
 \n
+# sort result_list\n
+transformation_allowed_content_type_list = context.portal_types[\'Transformation\'].getTypeAllowedContentTypeList()\n
+def compare(a, b):\n
+    return cmp((consumption_dict.has_key(a.getUid()), a.portal_type in transformation_allowed_content_type_list),\n
+               (consumption_dict.has_key(b.getUid()), b.portal_type in transformation_allowed_content_type_list),\n
+               )\n
+result_list.sort(cmp=compare, reverse=True)\n
+\n
 context.REQUEST.set(\'consumption_dict\', consumption_dict)\n
 return result_list\n
 </string> </value>
