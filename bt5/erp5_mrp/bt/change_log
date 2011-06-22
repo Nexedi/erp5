@@ -1,4 +1,7 @@
 2011-06-22 yusei
+* Fix a bug. Quantity unit field on production order line must always be displayed.
+
+2011-06-22 yusei
 * Fix material consumption tab. Sort result as user can easily understand.
 
 2011-06-22 yusei
