@@ -256,27 +256,15 @@ class TemplateTool (BaseTool):
         Export the Business Template as a bt5 file and offer the user to
         download it.
       """
-      path = business_template.getTitle()
-      path = pathname2url(path)
-      # XXX Why is it necessary to create a temporary directory?
-      tmpdir_path = mkdtemp()
-      # XXX not thread safe
-      current_directory = os.getcwd()
-      os.chdir(tmpdir_path)
-      absolute_path = os.path.abspath(path)
-      export_string = business_template.export(path=absolute_path)
-      os.chdir(current_directory)
-      if RESPONSE is not None:
-        RESPONSE.setHeader('Content-type','tar/x-gzip')
-        RESPONSE.setHeader('Content-Disposition',
-                           'inline;filename=%s-%s.bt5' % \
-                               (path,
-                                business_template.getVersion()))
+      export_string = business_template.export()
       try:
+        if RESPONSE is not None:
+          RESPONSE.setHeader('Content-type','tar/x-gzip')
+          RESPONSE.setHeader('Content-Disposition', 'inline;filename=%s-%s.bt5'
+            % (business_template.getTitle(), business_template.getVersion()))
         return export_string.getvalue()
       finally:
         export_string.close()
-        shutil.rmtree(tmpdir_path)
 
     security.declareProtected( 'Import/Export objects', 'publish' )
     def publish(self, business_template, url, username=None, password=None):

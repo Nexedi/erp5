@@ -43,17 +43,6 @@ from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
 from Products.ERP5Type.Utils import simple_decorator
 
 @simple_decorator
-def chdir_working_copy(func):
-  def decorator(self, *args, **kw):
-    cwd = os.getcwd()
-    try:
-      os.chdir(self.working_copy)
-      return func(self, *args, **kw)
-    finally:
-      os.chdir(cwd)
-  return decorator
-
-@simple_decorator
 def selfcached(func):
   """Return a function which stores a computed value in an instance
   at the first call.
@@ -202,15 +191,10 @@ class WorkingCopy(Implicit):
     business_template.build()
     # XXX: Big hack to make export work as expected.
     transaction.commit()
-    old_cwd = os.getcwd()
-    try:
-      os.chdir(self.working_copy)
-      self._export(business_template)
-    finally:
-      os.chdir(old_cwd)
+    self._export(business_template)
 
   def _export(self, business_template):
-    bta = BusinessTemplateWorkingCopy(creation=1)
+    bta = BusinessTemplateWorkingCopy(creation=1, path=self.working_copy)
     self.addremove(*bta.export(business_template))
 
   def showOld(self, path):
@@ -386,6 +370,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
   def _writeString(self, obj, path):
     self.file_set.add(path)
     self._makeParent(path)
+    path = os.path.join(self.path, path)
     # write file unless unchanged
     file = None
     try:
@@ -412,8 +397,9 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     path = os.path.dirname(path)
     if path and path not in self.dir_set:
       self._makeParent(path)
-      if not os.path.exists(path):
-        os.mkdir(path)
+      real_path = os.path.join(self.path, path)
+      if not os.path.exists(real_path):
+        os.mkdir(real_path)
       self.dir_set.add(path)
 
   def export(self, business_template):
@@ -423,8 +409,8 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     business_template.export(bta=self)
     # Remove dangling files/dirs
     removed_set = set()
-    prefix_length = len(os.path.join('.', ''))
-    for dirpath, dirnames, filenames in os.walk('.'):
+    prefix_length = len(os.path.join(self.path, ''))
+    for dirpath, dirnames, filenames in os.walk(self.path):
       dirpath = dirpath[prefix_length:]
       for i in xrange(len(dirnames) - 1, -1, -1):
         d = dirnames[i]
@@ -432,13 +418,13 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
           d = os.path.join(dirpath, d)
           if d in self.dir_set:
             continue
-          shutil.rmtree(d)
+          shutil.rmtree(os.path.join(self.path, d))
           removed_set.add(d)
         del dirnames[i]
       for f in filenames:
         f = os.path.join(dirpath, f)
         if f not in self.file_set:
-          os.remove(f)
+          os.remove(os.path.join(self.path, f))
           removed_set.add(f)
     return self.file_set, removed_set
 

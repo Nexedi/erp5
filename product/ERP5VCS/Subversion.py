@@ -30,15 +30,35 @@
 ##############################################################################
 
 import errno, glob, os, re, shutil
+import threading
 from ZTUtils import make_query
 from Products.ERP5Type.Message import translateString
+from Products.ERP5Type.Utils import simple_decorator
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
 from Products.ERP5VCS.WorkingCopy import \
-  WorkingCopy, Dir, File, chdir_working_copy, selfcached, \
+  WorkingCopy, Dir, File, selfcached, \
   NotAWorkingCopyError, NotVersionedError, VcsConflictError
 from Products.ERP5VCS.SubversionClient import \
   newSubversionClient, SubversionLoginError, SubversionSSLTrustError
 
+# XXX Still not thread safe !!! Proper fix is to never use 'os.chdir'
+#     Using a RLock is a temporary quick change that only protects against
+#     concurrent uses of ERP5 Subversion.
+_chdir_lock = threading.RLock()
+@simple_decorator
+def chdir_working_copy(func):
+  def decorator(self, *args, **kw):
+    _chdir_lock.acquire()
+    try:
+      cwd = os.getcwd()
+      try:
+        os.chdir(self.working_copy)
+        return func(self, *args, **kw)
+      finally:
+        os.chdir(cwd)
+    finally:
+      _chdir_lock.release()
+  return decorator
 
 class Subversion(WorkingCopy):
 
@@ -238,6 +258,7 @@ class Subversion(WorkingCopy):
         'Files committed successfully in revision ${revision}',
         mapping=dict(revision=getRevisionNumber(revision))))))
 
+  @chdir_working_copy
   def _export(self, business_template):
     bta = BusinessTemplateWorkingCopy(creation=1, client=self._getClient())
     bta.export(business_template)
