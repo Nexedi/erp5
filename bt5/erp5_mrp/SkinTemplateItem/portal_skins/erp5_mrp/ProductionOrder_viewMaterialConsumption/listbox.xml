@@ -11,7 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
-                <string>editable_columns</string>
+                <string>default_params</string>
                 <string>list_action</string>
                 <string>list_method</string>
                 <string>selection_name</string>
@@ -97,10 +97,6 @@
                           <string>Consumption</string>
                         </tuple>
                         <tuple>
-                          <string>quantity_unit_item</string>
-                          <string>Unit</string>
-                        </tuple>
-                        <tuple>
                           <string>getCurrentInventory</string>
                           <string>Current</string>
                         </tuple>
@@ -112,18 +108,17 @@
                           <string>getFutureInventory</string>
                           <string>Future</string>
                         </tuple>
+                        <tuple>
+                          <string>quantity_unit_item</string>
+                          <string>Unit</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>editable_columns</string> </key>
+                    <key> <string>default_params</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>movement.start_date</string>
-                          <string>movement.start_date</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

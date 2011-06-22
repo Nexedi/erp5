@@ -1,3 +1,6 @@
+2011-06-22 yusei
+* Fix bug on production order material consumption tab.
+
 2011-06-15 yusei
 * production order movement may not have specialise category value.
 
