@@ -1,3 +1,6 @@
+2011-06-23 yusei
+* Add an action to call alarm.activeSense() for developer.
+
 2011-06-07 yusei
 * Set auditor proxy role to Base_getConversionFormatItemList. Anybody should be able to view conversion format list.
 
