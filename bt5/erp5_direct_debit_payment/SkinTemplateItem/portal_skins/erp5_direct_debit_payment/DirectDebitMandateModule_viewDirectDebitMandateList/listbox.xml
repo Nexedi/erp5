@@ -170,12 +170,12 @@
                           <string>Creditor</string>
                         </tuple>
                         <tuple>
-                          <string>translated_simulation_state_title</string>
-                          <string>Export State</string>
-                        </tuple>
-                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_simulation_state_title</string>
+                          <string>Export State</string>
                         </tuple>
                       </list>
                     </value>
