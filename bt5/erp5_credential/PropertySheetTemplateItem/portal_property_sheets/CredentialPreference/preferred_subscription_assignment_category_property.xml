@@ -33,13 +33,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Defines base categories axes in components variations</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>preferred_credential_assignment_role_property</string> </value>
+            <value> <string>preferred_subscription_assignment_category_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
