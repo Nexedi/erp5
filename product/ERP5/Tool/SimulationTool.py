@@ -1795,7 +1795,7 @@ class SimulationTool(BaseTool):
       if 'section_uid' in kw:
         # ignore internal movements
         sql_kw['where_expression'] += ' AND ' \
-          'stock.section_uid!=stock.mirror_section_uid'
+          'NOT(stock.section_uid<=>stock.mirror_section_uid)'
 
       result = self.Resource_zGetAssetPrice(
           valuation_method=valuation_method,

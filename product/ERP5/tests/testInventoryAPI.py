@@ -230,7 +230,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
   # }}}
 
   @reindex
-  def _makeMovement(self, **kw):
+  def _makeMovement(self, is_internal=0, **kw):
     """Creates a movement.
     """
     mvt = self.folder.newContent(portal_type='Dummy Movement')
@@ -238,6 +238,9 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     kw.setdefault('source_section_value', self.mirror_section)
     kw.setdefault('destination_value', self.node)
     kw.setdefault('source_value', self.mirror_node)
+    if is_internal:
+      kw['source_section_value'] = None
+      kw['source_value'] = None
     kw.setdefault('resource_value', self.resource)
     mvt.edit(**kw)
     return mvt
@@ -1227,6 +1230,29 @@ class TestInventoryList(InventoryAPITestCase):
                   node_uid=self.node.getUid())
       self.assertTrue(result is not None)
       self.assertEquals(data[cur]['after']['total_price'], round(result))
+
+    # check internal data
+    internal_data = {
+      '2010/12':
+        dict(movement_list=[h(103, 46350)], after=h(269, 124434)),
+      '2011/01':
+        dict(movement_list=[h(22, 8910)], after=h(291, 133344)),
+     }
+    for month, value in internal_data.iteritems():
+      for mov in value['movement_list']:
+        d = DateTime('%s/15 15:00 UTC' % month)
+        self._makeMovement(is_internal=1, start_date=d, resource_uid=resource_uid, **mov)
+    for cur in sorted(internal_data):
+      to_date = DateTime("%s/1" % cur) + 31
+      # check by section
+      result = self.getSimulationTool().getInventoryAssetPrice(
+                  valuation_method="MonthlyWeightedAverage",
+                  to_date=to_date,
+                  resource_uid=resource.getUid(),
+                  section_uid=self.section.getUid())
+      self.assertTrue(result is not None)
+      self.assertEquals(internal_data[cur]['after']['total_price'], round(result))
+
 
 class TestMovementHistoryList(InventoryAPITestCase):
   """Tests Movement history list methods.
