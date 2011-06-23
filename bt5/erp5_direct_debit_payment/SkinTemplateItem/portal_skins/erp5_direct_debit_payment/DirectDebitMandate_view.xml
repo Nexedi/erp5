@@ -113,7 +113,6 @@
                         <string>my_effective_date</string>
                         <string>my_expiration_date</string>
                         <string>my_translated_validation_state_title</string>
-                        <string>my_translated_simulation_state_title</string>
                       </list>
                     </value>
                 </item>
