@@ -32,10 +32,9 @@ import argparse
 import os
 import sys
 import multiprocessing
-import datetime
 import xmlrpclib
 
-from benchmark import ArgumentType, BenchmarkProcess
+from benchmark import ArgumentType, BenchmarkProcess, ERP5BenchmarkResult
 
 class PerformanceTester(object):
   def __init__(self, namespace=None):
@@ -177,39 +176,18 @@ class PerformanceTester(object):
     if not self._argument_namespace.erp5_publish_url:
       return
 
-    test_result_module = xmlrpclib.ServerProxy(
-      self._argument_namespace.erp5_publish_url, verbose=True, allow_none=True)
-
-    # TODO: range of users?
-    benchmark_result = test_result_module.TestResultModule_addBenchmarkResult(
-      '%d repeat with %d concurrent users' % (self._argument_namespace.repeat,
-                                              self._argument_namespace.users),
-      self._argument_namespace.erp5_publish_project,
-      ' '.join(sys.argv),
-      datetime.datetime.now())
-
-    try:
-      benchmark_result_id = benchmark_result['id']
-    except:
-      raise RuntimeError, "Cannot create the benchmark result"
-
     self._argument_namespace.erp5_publish_url += \
-        'test_result_module/%s' % benchmark_result_id
+        ERP5BenchmarkResult.createResultDocument(self._argument_namespace.erp5_publish_url,
+                                                 self._argument_namespace.erp5_publish_project,
+                                                 self._argument_namespace.repeat,
+                                                 self._argument_namespace.users)          
 
   def postRun(self, error_message_set):
     if not self._argument_namespace.erp5_publish_url:
       return
 
-    if error_message_set:
-      result = 'FAIL'
-    else:
-      result = 'PASS'
-
-    benchmark_result = xmlrpclib.ServerProxy(
-      self._argument_namespace.erp5_publish_url,
-      verbose=True, allow_none=True)
-
-    benchmark_result.BenchmarkResult_completed(result, error_message_set)
+    ERP5BenchmarkResult.closeResultDocument(self._argument_namespace.erp5_publish_url,
+                                            error_message_set)
 
   def _run_constant(self, nb_users):
     process_list = []

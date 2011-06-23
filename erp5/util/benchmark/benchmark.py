@@ -313,6 +313,7 @@ class CSVBenchmarkResult(BenchmarkResult):
 from cStringIO import StringIO
 
 import xmlrpclib
+import datetime
 
 class ERP5BenchmarkResult(BenchmarkResult):
   def __init__(self, *args, **kwargs):
@@ -347,6 +348,28 @@ class ERP5BenchmarkResult(BenchmarkResult):
 
   def __exit__(self, exc_type, exc_value, traceback):
     super(ERP5BenchmarkResult, self).__exit__(exc_type, exc_value, traceback)
+
+  @staticmethod
+  def createResultDocument(publish_url, publish_project, repeat, nb_users):
+    test_result_module = xmlrpclib.ServerProxy(publish_url,
+                                               verbose=True,
+                                               allow_none=True)
+
+    # TODO: range of users?
+    benchmark_result = test_result_module.TestResultModule_addBenchmarkResult(
+      '%d repeat with %d concurrent users' % (repeat, nb_users),
+      publish_project, ' '.join(sys.argv), datetime.datetime.now())
+
+    return benchmark_result['id']
+
+  @staticmethod
+  def closeResultDocument(publish_document_url, error_message_set):
+    result = xmlrpclib.ServerProxy(publish_document_url,
+                                   verbose=True,
+                                   allow_none=True)
+
+    result.BenchmarkResult_completed(error_message_set and 'FAIL' or 'PASS',
+                                     error_message_set)
 
 import multiprocessing
 import csv
