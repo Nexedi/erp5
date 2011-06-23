@@ -28,7 +28,6 @@ from Products.ERP5Type.patches import PropertyManager
 from Products.ERP5Type.patches import TM
 from Products.ERP5Type.patches import DA
 from Products.ERP5Type.patches import DCWorkflow
-from Products.ERP5Type.patches import DCWorkflowGraph
 from Products.ERP5Type.patches import Worklists
 from Products.ERP5Type.patches import BTreeFolder2
 from Products.ERP5Type.patches import WorkflowTool
