@@ -244,12 +244,11 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.logout()
 
   def stepSetCredentialAssignmentPropertyList(self, sequence={}):
-    role_list = sequence.get("role_list", ["internal",])
-    function_list = sequence.get("function_list", ["member",])
+    category_list = sequence.get("category_list",
+        ["role/internal", "function/member"])
     self.login()
     preference = self._getPreference()
-    preference.edit(preferred_credential_assignment_role_list=role_list,
-                    preferred_credential_assignment_function_list=function_list)
+    preference.edit(preferred_subscription_assignment_category_list=category_list)
     self._enablePreference()
     self.stepTic()
     self.logout()
@@ -861,8 +860,8 @@ class TestERP5Credential(ERP5TypeTestCase):
                     assignment_function="member",
                     assignment_role="internal")
     self.stepCheckAssignmentAfterActiveLogin(sequence)
-    self.stepSetCredentialAssignmentPropertyList(dict(role_list=["client",],
-                                                    function_list=["agent",]))
+    category_list = ["role/client", "function/agent"]
+    self.stepSetCredentialAssignmentPropertyList(dict(category_list=category_list))
     self._createCredentialRequest(reference="credential_user")
     sequence = dict(reference="credential_user",
                     assignment_function="agent",
