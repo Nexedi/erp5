@@ -51,14 +51,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Returns the function list and role list according to the properties \n
-  selected in System Preference enabled\n
+  Returns list with all categories defined on Credential\'s tab\n
 """\n
-portal_preferences = context.getPortalObject().portal_preferences\n
-function_list = portal_preferences.getPreferredCredentialAssignmentFunctionList()\n
-role_list = portal_preferences.getPreferredCredentialAssignmentRoleList()\n
 \n
-return dict(role_list=role_list, function_list=function_list)\n
+portal_preferences = context.portal_preferences\n
+return portal_preferences.getPreferredSubscriptionAssignmentCategoryList()\n
 </string> </value>
         </item>
         <item>
