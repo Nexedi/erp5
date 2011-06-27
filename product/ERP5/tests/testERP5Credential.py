@@ -855,6 +855,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     Credential Request correctly """
     sequence = dict(automatic_call=False)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
+    self.stepSetCredentialAssignmentPropertyList()
     self._createCredentialRequest()
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(
@@ -862,6 +863,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(credential_request.getFirstName(), "Gabriel")
     self.assertEquals(credential_request.getDefaultEmailText(),
         "gabriel@test.com")
+    self.assertEquals(credential_request.getRole(), "internal")
+    self.assertEquals(credential_request.getFunction(), "member")
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
   def testBase_getDefaultAssignmentArgumentDict(self):
