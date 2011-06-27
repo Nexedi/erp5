@@ -757,15 +757,15 @@ class TestERP5Credential(ERP5TypeTestCase):
                                default_email_text="gabriel@test.com"):
     self.logout()
     self.portal.ERP5Site_newCredentialRequest(first_name=first_name,
-                                                   last_name=last_name,
-                                                   reference=reference,
-                                                   password=password,
-                                                   career_subordination_title="",
-                                                   default_email_text=default_email_text,
-                                                   default_telephone_text="223344",
-                                                   default_address_street_address="Test Street",
-                                                   default_address_city="Campos",
-                                                   default_address_zip_code="28024030")
+        last_name=last_name,
+        reference=reference,
+        password=password,
+        career_subordination_title="",
+        default_email_text=default_email_text,
+        default_telephone_text="223344",
+        default_address_street_address="Test Street",
+        default_address_city="Campos",
+        default_address_zip_code="28024030")
     self.login("ERP5TypeTestCase")
     self.stepTic()
 
@@ -779,12 +779,12 @@ class TestERP5Credential(ERP5TypeTestCase):
       sequence_list=None, **kw):
     credential_reference_str = sequence["credential_reference"]
     portal_catalog = self.portal.portal_catalog
-    credential_reference = portal_catalog.getResultValue(portal_type="Credential Request", 
-                                                       reference=credential_reference_str)
+    credential_reference = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference=credential_reference_str)
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
                                                  follow_up=credential_reference)
     self.assertEquals(mail_message.getSimulationState(), "started")
-    self.assertTrue("key=%s" % mail_message.getReference() in mail_message.getTextContent())
+    self.assertTrue( "key=%s" % mail_message.getReference() in mail_message.getTextContent())
 
   def stepSetPreferredCredentialAlarmAutomaticCallAsFalse(self, sequence):
     sequence.edit(automatic_call=False)
@@ -809,12 +809,11 @@ class TestERP5Credential(ERP5TypeTestCase):
                                  last_name="Test",
                                  reference="vifibtest")
     portal_catalog = self.portal.portal_catalog
-    credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
-                                                       reference="vifibtest",
-                                                       first_name="Vifib",
-                                                       last_name="Test")
-    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
-                                                 follow_up=credential_request)
+    credential_request = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference="vifibtest", 
+        first_name="Vifib", last_name="Test")
+    mail_message = portal_catalog.getResultValue(
+        portal_type="Mail Message", follow_up=credential_request)
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, message_text = last_message
@@ -822,7 +821,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(['Vifib Test <gabriel@test.com>'], mto)
     self.assertNotEquals(re.search("Subject\:.*Welcome", message_text), None)
     self.assertNotEquals(re.search("Hello\ Vifib\ Test\,", message_text), None)
-    self.assertNotEquals(re.search("key\=..%s" % mail_message.getReference(), message_text), None)
+    self.assertNotEquals(re.search("key\=..%s" % mail_message.getReference(),
+      message_text), None)
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
   def testERP5Site_activeLogin(self):
@@ -832,15 +832,16 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self._createCredentialRequest()
     portal_catalog = self.portal.portal_catalog
-    credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
-                                                       reference="gabriel")
+    credential_request = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference="gabriel")
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
                                                  follow_up=credential_request)
     self.logout()
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
     self.login("ERP5TypeTestCase")
     self.stepTic()
-    person = portal_catalog.getResultValue(reference="gabriel", portal_type="Person")
+    person = portal_catalog.getResultValue(reference="gabriel",
+        portal_type="Person")
     assignment_list = person.objectValues(portal_type="Assignment")
     self.assertNotEquals(assignment_list, [])
     self.assertEquals(len(assignment_list), 1)
@@ -856,12 +857,12 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self._createCredentialRequest()
     portal_catalog = self.portal.portal_catalog
-    credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
-                                                       reference="gabriel")
+    credential_request = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference="gabriel")
     self.assertEquals(credential_request.getFirstName(), "Gabriel")
-    self.assertEquals(credential_request.getDefaultEmailText(), "gabriel@test.com")
+    self.assertEquals(credential_request.getDefaultEmailText(),
+        "gabriel@test.com")
     self.stepUnSetCredentialAutomaticApprovalPreferences()
-
 
   def testBase_getDefaultAssignmentArgumentDict(self):
     sequence = dict(automatic_call=False)
@@ -873,7 +874,8 @@ class TestERP5Credential(ERP5TypeTestCase):
                     assignment_role="internal")
     self.stepCheckAssignmentAfterActiveLogin(sequence)
     category_list = ["role/client", "function/agent"]
-    self.stepSetCredentialAssignmentPropertyList(dict(category_list=category_list))
+    self.stepSetCredentialAssignmentPropertyList(
+        dict(category_list=category_list))
     self._createCredentialRequest(reference="credential_user")
     sequence = dict(reference="credential_user",
                     assignment_function="agent",
