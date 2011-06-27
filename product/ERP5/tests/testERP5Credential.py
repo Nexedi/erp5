@@ -33,7 +33,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 import email, re
 from email.Header import decode_header, make_header
 from email.Utils import parseaddr
-from zLOG import LOG
 import transaction
 import cgi
 from urlparse import urlparse
@@ -452,7 +451,6 @@ class TestERP5Credential(ERP5TypeTestCase):
       sequence_list=None, **kw):
     request = self.portal.REQUEST
     request['PARENTS'] = [self.app]
-    form_url = self.portal.absolute_url_path() + '/ERP5Site_viewNewCredentialRequestDialog'
 
     # logout to be annonymous
     self.logout()
@@ -493,7 +491,6 @@ class TestERP5Credential(ERP5TypeTestCase):
       sequence_list=None, **kw):
     request = self.portal.REQUEST
     request['PARENTS'] = [self.app]
-    form_url = self.portal.absolute_url_path() + '/ERP5Site_viewNewCredentialRequestDialog'
 
     # logout to be annonymous
     self.logout()
