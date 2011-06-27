@@ -125,7 +125,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string>required</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
