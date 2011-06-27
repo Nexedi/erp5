@@ -229,7 +229,9 @@ class TestERP5Credential(ERP5TypeTestCase):
     preference.edit(preferred_credential_request_automatic_approval=False,
                     preferred_credential_recovery_automatic_approval=False,
                     preferred_organisation_credential_update_automatic_approval=False,
-                    preferred_person_credential_update_automatic_approval=False)
+                    preferred_person_credential_update_automatic_approval=False,
+                    preferred_credential_alarm_automatic_call=True)
+
     self._enablePreference()
     transaction.commit()
     self.tic()
@@ -238,7 +240,9 @@ class TestERP5Credential(ERP5TypeTestCase):
   def stepSetCredentialRequestAutomaticApprovalPreferences(self, sequence=None):
     self.login()
     preference = self._getPreference()
-    preference.edit(preferred_credential_request_automatic_approval=True)
+    automatic_call = sequence.get("automatic_call", True)
+    preference.edit(preferred_credential_request_automatic_approval=True,
+                    preferred_credential_alarm_automatic_call=automatic_call)
     self._enablePreference()
     self.stepTic()
     self.logout()
@@ -752,7 +756,7 @@ class TestERP5Credential(ERP5TypeTestCase):
                                password="123",
                                default_email_text="gabriel@test.com"):
     self.logout()
-    self.portal.ERP5Site_registerCredentialRequest(first_name=first_name,
+    self.portal.ERP5Site_newCredentialRequest(first_name=first_name,
                                                    last_name=last_name,
                                                    reference=reference,
                                                    password=password,
@@ -782,10 +786,14 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(mail_message.getSimulationState(), "started")
     self.assertTrue("key=%s" % mail_message.getReference() in mail_message.getTextContent())
 
+  def stepSetPreferredCredentialAlarmAutomaticCallAsFalse(self, sequence):
+    sequence.edit(automatic_call=False)
+
   def testMailMessagePosted(self):
     """ Test if the Mail Message was posted correctly """
     sequence_list = SequenceList()
-    sequence_string = 'stepSetCredentialRequestAutomaticApprovalPreferences '\
+    sequence_string = 'SetCredentialRequestAutomaticApprovalPreferences '\
+                      'SetPreferredCredentialAlarmAutomaticCallAsFalse '\
                       'CreateCredentialRequestSample '\
                       'CheckIfMailMessageWasPosted '\
                       'stepUnSetCredentialAutomaticApprovalPreferences'\
@@ -795,7 +803,8 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def testMailFromMailMessageEvent(self):
     """ """
-    self.stepSetCredentialRequestAutomaticApprovalPreferences()
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self._createCredentialRequest(first_name="Vifib", 
                                  last_name="Test",
                                  reference="vifibtest")
@@ -819,7 +828,8 @@ class TestERP5Credential(ERP5TypeTestCase):
   def testERP5Site_activeLogin(self):
     """ Test if the script WebSection_activeLogin will create one user
     correctly """
-    self.stepSetCredentialRequestAutomaticApprovalPreferences()
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self._createCredentialRequest()
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
@@ -839,10 +849,11 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(person.getValidationState(), "validated")
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
-  def testERP5Site_registerCredentialRequest(self):
-    """ Test if the script ERP5Site_registerCredentialRequest will create one
+  def testERP5Site_newCredentialRequest(self):
+    """ Test if the script ERP5Site_newCredentialRequest will create one
     Credential Request correctly """
-    self.stepSetCredentialRequestAutomaticApprovalPreferences()
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self._createCredentialRequest()
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(portal_type="Credential Request", 
@@ -853,7 +864,8 @@ class TestERP5Credential(ERP5TypeTestCase):
 
 
   def testBase_getDefaultAssignmentArgumentDict(self):
-    self.stepSetCredentialRequestAutomaticApprovalPreferences()
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self.stepSetCredentialAssignmentPropertyList()
     self._createCredentialRequest()
     sequence = dict(reference="gabriel",
