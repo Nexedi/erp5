@@ -10,10 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>enabled</string>
-                <string>first_item</string>
-                <string>items</string>
+                <string>required</string>
                 <string>title</string>
+                <string>items</string>
               </list>
             </value>
         </item>
@@ -56,17 +55,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -76,15 +65,11 @@
                 <item>
                     <key> <string>items</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -95,26 +80,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_radio_field</string> </value>
-                </item>
-                <item>
-                    <key> <string>first_item</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <string>my_list_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>items</string> </key>
-                    <value>
-                      <list/>
-                    </value>
+                    <key> <string>required</string> </key>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -122,7 +97,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Category</string> </value>
+                    <value> <string>Message Subject</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -138,24 +113,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-python: here.WebSection_getEventResourceItemList()[0] == (\'\', \'\') and (len(here.WebSection_getEventResourceItemList()) > 1) or (here.WebSection_getEventResourceItemList()[0] != (\'\', \'\') and len(here.WebSection_getEventResourceItemList()))
-
-]]></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.WebSection_getEventResourceItemList()[0] == (\'\', \'\') and here.WebSection_getEventResourceItemList()[1:] or here.WebSection_getEventResourceItemList()</string> </value>
+            <value> <string>here/WebSection_getEventResourceItemList</string> </value>
         </item>
       </dictionary>
     </pickle>

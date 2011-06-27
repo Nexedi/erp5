@@ -10,10 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>selection_name</string>
-                <string>search_columns</string>
                 <string>columns</string>
+                <string>search_columns</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -91,6 +91,10 @@
                           <string>Warehouse</string>
                         </tuple>
                         <tuple>
+                          <string>destination_section_title</string>
+                          <string>Owner</string>
+                        </tuple>
+                        <tuple>
                           <string>delivery.start_date</string>
                           <string>Inventory Date</string>
                         </tuple>
@@ -124,6 +128,10 @@
                         <tuple>
                           <string>destination_title</string>
                           <string>Warehouse</string>
+                        </tuple>
+                        <tuple>
+                          <string>destination_section_title</string>
+                          <string>Owner</string>
                         </tuple>
                         <tuple>
                           <string>delivery.start_date</string>

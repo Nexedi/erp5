@@ -65,11 +65,10 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     template_tool = getToolByName(portal, 'portal_templates')
 
     installed_bt_list = template_tool.getInstalledBusinessTemplateTitleList()
-    filename_bt5_id = '%s.bt5' % bt5_id
-    if business_configuration.isStandardBT5(filename_bt5_id):
+    if business_configuration.isStandardBT5(bt5_id):
       if bt5_id not in installed_bt_list:
         update_catalog = self.getUpdateCatalog(0)
-        bt_url = template_tool.getBusinessTemplateUrl(None, filename_bt5_id)
+        bt_url = template_tool.getBusinessTemplateUrl(None, bt5_id)
         template_tool.updateBusinessTemplateFromUrl(bt_url,
                                               update_catalog=update_catalog)
         LOG("StandardBT5ConfiguratorItem", INFO,

@@ -475,6 +475,7 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
      - cell_range_kw
      - mapped_value_argument_list
      - table
+     - variation_category_list_and_mapped_value_list (optional)
 
     Example:
       updateCellList(sale_order_line_1_1,
@@ -510,6 +511,25 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
       (line,   mapped_value,   mapped_value,),
       )
       )
+    four_dimension = (
+      ((tab,tab),
+      (        column,         column,),
+      (line,   mapped_value,   mapped_value,),
+      (line,   mapped_value,   mapped_value,),
+      ),
+      ((tab,tab),
+      (        column,         column,),
+      (line,   mapped_value,   mapped_value,),
+      (line,   mapped_value,   mapped_value,),
+      )
+      )
+
+    Also you can pass variation_category_list_and_mapped_value_list. Then you do not
+    have touse above table structure. variation_category_list_and_mapped_value_list
+    structure should be like following:
+      ((variation_category_list, mapped_value),
+       (variation_category_list, mapped_value),
+       (variation_category_list, mapped_value),)
   """
   def get_range_id_list(range_list):
     if not range_list:
@@ -519,6 +539,19 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
     else:
       return range_list
 
+  def getSortedCategoryList(line, base_id, category_list):
+    category_dict = {}
+    for category in category_list:
+      category_dict[category.split('/')[0]] = category
+    result = []
+    index_list = line.index[base_id].keys()
+    index_list.sort()
+    for index in index_list:
+      if line.index[base_id][index]:
+        base_category = line.index[base_id][index].keys()[0].split('/')[0]
+        result.append(category_dict[base_category])
+    return result
+    
   for cell_dict in cell_dict_list:
     base_id = cell_dict['base_id']
     if callable(cell_range_method):
@@ -543,38 +576,44 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
           result[argument_name] = item[index]
         return result
 
-    # verify table structure to know dimension.
-    table = cell_dict['table']
-    if len([True for item in table if len(item)!=2])==0:
-      dimension = 1
-    elif len(table)>1 and (len(table[0])+1)==len(table[1]):
-      dimension = 2
-    elif isinstance(table[0][0], (tuple, list)):
-      dimension = 3
-    else:
-      raise RuntimeError, "Unsupported table structure!"
-
     data_list = []
-    if dimension==1:
-      for table_line in table:
-        data_list.append(([table_line[0]], getMappedValueDict(table_line[1])))
-    elif dimension==2:
-      column = table[0]
-      for table_line in table[1:]:
-        row = table_line[0]
-        for index, item in enumerate(table_line[1:]):
-          data_list.append(([row, column[index]], getMappedValueDict(item)))
-    elif dimension==3:
-      table_list = table
-      for table in table_list:
-        tab = table[0][0]
-        column = table[1]
-        for table_line in table[2:]:
+    if cell_dict.get('variation_category_list_and_mapped_value_list'):
+      for variation_category_list, mapped_value in cell_dict.get('variation_category_list_and_mapped_value_list'):
+        data_list.append((variation_category_list, getMappedValueDict(mapped_value)))
+    else:
+      # verify table structure to know dimension.
+      table = cell_dict['table']
+      if len([True for item in table if len(item)!=2])==0:
+        dimension = 1
+      elif len(table)>1 and (len(table[0])+1)==len(table[1]):
+        dimension = 2
+      elif isinstance(table[0][0], (tuple, list)):
+        dimension = 3
+      else:
+        raise RuntimeError, "Unsupported table structure!"
+
+      if dimension==1:
+        for table_line in table:
+          data_list.append(([table_line[0]], getMappedValueDict(table_line[1])))
+      elif dimension==2:
+        column = table[0]
+        for table_line in table[1:]:
           row = table_line[0]
           for index, item in enumerate(table_line[1:]):
-            data_list.append(([row, column[index], tab], getMappedValueDict(item)))
+            data_list.append(([row, column[index]], getMappedValueDict(item)))
+      elif dimension==3:
+        table_list = table
+        for table in table_list:
+          tab_list = list(table[0])
+          tab_list.reverse()
+          column = table[1]
+          for table_line in table[2:]:
+            row = table_line[0]
+            for index, item in enumerate(table_line[1:]):
+              data_list.append(([row, column[index]] + tab_list, getMappedValueDict(item)))
 
     for category_list, mapped_value_dict in data_list:
+      category_list = getSortedCategoryList(line, base_id, category_list)
       cell = line.newCell(portal_type=cell_type,
                           base_id=base_id,
                           *category_list)

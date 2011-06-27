@@ -68,7 +68,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         <div tal:content="structure python: here.ERP5Site_viewHomeAreaRenderer(mode=\'web_front\', \n
                                                                                default_pad_group=\'\',\n
                                                                                create_default_pad=True, \n
-                                                                               make_security_check=True)"\n
+                                                                               make_security_check=True,\n
+                                                                               use_anonymous_knowledge_pad=context.getLayoutProperty(\'layout_force_anonymous_gadget\',False))"\n
              class="draggable_wrapper"/>\n
       </div>\n
     </tal:block>\n

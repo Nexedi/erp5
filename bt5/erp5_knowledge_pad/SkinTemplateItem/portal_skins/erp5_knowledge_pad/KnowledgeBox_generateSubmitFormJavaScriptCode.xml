@@ -51,9 +51,15 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>pad_relative_url = context.getRelativeUrl()\n
-return \'\'\'onkeypress="submitGadgetPreferenceFormOnEnter(event, \'%s\',\'%s\');"\'\'\' \\\n
-         %(\'gadget_preference_%s_field\' %pad_relative_url.replace(\'/\', \'_\'), pad_relative_url)\n
+edit_form_id = context.getSpecialiseValue().getEditFormId()\n
+\n
+return \'\'\'onkeypress="submitGadgetPreferenceFormOnEnter(event, \'%s\',\'%s\', \'%s\');"\'\'\' \\\n
+         %(\'gadget_preference_%s_field\' %pad_relative_url.replace(\'/\', \'_\'), pad_relative_url, edit_form_id)\n
 </string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

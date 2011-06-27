@@ -110,6 +110,20 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>Set own password</string> </key>
+                    <value>
+                      <tuple>
+                        <string>Anonymous</string>
+                        <string>Assignee</string>
+                        <string>Assignor</string>
+                        <string>Associate</string>
+                        <string>Author</string>
+                        <string>Manager</string>
+                        <string>Owner</string>
+                      </tuple>
+                    </value>
+                </item>
+                <item>
                     <key> <string>View</string> </key>
                     <value>
                       <tuple>

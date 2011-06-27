@@ -121,7 +121,7 @@ quantity at each step:\n
 */\n
 SET\n
  @unbalanced_output:=\n
-   (SELECT\n
+   IFNULL((SELECT\n
       SUM(-quantity)\n
     FROM\n
       stock, catalog\n
@@ -129,7 +129,7 @@ SET\n
       quantity < 0\n
     AND\n
       <dtml-var where_expression>\n
-    ),\n
+    ),0),\n
  @total_asset_price=0\n
 <dtml-var sql_delimiter>\n
 \n

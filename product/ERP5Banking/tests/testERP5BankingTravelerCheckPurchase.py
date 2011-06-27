@@ -61,13 +61,6 @@ class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTran
     """
     return "ERP5BankingTravelerCheckPurchase"
 
-  def getTravelerCheckPurchaseModule(self):
-    """
-    Return the Traveler Check Purchase Module
-    """
-    return getattr(self.getPortal(), 'traveler_check_purchase_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

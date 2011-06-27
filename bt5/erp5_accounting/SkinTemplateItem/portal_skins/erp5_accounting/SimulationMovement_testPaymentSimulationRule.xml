@@ -56,8 +56,7 @@ parent = movement.getParentValue()\n
 if parent.getPortalType() != \'Applied Rule\':\n
   return False\n
 \n
-parent_rule = parent.getSpecialiseValue()\n
-if parent_rule.getPortalType() not in (\'Invoice Transaction Simulation Rule\',):\n
+if parent.getSpecialiseReference() != \'default_invoice_transaction_rule\':\n
   return False\n
 \n
 # XXX hardcoded\n

@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""Validates the transaction for both source and destination section.\n
+\n
+XXX why proxy role ???\n
+"""\n
+from Products.DCWorkflow.DCWorkflow import ValidationFailed\n
+from Products.ERP5Type.Message import translateString\n
+\n
+transaction = state_change[\'object\']\n
+\n
+# XXX manually default start date to stop date\n
+if not transaction.getStartDate() and transaction.getStopDate():\n
+  transaction.setStartDate(transaction.getStopDate())\n
+\n
+# XXX auto-fill mirror accounts, if necessary.\n
+transaction.AccountingTransaction_setDefaultMirrorAccountList()\n
+\n
+# Check constraints\n
+transaction.Base_checkConsistency()\n
+\n
+# Check that the transaction is in an open accounting period when we validate\n
+# it.\n
+skip_period_validation = state_change[\'kwargs\'].get(\n
+                              \'skip_period_validation\', 0)\n
+transition = state_change[\'transition\']\n
+if transition.id in (\'plan_action\', \'confirm_action\') :\n
+  skip_period_validation = 1\n
+\n
+source_section = transaction.getSourceSectionValue(\n
+                       portal_type=[\'Organisation\', \'Person\'])\n
+destination_section = transaction.getDestinationSectionValue(\n
+                       portal_type=[\'Organisation\', \'Person\'])\n
+\n
+if source_section is None and destination_section is None:\n
+  raise ValidationFailed(translateString(\'At least one section must be defined.\'))\n
+\n
+# check that no categories are used for section\n
+if transaction.getSourceSectionValue(portal_type=\'Category\') is not None or\\\n
+    transaction.getDestinationSectionValue(portal_type=\'Category\') is not None:\n
+  raise ValidationFailed(translateString(\'Using category for section is invalid.\'))\n
+\n
+transaction_line_list = transaction.getMovementList(\n
+        portal_type=transaction.getPortalAccountingMovementTypeList())\n
+\n
+\n
+def checkAccountingPeriodRecusivly(accounting_period, transaction_date):\n
+  valid = accounting_period.getSimulationState() in (\'planned\', \'started\')\n
+  if not valid:\n
+    return False\n
+  for sub_accounting_period in accounting_period.contentValues():\n
+    if sub_accounting_period.getSimulationState() in (\n
+                                        \'deleted\', \'cancelled\'):\n
+      continue\n
+    if sub_accounting_period.getStartDate().earliestTime() <= \\\n
+            transaction_date <= \\\n
+            sub_accounting_period.getStopDate().latestTime():\n
+      if not checkAccountingPeriodRecusivly(sub_accounting_period,\n
+                                            transaction_date):\n
+        return False\n
+  return True\n
+\n
+if not skip_period_validation :\n
+  # check the date is in an opened period\n
+  if source_section is not None:\n
+    # if we don\'t have any accounts on this side, we don\'t enforce date checks\n
+    valid_date = False\n
+    no_accounts = True\n
+    for line in transaction_line_list:\n
+      if line.getSource():\n
+        no_accounts = False\n
+    if no_accounts:\n
+      valid_date = True\n
+    else:\n
+      section = source_section\n
+      if section.getPortalType() == \'Organisation\':\n
+        section = section.Organisation_getMappingRelatedOrganisation()\n
+      if not len(section.contentValues(\n
+             filter=dict(portal_type="Accounting Period"))):\n
+        valid_date = True\n
+      else:\n
+        accounting_period = transaction\\\n
+          .AccountingTransaction_getAccountingPeriodForSourceSection()\n
+        transaction_date = transaction.getStartDate().earliestTime()\n
+        valid_date = False\n
+        if accounting_period is not None:\n
+          valid_date = checkAccountingPeriodRecusivly(accounting_period,\n
+                                                      transaction_date)\n
+\n
+    if not valid_date:\n
+      raise ValidationFailed(translateString("Date is not in a started Accounting Period "\n
+                                             "for source section."))\n
+\n
+  # do the same for destination section \n
+  if destination_section is not None:\n
+    # if we don\'t have any accounts on this side, we don\'t enforce date checks\n
+    valid_date = False\n
+    no_accounts = True\n
+    for line in transaction_line_list:\n
+      if line.getDestination():\n
+        no_accounts = False\n
+    if no_accounts:\n
+      valid_date = True\n
+    else:\n
+      section = destination_section\n
+      if section.getPortalType() == \'Organisation\':\n
+        section = section.Organisation_getMappingRelatedOrganisation()\n
+      if not len(section.contentValues(\n
+             filter=dict(portal_type="Accounting Period"))):\n
+        valid_date = True\n
+      else:\n
+        accounting_period = transaction\\\n
+          .AccountingTransaction_getAccountingPeriodForDestinationSection()\n
+        transaction_date = transaction.getStopDate().earliestTime()\n
+        valid_date = False\n
+        if accounting_period is not None:\n
+          valid_date = checkAccountingPeriodRecusivly(accounting_period,\n
+                                                      transaction_date)\n
+\n
+    if not valid_date:\n
+      raise ValidationFailed(translateString("Date is not in a started Accounting Period "\n
+                                             "for destination section."))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Anonymous</string>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Authenticated</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Member</string>
+                <string>Owner</string>
+                <string>Reviewer</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>validateTransaction</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

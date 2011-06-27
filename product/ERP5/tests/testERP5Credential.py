@@ -54,7 +54,13 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return (
+      'erp5_full_text_myisam_catalog',
       'erp5_base',
+      'erp5_jquery',
+      'erp5_ingestion_mysql_innodb_catalog',
+      'erp5_ingestion',
+      'erp5_web',
+      'erp5_crm',
       'erp5_credential')
 
   def afterSetUp(self):
@@ -223,20 +229,32 @@ class TestERP5Credential(ERP5TypeTestCase):
     preference.edit(preferred_credential_request_automatic_approval=False,
                     preferred_credential_recovery_automatic_approval=False,
                     preferred_organisation_credential_update_automatic_approval=False,
-                    preferred_person_credential_update_automatic_approval=False)
+                    preferred_person_credential_update_automatic_approval=False,
+                    preferred_credential_alarm_automatic_call=True)
+
     self._enablePreference()
     transaction.commit()
     self.tic()
     self.logout()
 
-  def stepSetCredentialRequestAutomaticApprovalPreferences(self, sequence=None,
-      sequence_list=None, **kw):
+  def stepSetCredentialRequestAutomaticApprovalPreferences(self, sequence=None):
     self.login()
     preference = self._getPreference()
-    preference.edit(preferred_credential_request_automatic_approval=True)
+    automatic_call = sequence.get("automatic_call", True)
+    preference.edit(preferred_credential_request_automatic_approval=True,
+                    preferred_credential_alarm_automatic_call=automatic_call)
     self._enablePreference()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
+    self.logout()
+
+  def stepSetCredentialAssignmentPropertyList(self, sequence={}):
+    category_list = sequence.get("category_list",
+        ["role/internal", "function/member"])
+    self.login()
+    preference = self._getPreference()
+    preference.edit(preferred_subscription_assignment_category_list=category_list)
+    self._enablePreference()
+    self.stepTic()
     self.logout()
 
   def stepSetOrganisationCredentialUpdateAutomaticApprovalPreferences(self, sequence=None,
@@ -268,6 +286,28 @@ class TestERP5Credential(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     self.logout()
+
+  def stepCheckAssignmentAfterActiveLogin(self, sequence):
+    portal_catalog = self.portal.portal_catalog
+    reference = sequence["reference"]
+    assignment_function = sequence["assignment_function"]
+    assignment_role = sequence["assignment_role"]
+    credential_request = portal_catalog.getResultValue(portal_type="Credential Request",
+                                                       reference=reference)
+    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
+                                                 follow_up=credential_request)
+    self.stepTic()
+    self.logout()
+    self.portal.ERP5Site_activeLogin(mail_message.getReference())
+    self.login("ERP5TypeTestCase")
+    self.stepTic()
+    person = portal_catalog.getResultValue(reference=reference,
+                                           portal_type="Person")
+    assignment_list = person.objectValues(portal_type="Assignment")
+    self.assertEquals(len(assignment_list), 1)
+    assignment = assignment_list[0]
+    self.assertEquals(assignment.getFunction(), assignment_function)
+    self.assertEquals(assignment.getRole(), assignment_role)
 
   def getUserFolder(self):
     """Returns the acl_users. """
@@ -575,6 +615,7 @@ class TestERP5Credential(ERP5TypeTestCase):
       match_obj = re.search(rawstr, line)
       if match_obj is not None:
         url = line[line.find('http:'):]
+    url = url.strip()
     self.assertNotEquals(url, None)
     response = self.publish(url)
     parameters = cgi.parse_qs(urlparse(url)[4])
@@ -583,17 +624,14 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.logout()
     # before changing, check that the user exists with 'secret' password
     self._assertUserExists('barney', 'secret')
-
     self.portal.portal_password.changeUserPassword(user_login="barney",
                                                    password="new_password",
                                                    password_confirmation="new_password",
                                                    password_key=key)
     transaction.commit()
     self.tic()
-
     # reset the cache
     self.portal.portal_caches.clearAllCache()
-
     # check we cannot login anymore with the previous password 'secret'
     self._assertUserDoesNotExists('barney', 'secret')
 
@@ -711,6 +749,138 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  def _createCredentialRequest(self, first_name="Gabriel",
+                               last_name="Monnerat",
+                               reference="gabriel",
+                               password="123",
+                               default_email_text="gabriel@test.com"):
+    self.logout()
+    self.portal.ERP5Site_newCredentialRequest(first_name=first_name,
+        last_name=last_name,
+        reference=reference,
+        password=password,
+        career_subordination_title="",
+        default_email_text=default_email_text,
+        default_telephone_text="223344",
+        default_address_street_address="Test Street",
+        default_address_city="Campos",
+        default_address_zip_code="28024030")
+    self.login("ERP5TypeTestCase")
+    self.stepTic()
+
+  def stepCreateCredentialRequestSample(self, sequence=None,
+      sequence_list=None, **kw):
+    credential_reference = "credential_reference"
+    self._createCredentialRequest(reference=credential_reference)
+    sequence.edit(credential_reference=credential_reference)
+  
+  def stepCheckIfMailMessageWasPosted(self, sequence=None,
+      sequence_list=None, **kw):
+    credential_reference_str = sequence["credential_reference"]
+    portal_catalog = self.portal.portal_catalog
+    credential_reference = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference=credential_reference_str)
+    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
+                                                 follow_up=credential_reference)
+    self.assertEquals(mail_message.getSimulationState(), "started")
+    self.assertTrue( "key=%s" % mail_message.getReference() in mail_message.getTextContent())
+
+  def stepSetPreferredCredentialAlarmAutomaticCallAsFalse(self, sequence):
+    sequence.edit(automatic_call=False)
+
+  def testMailMessagePosted(self):
+    """ Test if the Mail Message was posted correctly """
+    sequence_list = SequenceList()
+    sequence_string = 'SetPreferredCredentialAlarmAutomaticCallAsFalse '\
+                      'SetCredentialRequestAutomaticApprovalPreferences '\
+                      'CreateCredentialRequestSample '\
+                      'CheckIfMailMessageWasPosted '\
+                      'stepUnSetCredentialAutomaticApprovalPreferences'\
+
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def testMailFromMailMessageEvent(self):
+    """ """
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
+    self._createCredentialRequest(first_name="Vifib", 
+                                 last_name="Test",
+                                 reference="vifibtest")
+    portal_catalog = self.portal.portal_catalog
+    credential_request = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference="vifibtest", 
+        first_name="Vifib", last_name="Test")
+    mail_message = portal_catalog.getResultValue(
+        portal_type="Mail Message", follow_up=credential_request)
+    last_message = self.portal.MailHost._last_message
+    self.assertNotEquals((), last_message)
+    mfrom, mto, message_text = last_message
+    self.assertEquals(mfrom, 'Portal Administrator <postmaster@localhost>')
+    self.assertEquals(['Vifib Test <gabriel@test.com>'], mto)
+    self.assertNotEquals(re.search("Subject\:.*Welcome", message_text), None)
+    self.assertNotEquals(re.search("Hello\ Vifib\ Test\,", message_text), None)
+    self.assertNotEquals(re.search("key\=..%s" % mail_message.getReference(),
+      message_text), None)
+    self.stepUnSetCredentialAutomaticApprovalPreferences()
+
+  def testERP5Site_activeLogin(self):
+    """ Test if the script WebSection_activeLogin will create one user
+    correctly """
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
+    self._createCredentialRequest()
+    portal_catalog = self.portal.portal_catalog
+    credential_request = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference="gabriel")
+    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
+                                                 follow_up=credential_request)
+    self.logout()
+    self.portal.ERP5Site_activeLogin(mail_message.getReference())
+    self.login("ERP5TypeTestCase")
+    self.stepTic()
+    person = portal_catalog.getResultValue(reference="gabriel",
+        portal_type="Person")
+    assignment_list = person.objectValues(portal_type="Assignment")
+    self.assertNotEquals(assignment_list, [])
+    self.assertEquals(len(assignment_list), 1)
+    assignment = assignment_list[0]
+    self.assertEquals(assignment.getValidationState(), "open")
+    self.assertEquals(person.getValidationState(), "validated")
+    self.stepUnSetCredentialAutomaticApprovalPreferences()
+
+  def testERP5Site_newCredentialRequest(self):
+    """ Test if the script ERP5Site_newCredentialRequest will create one
+    Credential Request correctly """
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
+    self._createCredentialRequest()
+    portal_catalog = self.portal.portal_catalog
+    credential_request = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference="gabriel")
+    self.assertEquals(credential_request.getFirstName(), "Gabriel")
+    self.assertEquals(credential_request.getDefaultEmailText(),
+        "gabriel@test.com")
+    self.stepUnSetCredentialAutomaticApprovalPreferences()
+
+  def testBase_getDefaultAssignmentArgumentDict(self):
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
+    self.stepSetCredentialAssignmentPropertyList()
+    self._createCredentialRequest()
+    sequence = dict(reference="gabriel",
+                    assignment_function="member",
+                    assignment_role="internal")
+    self.stepCheckAssignmentAfterActiveLogin(sequence)
+    category_list = ["role/client", "function/agent"]
+    self.stepSetCredentialAssignmentPropertyList(
+        dict(category_list=category_list))
+    self._createCredentialRequest(reference="credential_user")
+    sequence = dict(reference="credential_user",
+                    assignment_function="agent",
+                    assignment_role="client")
+    self.stepCheckAssignmentAfterActiveLogin(sequence)
 
   def test_xx_checkCredentialQuestionIsNotCaseSensitive(self):
     '''

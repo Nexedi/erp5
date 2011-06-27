@@ -166,6 +166,13 @@
               </div>\n
 \n
               <div id="center" class="center_fluid" tal:define="dummy  python: request.set(\'editable_mode\', True)">\n
+                <!-- Headline Box -->\n
+                <tal:block tal:condition="python: layout_form is not None">\n
+                  <tal:block tal:repeat="aggregate python: [(\'headline\', headline_area)]">\n
+                    <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
+                  </tal:block>\n
+                </tal:block>\n
+\n
                 <!-- Splash Box -->\n
                 <tal:block tal:condition="python: layout_form is not None\n
                        and len(splash_area)\n
@@ -175,16 +182,11 @@
                   </tal:block>\n
                 </tal:block>\n
 \n
-                  <!-- Headline Box -->\n
+                  \n
                   <!-- Layout form rendering -->\n
                   <div id="km_left" \n
                        tal:attributes="class python:\'alone\' * is_right_area_empty;\n
                                        id python:is_front_layout * \'km_front\' or \'km_left\'">\n
-                    <tal:block tal:condition="python: layout_form is not None">\n
-                      <tal:block tal:repeat="aggregate python: [(\'headline\', headline_area)]">\n
-                          <tal:block metal:use-macro="here/aggregate_render/macros/aggregate_render"/>\n
-                      </tal:block>\n
-                    </tal:block>\n
                     <div id="master">\n
                       <div id="main_content" tal:attributes="class python:(list_mode and \'list_mode\') or \'view_mode\'"\n
                                              tal:define="dummy  python: request.set(\'editable_mode\', editable)">\n
@@ -229,8 +231,7 @@
       </tal:block>\n
     </tal:block>\n
   </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

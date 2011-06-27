@@ -38,17 +38,22 @@
 
 <tal:block tal:define="last_post here/DiscussionThread_getLastPost;\n
                        author_dict last_post/DiscussionPost_getAuthorDict;\n
-                       ">\n
+                       is_author_link_available python:author_dict[\'author_url\'] is not None;">\n
+\n
   <a class="listbox-row-discussion-thread-last-post-by-author-link"\n
      tal:attributes="href author_dict/author_url"\n
-     tal:content="author_dict/author_title"/> \n
+     tal:content="author_dict/author_title"\n
+     tal:condition="is_author_link_available"/>\n
+\n
+  <span tal:content="author_dict/author_title"\n
+        tal:condition="not:is_author_link_available"/>\n
+ \n
   <a class="listbox-row-discussion-thread-last-post-link"\n
      tal:attributes="href python: \'%s/view?list_start=%s&reset=1#%s\' %(here.absolute_url(), last_post.getId(), last_post.getUid())"> \n
     <img src="document_icon.gif" alt="Link To Post"/>\n
   </a>\n
  \n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>

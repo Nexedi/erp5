@@ -36,14 +36,13 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<script src="erp5_discussion.js" type="text/javascript"></script>\n
-<link href="erp5_discussion.css" rel="stylesheet" type="text/css">\n
-\n
 <tal:block tal:define="discussion_post_object here/getObject;\n
                  author_dict discussion_post_object/DiscussionPost_getAuthorDict;\n
                  author_url author_dict/author_url;\n
                  author_signature author_dict/author_signature;\n
                  author_title author_dict/author_title;\n
+                 author_thumbnail_url author_dict/author_thumbnail_url;\n
+                 is_author_thumbnai_available python: author_thumbnail_url is not None;\n
                  discussion_post_id discussion_post_object/getId;\n
                  discussion_post_uid discussion_post_object/getUid;\n
                  discussion_post_title discussion_post_object/getTitle;\n
@@ -53,42 +52,43 @@
                  discussion_post_stripped_html discussion_post_object/asStrippedHTML;\n
                  isUserAllowedToPost python: discussion_post_object.getParentValue().DiscussionThread_isUserAllowedToPost()">\n
 \n
-  <div class="discussion-post-header">\n
+  <div class="discussion-post-header"\n
+       tal:attributes="style python: test(is_author_thumbnai_available, \'height:104px\',\'\')">\n
 \n
-    <a class="discussion-post-title"\n
-       tal:attributes="href string:${discussion_post_url}/view;\n
-                       name discussion_post_uid"\n
-       tal:content="discussion_post_title"></a>\n
+    <div class="thumbnail"\n
+          tal:condition="is_author_thumbnai_available">\n
+      <img tal:attributes="src string:${author_thumbnail_url}?display=thumbnail&format=png"/>\n
+    </div>\n
 \n
-    <div class="discussion-post-creator">\n
-        by \n
+    <div class="title">\n
+      <a class="discussion-post-title"\n
+        tal:attributes="href string:${discussion_post_url}/view;\n
+                        name discussion_post_uid"\n
+        tal:content="discussion_post_title"/>\n
+        by\n
         <a class="discussion-post-creator-title-link"\n
-           tal:attributes="href author_url"\n
-           tal:content="author_title"></a> \n
-        on \n
-        <tal:block tal:replace="discussion_post_creation_date" />\n
-     </div>\n
+          tal:attributes="href author_url"\n
+          tal:content="author_title"/>\n
+        at \n
+        <span tal:content="discussion_post_creation_date" />\n
+    </div>\n
 \n
   </div>\n
 \n
-  <!-- Post Body -->\n
-  <div class="discussion-post-body-container">\n
+  <div class="discussion-post-body-container"\n
+       tal:content="structure discussion_post_stripped_html"/>\n
 \n
-    <div class="discussion-post-body"\n
-         tal:content="structure discussion_post_stripped_html"></div>\n
-\n
-  </div>\n
-\n
-  <!-- Signature -->\n
   <div tal:condition="python: author_signature is not None"\n
        class="discussion-post-author-signature-container"\n
-       tal:content="author_signature"></div>\n
+       tal:content="author_signature"/>\n
 \n
-  <button tal:condition="isUserAllowedToPost" type="submit"\n
-          title="Reply"\n
-          name="DiscussionThread_redirectCreateNewDiscussionPost:method"\n
-          tal:attributes="onClick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %discussion_post_id"\n
-          class="discussion-post-action-button">Reply</button>\n
+  <div class="discussion-post-actions">\n
+    <button tal:condition="isUserAllowedToPost" type="submit"\n
+            title="Reply"\n
+            name="DiscussionThread_redirectCreateNewDiscussionPost:method"\n
+            tal:attributes="onClick python: \'redirectCreateCitedNewDiscussionPost(\\\'%s\\\')\' %discussion_post_id"\n
+            class="discussion-post-action-button">Reply</button>\n
+  </div>\n
 \n
 </tal:block>
 

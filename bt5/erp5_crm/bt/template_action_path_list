@@ -12,15 +12,18 @@ Event Module | event_detailed_report
 Event Module | view
 Event Module | workflow_report
 Fax Message | assessment
+Fax Message | create_response
 Fax Message | preview
 Fax Message | related_events
 Fax Message | view
 Letter | assessment
+Letter | create_response
 Letter | preview
 Letter | related_events
 Letter | view
 Mail Message | assessment
 Mail Message | copy_document_to_dms
+Mail Message | create_response
 Mail Message | message_source
 Mail Message | preview
 Mail Message | related_events
@@ -34,6 +37,7 @@ Meeting | document_list
 Meeting | new_event
 Meeting | view
 Note | assessment
+Note | create_response
 Note | preview
 Note | related_events
 Note | view
@@ -43,6 +47,7 @@ Person Module | create_event_list
 Person | add_event
 Person | view_event_list
 Phone Call | assessment
+Phone Call | create_response
 Phone Call | preview
 Phone Call | related_events
 Phone Call | view
@@ -55,10 +60,12 @@ Sale Opportunity | document_list
 Sale Opportunity | new_event
 Sale Opportunity | view
 Short Message | assessment
+Short Message | create_response
 Short Message | preview
 Short Message | related_events
 Short Message | view
 Site Message | assessment
+Site Message | create_response
 Site Message | preview
 Site Message | related_events
 Site Message | view
@@ -74,10 +81,12 @@ Support Request | new_event
 Support Request | view
 System Preference | crm_preference
 Visit | assessment
+Visit | create_response
 Visit | preview
 Visit | related_events
 Visit | view
 Web Message | assessment
+Web Message | create_response
 Web Message | create_sender_person
 Web Message | preview
 Web Message | related_events

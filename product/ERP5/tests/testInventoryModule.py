@@ -553,6 +553,67 @@ class TestInventoryModule(TestOrderMixin, ERP5TypeTestCase):
 
     sequence_list.play(self)
 
+  def stepCreateFirstVariatedMultipleQuantityUnitResourceInventory(self, sequence=None, sequence_list=None, \
+                                 **kw):
+    """
+    We will put default values for an inventory
+    - size/Child/32 99 drum
+    - size/Child/34 100 drum
+    - size/Child/32 99 kilogram
+    - size/Child/34 100 kiligram
+    """
+    date = DateTime(self.first_date_string)
+    inventory = self.createInventory(start_date=date,sequence=sequence)
+    quantity = self.default_quantity
+    self.createVariatedInventoryLine(start_date=date,
+                  sequence=sequence, quantity=quantity)
+    inventory_line = inventory.objectValues(portal_type='Inventory Line')[0]
+    # Set non-default quantity unit to make sure that conversion correctly
+    # works and converted value is applied to stock.
+    inventory_line.setQuantityUnitValue(self.portal.portal_categories.quantity_unit.unit.drum)
+    self.createVariatedInventoryLine(start_date=date,
+                  sequence=sequence, quantity=quantity)
+
+  def stepCheckFirstVariatedMultipleQuantityUnitResourceInventory(self, sequence=None, sequence_list=None, \
+                                 **kw):
+    node_uid = sequence.get('organisation1').getUid()
+    resource_url = sequence.get('resource').getRelativeUrl()
+    date = DateTime(self.view_stock_date)
+    inventory = sequence.get('inventory_list')[-1]
+    total_quantity = sum([inventory_movement.getInventoriatedQuantity() for inventory_movement in inventory.getMovementList()])
+    self.assertEqual(total_quantity, (99*100 + 100*100 + 99 + 100))
+    quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
+                                                     resource=resource_url,
+                                                     to_date=date)
+    self.assertEquals(total_quantity, quantity)
+    variation_text = 'size/Child/32'
+    total_quantity = (99*100 + 99)
+    quantity = self.getSimulationTool().getInventory(node_uid=node_uid,
+                                                     resource=resource_url,
+                                                     variation_text=variation_text,
+                                                     to_date=date)
+    self.assertEquals(total_quantity,quantity)
+
+  def test_05_VariatedMultipleQuantityUnitResourceInventory(self, run=run_all_test):
+    """
+    Input inventory for resource which has variation and multiple quantity units
+    and make sure that inventory stores correct data.
+    """
+    if not run: return
+    self.logMessage('Test inventory with variated multiple quantity units resource')
+
+    sequence_list = SequenceList()
+
+    sequence_string = 'stepCreateVariatedMultipleQuantityUnitResource \
+                       stepCreateOrganisation1 \
+                       stepTic \
+                       stepCreateFirstVariatedMultipleQuantityUnitResourceInventory \
+                       stepTic \
+                       stepCheckFirstVariatedMultipleQuantityUnitResourceInventory'
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self)
+
 
 def test_suite():
   suite = unittest.TestSuite()

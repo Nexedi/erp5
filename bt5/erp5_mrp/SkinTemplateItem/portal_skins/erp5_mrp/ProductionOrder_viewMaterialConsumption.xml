@@ -91,7 +91,9 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_movement_start_date</string>
+                        <string>listbox_quantity_unit_item</string>
+                        <string>listbox_consumption_item</string>
+                        <string>listbox_variation_category_item_list</string>
                       </list>
                     </value>
                 </item>

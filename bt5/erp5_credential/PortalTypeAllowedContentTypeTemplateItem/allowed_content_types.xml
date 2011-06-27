@@ -20,8 +20,8 @@
   <item>Address</item>
   <item>Credential Question</item>
   <item>Email</item>
+  <item>Embedded File</item>
   <item>Fax</item>
-  <item>Image</item>
   <item>Telephone</item>
  </portal_type>
  <portal_type id="Credential Update Module">

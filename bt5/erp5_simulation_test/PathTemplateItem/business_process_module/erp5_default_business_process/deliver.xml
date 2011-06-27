@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="BusinessLink" module="Products.ERP5.Document.BusinessLink"/>
+      <global name="Business Link" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -76,10 +76,12 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>delivery_builder/portal_deliveries/sale_packing_list_builder</string>
                 <string>trade_phase/default/delivery</string>
                 <string>predecessor/trade_state/ordered</string>
                 <string>successor/trade_state/delivered</string>
+                <string>delivery_builder/portal_deliveries/internal_packing_list_builder</string>
+                <string>delivery_builder/portal_deliveries/purchase_packing_list_builder</string>
+                <string>delivery_builder/portal_deliveries/sale_packing_list_builder</string>
               </tuple>
             </value>
         </item>

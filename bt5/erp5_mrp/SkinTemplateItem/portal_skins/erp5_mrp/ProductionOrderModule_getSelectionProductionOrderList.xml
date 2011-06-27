@@ -50,8 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.portal_selections.getSelectionValueList(context=context,\n
+            <value> <string>return [brain\n
+        for brain in context.portal_selections.getSelectionValueList(context=context,\n
                                                 selection_name= \'production_order_module_selection\')\n
+        if brain.getStartDate() is not None and brain.getStopDate() is not None]\n
 </string> </value>
         </item>
         <item>

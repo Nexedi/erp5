@@ -1454,7 +1454,7 @@ class TestIngestion(ERP5TypeTestCase):
     # create an user to simulate upload from him
     user = self.createUser(reference='contributor1')
     organisation = self.portal.organisation_module.newContent(**dict(group='anybody',
-                                                                     site='site/arctic/spitsbergen'))
+                                                                     site='arctic/spitsbergen'))
 
     user.setSubordinationValue(organisation)
     portal.document_module.manage_setLocalRoles('contributor1', ['Assignor',])
@@ -1465,7 +1465,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.stepTic()
     self.assertEquals(document.getFilename(), 'TEST-en-002.doc')
     self.assertEquals('anybody', document.getGroup())
-    self.assertEquals('site/arctic/spitsbergen', document.getSite())
+    self.assertEquals('arctic/spitsbergen', document.getSite())
 
   def test_IngestionConfigurationByTypeBasedMethod_usecase1(self):
     """How to configure meta data discovery so that each time a file

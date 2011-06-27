@@ -69,15 +69,7 @@ order.activate(\n
     priority=priority,\n
     ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 \n
-order_portal_type = order.getPortalType()\n
-builder_dict = {\n
-  \'Sale Order\':\'sale_packing_list_builder\',\n
-  \'Purchase Order\':\'purchase_packing_list_builder\',\n
-  \'Internal Order\':\'internal_packing_list_builder\',\n
-}\n
-delivery_builder = getattr(order.getPortalObject().portal_deliveries, builder_dict[order_portal_type])\n
-\n
-delivery_builder.activate(activity=\'SQLQueue\', after_tag=(tag, expand_tag)).build(explanation_uid=order.getUid())\n
+order.activate(after_tag=(tag, expand_tag)).Delivery_buildOnComposedDocument()\n
 </string> </value>
         </item>
         <item>

@@ -300,6 +300,7 @@
                         <string>my_view_mode_min_delay</string>
                         <string>my_view_mode_movement_quantity</string>
                         <string>my_view_mode_quantity</string>
+                        <string>my_view_mode_preferred_internal_use_list</string>
                       </list>
                     </value>
                 </item>

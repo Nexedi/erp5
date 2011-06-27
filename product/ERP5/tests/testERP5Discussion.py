@@ -98,6 +98,46 @@ class TestERP5Discussion(ERP5TypeTestCase):
     post = self.stepCreatePost(thread);
     self.stepTic()
 
+  def test_MultipleForum(self):
+    """
+      Test multiple forums may exists within same ERP5 Web Site.
+    """
+    portal = self.portal
+
+    # create web sections & set predicates
+    group1 = portal.portal_categories.group.newContent(portal_type='Category',
+                                                       title = 'Group 1')
+    group2 = portal.portal_categories.group.newContent(portal_type='Category',
+                                                       title = 'Group 2')                                                       
+    web_site = portal.web_site_module.newContent(portal_type='Web Site')
+    web_section1 = web_site.newContent(portal_type='Web Section')
+    web_section2 = web_site.newContent(portal_type='Web Section')
+    web_section1.setMultimembershipCriterionBaseCategoryList(['group'])
+    web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])
+    web_section2.setMultimembershipCriterionBaseCategoryList(['group'])
+    web_section2.setMembershipCriterionCategoryList([group2.getRelativeUrl()])    
+    self.stepTic()
+    
+    # add threads on Web Section context
+    web_section1.WebSection_createNewDiscussionThread('test1', 'test1 body')
+    web_section2.WebSection_createNewDiscussionThread('test2', 'test2 body')    
+    self.stepTic()
+    discussion_thread_object1 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
+                                                                    title = 'test1')
+    discussion_thread_object2 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
+                                                                    title = 'test2')
+    self.assertEqual(group1, discussion_thread_object1.getGroupValue())
+    self.assertEqual(group2, discussion_thread_object2.getGroupValue())
+    
+    # check getDocumentValue.. on Web Section context
+    self.assertSameSet([], web_section1.getDocumentValueList())
+    self.assertSameSet([], web_section2.getDocumentValueList())
+    discussion_thread_object1.publish()
+    discussion_thread_object2.publish()
+    self.stepTic()
+    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in web_section1.getDocumentValueList()])
+    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in web_section2.getDocumentValueList()])    
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Discussion))

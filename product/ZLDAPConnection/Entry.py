@@ -154,14 +154,14 @@ class GenericEntry(Acquisition.Implicit):
     ### a .set calls this directly, while in the TransactionalModel this
     ### gets called by the Transaction system at commit time.
     def _modify(self):
-	modlist = []
+        modlist = []
 
-	for attribute, values in self._data.items():
-	    modlist.append((ldap.MOD_REPLACE, attribute, values))
+        for attribute, values in self._data.items():
+            modlist.append((ldap.MOD_REPLACE, attribute, values))
         for attribute in self._mod_delete:
             modlist.append((ldap.MOD_DELETE, attribute, None))
 
-	self._connection()._modifyEntry(self.dn, modlist)
+        self._connection()._modifyEntry(self.dn, modlist)
         self._mod_delete=[]
         self.__subentries={}
 
@@ -422,8 +422,8 @@ class ZopeEntry(OFS.SimpleItem.Item):
     #### Initialazation Routines ##############
 
     manage_options=(
-	{'label':'Attributes','action':'manage_attributes'},
-	)
+        {'label':'Attributes','action':'manage_attributes'},
+        )
     
     __ac_permissions__=(
         ('Access contents information', ('manage_attributes',),
@@ -445,7 +445,7 @@ class ZopeEntry(OFS.SimpleItem.Item):
     #### Entry & Attribute Access Machinery #####################
 
     def attributesMap(self):
-	return self._data.items()
+        return self._data.items()
 
     def __bobo_traverse__(self, REQUEST, key):
         ' allow traversal to subentries '
@@ -456,14 +456,14 @@ class ZopeEntry(OFS.SimpleItem.Item):
     ###### Tree Machinery ######
 
     def tpValues(self):
-	return self._subentries().values()
+        return self._subentries().values()
 
     def tpId(self):
-	return self.id
+        return self.id
 
     def tpURL(self):
-	"""Return string to be used as URL relative to parent."""
-	return urllib.quote(self.id)
+        """Return string to be used as URL relative to parent."""
+        return urllib.quote(self.id)
     
     ### Object Manager-ish Machinery
     def objectValues(self):
@@ -478,22 +478,22 @@ class ZopeEntry(OFS.SimpleItem.Item):
     ### Zope management stuff
 
     def manage_deleteEntry(self, ids, REQUEST=None):
-	'''Delete marked Entries and all their sub-entries.'''
+        '''Delete marked Entries and all their sub-entries.'''
 
-	for rdn in ids:
+        for rdn in ids:
             self._delete_dn(rdn)
 
-	if REQUEST is not None:
-	    return self.manage_contents(self, REQUEST)
+        if REQUEST is not None:
+            return self.manage_contents(self, REQUEST)
 
 
     def manage_newEntry(self, rdn, REQUEST=None):
-	'''Add a new entry'''
+        '''Add a new entry'''
 
         e = self.addSubentry(rdn)
 
-	if REQUEST is not None:
-	    return self.manage_contents(self, REQUEST)
+        if REQUEST is not None:
+            return self.manage_contents(self, REQUEST)
         else:
             return e
 
@@ -504,19 +504,19 @@ class ZopeEntry(OFS.SimpleItem.Item):
         return e                        # return the new entry
 
     def manage_addAttribute(self, id, values, REQUEST=None):
-	'''Add an attribute to an LDAP entry'''
-	
+        '''Add an attribute to an LDAP entry'''
+
         self.set(id, values)
 
-	if REQUEST is not None:
-	    return self.manage_attributes(self, REQUEST) 
+        if REQUEST is not None:
+            return self.manage_attributes(self, REQUEST)
 
 
     def manage_editAttributes(self, REQUEST):
         """Edit entry's attributes via the web."""
-	
+
         for attribute in self._data.keys():
-	    values = REQUEST.get(attribute, [])
+            values = REQUEST.get(attribute, [])
             values = filter(isNotBlank, values)   #strip out blanks
 
             self.set(attribute, values)

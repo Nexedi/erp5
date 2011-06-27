@@ -50,9 +50,79 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Returns list of materials\' inventories used in consumption for production"""\n
-kwargs[\'resource_portal_type\'] = context.getPortalObject().getPortalProductTypeList()\n
-return context.ProductionOrder_getConsumptionMovementList(*args,**kwargs)\n
+            <value> <string>"""Returns list of resources\' inventories used in consumption for production\n
+   Show only resources which are defined in transformation.\n
+"""\n
+movement_list = context.getMovementList()\n
+transformation_line_list_dict = {}\n
+consumed_resource_list = []\n
+for movement in movement_list:\n
+  transformation = movement.getSpecialiseValue()\n
+  if transformation is not None:\n
+    transformation_line_list = transformation.objectValues()\n
+    transformation_line_list_dict[movement] = transformation_line_list\n
+    for transformation_line in transformation_line_list:\n
+      transformation_resource = transformation_line.getResourceValue()\n
+      if transformation_resource is not None:\n
+        consumed_resource_list.append(transformation_resource)\n
+  else:\n
+    transformation_line_list_dict[movement] = ()\n
+\n
+if not consumed_resource_list:\n
+  return ()\n
+\n
+kwargs[\'resource\'] = [resource.getRelativeUrl() for resource in consumed_resource_list]\n
+kwargs[\'group_by_section\'] = 0\n
+kwargs[\'group_by_node\'] = 1\n
+kwargs[\'group_by_variation\'] = 1\n
+kwargs[\'section_uid\'] = context.getSourceSectionUid()\n
+\n
+inventory_dict = {}\n
+for inventory in context.portal_simulation.getFutureInventoryList(*args,**kwargs):\n
+  inventory_dict[inventory.resource_relative_url,\n
+                 inventory.variation_text,\n
+                 inventory.node_relative_url] = inventory\n
+\n
+result_list = inventory_dict.values()\n
+consumption_dict = {}\n
+for movement in movement_list:\n
+  for material in transformation_line_list_dict[movement]:\n
+    material_resource = material.getResource()\n
+    if material_resource is None:\n
+      continue\n
+\n
+    inventory_dict_key = (material_resource,\n
+                          \'\\n\'.join(sorted(material.getVariationCategoryList())),\n
+                          movement.getSource())\n
+\n
+    quantity = material.getQuantity()\n
+\n
+    try:\n
+      obj = inventory_dict[inventory_dict_key]\n
+    except KeyError:\n
+      obj = material\n
+      result_list.append(obj)\n
+    else:\n
+      inventory_quantity_unit = obj.getQuantityUnit()\n
+      quantity_unit = material.getQuantityUnit()\n
+      if quantity_unit != inventory_quantity_unit:\n
+        quantity = material.getResourceValue().convertQuantity(quantity,\n
+                                                               quantity_unit,\n
+                                                               inventory_quantity_unit)\n
+\n
+    if quantity:\n
+      consumption_dict[obj.getUid()] = quantity * (movement.getQuantity() or 0)\n
+\n
+# sort result_list\n
+transformation_allowed_content_type_list = context.portal_types[\'Transformation\'].getTypeAllowedContentTypeList()\n
+def compare(a, b):\n
+    return cmp((consumption_dict.has_key(a.getUid()), a.portal_type in transformation_allowed_content_type_list),\n
+               (consumption_dict.has_key(b.getUid()), b.portal_type in transformation_allowed_content_type_list),\n
+               )\n
+result_list.sort(cmp=compare, reverse=True)\n
+\n
+context.REQUEST.set(\'consumption_dict\', consumption_dict)\n
+return result_list\n
 </string> </value>
         </item>
         <item>

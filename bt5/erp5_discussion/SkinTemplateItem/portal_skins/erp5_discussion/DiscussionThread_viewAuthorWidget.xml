@@ -36,12 +36,18 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block tal:define="author_dict python: here.DiscussionPost_getAuthorDict()">\n
+<tal:block tal:define="author_dict python: here.DiscussionPost_getAuthorDict();\n
+                       is_author_link_available python:author_dict[\'author_url\'] is not None;">\n
+\n
   <a class="listbox-row-discussion-thread-author-link"\n
      tal:attributes="href author_dict/author_url"\n
-     tal:content="author_dict/author_title"/>\n
-</tal:block>\n
-
+     tal:content="author_dict/author_title"\n
+     tal:condition="is_author_link_available"/>\n
+\n
+  <span tal:content="author_dict/author_title"\n
+        tal:condition="not:is_author_link_available"/>\n
+\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>

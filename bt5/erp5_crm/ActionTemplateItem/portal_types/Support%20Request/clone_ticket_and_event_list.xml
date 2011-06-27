@@ -30,7 +30,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>icon</string> </key>
@@ -58,7 +60,7 @@
         </item>
         <item>
             <key> <string>visible</string> </key>
-            <value> <int>1</int> </value>
+            <value> <int>0</int> </value>
         </item>
       </dictionary>
     </pickle>

@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>"""\n
+ This script allows to create a new Discussion Thread.\n
+"""\n
+MARKER = [\'\', None, []]\n
+\n
+portal = context.getPortalObject()\n
+person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+\n
+version = \'001\'\n
+language = portal.Localizer.get_selected_language()\n
+user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()\n
+if group_list in MARKER:\n
+  group_list = user_assignment_dict[\'group_list\']\n
+if site_list in MARKER:\n
+  site_list = user_assignment_dict[\'site_list\']\n
+\n
+# set predicate settings for current Web Section\n
+membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
+multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()\n
+reference = title.replace(\' \', \'-\')\n
+create_kw = dict(title = title,\n
+                 source_value = person,\n
+                 reference = reference,\n
+                 version = version,\n
+                 language = language,\n
+                 description=description,\n
+                 subject_list=subject_list,\n
+                 classification=classification,\n
+                 group_list=group_list,\n
+                 site_list=site_list)\n
+for base_category in multimembership_criterion_base_category_list:\n
+  create_kw[\'%s_list\' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]\n
+\n
+discussion_thread = portal.discussion_thread_module.newContent(\n
+                      portal_type = "Discussion Thread",\n
+                      **create_kw)\n
+discussion_post = discussion_thread.newContent(\n
+                      portal_type = "Discussion Post",\n
+                      title = title,\n
+                      text_content = text_content,\n
+                      source_value = person,\n
+                      version = version,\n
+                      language = language)\n
+\n
+# depending on security model Thread and Post can be directly published or shared\n
+portal_status_message = "New discussion created. Your post will be reviewed for approval."\n
+discussion_thread.submit()\n
+\n
+if send_notification_text not in (\'\', None):\n
+  # we can send notifications\n
+  person_list = []\n
+  notification_list = send_notification_text.split(\'\\n\')\n
+  for notification in notification_list:\n
+    # we can assume user wanted to specify Person\'s title\n
+    person_list.extend(portal.portal_catalog(portal_type=\'Person\',\n
+                                             title=notification,\n
+                                             default_email_text=\'!=\'))\n
+  if len(person_list):\n
+    #Get message from catalog\n
+    notification_reference = \'forum-new-thread\'\n
+    notification_message = context.NotificationTool_getDocumentValue(notification_reference, \'en\')\n
+    if notification_message is None:\n
+      raise ValueError, \'Unable to found Notification Message with reference "%s".\' % notification_reference\n
+\n
+    notification_mapping_dict = {\'subject\': discussion_thread.getTitle(),\n
+                                 \'url\': discussion_thread.absolute_url(),\n
+                                 \'sender\': portal.email_from_name }\n
+    #Preserve HTML else convert to text\n
+    if notification_message.getContentType() == "text/html":\n
+      mail_text = notification_message.asEntireHTML(\n
+        substitution_method_parameter_dict={\'mapping_dict\':notification_mapping_dict})\n
+    else:\n
+      mail_text = notification_message.asText(\n
+        substitution_method_parameter_dict={\'mapping_dict\':notification_mapping_dict})\n
+    sender = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+    #Send email\n
+    for recipient in person_list:\n
+      portal.portal_notifications.sendMessage(\n
+        sender=sender,\n
+        recipient=recipient,\n
+        subject=notification_message.getTitle(),\n
+        message=mail_text,\n
+        message_text_format=notification_message.getContentType(),\n
+        store_as_event=False)\n
+\n
+return discussion_thread.Base_redirect(form_id,\n
+         keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>title, text_content, form_id=\'view\', predecessor=None, description=None, subject_list=None, classification=None, group_list=None, site_list=None, send_notification_text=None, reference=None,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSection_createNewDiscussionThread</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

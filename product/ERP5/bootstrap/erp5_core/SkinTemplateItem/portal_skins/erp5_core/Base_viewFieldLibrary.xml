@@ -140,6 +140,7 @@
                         <string>listbox_creation_date</string>
                         <string>listbox_modification_date</string>
                         <string>listbox_owner_title</string>
+                        <string>my_captcha</string>
                       </list>
                     </value>
                 </item>

@@ -10,8 +10,8 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>display_width</string>
                 <string>description</string>
+                <string>display_width</string>
                 <string>title</string>
               </list>
             </value>
@@ -75,7 +75,7 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The postal code</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>display_width</string> </key>

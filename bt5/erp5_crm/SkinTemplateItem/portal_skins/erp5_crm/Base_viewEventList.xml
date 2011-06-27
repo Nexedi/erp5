@@ -93,8 +93,8 @@
                     <value>
                       <list>
                         <string>listbox_delivery_start_date</string>
-                        <string>ticket_listbox_start_date</string>
-                        <string>ticket_listbox_stop_date</string>
+                        <string>ticket_listbox_delivery_start_date</string>
+                        <string>ticket_listbox_delivery_stop_date</string>
                       </list>
                     </value>
                 </item>

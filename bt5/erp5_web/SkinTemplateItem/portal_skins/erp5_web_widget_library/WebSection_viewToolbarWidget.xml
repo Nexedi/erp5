@@ -49,11 +49,17 @@
 <tal:block\n
   tal:define="is_web_mode  python: True;\n
               actions      request/actions | python:\n
-                           here.Base_filterDuplicateActions(\n
-                             here.portal_actions.listFilteredActionsFor(here));\n
+                           here.Base_filterDuplicateActions(here.portal_actions.listFilteredActionsFor(here));\n
               dummy        python:request.set(\'actions\', actions);\n
               portal_url   python: getattr(here, \'getWebSiteValue\', here.getPortalObject)().absolute_url();\n
-              portal_type  here/getPortalType">\n
+              portal_type  here/getPortalType;\n
+              absolute_url here/absolute_url;\n
+              is_permanent_document python: getattr(here, \'editable_absolute_url\', None) is not None;\n
+              document_url python: test(is_permanent_document, \n
+                                        getattr(here, \'editable_absolute_url\', absolute_url), \n
+                                        absolute_url);\n
+              http_parameters string:${request/http_parameters}">\n
+\n
 <ul>\n
   <!-- Edit button menu -->\n
   <li class="toolboxSection" id="edit-document-toolbox">\n
@@ -61,7 +67,9 @@
     <div class="menu">\n
       <ul tal:define="edit_link_list python: here.Base_getAdminToolboxEditShortcutList()">\n
         <li tal:repeat="link edit_link_list">\n
-          <a tal:attributes="href python: link[\'url\']">\n
+          <a class="menu-link"\n
+             tal:attributes="href python: link[\'url\'];\n
+                             title python: link[\'title\']">\n
             <span>\n
               <img tal:attributes="src   python: link[\'icon\'];\n
                                    title python: link[\'label\'];\n
@@ -89,28 +97,32 @@
       <ul>\n
         <tal:block tal:define="allowed_content_type_list here/getVisibleAllowedContentTypeList | python:[] ">\n
         <li tal:repeat="content_id allowed_content_type_list">\n
-          <button class="menu-link" \n
-                  tal:attributes="title string:Add ${content_id};\n
-                                  name python:\'Base_doAction:method\';\n
-                                  value python: \'add %s\' % (content_id,) "\n
-                                  i18n:translate="" i18n:domain="ui">\n
-            Add <tal:block tal:content="content_id"\n
-                           i18n:name="portal_type" \n
-                           i18n:translate="" i18n:domain="ui" />\n
-          </button>\n
+\n
+          <a class="menu-link" \n
+             tal:attributes="title string:Add ${content_id};\n
+                             href string:${document_url}/Base_doAction?select_action=add ${content_id}"\n
+             i18n:translate="" i18n:domain="ui">\n
+            <span>\n
+              Add <tal:block tal:content="content_id"\n
+                             i18n:name="portal_type" \n
+                             i18n:translate="" i18n:domain="ui" />\n
+            </span>\n
+          </a>\n
         </li>\n
         </tal:block>\n
         <tal:block tal:define="document_template_list here/getDocumentTemplateList | nothing"\n
                    tal:condition="document_template_list">\n
         <li tal:repeat="document_template document_template_list">\n
-          <button class="menu-link"\n
-                  tal:attributes="title string:Add ${document_template/getTitle};\n
-                                  name python:\'Base_doAction:method\';\n
-                                  value python:\'template %s\' % (document_template.getRelativeUrl(), )"\n
-                  i18n:translate="" i18n:domain="ui">\n
-            Add <tal:block tal:content="document_template/getTitle"\n
-                           i18n:name="document_template" />\n
-          </button>\n
+\n
+          <a class="menu-link" \n
+             tal:attributes="title string:Add ${document_template/getTitle};\n
+                             href string:${document_url}/Base_doAction?select_action=template ${document_template/getRelativeUrl}}"\n
+             i18n:translate="" i18n:domain="ui">\n
+            <span>\n
+              Add <tal:block tal:content="document_template/getTitle"\n
+                             i18n:name="document_template" />\n
+            </span>\n
+          </a>\n
         </li>\n
         </tal:block>\n
       </ul>\n
@@ -118,33 +130,41 @@
       <label i18n:translate="" i18n:domain="ui">Workflows</label>\n
       <ul>\n
         <li tal:repeat="action actions/workflow">\n
-          <button class="menu-link" tal:content="action/name"\n
-                  tal:attributes="title action/name;\n
-                                  name python:\'Base_doAction:method\';\n
-                                  value python:\'workflow %s\' % (action[\'url\'], )"\n
-                  i18n:translate="" i18n:domain="ui">\n
-          </button>\n
+          <tal:block tal:define="action_url python: action[\'url\'].replace(absolute_url, document_url);">\n
+            <a class="menu-link" \n
+              tal:attributes="title action/name;\n
+                              href string:${document_url}/Base_doAction?select_action=workflow ${action_url}&${http_parameters}"\n
+              i18n:translate="" i18n:domain="ui">\n
+              <span tal:content="action/name"/>\n
+            </a>\n
+          </tal:block>\n
         </li>\n
       </ul>\n
 \n
       <label i18n:translate="" i18n:domain="ui">Object</label>\n
       <ul>\n
         <li tal:repeat="action actions/object_action | nothing">\n
-          <button class="menu-link" tal:content="action/name"\n
-                  tal:attributes="title action/name;\n
-                                  name python:\'Base_doAction:method\';\n
-                                  value python:\'object %s\' % (action[\'url\'], )"\n
-                  i18n:translate="" i18n:domain="ui"></button>\n
+          <tal:block tal:define="action_url python: action[\'url\'].replace(absolute_url, document_url);">\n
+            <a class="menu-link" \n
+              tal:attributes="title action/name;\n
+                              href string:${document_url}/Base_doAction?select_action=object ${action_url}&${http_parameters}"\n
+              i18n:translate="" i18n:domain="ui">\n
+              <span tal:content="action/name"/>\n
+            </a>\n
+          </tal:block>\n
         </li>\n
         <tal:block tal:define="object_view_list actions/object_view|nothing;\n
                                module_view_list python:[i for i in object_view_list if i[\'id\']==\'module_view\']"\n
                    tal:condition="module_view_list">\n
         <li tal:repeat="action module_view_list">\n
-          <button class="menu-link" tal:content="action/name"\n
-                  tal:attributes="title action/name;\n
-                                  name python:\'Base_doAction:method\';\n
-                                  value python:\'object %s\' % (action[\'url\'], )"\n
-                  i18n:translate="" i18n:domain="ui"></button>\n
+          <tal:block tal:define="action_url python: action[\'url\'].replace(absolute_url, document_url);">\n
+            <a class="menu-link" \n
+              tal:attributes="title action/name;\n
+                              href string:${document_url}/Base_doAction?select_action=object ${action_url}&${http_parameters}"\n
+              i18n:translate="" i18n:domain="ui">\n
+              <span tal:content="action/name"/>\n
+            </a>\n
+          </tal:block>\n
         </li>\n
         </tal:block>\n
       </ul>\n
@@ -160,8 +180,9 @@
        XXX - This is not so good to create new content in a section\n
              Behaviour should be to create content in section / site\n
   -->\n
-  <li class="toolboxSection" id="clone-document-toolbox"\n
-       tal:condition="python:here.isDocument">\n
+  <li class="toolboxSection" \n
+      id="clone-document-toolbox"\n
+      tal:condition="python:here.isDocument()">\n
     <h3 class="menu_title">\n
       <span id="create_new_document_title"></span>\n
       <span id="clone_document_title">\n
@@ -238,72 +259,38 @@
         </div>\n
       </fieldset>\n
 \n
-      <script type="text/javascript" tal:content="string:\n
-        // preload action icons\n
-        if (document.images) {\n
-          clone_icon = new Image();\n
-          new_icon   = new Image();\n
-          clone_icon.src = \'$portal_url/admin_toolbox_clone_document.png\';\n
-          new_icon.src   = \'$portal_url/admin_toolbox_new_document.png\';\n
-        }\n
-\n
-        function setCreationMode (sel) {\n
-          // default is cloning\n
-          var action      = \'clone\';\n
-          var action_name = \'Clone &amp; Edit\';\n
-          var icon        = \'admin_toolbox_clone_document.png\';\n
-          var name        = \'Base_cloneContent:method\';\n
-          var clone_display = \'inline\';\n
-          var new_title   = \'\';\n
-\n
-          // a portal type is given, so create a new document\n
-          var portal_type = sel.options[sel.selectedIndex].value;\n
-          if (portal_type != \'None\') {\n
-            action      = \'new\'\n
-            action_name = \'Create New &amp; Edit\';\n
-            icon        = \'admin_toolbox_new_document.png\';\n
-            name        = \'Base_newContent:method\';\n
-            clone_display = \'none\';\n
-            new_title   = \'Create New Document\';\n
-          }\n
-\n
-          // update action dependent values\n
-          document.getElementById(\'create_new_document_title\').innerHTML = new_title;\n
-          document.getElementById(\'clone_document_title\'     ).style.display = clone_display;\n
-          document.getElementById(\'duplicate_document_action\').innerHTML = action_name;\n
-\n
-          // replace the action icon\n
-          document.getElementById(\'clone_action_icon\').src = eval(action + \'_icon.src\');\n
-\n
-          // update action button title\n
-          var button   = document.getElementById(\'clone_action_button\');\n
-          button.title = action_name;\n
-          button.name  = name;\n
-        }\n
-      " />\n
     </div>\n
   </li>\n
 \n
   <!-- Module panel.\n
-       Some modules that should be useful for web management will be listed.\n
-  -->\n
+       Some modules that should be useful for web management will be listed.-->\n
   <li class="toolboxSection" id="select-module-toolbox">\n
     <h3 class="menu_title" i18n:translate="" i18n:domain="ui">Module</h3>\n
     <div class="menu">\n
       <ul>\n
         <li tal:define="module_list here/WebSection_getToolbarModuleItemList"\n
             tal:repeat="module module_list">\n
-          <button class="menu-link"\n
+\n
+            <a class="menu-link" \n
+              tal:attributes="title python: module[0];\n
+                              href python: \'Base_doModule?select_module=%s\' %module[1]"\n
+              i18n:translate="" i18n:domain="ui">\n
+              <span tal:content="python: module[0]"/>\n
+            </a>\n
+ <!--         <button class="menu-link"\n
                   tal:attributes="name string:Base_doModule:method;\n
                                   value python: module[1];\n
                                   title python: module[0]"\n
-                  tal:content="python: module[0]"></button>\n
+                  tal:content="python: module[0]"></button>-->\n
         </li>\n
       </ul>\n
     </div>\n
   </li>\n
 </ul>\n
-<script type="text/javascript" src="erp5_web_toolbar.js" tal:attributes="src string:$portal_url/erp5_web_toolbar.js"></script>\n
+\n
+<script type="text/javascript" \n
+        tal:attributes="src string:$portal_url/erp5_web_toolbar.js"></script>\n
+\n
 </tal:block>
 
 ]]></unicode> </value>
@@ -322,7 +309,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

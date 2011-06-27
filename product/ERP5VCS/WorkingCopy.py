@@ -29,27 +29,18 @@
 #
 ##############################################################################
 
-import errno, os, re, shutil
+import errno, json, os, re, shutil
+from base64 import b64encode, b64decode
 from tempfile import gettempdir
 import transaction
 from AccessControl import Unauthorized
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Acquisition import aq_base, Implicit
 from App.config import getConfiguration
+from DateTime import DateTime
 from ZTUtils import make_query
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
 from Products.ERP5Type.Utils import simple_decorator
-
-@simple_decorator
-def chdir_working_copy(func):
-  def decorator(self, *args, **kw):
-    cwd = os.getcwd()
-    try:
-      os.chdir(self.working_copy)
-      return func(self, *args, **kw)
-    finally:
-      os.chdir(cwd)
-  return decorator
 
 @simple_decorator
 def selfcached(func):
@@ -141,6 +132,22 @@ class WorkingCopy(Implicit):
     raise Unauthorized("Unauthorized access to path %r."
                        " It is NOT in your Zope home instance." % path)
 
+  def _getCookie(self, name, default=None):
+    try:
+      return json.loads(b64decode(self.REQUEST[name]))
+    except StandardError:
+      return default
+
+  def _setCookie(self, name, value, days=30):
+    portal = self.getPortalObject()
+    request = portal.REQUEST
+    value = b64encode(json.dumps(value))
+    request.set(name, value)
+    if days:
+      expires = (DateTime() + days).toZone('GMT').rfc822()
+      request.RESPONSE.setCookie(name, value, path=portal.absolute_url_path(),
+                                 expires=expires)
+
   # path is the path in svn working copy
   # return edit_path in zodb to edit it
   def editPath(self, path, html=False):
@@ -184,15 +191,10 @@ class WorkingCopy(Implicit):
     business_template.build()
     # XXX: Big hack to make export work as expected.
     transaction.commit()
-    old_cwd = os.getcwd()
-    try:
-      os.chdir(self.working_copy)
-      self._export(business_template)
-    finally:
-      os.chdir(old_cwd)
+    self._export(business_template)
 
   def _export(self, business_template):
-    bta = BusinessTemplateWorkingCopy(creation=1)
+    bta = BusinessTemplateWorkingCopy(creation=1, path=self.working_copy)
     self.addremove(*bta.export(business_template))
 
   def showOld(self, path):
@@ -213,24 +215,6 @@ class WorkingCopy(Implicit):
     finally:
       file.close()
     return revision
-
-  def getLastChangelog(self):
-    """Return last changelog of a business template
-    """
-    changelog = ""
-    try:
-      f = open(os.path.join(self.working_copy, 'bt', 'change_log'))
-      try:
-        for line in f:
-          if not line.strip():
-            break
-          changelog += line
-      finally:
-        f.close()
-    except IOError, e:
-      if e.errno != errno.ENOENT:
-        raise
-    return changelog
 
   def hasDiff(self, path):
     try:
@@ -386,6 +370,7 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
   def _writeString(self, obj, path):
     self.file_set.add(path)
     self._makeParent(path)
+    path = os.path.join(self.path, path)
     # write file unless unchanged
     file = None
     try:
@@ -412,8 +397,9 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     path = os.path.dirname(path)
     if path and path not in self.dir_set:
       self._makeParent(path)
-      if not os.path.exists(path):
-        os.mkdir(path)
+      real_path = os.path.join(self.path, path)
+      if not os.path.exists(real_path):
+        os.mkdir(real_path)
       self.dir_set.add(path)
 
   def export(self, business_template):
@@ -423,8 +409,8 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
     business_template.export(bta=self)
     # Remove dangling files/dirs
     removed_set = set()
-    prefix_length = len(os.path.join('.', ''))
-    for dirpath, dirnames, filenames in os.walk('.'):
+    prefix_length = len(os.path.join(self.path, ''))
+    for dirpath, dirnames, filenames in os.walk(self.path):
       dirpath = dirpath[prefix_length:]
       for i in xrange(len(dirnames) - 1, -1, -1):
         d = dirnames[i]
@@ -432,13 +418,13 @@ class BusinessTemplateWorkingCopy(BusinessTemplateFolder):
           d = os.path.join(dirpath, d)
           if d in self.dir_set:
             continue
-          shutil.rmtree(d)
+          shutil.rmtree(os.path.join(self.path, d))
           removed_set.add(d)
         del dirnames[i]
       for f in filenames:
         f = os.path.join(dirpath, f)
         if f not in self.file_set:
-          os.remove(f)
+          os.remove(os.path.join(self.path, f))
           removed_set.add(f)
     return self.file_set, removed_set
 

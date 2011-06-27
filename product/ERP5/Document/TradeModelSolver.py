@@ -95,6 +95,8 @@ class TradeModelSolver(AcceptSolver):
     # Second, apply changes on invoice lines to simulation movements,
     # then expand.
     for movement, simulation_movement_list in delivery_dict.iteritems():
+      if movement in trade_model_related_movement_list:
+        continue
       for simulation_movement in simulation_movement_list:
         if activate_kw is not None:
           simulation_movement.setDefaultActivateParameters(

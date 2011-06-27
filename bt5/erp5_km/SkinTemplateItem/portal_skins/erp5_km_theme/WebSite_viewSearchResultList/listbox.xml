@@ -63,10 +63,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>css_class</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -125,9 +121,7 @@
               <dictionary>
                 <item>
                     <key> <string>count_method</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
@@ -194,7 +188,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -255,19 +249,6 @@
     </pickle>
   </record>
   <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="Method" module="Products.Formulator.MethodField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>method_name</string> </key>
-            <value> <string>WebSite_countFullTextSearchResultList</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="4" aka="AAAAAAAAAAQ=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>

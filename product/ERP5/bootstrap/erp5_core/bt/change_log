@@ -1,3 +1,11 @@
+2011-06-23 yusei
+* Add an action to call alarm.activeSense() for developer.
+
+2011-06-07 yusei
+* Set auditor proxy role to Base_getConversionFormatItemList. Anybody should be able to view conversion format list.
+
+Fix CategoryTool_constructCategoryTableToExport. Sometimes categories were wrongly sorted and incorrect category definitions were exported.
+
 2011-02-25 arnaud.fontaine
 * Proxify all the fields in BaseType_view and PreferenceType_view.
 * Fix type_interface_list which was not displayed properly in BaseType_view and PreferenceType_view.

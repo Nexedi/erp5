@@ -41,6 +41,8 @@
     tal:define="global mode python: options.get(\'mode\', request.get(\'gadget_mode\', \'erp5_front\'));\n
                 global default_pad_group python: options.get(\'default_pad_group\', request.get(\'gadget_default_pad_group\', \'\'));\n
                 kw python: dict(mode=mode, default_pad_group=default_pad_group);\n
+                global isAnonymousKnowledgePadUsed python: options.get(\'use_anonymous_knowledge_pad\',request.get(\'use_anonymous_knowledge_pad\', False));\n
+                dummy python: request.set(\'is_anonymous_knowledge_pad_used\', isAnonymousKnowledgePadUsed);\n
                 struct python: here.ERP5Site_getActiveKnowledgePadForUser(**kw);\n
                 global active_knowledge_pad python: struct[0];\n
                 global knowledge_pads python: struct[1];\n
@@ -49,9 +51,7 @@
                 global isAnon python: here.portal_membership.isAnonymousUser();\n
                 global waitForActivitiesOnServer python: active_knowledge_pad is None and hasUserActivity;\n
                 global isUserAllowedToCreateKnowledgePads context/Base_isUserAllowedToUseKnowledgePad;\n
-                global isKnowledgePadTemplateUsed python: request.get(\'is_knowledge_pad_template_used\', 0);\n
-                global isAnonymousKnowledgePadUsed python: request.get(\'use_anonymous_knowledge_pad\', False);\n
-                dummy python: request.set(\'is_anonymous_knowledge_pad_used\', isAnonymousKnowledgePadUsed);                \n
+                global isKnowledgePadTemplateUsed python: request.get(\'is_knowledge_pad_template_used\', 0);               \n
                 global createDefaultPadForUser python: options.get(\'create_default_pad\', False) and \n
                                                          len(knowledge_pads)==0 and not hasUserActivity;\n
                 global make_security_check python: options.get(\'make_security_check\', False);\n

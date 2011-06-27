@@ -1,3 +1,12 @@
+2011-06-23 tatuya
+* Show the owner at Inventory module listbox because the inventories can be owned by multiple sections.
+
+2011-06-02 arnaud.fontaine
+* Fix issue on stock listbox when there is no unit conversion defined.
+
+2011-05-27 arnaud.fontaine
+* Fix stock listbox and add a new column 'order'.
+
 2011-04-14 yusei
 * Remove old unnecessary tales expression from relation string fields.
 

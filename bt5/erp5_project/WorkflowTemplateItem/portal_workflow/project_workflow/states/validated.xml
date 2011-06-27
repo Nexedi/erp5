@@ -46,10 +46,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -73,6 +70,7 @@
                     <key> <string>Add portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
@@ -82,6 +80,7 @@
                     <key> <string>Delete objects</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>
@@ -91,6 +90,7 @@
                     <key> <string>Modify portal content</string> </key>
                     <value>
                       <tuple>
+                        <string>Assignee</string>
                         <string>Assignor</string>
                         <string>Manager</string>
                       </tuple>

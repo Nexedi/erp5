@@ -206,13 +206,13 @@
 <!-- Go to PDF default big preview -->\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//tr[@class="listbox-data-line-1 DataB"]/td/a/img[@title=\'Thumbnail\']</td>\n
+  <td>//tr[@class="listbox-data-line-1 DataB"]/td/div/a/img[@title=\'Thumbnail\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>2 / 16</td>\n
-  <td></td>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="pdf_selection_index"]</td>\n
+  <td>2</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPresent</td>\n
@@ -247,9 +247,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>3 / 16</td>\n
-  <td></td>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="pdf_selection_index"]</td>\n
+  <td>3</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -257,9 +257,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>1 / 16</td>\n
-  <td></td>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="pdf_selection_index"]</td>\n
+  <td>1</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -267,9 +267,9 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>16 / 16</td>\n
-  <td></td>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="pdf_selection_index"]</td>\n
+  <td>16</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -277,9 +277,25 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>1 / 16</td>\n
-  <td></td>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="pdf_selection_index"]</td>\n
+  <td>1</td>\n
+</tr>\n
+<!-- Type in test -->\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="pdf_selection_index"]</td>\n
+  <td>5</td>\n
+</tr>\n
+<tr>\n
+  <td>keyPressAndWait</td>\n
+  <td>//input[@name="pdf_selection_index"]</td>\n
+  <td>\\13</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>//input[@name="pdf_selection_index"]</td>\n
+  <td>5</td>\n
 </tr>\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n

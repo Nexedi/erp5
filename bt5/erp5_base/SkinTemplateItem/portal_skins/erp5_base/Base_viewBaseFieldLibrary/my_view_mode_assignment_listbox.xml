@@ -115,6 +115,10 @@
                           <string>Activity</string>
                         </tuple>
                         <tuple>
+                          <string>role_translated_title</string>
+                          <string>Role</string>
+                        </tuple>
+                        <tuple>
                           <string>start_date</string>
                           <string>Start Date</string>
                         </tuple>

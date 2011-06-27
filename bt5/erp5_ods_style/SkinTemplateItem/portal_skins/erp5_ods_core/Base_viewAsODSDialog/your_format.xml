@@ -263,19 +263,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_getConversionFormatItemList(base_content_type=\'application/vnd.oasis.opendocument.spreadsheet\')</string> </value>
+            <value> <string>python: preferences.Base_getConversionFormatItemList(base_content_type=\'application/vnd.oasis.opendocument.spreadsheet\')</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -256,27 +256,15 @@ class TemplateTool (BaseTool):
         Export the Business Template as a bt5 file and offer the user to
         download it.
       """
-      path = business_template.getTitle()
-      path = pathname2url(path)
-      # XXX Why is it necessary to create a temporary directory?
-      tmpdir_path = mkdtemp()
-      # XXX not thread safe
-      current_directory = os.getcwd()
-      os.chdir(tmpdir_path)
-      absolute_path = os.path.abspath(path)
-      export_string = business_template.export(path=absolute_path)
-      os.chdir(current_directory)
-      if RESPONSE is not None:
-        RESPONSE.setHeader('Content-type','tar/x-gzip')
-        RESPONSE.setHeader('Content-Disposition',
-                           'inline;filename=%s-%s.bt5' % \
-                               (path,
-                                business_template.getVersion()))
+      export_string = business_template.export()
       try:
+        if RESPONSE is not None:
+          RESPONSE.setHeader('Content-type','tar/x-gzip')
+          RESPONSE.setHeader('Content-Disposition', 'inline;filename=%s-%s.bt5'
+            % (business_template.getTitle(), business_template.getVersion()))
         return export_string.getvalue()
       finally:
         export_string.close()
-        shutil.rmtree(tmpdir_path)
 
     security.declareProtected( 'Import/Export objects', 'publish' )
     def publish(self, business_template, url, username=None, password=None):
@@ -436,7 +424,7 @@ class TemplateTool (BaseTool):
           # this looks like a subversion repository, try to check it out
           LOG('ERP5', INFO, 'TemplateTool doing a svn checkout of %s' % url)
           return self._download_svn(url, bt_id)
-
+        
         return self._download_local(file_path, bt_id)
       finally:
         os.remove(temppath)
@@ -445,8 +433,8 @@ class TemplateTool (BaseTool):
       svn_checkout_tmp_dir = mkdtemp()
       svn_checkout_dir = os.path.join(svn_checkout_tmp_dir, 'bt')
       try:
-        import pysvn
-        pysvn.Client().export(url, svn_checkout_dir)
+        from Products.ERP5VCS.WorkingCopy import getVcsTool
+        getVcsTool('svn').__of__(self).export(url, svn_checkout_dir)
         return self._download_local(svn_checkout_dir, bt_id)
       finally:
         shutil.rmtree(svn_checkout_tmp_dir)
@@ -972,28 +960,74 @@ class TemplateTool (BaseTool):
 
       bt_list : list of (repository, id) tuple.
       """
-      def isDepend(a, b):
-        # return True if a depends on b.
-        dependency_list = [x.split(' ')[0] for x in a['dependency_list']]
-        provision_list = list(b['provision_list']) + [b['title']]
-        for i in provision_list:
-          if i in dependency_list:
-            return True
-          return False
-
       sorted_bt_list = []
+      title_id_mapping = {}
+
+      # Calculate the dependency graph
+      dependency_dict = {}
+      provition_dict = {}
+      repository_dict = {}
+      undependent_list = []
+
       for repository, bt_id in bt_list:
         bt = [x for x in self.repository_dict[repository] \
               if x['id'] == bt_id][0]
-        for j in range(len(sorted_bt_list)):
-          if isDepend(sorted_bt_list[j][1], bt):
-            sorted_bt_list.insert(j, (repository, bt))
-            break
-        else:
-           sorted_bt_list.append((repository, bt))
-      sorted_bt_list = [(repository, bt['id']) for repository, bt \
-                        in sorted_bt_list]
-      return sorted_bt_list
+        bt_title = bt['title']
+        repository_dict[bt_title] = repository
+        dependency_dict[bt_title] = [x.split(' ')[0] for x in bt['dependency_list']]
+        title_id_mapping[bt_title] = bt_id
+        if not dependency_dict[bt_title]:
+          del dependency_dict[bt_title]
+        for provision in list(bt['provision_list']):
+          provition_dict[provision] = bt_title
+        undependent_list.append(bt_title)
+
+      # Calculate the reverse dependency graph
+      reverse_dependency_dict = {}
+      for bt_id, dependency_id_list in dependency_dict.items():
+        update_dependency_id_list = []
+        for dependency_id in dependency_id_list:
+
+          # Get ride of provision id
+          if dependency_id in provition_dict:
+            dependency_id = provition_dict[dependency_id]
+          update_dependency_id_list.append(dependency_id)
+
+          # Fill incoming edge dict
+          if dependency_id in reverse_dependency_dict:
+            reverse_dependency_dict[dependency_id].append(bt_id)
+          else:
+            reverse_dependency_dict[dependency_id] = [bt_id]
+
+          # Remove from free node list
+          try:
+            undependent_list.remove(dependency_id)
+          except ValueError:
+            pass
+
+        dependency_dict[bt_id] = update_dependency_id_list
+
+      # Let's sort the bt5!
+      while undependent_list:
+        bt_id = undependent_list.pop(0)
+        if bt_id not in repository_dict:
+          continue
+        sorted_bt_list.insert(0, (repository_dict[bt_id], title_id_mapping[bt_id]))
+        for dependency_id in dependency_dict.get(bt_id, []):
+
+          local_dependency_list = reverse_dependency_dict[dependency_id]
+          local_dependency_list.remove(bt_id)
+          if local_dependency_list:
+            reverse_dependency_dict[dependency_id] = local_dependency_list
+          else:
+            del reverse_dependency_dict[dependency_id]
+            undependent_list.append(dependency_id)
+
+      if len(sorted_bt_list) != len(bt_list):
+        raise NotImplementedError, \
+          "Circular dependencies on %s" % reverse_dependency_dict.keys()
+      else:
+        return sorted_bt_list
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'sortDownloadedBusinessTemplateList')
@@ -1088,6 +1122,7 @@ class TemplateTool (BaseTool):
       for repository, property_dict in template_item_list:
         property_dict = property_dict.copy()
         id = property_dict['id']
+        filename = property_dict['id']
         del property_dict['id']
         version = property_dict['version']
         version_state = 'new'
@@ -1109,6 +1144,7 @@ class TemplateTool (BaseTool):
         obj = newTempBusinessTemplate(self, 'temp_' + uid,
                                       version_state = version_state,
                                       version_state_title = version_state_title,
+                                      filename = filename,
                                       installed_version = installed_version,
                                       installed_revision = installed_revision,
                                       repository = repository, **property_dict)
@@ -1176,14 +1212,16 @@ class TemplateTool (BaseTool):
       business_template_url_dict = {}
       for bt in self.getRepositoryBusinessTemplateList():
         url, name = self.decodeRepositoryBusinessTemplateUid(bt.getUid())
-        business_template_url_dict[name[:-4]] = {
-          'url':  '%s/%s' % (url, name),
+        if name.endswith('.bt5'):
+          name = name[:-4]
+        business_template_url_dict[name] = {
+          'url':  '%s/%s' % (url, bt.filename),
           'revision': bt.getRevision()
           }
       return business_template_url_dict
 
     security.declareProtected(Permissions.ManagePortal,
-        'installBusinessTemplatesFromRepositories' )
+        'installBusinessTemplatesFromRepositories')
     def installBusinessTemplatesFromRepositories(self, template_list,
         only_newer=True, update_catalog=_MARKER):
       """Installs template_list from configured repositories by default only newest"""

@@ -58,12 +58,6 @@ if parent.getPortalType() == \'Applied Rule\':\n
   if parent_rule.getPortalType() not in [\'Order Root Simulation Rule\', \'Production Order Root Simulation Rule\']:\n
     return False\n
 \n
-source_section = movement.getSourceSection()\n
-destination_section = movement.getDestinationSection()\n
-if source_section == destination_section or source_section is None \\\n
-    or destination_section is None:\n
-  return False\n
-\n
 return True\n
 </string> </value>
         </item>

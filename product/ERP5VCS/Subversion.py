@@ -29,18 +29,36 @@
 #
 ##############################################################################
 
-import errno, glob, json, os, re, shutil
-from base64 import b64encode, b64decode
-from DateTime import DateTime
+import errno, glob, os, re, shutil
+import threading
 from ZTUtils import make_query
 from Products.ERP5Type.Message import translateString
+from Products.ERP5Type.Utils import simple_decorator
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateFolder
 from Products.ERP5VCS.WorkingCopy import \
-  WorkingCopy, Dir, File, chdir_working_copy, selfcached, \
+  WorkingCopy, Dir, File, selfcached, \
   NotAWorkingCopyError, NotVersionedError, VcsConflictError
 from Products.ERP5VCS.SubversionClient import \
   newSubversionClient, SubversionLoginError, SubversionSSLTrustError
 
+# XXX Still not thread safe !!! Proper fix is to never use 'os.chdir'
+#     Using a RLock is a temporary quick change that only protects against
+#     concurrent uses of ERP5 Subversion.
+_chdir_lock = threading.RLock()
+@simple_decorator
+def chdir_working_copy(func):
+  def decorator(self, *args, **kw):
+    _chdir_lock.acquire()
+    try:
+      cwd = os.getcwd()
+      try:
+        os.chdir(self.working_copy)
+        return func(self, *args, **kw)
+      finally:
+        os.chdir(cwd)
+    finally:
+      _chdir_lock.release()
+  return decorator
 
 class Subversion(WorkingCopy):
 
@@ -54,22 +72,6 @@ class Subversion(WorkingCopy):
     WorkingCopy.__init__(self, path)
     if path and not os.path.exists(os.path.join(self.working_copy, '.svn')):
       raise NotAWorkingCopyError(self.working_copy)
-
-  def _getCookie(self, name, default=None):
-    try:
-      return json.loads(b64decode(self.REQUEST[name]))
-    except StandardError:
-      return default
-
-  def _setCookie(self, name, value, days=30):
-    portal = self.getPortalObject()
-    request = portal.REQUEST
-    value = b64encode(json.dumps(value))
-    request.set(name, value)
-    if days:
-      expires = (DateTime() + days).toZone('GMT').rfc822()
-      request.RESPONSE.setCookie(name, value, path=portal.absolute_url_path(),
-                                 expires=expires)
 
   def setLogin(self, realm, user, password):
     """Set login information.
@@ -159,6 +161,9 @@ class Subversion(WorkingCopy):
 
   def getRemoteComment(self):
     return 'r%s' % self.info()['revision']
+
+  def export(self, path, url):
+    return self._getClient().export(path, url)
 
   def log(self, path):
     """return log of a file or dir
@@ -253,6 +258,7 @@ class Subversion(WorkingCopy):
         'Files committed successfully in revision ${revision}',
         mapping=dict(revision=getRevisionNumber(revision))))))
 
+  @chdir_working_copy
   def _export(self, business_template):
     bta = BusinessTemplateWorkingCopy(creation=1, client=self._getClient())
     bta.export(business_template)

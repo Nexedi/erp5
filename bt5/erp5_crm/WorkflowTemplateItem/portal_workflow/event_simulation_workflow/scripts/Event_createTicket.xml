@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>event = state_change[\'object\']\n
+portal = event.getPortalObject()\n
+\n
+\n
+ticket_portal_type = portal.portal_workflow.getInfoFor(event, \'ticket_portal_type\')\n
+\n
+operator_list = event.getDestinationList()\n
+\n
+try:\n
+  source_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+except ValueError:\n
+  source_value = None\n
+if source_value is not None:\n
+  source_section_value = source_value.getDefaultCareerSubordinationValue()\n
+  operator_list.append(source_value.getRelativeUrl())\n
+else:\n
+  source_section_value = None\n
+\n
+module = portal.getDefaultModule(ticket_portal_type)\n
+ticket = module.newContent(\n
+            portal_type=ticket_portal_type,\n
+            start_date=event.getStartDate(),\n
+            destination_decision=event.getSource(),\n
+            destination_section=event.getSourceSection() or event.getSource(),\n
+            source_trade_set=operator_list,\n
+            source_value=source_value,\n
+            source_section_value=source_section_value,\n
+           )\n
+\n
+follow_up_list = event.getFollowUpList()\n
+follow_up_list.append(ticket.getRelativeUrl())\n
+event.edit(follow_up_list=follow_up_list)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>state_change</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Event_createTicket</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

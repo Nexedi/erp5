@@ -1619,25 +1619,23 @@ class ERP5Generator(PortalGenerator):
 
   @classmethod
   def bootstrap(cls, context, bt_name, item_name, content_id_list):
-    cwd = os.getcwd()
-    try:
-      os.chdir(getBootstrapBusinessTemplateUrl(bt_name))
-      from Products.ERP5.Document.BusinessTemplate import quote
-      traverse = context.unrestrictedTraverse
-      for root, dirs, files in os.walk(os.path.join(item_name, context.id)):
-        container_path = root.split(os.sep)[2:]
-        load = traverse(container_path)._importObjectFromFile
-        if container_path:
-          id_set = set(x[:-4] for x in files if x[-4:] == '.xml')
-        else:
-          id_set = set(quote(x) for x in content_id_list
-                                if not context.hasObject(x))
-        dirs[:] = id_set.intersection(dirs)
-        for file in id_set:
-          load(os.path.join(root, file + '.xml'),
-                verify=False, set_owner=False, suppress_events=True)
-    finally:
-      os.chdir(cwd)
+    bt_path = getBootstrapBusinessTemplateUrl(bt_name)
+    from Products.ERP5.Document.BusinessTemplate import quote
+    traverse = context.unrestrictedTraverse
+    top = os.path.join(bt_path, item_name, context.id)
+    prefix_len = len(os.path.join(top, ''))
+    for root, dirs, files in os.walk(top):
+      container_path = root[prefix_len:]
+      load = traverse(container_path)._importObjectFromFile
+      if container_path:
+        id_set = set(x[:-4] for x in files if x[-4:] == '.xml')
+      else:
+        id_set = set(quote(x) for x in content_id_list
+                              if not context.hasObject(x))
+      dirs[:] = id_set.intersection(dirs)
+      for file in id_set:
+        load(os.path.join(root, file + '.xml'),
+             verify=False, set_owner=False, suppress_events=True)
 
   def setupLastTools(self, p, **kw):
     """

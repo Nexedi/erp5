@@ -28,6 +28,7 @@
 
 import os, re, subprocess
 from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Acquisition import aq_base
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
@@ -35,11 +36,22 @@ from ZTUtils import make_query
 from Products.ERP5VCS.WorkingCopy import \
   WorkingCopy, NotAWorkingCopyError, NotVersionedError, Dir, File, selfcached
 
+# TODO: write a similar helper for 'nt' platform
+GIT_ASKPASS = os.path.join(os.path.dirname(__file__), 'bin', 'git_askpass')
+
+class GitInstallationError(EnvironmentError):
+  """Raised when an installation is broken"""
+  pass
+
 class GitError(EnvironmentError):
   def __init__(self, err, out, returncode):
     EnvironmentError.__init__(self, err)
     self.stdout = out
     self.returncode = returncode
+
+class GitLoginError(EnvironmentError):
+  """Raised when an authentication is required"""
+ModuleSecurityInfo(__name__).declarePublic('GitLoginError')
 
 class Git(WorkingCopy):
 
@@ -48,10 +60,23 @@ class Git(WorkingCopy):
   reference = 'git'
   title = 'Git'
 
+  _login_cookie_name = 'erp5_git_login'
+
   def _git(self, *args, **kw):
     kw.setdefault('cwd', self.working_copy)
     argv = ['git']
-    return subprocess.Popen(argv + list(args), **kw)
+    try:
+      return subprocess.Popen(argv + list(args), **kw)
+    except OSError, e:
+      import sys
+      from zLOG import LOG, WARNING
+      LOG('Git', WARNING,
+          'will not work as the executable cannot be executed, perhaps not '
+          'in the Zope PATH or because of permissions.',
+          error=sys.exc_info())
+
+      raise GitInstallationError("git command cannot be executed: %s" % \
+                                   e.strerror)
 
   security.declarePrivate('git')
   def git(self, *args, **kw):
@@ -63,6 +88,42 @@ class Git(WorkingCopy):
     if strip:
       return out.strip()
     return out
+
+  @selfcached
+  def _getLogin(self):
+    target_url = self.getRemoteUrl()
+    try:
+      for url, user, password in self._getCookie(self._login_cookie_name, ()):
+        if target_url == url:
+          return user, password
+    except ValueError:
+      pass
+
+  def setLogin(self, remote_url, user, password):
+    """Set login information"""
+    login_list = [x for x in self._getCookie(self._login_cookie_name, ())
+                    if x[0] != remote_url]
+    login_list.append((remote_url, user, password))
+    self._setCookie(self._login_cookie_name, login_list)
+
+  security.declarePrivate('remote_git')
+  def remote_git(self, *args, **kw):
+    try:
+      env = kw['env']
+    except KeyError:
+      kw['env'] = env = dict(os.environ)
+    env['GIT_ASKPASS'] = GIT_ASKPASS
+    userpwd = self._getLogin()
+    if userpwd:
+      env.update(ERP5_GIT_USERNAME=userpwd[0], ERP5_GIT_PASSWORD=userpwd[1])
+    try:
+      return self.git(*args, **kw)
+    except GitError, e:
+      message = 'Authentication failed'
+      if message in str(e):
+        raise GitLoginError(userpwd and message or
+          'Server needs authentication, no cookie found')
+      raise
 
   def __init__(self, *args, **kw):
     WorkingCopy.__init__(self, *args, **kw)
@@ -203,10 +264,11 @@ class Git(WorkingCopy):
 
   def update(self, keep=False):
     if self.getAheadCount():
-      raise NotImplementedError
+      raise NotImplementedError("I don't know how to update a working copy"\
+                                "with local commits")
     if not keep:
       self.clean()
-      self.git('pull', '--ff-only')
+      self.remote_git('pull', '--ff-only')
     elif 1: # elif local_changes:
       raise NotImplementedError
       # addremove
@@ -219,7 +281,7 @@ class Git(WorkingCopy):
       # finally:
       #   symbolic-ref HEAD B
     else:
-      self.git('pull', '--ff-only')
+      self.remote_git('pull', '--ff-only')
     return self.aq_parent.download(self.working_copy)
 
   def showOld(self, path):
@@ -279,21 +341,21 @@ class Git(WorkingCopy):
         remote, dst = remote.split('/', 1)
         push_args = 'push', '--porcelain', remote, '%s:%s' % (src, dst)
         try:
-          self.git(*push_args)
+          self.remote_git(*push_args)
         except GitError, e:
           # first check why we could not push
           status = [x for x in e.stdout.splitlines() if x[:1] == '!']
           if (len(status) !=  1 or
               status[0].split()[2:] != ['[rejected]', '(non-fast-forward)']):
             raise
-          self.git('fetch', '--prune', remote)
+          self.remote_git('fetch', '--prune', remote)
           if not self.getBehindCount():
             raise
           # try to update our working copy
           # TODO: find a solution if there are other local changes
           # TODO: solve conflicts on */bt/revision automatically
           try:
-            self.git(merge, '@{u}')
+            self.git(merge, '@{u}', env=env)
           except GitError, e:
             # XXX: how to know how it failed ?
             try:
@@ -305,9 +367,11 @@ class Git(WorkingCopy):
           if merge == 'merge':
             reset += 1
           # retry to push everything
-          self.git(*push_args)
-    except GitError, e:
+          self.remote_git(*push_args)
+    except (GitError, GitLoginError), e:
       self.git('reset', '--soft', '@{%u}' % reset)
+      if isinstance(e, GitLoginError):
+        raise
       portal_status_message = str(e)
     else:
       head = self.git('rev-parse', '--short', 'HEAD')

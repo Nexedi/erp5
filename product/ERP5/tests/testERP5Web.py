@@ -1322,6 +1322,50 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertTrue('<cite>foo</cite>' in web_page.asEntireHTML(charset='utf-8'))
     self.assertTrue('<cite>foo</cite>' in web_page.asEntireHTML())
 
+  def test_21_WebSiteMap(self):
+    """
+      Test Web Site map script.
+    """
+    portal = self.getPortal()
+    request = self.app.REQUEST
+    website = self.setupWebSite()
+    kw = {'depth': 5, 
+          'include_subsection':1}
+          
+    website.setSiteMapSectionParent(1)
+    websection1 = website.newContent(portal_type='Web Section',
+                                     title = 'Section 1',
+                                     site_map_section_parent=1, 
+                                     visible=1)
+    websection1_1 = websection1.newContent(portal_type='Web Section',
+                                     title = 'Section 1.1',
+                                     site_map_section_parent=1, 
+                                     visible=1)                                     
+    self.stepTic()
+    site_map =  website.WebSection_getSiteMapTree(depth=5, include_subsection=1)
+    self.assertSameSet([websection1.getTitle()], 
+                       [x['translated_title'] for x in site_map])
+    self.assertSameSet([websection1_1.getTitle()], 
+                       [x['translated_title'] for x in site_map[0]['subsection']])
+    self.assertEqual(1, site_map[0]['level'])                        
+    self.assertEqual(2, site_map[0]['subsection'][0]['level'])                       
+                       
+    # check depth works
+    site_map =  website.WebSection_getSiteMapTree(depth=1, include_subsection=1)
+    self.assertEqual(None, site_map[0]['subsection'])
+    self.assertSameSet([websection1.getTitle()], 
+                       [x['translated_title'] for x in site_map])
+                       
+   
+    # hide subsections
+    websection1_1.setSiteMapSectionParent(0)
+    websection1_1.setVisible(0)    
+    self.stepTic()
+    site_map =  website.WebSection_getSiteMapTree(depth=5, include_subsection=1)    
+    self.assertSameSet([websection1.getTitle()], 
+                       [x['translated_title'] for x in site_map])
+    self.assertEqual(None, site_map[0]['subsection'])                       
+
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   """

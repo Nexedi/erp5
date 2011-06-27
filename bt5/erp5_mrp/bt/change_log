@@ -1,3 +1,27 @@
+2011-06-22 yusei
+* Fix a bug. Quantity unit field on production order line must always be displayed.
+
+2011-06-22 yusei
+* Fix material consumption tab. Sort result as user can easily understand.
+
+2011-06-22 yusei
+* Fix bug on production order material consumption tab.
+
+2011-06-15 yusei
+* production order movement may not have specialise category value.
+
+2011-06-07 yusei
+* Stop displaying non-dated production order in planning box. It is useless.
+
+2011-06-02 arnaud.fontaine
+* Fix quantity unit conversion on ProductionOrder_viewMaterialConsumption.
+
+2011-06-01 arnaud.fontaine
+* Fix ProductionOrder_viewMaterialConsumption and display materials even when not in the inventory.
+
+2011-05-23 tatuya
+* Fix the issue that the Stock view on Production Order does not show anything.
+
 2011-04-14 yusei
 * Remove old unnecessary tales expression from relation string fields.
 

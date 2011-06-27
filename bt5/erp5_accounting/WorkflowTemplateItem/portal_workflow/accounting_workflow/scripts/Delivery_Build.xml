@@ -50,107 +50,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Builds the delivery.\n
-"""\n
-from Products.ERP5Type.Log import log\n
-delivery = sci[\'object\']\n
-delivery_portal_type = delivery.getPortalType()\n
-portal_deliveries = sci.getPortal().portal_deliveries\n
+            <value> <string>delivery = state_change[\'object\']\n
+delivery_path = delivery.getPath()\n
+path_and_method_id = (delivery_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
+expand_tag = delivery_path + \'_expand\'\n
+tag = delivery_path + \'_updateAppliedRule\'\n
 \n
-builder_by_ptype = {\n
-  \'Sale Invoice Transaction\' : \'sale_invoice_transaction_builder\',\n
-  \'Purchase Invoice Transaction\' : \'purchase_invoice_transaction_builder\',\n
-  \'Pay Sheet Transaction\' :  \'pay_sheet_transaction_builder\',\n
+priority = 3\n
+\n
+activate_kw = { \n
+  \'tag\': expand_tag,\n
+  \'priority\': priority,\n
 }\n
+delivery.activate(\n
+    after_path_and_method_id=path_and_method_id,\n
+    after_tag=expand_tag,\n
+    tag=tag,\n
+    priority=priority,\n
+    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 \n
-if builder_by_ptype.has_key(delivery_portal_type) :\n
-  builder = getattr(portal_deliveries, builder_by_ptype[delivery_portal_type], None)\n
-  if builder is None :\n
-    log(\'erp5_accounting\',\n
-        \'unable to build : no builder in %s\' % builder_by_ptype[delivery_portal_type])\n
-    return\n
-\n
-  ### Kev patch: Generate pay sheet accounting lines (inspired by order_workflow)\n
-  # (It could be great to make this Delivery_build script more generic)\n
-  if delivery_portal_type == \'Pay Sheet Transaction\':\n
-    PRIORITY     = 3\n
-    pay_sheet    = delivery\n
-    path         = pay_sheet.getPath()\n
-    tag          = \'%s_updateAppliedRule\' % path\n
-    expand_tag   = \'%s_expand\' % path\n
-    activate_kw  = { \'tag\'     : expand_tag\n
-                   , \'priority\': PRIORITY\n
-                   }\n
-\n
-    pay_sheet.activate( tag       = tag\n
-                      , after_tag = expand_tag\n
-                      , priority  = PRIORITY\n
-                      ).updateAppliedRule( rule_reference = \'default_invoice_rule\'\n
-                                         , activate_kw = activate_kw\n
-                                         )\n
-\n
-    builder = pay_sheet.portal_deliveries.pay_sheet_transaction_builder\n
-    builder.activate( activity  = \'SQLQueue\'\n
-                    , after_tag = (tag, expand_tag)\n
-                    , priority  = PRIORITY\n
-                    ).build( explanation_uid = pay_sheet.getUid()\n
-                           , activate_kw     = activate_kw\n
-                           )\n
-    return\n
-  ### End of kev patch\n
-\n
-\n
-  # build accounting lines\n
-  explanation_uid_list = [delivery.getUid(), ]\n
-  packing_list = delivery.getCausalityValue(\n
-                             portal_type=(\'Sale Packing List\',\n
-                                          \'Purchase Packing List\'))\n
-  if packing_list is not None:\n
-    explanation_uid_list.append(packing_list.getUid())\n
-    order = packing_list.getCausalityValue(\n
-                             portal_type=(\'Sale Order\',\n
-                                          \'Purchase Order\'))\n
-    if order is not None:\n
-      explanation_uid_list.append(order.getUid())\n
-\n
-  build_trade_model_tag = \'invoice_transaction_build_trade_model_%s\' % \\\n
-                                 delivery.getRelativeUrl()\n
-  build_accounting_tag = \'invoice_transaction_build_accounting_%s\' % delivery.getRelativeUrl()\n
-  path = delivery.getPath()\n
-  update_applied_rule_tag = \'%s_updateAppliedRule\' % path\n
-  expand_tag = \'%s_expand\' % path\n
-  builder.activate(\n
-      activity=\'SQLQueue\',\n
-      after_tag=(update_applied_rule_tag,\n
-                 expand_tag,\n
-                 build_trade_model_tag,),\n
-      tag=build_accounting_tag,\n
-      activate_kw=dict(tag=build_accounting_tag)).build(\n
-                      activate_kw=dict(tag=build_accounting_tag),\n
-                      explanation_uid=explanation_uid_list)\n
-\n
-  # build related payment transactions\n
-  portal_deliveries.payment_transaction_builder.activate(\n
-                      activity=\'SQLQueue\',\n
-                      after_tag=( build_trade_model_tag,\n
-                                  update_applied_rule_tag,\n
-                                  expand_tag,\n
-                                  build_accounting_tag, ),\n
-                      ).build(\n
-                          explanation_uid=explanation_uid_list)\n
-\n
-  # set the object in building state.\n
-  delivery.startBuilding()\n
-  delivery.activate(after_tag=(\n
-                      build_trade_model_tag,\n
-                      build_accounting_tag,)\n
-                      ).updateCausalityState()\n
+delivery.activate(after_tag=(tag, expand_tag)).Delivery_buildOnComposedDocument()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sci</string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -567,16 +567,16 @@ button.tree-closed{\n
   background: none;\n
   border: none;\n
   cursor: pointer;\n
+  padding-left: 15px;\n
+  text-align: left;\n
 }\n
 button.tree-open{\n
-  background: url("./images/tree_open.png") no-repeat scroll left center transparent;\n
+  background: url("./images/tree_open.png") no-repeat scroll left 4px transparent;\n
   font-weight: bold;\n
-  padding-left: 15px;\n
 }\n
 \n
 button.tree-closed{\n
-  background: url("./images/tree_closed.png") no-repeat scroll left center transparent;\n
-  padding-left: 15px;\n
+  background: url("./images/tree_closed.png") no-repeat scroll left 4px transparent;\n
 }\n
 \n
 \n

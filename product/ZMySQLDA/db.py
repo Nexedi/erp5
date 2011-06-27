@@ -94,8 +94,8 @@ MySQLdb_version_required = (0,9,2)
 _v = getattr(_mysql, 'version_info', (0,0,0))
 if _v < MySQLdb_version_required:
     raise NotSupportedError, \
-	"ZMySQLDA requires at least MySQLdb %s, %s found" % \
-	(MySQLdb_version_required, _v)
+        "ZMySQLDA requires at least MySQLdb %s, %s found" % \
+        (MySQLdb_version_required, _v)
 
 from MySQLdb.converters import conversions
 from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
@@ -152,11 +152,11 @@ type_xlate = {
     }
     
 def _mysql_timestamp_converter(s):
-	if len(s) < 14:
-		s = s + "0"*(14-len(s))
+        if len(s) < 14:
+                s = s + "0"*(14-len(s))
         parts = map(int, (s[:4],s[4:6],s[6:8],
                           s[8:10],s[10:12],s[12:14]))
-	return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
+        return DateTime("%04d-%02d-%02d %02d:%02d:%02d" % tuple(parts))
 
 def DateTime_or_None(s):
     try: return DateTime('%s UTC' % s)

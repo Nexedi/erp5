@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts00782283.02</string> </value>
+            <value> <string>ts07528717.77</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -171,8 +171,101 @@ function initialize_form(){\n
       })\n
    }\n
  }\n
- \n
-$(document).ready(initialize_form);
+\n
+// function make_pdf_navigation_asynchronous_form(){\n
+//   /*\n
+//   Make default PDF navigation in preview in asynchronous way.\n
+//   */\n
+// \n
+//   function splitUrl(url){\n
+//     jQuery.url.setUrl(image_src)\n
+//     base_url = jQuery.url.attr("base") + jQuery.url.attr("path");\n
+//     query_dict = {"display": jQuery.url.param("display"), \n
+//                   "format": jQuery.url.param("format"),\n
+//                   "resolution:int": jQuery.url.param("resolution:int"),\n
+//                   "frame": parseInt(jQuery.url.param("frame"))};\n
+//     query_string = $.param(query_dict);\n
+//     console.log(base_url);\n
+//     console.log(query_string);    \n
+//   }\n
+//   \n
+//   function loadThumbnail(event){\n
+//     event.preventDefault();\n
+//     navigation_url = this.href;\n
+// \n
+//     image = $("div.pdf-preview-content img");\n
+//     image_url = image.attr("src");\n
+//     \n
+//     // read current image URL\n
+//     jQuery.url.setUrl(image_url);\n
+//     base_url = jQuery.url.attr("base") + jQuery.url.attr("path");\n
+//     query_dict = {"display": jQuery.url.param("display"), \n
+//                   "format": jQuery.url.param("format"),\n
+//                   "resolution:int": jQuery.url.param("resolution:int")};\n
+// \n
+//     \n
+//     // get frame index from navigation link\n
+//     jQuery.url.setUrl(navigation_url);\n
+//     frame = parseInt(jQuery.url.param("selection_index"))\n
+//     query_dict["frame"]=frame;\n
+//     \n
+//     // construct new thumbnail URL\n
+//     query_string = $.param(query_dict);\n
+//     new_image_url = base_url + "?" +query_string;\n
+//     console.log(new_image_url);\n
+//     \n
+//     image.attr("src", new_image_url);\n
+//   \n
+//   }\n
+// \n
+//   pdf_preview_navigation = $(\'div.pdf-preview-navigation\');\n
+//   if(pdf_preview_navigation.length){\n
+//     \n
+//     // XXX: set hooks\n
+//     $("div.pdf-preview-navigation a img.first").parent("a").click(loadThumbnail);\n
+//     $("div.pdf-preview-navigation a img.previous").parent("a").click(loadThumbnail);\n
+//     $("div.pdf-preview-navigation a img.next").parent("a").click(loadThumbnail);\n
+//     $("div.pdf-preview-navigation a img.last").parent("a").click(loadThumbnail);    \n
+// \n
+//   }\n
+// }\n
+// $(document).ready(make_pdf_navigation_asynchronous_form);\n
+\n
+\n
+jQuery.fn.highlight = function (str, className) {\n
+  /*\n
+    Highlight search word in HTML content.\n
+  */\n
+  var regex = new RegExp(str, "gi");\n
+  return this.each(function () {\n
+      this.innerHTML = this.innerHTML.replace(regex, function(matched) {return "<span class=\\"" + className + "\\">" + matched + "</span>";});\n
+    });\n
+};\n
+\n
+function highlight_search_word(){\n
+  /*\n
+    Use referer to get search text (if coming from GET search page) and highlight found words.\n
+  */\n
+  query_array = queryStringToArray(document.referrer)\n
+  search_text = query_array["search_text"]\n
+  if (search_text!=undefined){\n
+    document_body = $("#main_content div.document div.page")\n
+    headline = $("#main_content div.document span.headline")\n
+    title = $("#wrapper_headline div.header_title")\n
+    // multiple words\n
+    search_word_list = search_text.split("%20")\n
+    for(var i=0; i<search_word_list.length; i++) {\n
+      document_body.highlight(search_word_list[i], "highlight")\n
+      headline.highlight(search_word_list[i], "highlight")\n
+      title.highlight(search_word_list[i], "highlight")\n
+      \n
+    }\n
+  }\n
+}\n
+\n
+$(document).ready(highlight_search_word);\n
+$(document).ready(initialize_form);\n
+
 
 ]]></string> </value>
         </item>
@@ -182,7 +275,7 @@ $(document).ready(initialize_form);
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5038</int> </value>
+            <value> <int>8364</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

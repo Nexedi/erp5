@@ -491,23 +491,15 @@
                           <string>Specialise Reference</string>
                         </tuple>
                         <tuple>
-                          <string>order</string>
-                          <string>Order</string>
-                        </tuple>
-                        <tuple>
-                          <string>order_ratio</string>
-                          <string>O/Rat</string>
-                        </tuple>
-                        <tuple>
                           <string>delivery</string>
                           <string>Delivery</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_ratio</string>
+                          <string>getDeliveryRatio</string>
                           <string>D/Rat</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_error</string>
+                          <string>getDeliveryError</string>
                           <string>D/Err</string>
                         </tuple>
                         <tuple>

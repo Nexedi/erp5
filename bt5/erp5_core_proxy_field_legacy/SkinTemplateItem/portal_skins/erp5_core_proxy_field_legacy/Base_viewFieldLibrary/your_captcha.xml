@@ -12,6 +12,17 @@
               <list>
                 <string>captcha_dot_net_client</string>
                 <string>captcha_dot_net_secret</string>
+                <string>captcha_dot_net_use_ssl</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>_CaptchaField__extraTalesPropertyList</string> </key>
+            <value>
+              <list>
+                <string>captcha_dot_net_client</string>
+                <string>captcha_dot_net_secret</string>
+                <string>captcha_dot_net_use_ssl</string>
               </list>
             </value>
         </item>
@@ -90,6 +101,22 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>captcha_dot_net_client</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>captcha_dot_net_secret</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>captcha_dot_net_use_ssl</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>captcha_type</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -145,6 +172,10 @@
                     <value> <string>secret</string> </value>
                 </item>
                 <item>
+                    <key> <string>captcha_dot_net_use_ssl</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>captcha_type</string> </key>
                     <value> <string>text</string> </value>
                 </item>
@@ -182,6 +213,32 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_captcha_username\', \'demo\')</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: preferences.getPreference(\'preferred_captcha_password\', \'secret\')</string> </value>
         </item>
       </dictionary>
     </pickle>

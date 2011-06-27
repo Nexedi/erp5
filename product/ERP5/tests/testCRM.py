@@ -955,7 +955,7 @@ class TestCRMMailSend(BaseTestCRM):
   def test_MailMessageHTML(self):
     # test sending a mail message edited as HTML (the default with FCKEditor),
     # then the mail should have HTML.
-    text_content = 'Hello<br/>World'
+    text_content = 'Hello<br />World'
     event = self.portal.event_module.newContent(portal_type='Mail Message')
     event.setSource('person_module/me')
     event.setDestination('person_module/recipient')
@@ -965,7 +965,11 @@ class TestCRMMailSend(BaseTestCRM):
                                             send_mail=1)
     transaction.commit()
     self.tic()
-    self.assertEquals(event.getTextContent(), text_content)
+    # The getTextContent() gets the content from the file data instead the
+    # Attribute text_content.
+    self.assertEquals(event.text_content, text_content)
+    text_content_from_data = '<html><body>Hello<br />World</body></html>'
+    self.assertEquals(event.getTextContent(), text_content_from_data)
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
@@ -1432,8 +1436,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     # XXX in the case of title, getTitle ignores the title attribute,
     # if any data is stored. In the case of text_content, getTextContent
-    # respects the text_content attribute, even if any data is stored.
-    # This sounds inconsistent, but this seems to be the spec.
+    # respects the behaviour is the same as Title.
     portal_type = 'Mail Message'
     dummy_title = 'Dummy title'
     real_title = 'Real Title'
@@ -1441,12 +1444,12 @@ class TestCRMMailSend(BaseTestCRM):
     real_content = 'Real content'
     event = self.portal.event_module.newContent(portal_type=portal_type,
                                                 title=dummy_title,
-                                                text_content=real_content,)
+                                                text_content=dummy_content,)
     self.assertFalse(event.hasFile(), '%r has a file' % (event,))
     self.assertEquals(event.getTitle(), dummy_title)
-    self.assertEquals(event.getTextContent(), real_content)
+    self.assertEquals(event.getTextContent(), dummy_content)
 
-    event.setData('Subject: %s\r\n\r\n%s' % (real_title, dummy_content))
+    event.setData('Subject: %s\r\n\r\n%s' % (real_title, real_content))
     self.assertTrue(event.hasFile(), '%r has no file' % (event,))
     self.assertEquals(event.getTitle(), real_title)
     self.assertEquals(event.getTextContent(), real_content)

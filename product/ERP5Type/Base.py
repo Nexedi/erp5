@@ -1643,7 +1643,7 @@ class Base( CopyContainer,
     """
     uid = getattr(aq_base(self), 'uid', None)
     if uid is None:
-      self.uid = self.portal_catalog.newUid()
+      self.uid = self.getPortalObject().portal_catalog.newUid()
       uid = getattr(aq_base(self), 'uid', None)
       if uid is None:
         raise DeferredCatalogError('Could neither access uid nor generate it', self)
@@ -2855,21 +2855,21 @@ class Base( CopyContainer,
      full dns name + portal_name + uid + random
      the guid should be defined only one time for each object
     """
-    if not hasattr(self, 'guid'):
+    if self.getGuid() is None:
       guid = ''
       # Set the dns name
       guid += gethostbyaddr(gethostname())[0]
       guid += '_' + self.portal_url.getPortalPath()
       guid += '_' + str(self.uid)
       guid += '_' + str(random.randrange(1,2147483600))
-    setattr(self,'guid',guid)
+      setattr(self, 'guid', guid)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getGuid')
   def getGuid(self):
     """
     Get the global and unique id
     """
-    return getattr(self,'guid',None)
+    return getattr(aq_base(self), 'guid', None)
 
   # Type Casting
   def _getTypeBasedMethod(self, method_id, fallback_script_id=None,

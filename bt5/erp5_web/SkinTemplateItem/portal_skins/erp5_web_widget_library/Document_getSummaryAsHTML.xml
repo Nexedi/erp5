@@ -40,7 +40,7 @@
   tal:define="document_url here/absolute_url;\n
               thumbnail_url here/Base_getThumbnailAbsoluteUrl;\n
               display string:thumbnail;\n
-              icon here/getIcon;\n
+              icon here/getIconURL;\n
               title here/getTitle;\n
               modification_date python: here.Base_FormatDate(here.getModificationDate(),hour_minute=1);\n
               format python: here.getObject().portal_preferences.getPreference(\'preferred_image_format\', \'png\');\n

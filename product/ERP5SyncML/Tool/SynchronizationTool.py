@@ -1110,8 +1110,13 @@ class SynchronizationTool(BaseTool):
     subscription.initLastMessageId()
 
     # save the actual user to use it in all the session:
-    user = getSecurityManager().getUser()
-    subscription._edit(zope_user=user.getId())
+    user_id = getSecurityManager().getUser().getId()
+    user_folder = self.getPortalObject().acl_users
+    user = user_folder.getUserById(user_id)
+    if user is None:
+      raise ValueError, "Current logged user %s cannot be found in user folder, \
+                 synchronization cannot work with this kind of user" %(user_id,)
+    subscription._edit(zope_user=user_id)
     if subscription.getAuthenticationState() != 'logged_in':
       subscription.login()
 
@@ -2201,10 +2206,12 @@ class SynchronizationTool(BaseTool):
               xml_object = conduit.replaceIdFromXML(xml_object, 'id',
                                                     object.getId(),
                                                     as_string=True)
-            else:
+            elif conduit.getContentType() == 'text/xml':
               # no previous, this is the first synchronization
               # store xml view from object as it has been provided.
               xml_object = etree.tostring(data_subnode)
+            else:
+              xml_object = data_subnode
             signature.setTemporaryData(xml_object)
             if conflict_list:
               status_code = 'conflict'
@@ -2506,7 +2513,7 @@ class SynchronizationTool(BaseTool):
     if not finished:
       domain.activate(activity='SQLQueue',
                       tag=domain.getId(),
-                      priority=self.PRIORITY).activateSyncModif(**kw)
+                      priority=ACTIVITY_PRIORITY).activateSyncModif(**kw)
     else:
       cmd_id = result['cmd_id']
       cmd_id_before_getsyncmldata = kw['cmd_id_before_getsyncmldata']

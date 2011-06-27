@@ -84,13 +84,6 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin):
     """
     return "ERP5BankingCounterRendering"
 
-  def getCounterRenderingModule(self):
-    """
-    Return the Cash Transer Module
-    """
-    return getattr(self.getPortal(), 'counter_rendering_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

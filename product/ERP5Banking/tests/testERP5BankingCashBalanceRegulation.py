@@ -42,21 +42,21 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
   """
   Unit test for the cash balance regulation module
   Source =  destination
-  Initial cash detail : 
-	5 banknotes of 10000
-    	12 coin of 200 
-    	24 banknotes of 5000 
-	0 coin of 100 
+  Initial cash detail :
+        5 banknotes of 10000
+        12 coin of 200
+        24 banknotes of 5000
+        0 coin of 100
 
   Ordered by Assignor
   Confirmed by Assignee
   Delivered by DestinationAssignee
-  Final cash detail : 
-	0 banknotes of 10000
-    	0 coin of 200 
-    	34 banknotes of 5000 
-	24 coin of 100 
-	 
+  Final cash detail :
+        0 banknotes of 10000
+        0 coin of 200
+        34 banknotes of 5000
+        24 coin of 100
+
   """
 
 
@@ -73,13 +73,6 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
     """
     return "ERP5BankingCashBalanceRegulation"
   
-  def getCashBalanceRegulationModule(self):
-    """
-    Return the Cash Balance Regulation Module
-    """
-    return getattr(self.getPortal(), 'cash_balance_regulation_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

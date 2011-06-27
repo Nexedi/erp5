@@ -1714,9 +1714,9 @@ def makeTreeList(here, form, root_dict, report_path, base_category,
             tree_list += [TreeListLine(o, 0, depth, 0, selection_domain, exception_uid_list)]
 
           tree_list += makeTreeList(here, form, new_root_dict, report_path,
-      		    base_category, depth + 1, unfolded_list, form_id,
-      		    selection_name, report_depth,
-      		    is_report_opened=is_report_opened, sort_on=sort_on)
+                    base_category, depth + 1, unfolded_list, form_id,
+                    selection_name, report_depth,
+                    is_report_opened=is_report_opened, sort_on=sort_on)
         else:
           tree_list += [TreeListLine(o, 1, depth, 0, selection_domain, ())] # Summary (closed)
   else:

@@ -1,0 +1,4 @@
+event_simulation_workflow is the new workflow which must be used in replacement of event_workflow for all new deployments.
+
+As Backward compatibility is not yet provided,
+Workflow Chain is preserved.

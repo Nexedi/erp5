@@ -93,7 +93,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
       #      How to know if the other value is negligible or not ?
       epsilon = abs(prevision_value * DEFAULT_PRECISION)
 
-    delta = decision_value - prevision_value
+    delta = abs(decision_value - prevision_value)
 
     # XXX we should use appropriate property sheets and getter methods
     # for these properties.

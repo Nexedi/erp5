@@ -1732,7 +1732,7 @@ class ListBoxRenderer:
         processed_value = editable_field.render_view(value=original_value)
 
       if not isinstance(processed_value, unicode):
-        processed_value = unicode(str(processed_value), self.getEncoding())
+        processed_value = unicode(str(processed_value), self.getEncoding(), 'replace')
 
       value_list.append((original_value, processed_value))
 
@@ -2197,7 +2197,8 @@ class ListBoxRendererLine:
     """
     # If this is a report line without statistics, just return an empty result.
     renderer = self.renderer
-    if self.getObject() is None:
+    obj = self.getObject()
+    if obj is None:
       return [(None, '')] * len(renderer.getSelectedColumnList())
 
     # Otherwise, evaluate each column.
@@ -2250,7 +2251,6 @@ class ListBoxRendererLine:
             processed_value = original_value
       else:
         # This is an usual line.
-        obj = None # Only evaluate if needed
         brain = self.getBrain()
 
         # Use a widget, if any.
@@ -2265,7 +2265,6 @@ class ListBoxRendererLine:
                               editable_field.get_tales)
           tales = get_tales('default')
           if tales:
-            obj = self.getObject()
             original_value = editable_field.__of__(obj).get_value('default',
                                                         cell=brain)
             processed_value = original_value
@@ -2276,29 +2275,24 @@ class ListBoxRendererLine:
             original_value = getattr(brain, alias)
             processed_value = original_value
           else:
-            obj = self.getObject()
-            if obj is not None:
+            try:
+              # Get the trailing part.
               try:
-                # Get the trailing part.
-                try:
-                  property_id = sql[sql.rindex('.') + 1:]
-                except ValueError:
-                  property_id = sql
+                property_id = sql[sql.rindex('.') + 1:]
+              except ValueError:
+                property_id = sql
 
-                try:
-                  original_value = obj.getProperty(property_id, _marker)
-                  if original_value is _marker:
-                    raise AttributeError, property_id
-                  processed_value = original_value
-                except AttributeError:
-                  original_value = getattr(obj, property_id, None)
-                  processed_value = original_value
-              except (AttributeError, KeyError, Unauthorized):
-                original_value = None
-                processed_value = 'Could not evaluate %s' % property_id
-            else:
+              try:
+                original_value = obj.getProperty(property_id, _marker)
+                if original_value is _marker:
+                  raise AttributeError, property_id
+                processed_value = original_value
+              except AttributeError:
+                original_value = getattr(obj, property_id, None)
+                processed_value = original_value
+            except (AttributeError, KeyError, Unauthorized):
               original_value = None
-              processed_value = 'Object does not exist'
+              processed_value = 'Could not evaluate %s' % property_id
 
       # If the value is callable, evaluate it.
       if callable(original_value):
@@ -2323,7 +2317,7 @@ class ListBoxRendererLine:
       if processed_value is None:
         processed_value = u''
       elif not isinstance(processed_value, unicode):
-        processed_value = unicode(str(processed_value), renderer.getEncoding())
+        processed_value = unicode(str(processed_value), renderer.getEncoding(), 'replace')
 
       value_list.append((original_value, processed_value))
 

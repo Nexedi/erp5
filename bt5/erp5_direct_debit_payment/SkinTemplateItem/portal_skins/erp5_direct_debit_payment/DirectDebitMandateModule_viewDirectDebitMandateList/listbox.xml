@@ -91,16 +91,16 @@
                           <string>Version</string>
                         </tuple>
                         <tuple>
+                          <string>source_title</string>
+                          <string>Debtor</string>
+                        </tuple>
+                        <tuple>
                           <string>source_payment_title</string>
                           <string>Bank Account</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
-                          <string>Creditor</string>
-                        </tuple>
-                        <tuple>
                           <string>destination_title</string>
-                          <string>Debtor</string>
+                          <string>Creditor</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
@@ -158,16 +158,16 @@
                           <string>Version</string>
                         </tuple>
                         <tuple>
+                          <string>source_title</string>
+                          <string>Debtor</string>
+                        </tuple>
+                        <tuple>
                           <string>source_payment_title</string>
                           <string>Bank Account</string>
                         </tuple>
                         <tuple>
-                          <string>source_title</string>
-                          <string>Creditor</string>
-                        </tuple>
-                        <tuple>
                           <string>destination_title</string>
-                          <string>Debtor</string>
+                          <string>Creditor</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>

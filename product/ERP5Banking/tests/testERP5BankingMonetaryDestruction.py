@@ -85,13 +85,6 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     """
     return "ERP5BankingMonetaryDestruction"
 
-  def getMonetaryDestructionModule(self):
-    """
-    Return the Monetary Destruction Module
-    """
-    return getattr(self.getPortal(), 'monetary_destruction_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data
@@ -136,7 +129,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
                              'variation_value': ('emission_letter/s', 'cash_status/cancelled') + self.variation_list,
                              'quantity': self.quantity_5000}
-			     
+
     inventory_dict_line_for_auxiliaire_1 = {'id' : 'inventory_line_1',
                              'resource': self.billet_10000,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
@@ -148,7 +141,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
                              'variation_value': ('emission_letter/p', 'cash_status/retired') + self.variation_list,
                              'quantity': self.quantity_5000}
-			     
+
     inventory_dict_line_for_dematerialization = {'id' : 'inventory_line_3',
                              'resource': self.piece_200,
                              'variation_id': ('emission_letter', 'cash_status', 'variation'),
@@ -1021,7 +1014,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
                     + 'StopMonetaryDestruction Tic ' \
                     + 'CheckSourceDebitAvailableForAuxiliaire ' \
                     + 'StoppedToDeliverMonetaryDestruction Tic ' \
-                    + 'CheckSourceDebitForAuxiliaire '	\
+                    + 'CheckSourceDebitForAuxiliaire ' \
                     + 'DelMonetaryDestruction Tic '
     sequence_list.addSequenceString(sequence_string_auxiliare)
 
@@ -1062,9 +1055,9 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
                     + 'StopMonetaryDestruction Tic ' \
                     + 'CheckSourceDebitAvailableForExterne ' \
                     + 'StoppedToDeliverMonetaryDestruction Tic ' \
-                    + 'CheckSourceDebitForExterne '	\
+                    + 'CheckSourceDebitForExterne ' \
                     + 'DelMonetaryDestruction Tic '
-		    
+
     sequence_list.addSequenceString(another_sequence_string)
 
     # We will now do a dematerialization
@@ -1078,8 +1071,8 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
                     + 'SetMonetaryDestructionSourceTotalAssetPriceForDematerialization ' \
                     + 'PlanMonetaryDestruction ' \
                     + 'ValidateMonetaryDestruction ' \
-                    + 'CheckFinalInventoryForDematerialization '		    
-		    
+                    + 'CheckFinalInventoryForDematerialization '
+
     sequence_list.addSequenceString(another_sequence_string)
     
     

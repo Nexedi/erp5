@@ -155,7 +155,7 @@ class TestTaskReporting(ERP5ReportTestCase):
           id='development',
           title='Development',
           reference='ref 1',
-          quantity_unit='unit'
+          quantity_unit='day'
           )
     if not module.has_key('consulting'):
       product = module.newContent(
@@ -163,7 +163,7 @@ class TestTaskReporting(ERP5ReportTestCase):
           id='consulting',
           title='Consulting',
           reference='ref 2',
-          quantity_unit='unit'
+          quantity_unit='day'
           )
 
     # and all this available to catalog

@@ -56,17 +56,25 @@
 portal = context.getPortalObject()\n
 \n
 author = context.getSourceValue()\n
-result = {\'author_url\': \'#\',\n
+result = {\'author_url\': None,\n
           \'author_signature\': None,\n
-          \'author_title\': context.Base_translateString(\'Unknown User\')}\n
+          \'author_title\': context.Base_translateString(\'Unknown User\'),\n
+          \'author_thumbnail_url\': None}\n
 \n
 if author is not None:\n
   result[\'author_url\'] = \'%s/view\' %author.getAbsoluteUrl()\n
   result[\'author_signature\'] = portal.ERP5Site_getUserPreferredForumSettingsDict(author.getReference())[\'preferred_forum_signature\']\n
   result[\'author_title\'] = author.getTitle()\n
+  thumbnail = author.getDefaultImage()\n
+  if thumbnail is not None:\n
+    result[\'author_thumbnail_url\'] = thumbnail.absolute_url()\n
 \n
 return result\n
 </string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

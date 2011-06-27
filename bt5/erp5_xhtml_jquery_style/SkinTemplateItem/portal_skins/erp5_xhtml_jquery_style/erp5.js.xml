@@ -364,6 +364,17 @@ function submitLinkAsHtmlForm(event){\n
   return false;\n
 }\n
 \n
+function redirectPDFPage(event, element){\n
+  /*\n
+    Used in PDF thumbnail preview mode\n
+  */\n
+  if(event.keyCode == 13){\n
+    selection_index = parseInt($(element).val()) - 1;\n
+    window.location.href = "PDF_viewHTMLPreviewAsImage?selection_index=" + selection_index;\n
+    return false;    \n
+  }\n
+}\n
+\n
 if (navigator.userAgent.toLowerCase().indexOf(\'firefox\') != -1)\n
   $(document).ready(rewriteIndentedSelect);\n
 $(document).ready(resizeIFrameOnLoad);\n

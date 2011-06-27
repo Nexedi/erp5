@@ -1,3 +1,12 @@
+2011-05-27 arnaud.fontaine
+* Remove meaningless 'Order Quantity Unit' and 'Order Quantity' columns, and use the translated title for the 'Quantity Unit' cells in Transformation Stock view.
+
+2011-05-23 tatuya
+* Add Stock view into Transformation portal type.
+
+2011-05-17 yusei
+* Pass display_id='translated_title' to all getVariationRangeBaseCategoryItemList call. Category titles in variation category list must be always translated.
+
 2010-10-19 yo
 * Specify Acquisition Portal Types to industrial_phase.
 

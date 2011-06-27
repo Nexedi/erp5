@@ -754,10 +754,14 @@ class PDFTypeInformation(ERP5TypeInformation):
     except AttributeError:
       return property_sheet_list
 
-    property_sheet = self.getPortalObject().portal_property_sheets.newContent(
-      id=self.__name__.replace(' ', ''),
-      portal_type='Property Sheet',
-      temp_object=True)
+    try:
+      property_sheet = self.getPortalObject().portal_property_sheets.newContent(
+        id=self.__name__.replace(' ', ''),
+        portal_type='Property Sheet',
+        temp_object=True)
+
+    except AttributeError:
+        return property_sheet_list
 
     for page_content in parsed_scribus_iterator:
       for field_name, fields_values in page_content:

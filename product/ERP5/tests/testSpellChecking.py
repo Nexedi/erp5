@@ -59,7 +59,6 @@ class Aspell(object):
                                      stdout=PIPE, stderr=PIPE, close_fds=True)
     return subprocess.communicate()[0].split('\n')[1:]
 
-
 class TestSpellChecking(ERP5TypeTestCase):
 
   run_all_test = 1
@@ -69,18 +68,19 @@ class TestSpellChecking(ERP5TypeTestCase):
     return "Spell Checking Test"
 
   def getBusinessTemplateList(self):
-    return ('erp5_base',
+    return ('erp5_full_text_myisam_catalog',
+            'erp5_base',
             'erp5_simulation',
             'erp5_accounting',
             'erp5_pdm',
             'erp5_trade',
             'erp5_workflow',
+            'erp5_jquery',
+            'erp5_jquery_ui',
             'erp5_web',
-
             'erp5_ingestion_mysql_innodb_catalog',
             'erp5_ingestion',
             'erp5_invoicing',
-
             'erp5_advanced_invoicing',
             'erp5_apparel',
             'erp5_archive',
@@ -90,12 +90,11 @@ class TestSpellChecking(ERP5TypeTestCase):
             #'erp5_banking_inventory',
             'erp5_budget',
             'erp5_calendar',
-
             'erp5_commerce',
             'erp5_consulting',
             'erp5_content_translation',
-            'erp5_credential',
             'erp5_crm',
+            'erp5_credential',
             'erp5_data_protection',
             'erp5_dms',
             #'erp5_egov_catalog',
@@ -108,13 +107,11 @@ class TestSpellChecking(ERP5TypeTestCase):
             'erp5_mrp',
             'erp5_open_trade',
             'erp5_payroll',
-
             'erp5_project',
             'erp5_publication',
             #'erp5_registry_ohada',
             'erp5_simulation_performance_test',
             'erp5_ui_test',
-
             'erp5_wizard',
             )
 

@@ -62,13 +62,6 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
     """
     return "ERP5BankingForeignCashReception"
 
-  def getForeignCashReceptionModule(self):
-    """
-    Return the Cash Inventory Module
-    """
-    return getattr(self.getPortal(), 'foreign_cash_reception_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data
@@ -127,11 +120,11 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
     #and a price cooreponding to the sum of banknote of 50 and 20 
     #( (3) * 50 + (5) * 20 ) = 250
     self.foreign_cash_reception = self.foreign_cash_reception_module.newContent(
-		    id='foreign_cash_reception', portal_type='Foreign Cash Reception',
+                    id='foreign_cash_reception', portal_type='Foreign Cash Reception',
                     source_value=None, destination_value=self.reception,
                     resource_value=self.currency_1,
                     description='test',
-		    source_total_asset_price=250)
+                    source_total_asset_price=250)
     # set source reference
     self.setDocumentSourceReference(self.foreign_cash_reception)
     # execute tic

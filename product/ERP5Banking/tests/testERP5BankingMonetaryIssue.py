@@ -122,20 +122,6 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
     """
     return "ERP5BankingMonetaryIssue"
 
-  def getMonetaryIssueModule(self):
-    """
-    Return the Cash Inventory Module
-    """
-    return getattr(self.getPortal(), 'monetary_issue_module', None)
-
-
-  def getMonetaryReceptionModule(self):
-    """
-    Return the Cash Inventory Module
-    """
-    return getattr(self.getPortal(), 'monetary_reception_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

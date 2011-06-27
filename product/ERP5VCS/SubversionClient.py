@@ -324,7 +324,10 @@ try:
       return self.client.switch(path=path, url=url)
 
     def checkout(self, path, url):
-      return self.client.checkout(path=path, url=url)
+      return self.client.checkout(path, url)
+
+    def export(self, path, url):
+      return self.client.export(path, url)
 
     def log(self, path):
       try:

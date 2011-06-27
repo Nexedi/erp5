@@ -239,7 +239,8 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
   def afterSetUp(self):
     """Initialize a node that will only process activities"""
     self.startZServer()
-    self._registerNode(distributing=0, processing=1)
+    from Zope2.custom_zodb import cluster
+    self._registerNode(distributing=not cluster, processing=1)
     transaction.commit()
 
   def processing_node(self):

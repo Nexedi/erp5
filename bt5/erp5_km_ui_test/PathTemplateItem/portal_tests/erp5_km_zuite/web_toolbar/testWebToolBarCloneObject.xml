@@ -65,7 +65,7 @@
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>Base_doModule:method</td>\n
+\t<td>//a[@class=\'menu-link\' and @title=\'Documents\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -75,7 +75,7 @@
 </tr>\n
 <tr>\n
 \t<td>clickAndWait</td>\n
-\t<td>Base_doAction:method</td>\n
+\t<td>//a[@class=\'menu-link\' and @title=\'Add Drawing\']</td>\n
 \t<td></td>\n
 </tr>\n
 <tr>\n
@@ -184,8 +184,6 @@
 \t<td>field_my_reference</td>\n
 \t<td>reference-z</td>\n
 </tr>\n
-\n
-\n
 \n
 <tal:block metal:use-macro="here/KMZuite_CommonTemplate/macros/deleteKMWebSite" />\n
 \n

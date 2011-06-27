@@ -68,6 +68,9 @@ portal = context.getPortalObject()\n
 content_type = context.getContentType()\n
 \n
 def getTargetFormatItemList(content_type):\n
+  # without content type no wayto determine target format\n
+  if content_type is None:\n
+    return []\n
   format_list = []\n
   output_content_type_list = []\n
   for obj in portal.portal_transforms.objectValues():\n
@@ -92,7 +95,6 @@ def getTargetFormatItemList(content_type):\n
 getTargetFormatItemList = CachingMethod(getTargetFormatItemList,\n
                                         id=\'Base_getTargetFormatItemList\',\n
                                         cache_factory=\'erp5_ui_long\')\n
-\n
 return getTargetFormatItemList(content_type)\n
 </string> </value>
         </item>

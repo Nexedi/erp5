@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts00370324.82</string> </value>
+            <value> <string>ts07964628.69</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -175,34 +175,42 @@ function createDefaultPadOnServer(timeout, default_pad_group, return_url, mode){
           success: function(data){checkForActivitiesOnServer(timeout, return_url, mode, default_pad_group);}});\n
 }\n
 \n
-function submitGadgetPreferenceFormOnEnter(event, form_fields_main_prefix, box_relative_url){\n
+function submitGadgetPreferenceFormOnEnter(event, \n
+                                           form_fields_main_prefix, \n
+                                           box_relative_url, \n
+                                           edit_form_id){\n
   /* This function can be used to submit gadget preferences form whenever\n
   an enter is pressed in form */\n
-  if(event.keyCode == 13){submitSynchronousGadgetPreferenceForm(form_fields_main_prefix, box_relative_url);}\n
+  if(event.keyCode == 13){submitSynchronousGadgetPreferenceForm(form_fields_main_prefix, \n
+                                                                box_relative_url, \n
+                                                                edit_form_id);}\n
 }\n
 \n
 function submitSynchronousGadgetPreferenceForm(\n
                                 form_fields_main_prefix, \n
-                                box_relative_url){\n
+                                box_relative_url,\n
+                                edit_form_id){\n
   /* this will add respective gadget knowledge box relative url and\n
      gadget ERP5 preference form field_prefix (so multiple gadgets can \n
      safely coexist in one HTML page with one HTML form */\n
   redirect_url = window.location.protocol + "//" + window.location.host + window.location.pathname\n
-  $("form").append(\'<input type="hidden" name="box_relative_url" value="\' +box_relative_url +  \'">\');\n
-  $("form").append(\'<input type="hidden" name="form_fields_main_prefix" value="\' +form_fields_main_prefix +  \'">\');\n
-  $("form").append(\'<input type="hidden" name="gadget_redirect_url" value="\' +redirect_url +  \'">\');\n
-  clickSaveButton(knowledge_box_edit_script_id);    \n
-};\n
+  $("form").append(\'<input type="hidden" name="box_relative_url" value="\' +box_relative_url +  \'">\')\n
+  $("form").append(\'<input type="hidden" name="form_fields_main_prefix" value="\' +form_fields_main_prefix +  \'">\')\n
+  $("form").append(\'<input type="hidden" name="gadget_redirect_url" value="\' +redirect_url +  \'">\')\n
+  $("form").append(\'<input type="hidden" name="form_id" value="\' +edit_form_id +  \'">\') \n
+  clickSaveButton(knowledge_box_edit_script_id)\n
+}\n
 \n
 function submitAsynchronousGadgetPreferenceForm(\n
                                  form_dom_id, \n
                                  view_form_url, \n
                                  box_relative_url, \n
                                  visual_block_dom_id, \n
-                                 form_fields_main_prefix){\n
+                                 form_fields_main_prefix,\n
+                                 edit_form_id){\n
   /* Iterate over all possible form elements within edit form,\n
     collect them and send to server*/\n
-  var request_str = "box_relative_url=" + box_relative_url+ "&form_fields_main_prefix=" + form_fields_main_prefix + "&";\n
+  var request_str = "synchronous_mode:int=0&" + "box_relative_url=" + box_relative_url+ "&form_fields_main_prefix=" + form_fields_main_prefix + "&form_id="+edit_form_id + "&";\n
   \n
   //input tags\n
   $("#" + form_dom_id).find("input").each(\n
@@ -234,12 +242,23 @@ function submitAsynchronousGadgetPreferenceForm(\n
             if(option.attr("selected")){request_str+=element.attr("name") + \'=\' + option.val() + \'&\';}\n
           }); }\n
        else{request_str+=name + \'=\' + value + \'&\';} });\n
-    \n
+  \n
   // save form preferences to remote server\n
   $.ajax({url: knowledge_box_edit_script_id + "?" + request_str,\n
+          dataType: "json",\n
           success: function (data){\n
-                     updater(view_form_url, box_relative_url, visual_block_dom_id);\n
-                     $("#" + form_dom_id).toggle();} });\n
+                     if (data.validation_status){\n
+                       // server side validation passed\n
+                       updater(view_form_url, box_relative_url, visual_block_dom_id)\n
+                       $("#" + form_dom_id).toggle()\n
+                       // clean error messages\n
+                       $("#" + form_dom_id + " span.error").remove()\n
+                     }\n
+                     else{\n
+                       // server side validation failed show error message\n
+                       $("#" + form_dom_id + " div.edit-form-content").html(data.content)\n
+                     }\n
+          } });\n
 }\n
 \n
 function updateServerBoxColumnLayout(event, ui){\n
@@ -493,7 +512,7 @@ $(document).ready(initialize);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18244</int> </value>
+            <value> <int>19261</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

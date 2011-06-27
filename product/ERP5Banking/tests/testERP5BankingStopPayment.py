@@ -61,13 +61,6 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     """
     return "ERP5BankingStopPayment"
 
-  def getStopPaymentModule(self):
-    """
-    Return the Stop Payment Module
-    """
-    return getattr(self.getPortal(), 'stop_payment_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

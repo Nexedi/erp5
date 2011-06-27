@@ -1,5 +1,6 @@
 acknowledgement_workflow
 event_interaction_workflow
+event_simulation_workflow
 event_workflow
 sale_opportunity_workflow
 ticket_interaction_workflow

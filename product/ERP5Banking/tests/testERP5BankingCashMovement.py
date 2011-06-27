@@ -95,13 +95,6 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     """
     return "ERP5BankingCashMovement"
 
-  def getCashMovementModule(self):
-    """
-    Return the Vault Transer Module
-    """
-    return getattr(self.getPortal(), 'cash_movement_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

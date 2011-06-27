@@ -64,6 +64,7 @@ if kw[\'reference\'] is None:\n
   # we can not find other "verions" of this document as it doesn\'t have a reference\n
   return []\n
 kw[\'uid\'] = \'!=%s\' %document.getUid()\n
+kw[\'portal_type\'] = context.getPortalDocumentTypeList()\n
 return portal.portal_catalog(**kw)\n
 </string> </value>
         </item>

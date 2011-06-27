@@ -1,6 +1,7 @@
 import glob, os, subprocess
 # test_suite is provided by 'run_test_suite'
 from test_suite import ERP5TypeTestSuite
+import sys
 
 class _ERP5(ERP5TypeTestSuite):
   realtime_output = False
@@ -45,8 +46,8 @@ class ERP5(_ERP5):
 
   def getTestList(self):
     test_list = []
-    for test_path in glob.glob('Products/*/tests/test*.py') + \
-                     glob.glob('bt5/*/TestTemplateItem/test*.py'):
+    for test_path in glob.glob('%s/product/*/tests/test*.py' % sys.path[0]) + \
+                 glob.glob('%s/bt5/*/TestTemplateItem/test*.py' % sys.path[0]):
       test_case = test_path.split(os.sep)[-1][:-3] # remove .py
       product = test_path.split(os.sep)[-3]
       # don't test 3rd party products
@@ -54,7 +55,10 @@ class ERP5(_ERP5):
         continue
       # skip some tests
       if test_case.startswith('testLive') or test_case.startswith('testVifib') \
-         or test_case in ('testPerformance', 'testSimulationPerformance'):
+         or test_case in ('testPerformance', 'testSimulationPerformance',
+                          'testDmsWithFlare', # XXX(Seb), put it back ASAP
+                          'testERP5eGov', # it is not maintained any more
+                          'testAccounting_l10n_fr_m9'):
         continue
       test_list.append(test_case)
     return test_list

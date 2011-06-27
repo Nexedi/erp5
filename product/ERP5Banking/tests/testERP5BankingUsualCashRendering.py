@@ -96,13 +96,6 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
     """
     return "ERP5BankingUsualCashRendering"
 
-  def getUsualCashRenderingModule(self):
-    """
-    Return the Vault Transer Module
-    """
-    return getattr(self.getPortal(), 'usual_cash_rendering_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

@@ -273,6 +273,7 @@ class SyncMLSubscription(XMLObject):
     """
     This tries to generate a new Id
     """
+    warn('Only container is allowed to compute new ID', DeprecationWarning)
     id_generator = self.getSynchronizationIdGeneratorMethodId()
     if id_generator is not None:
       o_base = aq_base(object)

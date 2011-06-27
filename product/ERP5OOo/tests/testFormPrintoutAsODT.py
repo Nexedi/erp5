@@ -159,6 +159,11 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
                      'inline;filename="Foo_viewAsPrintout.odt"')
     self._validate(odf_document)
+    pdf_document = foo_printout.index_html(REQUEST=request, format='pdf')
+    self.assertEqual(request.RESPONSE.getHeader('content-type'),
+                     'application/pdf')
+    self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
+                     'attachment;filename="Foo_viewAsPrintout.pdf"')
 
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
@@ -1156,13 +1161,13 @@ return []
     printout = foo_printout(REQUEST=self.portal.REQUEST)
     #test_output = open("/tmp/test_99_OOoConversion.pdf", "w")
     #test_output.write(printout.data)
-    self.assertEqual('application/pdf', guessMime(printout.data))
+    self.assertEqual('application/pdf', guessMime(printout))
 
     self.portal.REQUEST.set('format', 'doc')
     printout = foo_printout(REQUEST=self.portal.REQUEST)
     #test_output = open("/tmp/test_99_OOoConversion.doc", "w")
     #test_output.write(printout.data)
-    self.assertEqual('application/msword', guessMime(printout.data))
+    self.assertEqual('application/msword', guessMime(printout))
 
   def test_09_FieldReplacement(self, validate=False):
     """test field in ODF Documents"""

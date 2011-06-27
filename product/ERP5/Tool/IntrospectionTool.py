@@ -28,10 +28,11 @@
 ##############################################################################
 
 import os
+import sys
 import tempfile
+import json
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from AccessControl.SecurityManagement import setSecurityManager
@@ -44,7 +45,12 @@ from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type import tarfile
 from cgi import escape
 
+import logging
+
 _MARKER = []
+
+event_log = logging.getLogger()
+access_log = logging.getLogger("access")
 
 class IntrospectionTool(LogMixin, BaseTool):
   """
@@ -71,15 +77,16 @@ class IntrospectionTool(LogMixin, BaseTool):
       Returns menu items for a given user
     """
     portal = self.getPortalObject()
-    is_portal_manager = getToolByName(portal, 
-      'portal_membership').checkPermission(Permissions.ManagePortal, self)
+    is_portal_manager = portal.portal_membership.checkPermission(\
+      Permissions.ManagePortal, self)
+
     downgrade_authenticated_user = user_name is not _MARKER and is_portal_manager
     if downgrade_authenticated_user:
       # downgrade to desired user
       original_security_manager = _setSuperSecurityManager(self, user_name)
 
     # call the method implementing it
-    erp5_menu_dict = getToolByName(portal, 'portal_actions').listFilteredActionsFor(portal)
+    erp5_menu_dict = portal.portal_actions.listFilteredActionsFor(portal)
 
     if downgrade_authenticated_user:
       # restore original Security Manager
@@ -99,8 +106,9 @@ class IntrospectionTool(LogMixin, BaseTool):
       Returns module items for a given user
     """
     portal = self.getPortalObject()
-    is_portal_manager = getToolByName(portal, 
-      'portal_membership').checkPermission(Permissions.ManagePortal, self)
+    is_portal_manager = portal.portal_membership.checkPermission(
+      Permissions.ManagePortal, self)
+
     downgrade_authenticated_user = user_name is not _MARKER and is_portal_manager
     if downgrade_authenticated_user:
       # downgrade to desired user
@@ -159,34 +167,18 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     return ''
 
-  security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
-  def getAccessLog(self, compressed=1, REQUEST=None):
-    """
-      Get the Access Log.
-    """
-    if REQUEST is not None:
-      response = REQUEST.RESPONSE
-    else:
-      return "FAILED"
-
-    return self._getLocalFile(REQUEST, response, 
-                               file_path='log/Z2.log', 
-                               compressed=compressed) 
-
-  security.declareProtected(Permissions.ManagePortal, 'getEventLog')
-  def getEventLog(self, compressed=1, REQUEST=None):
+  def __getEventLogPath(self):
     """
       Get the Event Log.
     """
-    if REQUEST is not None:
-      response = REQUEST.RESPONSE
-    else:
-      return "FAILED"
+    return event_log.handlers[0].baseFilename
 
-    return self._getLocalFile(REQUEST, response,
-                               file_path='log/event.log',
-                               compressed=compressed)
 
+  def __getAccessLogPath(self):
+    """
+      Get the Event Log.
+    """
+    return access_log.handlers[0].baseFilename
 
   def _tailFile(self, file_name, line_number=10):
     """
@@ -196,7 +188,7 @@ class IntrospectionTool(LogMixin, BaseTool):
     if not os.path.exists(log_file):
       raise IOError, 'The file: %s does not exist.' % log_file
 
-    char_per_line=75
+    char_per_line = 75
 
     tailed_file = open(log_file,'r')
     while 1:
@@ -213,7 +205,7 @@ class IntrospectionTool(LogMixin, BaseTool):
       if (len(lines) > (line_number + 1)) or at_start:
         break
       # The lines are bigger than we thought
-      char_per_line = char_per_line * 1.3 # Inc for retry
+      char_per_line = char_per_line * 1.3  # Inc for retry
 
     tailed_file.close()
 
@@ -224,17 +216,50 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     return "\n".join(lines[start:len(lines)])
 
-
   security.declareProtected(Permissions.ManagePortal, 'tailEventLog')
   def tailEventLog(self):
     """
     Tail the Event Log.
     """
-    return escape(self._tailFile('log/event.log', 50))
+    return escape(self._tailFile(self.__getEventLogPath(), 50))
 
+  security.declareProtected(Permissions.ManagePortal, 'tailAccessLog')
+  def tailAccessLog(self):
+    """
+    Tail the Event Log.
+    """
+    return escape(self._tailFile(self.__getAccessLogPath(), 50))
 
   security.declareProtected(Permissions.ManagePortal, 'getAccessLog')
-  def getDataFs(self,  compressed=1, REQUEST=None):
+  def getAccessLog(self, compressed=1, REQUEST=None):
+    """
+      Get the Access Log.
+    """
+    if REQUEST is not None:
+      response = REQUEST.RESPONSE
+    else:
+      return "FAILED"
+
+    return self._getLocalFile(REQUEST, response,
+                               file_path=self.__getAccessLogPath(),
+                               compressed=compressed)
+
+  security.declareProtected(Permissions.ManagePortal, 'getEventLog')
+  def getEventLog(self, compressed=1, REQUEST=None):
+    """
+      Get the Event Log.
+    """
+    if REQUEST is not None:
+      response = REQUEST.RESPONSE
+    else:
+      return "FAILED"
+
+    return self._getLocalFile(REQUEST, response,
+                               file_path=self.__getEventLogPath(),
+                               compressed=compressed)
+
+  security.declareProtected(Permissions.ManagePortal, 'getDataFs')
+  def getDataFs(self, compressed=1, REQUEST=None):
     """
       Get the Data.fs.
     """
@@ -268,205 +293,34 @@ class IntrospectionTool(LogMixin, BaseTool):
                                 cache_factory='erp5_content_long')
     return  cached_loadExternalConfig()
 
-  security.declareProtected(Permissions.ManagePortal, '_getZopeConfigurationFile')
-  def _getZopeConfigurationFile(self, relative_path="", mode="r"):
+  security.declareProtected(Permissions.ManagePortal, '_getSoftwareHome')
+  def _getSoftwareHome(self):
     """
-     Get a configuration file from the instance using relative path
-    """
-    if ".." in relative_path or relative_path.startswith("/"):
-      raise Unauthorized("In Relative Path, you cannot use .. or startwith / for security reason.")
-
-    instance_home = getConfiguration().instancehome
-    file_path = os.path.join(instance_home, relative_path)
-    if not os.path.exists(file_path):
-      raise IOError, 'The file: %s does not exist.' % file_path
-
-    return open(file_path, mode)
-    
-
-  security.declareProtected(Permissions.ManagePortal, 'getSoftwareHome')
-  def getSoftwareHome(self):
-    """
-      EXPERIMENTAL - DEVELOPMENT
-
       Get the value of SOFTWARE_HOME for zopectl startup script
       or from zope.conf (whichever is most relevant)
     """
     return getConfiguration().softwarehome
 
-  security.declareProtected(Permissions.ManagePortal, 'setSoftwareHome')
-  def setSoftwareHome(self, relative_path):
-    """
-      EXPERIMENTAL - DEVELOPMENT
-
-      Set the value of SOFTWARE_HOME for zopectl startup script
-      or from zope.conf (whichever is most relevant)
-
-      Rationale: multiple versions of ERP5 / Zope can be present
-      at the same time on the same system
-
-      WARNING: the list of possible path should be protected 
-      if possible (ex. /etc/erp5/software_home)
-    """
-    config = self._loadExternalConfig()
-    allowed_path_list = config.get("main", "zopehome").split("\n")
-    base_zope_path = config.get("base", "base_zope_path").split("\n")
-    path = "%s/%s/lib/python" % (base_zope_path,relative_path)
-  
-    if path not in allowed_path_list:
-      raise Unauthorized("You are setting one Unauthorized path as Zope Home.")
-
-    config_file = self._getZopeConfigurationFile("bin/zopectl")
-    new_file_list = []
-    for line in config_file:
-      if line.startswith("SOFTWARE_HOME="):
-        # Only comment the line, so it can easily reverted 
-        new_file_list.append("#%s" % (line))
-        new_file_list.append('SOFTWARE_HOME="%s"\n' % (path))
-      else:
-        new_file_list.append(line)
-
-    config_file.close()
-
-    # reopen file for write
-    config_file = self._getZopeConfigurationFile("bin/zopectl", "w")
-    config_file.write("".join(new_file_list))
-    config_file.close()
-    return 
-
-  security.declareProtected(Permissions.ManagePortal, 'getPythonExecutable')
-  def getPythonExecutable(self):
+  security.declareProtected(Permissions.ManagePortal, '_getPythonExecutable')
+  def _getPythonExecutable(self):
     """
       Get the value of PYTHON for zopectl startup script
       or from zope.conf (whichever is most relevant)
     """
-    config_file = self._getZopeConfigurationFile("bin/zopectl")
-    new_file_list = []
-    for line in config_file:
-      if line.startswith("PYTHON="):
-        return line.replace("PYTHON=","")
+    return sys.executable
 
-    # Not possible get configuration from the zopecl
-    return None
-    
-  security.declareProtected(Permissions.ManagePortal, 'setPythonExecutable')
-  def setPythonExecutable(self, path):
-    """
-      Set the value of PYTHON for zopectl startup script
-      or from zope.conf (whichever is most relevant)
-
-      Rationale: some day Zope will no longer use python2.4
-
-      WARNING: the list of possible path should be protected 
-      if possible (ex. /etc/erp5/python)
-    """
-    config = self._loadExternalConfig()
-    allowed_path_list = config.get("main", "python").split("\n")
-
-    if path not in allowed_path_list:
-      raise Unauthorized("You are setting one Unauthorized path as Python.")
-
-    config_file = self._getZopeConfigurationFile("bin/zopectl")
-    new_file_list = []
-    for line in config_file:
-      if line.startswith("PYTHON="):
-        # Only comment the line, so it can easily reverted 
-        new_file_list.append("#%s" % (line))
-        new_file_list.append('PYTHON="%s"\n' % (path))
-      else:
-        new_file_list.append(line)
-
-    config_file.close()    
-    # reopen file for write
-    config_file = self._getZopeConfigurationFile("bin/zopectl", "w")
-    config_file.write("".join(new_file_list))
-    config_file.close()
-    return 
-
-  security.declareProtected(Permissions.ManagePortal, 'getProductPathList')
-  def getProductPathList(self):
+  security.declareProtected(Permissions.ManagePortal, '_getProductPathList')
+  def _getProductPathList(self):
     """
       Get the value of SOFTWARE_HOME for zopectl startup script
       or from zope.conf (whichever is most relevant)
     """
     return getConfiguration().products
 
-  security.declareProtected(Permissions.ManagePortal, 'setProductPath')
-  def setProductPath(self, relative_path):
-    """
-      Set the value of SOFTWARE_HOME for zopectl startup script
-      or from zope.conf (whichever is most relevant)
-
-      Rationale: multiple versions of Products can be present
-      on the same system
-
-      relative_path is usually defined by a number of release 
-       (ex. 5.4.2)
-
-      WARNING: the list of possible path should be protected 
-      if possible (ex. /etc/erp5/product)
-    """
-    config = self._loadExternalConfig()
-    allowed_path_list = config.get("main", "products").split("\n")
-    base_product_path_list = config.get("base", "base_product_path").split("\n")
-    if len(base_product_path_list) == 0:
-      raise Unauthorized(
-             "base_product_path_list is not defined into configuration.")
-
-    base_product_path = base_product_path_list[0]
-    path = base_product_path + relative_path
-
-    if path not in allowed_path_list:
-      raise Unauthorized(
-               "You are setting one Unauthorized path as Product Path (%s)." \
-               % (path))
-
-    if path not in allowed_path_list:
-      raise Unauthorized("You are setting one Unauthorized path as Product Path.")
-
-    config_file = self._getZopeConfigurationFile("etc/zope.conf")
-    new_file_list = []
-    for line in config_file:
-      new_line = line
-      if line.strip(" ").startswith("products %s" % (base_product_path)):
-        # Only comment the line, so it can easily reverted 
-        new_line = "#%s" % (line)
-      new_file_list.append(new_line)
-    # Append the new line.
-    new_file_list.append("products %s\n" % (path))
-    config_file.close()    
-
-    # reopen file for write
-    config_file = self._getZopeConfigurationFile("etc/zope.conf", "w")
-    config_file.write("".join(new_file_list))
-    config_file.close()
-    return 
-
-  security.declareProtected(Permissions.ManagePortal, 'updateSVNProductList')
-  def updateSVNProductList(self, path_list, revision=None):
-    """
-      Allow developers to create local products from the SVN
-      in order to play with recent versions of the system
-
-      Rationale: we can not do more than that or we take too
-      much risks for security. Large projects should simply use
-      buildout installer (server level) and build a complex custom
-      software home or product home
-    """
-    # XXX (rafael) it better use (and extend if needed) the portal_subversions.
-    if self.getSystemSignatureDict()["pysvn"] is None:
-      raise 
-    raise NotImplementedError 
-
-  #
-  #   Library signature
-  #
-  # XXX this function can be cached to prevent disk access.
-  security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureDict')
-  def getSystemSignatureDict(self):
+  security.declareProtected(Permissions.ManagePortal, '_getSystemVersionDict')
+  def _getSystemVersionDict(self):
     """
       Returns a dictionnary with all versions of installed libraries
-
       {
          'python': '2.4.3'
        , 'pysvn': '1.2.3'
@@ -474,31 +328,134 @@ class IntrospectionTool(LogMixin, BaseTool):
       }
       NOTE: consider using autoconf / automake tools ?
     """
-    def tuple_to_format_str(t):
-       return '.'.join([str(i) for i in t])
-    from Products import ERP5 as erp5_product
-    erp5_product_path =  erp5_product.__file__.split("/")[:-1]
-    try:
-      erp5_v = open("/".join((erp5_product_path) + ["VERSION.txt"])).read().strip()
-      erp5_version = erp5_v.replace("ERP5 ", "")
-    except:
-       erp5_version = None
+    def cached_getSystemVersionDict():
+      import pkg_resources
+      def tuple_to_format_str(t):
+         return '.'.join([str(i) for i in t])
 
-    from App import version_txt
-    zope_version = tuple_to_format_str(version_txt.getZopeVersion()[:3])
+      version_dict = {}
+      for dist in pkg_resources.working_set:
+        version_dict[dist.key] = dist.version
 
-    from sys import version_info
-    # Get only x.x.x numbers.
-    py_version = tuple_to_format_str(version_info[:3])
-    try:
-      import pysvn
-      # Convert tuple to x.x.x format
-      pysvn_version =  tuple_to_format_str(pysvn.version)
-    except:
-      pysvn_version = None
-    
-    return { "python" : py_version , "pysvn"  : pysvn_version ,
-             "erp5"   : erp5_version, "zope"   : zope_version
-           }
+      from Products import ERP5 as erp5_product
+      erp5_product_path = erp5_product.__file__.split("/")[:-1]
+      try:
+        erp5_v = open("/".join((erp5_product_path) + ["VERSION.txt"])).read().strip()
+        erp5_version = erp5_v.replace("ERP5 ", "")
+      except:
+         erp5_version = None
+
+      version_dict["ProductS.ERP5"] = erp5_version
+      return version_dict
+
+    get_system_version_dict = CachingMethod(
+                  cached_getSystemVersionDict,
+                  id='IntrospectionTool__getSystemVersionDict',
+                  cache_factory='erp5_content_long')
+
+    return get_system_version_dict()
+
+  security.declareProtected(Permissions.ManagePortal,
+      '_getExternalConnectionDict')
+  def _getExternalConnectionDict(self):
+    """ Return a dictionary with all connections from ERP5 to an External
+        Service, this may include MySQL, Memcached, Kumofs, Ldap or any other.
+
+        The standard format is:
+	  {'relative_url/method_or_property_id' : method_value_output,}.
+    """
+    connection_dict = {}
+    portal = self.getPortalObject()
+
+    def collect_information_by_method(document, method_id):
+      method_object = getattr(document, method_id, None)
+      key = "%s/%s" % (document.getRelativeUrl(), method_id)
+      connection_dict[key] = method_object()
+
+    portal = self.getPortalObject()
+
+    # Collect information from portal memcached
+    for plugin in portal.portal_memcached.objectValues():
+      collect_information_by_method(plugin, "getUrlString")
+
+    system_preference = \
+       portal.portal_preferences.getActiveSystemPreference()
+
+    if system_preference is not None:
+      # Conversion Server information
+      collect_information_by_method(system_preference, 
+                         'getPreferredOoodocServerAddress')
+      collect_information_by_method(system_preference,
+                         'getPreferredOoodocServerPortNumber')
+
+    def collect_information_by_property(document, property_id):
+      key = "%s/%s" % (document.getId(), property_id)
+      connection_dict[key] = str(getattr(document, property_id, None))
+
+    # Collect information related to Mail Server.
+    collect_information_by_property(self.MailHost,'smtp_host')
+    collect_information_by_property(self.MailHost,'smtp_port')
+
+    # Collect information related to Databases. ie.: MySQL, LDap?
+    for conn in self.objectValues(["CMFActivity Database Connection", 
+                                   "Z MySQL Database Connection", 
+                                   "Z MySQL Deferred Database Connection"]):
+
+      collect_information_by_property(conn,'connection_string')
+
+    return connection_dict
+
+  security.declareProtected(Permissions.ManagePortal, 
+      '_getBusinessTemplateRevisionDict')
+  def _getBusinessTemplateRevisionDict(self):
+    """ Return a Dictionary of installed business templates and their revisions
+    """
+    business_template_dict = {}
+    for installed in self.portal_templates.getInstalledBusinessTemplateList():
+       business_template_dict[installed.getTitle()] = installed.getRevision()
+    return business_template_dict
+
+  security.declareProtected(Permissions.ManagePortal,
+      '_getActivityDict')
+  def _getActivityDict(self):
+    """ Return a Dictionary with the snapshot with the status of activities. 
+        failures (-2 and -3) and running. 
+    """
+    activity_dict = {}
+    # XXX Maybe this is not so efficient check. Performance Optimization 
+    # should be consider.
+    activity_dict['failure'] = len(self.portal_activities.getMessageList(processing_node=-2))
+    activity_dict['total'] = len(self.portal_activities.getMessageList())
+    return activity_dict
+
+  security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureDict')
+  def getSystemSignatureDict(self):
+    """ Returns a dictionary with all informations related to the instance.
+    This information can report what resources (memcache, mysql, zope,
+    python, libraries) the instance is using. Also, what business templates are
+    installed.
+
+    Such information is usefull to detect changes in the system, into upgrader, 
+    slapos and/or to build Introspection Reports.
+    """
+    business_template_repository_list = self.portal_templates.getRepositoryList()
+    return dict(
+           activity_dict=self._getActivityDict(),
+           version_dict=self._getSystemVersionDict(), 
+           external_connection_dict=self._getExternalConnectionDict(), 
+           business_template_dict=self._getBusinessTemplateRevisionDict(), 
+           business_template_repository_list=business_template_repository_list)
+
+  security.declareProtected(Permissions.ManagePortal, 'getSystemSignatureAsJSON')
+  def getSystemSignatureAsJSON(self, REQUEST=None):
+    """
+      Returns the information as JSON. 
+
+      THIS merhod could be a decorator or use a some other clever way to convert
+      the getSystemSignatureDict
+    """
+    if REQUEST is not None:
+      REQUEST.set("Content-Type", "application/json")
+    return json.dumps(self.getSystemSignatureDict())
 
 InitializeClass(IntrospectionTool)

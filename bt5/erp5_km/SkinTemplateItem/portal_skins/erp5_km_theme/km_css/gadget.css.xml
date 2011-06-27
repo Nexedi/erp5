@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts04498752.63</string> </value>
+            <value> <string>ts07623168.89</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/css; charset=utf-8</string> </value>
+            <value> <string>text/css</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -574,42 +574,46 @@ fieldset.gadget div.text{\n
 \n
 /* Gadget Browser */\n
 div.gadget-website-browser {\n
+  padding-left:0.8em;\n
   margin-top: 0.5em;\n
 }\n
-div.gadget-website-browser ul {\n
+\n
+div.gadget-website-browser ul,\n
+div.gadget-website-browser li {\n
   margin: 0em;\n
   padding: 0em;\n
 }\n
 \n
-div.gadget-website-browser li {\n
-  padding-left: 0em;\n
-}\n
-\n
-div.gadget-website-browser ul.first_level, \n
-div.gadget-website-browser ul.second_level{\n
-  list-style-type: none;\n
-}\n
-\n
-div.gadget-website-browser ul.first_level {\n
+div.gadget-website-browser ul.level-1 {\n
   padding-bottom: 0.5em;\n
 }\n
 \n
-div.gadget-website-browser ul.second_level{\n
-  padding-left: 0.7em;\n
+div.gadget-website-browser ul.level-1,\n
+div.gadget-website-browser ul.level-2,\n
+div.gadget-website-browser ul.level-3,\n
+div.gadget-website-browser ul.level-4,\n
+div.gadget-website-browser ul.level-5,\n
+div.gadget-website-browser ul.level-6{\n
+  padding-left:1em;\n
 }\n
 \n
-div.gadget-website-browser ul.third_level{\n
-  padding-left: 1.4em;\n
+div.gadget-website-browser ul.collapse-list-node{\n
+  list-style-type: none;\n
+  margin-left:-1.1em;\n
+}\n
+div.gadget-website-browser .collapse-content{\n
+  padding-left:1em;\n
+}\n
+\n
+div.gadget-website-browser .collapse-link{\n
+  cursor:pointer;\n
+  margin-left: 0.5em;\n
 }\n
 \n
 div.gadget-website-browser a,div.gadget-website-browser a:link,\n
 div.gadget-website-browser a:active,div.gadget-website-browser a:visited {\n
   font-weight: normal;\n
   color: inherit;\n
-}\n
-div.gadget-website-browser .empty-list-node{\n
-   list-style-type: square;\n
-   margin-left: 1.4em;\n
 }\n
 \n
 /* Gadget SubSection */\n
@@ -705,7 +709,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>11966</int> </value>
+            <value> <int>12118</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

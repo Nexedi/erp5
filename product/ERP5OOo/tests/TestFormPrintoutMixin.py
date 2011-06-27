@@ -31,6 +31,7 @@
 
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from AccessControl.SecurityManagement import newSecurityManager
 from StringIO import StringIO
 
@@ -48,8 +49,9 @@ class TestFormPrintoutMixin(ERP5TypeTestCase):
 
   def setSystemPreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    default_pref.setPreferredOoodocServerAddress('127.0.0.1')
-    default_pref.setPreferredOoodocServerPortNumber('8008')
+    conversion_dict = _getConversionServerDict()
+    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     #default_pref.setPreferredConversionCacheFactory('document_cache_factory')
     if default_pref.getPreferenceState() != 'global':
       default_pref.enable()

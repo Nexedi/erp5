@@ -70,7 +70,8 @@
   KEY `destination_uid` (`destination_uid`),\n
   KEY `source_section_uid` (`source_section_uid`),\n
   KEY `destination_section_uid` (`destination_section_uid`),\n
-  KEY `resource_uid` (`resource_uid`)\n
+  KEY `resource_uid` (`resource_uid`),\n
+  KEY `start_date` (`start_date`)\n
 ) TYPE=InnoDB\n
 </string> </value>
         </item>

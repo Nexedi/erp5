@@ -977,7 +977,7 @@ class SimulationTool(BaseTool):
 
       mirror_section_category - only take rows in stock table which 
                                 mirror_section_uid is member of
-				mirror_section_category
+                                mirror_section_category
 
       node_filter     - only take rows in stock table which node_uid
                         matches node_filter
@@ -1800,7 +1800,7 @@ class SimulationTool(BaseTool):
       if 'section_uid' in kw:
         # ignore internal movements
         sql_kw['where_expression'] += ' AND ' \
-          'stock.section_uid!=stock.mirror_section_uid'
+          'NOT(stock.section_uid<=>stock.mirror_section_uid)'
 
       result = self.Resource_zGetAssetPrice(
           valuation_method=valuation_method,
@@ -1856,7 +1856,7 @@ class SimulationTool(BaseTool):
 
       TODO:
         - make sure getInventoryHistoryList can return
-	  cumulative values calculated by SQL (JPS)
+          cumulative values calculated by SQL (JPS)
       """
       sql_kw = self._generateSQLKeywordDict(**kw)
       return self.Resource_getInventoryHistoryList(

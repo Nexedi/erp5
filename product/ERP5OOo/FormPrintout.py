@@ -290,6 +290,7 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     # End of temporary implementation
     if not format:
       if REQUEST is not None and not batch_mode:
+        REQUEST.RESPONSE.setHeader('Content-Length', len(printout))
         REQUEST.RESPONSE.setHeader('Content-Type','%s' % content_type)
         REQUEST.RESPONSE.setHeader('Content-disposition',
                                    'inline;filename="%s%s"' % \
@@ -298,16 +299,17 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     from Products.ERP5Type.Document import newTempOOoDocument
     tmp_ooo = newTempOOoDocument(self, self.title_or_id())
     tmp_ooo.edit(data=printout,
-                 fname=self.title_or_id(),
-                 source_reference=self.title_or_id(),
-                 content_type=content_type)
-    tmp_ooo.convertToBaseFormat()
+                 base_data=printout,
+                 filename=self.title_or_id(),
+                 content_type=content_type,
+                 base_content_type=content_type)
     mime, data = tmp_ooo.convert(format)
     if REQUEST is not None and not batch_mode:
+      REQUEST.RESPONSE.setHeader('Content-Length', len(data))
       REQUEST.RESPONSE.setHeader('Content-type', mime)
       REQUEST.RESPONSE.setHeader('Content-disposition',
           'attachment;filename="%s.%s"' % (filename, format))
-    return data
+    return str(data)
 
 InitializeClass(FormPrintout)
 
@@ -905,7 +907,7 @@ class ODTStrategy(ODFStrategy):
     ooo_builder -- the OOoBuilder object which have an ODF document.
     iteration_index -- the index which is used when iterating the group of items using ReportSection.
     """
-    field_list = form.get_fields(include_disabled=1)
+    field_list = form.get_fields()
     REQUEST = here.REQUEST
     for (count, field) in enumerate(field_list):
       if isinstance(field, ListBox):
@@ -973,6 +975,10 @@ class ODTStrategy(ODFStrategy):
       style_value = target_node.attrib.get(style_attribute_id)
       if style_value:
         attr_dict.update({style_attribute_id: style_value})
+      display_attribute_id = '{%s}display' % TEXT_URI
+      display_value = target_node.attrib.get(display_attribute_id)
+      if display_value:
+        attr_dict.update({display_attribute_id: display_value})
       formula_attribute_id = '{%s}formula' % TEXT_URI
       formula_value = target_node.attrib.get(formula_attribute_id)
       if formula_value:
@@ -1083,7 +1089,7 @@ class ODGStrategy(ODFStrategy):
 
   def _replaceXmlByForm(self, element_tree, form, here, extra_context,
                         ooo_builder, iteration_index=0):
-    field_list = form.get_fields(include_disabled=1)
+    field_list = form.get_fields()
     for (count, field) in enumerate(field_list):
       text_xpath = '//draw:frame[@draw:name="%s"]' % field.id
       node_list = element_tree.xpath(text_xpath, namespaces=element_tree.nsmap)

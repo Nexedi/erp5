@@ -59,27 +59,36 @@ from zExceptions import Unauthorized\n
 from Products.ERP5Type.Cache import CachingMethod\n
 portal = context.getPortalObject()\n
 \n
+sql_kw = {\'portal_type\': portal.getPortalResourceTypeList(),\n
+          \'use_uid\': portal.portal_categories.getCategoryUid(portal.portal_preferences.getPreferredEventUse(), base_category=\'use\'),\n
+          \'validation_state\': \'validated\',\n
+          \'sort_on\': \'title\'}\n
+\n
 def getResourceItemList():\n
-  result = [(\'\', \'\')]\n
-  url_list = portal.portal_preferences.getPreferredEventResourceList()\n
-  for url in url_list:\n
-    try:\n
-      resource_value = portal.restrictedTraverse(url, None)\n
-      if resource_value is not None:\n
-        if resource_value.getPortalType() == \'Category\':\n
-          category_relative_url = resource_value.getCategoryRelativeUrl()\n
-        else:\n
-          category_relative_url = resource_value.getRelativeUrl()\n
-        result.append((resource_value.getTranslatedTitle(), category_relative_url))\n
-    except Unauthorized:\n
-      pass\n
-  return result\n
+  return [(\'\', \'\')] + [(result.getTitle(), result.getRelativeUrl()) for result in portal.portal_catalog(**sql_kw)]\n
 \n
 getResourceItemList = CachingMethod(getResourceItemList, \n
       id=(script.id, context.Localizer.get_selected_language()), \n
       cache_factory=\'erp5_ui_long\')\n
 \n
-return getResourceItemList()\n
+result_list = getResourceItemList()[:]\n
+\n
+# BBB returns actual value in list field\n
+if context.getResource() and context.getResource() not in [result[1] for result in result_list]:\n
+  try:\n
+    resource_value = portal.portal_categories.getCategoryValue(context.getResource(), base_category=\'resource\')\n
+    if resource_value is not None:\n
+      if resource_value.getPortalType() == \'Category\':\n
+        category_relative_url = resource_value.getCategoryRelativeUrl()\n
+        category_title = resource_value.getTranslatedTitle()\n
+      else:\n
+        category_relative_url = resource_value.getRelativeUrl()\n
+        category_title = resource_value.getTitle()\n
+      result_list.append((category_title, category_relative_url))\n
+  except Unauthorized:\n
+    pass\n
+\n
+return result_list\n
 </string> </value>
         </item>
         <item>

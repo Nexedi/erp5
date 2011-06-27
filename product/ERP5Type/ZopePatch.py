@@ -72,6 +72,7 @@ from Products.ERP5Type.patches import ZODBConnection
 from Products.ERP5Type.patches import TransactionAddBeforeCommitHook
 from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import ZopePageTemplateUtils
+from Products.ERP5Type.patches import OFSHistory
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager

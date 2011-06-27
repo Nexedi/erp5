@@ -42,6 +42,7 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5VCS.WorkingCopy import getVcsTool
 import shutil
 import os
 import gc
@@ -200,6 +201,36 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     core_bt = self.getBusinessTemplate('erp5_core')
     self.failIf(core_bt is None)
     sequence.edit(current_bt=core_bt)
+
+  def stepCreateTest(self, sequence=None, **kw):
+    test_title = 'UnitTest'
+    test_data = """class UnitTest:
+  pass"""
+    cfg = getConfiguration()
+    file_path = os.path.join(cfg.instancehome, 'tests', test_title+'.py')
+    if os.path.exists(file_path):
+      os.remove(file_path)
+    f = file(file_path, 'w')
+    f.write(test_data)
+    f.close()
+    self.failUnless(os.path.exists(file_path))
+    sequence.edit(test_title=test_title, test_path=file_path,
+        test_data=test_data)
+
+  def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
+    bt = sequence['current_bt']
+    bt.edit(template_test_id_list=[sequence['test_title']])
+
+  def stepRemoveTest(self, sequence=None, **kw):
+    test_path = sequence['test_path']
+    os.remove(test_path)
+    self.failIf(os.path.exists(test_path))
+
+  def stepCheckTestExists(self, sequence=None, **kw):
+    self.failIf(not os.path.exists(sequence['test_path']))
+
+  def stepCheckTestRemoved(self, sequence=None, **kw):
+    self.failIf(os.path.exists(sequence['test_path']))
 
   def stepCopyCoreBusinessTemplate(self, sequence=None, **kw):
     """
@@ -783,7 +814,6 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       group_dict[group] = id_list
     sequence.edit(another_form_id=form_id)
 
-
   def stepRemoveForm(self, sequence=None):
     """Remove an ERP5 Form."""
     ps = self.getSkinsTool()
@@ -874,7 +904,6 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     form = skin_folder._getOb(form_id, None)
     self.assertNotEquals(form, None)
 
-
   def stepRemoveFormField(self, sequence=None):
     """Remove a field from an ERP5 Form."""
     ps = self.getSkinsTool()
@@ -948,7 +977,6 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
       if skin_id in selection:
         selection.remove(skin_id)
       ps.manage_skinLayers(skinpath = tuple(selection), skinname = skin_name, add_skin = 1)
-
 
   def stepCheckSkinFolderExists(self, sequence=None, **kw):
     """
@@ -1553,7 +1581,6 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     catalog.filter_dict[method_id]['expression_instance'] = expr_instance
     catalog.filter_dict[method_id]['expression_cache_key'] = 'portal_type',
     catalog.filter_dict[method_id]['type'] = []
-
 
   def stepCreateUpdateCatalogMethod(self, sequence=None, **kw):
     pc = self.getCatalogTool()
@@ -2642,7 +2669,6 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     message_list = [ m for m in self.portal.portal_activities.getMessageList()
                      if m.method_id == 'Folder_reindexAll']
     self.assertNotEquals(len(message_list), 0)
-
 
   def stepCheckPathNotUnindexAfterBuild(self, sequence=None, **kw):
     """
@@ -4258,9 +4284,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        CheckNotInstalledInstallationState \
                        CheckPreinstallReturnSomething \
                        CheckCatalogPreinstallReturnCatalogMethod \
-		       Tic \
+                       Tic \
                        InstallWithoutForceBusinessTemplate \
-		       CheckFolderReindexActivityPresence \
+                       CheckFolderReindexActivityPresence \
                        Tic \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
@@ -5039,17 +5065,17 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test is revision number is incremented with the bt is built"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateNewBusinessTemplate \
-		       UseExportBusinessTemplate \
-		       CheckInitialRevision \
+                       UseExportBusinessTemplate \
+                       CheckInitialRevision \
                        BuildBusinessTemplate \
                        CheckBuiltBuildingState \
-		       stepCheckFirstRevision \
-		       BuildBusinessTemplate \
-		       stepCheckSecondRevision \
+                       stepCheckFirstRevision \
+                       BuildBusinessTemplate \
+                       stepCheckSecondRevision \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
+                       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -5058,12 +5084,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test if a new Business Template has no dependencies"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateNewBusinessTemplate \
-		       UseExportBusinessTemplate \
+                       UseExportBusinessTemplate \
                        CheckNoMissingDependencies \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
+                       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -5072,13 +5098,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test if a exception is raised when a dependency is missing"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateNewBusinessTemplate \
-		       UseExportBusinessTemplate \
+                       UseExportBusinessTemplate \
                        AddDependency \
                        CheckMissingDependencies \
                        RemoveBusinessTemplate \
-		       RemovePortalType \
+                       RemovePortalType \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -5087,9 +5113,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test if the dependency problem is fixed when the dependency is installed"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateNewBusinessTemplate \
-		       UseExportBusinessTemplate \
+                       UseExportBusinessTemplate \
                        AddDependency \
                        CheckMissingDependencies \
                        CreateDependencyBusinessTemplate \
@@ -5162,7 +5188,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test if backup works during installation of a bt with subfolder in skin folder"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateSkinFolder \
                        CheckSkinFolderExists \
                        CreateSkinSubFolder \
@@ -5188,7 +5214,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test if build fails when one of the paths does not exist"""
     sequence_list = SequenceList()
     sequence_string = '\
-    		       CreatePortalType \
+                       CreatePortalType \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddPathToBusinessTemplate \
@@ -5373,7 +5399,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
                        InstallWithoutForceBusinessTemplate \
-		       CheckFolderReindexActivityPresence \
+                       CheckFolderReindexActivityPresence \
                        Tic \
                        \
                        CheckFormGroups \
@@ -5387,9 +5413,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                        \
                        ImportBusinessTemplate \
                        UseImportBusinessTemplate \
-		       Tic \
+                       Tic \
                        InstallWithoutForceBusinessTemplate \
-		       CheckFolderReindexActivityPresence \
+                       CheckFolderReindexActivityPresence \
                        Tic \
                        \
                        CheckFormGroups \
@@ -5567,11 +5593,26 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     self.assertEquals(test_web.getTitle(), 'test_web')
     self.assertTrue(test_web.getRevision())
 
+  def _svn_setup_ssl(self):
+    """
+      Function used to trust in svn.erp5.org.
+    """
+    trust_dict = dict(realm="https://svn.erp5.org:443",
+      hostname="roundcube.nexedi.com",
+      issuer_dname="Nexedi SA, Marcq en Baroeul, Nord Pas de Calais, FR",
+      valid_from="Thu, 22 May 2008 13:43:01 GMT",
+      valid_until="Sun, 20 May 2018 13:43:01 GMT",
+      finger_print=\
+        "a1:f7:c6:bb:51:69:84:28:ac:58:af:9d:05:73:de:24:45:4d:a1:bb",
+      failures=8)
+    getVcsTool("svn").__of__(self.portal).acceptSSLServer(trust_dict)
+
   def test_download_svn(self):
     # if the page looks like a svn repository, template tool will use pysvn to
     # get the bt5.
-    test_web = self.portal.portal_templates.download(
-        'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_web')
+    self._svn_setup_ssl()
+    bt5_url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_web'
+    test_web = self.portal.portal_templates.download(bt5_url)
     self.assertEquals(test_web.getPortalType(), 'Business Template')
     self.assertEquals(test_web.getTitle(), 'test_web')
     self.assertTrue(test_web.getRevision())
@@ -5583,6 +5624,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
      By default if a new business template has revision >= previous one
      the new bt5 is not installed, only imported.
     """
+    self._svn_setup_ssl()
     template_tool = self.portal.portal_templates
     old_bt = template_tool.getInstalledBusinessTemplate('erp5_csv_style')
     # change revision to an old revision
@@ -5620,6 +5662,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """
      Test updateBusinessTemplateFromUrl method
     """
+    self._svn_setup_ssl()
     template_tool = self.portal.portal_templates
     url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_core'
     # don't install test_file
@@ -5639,7 +5682,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """
     from Products.ERP5Type.tests.utils import createZODBPythonScript
     portal = self.getPortal()
-
+    self._svn_setup_ssl()
     createZODBPythonScript(portal.portal_skins.custom,
                                    'BT_dummyA',
                                    'scripts_params=None',
@@ -6383,6 +6426,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     finally:
       BaseTemplateItem.removeProperties = BaseTemplateItem_removeProperties
       SimpleItem._getCopy = SimpleItem_getCopy
+      gc.enable()
     # check the previously existing instance now behaves as the overriden class
     self.assertTrue(getattr(portal.another_file, 'isClassOverriden', False))
     # test uninstall is effective
@@ -7113,35 +7157,9 @@ class TestTestTemplateItem(TestDocumentTemplateItem):
   document_base_path = os.path.join(getConfiguration().instancehome, 'tests')
   template_property = 'template_test_id_list'
 
-  def stepCreateTest(self, sequence=None, **kw):
-    test_title = 'UnitTest'
-    test_data = """class UnitTest:
-  pass"""
-    cfg = getConfiguration()
-    file_path = os.path.join(cfg.instancehome, 'tests', test_title+'.py')
-    if os.path.exists(file_path):
-      os.remove(file_path)
-    f = file(file_path, 'w')
-    f.write(test_data)
-    f.close()
-    self.failUnless(os.path.exists(file_path))
-    sequence.edit(test_title=test_title, test_path=file_path,
-        test_data=test_data)
-
   def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence['current_bt']
     bt.edit(template_test_id_list=[sequence['test_title']])
-
-  def stepRemoveTest(self, sequence=None, **kw):
-    test_path = sequence['test_path']
-    os.remove(test_path)
-    self.failIf(os.path.exists(test_path))
-
-  def stepCheckTestExists(self, sequence=None, **kw):
-    self.failIf(not os.path.exists(sequence['test_path']))
-
-  def stepCheckTestRemoved(self, sequence=None, **kw):
-    self.failIf(os.path.exists(sequence['test_path']))
 
   def stepCheckDocumentTestSameName(self, sequence=None, **kw):
     self.assertEqual(sequence['test_title'], sequence['document_title'])

@@ -10,7 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>width</string>
+                <string>css_class</string>
+                <string>description</string>
+                <string>enabled</string>
                 <string>title</string>
               </list>
             </value>
@@ -54,6 +56,20 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -65,6 +81,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -73,8 +93,20 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>hidden_label</string> </value>
+                </item>
+                <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_area_field</string> </value>
+                    <value> <string>my_text_content</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -86,14 +118,23 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Message</string> </value>
-                </item>
-                <item>
-                    <key> <string>width</string> </key>
-                    <value> <int>40</int> </value>
+                    <value> <string>text_content</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>not:here/getUrlString</string> </value>
         </item>
       </dictionary>
     </pickle>

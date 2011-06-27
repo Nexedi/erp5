@@ -218,6 +218,52 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     resource_list.append(resource)
     sequence.edit( resource_list = resource_list )
 
+  def stepCreateVariatedMultipleQuantityUnitResource(self, sequence=None, sequence_list=None, **kw):
+    """
+    Create a resource with variation and multiple quantity units
+    """
+    # Extend quantity_unit category if needed
+    quantity_unit = self.portal.portal_categories.quantity_unit
+    if not 'unit' in quantity_unit.objectIds():
+      quantity_unit.newContent(id='unit')
+    if not 'drum' in quantity_unit.unit.objectIds():
+      quantity_unit.unit.newContent(id='drum', quantity=1)
+    if not 'mass' in quantity_unit.objectIds():
+      quantity_unit.newContent(id='mass')
+    if not 'kilogram' in quantity_unit.mass.objectIds():
+      quantity_unit.mass.newContent(id='kilogram', quantity=1)
+    # Extend metric_type category if needed
+    metric_type = self.portal.portal_categories.metric_type
+    if not 'unit' in metric_type.objectIds():
+      metric_type.newContent(id='unit')
+    if not 'mass' in metric_type.objectIds():
+      metric_type.newContent(id='mass')
+
+    # Create resource
+    self.stepCreateVariatedResource(sequence, sequence_list, **kw)
+    resource = sequence.get('resource')
+
+    # Extend resource portal type
+    resource_portal_type = getattr(self.portal.portal_types, resource.portal_type)
+    type_allowed_content_type_list = resource_portal_type.getTypeAllowedContentTypeList()
+    if not 'Measure' in type_allowed_content_type_list:
+      type_allowed_content_type_list.append('Measure')
+      resource_portal_type.setTypeAllowedContentTypeList(type_allowed_content_type_list)
+
+    # Set quantity units to product
+    resource.setQuantityUnitValueList([quantity_unit.mass.kilogram,
+                                       quantity_unit.unit.drum])
+    # Set measures to products
+    resource.newContent(portal_type='Measure',
+                        metric_type_value=metric_type.mass,
+                        default_metric_type=True,
+                        quantity_unit_value=quantity_unit.mass.kilogram,
+                        quantity=1)
+    resource.newContent(portal_type='Measure',
+                        metric_type_value=metric_type.unit,
+                        quantity_unit_value=quantity_unit.unit.drum,
+                        quantity=0.01)
+
   def stepCreateOrganisation(self, sequence=None, sequence_list=None,
                              title=None, **kw):
     """

@@ -2,6 +2,7 @@ Acquired Property | view
 Action Information | view
 Alarm Tool | alarm_report
 Alarm Tool | view
+Alarm | call_active_sense
 Alarm | configuration
 Alarm | custom_report
 Alarm | notification
@@ -101,6 +102,7 @@ SQL Non Continuous Increasing Id Generator | view
 Standard Property | view
 String Attribute Match Constraint | predicate
 String Attribute Match Constraint | view
+System Preference | captcha
 System Preference | view
 TALES Constraint | predicate
 TALES Constraint | view
@@ -124,6 +126,7 @@ portal_actions | bt_tool
 portal_actions | category_tool
 portal_actions | create_module
 portal_actions | make_template
+portal_actions | portal_alarms_action
 portal_actions | property_sheet_tool
 portal_actions | types_tool
 portal_membership | login

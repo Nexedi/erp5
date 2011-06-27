@@ -683,14 +683,14 @@ class BusinessProcess(Path, XMLObject):
                           amount.getRelativeUrl())
 
     # Build a list of temp movements
-    from Products.ERP5Type.Document import newTempMovement
+    from Products.ERP5Type.Document import newTempSimulationMovement
     result = []
     id_index = 0
     base_id = amount.getId()
     if update_property_dict is None: update_property_dict = {}
     for trade_model_path in self.getTradeModelPathValueList(context=amount, trade_phase=trade_phase):
       id_index += 1
-      movement = newTempMovement(trade_model_path, '%s_%s' % (base_id, id_index))
+      movement = newTempSimulationMovement(trade_model_path, '%s_%s' % (base_id, id_index))
       kw = self._getPropertyAndCategoryDict(explanation, amount, trade_model_path, delay_mode=delay_mode)
       try:
         kw['trade_phase'], = \
@@ -698,7 +698,7 @@ class BusinessProcess(Path, XMLObject):
       except ValueError:
         pass
       kw.update(update_property_dict)
-      movement._edit(**kw)
+      movement._edit(force_update=True, **kw)
       business_link = self.getBusinessLinkValueList(trade_phase=trade_phase,
                                                     context=movement)
       movement._setCausalityList([trade_model_path.getRelativeUrl()]
@@ -756,7 +756,7 @@ class BusinessProcess(Path, XMLObject):
       property_dict = _getPropertyAndCategoryList(amount)
     else:
       property_dict = {}
-      for tester in rule._getUpdatingTesterList(exclude_quantity=False):
+      for tester in rule._getUpdatingTesterList():
         property_dict.update(tester.getUpdatablePropertyDict(
           amount, None))
 
@@ -764,6 +764,12 @@ class BusinessProcess(Path, XMLObject):
     for base_category, category_url_list in \
             trade_model_path.getArrowCategoryDict(context=amount).iteritems():
       property_dict[base_category] = category_url_list
+
+    # More categories
+    for base_category in ('delivery_mode', 'incoterm', 'payment_mode'):
+      value = trade_model_path.getPropertyList(base_category)
+      if len(value) > 0:
+        property_dict[base_category] = amount.getPropertyList(base_category)
 
     # Amount quantities - XXX-JPS maybe we should consider handling unit conversions here
     # and specifying units

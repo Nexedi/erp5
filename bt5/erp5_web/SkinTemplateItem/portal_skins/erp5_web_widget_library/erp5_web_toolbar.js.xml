@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts94991458.99</string> </value>
+            <value> <string>ts06480713.25</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -24,7 +24,9 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>/*\n
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
 Copyright (c) 2011-2012 Nexedi SARL and Contributors. All Rights Reserved.\n
 \n
 This program is Free Software; you can redistribute it and/or\n
@@ -42,9 +44,50 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
 \n
+function setCreationMode (sel) {\n
+  // default is cloning\n
+  var action      = \'clone\';\n
+  var action_name = \'Clone &amp; Edit\';\n
+  var icon        = \'admin_toolbox_clone_document.png\';\n
+  var name        = \'Base_cloneContent:method\';\n
+  var clone_display = \'inline\';\n
+  var new_title   = \'\';\n
+\n
+  // a portal type is given, so create a new document\n
+  var portal_type = sel.options[sel.selectedIndex].value;\n
+  if (portal_type != \'None\') {\n
+    action      = \'new\'\n
+    action_name = \'Create New &amp; Edit\';\n
+    icon        = \'admin_toolbox_new_document.png\';\n
+    name        = \'Base_newContent:method\';\n
+    clone_display = \'none\';\n
+    new_title   = \'Create New Document\';\n
+  }\n
+\n
+  // update action dependent values\n
+  document.getElementById(\'create_new_document_title\').innerHTML = new_title;\n
+  document.getElementById(\'clone_document_title\'     ).style.display = clone_display;\n
+  document.getElementById(\'duplicate_document_action\').innerHTML = action_name;\n
+\n
+  // replace the action icon\n
+  document.getElementById(\'clone_action_icon\').src = eval(action + \'_icon.src\');\n
+\n
+  // update action button title\n
+  var button   = document.getElementById(\'clone_action_button\');\n
+  button.title = action_name;\n
+  button.name  = name;\n
+}\n
 \n
 function initialize_toolbar(){\n
-  /* initialize all toolbar menues */\n
+  /* initialize all toolbar menu items */\n
+\n
+  if (document.images) {\n
+    clone_icon = new Image();\n
+    new_icon   = new Image();\n
+    clone_icon.src = \'admin_toolbox_clone_document.png\';\n
+    new_icon.src   = \'admin_toolbox_new_document.png\';\n
+  }\n
+          \n
   $("li.toolboxSection").each(\n
     function (index, menu){\n
       menu = $(this);\n
@@ -64,7 +107,9 @@ function display_menu(clicked_item){\n
   })};\n
 \n
 $(document).ready(initialize_toolbar);\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -72,7 +117,7 @@ $(document).ready(initialize_toolbar);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1497</int> </value>
+            <value> <int>2925</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

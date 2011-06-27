@@ -104,8 +104,8 @@ class TestConversionInSimulation(AccountingTestCase):
             'gap/%s' % self.vat_gap,
             'gap/%s' % self.sale_gap,
             'gap/%s' % self.customer_gap,
-	    'delivery_mode/%s' % self.mail_delivery_mode,
-	    'incoterm/%s' % self.cpt_incoterm,
+            'delivery_mode/%s' % self.mail_delivery_mode,
+            'incoterm/%s' % self.cpt_incoterm,
             'quantity_unit/%s' % self.unit_piece_quantity_unit,
             'quantity_unit/%s' % self.mass_quantity_unit,
             'product_line/apparel',
@@ -243,7 +243,7 @@ class TestConversionInSimulation(AccountingTestCase):
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
-		    product_line='apparel')
+                    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='euro')
@@ -256,8 +256,8 @@ class TestConversionInSimulation(AccountingTestCase):
     transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
-	                          portal_type='Currency Exchange Line',
-			price_currency=new_currency.getRelativeUrl())
+                                  portal_type='Currency Exchange Line',
+                        price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
@@ -269,7 +269,7 @@ class TestConversionInSimulation(AccountingTestCase):
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Client',
-		price_currency=new_currency.getRelativeUrl(),
+                price_currency=new_currency.getRelativeUrl(),
                         default_address_region=self.default_region)
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -309,10 +309,10 @@ class TestConversionInSimulation(AccountingTestCase):
           delivery_movement.getPriceCurrencyValue())
     self.assertEquals\
      (invoice_transaction_movement_1.getDestinationTotalAssetPrice(),
-	round(655.957*delivery_movement.getTotalPrice()))
+        round(655.957*delivery_movement.getTotalPrice()))
     self.assertEquals\
         (invoice_transaction_movement_1.getSourceTotalAssetPrice(),
-	None)
+        None)
     invoice_transaction_movement_2 =\
          invoice_transaction_applied_rule.contentValues()[1]
     self.assertEquals(currency,
@@ -321,8 +321,8 @@ class TestConversionInSimulation(AccountingTestCase):
           delivery_movement.getPriceCurrencyValue())
     self.assertEquals\
         (invoice_transaction_movement_2.getDestinationTotalAssetPrice(),
-	round(655.957*delivery_movement.getTotalPrice()))
-	
+        round(655.957*delivery_movement.getTotalPrice()))
+
   def test_01_simulation_movement_source_asset_price(self,quiet=0,
           run=run_all_test):
     """
@@ -336,7 +336,7 @@ class TestConversionInSimulation(AccountingTestCase):
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
-		    product_line='apparel')
+                    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='euro')
@@ -349,8 +349,8 @@ class TestConversionInSimulation(AccountingTestCase):
     transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
-	                      portal_type='Currency Exchange Line',
-		price_currency=new_currency.getRelativeUrl())
+                              portal_type='Currency Exchange Line',
+                price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
@@ -366,7 +366,7 @@ class TestConversionInSimulation(AccountingTestCase):
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Vendor',
-			    price_currency=new_currency.getRelativeUrl(),
+                            price_currency=new_currency.getRelativeUrl(),
                             default_address_region=self.default_region)
     order = self.portal.sale_order_module.newContent(
                               portal_type='Sale Order',
@@ -402,12 +402,12 @@ class TestConversionInSimulation(AccountingTestCase):
           delivery_movement.getPriceCurrencyValue())
     self.assertEquals\
         (invoice_transaction_movement.getSourceTotalAssetPrice(),
-	round(655.957*delivery_movement.getTotalPrice()))
+        round(655.957*delivery_movement.getTotalPrice()))
     self.assertEquals\
         (invoice_transaction_movement.getDestinationTotalAssetPrice(),
-	None)
-	
-	
+        None)
+
+
   def test_01_destination_total_asset_price_on_accounting_lines(self,quiet=0,
           run=run_all_test):
     """
@@ -418,11 +418,11 @@ class TestConversionInSimulation(AccountingTestCase):
     if not quiet:
        printAndLog(
        'test_01_destination_total_asset_price_on_accounting_lines')
-    		  
+
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
-		    product_line='apparel')
+                    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='euro')
@@ -435,8 +435,8 @@ class TestConversionInSimulation(AccountingTestCase):
     transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
-	                          portal_type='Currency Exchange Line',
-			price_currency=new_currency.getRelativeUrl())
+                                  portal_type='Currency Exchange Line',
+                        price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
@@ -448,7 +448,7 @@ class TestConversionInSimulation(AccountingTestCase):
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Client', 
-		price_currency=new_currency.getRelativeUrl(),
+                price_currency=new_currency.getRelativeUrl(),
                        default_address_region=self.default_region)
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -495,10 +495,10 @@ class TestConversionInSimulation(AccountingTestCase):
        self.assertEquals(line.getDestinationTotalAssetPrice(),
               round(655.957*delivery_movement.getTotalPrice()))
   
-		 
-		 
+
+
   def test_01_diverged_sale_packing_list_destination_total_asset_price(
-	  self,quiet=0,run=run_all_test):
+          self,quiet=0,run=run_all_test):
     """
     tests that when the sale packing list is divergent on the quantity and
     that the resource on simulation movements is different
@@ -510,11 +510,11 @@ class TestConversionInSimulation(AccountingTestCase):
     if not quiet:
      printAndLog(
         'test_01_diverged_sale_packing_list_destination_total_asset_price')
-    		  
+
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
-		    product_line='apparel')
+                    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='euro')
@@ -527,8 +527,8 @@ class TestConversionInSimulation(AccountingTestCase):
     transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
-	                      portal_type='Currency Exchange Line',
-	       price_currency=new_currency.getRelativeUrl())
+                              portal_type='Currency Exchange Line',
+               price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
@@ -540,7 +540,7 @@ class TestConversionInSimulation(AccountingTestCase):
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Client', 
-		price_currency=new_currency.getRelativeUrl(),
+                price_currency=new_currency.getRelativeUrl(),
                         default_address_region=self.default_region)
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -585,7 +585,7 @@ class TestConversionInSimulation(AccountingTestCase):
     self.tic()
 
     related_applied_rule = order.getCausalityRelatedValue(
-                            portal_type='Applied Rule')		
+                            portal_type='Applied Rule')
     order_movement = related_applied_rule.contentValues()[0]
     delivery_applied_rule = order_movement.contentValues()[0]
     delivery_movement = delivery_applied_rule.contentValues()[0]
@@ -600,7 +600,7 @@ class TestConversionInSimulation(AccountingTestCase):
    
    
   def test_01_diverged_purchase_packing_list_source_total_asset_price(
-	   self,quiet=0,run=run_all_test):
+           self,quiet=0,run=run_all_test):
     """
     tests that when the purchase packing list is divergent on the quantity
       and that the resource on simulation movements is different
@@ -612,11 +612,11 @@ class TestConversionInSimulation(AccountingTestCase):
     if not quiet:
      printAndLog(
       'test_01_diverged_purchase_packing_list_source_total_asset_price')
-    		  
+
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
-		    product_line='apparel')
+                    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='euro')
@@ -629,8 +629,8 @@ class TestConversionInSimulation(AccountingTestCase):
     transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
-	                       portal_type='Currency Exchange Line',
-		price_currency=new_currency.getRelativeUrl())
+                               portal_type='Currency Exchange Line',
+                price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
@@ -646,7 +646,7 @@ class TestConversionInSimulation(AccountingTestCase):
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Vendor',
-		price_currency=new_currency.getRelativeUrl(),
+                price_currency=new_currency.getRelativeUrl(),
                         default_address_region=self.default_region)
     order = self.portal.purchase_order_module.newContent(
                               portal_type='Purchase Order',
@@ -700,9 +700,9 @@ class TestConversionInSimulation(AccountingTestCase):
     self.assertEquals(invoice_transaction_movement.\
         getSourceTotalAssetPrice(),
         old_source_asset_price *(3.0/5.0))
-	
+
   def test_01_delivery_mode_on_sale_packing_list_and_invoice(
-	  self,quiet=0,run=run_all_test):
+          self,quiet=0,run=run_all_test):
     """
     tests that when the sale packing list is divergent on the quantity and
     that the resource on simulation movements is different
@@ -714,11 +714,11 @@ class TestConversionInSimulation(AccountingTestCase):
     if not quiet:
      printAndLog(
         'test_01_delivery_mode_on_sale_packing_list_and_invoice')
-    		  
+
     resource = self.portal.product_module.newContent(
                     portal_type='Product',
                     title='Resource',
-		    product_line='apparel')
+                    product_line='apparel')
     currency = self.portal.currency_module.newContent(
                                 portal_type='Currency',
                                 title='euro')
@@ -731,8 +731,8 @@ class TestConversionInSimulation(AccountingTestCase):
     transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
-	                          portal_type='Currency Exchange Line',
-			price_currency=new_currency.getRelativeUrl())
+                                  portal_type='Currency Exchange Line',
+                        price_currency=new_currency.getRelativeUrl())
     x_curr_ex_line.setTitle('Euro to Francs CFA')
     x_curr_ex_line.setBasePrice(655.957)
     x_curr_ex_line.setStartDate(DateTime(2008,10,21))
@@ -744,7 +744,7 @@ class TestConversionInSimulation(AccountingTestCase):
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
                             title='Client', 
-		price_currency=new_currency.getRelativeUrl(),
+                price_currency=new_currency.getRelativeUrl(),
                        default_address_region=self.default_region)
     vendor = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -758,8 +758,8 @@ class TestConversionInSimulation(AccountingTestCase):
                               destination_section_value=client,
                               start_date=DateTime(2008,10, 21),
                               price_currency_value=currency,
-			      delivery_mode=self.mail_delivery_mode,
-			      incoterm=self.cpt_incoterm,
+                              delivery_mode=self.mail_delivery_mode,
+                              incoterm=self.cpt_incoterm,
                               title='Order')
     order_line = order.newContent(portal_type='Sale Order Line',
                                   resource_value=resource,

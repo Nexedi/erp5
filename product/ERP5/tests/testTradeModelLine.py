@@ -136,6 +136,8 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
              # should successor be trade_state/discounted? There is no
              # such trade_state category
              successor='trade_state/accounted',
+             delivery_builder=['portal_deliveries/purchase_invoice_transaction_trade_model_builder',
+                               'portal_deliveries/sale_invoice_transaction_trade_model_builder'],
         ),
         dict(reference='tax',
              trade_phase='default/tax',
@@ -149,6 +151,8 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
              # just to get back to accounted, and match it with (or
              # create a new) a portal_rule.
              successor='trade_state/accounted',
+             delivery_builder=['portal_deliveries/purchase_invoice_transaction_trade_model_builder',
+                               'portal_deliveries/sale_invoice_transaction_trade_model_builder'],
         ),
       ]
       for business_link in business_link_list:

@@ -271,11 +271,11 @@ class TestUNG(ERP5TypeTestCase):
     self.stepTic()
     kw = dict(brain=web_illustration)
     url = self.portal.WebSection_getDocumentUrl(**kw)
-    pattern = "^http.*\/web_page_module\/[0-9]+\/WebIllustration_viewEditor\?editable_mode\:int\=1"
+    pattern = "^http.*\/web_page_module\/[0-9]+\?editable_mode\:int\=1"
     self.assertNotEquals(re.search(pattern, url), None)
     kw = dict(brain=web_page)
     url = self.portal.WebSection_getDocumentUrl(**kw)
-    pattern = "^http.*\/web_page_module\/[0-9]+\/WebPage_viewEditor\?editable_mode\:int\=1"
+    pattern = "^http.*\/web_page_module\/[0-9]+\?editable_mode\:int\=1"
     self.assertNotEquals(re.search(pattern, url), None, url)
  
   def testBase_updateCalendarEventList(self):

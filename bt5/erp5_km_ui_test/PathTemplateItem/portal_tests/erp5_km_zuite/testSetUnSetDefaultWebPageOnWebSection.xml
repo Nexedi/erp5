@@ -70,7 +70,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//li[@id=\'edit-document-toolbox\']/div/ul/li/a/span</td>\n
+  <td>//a[@class=\'menu-link\' and @title=\'Edit Web Section details\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -100,7 +100,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//div[@id=\'wrapper_path\']/div/fieldset/div[1]/div/ul/li[2]/a</td>\n
+  <td>link=Section 1</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -136,7 +136,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//li[@id=\'edit-document-toolbox\']/div/ul/li[3]/a/span</td>\n
+  <td>//a[@class=\'menu-link\' and @title=\'Edit Parent Web Section\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -156,7 +156,7 @@
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
-  <td>//div[@id=\'wrapper_path\']/div/fieldset/div[1]/div/ul/li[2]/a</td>\n
+  <td>link=Section 1</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

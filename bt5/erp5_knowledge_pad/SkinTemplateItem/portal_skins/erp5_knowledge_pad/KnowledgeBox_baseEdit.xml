@@ -53,7 +53,9 @@
             <value> <string>"""\n
   This script edits a Knowledge Box instance used for saving a Gadget preferences.\n
 """\n
-# XXX: How validation\n
+from Products.Formulator.Errors import FormValidationError\n
+from json import dumps\n
+\n
 kw = {}\n
 request = context.REQUEST\n
 form = request.form\n
@@ -61,6 +63,30 @@ fields = filter(lambda x: x.startswith(form_fields_main_prefix), form.keys())\n
 box = context.restrictedTraverse(box_relative_url)\n
 portal_selection = context.getPortalObject().portal_selections\n
 \n
+# do validation\n
+form = getattr(context,form_id)\n
+try:\n
+  # Validate\n
+  form.validate_all_to_request(request, key_prefix=form_fields_main_prefix)\n
+except FormValidationError, validation_errors:\n
+  # Pack errors into the request\n
+  field_errors = form.ErrorFields(validation_errors)\n
+  request.set(\'field_errors\', field_errors)\n
+  # we need form rendered in gadget mode\n
+  request.set(\'is_gadget_mode\', 1)\n
+  # Make sure editors are pushed back as values into the REQUEST object\n
+  for f in form.get_fields():\n
+    field_id = f.id\n
+    if request.has_key(field_id):\n
+      value = request.get(field_id)\n
+      if callable(value):\n
+        value(request)\n
+  # return validation failed code and rendered form\n
+  result = {\'content\': form(request, key_prefix=form_fields_main_prefix),\n
+            \'validation_status\':  0}\n
+  return dumps(result)\n
+\n
+form = request.form\n
 # get interesting for us fields and save\n
 listbox_selection_field_prefix = \'%s_my_listbox_selection_\' %form_fields_main_prefix\n
 for field in fields:\n
@@ -74,15 +100,20 @@ for field in fields:\n
       portal_selection.setSelectionParamsFor(selection_name, params)\n
   kw[field.replace(\'%s_my_\' %form_fields_main_prefix, \'\')] = form[field]\n
 \n
+# edit\n
+box.edit(**kw)\n
+\n
+if not synchronous_mode:\n
+  # return JSON in asynchronous mode\n
+  result = {\'content\': \'\',\n
+            \'validation_status\': 1}\n
+  return dumps(result)\n
+\n
 # determine redirect URL as passed from gadget preference form\n
 if gadget_redirect_url is None:\n
   # taking URL1 as the base of the original URL. \n
   # it works for both synchronous and  asynchronous gadgets\n
   gadget_redirect_url = request[\'URL1\']\n
-  \n
-# edit\n
-box.edit(**kw)\n
-\n
 request.RESPONSE.redirect(\'%s?portal_status_message=%s\'\n
                            %(gadget_redirect_url, \n
                              context.Base_translateString(\'Preference updated.\')))\n
@@ -90,7 +121,7 @@ request.RESPONSE.redirect(\'%s?portal_status_message=%s\'\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_fields_main_prefix, box_relative_url, gadget_redirect_url=None</string> </value>
+            <value> <string>form_id, form_fields_main_prefix, box_relative_url, gadget_redirect_url=None, synchronous_mode=True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

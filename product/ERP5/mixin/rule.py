@@ -298,7 +298,7 @@ class RuleMixin(Predicate):
     return filter(lambda x:x.isMatchingProvider(), self.objectValues(
       portal_type=self.getPortalDivergenceTesterTypeList()))
 
-  def _getUpdatingTesterList(self, exclude_quantity=True):
+  def _getUpdatingTesterList(self, exclude_quantity=False):
     """
     Return the applicable divergence testers which must be used to
     update movements. (ie. not all divergence testers of the Rule)
@@ -384,7 +384,7 @@ class RuleMixin(Predicate):
     #  ie. what comes in must either go out or has been lost
     divergence_tester_list = self._getDivergenceTesterList()
     profit_tester_list = divergence_tester_list
-    updating_tester_list = self._getUpdatingTesterList()
+    updating_tester_list = self._getUpdatingTesterList(exclude_quantity=True)
     profit_updating_tester_list = updating_tester_list
     quantity_tester_list = self._getQuantityTesterList()
     compensated_quantity = 0.0

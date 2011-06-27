@@ -56,9 +56,9 @@ Simulation Movements can come from normal Invoice Transaction Rule\n
 and same rule which is children of Trade Model Rule """\n
 \n
 # search for normal movements\n
-kw[\'parent_specialise_portal_type\'] = [\'Invoice Transaction Rule\', \'Invoice Transaction Simulation Rule\']\n
-kw[\'grand_grand_parent_specialise_portal_type\'] = [\n
-             \'Invoicing Rule\', \'Invoice Simulation Rule\', \'Invoice Rule\', \'Invoice Root Simulation Rule\', \'Tax Rule\']\n
+kw[\'parent_specialise_reference\'] = [\'default_invoice_transaction_rule\']\n
+kw[\'grand_grand_parent_specialise_reference\'] = [\n
+             \'default_invoicing_rule\', \'default_invoice_rule\']\n
 if context.Invoice_isAdvanced():\n
   kw[\'explanation_portal_type\']       = [\'%s Order\' % trade_type,\n
                                          \'%s Invoice\' % trade_type,\n
@@ -77,7 +77,7 @@ normal_movement_list = [movement for movement in context.InvoiceTransaction_zSel
 \n
 # update query to search for movements which are children of Trade Model Rule\n
 kw.pop(\'grand_parent_simulation_state\')\n
-kw[\'grand_grand_parent_specialise_portal_type\'] = [\'Trade Model Rule\', \'Trade Model Simulation Rule\']\n
+kw[\'grand_grand_parent_specialise_reference\'] = \'default_trade_model_rule\'\n
 kw[\'grand_grand_grand_parent_simulation_state\'] = [\'started\']\n
 \n
 search_kw = kw.copy()\n
@@ -89,7 +89,7 @@ trade_model_movement_list = [movement for movement in context.InvoiceTransaction
 movement_list = [] \n
 for movement in normal_movement_list + trade_model_movement_list:\n
   movement = movement.getObject()\n
-  if movement.getDeliveryValue() is None :\n
+  if movement.getDeliveryValue() is None and movement not in movement_list :\n
     movement_list.append(movement)\n
   else :\n
     from Products.ERP5Type.Log import log\n

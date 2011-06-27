@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import zLOG
 from Products.ERP5Type import Permissions
 from App.special_dtml import HTMLFile
 from Acquisition import aq_inner
@@ -57,12 +56,13 @@ def addWorkflowFactory(factory, id, title):
     in the Workflow Tool.
     """
     assert not _workflow_factories.get(id), (
-        'Workflow with id %r already exists.' % id)
+        'Workflow factory with id %r already exists.' % id)
 
-    factory_info = dict(factory=factory,
-                        id=id,
-                        title=title)
-    _workflow_factories[id] = factory_info
+    _workflow_factories[id] = {
+      'factory': factory,
+      'id': id,
+      'title': title,
+    }
     # register with CMF 1 if it's still there
     baseAddWorkflowFactory(factory, id, title)
 
@@ -79,15 +79,15 @@ def _generateWorkflowConstructors(factory_info):
   workflow_factory_id = factory_info['id']
   workflow_factory_title = factory_info['title']
   # the method names (last url segments)
-  constructor_form_name=FACTORY_FORM_PREFIX + workflow_factory_id
-  constructor_action_name=FACTORY_ACTION_PREFIX + workflow_factory_id
+  constructor_form_name = FACTORY_FORM_PREFIX + workflow_factory_id
+  constructor_action_name = FACTORY_ACTION_PREFIX + workflow_factory_id
 
   # The form
   def manage_addWorkflowForm(dispatcher, REQUEST, RESPONSE):
     """Form to add a type-specific workflow to portal_workflow"""
-    kw = dict(workflow_factory_title=workflow_factory_title,
-              form_action=constructor_action_name)
-    return manage_addWorkflowFormDtml(None, dispatcher, REQUEST, **kw)
+    return manage_addWorkflowFormDtml(None, dispatcher, REQUEST,
+      workflow_factory_title=workflow_factory_title,
+      form_action=constructor_action_name)
   
   # The action of the form
   @postonly
@@ -103,9 +103,10 @@ def _generateWorkflowConstructors(factory_info):
     return workflow
 
   # The constructors
-  constructors = [(constructor_form_name, manage_addWorkflowForm),
-                  (constructor_action_name, manage_addWorkflow)]
-  return constructors
+  return [
+    (constructor_form_name, manage_addWorkflowForm),
+    (constructor_action_name, manage_addWorkflow),
+  ]
 
 def addWorkflowByType(container, workflow_factory_id, workflow_id):
   """ Add a workflow with name 'workflow_id' from factory identified by
@@ -113,21 +114,20 @@ def addWorkflowByType(container, workflow_factory_id, workflow_id):
   """
   # This functionality could be inside the generated manage_addWorkflow above,
   # but is placed here to be easily used directly from Python code.
-  workflow_factory = _workflow_factories[workflow_factory_id]['factory']
-  workflow = workflow_factory(workflow_id)
-  container._setObject(workflow_id, workflow)
+  container._setObject(workflow_id,
+    _workflow_factories[workflow_factory_id]['factory'](workflow_id))
   return aq_inner(container.restrictedTraverse(workflow_id))
 
 def registerWorkflowFactory(context, factory_info):
   """ Register a workflow factory as a Zope2 style object factory that is only
   addable to portal_workflow"""
-  constructors = _generateWorkflowConstructors(factory_info)
-  permission = Permissions.ManagePortal
-  context.registerClass(DCWorkflowDefinition, # this class is only used here for its interfaces
-                        meta_type=factory_info['title'],
-                        constructors=constructors,
-                        permission=permission,
-                        visibility=None)
+  context.registerClass(
+    DCWorkflowDefinition, # this class is only used here for its interfaces
+    meta_type=factory_info['title'],
+    constructors=_generateWorkflowConstructors(factory_info),
+    permission=Permissions.ManagePortal,
+    visibility=None,
+  )
 
 def registerAllWorkflowFactories(context):
   """register workflow factories during product initialization
@@ -143,56 +143,68 @@ def setupERP5Workflow(wf):
   """Sets up an DC Workflow with defaults variables needed by ERP5.
   """
   wf.setProperties(title='ERP5 Default Workflow')
+  states = wf.states
+  addState = states.addState
   for state_id, state_title in (('draft', 'Draft'),):
-    wf.states.addState(state_id)
-    wf.states[state_id].title = state_title
-  for v in ('action', 'actor', 'comment', 'history', 'time',
-            'error_message', 'portal_type'):
-    wf.variables.addVariable(v)
+    addState(state_id)
+    states[state_id].title = state_title
+  states.setInitialState('draft')
+
+  variables = wf.variables
+  addVariable = variables.addVariable
+  for v, property_dict in (
+        ('action', {
+            'description': 'Transition id',
+            'default_expr': 'transition/getId|nothing',
+            'for_status': 1,
+            'update_always': 1,
+          }),
+        ('actor', {
+            'description': 'Name of the user who performed transition',
+            'default_expr': 'user/getUserName',
+            'for_status': 1,
+            'update_always': 1,
+          }),
+        ('comment', {
+            'description': 'Comment about transition',
+            'default_expr': "python:state_change.kwargs.get('comment', '')",
+            'for_status': 1,
+            'update_always': 1,
+          }),
+        ('history', {
+            'description': 'Provides access to workflow history',
+            'default_expr': 'state_change/getHistory',
+          }),
+        ('time', {
+            'description': 'Transition timestamp',
+            'default_expr': 'state_change/getDateTime',
+            'for_status': 1,
+            'update_always': 1,
+          }),
+        ('error_message', {
+            'description': 'Error message if validation failed',
+            'for_status': 1,
+            'update_always': 1,
+          }),
+        ('portal_type', {
+            'description': 'Portal type (used as filter for worklists)',
+            'for_catalog': 1,
+          }),
+      ):
+    addVariable(v)
+    variables[v].setProperties(**property_dict)
+
+  addManagedPermission = wf.addManagedPermission
   for perm in (Permissions.AccessContentsInformation,
                Permissions.View,
                Permissions.AddPortalContent,
                Permissions.ModifyPortalContent,
                Permissions.DeleteObjects):
-    wf.addManagedPermission(perm)
+    addManagedPermission(perm)
 
-  wf.states.setInitialState('draft')
   # set by default the state variable to simulation_state.
   # anyway, a default workflow needs to be configured.
-  wf.variables.setStateVar('simulation_state')
-
-  vdef = wf.variables['action']
-  vdef.setProperties(description='The last transition',
-                     default_expr='transition/getId|nothing',
-                     for_status=1, update_always=1)
-
-  vdef = wf.variables['actor']
-  vdef.setProperties(description='The name of the user who performed '
-                     'the last transition',
-                     default_expr='user/getUserName',
-                      for_status=1, update_always=1)
-
-  vdef = wf.variables['comment']
-  vdef.setProperties(description='Comments about the last transition',
-               default_expr="python:state_change.kwargs.get('comment', '')",
-               for_status=1, update_always=1)
-
-  vdef = wf.variables['history']
-  vdef.setProperties(description='Provides access to workflow history',
-                     default_expr="state_change/getHistory")
-
-  vdef = wf.variables['time']
-  vdef.setProperties(description='Time of the last transition',
-                     default_expr="state_change/getDateTime",
-                     for_status=1, update_always=1)
-
-  vdef = wf.variables['error_message']
-  vdef.setProperties(description='Error message if validation failed',
-                     for_status=1, update_always=1)
-  
-  vdef = wf.variables['portal_type']
-  vdef.setProperties(description='portal type (use as filter for worklists)',
-                     for_catalog=1)
+  variables.setStateVar('simulation_state')
 
 def createERP5Workflow(id):
   """Creates an ERP5 Workflow """
@@ -202,4 +214,5 @@ def createERP5Workflow(id):
 
 addWorkflowFactory(createERP5Workflow,
                    id='erp5_workflow',
-                   title='ERP5-style empty workflow')
+                   title='ERP5-style pre-configured DCWorkflow')
+

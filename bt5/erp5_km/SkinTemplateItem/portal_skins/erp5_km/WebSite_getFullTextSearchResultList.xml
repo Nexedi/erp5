@@ -53,7 +53,7 @@
             <value> <string>"""\n
   Return the result list of all documents found by specified keyword arguments.\n
 """\n
-return context.portal_catalog(**kw)\n
+return context.getDocumentValueList(**kw)\n
 </string> </value>
         </item>
         <item>

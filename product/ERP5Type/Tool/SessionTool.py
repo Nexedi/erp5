@@ -89,14 +89,6 @@ class RamSession(Session):
     """ Update current aquisition context. """
     self._aq_context = aq_context
 
-# disabled as session should be dictionary like 
-#  def __getattr__(self, key, default=_marker):
-#    if key in self.data:
-#      return self.__getitem__(key)
-#    if default is not _marker:
-#      return default
-#    raise AttributeError, key
-
   def __getitem__(self, key):
     if key in self.data:
       value = self.data[key]
@@ -215,7 +207,8 @@ class SessionTool(BaseTool):
         session._updateSessionId(session_id)
       if session_duration is None:
         # set session duration (this is used from backend storage machinery for expire purposes)
-        session_duration = self.portal_caches[SESSION_CACHE_FACTORY].objectValues()[0].cache_duration
+        cache_plugin = self.portal_caches[SESSION_CACHE_FACTORY].objectValues()[0]
+        session_duration = cache_plugin.getCacheDuration()
       session._updateSessionDuration(session_duration)
       storage_plugin.set(session_id, SESSION_SCOPE, session, session_duration)
     else:

@@ -12,6 +12,7 @@
   </permission>
   <permission type='tuple'>
    <name>Access contents information</name>
+   <role>Anonymous</role>
    <role>Assignee</role>
    <role>Assignor</role>
    <role>Associate</role>
@@ -76,6 +77,7 @@
   </permission>
   <permission type='tuple'>
    <name>View</name>
+   <role>Anonymous</role>
    <role>Assignee</role>
    <role>Assignor</role>
    <role>Auditor</role>

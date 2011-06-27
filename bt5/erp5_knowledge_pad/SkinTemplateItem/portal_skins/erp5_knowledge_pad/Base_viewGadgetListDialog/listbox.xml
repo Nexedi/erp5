@@ -17,8 +17,9 @@
                 <string>editable_columns</string>
                 <string>hide_rows_on_no_search_criterion</string>
                 <string>list_method</string>
-                <string>meta_types</string>
+                <string>portal_types</string>
                 <string>search_columns</string>
+                <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
                 <string>url_columns</string>
@@ -191,12 +192,12 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>meta_types</string> </key>
+                    <key> <string>portal_types</string> </key>
                     <value>
                       <list>
                         <tuple>
-                          <string>ERP5 Gadget</string>
-                          <string>ERP5 Gadget</string>
+                          <string>Gadget</string>
+                          <string>Gadget</string>
                         </tuple>
                       </list>
                     </value>
@@ -215,6 +216,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>selection_name</string> </key>
+                    <value> <string>gadget_dialog_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

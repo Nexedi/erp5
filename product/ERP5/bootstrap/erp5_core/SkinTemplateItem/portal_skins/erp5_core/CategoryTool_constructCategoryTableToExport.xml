@@ -66,14 +66,19 @@ for base_cat_id in context.REQUEST[\'category_list\']:\n
   d[\'cat_list\'] = cat_list = []\n
   d[\'max_cat_depth\'] = max_cat_depth = 0\n
   cat_info_list.append(d)\n
+  temporary_category_list = []\n
   for cat in context.portal_catalog(portal_type=\'Category\',\n
-                                    sort_on=((\'path\', \'ascending\'),),\n
+                                    sort_on=((\'path\', \'ascending\'),),# This sorting is not enough.\n
                                     limit=None,\n
                                     **{\'default_%s_uid\' % (base_cat.getId(),): base_cat.getUid()}):\n
-    d[\'cat_list\'].append(cat)\n
-    cat_depth = len(cat.getRelativeUrl().split(\'/\'))\n
+    cat_relative_url_path_list = cat.getRelativeUrl().split(\'/\')\n
+    cat_depth = len(cat_relative_url_path_list)\n
+    temporary_category_list.append((cat_relative_url_path_list, cat))\n
     if cat_depth > d[\'max_cat_depth\']:\n
       d[\'max_cat_depth\'] = cat_depth\n
+  # Sort by split path by Python, if you sort with "/" by MySQL, then the result will be like (\'A\',\'A_B/1\',\'A_B/2\',\'A/1\',\'A/2\')\n
+  temporary_category_list.sort()\n
+  d[\'cat_list\'] = [i[1] for i in temporary_category_list]\n
 \n
 result = []\n
 for cat_info in cat_info_list:\n

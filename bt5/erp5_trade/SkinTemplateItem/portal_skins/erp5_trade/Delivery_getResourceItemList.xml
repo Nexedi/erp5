@@ -57,8 +57,12 @@ if context.getPortalType() in portal.getPortalSaleTypeList():\n
   use_list = context.portal_preferences.getPreferredSaleUseList()\n
 elif context.getPortalType() in portal.getPortalPurchaseTypeList():\n
   use_list = portal.portal_preferences.getPreferredPurchaseUseList()\n
+elif context.getPortalType() in portal.getPortalInternalTypeList():\n
+  use_list = portal.portal_preferences.getPreferredInternalUseList()\n
 else:\n
-  use_list = portal.portal_preferences.getPreferredPurchaseUseList() + portal.portal_preferences.getPreferredSaleUseList()\n
+  use_list = portal.portal_preferences.getPreferredPurchaseUseList()\\\n
+             + portal.portal_preferences.getPreferredSaleUseList()\\\n
+             + portal.portal_preferences.getPreferredInternalUseList()\n
 \n
 if not use_list:\n
   return []\n

@@ -5398,6 +5398,9 @@ msgstr "Dépôt sur compte d'ordre"
 msgid "Internal Order"
 msgstr "Commande interne"
 
+msgid "Internal Order Line"
+msgstr "Ligne de commande interne"
+
 msgid "Internal Order Lines"
 msgstr "Lignes de commande interne"
 
@@ -5457,6 +5460,12 @@ msgstr "Livraisons internes à expédier"
 
 msgid "Internal Reference"
 msgstr "Référence interne"
+
+msgid "Internal Trade Condition"
+msgstr "Condition de vente interne"
+
+msgid "Internal Trade Conditions"
+msgstr "Conditions de vente interne"
 
 msgid "International Form"
 msgstr "Mode international"

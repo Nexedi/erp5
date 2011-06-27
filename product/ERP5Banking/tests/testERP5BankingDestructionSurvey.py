@@ -57,13 +57,6 @@ class TestERP5BankingDestructionSurvey(TestERP5BankingMixin):
     """
     return "ERP5BankingDestructionSurvey"
 
-  def getDestructionSurveyModule(self):
-    """
-    Return the Cash Transer Module
-    """
-    return getattr(self.getPortal(), 'destruction_survey_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

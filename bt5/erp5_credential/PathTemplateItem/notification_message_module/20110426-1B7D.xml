@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>content_md5</string> </key>
-            <value> <string>2c77d20542feb73e99d6e2f219317ff4</string> </value>
+            <value> <string>535ab3751cc2da6c71fd62d3bed083e4</string> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
@@ -98,7 +98,7 @@
             <value> <string>You have requested the renewal of your password.\n
 Please copy and paste the following link into your browser:\n
 \n
-${reset_password_link} \n
+${reset_password_link}\n
 \n
 Please note that this link will be valid once, until ${expiration_date}.\n
 After that date, or after using this link, a new request is required.\n

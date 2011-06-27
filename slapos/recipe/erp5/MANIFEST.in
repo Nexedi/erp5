@@ -1,2 +1,0 @@
-include CHANGES.txt
-recursive-include src/slapos/recipe/erp5 *.in

@@ -55,10 +55,10 @@
 portal_type_dict_mapping = {\n
   \'Production Order\' : {\'node_uid\' : context.getDestinationUid()},\n
 }\n
+kw = {}\n
 kw[\'group_by_node\'] = 1\n
 kw[\'group_by_section\'] = 0\n
 kw[\'group_by_variation\'] = 1\n
-kw[\'explanation_uid\'] = context.getUid()\n
 \n
 kw.update( **portal_type_dict_mapping.get(context.getPortalType(),{}) )\n
 return context.getFutureInventoryList(*args,**kw)\n

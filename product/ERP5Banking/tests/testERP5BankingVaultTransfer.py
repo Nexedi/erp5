@@ -96,13 +96,6 @@ class TestERP5BankingVaultTransfer(TestERP5BankingMixin):
     """
     return "ERP5BankingVaultTransfer"
 
-  def getVaultTransferModule(self):
-    """
-    Return the Vault Transer Module
-    """
-    return getattr(self.getPortal(), 'vault_transfer_module', None)
-
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data

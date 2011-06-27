@@ -631,7 +631,7 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
     packing_list_line= self.createPackingListLine(packing_list=packing_list,
                                                   resource=resource)
     transaction.commit()
-    self.tic()				      
+    self.tic()
     packing_list_line.DeliveryLine_viewItemCreationDialog()
     # create a listbox 
     listbox = ({ 'listbox_key': '000',

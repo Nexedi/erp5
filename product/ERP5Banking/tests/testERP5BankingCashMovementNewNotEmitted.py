@@ -54,12 +54,6 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     """
     return "ERP5BankingCashMovementNewNotEmitted"
 
-  def getCashMovementModule(self):
-    return getattr(self.getPortal(), 'cash_movement_new_not_emitted_module')
-
-  def getMonetaryReceptionModule(self):
-    return getattr(self.getPortal(), 'monetary_reception_module')
-
   def afterSetUp(self):
     """
       Method called before the launch of the test to initialize some data
@@ -67,7 +61,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     # Set some variables :
     self.initDefaultVariable()
     # the cahs transfer module
-    self.cash_movement_module = self.getCashMovementModule()
+    self.cash_movement_module = self.getCashMovementNewNotEmittedModule()
     self.monetary_reception_module = self.getMonetaryReceptionModule()
     self.createManagerAndLogin()
     self.current_date = DateTime()

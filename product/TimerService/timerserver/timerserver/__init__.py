@@ -7,4 +7,4 @@ class TimerServerFactory(ServerFactory):
 
     def create(self):
         from timerserver.TimerServer import TimerServer
-	return TimerServer(self.module, self.interval)
+        return TimerServer(self.module, self.interval)

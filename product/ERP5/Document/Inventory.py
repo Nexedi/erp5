@@ -195,9 +195,9 @@ class Inventory(Delivery):
       method = getattr(self, list_method)      
       for movement in method():
         if movement.getResourceValue() is not None and \
-            movement.getQuantity() not in (None, ''):
+            movement.getInventoriatedQuantity() not in (None, ''):
 
-          movement_quantity = movement.getQuantity()
+          movement_quantity = movement.getInventoriatedQuantity()
           # construct key to retrieve inventory into dict
           getter_list = [x['getter'] for x in inventory_calculation_dict['first_level']]
           key_list = []

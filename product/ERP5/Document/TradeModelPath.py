@@ -163,48 +163,22 @@ class TradeModelPath(Path):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getArrowCategoryDict')
   def getArrowCategoryDict(self, context=None, **kw): # XXX-JPS do we need it in API ?
+    # This method returns the dict like
+    # {base_category_id:[category value url list], ...}
+    # for all Arrow base categories.
+    # Each category values are self's category values (if exist) or
+    # dynamically computed values (if not exist).
     result = {}
     dynamic_category_list = self._getDynamicCategoryList(context)
     for base_category in self.getSourceArrowBaseCategoryList() +\
             self.getDestinationArrowBaseCategoryList():
-      category_url_list = Path._getAcquiredCategoryMembershipList(
-        self, base_category, **kw)
-      if len(category_url_list) == 0 and context is not None:
+      category_url_list = self._getAcquiredCategoryMembershipList(
+        base_category, **kw)
+      if len(category_url_list) == 0 and len(dynamic_category_list) > 0:
         category_url_list = self._filterCategoryList(dynamic_category_list,
                                                      base_category, **kw)
       if len(category_url_list) > 0:
         result[base_category] = category_url_list
-    return result
-
-  # ICategoryAccessProvider overridden methods
-  def _getCategoryMembershipList(self, category, **kw):
-    """
-      Overridden in order to take into account dynamic arrow categories in case if no static
-      categories are set on Trade Model Path
-    """
-    context = kw.pop('context')
-    result = Path._getCategoryMembershipList(self, category, **kw)
-    if len(result) > 0:
-      return result
-    if context is not None:
-      dynamic_category_list = self._getDynamicCategoryList(context)
-      dynamic_category_list = self._filterCategoryList(dynamic_category_list, category, **kw)
-      result = dynamic_category_list
-    return result
-
-  def _getAcquiredCategoryMembershipList(self, category, **kw):
-    """
-      Overridden in order to take into account dynamic arrow categories in case if no static
-      categories are set on Trade Model Path
-    """
-    context = kw.pop('context', None)
-    result = Path._getAcquiredCategoryMembershipList(self, category, **kw)
-    if len(result) > 0:
-      return result
-    if context is not None:
-      dynamic_category_list = self._getDynamicCategoryList(context)
-      dynamic_category_list = self._filterCategoryList(dynamic_category_list, category, **kw)
-      result = dynamic_category_list
     return result
 
   def _filterCategoryList(self, category_list, category, spec=(),

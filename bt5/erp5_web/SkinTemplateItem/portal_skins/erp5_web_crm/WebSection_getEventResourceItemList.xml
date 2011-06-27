@@ -50,17 +50,39 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""Create a temp event then returns\n
-Event_getResourceItemList to display list of supported Resources of events.\n
+            <value> <string>"""Inspired by Event_getResourceItemList\n
+Use Auditor proxy role to let anonymous users accessing resources.\n
 """\n
-from Products.ERP5Type.Document import newTempEvent\n
-event = newTempEvent(context, \'temp_event\')\n
-return event.Event_getResourceItemList()\n
+\n
+from Products.ERP5Type.Cache import CachingMethod\n
+portal = context.getPortalObject()\n
+\n
+sql_kw = {\'portal_type\': portal.getPortalResourceTypeList(),\n
+          \'use_uid\': portal.portal_categories.getCategoryUid(portal.portal_preferences.getPreferredEventUse(), base_category=\'use\'),\n
+          \'validation_state\': \'validated\',\n
+          \'sort_on\': \'title\'}\n
+\n
+def getResourceItemList():\n
+  return [(\'\', \'\')] + [(result.getTitle(), result.getRelativeUrl()) for result in portal.portal_catalog(**sql_kw)]\n
+\n
+getResourceItemList = CachingMethod(getResourceItemList, \n
+      id=(script.id, context.Localizer.get_selected_language()), \n
+      cache_factory=\'erp5_ui_long\')\n
+\n
+return getResourceItemList()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Auditor</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

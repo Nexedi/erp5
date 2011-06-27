@@ -84,7 +84,7 @@ class AccountingTransactionBalanceConstraint(ConstraintMixin):
           precision = section_currency.getQuantityPrecision()
         if round(total, precision) != 0:
           error_list.append(self._generateError(obj, self._getMessage(
-                'message_transaction_not_balanced_for_source'),
+                'message_transaction_not_balanced_for_destination'),
                 mapping=dict(section_title=section.getTranslatedTitle())))
           break
 

@@ -58,14 +58,14 @@
 #context.log("Delivery_getMovementList", "portal_type = %s" %(portal_type,))\n
 #context.log("Delivery_getMovementList", "len portal_type = %s" % (len(portal_type),))\n
 \n
-if not same_type(portal_type, []):\n
+if same_type(portal_type, ""):\n
   return context.getMovementList(portal_type=portal_type)\n
 if len(portal_type) != 2:\n
   # use catalog\n
   return context.getMovementList(portal_type=portal_type)\n
 \n
 line_list = context.objectValues(portal_type=portal_type[0])\n
-#context.log(\'line_list\', line_list)\n
+\n
 invert = 0\n
 if len(line_list) == 0:\n
   # try with the second portal type\n

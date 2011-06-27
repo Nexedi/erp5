@@ -107,7 +107,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.WebSite_viewWidgetManagementButtonsWidget(default_pad_group=\'default_content_pad\', mode=\'web_section\')</string> </value>
+            <value> <string>python: here.WebSite_viewWidgetManagementButtonsWidget(default_pad_group=\'default_content_pad\',mode=\'web_section\',use_anonymous_knowledge_pad=context.getLayoutProperty(\'layout_force_anonymous_gadget\',False))</string> </value>
         </item>
       </dictionary>
     </pickle>

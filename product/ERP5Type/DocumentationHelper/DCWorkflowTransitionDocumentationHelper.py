@@ -60,7 +60,7 @@ class DCWorkflowTransitionDocumentationHelper(DocumentationHelper):
     if new_state_id:
       uri = '%s/states/%s' % (self.uri.rsplit('/',2)[0], new_state_id)
       return self.getDocumentationHelper('DCWorkflowStateDocumentationHelper', uri)
-	
+
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTriggerType')
   def getTriggerType(self):
