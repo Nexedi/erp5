@@ -799,7 +799,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_list.play(self)
 
   def testMailFromMailMessageEvent(self):
-    """ """
+    """
+      Check that the email is created correctly after create on Credentail
+      Request with user's information
+    """
     sequence = dict(automatic_call=False)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self._createCredentialRequest(first_name="Vifib", 
