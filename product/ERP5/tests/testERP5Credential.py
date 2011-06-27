@@ -792,8 +792,8 @@ class TestERP5Credential(ERP5TypeTestCase):
   def testMailMessagePosted(self):
     """ Test if the Mail Message was posted correctly """
     sequence_list = SequenceList()
-    sequence_string = 'SetCredentialRequestAutomaticApprovalPreferences '\
-                      'SetPreferredCredentialAlarmAutomaticCallAsFalse '\
+    sequence_string = 'SetPreferredCredentialAlarmAutomaticCallAsFalse '\
+                      'SetCredentialRequestAutomaticApprovalPreferences '\
                       'CreateCredentialRequestSample '\
                       'CheckIfMailMessageWasPosted '\
                       'stepUnSetCredentialAutomaticApprovalPreferences'\
