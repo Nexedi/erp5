@@ -528,11 +528,11 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(related_person.getDefaultCredentialQuestionAnswer(),
         'Renault 4L')
 
-  def stepCreateCredentialRecovery(self, sequence=None, sequence_list=None,
+  def stepCreatePerson(self, sequence=None, sequence_list=None,
       **kw):
-    '''
-    Create a simple subscription request
-    '''
+    """
+      Create a simple person
+    """
     portal = self.getPortalObject()
     # create a person with 'secret' as password
     self.login()
@@ -545,9 +545,18 @@ class TestERP5Credential(ERP5TypeTestCase):
     assignment = barney.newContent(portal_type='Assignment',
                       function='member')
     assignment.open()
-    transaction.commit()
-    self.tic()
-    sequence.edit(barney=barney)
+    sequence.edit(person_reference=barney.getReference())
+
+  def stepCreateCredentialRecovery(self, sequence=None, sequence_list=None,
+      **kw):
+    '''
+    Create a simple subscription request
+    '''
+    portal = self.getPortalObject()
+    person_reference = sequence["person_reference"]
+    person = portal.portal_catalog.getResultValue(portal_type="Person",
+        reference=person_reference)
+    sequence.edit(barney=person)
     # check barney can log in the system
     self._assertUserExists('barney', 'secret')
     self.login('barney')
@@ -561,8 +570,24 @@ class TestERP5Credential(ERP5TypeTestCase):
         'Credential Recovery')
 
     # associate it with barney
-    credential_recovery.setDestinationDecisionValue(barney)
+    credential_recovery.setDestinationDecisionValue(person)
     sequence.edit(credential_recovery=credential_recovery)
+
+  def stepRequestCredentialRecoveryWithERP5Site_newCredentialRecovery(self,
+      sequence=None, sequence_list=None, **kw):
+    person_reference = sequence["person_reference"]
+    self.portal.ERP5Site_newCredentialRecovery(reference=person_reference)
+
+  def stepCheckCredentialRecoveryCreation(self, sequence=None, 
+      sequence_list=None, **kw):
+    person_reference = sequence["person_reference"]
+    result_list = self.portal.portal_catalog(
+        portal_type='Credential Recovery', reference=person_reference)
+    self.assertEquals(1, len(result_list))
+    credential_recovery = result_list[0]
+    person = credential_recovery.getDestinationDecisionValue()
+    self.assertEquals("Barney", person.getTitle())
+    self.assertEquals("barney@duff.com", person.getEmailText())
 
   def stepSubmitCredentialRecovery(self, sequence=None, sequence_list=None,
       **kw):
@@ -738,7 +763,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     log in the system with this new password
     '''
     sequence_list = SequenceList()
-    sequence_string = 'CreateCredentialRecovery Tic '\
+    sequence_string = 'CreatePerson Tic '\
+                      'CreateCredentialRecovery Tic '\
                       'SubmitCredentialRecovery Tic '\
                       'AcceptCredentialRecovery Tic '\
                       'CheckEmailIsSent Tic '\
@@ -884,6 +910,18 @@ class TestERP5Credential(ERP5TypeTestCase):
                     assignment_function="agent",
                     assignment_role="client")
     self.stepCheckAssignmentAfterActiveLogin(sequence)
+
+  def testERP5Site_newCredentialRecoveryWithNoSecurityQuestion(self):
+    """
+      Check that password recovery works in case if not security question with
+      answer is defined
+    """
+    sequence_list = SequenceList()
+    sequence_string = "CreatePerson Tic " \
+           "RequestCredentialRecoveryWithERP5Site_newCredentialRecovery Tic " \
+           "CheckCredentialRecoveryCreation"
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
 
   def test_xx_checkCredentialQuestionIsNotCaseSensitive(self):
     '''
