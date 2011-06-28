@@ -11,6 +11,5 @@
  </portal_type>
  <portal_type id="Trade Model Path">
   <item>PaymentCondition</item>
-  <item>SupplyPath</item>
  </portal_type>
 </property_sheet_list>
