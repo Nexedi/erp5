@@ -230,7 +230,6 @@ class TestERP5Credential(ERP5TypeTestCase):
                     preferred_organisation_credential_update_automatic_approval=False,
                     preferred_person_credential_update_automatic_approval=False,
                     preferred_credential_alarm_automatic_call=True)
-
     self._enablePreference()
     transaction.commit()
     self.tic()
@@ -358,30 +357,41 @@ class TestERP5Credential(ERP5TypeTestCase):
     # check annonymous can access subscription form
     self.assertTrue("Desired Login Name" in request.traverse(form_url)())
     # fill in and submit the subscription form
-
+    credential_reference = 'homie'
     result = self.portal.ERP5Site_newCredentialRequest(\
         first_name='Homer',
         last_name='Simpson',
-        reference='homie',
+        reference=credential_reference,
         password='secret',
         default_email_text='homer.simpson@fox.com',
         role_list=['internal'],
         )
-    self.assertTrue('portal_status_message=Credential%20Request%20Created.'\
-        in result)
+    portal_status_message = sequence.get("portal_status_message",
+        "Credential%20Request%20Created.")
+#    if 'portal_status_message=%s' % portal_status_message not in result:
+#      import ipdb;ipdb.set_trace()
+    self.assertTrue('portal_status_message=%s' % portal_status_message in result, result)
 
     credential_request_module = self.portal.getDefaultModule('Credential Request')
     result = credential_request_module.contentValues(\
         portal_type='Credential Request', first_name='Homer',
         last_name='Simpson', reference='homie')
     self.assertEquals(len(result), 1)
-    sequence.edit(subscription_request=result[0])
+    sequence.edit(subscription_request=result[0],
+        person_reference=credential_reference)
 
   def stepAcceptSubscriptionRequest(self, sequence=None, sequence_list=None,
       **kw):
     self.login()
     subscription_request = sequence.get('subscription_request')
     subscription_request.accept()
+    self.logout()
+
+  def stepSubmitSubscriptionRequest(self, sequence=None, sequence_list=None,
+      **kw):
+    self.login()
+    subscription_request = sequence.get('subscription_request')
+    subscription_request.submit()
     self.logout()
 
   def stepCheckAccountIsCreated(self, sequence=None, sequence_list=None, **kw):
@@ -578,6 +588,23 @@ class TestERP5Credential(ERP5TypeTestCase):
     person_reference = sequence["person_reference"]
     self.portal.ERP5Site_newCredentialRecovery(reference=person_reference)
 
+  def stepLoginAsCurrentPersonReference(self, sequence=None,
+      sequence_list=None, **kw):
+     person_reference = sequence["person_reference"]
+     self.login(person_reference)
+
+  def stepCreateCredentialUpdateWithERP5Site_newCredentialUpdate(self,
+      sequence=None, sequence_list=None, **kw):
+    self.portal.ERP5Site_newPersonCredentialUpdate(first_name="tom",
+        default_email_text="tom@host.com")
+
+  def stepSelectCredentialUpdate(self, sequence=None, sequence_list=None,
+      **kw):
+    self.login()
+    credential_update = self.portal.portal_catalog.getResultValue(
+        portal_type="Credential Update")
+    sequence["credential_update"] = credential_update
+
   def stepCheckCredentialRecoveryCreation(self, sequence=None, 
       sequence_list=None, **kw):
     person_reference = sequence["person_reference"]
@@ -588,6 +615,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     person = credential_recovery.getDestinationDecisionValue()
     self.assertEquals("Barney", person.getTitle())
     self.assertEquals("barney@duff.com", person.getEmailText())
+    sequence["credential_recovery"] = credential_recovery
 
   def stepSubmitCredentialRecovery(self, sequence=None, sequence_list=None,
       **kw):
@@ -604,6 +632,10 @@ class TestERP5Credential(ERP5TypeTestCase):
       Check an email containing the password reset link as been sent
     '''
     barney = sequence.get('barney')
+    if not barney:
+      reference = sequence.get('person_reference')
+      barney = self.portal.portal_catalog.getResultValue(portal_type="Person",
+          reference=reference)
 
     # after accept, an email is send containing the reset link
     last_message = self.portal.MailHost._last_message
@@ -660,7 +692,69 @@ class TestERP5Credential(ERP5TypeTestCase):
     # check we can now login with the new password 'new_password'
     self._assertUserExists('barney', 'new_password')
 
-  def test_01_simpleSubsciptionRequest(self):
+  def _createCredentialRequest(self, first_name="Gabriel",
+                               last_name="Monnerat",
+                               reference="gabriel",
+                               password="123",
+                               default_email_text="gabriel@test.com"):
+    self.logout()
+    self.portal.ERP5Site_newCredentialRequest(first_name=first_name,
+        last_name=last_name,
+        reference=reference,
+        password=password,
+        career_subordination_title="",
+        default_email_text=default_email_text,
+        default_telephone_text="223344",
+        default_address_street_address="Test Street",
+        default_address_city="Campos",
+        default_address_zip_code="28024030")
+    self.login("ERP5TypeTestCase")
+    self.stepTic()
+
+  def stepCreateCredentialRequestSample(self, sequence=None,
+      sequence_list=None, **kw):
+    credential_reference = "credential_reference"
+    self._createCredentialRequest(reference=credential_reference)
+    sequence.edit(credential_reference=credential_reference)
+  
+  def stepCheckIfMailMessageWasPosted(self, sequence=None,
+      sequence_list=None, **kw):
+    credential_reference_str = sequence["credential_reference"]
+    portal_catalog = self.portal.portal_catalog
+    credential_reference = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference=credential_reference_str)
+    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
+                                                 follow_up=credential_reference)
+    self.assertEquals(mail_message.getSimulationState(), "started")
+    self.assertTrue( "key=%s" % mail_message.getReference() in mail_message.getTextContent())
+
+  def stepSetPreferredCredentialAlarmAutomaticCallAsFalse(self, sequence):
+    sequence.edit(automatic_call=False)
+
+  def stepSetAssigneeRoleToCurrentPersonInCredentialUpdateModule(self,
+      sequence=None, sequence_list=None, **kw):
+    person_reference = sequence["person_reference"]
+    self.portal.credential_update_module.manage_setLocalRoles(person_reference,
+        ['Assignor',])
+
+  def stepSetAuditorRoleToCurrentPerson(self, sequence=None,
+      sequence_list=None, **kw):
+    person_reference = sequence["person_reference"]
+    self.login()
+    person = self.portal.portal_catalog.getResultValue(portal_type="Person",
+        reference=person_reference)
+    person.manage_setLocalRoles(person_reference, ["Auditor"])
+    self.logout()
+
+  def stepCheckPersonAfterUpdatePerson(self, sequence=None,
+      sequence_list=None, **kw):
+    person = self.portal.portal_catalog.getResultValue(
+      reference=sequence["person_reference"], portal_type="Person")
+    self.assertEquals("tom", person.getFirstName())
+    self.assertEquals("Simpson", person.getLastName())
+    self.assertEquals("tom@host.com", person.getDefaultEmailText())
+
+  def test_01_simpleSubscriptionRequest(self):
     '''
     Check that is possible to subscribe to erp5
     '''
@@ -773,45 +867,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def _createCredentialRequest(self, first_name="Gabriel",
-                               last_name="Monnerat",
-                               reference="gabriel",
-                               password="123",
-                               default_email_text="gabriel@test.com"):
-    self.logout()
-    self.portal.ERP5Site_newCredentialRequest(first_name=first_name,
-        last_name=last_name,
-        reference=reference,
-        password=password,
-        career_subordination_title="",
-        default_email_text=default_email_text,
-        default_telephone_text="223344",
-        default_address_street_address="Test Street",
-        default_address_city="Campos",
-        default_address_zip_code="28024030")
-    self.login("ERP5TypeTestCase")
-    self.stepTic()
-
-  def stepCreateCredentialRequestSample(self, sequence=None,
-      sequence_list=None, **kw):
-    credential_reference = "credential_reference"
-    self._createCredentialRequest(reference=credential_reference)
-    sequence.edit(credential_reference=credential_reference)
-  
-  def stepCheckIfMailMessageWasPosted(self, sequence=None,
-      sequence_list=None, **kw):
-    credential_reference_str = sequence["credential_reference"]
-    portal_catalog = self.portal.portal_catalog
-    credential_reference = portal_catalog.getResultValue(
-        portal_type="Credential Request", reference=credential_reference_str)
-    mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
-                                                 follow_up=credential_reference)
-    self.assertEquals(mail_message.getSimulationState(), "started")
-    self.assertTrue( "key=%s" % mail_message.getReference() in mail_message.getTextContent())
-
-  def stepSetPreferredCredentialAlarmAutomaticCallAsFalse(self, sequence):
-    sequence.edit(automatic_call=False)
-
   def testMailMessagePosted(self):
     """ Test if the Mail Message was posted correctly """
     sequence_list = SequenceList()
@@ -851,11 +906,31 @@ class TestERP5Credential(ERP5TypeTestCase):
       message_text), None)
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
+  def testAssignmentProperties(self):
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
+    self.stepSetCredentialAssignmentPropertyList()
+    self._createCredentialRequest()
+    sequence = dict(reference="gabriel",
+                   assignment_function="member",
+                   assignment_role="internal")
+    self.stepCheckAssignmentAfterActiveLogin(sequence)
+    category_list = ["role/client", "function/agent"]
+    self.stepSetCredentialAssignmentPropertyList(
+        dict(category_list=category_list))
+    self._createCredentialRequest(reference="credential_user")
+    sequence = dict(reference="credential_user",
+                   assignment_function="agent",
+                   assignment_role="client")
+    self.stepCheckAssignmentAfterActiveLogin(sequence)
+
   def testERP5Site_activeLogin(self):
     """ Test if the script WebSection_activeLogin will create one user
     correctly """
     sequence = dict(automatic_call=False)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
+    self.stepSetCredentialAssignmentPropertyList()
+    self.stepTic()
     self._createCredentialRequest()
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(
@@ -893,24 +968,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(credential_request.getFunction(), "member")
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
-  def testBase_getDefaultAssignmentArgumentDict(self):
-    sequence = dict(automatic_call=False)
-    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
-    self.stepSetCredentialAssignmentPropertyList()
-    self._createCredentialRequest()
-    sequence = dict(reference="gabriel",
-                    assignment_function="member",
-                    assignment_role="internal")
-    self.stepCheckAssignmentAfterActiveLogin(sequence)
-    category_list = ["role/client", "function/agent"]
-    self.stepSetCredentialAssignmentPropertyList(
-        dict(category_list=category_list))
-    self._createCredentialRequest(reference="credential_user")
-    sequence = dict(reference="credential_user",
-                    assignment_function="agent",
-                    assignment_role="client")
-    self.stepCheckAssignmentAfterActiveLogin(sequence)
-
   def testERP5Site_newCredentialRecoveryWithNoSecurityQuestion(self):
     """
       Check that password recovery works in case if not security question with
@@ -919,7 +976,31 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_list = SequenceList()
     sequence_string = "CreatePerson Tic " \
            "RequestCredentialRecoveryWithERP5Site_newCredentialRecovery Tic " \
-           "CheckCredentialRecoveryCreation"
+           "CheckCredentialRecoveryCreation " \
+           "AcceptCredentialRecovery Tic "\
+           "CheckEmailIsSent Tic "\
+           "CheckPasswordChange "\
+
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
+  def testERP5Site_newCredentialUpdateWithNoSecurityQuestion(self):
+    """
+      Check that password recovery works in case if not security question with
+      answer is defined
+    """
+    sequence_list = SequenceList()
+    sequence_string = "UnSetCredentialAutomaticApprovalPreferences " \
+           "CreateSimpleSubscriptionRequest Tic " \
+           "AcceptSubscriptionRequest Tic " \
+           "SetAuditorRoleToCurrentPerson " \
+           "SetAssigneeRoleToCurrentPersonInCredentialUpdateModule Tic " \
+           "LoginAsCurrentPersonReference " \
+           "CreateCredentialUpdateWithERP5Site_newCredentialUpdate Tic " \
+           "SelectCredentialUpdate " \
+           "AcceptCredentialUpdate Tic "\
+           "CheckPersonAfterUpdatePerson "\
+
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
