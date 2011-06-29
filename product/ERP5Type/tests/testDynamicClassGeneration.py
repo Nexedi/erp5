@@ -1108,7 +1108,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     # Then close this new connection.
     transaction.abort()
     con.close()
-    # Delete all connections by force
     # This code depends on ZODB implementation.
     for i in db.pool.available[:]:
       if i[1] == con:
