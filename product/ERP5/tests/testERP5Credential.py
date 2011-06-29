@@ -241,7 +241,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.login()
     preference = self._getPreference()
     automatic_call = sequence.get("automatic_call", True)
-    preference.edit(preferred_credential_request_automatic_approval=True,
+    preferencedit(preferred_credential_request_automatic_approval=True,
                     preferred_credential_alarm_automatic_call=automatic_call)
     self._enablePreference()
     self.stepTic()
@@ -781,7 +781,7 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def test_03_simpleCredentialUpdate(self):
     '''
-    check it's possible to update credential informations using credential
+    Check it's possible to update credential informations using credential
     update
     '''
     sequence_list = SequenceList()
@@ -796,10 +796,11 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def test_04_automaticCredentialRequestApproval(self):
     '''
-    if the workflow credential_automatic_accept_interraction_workflow
-    is defined on Credential Request portal_type, the Credential Request object
+    if the property preferred_credential_request_automatic_approval is True on
+    System Preference object. it means that the Credential Request object
     should be accepted automatically and account created without any human
-    intervention
+    intervention.
+    Check that the user is create without human intervention
     '''
     sequence_list = SequenceList()
     sequence_string = 'SetCredentialRequestAutomaticApprovalPreferences '\
@@ -811,10 +812,11 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def test_05_automaticCredentialUpdateApproval(self):
     '''
-    if the workflow credential_automatic_accept_interraction_workflow
-    is defined on Credential Update portal_type, the Credential Update object
-    should be accepted automatically and object modified without any human
-    intervention
+    if the property preferred_credential_request_automatic_approval is True on
+    System Preference object. it means that the Credential Update object
+    should be accepted automatically and account created without any human
+    intervention.
+    Check that the user is create without human intervention
     '''
     sequence_list = SequenceList()
     sequence_string = 'SetPersonCredentialUpdateAutomaticApprovalPreferences '\
@@ -908,7 +910,11 @@ class TestERP5Credential(ERP5TypeTestCase):
       message_text), None)
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
-  def testAssignmentProperties(self):
+  def testAssignmentCreationUsingSystemPreferenceProperty(self):
+    """
+      Check that the category list are used correctly to create a new
+      assignment
+    """
     sequence = dict(automatic_call=False)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self.stepSetCredentialAssignmentPropertyList()
@@ -927,8 +933,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.stepCheckAssignmentAfterActiveLogin(sequence)
 
   def testERP5Site_activeLogin(self):
-    """ Test if the script WebSection_activeLogin will create one user
-    correctly """
+    """
+      Test if the script WebSection_activeLogin will create one user
+    correctly
+    """
     sequence = dict(automatic_call=False)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self.stepSetCredentialAssignmentPropertyList()
@@ -954,8 +962,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
   def testERP5Site_newCredentialRequest(self):
-    """ Test if the script ERP5Site_newCredentialRequest will create one
-    Credential Request correctly """
+    """
+      Check that the script ERP5Site_newCredentialRequest will create one
+      Credential Request correctly
+    """
     sequence = dict(automatic_call=False)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self.stepSetCredentialAssignmentPropertyList()
@@ -972,8 +982,8 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def testERP5Site_newCredentialRecoveryWithNoSecurityQuestion(self):
     """
-      Check that password recovery works in case if not security question with
-      answer is defined
+      Check that password recovery works when security question and answer are
+      None
     """
     sequence_list = SequenceList()
     sequence_string = "CreatePerson Tic " \
@@ -988,8 +998,9 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def testERP5Site_newCredentialUpdateWithNoSecurityQuestion(self):
     """
-      Check that password recovery works in case if not security question with
-      answer is defined
+      Check that the script ERP5Site_newCredentialUpdate creates correctly one
+      Credential Update object is create correctly and the user is updated with
+      new properties
     """
     sequence_list = SequenceList()
     sequence_string = "UnSetCredentialAutomaticApprovalPreferences " \
