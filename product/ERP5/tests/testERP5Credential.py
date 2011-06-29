@@ -25,6 +25,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 #
 ##############################################################################
+
 import unittest
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -45,6 +46,7 @@ if use_verbose_security:
               ownerous=True,
               authenticated=True,
               verbose=True)
+
 
 class TestERP5Credential(ERP5TypeTestCase):
 
@@ -92,7 +94,7 @@ class TestERP5Credential(ERP5TypeTestCase):
   def createCategories(self):
     """Create the categories for our test. """
     # create categories
-    for cat_string in self.getNeededCategoryList() :
+    for cat_string in self.getNeededCategoryList():
       base_cat = cat_string.split("/")[0]
       # if base_cat not exist, create it
       if getattr(self.getPortal().portal_categories, base_cat, None) == None:
@@ -100,8 +102,8 @@ class TestERP5Credential(ERP5TypeTestCase):
                                           portal_type='Base Category',
                                           id=base_cat)
       base_cat_value = self.getPortal().portal_categories[base_cat]
-      for cat in cat_string.split("/")[1:] :
-        if not cat in base_cat_value.objectIds() :
+      for cat in cat_string.split("/")[1:]:
+        if not cat in base_cat_value.objectIds():
           base_cat_value = base_cat_value.newContent(
                     portal_type='Category',
                     id=cat,
@@ -109,7 +111,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         else:
           base_cat_value = base_cat_value[cat]
     # check categories have been created
-    for cat_string in self.getNeededCategoryList() :
+    for cat_string in self.getNeededCategoryList():
       self.assertNotEquals(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
@@ -255,8 +257,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.stepTic()
     self.logout()
 
-  def stepSetOrganisationCredentialUpdateAutomaticApprovalPreferences(self, sequence=None,
-      sequence_list=None, **kw):
+  def stepSetOrganisationCredentialUpdateAutomaticApprovalPreferences(self,
+      sequence=None, sequence_list=None, **kw):
     self.login()
     preference = self._getPreference()
     preference.edit(preferred_organisation_credential_update_automatic_approval=True)
@@ -290,8 +292,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     reference = sequence["reference"]
     assignment_function = sequence["assignment_function"]
     assignment_role = sequence["assignment_role"]
-    credential_request = portal_catalog.getResultValue(portal_type="Credential Request",
-                                                       reference=reference)
+    credential_request = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference=reference)
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
                                                  follow_up=credential_request)
     self.stepTic()
@@ -320,9 +322,9 @@ class TestERP5Credential(ERP5TypeTestCase):
     uf = self.getUserFolder()
     self.assertNotEquals(uf.getUserById(login, None), None)
     for plugin_name, plugin in uf._getOb('plugins').listPlugins(
-                                IAuthenticationPlugin ):
+                                IAuthenticationPlugin):
       if plugin.authenticateCredentials(
-                  {'login':login, 'password':password}) is not None:
+                  {'login': login, 'password': password}) is not None:
         break
     else:
       self.fail("No plugin could authenticate '%s' with password '%s'" %
@@ -336,9 +338,9 @@ class TestERP5Credential(ERP5TypeTestCase):
                                                         IAuthenticationPlugin
     uf = self.getUserFolder()
     for plugin_name, plugin in uf._getOb('plugins').listPlugins(
-                              IAuthenticationPlugin ):
+                              IAuthenticationPlugin):
       if plugin.authenticateCredentials(
-                {'login':login, 'password':password}) is not None:
+                {'login': login, 'password': password}) is not None:
         self.fail(
            "Plugin %s should not have authenticated '%s' with password '%s'" %
            (plugin_name, login, password))
@@ -716,7 +718,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     credential_reference = "credential_reference"
     self._createCredentialRequest(reference=credential_reference)
     sequence.edit(credential_reference=credential_reference)
-  
+
   def stepCheckIfMailMessageWasPosted(self, sequence=None,
       sequence_list=None, **kw):
     credential_reference_str = sequence["credential_reference"]
@@ -726,7 +728,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
                                                  follow_up=credential_reference)
     self.assertEquals(mail_message.getSimulationState(), "started")
-    self.assertTrue( "key=%s" % mail_message.getReference() in mail_message.getTextContent())
+    self.assertTrue("key=%s" % mail_message.getReference() in mail_message.getTextContent())
 
   def stepSetPreferredCredentialAlarmAutomaticCallAsFalse(self, sequence):
     sequence.edit(automatic_call=False)
@@ -1009,6 +1011,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     check that if the user enter an answer with a diffent case, this will still
     enought to reset his passord
     '''
+
 
 def test_suite():
   suite = unittest.TestSuite()
