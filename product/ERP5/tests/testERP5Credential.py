@@ -1011,6 +1011,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     check that if the user enter an answer with a diffent case, this will still
     enought to reset his passord
     '''
+    raise NotImplementedError
 
 
 def test_suite():
