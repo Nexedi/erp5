@@ -1006,7 +1006,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_xx_checkCredentialQuestionIsNotCaseSensitive(self):
+  def test_checkCredentialQuestionIsNotCaseSensitive(self):
     '''
     check that if the user enter an answer with a diffent case, this will still
     enought to reset his passord
