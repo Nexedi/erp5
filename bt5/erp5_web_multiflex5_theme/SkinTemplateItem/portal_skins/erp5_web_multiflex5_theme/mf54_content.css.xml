@@ -729,8 +729,38 @@ div#main_content table.listbox tfoot .pageNavigation button:hover {\n
   background: #eee;\n
 }\n
 \n
-</tal:block>\n
-
+/* DMS PDF navigation \n
+  XXX: probably part of erp5_dms.bt5 */\n
+div.pdf-preview-navigation img{\n
+  width: 22px;\n
+  height: 22px;\n
+  margin-right: 1px;\n
+  background-repeat: no-repeat;\n
+  vertical-align: middle;\n
+}\n
+\n
+div.pdf-preview-navigation img.shaded{\n
+  opacity: 0.2;\n
+}\n
+\n
+div.pdf-preview-navigation img.first{\n
+  background-image:url("images/2leftarrowb.png");\n
+}\n
+\n
+div.pdf-preview-navigation img.previous{\n
+  background-image:url("images/1leftarrowb.png");\n
+}\n
+\n
+div.pdf-preview-navigation img.next{\n
+  background-image:url("images/1rightarrowb.png");\n
+}\n
+\n
+div.pdf-preview-navigation img.last{\n
+  background-image:url("images/2rightarrowb.png");\n
+}\n
+\n
+\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
