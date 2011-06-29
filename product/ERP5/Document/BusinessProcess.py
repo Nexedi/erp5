@@ -792,7 +792,7 @@ class BusinessProcess(Path, XMLObject):
         # It only makes sense to search for start and stop dates for
         # applied rules which are not root applied rules.
         # Date calculation by Business Process can be also disabled by
-        # leaving 'trade_phase' unset (XXX: a separate boolean property,
+        # leaving 'trade_date' unset (XXX: a separate boolean property,
         # on the TMP or the rule, may be better).
         if trade_model_path.getTradeDate():
           property_dict['start_date'], property_dict['stop_date'] = \
