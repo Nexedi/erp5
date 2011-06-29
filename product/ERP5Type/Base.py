@@ -2560,8 +2560,10 @@ class Base( CopyContainer,
   security.declarePublic('asContext')
   def asContext(self, context=None, REQUEST=None, **kw):
     """
-    Allows to have a kind of temp copy of an object edited with kw
-    parameters. This is somewhat equivalent to use tempObject.
+    The purpose of asContext is to allow users overloading easily the properties and categories of 
+    an existing persistent object. (Use the same data and create a different portal type instance)
+
+    Pay attention, to use asContext to create a temp object is wrong usage.
 
     ex : joe_person = person_module.bob_person.asContext(first_name='Joe')
     """
@@ -2578,13 +2580,8 @@ class Base( CopyContainer,
               temp_object=True,
               is_indexable=False)
 
-      # Attention! Here all contents of self.__dict__ are
-      # passed to context. This means that if self contains
-      # persistent object, it may be modified through the context.
-      # And if context is cached on memory, ConnectionStateError
-      # may occur. Thus this is very dangerous code.
-      # If asContext is expected to return a copied temporary object,
-      # copy.deepcopy must be used here.
+      # Pass all internal data to new instance. Do not copy, but 
+      # pass the same data. This is on purpose.
       context.__dict__.update(self.__dict__)
 
       # Copy REQUEST properties to self
