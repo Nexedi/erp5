@@ -2578,7 +2578,15 @@ class Base( CopyContainer,
               temp_object=True,
               is_indexable=False)
 
+      # Attention! Here all contents of self.__dict__ are
+      # passed to context. This means that if self contains
+      # persistent object, it may be modified through the context.
+      # And if context is cached on memory, ConnectionStateError
+      # may occur. Thus this is very dangerous code.
+      # If asContext is expected to return a copied temporary object,
+      # copy.deepcopy must be used here.
       context.__dict__.update(self.__dict__)
+
       # Copy REQUEST properties to self
       if REQUEST is not None:
         # Avoid copying a SESSION object, because it is newly created
