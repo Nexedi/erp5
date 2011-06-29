@@ -2540,13 +2540,20 @@ class Base( CopyContainer,
     """
     Returns a list of constraints filtered by filt argument.
     """
-    # currently only 'id' is supported.
+    # currently only 'id' and 'reference' are supported.
     constraints = self.constraints
     if filt is not None:
-      id_list = filt.get('id', None)
-      if not isinstance(id_list, (list, tuple)):
-        id_list = [id_list]
-      constraints = filter(lambda x:x.id in id_list, constraints)
+      if 'id' in filt:
+        id_list = filt.get('id', None)
+        if not isinstance(id_list, (list, tuple)):
+          id_list = [id_list]
+        constraints = filter(lambda x:x.id in id_list, constraints)
+      # New ZODB based constraint uses reference for identity
+      if 'reference' in filt:
+        reference_list = filt.get('reference', None)
+        if not isinstance(reference_list, (list, tuple)):
+          reference_list = [reference_list]
+        constraints = filter(lambda x:x.getProperty('reference') in reference_list, constraints)
     return constraints
 
   # Context related methods
