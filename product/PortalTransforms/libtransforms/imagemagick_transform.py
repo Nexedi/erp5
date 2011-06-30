@@ -18,9 +18,9 @@ class ImageMagickTransforms:
         newwidth = kwargs.get('width','')
         newheight = kwargs.get('height','')
         if newwidth and newheight:
-            parameter_list.extend('-resize', '%sx%s!' % (newwidth, newheight))
+            parameter_list.extend(['-resize', '%sx%s!' % (newwidth, newheight)])
         elif newwidth or newheight:
-            parameter_list.extend('-resize', '%sx%s' % (newwidth, newheight))
+            parameter_list.extend(['-resize', '%sx%s' % (newwidth, newheight)])
         parameter_list.append('-')
         parameter_list.append('%s:-' % self.format)
         process = subprocess.Popen(parameter_list,
