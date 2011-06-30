@@ -165,7 +165,7 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
           # do not reload ERP5TypeTestCase because we patch it
           testModule = reload(testModule)
         testCaseClass = getattr(testModule, testCaseClass.__name__)
-        return ERP5TypeTestReLoader.loadTestsFromTestCase(self, testCaseClass)
+        return ERP5TypeTestLoader.loadTestsFromTestCase(self, testCaseClass)
 
 def runLiveTest(test_list, verbosity=1, stream=None, **kw):
   from Products.ERP5Type.tests.runUnitTest import DebugTestResult
