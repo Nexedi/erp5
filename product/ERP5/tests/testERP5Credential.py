@@ -1017,6 +1017,28 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_no_reset_assignment_ERP5Site_newCredentialUpdate(self):
+    """Checks that assignments are left intact after credential update"""
+    reference = self.id()
+    person = self.portal.person_module.newContent(portal_type='Person',
+      reference=reference,
+      password='secret',
+      role='internal')
+    assignment = person.newContent(portal_type='Assignment', function='manager')
+    assignment.open()
+    transaction.commit()
+    credential_update = self.portal.credential_update_module.newContent(
+        portal_type='Credential Update',
+        first_name='Some Name',
+        destination_decision_value=person
+      )
+    credential_update.submit()
+    credential_update.accept()
+    self.tic()
+
+    self.assertEqual('Some Name', person.getFirstName())
+    self.assertEqual('manager', assignment.getFunction())
+
   def test_checkCredentialQuestionIsNotCaseSensitive(self):
     '''
     check that if the user enter an answer with a diffent case, this will still
