@@ -192,6 +192,10 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
     self.template = template
     self.filename = filename
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'SearchableText')
+  def SearchableText(self):
+    return ' '.join((self.id, self.title, self.form_name, self.template, self.filename))
+
   security.declareProtected('View', 'index_html')
   def index_html(self, REQUEST, RESPONSE=None, template_relative_url=None,
                  format=None, batch_mode=False):
