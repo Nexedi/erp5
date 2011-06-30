@@ -22,6 +22,9 @@ class ImageMagickTransforms:
             parameter_list.extend(['-resize', '%sx%s!' % (newwidth, newheight)])
         elif newwidth or newheight:
             parameter_list.extend(['-resize', '%sx%s' % (newwidth, newheight)])
+        depth = kwargs.get('depth','')
+        if depth:
+            parameter_list.extend(['-depth', '%s' % depth, '-type', 'Palette'])
         parameter_list.append('%s:-' % self.format)
         process = subprocess.Popen(parameter_list,
                                    stdin=subprocess.PIPE,
