@@ -241,7 +241,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.login()
     preference = self._getPreference()
     automatic_call = sequence.get("automatic_call", True)
-    preferencedit(preferred_credential_request_automatic_approval=True,
+    preference.edit(preferred_credential_request_automatic_approval=True,
                     preferred_credential_alarm_automatic_call=automatic_call)
     self._enablePreference()
     self.stepTic()
