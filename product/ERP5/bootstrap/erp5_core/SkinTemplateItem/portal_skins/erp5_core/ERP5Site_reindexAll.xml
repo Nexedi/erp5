@@ -185,7 +185,8 @@ tool_list = [portal.portal_templates, portal.portal_trash,\n
              portal.portal_deliveries, portal.portal_orders,\n
              portal.portal_caches, portal.portal_types,\n
              portal.portal_property_sheets,\n
-             portal.portal_ids, portal.portal_memcached]\n
+             portal.portal_ids, portal.portal_memcached,\n
+             portal.portal_solvers]\n
 possible_tool_list = [\'portal_gadgets\', \'portal_contribution_registry\',\n
                       \'portal_roundings\', \'portal_contributions\']\n
 for tool_id in possible_tool_list:\n
