@@ -1,3 +1,6 @@
+2011-07-01 yusei
+* Set proper title to interaction workflow.
+
 2011-04-04 Kazuhiko
 * configure searchable text property ids and method ids for Address, Chat Address, Email, Fax, Link and Telephone.
 
