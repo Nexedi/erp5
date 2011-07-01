@@ -31,10 +31,11 @@
 from benchmark import CSVBenchmarkResult
 
 class CSVScalabilityBenchmarkResult(CSVBenchmarkResult):
-  def flush(self):
-    super(CSVScalabilityBenchmarkResult, self).flush()
+  def flush(self, partial=True):
+    super(CSVScalabilityBenchmarkResult, self).flush(partial)
     self._argument_namespace.notify_method(self._result_filename,
-                                           self._result_file.tell())
+                                           self._result_file.tell(),
+                                           partial=partial)
 
 from erp5.utils.benchmark.performance_tester import PerformanceTester
 

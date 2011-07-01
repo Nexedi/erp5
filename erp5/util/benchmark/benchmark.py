@@ -245,12 +245,12 @@ class BenchmarkResult(object):
     self._suite_idx += 1
 
   @abc.abstractmethod
-  def flush(self):
+  def flush(self, partial=True):
     self._all_result_list = []
 
   @abc.abstractmethod
   def __exit__(self, exc_type, exc_value, traceback):
-    self.flush()
+    self.flush(partial=False)
     return True
 
 class CSVBenchmarkResult(BenchmarkResult):
@@ -288,7 +288,7 @@ class CSVBenchmarkResult(BenchmarkResult):
 
     return self
 
-  def flush(self):
+  def flush(self, partial=True):
     if self._result_file.tell() == 0:
       self._csv_writer.writerow(self.label_list)
 
@@ -296,7 +296,7 @@ class CSVBenchmarkResult(BenchmarkResult):
     self._result_file.flush()
     os.fsync(self._result_file.fileno())
 
-    super(CSVBenchmarkResult, self).flush()
+    super(CSVBenchmarkResult, self).flush(partial)
 
   def __exit__(self, exc_type, exc_value, traceback):
     super(CSVBenchmarkResult, self).__exit__(exc_type, exc_value, traceback)
@@ -329,7 +329,7 @@ class ERP5BenchmarkResult(BenchmarkResult):
     self._log_buffer_list.append(self.log_file.getvalue())
     self.log_file.seek(0)
 
-  def flush(self):
+  def flush(self, partial=True):
     benchmark_result = xmlrpclib.ServerProxy(
       self._argument_namespace.erp5_publish_url,
       verbose=True,
