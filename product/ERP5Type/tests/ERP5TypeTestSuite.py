@@ -272,8 +272,8 @@ class ProjectTestSuite(ERP5TypeTestSuite):
     for bt_dir in self._searchDirectory('bt5', path_list):
       for bt_id in self._bt_list:
         extend(_glob(pjoin(bt_dir, bt_id, bt_test_file_glob)))
-    return [path.splitext(path.basename(name))[0]
-      for name in test_file_list]
+    return list(frozenset((path.splitext(path.basename(name))[0]
+      for name in test_file_list)))
 
 class SavedProjectTestSuite(ERP5TypeTestSuite):
   """
