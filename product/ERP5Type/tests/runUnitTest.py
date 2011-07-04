@@ -62,6 +62,11 @@ Options:
                              ZSQL Connection string for
                              cmf_activity_sql_connection (if unset, defaults to
                              erp5_sql_connection_string)
+  --extra_sql_connection_string_list=STRING
+                             Used when 2 or more ZSQL connection strings are
+                             needed. By defaut, it will take the last four
+                             connection string already existing and created in 
+                             runTestSuite
   --email_from_address=STRING
                              Initialise the email_from_address property of the
                              portal, by default, CMFActivity failures are sent
@@ -615,6 +620,7 @@ def main(argument_list=None):
         "bt5_path=",
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
+        "extra_sql_connection_string_list=",
         "conversion_server_port=", 
         "conversion_server_hostname=",
         "volatile_memcached_server_port=", 
@@ -684,6 +690,8 @@ def main(argument_list=None):
       os.environ["erp5_sql_connection_string"] = arg
     elif opt == "--cmf_activity_sql_connection_string":
       os.environ["cmf_activity_sql_connection_string"] = arg
+    elif opt == "--extra_sql_connection_string_list":
+      os.environ["extra_sql_connection_string_list"] = arg
     elif opt == "--email_from_address":
       os.environ["email_from_address"] = arg
     elif opt == "--enable_full_indexing":

@@ -208,7 +208,8 @@ class ERP5TypeTestSuite(TestSuite):
       runUnitTest = os.environ.get('RUN_UNIT_TEST',
                                    'runUnitTest')
       args = tuple(shlex.split(runUnitTest)) \
-           + ('--verbose', '--erp5_sql_connection_string=' + mysql_db_list[0]) \
+           + ('--verbose', '--erp5_sql_connection_string=' + mysql_db_list[0],
+               '--extra_sql_connection_string_list='+mysql_db_list[-4:]) \
            + args
       status_dict = self.spawn(*args, **kw)
     except SubprocessError, e:
