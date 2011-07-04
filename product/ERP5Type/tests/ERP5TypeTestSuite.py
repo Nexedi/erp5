@@ -247,14 +247,14 @@ class ProjectTestSuite(ERP5TypeTestSuite):
   _bt_list = ()
   _search_path_list = None
 
-  def _searchDirectory(path, path_list):
+  def _searchDirectory(self, path, path_list):
     """
     Returns a iterator over directories matching <path> inside directories
     given in <path list>.
     """
-    path = os.path
-    pjoin = path.join
-    isdir = path.isdir
+    _path = os.path
+    pjoin = _path.join
+    isdir = _path.isdir
     return (y for y in (pjoin(x, path) for x in path_list) if isdir(y))
 
   def getTestList(self):
