@@ -65,8 +65,7 @@ Options:
   --extra_sql_connection_string_list=STRING
                              Used when 2 or more ZSQL connection strings are
                              needed. By defaut, it will take the last four
-                             connection string already existing and created in 
-                             runTestSuite
+                             connection string already existing and created in runTestSuite
   --email_from_address=STRING
                              Initialise the email_from_address property of the
                              portal, by default, CMFActivity failures are sent
