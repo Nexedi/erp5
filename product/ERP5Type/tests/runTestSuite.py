@@ -1,7 +1,8 @@
 #!/usr/bin/python2.6
 import argparse, pprint, socket, sys, time, xmlrpclib
 from DummyTaskDistributionTool import DummyTaskDistributionTool
-from ERP5TypeTestSuite import ERP5TypeTestSuite
+from ERP5TypeTestSuite import ERP5TypeTestSuite, SavedProjectTestSuite, \
+  ProjectTestSuite
 
 def makeSuite(node_quantity=None, test_suite=None, revision=None,
               db_list=None):
