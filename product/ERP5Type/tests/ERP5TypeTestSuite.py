@@ -289,10 +289,10 @@ class SavedTestSuite(ERP5TypeTestSuite):
     # Use same portal id for all tests run by current instance
     # but keep it (per-run) random.
     self._portal_id = 'portal_%i' % (random.randint(0, sys.maxint), )
-    super(SavedProjectTestSuite, self).__init__(*args, **kw)
+    super(SavedTestSuite, self).__init__(*args, **kw)
 
   def __runUnitTest(self, *args, **kw):
-    return super(SavedProjectTestSuite, self).runUnitTest(
+    return super(SavedTestSuite, self).runUnitTest(
       '--portal_id=' + self._portal_id,
       *args, **kw)
 
@@ -302,7 +302,7 @@ class SavedTestSuite(ERP5TypeTestSuite):
       *args, **kw)
 
   def setup(self):
-    super(SavedProjectTestSuite, self).setup()
+    super(SavedTestSuite, self).setup()
     self.__runUnitTest('--save', self._saved_test_id)
 
 class SubprocessError(EnvironmentError):
