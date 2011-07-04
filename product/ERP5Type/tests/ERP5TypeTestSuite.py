@@ -275,7 +275,7 @@ class ProjectTestSuite(ERP5TypeTestSuite):
     return list(frozenset((path.splitext(path.basename(name))[0]
       for name in test_file_list)))
 
-class SavedProjectTestSuite(ERP5TypeTestSuite):
+class SavedTestSuite(ERP5TypeTestSuite):
   """
   Helper code to use --save/--load to reduce execution time.
 
