@@ -314,5 +314,6 @@ class SubprocessError(EnvironmentError):
     return 'Error %i' % self.status_code
 
 sys.modules['test_suite'] = module = imp.new_module('test_suite')
-for var in SubprocessError, TestSuite, ERP5TypeTestSuite:
+for var in SubprocessError, TestSuite, ERP5TypeTestSuite, ProjectTestSuite, \
+    SavedTestSuite:
   setattr(module, var.__name__, var)
