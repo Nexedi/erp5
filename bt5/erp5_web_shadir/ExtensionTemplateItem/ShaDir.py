@@ -77,22 +77,13 @@ def WebSection_setObject(self, id, ob, **kw):
     Make any change related to the file uploaded.
   """
   portal = self.getPortalObject()
-
   data = self.REQUEST.get('BODY')
   schema = self.WebSite_getJSONSchema()
   structure = json.loads(data)
   validictory.validate(structure, schema)
 
-  property_dict = structure[0]
-  file_name = property_dict.get('file', None)
-  ob.setFilename(file_name)
-
-  expiration_date = property_dict.get('expiration_date', None)
-  if expiration_date is not None:
-    ob.setExpirationDate(expiration_date)
-
-  ob.publishAlive()
-  ob.setContentType('application/json')
+  file_name = structure[0].get('file', None)
+  expiration_date = structure[0].get('expiration_date', None)
 
   data_set = portal.portal_catalog.getResultValue(portal_type='Data Set',
                                                   reference=id)
@@ -100,9 +91,13 @@ def WebSection_setObject(self, id, ob, **kw):
     data_set = portal.data_set_module.newContent(portal_type='Data Set',
                                                  reference=id)
     data_set.publish()
-  ob.setFollowUp(data_set.getRelativeUrl())
+
 
   reference = hashlib.sha512(data).hexdigest()
+  ob.setFilename(file_name)
+  ob.setFollowUp(data_set.getRelativeUrl())
+  ob.setContentType('application/json')
   ob.setReference(reference)
-
+  if expiration_date is not None:
+    ob.setExpirationDate(expiration_date)
   return ob
