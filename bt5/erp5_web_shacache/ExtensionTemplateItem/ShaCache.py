@@ -65,7 +65,6 @@ def WebSection_setObject(self, id, ob, **kw):
   """
     Add any change of the file uploaded.
   """
-
   sha512sum = hashlib.sha512()
   self.REQUEST._file.seek(0)
   while True:
@@ -93,26 +92,9 @@ def WebSection_putFactory(self, name, typ, body):
        The key is the file name.
   """
   portal = self.getPortalObject()
-  group = ('networkcache',)
-  new_id = str(portal.portal_ids.generateNewId(id_group=group))
-  registry = portal.portal_contribution_registry
-  portal_type = registry.findPortalTypeName(filename=name,
-                                            content_type=typ)
-  if portal_type is None:
-    return None
-
-  # The code bellow is inspired from ERP5Type.Core.Folder.newContent
-  pt = self._getTypesTool()
-  myType = pt.getTypeInfo(self)
-  if myType is not None and not myType.allowType( portal_type ) and \
-     'portal_contributions' not in self.getPhysicalPath():
-    raise ValueError('Disallowed subobject type: %s' % portal_type)
-  container = portal.getDefaultModule(portal_type)
-  pt.constructContent(type_name=portal_type,
-                      container=container,
-                      id=new_id)
-
-  document = container._getOb(new_id)
+  document = portal.portal_contributions.newContent(data=body,
+                                                    filename=name,
+                                                    discover_metadata=False)
 
   # We can only change the state of the object after all the activities and
   # interaction workflow, to avoid any security problem.
