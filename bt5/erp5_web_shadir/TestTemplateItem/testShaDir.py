@@ -28,6 +28,7 @@
 ##############################################################################
 
 
+import httplib
 import json
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -60,11 +61,13 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       data_file.seek(0)
 
       self.portal.changeSkin('SHADIR')
-      self.shadir.REQUEST.set('method', 'POST')
-      self.shadir.REQUEST.set('Content-Type', 'application/json')
-      self.shadir.REQUEST._file = data_file
-      self.shadir.WebSection_getDocumentValue(key)
+      path = self.shadir.getPath()
+      response = self.publish('%s/%s' % (path, key),
+                        request_method='PUT',
+                        stdin=data_file,
+                        basic='ERP5TypeTestCase:')
       self.stepTic()
+      self.assertEqual(response.getStatus(), httplib.CREATED)
     finally:
       data_file.close()
 
@@ -88,6 +91,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
                    'document_module',):
       folder = self.portal[module]
       folder.manage_delObjects(list(folder.objectIds()))
+    self.portal.portal_caches.clearAllCache()
     transaction.commit()
     self.tic()
 
@@ -108,8 +112,10 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEquals(self.sha512sum, document.getReference())
     self.assertEquals(self.data, document.getData())
     self.assertEquals(data_set, document.getFollowUpValue())
-    self.assertEquals(self.expiration_date, document.getExpirationDate())
+    self.assertEquals(str(self.expiration_date),
+                                    str(document.getExpirationDate()))
     self.assertEquals('application/json', document.getContentType())
+    self.assertEquals('Published', document.getValidationStateTitle())
 
   def test_get_information(self):
     """
@@ -132,8 +138,11 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     """
     self.assertEquals(0, len(self.portal.data_set_module))
     self.assertEquals(0, len(self.portal.document_module))
+
+    self.postInformation()
     for x in xrange(10):
       self.postInformation()
+
 
     self.assertEquals(1, len(self.portal.data_set_module))
     data_set = self.portal.data_set_module.contentValues()[0]
