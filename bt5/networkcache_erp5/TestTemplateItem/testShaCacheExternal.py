@@ -96,7 +96,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeLiveTestCase
     self.assertNotEquals(None, document)
     self.assertEquals(self.data, document.getData())
     self.assertEquals('File', document.getPortalType())
-    self.assertEquals('Published Alive', document.getValidationStateTitle())
+    self.assertEquals('Published', document.getValidationStateTitle())
     self.assertEquals(self.expected_content_type, document.getContentType())
 
   def test_external_get(self, annonymous=False):

@@ -106,7 +106,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeLiveTestCase):
                                str(document.getExpirationDate()))
     self.assertEquals(data_set, document.getFollowUpValue())
     self.assertEquals('File', document.getPortalType())
-    self.assertEquals('Published Alive', document.getValidationStateTitle())
+    self.assertEquals('Published', document.getValidationStateTitle())
 
   def test_external_get(self, annonymous=False):
     """
