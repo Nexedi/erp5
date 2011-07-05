@@ -83,6 +83,13 @@ class Persistent(object):
     self._db.truncate()
 
 class TestSuite(object):
+  """
+  Subclasses may redefine the following properties:
+  mysql_db_count (integer, >=1)
+    Maximum number of SQL databases connection strings needed by any tests ran
+    in this suite. Tests will get mysql_db_count - 1 connection strings in
+    extra_sql_connection_string_list environment variable.
+  """
 
   mysql_db_count = 1
   allow_restart = False
@@ -208,8 +215,7 @@ class ERP5TypeTestSuite(TestSuite):
       runUnitTest = os.environ.get('RUN_UNIT_TEST',
                                    'runUnitTest')
       args = tuple(shlex.split(runUnitTest)) \
-           + ('--verbose', '--erp5_sql_connection_string=' + mysql_db_list[0],
-               '--extra_sql_connection_string_list='+mysql_db_list[-4:]) \
+           + ('--verbose', '--erp5_sql_connection_string=' + mysql_db_list[0]) \
            + args
       status_dict = self.spawn(*args, **kw)
     except SubprocessError, e:
