@@ -29,6 +29,7 @@
 
 
 import transaction
+import httplib
 from StringIO import StringIO
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from ShaCacheMixin import ShaCacheMixin
@@ -55,7 +56,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-  def postFile(self, key=None):
+  def putFile(self, key=None):
     """
       Post the file
     """
@@ -68,11 +69,13 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
       data_file.seek(0)
 
       self.portal.changeSkin('SHACACHE')
-      self.shacache.REQUEST.set('method', 'POST')
-      self.shacache.REQUEST.set('Content-Type', 'application/json')
-      self.shacache.REQUEST._file = data_file
-      self.shacache.WebSection_getDocumentValue(key)
+      path = self.shacache.getPath()
+      response = self.publish('%s/%s' % (path, key),
+                        request_method='PUT',
+                        stdin=data_file,
+                        basic='ERP5TypeTestCase:')
       self.stepTic()
+      self.assertEqual(response.getStatus(), httplib.CREATED)
     finally:
       data_file.close()
 
@@ -88,11 +91,11 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.shacache.REQUEST.set('method', 'GET')
     return self.shacache.WebSection_getDocumentValue(key)
 
-  def test_post_file(self):
+  def test_put_file(self):
     """
-      Check if the posted file has all the properties defined.
+      Check if the PUT method is creating an object.
     """
-    self.postFile()
+    self.putFile()
     self.assertEquals(1, len(self.portal.document_module))
 
     document = self.portal.document_module.contentValues()[0]
@@ -100,12 +103,13 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.assertEquals(self.key, document.getReference())
     self.assertEquals(self.data, document.getData())
     self.assertEquals('application/octet-stream', document.getContentType())
+    self.assertEquals('Published', document.getValidationStateTitle())
 
   def test_get_file(self):
     """
       Check if the file returned is the correct.
     """
-    self.test_post_file()
+    self.test_put_file()
     self.assertEquals(1, len(self.portal.document_module))
 
     document = self.getFile()
