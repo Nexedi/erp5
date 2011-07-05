@@ -35,11 +35,6 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
   """
     API SHACACHE
 
-     - POST /<key>
-        + parameters required:
-          * data:  it is the file content
-       The key is the file name.
-
      - GET /<key>
        The key is the sha512sum.
 
@@ -70,9 +65,6 @@ def WebSection_setObject(self, id, ob, **kw):
   """
     Add any change of the file uploaded.
   """
-  ob.publishAlive()
-  ob.setContentType('application/octet-stream')
-  ob.setFilename(id)
 
   sha512sum = hashlib.sha512()
   self.REQUEST._file.seek(0)
@@ -86,12 +78,19 @@ def WebSection_setObject(self, id, ob, **kw):
   if reference != id:
     raise ValueError('The content does not match with sha512sum provided.')
 
+  # Set object properties
+  ob.setContentType('application/octet-stream')
+  ob.setFilename(id)
   ob.setReference(reference)
   return ob
 
 def WebSection_putFactory(self, name, typ, body):
   """
-    XXX
+   API SHACACHE
+     - PUT /<key>
+        + parameters required:
+          * data:  it is the file content
+       The key is the file name.
   """
   portal = self.getPortalObject()
   group = ('networkcache',)
@@ -114,4 +113,12 @@ def WebSection_putFactory(self, name, typ, body):
                       id=new_id)
 
   document = container._getOb(new_id)
+
+  # We can only change the state of the object after all the activities and
+  # interaction workflow, to avoid any security problem.
+  document.activate(after_path_and_method_id=(document.getPath(), \
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat', \
+             'immediateReindexObject', 'recursiveImmediateReindexObject')))\
+            .WebSite_publishDocumentByActivity()
+
   return document
