@@ -43,8 +43,20 @@ class ScalabilityTester(PerformanceTester):
   def preRun(self, *args, **kwargs):
     pass
 
-  def postRun(self, *args, **kwargs):
-    pass
+  def postRun(self, error_message_set):
+    from logging import Formatter
+    import sys
+    import urllib
+    import urllib2
+
+    try:
+      urllib2.urlopen("http://[%s]:%d/report" % \
+                        (self._argument_namespace.manager_address,
+                         self._argument_namespace.manager_port),
+                      urllib.urlencode({'error_message_set': '|'.join(error_message_set)})).close()
+
+    except:
+      print >>sys.stderr, "ERROR: %s" % Formatter().formatException(sys.exc_info())
 
   def getResultClass(self):
     if not self._argument_namespace.erp5_publish_url:
