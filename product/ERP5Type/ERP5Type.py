@@ -419,8 +419,7 @@ class ERP5TypeInformation(XMLObject,
         init_script = self.getTypeInitScriptId()
         if init_script:
           # Acquire the init script in the context of this object
-          kw['created_by_builder'] = created_by_builder
-          getattr(ob, init_script)()
+          getattr(ob, init_script)(created_by_builder=created_by_builder)
 
       return ob
 
