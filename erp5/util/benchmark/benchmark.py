@@ -355,9 +355,13 @@ class ERP5BenchmarkResult(BenchmarkResult):
                                                verbose=True,
                                                allow_none=True)
 
-    # TODO: range of users?
+    if isinstance(nb_users, tuple):
+      nb_users_str = '%d to %d' % nb_users
+    else:
+      nb_users_str = '%d' % nb_users
+
     benchmark_result = test_result_module.TestResultModule_addBenchmarkResult(
-      '%d repeat with %d concurrent users' % (repeat, nb_users),
+      '%d repeat with %s concurrent users' % (repeat, nb_users_str),
       publish_project, ' '.join(sys.argv), datetime.datetime.now())
 
     return benchmark_result['id']
