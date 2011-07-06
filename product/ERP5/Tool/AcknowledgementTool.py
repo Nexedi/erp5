@@ -63,7 +63,7 @@ class AcknowledgementTool(BaseTool):
   security = ClassSecurityInfo()
 
 
-  security.declarePublic('getUnreadAcknowledgementList')
+  security.declarePublic('countUnread')
   def countUnread(self, *args, **kw):
     """
       counts number of acknowledgements pending
