@@ -100,10 +100,6 @@ class MappedProperty(XMLObject):
   security.declarePublic('setMappedProperty')
   def setMappedProperty(self, document, property, value):
     if property.endswith('_list'):
-      # XXX-Leo: This won't work for 'variation_category_list'
-      # calling document.setPropertyList('variation_category_list', value)
-      # breaks with:
-      # TypeError: A mono valued property must be set with a list of len 1
       property = property[:-5]
       setProperty = document.setPropertyList
     else:
