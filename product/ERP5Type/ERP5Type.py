@@ -353,7 +353,8 @@ class ERP5TypeInformation(XMLObject,
     security.declarePublic('constructInstance')
     def constructInstance(self, container, id, created_by_builder=0,
                           temp_object=0, compute_local_role=None,
-                          notify_workflow=True, **kw):
+                          notify_workflow=True, is_indexable=None,
+                          activate_kw=None, reindex_kw=None, **kw):
       """
       Build a "bare" instance of the appropriate type in
       'container', using 'id' as its id.
@@ -378,16 +379,11 @@ class ERP5TypeInformation(XMLObject,
         # container._setObject(set_owner=True) does.
         user_id = getCurrentUserIdOrAnonymousToken()
         ob.manage_setLocalRoles(user_id, ['Owner'])
-        for ignore in ('activate_kw', 'is_indexable', 'reindex_kw'):
-          kw.pop(ignore, None)
       else:
-        activate_kw = kw.pop('activate_kw', None)
         if activate_kw is not None:
           ob.__of__(container).setDefaultActivateParameters(**activate_kw)
-        reindex_kw = kw.pop('reindex_kw', None)
         if reindex_kw is not None:
           ob.__of__(container).setDefaultReindexParameters(**reindex_kw)
-        is_indexable = kw.pop('is_indexable', None)
         if is_indexable is not None:
           ob.isIndexable = is_indexable
         container._setObject(id, ob)
