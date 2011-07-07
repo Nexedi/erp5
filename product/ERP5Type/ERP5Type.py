@@ -400,9 +400,6 @@ class ERP5TypeInformation(XMLObject,
       # in order to initialize aq_dynamic
       ob.portal_type = self.getId()
 
-      if kw:
-        ob._edit(force_update=1, **kw)
-
       if compute_local_role:
         # Do not reindex object because it's already done by manage_afterAdd
         self.updateLocalRolesOnDocument(ob, reindex=False)
@@ -419,7 +416,11 @@ class ERP5TypeInformation(XMLObject,
         init_script = self.getTypeInitScriptId()
         if init_script:
           # Acquire the init script in the context of this object
-          getattr(ob, init_script)(created_by_builder=created_by_builder)
+          getattr(ob, init_script)(created_by_builder=created_by_builder,
+                                   edit_kw=kw)
+
+      if kw:
+        ob._edit(force_update=1, **kw)
 
       return ob
 
