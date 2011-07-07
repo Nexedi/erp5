@@ -74,8 +74,19 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
         activate_kw=activate_kw, **activate_kw)
       movement = simulation_movement.getDeliveryValue()
       value_dict = {}
+      base_category_set = set(movement.getBaseCategoryList())
       for solved_property in solved_property_list:
-        new_value = movement.getProperty(solved_property)
+        if solved_property in base_category_set:
+          # XXX-Leo: Hack, the accept solver was 'accepting' only the first
+          # value of a category and discarding all others by using only
+          # movement.getProperty().
+          # A proper fix would perhaps be to use .getPropertyList() always
+          # (and use .setPropertyList()), but we need to do property
+          # mapping on simulation and there is no
+          # simulation_movement.setMappedPropertyList().
+          new_value = movement.getPropertyList(solved_property)
+        else:
+          new_value = movement.getProperty(solved_property)
         # XXX hard coded
         if solved_property == 'quantity':
           new_quantity = new_value * simulation_movement.getDeliveryRatio()
