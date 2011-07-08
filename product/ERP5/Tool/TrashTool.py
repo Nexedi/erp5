@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-
+import imp, re, sys
 from AccessControl import ClassSecurityInfo
 from ZODB.broken import Broken
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -94,11 +94,16 @@ class TrashTool(BaseTool):
                 "Trying to backup uncommitted object %s" % object_path)
             return {}
           if isinstance(obj, Broken):
-            # Workaround for bug in ExportImport._importDuringCommit
-            # (ZODB.serialize should be reused in order
-            #  to use appropriate class factory)
             LOG("Trash Tool backupObject", WARNING,
                 "Can't backup broken object %s" % object_path)
+            klass = obj.__class__
+            if klass.__module__[:27] in ('Products.ERP5Type.Document.',
+                                         'erp5.portal_type'):
+              # meta_type is required so that a broken object
+              # can be removed properly from a BTreeFolder2
+              # (unfortunately, we can only guess it)
+              klass.meta_type = 'ERP5' + re.subn('(?=[A-Z])', ' ',
+                                                 klass.__name__)[0]
             return {}
           copy = connection.exportFile(obj._p_oid)
           # import object in trash
