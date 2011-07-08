@@ -33,12 +33,12 @@ import os
 import transaction
 import httplib
 from DateTime import DateTime
-from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from ShaCacheMixin import ShaCacheMixin
 from ShaSecurityMixin import ShaSecurityMixin
 
 
-class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeLiveTestCase):
+class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
   """
     ShaCache - HTTP File Cache server
     We must simulate the real usage of ShaCache using httplib.
@@ -49,6 +49,14 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeLiveTestCase
       Return the title of the current test set.
     """
     return "SHACACHE External - Real Usage Of ShaCache"
+
+  def getBusinessTemplateList(self):
+    """
+      Return the list of required business templates.
+    """
+    return ShaCacheMixin().getBusinessTemplateList() + \
+                         ('erp5_data_set',
+                          'networkcache_erp5',)
 
   def afterSetUp(self):
     """

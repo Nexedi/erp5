@@ -34,12 +34,12 @@ import os
 import transaction
 import httplib
 from DateTime import DateTime
-from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
+from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeTestCase
 from ShaDirMixin import ShaDirMixin
 from ShaSecurityMixin import ShaSecurityMixin
 
 
-class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeLiveTestCase):
+class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
   """
     ShaDir - HTTP Information Cache server
     We must simulate the real usage of ShaDir using httplib.
@@ -50,6 +50,13 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeLiveTestCase):
       Return the title of the current test set.
     """
     return "SHADIR External - Real Usage Of ShaDir"
+
+  def getBusinessTemplateList(self):
+    """
+      Return the list of required business templates.
+    """
+    return ShaDirMixin().getBusinessTemplateList() + \
+                         ('networkcache_erp5',)
 
   def afterSetUp(self):
     """
