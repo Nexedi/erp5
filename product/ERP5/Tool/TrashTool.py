@@ -28,6 +28,7 @@
 
 
 from AccessControl import ClassSecurityInfo
+from ZODB.broken import Broken
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -89,8 +90,15 @@ class TrashTool(BaseTool):
             o = o.aq_parent
             connection=o._p_jar
           if obj._p_oid is None:
-            LOG("Trash Tool backupObject", 100,
+            LOG("Trash Tool backupObject", WARNING,
                 "Trying to backup uncommitted object %s" % object_path)
+            return {}
+          if isinstance(obj, Broken):
+            # Workaround for bug in ExportImport._importDuringCommit
+            # (ZODB.serialize should be reused in order
+            #  to use appropriate class factory)
+            LOG("Trash Tool backupObject", WARNING,
+                "Can't backup broken object %s" % object_path)
             return {}
           copy = connection.exportFile(obj._p_oid)
           # import object in trash
@@ -120,7 +128,8 @@ class TrashTool(BaseTool):
             # field_added doesn't not exists on parent if it is a Trash
             # Folder and not a Form, or a module for the old object is
             # already removed, and we cannot backup the object
-            LOG("Trash Tool backupObject", 100, "Can't backup object %s" %(object_id))
+            LOG("Trash Tool backupObject", WARNING,
+                "Can't backup object %s" % object_path)
             return {}
 
     keep_sub = kw.get('keep_subobjects', 0)
