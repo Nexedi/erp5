@@ -32,6 +32,7 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import PropertyHolder
 from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderType
+from Acquisition import aq_base
 
 from zLOG import LOG, INFO, WARNING
 
@@ -186,6 +187,14 @@ class PropertySheet(Folder):
 
     for property_definition in property_definition_list:
       __traceback_info__ = property_definition
+      if getattr(aq_base(property_definition), 'applyOnAccessorHolder',
+          None) is None:
+        # Prevent implicit acquisition of this method when subobject doesn't
+        # have one with same name, triggering an infinite recursion.
+        # We raise a RuntimeError, to be consistent with infinit recursion
+        # (to avoid regressions).
+        raise RuntimeError('Malformed property definition %r on %s' % (
+          property_definition, self.getPath()))
       try:
         property_definition.applyOnAccessorHolder(accessor_holder,
                                                   expression_context,
