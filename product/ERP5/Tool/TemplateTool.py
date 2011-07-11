@@ -1291,30 +1291,23 @@ class TemplateTool (BaseTool):
       log("Installing %s ..." % download_url)
       imported_bt5 = self.download(url = download_url, id = id)
       bt_title = imported_bt5.getTitle()
-      BusinessTemplate_getModifiedObject = \
-        aq_base(getattr(self, 'BusinessTemplate_getModifiedObject'))
 
       if not reinstall:
-        listbox_object_list = BusinessTemplate_getModifiedObject.__of__(imported_bt5)()
-        install_kw = {}
         previous_bt5 = self.getInstalledBusinessTemplate(bt_title)
         if previous_bt5 is not None:
           try:
             imported_revision = int(imported_bt5.getRevision())
-          except ValueError:
-            imported_revision = None
-          try:
             previous_revision = int(previous_bt5.getRevision())
+            if imported_revision <= previous_revision:
+              log("%s is already installed with revision %i, which is same or "
+                  "newer revision than new revision %i." % (bt_title,
+                    previous_revision, imported_revision))
+              return imported_bt5
           except ValueError:
-            previous_revision = None
-          if imported_revision is not None and imported_revision is not None \
-              and (imported_revision <= previous_revision):
-            log("%s is already installed with revision %r, which is same or "
-                "newer revision then new revision %r." % (bt_title,
-                  previous_bt5.getRevision(), imported_bt5.getRevision()))
-            return imported_bt5
+            pass
 
-        for listbox_line in listbox_object_list:
+        install_kw = {}
+        for listbox_line in imported_bt5.BusinessTemplate_getModifiedObject():
           item = listbox_line.object_id
           state = listbox_line.object_state
           if state.startswith('Removed'):
@@ -1326,27 +1319,17 @@ class TemplateTool (BaseTool):
               maybe_moved and ' (moved to %s ?)' % maybe_moved))
           else:
             installed_dict[item] = bt_title
-          # Calculate keep logic, by following the default
-          keep = False
-          in_force_keep_list = True
-          if state in ('Modified but should be kept',
-              'Removed but should be kept') and item not in force_keep_list:
-            # For actions which suggest that item shall be kept and item is not
-            # explicitely forced, keep the default -- do nothing
-            keep = True
-            in_force_keep_list = False
 
-          in_keep_original_list = False
-          if item in keep_original_list:
-            # If item is forced to be untouched, do not touch it
-            keep = True
-            in_keep_original_list = True
-
-          if in_force_keep_list and in_keep_original_list:
-            log('Item %r is in force_keep_list and keep_original_list, as '
-                'keep_original_list has precedence item is NOT MODIFIED' % item)
-
-          if keep == True:
+          # For actions which suggest that item shall be kept and item is not
+          # explicitely forced, keep the default -- do nothing
+          in_force_keep_list = item in force_keep_list or state not in (
+            'Modified but should be kept', 'Removed but should be kept')
+          # If item is forced to be untouched, do not touch it
+          if item in keep_original_list or not in_force_keep_list:
+            if in_force_keep_list:
+              log('Item %r is in force_keep_list and keep_original_list,'
+                  ' as keep_original_list has precedence item is NOT MODIFIED'
+                  % item)
             install_kw[item] = 'nothing'
           else:
             install_kw[item] = listbox_line.choice_item_list[0][1]
