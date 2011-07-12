@@ -956,4 +956,49 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           return aq_base_name
       return aq_base_name
 
+    def _searchAndActivate(self, method_id, method_args=(), method_kw={},
+                           activate_kw={}, min_uid=None, **kw):
+      """Search the catalog and run a script by activity on all found objects
+
+      This method is configurable (via 'packet_size' & 'activity_count'
+      parameters) so that it can work efficiently with databases of any size.
+
+      'activate_kw' may specify an active process to collect results.
+      Note however, we don't use Base_makeActiveResult so you're likely to get
+      ConflictError at the beginning. You could avoid this by making sure
+      'result_list' is already initialized on the active process.
+      """
+      catalog_kw = dict(kw)
+      packet_size = catalog_kw.pop('packet_size', 30)
+      limit = packet_size * catalog_kw.pop('activity_count', 100)
+      if min_uid:
+        catalog_kw['uid'] = {'query': min_uid, 'range': 'nlt'}
+      if catalog_kw.pop('restricted', False):
+        search = self
+      else:
+        search = self.unrestrictedSearchResults
+      r = search(sort_on=(('uid','ascending'),), limit=limit, **catalog_kw)
+      result_count = len(r)
+      if result_count:
+        if result_count == limit:
+          tag = activate_kw.get('tag')
+          if not tag:
+            activate_kw['tag'] = tag = 'searchAndActivate_%r' % time.time()
+          _tag = '%s_%s' % (tag, min_uid)
+          self.activate(tag=tag, after_tag=_tag, activity='SQLQueue') \
+              ._searchAndActivate(method_id,method_args, method_kw,
+                                  dict(activate_kw), r[-1].getUid(), **kw)
+          activate_kw['tag'] = _tag
+        r = [x.getPath() for x in r]
+        r.sort()
+        activate = self.getPortalObject().portal_activities.activate
+        for i in xrange(0, result_count, packet_size):
+          activate(activity='SQLQueue', **activate_kw).callMethodOnObjectList(
+            r[i:i+packet_size], method_id, *method_args, **method_kw)
+
+    security.declarePublic('searchAndActivate')
+    def searchAndActivate(self, *args, **kw):
+      """Restricted version of _searchAndActivate"""
+      return self._searchAndActivate(restricted=True, *args, **kw)
+
 InitializeClass(CatalogTool)

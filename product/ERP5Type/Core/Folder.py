@@ -1524,21 +1524,20 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn, 
     object.manage_beforeDelete(object, self)
     self._delOb(id)
 
-  security.declareProtected( Permissions.ManagePortal, 'callMethodOnObjectList' )
+  security.declareProtected(Permissions.ManagePortal, 'callMethodOnObjectList')
   def callMethodOnObjectList(self, object_path_list, method_id, *args, **kw):
     """
-    Very usefull if we want to activate the call of a method
+    Very useful if we want to activate the call of a method
     on many objects at a time. Like this we could prevent creating
-    too much acitivities at a time, and we may have only the path
-
+    too many activities at a time, and we may have only the path
     """
-    portal = self.getPortalObject()
+    result_list = []
+    traverse = self.getPortalObject().unrestrictedTraverse
     for object_path in object_path_list:
-      current_object = portal.unrestrictedTraverse(object_path)
-      method = getattr(current_object, method_id, None)
-      if method is None:
-        raise ValueError, "The method %s was not found" % method_id
-      method(*args, **kw)
+      result = getattr(traverse(object_path), method_id)(*args, **kw)
+      if type(result) in (list, tuple):
+        result_list += result
+    return result_list
 
   def _verifyObjectPaste(self, object, validate_src=1):
     # To paste in an ERP5Type folder, we need to check 'Add permission'
