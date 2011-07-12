@@ -26,19 +26,19 @@
 #
 ##############################################################################
 
-def migrateToEmbeddedFile(self):
-  """ Migrate all embedded "File" and "Image" 
+import erp5
+from Products.ERP5.Extensions.CheckPortalTypes import changeObjectClass
+
+def migrateToEmbeddedFile(self, force=0):
+  """Migrate all embedded "File" and "Image"
      objects to an unified "Embedded File
   """
-  from Products.ERP5.Extensions.CheckPortalTypes import changeObjectClass
-  from Products.ERP5.Document.EmbeddedFile import EmbeddedFile
-  
-  if self.getPortalType() in ('File', 'Image',) and \
-    self.getValidationState()=='embedded':
-    changeObjectClass(self.getParentValue(), self.id, EmbeddedFile)
-    instance = getattr(self.getParentValue(), self.id)
-    instance.portal_type = EmbeddedFile.portal_type
-    instance.reindexObject()
-    self.log("Migrated %s" %self.getRelativeUrl())
-    return self.getRelativeUrl()
-  
+  portal_type = self.getPortalType()
+  if portal_type in ('File', 'Image') and self.getValidationState()=='embedded':
+    embedded_type = 'Embedded File'
+    container = self.getParentValue()
+    id = self.id
+    if force == 1:
+      changeObjectClass(container, id, getattr(erp5.portal_type, embedded_type))
+      container._getOb(id).portal_type = embedded_type
+    return '%s: %s -> %s' % (self.getRelativeUrl(), portal_type, embedded_type),
