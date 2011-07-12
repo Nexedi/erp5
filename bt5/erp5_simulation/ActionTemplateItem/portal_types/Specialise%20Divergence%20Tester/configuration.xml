@@ -18,7 +18,7 @@
               <tuple>
                 <string>action_type/object_view</string>
                 <string>portal_types/Trade Quantity Divergence Tester/1</string>
-                <string>portal_types/Float Divergence Tester/3</string>
+                <string>portal_types/Float Divergence Tester/2</string>
               </tuple>
             </value>
         </item>
@@ -42,7 +42,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>predicate</string> </value>
+            <value> <string>configuration</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -58,11 +58,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>3.0</float> </value>
+            <value> <float>2.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Predicate</string> </value>
+            <value> <string>Configuration</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -79,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Predicate_view</string> </value>
+            <value> <string>string:${object_url}/SpecialiseDivergenceTester_viewConfiguration</string> </value>
         </item>
       </dictionary>
     </pickle>

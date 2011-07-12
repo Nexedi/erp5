@@ -40,10 +40,16 @@ class SpecialiseEquivalenceTester(CategoryMembershipEquivalenceTester):
 
   tested_property = ('specialise',)
 
-  @staticmethod
-  def _getTestedPropertyValue(movement, property):
+  movement_specialise_type = ()
+  movement_exclude_specialise_type = ()
+
+  def _getTestedPropertyValue(self, movement, property):
     if movement.getPortalType() == 'Simulation Movement':
       return movement.getSpecialiseList()
     # following line would work for prevision movements, but it is slower
+    kw = dict(
+      specialise_type_list=self.getMovementSpecialiseTypeList(),
+      exclude_specialise_type_list=self.getMovementExcludeSpecialiseTypeList(),
+    )
     return [x.getRelativeUrl()
-      for x in movement.getInheritedSpecialiseValueList()]
+      for x in movement.getInheritedSpecialiseValueList(**kw)]
