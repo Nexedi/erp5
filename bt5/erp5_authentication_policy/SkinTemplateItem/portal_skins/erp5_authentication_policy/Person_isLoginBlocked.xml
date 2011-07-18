@@ -57,6 +57,7 @@
 """\n
 from DateTime import DateTime\n
 \n
+request = context.REQUEST\n
 portal = context.getPortalObject()\n
 portal_preferences = portal.portal_preferences\n
 \n
@@ -86,6 +87,7 @@ if len(failures_for_period)>= max_authentication_failures:\n
   context.log(\'check=%s  block=%s  release=%s-> %s\' %(check_duration, block_duration, block_timeout, failures_for_period))\n
   if block_timeout > now:\n
     context.log(\'block %s\' %context.getReference())\n
+    request.set(\'is_user_account_blocked\', True)\n
     return 1\n
 \n
 return 0\n

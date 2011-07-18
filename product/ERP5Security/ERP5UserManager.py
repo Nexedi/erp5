@@ -163,12 +163,38 @@ class ERP5UserManager(BasePlugin):
                                                  id='ERP5UserManager_authenticateCredentials',
                                                  cache_factory='erp5_content_short')
         try:
-          return _authenticateCredentials(
-                      login=credentials.get('login'),
-                      password=credentials.get('password'),
-                      path=self.getPhysicalPath())
+          authentication_result = _authenticateCredentials(
+                                    login=credentials.get('login'),
+                                    password=credentials.get('password'),
+                                    path=self.getPhysicalPath())
+                           
         except _AuthenticationFailure:
+          authentication_result = None
+       
+        method = getattr(self, 'ERP5Site_isAuthenticationPolicyEnabled', None)
+        if method is None or (method is not None and not method()):
+          # stop here, no authentication policy enabled 
+          # so just return authentication check result
+          # XXX: move to ERP5 Site API
+          return authentication_result
+        
+        # authentication policy enabled, we need person object anyway
+        user_list = self.getUserByLogin(credentials.get('login'))
+        if not user_list:
+          # not an ERP5 Person object
           return None
+        user = user_list[0]
+        
+        if authentication_result is None:
+          # file a failed authentication attempt
+          user.notifyLoginFailure()
+          return None
+          
+        # check if user account is blocked and if password is expired or not
+        if user.isLoginBlocked() or user.isPasswordExpired(): 
+          return None
+        
+        return authentication_result
 
     #
     #   IUserEnumerationPlugin implementation
