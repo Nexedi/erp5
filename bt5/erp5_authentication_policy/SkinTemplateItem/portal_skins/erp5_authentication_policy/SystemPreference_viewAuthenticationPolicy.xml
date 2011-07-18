@@ -92,6 +92,7 @@
                         <string>my_preferred_min_password_length</string>
                         <string>my_preferred_min_password_lifetime_duration</string>
                         <string>my_preferred_max_password_lifetime_duration</string>
+                        <string>my_preferred_password_lifetime_expire_warning_duration</string>
                         <string>my_preferred_number_of_last_password_to_check</string>
                         <string>my_preffered_force_username_check_in_password</string>
                         <string>my_preferred_min_regular_expression_group_number</string>
