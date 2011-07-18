@@ -54,6 +54,9 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
        Return list of information for a given key
        Raise HTTP error (404) if key does not exist
   """
+  if self.REQUEST.get('REQUEST_METHOD') in ('PUT',):
+    return
+
   if portal is None:
     portal = self.getPortalObject()
 
