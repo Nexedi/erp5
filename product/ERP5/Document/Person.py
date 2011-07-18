@@ -33,6 +33,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.mixin.encrypted_password import EncryptedPasswordMixin
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5.mixin.login_account_provider import LoginAccountProviderMixin
 
 try:
   from Products import PluggableAuthService
@@ -41,7 +42,7 @@ except ImportError:
   PluggableAuthService = None
 
 #class Person(Node, XMLObject):
-class Person(EncryptedPasswordMixin, XMLObject):
+class Person(LoginAccountProviderMixin, EncryptedPasswordMixin, XMLObject):
     """
       An Person object holds the information about
       an person (ex. you, me, someone in the company,
