@@ -149,7 +149,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEquals(self.key, data_set.getReference())
     self.assertEquals('Published', data_set.getValidationStateTitle())
 
-    self.assertEquals(10, len(self.portal.document_module))
+    self.assertEquals(11, len(self.portal.document_module))
 
   def test_get_information_for_single_data_set(self):
     """
