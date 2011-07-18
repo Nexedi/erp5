@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Person</type>
+  <workflow>password_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>
