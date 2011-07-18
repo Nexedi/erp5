@@ -376,6 +376,8 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       Test password expire.
     """
     portal = self.getPortal()
+    request = self.app.REQUEST
+    
     self.assertTrue(portal.ERP5Site_isAuthenticationPolicyEnabled())
     
     person = portal.portal_catalog.getResultValue(portal_type = 'Person', 
@@ -387,6 +389,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.stepTic()
     self._clearCache()
     self.assertFalse(person.isPasswordExpired())
+    self.assertFalse(request['is_user_account_password_expired'])
     
     # set older last password modification date just for test
     now = DateTime()
@@ -394,12 +397,30 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.stepTic()
     self._clearCache()
     self.assertTrue(person.isPasswordExpired())
+    self.assertTrue(request['is_user_account_password_expired'])    
     
     # set longer password validity interval
-    preference.setPreferredMaxPasswordLifetimeDuration(4*24)
+    person.setLastPasswordModificationDate(now)
+    preference.setPreferredMaxPasswordLifetimeDuration(4*24) # password expire in 4 days
     self.stepTic()
     self._clearCache()
-    self.assertFalse(person.isPasswordExpired())    
+    self.assertFalse(person.isPasswordExpired())
+    self.assertFalse(request['is_user_account_password_expired'])
+    
+    # test early warning password expire notification is detected
+    preference.setPreferredPasswordLifetimeExpireWarningDuration(4*24) # password expire notification appear immediately
+    self.stepTic()
+    self._clearCache()
+    self.assertFalse(person.isPasswordExpired())
+    self.assertTrue(request['is_user_account_password_expired_warning_on'])
+    
+    # test early warning password expire notification is detected
+    preference.setPreferredPasswordLifetimeExpireWarningDuration(4*24-24) # password expire notification appear 3 days befor time
+    self.stepTic()
+    self._clearCache()
+    self.assertFalse(person.isPasswordExpired())
+    #import pdb; pdb.set_trace()
+    self.assertFalse(request['is_user_account_password_expired_warning_on']) 
             
     
 def test_suite():
