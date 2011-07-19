@@ -1021,7 +1021,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence = dict(automatic_call=True)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self.stepSetCredentialAssignmentPropertyList()
-    self._createCredentialRequest()
+    response = self._createCredentialRequest()
+    self.assertTrue('Credential%20Request%20Created.' in response)
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(
         portal_type="Credential Request", reference="barney")
@@ -1036,15 +1037,13 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.tic()
     self.assertEqual('accepted', credential_request.getValidationState())
 
-    self._createCredentialRequest()
-    credential_request = portal_catalog.getResultValue(
-        portal_type="Credential Request", reference="barney",
-        validation_state="draft")
+    response = self._createCredentialRequest()
+    self.assertTrue('Selected%20login%20is%20already%20in%20use%2C%20pl'
+      'ease%20choose%20different%20one' in  response)
 
     self.portal.portal_alarms.accept_submitted_credentials.activeSense()
     transaction.commit()
     self.tic()
-    raise NotImplementedError('Real case is not known yet.')
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
   def testERP5Site_newCredentialRecoveryWithNoSecurityQuestion(self):
