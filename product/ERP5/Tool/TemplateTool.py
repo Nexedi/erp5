@@ -1272,7 +1272,8 @@ class TemplateTool (BaseTool):
                                          update_catalog=_MARKER,
                                          reinstall=False,
                                          active_process=None,
-                                         force_keep_list=None):
+                                         force_keep_list=None, 
+                                         only_newer=True):
       """ 
         This method download and install a bt5, from a URL.
 
@@ -1307,7 +1308,7 @@ class TemplateTool (BaseTool):
 
       if not reinstall:
         previous_bt5 = self.getInstalledBusinessTemplate(bt_title)
-        if previous_bt5 is not None:
+        if (previous_bt5 is not None) and only_newer:
           try:
             imported_revision = int(imported_bt5.getRevision())
             previous_revision = int(previous_bt5.getRevision())
