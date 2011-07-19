@@ -1226,6 +1226,16 @@ class TemplateTool (BaseTool):
         'installBusinessTemplatesFromRepositories')
     def installBusinessTemplatesFromRepositories(self, template_list,
         only_newer=True, update_catalog=_MARKER):
+      """Deprecated.
+      """
+      DeprecationWarning('getInstalledBusinessTemplatesList is deprecated; Use getInstalledBusinessTemplateList instead.', DeprecationWarning)
+      return self.installBusinessTemplateListFromRepository(template_list,
+        only_newer, update_catalog, activate=False)
+
+    security.declareProtected(Permissions.ManagePortal,
+        'installBusinessTemplateListFromRepository')
+    def installBusinessTemplateListFromRepository(self, template_list,
+        only_newer=True, update_catalog=_MARKER, activate=False):
       """Installs template_list from configured repositories by default only newest"""
       # XXX-Luke: This method could replace
       # TemplateTool_installRepositoryBusinessTemplateList while still being
