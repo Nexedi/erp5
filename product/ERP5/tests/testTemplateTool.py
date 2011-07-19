@@ -274,6 +274,9 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertNotEquals(None, self.getPortal()\
         .portal_templates.getInstalledBusinessTemplate('erp5_core'))
 
+    self.assertEquals(None, self.getPortal()\
+        .portal_templates.getInstalledBusinessTemplate('erp5_toto'))
+
   def test_getInstalledBusinessTemplateRevision(self):
     self.assertTrue(300 < self.getPortal()\
         .portal_templates.getInstalledBusinessTemplateRevision('erp5_core'))
