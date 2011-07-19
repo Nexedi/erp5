@@ -1014,10 +1014,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
   def test_double_ERP5Site_newCredentialRequest(self):
-    """
-      Check that the script ERP5Site_newCredentialRequest will create one
-      Credential Request correctly
-    """
+    """Check that ERP5Site_newCredentialRequest will not create conflicting
+       credentials."""
     sequence = dict(automatic_call=True)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self.stepSetCredentialAssignmentPropertyList()
@@ -1045,6 +1043,11 @@ class TestERP5Credential(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     self.stepUnSetCredentialAutomaticApprovalPreferences()
+
+  def test_double_ERP5Site_newCredentialRequest_double_click(self):
+    """Check that ERP5Site_newCredentialRequest will react correctly on double
+       click"""
+    raise NotImplementedError
 
   def testERP5Site_newCredentialRecoveryWithNoSecurityQuestion(self):
     """
