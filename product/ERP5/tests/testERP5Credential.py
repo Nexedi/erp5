@@ -1032,9 +1032,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(credential_request.getFunction(), "member")
 
     credential_request.submit()
-    credential_request.accept()
+    self.portal.portal_alarms.accept_submitted_credentials.activeSense()
     transaction.commit()
     self.tic()
+    self.assertEqual('accepted', credential_request.getValidationState())
 
     self._createCredentialRequest()
     credential_request = portal_catalog.getResultValue(
@@ -1042,11 +1043,11 @@ class TestERP5Credential(ERP5TypeTestCase):
         validation_state="draft")
 
     credential_request.submit()
-    credential_request.accept()
+    self.portal.portal_alarms.accept_submitted_credentials.activeSense()
     transaction.commit()
     self.tic()
-    self.stepUnSetCredentialAutomaticApprovalPreferences()
     raise NotImplementedError('Real case is not known yet.')
+    self.stepUnSetCredentialAutomaticApprovalPreferences()
 
   def testERP5Site_newCredentialRecoveryWithNoSecurityQuestion(self):
     """
