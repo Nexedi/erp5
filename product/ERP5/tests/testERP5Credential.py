@@ -1018,7 +1018,7 @@ class TestERP5Credential(ERP5TypeTestCase):
       Check that the script ERP5Site_newCredentialRequest will create one
       Credential Request correctly
     """
-    sequence = dict(automatic_call=False)
+    sequence = dict(automatic_call=True)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self.stepSetCredentialAssignmentPropertyList()
     self._createCredentialRequest()
@@ -1031,7 +1031,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(credential_request.getRole(), "internal")
     self.assertEquals(credential_request.getFunction(), "member")
 
-    credential_request.submit()
     self.portal.portal_alarms.accept_submitted_credentials.activeSense()
     transaction.commit()
     self.tic()
@@ -1042,7 +1041,6 @@ class TestERP5Credential(ERP5TypeTestCase):
         portal_type="Credential Request", reference="barney",
         validation_state="draft")
 
-    credential_request.submit()
     self.portal.portal_alarms.accept_submitted_credentials.activeSense()
     transaction.commit()
     self.tic()
