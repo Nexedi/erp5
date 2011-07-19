@@ -116,3 +116,22 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.assertNotEquals(None, document)
 
     self.assertEquals(self.data, document.getData())
+
+  def test_put_file_twice(self):
+    """
+      Check if is allowed to put the same file twice.
+    """
+    self.putFile()
+    self.assertEquals(1, len(self.portal.document_module))
+
+    document = self.portal.document_module.contentValues()[0]
+    self.assertEquals('Published', document.getValidationStateTitle())
+
+    self.putFile()
+    self.assertEquals(2, len(self.portal.document_module))
+
+    document2 = self.portal.document_module.contentValues()[1]
+    self.assertEquals('Published', document2.getValidationStateTitle())
+    self.assertEquals('Archived', document.getValidationStateTitle())
+
+
