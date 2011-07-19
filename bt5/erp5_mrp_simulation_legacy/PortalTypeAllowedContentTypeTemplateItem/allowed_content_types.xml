@@ -1,4 +1,10 @@
 <allowed_content_type_list>
+ <portal_type id="Rule Tool">
+  <item>Transformation Model Rule</item>
+  <item>Transformation Rule</item>
+  <item>Transformation Sourcing Model Rule</item>
+  <item>Transformation Sourcing Rule</item>
+ </portal_type>
  <portal_type id="Transformation Model Rule">
   <item>Category Divergence Tester</item>
   <item>Composed Divergence Tester</item>
