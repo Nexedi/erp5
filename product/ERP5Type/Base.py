@@ -181,17 +181,14 @@ class WorkflowMethod(Method):
     invoke_once_dict = self._invoke_once.get(portal_type, {})
     valid_invoke_once_item_list = []
     # Only keep those transitions which were never invoked
+    once_transition_dict = {}
     for wf_id, transition_list in invoke_once_dict.iteritems():
       valid_transition_list = []
       for transition_id in transition_list:
         once_transition_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__',
                                 wf_id, transition_id, instance_path)
-        try:
-          already_called_transition = transactional_variable[once_transition_key]
-        except KeyError:
-          already_called_transition = 0
-          transactional_variable[once_transition_key] = 1
-        if not already_called_transition:
+        once_transition_dict[(wf_id, transition_id)] = once_transition_key
+        if once_transition_key not in transactional_variable:
           valid_transition_list.append(transition_id)
       if valid_transition_list:
         valid_invoke_once_item_list.append((wf_id, valid_transition_list))
@@ -216,6 +213,12 @@ class WorkflowMethod(Method):
       for transition_id in transition_list:
         if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
           valid_list.append(transition_id)
+          once_transition_key = once_transition_dict.get((wf_id, transition_id),
+                                                         None)
+          if once_transition_key is not None:
+            # a run-once transiction, prevent it from running in the
+            # same transaction again
+            transactional_variable[once_transition_key] = 1
         elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
           raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
           # XXX Keep the log for projects that needs to comment out

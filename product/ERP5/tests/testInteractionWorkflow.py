@@ -560,6 +560,75 @@ context.setTitle('Bar')
     self.tic()
     self.assertEquals(organisation.getTitle(), 'Bar')
 
+  def test_18_no_temp_object(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Skips Temp Objects')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'editObject',
+            temporary_document_disallowed=False,
+            method_id='_setGroup.*',
+            after_script_name=('afterEdit',))
+    params = 'sci, **kw'
+    body = """\
+context = sci['object']
+context.setTitle('Bar')
+"""
+    self.script.ZPythonScript_edit(params, body)
+    self.createData()
+    organisation = self.organisation
+    temp = organisation.asContext()
+    temp.setTitle('Foo')
+    # interaction workflows can affect temp objects
+    temp.setGroupValue(organisation)
+    self.assertEqual(temp.getTitle(), 'Bar')
+    # but not if it has been forbidden
+    temp.setTitle('Foo')
+    self.interaction.setProperties(
+            'editObject',
+            temporary_document_disallowed=True,
+            method_id='_setGroup.*',
+            after_script_name=('afterEdit',))
+    temp.setGroupValue(None)
+    self.assertEqual(temp.getTitle(), 'Foo')
+
+  def test_19_temp_object_doesnt_skip_normal(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Skips Temp Objects, but run in normal objects in the same transaction')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'editObject',
+            once_per_transaction=True,
+            temporary_document_disallowed=True,
+            method_id='_setGroup.*',
+            after_script_name=('afterEdit',))
+    params = 'sci, **kw'
+    body = """\
+context = sci['object']
+context.setTitle('Bar')
+"""
+    self.script.ZPythonScript_edit(params, body)
+    self.createData()
+    organisation = self.organisation
+    organisation.setTitle('Foo')
+    temp = organisation.asContext()
+    # temp and organisation have the same path
+    self.assertEqual(temp.getPath(), organisation.getPath())
+    # which means that a transactional variable key based on path would
+    # match both the organisation and the temp object, but triggering the
+    # workflow on the temp object should not change it:
+    temp.setGroupValue(organisation)
+    self.assertEquals(temp.getTitle(), 'Foo')
+    # nor should it change the normal object
+    self.assertEquals(organisation.getTitle(), 'Foo')
+    # however, it should allow triggering the normal object later on the same
+    # transaction
+    organisation.setGroupValue(organisation)
+    self.assertEquals(organisation.getTitle(), 'Bar')
+    # while still not changing the temp object
+    self.assertEquals(temp.getTitle(), 'Foo')
 
   def test_regular_expression(self):
     # test that we can add an interaction by defining methods using regular
