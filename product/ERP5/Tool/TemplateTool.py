@@ -1242,7 +1242,7 @@ class TemplateTool (BaseTool):
       # TemplateTool_installRepositoryBusinessTemplateList while still being
       # possible to reuse by external callers
       opreation_log = []
-      template_dict = self._getBusinessTemplateUrlDict()
+      template_dict = self._getBusinessTemplateUrlDict(only_newer)
       for template_name in template_list:
         if template_name in template_dict:
           installed_bt = self.getInstalledBusinessTemplate(template_name)
