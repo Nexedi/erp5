@@ -172,7 +172,9 @@ class TemplateTool (BaseTool):
         given
       """
       bt = self.getInstalledBusinessTemplate(title)
-      return bt.getRevision()
+      if bt is not None:
+        return bt.getRevision()
+      return None
 
     def getBuiltBusinessTemplatesList(self):
       """Deprecated.

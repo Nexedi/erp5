@@ -281,6 +281,9 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertTrue(300 < self.getPortal()\
         .portal_templates.getInstalledBusinessTemplateRevision('erp5_core'))
 
+    self.assertEquals(None, self.getPortal()\
+        .portal_templates.getInstalledBusinessTemplateRevision('erp5_toto'))
+
   def test_getInstalledBusinessTemplateList(self):
     templates_tool = self.getPortal().portal_templates
     bt5_list = templates_tool.getInstalledBusinessTemplateList()
