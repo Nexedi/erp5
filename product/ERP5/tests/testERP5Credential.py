@@ -56,6 +56,7 @@ class TestERP5Credential(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     return (
       'erp5_full_text_myisam_catalog',
+      'erp5_core_proxy_field_legacy',
       'erp5_base',
       'erp5_jquery',
       'erp5_ingestion_mysql_innodb_catalog',
