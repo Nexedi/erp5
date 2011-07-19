@@ -10,9 +10,9 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>required</string>
                 <string>external_validator</string>
+                <string>required</string>
+                <string>title</string>
               </list>
             </value>
         </item>
