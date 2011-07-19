@@ -1694,6 +1694,7 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_domains', 'Domain Tool')
     addERP5Tool(p, 'portal_tests', 'Test Tool')
     addERP5Tool(p, 'portal_password', 'Password Tool')
+    addERP5Tool(p, 'portal_introspections', 'Introspection Tool')
     addERP5Tool(p, 'portal_acknowledgements', 'Acknowledgement Tool')
 
     # Add ERP5Type Tool
