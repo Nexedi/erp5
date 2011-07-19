@@ -57,6 +57,13 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.templates_tool.updateRepositoryBusinessTemplateList(\
                     ["http://www.erp5.org/dists/snapshot/bt5/",])
 
+  def beforeTearDown(self):
+    uninstall_bt_list = ["erp5_odt_style", "erp5_pdm", 'erp5_accounting']
+    for bt_name in uninstall_bt_list:
+      bt = self.templates_tool.getInstalledBusinessTemplate(bt_name)
+      if (bt is not None) and bt.getInstallationState() == 'installed':
+        bt.uninstall()
+    self.stepTic()
 
   def testUpdateBT5FromRepository(self, quiet=quiet, run=run_all_test):
     """ Test the list of bt5 returned for upgrade """
