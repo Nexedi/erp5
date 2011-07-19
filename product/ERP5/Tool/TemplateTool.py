@@ -1210,9 +1210,10 @@ class TemplateTool (BaseTool):
 
       return 0
 
-    def _getBusinessTemplateUrlDict(self):
+    def _getBusinessTemplateUrlDict(self, newest_only=False):
       business_template_url_dict = {}
-      for bt in self.getRepositoryBusinessTemplateList():
+      for bt in self.getRepositoryBusinessTemplateList(\
+                                    newest_only=newest_only):
         url, name = self.decodeRepositoryBusinessTemplateUid(bt.getUid())
         if name.endswith('.bt5'):
           name = name[:-4]
