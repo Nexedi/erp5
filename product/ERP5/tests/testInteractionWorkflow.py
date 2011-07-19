@@ -130,7 +130,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.createData()
     organisation = self.organisation
     organisation.edit()
-    self.assertEquals(organisation.getDescription(),'')
+    self.assertEqual(organisation.getDescription(),'')
 
   def test_02(self, quiet=0, run=run_all_test):
     if not run: return
@@ -150,7 +150,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation = self.organisation
     organisation.setDescription('bad')
     organisation.edit()
-    self.assertEquals(organisation.getDescription(),'toto')
+    self.assertEqual(organisation.getDescription(),'toto')
 
   def test_03(self, quiet=0, run=run_all_test):
     if not run: return
@@ -170,7 +170,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation = self.organisation
     organisation.setDescription('bad')
     organisation.edit(description='tutu')
-    self.assertEquals(organisation.getDescription(),'toto')
+    self.assertEqual(organisation.getDescription(),'toto')
 
   def test_04(self, quiet=0, run=run_all_test):
     if not run: return
@@ -189,7 +189,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation = self.organisation
     organisation.setDescription('bad')
     organisation.doSomethingStupid('tutu')
-    self.assertEquals(organisation.getDescription(),'toto')
+    self.assertEqual(organisation.getDescription(),'toto')
 
   def test_05(self, quiet=0, run=run_all_test):
     if not run: return
@@ -209,7 +209,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation = self.organisation
     organisation.setDescription('bad')
     organisation.setSizeList(['size/1','size/2'])
-    self.assertEquals(organisation.getDescription(),'toto')
+    self.assertEqual(organisation.getDescription(),'toto')
 
   def test_06(self, quiet=0, run=run_all_test):
     if not run: return
@@ -228,9 +228,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.createData()
     organisation = self.organisation
     organisation.edit()
-    self.assertEquals(organisation.getDescription(),'a')
+    self.assertEqual(organisation.getDescription(),'a')
     organisation.edit()
-    self.assertEquals(organisation.getDescription(),'aa')
+    self.assertEqual(organisation.getDescription(),'aa')
 
   def test_07(self, quiet=0, run=run_all_test):
     if not run: return
@@ -252,7 +252,7 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
           id='dummy_bank_account')
     self.assertNotEquals(dummy_bank_account, None)
     self.assertNotEquals(dummy_bank_account, 3)
-    self.assertEquals(dummy_bank_account.getPortalType(), 'Bank Account')
+    self.assertEqual(dummy_bank_account.getPortalType(), 'Bank Account')
 
   def test_08(self, quiet=0, run=run_all_test):
     if not run: return
@@ -271,9 +271,9 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     self.createData()
     organisation = self.organisation
     organisation.setCorporateName('corp')
-    self.assertEquals(organisation.getDescription(),'a')
+    self.assertEqual(organisation.getDescription(),'a')
     organisation.setActivityCode('acode')
-    self.assertEquals(organisation.getDescription(),'aa')
+    self.assertEqual(organisation.getDescription(),'aa')
 
   def test_09(self, quiet=0, run=run_all_test):
     if not run: return
@@ -364,12 +364,12 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation = self.organisation
     organisation._baseSetVatCode('x')
     organisation.setDescription('x')
-    self.assertEquals(organisation.getVatCode(),'x')
-    self.assertEquals(organisation.getDescription(),'x')
+    self.assertEqual(organisation.getVatCode(),'x')
+    self.assertEqual(organisation.getDescription(),'x')
     organisation.edit(description='bar')
     organisation.edit(vat_code='foo')
-    self.assertEquals(organisation.getVatCode(),'foo')
-    self.assertEquals(organisation.getDescription(),'bara')
+    self.assertEqual(organisation.getVatCode(),'foo')
+    self.assertEqual(organisation.getDescription(),'bara')
 
   def test_12(self, quiet=0, run=run_all_test):
     if not run: return
@@ -401,12 +401,12 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation = self.organisation
     organisation._baseSetDefaultEmailText('x')
     organisation.setVatCode('x')
-    self.assertEquals(organisation.getDefaultEmailText(),'x')
-    self.assertEquals(organisation.getVatCode(),'x')
+    self.assertEqual(organisation.getDefaultEmailText(),'x')
+    self.assertEqual(organisation.getVatCode(),'x')
     organisation.edit(vat_code='foo')
     organisation.edit(default_email_text='bar')
-    self.assertEquals(organisation.getVatCode(),'fooa')
-    self.assertEquals(organisation.getDefaultEmailText(),'bar')
+    self.assertEqual(organisation.getVatCode(),'fooa')
+    self.assertEqual(organisation.getDefaultEmailText(),'bar')
 
   def test_13(self, quiet=0, run=run_all_test):
     if not run: return
@@ -429,12 +429,12 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     organisation = self.organisation
     organisation.setTitle('foo')
     organisation.setVatCode('bar')
-    self.assertEquals(organisation.getTitle(), 'foo')
-    self.assertEquals(organisation.getVatCode(), 'bar')
+    self.assertEqual(organisation.getTitle(), 'foo')
+    self.assertEqual(organisation.getVatCode(), 'bar')
 
     organisation.edit(title='baz', vat_code='bar', edit_order=['vat_code',
       'title'])
-    self.assertEquals(organisation.getTitle(),'baz')
+    self.assertEqual(organisation.getTitle(),'baz')
     # here, the wrong behaviour is:
     # - edit:setTitle(baz)
     # - interaction:setVatCode(bara)
@@ -443,16 +443,16 @@ class TestInteractionWorkflow(ERP5TypeTestCase):
     # - edit:setTitle(baz)
     # - edit:setVatCode(bar)
     # - interaction:setVatCode(bara)
-    self.assertEquals(organisation.getVatCode(),'bara')
+    self.assertEqual(organisation.getVatCode(),'bara')
     # now, test the other way around
     organisation.edit(title='baz', vat_code='bara', edit_order=['title',
       'vat_code'])
-    self.assertEquals(organisation.getTitle(),'baz')
+    self.assertEqual(organisation.getTitle(),'baz')
     # here, we assert the failure:
     # - edit:setTitle(baz)
     # - interaction:setVatCode(baraa)
     # - edit:setVatCode(bara)
-    self.assertEquals(organisation.getVatCode(),'bara')
+    self.assertEqual(organisation.getVatCode(),'bara')
 
 
   def test_14_BeforeScriptParameters(self, quiet=0, run=run_all_test):
@@ -478,7 +478,7 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     organisation = self.organisation
     organisation.setDescription('bad')
     value = organisation.getProperty('description', d='toto')
-    self.assertEquals(value, "toto,('description',),None")
+    self.assertEqual(value, "toto,('description',),None")
 
   def test_15_AfterScriptParameters(self, quiet=0, run=run_all_test):
     if not run: return
@@ -504,7 +504,7 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     organisation.setDescription('bad')
     organisation.getProperty('description', d='toto')
     value = organisation.getDescription()
-    self.assertEquals(value, "toto,('description',),bad")
+    self.assertEqual(value, "toto,('description',),bad")
 
   def test_16_BeforeCommitParameters(self, quiet=0, run=run_all_test):
     if not run: return
@@ -528,11 +528,11 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     self.createData()
     organisation = self.organisation
     organisation.setDescription('bad')
-    self.assertEquals(organisation.getDescription(), 'bad')
+    self.assertEqual(organisation.getDescription(), 'bad')
     organisation.getProperty('description', d='toto')
-    self.assertEquals(organisation.getDescription(), 'bad')
+    self.assertEqual(organisation.getDescription(), 'bad')
     transaction.commit()
-    self.assertEquals(organisation.getDescription(), "toto,('description',),bad")
+    self.assertEqual(organisation.getDescription(), "toto,('description',),bad")
 
   def test_17_activity_interaction(self, quiet=0, run=run_all_test):
     if not run: return
@@ -554,11 +554,11 @@ context.setTitle('Bar')
     organisation = self.organisation
     organisation.setTitle('Foo')
     organisation.setGroupValue(organisation)
-    self.assertEquals(organisation.getTitle(), 'Foo')
+    self.assertEqual(organisation.getTitle(), 'Foo')
     transaction.commit()
-    self.assertEquals(organisation.getTitle(), 'Foo')
+    self.assertEqual(organisation.getTitle(), 'Foo')
     self.tic()
-    self.assertEquals(organisation.getTitle(), 'Bar')
+    self.assertEqual(organisation.getTitle(), 'Bar')
 
   def test_18_no_temp_object(self, quiet=0, run=run_all_test):
     if not run: return
@@ -616,19 +616,64 @@ context.setTitle('Bar')
     temp = organisation.asContext()
     # temp and organisation have the same path
     self.assertEqual(temp.getPath(), organisation.getPath())
-    # which means that a transactional variable key based on path would
-    # match both the organisation and the temp object, but triggering the
-    # workflow on the temp object should not change it:
+    # which means that a transactional variable key based on path
+    # would match both the organisation and the temp object, but
+    # triggering the workflow on the temp object should not change it
+    # because it's prevented by configuration:
     temp.setGroupValue(organisation)
-    self.assertEquals(temp.getTitle(), 'Foo')
+    self.assertEqual(temp.getTitle(), 'Foo')
     # nor should it change the normal object
-    self.assertEquals(organisation.getTitle(), 'Foo')
+    self.assertEqual(organisation.getTitle(), 'Foo')
     # however, it should allow triggering the normal object later on the same
     # transaction
     organisation.setGroupValue(organisation)
-    self.assertEquals(organisation.getTitle(), 'Bar')
+    self.assertEqual(organisation.getTitle(), 'Bar')
     # while still not changing the temp object
-    self.assertEquals(temp.getTitle(), 'Foo')
+    self.assertEqual(temp.getTitle(), 'Foo')
+
+  def test_20_temp_object_does_skip_normal(self, quiet=0, run=run_all_test):
+    if not run: return
+    if not quiet:
+      self.logMessage('Runs on temp Objects and skip normal objects')
+    self.createInteractionWorkflow()
+    self.interaction.setProperties(
+            'editObject',
+            once_per_transaction=True,
+            temporary_document_disallowed=False,
+            method_id='_setGroup.*',
+            after_script_name=('afterEdit',))
+    params = 'sci, **kw'
+    body = """\
+context = sci['object']
+context.setTitle('Bar')
+"""
+    self.script.ZPythonScript_edit(params, body)
+    self.createData()
+    organisation = self.organisation
+    organisation.setTitle('Foo')
+    temp = organisation.asContext()
+    # temp and organisation have the same path
+    self.assertEqual(temp.getPath(), organisation.getPath())
+    # which means that a transactional variable key based on path
+    # would match both the organisation and the temp
+    # object. Triggering the workflow on the temp object Will change
+    # it, since this is not prevented by configuration:
+    temp.setGroupValue(organisation)
+    self.assertEqual(temp.getTitle(), 'Bar')
+    # This should not change the normal object
+    self.assertEqual(organisation.getTitle(), 'Foo')
+    # However, since the interaction can only run once per transaction
+    # (and per object path), it cannot run again on the normal object:
+    organisation.setGroupValue(organisation)
+    self.assertEqual(organisation.getTitle(), 'Foo')
+    # This can be considered an undesired side-effect, so if this test
+    # starts failing in the assertion above for a good reason, just
+    # fix the test.
+    transaction.commit()
+    # committing the transaction allows the interaction workflow to
+    # run on the normal object again:
+    organisation.setGroupValue(None)
+    self.assertEqual(organisation.getTitle(), 'Bar')
 
   def test_regular_expression(self):
     # test that we can add an interaction by defining methods using regular
@@ -647,16 +692,16 @@ context.setTitle('Bar')
     # all methods matching set.* regular expression are matched
     organisation.setDescription('')
     # two calls: setDescription, _setDescription
-    self.assertEquals(len(call_list), 2)
+    self.assertEqual(len(call_list), 2)
     organisation.setTitle('')
     # two calls: setTitle, _setTitle
-    self.assertEquals(len(call_list), 4)
+    self.assertEqual(len(call_list), 4)
     organisation.getDescription()
     # no calls
-    self.assertEquals(len(call_list), 4)
+    self.assertEqual(len(call_list), 4)
     organisation.edit(description='desc')
     # two calls: one to _setProperty, and one to _setDescription
-    self.assertEquals(len(call_list), 6)
+    self.assertEqual(len(call_list), 6)
 
 
   def test_security(self):
@@ -672,7 +717,7 @@ context.setTitle('Bar')
     # the default security is "Access contents information"
     self.organisation.manage_permission(
                       'Access contents information', ['Role1'], 0)
-    self.assertEquals(self.organisation.nonExistantMethod__roles__,
+    self.assertEqual(self.organisation.nonExistantMethod__roles__,
                       ('Role1',))
 
   def test_security_defined(self):
@@ -689,7 +734,7 @@ context.setTitle('Bar')
     # portal content'
     self.organisation.manage_permission(
                      'Modify portal content', ['Role2'], 0)
-    self.assertEquals(self.organisation.setDescription__roles__,
+    self.assertEqual(self.organisation.setDescription__roles__,
                       ('Role2',))
 
   def test_security_defined_on_class(self):
@@ -709,7 +754,7 @@ context.setTitle('Bar')
     self.script.ZPythonScript_edit('sci', '')
     self.createData()
 
-    self.assertEquals(self.organisation.doSomethingStupid__roles__, ())
+    self.assertEqual(self.organisation.doSomethingStupid__roles__, ())
 
   def test_wrap_workflow_transition(self):
     self.logMessage('Wrap workflow transition')
@@ -723,10 +768,10 @@ context.setTitle('Bar')
            "context.setDescription('titi')"
     self.script.ZPythonScript_edit(params, body)
     self.createData()
-    self.assertEquals('', self.organisation.getDescription())
+    self.assertEqual('', self.organisation.getDescription())
     self.portal.portal_workflow.doActionFor(self.organisation, 'validate_action')
-    self.assertEquals('validated', self.organisation.getValidationState())
-    self.assertEquals('titi', self.organisation.getDescription())
+    self.assertEqual('validated', self.organisation.getValidationState())
+    self.assertEqual('titi', self.organisation.getDescription())
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -213,11 +213,10 @@ class WorkflowMethod(Method):
       for transition_id in transition_list:
         if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
           valid_list.append(transition_id)
-          once_transition_key = once_transition_dict.get((wf_id, transition_id),
-                                                         None)
-          if once_transition_key is not None:
-            # a run-once transiction, prevent it from running in the
-            # same transaction again
+          once_transition_key = once_transition_dict.get((wf_id, transition_id))
+          if once_transition_key:
+            # a run-once transition, prevent it from running again in
+            # the same transaction
             transactional_variable[once_transition_key] = 1
         elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
           raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
