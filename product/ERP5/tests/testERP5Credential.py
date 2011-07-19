@@ -1013,6 +1013,41 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(credential_request.getFunction(), "member")
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
+  def test_double_ERP5Site_newCredentialRequest(self):
+    """
+      Check that the script ERP5Site_newCredentialRequest will create one
+      Credential Request correctly
+    """
+    sequence = dict(automatic_call=False)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
+    self.stepSetCredentialAssignmentPropertyList()
+    self._createCredentialRequest()
+    portal_catalog = self.portal.portal_catalog
+    credential_request = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference="barney")
+    self.assertEquals(credential_request.getFirstName(), "Barney")
+    self.assertEquals(credential_request.getDefaultEmailText(),
+        "barney@duff.com")
+    self.assertEquals(credential_request.getRole(), "internal")
+    self.assertEquals(credential_request.getFunction(), "member")
+
+    credential_request.submit()
+    credential_request.accept()
+    transaction.commit()
+    self.tic()
+
+    self._createCredentialRequest()
+    credential_request = portal_catalog.getResultValue(
+        portal_type="Credential Request", reference="barney",
+        validation_state="draft")
+
+    credential_request.submit()
+    credential_request.accept()
+    transaction.commit()
+    self.tic()
+    self.stepUnSetCredentialAutomaticApprovalPreferences()
+    raise NotImplementedError('Real case is not known yet.')
+
   def testERP5Site_newCredentialRecoveryWithNoSecurityQuestion(self):
     """
       Check that password recovery works when security question and answer are
