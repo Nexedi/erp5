@@ -367,7 +367,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         role_list=['internal'],
         )
     portal_status_message = sequence.get("portal_status_message",
-        "Credential%20Request%20Created.")
+        "Thanks%20for%20your%20registration.%20You%20will%20be%20receive%20an%20email%20to%20activate%20your%20account.")
     self.assertTrue('portal_status_message=%s' % portal_status_message in result, result)
 
     credential_request_module = self.portal.getDefaultModule('Credential Request')
