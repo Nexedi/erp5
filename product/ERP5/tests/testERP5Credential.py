@@ -1225,6 +1225,14 @@ class TestERP5Credential(ERP5TypeTestCase):
         web_site.getRelativeUrl(), self.contract_reference)).getTextContent()
     self.assertTrue(self.contract_content in rendered)
 
+  def test_ERP5Site_viewCredentialRequestForm_no_contract(self):
+    """Check that if no contract is configured none is shown nor it is not
+       required to accept it"""
+    self.logout()
+    result = self.portal.ERP5Site_viewCredentialRequestForm()
+    self.assertFalse('Contract' in result)
+    self.assertFalse('your_term_confirmation' in result)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Credential))
