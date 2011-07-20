@@ -142,10 +142,20 @@ class TestERP5Credential(ERP5TypeTestCase):
         self.portal.getDefaultModule('Person'))
     for module in module_list:
       module.manage_delObjects(list(module.objectIds()))
-    self.stepUnSetCredentialAutomaticApprovalPreferences()
+    self.resetCredentialSystemPreference()
     transaction.commit()
     self.tic()
     self.logout()
+
+  def resetCredentialSystemPreference(self):
+    self.login()
+    preference = self._getPreference()
+    preference.edit(preferred_credential_request_automatic_approval=False,
+                    preferred_credential_recovery_automatic_approval=False,
+                    preferred_organisation_credential_update_automatic_approval=False,
+                    preferred_person_credential_update_automatic_approval=False,
+                    preferred_credential_alarm_automatic_call=False)
+    self._enablePreference()
 
   # Copied from bt5/erp5_egov/TestTemplateItem/testEGovMixin.py
   def decode_email(self, file):
@@ -224,20 +234,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     preference = self._getPreference()
     if preference.getPreferenceState() in ('enable', 'global'):
       preference.disable()
-
-  def stepUnSetCredentialAutomaticApprovalPreferences(self, sequence=None,
-      sequence_list=None, **kw):
-    self.login()
-    preference = self._getPreference()
-    preference.edit(preferred_credential_request_automatic_approval=False,
-                    preferred_credential_recovery_automatic_approval=False,
-                    preferred_organisation_credential_update_automatic_approval=False,
-                    preferred_person_credential_update_automatic_approval=False,
-                    preferred_credential_alarm_automatic_call=False)
-    self._enablePreference()
-    transaction.commit()
-    self.tic()
-    self.logout()
 
   def stepSetCredentialRequestAutomaticApprovalPreferences(self, sequence=None):
     self.login()
@@ -911,7 +907,6 @@ class TestERP5Credential(ERP5TypeTestCase):
                       'SetCredentialRequestAutomaticApprovalPreferences '\
                       'CreateCredentialRequestSample '\
                       'CheckIfMailMessageWasPosted '\
-                      'stepUnSetCredentialAutomaticApprovalPreferences'\
 
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -941,7 +936,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertNotEquals(re.search("Hello\ Vifib\ Test\,", message_text), None)
     self.assertNotEquals(re.search("key\=..%s" % mail_message.getReference(),
       message_text), None)
-    self.stepUnSetCredentialAutomaticApprovalPreferences()
 
   def testAssignmentCreationUsingSystemPreferenceProperty(self):
     """
@@ -992,7 +986,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     assignment = assignment_list[0]
     self.assertEquals(assignment.getValidationState(), "open")
     self.assertEquals(person.getValidationState(), "validated")
-    self.stepUnSetCredentialAutomaticApprovalPreferences()
 
   def testERP5Site_newCredentialRequest(self):
     """
@@ -1011,7 +1004,6 @@ class TestERP5Credential(ERP5TypeTestCase):
         "barney@duff.com")
     self.assertEquals(credential_request.getRole(), "internal")
     self.assertEquals(credential_request.getFunction(), "member")
-    self.stepUnSetCredentialAutomaticApprovalPreferences()
 
   def test_double_ERP5Site_newCredentialRequest(self):
     """Check that ERP5Site_newCredentialRequest will not create conflicting
@@ -1042,7 +1034,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.portal.portal_alarms.accept_submitted_credentials.activeSense()
     transaction.commit()
     self.tic()
-    self.stepUnSetCredentialAutomaticApprovalPreferences()
 
   def test_double_ERP5Site_newCredentialRequest_indexation(self):
     """Check that ERP5Site_newCredentialRequest will react correctly in case
