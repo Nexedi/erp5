@@ -96,7 +96,7 @@ class TemplateTool (BaseTool):
     title = 'Template Tool'
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
-    allowed_types = ( 'ERP5 Business Template',)
+    allowed_types = ('ERP5 Business Template', )
 
     # This stores information on repositories.
     repository_dict = {}
@@ -104,8 +104,8 @@ class TemplateTool (BaseTool):
     # Declarative Security
     security = ClassSecurityInfo()
 
-    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-    manage_overview = DTMLFile( 'explainTemplateTool', _dtmldir )
+    security.declareProtected(Permissions.ManagePortal, 'manage_overview')
+    manage_overview = DTMLFile('explainTemplateTool', _dtmldir)
 
     def getInstalledBusinessTemplate(self, title, strict=False, **kw):
       """
@@ -232,7 +232,7 @@ class TemplateTool (BaseTool):
       return "file://%s/" % pathname2url(
                   os.path.join(getConfiguration().instancehome, 'bt5'))
 
-    security.declareProtected( 'Import/Export objects', 'save' )
+    security.declareProtected('Import/Export objects', 'save')
     def save(self, business_template, REQUEST=None, RESPONSE=None):
       """
         Save the BusinessTemplate in the servers's filesystem.
@@ -426,7 +426,7 @@ class TemplateTool (BaseTool):
           # this looks like a subversion repository, try to check it out
           LOG('ERP5', INFO, 'TemplateTool doing a svn checkout of %s' % url)
           return self._download_svn(url, bt_id)
-        
+
         return self._download_local(file_path, bt_id)
       finally:
         os.remove(temppath)
@@ -856,7 +856,7 @@ class TemplateTool (BaseTool):
           if title == property_dict['title']:
             if (version_restriction is None) or (self.compareVersionStrings(property_dict['version'], version_restriction)):
               if (result is None) or (self.compareVersions(property_dict['version'], result[2]) > 0):
-                result = (repository,  property_dict['id'], property_dict['version'])
+                result = (repository, property_dict['id'], property_dict['version'])
       if result is not None:
         return (result[0], result[1])
       else:
@@ -1218,7 +1218,7 @@ class TemplateTool (BaseTool):
         if name.endswith('.bt5'):
           name = name[:-4]
         business_template_url_dict[name] = {
-          'url':  '%s/%s' % (url, bt.filename),
+          'url': '%s/%s' % (url, bt.filename),
           'revision': bt.getRevision()
           }
       return business_template_url_dict
@@ -1318,9 +1318,9 @@ class TemplateTool (BaseTool):
                                          update_catalog=_MARKER,
                                          reinstall=False,
                                          active_process=None,
-                                         force_keep_list=None, 
+                                         force_keep_list=None,
                                          only_newer=True):
-      """ 
+      """
         This method download and install a bt5, from a URL.
 
         keep_original_list can be used to make paths not touched at all
@@ -1436,7 +1436,7 @@ class TemplateTool (BaseTool):
       for base_url in base_url_list:
         url = "%s/%s" % (base_url, bt5_title)
         if base_url == "INSTANCE_HOME_REPOSITORY":
-          url = "file://%s/bt5/%s" % (getConfiguration().instancehome, 
+          url = "file://%s/bt5/%s" % (getConfiguration().instancehome,
                                       bt5_title)
           LOG('ERP5', INFO, "TemplateTool: INSTANCE_HOME_REPOSITORY is %s." \
               % url)
@@ -1452,7 +1452,7 @@ class TemplateTool (BaseTool):
             return url
           except (urllib2.HTTPError, OSError):
             pass
-      LOG('ERP5', INFO, 'TemplateTool: %s was not found into the url list: ' 
+      LOG('ERP5', INFO, 'TemplateTool: %s was not found into the url list: '
                         '%s.' % (bt5_title, base_url_list))
       return None
 
