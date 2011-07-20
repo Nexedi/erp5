@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>vifib_contract</string> </value>
+            <value> <string>contract</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -273,7 +273,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>vifib_contract</string> </value>
+                    <value> <string>Contract</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
