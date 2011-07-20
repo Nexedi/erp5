@@ -1234,6 +1234,52 @@ class TemplateTool (BaseTool):
         only_newer, update_catalog, activate=False)
 
     security.declareProtected(Permissions.ManagePortal,
+         'resolveBusinessTemplateListDependency')
+    def resolveBusinessTemplateListDependency(self, template_title_list, 
+              newest_only=True):
+      available_bt5_list = self.getRepositoryBusinessTemplateList(
+        newest_only=newest_only)
+
+      installed_bt5_title_list = self.getInstalledBusinessTemplateTitleList()
+
+      bt5_set = set([])
+      for available_bt5 in available_bt5_list:
+        if available_bt5.title in template_title_list:
+          document = self.getInstalledBusinessTemplate(available_bt5.title)
+          if not newest_only or document is None or (document is not None and  \
+              (int(document.getRevision()) < int(available_bt5.getRevision()))):
+  
+            bt5 = self.decodeRepositoryBusinessTemplateUid(available_bt5.uid)
+            bt5_set.add(bt5)
+            for dep_repository, dep_id in self.getDependencyList(bt5):
+              if dep_repository != 'meta':
+                bt5_set.add((dep_repository, dep_id))
+              else:
+                provider_list = self.getProviderList(dep_id)
+                provider_installed = False
+                for provider in provider_list:
+                  if provider in [i[1].replace(".bt5", "") for i in bt5_set] or \
+                       provider in installed_bt5_title_list or \
+                       provider in template_title_list:
+                    provider_installed = True
+                    break
+
+                if not provider_installed:
+                  if len(provider_list) == 1:
+                    for candidate in available_bt5_list:
+                      if candidate.title == provider_list[0]:
+                        bt5_set.add(\
+                          self.decodeRepositoryBusinessTemplateUid(
+                              candidate.uid))
+                        break
+                  else:
+                    raise BusinessTemplateMissingDependency,\
+                      "Unable to resolve dependencies for %s, options are %s" \
+                          % (dep_id, provider_list)
+      
+      return self.sortBusinessTemplateList(list(bt5_set))
+
+    security.declareProtected(Permissions.ManagePortal,
         'installBusinessTemplateListFromRepository')
     def installBusinessTemplateListFromRepository(self, template_list,
         only_newer=True, update_catalog=_MARKER, activate=False):
