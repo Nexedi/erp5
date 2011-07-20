@@ -823,6 +823,9 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepSetCredentialRequestCreatedMessage(self, sequence=None, **kw):
+    sequence['portal_status_message'] = 'Credential%20Request%20Created'
+
   def test_04_automaticCredentialRequestApproval(self):
     '''
     if the property preferred_credential_request_automatic_approval is True on
@@ -833,6 +836,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     '''
     sequence_list = SequenceList()
     sequence_string = 'SetCredentialRequestAutomaticApprovalPreferences '\
+                      'SetCredentialRequestCreatedMessage ' \
                       'CreateSimpleSubscriptionRequest Tic '\
                       'CheckAccountIsCreated '\
 
