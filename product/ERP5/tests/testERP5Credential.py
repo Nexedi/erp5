@@ -1044,10 +1044,32 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.tic()
     self.stepUnSetCredentialAutomaticApprovalPreferences()
 
-  def test_double_ERP5Site_newCredentialRequest_double_click(self):
-    """Check that ERP5Site_newCredentialRequest will react correctly on double
-       click"""
-    raise NotImplementedError
+  def test_double_ERP5Site_newCredentialRequest_indexation(self):
+    """Check that ERP5Site_newCredentialRequest will react correctly in case
+       if indexation is still ongoing."""
+    sequence = dict(automatic_call=True)
+    self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
+    self.stepSetCredentialAssignmentPropertyList()
+    reference = self.id()
+    self.logout()
+    response = self.portal.ERP5Site_newCredentialRequest(reference=reference,
+        default_email_text='some@one.com',)
+    self.login()
+    self.assertTrue('Credential%20Request%20Created.' in response)
+    transaction.commit()
+    self.logout()
+    response = self.portal.ERP5Site_newCredentialRequest(reference=reference,
+        default_email_text='some@one.com',)
+    self.login()
+    # Now is time to assert that even if no reindexation was done yet, another
+    # request will already refuse to create new credential request.
+    self.assertTrue('Selected%20login%20is%20already%20in%20use%2C%20pl'
+      'ease%20choose%20different%20one' in response)
+    transaction.commit()
+    self.tic()
+    # just to be sure that last response not resulted with creation of object
+    self.assertEqual(1, self.portal.portal_catalog.countResults(
+      portal_type='Credential Request', reference=reference)[0][0])
 
   def testERP5Site_newCredentialRecoveryWithNoSecurityQuestion(self):
     """
