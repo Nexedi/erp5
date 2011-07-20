@@ -471,7 +471,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         default_credential_question_question='credential/library_card_number',
         default_credential_question_answer='923R4293'
         )
-    self.assertTrue('portal_status_message=Credential%20Request%20Created.'\
+    self.assertTrue('portal_status_message=Thanks%20for%20your%20registration.%20You%20will%20be%20receive%20an%20email%20to%20activate%20your%20account.'\
         in result)
 
     transaction.commit()
@@ -512,7 +512,7 @@ class TestERP5Credential(ERP5TypeTestCase):
             'car model do you have ?',
         default_credential_question_answer='Renault 4L'
         )
-    self.assertTrue('portal_status_message=Credential%20Request%20Created.'\
+    self.assertTrue('portal_status_message=Thanks%20for%20your%20registration.%20You%20will%20be%20receive%20an%20email%20to%20activate%20your%20account.'\
         in result)
 
     transaction.commit()
@@ -877,6 +877,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     '''
     sequence_list = SequenceList()
     sequence_string = 'CreateSubscriptionRequestWithSecurityQuestionCategory '\
+                      'SubmitSubscriptionRequest Tic '\
                       'AcceptSubscriptionRequest Tic '\
                       'CheckSecurityQuestionCategoryAsBeenCopiedOnPersonObject '\
 
@@ -890,6 +891,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     '''
     sequence_list = SequenceList()
     sequence_string = 'CreateSubscriptionRequestWithSecurityQuestionFreeText '\
+                      'SubmitSubscriptionRequest Tic '\
                       'AcceptSubscriptionRequest Tic '\
                       'CheckSecurityQuestionFreeTextAsBeenCopiedOnPersonObject '\
 
