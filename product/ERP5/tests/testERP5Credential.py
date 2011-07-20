@@ -233,7 +233,7 @@ class TestERP5Credential(ERP5TypeTestCase):
                     preferred_credential_recovery_automatic_approval=False,
                     preferred_organisation_credential_update_automatic_approval=False,
                     preferred_person_credential_update_automatic_approval=False,
-                    preferred_credential_alarm_automatic_call=True)
+                    preferred_credential_alarm_automatic_call=False)
     self._enablePreference()
     transaction.commit()
     self.tic()
