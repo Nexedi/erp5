@@ -155,7 +155,8 @@ class TestERP5Credential(ERP5TypeTestCase):
                     preferred_organisation_credential_update_automatic_approval=False,
                     preferred_person_credential_update_automatic_approval=False,
                     preferred_credential_alarm_automatic_call=False,
-                    preferred_subscription_assignment_category_list=[])
+                    preferred_subscription_assignment_category_list=[],
+                    preferred_credential_contract_document_reference=None)
     self._enablePreference()
 
   # Copied from bt5/erp5_egov/TestTemplateItem/testEGovMixin.py
@@ -1163,6 +1164,66 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def _prepareContractAndPreference(self):
+    self.contract_reference = self.id()
+    self.contract_content = 'My contract %s.' % self.contract_reference
+    preference = self._getPreference()
+    preference.edit(
+      preferred_credential_contract_document_reference=self.contract_reference)
+    self._enablePreference()
+    # reset the cache in order to have this preference working
+    self.portal.portal_caches.clearAllCache()
+    
+    self.contract = self.portal.web_page_module.newContent(
+      portal_type='Web Page',
+      reference=self.contract_reference,
+      language='en',
+      version='1',
+      text_content=self.contract_content
+    )
+    self.contract.publish()
+    transaction.commit()
+    self.tic()
+
+  def test_ERP5Site_viewCredentialRequestForm_contract(self):
+    """Check that if contract document is configured and it is published it
+       is shown while using join form"""
+    self._prepareContractAndPreference()
+    # render the form anonymous...
+    self.logout()
+    result = self.portal.ERP5Site_viewCredentialRequestForm()
+    # but check as superuser
+    self.login()
+    self.assertTrue('%s/asStrippedHTML' % self.contract.getRelativeUrl() in result)
+
+    # check if really contract has been correctly rendered
+    self.logout()
+    rendered = self.contract.asStrippedHTML()
+    self.assertTrue(self.contract_content in rendered)
+
+  def test_ERP5Site_viewCredentialRequestForm_contract_web(self):
+    """Check that if contract document is configured and it is published it
+       is shown while using join form in Web site"""
+    self._prepareContractAndPreference()
+
+    # create cool web site
+    web_site = self.portal.web_site_module.newContent(portal_type='Web Site')
+    web_site.publish()
+    transaction.commit()
+    self.tic()
+
+    # render the form anonymous...
+    self.logout()
+    result = web_site.ERP5Site_viewCredentialRequestForm()
+    # but check as superuser
+    self.login()
+    self.assertTrue(self.contract_reference in result)
+
+    # check if really contract has been correctly rendered
+    self.logout()
+    rendered = self.portal.unrestrictedTraverse('%s/%s' % (
+        web_site.getRelativeUrl(), self.contract_reference)).getTextContent()
+    self.assertTrue(self.contract_content in rendered)
 
 def test_suite():
   suite = unittest.TestSuite()
