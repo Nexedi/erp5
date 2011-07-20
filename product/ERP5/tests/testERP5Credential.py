@@ -849,7 +849,7 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def test_05_automaticCredentialUpdateApproval(self):
     '''
-    if the property preferred_credential_request_automatic_approval is True on
+    if the property preferred_credential_update_automatic_approval is True on
     System Preference object. it means that the Credential Update object
     should be accepted automatically and account created without any human
     intervention.
@@ -857,7 +857,9 @@ class TestERP5Credential(ERP5TypeTestCase):
     '''
     sequence_list = SequenceList()
     sequence_string = 'SetPersonCredentialUpdateAutomaticApprovalPreferences '\
+                      'SetCredentialAssignmentPropertyList '\
                       'CreateSimpleSubscriptionRequest '\
+                      'SubmitSubscriptionRequest Tic '\
                       'AcceptSubscriptionRequest Tic '\
                       'CheckAccountIsCreated '\
                       'CreateCredentialUpdate Tic '\
