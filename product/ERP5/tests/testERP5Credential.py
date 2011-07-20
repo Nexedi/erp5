@@ -836,7 +836,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     '''
     sequence_list = SequenceList()
     sequence_string = 'SetCredentialRequestAutomaticApprovalPreferences '\
-                      'SetCredentialRequestCreatedMessage ' \
+                      'SetCredentialAssignmentPropertyList '\
+                      'SetCredentialRequestCreatedMessage '\
                       'CreateSimpleSubscriptionRequest Tic '\
                       'CheckAccountIsCreated '\
 
