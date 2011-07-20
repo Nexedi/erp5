@@ -1085,8 +1085,7 @@ class TestERP5Credential(ERP5TypeTestCase):
       new properties
     """
     sequence_list = SequenceList()
-    sequence_string = "UnSetCredentialAutomaticApprovalPreferences Tic " \
-           "CreateSimpleSubscriptionRequest Tic " \
+    sequence_string = "CreateSimpleSubscriptionRequest Tic " \
            "AcceptSubscriptionRequest Tic " \
            "SetAuditorRoleToCurrentPerson " \
            "SetAssigneeRoleToCurrentPersonInCredentialUpdateModule Tic " \
