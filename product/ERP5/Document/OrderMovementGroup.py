@@ -39,10 +39,7 @@ class OrderMovementGroup(MovementGroup):
   portal_type = 'Order Movement Group'
 
   def _getPropertyDict(self, movement, **kw):
-    property_dict = {}
-    order_relative_url = self._getOrderRelativeUrl(movement)
-    property_dict['causality_list'] = [order_relative_url]
-    return property_dict
+    return {'causality_list': [self._getOrderRelativeUrl(movement)]}
 
   def test(self, movement, property_dict, **kw):
     if set(property_dict['causality_list']).issubset(movement.getCausalityList()):
@@ -52,16 +49,13 @@ class OrderMovementGroup(MovementGroup):
       return False, property_dict
 
   def _getOrderRelativeUrl(self, movement):
-    if hasattr(movement, 'getRootAppliedRule'):
-      # This is a simulation movement
-      order_relative_url = movement.getRootAppliedRule().getCausality(
-        portal_type=movement.getPortalOrderTypeList())
-      if order_relative_url is None:
-        # In some cases (ex. DeliveryRule), there is no order
-        # we may consider a PackingList as the order in the OrderGroup
-        order_relative_url = movement.getRootAppliedRule().getCausality(
-          portal_type=movement.getPortalDeliveryTypeList())
-    else:
-      # This is a temp movement
-      order_relative_url = None
-    return order_relative_url
+    try:
+      getRootAppliedRule = movement.getRootAppliedRule
+    except AttributeError:
+      return # This is a temp movement
+    # This is a simulation movement
+    getCausality = getRootAppliedRule().getCausality
+    return (getCausality(portal_type=movement.getPortalOrderTypeList()) or
+            # In some cases (ex. DeliveryRule), there is no order
+            # we may consider a PackingList as the order in the OrderGroup
+            getCausality(portal_type=movement.getPortalDeliveryTypeList()))
