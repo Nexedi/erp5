@@ -154,7 +154,8 @@ class TestERP5Credential(ERP5TypeTestCase):
                     preferred_credential_recovery_automatic_approval=False,
                     preferred_organisation_credential_update_automatic_approval=False,
                     preferred_person_credential_update_automatic_approval=False,
-                    preferred_credential_alarm_automatic_call=False)
+                    preferred_credential_alarm_automatic_call=False,
+                    preferred_subscription_assignment_category_list=[])
     self._enablePreference()
 
   # Copied from bt5/erp5_egov/TestTemplateItem/testEGovMixin.py
