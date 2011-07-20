@@ -7,4 +7,3 @@ portal_alarms/accept_submitted_credentials
 portal_categories/question
 portal_categories/question/credential
 portal_categories/question/credential/**
-web_page_module/erp5-Contract
