@@ -802,7 +802,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     log in the system.
     '''
     sequence_list = SequenceList()
-    sequence_string = 'CreateSimpleSubscriptionRequest Tic '\
+    sequence_string = 'SetCredentialAssignmentPropertyList '\
+                      'CreateSimpleSubscriptionRequest Tic '\
                       'SubmitSubscriptionRequest Tic '\
                       'AcceptSubscriptionRequest Tic '\
                       'CheckAccountIsCreated Tic '\
@@ -816,7 +817,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     update
     '''
     sequence_list = SequenceList()
-    sequence_string = 'CreateSimpleSubscriptionRequest '\
+    sequence_string = 'SetCredentialAssignmentPropertyList ' \
+                      'CreateSimpleSubscriptionRequest '\
                       'SubmitSubscriptionRequest Tic '\
                       'AcceptSubscriptionRequest Tic '\
                       'CreateCredentialUpdate '\
