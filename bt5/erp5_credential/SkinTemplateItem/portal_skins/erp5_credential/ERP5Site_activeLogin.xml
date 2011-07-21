@@ -57,6 +57,7 @@ mail_message = portal.portal_catalog.getResultValue(portal_type="Mail Message", 
 credential_request = mail_message.getFollowUpValue()\n
 \n
 credential_request.submit(comment=\'Create by subscription form\')\n
+\n
 mail_message.deliver()\n
 message = "Your account is being activated. You will receive one e-mail after finish the activation"\n
 return context.Base_redirect("login_form?portal_status_message=%s" % message)\n
