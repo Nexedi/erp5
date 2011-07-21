@@ -110,6 +110,11 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # file two more failures so we should detect and block account
     self.assertEqual(2, len(person.notifyLoginFailure()))
     self.assertEqual(3, len(person.notifyLoginFailure()))
+    
+    # we do not need to store more than max allowed failures so check it here
+    # this way a bot can not brute force us by filling up session storage backend
+    for i in range (0, 1000):
+      self.assertEqual(3, len(person.notifyLoginFailure()))
 
     #import pdb; pdb.set_trace()
     self.assertTrue(person.isLoginBlocked())

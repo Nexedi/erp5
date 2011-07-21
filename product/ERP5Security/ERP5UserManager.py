@@ -179,6 +179,7 @@ class ERP5UserManager(BasePlugin):
           return authentication_result
         
         # authentication policy enabled, we need person object anyway
+        # XXX: every request is a MySQL call
         user_list = self.getUserByLogin(credentials.get('login'))
         if not user_list:
           # not an ERP5 Person object
