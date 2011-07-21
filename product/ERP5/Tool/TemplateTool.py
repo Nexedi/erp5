@@ -1226,12 +1226,13 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
         'installBusinessTemplatesFromRepositories')
     def installBusinessTemplatesFromRepositories(self, template_list,
-        only_newer=True, update_catalog=_MARKER):
+        only_newer=True, update_catalog=_MARKER, activate=False,
+        install_dependency=False):
       """Deprecated.
       """
       DeprecationWarning('getInstalledBusinessTemplatesList is deprecated; Use getInstalledBusinessTemplateList instead.', DeprecationWarning)
       return self.installBusinessTemplateListFromRepository(template_list,
-        only_newer, update_catalog, activate=False)
+        only_newer, update_catalog, activate, install_dependency)
 
     security.declareProtected(Permissions.ManagePortal,
          'resolveBusinessTemplateListDependency')
@@ -1287,32 +1288,44 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
         'installBusinessTemplateListFromRepository')
     def installBusinessTemplateListFromRepository(self, template_list,
-        only_newer=True, update_catalog=_MARKER, activate=False):
+        only_newer=True, update_catalog=_MARKER, activate=False,
+        install_dependency=False):
       """Installs template_list from configured repositories by default only newest"""
       # XXX-Luke: This method could replace
       # TemplateTool_installRepositoryBusinessTemplateList while still being
       # possible to reuse by external callers
-      opreation_log = []
-      template_dict = self._getBusinessTemplateUrlDict(only_newer)
-      for template_name in template_list:
-        if template_name in template_dict:
-          installed_bt = self.getInstalledBusinessTemplate(template_name)
-          if installed_bt is None or not only_newer or \
-              installed_bt.getRevision() < template_dict[
-              template_name]['revision']:
-            template_document = self.download(template_dict[template_name][
-              'url'])
-            if update_catalog is _MARKER:
-              template_document.install()
-            else:
-              template_document.install(update_catalog=update_catalog)
-            opreation_log.append('Installed %s with revision %s' % (
-              template_document.getTitle(), template_document.getRevision()))
-          else:
-            opreation_log.append('Skipped %s' % template_name)
+
+      operation_log = []
+      resolved_template_list = self.resolveBusinessTemplateListDependency(
+                   template_list, newest_only=only_newer)
+
+      if not install_dependency:
+        missing_dependency_list = [i[1] for i in resolved_template_list
+                             if i[1].replace(".bt5", "") not in template_list]
+        if len(missing_dependency_list) > 0:
+          raise BusinessTemplateMissingDependency,\
+           "Impossible to install, please install the following dependencies before: %s" \
+              % missing_dependency_list
+
+      activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()))
+      for repository, bt_id in resolved_template_list:
+        bt_url = '%s/%s' % (repository, bt_id)
+        param_dict = dict(download_url=bt_url, only_newer=only_newer)
+        if update_catalog is not _MARKER:
+          param_dict["update_catalog"] = update_catalog
+
+        if activate:
+          self.activate(**activate_kw).\
+                updateBusinessTemplateFromUrl(**param_dict)
+          activate_kw["after_tag"] = activate_kw["tag"]
+          activate_kw["tag"] = bt_id
+          operation_log.append('Installed %s using activities' % (bt_id))
         else:
-          opreation_log.append('Not found in repositories %s' % template_name)
-      return opreation_log
+          document = self.updateBusinessTemplateFromUrl(**param_dict)
+          operation_log.append('Installed %s with revision %s' % (
+              document.getTitle(), document.getRevision()))
+
+      return operation_log
 
     security.declareProtected(Permissions.ManagePortal,
             'updateBusinessTemplateFromUrl')
