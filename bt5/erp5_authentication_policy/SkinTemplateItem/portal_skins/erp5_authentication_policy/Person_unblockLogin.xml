@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 \n
-if not context.ERP5Site_isAuthenticationPolicyEnabled():\n
+if not portal.ERP5Site_isAuthenticationPolicyEnabled():\n
   # no policy, no sense to block account\n
   return 0\n
 \n
@@ -60,11 +60,14 @@ key = \'authentication_failure_list\'\n
 session_id = context.Person_getAuthenticationSessionId()\n
 session = portal.portal_sessions[session_id]\n
 session[key] = []\n
+if not batch_mode:\n
+  message = context.Base_translateString(\'User Login unblocked.\')\n
+  context.Base_redirect(form_id=form_id, keep_items={\'portal_status_message\': message})\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>form_id, batch_mode=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
