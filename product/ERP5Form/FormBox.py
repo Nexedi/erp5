@@ -74,7 +74,7 @@ class FormBoxWidget(Widget.Widget):
                                 description=(
     "ID of the form which must be rendered in this box."),
                                 default="",
-                                required=1)
+                                required=0)
 
   default = fields.StringField(
                                 'default',
@@ -94,14 +94,17 @@ class FormBoxWidget(Widget.Widget):
     # using 'cell' parameter.
     if not REQUEST.has_key('cell'):
       REQUEST.set('cell', here)
-    try:
-      form = getattr(here, field.get_value('formbox_target_id'))
-    except AttributeError:
-      LOG('FormBox', WARNING, 
-          'Could not get a form from formbox %s in %s' % \
-              (field.id, field.aq_parent.id))
-      return ''
-    return form(REQUEST=REQUEST, key_prefix=key)
+    target_id = field.get_value('formbox_target_id')
+    if target_id not in (None, ''):
+      try:
+        form = getattr(here, target_id)
+      except AttributeError:
+        LOG('FormBox', WARNING,
+            'Could not get a form from formbox %s in %s' % \
+                (field.id, field.aq_parent.id))
+      else:
+        result = form(REQUEST=REQUEST, key_prefix=key)
+    return result
 
 class FormBoxEditor:
   """
