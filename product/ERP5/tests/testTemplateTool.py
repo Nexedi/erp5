@@ -71,17 +71,22 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt_list = self.templates_tool.searchFolder(title='erp5_base')
     self.assertEquals(len(bt_list), 1)
     erp5_base = bt_list[0].getObject()
-    erp5_base.edit(revision=int(erp5_base.getRevision()) - 10)
+    try:
+      erp5_base.edit(revision=int(erp5_base.getRevision()) - 10)
 
-    updatable_bt_list = self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)
-    self.assertEqual(
-           [i.title for i in updatable_bt_list if i.title == "erp5_base"], 
+      updatable_bt_list = \
+        self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)
+      self.assertEqual(
+           [i.title for i in updatable_bt_list if i.title == "erp5_base"],
            ["erp5_base"])
-    erp5_base.replace()
-    updatable_bt_list = self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)
-    self.assertEqual(
+      erp5_base.replace()
+      updatable_bt_list = \
+        self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)
+      self.assertEqual(
            [i.title for i in updatable_bt_list if i.title == "erp5_base"],
            [])
+    finally:
+      erp5_base.edit(revision=int(erp5_base.getRevision()) + 10)
 
   def test_download_http(self):
     test_web = self.portal.portal_templates.download(
