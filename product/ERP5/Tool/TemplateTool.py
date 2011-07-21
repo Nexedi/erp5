@@ -59,6 +59,7 @@ from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
 import subprocess
+import time
 
 
 WIN = os.name == 'nt'
@@ -1236,7 +1237,7 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.ManagePortal,
          'resolveBusinessTemplateListDependency')
-    def resolveBusinessTemplateListDependency(self, template_title_list, 
+    def resolveBusinessTemplateListDependency(self, template_title_list,
               newest_only=True):
       available_bt5_list = self.getRepositoryBusinessTemplateList(
         newest_only=newest_only)
