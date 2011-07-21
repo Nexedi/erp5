@@ -1240,11 +1240,13 @@ class TemplateTool (BaseTool):
       available_bt5_list = self.getRepositoryBusinessTemplateList(
         newest_only=newest_only)
 
+      template_title_list = set(template_title_list)
       installed_bt5_title_list = self.getInstalledBusinessTemplateTitleList()
 
       bt5_set = set([])
       for available_bt5 in available_bt5_list:
         if available_bt5.title in template_title_list:
+          template_title_list.remove(available_bt5.title)
           document = self.getInstalledBusinessTemplate(available_bt5.title)
           if not newest_only or document is None or (document is not None and  \
               (int(document.getRevision()) < int(available_bt5.getRevision()))):
@@ -1276,7 +1278,10 @@ class TemplateTool (BaseTool):
                     raise BusinessTemplateMissingDependency,\
                       "Unable to resolve dependencies for %s, options are %s" \
                           % (dep_id, provider_list)
-      
+
+      if len(template_title_list) > 0:
+         raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repositories %s' % \
+             (list(template_title_list), self.getRepositoryList())
       return self.sortBusinessTemplateList(list(bt5_set))
 
     security.declareProtected(Permissions.ManagePortal,
