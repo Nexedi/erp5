@@ -33,11 +33,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Automatically accept credential recovery</string> </value>
+            <value> <string>If set will make an email verification by sending an email activation message to specified by user email address.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>preferred_credential_recovery_automatic_approval_property</string> </value>
+            <value> <string>preferred_email_verification_check_property</string> </value>
         </item>
         <item>
             <key> <string>mode</string> </key>
@@ -53,7 +53,7 @@
         </item>
         <item>
             <key> <string>property_default</string> </key>
-            <value> <string>python: False</string> </value>
+            <value> <string>python: True</string> </value>
         </item>
         <item>
             <key> <string>write_permission</string> </key>
