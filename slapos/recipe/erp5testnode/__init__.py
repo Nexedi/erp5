@@ -24,7 +24,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from slapos.lib.recipe.BaseSlapRecipe import BaseSlapRecipe
+from slapos.recipe.librecipe import BaseSlapRecipe
 import os
 import pkg_resources
 import zc.buildout
@@ -159,7 +159,7 @@ class Recipe(BaseSlapRecipe):
       os.symlink(destination, link)
 
   def _install(self):
-    self.requirements, self.ws = self.egg.working_set([__name__])
+    self.requirements, self.ws = self.egg.working_set()
     self.path_list = []
     self.installSlapOs()
     self.setupRunningWrapper()

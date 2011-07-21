@@ -1,7 +1,0 @@
-Changelog
-=========
-
-1.1 (unreleased)
-----------------
-
- * backup enabled for Certificate Authority [Łukasz Nowak]
