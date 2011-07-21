@@ -360,22 +360,6 @@ class BusinessConfiguration(Item):
     global_configuration_attributes = getattr(self, '_global_configuration_attributes', {})
     return global_configuration_attributes.get(key, default)
 
-  security.declareProtected(Permissions.View, 'getBuiltBusinessConfigurationBT5List')
-  def getBuiltBusinessConfigurationBT5List(self):
-    """
-      Get list of built business templates in a Wizard format.
-    """
-    bt5_file_list = []
-    for bt_link in self.contentValues(portal_type="Link"):
-      bt5_item = dict(bt5_id=bt_link.getUrlString(), 
-                      bt5_filedata="")
-      bt5_file_list.append(bt5_item)
-
-    for bt_file in self.contentValues(portal_type="File"):
-      bt5_item = dict(bt5_id=bt_file.getId(),
-                      bt5_filedata=bt_file.getData())
-      bt5_file_list.append(bt5_item)
-    return bt5_file_list
 
   ############# Instance and Business Configuration ########################
   security.declareProtected(Permissions.ModifyPortalContent, 'buildConfiguration')
