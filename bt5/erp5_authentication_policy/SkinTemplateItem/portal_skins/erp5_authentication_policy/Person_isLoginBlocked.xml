@@ -84,7 +84,7 @@ failures_for_period = [x for x in authentication_failure_list if x >= check_time
 if len(failures_for_period)>= max_authentication_failures:\n
   # block login as too many authentication failure for given time interval back\n
   block_timeout = failures_for_period[-1] + block_duration*one_second\n
-  context.log(\'check=%s  block=%s  release=%s-> %s\' %(check_duration, block_duration, block_timeout, failures_for_period))\n
+  #context.log(\'check=%s  block=%s  release=%s-> %s\' %(check_duration, block_duration, block_timeout, failures_for_period))\n
   if block_timeout > now:\n
     context.log(\'block %s\' %context.getReference())\n
     request.set(\'is_user_account_blocked\', True)\n

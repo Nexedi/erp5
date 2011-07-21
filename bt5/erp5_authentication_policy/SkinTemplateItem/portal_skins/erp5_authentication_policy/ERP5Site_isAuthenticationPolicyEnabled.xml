@@ -55,10 +55,9 @@
 """\n
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
-portal = context.getPortalObject()\n
-portal_preferences = portal.portal_preferences\n
-\n
 def _isAuthenticationPolicyEnabled():\n
+  portal = context.getPortalObject()\n
+  portal_preferences = portal.portal_preferences\n
   return portal_preferences.getPreferredMaxAuthenticationFailure() or \\\n
          portal_preferences.getPreferredMaxPasswordLifetimeDuration()\n
 \n

@@ -50,44 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
-  File a failed authentication attempt.\n
-"""\n
-from DateTime import DateTime\n
-portal = context.getPortalObject()\n
+            <value> <string>portal = context.getPortalObject()\n
 \n
 if not context.ERP5Site_isAuthenticationPolicyEnabled():\n
-  # no policy, no sense to file failure\n
+  # no policy, no sense to block account\n
   return 0\n
 \n
 key = \'authentication_failure_list\'\n
 session_id = context.Person_getAuthenticationSessionId()\n
 session = portal.portal_sessions[session_id]\n
-\n
-if key not in session.keys():\n
-  # init it only once\n
-  session[key] = []\n
-\n
-authentication_failure_list = session[key]\n
-authentication_failure_list.append(DateTime())\n
-\n
-# we care for only recent failures, no need to save all so purge old one\n
-max_authentication_failures = portal.portal_preferences.getPreferredMaxAuthenticationFailure()\n
-if len(authentication_failure_list)> max_authentication_failures:\n
-  authentication_failure_list.reverse()\n
-  authentication_failure_list = authentication_failure_list[0:max_authentication_failures]\n
-  authentication_failure_list.reverse()\n
-\n
-# update backend\n
-session[key] = authentication_failure_list\n
-\n
-#context.log(\'notify login failure %s %s %s\' %(session_id, session, len(session[key])))\n
-return session[key]\n
-
-
-]]></string> </value>
+session[key] = []\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
@@ -95,7 +68,7 @@ return session[key]\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_notifyLoginFailure</string> </value>
+            <value> <string>Person_unblockLogin</string> </value>
         </item>
       </dictionary>
     </pickle>
