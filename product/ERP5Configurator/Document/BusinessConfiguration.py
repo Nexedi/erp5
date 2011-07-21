@@ -169,7 +169,7 @@ class BusinessConfiguration(Item):
         ## exec next transition for this business configuration 
         self._executeTransition()
         transition = self.getNextTransition()
-        return None, None, None, None, None
+        return None, None, None, None
       if form_id is None:
         ## go on until you find a form
         self._executeTransition()
@@ -187,7 +187,7 @@ class BusinessConfiguration(Item):
         if self._isAlreadyConfSaveInWorkflowHistory(transition):
           previous = translate("Previous")
         return previous, form_html, form_title, \
-               translate(transition.getTitle()), self.getServerBuffer()
+               translate(transition.getTitle())
 
   security.declarePrivate('_renderFormInContext')
   def _renderFormInContext(self, form_id, context, validation_errors):
@@ -328,23 +328,6 @@ class BusinessConfiguration(Item):
       self._multi_entry_transitions = PersistentMapping()
     self._multi_entry_transitions[transition_url] = max_entry_number
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'setServerBuffer')
-  def setServerBuffer(self, **kw):
-    """ Set what we should return to client. """
-    if getattr(aq_base(self), '_server_buffer', None) is None:
-      self._server_buffer = {}
-    for item, value in kw.items():
-      self._server_buffer[item] = value
-    self._p_changed = 1
-
-  security.declareProtected(Permissions.View, 'getServerBuffer')
-  def getServerBuffer(self):
-    """ Get return buffer which will be sent to client and 
-    afterwards deleted. """
-    server_buffer = getattr(aq_base(self), '_server_buffer', {})
-    self._server_buffer = {}
-    return server_buffer
-
   security.declareProtected(Permissions.ModifyPortalContent, 'setGlobalConfigurationAttr')
   def setGlobalConfigurationAttr(self, **kw):
     """ Set global business configuration attribute. """
@@ -359,7 +342,6 @@ class BusinessConfiguration(Item):
     """ Get global business configuration attribute. """
     global_configuration_attributes = getattr(self, '_global_configuration_attributes', {})
     return global_configuration_attributes.get(key, default)
-
 
   ############# Instance and Business Configuration ########################
   security.declareProtected(Permissions.ModifyPortalContent, 'buildConfiguration')

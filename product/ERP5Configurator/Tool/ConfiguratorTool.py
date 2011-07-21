@@ -335,8 +335,8 @@ class ConfiguratorTool(BaseTool):
             ### client can not continue at the momen
             return self._terminateConfigurationProcess(response,
                 reason='no_available_transitions')
-          response["previous"], html, form_title, response["next"], \
-              response['server_buffer'] = business_configuration._displayNextForm()
+          response["previous"], html, form_title, response["next"] \
+                  = business_configuration._displayNextForm()
         else:
           ## validation passed
           need_validation = 0
@@ -347,9 +347,9 @@ class ConfiguratorTool(BaseTool):
               'no_available_transitions')
         ## validation failure
         rendered = True
-        response["previous"], html, form_title, response["next"], \
-            response['server_buffer'] = business_configuration.\
-            _displayNextForm(validation_errors=validation_errors)
+        response["previous"], html, form_title, response["next"] =\
+            business_configuration._displayNextForm(
+                validation_errors=validation_errors)
 
     if html is None:
       ## we have no more forms proceed to build
@@ -409,7 +409,7 @@ class ConfiguratorTool(BaseTool):
       return self.ConfiguratorTool_dialogForm(form_html = form_html,
                                         next = "Next")
 
-    response['previous'], form_html, form_title, response['next'], server_buffer = \
+    response['previous'], form_html, form_title, response['next'] = \
         business_configuration._displayPreviousForm()
 
     next_state = self.restrictedTraverse(
