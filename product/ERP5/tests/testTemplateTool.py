@@ -55,7 +55,8 @@ class TestTemplateTool(ERP5TypeTestCase):
   def afterSetUp(self):
     self.templates_tool = self.portal.portal_templates
     self.templates_tool.updateRepositoryBusinessTemplateList(\
-                    ["http://www.erp5.org/dists/snapshot/bt5/",])
+                    ["http://www.erp5.org/dists/snapshot/bt5/", ])
+
 
   def beforeTearDown(self):
     uninstall_bt_list = ["erp5_odt_style", "erp5_pdm", 'erp5_accounting']
@@ -168,7 +169,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     template_tool = self.portal.portal_templates
     url = 'https://svn.erp5.org/repos/public/erp5/trunk/bt5/test_core'
     # don't install test_file
-    keep_original_list = ( 'portal_skins/erp5_test/test_file', )
+    keep_original_list = ('portal_skins/erp5_test/test_file', )
     template_tool.updateBusinessTemplateFromUrl(url,
                                    keep_original_list=keep_original_list)
     bt = template_tool.getInstalledBusinessTemplate('test_core')
@@ -299,7 +300,7 @@ class TestTemplateTool(ERP5TypeTestCase):
   def test_getInstalledBusinessTemplateList(self):
     templates_tool = self.getPortal().portal_templates
     bt5_list = templates_tool.getInstalledBusinessTemplateList()
-    another_bt_list = [ i for i in templates_tool.contentValues() \
+    another_bt_list = [i for i in templates_tool.contentValues() \
                        if i.getInstallationState() == 'installed']
     self.assertEquals(len(bt5_list), len(another_bt_list))
     for bt in bt5_list:
@@ -310,8 +311,8 @@ class TestTemplateTool(ERP5TypeTestCase):
 
   def test_getInstalledBusinessTemplateTitleList(self):
     templates_tool = self.getPortal().portal_templates
-    bt5_list =  templates_tool.getInstalledBusinessTemplateTitleList()
-    another_bt_list = [ i.getTitle() for i in templates_tool.contentValues() \
+    bt5_list = templates_tool.getInstalledBusinessTemplateTitleList()
+    another_bt_list = [i.getTitle() for i in templates_tool.contentValues() \
                        if i.getInstallationState() == 'installed']
     bt5_list.sort()
     another_bt_list.sort()
@@ -328,11 +329,11 @@ class TestTemplateTool(ERP5TypeTestCase):
         template
     """
     # How to define an existing and use INSTANCE_HOME_REPOSITORY?
-    url_list = [ 'https://svn.erp5.org/repos/public/erp5/trunk/bt5',
-                 'http://www.erp5.org/dists/snapshot/bt5',
-                 'http://www.erp5.org/dists/release/5.4.5/bt5',
-                 "INSTANCE_HOME_REPOSITORY",
-                 'file:///opt/does/not/exist']
+    url_list = ['https://svn.erp5.org/repos/public/erp5/trunk/bt5',
+                'http://www.erp5.org/dists/snapshot/bt5',
+                'http://www.erp5.org/dists/release/5.4.5/bt5',
+                "INSTANCE_HOME_REPOSITORY",
+                'file:///opt/does/not/exist']
 
     exist_bt5 = 'erp5_base'
     not_exist_bt5 = "erp5_not_exist"
@@ -368,7 +369,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     template_tool = self.portal.portal_templates
     bt5_id_list = ['erp5_accounting']
     bt5_list = template_tool.resolveBusinessTemplateListDependency(bt5_id_list)
-    self.assertEquals([(repository, 'erp5_simulation.bt5'), 
+    self.assertEquals([(repository, 'erp5_simulation.bt5'),
                        (repository, 'erp5_accounting.bt5')], bt5_list)
 
     bt5_id_list = ['erp5_csv_style']
@@ -387,11 +388,12 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt5_id_list = ['erp5_configurator_ung']
     bt5_list = template_tool.resolveBusinessTemplateListDependency(bt5_id_list)
     self.assertEquals([(repository, 'erp5_workflow.bt5'),
-                       (repository, 'erp5_configurator.bt5'), 
+                       (repository, 'erp5_configurator.bt5'),
                        (repository, 'erp5_configurator_ung.bt5')], bt5_list)
 
-    bt5_id_list = ['erp5_configurator_ung', 'erp5_accounting', 'erp5_invoicing', 
-                   'erp5_crm']
+    bt5_id_list = ['erp5_configurator_ung', 'erp5_accounting',
+                   'erp5_invoicing', 'erp5_crm']
+
     bt5_list = template_tool.resolveBusinessTemplateListDependency(bt5_id_list)
     self.assertEquals([(repository, 'erp5_ingestion_mysql_innodb_catalog.bt5'),
                        (repository, 'erp5_workflow.bt5'),
