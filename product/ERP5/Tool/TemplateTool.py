@@ -1247,10 +1247,10 @@ class TemplateTool (BaseTool):
       for available_bt5 in available_bt5_list:
         if available_bt5.title in template_title_list:
           template_title_list.remove(available_bt5.title)
-          document = self.getInstalledBusinessTemplate(available_bt5.title)
+          document = self.getInstalledBusinessTemplate(available_bt5.title,
+                 strict=True)
           if not newest_only or document is None or (document is not None and  \
               (int(document.getRevision()) < int(available_bt5.getRevision()))):
-  
             bt5 = self.decodeRepositoryBusinessTemplateUid(available_bt5.uid)
             bt5_set.add(bt5)
             for dep_repository, dep_id in self.getDependencyList(bt5):
