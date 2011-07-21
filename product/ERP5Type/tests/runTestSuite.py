@@ -1,6 +1,6 @@
 #!/usr/bin/python2.6
 import argparse, pprint, socket, sys, time, xmlrpclib
-import DummyTaskDistributionTool
+from DummyTaskDistributionTool import DummyTaskDistributionTool
 from ERP5TypeTestSuite import ERP5TypeTestSuite
 
 def makeSuite(node_quantity=None, test_suite=None, revision=None,
@@ -55,9 +55,6 @@ def main():
   parser.add_argument('--master_url',
                       help='The Url of Master controling many suites',
                       default=None)
-  parser.add_argument('--master_directory',
-                      help='Directory to simulate master',
-                      default=None)
   parser.add_argument('--db_list', help='A list of sql connection strings')
   # parameters that needs to be passed to runUnitTest
   parser.add_argument('--conversion_server_hostname', default=None)
@@ -76,11 +73,8 @@ def main():
               (master_url, 'portal_task_distribution'),
               allow_none=1)
     assert master.getProtocolRevision() == 1
-  elif args.master_directory is not None:
-    master = DummyTaskDistributionTool.JSONFSTaskDistributionTool(
-        args.master_directory)
   else:
-    master = DummyTaskDistributionTool.DummyTaskDistributionTool()
+    master = DummyTaskDistributionTool()
   test_suite_title = args.test_suite_title or args.test_suite
   revision = args.revision
   suite = makeSuite(test_suite=args.test_suite,
