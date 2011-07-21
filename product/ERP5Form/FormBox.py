@@ -94,6 +94,7 @@ class FormBoxWidget(Widget.Widget):
     # using 'cell' parameter.
     if not REQUEST.has_key('cell'):
       REQUEST.set('cell', here)
+    result = ''
     target_id = field.get_value('formbox_target_id')
     if target_id not in (None, ''):
       try:
