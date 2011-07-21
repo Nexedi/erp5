@@ -10,3 +10,4 @@ Person | credential
 Person | jump_to_credential_request
 Person | jump_to_credential_update
 System Preference | credential_preference
+portal_actions | update_credentials
