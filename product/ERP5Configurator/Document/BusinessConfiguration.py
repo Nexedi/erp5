@@ -415,17 +415,3 @@ class BusinessConfiguration(Item):
     # ERP5 Workflow initialization
     erp5_workflow = self.getResourceValue()
     erp5_workflow.initializeDocument(self)
-
-  def isStandardBT5(self, bt5_id):
-    """Is bt5_id standard gzipped bt5 id?
-       Use ERP5 site portal_templates to get list of bt5_ids from configured
-       repository. This relies on the fact that the host site have a
-       configured repository.
-    """
-    # XXX This should be one API from portal_templates
-    bt5_title_list = []
-    bt5_title = bt5_id.split('.')[0]
-    for bt5 in self.getPortalObject().portal_templates\
-        .getRepositoryBusinessTemplateList():
-      bt5_title_list.append(bt5.getTitle())
-    return bt5_title in bt5_title_list
