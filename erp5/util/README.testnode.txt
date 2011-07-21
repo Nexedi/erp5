@@ -1,2 +1,2 @@
-erp5testnode
-============
+testnode
+--------
