@@ -1404,15 +1404,14 @@ class TemplateTool (BaseTool):
         log('Execute %r' % before_triggered_bt5_id)
         imported_bt5.unrestrictedTraverse(before_triggered_bt5_id)()
 
-      update_catalog_kw = {}
-      if update_catalog is not _MARKER:
-        update_catalog_kw = dict(update_catalog=update_catalog)
+      if update_catalog is _MARKER and install_kw != {}:
+        update_catalog = imported_bt5.isCatalogUpdatable()
 
       if reinstall:
-        imported_bt5.install(force=True,**update_catalog_kw)
+        imported_bt5.install(force=True,update_catalog=update_catalog)
       else:
         imported_bt5.install(object_to_update=install_kw,
-                             **update_catalog_kw)
+                             update_catalog=update_catalog)
 
       # Run After script list
       for after_triggered_bt5_id in after_triggered_bt5_id_list:
