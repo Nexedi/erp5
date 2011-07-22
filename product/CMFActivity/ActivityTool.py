@@ -895,14 +895,13 @@ class ActivityTool (Folder, UniqueObject):
         acquired = timerservice_lock.acquire(0)
         if not acquired:
           return
-
-        # make sure our skin is set-up. On CMF 1.5 it's setup by acquisition,
-        # but on 2.2 it's by traversal, and our site probably wasn't traversed
-        # by the timerserver request, which goes into the Zope Control_Panel
-        # calling it a second time is a harmless and cheap no-op.
-        # both setupCurrentSkin and REQUEST are acquired from containers.
-        self.setupCurrentSkin(self.REQUEST)
         try:
+          # make sure our skin is set-up. On CMF 1.5 it's setup by acquisition,
+          # but on 2.2 it's by traversal, and our site probably wasn't traversed
+          # by the timerserver request, which goes into the Zope Control_Panel
+          # calling it a second time is a harmless and cheap no-op.
+          # both setupCurrentSkin and REQUEST are acquired from containers.
+          self.setupCurrentSkin(self.REQUEST)
           old_sm = getSecurityManager()
           try:
             try:
