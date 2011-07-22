@@ -37,12 +37,15 @@ setup(name=name,
       install_requires=[
         'setuptools', # namespaces
       ],
+      extras_require={
+        'testnode': ['slapos.core', 'xml_marshaller'],
+      },
       zip_safe=True,
       packages=find_packages(),
       include_package_data=True,
       entry_points={
         'console_scripts': [
-          'testnode = erp5.util.testnode:main',
+          'testnode = erp5.util.testnode:main [testnode]',
         ],
       }
     )
