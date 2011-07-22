@@ -219,10 +219,7 @@ branch = %(branch)s
               retry_software = True
               raise SubprocessError(status_dict)
 
-          partition_path = os.path.join(config['instance_root'],
-                                        config['partition_reference'])
-          run_test_suite_path = os.path.join(partition_path, 'bin',
-                                            'runTestSuite')
+          run_test_suite_path = config['runTestSuite']
           if not os.path.exists(run_test_suite_path):
             raise SubprocessError({
               'command': 'os.path.exists(run_test_suite_path)',

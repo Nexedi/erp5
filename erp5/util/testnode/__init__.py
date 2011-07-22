@@ -82,8 +82,8 @@ def main(*args):
   open(CONFIG['slapos_config'], 'w').write(slapos_config)
   CONFIG['git_binary'] = geto('git_binary')
   CONFIG['zip_binary'] = geto('zip_binary')
-  CONFIG['runUnitTest'] = os.path.join(CONFIG['instance_root'],
-    CONFIG['partition_reference'], 'bin', 'runUnitTest')
+  CONFIG['runTestSuite'] = os.path.join(CONFIG['instance_root'],
+    CONFIG['partition_reference'], 'bin', 'runTestSuite')
 
   # generate vcs_repository_list
   vcs_repository_list = []
