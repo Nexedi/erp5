@@ -1,30 +1,10 @@
-##############################################################################
-#
-# Copyright (c) 2011 Nexedi SA and Contributors. All Rights Reserved.
-#
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsibility of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# guarantees and support are strongly advised to contract a Free Software
-# Service Company
-#
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 3
-# of the License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-#
-##############################################################################
-import os, sys, subprocess, re, threading
+import errno
+import os
+import re
+import subprocess
+import sys
+import threading
+
 from testnode import SubprocessError
 
 _format_command_search = re.compile("[[\\s $({?*\\`#~';<>&|]").search
@@ -79,7 +59,13 @@ class Updater(object):
   realtime_output = True
   stdin = file(os.devnull)
 
-  def __init__(self, repository_path, revision=None, git_binary=None):
+  def log(self, message):
+    print message
+
+  def __init__(self, repository_path, revision=None, git_binary=None,
+      log=None):
+    if log is not None:
+      self.log = log
     self.revision = revision
     self._path_list = []
     self.repository_path = repository_path
@@ -120,7 +106,7 @@ class Updater(object):
     quiet = kw.pop('quiet', False)
     env = kw and dict(os.environ, **kw) or None
     command = format_command(*args, **kw)
-    print '\n$ ' + command
+    self.log('$ ' + command)
     sys.stdout.flush()
     p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
                          stderr=subprocess.PIPE, env=env,

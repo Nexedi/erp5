@@ -53,7 +53,12 @@ def main(*args):
     return config.get('testnode', o)
   CONFIG['slapos_directory'] = geto('slapos_directory')
   CONFIG['working_directory'] = geto('working_directory')
-  for d in CONFIG['slapos_directory'], CONFIG['working_directory']:
+  CONFIG['test_suite_directory'] = geto('test_suite_directory')
+  CONFIG['log_directory'] = geto('log_directory')
+  CONFIG['run_directory'] = geto('run_directory')
+  for d in CONFIG['slapos_directory'], CONFIG['working_directory'], \
+      CONFIG['test_suite_directory'], CONFIG['log_directory'], \
+      CONFIG['run_directory']:
     if not os.path.isdir(d):
       raise ValueError('Directory %r does not exists.' % d)
   CONFIG['software_root'] = os.path.join(CONFIG['slapos_directory'],
@@ -87,7 +92,6 @@ def main(*args):
       vcs_repository_list.append(dict(config.items(section)))
   CONFIG['vcs_repository_list'] = vcs_repository_list
 
-  CONFIG['profile_path'] = geto('profile_path')
   CONFIG['test_suite_title'] = geto('test_suite_title')
   CONFIG['test_node_title'] = geto('test_node_title')
   CONFIG['test_suite'] = geto('test_suite')

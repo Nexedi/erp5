@@ -29,7 +29,12 @@ from xml_marshaller import xml_marshaller
 
 class SlapOSControler(object):
 
-  def __init__(self, config, process_group_pid_set=None):
+  def log(self, message):
+    print message
+
+  def __init__(self, config, process_group_pid_set=None, log=None):
+    if log is not None:
+      self.log = log
     self.config = config
     # By erasing everything, we make sure that we are able to "update"
     # existing profiles. This is quite dirty way to do updates...
@@ -54,7 +59,7 @@ class SlapOSControler(object):
     partition_path = os.path.join(config['instance_root'], partition_reference)
     if not os.path.exists(partition_path):
       os.mkdir(partition_path)
-      os.chmod(partition_path, 0750)
+    os.chmod(partition_path, 0750)
     computer.updateConfiguration(xml_marshaller.dumps({
  'address': config['ipv4_address'],
  'instance_root': config['instance_root'],
@@ -74,13 +79,14 @@ class SlapOSControler(object):
 
   def runSoftwareRelease(self, config, environment, process_group_pid_set=None,
                          stdout=None, stderr=None):
-    print "SlapOSControler.runSoftwareRelease"
+    self.log("SlapOSControler.runSoftwareRelease")
     cpu_count = os.sysconf("SC_NPROCESSORS_ONLN")
     os.putenv('MAKEFLAGS', '-j%s' % cpu_count)
     os.environ['PATH'] = environment['PATH']
-    slapgrid = subprocess.Popen([config['slapgrid_software_binary'], '-v', '-c',
+    command = [config['slapgrid_software_binary'], '-v', '-c',
       #'--buildout-parameter',"'-U -N' -o",
-      config['slapos_config']],
+      config['slapos_config']]
+    slapgrid = subprocess.Popen(command,
       stdout=stdout, stderr=stderr,
       close_fds=True, preexec_fn=os.setsid)
     process_group_pid_set.add(slapgrid.pid)
@@ -89,6 +95,7 @@ class SlapOSControler(object):
     stderr.seek(0)
     process_group_pid_set.remove(slapgrid.pid)
     status_dict = {'status_code':slapgrid.returncode,
+                    'command': repr(command),
                     'stdout':stdout.read(),
                     'stderr':stderr.read()}
     stdout.close()
@@ -98,13 +105,14 @@ class SlapOSControler(object):
   def runComputerPartition(self, config, environment,
                            process_group_pid_set=None,
                            stdout=None, stderr=None):
-    print "SlapOSControler.runSoftwareRelease"
+    self.log("SlapOSControler.runComputerPartition")
     slap = slapos.slap.slap()
     slap.registerOpenOrder().request(self.software_profile,
         partition_reference='testing partition',
         partition_parameter_kw=config['instance_dict'])
-    slapgrid = subprocess.Popen([config['slapgrid_partition_binary'],
-      config['slapos_config'], '-c', '-v'],
+    command = [config['slapgrid_partition_binary'],
+      config['slapos_config'], '-c', '-v']
+    slapgrid = subprocess.Popen(command,
       stdout=stdout, stderr=stderr,
       close_fds=True, preexec_fn=os.setsid)
     process_group_pid_set.add(slapgrid.pid)
@@ -113,6 +121,7 @@ class SlapOSControler(object):
     stderr.seek(0)
     process_group_pid_set.remove(slapgrid.pid)
     status_dict = {'status_code':slapgrid.returncode,
+                    'command': repr(command),
                     'stdout':stdout.read(),
                     'stderr':stderr.read()}
     stdout.close()
