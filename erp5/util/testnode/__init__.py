@@ -46,6 +46,8 @@ def main(*args):
   else:
     parsed_argument = parser.parse_args()
   config = ConfigParser.SafeConfigParser()
+  # do not change case of option keys
+  config.optionxform = str
   config.readfp(parsed_argument.configuration_file[0])
   def geto(o):
     return config.get('testnode', o)
