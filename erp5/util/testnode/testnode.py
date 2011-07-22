@@ -67,8 +67,7 @@ def getInputOutputFileList(config, command_name):
 
 slapos_controler = None
 
-def run(args):
-  config = args[0]
+def run(config):
   slapgrid = None
   supervisord_pid_file = os.path.join(config['instance_root'], 'var', 'run',
         'supervisord.pid')
