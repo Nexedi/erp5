@@ -24,8 +24,11 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import slapos.slap, subprocess, os, time
-from xml_marshaller import xml_marshaller
+import os
+import slapos.slap
+import subprocess
+import time
+import xml_marshaller
 
 class SlapOSControler(object):
 
@@ -60,7 +63,7 @@ class SlapOSControler(object):
     if not os.path.exists(partition_path):
       os.mkdir(partition_path)
     os.chmod(partition_path, 0750)
-    computer.updateConfiguration(xml_marshaller.dumps({
+    computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
  'address': config['ipv4_address'],
  'instance_root': config['instance_root'],
  'netmask': '255.255.255.255',

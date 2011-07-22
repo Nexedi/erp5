@@ -24,13 +24,16 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-import os, xmlrpclib, time
+import os
+import pprint
 import signal
+import socket
 import subprocess
 import sys
-import socket
-import pprint
-from SlapOSControler import SlapOSControler
+import time
+import xmlrpclib
+
+import SlapOSControler
 
 class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
@@ -226,7 +229,7 @@ branch = %(branch)s
               updater.checkout()
 
           # Now prepare the installation of SlapOS and create instance
-          slapos_controler = SlapOSControler(config,
+          slapos_controler = SlapOSControler.SlapOSControler(config,
             process_group_pid_set=process_group_pid_set, log=log)
           for method_name in ("runSoftwareRelease", "runComputerPartition"):
             stdout, stderr = getInputOutputFileList(config, method_name)
