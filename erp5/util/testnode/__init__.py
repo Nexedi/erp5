@@ -100,9 +100,7 @@ def main(*args):
   if 'bot_environment' in config.sections():
     bot_environment = dict(config.items('bot_environment'))
   CONFIG['bot_environment'] = bot_environment
-  environment = {}
-  if 'environment' in config.sections():
-    environment = dict(config.items('environment'))
-  CONFIG['environment'] = environment
+  CONFIG['environment'] = dict(config.items('environment'))
+  CONFIG['slapproxy_binary'] = geto('slapproxy_binary')
 
   testnode.run(CONFIG)
