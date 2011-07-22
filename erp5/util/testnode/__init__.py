@@ -28,7 +28,6 @@ import ConfigParser
 import argparse
 import os
 import pkg_resources
-import sys
 
 import testnode
 

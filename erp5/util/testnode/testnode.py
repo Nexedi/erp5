@@ -24,18 +24,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
-from xml_marshaller import xml_marshaller
-import os, xmlrpclib, time, imp
-from glob import glob
+import os, xmlrpclib, time
 import signal
-import slapos.slap
 import subprocess
 import sys
 import socket
 import pprint
-import traceback
 from SlapOSControler import SlapOSControler
-import time
 
 class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
