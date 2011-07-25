@@ -922,7 +922,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       if aq_base_name == None:
         DYNAMIC_METHOD_NAME = 'z_related_'
         STRICT_DYNAMIC_METHOD_NAME = 'z_related_strict_'
-        method_name_length = len(DYNAMIC_METHOD_NAME)
         zope_security = '__roles__'
         if (name.startswith(DYNAMIC_METHOD_NAME) and \
           (not name.endswith(zope_security))):
