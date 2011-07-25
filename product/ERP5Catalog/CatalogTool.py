@@ -61,8 +61,12 @@ from Persistence import Persistent
 from Acquisition import Implicit
 
 DYNAMIC_METHOD_NAME = 'z_related_'
+DYNAMIC_METHOD_NAME_LEN = len(DYNAMIC_METHOD_NAME)
 STRICT_DYNAMIC_METHOD_NAME = DYNAMIC_METHOD_NAME + 'strict_'
+STRICT_DYNAMIC_METHOD_NAME_LEN = len(STRICT_DYNAMIC_METHOD_NAME)
 RELATED_DYNAMIC_METHOD_NAME = '_related'
+# Negative as it's used as a slice end offset
+RELATED_DYNAMIC_METHOD_NAME_LEN = -len(RELATED_DYNAMIC_METHOD_NAME)
 ZOPE_SECURITY_SUFFIX = '__roles__'
 
 class IndexableObjectWrapper(object):
@@ -190,27 +194,39 @@ class RelatedBaseCategory(Method):
     """
     def __init__(self, id, strict_membership=0, related=0):
       self._id = id
-      self.strict_membership=strict_membership
-      self.related = related
+      if strict_membership:
+        strict = 'AND %(category_table)s.category_strict_membership = 1\n'
+      else:
+        strict = ''
+      # From the point of view of query_table, we are looking up objects...
+      if related:
+        # ... which have a relation toward us
+        from_table = 'related'
+        to_table = 'relation_holder'
+      else:
+        # ... toward which we have a relation
+        from_table = 'relation_holder'
+        to_table = 'related'
+      self._template = """\
+%%(category_table)s.base_category_uid = %%(base_category_uid)s
+%(strict)sAND %%(%(to_table)s)s.uid = %%(category_table)s.category_uid
+AND %%(category_table)s.uid = %%(%(from_table)s)s.uid""" % {
+          'strict': strict,
+          'from_table': from_table,
+          'to_table': to_table,
+      }
 
     def __call__(self, instance, table_0, table_1, query_table='catalog', **kw):
       """Create the sql code for this related key."""
-      base_category_uid = instance.portal_categories._getOb(self._id).getUid()
-      expression_list = []
-      append = expression_list.append
-      if self.related:
-        append('%s.uid = %s.uid' % (table_1,table_0))
-        if self.strict_membership:
-          append('AND %s.category_strict_membership = 1' % table_0)
-        append('AND %s.base_category_uid = %s' % (table_0,base_category_uid))
-        append('AND %s.category_uid = %s.uid' % (table_0,query_table))
-      else:
-        append('%s.uid = %s.category_uid' % (table_1,table_0))
-        if self.strict_membership:
-          append('AND %s.category_strict_membership = 1' % table_0)
-        append('AND %s.base_category_uid = %s' % (table_0,base_category_uid))
-        append('AND %s.uid = %s.uid' % (table_0,query_table))
-      return ' '.join(expression_list)
+      # Note: in normal conditions, our category's uid will not change from
+      # one invocation to the next.
+      return self._template % {
+        'base_category_uid': instance.getPortalObject().portal_categories.\
+          _getOb(self._id).getUid(),
+        'category_table': table_0,
+        'relation_holder': query_table,
+        'related': table_1,
+      }
 
 class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     """
@@ -889,31 +905,19 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
             if end_key.startswith('related_'):
               end_key = end_key[len('related_'):]
-              # accept only some catalog columns
-              if end_key in ('title', 'uid', 'description', 'reference',
-                             'relative_url', 'id', 'portal_type',
-                             'simulation_state'):
-                if strict:
-                  related_key_list.append(
-                        '%s%s | category,catalog/%s/z_related_strict_%s_related' %
-                        (prefix, key, end_key, expected_base_cat_id))
-                else:
-                  related_key_list.append(
-                        '%s%s | category,catalog/%s/z_related_%s_related' %
-                        (prefix, key, end_key, expected_base_cat_id))
+              suffix = '_related'
             else:
-              # accept only some catalog columns
-              if end_key in ('title', 'uid', 'description', 'reference',
-                             'relative_url', 'id', 'portal_type',
-                             'simulation_state'):
-                if strict:
-                  related_key_list.append(
-                        '%s%s | category,catalog/%s/z_related_strict_%s' %
-                        (prefix, key, end_key, expected_base_cat_id))
-                else:
-                  related_key_list.append(
-                        '%s%s | category,catalog/%s/z_related_%s' %
-                        (prefix, key, end_key, expected_base_cat_id))
+              suffix = ''
+            # accept only some catalog columns
+            if end_key in ('title', 'uid', 'description', 'reference',
+                           'relative_url', 'id', 'portal_type',
+                           'simulation_state'):
+              if strict:
+                pattern = '%s%s | category,catalog/%s/z_related_strict_%s%s'
+              else:
+                pattern = '%s%s | category,catalog/%s/z_related_%s%s'
+              related_key_list.append(pattern %
+                (prefix, key, end_key, expected_base_cat_id, suffix))
 
       return related_key_list
 
@@ -925,23 +929,18 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       result = None
       if name.startswith(DYNAMIC_METHOD_NAME) and \
           not name.endswith(ZOPE_SECURITY_SUFFIX):
-
+        kw = {}
         if name.endswith(RELATED_DYNAMIC_METHOD_NAME):
-          if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
-            base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):-len('_related')]
-            method = RelatedBaseCategory(base_category_id,
-                                         strict_membership=1, related=1)
-          else:
-            base_category_id = name[len(DYNAMIC_METHOD_NAME):-len('_related')]
-            method = RelatedBaseCategory(base_category_id, related=1)
+          end_offset = RELATED_DYNAMIC_METHOD_NAME_LEN
+          kw['related'] = 1
         else:
-          if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
-            base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):]
-            method = RelatedBaseCategory(base_category_id, strict_membership=1)
-          else:
-            base_category_id = name[len(DYNAMIC_METHOD_NAME):]
-            method = RelatedBaseCategory(base_category_id)
-
+          end_offset = None
+        if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
+          start_offset = STRICT_DYNAMIC_METHOD_NAME_LEN
+          kw['strict_membership'] = 1
+        else:
+          start_offset = DYNAMIC_METHOD_NAME_LEN
+        method = RelatedBaseCategory(name[start_offset:end_offset], **kw)
         setattr(self.__class__, name, method)
         # This getattr has 2 purposes:
         # - wrap in acquisition context
