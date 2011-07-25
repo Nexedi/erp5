@@ -943,6 +943,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             method = RelatedBaseCategory(base_category_id)
 
         setattr(self.__class__, name, method)
+        # This getattr has 2 purposes:
+        # - wrap in acquisition context
+        #   This alone should be explicitly done rather than through getattr.
+        # - wrap (if needed) class attribute on the instance
+        #   (for the sake of not relying on current implementation details
+        #   "too much")
         result = getattr(self, name)
       return result
 
