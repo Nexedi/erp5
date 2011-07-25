@@ -943,13 +943,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
               method = RelatedBaseCategory(base_category_id)
 
           setattr(self.__class__, name, method)
-          klass = aq_base(self).__class__
-          if hasattr(klass, 'security'):
-            from Products.ERP5Type import Permissions as ERP5Permissions
-            klass.security.declareProtected(ERP5Permissions.View, name)
-          else:
-            LOG('ERP5Catalog', PROBLEM,
-                'Security not defined on %s' % klass.__name__)
           return getattr(self, name)
         else:
           return aq_base_name
