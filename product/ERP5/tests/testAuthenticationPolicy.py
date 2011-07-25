@@ -218,8 +218,8 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.stepTic()
     self._clearCache()
     
-    self.assertFalse(person.isPasswordValid(''))
-    self.assertFalse(person.isPasswordValid('1234567'))   
+    self.assertEqual(-1, person.isPasswordValid(''))
+    self.assertEqual(-1, person.isPasswordValid('1234567'))   
     self.assertTrue(person.isPasswordValid('12345678'))
     
     # not changed in last x days
@@ -232,7 +232,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     
     person.setPassword('12345678')
     self.stepTic()
-    self.assertFalse(person.isPasswordValid('87654321')) # if we try to change now we should fail with any password
+    self.assertEqual(-3, person.isPasswordValid('87654321')) # if we try to change now we should fail with any password
     
     preference.setPreferredMinPasswordLifetimeDuration(0) # remove restriction
     self.stepTic()
@@ -245,7 +245,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._clearCache()    
     person.setPassword('12345678')
     self.stepTic()
-    self.assertFalse(person.isPasswordValid('12345678')) # if we try to change now we should fail with this EXACT password     
+    self.assertEqual(-4, person.isPasswordValid('12345678')) # if we try to change now we should fail with this EXACT password     
     self.assertTrue(person.isPasswordValid('12345678_')) # it's OK with another one not used yet
     for password in ['a','b','c','d', 'e']:
       person.setPassword(password)
@@ -255,9 +255,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertTrue(person.isPasswordValid('a'))
     self.assertTrue(person.isPasswordValid('b'))
     # only last 3 (including current one are invalid)
-    self.assertFalse(person.isPasswordValid('c'))
-    self.assertFalse(person.isPasswordValid('d'))
-    self.assertFalse(person.isPasswordValid('e'))
+    self.assertEqual(-4, person.isPasswordValid('c'))
+    self.assertEqual(-4, person.isPasswordValid('d'))
+    self.assertEqual(-4, person.isPasswordValid('e'))
     
     # if we remove restricted then all password are usable
     preference.setPreferredNumberOfLastPasswordToCheck(None)
@@ -274,7 +274,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.stepTic()
     self.assertTrue(person.isPasswordValid('c'))
     self.assertTrue(person.isPasswordValid('d'))
-    self.assertFalse(person.isPasswordValid('e'))    
+    self.assertEqual(-4, person.isPasswordValid('e'))    
     
     preference.setPreferredRegularExpressionGroupList(regular_expression_list)
     preference.setPreferredMinPasswordLength(7)
@@ -295,7 +295,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     for password in four_group_password_list:
       self.assertTrue(person.isPasswordValid(password))
     for password in three_group_password_list+two_group_password_list + one_group_password_list:
-      self.assertFalse(person.isPasswordValid(password))    
+      self.assertEqual(-2, person.isPasswordValid(password))    
 
     # min 3 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(3)    
@@ -305,7 +305,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     for password in four_group_password_list + three_group_password_list:
       self.assertTrue(person.isPasswordValid(password))
     for password in two_group_password_list + one_group_password_list:
-      self.assertFalse(person.isPasswordValid(password))
+      self.assertEqual(-2, person.isPasswordValid(password))
     
     # min 2 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(2)
@@ -314,7 +314,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     for password in four_group_password_list + three_group_password_list + two_group_password_list:
       self.assertTrue(person.isPasswordValid(password))
     for password in one_group_password_list:
-      self.assertFalse(person.isPasswordValid(password))
+      self.assertEqual(-2, person.isPasswordValid(password))
       
     # min 1 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(1)
@@ -327,8 +327,8 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPrefferedForceUsernameCheckInPassword(1)
     self._clearCache()
     self.stepTic()
-    self.assertFalse(person.isPasswordValid('abAB#12_%s' %person.getFirstName()))
-    self.assertFalse(person.isPasswordValid('abAB#12_%s' %person.getLastName()))
+    self.assertEqual(-5, person.isPasswordValid('abAB#12_%s' %person.getFirstName()))
+    self.assertEqual(-5, person.isPasswordValid('abAB#12_%s' %person.getLastName()))
     preference.setPrefferedForceUsernameCheckInPassword(0)
     self._clearCache()
     self.stepTic()
@@ -348,7 +348,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._clearCache()    
     self.stepTic()    
     # in this case which is basically used in new account creation only length of password matters
-    self.assertFalse(temp_person.Person_isPasswordValid('onlyNine1'))
+    self.assertEqual(-1, temp_person.Person_isPasswordValid('onlyNine1'))
     self.assertTrue(temp_person.Person_isPasswordValid('longEnough1'))
     
     # make sure re check works on temp as well ( i.e. min 3 out of all groups)
@@ -360,14 +360,14 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     for password in four_group_password_list + three_group_password_list:
       self.assertTrue(temp_person.Person_isPasswordValid(password))
     for password in two_group_password_list + one_group_password_list:
-      self.assertFalse(temp_person.Person_isPasswordValid(password))
+      self.assertEqual(-2, temp_person.Person_isPasswordValid(password))
       
     # make sure peron's check on username works on temp as well (i.e. not contain the full name of the user)
     preference.setPrefferedForceUsernameCheckInPassword(1)
     self._clearCache()
     self.stepTic()
-    self.assertFalse(temp_person.Person_isPasswordValid('abAB#12_%s' %first_name))
-    self.assertFalse(temp_person.Person_isPasswordValid('abAB#12_%s' %last_name))
+    self.assertEqual(-5, temp_person.Person_isPasswordValid('abAB#12_%s' %first_name))
+    self.assertEqual(-5, temp_person.Person_isPasswordValid('abAB#12_%s' %last_name))
     
     preference.setPrefferedForceUsernameCheckInPassword(0)
     self._clearCache()
