@@ -922,32 +922,29 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       Automatic related key generation.
       Will generate z_related_[base_category_id] if possible
       """
-      aq_base_name = getattr(aq_base(self), name, None)
-      if aq_base_name == None:
-        if (name.startswith(DYNAMIC_METHOD_NAME) and \
-          (not name.endswith(ZOPE_SECURITY_SUFFIX))):
+      result = None
+      if name.startswith(DYNAMIC_METHOD_NAME) and \
+          not name.endswith(ZOPE_SECURITY_SUFFIX):
 
-          if name.endswith(RELATED_DYNAMIC_METHOD_NAME):
-            if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
-              base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):-len('_related')]
-              method = RelatedBaseCategory(base_category_id,
-                                           strict_membership=1, related=1)
-            else:
-              base_category_id = name[len(DYNAMIC_METHOD_NAME):-len('_related')]
-              method = RelatedBaseCategory(base_category_id, related=1)
+        if name.endswith(RELATED_DYNAMIC_METHOD_NAME):
+          if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
+            base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):-len('_related')]
+            method = RelatedBaseCategory(base_category_id,
+                                         strict_membership=1, related=1)
           else:
-            if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
-              base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):]
-              method = RelatedBaseCategory(base_category_id, strict_membership=1)
-            else:
-              base_category_id = name[len(DYNAMIC_METHOD_NAME):]
-              method = RelatedBaseCategory(base_category_id)
-
-          setattr(self.__class__, name, method)
-          return getattr(self, name)
+            base_category_id = name[len(DYNAMIC_METHOD_NAME):-len('_related')]
+            method = RelatedBaseCategory(base_category_id, related=1)
         else:
-          return aq_base_name
-      return aq_base_name
+          if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
+            base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):]
+            method = RelatedBaseCategory(base_category_id, strict_membership=1)
+          else:
+            base_category_id = name[len(DYNAMIC_METHOD_NAME):]
+            method = RelatedBaseCategory(base_category_id)
+
+        setattr(self.__class__, name, method)
+        result = getattr(self, name)
+      return result
 
     def _searchAndActivate(self, method_id, method_args=(), method_kw={},
                            activate_kw={}, min_uid=None, **kw):
