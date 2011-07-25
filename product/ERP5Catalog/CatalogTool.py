@@ -60,6 +60,10 @@ ACQUIRE_PERMISSION_VALUE = []
 from Persistence import Persistent
 from Acquisition import Implicit
 
+DYNAMIC_METHOD_NAME = 'z_related_'
+STRICT_DYNAMIC_METHOD_NAME = DYNAMIC_METHOD_NAME + 'strict_'
+RELATED_DYNAMIC_METHOD_NAME = '_related'
+ZOPE_SECURITY_SUFFIX = '__roles__'
 
 class IndexableObjectWrapper(object):
 
@@ -920,13 +924,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
       aq_base_name = getattr(aq_base(self), name, None)
       if aq_base_name == None:
-        DYNAMIC_METHOD_NAME = 'z_related_'
-        STRICT_DYNAMIC_METHOD_NAME = 'z_related_strict_'
-        zope_security = '__roles__'
         if (name.startswith(DYNAMIC_METHOD_NAME) and \
-          (not name.endswith(zope_security))):
+          (not name.endswith(ZOPE_SECURITY_SUFFIX))):
 
-          if name.endswith('_related'):
+          if name.endswith(RELATED_DYNAMIC_METHOD_NAME):
             if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
               base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):-len('_related')]
               method = RelatedBaseCategory(base_category_id,
