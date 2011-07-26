@@ -51,7 +51,7 @@ from Tool import CategoryTool, SimulationTool, RuleTool, IdTool, TemplateTool,\
                  GadgetTool, ContributionRegistryTool, IntrospectionTool,\
                  AcknowledgementTool, SolverTool, SolverProcessTool,\
                  ConversionTool, RoundingTool, UrlRegistryTool,\
-                 CertificateAuthorityTool.CertificateAuthorityTool
+                 CertificateAuthorityTool
 import ERP5Site
 from Document import PythonScript
 object_classes = ( ERP5Site.ERP5Site,
