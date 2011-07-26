@@ -214,13 +214,15 @@ class RelatedBaseCategory(Method):
       self._template = """\
 %%(category_table)s.base_category_uid = %%(base_category_uid)s
 %(strict)sAND %%(foreign_catalog)s.uid = %%(category_table)s.%(foreign_side)s
-AND %%(category_table)s.%(query_table_side)s = %%(query_table)s.uid""" % {
+%%(RELATED_QUERY_SEPARATOR)s
+%%(category_table)s.%(query_table_side)s = %%(query_table)s.uid""" % {
           'strict': strict,
           'foreign_side': foreign_side,
           'query_table_side': query_table_side,
       }
 
-    def __call__(self, instance, table_0, table_1, query_table='catalog', **kw):
+    def __call__(self, instance, table_0, table_1, query_table='catalog',
+        RELATED_QUERY_SEPARATOR=' AND ', **kw):
       """Create the sql code for this related key."""
       # Note: in normal conditions, our category's uid will not change from
       # one invocation to the next.
@@ -230,6 +232,7 @@ AND %%(category_table)s.%(query_table_side)s = %%(query_table)s.uid""" % {
         'query_table': query_table,
         'category_table': table_0,
         'foreign_catalog': table_1,
+        'RELATED_QUERY_SEPARATOR': RELATED_QUERY_SEPARATOR,
       }
 
 class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
