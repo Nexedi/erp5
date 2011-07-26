@@ -201,19 +201,23 @@ class RelatedBaseCategory(Method):
       # From the point of view of query_table, we are looking up objects...
       if related:
         # ... which have a relation toward us
-        from_table = 'related'
-        to_table = 'relation_holder'
+        # query_table's uid = category table's category_uid
+        query_table_side = 'category_uid'
+        # category table's uid = foreign_table's uid
+        foreign_side = 'uid'
       else:
         # ... toward which we have a relation
-        from_table = 'relation_holder'
-        to_table = 'related'
+        # query_table's uid = category table's uid
+        query_table_side = 'uid'
+        # category table's category_uid = foreign_table's uid
+        foreign_side = 'category_uid'
       self._template = """\
 %%(category_table)s.base_category_uid = %%(base_category_uid)s
-%(strict)sAND %%(%(to_table)s)s.uid = %%(category_table)s.category_uid
-AND %%(category_table)s.uid = %%(%(from_table)s)s.uid""" % {
+%(strict)sAND %%(foreign_catalog)s.uid = %%(category_table)s.%(foreign_side)s
+AND %%(category_table)s.%(query_table_side)s = %%(query_table)s.uid""" % {
           'strict': strict,
-          'from_table': from_table,
-          'to_table': to_table,
+          'foreign_side': foreign_side,
+          'query_table_side': query_table_side,
       }
 
     def __call__(self, instance, table_0, table_1, query_table='catalog', **kw):
@@ -223,9 +227,9 @@ AND %%(category_table)s.uid = %%(%(from_table)s)s.uid""" % {
       return self._template % {
         'base_category_uid': instance.getPortalObject().portal_categories.\
           _getOb(self._id).getUid(),
+        'query_table': query_table,
         'category_table': table_0,
-        'relation_holder': query_table,
-        'related': table_1,
+        'foreign_catalog': table_1,
       }
 
 class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
