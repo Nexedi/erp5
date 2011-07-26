@@ -1,0 +1,10 @@
+<base_category_list>
+ <portal_type id="Payment Transaction Group">
+  <item>payment_mode</item>
+  <item>payment_transaction_group_type</item>
+  <item>price_currency</item>
+ </portal_type>
+ <portal_type id="Payment Transaction Group Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>

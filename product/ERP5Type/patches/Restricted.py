@@ -178,3 +178,11 @@ allow_module('difflib')
 allow_module('hashlib')
 allow_module('time')
 allow_module('urlparse')
+
+ModuleSecurityInfo('os.path').declarePublic(
+# Allow functions accessing neither file system nor environment.
+  'abspath', 'basename', 'commonprefix', 'dirname', 'isabs', 'join',
+  'normpath', 'split', 'splitext',
+# Also allow some handy data properties.
+  'sep', 'pardir', 'curdir', 'extsep',
+)

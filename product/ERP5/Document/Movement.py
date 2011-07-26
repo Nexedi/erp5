@@ -831,8 +831,9 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
   def _edit(self, edit_order=(), **kw):
     """Overloaded _edit to support setting debit and credit at the same time,
     which is required for the GUI.
-    Also sets the variation category list at the end, because 
-    _setVariationCategoryList needs the resource to be set.
+    Also sets the variation category list and property dict at the end, because
+    _setVariationCategoryList and _setVariationPropertyDict needs the resource
+    to be set.
     """
     quantity = 0
     if 'source_debit' in kw and 'source_credit' in kw:
@@ -862,7 +863,7 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
         kw.pop('destination_asset_credit', None)
 
     if not edit_order:
-      edit_order = ('variation_category_list', )
+      edit_order = ('variation_category_list', 'variation_property_dict',)
     return XMLObject._edit(self, edit_order=edit_order, **kw)
 
   # Debit and credit methods for asset

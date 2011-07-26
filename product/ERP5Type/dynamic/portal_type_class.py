@@ -204,21 +204,21 @@ def generatePortalTypeClass(site, portal_type_name):
     #     "Filling accessor holder list for portal_type " + portal_type_name)
 
     property_sheet_generating_portal_type_set.add(portal_type_name)
+    try:
+      # Initialize ZODB Property Sheets accessor holders
+      accessor_holder_list = createAllAccessorHolderList(site,
+                                                         portal_type_name,
+                                                         portal_type,
+                                                         klass)
 
-    # Initialize ZODB Property Sheets accessor holders
-    accessor_holder_list = createAllAccessorHolderList(site,
-                                                       portal_type_name,
-                                                       portal_type,
-                                                       klass)
+      base_category_set = set(attribute_dict['_categories'])
+      for accessor_holder in accessor_holder_list:
+        base_category_set.update(accessor_holder._categories)
+        attribute_dict['constraints'].extend(accessor_holder.constraints)
 
-    base_category_set = set(attribute_dict['_categories'])
-    for accessor_holder in accessor_holder_list:
-      base_category_set.update(accessor_holder._categories)
-      attribute_dict['constraints'].extend(accessor_holder.constraints)
-
-    attribute_dict['_categories'] = list(base_category_set)
-
-    property_sheet_generating_portal_type_set.remove(portal_type_name)
+      attribute_dict['_categories'] = list(base_category_set)
+    finally:
+      property_sheet_generating_portal_type_set.remove(portal_type_name)
 
   # LOG("ERP5Type.dynamic", INFO,
   #     "Filled accessor holder list for portal_type %s (%s)" % \

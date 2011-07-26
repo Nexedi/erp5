@@ -1,0 +1,3 @@
+include CHANGES.erp5.util.txt
+include README.erp5.util.txt
+include erp5/util/testnode/template/slapos.cfg.in

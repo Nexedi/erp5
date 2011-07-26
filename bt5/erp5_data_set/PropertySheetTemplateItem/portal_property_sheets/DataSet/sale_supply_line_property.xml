@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Acquired Property" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>mode</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>alt_accessor_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>elementary_type/content</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_acquired_property_id</string> </key>
+            <value>
+              <tuple>
+                <string>base_price</string>
+                <string>id</string>
+                <string>priced_quantity</string>
+                <string>price_currency</string>
+                <string>price_currency_title</string>
+                <string>source</string>
+                <string>destination</string>
+                <string>source_title</string>
+                <string>destination_title</string>
+                <string>source_value</string>
+                <string>destination_value</string>
+                <string>quantity_step</string>
+                <string>priced_quantity</string>
+                <string>start_date</string>
+                <string>stop_date</string>
+                <string>start_date_range_max</string>
+                <string>start_date_range_min</string>
+                <string>comment</string>
+                <string>source_reference</string>
+                <string>destination_reference</string>
+                <string>p_variation_base_category_list</string>
+                <string>source_account</string>
+                <string>min_delay</string>
+                <string>max_delay</string>
+                <string>min_flow</string>
+                <string>max_flow</string>
+                <string>min_stock</string>
+                <string>max_stock</string>
+                <string>aggregate</string>
+                <string>aggregate_value</string>
+                <string>aggregate_value_list</string>
+                <string>aggregate_title</string>
+                <string>aggregate_uid</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_portal_type</string> </key>
+            <value> <string>python: (\'Sale Supply Line\',)</string> </value>
+        </item>
+        <item>
+            <key> <string>content_translation_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>sale_supply_line_property</string> </value>
+        </item>
+        <item>
+            <key> <string>mode</string> </key>
+            <value> <string>w</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Acquired Property</string> </value>
+        </item>
+        <item>
+            <key> <string>storage_id</string> </key>
+            <value> <string>default_ssl</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

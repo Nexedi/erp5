@@ -60,6 +60,14 @@ ACQUIRE_PERMISSION_VALUE = []
 from Persistence import Persistent
 from Acquisition import Implicit
 
+DYNAMIC_METHOD_NAME = 'z_related_'
+DYNAMIC_METHOD_NAME_LEN = len(DYNAMIC_METHOD_NAME)
+STRICT_DYNAMIC_METHOD_NAME = DYNAMIC_METHOD_NAME + 'strict_'
+STRICT_DYNAMIC_METHOD_NAME_LEN = len(STRICT_DYNAMIC_METHOD_NAME)
+RELATED_DYNAMIC_METHOD_NAME = '_related'
+# Negative as it's used as a slice end offset
+RELATED_DYNAMIC_METHOD_NAME_LEN = -len(RELATED_DYNAMIC_METHOD_NAME)
+ZOPE_SECURITY_SUFFIX = '__roles__'
 
 class IndexableObjectWrapper(object):
 
@@ -186,50 +194,46 @@ class RelatedBaseCategory(Method):
     """
     def __init__(self, id, strict_membership=0, related=0):
       self._id = id
-      self.strict_membership=strict_membership
-      self.related = related
+      if strict_membership:
+        strict = 'AND %(category_table)s.category_strict_membership = 1\n'
+      else:
+        strict = ''
+      # From the point of view of query_table, we are looking up objects...
+      if related:
+        # ... which have a relation toward us
+        # query_table's uid = category table's category_uid
+        query_table_side = 'category_uid'
+        # category table's uid = foreign_table's uid
+        foreign_side = 'uid'
+      else:
+        # ... toward which we have a relation
+        # query_table's uid = category table's uid
+        query_table_side = 'uid'
+        # category table's category_uid = foreign_table's uid
+        foreign_side = 'category_uid'
+      self._template = """\
+%%(category_table)s.base_category_uid = %%(base_category_uid)s
+%(strict)sAND %%(foreign_catalog)s.uid = %%(category_table)s.%(foreign_side)s
+%%(RELATED_QUERY_SEPARATOR)s
+%%(category_table)s.%(query_table_side)s = %%(query_table)s.uid""" % {
+          'strict': strict,
+          'foreign_side': foreign_side,
+          'query_table_side': query_table_side,
+      }
 
     def __call__(self, instance, table_0, table_1, query_table='catalog',
-                 RELATED_QUERY_SEPARATOR=' AND ',
-                 **kw):
-      """Create the sql code for this related key.
-
-      table_0 is the category table alias
-      table_1 is the catalog table alias for the related record
-      query_table is the catalog table (alias) for the main record.
-      """
-      base_category_uid = instance.portal_categories._getOb(self._id).getUid()
-      expression_list = []
-      append = expression_list.append
-      # category selection and strict membership condition
-      append('%s.base_category_uid = %s' % (table_0,base_category_uid))
-      if self.strict_membership:
-        append('%s.category_strict_membership = 1' % table_0)
-      # join conditions:
-      if self.related:
-        # query_table record is destination of relationship.
-        # 'on' condition for category join:
-        append('%s.uid = %s.uid' % (table_1,table_0))
-        # 'on' condition for catalog join:
-        query_table_join = '%s.category_uid = %s.uid' % (table_0,query_table)
-      else:
-        # query_table record is origin of relationship (i.e. the equivalent
-        # object contains the destination in its .category attribute)
-        # 'on' condition for category join:
-        append('%s.uid = %s.category_uid' % (table_1,table_0))
-        # 'on' condition for catalog join:
-        query_table_join = '%s.uid = %s.uid' % (table_0,query_table)
-      category_join = '\n AND \n'.join(expression_list)
-      # Since we relate two tables, we need to return two sets of
-      # conditions: one for the (inner) join between the two tables,
-      # and one for the join between the above and the main catalog
-      # table.
-      #
-      # These conditions are separated by RELATED_QUERY_SEPARATOR,
-      # which can be passed in by the caller if it wishes to separate
-      # the join condition on the catalog to generate an explicit inner join
-      expression = category_join + RELATED_QUERY_SEPARATOR + query_table_join
-      return expression
+        RELATED_QUERY_SEPARATOR=' AND ', **kw):
+      """Create the sql code for this related key."""
+      # Note: in normal conditions, our category's uid will not change from
+      # one invocation to the next.
+      return self._template % {
+        'base_category_uid': instance.getPortalObject().portal_categories.\
+          _getOb(self._id).getUid(),
+        'query_table': query_table,
+        'category_table': table_0,
+        'foreign_catalog': table_1,
+        'RELATED_QUERY_SEPARATOR': RELATED_QUERY_SEPARATOR,
+      }
 
 class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     """
@@ -908,31 +912,19 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
             if end_key.startswith('related_'):
               end_key = end_key[len('related_'):]
-              # accept only some catalog columns
-              if end_key in ('title', 'uid', 'description', 'reference',
-                             'relative_url', 'id', 'portal_type',
-                             'simulation_state'):
-                if strict:
-                  related_key_list.append(
-                        '%s%s | category,catalog/%s/z_related_strict_%s_related' %
-                        (prefix, key, end_key, expected_base_cat_id))
-                else:
-                  related_key_list.append(
-                        '%s%s | category,catalog/%s/z_related_%s_related' %
-                        (prefix, key, end_key, expected_base_cat_id))
+              suffix = '_related'
             else:
-              # accept only some catalog columns
-              if end_key in ('title', 'uid', 'description', 'reference',
-                             'relative_url', 'id', 'portal_type',
-                             'simulation_state'):
-                if strict:
-                  related_key_list.append(
-                        '%s%s | category,catalog/%s/z_related_strict_%s' %
-                        (prefix, key, end_key, expected_base_cat_id))
-                else:
-                  related_key_list.append(
-                        '%s%s | category,catalog/%s/z_related_%s' %
-                        (prefix, key, end_key, expected_base_cat_id))
+              suffix = ''
+            # accept only some catalog columns
+            if end_key in ('title', 'uid', 'description', 'reference',
+                           'relative_url', 'id', 'portal_type',
+                           'simulation_state'):
+              if strict:
+                pattern = '%s%s | category,catalog/%s/z_related_strict_%s%s'
+              else:
+                pattern = '%s%s | category,catalog/%s/z_related_%s%s'
+              related_key_list.append(pattern %
+                (prefix, key, end_key, expected_base_cat_id, suffix))
 
       return related_key_list
 
@@ -941,42 +933,74 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       Automatic related key generation.
       Will generate z_related_[base_category_id] if possible
       """
-      aq_base_name = getattr(aq_base(self), name, None)
-      if aq_base_name == None:
-        DYNAMIC_METHOD_NAME = 'z_related_'
-        STRICT_DYNAMIC_METHOD_NAME = 'z_related_strict_'
-        method_name_length = len(DYNAMIC_METHOD_NAME)
-        zope_security = '__roles__'
-        if (name.startswith(DYNAMIC_METHOD_NAME) and \
-          (not name.endswith(zope_security))):
-
-          if name.endswith('_related'):
-            if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
-              base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):-len('_related')]
-              method = RelatedBaseCategory(base_category_id,
-                                           strict_membership=1, related=1)
-            else:
-              base_category_id = name[len(DYNAMIC_METHOD_NAME):-len('_related')]
-              method = RelatedBaseCategory(base_category_id, related=1)
-          else:
-            if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
-              base_category_id = name[len(STRICT_DYNAMIC_METHOD_NAME):]
-              method = RelatedBaseCategory(base_category_id, strict_membership=1)
-            else:
-              base_category_id = name[len(DYNAMIC_METHOD_NAME):]
-              method = RelatedBaseCategory(base_category_id)
-
-          setattr(self.__class__, name, method)
-          klass = aq_base(self).__class__
-          if hasattr(klass, 'security'):
-            from Products.ERP5Type import Permissions as ERP5Permissions
-            klass.security.declareProtected(ERP5Permissions.View, name)
-          else:
-            LOG('ERP5Catalog', PROBLEM,
-                'Security not defined on %s' % klass.__name__)
-          return getattr(self, name)
+      result = None
+      if name.startswith(DYNAMIC_METHOD_NAME) and \
+          not name.endswith(ZOPE_SECURITY_SUFFIX):
+        kw = {}
+        if name.endswith(RELATED_DYNAMIC_METHOD_NAME):
+          end_offset = RELATED_DYNAMIC_METHOD_NAME_LEN
+          kw['related'] = 1
         else:
-          return aq_base_name
-      return aq_base_name
+          end_offset = None
+        if name.startswith(STRICT_DYNAMIC_METHOD_NAME):
+          start_offset = STRICT_DYNAMIC_METHOD_NAME_LEN
+          kw['strict_membership'] = 1
+        else:
+          start_offset = DYNAMIC_METHOD_NAME_LEN
+        method = RelatedBaseCategory(name[start_offset:end_offset], **kw)
+        setattr(self.__class__, name, method)
+        # This getattr has 2 purposes:
+        # - wrap in acquisition context
+        #   This alone should be explicitly done rather than through getattr.
+        # - wrap (if needed) class attribute on the instance
+        #   (for the sake of not relying on current implementation details
+        #   "too much")
+        result = getattr(self, name)
+      return result
+
+    def _searchAndActivate(self, method_id, method_args=(), method_kw={},
+                           activate_kw={}, min_uid=None, **kw):
+      """Search the catalog and run a script by activity on all found objects
+
+      This method is configurable (via 'packet_size' & 'activity_count'
+      parameters) so that it can work efficiently with databases of any size.
+
+      'activate_kw' may specify an active process to collect results.
+      Note however, we don't use Base_makeActiveResult so you're likely to get
+      ConflictError at the beginning. You could avoid this by making sure
+      'result_list' is already initialized on the active process.
+      """
+      catalog_kw = dict(kw)
+      packet_size = catalog_kw.pop('packet_size', 30)
+      limit = packet_size * catalog_kw.pop('activity_count', 100)
+      if min_uid:
+        catalog_kw['uid'] = {'query': min_uid, 'range': 'nlt'}
+      if catalog_kw.pop('restricted', False):
+        search = self
+      else:
+        search = self.unrestrictedSearchResults
+      r = search(sort_on=(('uid','ascending'),), limit=limit, **catalog_kw)
+      result_count = len(r)
+      if result_count:
+        if result_count == limit:
+          tag = activate_kw.get('tag')
+          if not tag:
+            activate_kw['tag'] = tag = 'searchAndActivate_%r' % time.time()
+          _tag = '%s_%s' % (tag, min_uid)
+          self.activate(tag=tag, after_tag=_tag, activity='SQLQueue') \
+              ._searchAndActivate(method_id,method_args, method_kw,
+                                  dict(activate_kw), r[-1].getUid(), **kw)
+          activate_kw['tag'] = _tag
+        r = [x.getPath() for x in r]
+        r.sort()
+        activate = self.getPortalObject().portal_activities.activate
+        for i in xrange(0, result_count, packet_size):
+          activate(activity='SQLQueue', **activate_kw).callMethodOnObjectList(
+            r[i:i+packet_size], method_id, *method_args, **method_kw)
+
+    security.declarePublic('searchAndActivate')
+    def searchAndActivate(self, *args, **kw):
+      """Restricted version of _searchAndActivate"""
+      return self._searchAndActivate(restricted=True, *args, **kw)
 
 InitializeClass(CatalogTool)

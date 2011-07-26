@@ -85,12 +85,22 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_dialog_mode_gender</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewCredentialFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>items</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -123,7 +133,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: getattr(here.portal_categories[field.getId().replace(\'my_\', \'\', 1)], preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')</string> </value>
+            <value> <string>python: getattr(here.portal_categories[field.getId().replace(\'your_\', \'\', 1).replace(\'_list\', \'\')], preferences.getPreference(\'preferred_category_child_item_list_method_id\', \'getCategoryChildCompactLogicalPathItemList\'))(local_sort_id=(\'int_index\', \'translated_title\'), checked_permission=\'View\')</string> </value>
         </item>
       </dictionary>
     </pickle>

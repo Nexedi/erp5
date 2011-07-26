@@ -17,10 +17,7 @@ from App.ImageFile import ImageFile
 
 def haveProxyRole(self):
   """if a script has proxy role, return True"""
-  if self._proxy_roles:
-    return True
-  return False
-
+  return bool(self._proxy_roles)
 
 def om_icons(self):
   """Return a list of icon URLs to be displayed by an ObjectManager"""

@@ -51,25 +51,7 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>packing_list = state_change[\'object\']\n
-packing_list_path = packing_list.getPath()\n
-path_and_method_id = (packing_list_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-expand_tag = packing_list_path + \'_expand\'\n
-tag = packing_list_path + \'_updateAppliedRule\'\n
-\n
-priority = 3\n
-\n
-activate_kw = { \n
-  \'tag\': expand_tag,\n
-  \'priority\': priority,\n
-}\n
-packing_list.activate(\n
-    after_path_and_method_id=path_and_method_id,\n
-    after_tag=expand_tag,\n
-    tag=tag,\n
-    priority=priority,\n
-    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
-\n
-packing_list.activate(after_tag=(tag, expand_tag)).Delivery_buildOnComposedDocument()\n
+packing_list.Delivery_expandAndBuild()\n
 </string> </value>
         </item>
         <item>

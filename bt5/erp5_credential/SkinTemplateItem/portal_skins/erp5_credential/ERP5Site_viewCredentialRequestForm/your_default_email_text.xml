@@ -125,7 +125,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.ERP5Site_getAuthenticatedMemberPersonValue().getDefaultEmailText()</string> </value>
+            <value> <string>python: context.ERP5Site_getAuthenticatedMemberPersonValue() is not None and context.ERP5Site_getAuthenticatedMemberPersonValue().getDefaultEmailText() or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>

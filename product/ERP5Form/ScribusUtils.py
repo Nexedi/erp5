@@ -502,7 +502,7 @@ class ManageFiles:
     factory.addDTMLDocument(form_css_id, "css", form_css_content)
 
 
-  security.declarePublic('importFile')
+  security.declarePublic('setPDFForm')
   def setPDFForm(self,
                  factory,
                  skin_folder,
@@ -1334,7 +1334,7 @@ class ScribusParser:
       + ": using " + str(default_value))
       return default_value
 
-  security.declarePublic('getXmlObjectPropertiesDict')
+  security.declarePublic('getXmlObjectsPropertiesDict')
   def getXmlObjectsPropertiesDict(self, xml_string):
     """
     takes a string containing a whole document and returns

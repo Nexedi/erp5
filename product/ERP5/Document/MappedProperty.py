@@ -107,6 +107,6 @@ class MappedProperty(XMLObject):
     mapping_dict = self.getMappingDict(reverse=True)
     mapped_property = mapping_dict.get(property, property)
     if mapped_property.startswith('-'):
-      return setProperty(mapped_property, -1 * value)
+      return setProperty(mapped_property[1:], -1 * value)
     else:
       return setProperty(mapped_property, value)

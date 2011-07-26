@@ -13,6 +13,16 @@
             </value>
         </item>
         <item>
+            <key> <string>creation_guard</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>groups</string> </key>
             <value>
               <tuple/>
@@ -23,8 +33,16 @@
             <value> <string>rule_interaction_workflow</string> </value>
         </item>
         <item>
+            <key> <string>manager_bypass</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
             <key> <string>state_var</string> </key>
             <value> <string>amortisation_transaction_edit_workflow_state</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Rule Interaction Workflow</string> </value>
         </item>
       </dictionary>
     </pickle>

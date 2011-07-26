@@ -252,6 +252,78 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def _createInitialSiteManager(self):
+    # This section of code is inspired by
+    # Products.CMFDefault.upgrade.to21.upgrade_root_site_manager(),
+    # specificallythe 'except ComponentLookupError:' clause, and also
+    # by Products.CMFDefault.PortalObjectBase.__init__
+    from zope.component.globalregistry import base
+    from five.localsitemanager import (PersistentComponents,
+                                       find_next_sitemanager)
+    next = find_next_sitemanager(self)
+    if next is None:
+      next = base
+    name = '++etc++site'
+    sm = PersistentComponents(name, (next,))
+    sm.__parent__ = aq_base(self)
+    self.setSiteManager(sm)
+    LOG('ERP5Site', 0, "Site manager '%s' added." % name)
+
+  def _doTranslationDomainRegistration(self):
+    from zope.i18n.interfaces import ITranslationDomain
+    from Products.ERP5Type.patches.Localizer import (
+      message_catalog_alias_sources
+    )
+    sm = self.getSiteManager()
+    for message_catalog in self.Localizer.objectValues():
+      sm.registerUtility(message_catalog,
+                         provided=ITranslationDomain,
+                         name=message_catalog.getId())
+      for alias in message_catalog_alias_sources.get(message_catalog.getId()):
+        sm.registerUtility(message_catalog,
+                           provided=ITranslationDomain,
+                           name=alias)
+
+  def _doInitialSiteManagerMigration(self):
+    self._createInitialSiteManager()
+    # Now that we have a sitemanager, se can do things that require
+    # one. Including setting up ZTK style utilities and adapters. We
+    # can even call setSite(self), as long as we roll back that later,
+    # since we are actually in the middle of a setSite() call.
+    from zope.site.hooks import getSite, setSite
+    old_site = getSite()
+    try:
+      setSite(self)
+      # setSite(self) is not really necessary for the migration below, but
+      # could be needed by other migrations to be added here.
+      self._doTranslationDomainRegistration()
+    finally:
+      setSite(old_site)
+
+  # backward compatibility auto-migration
+  def getSiteManager(self):
+    # NOTE: do not add a docstring! This method is private by virtue of
+    # not having it.
+
+    # XXX-Leo: Consider moving this method and all methods that it calls
+    # into a monkeypatch of an optional product. This product could have
+    # its own tests for migration without actually cluttering the original
+    # source code and would only need to be installed in sites needing
+    # migration from Zope 2.8
+
+    # This code is an alteration of
+    # OFS.ObjectManager.ObjectManager.getSiteManager(), and is exactly
+    # as cheap as it is on the case that self._components is already
+    # set.
+    _components = self._components
+    if _components is not None:
+      return _components
+    # This method below can take as (reasonably) long as it pleases
+    # since it will not be run ever again
+    self._doInitialSiteManagerMigration()
+    assert self._components is not None, 'Migration Failed!'
+    return self._components
+
   security.declareProtected(Permissions.View, 'view')
   def view(self):
     """
@@ -1694,6 +1766,7 @@ class ERP5Generator(PortalGenerator):
     addERP5Tool(p, 'portal_domains', 'Domain Tool')
     addERP5Tool(p, 'portal_tests', 'Test Tool')
     addERP5Tool(p, 'portal_password', 'Password Tool')
+    addERP5Tool(p, 'portal_introspections', 'Introspection Tool')
     addERP5Tool(p, 'portal_acknowledgements', 'Acknowledgement Tool')
 
     # Add ERP5Type Tool

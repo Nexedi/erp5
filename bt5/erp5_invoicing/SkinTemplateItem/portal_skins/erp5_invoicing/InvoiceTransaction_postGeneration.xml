@@ -121,6 +121,9 @@ if not invoice.hasTitle() and related_packing_list.hasTitle():\n
 # initialize accounting_workflow to confirmed state\n
 if invoice.getSimulationState() == \'draft\':\n
   invoice.confirm(comment=translateString(\'Initialised by Delivery Builder.\'),)\n
+else:\n
+  # call builder just same as after script of \'confirm\' transition\n
+  invoice.Delivery_expandAndBuild()\n
 \n
 # First set the invoice in the building state on the causality workflow\n
 invoice.startBuilding()\n

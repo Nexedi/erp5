@@ -278,7 +278,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
   # Conversion API
-  def _convert(self, format, display=None, quality=_MARKER, **kw):
+  def _convert(self, format, display=None, quality=_MARKER, frame=0, **kw):
     """Convert the document to the given format.
 
     If a conversion is already stored for this format, it is returned
@@ -388,7 +388,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                                        temp_object=1)
         temp_image._setData(data)
         # we care for first page only but as well for image quality
-        mime, data = temp_image.convert(original_format, display=display, frame=0, quality=quality, **kw)
+        mime, data = temp_image.convert(original_format, display=display, frame=frame, quality=quality, **kw)
         # store conversion
         if display is None:
           self.setConversion(data, mime, format=original_format)

@@ -353,7 +353,8 @@ class ERP5TypeInformation(XMLObject,
     security.declarePublic('constructInstance')
     def constructInstance(self, container, id, created_by_builder=0,
                           temp_object=0, compute_local_role=None,
-                          notify_workflow=True, *args, **kw ):
+                          notify_workflow=True, is_indexable=None,
+                          activate_kw=None, reindex_kw=None, **kw):
       """
       Build a "bare" instance of the appropriate type in
       'container', using 'id' as its id.
@@ -378,16 +379,11 @@ class ERP5TypeInformation(XMLObject,
         # container._setObject(set_owner=True) does.
         user_id = getCurrentUserIdOrAnonymousToken()
         ob.manage_setLocalRoles(user_id, ['Owner'])
-        for ignore in ('activate_kw', 'is_indexable', 'reindex_kw'):
-          kw.pop(ignore, None)
       else:
-        activate_kw = kw.pop('activate_kw', None)
         if activate_kw is not None:
           ob.__of__(container).setDefaultActivateParameters(**activate_kw)
-        reindex_kw = kw.pop('reindex_kw', None)
         if reindex_kw is not None:
           ob.__of__(container).setDefaultReindexParameters(**reindex_kw)
-        is_indexable = kw.pop('is_indexable', None)
         if is_indexable is not None:
           ob.isIndexable = is_indexable
         container._setObject(id, ob)
@@ -395,9 +391,6 @@ class ERP5TypeInformation(XMLObject,
         # if no activity tool, the object has already an uid
         if getattr(aq_base(ob), 'uid', None) is None:
           ob.uid = portal.portal_catalog.newUid()
-
-      if kw:
-        ob._edit(force_update=1, **kw)
 
       # Portal type has to be set before setting other attributes
       # in order to initialize aq_dynamic
@@ -419,8 +412,11 @@ class ERP5TypeInformation(XMLObject,
         init_script = self.getTypeInitScriptId()
         if init_script:
           # Acquire the init script in the context of this object
-          kw['created_by_builder'] = created_by_builder
-          getattr(ob, init_script)(*args, **kw)
+          getattr(ob, init_script)(created_by_builder=created_by_builder,
+                                   edit_kw=kw)
+
+      if kw:
+        ob._edit(force_update=1, **kw)
 
       return ob
 

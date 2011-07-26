@@ -59,6 +59,7 @@ from Products.ERP5Type.Message import translateString
 from zLOG import LOG, INFO, WARNING
 from base64 import decodestring
 import subprocess
+import time
 
 
 WIN = os.name == 'nt'
@@ -96,7 +97,7 @@ class TemplateTool (BaseTool):
     title = 'Template Tool'
     meta_type = 'ERP5 Template Tool'
     portal_type = 'Template Tool'
-    allowed_types = ( 'ERP5 Business Template',)
+    allowed_types = ('ERP5 Business Template', )
 
     # This stores information on repositories.
     repository_dict = {}
@@ -104,8 +105,8 @@ class TemplateTool (BaseTool):
     # Declarative Security
     security = ClassSecurityInfo()
 
-    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-    manage_overview = DTMLFile( 'explainTemplateTool', _dtmldir )
+    security.declareProtected(Permissions.ManagePortal, 'manage_overview')
+    manage_overview = DTMLFile('explainTemplateTool', _dtmldir)
 
     def getInstalledBusinessTemplate(self, title, strict=False, **kw):
       """
@@ -172,7 +173,9 @@ class TemplateTool (BaseTool):
         given
       """
       bt = self.getInstalledBusinessTemplate(title)
-      return bt.getRevision()
+      if bt is not None:
+        return bt.getRevision()
+      return None
 
     def getBuiltBusinessTemplatesList(self):
       """Deprecated.
@@ -230,7 +233,7 @@ class TemplateTool (BaseTool):
       return "file://%s/" % pathname2url(
                   os.path.join(getConfiguration().instancehome, 'bt5'))
 
-    security.declareProtected( 'Import/Export objects', 'save' )
+    security.declareProtected('Import/Export objects', 'save')
     def save(self, business_template, REQUEST=None, RESPONSE=None):
       """
         Save the BusinessTemplate in the servers's filesystem.
@@ -424,7 +427,7 @@ class TemplateTool (BaseTool):
           # this looks like a subversion repository, try to check it out
           LOG('ERP5', INFO, 'TemplateTool doing a svn checkout of %s' % url)
           return self._download_svn(url, bt_id)
-        
+
         return self._download_local(file_path, bt_id)
       finally:
         os.remove(temppath)
@@ -854,7 +857,7 @@ class TemplateTool (BaseTool):
           if title == property_dict['title']:
             if (version_restriction is None) or (self.compareVersionStrings(property_dict['version'], version_restriction)):
               if (result is None) or (self.compareVersions(property_dict['version'], result[2]) > 0):
-                result = (repository,  property_dict['id'], property_dict['version'])
+                result = (repository, property_dict['id'], property_dict['version'])
       if result is not None:
         return (result[0], result[1])
       else:
@@ -1208,14 +1211,15 @@ class TemplateTool (BaseTool):
 
       return 0
 
-    def _getBusinessTemplateUrlDict(self):
+    def _getBusinessTemplateUrlDict(self, newest_only=False):
       business_template_url_dict = {}
-      for bt in self.getRepositoryBusinessTemplateList():
+      for bt in self.getRepositoryBusinessTemplateList(\
+                                    newest_only=newest_only):
         url, name = self.decodeRepositoryBusinessTemplateUid(bt.getUid())
         if name.endswith('.bt5'):
           name = name[:-4]
         business_template_url_dict[name] = {
-          'url':  '%s/%s' % (url, bt.filename),
+          'url': '%s/%s' % (url, bt.filename),
           'revision': bt.getRevision()
           }
       return business_template_url_dict
@@ -1223,32 +1227,106 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
         'installBusinessTemplatesFromRepositories')
     def installBusinessTemplatesFromRepositories(self, template_list,
-        only_newer=True, update_catalog=_MARKER):
+        only_newer=True, update_catalog=_MARKER, activate=False,
+        install_dependency=False):
+      """Deprecated.
+      """
+      DeprecationWarning('getInstalledBusinessTemplatesList is deprecated; Use getInstalledBusinessTemplateList instead.', DeprecationWarning)
+      return self.installBusinessTemplateListFromRepository(template_list,
+        only_newer, update_catalog, activate, install_dependency)
+
+    security.declareProtected(Permissions.ManagePortal,
+         'resolveBusinessTemplateListDependency')
+    def resolveBusinessTemplateListDependency(self, template_title_list,
+              newest_only=True):
+      available_bt5_list = self.getRepositoryBusinessTemplateList(
+        newest_only=newest_only)
+
+      template_title_list = set(template_title_list)
+      installed_bt5_title_list = self.getInstalledBusinessTemplateTitleList()
+
+      bt5_set = set([])
+      for available_bt5 in available_bt5_list:
+        if available_bt5.title in template_title_list:
+          template_title_list.remove(available_bt5.title)
+          document = self.getInstalledBusinessTemplate(available_bt5.title,
+                 strict=True)
+          if not newest_only or document is None or (document is not None and  \
+              (int(document.getRevision()) < int(available_bt5.getRevision()))):
+            bt5 = self.decodeRepositoryBusinessTemplateUid(available_bt5.uid)
+            bt5_set.add(bt5)
+            for dep_repository, dep_id in self.getDependencyList(bt5):
+              if dep_repository != 'meta':
+                bt5_set.add((dep_repository, dep_id))
+              else:
+                provider_list = self.getProviderList(dep_id)
+                provider_installed = False
+                for provider in provider_list:
+                  if provider in [i[1].replace(".bt5", "") for i in bt5_set] or \
+                       provider in installed_bt5_title_list or \
+                       provider in template_title_list:
+                    provider_installed = True
+                    break
+
+                if not provider_installed:
+                  if len(provider_list) == 1:
+                    for candidate in available_bt5_list:
+                      if candidate.title == provider_list[0]:
+                        bt5_set.add(\
+                          self.decodeRepositoryBusinessTemplateUid(
+                              candidate.uid))
+                        break
+                  else:
+                    raise BusinessTemplateMissingDependency,\
+                      "Unable to resolve dependencies for %s, options are %s" \
+                          % (dep_id, provider_list)
+
+      if len(template_title_list) > 0:
+         raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repositories %s' % \
+             (list(template_title_list), self.getRepositoryList())
+      return self.sortBusinessTemplateList(list(bt5_set))
+
+    security.declareProtected(Permissions.ManagePortal,
+        'installBusinessTemplateListFromRepository')
+    def installBusinessTemplateListFromRepository(self, template_list,
+        only_newer=True, update_catalog=_MARKER, activate=False,
+        install_dependency=False):
       """Installs template_list from configured repositories by default only newest"""
       # XXX-Luke: This method could replace
       # TemplateTool_installRepositoryBusinessTemplateList while still being
       # possible to reuse by external callers
-      opreation_log = []
-      template_dict = self._getBusinessTemplateUrlDict()
-      for template_name in template_list:
-        if template_name in template_dict:
-          installed_bt = self.getInstalledBusinessTemplate(template_name)
-          if installed_bt is None or not only_newer or \
-              installed_bt.getRevision() < template_dict[
-              template_name]['revision']:
-            template_document = self.download(template_dict[template_name][
-              'url'])
-            if update_catalog is _MARKER:
-              template_document.install()
-            else:
-              template_document.install(update_catalog=update_catalog)
-            opreation_log.append('Installed %s with revision %s' % (
-              template_document.getTitle(), template_document.getRevision()))
-          else:
-            opreation_log.append('Skipped %s' % template_name)
+
+      operation_log = []
+      resolved_template_list = self.resolveBusinessTemplateListDependency(
+                   template_list, newest_only=only_newer)
+
+      if not install_dependency:
+        missing_dependency_list = [i[1] for i in resolved_template_list
+                             if i[1].replace(".bt5", "") not in template_list]
+        if len(missing_dependency_list) > 0:
+          raise BusinessTemplateMissingDependency,\
+           "Impossible to install, please install the following dependencies before: %s" \
+              % missing_dependency_list
+
+      activate_kw =  dict(activity="SQLQueue", tag="start_%s" % (time.time()))
+      for repository, bt_id in resolved_template_list:
+        bt_url = '%s/%s' % (repository, bt_id)
+        param_dict = dict(download_url=bt_url, only_newer=only_newer)
+        if update_catalog is not _MARKER:
+          param_dict["update_catalog"] = update_catalog
+
+        if activate:
+          self.activate(**activate_kw).\
+                updateBusinessTemplateFromUrl(**param_dict)
+          activate_kw["after_tag"] = activate_kw["tag"]
+          activate_kw["tag"] = bt_id
+          operation_log.append('Installed %s using activities' % (bt_id))
         else:
-          opreation_log.append('Not found in repositories %s' % template_name)
-      return opreation_log
+          document = self.updateBusinessTemplateFromUrl(**param_dict)
+          operation_log.append('Installed %s with revision %s' % (
+              document.getTitle(), document.getRevision()))
+
+      return operation_log
 
     security.declareProtected(Permissions.ManagePortal,
             'updateBusinessTemplateFromUrl')
@@ -1256,11 +1334,12 @@ class TemplateTool (BaseTool):
                                          keep_original_list=None,
                                          before_triggered_bt5_id_list=None,
                                          after_triggered_bt5_id_list=None,
-                                         update_catalog=0,
+                                         update_catalog=_MARKER,
                                          reinstall=False,
                                          active_process=None,
-                                         force_keep_list=None):
-      """ 
+                                         force_keep_list=None,
+                                         only_newer=True):
+      """
         This method download and install a bt5, from a URL.
 
         keep_original_list can be used to make paths not touched at all
@@ -1291,30 +1370,23 @@ class TemplateTool (BaseTool):
       log("Installing %s ..." % download_url)
       imported_bt5 = self.download(url = download_url, id = id)
       bt_title = imported_bt5.getTitle()
-      BusinessTemplate_getModifiedObject = \
-        aq_base(getattr(self, 'BusinessTemplate_getModifiedObject'))
 
       if not reinstall:
-        listbox_object_list = BusinessTemplate_getModifiedObject.__of__(imported_bt5)()
-        install_kw = {}
         previous_bt5 = self.getInstalledBusinessTemplate(bt_title)
-        if previous_bt5 is not None:
+        if (previous_bt5 is not None) and only_newer:
           try:
             imported_revision = int(imported_bt5.getRevision())
-          except ValueError:
-            imported_revision = None
-          try:
             previous_revision = int(previous_bt5.getRevision())
+            if imported_revision <= previous_revision:
+              log("%s is already installed with revision %i, which is same or "
+                  "newer revision than new revision %i." % (bt_title,
+                    previous_revision, imported_revision))
+              return imported_bt5
           except ValueError:
-            previous_revision = None
-          if imported_revision is not None and imported_revision is not None \
-              and (imported_revision <= previous_revision):
-            log("%s is already installed with revision %r, which is same or "
-                "newer revision then new revision %r." % (bt_title,
-                  previous_bt5.getRevision(), imported_bt5.getRevision()))
-            return imported_bt5
+            pass
 
-        for listbox_line in listbox_object_list:
+        install_kw = {}
+        for listbox_line in imported_bt5.BusinessTemplate_getModifiedObject():
           item = listbox_line.object_id
           state = listbox_line.object_state
           if state.startswith('Removed'):
@@ -1326,27 +1398,17 @@ class TemplateTool (BaseTool):
               maybe_moved and ' (moved to %s ?)' % maybe_moved))
           else:
             installed_dict[item] = bt_title
-          # Calculate keep logic, by following the default
-          keep = False
-          in_force_keep_list = True
-          if state in ('Modified but should be kept',
-              'Removed but should be kept') and item not in force_keep_list:
-            # For actions which suggest that item shall be kept and item is not
-            # explicitely forced, keep the default -- do nothing
-            keep = True
-            in_force_keep_list = False
 
-          in_keep_original_list = False
-          if item in keep_original_list:
-            # If item is forced to be untouched, do not touch it
-            keep = True
-            in_keep_original_list = True
-
-          if in_force_keep_list and in_keep_original_list:
-            log('Item %r is in force_keep_list and keep_original_list, as '
-                'keep_original_list has precedence item is NOT MODIFIED' % item)
-
-          if keep == True:
+          # For actions which suggest that item shall be kept and item is not
+          # explicitely forced, keep the default -- do nothing
+          in_force_keep_list = item in force_keep_list or state not in (
+            'Modified but should be kept', 'Removed but should be kept')
+          # If item is forced to be untouched, do not touch it
+          if item in keep_original_list or not in_force_keep_list:
+            if in_force_keep_list:
+              log('Item %r is in force_keep_list and keep_original_list,'
+                  ' as keep_original_list has precedence item is NOT MODIFIED'
+                  % item)
             install_kw[item] = 'nothing'
           else:
             install_kw[item] = listbox_line.choice_item_list[0][1]
@@ -1356,9 +1418,11 @@ class TemplateTool (BaseTool):
         log('Execute %r' % before_triggered_bt5_id)
         imported_bt5.unrestrictedTraverse(before_triggered_bt5_id)()
 
+      if update_catalog is _MARKER and install_kw != {}:
+        update_catalog = imported_bt5.isCatalogUpdatable()
+
       if reinstall:
-        imported_bt5.install(force=True,
-                             update_catalog=update_catalog)
+        imported_bt5.install(force=True,update_catalog=update_catalog)
       else:
         imported_bt5.install(object_to_update=install_kw,
                              update_catalog=update_catalog)
@@ -1390,7 +1454,7 @@ class TemplateTool (BaseTool):
       for base_url in base_url_list:
         url = "%s/%s" % (base_url, bt5_title)
         if base_url == "INSTANCE_HOME_REPOSITORY":
-          url = "file://%s/bt5/%s" % (getConfiguration().instancehome, 
+          url = "file://%s/bt5/%s" % (getConfiguration().instancehome,
                                       bt5_title)
           LOG('ERP5', INFO, "TemplateTool: INSTANCE_HOME_REPOSITORY is %s." \
               % url)
@@ -1406,7 +1470,7 @@ class TemplateTool (BaseTool):
             return url
           except (urllib2.HTTPError, OSError):
             pass
-      LOG('ERP5', INFO, 'TemplateTool: %s was not found into the url list: ' 
+      LOG('ERP5', INFO, 'TemplateTool: %s was not found into the url list: '
                         '%s.' % (bt5_title, base_url_list))
       return None
 

@@ -456,7 +456,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self.test_property_sheet.newContent(
       reference='test_content_existence_constraint',
       portal_type='Content Existence Constraint',
-      constraint_portal_type='python: ("Content Existence Constraint")')
+      constraint_portal_type='python: ("Test Document")')
 
   def _newCategoryMembershipArityConstraint(self,
                                             reference,
@@ -588,6 +588,16 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
         type_property_sheet_list=('TestMigration',),
         type_base_category_list=('test_category_existence_constraint',),
         type_filter_content_type=False)
+    # Create a Portal Type for subobject of Test Migration
+    try:
+      self.test_subobject_portal_type = getattr(portal.portal_types, 'Test Document')
+    except AttributeError:
+      self.test_subobject_portal_type = portal.portal_types.newContent(
+        id='Test Document',
+        portal_type='Base Type',
+        type_class='Folder',
+        type_filter_content_type=False)
+      self.test_portal_type.setTypeAllowedContentTypeList(['Test Document'])
 
     # Create a test module, meaningful to force generation of
     # TestMigration accessor holders and check the constraints
@@ -926,10 +936,15 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                        **kw):
     constraint = self._getConstraintByReference(constraint_reference)
     self.failIfEqual(None, constraint)
-    self.assertEquals(1, len(constraint.checkConsistency(self.test_module)))
+
+    # Use Base.checkConsistency!!
+    # This is the standard interface which real users are always using.
+    # Never call ConstraintMixin.checkConsistency directly in unit test.
+    # You will miss serious bugs.
+    self.assertEquals(1, len(self.test_module.checkConsistency(filter={'reference':constraint_reference})))
 
     setter_function(*args, **kw)
-    self.assertEquals([], constraint.checkConsistency(self.test_module))
+    self.assertEquals([], self.test_module.checkConsistency(filter={'reference':constraint_reference}))
 
   def testPropertyExistenceConstraint(self):
     """
@@ -985,15 +1000,14 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
   def testContentExistenceConstraint(self):
     """
-    Take the test module and check whether the Content Existence
-    Constraint is there. Until there is at least one subobject of
-    'Test Module' whose Portal Type is 'Folder', the constraint should
-    fail
+    Take the test module and check whether the Test Document is there.
+    Until there is at least one subobject of 'Test Module' whose Portal
+    Type is 'Folder', the constraint should fail
     """
     self._checkConstraint('test_content_existence_constraint',
                           self.test_module.newContent,
                           id='Test Content Existence Constraint',
-                          portal_type='Content Existence Constraint')
+                          portal_type='Test Document')
 
   def testCategoryMembershipArityConstraint(self):
     """
@@ -1061,6 +1075,53 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self._checkConstraint('test_property_type_validity_constraint',
                           self.test_module.setTitle,
                           'my_property_type_validity_constraint_title')
+
+  def testConstraintAfterClosingZODBConnection(self):
+    """
+    Make sure that constraint works even if ZODB connection close.
+    This test is added for the bug #20110628-ABAA76.
+    """
+    # Open new connection and add a new constraint.
+    db = self.app._p_jar.db()
+    con = db.open()
+    app = con.root()['Application'].__of__(self.app.aq_parent)
+    portal = app[self.getPortalName()]
+    from Products.ERP5.ERP5Site import getSite, setSite
+    old_site = getSite()
+    setSite(portal)
+
+    import erp5
+    dummy = getattr(erp5.portal_type, 'TALES Constraint')(id='dummy')
+    portal.portal_property_sheets.TestMigration._setObject('dummy', dummy)
+    dummy = portal.portal_property_sheets.TestMigration.dummy
+    dummy.edit(reference='test_dummy_constraint',
+               expression='python: object.getTitle() == "my_tales_constraint_title"')
+    dummy.Predicate_view()
+
+    transaction.commit()
+
+    # Recreate class with a newly added constraint
+    synchronizeDynamicModules(portal, force=True)
+    # Load test_module
+    test_module = getattr(portal, 'Test Migration')
+    test_module.objectValues()
+    # Then close this new connection.
+    transaction.abort()
+    con.close()
+    # This code depends on ZODB implementation.
+    for i in db.pool.available[:]:
+      if i[1] == con:
+        db.pool.available.remove(i)
+    db.pool.all.remove(con)
+    del con
+
+    # Back to the default connection.
+    transaction.abort()
+    self.app._p_jar._resetCache()
+    setSite(old_site)
+
+    # Call checkConsistency and make sure that ConnectionStateError does not occur.
+    self.assert_(self.test_module.checkConsistency())
 
   def testAddEmptyProperty(self):
     """

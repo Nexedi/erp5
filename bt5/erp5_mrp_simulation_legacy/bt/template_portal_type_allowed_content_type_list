@@ -1,3 +1,7 @@
+Rule Tool | Transformation Model Rule
+Rule Tool | Transformation Rule
+Rule Tool | Transformation Sourcing Model Rule
+Rule Tool | Transformation Sourcing Rule
 Transformation Model Rule | Category Divergence Tester
 Transformation Model Rule | Composed Divergence Tester
 Transformation Model Rule | Property Divergence Tester

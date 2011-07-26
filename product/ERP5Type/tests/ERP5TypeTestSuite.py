@@ -1,4 +1,4 @@
-import re, imp, sys, threading, os, shlex, subprocess, shutil
+import re, imp, sys, threading, os, shlex, subprocess, shutil, glob, random
 import traceback
 
 # The content of this file might be partially moved to an egg
@@ -83,6 +83,13 @@ class Persistent(object):
     self._db.truncate()
 
 class TestSuite(object):
+  """
+  Subclasses may redefine the following properties:
+  mysql_db_count (integer, >=1)
+    Maximum number of SQL databases connection strings needed by any tests ran
+    in this suite. Tests will get mysql_db_count - 1 connection strings in
+    extra_sql_connection_string_list environment variable.
+  """
 
   mysql_db_count = 1
   allow_restart = False
@@ -229,6 +236,81 @@ class ERP5TypeTestSuite(TestSuite):
                                    +int(groupdict['unexpected_successes'] or 0))
     return status_dict
 
+class ProjectTestSuite(ERP5TypeTestSuite):
+  """
+  Helper code to locate all tests in a path list.
+
+  To use this class, inherit from it and define the following properties:
+  _product_list
+    List of product names to search tests in.
+  _bt_list
+    List of bt names to search tests in.
+  _search_path_list:
+    List of base paths to search for products & bts.
+    Defaults to sys.path (upon getTestList execution).
+  """
+  _product_list = ()
+  _bt_list = ()
+  _search_path_list = None
+
+  def _searchDirectory(self, path, path_list):
+    """
+    Returns a iterator over directories matching <path> inside directories
+    given in <path list>.
+    """
+    _path = os.path
+    pjoin = _path.join
+    isdir = _path.isdir
+    return (y for y in (pjoin(x, path) for x in path_list) if isdir(y))
+
+  def getTestList(self):
+    _glob = glob.glob
+    path = os.path
+    pjoin = path.join
+    path_list = self._search_path_list or sys.path
+    product_test_file_glob = pjoin('tests', 'test*.py')
+    bt_test_file_glob = pjoin('TestTemplateItem', 'test*.py')
+    test_file_list = []
+    extend = test_file_list.extend
+    for product_dir in self._searchDirectory('product', path_list):
+      for product_id in self._product_list:
+        extend(_glob(pjoin(product_dir, product_id, product_test_file_glob)))
+    for bt_dir in self._searchDirectory('bt5', path_list):
+      for bt_id in self._bt_list:
+        extend(_glob(pjoin(bt_dir, bt_id, bt_test_file_glob)))
+    return list(frozenset((path.splitext(path.basename(name))[0]
+      for name in test_file_list)))
+
+class SavedTestSuite(ERP5TypeTestSuite):
+  """
+  Helper code to use --save/--load to reduce execution time.
+
+  To use this class, inherit from it and define the following properties:
+  _saved_test_id
+    Name of the test to use for --save execution.
+  """
+  _saved_test_id = None
+
+  def __init__(self, *args, **kw):
+    # Use same portal id for all tests run by current instance
+    # but keep it (per-run) random.
+    self._portal_id = 'portal_%i' % (random.randint(0, sys.maxint), )
+    super(SavedTestSuite, self).__init__(*args, **kw)
+
+  def __runUnitTest(self, *args, **kw):
+    return super(SavedTestSuite, self).runUnitTest(
+      '--portal_id=' + self._portal_id,
+      *args, **kw)
+
+  def runUnitTest(self, *args, **kw):
+    return self.__runUnitTest(
+      '--load',
+      *args, **kw)
+
+  def setup(self):
+    super(SavedTestSuite, self).setup()
+    self.__runUnitTest('--save', self._saved_test_id)
+
 class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
     self.status_dict = status_dict
@@ -238,5 +320,6 @@ class SubprocessError(EnvironmentError):
     return 'Error %i' % self.status_code
 
 sys.modules['test_suite'] = module = imp.new_module('test_suite')
-for var in SubprocessError, TestSuite, ERP5TypeTestSuite:
+for var in SubprocessError, TestSuite, ERP5TypeTestSuite, ProjectTestSuite, \
+    SavedTestSuite:
   setattr(module, var.__name__, var)

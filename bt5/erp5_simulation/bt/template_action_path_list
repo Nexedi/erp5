@@ -25,6 +25,7 @@ Solver Type | solver_view
 Solver Type | translation_view
 Solver Type | update_local_roles
 Solver Type | view
+Specialise Divergence Tester | configuration
 Specialise Divergence Tester | predicate
 Specialise Divergence Tester | view
 String Divergence Tester | configuration

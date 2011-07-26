@@ -216,12 +216,11 @@ class ConfiguratorTool(BaseTool):
       return self.view()
     response = self._next(business_configuration=bc, kw=kw)
     ## Parse server response
-    command = response["command"]
-    if command == "show":
+    if response["command"] == "show":
       return self.ConfiguratorTool_dialogForm(previous=response['previous'],
                                         form_html=response["data"],
-                                        next = response['next'])
-    elif command == "install":
+                                        next=response['next'])
+    elif response["command"] == "install":
       return self.startInstallation(bc, REQUEST=REQUEST)
 
   def _next(self, business_configuration, kw):
@@ -336,8 +335,8 @@ class ConfiguratorTool(BaseTool):
             ### client can not continue at the momen
             return self._terminateConfigurationProcess(response,
                 reason='no_available_transitions')
-          response["previous"], html, form_title, response["next"], \
-              response['server_buffer'] = business_configuration._displayNextForm()
+          response["previous"], html, form_title, response["next"] \
+                  = business_configuration._displayNextForm()
         else:
           ## validation passed
           need_validation = 0
@@ -348,13 +347,13 @@ class ConfiguratorTool(BaseTool):
               'no_available_transitions')
         ## validation failure
         rendered = True
-        response["previous"], html, form_title, response["next"], \
-            response['server_buffer'] = business_configuration.\
-            _displayNextForm(validation_errors=validation_errors)
+        response["previous"], html, form_title, response["next"] =\
+            business_configuration._displayNextForm(
+                validation_errors=validation_errors)
 
     if html is None:
       ## we have no more forms proceed to build
-      response.update(command = "install", data = None)
+      response.update(command="install", data=None)
     else:
       ## we have more forms
       next_state = self.restrictedTraverse(business_configuration.getNextTransition()\
@@ -371,12 +370,12 @@ class ConfiguratorTool(BaseTool):
         he can no longer continue. """
     if reason == 'no_available_transitions':
       form_html = self.BusinessConfiguration_viewStopForm()
-      response.update(command = "show", next = None, \
-                      previous = None, data = form_html)
+      response.update(command="show", next=None, \
+                      previous=None, data=form_html)
     elif reason == 'authentification_failure':
       form_html = self.BusinessConfiguration_viewUnauthenticatedForm()
-      response.update(command = "show", data = form_html,
-                      next = None, previous = None,)
+      response.update(command="show", data=form_html,
+                      next=None, previous=None,)
 
     return response
 
@@ -403,23 +402,23 @@ class ConfiguratorTool(BaseTool):
     ## is client is not allowed access ?
     if business_configuration is None:
       form_html = self.BusinessConfiguration_viewUnauthenticatedForm()
-      return self.ConfiguratorTool_dialogForm(form_html = form_html)
+      return self.ConfiguratorTool_dialogForm(form_html=form_html)
     ## client can not go further his business configuration is already built
     if business_configuration.isEndConfigurationState():
       form_html = self.BusinessConfiguration_viewStopForm()
       return self.ConfiguratorTool_dialogForm(form_html = form_html,
                                         next = "Next")
 
-    response['previous'], form_html, form_title, response['next'], server_buffer = \
+    response['previous'], form_html, form_title, response['next'] = \
         business_configuration._displayPreviousForm()
 
     next_state = self.restrictedTraverse(
         business_configuration.getNextTransition().getDestination())
 
     response['data'] = self.Base_mainConfiguratorTemplate(
-        form_html = form_html,
-        current_state = next_state,
-        business_configuration = business_configuration)
+        form_html=form_html,
+        current_state=next_state,
+        business_configuration=business_configuration)
     return response
 
   security.declarePublic(Permissions.AccessContentsInformation,
@@ -466,7 +465,7 @@ class ConfiguratorTool(BaseTool):
     REQUEST.set('active_process_id', active_process.getId())
     request_restore_dict = {'__ac_key': REQUEST.get('__ac_key',
                                                        None), }
-    self.activate(active_process=active_process, tag = 'initialERP5Setup'
+    self.activate(active_process=active_process, tag='initialERP5Setup'
         ).initialERP5Setup(business_configuration.getRelativeUrl(), request_restore_dict)
     return self.ConfiguratorTool_viewInstallationStatus(REQUEST)
 

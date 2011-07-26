@@ -97,12 +97,16 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
 
   def _getInputMovementList(self, movement_list=None, rounding=False):
     simulation_movement = self._applied_rule.getParentValue()
+    portal = self._applied_rule.getPortalObject()
+    # List of types passed to simulation_movemet.asComposedDocument()
+    # it needs to include portal types of all 'amount_generator*' groups:
+    composition_type_list = (portal.getPortalAmountGeneratorTypeList() +
+                             portal.getPortalAmountGeneratorLineTypeList() +
+                             portal.getPortalAmountGeneratorCellTypeList())
+    amount_list = simulation_movement.getAggregatedAmountList(
+        amount_generator_type_list=composition_type_list)
     input_movement = aq_base(simulation_movement).__of__(self._applied_rule)
-    for amount in simulation_movement.getAggregatedAmountList(
-        # XXX add a 'trade_amount_generator' group type
-        amount_generator_type_list=('Purchase Trade Condition',
-                                    'Sale Trade Condition',
-                                    'Trade Model Line')):
+    for amount in amount_list:
       if amount.getResource():
         # FIXME: Is it the right way to have source/destination and other
         #        non-Amount properties set on the generated movement ?

@@ -2335,11 +2335,13 @@ class PortalTypeAllowedContentTypeTemplateItem(BaseTemplateItem):
           if action == 'nothing':
             continue
         portal_id = key.split('/')[-1]
+        property_list = self._objects.get(key, [])
         type_information = types_tool.getTypeInfo(portal_id)
         if type_information is None:
+          if not property_list:
+            continue
           raise AttributeError, "Portal type '%s' not found while " \
               "installing %s" % (portal_id, self.getTitle())
-        property_list = self._objects.get(key, [])
         old_property_list = old_objects.get(key, ())
         object_property_list = getattr(type_information, self.class_property, ())
         # merge differences between portal types properties

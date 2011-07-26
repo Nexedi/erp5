@@ -55,9 +55,10 @@
   objects to an unified "Embedded File".\n
 """\n
 active_process = context.getPortalObject().portal_activities.newActiveProcess()\n
-context.ERP5Site_checkDataWithScript("Base_migrateToEmbeddedFile", \n
-                                      tag="migrate",\n
-                                      active_process=active_process.getPath())\n
+context.ERP5Site_checkDataWithScript("Base_migrateToEmbeddedFile",\n
+                                     tag="migrate",\n
+                                     active_process=active_process.getPath(),\n
+                                     method_kw=dict(force=1))\n
 \n
 print "Migration started with process id: %s" %active_process.getPath()\n
 return printed\n

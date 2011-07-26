@@ -63,28 +63,28 @@
   sitename_width python:here.getLayoutProperty(\'layout_sitename_width\', 300);\n
   header_background_image python:here.getLayoutProperty(\'layout_header_background_image\', \n
                                                         \'mf54_image/bg_header.jpg\');\n
-  header_background_image python:\'%s/%s\' % (site_url, header_background_image);\n
+  header_background_image python:\'%s/%s?format=png\' % (site_url, header_background_image);\n
   site_logo python:here.getLayoutProperty(\'layout_site_logo\', \n
                                           \'mf54_image/bg_logo.gif\');\n
-  site_logo python:\'%s/%s\' % (site_url, site_logo);\n
+  site_logo python:\'%s/%s?format=png\' % (site_url, site_logo);\n
   page_top_background_image python:here.getLayoutProperty(\'layout_page_top_background_image\', \n
                                                         \'mf54_image/bg_corner_page_top.gif\');\n
-  page_top_background_image python:\'%s/%s\' % (site_url, page_top_background_image);\n
+  page_top_background_image python:\'%s/%s?format=png\' % (site_url, page_top_background_image);\n
   page_bottom_background_image python:here.getLayoutProperty(\'layout_page_bottom_background_image\', \n
                                                         \'mf54_image/bg_corner_page_bottom.gif\');\n
-  page_bottom_background_image python:\'%s/%s\' % (site_url, page_bottom_background_image);\n
+  page_bottom_background_image python:\'%s/%s?format=png\' % (site_url, page_bottom_background_image);\n
   content_bottom_background_image python:here.getLayoutProperty(\'layout_content_bottom_background_image\', \n
             \'mf54_image/bg_corner_content_%s1col_bottom.gif\' % ((not has_right_column and \'nosidebar_\') or \'\'));\n
-  content_bottom_background_image python:\'%s/%s\' % (site_url, content_bottom_background_image);\n
+  content_bottom_background_image python:\'%s/%s?format=png\' % (site_url, content_bottom_background_image);\n
   content_top_background_image python:here.getLayoutProperty(\'layout_content_top_background_image\', \n
             \'mf54_image/bg_corner_content_%s1col_top.gif\' % ((not has_right_column and \'nosidebar_\') or \'\'));\n
-  content_top_background_image python:\'%s/%s\' % (site_url, content_top_background_image);\n
+  content_top_background_image python:\'%s/%s?format=png\' % (site_url, content_top_background_image);\n
   subcontent_top_background_image python:here.getLayoutProperty(\'layout_subcontent_top_background_image\',\n
                                                         \'mf54_image/bg_corner_subcontent_top.gif\');\n
-  subcontent_top_background_image python:\'%s/%s\' % (site_url, subcontent_top_background_image);\n
+  subcontent_top_background_image python:\'%s/%s?format=png\' % (site_url, subcontent_top_background_image);\n
   subcontent_bottom_background_image python:here.getLayoutProperty(\'layout_subcontent_bottom_background_image\',\n
                                                         \'mf54_image/bg_corner_subcontent_bottom.gif\');\n
-  subcontent_bottom_background_image python:\'%s/%s\' % (site_url, subcontent_bottom_background_image);\n
+  subcontent_bottom_background_image python:\'%s/%s?format=png\' % (site_url, subcontent_bottom_background_image);\n
 ">\n
                     \n
 /****************************************************************/\n
@@ -333,6 +333,7 @@ div.subcontent-box.headbox1noicon h2.noicon {background:none;}\n
 /*  ERP5 Extensions                       */\n
 /******************************************/\n
 .navbar ul li.login {float:right}\n
+\n
 \n
 </tal:block>
 

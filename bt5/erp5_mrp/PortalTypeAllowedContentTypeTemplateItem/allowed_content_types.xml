@@ -56,10 +56,6 @@
   <item>Production Order Model Rule</item>
   <item>Production Order Root Simulation Rule</item>
   <item>Production Order Rule</item>
-  <item>Transformation Model Rule</item>
-  <item>Transformation Rule</item>
-  <item>Transformation Sourcing Model Rule</item>
-  <item>Transformation Sourcing Rule</item>
  </portal_type>
  <portal_type id="Supply Chain">
   <item>Supply Link</item>

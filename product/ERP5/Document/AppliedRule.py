@@ -248,7 +248,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
         for applied_rule in movement.objectValues():
           applied_rule.recursiveImmediateReindexSimulationMovement(**kw)
 
-    security.declarePublic('recursiveReindexObject')
+    security.declarePublic('recursiveReindexSimulationMovement')
     def recursiveReindexSimulationMovement(self, activate_kw=None, **kw):
       if self.isIndexable:
         if activate_kw is None:

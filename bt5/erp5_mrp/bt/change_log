@@ -1,3 +1,6 @@
+2011-07-01 yusei
+* Set proper title to interaction workflows.
+
 2011-06-22 yusei
 * Fix a bug. Quantity unit field on production order line must always be displayed.
 

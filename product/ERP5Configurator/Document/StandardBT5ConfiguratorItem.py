@@ -60,24 +60,17 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     )
 
   def _build(self, business_configuration):
-    bt5_id = self.getBt5Id()
-    portal = self.getPortalObject()
-    template_tool = getToolByName(portal, 'portal_templates')
+    template_tool = self.getPortalObject().portal_templates
+    bt5_id = self.getBt5Id().split('.')[0]
+    for bt5 in template_tool.getRepositoryBusinessTemplateList():
+      if bt5_id == bt5.getTitle():
+        template_tool.installBusinessTemplateListFromRepository([bt5_id],
+                                   update_catalog=self.getUpdateCatalog(0))
 
-    installed_bt_list = template_tool.getInstalledBusinessTemplateTitleList()
-    if business_configuration.isStandardBT5(bt5_id):
-      if bt5_id not in installed_bt_list:
-        update_catalog = self.getUpdateCatalog(0)
-        bt_url = template_tool.getBusinessTemplateUrl(None, bt5_id)
-        template_tool.updateBusinessTemplateFromUrl(bt_url,
-                                              update_catalog=update_catalog)
         LOG("StandardBT5ConfiguratorItem", INFO,
-            "Install %s for %s" % (bt_url, self.getRelativeUrl()))
-      else:
-        LOG("StandardBT5ConfiguratorItem", INFO,
-             "%s is already present. Ignore installation (%s)" \
-                               % (bt5_id, self.getRelativeUrl()))
-    else:
-      raise ValueError("The business template %s was not found on available \
+          "Install %s for %s" % (bt5_id, self.getRelativeUrl()))
+        return
+
+    raise ValueError("The business template %s was not found on available \
                          sources." % bt5_id)
 

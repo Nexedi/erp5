@@ -1,0 +1,10 @@
+[slapos]
+software_root = %(software_root)s
+instance_root = %(instance_root)s
+master_url = %(master_url)s
+computer_id = %(computer_id)s
+
+[slapproxy]
+host = %(proxy_host)s
+port = %(proxy_port)s
+database_uri = %(proxy_database)s

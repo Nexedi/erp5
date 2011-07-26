@@ -540,17 +540,16 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
       return range_list
 
   def getSortedCategoryList(line, base_id, category_list):
-    category_dict = {}
-    for category in category_list:
-      category_dict[category.split('/')[0]] = category
     result = []
     index_list = line.index[base_id].keys()
     index_list.sort()
-    for index in index_list:
-      if line.index[base_id][index]:
-        base_category = line.index[base_id][index].keys()[0].split('/')[0]
-        result.append(category_dict[base_category])
-    return result
+    for category in category_list:
+      for index in index_list:
+        if line.index[base_id][index]:
+          if category in line.index[base_id][index]:
+            result.append((index, category))
+    result.sort()
+    return [category for index, category in result]
     
   for cell_dict in cell_dict_list:
     base_id = cell_dict['base_id']

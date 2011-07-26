@@ -2,3 +2,6 @@
 *.pyo
 *.swp
 *~
+build/
+dist/
+erp5.util.egg-info/

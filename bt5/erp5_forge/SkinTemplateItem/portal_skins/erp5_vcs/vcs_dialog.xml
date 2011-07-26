@@ -40,7 +40,7 @@
            xmlns:metal="http://xml.zope.org/namespaces/metal"\n
            xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
   <tal:block define="local_parameter_list python: dict((x, request[x])\n
-                       for x in (\'added\', \'modified\', \'removed\', \'changelog\')\n
+                       for x in (\'added\', \'modified\', \'removed\', \'changelog\', \'push\')\n
                        if x in request);\n
                      dummy python: local_parameter_list.update((x, options.pop(x))\n
                        for x in (\'caller\', \'caller_kw\')\n

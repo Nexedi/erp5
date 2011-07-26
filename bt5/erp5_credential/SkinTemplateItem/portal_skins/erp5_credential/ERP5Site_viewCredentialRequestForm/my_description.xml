@@ -57,6 +57,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -67,6 +71,10 @@
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
@@ -141,7 +149,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:"<h1>%s</h1>" % (context.Base_translateString(context.getDescription()))
+python: getattr(context, \'getDescription\', None) is not None and "<h1>%s</h1>" % (context.Base_translateString(context.getDescription())) or \'\'
 
 ]]></string> </value>
         </item>
@@ -156,7 +164,7 @@ python:"<h1>%s</h1>" % (context.Base_translateString(context.getDescription()))
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>context/getDescription</string> </value>
+            <value> <string>python: getattr(context, \'getDescription\', None) is not None and context.getDescription() or \'\'</string> </value>
         </item>
       </dictionary>
     </pickle>
@@ -169,7 +177,7 @@ python:"<h1>%s</h1>" % (context.Base_translateString(context.getDescription()))
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>context/getDescription</string> </value>
+            <value> <string>python: getattr(context, \'getDescription\', None) and context.getDescription()</string> </value>
         </item>
       </dictionary>
     </pickle>

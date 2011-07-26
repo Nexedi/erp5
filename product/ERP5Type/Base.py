@@ -181,17 +181,14 @@ class WorkflowMethod(Method):
     invoke_once_dict = self._invoke_once.get(portal_type, {})
     valid_invoke_once_item_list = []
     # Only keep those transitions which were never invoked
+    once_transition_dict = {}
     for wf_id, transition_list in invoke_once_dict.iteritems():
       valid_transition_list = []
       for transition_id in transition_list:
         once_transition_key = ('Products.ERP5Type.Base.WorkflowMethod.__call__',
                                 wf_id, transition_id, instance_path)
-        try:
-          already_called_transition = transactional_variable[once_transition_key]
-        except KeyError:
-          already_called_transition = 0
-          transactional_variable[once_transition_key] = 1
-        if not already_called_transition:
+        once_transition_dict[(wf_id, transition_id)] = once_transition_key
+        if once_transition_key not in transactional_variable:
           valid_transition_list.append(transition_id)
       if valid_transition_list:
         valid_invoke_once_item_list.append((wf_id, valid_transition_list))
@@ -216,6 +213,11 @@ class WorkflowMethod(Method):
       for transition_id in transition_list:
         if candidate_workflow.isWorkflowMethodSupported(instance, transition_id):
           valid_list.append(transition_id)
+          once_transition_key = once_transition_dict.get((wf_id, transition_id))
+          if once_transition_key:
+            # a run-once transition, prevent it from running again in
+            # the same transaction
+            transactional_variable[once_transition_key] = 1
         elif candidate_workflow.__class__.__name__ == 'DCWorkflowDefinition':
           raise UnsupportedWorkflowMethod(instance, wf_id, transition_id)
           # XXX Keep the log for projects that needs to comment out
@@ -2540,21 +2542,30 @@ class Base( CopyContainer,
     """
     Returns a list of constraints filtered by filt argument.
     """
-    # currently only 'id' is supported.
+    # currently only 'id' and 'reference' are supported.
     constraints = self.constraints
     if filt is not None:
-      id_list = filt.get('id', None)
-      if not isinstance(id_list, (list, tuple)):
-        id_list = [id_list]
-      constraints = filter(lambda x:x.id in id_list, constraints)
+      if 'id' in filt:
+        id_list = filt.get('id', None)
+        if not isinstance(id_list, (list, tuple)):
+          id_list = [id_list]
+        constraints = filter(lambda x:x.id in id_list, constraints)
+      # New ZODB based constraint uses reference for identity
+      if 'reference' in filt:
+        reference_list = filt.get('reference', None)
+        if not isinstance(reference_list, (list, tuple)):
+          reference_list = [reference_list]
+        constraints = filter(lambda x:x.getProperty('reference') in reference_list, constraints)
     return constraints
 
   # Context related methods
   security.declarePublic('asContext')
   def asContext(self, context=None, REQUEST=None, **kw):
     """
-    Allows to have a kind of temp copy of an object edited with kw
-    parameters. This is somewhat equivalent to use tempObject.
+    The purpose of asContext is to allow users overloading easily the properties and categories of 
+    an existing persistent object. (Use the same data and create a different portal type instance)
+
+    Pay attention, to use asContext to create a temp object is wrong usage.
 
     ex : joe_person = person_module.bob_person.asContext(first_name='Joe')
     """
@@ -2571,7 +2582,10 @@ class Base( CopyContainer,
               temp_object=True,
               is_indexable=False)
 
+      # Pass all internal data to new instance. Do not copy, but 
+      # pass the same data. This is on purpose.
       context.__dict__.update(self.__dict__)
+
       # Copy REQUEST properties to self
       if REQUEST is not None:
         # Avoid copying a SESSION object, because it is newly created

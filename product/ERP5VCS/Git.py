@@ -152,8 +152,10 @@ class Git(WorkingCopy):
     except GitError, e:
       local, _ = e.stdout.splitlines()
       remote = None
-    assert local[:11] == 'refs/heads/'
-    return local[11:], remote
+    if local != 'HEAD':
+      assert local[:11] == 'refs/heads/'
+      local = local[11:]
+    return local, remote
 
   @selfcached
   def getAheadCount(self):
