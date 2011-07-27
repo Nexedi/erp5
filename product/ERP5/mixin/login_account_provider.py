@@ -47,6 +47,14 @@ class LoginAccountProviderMixin:
     method = self._getTypeBasedMethod('notifyLoginFailure')
     return method(**kw)
 
+  security.declareProtected(Permissions.SetOwnPassword, 'notifyPasswordExpire')
+  def notifyPasswordExpire(self, **kw):
+    """
+    Notify a password expire event.
+    """
+    method = self._getTypeBasedMethod('notifyPasswordExpire')
+    return method(**kw)
+
   security.declareProtected(Permissions.SetOwnPassword, 'isLoginBlocked')
   def isLoginBlocked(self, **kw):
     """

@@ -39,6 +39,11 @@ class ILoginAccountProvider(Interface):
     """
     Notify an authentication failure.
     """
+
+  def notifyPasswordExpire(**kw):
+    """
+    Notify a password expire event.
+    """
     
   def isLoginBlocked(**kw):
     """
