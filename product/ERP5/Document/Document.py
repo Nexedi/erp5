@@ -609,7 +609,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
               update_kw[k] = self.getProperty(k)
           existing_document.edit(**update_kw)
           # Erase self
-          self.delete() # XXX Do we want to delete by workflow or for real ?
+          self.getParentValue().manage_delObjects([self.getId(),])
     return document
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getLanguageList')
