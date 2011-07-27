@@ -150,7 +150,7 @@ class ERP5UserManager(BasePlugin):
                        assignment.getStopDate() < login_date:
                   continue
                 valid_assignment_list.append(assignment)
-                
+
               if pw_validate(user.getPassword(), password) and \
                      len(valid_assignment_list) and user \
                      .getValidationState() != 'deleted': #user.getCareerRole() == 'internal':
@@ -187,9 +187,14 @@ class ERP5UserManager(BasePlugin):
           # file a failed authentication attempt
           user.notifyLoginFailure()
           return None
-          
-        # check if user account is blocked and if password is expired or not
-        if user.isLoginBlocked() or user.isPasswordExpired(): 
+        
+        # check if password is expired
+        if user.isPasswordExpired():
+          user.notifyPasswordExpire()
+          return None
+        
+        # check if user account is blocked
+        if user.isLoginBlocked():
           return None
         
         return authentication_result
