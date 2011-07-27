@@ -45,7 +45,6 @@ class MovementCollectionDiff(object):
     self._deletable_movement_list = []
     self._new_movement_list = []
     self._updatable_movement_list = []
-    self._property_dict_dict = {}
 
   def getDeletableMovementList(self):
     """
@@ -75,24 +74,9 @@ class MovementCollectionDiff(object):
 
   def getUpdatableMovementList(self):
     """
-    Returns the list of movements which need
-    to be updated.
+    Returns movements which need to be updated, with properties to update
     """
     return self._updatable_movement_list
-
-  def getMovementPropertyDict(self, movement):
-    """
-    Returns a dict of all properties and values
-    to update an existing movement or to
-    create a new movement.
-    """
-    # for updatable movement, property_dict is already calculated.
-    property_dict = self._property_dict_dict.get(movement)
-    # for new movement, property_dict should be calculated here.
-    if property_dict is None:
-      return _getPropertyAndCategoryList(movement)
-    else:
-      return property_dict
 
   def addUpdatableMovement(self, movement, property_dict):
     """
@@ -100,8 +84,7 @@ class MovementCollectionDiff(object):
 
     property_dict -- properties to update
     """
-    self._updatable_movement_list.append(movement)
-    self._property_dict_dict[movement] = property_dict
+    self._updatable_movement_list.append((movement, property_dict))
 
 def _getPropertyAndCategoryList(document):
   """

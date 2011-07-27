@@ -164,13 +164,15 @@ class MovementCollectionUpdaterMixin:
     # Apply Diff
     for movement in movement_diff.getDeletableMovementList():
       movement.getParentValue().deleteContent(movement.getId())
-    for movement in movement_diff.getUpdatableMovementList():
-      kw = movement_diff.getMovementPropertyDict(movement)
+    for movement, kw in movement_diff.getUpdatableMovementList():
       movement.edit(**kw)
-      for property_id in kw.iterkeys():
+      for property_id in kw:
         movement.clearRecordedProperty(property_id)
     for movement in movement_diff.getNewMovementList():
-      kw = movement_diff.getMovementPropertyDict(movement)
-      movement = context.newContent(portal_type=self.movement_type, **kw)
-
- 
+      d = movement.__dict__
+      # make sure our optimization does not touch existing persistent data
+      assert movement.isTempObject() and '_original' not in d
+      del movement.__dict__
+      movement = context.newContent(portal_type=self.movement_type)
+      d.update(movement.__dict__)
+      movement.__dict__ = d
