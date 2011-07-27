@@ -51,7 +51,7 @@ class InteractorMethodCall:
   from before and after scripts if needed.
   """
 
-  def __init__(self, method, instance, *args, **kw):
+  def __init__(self, method, instance, args, kw):
     self.instance = instance
     self.args = args
     self.kw = kw
@@ -82,7 +82,7 @@ class InteractorMethod(Method):
     self.after_action_list.append((action, args, kw))
 
   def __call__(self, instance, *args, **kw):
-    method_call_object = InteractorMethodCall(self.method, instance, *args, **kw)
+    method_call_object = InteractorMethodCall(self.method, instance, args, kw)
     for action, args, kw in self.before_action_list:
       action(method_call_object, *args, **kw)
     result = method_call_object()
