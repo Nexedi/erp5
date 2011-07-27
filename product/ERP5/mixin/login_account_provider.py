@@ -45,7 +45,8 @@ class LoginAccountProviderMixin:
     Notify an authentication failure.
     """
     method = self._getTypeBasedMethod('notifyLoginFailure')
-    return method(**kw)
+    if method is not None:
+      return method(**kw)
 
   security.declareProtected(Permissions.SetOwnPassword, 'notifyPasswordExpire')
   def notifyPasswordExpire(self, **kw):
@@ -53,7 +54,8 @@ class LoginAccountProviderMixin:
     Notify a password expire event.
     """
     method = self._getTypeBasedMethod('notifyPasswordExpire')
-    return method(**kw)
+    if method is not None:
+      return method(**kw)
 
   security.declareProtected(Permissions.SetOwnPassword, 'isLoginBlocked')
   def isLoginBlocked(self, **kw):
@@ -61,7 +63,9 @@ class LoginAccountProviderMixin:
     Is this login blocked?
     """
     method = self._getTypeBasedMethod('isLoginBlocked')
-    return method(**kw)    
+    if method is not None:
+      return method(**kw)
+    return False      
 
   security.declareProtected(Permissions.SetOwnPassword, 'isPasswordExpired')
   def isPasswordExpired(self, **kw):
@@ -69,7 +73,9 @@ class LoginAccountProviderMixin:
     Is password expired?
     """
     method = self._getTypeBasedMethod('isPasswordExpired')
-    return method(**kw)
+    if method is not None:
+      return method(**kw)
+    return False      
 
   security.declareProtected(Permissions.SetOwnPassword, 'isPasswordValid')
   def isPasswordValid(self, password, **kw):
@@ -77,7 +83,9 @@ class LoginAccountProviderMixin:
     Is password valid?
     """
     method = self._getTypeBasedMethod('isPasswordValid')
-    return method(password, **kw)
+    if method is not None:
+      return method(password, **kw)
+    return True      
     
   security.declareProtected(Permissions.SetOwnPassword, 'isPasswordAlreadyUsed')
   def isPasswordAlreadyUsed(self, password):
