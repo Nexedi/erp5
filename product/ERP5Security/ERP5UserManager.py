@@ -171,15 +171,12 @@ class ERP5UserManager(BasePlugin):
         except _AuthenticationFailure:
           authentication_result = None
        
-        method = getattr(self, 'ERP5Site_isAuthenticationPolicyEnabled', None)
-        if method is None or (method is not None and not method()):
+        if not self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled():
           # stop here, no authentication policy enabled 
           # so just return authentication check result
-          # XXX: move to ERP5 Site API
           return authentication_result
         
         # authentication policy enabled, we need person object anyway
-        # XXX: every request is a MySQL call
         user_list = self.getUserByLogin(credentials.get('login'))
         if not user_list:
           # not an ERP5 Person object

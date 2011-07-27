@@ -77,7 +77,7 @@ class LoginAccountProviderMixin:
       Return if password has already been used.
     """
     preferred_number_of_last_password_to_check = self.portal_preferences.getPreferredNumberOfLastPasswordToCheck()
-    password_list = self.getLastChangedPasswordValueList() + [self.getPassword()]
+    password_list = self.getLastChangedPasswordValueList()
     password_list.reverse()
     for encoded_password in password_list[:preferred_number_of_last_password_to_check]:
       if pw_validate(encoded_password, password):

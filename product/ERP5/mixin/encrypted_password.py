@@ -63,6 +63,19 @@ class EncryptedPasswordMixin:
       return pw_validate(self.getPassword(), value)
     return False
 
+  def checkPasswordValueAcceptable(self, value):
+    """
+    Check the password. This method is defined explicitly, because:
+
+     - we want to apply an authentication policy which itself may contain explicit password rules
+    """
+    if not self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled():
+      # not a policy so basically all passwords are accceptable
+      return True
+    result = self.isPasswordValid(value)
+    if result <= 0:
+      raise ValueError, "Bad password (%s)." %result
+
   def checkUserCanChangePassword(self):
     if not _checkPermission(Permissions.SetOwnPassword, self):
       raise AccessControl_Unauthorized('setPassword')
@@ -87,6 +100,7 @@ class EncryptedPasswordMixin:
 
   def _setPassword(self, value):
     self.checkUserCanChangePassword()
+    self.checkPasswordValueAcceptable(value)
     self._forceSetPassword(value)
 
   security.declarePublic('setPassword')
