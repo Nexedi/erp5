@@ -79,6 +79,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_preferred_authentication_policy_enabled</string>
                         <string>my_preferred_max_authentication_failure</string>
                         <string>my_preferred_authentication_failure_check_duration</string>
                         <string>my_preferred_authentication_failure_block_duration</string>

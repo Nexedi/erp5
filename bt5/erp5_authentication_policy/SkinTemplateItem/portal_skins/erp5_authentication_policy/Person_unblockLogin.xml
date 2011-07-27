@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 \n
-if not portal.ERP5Site_isAuthenticationPolicyEnabled():\n
+if not portal.portal_preferences.isAuthenticationPolicyEnabled():\n
   # no policy, no sense to block account\n
   return 0\n
 \n

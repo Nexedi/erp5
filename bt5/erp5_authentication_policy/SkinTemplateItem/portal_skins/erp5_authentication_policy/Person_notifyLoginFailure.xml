@@ -57,8 +57,9 @@
 """\n
 from DateTime import DateTime\n
 portal = context.getPortalObject()\n
+portal_preferences = portal.portal_preferences\n
 \n
-if not context.ERP5Site_isAuthenticationPolicyEnabled():\n
+if not portal_preferences.isAuthenticationPolicyEnabled():\n
   # no policy, no sense to file failure\n
   return 0\n
 \n
