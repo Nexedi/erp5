@@ -55,6 +55,7 @@
 """\n
   Return true if user account is blocked.\n
 """\n
+\n
 from DateTime import DateTime\n
 \n
 request = context.REQUEST\n
@@ -71,7 +72,7 @@ key = \'authentication_failure_list\'\n
 session_id = context.Person_getAuthenticationSessionId()\n
 # session might not be initialized yet\n
 session = portal.portal_sessions[session_id]\n
-authentication_failure_list = session[key]\n
+authentication_failure_list = session.get(key, [])\n
 \n
 check_duration = portal_preferences.getPreferredAuthenticationFailureCheckDuration()\n
 block_duration = portal_preferences.getPreferredAuthenticationFailureBlockDuration()\n
