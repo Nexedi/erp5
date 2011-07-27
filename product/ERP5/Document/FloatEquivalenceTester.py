@@ -79,10 +79,12 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     prevision_value = self._getTestedPropertyValue(prevision_movement,
                                                    tested_property) or 0.0
 
-    # use delivery_ratio if specified
-    if self.getProperty('use_delivery_ratio') and \
-        prevision_movement.getDelivery() == decision_movement.getRelativeUrl():
-      decision_value *= prevision_movement.getDeliveryRatio()
+    if prevision_movement.getDelivery() == decision_movement.getRelativeUrl():
+      # use delivery_ratio if specified
+      if self.getProperty('use_delivery_ratio'):
+        decision_value *= prevision_movement.getDeliveryRatio()
+      if tested_property == 'quantity':
+        prevision_value += prevision_movement.getDeliveryError(0.0)
 
     if self.isDecimalAlignmentEnabled():
       decision_value = self._round(decision_value)
