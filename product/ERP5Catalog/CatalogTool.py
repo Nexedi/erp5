@@ -184,6 +184,14 @@ class IndexableObjectWrapper(object):
       """
       return self._getSecurityParameterList()[2].get('Assignor', None)
 
+    def getViewPermissionAssociate(self):
+      """Returns the user ID of the user with 'Associate' local role on this
+      document, if the Associate role has View permission.
+
+      If there is more than one Associate local role, the result is undefined.
+      """
+      return self._getSecurityParameterList()[2].get('Associate', None)
+
     def __repr__(self):
       return '<Products.ERP5Catalog.CatalogTool.IndexableObjectWrapper'\
           ' for %s>' % ('/'.join(self.__ob.getPhysicalPath()), )
