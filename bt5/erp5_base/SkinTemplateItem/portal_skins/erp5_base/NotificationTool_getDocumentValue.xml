@@ -65,7 +65,7 @@ portal_catalog = portal.portal_catalog\n
 valid_portal_type_list = (\'Notification Message\',)\n
 \n
 # Find the applicable language\n
-if language is None:\n
+if language in (None, \'\'):\n
   language = portal.Localizer.get_selected_language()\n
 \n
 # Find the default language\n
