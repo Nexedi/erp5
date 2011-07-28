@@ -162,7 +162,7 @@ class ActiveObject(ExtensionClass.Base):
 
   def getActiveProcess(self):
     path = getActivityRuntimeEnvironment()._message.active_process
-    if active_process:
+    if path:
       return self.unrestrictedTraverse(path)
 
   def setDefaultActivateParameters(self, placeless=False, **kw):
