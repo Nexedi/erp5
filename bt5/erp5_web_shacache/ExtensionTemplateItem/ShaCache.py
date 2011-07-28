@@ -71,7 +71,7 @@ def WebSection_setObject(self, id, ob, **kw):
   sha512sum = hashlib.sha512()
   self.REQUEST._file.seek(0)
   while True:
-    d = self.REQUEST._file.read(sha512sum.block_size)
+    d = self.REQUEST._file.read(1<<20)
     if not d:
       break
     sha512sum.update(d)
