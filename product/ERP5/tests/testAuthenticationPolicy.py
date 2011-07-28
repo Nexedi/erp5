@@ -32,6 +32,7 @@ import unittest
 import time
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.Formulator.Errors import ValidationError
 from Products.ERP5Type.Document import newTempBase
 from DateTime import DateTime
 
@@ -229,8 +230,8 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     """
       Test validity of a password.
     """
-      
     portal = self.getPortal()
+    request = self.app.REQUEST    
     
     regular_expression_list = ['([a-z]+)', # english lowercase
                                '([A-Z]+)', # english uppercase
@@ -299,11 +300,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertEqual(1, person.isPasswordValid('a'))
     self.assertEqual(1, person.isPasswordValid('b'))
     # only last 3 (including current one are invalid)
-    #import pdb; pdb.set_trace()
     self.assertEqual(-4, person.isPasswordValid('d'))
     self.assertEqual(-4, person.isPasswordValid('e'))     
     self.assertEqual(-4, person.isPasswordValid('f'))
-
   
     # if we remove restricted then all password are usable
     preference.setPreferredNumberOfLastPasswordToCheck(None)
@@ -421,7 +420,30 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.stepTic()
     self.assertTrue(temp_person.Person_isPasswordValid('abAB#12_%s' %first_name))
     self.assertTrue(temp_person.Person_isPasswordValid('abAB#12_%s' %last_name))    
-      
+    
+    # check Base_isPasswordValid is able to work in Anonymous User fashion
+    # but with already create Person object (i.e. recover password case)
+    preference.setPrefferedForceUsernameCheckInPassword(1)
+    preference.setPreferredMinPasswordLength(7)
+    preference.setPreferredMinRegularExpressionGroupNumber(3)
+    preference.setPreferredNumberOfLastPasswordToCheck(1)
+    self._clearCache()
+    self.stepTic()    
+    
+    person.setPassword('used_ALREADY_1234')
+    self._clearCache()
+    self.stepTic()
+    
+    # emulate Anonymous User
+    self.logout()
+    request.set('field_user_login', person.getReference())     
+    self.assertRaises(ValidationError,  portal.Base_isPasswordValid, 'abAB#12_%s' %person.getFirstName(), request) # contains name
+    self.assertRaises(ValidationError,  portal.Base_isPasswordValid, 'abAB#12_%s' %person.getLastName(), request) # contains name
+    self.assertRaises(ValidationError,  portal.Base_isPasswordValid, 'abAB#1', request) # too short
+    self.assertRaises(ValidationError,  portal.Base_isPasswordValid, 'abABCDEFG', request) # too few groups
+    self.assertRaises(ValidationError,  portal.Base_isPasswordValid, 'used_ALREADY_1234', request) # already used 
+    self.assertEqual(1, portal.Base_isPasswordValid('abAB#12_', request))
+    self.assertEqual(1, portal.Base_isPasswordValid('not_used_ALREADY_1234', request))     
 
   def test_04_PasswordExpire(self):
     """
