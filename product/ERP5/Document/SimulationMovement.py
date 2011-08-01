@@ -171,12 +171,12 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     if order is not None:
       return order.getSimulationState()
 
+    parent = self.getParentValue()
     try:
-      parent_state = None
       try:
-        parent_state = self.getParentValue().getSimulationState()
+        parent_state = parent.getSimulationState()
       except AttributeError:
-        item = self.getParentValue().getCausalityValue(
+        item = parent.getCausalityValue(
                 portal_type=self.getPortalItemTypeList())
         if interfaces.IExpandableItem.providedBy(item):
           return item.getSimulationMovementSimulationState(self)
