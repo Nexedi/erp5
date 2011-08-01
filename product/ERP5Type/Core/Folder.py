@@ -28,8 +28,10 @@
 ##############################################################################
 
 import transaction
+from collections import deque
 from AccessControl import ClassSecurityInfo, getSecurityManager
 from Acquisition import aq_base, aq_parent, aq_inner
+from OFS.ObjectManager import ObjectManager
 from OFS.History import Historical
 import ExtensionClass
 
@@ -359,6 +361,93 @@ class FolderMixIn(ExtensionClass.Base):
     else:
       return None
 
+  def _recurseCallMethod(self, method_id, method_args=(), method_kw={},
+                         restricted=False, id_list=None, min_id=None, **kw):
+    """Run a script by activity on objects found recursively from this folder
+
+    This method is configurable (via activate_kw['group_*'] & 'activity_count'
+    parameters) so that it can work efficiently with databases of any size.
+
+    'activate_kw' may specify an active process to collect results.
+
+    In order to activate objects that don't inherit ActiveObject,
+    only placeless default activate parameters are taken into account.
+    """
+    portal = self.getPortalObject()
+    activate_kw = portal.getPlacelessDefaultActivateParameters()
+    if activate_kw:
+      activate_kw = activate_kw.copy()
+    else:
+      activate_kw = {}
+    activate_kw.update(kw.get('activate_kw', ()))
+    activate_kw.setdefault('active_process', None)
+    activate = portal.portal_activities.activateObject
+    validate = restricted and getSecurityManager().validate
+    cost = activate_kw.get('group_method_cost', .034) # 30 objects
+    if cost != 1:
+      activate_kw.setdefault('group_method_id', None) # dummy group method
+    activity_count = kw.get('activity_count', 1000)
+    if activity_count is None:
+      check_limit = lambda: None
+    else:
+      check_limit = iter(xrange(activity_count)).next
+    try:
+      recurse_stack = kw['_recurse_stack']
+    except KeyError:
+      recurse_stack = [id_list and deque(id_list) or min_id or '']
+      kw['_recurse_stack'] = recurse_stack
+    min_depth = kw.get('min_depth', 0)
+    max_depth = kw.get('max_depth', 0)
+    def recurse(container, depth):
+      if getattr(aq_base(container), 'getPhysicalPath', None) is None:
+        return
+      if (max_depth is None or depth < max_depth) and \
+         isinstance(container, ObjectManager) and len(container):
+        try:
+          next_id = recurse_stack[depth]
+        except IndexError:
+          next_id = ''
+          recurse_stack.append(next_id)
+        if isinstance(next_id, basestring):
+          folder_handler = isinstance(container, Folder) and \
+                          container._folder_handler
+          if not folder_handler:
+            next_id = deque(x for x in container.objectIds() if x >= next_id)
+            recurse_stack[depth] = next_id
+          else:
+            if folder_handler == HBTREE_HANDLER:
+              iteritems = container._htree_iteritems
+            else:
+              iteritems = container._tree.iteritems
+            for id, ob in iteritems(next_id):
+              ob = ob.__of__(container)
+              if not restricted or validate(container, container, id, ob):
+                recurse_stack[depth] = id
+                recurse(ob, depth + 1)
+            recurse_stack[-1] = next_id = None
+        while next_id:
+          id = next_id[0]
+          ob = container._getOb(id)
+          if not restricted or validate(container, container, id, ob):
+            recurse(ob, depth + 1)
+          del next_id[0]
+      if min_depth <= depth:
+        check_limit()
+        getattr(activate(container, 'SQLQueue', **activate_kw),
+                method_id)(*method_args, **method_kw)
+      del recurse_stack[depth:]
+    try:
+      recurse(self, 0)
+    except StopIteration:
+      activate_kw['group_method_id'] = kw['group_id'] = '' # no grouping
+      activate_kw['priority'] = 1 + activate_kw.get('priority', 1)
+      activate(self, 'SQLQueue', **activate_kw)._recurseCallMethod(
+        method_id, method_args, method_kw, restricted=restricted, **kw)
+
+  security.declarePublic('recurseCallMethod')
+  def recurseCallMethod(self, *args, **kw):
+    """Restricted version of _recurseCallMethod"""
+    return self._recurseCallMethod(restricted=True, *args, **kw)
 
 OFS_HANDLER = 0
 BTREE_HANDLER = 1
