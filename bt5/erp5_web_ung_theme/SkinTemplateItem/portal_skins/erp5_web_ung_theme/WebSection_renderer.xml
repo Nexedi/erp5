@@ -67,13 +67,11 @@ else:\n
   portal_type_list = request.form.get("portal_type")\n
   searchable_text = request.form.get("SearchableText")\n
   return context.Base_redirect("unfoldDomain", \n
-                               keep_items = dict(domain_url="ung_domain/all_documents",\n
+                               keep_items = dict(unfoldDomain="ung_domain/all_documents.0",\n
                                                  form_id="erp5_web_ung_layout",\n
                                                  list_selection_name="ung_document_list_selection",\n
-                                                 domain_depth=0,\n
                                                  SearchableText=searchable_text,\n
-                                                 portal_type=portal_type_list,\n
-                                                 reset=1))\n
+                                                 portal_type=portal_type_list))\n
 </string> </value>
         </item>
         <item>
