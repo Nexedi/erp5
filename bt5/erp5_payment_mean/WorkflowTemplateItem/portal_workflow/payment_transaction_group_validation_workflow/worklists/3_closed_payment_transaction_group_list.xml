@@ -11,6 +11,10 @@
             <value> <string>global</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string>Payment Transaction Groups to Deliver (%(count)s)</string> </value>
         </item>
@@ -55,6 +59,7 @@ payment_transaction_group_module/view?reset:int=1&portal_type=Payment Transactio
             <key> <string>roles</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
               </tuple>
             </value>
