@@ -1,4 +1,7 @@
 2011-07-01 gabriel.oliveira
+* Refactor css to apply inside new ung structure
+
+2011-07-01 gabriel.oliveira
 * Fix unfoldDomain param, and disable reset
 * Fix forgot to commit erp5_web_ung_layout form content
 * Remove old listbox and add new one based on gadget

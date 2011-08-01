@@ -34,20 +34,16 @@
 \n
 body {\n
   background: #fff !important;\n
-  width:100%;\n
-  height:100%;\n
   margin: 0;\n
   padding: 0;\n
   font-family: arial,sans-serif;\n
-  display:inline-block;\n
   font-weight:normal;\n
-  overflow-x: hidden;\n
 }\n
 \n
 /* Hidden input */\n
 fieldset#hidden_fieldset,\n
  div#upload_document,\n
- div#edit_document {\t \n
+ div#edit_document {\n
   display: none;\n
 }\n
 \n
@@ -63,17 +59,17 @@ div.navigation {\n
 \n
 div.navigation fieldset.widget {\n
   border: 0px;\n
-  padding-top: 0.6%; \n
+  padding-top: 0.6%;\n
   margin: -0.60%;\n
   width: 96%;\n
 }\n
 \n
-div.navigation-right { \n
+div.navigation-right {\n
   float: right;\n
   margin-top: -16px;\n
 }\n
 \n
-div.header-user { \n
+div.header-user {\n
   text-align: right;\n
   font-size: 13px;\n
   margin-right:1%;\n
@@ -127,6 +123,10 @@ div.main-right div.main-status {\n
   font-style: bold;\n
 }\n
 \n
+div.main-right #page_wrapper {\n
+  margin-top: 0px; !important\n
+}\n
+\n
 div.gadget-column {\n
   margin-left:-4px;\n
 }\n
@@ -160,10 +160,10 @@ div.quick-search-item:hover,\n
 \n
 /* ERP5 Forms*/\n
 \n
-div.field label, \n
- span.headline,  \n
- a.listbox_title,  \n
- div.actions, div.actions, \n
+div.field label,\n
+ span.headline,\n
+ a.listbox_title,\n
+ div.actions, div.actions,\n
  legend.group_title, fieldset.left {\n
   display:none;\n
 }\n
@@ -254,7 +254,7 @@ div.listbox-content a:hover {\n
 img.sort-button-desc {\n
   background: url("ung_images/icon_desc.gif") no-repeat;\n
   width:10px;\n
-  margin:1px -10px; \n
+  margin:1px -10px;\n
 }\n
 \n
 img.sort-button-asc {\n
@@ -277,7 +277,7 @@ iframe#svgframe {\n
 \n
 div#wrapper_toolbar {\n
   background: #E3E9FF no-repeat;\n
-  height:35px;  \n
+  height:35px;\n
 }\n
 \n
 button.clone {\n
@@ -300,7 +300,7 @@ div#wrapper_header div.field fieldset {\n
   border:0px;\n
 }\n
 \n
-div#wrapper_header div.field a[name="document_title"], \n
+div#wrapper_header div.field a[name="document_title"],\n
  div#wrapper_header div.field a[name="document_state"] {\n
   margin-left:22px;\n
   font-size:15px;\n
@@ -348,9 +348,10 @@ table.listbox {\n
   background: #eff3fa;\n
 }\n
 \n
-div.main-right fieldset.widget div.field:last-child img {\n
-  display:none;\n
-}\n
+// XXX: this disable image on main listbox (now by gadget)\n
+//div.main-right fieldset.widget div.field:last-child img {\n
+//  display:none;\n
+//}\n
 \n
 div.header-right div.input a {\n
   color:#A7A2A2;\n
@@ -375,7 +376,7 @@ div.main-left {\n
 \n
 div.favorite {\n
   background-color: #BBCCFF;\n
-  height:27px; \n
+  height:27px;\n
   margin-top:-5px;\n
   padding-top:8px;\n
 }\n
@@ -392,7 +393,7 @@ div.toolbar, div.favorite {\n
 \n
 div.toolbar {\n
   background-color: #E3E9FF;\n
-  height:27px; \n
+  height:27px;\n
   padding-bottom:5px;\n
 }\n
 \n
@@ -420,7 +421,7 @@ div.header-left {\n
 .sort-button span {\n
  color:#112abb;\n
 }\n
- \n
+\n
 div.navigation-left a {\n
  margin-left:7px;\n
 }\n
@@ -461,7 +462,7 @@ div#select_language {\n
   white-space:nowrap;\n
 }\n
 .menu_create_object img {\n
-  border:0px;  \n
+  border:0px;\n
 }\n
 \n
 .menu_create_object li a#current {\n
@@ -687,7 +688,7 @@ div#edit_document fieldset label {\n
   font-size: 12px;\n
 }\n
 \n
-span#ui-dialog-title-edit_document, \n
+span#ui-dialog-title-edit_document,\n
  span#ui-dialog-title-upload_document,\n
  span#ui-dialog-title-gadget-listbox{\n
   font-size:17px;\n
@@ -712,7 +713,7 @@ button#save_document, button#cancel_document {\n
 .ui-dialog .ui-dialog-buttonpane {\n
   background:none repeat scroll 0 0 #C1D9FF;\n
   border-top:0 none;\n
-  width: 5.6em;\n
+//  width: 5.6em;\n
   padding:0 !important;\n
 }\n
 \n
@@ -734,7 +735,7 @@ span.ui-button-text {\n
 \n
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {\n
  float:none !important;\n
- width:104px;\n
+// width:104px;\n
  height:21px;\n
  margin-top:-10px;\n
 }\n
@@ -760,13 +761,13 @@ div.listbox-number-of-records{\n
   float: right;\n
   font-size: 12px;\n
   margin-right: 12em;\n
-  margin-top: -18px;\n
+  margin-top: -25px;\n
   min-width: 30%;\n
 }\n
 \n
 div.listbox-navigation button.listbox_last_page,\n
-  div.listbox-navigation button.listbox_next_page, \n
-  div.listbox-navigation button.listbox_previous_page, \n
+  div.listbox-navigation button.listbox_next_page,\n
+  div.listbox-navigation button.listbox_previous_page,\n
   div.listbox-navigation button.listbox_first_page {\n
   height:20px;\n
   border: 0px;\n
@@ -778,7 +779,7 @@ div.listbox-navigation button.listbox_previous_page,\n
   width:12px;\n
 }\n
 \n
-div.listbox-navigation button.listbox_last_page, \n
+div.listbox-navigation button.listbox_last_page,\n
   div.listbox-navigation button.listbox_first_page {\n
   margin: 0px;\n
   width:18px;\n
@@ -800,7 +801,7 @@ div.listbox-navigation button.listbox_previous_page {\n
   background-image: url(\'<dtml-var expr="portal_url()">/ung_images/previous_page.png\');\n
 }\n
 \n
-div.listbox-navigation button.listbox_previous_page, \n
+div.listbox-navigation button.listbox_previous_page,\n
  div.listbox-navigation button.listbox_first_page,\n
  div.listbox-navigation button.listbox_last_page,\n
  div.listbox-navigation button.listbox_next_page {\n
@@ -880,7 +881,7 @@ div#login-box {\n
 }\n
 \n
 div#login-box input {\n
-  vertical-align: middle; \n
+  vertical-align: middle;\n
 }\n
 \n
 div#login-box input.submit {\n
@@ -900,7 +901,7 @@ fieldset.center.editable, fieldset.right.editable {\n
   margin-left: -11px;\n
 }\n
 \n
-fieldset.center.editable div.field label, \n
+fieldset.center.editable div.field label,\n
  fieldset.right.editable div.field label {\n
   display: block;\n
 }\n
@@ -1012,7 +1013,8 @@ div.front_pad div#page_wrapper {\n
 \n
 form#ung_preference,\n
  form#system_preference,\n
- form#erp5_preference {\n
+ form#erp5_preference,\n
+ form#change_state_form {\n
   margin:0px;\n
   padding: 0px;\n
 }\n
@@ -1103,7 +1105,7 @@ div#advertisement h2 {\n
 }\n
 \n
 div#advertisement b {\n
-  font-size: 12px !important;  \n
+  font-size: 12px !important;\n
 }\n
 \n
 div.footer {\n
@@ -1145,7 +1147,59 @@ span#no-input-file {\n
   border: none;\n
   background: #FFF;\n
   cursor: pointer;\n
-}
+}\n
+\n
+\n
+\n
+\n
+div#change_state_dialog {\n
+  display:none;\n
+  width: 480px !important;\n
+  font-size: 14px;\n
+}\n
+\n
+div.xunda {\n
+  border: 0;\n
+  padding: 0.15em 0.35em 0.400em;\n
+  font-size: 14px;\n
+  margin-left: 5px;\n
+}\n
+\n
+div.xunda div.field label {\n
+  display: block;\n
+}\n
+\n
+div.xunda .sort-button {\n
+  color: #FFFFFF;\n
+}\n
+\n
+/*span#ui-dialog-title-change_state_dialog {*/\n
+/*  margin: 0;*/\n
+/*  margin-top: -2px;*/\n
+/*  margin-left: -10px;*/\n
+/*  font-size: 15px;*/\n
+/*  color: #222222 !important;*/\n
+/*}*/\n
+\n
+div#change_state_dialog div.field {\n
+  padding-bottom: 1px;\n
+  padding-top: 1px;\n
+}\n
+\n
+/* Transition Message */\n
+div.portal_status_message {\n
+  float: left;\n
+  padding-left: 100px;\n
+}\n
+\n
+// fix \'_\' after ung-logo image\n
+a.ung_docs {\n
+  text-decoration: none !important;\n
+}\n
+a.ung_docs:link {\n
+  text-decoration: none !important;\n
+}\n
+
 
 ]]></string> </value>
         </item>
