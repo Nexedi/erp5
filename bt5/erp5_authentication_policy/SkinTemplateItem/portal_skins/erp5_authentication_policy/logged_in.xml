@@ -75,12 +75,12 @@
       </tal:block>\n
     </tal:block>\n
     <tal:block tal:condition="not: isAnon"\n
-               tal:define="is_user_account_password_expired_warning_on python:request.get(\'is_user_account_password_expired_warning_on\', False);">\n
+               tal:define="is_user_account_password_expired_warning_on python:request.get(\'is_user_account_password_expired_warning_on\', 0);">\n
       \n
       <!-- Password will expire soon just warn user ?  -->\n
       <tal:block tal:condition="is_user_account_password_expired_warning_on">\n
          <tal:block tal:define="came_from python: request.get(\'came_from\') or here.absolute_url();\n
-                               dummy python: response.redirect(\'%s/ERP5Site_viewNewPersonCredentialUpdateDialog?portal_status_message=%s&amp;cancel_url=%s\' %(came_from, here.Base_translateString(\'Your password will expire soon. You are advised to change it as soon as possible.\'), came_from));" />\n
+                               dummy python: response.redirect(\'%s/ERP5Site_viewNewPersonCredentialUpdateDialog?portal_status_message=%s&amp;cancel_url=%s\' %(came_from, here.Base_translateString(\'Your password will expire in %s hours. You are advised to change it as soon as possible.\' %is_user_account_password_expired_warning_on), came_from));" />\n
       </tal:block>\n
 \n
       <tal:block tal:condition="not: is_user_account_password_expired_warning_on">\n
