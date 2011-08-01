@@ -115,8 +115,12 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
 
     self.login()
     # Now a web message has been created
+    telephone_key = 'source_person_default_telephone_text'
     event = self.portal.event_module.objectValues()[0]
     for property_id, value in form_kw.iteritems():
+      if property_id == telephone_key:
+        value =  '+(0)-%s' % value
+
       self.assertEquals(event.getProperty(property_id), value)
     self.assertEquals(event.getSourceCarrier(), web_section.getRelativeUrl())
     self.assertTrue(event.hasStartDate())
@@ -165,10 +169,14 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     self.logout()
 
     self.login()
+    telephone_key = "source_person_default_telephone_text"
     # Now a web message has been created
     event = self.portal.event_module.objectValues()[0]
     for property_id, value in form_kw.iteritems():
+      if property_id == telephone_key:
+        value =  '+(0)-%s' % value
       self.assertEquals(event.getProperty(property_id), value)
+
     self.assertEquals(event.getSourceCarrier(), web_section.getRelativeUrl())
     self.assertTrue(event.hasStartDate())
     self.assertTrue(event.hasSource()) # User was connected
