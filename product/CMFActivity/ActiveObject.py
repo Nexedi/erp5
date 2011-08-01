@@ -93,32 +93,25 @@ class ActiveObject(ExtensionClass.Base):
     # Get activate values from activate_kw, then default_activate_parameter
     # transactional variable only if they are not set directly as arguments
     # to activate()
-    if activate_kw is not None:
-      for k, v in activate_kw.iteritems():
-        if k not in kw:
-          kw[k] = v
-
-    # Get default parameters from a transactional variable.
     new_kw = self.getDefaultActivateParameterDict()
-    new_kw.update(kw) # kw values takes precedence
-    kw = new_kw # replace it to takes into account default activate parameters
+    if activate_kw:
+      new_kw.update(activate_kw)
+    new_kw.update(kw)
 
     if kw.get('group_id', '') is None:
       raise ValueError, "Cannot defined a group_id with value None"
     elif kw.get('group_method_id') is None and kw.get('group_id') is not None:
       raise ValueError, "Cannot defined a group_id without group_method_id"
 
-    portal = self.getPortalObject()
-    if isinstance(active_process, basestring):
-      active_process = portal.unrestrictedTraverse(active_process)
-
-    activity_tool = getattr(portal, 'portal_activities', None)
-    if activity_tool is None:
+    try:
+      activity_tool = self.getPortalObject().portal_activities
+    except AttributeError:
       return self # Do nothing if no portal_activities
     # activate returns an ActiveWrapper
     # a queue can be provided as well as extra parameters
     # which can be used for example to define deferred tasks
-    return activity_tool.activateObject(self, activity, active_process, **kw)
+    return activity_tool.activateObject(
+      self, activity, active_process, **new_kw)
 
   security.declareProtected( permissions.ModifyPortalContent, 'flushActivity' )
   def flushActivity(self, invoke=0, **kw):

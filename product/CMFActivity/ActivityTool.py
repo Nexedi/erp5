@@ -453,8 +453,12 @@ class Method:
 allow_class(Method)
 
 class ActiveWrapper:
+  # XXX: maybe we should accept and forward an 'activity_tool' parameter,
+  #      so that Method:
+  #      - does not need to search it again
+  #      - a string can be passed as first parameter to ActiveWrapper
 
-  def __init__(self, passive_self, activity, active_process, **kw):
+  def __init__(self, passive_self, activity, active_process, kw):
     self.__dict__['__passive_self'] = passive_self
     self.__dict__['__activity'] = activity
     self.__dict__['__active_process'] = active_process
@@ -1060,7 +1064,9 @@ class ActivityTool (Folder, UniqueObject):
       if not is_initialized:
         self.initialize()
       self.getActivityBuffer()
-      return ActiveWrapper(object, activity, active_process, **kw)
+      if isinstance(active_process, str):
+        active_process = self.unrestrictedTraverse(active_process)
+      return ActiveWrapper(object, activity, active_process, kw)
 
     def deferredQueueMessage(self, activity, message):
       activity_buffer = self.getActivityBuffer()
