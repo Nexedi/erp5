@@ -51,7 +51,7 @@ from Products.ERP5Security import mergedLocalRoles
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.ERP5Type.Utils import sqlquote
 
-import os, time, urllib, warnings
+import os, urllib, warnings
 import sys
 from zLOG import LOG, PROBLEM, WARNING, INFO
 
@@ -978,9 +978,6 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       parameters) so that it can work efficiently with databases of any size.
 
       'activate_kw' may specify an active process to collect results.
-      Note however, we don't use Base_makeActiveResult so you're likely to get
-      ConflictError at the beginning. You could avoid this by making sure
-      'result_list' is already initialized on the active process.
       """
       catalog_kw = dict(kw)
       packet_size = catalog_kw.pop('packet_size', 30)
@@ -995,14 +992,10 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       result_count = len(r)
       if result_count:
         if result_count == limit:
-          tag = activate_kw.get('tag')
-          if not tag:
-            activate_kw['tag'] = tag = 'searchAndActivate_%r' % time.time()
-          _tag = '%s_%s' % (tag, min_uid)
-          self.activate(tag=tag, after_tag=_tag, activity='SQLQueue') \
+          next_kw = dict(activate_kw, priority=1+activate_kw.get('priority', 1))
+          self.activate(activity='SQLQueue', **next_kw) \
               ._searchAndActivate(method_id,method_args, method_kw,
-                                  dict(activate_kw), r[-1].getUid(), **kw)
-          activate_kw['tag'] = _tag
+                                  activate_kw, r[-1].getUid(), **kw)
         r = [x.getPath() for x in r]
         r.sort()
         activate = self.getPortalObject().portal_activities.activate
