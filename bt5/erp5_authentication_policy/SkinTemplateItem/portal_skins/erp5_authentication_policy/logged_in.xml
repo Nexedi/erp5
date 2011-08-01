@@ -66,7 +66,7 @@
         <!-- Password is expired permanently. -->\n
         <tal:block tal:condition="is_user_account_password_expired">\n
           <tal:block tal:define="message python: {False: \'Password is expired.\',\n
-                                                  True: \'Password is expired. You will soon receive an email with details how you can recover it.\'}.get(here.getPortalObject().portal_preferences.isPreferredSystemRecoverExpiredPassword());\n
+                                                  True: \'Password is expired. You will soon receive an email with details about how you can recover it.\'}.get(here.getPortalObject().portal_preferences.isPreferredSystemRecoverExpiredPassword());\n
                                  url python: \'%s/login_form?portal_status_message=%s\' % (here.absolute_url(), here.Base_translateString(message));\n
                                  url python: request.get(\'came_from\') and  \'%s&amp;came_from=%s\' % (url, request[\'came_from\']) or url;\n
                                  dummy python: response.redirect(url);"/>\n
