@@ -1616,10 +1616,10 @@ for source_klass, destination_klass in \
   # special meanings in Python or Zope, and lead to strange errors
   # when set to an unexpected value. In fact, __implemented__ should not
   # be set this way, otherwise Zope crashes.
-  method_id_list = [x for x in source_klass.__dict__.iterkeys()
-          if not x.startswith('__') and callable(getattr(source_klass, x))]
-  for method_id in method_id_list:
-    if not hasattr(destination_klass, method_id):
+  for method_id in source_klass.__dict__:
+    if (method_id[:2] != '__' and method_id[:7] != '_htree_' and
+        callable(getattr(source_klass, method_id)) and
+        not hasattr(destination_klass, method_id)):
       setattr(destination_klass, method_id, NotImplementedClass(method_id))
       # Zope 2.7 required to have methodId__roles__ defined
       # to know the security ot the method

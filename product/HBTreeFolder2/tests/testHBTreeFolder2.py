@@ -12,6 +12,7 @@
 #
 ##############################################################################
 
+import random
 import unittest
 import ZODB
 import Testing
@@ -194,6 +195,34 @@ class HBTreeFolder2Tests(unittest.TestCase):
         key.value = 'a'
         self.f.manage_cleanup()
 
+    def testIterItems(self):
+        h = HBTreeFolder2()
+        id_list = ['a-b', 'a-cd',
+                   'b',
+                   'd-a-b', 'd-c-d', 'd-f-a',
+                   'e-cd', 'e-f',
+                   'f']
+        for i in id_list:
+          h._setOb(i, tuple(i))
+        while 1:
+          for min in (None, 'a', 'a-a', 'a-b',
+                      'a-b-a', 'a-c', 'a-cd',
+                      'a-cde', 'a-d', 'aa', 'b',
+                      'b-c-d', 'c', 'd'):
+            if min:
+              m = min.split('-')
+              for i, id in enumerate(id_list):
+                if m <= id.split('-'):
+                  break
+            else:
+              i = 0
+            expected = [(i, tuple(i)) for i in id_list[i:]]
+            self.assertEqual(expected, list(h._htree_iteritems(min)))
+          if not id_list:
+            break
+          i = random.choice(id_list)
+          id_list.remove(i)
+          h._delOb(i)
 
 class TrojanKey:
     """Pretends to be a consistent, immutable, humble citizen...
