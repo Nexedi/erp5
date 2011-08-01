@@ -259,7 +259,7 @@ return result
     # operation even remote cache must have access time less than a second.
     # if it's greater than method wasn't previously cached and was calculated
     # instead
-    self.assert_(1.0 > calculation_time)
+    self.assert_(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
 
     ## check if equal.
     self.assertEquals(cached, result)
@@ -485,7 +485,7 @@ return 'a' * 1024 * 1024 * 25
       end = time.time()
       calculation_time = end-start
       print "\n\tCalculation time (1st call)", calculation_time
-      self.assertTrue(calculation_time > 1.0)
+      self.assertTrue(calculation_time > 1.0, "%s <= 1.0" % calculation_time)
 
       ## 2nd call - should be cached now
       start = time.time()
@@ -494,7 +494,7 @@ return 'a' * 1024 * 1024 * 25
       end = time.time()
       calculation_time = end-start
       print "\n\tCalculation time (2nd call)", calculation_time
-      self.assertTrue(calculation_time < 1.0)
+      self.assertTrue(calculation_time < 1.0, "%s >= 1.0" % calculation_time)
 
       # Wait expiration period then check that value is computed
       # .1 is an additional epsilon delay to work around time precision issues
@@ -509,7 +509,7 @@ return 'a' * 1024 * 1024 * 25
       end = time.time()
       calculation_time = end-start
       print "\n\tCalculation time (3rd call)", calculation_time
-      self.assertTrue(calculation_time > 1.0)
+      self.assertTrue(calculation_time > 1.0, "%s <= 1.0" % calculation_time)
 
   def test_99_CachePluginInterface(self):
     """Test Class against Interface
