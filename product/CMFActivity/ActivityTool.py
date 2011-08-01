@@ -1243,7 +1243,7 @@ class ActivityTool (Folder, UniqueObject):
 
       try:
         if len(expanded_object_list) > 0:
-          method = self.unrestrictedTraverse(method_id)
+          method = self.getPortalObject().unrestrictedTraverse(method_id)
           # FIXME: how to apply security here?
           # NOTE: expanded_object_list must be set to failed objects by the
           #       callee. If it fully succeeds, expanded_object_list must be
