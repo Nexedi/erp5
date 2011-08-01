@@ -22,7 +22,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-payment_transaction_group_module/view?reset:int=1&portal_type=Payment Transaction Group&local_roles=Assignee&validation_state=closed
+payment_transaction_group_module/view?reset:int=1&portal_type=Payment Transaction Group&local_roles=Assignor&validation_state=closed
 
 ]]></string> </value>
         </item>
@@ -59,7 +59,6 @@ payment_transaction_group_module/view?reset:int=1&portal_type=Payment Transactio
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
               </tuple>
             </value>

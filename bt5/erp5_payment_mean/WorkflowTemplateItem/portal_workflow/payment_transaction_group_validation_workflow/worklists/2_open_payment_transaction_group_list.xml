@@ -60,7 +60,6 @@ payment_transaction_group_module/view?reset:int=1&portal_type=Payment Transactio
             <value>
               <tuple>
                 <string>Assignee</string>
-                <string>Assignor</string>
               </tuple>
             </value>
         </item>
