@@ -77,9 +77,6 @@ configuration_save.addConfigurationItem("Portal Type Configurator Item",\n
 configuration_save.addConfigurationItem("Portal Type Configurator Item",\n
                                         target_portal_type=\'Inventory\',\n
                                         add_propertysheet_list=(\'InventoryConstraint\',))\n
-\n
-# These must be last\n
-configuration_save.addConfigurationItem("Export Customer BT5 Configurator Item")\n
 </string> </value>
         </item>
         <item>

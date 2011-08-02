@@ -50,11 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
-group_id = context.getGlobalConfigurationAttr(\'group_id\')\n
-\n
-# These must be last\n
-configuration_save.addConfigurationItem("Export Customer BT5 Configurator Item")\n
+            <value> <string>"""\n
+ This script should be removed.\n
+"""\n
+pass\n
 </string> </value>
         </item>
         <item>
