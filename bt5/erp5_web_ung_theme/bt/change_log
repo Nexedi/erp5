@@ -1,4 +1,7 @@
 2011-07-01 gabriel.oliveira
+* Fix params for Refresh button
+
+2011-07-01 gabriel.oliveira
 * Add method to return document list and javascript needed for listbox
 
 2011-07-01 gabriel.oliveira

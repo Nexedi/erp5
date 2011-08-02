@@ -41,13 +41,14 @@
                          portal_path python:website.absolute_url();\n
                          current_url here/absolute_url;\n
                          has_editor python: current_url != portal_path;\n
-                         domain_url python: context.REQUEST.form.get(\'domain_url\') or \'ung_domain/all_document_list\';">\n
+                         domain_url python: context.REQUEST.form.get(\'domain_url\') or \'ung_domain/all_documents\';">\n
     <a class="domain_selected"></a>\n
+    <div tal:content="request/portal_status_message | nothing" class="portal_status_message"/>\n
     <tal:block tal:condition="python: not has_editor">\n
-      <a i18n:translate="" i18n:domain="ui" tal:attributes="href python: request.get(\'URL\') + \'?domain_url=%s&\' % domain_url + \n
+      <a i18n:translate="" i18n:domain="ui" tal:attributes="href python: request.get(\'URL\') + \'?unfoldDomain=%s.0&\' % domain_url + \n
                                                            \'form_id=erp5_web_ung_layout&\' + \n
                                                            \'list_selection_name=ung_document_list_selection&\' + \n
-                                                           \'domain_depth:int=0&reset:int=1\'">Refresh</a>\n
+                                                           \'reset:int=1\'">Refresh</a>\n
     </tal:block>\n
     <tal:block tal:condition="python: has_editor">\n
       <a tal:attributes="href python: request.get(\'URL\') + \'?editable_mode:int=1\'"\n
