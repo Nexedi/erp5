@@ -620,36 +620,37 @@ $().ready(function(){\n
     h3Tag.hide();\n
   }\n
 \n
-  // render main document listbox\n
-  $.ajax({\n
-    async: false,\n
-    url: \'WebSection_getUNGDocumentListPadAsJSON\',\n
-    data: {pad_relative_url: \'knowledge_pad_module/ung_knowledge_pad\', mode: \'web_front\'},\n
-    dataType: \'json\',\n
-    success: function(data){\n
-      external_data = data\n
-      var data_html = $(data.body)[0]\n
-      //var data_script = $(data.body)[1].text\n
-      var data_script = data.javascript\n
+  if (!$("div.gadget-column").length == 0) {\n
+    // render main document listbox\n
+    $.ajax({\n
+      async: false,\n
+      url: \'WebSection_getUNGDocumentListPadAsJSON\',\n
+      data: {pad_relative_url: \'knowledge_pad_module/ung_knowledge_pad\', mode: \'web_front\'},\n
+      dataType: \'json\',\n
+      success: function(data){\n
+        external_data = data\n
+        var data_html = $(data.body)[0]\n
+        //var data_script = $(data.body)[1].text\n
+        var data_script = data.javascript\n
 \n
-      ung_listbox_container = $(\'div#main_listbox-container\')\n
-      // fill body\n
-      ung_listbox_container.html(data_html);\n
-      // attach listener\n
-      ung_listbox_container.live(\'DOMSubtreeModified\', checkUNGListbox)\n
-      // eval script\n
-      eval(data_script)\n
-      // remove class \'portal-column\' from main listbox\n
-      // (as it should not interfere in user\'s box layout)\n
-      // updateServerBoxColumnLayout method uses \'div.portal-column\' as selector\n
-      ung_listbox_container.find(\'div.portal-column\')[0].className = \'\'\n
+        ung_listbox_container = $(\'div#main_listbox-container\')\n
+        // fill body\n
+        ung_listbox_container.html(data_html);\n
+        // attach listener\n
+        ung_listbox_container.live(\'DOMSubtreeModified\', checkUNGListbox)\n
+        // eval script\n
+        eval(data_script)\n
+        // remove class \'portal-column\' from main listbox\n
+        // (as it should not interfere in user\'s box layout)\n
+        // updateServerBoxColumnLayout method uses \'div.portal-column\' as selector\n
+        ung_listbox_container.find(\'div.portal-column\')[0].className = \'\'\n
 \n
-      configureUNGSearch(data_script);\n
+        configureUNGSearch(data_script);\n
 \n
-      wrapUpdater();\n
-    }\n
-  });\n
-\n
+        wrapUpdater();\n
+      }\n
+    });\n
+  }\n
   return false;\n
 });\n
 \n
