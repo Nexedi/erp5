@@ -256,9 +256,7 @@ branch = %(branch)s
           if isinstance(revision, tuple):
             revision = ','.join(revision)
           # Deal with Shebang size limitation
-          file_object = open(run_test_suite_path, 'r')
-          line = file_object.readline()
-          file_object.close()
+          line = open(run_test_suite_path, 'r').readline()
           invocation_list = []
           if line[:2] == '#!':
             invocation_list = line[2:].split()
