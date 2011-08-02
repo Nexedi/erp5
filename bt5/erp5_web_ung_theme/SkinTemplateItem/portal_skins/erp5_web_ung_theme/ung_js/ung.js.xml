@@ -474,7 +474,7 @@ $().ready(function(){\n
         success: function(data2) {\n
           folder_workflow_action_dialog_data = data2\n
           $("div#change_state_dialog").append("<form id=\'change_state_form\'>" +\n
-                                              "<div class=\'xunda\'>" +\n
+                                              "<div class=\'change_state_dialog\'>" +\n
                                               "<table class=\'listbox listbox-table\'>" +\n
                                               "  <thead>" +\n
                                               "    <tr class=\'listbox-label-line\'>" +\n
