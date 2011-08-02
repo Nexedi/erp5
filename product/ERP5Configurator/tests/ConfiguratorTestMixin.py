@@ -531,7 +531,6 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     bt5_title_list = self.portal.portal_templates.getInstalledBusinessTemplateTitleList()
     expected_list = self.standard_bt5_list + bt5_tuple
     self.assertEquals([i for i in expected_list if i not in bt5_title_list], [])
-
     
     self.assertFalse(bc_id in bt5_title_list)
 
