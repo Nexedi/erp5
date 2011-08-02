@@ -36,12 +36,17 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
+<div id="change_state_dialog" title="Change State of Documents" i18n:translate="" i18n:domain="ui"></div>\n
 <div class="toolbar">\n
   <button name="WebSection_deleteObjectList:method" \n
           type="submit" class="delete"\n
           i18n:translate="" i18n:domain="ui">Delete</button>\n
-  <button name="#" type="submit" class="change_state"\n
+\n
+  <button name="WebSection_changeStateOnUNGDocs:method" type="submit" class="change_state"\n
           i18n:translate="" i18n:domain="ui">Change State</button>\n
+\n
+  <div class="listbox-navigation"></div>\n
+\n
 </div>
 
 ]]></unicode> </value>
