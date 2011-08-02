@@ -1,4 +1,7 @@
 2011-07-01 gabriel.oliveira
+* Fix unfoldDomain param and refactor search button
+
+2011-07-01 gabriel.oliveira
 * Refactor to self-close html tags
 
 2011-07-01 gabriel.oliveira
