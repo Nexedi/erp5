@@ -107,5 +107,9 @@ def main(*args):
   CONFIG['bot_environment'] = bot_environment
   CONFIG['environment'] = dict(config.items('environment'))
   CONFIG['slapproxy_binary'] = geto('slapproxy_binary')
+  instance_dict = {}
+  if 'instance_dict' in config.sections():
+    instance_dict = dict(config.items('instance_dict'))
+  CONFIG['instance_dict'] = instance_dict
 
   testnode.run(CONFIG)
