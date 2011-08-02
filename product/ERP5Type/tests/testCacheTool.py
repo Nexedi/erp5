@@ -259,7 +259,7 @@ return result
     # operation even remote cache must have access time less than a second.
     # if it's greater than method wasn't previously cached and was calculated
     # instead
-    self.assert_(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
+    self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
 
     ## check if equal.
     self.assertEquals(cached, result)
@@ -277,7 +277,7 @@ return result
       calculation_time = end-start
       print "\n\tCalculation time (after cache clear)", calculation_time
       ## Cache  cleared shouldn't be previously cached
-      self.assert_(1.0 < calculation_time)
+      self.assertTrue(1.0 < calculation_time, "1.0 >= %s" % calculation_time)
       self.assertEquals(cached, result)
 
 
@@ -303,7 +303,7 @@ return result
     end = time.time()
     calculation_time = end-start
     print "\n\tCalculation time (4th call)", calculation_time
-    self.assert_(1.0 < calculation_time)
+    self.assertTrue(1.0 < calculation_time, "1.0 >= %s" % calculation_time)
     self.assertEquals(cached, result)
     transaction.commit()
 
@@ -359,7 +359,7 @@ return result
     end = time.time()
     calculation_time = end-start
     print "\n\tCalculation time (2nd call)", calculation_time
-    self.assert_(1.0 > calculation_time)
+    self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
     self.assertEquals(cached, result)
     transaction.commit()
 
@@ -373,7 +373,7 @@ return result
     end = time.time()
     calculation_time = end-start
     print "\n\tCalculation time (3rd call)", calculation_time
-    self.assert_(1.0 > calculation_time)
+    self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
     self.assertEquals(cached, result)
     transaction.commit()
 
@@ -455,7 +455,7 @@ return 'a' * 1024 * 1024 * 25
     end = time.time()
     calculation_time = end-start
     print "\n\tCalculation time (2nd call)", calculation_time
-    self.assert_(1.0 > calculation_time)
+    self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
     self.assertEquals(cached, result)
     transaction.commit()
 
