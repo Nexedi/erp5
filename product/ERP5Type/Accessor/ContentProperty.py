@@ -276,7 +276,7 @@ class Tester(Method):
     func_defaults = ()
 
     def __init__(self, id, key, property_type, acquired_property,
-                 storage_id=None):
+                 portal_type=None, storage_id=None):
       self._id = id
       self.__name__ = id
       self._key = key
@@ -284,9 +284,19 @@ class Tester(Method):
       self._null = type_definition[property_type]['null']
       if storage_id is None:
         storage_id = "%s%s" % (ATTRIBUTE_PREFIX, key)
-      self._storage_id = storage_id
+      elif type(storage_id) is not list:
+        storage_id = [storage_id]
+      self._storage_id_list = storage_id
+      if type(portal_type) is str:
+        portal_type = (portal_type,)
+      self._portal_type = portal_type
       self._acquired_property = acquired_property
 
     def __call__(self, instance, *args, **kw):
-      return getattr(instance, self._storage_id, None) is not None
+      o = None
+      for k in self._storage_id_list:
+        o = getattr(instance, k, None)
+        if o is not None and o.portal_type in self._portal_type:
+          return o.hasProperty(self._acquired_property)
+      return False
 

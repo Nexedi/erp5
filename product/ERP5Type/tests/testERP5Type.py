@@ -1059,8 +1059,14 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
           'organisation',
           **self.DEFAULT_ORGANISATION_TITLE_PROP)
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
-      self.assertTrue(hasattr(person, 'getDefaultOrganisationTitle'))
-      self.assertTrue(hasattr(person, 'setDefaultOrganisationTitle'))
+      self.assertTrue(getattr(person, 'getDefaultOrganisationTitle'))
+      self.assertTrue(getattr(person, 'setDefaultOrganisationTitle'))
+      self.assertTrue(getattr(person, 'hasDefaultOrganisationTitle'))
+      self.assertTrue(getattr(person, 'hasOrganisationTitle'))
+      self.assertFalse(person.hasDefaultOrganisation())
+      self.assertFalse(person.hasOrganisation())
+      self.assertFalse(person.hasDefaultOrganisationTitle())
+      self.assertFalse(person.hasOrganisationTitle())
       person.setDefaultOrganisationTitle('The organisation title')
       # XXX content generated properties are not in propertyMap. is it a bug ?
       #self.assertTrue(person.hasProperty('default_organisation_title'))
@@ -1072,7 +1078,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                         default_organisation.getPortalTypeName())
       self.assertEquals('The organisation title',
                         default_organisation.getTitle())
-
+      self.assertTrue(person.hasDefaultOrganisation())
+      self.assertTrue(person.hasOrganisation())
+      self.assertTrue(person.hasDefaultOrganisationTitle())
+      self.assertTrue(person.hasOrganisationTitle())
       # make sure this new organisation is indexed
       transaction.commit()
       self.assertEquals(1, len([m for m in
