@@ -799,11 +799,14 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     def catalogObjectList(self, object_list, *args, **kw):
         """Catalog a list of objects"""
-        if type(object_list[0]) is tuple:
+        m = object_list[0]
+        if type(m) is list:
           tmp_object_list = [x[0] for x in object_list]
-          super(CatalogTool, self).catalogObjectList(tmp_object_list, **x[2])
-          # keep failed objects in 'object_list'
-          object_list[:] = [x for x in object_list if x[0] in tmp_object_list]
+          super(CatalogTool, self).catalogObjectList(tmp_object_list, **m[2])
+          if tmp_object_list:
+            for x in object_list:
+              if x[0] in tmp_object_list:
+                del object_list[3] # no result means failed
         else:
           super(CatalogTool, self).catalogObjectList(object_list, *args, **kw)
 
@@ -812,9 +815,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """Uncatalog a list of objects"""
       # XXX: this is currently only a placeholder for further optimization
       #      (for the moment, it's not faster than the dummy group method)
-      for obj, args, kw in message_list:
-        self.unindexObject(*args, **kw)
-      del message_list[:]
+      for m in message_list:
+        self.unindexObject(*m[1], **m[2])
 
     security.declarePrivate('unindexObject')
     def unindexObject(self, object=None, path=None, uid=None,sql_catalog_id=None):
