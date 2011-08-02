@@ -30,7 +30,6 @@ import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
 class ExportCustomerBT5ConfiguratorItem(XMLObject, ConfiguratorItemMixin):
@@ -56,8 +55,7 @@ class ExportCustomerBT5ConfiguratorItem(XMLObject, ConfiguratorItemMixin):
                     , PropertySheet.DublinCore )
 
   def _build(self, business_configuration):
-    portal = self.getPortalObject()
-    template_tool = getToolByName(portal, 'portal_templates')
+    template_tool = self.getPortalObject().portal_templates
     bt5_obj = business_configuration.getSpecialiseValue()
     if bt5_obj.getBuildingState() != 'built':
       ## build template so it can be exported
@@ -66,5 +64,5 @@ class ExportCustomerBT5ConfiguratorItem(XMLObject, ConfiguratorItemMixin):
     bt5_data = template_tool.export(bt5_obj)
     business_configuration.newContent(
                         portal_type='File',
-                        title = bt5_obj.getTitle(),
-                        data = bt5_data)
+                        title=bt5_obj.getTitle(),
+                        data=bt5_data)
