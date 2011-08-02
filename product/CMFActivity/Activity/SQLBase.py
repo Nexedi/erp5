@@ -222,7 +222,7 @@ class SQLBase:
         activity_tool.SQLBase_processMessage(table=self.sql_table, uid=[uid])
         uid_to_duplicate_uid_list_dict.setdefault(uid, []) \
           .extend(getDuplicateMessageUidList(line))
-        if group_method_id not in (None, '', '\0'):
+        if group_method_id != '\0':
           # Count the number of objects to prevent too many objects.
           cost = m.activity_kw.get('group_method_cost', .01)
           assert 0 < cost <= 1, (self.sql_table, uid)

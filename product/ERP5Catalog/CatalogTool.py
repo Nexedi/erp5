@@ -810,6 +810,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declarePrivate('uncatalogObjectList')
     def uncatalogObjectList(self, message_list):
       """Uncatalog a list of objects"""
+      # XXX: this is currently only a placeholder for further optimization
+      #      (for the moment, it's not faster than the dummy group method)
       for obj, args, kw in message_list:
         self.unindexObject(*args, **kw)
       del message_list[:]

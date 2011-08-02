@@ -98,11 +98,6 @@ class ActiveObject(ExtensionClass.Base):
       new_kw.update(activate_kw)
     new_kw.update(kw)
 
-    if kw.get('group_id', '') is None:
-      raise ValueError, "Cannot defined a group_id with value None"
-    elif kw.get('group_method_id') is None and kw.get('group_id') is not None:
-      raise ValueError, "Cannot defined a group_id without group_method_id"
-
     try:
       activity_tool = self.getPortalObject().portal_activities
     except AttributeError:

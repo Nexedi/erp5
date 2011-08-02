@@ -1289,6 +1289,16 @@ class ActivityTool (Folder, UniqueObject):
       if self.activity_tracking:
         activity_tracking_logger.info('invoked group messages')
 
+    security.declarePrivate('dummyGroupMethod')
+    class dummyGroupMethod(object):
+      def __bobo_traverse__(self, REQUEST, method_id):
+        def group_method(message_list):
+          for m in message_list:
+            getattr(m[0], method_id)(*m[1], **m[2])
+          del message_list[:]
+        return group_method
+    dummyGroupMethod = dummyGroupMethod()
+
     def newMessage(self, activity, path, active_process,
                    activity_kw, method_id, *args, **kw):
       # Some Security Cheking should be made here XXX
