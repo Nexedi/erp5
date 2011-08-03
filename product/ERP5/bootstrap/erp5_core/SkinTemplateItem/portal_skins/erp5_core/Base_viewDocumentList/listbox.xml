@@ -233,8 +233,40 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>id</string>
-                          <string>ID</string>
+                          <string>title</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>version</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>description</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_validation_state_title</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>language</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>revision</string>
+                          <string></string>
+                        </tuple>
+                        <tuple>
+                          <string>int_index</string>
+                          <string></string>
                         </tuple>
                       </list>
                     </value>
