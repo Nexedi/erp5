@@ -85,13 +85,8 @@ class Updater(object):
   realtime_output = True
   stdin = file(os.devnull)
 
-  def log(self, message):
-    print message
-
-  def __init__(self, repository_path, revision=None, git_binary=None,
-      log=None):
-    if log is not None:
-      self.log = log
+  def __init__(self, repository_path, log, revision=None, git_binary=None):
+    self.log = log
     self.revision = revision
     self._path_list = []
     self.repository_path = repository_path

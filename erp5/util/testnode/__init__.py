@@ -48,9 +48,8 @@ def main(*args):
     parsed_argument = parser.parse_args(list(args))
   else:
     parsed_argument = parser.parse_args()
-  logger = None
+  logger = logging.getLogger('erp5testnode')
   if parsed_argument.console or parsed_argument.logfile:
-    logger = logging.getLogger('erp5testnode')
     logger.setLevel(logging.INFO)
     if parsed_argument.console:
       logger.addHandler(logging.StreamHandler())
@@ -58,8 +57,9 @@ def main(*args):
     if parsed_argument.logfile:
       logger.addHandler(logging.FileHandler(filename=parsed_argument.logfile))
       logger.info('Activated logfile %r output' % parsed_argument.logfile)
-  if logger is not None:
-    CONFIG['logger'] = logger.info
+  else:
+    logger.addHandler(logging.NullHandler())
+  CONFIG['logger'] = logger.info
   config = ConfigParser.SafeConfigParser()
   # do not change case of option keys
   config.optionxform = str

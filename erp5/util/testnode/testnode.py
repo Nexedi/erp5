@@ -46,10 +46,6 @@ class SubprocessError(EnvironmentError):
 
 from Updater import Updater
 
-def log(message):
-  # Log to stdout, with a timestamp.
-  print time.strftime('%Y/%m/%d %H:%M:%S'), message
-
 supervisord_pid_file = None
 process_group_pid_set = set()
 def sigterm_handler(signal, frame):
@@ -100,6 +96,7 @@ def killPreviousRun():
 PROFILE_PATH_KEY = 'profile_path'
 
 def run(config):
+  log = config['logger']
   slapgrid = None
   global supervisord_pid_file
   supervisord_pid_file = os.path.join(config['instance_root'], 'var', 'run',
@@ -225,7 +222,7 @@ branch = %(branch)s
               # revision
               log('  %s at %s' % (repository_path, revision))
               updater = Updater(repository_path, git_binary=config['git_binary'],
-                                revision=revision)
+                                revision=revision, log=log)
               updater.checkout()
 
           # Now prepare the installation of SlapOS and create instance

@@ -32,12 +32,8 @@ import xml_marshaller
 
 class SlapOSControler(object):
 
-  def log(self, message):
-    print message
-
-  def __init__(self, config, process_group_pid_set=None, log=None):
-    if log is not None:
-      self.log = log
+  def __init__(self, config, log, process_group_pid_set=None):
+    self.log = log
     self.config = config
     # By erasing everything, we make sure that we are able to "update"
     # existing profiles. This is quite dirty way to do updates...
