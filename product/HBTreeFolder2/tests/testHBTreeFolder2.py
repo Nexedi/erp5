@@ -214,6 +214,8 @@ class HBTreeFolder2Tests(unittest.TestCase):
               for i, id in enumerate(id_list):
                 if m <= id.split('-'):
                   break
+              else:
+                i += 1
             else:
               i = 0
             expected = [(i, tuple(i)) for i in id_list[i:]]
