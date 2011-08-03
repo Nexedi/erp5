@@ -58,13 +58,14 @@ def sigterm_handler(signal, frame):
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
+import logging
 def safeRpcCall(function, *args):
   retry = 64
   while True:
     try:
       return function(*args)
     except (socket.error, xmlrpclib.ProtocolError), e:
-      print >>sys.stderr, e
+      logging.warning(e)
       pprint.pprint(args, file(function._Method__name, 'w'))
       time.sleep(retry)
       retry += retry >> 1
