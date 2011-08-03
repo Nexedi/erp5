@@ -26,6 +26,7 @@
 ##############################################################################
 import ConfigParser
 import argparse
+import logging
 import os
 import pkg_resources
 
@@ -40,10 +41,25 @@ def main(*args):
   parser = argparse.ArgumentParser()
   parser.add_argument("configuration_file", nargs=1, type=argparse.FileType(),
       help="Configuration file.")
+  parser.add_argument('-c', '--console', action='store_true',
+      help="Enable console output.")
+  parser.add_argument('-l', '--logfile', help="Enable output into logfile.")
   if args:
     parsed_argument = parser.parse_args(list(args))
   else:
     parsed_argument = parser.parse_args()
+  logger = None
+  if parsed_argument.console or parsed_argument.logfile:
+    logger = logging.getLogger('erp5testnode')
+    logger.setLevel(logging.INFO)
+    if parsed_argument.console:
+      logger.addHandler(logging.StreamHandler())
+      logger.info('Activated console output.')
+    if parsed_argument.logfile:
+      logger.addHandler(logging.FileHandler(filename=parsed_argument.logfile))
+      logger.info('Activated logfile %r output' % parsed_argument.logfile)
+  if logger is not None:
+    CONFIG['logger'] = logger.info
   config = ConfigParser.SafeConfigParser()
   # do not change case of option keys
   config.optionxform = str
