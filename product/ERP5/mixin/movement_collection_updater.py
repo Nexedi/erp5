@@ -29,7 +29,8 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
-from Products.ERP5.MovementCollectionDiff import MovementCollectionDiff
+from Products.ERP5.MovementCollectionDiff import (
+  MovementCollectionDiff, _getPropertyAndCategoryList)
 from Products.ERP5.mixin.rule import _compare
 
 class MovementCollectionUpdaterMixin:
@@ -170,8 +171,14 @@ class MovementCollectionUpdaterMixin:
         movement.clearRecordedProperty(property_id)
     for movement in movement_diff.getNewMovementList():
       d = movement.__dict__
-      # make sure our optimization does not touch existing persistent data
-      assert movement.isTempObject() and '_original' not in d
+      assert movement.isTempObject()
+      if '_original' in d:
+        # slow but safe way (required for compensated movements)
+        context.newContent(portal_type=self.movement_type,
+          **_getPropertyAndCategoryList(movement))
+        continue
+      # fast way (we had to make sure such optimization
+      # does not touch existing persistent data)
       del movement.__dict__
       movement = context.newContent(portal_type=self.movement_type)
       d.update(movement.__dict__)
