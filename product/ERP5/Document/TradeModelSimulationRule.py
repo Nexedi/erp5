@@ -107,7 +107,9 @@ class TradeModelRuleMovementGenerator(MovementGeneratorMixin):
         amount_generator_type_list=composition_type_list)
     input_movement = aq_base(simulation_movement).__of__(self._applied_rule)
     for amount in amount_list:
-      if amount.getResource() and amount.getPrice():
+      # Do not ignore amount with price = 0 (such behaviour can be obtained by
+      # specifying a predicate on the amount generator line/cell).
+      if amount.getResource():
         # FIXME: Is it the right way to have source/destination and other
         #        non-Amount properties set on the generated movement ?
         movement = input_movement.asContext(**dict((k, v)
