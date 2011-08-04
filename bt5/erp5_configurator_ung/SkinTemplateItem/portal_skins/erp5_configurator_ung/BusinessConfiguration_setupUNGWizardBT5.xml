@@ -60,14 +60,6 @@ configuration_save.addConfigurationItem("Customer BT5 Configurator Item", \n
             <value> <string>configuration_save_url=None, **kw</string> </value>
         </item>
         <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>BusinessConfiguration_setupUNGWizardBT5</string> </value>
         </item>
