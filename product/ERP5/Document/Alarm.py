@@ -37,6 +37,7 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
+from zLOG import INFO
 
 class Alarm(XMLObject, PeriodicityMixin):
   """
@@ -203,7 +204,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     # active process but no method_id is defined
     for result in process.getResultList():
       # This is useful is result is returned as a Return instance
-      if result.severity > result.INFO:
+      if result.severity > INFO:
         return True
       # This is the default case
       if getattr(result, 'result', False):
