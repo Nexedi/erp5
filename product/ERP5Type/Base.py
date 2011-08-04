@@ -3249,7 +3249,7 @@ class Base( CopyContainer,
   def serialize(self):
     """Make the transaction accessing to this object atomic
     """
-    self.id = self.id
+    self._p_changed = 1
 
   # Helpers
   def getQuantityPrecisionFromResource(self, resource, d=2):
