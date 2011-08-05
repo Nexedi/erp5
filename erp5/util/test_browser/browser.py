@@ -702,7 +702,10 @@ class MainForm(Form):
     self.submit()
 
     if 'Logged In as' not in self.browser.contents:
-      raise LoginError
+      raise LoginError("%s: Could not log in as '%s:%s'" % \
+                         (self.browser._erp5_base_url,
+                          self.browser._username,
+                          self.browser._password))
 
     self.browser._is_logged_in = True
 
