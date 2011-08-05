@@ -458,17 +458,12 @@ class BenchmarkProcess(multiprocessing.Process):
     if self._argument_namespace.repeat != -1:
       signal.signal(signal.SIGTERM, self.stopGracefully)
 
-    try:
-      self._browser = self.getBrowser(result_instance.log_file)
-    except:
-      self._logger.error(traceback.format_exc())
-      raise
-
     exit_status = 0
     exit_msg = None
 
-    # Create the result CSV file
     try:
+      self._browser = self.getBrowser(result_instance.log_file)
+
       with result_instance as result:
         while self._current_repeat != (self._argument_namespace.repeat + 1):
           self._logger.info("Iteration: %d" % self._current_repeat)
