@@ -217,6 +217,7 @@ class Git(WorkingCopy):
       template = 'Index: %%s\n%s%%s\n' % ('=' * 67)
       for diff in out:
         path = diff[:diff.index(' ')]
+        # XXX: the following line fails if only the file mode changes
         diff_dict[path] = template % (path, diff[diff.index('\n---'):])
     return stat_dict, diff_dict
 
