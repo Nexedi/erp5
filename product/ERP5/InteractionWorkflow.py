@@ -22,6 +22,7 @@ from Products.ERP5Type import Globals
 import App
 from types import StringTypes
 from AccessControl import getSecurityManager, ClassSecurityInfo
+from AccessControl.SecurityManagement import setSecurityManager
 from Acquisition import aq_base
 from Products.CMFCore.utils import getToolByName
 from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
@@ -290,10 +291,11 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
         # Pass lots of info to the script in a single parameter.
         script(sci)  # May throw an exception
 
-      # Execute Before Commit
+      # Queue the "Before Commit" scripts
+      sm = getSecurityManager()
       for script_name in tdef.before_commit_script_name:
         transaction.get().addBeforeCommitHook(self._before_commit,
-                                              (sci, script_name))
+                                              (sci, script_name, sm))
 
       # Execute "activity" scripts
       for script_name in tdef.activate_script_name:
@@ -301,14 +303,22 @@ class InteractionWorkflowDefinition (DCWorkflowDefinition, ActiveObject):
             .activeScript(script_name, ob.getRelativeUrl(),
                           status, tdef.id)
 
-  def _before_commit(self, sci, script_name):
+  def _before_commit(self, sci, script_name, security_manager):
     # check the object still exists before calling the script
     ob = sci.object
     while ob.isTempObject():
       ob = ob.getParentValue()
     if aq_base(self.unrestrictedTraverse(ob.getPhysicalPath(), None)) is \
        aq_base(ob):
-      self.scripts[script_name](sci)
+      current_security_manager = getSecurityManager()
+      try:
+        # Who knows what happened to the authentication context
+        # between here and when the interaction was executed... So we
+        # need to switch to the security manager as it was back then
+        setSecurityManager(security_manager)
+        self.scripts[script_name](sci)
+      finally:
+        setSecurityManager(current_security_manager)
 
   security.declarePrivate('activeScript')
   def activeScript(self, script_name, ob_url, status, tdef_id):
