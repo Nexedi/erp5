@@ -26,7 +26,7 @@
 #
 ##############################################################################
 
-import sys, types
+import os, sys, types
 
 if sys.version_info < (2, 5):
   import __builtin__, imp
@@ -108,3 +108,9 @@ if sys.version_info < (2, 7):
       raise missing_ordereddict
   import collections
   collections.OrderedDict = OrderedDict
+
+
+# Workaround bad use of getcwd() in docutils.
+# Required by PortalTransforms.transforms.rest
+from docutils import utils
+utils.relative_path = lambda source, target: os.path.abspath(target)
