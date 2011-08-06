@@ -191,6 +191,9 @@ class ERP5TypeTestSuite(TestSuite):
     \)
     """, re.DOTALL | re.VERBOSE)
 
+  FTEST_PASS_FAIL_RE = re.compile(
+    '.*Functional Tests (?P<total>\d+) Tests, (?P<failures>\d+) Failures')
+
   def setup(self):
     instance_home = self.instance and 'unit_test.%u' % self.instance \
                                    or 'unit_test'
