@@ -175,7 +175,7 @@ branch = %(branch)s
             if vcs_repository.get('branch') is not None:
               parameter_list.extend(['-b',vcs_repository.get('branch')])
             parameter_list.append(repository_path)
-            subprocess.check_call(parameter_list)
+            log(subprocess.check_output(parameter_list, stderr=subprocess.STDOUT))
           # Make sure we have local repository
           updater = Updater(repository_path, git_binary=config['git_binary'],
             log=log)
@@ -268,9 +268,10 @@ branch = %(branch)s
           # any custom code to pick the failure up and react ?)
           remote_test_result_needs_cleanup = False
           run_test_suite = subprocess.Popen(invocation_list,
-            preexec_fn=os.setsid, cwd=config['test_suite_directory'])
+            preexec_fn=os.setsid, cwd=config['test_suite_directory'],
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
           process_group_pid_set.add(run_test_suite.pid)
-          run_test_suite.wait()
+          log(run_test_suite.communicate()[0])
           process_group_pid_set.remove(run_test_suite.pid)
       except SubprocessError, e:
         if remote_test_result_needs_cleanup:
