@@ -1,3 +1,6 @@
+2011-08-08 yusei
+* Extract messages from constraints in ZODB property sheets for POT.
+
 2011-04-14 yusei
 * Remove old unnecessary tales expression from relation string field.
 
