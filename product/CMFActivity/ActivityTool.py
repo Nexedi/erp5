@@ -260,13 +260,7 @@ class Message(BaseMessage):
       result = ActiveResult(result=result)
     # XXX Allow other method_id in future
     result.edit(object_path=object, method_id=self.method_id)
-    kw = self.activity_kw
-    kw = dict((k, kw[k]) for k in ('priority', 'tag') if k in kw)
-    # Save result in a separate activity to reduce
-    # probability and cost of conflict error.
-    active_process.activate(activity='SQLQueue',
-      group_method_id=None, # dummy group method
-      **kw).activateResult(result)
+    active_process.postResult(result)
 
   def __call__(self, activity_tool):
     try:
