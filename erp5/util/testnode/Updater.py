@@ -137,9 +137,8 @@ class Updater(object):
       stdout, stderr = subprocess_capture(p, quiet)
     else:
       stdout, stderr = p.communicate()
-      if not quiet:
-        sys.stdout.write(stdout)
-      sys.stderr.write(stderr)
+      self.log(stdout)
+      self.log(stderr)
     result = dict(status_code=p.returncode, command=command,
                   stdout=stdout, stderr=stderr)
     if p.returncode:
