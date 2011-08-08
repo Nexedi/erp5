@@ -178,7 +178,7 @@ branch = %(branch)s
             log(subprocess.check_output(parameter_list, stderr=subprocess.STDOUT))
           # Make sure we have local repository
           updater = Updater(repository_path, git_binary=config['git_binary'],
-            log=log)
+            log=log, realtime_output=False)
           updater.checkout()
           revision = "-".join(updater.getRevision())
           full_revision_list.append('%s=%s' % (repository_id, revision))
