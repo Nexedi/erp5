@@ -225,8 +225,12 @@ branch = %(branch)s
               updater.checkout()
 
           # Now prepare the installation of SlapOS and create instance
+          slapproxy_log = os.path.join(config['log_directory'],
+              'slapproxy.log')
+          log('Configured slapproxy log to %r' % slapproxy_log)
           slapos_controler = SlapOSControler.SlapOSControler(config,
-            process_group_pid_set=process_group_pid_set, log=log)
+            process_group_pid_set=process_group_pid_set, log=log,
+            slapproxy_log=slapproxy_log)
           for method_name in ("runSoftwareRelease", "runComputerPartition"):
             stdout, stderr = getInputOutputFileList(config, method_name)
             slapos_method = getattr(slapos_controler, method_name)
