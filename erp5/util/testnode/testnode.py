@@ -221,7 +221,8 @@ branch = %(branch)s
               # revision
               log('  %s at %s' % (repository_path, revision))
               updater = Updater(repository_path, git_binary=config['git_binary'],
-                                revision=revision, log=log)
+                                revision=revision, log=log,
+                                realtime_output=False)
               updater.checkout()
 
           # Now prepare the installation of SlapOS and create instance
