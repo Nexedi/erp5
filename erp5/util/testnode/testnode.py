@@ -102,8 +102,6 @@ def run(config):
   global supervisord_pid_file
   supervisord_pid_file = os.path.join(config['instance_root'], 'var', 'run',
         'supervisord.pid')
-  subprocess.check_call([config['git_binary'],
-                "config", "--global", "http.sslVerify", "false"])
   previous_revision = None
 
   run_software = True
