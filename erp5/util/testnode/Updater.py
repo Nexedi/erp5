@@ -82,15 +82,16 @@ SVN_TYPE = 'svn'
 class Updater(object):
 
   _git_cache = {}
-  realtime_output = True
   stdin = file(os.devnull)
 
-  def __init__(self, repository_path, log, revision=None, git_binary=None):
+  def __init__(self, repository_path, log, revision=None, git_binary=None,
+      realtime_output=True):
     self.log = log
     self.revision = revision
     self._path_list = []
     self.repository_path = repository_path
     self.git_binary = git_binary
+    self.realtime_output = realtime_output
 
   def getRepositoryPath(self):
     return self.repository_path
