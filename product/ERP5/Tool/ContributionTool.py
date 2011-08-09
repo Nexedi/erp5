@@ -151,7 +151,6 @@ class ContributionTool(BaseTool):
         kw['filename'] = kw['file_name']
       del(kw['file_name'])
     filename = kw.get('filename', None)
-    portal_type = kw.get('portal_type')
     temp_object = kw.get('temp_object', False)
 
     document = None
@@ -161,42 +160,55 @@ class ContributionTool(BaseTool):
       # Container may disappear, be smoother by passing default value
       container = portal.restrictedTraverse(container_path, None)
     # Try to find the filename
-    content_type = None
     if not url:
       # check if file was provided
       file_object = kw.get('file')
       if file_object is not None:
         if not filename:
-          filename = file_object.filename
+          filename = getattr(file_object, 'filename', None)
       else:
         # some channels supply data and file-name separately
         # this is the case for example for email ingestion
         # in this case, we build a file wrapper for it
-        data = kw.get('data')
-        if data is not None and filename:
+        try:
+          data = kw.pop('data')
+        except KeyError:
+          raise ValueError('data must be provided')
+        if data is not None:
           file_object = cStringIO.StringIO()
           file_object.write(data)
           file_object.seek(0)
           kw['file'] = file_object
-          del kw['data']
-        else:
-          raise TypeError, 'data and filename must be provided'
+      content_type = kw.pop('content_type', None)
     else:
       file_object, filename, content_type = self._openURL(url)
-      if content_type:
-        kw['content_type'] = content_type
+      content_type = kw.pop('content_type', None) or content_type
       kw['file'] = file_object
+
+    if not filename:
+      raise ValueError('filename must be provided')
 
     if not content_type:
       # fallback to a default content_type according provided
       # filename
       content_type = self.guessMimeTypeFromFilename(filename)
+    if content_type:
+      kw['content_type'] = content_type
 
-    if portal_type and container is not None:
+    portal_type = kw.pop('portal_type', None)
+    if not portal_type:
+      if container is None or container.isModuleType():
+        # Guess it with help of portal_contribution_registry
+        portal_type = portal.portal_contribution_registry.findPortalTypeName(
+          filename=filename, content_type=content_type)
+      else:
+        portal_type = 'Embedded File'
+
+    if container is not None:
       # Simplify things here and return a document immediately
       # XXX Nicolas: This will break support of WebDAV
       # if _setObject is not called
-      document = container.newContent(id=document_id, **kw)
+      document = container.newContent(document_id, portal_type, **kw)
       if discover_metadata:
         document.activate(after_path_and_method_id=(document.getPath(),
             ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat')))\
@@ -206,24 +218,14 @@ class ContributionTool(BaseTool):
       return document
 
     # If the portal_type was provided, we can go faster
-    if portal_type and container is None:
+    if portal_type:
       # We know the portal_type, let us find the default module
       # and use it as container
       try:
         container = portal.getDefaultModule(portal_type)
       except ValueError:
-        container = None
+        pass
 
-    # From here, there is no hope unless a file was provided
-    if file_object is None:
-      raise ValueError, "No data provided"
-
-
-    if portal_type is None:
-      # Guess it with help of portal_contribution_registry
-      registry = portal.portal_contribution_registry
-      portal_type = registry.findPortalTypeName(filename=filename,
-                                                content_type=content_type)
     #
     # Check if same file is already exists. if it exists, then update it.
     #
@@ -247,12 +249,9 @@ class ContributionTool(BaseTool):
     # Temp objects use the standard newContent from Folder
     if temp_object:
       # For temp_object creation, use the standard method
-      kw['portal_type'] = portal_type
-      return BaseTool.newContent(self, **kw)
+      return BaseTool.newContent(self, portal_type=portal_type, **kw)
 
     # Then put the file inside ourselves for a short while
-    if container_path is not None:
-      container = self.getPortalObject().restrictedTraverse(container_path)
     document = self._setObject(document_id, None, portal_type=portal_type,
                                user_login=user_login, container=container,
                                discover_metadata=discover_metadata,
@@ -270,7 +269,7 @@ class ContributionTool(BaseTool):
 
     # Allow reindexing, reindex it and return the document
     try:
-      delattr(document, 'isIndexable')
+      del document.isIndexable
     except AttributeError:
       # Document does not have such attribute
       pass
