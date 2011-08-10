@@ -100,7 +100,7 @@ class EmailDocumentProxyMixin(DocumentProxyMixin):
 
 class ProxiedMethod(Method):
   """
-  Accessort that retrieve methods directly on the proxy
+  Accessor that retrieves methods directly on the proxy
   """
 
   def __init__(self, proxied_method_id):
@@ -127,6 +127,9 @@ class EmailDocument(TextDocument):
     is similar to a TextDocument.
     A Text Document which stores raw HTML and can 
     convert it to various formats.
+
+    another line for testing
+    here too
   """
 
   meta_type = 'ERP5 Email Document'
@@ -312,7 +315,8 @@ class EmailDocument(TextDocument):
           if content_type and filename:
             RESPONSE.setHeader('Content-Type', content_type)
             RESPONSE.setHeader('Content-disposition',
-                               'attachment; filename="%s"' % filename)
+                               'attachment; filename="%s"' % filename.encode('utf-8'))
+#                               'attachment; filename="%s"' % filename)
         if 'text/html' in content_type:
           # Strip out html content in safe mode.
           mime, content = self.convert(format='html',
@@ -430,9 +434,16 @@ class EmailDocument(TextDocument):
     if date_string:
       parsed_date_string = parsedate_tz(date_string)
       if parsed_date_string is not None:
-        time = mktime_tz(parsed_date_string)
-        if time:
-          return DateTime(time)
+        try:
+          try:
+            time = mktime_tz(parsed_date_string)
+          except OverflowError: # No way to get a date - parsing failed (XXX)
+            time = None		  
+	  if time:
+	    return DateTime(time)
+        except ValueError:
+	  # If the parsed date is not conformant, nothing to do
+          pass
     return self.getCreationDate()
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getTextContent')
@@ -583,7 +594,7 @@ class EmailDocument(TextDocument):
     return content_information.get('Return-Path', content_information.get('From'))
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
-  def send(self, from_url=None, to_url=None, reply_url=None, subject=None,
+  def send(self, from_url=None, to_url=None, cc_url=None, bcc_url=None, reply_url=None, subject=None,
            body=None, attachment_format=None, attachment_list=None, download=False):
     """
       Sends the current event content by email. If documents are
@@ -651,7 +662,7 @@ class EmailDocument(TextDocument):
                                   sender.getDefaultEmailText())
         else:
           from_url = sender.getDefaultEmailText()
-      else:
+      elif self.getSender():
         from_url = self.getSender() # Access sender directly
 
     # Return-Path
@@ -677,10 +688,16 @@ class EmailDocument(TextDocument):
             to_url_list.append(email)
         else:
           raise ValueError, 'Recipient %s has no defined email' % recipient
-      if not to_url_list:
+      if not to_url_list and self.getRecipient():
         to_url_list.append(self.getRecipient())
     elif type(to_url) in types.StringTypes:
       to_url_list.append(to_url)
+
+    # bcc_url
+    if bcc_url is None:
+      bcc_url = self.getBccRecipient()
+    if cc_url is None:
+      cc_url = self.getCcRecipient()
 
     # Attachments
     if attachment_list is None:
@@ -708,8 +725,10 @@ class EmailDocument(TextDocument):
         if mime_type is not None:
           try:
             mime_type, content = attachment.convert(mime_type)
+            if mime_type is None: mime_type = 'application/pdf' # dirty hack JPS
           except ConversionError:
             mime_type = attachment.getBaseContentType()
+            if mime_type is None: mime_type = 'application/pdf' # dirty hack JPS
             content = attachment.getBaseData()
           except (NotImplementedError, MimeTypeException):
             pass
@@ -727,12 +746,13 @@ class EmailDocument(TextDocument):
 
       attachment_list.append({'mime_type':mime_type,
                               'content':content,
-                              'name':attachment.getReference()}
+			      'name':attachment.getReference() or attachment.getTitle() or attachment.Id()}
                              )
 
     mail_message = None
     for to_url in to_url_list:
-      mime_message = buildEmailMessage(from_url=from_url, to_url=to_url,
+      mime_message = buildEmailMessage(from_url=from_url, to_url=to_url, # XXX Missing Cc
+                                       cc_url=cc_url, bcc_url=bcc_url,
                                        msg=body, subject=subject,
                                        attachment_list=attachment_list,
                                        additional_headers=additional_headers)
@@ -754,7 +774,7 @@ class EmailDocument(TextDocument):
 
       XXX - Needs to be unified with Event methods
     """
-    self.MailHost.send(message)
+    self.MailHost.send(message) # uggly hardcoding
 
   # Because TextDocument is base_convertable and not EmailDocument.
   # getData must be implemented like File.getData is.
