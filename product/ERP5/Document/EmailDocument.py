@@ -128,8 +128,8 @@ class EmailDocument(TextDocument):
     A Text Document which stores raw HTML and can 
     convert it to various formats.
 
-    one more line for testing
     another line for testing
+    here too
   """
 
   meta_type = 'ERP5 Email Document'
