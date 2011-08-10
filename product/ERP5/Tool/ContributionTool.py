@@ -197,12 +197,12 @@ class ContributionTool(BaseTool):
 
     portal_type = kw.pop('portal_type', None)
     if not portal_type:
-      if container is None or container.isModuleType():
-        # Guess it with help of portal_contribution_registry
-        portal_type = portal.portal_contribution_registry.findPortalTypeName(
-          filename=filename, content_type=content_type)
-      else:
-        portal_type = 'Embedded File'
+      # Guess it with help of portal_contribution_registry
+      portal_type = portal.portal_contribution_registry.findPortalTypeName(
+        filename=filename, content_type=content_type)
+      if not (container is None or container.isModuleType() or
+              container.getTypeInfo().allowType(portal_type)):
+          portal_type = 'Embedded File'
 
     if container is not None:
       # Simplify things here and return a document immediately
