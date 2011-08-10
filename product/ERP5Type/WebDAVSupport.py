@@ -201,7 +201,12 @@ class TextContent:
     return len(self.manage_FTPget())
 
 from webdav.common import Locked, PreconditionFailed
-from webdav.interfaces import IWriteLock
+try:
+  from webdav.interfaces import IWriteLock
+  providesIWriteLock = IWriteLock.providedBy
+except ImportError: # BBB: Zope 2.8
+  from webdav.WriteLockInterface import WriteLockInterface
+  providesIWriteLock = WriteLockInterface.isImplementedBy
 from webdav.NullResource import NullResource
 from zope.contenttype import guess_content_type
 NullResource_PUT = NullResource.PUT
@@ -218,7 +223,7 @@ def PUT(self, REQUEST, RESPONSE):
         parent = self.__parent__
 
         ifhdr = REQUEST.get_header('If', '')
-        if IWriteLock.providedBy(parent) and parent.wl_isLocked():
+        if providesIWriteLock(parent) and parent.wl_isLocked():
             if ifhdr:
                 parent.dav__simpleifhandler(REQUEST, RESPONSE, col=1)
             else:
