@@ -127,6 +127,8 @@ class EmailDocument(TextDocument):
     is similar to a TextDocument.
     A Text Document which stores raw HTML and can 
     convert it to various formats.
+
+    one more line for testing
   """
 
   meta_type = 'ERP5 Email Document'
