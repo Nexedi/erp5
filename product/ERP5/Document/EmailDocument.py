@@ -129,6 +129,7 @@ class EmailDocument(TextDocument):
     convert it to various formats.
 
     one more line for testing
+    another line for testing
   """
 
   meta_type = 'ERP5 Email Document'
