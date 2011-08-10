@@ -204,7 +204,17 @@ class ContributionTool(BaseTool):
               container.getTypeInfo().allowType(portal_type)):
           portal_type = 'Embedded File'
 
-    if container is not None:
+    if container is None:
+      # If the portal_type was provided, we can go faster
+      if portal_type:
+        # We know the portal_type, let us find the default module
+        # and use it as container
+        try:
+          container = portal.getDefaultModule(portal_type)
+        except ValueError:
+          pass
+
+    elif not url:
       # Simplify things here and return a document immediately
       # XXX Nicolas: This will break support of WebDAV
       # if _setObject is not called
@@ -216,15 +226,6 @@ class ContributionTool(BaseTool):
                                 user_login=user_login,
                                 input_parameter_dict=input_parameter_dict)
       return document
-
-    # If the portal_type was provided, we can go faster
-    if portal_type:
-      # We know the portal_type, let us find the default module
-      # and use it as container
-      try:
-        container = portal.getDefaultModule(portal_type)
-      except ValueError:
-        pass
 
     #
     # Check if same file is already exists. if it exists, then update it.
