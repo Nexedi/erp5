@@ -208,7 +208,6 @@ except ImportError: # BBB: Zope 2.8
   from webdav.WriteLockInterface import WriteLockInterface
   providesIWriteLock = WriteLockInterface.isImplementedBy
 from webdav.NullResource import NullResource
-from zope.contenttype import guess_content_type
 NullResource_PUT = NullResource.PUT
 
 def PUT(self, REQUEST, RESPONSE):
