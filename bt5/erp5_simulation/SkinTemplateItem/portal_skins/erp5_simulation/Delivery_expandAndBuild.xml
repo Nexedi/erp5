@@ -72,6 +72,7 @@ delivery.activate(\n
     after_tag=after_tag,\n
     tag=tag,\n
     priority=priority,\n
+    serialization_tag=tag,\n
     ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 delivery.activate(after_tag=(tag, expand_tag)).Delivery_buildOnComposedDocument()\n
 </string> </value>
