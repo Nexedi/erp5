@@ -1412,7 +1412,22 @@ div.pdf-preview-navigation img.next{\n
 div.pdf-preview-navigation img.last{\n
   background-image:url("images/2rightarrowb.png");\n
 }\n
-
+\n
+.horizontal_align_form_box > div.input {\n
+    float: right;\n
+    width: 70%; /* because label width is 30%*/\n
+}\n
+\n
+.horizontal_align_form_box > div.input > div.field {\n
+    clear: none;\n
+    float: left;\n
+    width: auto;\n
+}\n
+\n
+.horizontal_align_form_box > div.input > div.field > label {\n
+    width: auto;\n
+    padding-top: 2px;\n
+}
 
 ]]></string> </value>
         </item>
