@@ -101,9 +101,9 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_default_email_text</string>
-                        <string>my_default_telephone_text</string>
-                        <string>my_default_fax_text</string>
+                        <string>my_default_email_coordinate_text</string>
+                        <string>default_telephone</string>
+                        <string>default_fax</string>
                         <string>my_default_address_street_address</string>
                         <string>my_default_address_zip_code</string>
                         <string>my_default_address_city</string>

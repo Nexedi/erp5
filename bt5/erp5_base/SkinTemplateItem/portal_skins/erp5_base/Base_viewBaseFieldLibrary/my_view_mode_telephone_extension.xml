@@ -10,14 +10,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>description</string>
+                <string>display_width</string>
+                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_mobile_telephone_text</string> </value>
+            <value> <string>my_view_mode_telephone_extension</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -54,6 +55,14 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -65,6 +74,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -74,7 +87,11 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The mobile telephone number.</string> </value>
+                    <value> <string>The telephone number suffix (extension)</string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>3</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -90,7 +107,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Mobile Telephone</string> </value>
+                    <value> <string>Suffix</string> </value>
                 </item>
               </dictionary>
             </value>

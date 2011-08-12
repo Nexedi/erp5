@@ -93,6 +93,12 @@
                         <string>my_view_mode_contact_listbox_int_index</string>
                         <string>my_view_mode_contact_listbox_title</string>
                         <string>my_view_mode_role</string>
+                        <string>my_view_mode_telephone_area</string>
+                        <string>my_view_mode_telephone_city</string>
+                        <string>my_view_mode_telephone_coordinate_text</string>
+                        <string>my_view_mode_telephone_country</string>
+                        <string>my_view_mode_telephone_extension</string>
+                        <string>my_view_mode_telephone_number</string>
                       </list>
                     </value>
                 </item>

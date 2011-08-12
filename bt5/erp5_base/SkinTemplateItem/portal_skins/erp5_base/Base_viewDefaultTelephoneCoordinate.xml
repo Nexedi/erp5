@@ -35,7 +35,17 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>Base_edit</string> </value>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
         </item>
         <item>
             <key> <string>encoding</string> </key>
@@ -64,60 +74,38 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list>
-                        <string>listbox_int_index</string>
-                        <string>listbox_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_social_title</string>
-                        <string>my_first_name</string>
-                        <string>my_last_name</string>
-                        <string>my_destination_reference</string>
-                        <string>my_career_subordination_title</string>
-                        <string>my_gender</string>
-                        <string>my_career_role_list</string>
-                        <string>my_career_function</string>
-                        <string>my_career_activity</string>
-                        <string>my_career_product_line_list</string>
-                        <string>my_nationality</string>
+                        <string>my_default_telephone_coordinate_text</string>
+                        <string>my_default_telephone_telephone_country</string>
+                        <string>my_default_telephone_telephone_area</string>
+                        <string>my_default_telephone_telephone_city</string>
+                        <string>my_default_telephone_telephone_number</string>
+                        <string>my_default_telephone_telephone_extension</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_default_email_coordinate_text</string>
-                        <string>default_telephone</string>
-                        <string>mobile_telephone</string>
-                        <string>default_fax</string>
-                        <string>my_default_address_street_address</string>
-                        <string>my_default_address_zip_code</string>
-                        <string>my_default_address_city</string>
-                        <string>my_default_address_region</string>
-                        <string>my_translated_validation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -125,7 +113,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_view</string> </value>
+            <value> <string>Base_viewDefaultTelephoneCoordinate</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -133,11 +121,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>General</string> </value>
+            <value> <string>Base_viewTelephoneCoordinate</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>form_view</string> </value>
+            <value> <string>embedded_form_render</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -149,7 +137,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Person</string> </value>
+            <value> <string>Telephone Coordinate</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
@@ -157,6 +145,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
