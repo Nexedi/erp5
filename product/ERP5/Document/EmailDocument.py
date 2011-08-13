@@ -28,6 +28,7 @@
 ##############################################################################
 
 import re, types
+from email.utils import formataddr
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -646,11 +647,8 @@ class EmailDocument(TextDocument):
     if from_url is None:
       sender = self.getSourceValue()
       if sender is not None:
-        if sender.getTitle():
-          from_url = '"%s" <%s>' % (sender.getTitle(),
-                                  sender.getDefaultEmailText())
-        else:
-          from_url = sender.getDefaultEmailText()
+        from_url = formataddr((sender.getTitle(),
+                               sender.getDefaultEmailText()))
       else:
         from_url = self.getSender() # Access sender directly
 
@@ -671,10 +669,7 @@ class EmailDocument(TextDocument):
       for recipient in self.getDestinationValueList():
         email = recipient.getDefaultEmailText()
         if email:
-          if recipient.getTitle():
-            to_url_list.append('"%s" <%s>' % (recipient.getTitle(), email))
-          else:
-            to_url_list.append(email)
+          to_url_list.append(formataddr((recipient.getTitle(), email)))
         else:
           raise ValueError, 'Recipient %s has no defined email' % recipient
       if not to_url_list:
