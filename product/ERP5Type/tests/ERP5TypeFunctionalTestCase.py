@@ -82,10 +82,10 @@ class Xvfb:
 
     print 'Xvfb : %d' % self.pid
     print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.fbdir
-    return self.pid
 
   def quit(self):
     if self.pid:
+      print "Stopping Xvfb on pid: %s" % self.pid
       os.kill(self.pid, signal.SIGTERM)
 
 class Firefox:
