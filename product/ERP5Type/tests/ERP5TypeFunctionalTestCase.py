@@ -48,6 +48,8 @@ TEST_RESULT_RE = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
 
 TEST_ERROR_RESULT_RE = re.compile('.*(?:error.gif|title status_failed).*', re.S)
 
+ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=%s/portal_tests/postResults&__ac_name=%s&__ac_password=%s"
+
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
 if tests_framework_home.startswith('/usr/lib'):
@@ -125,8 +127,8 @@ class Firefox:
     print 'firefox : %d' % self.pid
     return self.pid
 
-  def getPrefJs(self, host, port):
-    prefs_js = """
+  def getPrefJs(self):
+    return """
 // Don't ask if we want to switch default browsers
 user_pref("browser.shell.checkDefaultBrowser", false);
 
@@ -158,10 +160,8 @@ user_pref("dom.max_script_run_time", 120);
 // this is required to upload files
 user_pref("capability.principal.codebase.p1.granted", "UniversalFileRead");
 user_pref("signed.applets.codebase_principal_support", true);
-user_pref("capability.principal.codebase.p1.id", "http://%s");
+user_pref("capability.principal.codebase.p1.id", "http://%s:%s");
 user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
-      '%s:%s' % (host, port)
-    return prefs_js
 
   def _prepare(self):
     prefs_js = self.getPrefJs(self.host, self.port)
@@ -177,7 +177,6 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
 
 class FunctionalTestRunner:
 
-  ZELENIUM_BASE_URL = "%s/portal_tests/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=%s/portal_tests/postResults&__ac_name=%s&__ac_password=%s"
 
   
   def __init__(self, host, port, portal, run_only=''):
@@ -198,15 +197,9 @@ class FunctionalTestRunner:
     transaction.commit()
     return self.portal.portal_tests.TestTool_getResults()
 
-  def _getTestURL(self, run_only):
-    url_string = self.ZELENIUM_BASE_URL % (self.portal_url, 
-                                           self.portal_url, 
-                                           self.user, 
-                                           self.password)
-    if run_only:
-      url_string = url_string.replace('/portal_tests/', 
-                       '/portal_tests/%s/' % self.run_only, 1)
-    return url_string
+  def _getTestURL(self):
+    return ZELENIUM_BASE_URL % (self.portal.portal_url(), self.run_only,
+                      self.portal.portal_url(), self.user, self.password)
 
   def launchFunctionalTest(self, debug=0):
     pid = None
@@ -276,6 +269,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
        conversion_server_hostname=conversion_dict['hostname'],
        conversion_server_port=conversion_dict['port']
       )
+    # XXX Memcached is missing
+    # XXX Persistent cache setup is missing
 
   def testFunctionalTestRunner(self):
     # first of all, abort to get rid of the mysql participation inn this
@@ -285,13 +280,13 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
                                        self.portal, self.run_only)
     self.runner.launchFunctionalTest(debug=self.foreground)
 
-    detail, sucess, failure, error_title_list = self.runner.processResult()
+    detail, success, failure, error_title_list = self.runner.processResult()
 
-    self.logMessage("-"*79)
-    total = sucess + failure
+    self.logMessage("-" * 79)
+    total = success + failure
     self.logMessage("%s Functional Tests %s Tests, %s Failures" % \
                     (self.getTitle(), total, failure))
-    self.logMessage("-"*79)
+    self.logMessage("-" * 79)
     self.logMessage(detail)
-    self.logMessage("-"*79)
+    self.logMessage("-" * 79)
     self.assertEquals([], error_title_list)
