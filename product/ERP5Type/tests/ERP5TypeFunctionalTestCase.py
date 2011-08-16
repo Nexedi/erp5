@@ -88,8 +88,9 @@ class Xvfb:
       print "Stopping Xvfb on pid: %s" % self.pid
       os.kill(self.pid, signal.SIGTERM)
 
-class Firefox:
-  
+class Browser:
+
+  use_xvfb = 1
   def __init__(self, profile_dir, host, port):
     self.profile_dir = profile_dir
     self.host = host
@@ -100,9 +101,36 @@ class Firefox:
     if self.pid:
       os.kill(self.pid, signal.SIGTERM)
 
+  def _run(self, url, display):
+    """ This method should be implemented on a subclass """
+    raise NotImplementedError
+
+  def _setEnviron(self):
+    pass
+
   def run(self, url, display):
-    self._prepare()
-    
+    self.clean()
+    self._setEnviron()
+    self._setDisplay(display)
+    self._run(url)
+    print "Browser %s running on pid: %s" % (self.__class__.__name__, self.pid)
+
+  def clean(self):
+    """ Clean up removing profile dir and recreating it"""
+    os.system("rm -rf %s" % self.profile_dir)
+    os.mkdir(self.profile_dir)
+
+  def _createFile(self, filename, content):
+    file_path = os.path.join(self.profile_dir, filename)
+    f = open(file_path, 'w')
+    try:
+      f.write(content)
+    finally:
+      f.close()
+
+    return file_path
+
+  def _setDisplay(self, display):
     if display is None:
       try:
         shutil.copy2(os.path.expanduser('~/.Xauthority'), '%s/.Xauthority' % self.profile_dir)
@@ -111,21 +139,27 @@ class Firefox:
     else:
       os.environ["DISPLAY"] = display
 
+  def _runCommand(self, command_tuple):
+    print " ".join(list(command_tuple))
+    self.pid = os.spawnlp(os.P_NOWAIT, *command_tuple)
+
+class Firefox(Browser):
+  """ Use firefox to open run all the tests"""
+
+  def _setEnviron(self):
     os.environ['MOZ_NO_REMOTE'] = '1'
     os.environ['HOME'] = self.profile_dir
     os.environ['LC_ALL'] = 'C'
     os.environ["MOZ_CRASHREPORTER_DISABLE"] = "1"
     os.environ["NO_EM_RESTART"] = "1"
 
-    command_tuple = ("firefox", "firefox",  "-no-remote",
-                 "-profile", self.profile_dir, url)
+  def _run(self, url):
+    # Prepare to run
+    self._createFile('prefs.js', self.getPrefJs())
+    self._runCommand(("firefox", "firefox", "-no-remote",
+                     "-profile", self.profile_dir, url))
 
-    print " ".join(list(command_tuple))
-
-    self.pid = os.spawnlp(os.P_NOWAIT, *command_tuple)
     os.environ['MOZ_NO_REMOTE'] = '0'
-    print 'firefox : %d' % self.pid
-    return self.pid
 
   def getPrefJs(self):
     return """
@@ -162,17 +196,7 @@ user_pref("capability.principal.codebase.p1.granted", "UniversalFileRead");
 user_pref("signed.applets.codebase_principal_support", true);
 user_pref("capability.principal.codebase.p1.id", "http://%s:%s");
 user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
-
-  def _prepare(self):
-    prefs_js = self.getPrefJs(self.host, self.port)
-    os.system("rm -rf %s" % self.profile_dir)
-    os.mkdir(self.profile_dir)
-    pref_file = open(os.path.join(self.profile_dir, 'prefs.js'), 'w')
-    pref_file.write(prefs_js)
-    pref_file.close()
-
-  def isXvfbRequired(self):
-    return True
+    (self.host, self.port)
 
 
 class FunctionalTestRunner:
@@ -208,7 +232,7 @@ class FunctionalTestRunner:
     display = None
     xvfb = Xvfb(self.instance_home, None)
     try:
-      if not debug and browser.isXvfbRequired():
+      if not debug and self.browser.use_xvfb:
         xvfb.display = self.xvfb_display
         xvfb.run()
       browser.run(test_url, xvfb.display)
