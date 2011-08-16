@@ -1018,19 +1018,19 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if object_id is not None:
       if sub_object is None:
         sub_object = object._getOb(object_id, None)
-      if sub_object is None: # If so, it doesn't exist
-        portal_type = ''
-        if xml.xpath('local-name()') == XML_OBJECT_TAG:
-          portal_type = self.getObjectType(xml)
-        sub_object, reset_local_roles, reset_workflow = self.constructContent(
-                                                        object,
-                                                        object_id,
-                                                        portal_type)
-      self.newObject(object=sub_object,
-                     xml=xml,
-                     simulate=simulate,
-                     reset_local_roles=reset_local_roles,
-                     reset_workflow=reset_workflow)
+    if sub_object is None: # If so, it doesn't exist
+      portal_type = ''
+      if xml.xpath('local-name()') == XML_OBJECT_TAG:
+        portal_type = self.getObjectType(xml)
+      sub_object, reset_local_roles, reset_workflow = self.constructContent(
+                                                      object,
+                                                      object_id,
+                                                      portal_type)
+    self.newObject(object=sub_object,
+                    xml=xml,
+                    simulate=simulate,
+                    reset_local_roles=reset_local_roles,
+                    reset_workflow=reset_workflow)
     return sub_object
 
   def _updateContent(self, object=None, **args):
