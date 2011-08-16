@@ -227,20 +227,20 @@ class FunctionalTestRunner:
   # There is no test that can take more them 24 hours
   timeout = 24 * 60 * 60
 
-  
-  def __init__(self, host, port, portal, run_only=''):
+  def __init__(self, host, port, portal, run_only='', use_phanthom=False):
     self.instance_home = os.environ['INSTANCE_HOME']
-    self.host = host
-    self.port = int(port)
+
     # Such informations should be automatically loaded
     self.user = 'ERP5TypeTestCase'
     self.password = ''
     self.run_only = run_only
     self.xvfb_display = ':123'
-    self.profile_dir = os.path.join(self.instance_home, 'profile')
-    self.portal_url = "http://%s:%d/%s" % (host, port, portal.getId())
+    profile_dir = os.path.join(self.instance_home, 'profile')
     self.portal = portal
-
+    if use_phanthom:
+      self.browser = PhantomJS(profile_dir, host, int(port))
+    else:
+      self.browser = Firefox(profile_dir, host, int(port))
 
   def getStatus(self):
     transaction.commit()
@@ -250,25 +250,21 @@ class FunctionalTestRunner:
     return ZELENIUM_BASE_URL % (self.portal.portal_url(), self.run_only,
                       self.portal.portal_url(), self.user, self.password)
 
-  def launchFunctionalTest(self, debug=0):
-    pid = None
-    test_url = self._getTestURL(self.run_only)
-    browser = Firefox(self.profile_dir, self.host, self.port)
-    display = None
+  def test(self, debug=0):
     xvfb = Xvfb(self.instance_home, None)
     try:
       start = time.time()
       if not debug and self.browser.use_xvfb:
         xvfb.display = self.xvfb_display
         xvfb.run()
-      browser.run(test_url, xvfb.display)
+      self.browser.run(self._getTestURL() , xvfb.display)
       while self.getStatus() is None:
         time.sleep(10)
         if (start - time.time()) > float(self.timeout):
           raise TimeoutError("Test took more them %s seconds" % self.timeout)
 
     finally:
-      browser.quit()
+      self.browser.quit()
       xvfb.quit()
 
   def processResult(self):
@@ -296,11 +292,10 @@ class FunctionalTestRunner:
     return detail, int(sucess_amount), int(failure_amount), error_title_list
 
 
-
 class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
-
   run_only = ""
   foreground = 0
+  use_phanthom = True
 
   def getTitle(self):
     return "Zelenium"
@@ -328,10 +323,10 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     # first of all, abort to get rid of the mysql participation inn this
     # transaction
     self.portal._p_jar.sync()
-    self.runner = FunctionalTestRunner(self.serverhost, self.serverport, 
-                                       self.portal, self.run_only)
-    self.runner.launchFunctionalTest(debug=self.foreground)
+    self.runner = FunctionalTestRunner(self.serverhost, self.serverport,
+                                self.portal, self.run_only, self.use_phanthom)
 
+    self.runner.test(debug=self.foreground)
     detail, success, failure, error_title_list = self.runner.processResult()
 
     self.logMessage("-" * 79)
