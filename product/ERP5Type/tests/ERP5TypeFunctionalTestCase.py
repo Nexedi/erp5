@@ -201,6 +201,26 @@ user_pref("capability.principal.codebase.p1.id", "http://%s:%s");
 user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
     (self.host, self.port)
 
+class PhantomJS(Browser):
+  def _createRunJS(self):
+    run_js = """
+var page = new WebPage(),
+    address;
+
+address = phantom.args[0];
+page.open(address, function (status) {
+  if (status !== 'success') {
+    console.log('FAIL to load the address');
+  } else {
+    console.log('SUCCESS load the address');
+  }
+  phantom.exit();
+});
+"""
+    return self._createFile('run.js', run_js)
+
+  def _run(self, url):
+    self._runCommand(("phantomjs", "phantomjs", self._createRunJS(), url))
 
 class FunctionalTestRunner:
 
