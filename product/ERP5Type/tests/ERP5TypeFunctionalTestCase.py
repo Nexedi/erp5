@@ -29,7 +29,7 @@
 
 import os
 import transaction
-from time import sleep
+import time
 import signal
 import re
 from subprocess import Popen, PIPE
@@ -62,6 +62,9 @@ instance_home = os.path.join(real_instance_home, 'unit_test')
 bt5_dir_list = ','.join([
                     os.path.join(instance_home, 'Products/ERP5/bootstrap'),
                     os.path.join(instance_home, 'bt5')])
+
+class TimeoutError(Exception):
+  pass
 
 class Xvfb:
   def __init__(self, fbdir, display):
@@ -201,6 +204,8 @@ user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
 
 class FunctionalTestRunner:
 
+  # There is no test that can take more them 24 hours
+  timeout = 24 * 60 * 60
 
   
   def __init__(self, host, port, portal, run_only=''):
@@ -232,12 +237,15 @@ class FunctionalTestRunner:
     display = None
     xvfb = Xvfb(self.instance_home, None)
     try:
+      start = time.time()
       if not debug and self.browser.use_xvfb:
         xvfb.display = self.xvfb_display
         xvfb.run()
       browser.run(test_url, xvfb.display)
       while self.getStatus() is None:
-        sleep(10)
+        time.sleep(10)
+        if (start - time.time()) > float(self.timeout):
+          raise TimeoutError("Test took more them %s seconds" % self.timeout)
 
     finally:
       browser.quit()
