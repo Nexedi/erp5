@@ -67,14 +67,27 @@ class TimeoutError(Exception):
   pass
 
 class Xvfb:
-  def __init__(self, fbdir, display):
-    self.display = display
+  def __init__(self, fbdir):
+    self.display_list = [":%s" % i for i in range(123, 144)]
+    self.display = None
     self.fbdir = fbdir
     self.pid = None
 
+  def _runCommand(self, display):
+    command = ['Xvfb', '-fbdir' , self.fbdir, display]
+    self.process = Popen(" ".join(command),
+                         stdout=PIPE,
+                         stderr=PIPE,
+                         shell=True,
+                         close_fds=True)
+
   def run(self):
-    self.pid = os.spawnlp(os.P_NOWAIT, 'Xvfb', 'Xvfb',
-                          '-fbdir' , self.fbdir, self.display)
+    for display_try in self.display_list:
+      lock_filepath = '/tmp/.X%s-lock' % display_try.replace(":", "")
+      if not os.path.exists(lock_filepath):
+        self._runCommand(display_try)
+        self.display = display_try
+        break
 
     display = os.environ.get('DISPLAY')
     if display:
@@ -83,13 +96,18 @@ class Xvfb:
         (displayname, protocolname, hexkey) = auth.split()
         Popen(['xauth', 'add', 'localhost/unix:%s' % display, protocolname, hexkey])
 
-    print 'Xvfb : %d' % self.pid
+    print 'Xvfb : %d' % self.process.pid
     print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.fbdir
 
   def quit(self):
-    if self.pid:
-      print "Stopping Xvfb on pid: %s" % self.pid
-      os.kill(self.pid, signal.SIGTERM)
+    if hasattr(self, 'process'):
+      process_pid = self.process.pid
+      try:
+        self.process.terminate()
+      finally:
+        if process_pid:
+          print "Stopping Xvfb on pid: %s" % self.pid
+          os.kill(process_pid, signal.SIGTERM)
 
 class Browser:
 
@@ -234,7 +252,6 @@ class FunctionalTestRunner:
     self.user = 'ERP5TypeTestCase'
     self.password = ''
     self.run_only = run_only
-    self.xvfb_display = ':123'
     profile_dir = os.path.join(self.instance_home, 'profile')
     self.portal = portal
     if use_phanthom:
@@ -251,11 +268,10 @@ class FunctionalTestRunner:
                       self.portal.portal_url(), self.user, self.password)
 
   def test(self, debug=0):
-    xvfb = Xvfb(self.instance_home, None)
+    xvfb = Xvfb(self.instance_home)
     try:
       start = time.time()
       if not debug and self.browser.use_xvfb:
-        xvfb.display = self.xvfb_display
         xvfb.run()
       self.browser.run(self._getTestURL() , xvfb.display)
       while self.getStatus() is None:
@@ -290,7 +306,6 @@ class FunctionalTestRunner:
 </html>''' % detail
 
     return detail, int(sucess_amount), int(failure_amount), error_title_list
-
 
 class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   run_only = ""
