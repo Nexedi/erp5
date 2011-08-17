@@ -295,7 +295,7 @@ class FunctionalTestRunner:
 class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   run_only = ""
   foreground = 0
-  use_phanthom = True
+  use_phanthom = False
 
   def getTitle(self):
     return "Zelenium"
