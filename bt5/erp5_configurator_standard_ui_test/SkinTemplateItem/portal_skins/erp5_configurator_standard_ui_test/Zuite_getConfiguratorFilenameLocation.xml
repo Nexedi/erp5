@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_function</string> </key>
-            <value> <string>Zuite_getTestDocumentsHome</string> </value>
+            <value> <string>Zuite_getTestDocumentPath</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>

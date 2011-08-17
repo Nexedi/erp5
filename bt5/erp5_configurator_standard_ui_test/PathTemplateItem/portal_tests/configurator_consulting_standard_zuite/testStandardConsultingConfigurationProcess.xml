@@ -70,7 +70,7 @@
 <!-- Set longer timeout as it takes time at configurator side to prepare everything needed. -->\n
 <tr>\n
   <td>setTimeout</td>\n
-  <td>1200000</td>\n
+  <td>120000000</td>\n
   <td></td>\n
 </tr>\n
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities" />\n
