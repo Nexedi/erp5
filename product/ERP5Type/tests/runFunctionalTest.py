@@ -11,6 +11,10 @@ from subprocess import Popen, PIPE
 from sendMail import sendMail
 import atexit
 
+print "DEPRECATION WARNNING: This command 'runFunctionalTest' is Deprecated, " + \
+      "you should use ERP5TypeFunctionalTestCase and runUnitTest instead." + \
+      "You can take a look at testFuncionalCore.py"
+
 __doc__ = """%(program)s: Zelenium functional test runner for the ERP5 Project
 
 usage: %(program)s [options]
