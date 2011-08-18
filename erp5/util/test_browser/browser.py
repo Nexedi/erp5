@@ -883,6 +883,13 @@ class ContextMainForm(MainForm):
     """
     self.submit(name='Base_cancel:method')
 
+  def submitDialogUpdate(self):
+    """
+    Update the dialog action. A dialog may contain a button to update
+    the form before confirming it. See L{submitDialogConfirm} as well.
+    """
+    self.submit(name='Base_showUpdateDialog:method')
+
   def submitDialogConfirm(self):
     """
     Confirm the dialog action. A dialog is showed when validating a
