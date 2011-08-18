@@ -378,7 +378,7 @@ class Browser(ExtendedTestBrowser):
 
   def getTransitionMessage(self):
     """
-    Parses the current page and returns the value of the portal_status
+    Parse the current page and returns the value of the portal_status
     message.
 
     @return: The transition message
@@ -390,6 +390,21 @@ class Browser(ExtendedTestBrowser):
       return self.etree.xpath('//div[@id="transition_message"]')[0].text
     except IndexError:
       raise LookupError("Cannot find div with ID 'transition_message'")
+
+  def getInformationArea(self):
+    """
+    Parse the current page and returns the value of the information_area
+    message.
+
+    @return: The information area message
+    @rtype: str
+
+    @raise LookupError: Not found
+    """
+    try:
+      return self.etree.xpath('//div[@id="information_area"]')[0].text
+    except IndexError:
+      raise LookupError("Cannot find div with ID 'information_area'")
 
   _listbox_table_xpath_str = '//table[contains(@class, "listbox-table")]'
 
