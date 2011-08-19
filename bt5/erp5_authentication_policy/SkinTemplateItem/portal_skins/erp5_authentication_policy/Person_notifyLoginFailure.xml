@@ -66,6 +66,7 @@ authentication_event = portal.system_event_module.newContent(\n
                                                     portal_type = "Authentication Event",\n
                                                     activate_kw = activate_kw)\n
 authentication_event.setDestinationValue(context)\n
+authentication_event.confirm()\n
 return authentication_event\n
 </string> </value>
         </item>

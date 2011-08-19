@@ -71,7 +71,7 @@ kw = {\'portal_type\': \'Authentication Event\',\n
       \'default_destination_uid\': context.getUid(),\n
       \'creation_date\': Query(creation_date = check_time,\n
                              range=\'min\'),\n
-      \'validation_state\' : \'!=acknowledged\',\n
+      \'validation_state\' : \'confirmed\',\n
       \'sort_on\' : ((\'creation_date\', \'ASC\',),),\n
       }\n
 \n
