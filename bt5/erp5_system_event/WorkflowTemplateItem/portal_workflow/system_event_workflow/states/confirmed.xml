@@ -8,22 +8,22 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Event is considered as submitted to the system but still no human has acknowledge it.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>draft</string> </value>
+            <value> <string>confirmed</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Draft</string> </value>
+            <value> <string>Submitted</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
               <tuple>
-                <string>confirm</string>
-                <string>confirm_action</string>
+                <string>acknowledge</string>
+                <string>acknowledge_action</string>
               </tuple>
             </value>
         </item>
