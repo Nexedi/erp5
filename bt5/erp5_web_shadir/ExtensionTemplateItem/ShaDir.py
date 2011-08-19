@@ -104,3 +104,28 @@ def WebSection_setObject(self, id, ob, **kw):
   if expiration_date is not None:
     ob.setExpirationDate(expiration_date)
   return ob
+
+def WebSection_putFactory(self, name, typ, body):
+  """
+   API SHACACHE
+     - PUT /<key>
+        + parameters required:
+          * data:  it is the file content
+       The key is the file name.
+  """
+  portal = self.getPortalObject()
+  if name is None:
+    name = 'shacache'
+  document = portal.portal_contributions.newContent(data=body,
+                                                    filename=name,
+                                                    discover_metadata=False)
+
+  # We can only change the state of the object after all the activities and
+  # interaction workflow, to avoid any security problem.
+  document.activate(after_path_and_method_id=(document.getPath(), \
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat', \
+             'immediateReindexObject', 'recursiveImmediateReindexObject')))\
+            .publish()
+
+  return document
+

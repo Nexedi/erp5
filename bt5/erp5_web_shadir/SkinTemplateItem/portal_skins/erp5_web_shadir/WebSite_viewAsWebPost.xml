@@ -8,15 +8,15 @@
       <dictionary>
         <item>
             <key> <string>_function</string> </key>
-            <value> <string>WebSection_setObject</string> </value>
+            <value> <string>WebSite_viewAsWebPost</string> </value>
         </item>
         <item>
             <key> <string>_module</string> </key>
-            <value> <string>ShaCache</string> </value>
+            <value> <string>ShaDir</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_setObject</string> </value>
+            <value> <string>WebSite_viewAsWebPost</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

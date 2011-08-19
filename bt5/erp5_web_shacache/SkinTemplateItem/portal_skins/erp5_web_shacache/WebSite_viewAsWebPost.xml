@@ -2,25 +2,21 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Folder" module="OFS.Folder"/>
+      <global name="ExternalMethod" module="Products.ExternalMethod.ExternalMethod"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_local_properties</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <key> <string>_function</string> </key>
+            <value> <string>WebSite_viewAsWebPost</string> </value>
         </item>
         <item>
-            <key> <string>_objects</string> </key>
-            <value>
-              <tuple/>
-            </value>
+            <key> <string>_module</string> </key>
+            <value> <string>ShaCache</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_web_shacache_core</string> </value>
+            <value> <string>WebSite_viewAsWebPost</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

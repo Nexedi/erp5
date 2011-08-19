@@ -63,52 +63,6 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
 
   return None
 
-
-def WebSection_setObject(self, id, ob, **kw):
-  """
-    Add any change of the file uploaded.
-  """
-  sha512sum = hashlib.sha512()
-  self.REQUEST._file.seek(0)
-  while True:
-    d = self.REQUEST._file.read(1<<20)
-    if not d:
-      break
-    sha512sum.update(d)
-
-  reference = sha512sum.hexdigest()
-  if reference != id:
-    raise ValueError('The content does not match with sha512sum provided.')
-
-  # Set object properties
-  ob.setContentType('application/octet-stream')
-  ob.setFilename(id)
-  ob.setReference(reference)
-  return ob
-
-def WebSection_putFactory(self, name, typ, body):
-  """
-   API SHACACHE
-     - PUT /<key>
-        + parameters required:
-          * data:  it is the file content
-       The key is the file name.
-  """
-  portal = self.getPortalObject()
-  document = portal.portal_contributions.newContent(data=body,
-                                                    filename=name,
-                                                    discover_metadata=False)
-
-  # We can only change the state of the object after all the activities and
-  # interaction workflow, to avoid any security problem.
-  document.activate(after_path_and_method_id=(document.getPath(), \
-            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat', \
-             'immediateReindexObject', 'recursiveImmediateReindexObject')))\
-            .WebSite_publishDocumentByActivity()
-
-  return document
-
-
 def File_viewAsWeb(self):
   """
     Make possible to send the file data to the client without consume the
@@ -147,3 +101,28 @@ def File_viewAsWeb(self):
     data=next_data
 
   return ''
+
+def WebSite_viewAsWebPost(self, *args, **kwargs):
+  portal = self.getPortalObject()
+  sha512sum = hashlib.sha512()
+  self.REQUEST._file.seek(0)
+  while True:
+    d = self.REQUEST._file.read(1<<20)
+    if not d:
+      break
+    sha512sum.update(d)
+  sha512sum = sha512sum.hexdigest()
+  document = portal.portal_contributions.newContent(data=self.REQUEST.BODY,
+    filename='shacache', discover_metadata=False, reference=sha512sum,
+    content_type='application/octet-stream')
+
+  # We can only change the state of the object after all the activities and
+  # interaction workflow, to avoid any security problem.
+  document.activate(after_path_and_method_id=(document.getPath(), \
+            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat', \
+             'immediateReindexObject', 'recursiveImmediateReindexObject')))\
+            .publish()
+
+  self.REQUEST.RESPONSE.setStatus(201)
+  return sha512sum
+

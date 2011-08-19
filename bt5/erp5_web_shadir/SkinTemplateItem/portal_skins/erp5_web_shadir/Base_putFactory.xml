@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_module</string> </key>
-            <value> <string>ShaCache</string> </value>
+            <value> <string>ShaDir</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

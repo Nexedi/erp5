@@ -30,7 +30,7 @@
 
 import transaction
 import httplib
-from StringIO import StringIO
+import urlparse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from ShaCacheMixin import ShaCacheMixin
 
@@ -46,38 +46,19 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     """
     return "SHACACHE - HTTP File Cache Server"
 
-  def beforeTearDown(self):
-    """
-      Clear everything for next test.
-    """
-    for module in ('document_module',):
-      folder = self.portal[module]
-      folder.manage_delObjects(list(folder.objectIds()))
-    transaction.commit()
-    self.tic()
-
-  def putFile(self, key=None):
+  def postFile(self, key=None):
     """
       Post the file
     """
-    if key is None:
-      key = self.key
-
+    parsed = urlparse.urlparse(self.shacache_url)
+    connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
     try:
-      data_file = StringIO()
-      data_file.write(self.data)
-      data_file.seek(0)
-
-      self.portal.changeSkin('SHACACHE')
-      path = self.shacache.getPath()
-      response = self.publish('%s/%s' % (path, key),
-                        request_method='PUT',
-                        stdin=data_file,
-                        basic='ERP5TypeTestCase:')
-      self.stepTic()
-      self.assertEqual(response.getStatus(), httplib.CREATED)
+      connection.request('POST', parsed.path, self.data, self.header_dict)
+      result = connection.getresponse()
+      data = result.read()
     finally:
-      data_file.close()
+      connection.close()
+    return result.status, data
 
   def getFile(self, key=None):
     """
@@ -87,18 +68,30 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     if key is None:
       key = self.key
 
-    self.portal.changeSkin('SHACACHE')
-    self.shacache.REQUEST.set('method', 'GET')
-    return self.shacache.WebSection_getDocumentValue(key)
+    parsed = urlparse.urlparse(self.shacache_url)
+    connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
+    try:
+      connection.request('GET', '/'.join([parsed.path, key]), None,
+        self.header_dict)
+      result = connection.getresponse()
+      data = result.read()
+    finally:
+      connection.close()
+    return result.status, data
 
   def test_put_file(self):
     """
       Check if the PUT method is creating an object.
     """
-    self.putFile()
-    self.assertEquals(1, len(self.portal.document_module))
+    result, data = self.postFile()
+    self.assertEqual(result, httplib.CREATED)
+    self.assertEqual(data, self.key)
 
-    document = self.portal.document_module.contentValues()[0]
+    transaction.commit()
+    self.tic()
+
+    document = self.portal.portal_catalog.getResultValue(reference=self.key)
+    self.assertNotEqual(None, document)
     self.assertEquals(self.key, document.getTitle())
     self.assertEquals(self.key, document.getReference())
     self.assertEquals(self.data, document.getData())
@@ -109,29 +102,39 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     """
       Check if the file returned is the correct.
     """
-    self.test_put_file()
-    self.assertEquals(1, len(self.portal.document_module))
+    result, data = self.postFile()
+    self.assertEqual(result, httplib.CREATED)
+    self.assertEqual(data, self.key)
 
-    document = self.getFile()
-    self.assertNotEquals(None, document)
+    transaction.commit()
+    self.tic()
 
-    self.assertEquals(self.data, document.getData())
+    document = self.portal.portal_catalog.getResultValue(reference=self.key)
+    self.assertNotEqual(None, document)
+
+    result, data = self.getFile()
+    self.assertEqual(result, httplib.OK)
+    self.assertEquals(data, self.data)
 
   def test_put_file_twice(self):
     """
       Check if is allowed to put the same file twice.
     """
-    self.putFile()
-    self.assertEquals(1, len(self.portal.document_module))
-
-    document = self.portal.document_module.contentValues()[0]
+    self.postFile()
+    transaction.commit()
+    self.tic()
+    document = self.portal.portal_catalog.getResultValue(reference=self.key)
     self.assertEquals('Published', document.getValidationStateTitle())
 
-    self.putFile()
-    self.assertEquals(2, len(self.portal.document_module))
+    self.postFile()
+    transaction.commit()
+    self.tic()
+    self.assertEquals(2, self.portal.portal_catalog.countResults(
+      reference=self.key)[0][0])
 
-    document2 = self.portal.document_module.contentValues()[1]
+    document2 = self.portal.portal_catalog.getResultValue(reference=self.key,
+      sort_on=(('uid', 'ASC'),))
     self.assertEquals('Published', document2.getValidationStateTitle())
-    self.assertEquals('Archived', document.getValidationStateTitle())
+    self.assertEquals('archived', document.getValidationState())
 
 
