@@ -105,7 +105,8 @@ class LoginAccountProviderMixin:
     password_event_list = self.getPortalObject().portal_catalog(
                                                    portal_type = "Password Event",
                                                    default_destination_uid = self.getUid(),
-                                                   sort_on = (('creation_date', 'DESC',),),                                                               
+                                                   sort_on = (('creation_date', 'DESC',),),
+                                                   validation_state = 'confirmed',                                                   
                                                    limit = preferred_number_of_last_password_to_check)
     password_list = [x.getPassword() for x in password_event_list]                                                                
     for encoded_password in password_list:
