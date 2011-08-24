@@ -43,7 +43,7 @@ if save_mysql:
     # The output of mysqldump needs to merge many lines at a time
     # for performance reasons (merging lines is at most 10 times
     # faster, so this produce somewhat not nice to read sql
-    command = 'mysqldump %s > dump.sql' % getMySQLArguments()
+    command = 'mysqldump %s > %s' % (getMySQLArguments(), os.path.abspath('dump.sql'),)
     if verbosity:
       _print('Dumping MySQL database with %s...' % command)
     os.system(command)
@@ -64,7 +64,7 @@ if load:
       ret = os.system("mysql %s < %s" % (getMySQLArguments(), dump_sql))
       assert not ret
     else:
-      _print("Could not find MySQL dump, will recreate catalog ... ")
+      _print("Could not find MySQL dump (%r), will recreate catalog ... " % dump_sql)
       os.environ['erp5_tests_recreate_catalog'] = '1'
   _print("Restoring static files ... ")
   live_instance_path = os.environ.get('live_instance_path')
