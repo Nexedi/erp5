@@ -569,10 +569,14 @@ class Browser(ExtendedTestBrowser):
     @return: The number of remaining activities
     @rtype: int
     """
+    self._logger.debug("Checking the number of remaining activities")
     activity_counter = self.mech_browser.open_novisit(
       self._erp5_base_url + 'portal_activities/countMessage').read()
 
-    return activity_counter and int(activity_counter) or 0
+    activity_counter = activity_counter and int(activity_counter) or 0
+    self._logger.debug("Remaining activities: %d" % activity_counter)
+
+    return activity_counter
 
 from zope.testbrowser.browser import Form, ListControl
 
