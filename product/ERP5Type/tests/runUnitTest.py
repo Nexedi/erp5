@@ -346,7 +346,7 @@ class DebugTestResult:
       import IPython
       try:
         IPython.InteractiveShell()
-        p = IPython.core.debugger.Pdb()
+        p = IPython.core.debugger.Pdb(color_scheme='Linux')
       except AttributeError: # for ipython-0.10 or before
         IPython.Shell.IPShell(argv=[])
         p = IPython.Debugger.Pdb(color_scheme=__IPYTHON__.rc.colors)
