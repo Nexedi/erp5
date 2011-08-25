@@ -356,8 +356,9 @@ class NotificationTool(BaseTool):
       event.setAggregateValueList(attachment_document_list)
       event_list.append(event)
 
-    portal_workflow = getToolByName(self, 'portal_workflow')
     for event in event_list:
+      # XXX: this uses too low level API, instead event_workflow should be used in case 
+      # of persistent ERP5 objects
       event.send(**low_level_kw)
 
     return
