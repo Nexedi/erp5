@@ -23,8 +23,8 @@ def createPerson(result, browser):
   assert browser.getTransitionMessage() == 'Object created.'
 
   # Fill the first and last name of the newly created person
-  browser.mainForm.getControl(name='field_my_first_name').value = 'Foo'
-  browser.mainForm.getControl(name='field_my_last_name').value = 'Bar'
+  browser.mainForm.getControl(name='field_my_first_name').value = 'Create'
+  browser.mainForm.getControl(name='field_my_last_name').value = 'Person'
 
   # Submit the changes, record the time elapsed in seconds
   result('Save', browser.mainForm.timeSubmitSaveInSecond())
@@ -45,3 +45,8 @@ def createPerson(result, browser):
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
+
+  # Validate it
+  result('Validate', browser.mainForm.timeSubmitSelectWorkflowInSecond(value='validate_action'))
+  result('Validated', browser.mainForm.timeSubmitDialogConfirmInSecond())
+  assert browser.getTransitionMessage() == 'Status changed.'
