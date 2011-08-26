@@ -28,8 +28,9 @@
 ##############################################################################
 
 
+import base64
 import hashlib
-
+import random
 
 class ShaCacheMixin(object):
   """
@@ -56,21 +57,15 @@ class ShaCacheMixin(object):
     """
     self.login()
     self.portal = self.getPortal()
-
     module = self.portal.web_site_module
-    shacache = getattr(module, 'shacache', None)
-    if shacache is None:
-      shacache = module.newContent(portal_type='Web Site',
-                                   id='shacache',
-                                   title='SHA Cache Server',
-                                   skin_selection_name='SHACACHE')
-
-    isTransitionPossible = self.portal.portal_workflow.isTransitionPossible
-    if isTransitionPossible(shacache, 'publish'):
-      shacache.publish()
-      self.stepTic()
-
-    self.shacache = shacache
-
-    self.data = 'Random Content. %s' % self.portal.Base_generateRandomString()
+    self.shacache = module.newContent(portal_type='Web Site',
+      title='SHA Cache Server', skin_selection_name='SHACACHE')
+    self.shacache.publish()
+    self.header_dict = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic %s' % (base64.encodestring('ERP5TypeTestCase:'))
+    }
+    self.shacache_url = self.shacache.absolute_url()
+    self.stepTic()
+    self.data = 'Random Content. %s' % str(random.random())
     self.key = hashlib.sha512(self.data).hexdigest()

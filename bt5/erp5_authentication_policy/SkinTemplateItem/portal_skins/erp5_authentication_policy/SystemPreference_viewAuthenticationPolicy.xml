@@ -79,6 +79,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
+                        <string>my_preferred_authentication_policy_enabled</string>
                         <string>my_preferred_max_authentication_failure</string>
                         <string>my_preferred_authentication_failure_check_duration</string>
                         <string>my_preferred_authentication_failure_block_duration</string>
@@ -97,6 +98,7 @@
                         <string>my_preffered_force_username_check_in_password</string>
                         <string>my_preferred_min_regular_expression_group_number</string>
                         <string>my_preferred_regular_expression_group</string>
+                        <string>my_preferred_system_recover_expired_password</string>
                       </list>
                     </value>
                 </item>

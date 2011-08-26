@@ -150,7 +150,7 @@ class ERP5UserManager(BasePlugin):
                        assignment.getStopDate() < login_date:
                   continue
                 valid_assignment_list.append(assignment)
-                
+
               if pw_validate(user.getPassword(), password) and \
                      len(valid_assignment_list) and user \
                      .getValidationState() != 'deleted': #user.getCareerRole() == 'internal':
@@ -171,15 +171,12 @@ class ERP5UserManager(BasePlugin):
         except _AuthenticationFailure:
           authentication_result = None
        
-        method = getattr(self, 'ERP5Site_isAuthenticationPolicyEnabled', None)
-        if method is None or (method is not None and not method()):
+        if not self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled():
           # stop here, no authentication policy enabled 
           # so just return authentication check result
-          # XXX: move to ERP5 Site API
           return authentication_result
         
         # authentication policy enabled, we need person object anyway
-        # XXX: every request is a MySQL call
         user_list = self.getUserByLogin(credentials.get('login'))
         if not user_list:
           # not an ERP5 Person object
@@ -190,9 +187,14 @@ class ERP5UserManager(BasePlugin):
           # file a failed authentication attempt
           user.notifyLoginFailure()
           return None
-          
-        # check if user account is blocked and if password is expired or not
-        if user.isLoginBlocked() or user.isPasswordExpired(): 
+        
+        # check if password is expired
+        if user.isPasswordExpired():
+          user.notifyPasswordExpire()
+          return None
+        
+        # check if user account is blocked
+        if user.isLoginBlocked():
           return None
         
         return authentication_result

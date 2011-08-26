@@ -203,6 +203,15 @@ for i in context.portal_types.objectValues():\n
 for action_title, action_provider_id in context.Base_getActionTitleListFromAllActionProvider(context.getPortalObject()):\n
   add_message(action_title, action_provider_id)\n
 \n
+#\n
+# ZODB Property Sheet\n
+#\n
+for property_sheet in context.portal_property_sheets.objectValues():\n
+  for property_ in property_sheet.objectValues():\n
+    if property_.getId().endswith(\'constraint\'):\n
+      for key, value in property_.showDict().items():\n
+        if key.startswith(\'message_\'):\n
+          add_message(value, portal_url.getRelativeContentURL(property_))\n
 \n
 #\n
 # Output\n

@@ -531,7 +531,10 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     self.assertEqual(organisation.getDescription(), 'bad')
     organisation.getProperty('description', d='toto')
     self.assertEqual(organisation.getDescription(), 'bad')
+    # before-commit interactions should be immune to security changes
+    self.logout()
     transaction.commit()
+    self.login()
     self.assertEqual(organisation.getDescription(), "toto,('description',),bad")
 
   def test_17_activity_interaction(self, quiet=0, run=run_all_test):

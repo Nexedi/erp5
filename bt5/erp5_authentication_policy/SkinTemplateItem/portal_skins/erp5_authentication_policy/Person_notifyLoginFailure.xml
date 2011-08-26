@@ -50,48 +50,37 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
   File a failed authentication attempt.\n
 """\n
 from DateTime import DateTime\n
 portal = context.getPortalObject()\n
+portal_preferences = portal.portal_preferences\n
 \n
-if not context.ERP5Site_isAuthenticationPolicyEnabled():\n
+if not portal_preferences.isAuthenticationPolicyEnabled():\n
   # no policy, no sense to file failure\n
   return 0\n
 \n
-key = \'authentication_failure_list\'\n
-session_id = context.Person_getAuthenticationSessionId()\n
-session = portal.portal_sessions[session_id]\n
-\n
-if key not in session.keys():\n
-  # init it only once\n
-  session[key] = []\n
-\n
-authentication_failure_list = session[key]\n
-authentication_failure_list.append(DateTime())\n
-\n
-# we care for only recent failures, no need to save all so purge old one\n
-max_authentication_failures = portal.portal_preferences.getPreferredMaxAuthenticationFailure()\n
-if len(authentication_failure_list)> max_authentication_failures:\n
-  authentication_failure_list.reverse()\n
-  authentication_failure_list = authentication_failure_list[0:max_authentication_failures]\n
-  authentication_failure_list.reverse()\n
-\n
-# update backend\n
-session[key] = authentication_failure_list\n
-\n
-#context.log(\'notify login failure %s %s %s\' %(session_id, session, len(session[key])))\n
-return session[key]\n
-
-
-]]></string> </value>
+activate_kw = {\'tag\': \'authentication_event_%s\' %context.getReference()}\n
+authentication_event = portal.system_event_module.newContent(\n
+                                                    portal_type = "Authentication Event",\n
+                                                    activate_kw = activate_kw)\n
+authentication_event.setDestinationValue(context)\n
+authentication_event.confirm()\n
+return authentication_event\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

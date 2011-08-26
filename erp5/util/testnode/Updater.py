@@ -82,20 +82,16 @@ SVN_TYPE = 'svn'
 class Updater(object):
 
   _git_cache = {}
-  realtime_output = True
   stdin = file(os.devnull)
 
-  def log(self, message):
-    print message
-
-  def __init__(self, repository_path, revision=None, git_binary=None,
-      log=None):
-    if log is not None:
-      self.log = log
+  def __init__(self, repository_path, log, revision=None, git_binary=None,
+      realtime_output=True):
+    self.log = log
     self.revision = revision
     self._path_list = []
     self.repository_path = repository_path
     self.git_binary = git_binary
+    self.realtime_output = realtime_output
 
   def getRepositoryPath(self):
     return self.repository_path
@@ -141,9 +137,8 @@ class Updater(object):
       stdout, stderr = subprocess_capture(p, quiet)
     else:
       stdout, stderr = p.communicate()
-      if not quiet:
-        sys.stdout.write(stdout)
-      sys.stderr.write(stderr)
+      self.log(stdout)
+      self.log(stderr)
     result = dict(status_code=p.returncode, command=command,
                   stdout=stdout, stderr=stderr)
     if p.returncode:

@@ -531,24 +531,12 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     bt5_title_list = self.portal.portal_templates.getInstalledBusinessTemplateTitleList()
     expected_list = self.standard_bt5_list + bt5_tuple
     self.assertEquals([i for i in expected_list if i not in bt5_title_list], [])
-
     
     self.assertFalse(bc_id in bt5_title_list)
 
     bt = business_configuration.getSpecialiseValue(portal_type="Business Template")
     self.assertEquals(bc_id, bt.getTitle())
     self.assertEquals(bt.getInstallationState(), 'not_installed')
-    self.assertEquals(bt.getBuildingState(), 'built')
-
-
-    # check for links
-    file_list = business_configuration.searchFolder(portal_type="File")
-    self.assertEquals(1, len(file_list))
-    self.assertEquals(business_configuration.getSpecialiseTitle(), 
-                      file_list[0].getTitle())
-
-    file_title_list = ('%s' % bc_id,)
-    self.assertSameSet(file_title_list, [f.getTitle() for f in file_list])
 
   def stepCheckConfiguredInstancePreference(sequence=None,  sequence_list=None, **kw):
     """ Check if the configured instance  has appropriate configuration"""

@@ -26,10 +26,8 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import getPath
-from zLOG import LOG
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile
+from zLOG import LOG, INFO
 from Products.PythonScripts.Utility import allow_class
 
 class ActiveResult:
@@ -39,40 +37,24 @@ class ActiveResult:
     (and eventually, errors)
   """
 
-  # Standard severities
-  TRACE   = -300
-  DEBUG   = -200
-  BLATHER = -100
-  INFO    =    0
-  PROBLEM =  100
-  WARNING =  100
-  ERROR   =  200
-  PANIC   =  300
-  # getProperty default
-  _MARKER = None
-
   def __init__(self, summary='', severity=INFO, detail='', **kw):
     """
     set all parameters
     """
-    if kw.has_key('object_path'):
-      self.object_path = getPath(kw['object_path'],tuple=1)
-      del kw['object_path']
     self.summary = summary
     self.severity = severity
     self.detail = detail
-    self.__dict__.update(kw)
+    self.edit(**kw)
 
   def edit(self,**kw):
     """
     set all parameters
     """
-    if kw.has_key('object_path'):
-      self.object_path = getPath(kw['object_path'],tuple=1)
-      del kw['object_path']
+    if 'object_path' in kw:
+      self.object_path = getPath(kw.pop('object_path'), tuple=1)
     self.__dict__.update(kw)
 
-  def getProperty(self,value,d=_MARKER,**kw):
+  def getProperty(self, value, d=None):
     """
     A simple getter
     """
@@ -88,13 +70,13 @@ class ActiveResult:
     """
     Tells if the result is a result or an error
     """
-    return self.severity <= self.INFO
+    return self.severity <= INFO
 
   def isError(self):
     """
     Tells if the result is a result or an error
     """
-    return self.severity > self.INFO
+    return self.severity > INFO
 
 
 allow_class(ActiveResult)

@@ -2,7 +2,6 @@ from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
 from reStructuredText import HTML
 import sys
-import os
 
 class rest:
     r"""Converts from reST to HTML.
@@ -57,11 +56,9 @@ class rest:
         input_encoding  = kwargs.get('input_encoding', encoding)
         output_encoding = kwargs.get('output_encoding', encoding)
         language        = kwargs.get('language', 'en') 
-        warnings        = kwargs.get('warnings', None)
-        rest_template = os.path.join(os.path.dirname(__file__), 'rest.template')
+        warnings        = kwargs.get('warnings', None) 
         settings = {'documentclass': '',
                     'traceback': 1,
-                    'template' : rest_template
                }
         html = HTML(orig, 
                     report_level=2,

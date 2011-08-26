@@ -46,10 +46,6 @@ class SubprocessError(EnvironmentError):
 
 from Updater import Updater
 
-def log(message):
-  # Log to stdout, with a timestamp.
-  print time.strftime('%Y/%m/%d %H:%M:%S'), message
-
 supervisord_pid_file = None
 process_group_pid_set = set()
 def sigterm_handler(signal, frame):
@@ -62,13 +58,14 @@ def sigterm_handler(signal, frame):
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
+import logging
 def safeRpcCall(function, *args):
   retry = 64
   while True:
     try:
       return function(*args)
     except (socket.error, xmlrpclib.ProtocolError), e:
-      print >>sys.stderr, e
+      logging.warning(e)
       pprint.pprint(args, file(function._Method__name, 'w'))
       time.sleep(retry)
       retry += retry >> 1
@@ -100,12 +97,11 @@ def killPreviousRun():
 PROFILE_PATH_KEY = 'profile_path'
 
 def run(config):
+  log = config['logger']
   slapgrid = None
   global supervisord_pid_file
   supervisord_pid_file = os.path.join(config['instance_root'], 'var', 'run',
         'supervisord.pid')
-  subprocess.check_call([config['git_binary'],
-                "config", "--global", "http.sslVerify", "false"])
   previous_revision = None
 
   run_software = True
@@ -179,10 +175,10 @@ branch = %(branch)s
             if vcs_repository.get('branch') is not None:
               parameter_list.extend(['-b',vcs_repository.get('branch')])
             parameter_list.append(repository_path)
-            subprocess.check_call(parameter_list)
+            log(subprocess.check_output(parameter_list, stderr=subprocess.STDOUT))
           # Make sure we have local repository
           updater = Updater(repository_path, git_binary=config['git_binary'],
-            log=log)
+            log=log, realtime_output=False)
           updater.checkout()
           revision = "-".join(updater.getRevision())
           full_revision_list.append('%s=%s' % (repository_id, revision))
@@ -225,12 +221,17 @@ branch = %(branch)s
               # revision
               log('  %s at %s' % (repository_path, revision))
               updater = Updater(repository_path, git_binary=config['git_binary'],
-                                revision=revision)
+                                revision=revision, log=log,
+                                realtime_output=False)
               updater.checkout()
 
           # Now prepare the installation of SlapOS and create instance
+          slapproxy_log = os.path.join(config['log_directory'],
+              'slapproxy.log')
+          log('Configured slapproxy log to %r' % slapproxy_log)
           slapos_controler = SlapOSControler.SlapOSControler(config,
-            process_group_pid_set=process_group_pid_set, log=log)
+            process_group_pid_set=process_group_pid_set, log=log,
+            slapproxy_log=slapproxy_log)
           for method_name in ("runSoftwareRelease", "runComputerPartition"):
             stdout, stderr = getInputOutputFileList(config, method_name)
             slapos_method = getattr(slapos_controler, method_name)
@@ -256,9 +257,7 @@ branch = %(branch)s
           if isinstance(revision, tuple):
             revision = ','.join(revision)
           # Deal with Shebang size limitation
-          file_object = open(run_test_suite_path, 'r')
-          line = file_object.readline()
-          file_object.close()
+          line = open(run_test_suite_path, 'r').readline()
           invocation_list = []
           if line[:2] == '#!':
             invocation_list = line[2:].split()
@@ -274,9 +273,10 @@ branch = %(branch)s
           # any custom code to pick the failure up and react ?)
           remote_test_result_needs_cleanup = False
           run_test_suite = subprocess.Popen(invocation_list,
-            preexec_fn=os.setsid, cwd=config['test_suite_directory'])
+            preexec_fn=os.setsid, cwd=config['test_suite_directory'],
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
           process_group_pid_set.add(run_test_suite.pid)
-          run_test_suite.wait()
+          log(run_test_suite.communicate()[0])
           process_group_pid_set.remove(run_test_suite.pid)
       except SubprocessError, e:
         if remote_test_result_needs_cleanup:

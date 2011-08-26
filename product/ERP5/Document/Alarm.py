@@ -203,7 +203,7 @@ class Alarm(XMLObject, PeriodicityMixin):
     # active process but no method_id is defined
     for result in process.getResultList():
       # This is useful is result is returned as a Return instance
-      if result.severity > result.INFO:
+      if result.isError():
         return True
       # This is the default case
       if getattr(result, 'result', False):

@@ -44,7 +44,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
-from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
+from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent
 from ActivityBuffer import ActivityBuffer
@@ -255,19 +255,12 @@ class Message(BaseMessage):
       noSecurityManager()
     return user
 
-  def activateResult(self, activity_tool, result, object):
-    if self.active_process is not None:
-      active_process = activity_tool.unrestrictedTraverse(self.active_process)
-      if isinstance(result, ActiveResult):
-        result.edit(object_path=object)
-        result.edit(method_id=self.method_id)
-        # XXX Allow other method_id in future
-        active_process.activateResult(result)
-      else:
-        active_process.activateResult(
-                    ActiveResult(object_path=object,
-                                 method_id=self.method_id,
-                                 result=result)) # XXX Allow other method_id in future
+  def activateResult(self, active_process, result, object):
+    if not isinstance(result, ActiveResult):
+      result = ActiveResult(result=result)
+    # XXX Allow other method_id in future
+    result.edit(object_path=object, method_id=self.method_id)
+    active_process.postResult(result)
 
   def __call__(self, activity_tool):
     try:
@@ -305,7 +298,10 @@ class Message(BaseMessage):
           setSecurityManager(old_security_manager)
 
         if method is not None:
-          self.activateResult(activity_tool, result, obj)
+          if self.active_process and result is not None:
+            self.activateResult(
+              activity_tool.unrestrictedTraverse(self.active_process),
+              result, obj)
           self.setExecutionState(MESSAGE_EXECUTED)
       except:
         self.setExecutionState(MESSAGE_NOT_EXECUTED, context=activity_tool)
@@ -453,8 +449,12 @@ class Method:
 allow_class(Method)
 
 class ActiveWrapper:
+  # XXX: maybe we should accept and forward an 'activity_tool' parameter,
+  #      so that Method:
+  #      - does not need to search it again
+  #      - a string can be passed as first parameter to ActiveWrapper
 
-  def __init__(self, passive_self, activity, active_process, **kw):
+  def __init__(self, passive_self, activity, active_process, kw):
     self.__dict__['__passive_self'] = passive_self
     self.__dict__['__activity'] = activity
     self.__dict__['__active_process'] = active_process
@@ -922,9 +922,10 @@ class ActivityTool (Folder, UniqueObject):
               # with TimerService we have the same REQUEST over multiple
               # portals, we clear this cache to make sure the cache doesn't
               # contains skins from another portal.
-              stool = getToolByName(self, 'portal_skins', None)
-              if stool is not None:
-                stool.changeSkin(None)
+              try:
+                self.getPortalObject().portal_skins.changeSkin(None)
+              except AttributeError:
+                pass
 
               # call tic for the current processing_node
               # the processing_node numbers are the indices of the elements in the node tuple +1
@@ -1059,7 +1060,9 @@ class ActivityTool (Folder, UniqueObject):
       if not is_initialized:
         self.initialize()
       self.getActivityBuffer()
-      return ActiveWrapper(object, activity, active_process, **kw)
+      if isinstance(active_process, str):
+        active_process = self.unrestrictedTraverse(active_process)
+      return ActiveWrapper(object, activity, active_process, kw)
 
     def deferredQueueMessage(self, activity, message):
       activity_buffer = self.getActivityBuffer()
@@ -1197,8 +1200,7 @@ class ActivityTool (Folder, UniqueObject):
           'invoking group messages: method_id=%s, paths=%s'
           % (method_id, ['/'.join(m.object_path) for m in message_list]))
       # Invoke a group method.
-      expanded_object_list = []
-      new_message_list = []
+      message_dict = {}
       path_set = set()
       # Filter the list of messages. If an object is not available, mark its
       # message as non-executable. In addition, expand an object if necessary,
@@ -1220,6 +1222,7 @@ class ActivityTool (Folder, UniqueObject):
             subobject_list = m.getObjectList(self)
           else:
             subobject_list = (obj,)
+          message_dict[m] = expanded_object_list = []
           for subobj in subobject_list:
             if merge_duplicate:
               path = subobj.getPath()
@@ -1236,25 +1239,23 @@ class ActivityTool (Folder, UniqueObject):
               active_obj = subobj.activate(activity=activity, **activity_kw)
               getattr(active_obj, alternate_method_id)(*m.args, **m.kw)
             else:
-              expanded_object_list.append((subobj, m.args, m.kw))
-          new_message_list.append((m, obj))
+              expanded_object_list.append([subobj, m.args, m.kw, None])
         except:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
 
+      expanded_object_list = sum(message_dict.itervalues(), [])
       try:
         if len(expanded_object_list) > 0:
-          method = self.unrestrictedTraverse(method_id)
+          traverse = self.getPortalObject().unrestrictedTraverse
           # FIXME: how to apply security here?
-          # NOTE: expanded_object_list must be set to failed objects by the
-          #       callee. If it fully succeeds, expanded_object_list must be
-          #       empty when returning.
-          result = method(expanded_object_list)
-        else:
-          result = None
+          # NOTE: expanded_object_list[*][3] must be updated by the callee:
+          #       it must be deleted in case of failure, or updated with the
+          #       result to post on the active process otherwise.
+          traverse(method_id)(expanded_object_list)
       except:
         # In this case, the group method completely failed.
         exc_info = sys.exc_info()
-        for m, obj in new_message_list:
+        for m in message_dict:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
         LOG('WARNING ActivityTool', 0,
             'Could not call method %s on objects %s' %
@@ -1263,24 +1264,37 @@ class ActivityTool (Folder, UniqueObject):
         if error_log is not None:
           error_log.raising(exc_info)
       else:
-        # Obtain all indices of failed messages.
-        # Note that this can be a partial failure.
-        failed_message_set = set(id(x[2]) for x in expanded_object_list)
-        # Only for succeeded messages, an activity process is invoked (if any).
-        for m, obj in new_message_list:
-          # We use id of kw dict (persistent object) to know if there is a
-          # failed 3-tuple corresponding to Message m.
-          if id(m.kw) in failed_message_set:
-            m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
+        # Note there can be partial failures.
+        for m, expanded_object_list in message_dict.iteritems():
+          result_list = []
+          for result in expanded_object_list:
+            if len(result) != 4:
+              break # message marked as failed by the group_method_id
+            elif result[3] is not None:
+              result_list.append(result)
           else:
             try:
-              m.activateResult(self, result, obj)
+              if result_list and m.active_process:
+                active_process = traverse(m.active_process)
+                for result in result_list:
+                  m.activateResult(active_process, result[3], result[0])
             except:
-              m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
+              pass
             else:
               m.setExecutionState(MESSAGE_EXECUTED, context=self)
+              continue
+          m.setExecutionState(MESSAGE_NOT_EXECUTED, context=self)
       if self.activity_tracking:
         activity_tracking_logger.info('invoked group messages')
+
+    security.declarePrivate('dummyGroupMethod')
+    class dummyGroupMethod(object):
+      def __bobo_traverse__(self, REQUEST, method_id):
+        def group_method(message_list):
+          for m in message_list:
+            m[3] = getattr(m[0], method_id)(*m[1], **m[2])
+        return group_method
+    dummyGroupMethod = dummyGroupMethod()
 
     def newMessage(self, activity, path, active_process,
                    activity_kw, method_id, *args, **kw):
@@ -1321,7 +1335,7 @@ class ActivityTool (Folder, UniqueObject):
       """
         Clear all activities and recreate tables.
       """
-      folder = getToolByName(self, 'portal_skins').activity
+      folder = self.getPortalObject().portal_skins
 
       # Obtain all pending messages.
       message_list_dict = {}

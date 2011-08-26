@@ -580,7 +580,8 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalType(),
                 reference=self.getReference(),
-                where_expression=SQLQuery("validation_state NOT IN ('archived', 'cancelled', 'deleted')"))
+                where_expression=SQLQuery("validation_state NOT IN ('archived', 'cancelled', 'deleted')"),
+                sort_on='creation_date')
       if self.getVersion():
         kw['version'] = self.getVersion()
       if self.getLanguage():
@@ -589,8 +590,6 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       existing_document = None
       # Select the first one which is not self and which
       # shares the same coordinates
-      document_list = list(document_list)
-      document_list.sort(key=lambda x: x.getId())
       for o in document_list:
         if o.getRelativeUrl() != self.getRelativeUrl() and\
            o.getVersion() == self.getVersion() and\
@@ -609,7 +608,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
               update_kw[k] = self.getProperty(k)
           existing_document.edit(**update_kw)
           # Erase self
-          self.delete() # XXX Do we want to delete by workflow or for real ?
+          self.getParentValue().manage_delObjects([self.getId(),])
     return document
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getLanguageList')

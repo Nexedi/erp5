@@ -412,38 +412,10 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     transaction.commit()
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
+    portal.portal_activities.distribute()
+    portal.portal_activities.tic()
     self.assertEquals(self.title1,organisation.getTitle())
     result = active_process.getResultList()[0]
-    self.assertEquals(result.method_id , 'getTitle')
-    self.assertEquals(result.result , self.title1)
-    message_list = portal.portal_activities.getMessageList()
-    self.assertEquals(len(message_list),0)
-
-  def TryActiveProcessInsideActivity(self, activity):
-    """
-    Try two levels with active_process, we create one first
-    activity with an active process, then this new activity
-    uses another active process
-    """
-    portal = self.getPortal()
-    organisation =  portal.organisation._getOb(self.company_id)
-    organisation._setTitle(self.title1)
-    def Organisation_test(self):
-      active_process = self.portal_activities.newActiveProcess()
-      self.activate(active_process=active_process).getTitle()
-      return active_process
-    Organisation.Organisation_test = Organisation_test
-    active_process = portal.portal_activities.newActiveProcess()
-    organisation.activate(activity=activity,active_process=active_process).Organisation_test()
-    # Needed so that the message are commited into the queue
-    transaction.commit()
-    portal.portal_activities.distribute()
-    portal.portal_activities.tic()
-    portal.portal_activities.distribute()
-    portal.portal_activities.tic()
-    sub_active_process = active_process.getResultList()[0].result
-    LOG('TryActiveProcessInsideActivity, sub_active_process',0,sub_active_process)
-    result = sub_active_process.getResultList()[0]
     self.assertEquals(result.method_id , 'getTitle')
     self.assertEquals(result.result , self.title1)
     message_list = portal.portal_activities.getMessageList()
@@ -1287,42 +1259,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     self.TryActiveProcess('RAMQueue')
 
-  def test_50_TryActiveProcessInsideActivityWithSQLDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Active Process Inside Activity With SQL Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActiveProcessInsideActivity('SQLDict')
-
-  def test_51_TryActiveProcessInsideActivityWithSQLQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Active Process Inside Activity With SQL Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActiveProcessInsideActivity('SQLQueue')
-
-  def test_52_TryActiveProcessInsideActivityWithRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Active Process Inside Activity With RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActiveProcessInsideActivity('RAMDict')
-
-  def test_53_TryActiveProcessInsideActivityWithRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Active Process Inside Activity With RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActiveProcessInsideActivity('RAMQueue')
-
   def test_54_TryAfterMethodIdWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if after_method_id can be used
     if not run: return
@@ -1876,13 +1812,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     foobar_list = []
     def setFoobar(self, object_list):
       foobar_list.append(len(object_list))
-      for obj, args, kw in object_list:
-        number = kw.get('number', 1)
-        if getattr(obj,'foobar', None) is not None:
-          obj.foobar = obj.foobar + number
-        else:
-          obj.foobar = number
-      del object_list[:]
+      for obj, args, kw, _ in object_list:
+        obj.foobar = getattr(obj.aq_base, 'foobar', 0) + kw.get('number', 1)
     from Products.ERP5Type.Core.Folder import Folder
     Folder.setFoobar = setFoobar    
 
@@ -2038,15 +1969,13 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           message_list=[pickled_message],
           priority_list=[1],
           processing_node_list=[-2],
-          group_method_id_list=[''],
+          group_method_id_list=['\0'],
           tag_list=[''],
           order_validation_text_list=[''],
           serialization_tag_list=[''],
           )
-      if len(object_list) == 2:
-        # Remove one entry from object list: this is understood by caller as a
-        # success for this entry.
-        object_list.pop()
+      # Mark first entry as failed
+      del object_list[0][3]
     def dummy(self):
       pass
     try:
@@ -2095,7 +2024,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           message_list=[pickled_message],
           priority_list=[1],
           processing_node_list=[-2],
-          group_method_id_list=[''],
+          group_method_id_list=['\0'],
           tag_list=[''],
           order_validation_text_list=[''],
           serialization_tag_list=['']
@@ -2162,7 +2091,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           message_list=[pickled_message],
           priority_list=[1],
           processing_node_list=[-2],
-          group_method_id_list=[''],
+          group_method_id_list=['\0'],
           tag_list=[''],
           order_validation_text_list=[''],
           serialization_tag_list=[''],
@@ -2220,7 +2149,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           message_list=[pickled_message],
           priority_list=[1],
           processing_node_list=[-2],
-          group_method_id_list=[''],
+          group_method_id_list=['\0'],
           tag_list=[''],
           order_validation_text_list=[''],
           serialization_tag_list=[''],
@@ -2465,12 +2394,11 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           message_list=[pickled_message],
           priority_list=[1],
           processing_node_list=[-2],
-          group_method_id_list=[''],
+          group_method_id_list=['\0'],
           tag_list=[''],
           order_validation_text_list=[''],
           )
       transaction.get().__class__.commit = fake_commit
-      object_list[:] = []
     commit = transaction.get().__class__.commit
     def fake_commit(*args, **kw):
       transaction.get().__class__.commit = commit
@@ -2523,7 +2451,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           message_list=[pickled_message],
           priority_list=[1],
           processing_node_list=[-2],
-          group_method_id_list=[''],
+          group_method_id_list=['\0'],
           tag_list=[''],
           order_validation_text_list=[''],
          )
@@ -3798,9 +3726,8 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     group_method_call_list = []
     def doSomething(self, message_list):
-      group_method_call_list.append(sorted((obj.getPath(), args, kw)
-                                           for obj, args, kw in message_list))
-      del message_list[:]
+      group_method_call_list.append(sorted((ob.getPath(), args, kw)
+                                           for ob, args, kw, _ in message_list))
     activity_tool.__class__.doSomething = doSomething
     try:
       for activity in 'SQLDict', 'SQLQueue':

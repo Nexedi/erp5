@@ -69,8 +69,11 @@ default_site_preference.setPreferredHtmlStyleUnsavedFormWarning(False)\n
 default_site_preference.setPreferredHtmlStyleDevelopperMode(None)\n
 default_site_preference.setPreferredHtmlStyleAccessTab(\'1\')\n
 \n
-default_site_preference.setPreferredOoodocServerAddress(configuration_info.get("oood_hostname",\'localhost\'))\n
-default_site_preference.setPreferredOoodocServerPortNumber(configuration_info.get("oood_port",8008))\n
+previous_conversion_server_address = portal.portal_preferences.getPreferredOoodocServerAddress()\n
+default_site_preference.setPreferredOoodocServerAddress(previous_conversion_server_address)\n
+\n
+previous_conversion_port = portal.portal_preferences.getPreferredOoodocServerPortNumber()\n
+default_site_preference.setPreferredOoodocServerPortNumber(previous_conversion_port)\n
 \n
 if default_site_preference.getPreferenceState() != \'global\':\n
   default_site_preference.enable()\n

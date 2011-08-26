@@ -58,6 +58,10 @@ class CredentialRequest(Ticket, EncryptedPasswordMixin):
       # should be able to do it
       pass
 
+    def checkPasswordValueAcceptable(self, value):
+      # all passwords are acceptable on Credential Request
+      pass
+
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getTitle')
     def getTitle(self, **kw):

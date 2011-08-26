@@ -1,7 +1,13 @@
 Changes
 =======
 
-0.1 (unreleased)
+0.2 (unreleased)
 ----------------
 
  * No changes yet.
+
+0.1 (2011-08-08)
+----------------
+
+ * erp5.util.testnode imported from recipe like slapos.cookbook
+   [Łukasz Nowak]

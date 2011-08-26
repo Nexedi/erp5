@@ -45,7 +45,17 @@ class LoginAccountProviderMixin:
     Notify an authentication failure.
     """
     method = self._getTypeBasedMethod('notifyLoginFailure')
-    return method(**kw)
+    if method is not None:
+      return method(**kw)
+
+  security.declareProtected(Permissions.SetOwnPassword, 'notifyPasswordExpire')
+  def notifyPasswordExpire(self, **kw):
+    """
+    Notify a password expire event.
+    """
+    method = self._getTypeBasedMethod('notifyPasswordExpire')
+    if method is not None:
+      return method(**kw)
 
   security.declareProtected(Permissions.SetOwnPassword, 'isLoginBlocked')
   def isLoginBlocked(self, **kw):
@@ -53,7 +63,9 @@ class LoginAccountProviderMixin:
     Is this login blocked?
     """
     method = self._getTypeBasedMethod('isLoginBlocked')
-    return method(**kw)    
+    if method is not None:
+      return method(**kw)
+    return False      
 
   security.declareProtected(Permissions.SetOwnPassword, 'isPasswordExpired')
   def isPasswordExpired(self, **kw):
@@ -61,14 +73,27 @@ class LoginAccountProviderMixin:
     Is password expired?
     """
     method = self._getTypeBasedMethod('isPasswordExpired')
-    return method(**kw)
+    if method is not None:
+      return method(**kw)
+    return False      
 
   security.declareProtected(Permissions.SetOwnPassword, 'isPasswordValid')
   def isPasswordValid(self, password, **kw):
     """
     Is password valid?
     """
-    method = self._getTypeBasedMethod('isPasswordValid')
+    result_code_list = self.analyzePassword(password, **kw)
+    if not len(result_code_list):
+      return True
+    return False
+    
+  def analyzePassword(self, password, **kw):
+    """
+    Analyze password validity.
+    Return status code indicating if password is acceptable and if not status code
+    for reason for not being a valid one (i.e. too short, not complex, etc ...)    
+    """
+    method = self._getTypeBasedMethod('analyzePassword')
     return method(password, **kw)
     
   security.declareProtected(Permissions.SetOwnPassword, 'isPasswordAlreadyUsed')
@@ -77,9 +102,14 @@ class LoginAccountProviderMixin:
       Return if password has already been used.
     """
     preferred_number_of_last_password_to_check = self.portal_preferences.getPreferredNumberOfLastPasswordToCheck()
-    password_list = self.getLastChangedPasswordValueList() + [self.getPassword()]
-    password_list.reverse()
-    for encoded_password in password_list[:preferred_number_of_last_password_to_check]:
+    password_event_list = self.getPortalObject().portal_catalog(
+                                                   portal_type = "Password Event",
+                                                   default_destination_uid = self.getUid(),
+                                                   sort_on = (('creation_date', 'DESC',),),
+                                                   validation_state = 'confirmed',                                                   
+                                                   limit = preferred_number_of_last_password_to_check)
+    password_list = [x.getPassword() for x in password_event_list]                                                                
+    for encoded_password in password_list:
       if pw_validate(encoded_password, password):
         return True
     return False

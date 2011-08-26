@@ -344,8 +344,12 @@ class DebugTestResult:
     try:
       # try ipython if available
       import IPython
-      IPython.Shell.IPShell(argv=[])
-      p = IPython.Debugger.Pdb(color_scheme=__IPYTHON__.rc.colors)
+      try:
+        IPython.InteractiveShell()
+        p = IPython.core.debugger.Pdb(color_scheme='Linux')
+      except AttributeError: # for ipython-0.10 or before
+        IPython.Shell.IPShell(argv=[])
+        p = IPython.Debugger.Pdb(color_scheme=__IPYTHON__.rc.colors)
       p.reset()
       while tb.tb_next is not None:
         tb = tb.tb_next

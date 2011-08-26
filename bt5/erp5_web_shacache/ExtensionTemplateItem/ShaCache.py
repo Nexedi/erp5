@@ -63,47 +63,66 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
 
   return None
 
+def File_viewAsWeb(self):
+  """
+    Make possible to send the file data to the client without consume the
+    RAM memory.
+  """
+  RESPONSE = self.REQUEST.RESPONSE
+  RESPONSE.setHeader('Content-Type', self.getContentType())
+  RESPONSE.setHeader('Content-Length', self.getSize())
+  RESPONSE.setHeader('Accept-Ranges', 'bytes')
 
-def WebSection_setObject(self, id, ob, **kw):
-  """
-    Add any change of the file uploaded.
-  """
+  #  If the file is not a Pdata, we should return the data directly.
+  data=self.data
+  if isinstance(data, str):
+    RESPONSE.setBase(None)
+    return data
+
+  # Once the object is PData type,
+  # we must iterate and send chunk by chunk.
+  while data is not None:
+    # Break!! If the channel is closed.
+    # if the client side stops the connection brutally
+    # the server side should stop.
+    if RESPONSE.stdout._channel.closed:
+      break
+    # Send data to the client.
+    RESPONSE.write(data.data)
+
+    # Load next object.
+    next_data = data.next
+
+    # Desactivate the object, make sure that this object content
+    # is not loaded in RAM memory.
+    data._p_deactivate()
+
+    # Set the new data.
+    data=next_data
+
+  return ''
+
+def WebSite_viewAsWebPost(self, *args, **kwargs):
+  portal = self.getPortalObject()
   sha512sum = hashlib.sha512()
   self.REQUEST._file.seek(0)
   while True:
-    d = self.REQUEST._file.read(sha512sum.block_size)
+    d = self.REQUEST._file.read(1<<20)
     if not d:
       break
     sha512sum.update(d)
-
-  reference = sha512sum.hexdigest()
-  if reference != id:
-    raise ValueError('The content does not match with sha512sum provided.')
-
-  # Set object properties
-  ob.setContentType('application/octet-stream')
-  ob.setFilename(id)
-  ob.setReference(reference)
-  return ob
-
-def WebSection_putFactory(self, name, typ, body):
-  """
-   API SHACACHE
-     - PUT /<key>
-        + parameters required:
-          * data:  it is the file content
-       The key is the file name.
-  """
-  portal = self.getPortalObject()
-  document = portal.portal_contributions.newContent(data=body,
-                                                    filename=name,
-                                                    discover_metadata=False)
+  sha512sum = sha512sum.hexdigest()
+  document = portal.portal_contributions.newContent(data=self.REQUEST.BODY,
+    filename='shacache', discover_metadata=False, reference=sha512sum,
+    content_type='application/octet-stream')
 
   # We can only change the state of the object after all the activities and
   # interaction workflow, to avoid any security problem.
   document.activate(after_path_and_method_id=(document.getPath(), \
             ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat', \
              'immediateReindexObject', 'recursiveImmediateReindexObject')))\
-            .WebSite_publishDocumentByActivity()
+            .publish()
 
-  return document
+  self.REQUEST.RESPONSE.setStatus(201)
+  return sha512sum
+

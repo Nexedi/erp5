@@ -200,36 +200,52 @@ class TextContent:
     """ Used for FTP and apparently the ZMI now too """
     return len(self.manage_FTPget())
 
+from webdav.common import Locked, PreconditionFailed
+try:
+  from webdav.interfaces import IWriteLock
+  providesIWriteLock = IWriteLock.providedBy
+except ImportError: # BBB: Zope 2.8
+  from webdav.WriteLockInterface import WriteLockInterface
+  providesIWriteLock = WriteLockInterface.isImplementedBy
+from webdav.NullResource import NullResource
+NullResource_PUT = NullResource.PUT
 
-class Folder:
-  """
-  Taken from CMFCore.PortalFolder
-  """
-  def PUT_factory( self, name, typ, body ):
-    """ Factory for PUT requests to objects which do not yet exist.
+def PUT(self, REQUEST, RESPONSE):
+        """Create a new non-collection resource.
+        """
+        if getattr(self.__parent__, 'PUT_factory', None) is not None: # BBB
+          return NullResource_PUT(self, REQUEST, RESPONSE)
 
-    Used by NullResource.PUT.
+        self.dav__init(REQUEST, RESPONSE)
 
-    Returns -- Bare and empty object of the appropriate type (or None, if
-    we don't know what to do)
-    """
-    portal = self.getPortalObject()
-    registry = portal.portal_contribution_registry
-    portal_type = registry.findPortalTypeName(filename=name,
-                                              content_type=typ)
-    if portal_type is None:
-      return None
+        name = self.__name__
+        parent = self.__parent__
 
-    # The code bellow is inspired from ERP5Type.Core.Folder.newContent
-    pt = self._getTypesTool()
-    myType = pt.getTypeInfo(self)
-    if myType is not None and not myType.allowType( portal_type ) and \
-       'portal_contributions' not in self.getPhysicalPath():
-      raise ValueError('Disallowed subobject type: %s' % portal_type)
-    container = portal.getDefaultModule(portal_type)
-    pt.constructContent(type_name=portal_type,
-                        container=container,
-                        id=name)
+        ifhdr = REQUEST.get_header('If', '')
+        if providesIWriteLock(parent) and parent.wl_isLocked():
+            if ifhdr:
+                parent.dav__simpleifhandler(REQUEST, RESPONSE, col=1)
+            else:
+                # There was no If header at all, and our parent is locked,
+                # so we fail here
+                raise Locked
+        elif ifhdr:
+            # There was an If header, but the parent is not locked
+            raise PreconditionFailed
 
-    document = container._getOb(name)
-    return document
+        # <ERP5>
+        # XXX: Do we really want to force 'id'
+        #      when PUT is called on Contribution Tool ?
+        kw = {'id': name, 'data': None, 'filename': name}
+        contribution_tool = parent.getPortalObject().portal_contributions
+        if aq_base(contribution_tool) is not aq_base(parent):
+          kw.update(container=parent, discover_metadata=False)
+        ob = contribution_tool.newContent(**kw)
+        # </ERP5>
+
+        ob.PUT(REQUEST, RESPONSE)
+        RESPONSE.setStatus(201)
+        RESPONSE.setBody('')
+        return RESPONSE
+
+NullResource.PUT = PUT

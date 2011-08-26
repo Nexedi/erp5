@@ -32,19 +32,21 @@ import xml_marshaller
 
 class SlapOSControler(object):
 
-  def log(self, message):
-    print message
-
-  def __init__(self, config, process_group_pid_set=None, log=None):
-    if log is not None:
-      self.log = log
+  def __init__(self, config, log, process_group_pid_set=None,
+      slapproxy_log=None):
+    self.log = log
     self.config = config
     # By erasing everything, we make sure that we are able to "update"
     # existing profiles. This is quite dirty way to do updates...
     if os.path.exists(config['proxy_database']):
       os.unlink(config['proxy_database'])
+    kwargs = dict(close_fds=True, preexec_fn=os.setsid)
+    if slapproxy_log is not None:
+      slapproxy_log_fp = open(slapproxy_log, 'w')
+      kwargs['stdout'] = slapproxy_log_fp
+      kwargs['stderr'] = slapproxy_log_fp
     proxy = subprocess.Popen([config['slapproxy_binary'],
-      config['slapos_config']], close_fds=True, preexec_fn=os.setsid)
+      config['slapos_config']], **kwargs)
     process_group_pid_set.add(proxy.pid)
     # XXX: dirty, giving some time for proxy to being able to accept
     # connections

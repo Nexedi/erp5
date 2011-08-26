@@ -97,7 +97,8 @@ class PasswordTool(BaseTool):
     return url
 
   def mailPasswordResetRequest(self, user_login=None, REQUEST=None, 
-                              notification_message=None, sender=None):
+                              notification_message=None, sender=None,
+                              store_as_event=False):
     """
     Create a random string and expiration date for request
     Parameters:
@@ -106,7 +107,10 @@ class PasswordTool(BaseTool):
     notification_message -- Notification Message Document used to build the email. 
                             As default, a standart text will be used.
     sender -- Sender (Person or Organisation) of the email.
-            As default, the default email address will be used"""
+            As default, the default email address will be used
+    store_as_event -- whenever CRM is available, store
+                        notifications as events
+    """
     if REQUEST is None:
       REQUEST = get_request()
 
@@ -192,8 +196,8 @@ class PasswordTool(BaseTool):
         message = notification_message.asText(substitution_method_parameter_dict=message_dict)
 
     self.getPortalObject().portal_notifications.sendMessage(sender=sender, recipient=[user,],
-                                                            subject=subject, message=message)
-                                                            
+                                                            subject=subject, message=message,
+                                                            store_as_event=store_as_event)
     if REQUEST is not None:
       msg = translateString("An email has been sent to you.")
       parameter = urlencode(dict(portal_status_message=msg))

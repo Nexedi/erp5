@@ -134,10 +134,13 @@ def buildEmailMessage(from_url, to_url, msg=None,
     for key, value in additional_headers.items():
       message.add_header(key, value)
 
-  message.add_header('Subject',
-                      make_header([(subject, 'utf-8')]).encode())
-  message.add_header('From', from_url)
-  message.add_header('To', to_url)
+  if subject:
+    message.add_header('Subject',
+                        make_header([(subject, 'utf-8')]).encode())
+  if from_url:
+    message.add_header('From', from_url)
+  if to_url:
+    message.add_header('To', to_url)
 
   for attachment in attachment_list:
     attachment_name = attachment.get('name', '')
@@ -353,8 +356,9 @@ class NotificationTool(BaseTool):
       event.setAggregateValueList(attachment_document_list)
       event_list.append(event)
 
-    portal_workflow = getToolByName(self, 'portal_workflow')
     for event in event_list:
+      # XXX: this uses too low level API, instead event_workflow should be used in case 
+      # of persistent ERP5 objects
       event.send(**low_level_kw)
 
     return

@@ -105,7 +105,9 @@ class TestCopySupport(ERP5TypeTestCase):
     #   uid of <Products.ERP5Catalog.CatalogTool.IndexableObjectWrapper for
     #   /erp5/person_module/1/old_address> is 599L and is already assigned
     #   to deleted in catalog !!! This can be fatal.
-    # This test would also fail if SQLDict was used for 'unindexObject'.
+    # This test would fail if:
+    # - SQLDict was used for 'unindexObject'
+    # - there were more than MAX_VALIDATED_LIMIT unindexed & reindexed objects
     self.tic()
 
   def test_03_unindexObjectGrouping(self):

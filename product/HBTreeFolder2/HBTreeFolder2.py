@@ -358,6 +358,40 @@ class HBTreeFolder2Base (Persistent):
           return 0
         return 1
 
+    def _htree_iteritems(self, min=None):
+        # BUG: Due to bad design of HBTreeFolder2, buckets other than the root
+        #      one must not contain both buckets & leafs. Otherwise, this method
+        #      fails.
+        h = self._htree
+        recurse_stack = []
+        try:
+          for sub_id in min and self.hashId(min) or ('',):
+            if recurse_stack:
+              i.next()
+              if type(h) is not OOBTree:
+                break
+              id += H_SEPARATOR + sub_id
+              if type(h.itervalues().next()) is not OOBTree:
+                sub_id = id
+            else:
+              id = sub_id
+            i = h.iteritems(sub_id)
+            recurse_stack.append(i)
+            h = h[sub_id]
+        except (KeyError, StopIteration):
+          pass
+        while recurse_stack:
+          i = recurse_stack.pop()
+          try:
+            while 1:
+              id, h = i.next()
+              if type(h) is OOBTree:
+                recurse_stack.append(i)
+                i = h.iteritems()
+              else:
+                yield id, h
+          except StopIteration:
+            pass
 
     security.declareProtected(access_contents_information,
                               'treeIds')

@@ -502,6 +502,44 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
         error_list.append((i.getId(), i.getUid(), i.getProperty('uid')))
     self.assertEquals(error_list, [])
 
+  def test_site_manager_and_translation_migration(self):
+    from zope.site.hooks import getSite, setSite
+    from zope.component import queryUtility
+    from zope.i18n.interfaces import ITranslationDomain
+    # check translation is working normaly
+    erp5_ui_catalog = self.portal.Localizer.erp5_ui
+    self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
+                     erp5_ui_catalog)
+    self.assertEqual(queryUtility(ITranslationDomain, 'ui'), erp5_ui_catalog)
+    # let's damage it intentionally to see how it is rebuild from scratch
+    # in a migration from Zope 2.8
+    sm = self.portal.getSiteManager()
+    sm.unregisterUtility(provided=ITranslationDomain, name=u'ui')
+    self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
+                     erp5_ui_catalog)
+    self.assertEqual(queryUtility(ITranslationDomain, 'ui'), None)
+    # now let's simulate a site just migrated from Zope 2.8 that's being
+    # accessed for the first time:
+    old_site = getSite()
+    try:
+      setSite()
+      # Sites from Zope2.8 don't have a site_manager yet.
+      del self.portal._components
+      # check that we can't get any translation utility
+      self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'), None)
+      # Now simulate first access. Default behaviour from
+      # ObjectManager is to raise a ComponentLookupError here:
+      setSite(self.portal)
+      # This should have automatically reconstructed the i18n utility
+      # registrations:
+      self.assertEqual(queryUtility(ITranslationDomain, 'erp5_ui'),
+                       erp5_ui_catalog)
+      self.assertEqual(queryUtility(ITranslationDomain, 'ui'), erp5_ui_catalog)
+    finally:
+      # clean everything up, we don't want to mess the test environment
+      transaction.abort()
+      setSite(old_site)
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestERP5Core))

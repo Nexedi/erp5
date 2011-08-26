@@ -129,7 +129,10 @@ class TradeModelSolver(AcceptSolver):
           movement.setQuantity(total_quantity)
           for simulation_movement in simulation_movement_list:
             quantity = simulation_movement.getQuantity()
-            delivery_ratio = quantity / total_quantity
+            if total_quantity != 0.0:
+              delivery_ratio = quantity / total_quantity
+            else:
+              delivery_ratio = 1.0 / len(simulation_movement_list)
             delivery_error = total_quantity * delivery_ratio - quantity
             simulation_movement.edit(delivery_ratio=delivery_ratio,
                                      delivery_error=delivery_error,

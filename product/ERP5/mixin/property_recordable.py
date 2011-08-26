@@ -61,21 +61,22 @@ class PropertyRecordableMixin:
 
     id -- ID of the property
     """
-    try:
-      property_info = [x for x in self.getPropertyMap() \
-                       if x['id'] == id][0]
-    except IndexError:
+    for property_info in self.getPropertyMap():
+      if property_info['id'] == id:
+        if property_info['type'] in list_types:
+          value = self.getPropertyList(id)
+        else:
+          value = self.getProperty(id)
+        break
+    else:
       if id in self.getBaseCategoryList():
         value = self.getPropertyList(id)
       else: # should be local property
         value = self.getProperty(id)
-    else:
-      if property_info['type'] in list_types:
-        value = self.getPropertyList(id)
-      else:
-        value = self.getProperty(id)
-    recorded_property_dict = self._getRecordedPropertyDict()
-    recorded_property_dict[id] = value
+    try:
+      self._getRecordedPropertyDict()[id] = value
+    except AttributeError:
+      self._recorded_property_dict = PersistentMapping({id: value})
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'clearRecordedProperty')
@@ -84,11 +85,7 @@ class PropertyRecordableMixin:
     Clears a previously recorded property from
     the property record.
     """
-    recorded_property_dict = self._getRecordedPropertyDict()
-    try:
-      del(recorded_property_dict[id])
-    except KeyError:
-      pass
+    self._getRecordedPropertyDict({}).pop(id, None)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getRecordedPropertyIdList')
@@ -97,7 +94,7 @@ class PropertyRecordableMixin:
     Returns the list of property IDs which have
     been recorded.
     """
-    return (self._getRecordedPropertyDict().keys())
+    return self._getRecordedPropertyDict({}).keys()
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isPropertyRecorded')
@@ -108,7 +105,7 @@ class PropertyRecordableMixin:
 
     id -- ID of the property
     """
-    return self._getRecordedPropertyDict().has_key(id)
+    return id in self._getRecordedPropertyDict(())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getRecordedProperty')
@@ -128,10 +125,9 @@ class PropertyRecordableMixin:
     which recorded properties in its context.
     """
     context = self.asContext()
-    context.edit(**dict(self._getRecordedPropertyDict()))
+    # BBB: cast to dict is required for Python < 2.6
+    context.edit(**dict(self._getRecordedPropertyDict(())))
     return context
 
-  def _getRecordedPropertyDict(self):
-    if getattr(aq_base(self), '_recorded_property_dict', None) is None:
-      self._recorded_property_dict = PersistentMapping()
-    return self._recorded_property_dict
+  def _getRecordedPropertyDict(self, *args):
+    return getattr(aq_base(self), '_recorded_property_dict', *args)

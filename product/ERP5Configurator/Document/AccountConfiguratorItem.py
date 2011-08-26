@@ -56,8 +56,7 @@ class AccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.Account )
 
   def _build(self, business_configuration):
-    portal = self.getPortalObject()
-    account_module = portal.account_module
+    account_module = self.getPortalObject().account_module
 
     extra_kw = {}
     account_id = getattr(self, 'account_id', None)

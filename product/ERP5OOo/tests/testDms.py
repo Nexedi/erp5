@@ -1330,7 +1330,7 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEquals('Image', document.getPortalType())
-    self.assertEquals('ERP5 is a free software.\n', document.asText())
+    self.assertEquals('ERP5 is a free software\n\n', document.asText())
 
   def test_Base_showFoundText(self):
     # Create document with good content
@@ -1841,7 +1841,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     module = self.portal.getDefaultModule(portal_type)
     upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
     document = module.newContent(portal_type=portal_type, file=upload_file)
-    self.assertEquals(document.asText(), 'ERP5 is a free software.\n')
+    self.assertEquals(document.asText(), 'ERP5 is a free software\n\n')
 
   def createRestrictedSecurityHelperScript(self):
     script_content_list = ['format=None, **kw', """
@@ -2054,10 +2054,22 @@ return 1
       image_document_image_size_no_quality,image_document_file_size_no_quality = self.getURLSizeList(url, **convert_kw)
       # check file sizes
       self.assertTrue(image_document_file_size_100p > image_document_file_size_no_quality and \
-                      image_document_file_size_no_quality > image_document_file_size_5p)
+                      image_document_file_size_no_quality > image_document_file_size_5p,
+                      "%s should be more then %s and %s should be more them %s" % \
+                       (image_document_file_size_100p,
+                        image_document_file_size_no_quality,
+                        image_document_file_size_no_quality, 
+                        image_document_file_size_5p)
+                      )
       # no matter of quality image sizes whould be the same
       self.assertTrue(image_document_image_size_100p==image_document_image_size_5p and \
-                        image_document_image_size_5p==image_document_image_size_no_quality)
+                        image_document_image_size_5p==image_document_image_size_no_quality,
+                      "%s should be equals to %s and %s should be equals to %s" % \
+                       (image_document_image_size_100p,
+                        image_document_image_size_5p,
+                        image_document_image_size_5p,
+                        image_document_image_size_no_quality)
+                      )
 
   def test_checkConversionFormatPermission(self):
     """
@@ -2541,7 +2553,9 @@ class TestDocumentPerformance(TestDocumentMixin):
     after = time.time()
     req_time = (after - before)
     # we should have image converted in less than 20s
-    self.assertTrue(req_time < 30.0)
+    self.assertTrue(req_time < 30.0, 
+      "Conversion took %s seconds and it is not less them 30.0 seconds" % \
+        req_time)
 
 def test_suite():
   suite = unittest.TestSuite()

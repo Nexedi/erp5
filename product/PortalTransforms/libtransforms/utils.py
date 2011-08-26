@@ -16,7 +16,7 @@ except ImportError:
 
 class MissingBinary(Exception): pass
 
-envPath = os.environ['PATH']
+envPath = os.getenv('PATH', '')
 bin_search_path = [path for path in envPath.split(os.pathsep)
                    if os.path.isdir(path)]
 

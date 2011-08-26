@@ -26,6 +26,7 @@
 ##############################################################################
 import ConfigParser
 import argparse
+import logging
 import os
 import pkg_resources
 
@@ -40,10 +41,25 @@ def main(*args):
   parser = argparse.ArgumentParser()
   parser.add_argument("configuration_file", nargs=1, type=argparse.FileType(),
       help="Configuration file.")
+  parser.add_argument('-c', '--console', action='store_true',
+      help="Enable console output.")
+  parser.add_argument('-l', '--logfile', help="Enable output into logfile.")
   if args:
     parsed_argument = parser.parse_args(list(args))
   else:
     parsed_argument = parser.parse_args()
+  logger = logging.getLogger('erp5testnode')
+  if parsed_argument.console or parsed_argument.logfile:
+    logger.setLevel(logging.INFO)
+    if parsed_argument.console:
+      logger.addHandler(logging.StreamHandler())
+      logger.info('Activated console output.')
+    if parsed_argument.logfile:
+      logger.addHandler(logging.FileHandler(filename=parsed_argument.logfile))
+      logger.info('Activated logfile %r output' % parsed_argument.logfile)
+  else:
+    logger.addHandler(logging.NullHandler())
+  CONFIG['logger'] = logger.info
   config = ConfigParser.SafeConfigParser()
   # do not change case of option keys
   config.optionxform = str
@@ -107,5 +123,9 @@ def main(*args):
   CONFIG['bot_environment'] = bot_environment
   CONFIG['environment'] = dict(config.items('environment'))
   CONFIG['slapproxy_binary'] = geto('slapproxy_binary')
+  instance_dict = {}
+  if 'instance_dict' in config.sections():
+    instance_dict = dict(config.items('instance_dict'))
+  CONFIG['instance_dict'] = instance_dict
 
   testnode.run(CONFIG)

@@ -56,7 +56,7 @@ for result in context.getResultList():\n
   if result is None:\n
     continue # Workaround for bogus results\n
   # This is useful is result is returned as a Return instance\n
-  if result.severity > result.INFO:\n
+  if result.isError():\n
     return True\n
   # This is the default case\n
   if getattr(result, \'result\', False):\n
