@@ -26,14 +26,8 @@
 #
 ##############################################################################
 
-from DateTime import DateTime
-from zLOG import LOG, PROBLEM
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
-from AccessControl.SecurityManagement import getSecurityManager,\
-                                             newSecurityManager,\
-                                             setSecurityManager
-
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from Products.PluggableAuthService.interfaces import plugins
@@ -41,9 +35,7 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 
-from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Security.ERP5UserManager import ERP5UserManager,\
-     SUPER_USER, _AuthenticationFailure
+from Products.ERP5Security.ERP5UserManager import ERP5UserManager
 
 #Form for new plugin in ZMI
 manage_addERP5ExternalAuthenticationPluginForm = PageTemplateFile(
