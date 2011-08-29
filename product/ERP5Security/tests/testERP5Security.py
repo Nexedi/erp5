@@ -409,6 +409,43 @@ class TestUserManagement(ERP5TypeTestCase):
     self.tic()
     self.assertEqual(None, person.getReference())
 
+  def testERP5CertificateAuthorityAuthenticationPlugin(self):
+    """
+     Make sure that we can grant security using a
+     ERP5 Certificate Authority Authentication Plugin.
+    """
+    portal = self.portal
+    uf = portal.acl_users
+    uf.manage_addProduct['ERP5Security'].\
+        addERP5CertificateAuthorityAuthenticationPlugin(
+          id='erp5_certificate_authority_authentication_plugin',
+          title='ERP5 Certificate Authority Authentication Plugin',)
+
+    plugin = getattr(uf, 'erp5_certificate_authority_authentication_plugin')
+    plugin.manage_activateInterfaces(interfaces=['IExtractionPlugin',
+                                                 'IAuthenticationPlugin'])
+    self.stepTic()
+
+    reference = 'external_auth_person'
+    loginable_person = self.getPersonModule().newContent(portal_type='Person',
+                                                         reference=reference,
+                                                         password='guest')
+    assignment = loginable_person.newContent(portal_type='Assignment',
+                                             function='another_subcat')
+    assignment.open()
+    self.stepTic()
+
+    base_url = portal.absolute_url(relative=1)
+
+    response = self.publish(base_url)
+    self.assertEqual(response.getStatus(), 302)
+
+    response = self.publish(base_url, env={"REMOTE_USER": reference})
+    self.assertEqual(response.getStatus(), 200)
+    self.assertTrue(reference in response.getBody())
+
+
+
 class TestLocalRoleManagement(ERP5TypeTestCase):
   """Tests Local Role Management with ERP5Security.
 
@@ -823,42 +860,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     response = self.publish(base_url, env={user_id_key.replace('-', '_').upper():reference})
     self.assertEqual(response.getStatus(), 200)
     self.assertTrue(reference in response.getBody())
-
-  def testERP5CertificateAuthorityAuthenticationPlugin(self):
-    """
-     Make sure that we can grant security using a
-     ERP5 Certificate Authority Authentication Plugin.
-    """
-    portal = self.portal
-    uf = portal.acl_users
-    uf.manage_addProduct['ERP5Security'].\
-        addERP5CertificateAuthorityAuthenticationPlugin(
-          id='erp5_certificate_authority_authentication_plugin',
-          title='ERP5 Certificate Authority Authentication Plugin',)
-
-    plugin = getattr(uf, 'erp5_certificate_authority_authentication_plugin')
-    plugin.manage_activateInterfaces(interfaces=['IExtractionPlugin',
-                                                 'IAuthenticationPlugin'])
-    self.stepTic()
-
-    reference = 'external_auth_person'
-    loginable_person = self.getPersonModule().newContent(portal_type='Person',
-                                                         reference=reference,
-                                                         password='guest')
-    assignment = loginable_person.newContent(portal_type='Assignment',
-                                             function='another_subcat')
-    assignment.open()
-    self.stepTic()
-
-    base_url = portal.absolute_url(relative=1)
-
-    response = self.publish(base_url)
-    self.assertEqual(response.getStatus(), 302)
-
-    response = self.publish(base_url, env={"REMOTE_USER": reference})
-    self.assertEqual(response.getStatus(), 200)
-    self.assertTrue(reference in response.getBody())
-
 
   def _createZodbUser(self, login, role_list=None):
     if role_list is None:
