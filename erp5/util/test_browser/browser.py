@@ -50,8 +50,8 @@ def measurementMetaClass(prefix):
   class MeasurementMetaClass(type):
     """
     Meta class to automatically wrap methods whose prefix starts with
-    C{prefix}, and also to define C{lastRequestSeconds} and
-    C{lastRequestPystones} on other classes besides of Browser.
+    C{prefix}, and also to define C{lastRequestSeconds} on other classes
+    besides of Browser.
     """
     def __new__(metacls, name, bases, dictionary):
       def timeInSecondDecorator(method):
@@ -92,19 +92,14 @@ def measurementMetaClass(prefix):
           if callable(attribute):
             applyMeasure(attribute)
 
-      # lastRequestSeconds and lastRequestPystones properties are only
-      # defined on classes inheriting from zope.testbrowser.browser.Browser,
-      # so create these properties for all other classes too
+      # lastRequestSeconds properties are only defined on classes inheriting
+      # from zope.testbrowser.browser.Browser, so create these properties for
+      # all other classes too
       if 'Browser' not in bases[0].__name__:
         time_method = lambda self: self.browser.lastRequestSeconds
         time_method.func_name = 'lastRequestSeconds'
         time_method.__doc__ = Browser.lastRequestSeconds.__doc__
         dictionary['lastRequestSeconds'] = property(time_method)
-
-        time_method = lambda self: self.browser.lastRequestPystones
-        time_method.func_name = 'lastRequestPystones'
-        time_method.__doc__ = Browser.lastRequestPystones.__doc__
-        dictionary['lastRequestPystones'] = property(time_method)
 
       return super(MeasurementMetaClass,
                    metacls).__new__(metacls, name, bases, dictionary)
