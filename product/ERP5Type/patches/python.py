@@ -56,6 +56,9 @@ if sys.version_info < (2, 5):
   hashlib.md5 = md5.new
   hashlib.sha1 = sha.new
 
+  import email.Utils
+  sys.modules['email.utils'] = email.Utils
+
   # A business template exported by Python 2.4 may contain:
   # <klass>
   #   <global id="xxx" name="_compile" module="sre"/>

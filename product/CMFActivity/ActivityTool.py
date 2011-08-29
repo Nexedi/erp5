@@ -1335,7 +1335,7 @@ class ActivityTool (Folder, UniqueObject):
       """
         Clear all activities and recreate tables.
       """
-      folder = self.getPortalObject().portal_skins
+      folder = self.getPortalObject().portal_skins.activity
 
       # Obtain all pending messages.
       message_list_dict = {}
