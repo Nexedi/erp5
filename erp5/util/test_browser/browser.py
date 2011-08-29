@@ -742,6 +742,8 @@ class MainForm(Form):
     """
     self.submitSelectFavourite(value='/logout')
 
+import time
+
 class ContextMainForm(MainForm):
   """
   Class defining context-dependent convenient methods for the main
@@ -845,7 +847,9 @@ class ContextMainForm(MainForm):
     self.submit(name='Base_doSelect:method')
 
   def submitSelectWorkflow(self, label=None, value=None,
-                           script_id='viewWorkflowActionDialog', **kw):
+                           script_id='viewWorkflowActionDialog',
+                           maximum_attempt_number=1, sleep_between_attempt=0,
+                           **kw):
     """
     Select and submit a workflow action, given either by its label
     (such as I{Create User}) or value (such as I{create_user_action}
@@ -855,19 +859,41 @@ class ContextMainForm(MainForm):
     When validating an object, L{submitDialogConfirm} allows to
     perform the validation required on the next page.
 
+    As the Workflow action may not be available yet, it is possible to set the
+    maximum number of attempts and the sleep duration between each attempt.
+
     @param script_id: Script identifier
     @type script_id: str
+    @param maximum_attempt_number: Number of attempts before failing
+    @type maximum_attempt_number: int
+    @param sleep_between_attempt: Sleep N seconds between attempts
+    @type sleep_between_attempt: int
+    @return: The time spent (in seconds) if relevant
+    @rtype: int
     """
-    try:
-      self.submitSelect('select_action', 'Base_doAction:method', label,
-                        value and '%s?workflow_action=%s' % (script_id, value),
-                        **kw)
+    current_attempt_number = 1
+    while True:
+      try:
+        try:
+          self.submitSelect('select_action', 'Base_doAction:method', label,
+                            value and '%s?workflow_action=%s' % (script_id, value),
+                            **kw)
 
-    except LookupError:
-      self.submitSelect('select_action', 'Base_doAction:method', label,
-                        value and '%s?field_my_workflow_action=%s' % (script_id,
-                                                                      value),
-                        **kw)
+        except LookupError:
+          self.submitSelect('select_action', 'Base_doAction:method', label,
+                            value and '%s?field_my_workflow_action=%s' % (script_id,
+                                                                          value),
+                            **kw)
+      except LookupError:
+        if current_attempt_nbr == maximum_attempt_number:
+          raise
+
+        current_attempt_number += 1
+        time.sleep(sleep_between_attempt)
+      else:
+        break
+
+    return (current_attempt_number - 1) * sleep_between_attempt
 
   def submitDialogCancel(self):
     """
