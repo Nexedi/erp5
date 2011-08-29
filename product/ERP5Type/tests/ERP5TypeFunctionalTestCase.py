@@ -305,7 +305,9 @@ class FunctionalTestRunner:
 <body>%s</body>
 </html>''' % detail
 
-    return detail, int(sucess_amount), int(failure_amount), error_title_list
+    return detail.decode('ascii', "replace"), int(sucess_amount),\
+           int(failure_amount),\
+           [i.decode('ascii', "replace") for i in error_title_list]
 
 class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   run_only = ""
@@ -352,3 +354,4 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.logMessage(detail)
     self.logMessage("-" * 79)
     self.assertEquals([], error_title_list)
+
