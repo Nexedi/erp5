@@ -57,11 +57,16 @@ def measurementMetaClass(prefix):
       def timeInSecondDecorator(method):
         def wrapper(self, *args, **kwargs):
           """
-          Replaced by the wrapped method docstring
+          Replaced by the wrapped method docstring. Some methods return the
+          time spent on waiting (C{submitSelectJump} and for example), thus
+          return a tuple with the time spent on the request and the time spent
+          on waiting
           """
           ret = method(self, *args, **kwargs)
-          return (ret is None and self.lastRequestSeconds or
-                  (ret + self.lastRequestSeconds))
+          if ret is None:
+            return self.lastRequestSeconds
+          else:
+            return (self.lastRequestSeconds, ret)
 
         return wrapper
 
@@ -77,6 +82,10 @@ def measurementMetaClass(prefix):
         wrapper_method.func_name = method.func_name
         wrapper_method.__doc__ = method.__doc__
 
+        # In order to avoid re-wrapping the method when looking at the bases
+        # for example
+        wrapper_method.__is_wrapper__ = True
+
         dictionary[method.func_name] = wrapper_method
 
       # Only wrap methods prefixed by the given prefix
@@ -89,7 +98,7 @@ def measurementMetaClass(prefix):
         if attribute_name not in dictionary and \
            attribute_name.startswith(prefix):
           attribute = getattr(bases[0], attribute_name)
-          if callable(attribute):
+          if callable(attribute) and not getattr(attribute, '__is_wrapper__', False):
             applyMeasure(attribute)
 
       # lastRequestSeconds properties are only defined on classes inheriting
@@ -780,8 +789,6 @@ class ContextMainForm(MainForm):
     @type maximum_attempt_number: int
     @param sleep_between_attempt: Sleep N seconds between attempts
     @type sleep_between_attempt: int
-    @return: The time spent (in seconds) if relevant
-    @rtype: int
     """
     if not no_jump_transition_message:
       self.submitSelect('select_jump', 'Base_doJump:method',
@@ -899,32 +906,36 @@ class ContextMainForm(MainForm):
     @type maximum_attempt_number: int
     @param sleep_between_attempt: Sleep N seconds between attempts
     @type sleep_between_attempt: int
-    @return: The time spent (in seconds) if relevant
-    @rtype: int
     """
-    current_attempt_number = 1
-    while True:
+    def tryLegacyAndNew():
       try:
-        try:
-          self.submitSelect('select_action', 'Base_doAction:method', label,
-                            value and '%s?workflow_action=%s' % (script_id, value),
-                            **kw)
+        self.submitSelect('select_action', 'Base_doAction:method', label,
+                          value and '%s?workflow_action=%s' % (script_id, value),
+                          **kw)
 
-        except LookupError:
-          self.submitSelect('select_action', 'Base_doAction:method', label,
-                            value and '%s?field_my_workflow_action=%s' % (script_id,
-                                                                          value),
-                            **kw)
       except LookupError:
-        if current_attempt_nbr == maximum_attempt_number:
-          raise
+        self.submitSelect('select_action', 'Base_doAction:method', label,
+                          value and '%s?field_my_workflow_action=%s' % (script_id,
+                                                                        value),
+                          **kw)
+    
+    if maximum_attempt_number == 1:
+      tryLegacyAndNew()
+    else:
+      current_attempt_number = 1
+      while True:
+        try:
+          tryLegacyAndNew()
+        except LookupError:
+          if current_attempt_number == maximum_attempt_number:
+            raise
 
-        current_attempt_number += 1
-        time.sleep(sleep_between_attempt)
-      else:
-        break
+          current_attempt_number += 1
+          time.sleep(sleep_between_attempt)
+        else:
+          break
 
-    return (current_attempt_number - 1) * sleep_between_attempt
+      return (current_attempt_number - 1) * sleep_between_attempt
 
   def submitDialogCancel(self):
     """
