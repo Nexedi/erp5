@@ -468,8 +468,7 @@ class TestUserManagement(ERP5TypeTestCase):
     loginable_person = self.getPersonModule().newContent(portal_type='Person',
                                                          reference=reference,
                                                          password='guest')
-    assignment = loginable_person.newContent(portal_type='Assignment',
-                                             function='another_subcat')
+    assignment = loginable_person.newContent(portal_type='Assignment')
     assignment.open()
     self.stepTic()
 
