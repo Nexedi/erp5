@@ -31,6 +31,7 @@ def createPerson(result, browser):
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
+  person_url = browser.url
 
   # Add phone number
   result('Add telephone',
@@ -46,7 +47,9 @@ def createPerson(result, browser):
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
 
-  # Validate it
+  # Validate it after going back to the Person page
+  browser.open(person_url)
+
   result('Validate', browser.mainForm.submitSelectWorkflow(value='validate_action'))
   result('Validated', browser.mainForm.submitDialogConfirm())
   assert browser.getTransitionMessage() == 'Status changed.'
