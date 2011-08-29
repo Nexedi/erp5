@@ -105,6 +105,7 @@
                              is_right_area_empty python:right_list == 0 or len(right_list) == 0;\n
                              is_front_layout python: layout_form is not None and\n
                                                      layout_form.id == \'erp5_km_minimal_front_layout\';\n
+                             subject_list python:here.getLayoutProperty(\'subject_list\');\n
                              global header_title python:\'%s | %s\' % (here.getTranslatedTitleOrId(), website.getTranslatedTitleOrId());\n
                              global css_list_template python:[\n
                                     \'%s/erp5_listbox.css\' % portal_path,\n
