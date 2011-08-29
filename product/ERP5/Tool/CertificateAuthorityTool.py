@@ -44,8 +44,8 @@ def popenCommunicate(command_list, input=None, **kwargs):
   if popen.returncode is None:
     popen.kill()
   if popen.returncode != 0:
-    raise ValueError('Issue during calling %r, result was:\n%s' % (command_list,
-      result))
+    raise ValueError('Issue during calling %r, result was:\n%s' % (
+    command_list, result))
   return result
 
 class CertificateAuthorityBusy(Exception):
@@ -59,7 +59,8 @@ class CertificateAuthorityDamaged(Exception):
 class CertificateAuthorityTool(BaseTool):
   """CertificateAuthorityTool
 
-  This tool assumes that in certificate_authority_path openssl configuration is ready.
+  This tool assumes that in certificate_authority_path openssl configuration
+  is ready.
   """
 
   id = 'portal_certificate_authority'
@@ -91,7 +92,9 @@ class CertificateAuthorityTool(BaseTool):
                  )
 
   def _lockCertificateAuthority(self):
-    """Checks lock and locks Certificate Authority tool, raises CertificateAuthorityBusy"""
+    """Checks lock and locks Certificate Authority tool
+
+       Raises CertificateAuthorityBusy"""
     if os.path.exists(self.lock):
       raise CertificateAuthorityBusy
     open(self.lock, 'w').write('locked')
@@ -105,7 +108,9 @@ class CertificateAuthorityTool(BaseTool):
         'during unlocking' % self.lock)
 
   def _checkCertificateAuthority(self):
-    """Checks Certificate Authority configuration, raises CertificateAuthorityDamaged"""
+    """Checks Certificate Authority configuration
+
+       Raises CertificateAuthorityDamaged"""
     if not self.certificate_authority_path:
       raise CertificateAuthorityDamaged('Certificate authority path is not '
         'configured')
@@ -151,8 +156,10 @@ class CertificateAuthorityTool(BaseTool):
       globals(),
       __name__='manage_editCertificateAuthorityToolForm')
 
-  security.declareProtected(Permissions.ManageProperties, 'manage_editCertificateAuthorityTool')
-  def manage_editCertificateAuthorityTool(self, certificate_authority_path, openssl_binary, RESPONSE=None):
+  security.declareProtected(Permissions.ManageProperties,
+      'manage_editCertificateAuthorityTool')
+  def manage_editCertificateAuthorityTool(self, certificate_authority_path,
+      openssl_binary, RESPONSE=None):
     """Edit the object"""
     error_message = ''
 
@@ -178,17 +185,21 @@ class CertificateAuthorityTool(BaseTool):
                           % (self.absolute_url(), message)
                           )
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'getNewCertificate')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'getNewCertificate')
   def getNewCertificate(self, common_name):
     # No docstring in order to make this method non publishable
-    # Returns certificate for passed common name, as dictionary of {key, certificate, id, common_name}
+    # Returns certificate for passed common name, as dictionary of
+    #      {key, certificate, id, common_name}
     self._checkCertificateAuthority()
     self._lockCertificateAuthority()
     try:
       new_id = open(self.serial, 'r').read().strip().lower()
-      key = os.path.join(self.certificate_authority_path, 'private', new_id+'.key')
+      key = os.path.join(self.certificate_authority_path, 'private',
+          new_id+'.key')
       csr = os.path.join(self.certificate_authority_path, new_id + '.csr')
-      cert = os.path.join(self.certificate_authority_path, 'certs', new_id + '.crt')
+      cert = os.path.join(self.certificate_authority_path, 'certs',
+          new_id + '.crt')
       try:
         popenCommunicate([self.openssl_binary, 'req', '-nodes', '-config',
           self.openssl_config, '-new', '-keyout', key, '-out', csr, '-days',
@@ -214,7 +225,8 @@ class CertificateAuthorityTool(BaseTool):
     finally:
       self._unlockCertificateAuthority()
 
-  security.declareProtected(Permissions.AccessContentsInformation, 'revokeCertificate')
+  security.declareProtected(Permissions.AccessContentsInformation,
+      'revokeCertificate')
   def revokeCertificate(self, serial):
     # No docstring in order to make this method non publishable
     # Revokes certificate with serial, returns dictionary {crl}
@@ -224,7 +236,8 @@ class CertificateAuthorityTool(BaseTool):
       new_id = open(self.crl, 'r').read().strip().lower()
       crl_path = os.path.join(self.certificate_authority_path, 'crl')
       crl = os.path.join(crl_path, new_id + '.crl')
-      cert = os.path.join(self.certificate_authority_path, 'certs', serial.lower() + '.crt')
+      cert = os.path.join(self.certificate_authority_path, 'certs',
+          serial.lower() + '.crt')
       if not os.path.exists(cert):
         raise ValueError('Certificate with serial %r does not exists' % serial)
       try:
