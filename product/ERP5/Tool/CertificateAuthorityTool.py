@@ -132,7 +132,7 @@ class CertificateAuthorityTool(BaseTool):
   def manage_afterAdd(self, item, container) :
     """Init permissions right after creation.
 
-    Permissions in slap tool are simple:
+    Permissions in tool are simple:
      o Each member can access the tool.
      o Only manager can view and create.
      o Anonymous can not access
