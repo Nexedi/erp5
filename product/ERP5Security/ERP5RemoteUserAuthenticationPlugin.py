@@ -52,25 +52,25 @@ from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 
 
 #Form for new plugin in ZMI
-manage_addERP5CertificateAuthorityAuthenticationPluginForm = PageTemplateFile(
-  'www/ERP5Security_addERP5CertificateAuthorityAuthenticationPlugin', globals(),
-  __name__='manage_addERP5CertificateAuthorityAuthenticationPluginForm')
+manage_addERP5RemoteUserAuthenticationPluginForm = PageTemplateFile(
+  'www/ERP5Security_addERP5RemoteUserAuthenticationPlugin', globals(),
+  __name__='manage_addERP5RemoteUserAuthenticationPluginForm')
 
-def addERP5CertificateAuthorityAuthenticationPlugin(dispatcher, id, title=None, REQUEST=None):
-  """ Add a ERP5CertificateAuthorityAuthenticationPlugin to a Pluggable Auth Service. """
+def addERP5RemoteUserAuthenticationPlugin(dispatcher, id, title=None, REQUEST=None):
+  """ Add a ERP5RemoteUserAuthenticationPlugin to a Pluggable Auth Service. """
 
-  plugin = ERP5CertificateAuthorityAuthenticationPlugin(id, title)
+  plugin = ERP5RemoteUserAuthenticationPlugin(id, title)
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
       REQUEST['RESPONSE'].redirect(
           '%s/manage_workspace'
           '?manage_tabs_message='
-          'ERP5CertificateAuthorityAuthenticationPlugin+added.'
+          'ERP5RemoteUserAuthenticationPlugin+added.'
           % dispatcher.absolute_url())
 
 
-class ERP5CertificateAuthorityAuthenticationPlugin(ERP5UserManager):
+class ERP5RemoteUserAuthenticationPlugin(ERP5UserManager):
   """
   Plugin to authenicate as machines.
   """
@@ -125,11 +125,11 @@ class ERP5CertificateAuthorityAuthenticationPlugin(ERP5UserManager):
     return (login, login)
 
 #List implementation of class
-classImplements(ERP5CertificateAuthorityAuthenticationPlugin,
+classImplements(ERP5RemoteUserAuthenticationPlugin,
                 plugins.IAuthenticationPlugin)
 
-classImplements( ERP5CertificateAuthorityAuthenticationPlugin,
+classImplements( ERP5RemoteUserAuthenticationPlugin,
                 plugins.ILoginPasswordHostExtractionPlugin
                )
 
-InitializeClass(ERP5CertificateAuthorityAuthenticationPlugin)
+InitializeClass(ERP5RemoteUserAuthenticationPlugin)

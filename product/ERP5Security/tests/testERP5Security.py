@@ -409,19 +409,20 @@ class TestUserManagement(ERP5TypeTestCase):
     self.tic()
     self.assertEqual(None, person.getReference())
 
-  def testERP5CertificateAuthorityAuthenticationPlugin(self):
+  def testERP5RemoteUserAuthenticationPlugin(self):
     """
      Make sure that we can grant security using a
      ERP5 Certificate Authority Authentication Plugin.
     """
     portal = self.portal
     uf = portal.acl_users
+    plugin_id = 'erp5_remote_user_authentication_plugin'
     uf.manage_addProduct['ERP5Security'].\
-        addERP5CertificateAuthorityAuthenticationPlugin(
-          id='erp5_certificate_authority_authentication_plugin',
-          title='ERP5 Certificate Authority Authentication Plugin',)
+        addERP5RemoteUserAuthenticationPlugin(
+          id=plugin_id,
+          title='ERP5 Remote User Authentication Plugin',)
 
-    plugin = getattr(uf, 'erp5_certificate_authority_authentication_plugin')
+    plugin = getattr(uf, plugin_id)
     plugin.manage_activateInterfaces(interfaces=['IExtractionPlugin',
                                                  'IAuthenticationPlugin'])
     self.stepTic()

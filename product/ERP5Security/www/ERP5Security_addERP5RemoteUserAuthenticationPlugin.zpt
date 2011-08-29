@@ -4,11 +4,11 @@
     tal:replace="structure here/manage_form_title">Form Title</h2>
 
 <p class="form-help">
-ERP5 CertificateAuthority Authentication Plugin allows to login with remote
+ERP5 RemoteUser Authentication Plugin allows to login with remote
 user.
 </p>
 
-<form action="addERP5CertificateAuthorityAuthenticationPlugin" method="post">
+<form action="addERP5RemoteUserAuthenticationPlugin" method="post">
 <table cellspacing="0" cellpadding="2" border="0">
   <tr>
     <td align="left" valign="top">
