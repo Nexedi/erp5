@@ -121,70 +121,6 @@ class ERP5ExternalAuthenticationPlugin(ERP5UserManager):
     return creds
 
   ################################
-  #     IAuthenticationPlugin    #
-  ################################
-  security.declarePrivate('authenticateCredentials')
-  def authenticateCredentials(self, credentials):
-    """Authentificate with credentials"""
-    login = credentials.get('external_login', None)
-    # Forbidden the usage of the super user.
-    if login == SUPER_USER:
-      return None
-
-    #Function to allow cache
-    def _authenticateCredentials(login):
-      if not login:
-        return None
-
-      #Search the user by his login
-      user_list = self.getUserByLogin(login)
-      if len(user_list) != 1:
-        raise _AuthenticationFailure()
-      user = user_list[0]
-
-      #We need to be super_user
-      sm = getSecurityManager()
-      if sm.getUser().getId() != SUPER_USER:
-        newSecurityManager(self, self.getUser(SUPER_USER))
-        try:
-          # get assignment list
-          assignment_list = [x for x in user.objectValues(portal_type="Assignment") \
-                             if x.getValidationState() == "open"]
-          valid_assignment_list = []
-          # check dates if exist
-          login_date = DateTime()
-          for assignment in assignment_list:
-            if assignment.getStartDate() is not None and \
-                   assignment.getStartDate() > login_date:
-              continue
-            if assignment.getStopDate() is not None and \
-                   assignment.getStopDate() < login_date:
-              continue
-            valid_assignment_list.append(assignment)
-
-          # validate
-          if len(valid_assignment_list) > 0:
-            return (login,login)
-        finally:
-          setSecurityManager(sm)
-
-        raise _AuthenticationFailure()
-
-    #Cache Method for best performance
-    _authenticateCredentials = CachingMethod(
-      _authenticateCredentials,
-      id='ERP5ExternalAuthenticationPlugin_authenticateCredentials',
-      cache_factory='erp5_content_short')
-    try:
-      return _authenticateCredentials(login=login)
-    except _AuthenticationFailure:
-      return None
-    except StandardError,e:
-      #Log standard error
-      LOG('ERP5ExternalAuthenticationPlugin.authenticateCredentials', PROBLEM, str(e))
-      return None
-
-  ################################
   # Properties for ZMI managment #
   ################################
 
@@ -219,7 +155,6 @@ class ERP5ExternalAuthenticationPlugin(ERP5UserManager):
 
 #List implementation of class
 classImplements(ERP5ExternalAuthenticationPlugin,
-                plugins.IAuthenticationPlugin,
                 plugins.ILoginPasswordHostExtractionPlugin)
 
 InitializeClass(ERP5ExternalAuthenticationPlugin)
