@@ -304,7 +304,9 @@ class CSVBenchmarkResult(BenchmarkResult):
 
     if exc_type:
       msg = "An error occured, see: %s" % self._log_filename_path
-      self.getLogger().error("%s: %s\n%s" % (exc_type, exc_value, traceback))
+      from traceback import format_tb
+      self.getLogger().error("%s: %s\n%s" % (exc_type, exc_value,
+                                             ''.join(format_tb(traceback))))
       if isinstance(exc_type, StopIteration):
         raise StopIteration, msg
       else:
@@ -468,9 +470,9 @@ class BenchmarkProcess(multiprocessing.Process):
     exit_msg = None
 
     try:
-      self._browser = self.getBrowser(result_instance.log_file)
-
       with result_instance as result:
+        self._browser = self.getBrowser(result_instance.log_file)
+
         while self._current_repeat != (self._argument_namespace.repeat + 1):
           self._logger.info("Iteration: %d" % self._current_repeat)
           self.runBenchmarkSuiteList(result)
@@ -486,9 +488,6 @@ class BenchmarkProcess(multiprocessing.Process):
     except BaseException, e:
       exit_msg = e
       exit_status = 2
-
-    if exit_msg:
-      self._logger.error(exit_msg)
 
     self._exit_msg_queue.put(exit_msg)
     sys.exit(exit_status)
