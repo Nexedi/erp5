@@ -21,7 +21,7 @@ def benchmarkAddPerson(iteration_counter, result_dict):
 
   # Create a new person and record the time elapsed in seconds
   result_dict.setdefault('Create', []).append(
-    browser.mainForm.timeSubmitNewInSecond())
+    browser.mainForm.submitNew())
 
   # Check whether it has been successfully created
   assert browser.getTransitionMessage() == 'Object created.'
@@ -35,7 +35,7 @@ def benchmarkAddPerson(iteration_counter, result_dict):
 
   # Submit the changes, record the time elapsed in seconds
   result_dict.setdefault('Save', []).append(
-    browser.mainForm.timeSubmitSaveInSecond())
+    browser.mainForm.submitSave())
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
@@ -43,7 +43,7 @@ def benchmarkAddPerson(iteration_counter, result_dict):
   # Validate the person and record confirmation
   browser.mainForm.submitSelectWorkflow(value='validate_action')
   result_dict.setdefault('Validate', []).append(
-    browser.mainForm.timeSubmitDialogConfirmInSecond())
+    browser.mainForm.submitDialogConfirm())
 
   # Check whether it has been successfully validated
   assert browser.getTransitionMessage() == 'Status changed.'
@@ -58,7 +58,7 @@ def benchmarkAddPerson(iteration_counter, result_dict):
   browser.mainForm.getListboxControl(2, 2).value = 'Foo%'
 
   result_dict.setdefault('Filter', []).append(
-    browser.mainForm.timeSubmitInSecond())
+    browser.mainForm.submit())
 
   # Get the line number
   line_number = browser.getListboxPosition("Foo%(counter)d Bar%(counter)d" % \

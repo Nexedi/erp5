@@ -49,58 +49,37 @@ def measurementMetaClass(prefix):
   """
   class MeasurementMetaClass(type):
     """
-    Meta class to define automatically C{time*InSecond} and
-    C{time*InPystone} methods automatically according to given
+    Meta class to automatically wrap methods whose prefix starts with
     C{prefix}, and also to define C{lastRequestSeconds} and
     C{lastRequestPystones} on other classes besides of Browser.
     """
     def __new__(metacls, name, bases, dictionary):
+      def timeInSecondDecorator(method):
+        def wrapper(self, *args, **kwargs):
+          """
+          Replaced by the wrapped method docstring
+          """
+          ret = method(self, *args, **kwargs)
+          return (ret is None and self.lastRequestSeconds or
+                  (ret + self.lastRequestSeconds))
+
+        return wrapper
+
       def applyMeasure(method):
         """
-        Inner function to add the C{time*InSecond} and C{time*InPystone}
-        methods to the dictionary of newly created class.
-
-        For example, if the method name is C{submitSave} then
-        C{timeSubmitSaveInSecond} and C{timeSubmitSaveInPystone} will
-        be added to the newly created class.
+        Inner function to wrap timed methods to automatically return the time
+        spent on the request
 
         @param method: Instance method to be called
         @type method: function
         """
-        # Upper the first character
-        method_name_prefix = 'time' + method.func_name[0].upper() + \
-            method.func_name[1:]
+        wrapper_method = timeInSecondDecorator(method)
+        wrapper_method.func_name = method.func_name
+        wrapper_method.__doc__ = method.__doc__
 
-        def innerSecond(self, *args, **kwargs):
-          """
-          Call L{%(name)s} method and return the time it took in seconds.
+        dictionary[method.func_name] = wrapper_method
 
-          @param args: Positional arguments given to L{%(name)s}
-          @param kwargs: Keyword arguments given to L{%(name)s}
-          """
-          method(self, *args, **kwargs)
-          return self.lastRequestSeconds
-
-        innerSecond.func_name = method_name_prefix + 'InSecond'
-        innerSecond.__doc__ = innerSecond.__doc__ %  {'name': method.func_name}
-        dictionary[innerSecond.func_name] = innerSecond
-
-        def innerPystone(self, *args, **kwargs):
-          """
-          Call L{%(name)s} method and return the time it took in pystones.
-
-          @param args: Positional arguments given to L{%(name)s}
-          @param kwargs: Keyword arguments given to L{%(name)s}
-          """
-          method(self, *args, **kwargs)
-          return self.lastRequestPystones
-
-        innerPystone.func_name = method_name_prefix + 'InPystone'
-        innerPystone.__doc__ = innerPystone.__doc__ % {'name': method.func_name}
-        dictionary[innerPystone.func_name] = innerPystone
-
-      # Create time*InSecond and time*InPystone methods only for the
-      # methods prefixed by the given prefix
+      # Only wrap methods prefixed by the given prefix
       for attribute_name, attribute in dictionary.items():
         if attribute_name.startswith(prefix) and callable(attribute):
           applyMeasure(attribute)
@@ -1003,7 +982,6 @@ from zope.testbrowser.browser import Link
 
 class LinkWithTime(Link):
   """
-  Only define to add timeClick*InSecond() and timeClick*InPystone()
-  methods
+  Only define to wrap click methods to measure the time spent
   """
   __metaclass__ = measurementMetaClass(prefix='click')
