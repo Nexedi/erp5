@@ -412,7 +412,7 @@ class TestUserManagement(ERP5TypeTestCase):
   def testERP5RemoteUserAuthenticationPlugin(self):
     """
      Make sure that we can grant security using a
-     ERP5 Certificate Authority Authentication Plugin.
+     ERP5 Remote User Authentication Plugin.
     """
     portal = self.portal
     uf = portal.acl_users

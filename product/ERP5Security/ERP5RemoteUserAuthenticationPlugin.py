@@ -75,7 +75,7 @@ class ERP5RemoteUserAuthenticationPlugin(ERP5UserManager):
   Plugin to authenicate as machines.
   """
 
-  meta_type = "ERP5 Certificate Authority Authentication Plugin"
+  meta_type = "ERP5 Remote User Authentication Plugin"
   security = ClassSecurityInfo()
 
   def __init__(self, id, title=None):
