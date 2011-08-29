@@ -445,24 +445,27 @@ class TestUserManagement(ERP5TypeTestCase):
     self.assertEqual(response.getStatus(), 200)
     self.assertTrue(reference in response.getBody())
 
+class TestUserManagementExternalAuthentication(TestUserManagement):
+  def afterSetUp(self):
+    self.user_id_key = 'openAMid'
+    # add key authentication PAS plugin
+    uf = self.portal.acl_users
+    plugin_id = 'erp5_external_authentication_plugin'
+    if plugin_id not in uf.objectIds():
+      uf.manage_addProduct['ERP5Security'].addERP5ExternalAuthenticationPlugin(
+        id=plugin_id, \
+        title='ERP5 External Authentication Plugin',\
+        user_id_key=self.user_id_key,)
+
+      getattr(uf, plugin_id).manage_activateInterfaces(
+        interfaces=['IExtractionPlugin',
+                    'IAuthenticationPlugin'])
+      self.stepTic()
+
   def testERP5ExternalAuthenticationPlugin(self):
     """
      Make sure that we can grant security using a ERP5 External Authentication Plugin.
     """
-    user_id_key = 'openAMid'
-    # add key authentication PAS plugin
-    portal = self.portal
-    uf = portal.acl_users
-    uf.manage_addProduct['ERP5Security'].addERP5ExternalAuthenticationPlugin(
-      id='erp5_external_authentication_plugin', \
-      title='ERP5 External Authentication Plugin',\
-      user_id_key=user_id_key,)
-
-    erp5_external_authentication_plugin = getattr(uf, 'erp5_external_authentication_plugin')
-    erp5_external_authentication_plugin.manage_activateInterfaces(
-      interfaces=['IExtractionPlugin',
-                  'IAuthenticationPlugin'])
-    self.stepTic()
 
     reference = 'external_auth_person'
     loginable_person = self.getPersonModule().newContent(portal_type='Person',
@@ -472,7 +475,7 @@ class TestUserManagement(ERP5TypeTestCase):
     assignment.open()
     self.stepTic()
 
-    base_url = portal.absolute_url(relative=1)
+    base_url = self.portal.absolute_url(relative=1)
 
     # without key we are Anonymous User so we should be redirected with proper HTML
     # status code to login_form
@@ -484,7 +487,7 @@ class TestUserManagement(ERP5TypeTestCase):
     # self.assertTrue(response.headers['location'].endswith('login_form'))
 
     # view front page we should be logged in if we use authentication key
-    response = self.publish(base_url, env={user_id_key.replace('-', '_').upper():reference})
+    response = self.publish(base_url, env={self.user_id_key.replace('-', '_').upper():reference})
     self.assertEqual(response.getStatus(), 200)
     self.assertTrue(reference in response.getBody())
 
@@ -946,5 +949,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestUserManagement))
+  suite.addTest(unittest.makeSuite(TestUserManagementExternalAuthentication))
   suite.addTest(unittest.makeSuite(TestLocalRoleManagement))
   return suite
