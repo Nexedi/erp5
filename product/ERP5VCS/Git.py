@@ -217,8 +217,10 @@ class Git(WorkingCopy):
       template = 'Index: %%s\n%s%%s\n' % ('=' * 67)
       for diff in out:
         path = diff[:diff.index(' ')]
-        # XXX: the following line fails if only the file mode changes
-        diff_dict[path] = template % (path, diff[diff.index('\n---'):])
+        try:
+          diff_dict[path] = template % (path, diff[diff.index('\n---'):])
+        except ValueError:
+          pass # empty file is deleted or only file mode is changed
     return stat_dict, diff_dict
 
   def getModifiedTree(self, show_unmodified=False):
