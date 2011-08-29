@@ -759,15 +759,46 @@ class ContextMainForm(MainForm):
    - doContextReport
    - doContextExchange
   """
-  def submitSelectJump(self, label=None, value=None, **kw):
+  def submitSelectJump(self, label=None, value=None,
+                       no_jump_transition_message=None,
+                       maximum_attempt_number=1, sleep_between_attempt=0,
+                       **kw):
     """
     Select and submit a jump, given either by its label (such as
     I{Queries}) or value (such as
     I{/person_module/Base_jumpToRelatedObject?portal_type=Foo}). See
     L{submitSelect}.
+
+    Usually, a transition message will be displayed if it was not possible to
+    jump (for example because the object has not been created yet), therefore
+    the number of attempts before failing can be specified if necessary.
+
+    @param no_jump_transition_message: Transition message displayed if the
+                                       jump could not be performed
+    @type no_jump_transition_message: str
+    @param maximum_attempt_number: Number of attempts before failing
+    @type maximum_attempt_number: int
+    @param sleep_between_attempt: Sleep N seconds between attempts
+    @type sleep_between_attempt: int
+    @return: The time spent (in seconds) if relevant
+    @rtype: int
     """
-    self.submitSelect('select_jump', 'Base_doJump:method', label, value,
-                      **kw)
+    if not no_jump_transition_message:
+      self.submitSelect('select_jump', 'Base_doJump:method',
+                        label, value, **kw)
+    else:
+      current_attempt_number = 0
+      while current_attempt_counter != maximum_attempt_number:
+        self.submitSelect('select_jump', 'Base_doJump:method',
+                          label, value, **kw)
+
+        if no_jump_transition_message != self.browser.getTransitionMessage():
+          return current_attempt_counter * sleep_between_attempt
+
+        time.sleep(sleep_between_attempt)
+        current_attempt_counter += 1
+
+      raise AssertionError("Could not jump to related object")
 
   def submitSelectAction(self, label=None, value=None, **kw):
     """
