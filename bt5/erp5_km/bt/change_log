@@ -1,3 +1,6 @@
+2011-08-29 Kazuhiko
+* use acquired subject list from the parent if empty in the web section.
+
 2011-01-14 Ivan
 * Use jQuery
 
