@@ -410,6 +410,10 @@ class TestUserManagement(ERP5TypeTestCase):
     self.assertEqual(None, person.getReference())
 
 class TestUserManagementExternalAuthentication(TestUserManagement):
+  def getTitle(self):
+    """Title of the test."""
+    return "ERP5Security: User Management with External Authentication plugin"
+
   def afterSetUp(self):
     self.user_id_key = 'openAMid'
     # add key authentication PAS plugin

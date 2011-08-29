@@ -35,8 +35,6 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 
-from Products.ERP5Security.ERP5UserManager import ERP5UserManager
-
 #Form for new plugin in ZMI
 manage_addERP5ExternalAuthenticationPluginForm = PageTemplateFile(
   'www/ERP5Security_addERP5ExternalAuthenticationPlugin', globals(),
@@ -56,7 +54,7 @@ def addERP5ExternalAuthenticationPlugin(dispatcher, id, title=None, user_id_key=
           'ERP5ExternalAuthenticationPlugin+added.'
           % dispatcher.absolute_url())
 
-class ERP5ExternalAuthenticationPlugin(ERP5UserManager):
+class ERP5ExternalAuthenticationPlugin(BasePlugin):
   """
   External authentification PAS plugin which extracts the user id from HTTP
   request header, like REMOTE_USER, openAMid, etc.
