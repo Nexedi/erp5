@@ -121,6 +121,9 @@ class ERP5UserManager(BasePlugin):
         login = credentials.get('login')
         ignore_password = False
         if not login:
+          # fallback to support plugins using external tools to extract login
+          # those are not using login/password pair, they just extract login
+          # from remote system (eg. SSL certificates)
           login = credentials.get('external_login')
           ignore_password = True
         # Forbidden the usage of the super user.
