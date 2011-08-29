@@ -45,6 +45,7 @@ from Products.ERP5Type import PropertySheet
 from Products.ERP5Type.XMLExportImport import Folder_asXML
 from Products.ERP5Type.Utils import sortValueList
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Globals import InitializeClass
 
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
@@ -452,6 +453,7 @@ OFS_HANDLER = 0
 BTREE_HANDLER = 1
 HBTREE_HANDLER = 2
 
+InitializeClass(FolderMixIn)
 
 class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
   """
