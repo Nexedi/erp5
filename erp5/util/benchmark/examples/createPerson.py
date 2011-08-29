@@ -52,7 +52,7 @@ def createPerson(result, browser):
 
   # Validate it (as the workflow action may not be available yet, try 5 times
   # and sleep 5s between each attempts before failing)
-  waiting_for_validate_action, show_validate_time = \
+  show_validate_time, waiting_for_validate_action = \
       browser.mainForm.submitSelectWorkflow(value='validate_action',
                                             maximum_attempt_number=5,
                                             sleep_between_attempt=5)
