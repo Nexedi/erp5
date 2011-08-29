@@ -409,42 +409,6 @@ class TestUserManagement(ERP5TypeTestCase):
     self.tic()
     self.assertEqual(None, person.getReference())
 
-  def testERP5RemoteUserAuthenticationPlugin(self):
-    """
-     Make sure that we can grant security using a
-     ERP5 Remote User Authentication Plugin.
-    """
-    portal = self.portal
-    uf = portal.acl_users
-    plugin_id = 'erp5_remote_user_authentication_plugin'
-    uf.manage_addProduct['ERP5Security'].\
-        addERP5RemoteUserAuthenticationPlugin(
-          id=plugin_id,
-          title='ERP5 Remote User Authentication Plugin',)
-
-    plugin = getattr(uf, plugin_id)
-    plugin.manage_activateInterfaces(interfaces=['IExtractionPlugin',
-                                                 'IAuthenticationPlugin'])
-    self.stepTic()
-
-    reference = 'external_auth_person'
-    loginable_person = self.getPersonModule().newContent(portal_type='Person',
-                                                         reference=reference,
-                                                         password='guest')
-    assignment = loginable_person.newContent(portal_type='Assignment',
-                                             function='another_subcat')
-    assignment.open()
-    self.stepTic()
-
-    base_url = portal.absolute_url(relative=1)
-
-    response = self.publish(base_url)
-    self.assertEqual(response.getStatus(), 302)
-
-    response = self.publish(base_url, env={"REMOTE_USER": reference})
-    self.assertEqual(response.getStatus(), 200)
-    self.assertTrue(reference in response.getBody())
-
 class TestUserManagementExternalAuthentication(TestUserManagement):
   def afterSetUp(self):
     self.user_id_key = 'openAMid'
@@ -458,8 +422,7 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
         user_id_key=self.user_id_key,)
 
       getattr(uf, plugin_id).manage_activateInterfaces(
-        interfaces=['IExtractionPlugin',
-                    'IAuthenticationPlugin'])
+        interfaces=['IExtractionPlugin'])
       self.stepTic()
 
   def testERP5ExternalAuthenticationPlugin(self):
