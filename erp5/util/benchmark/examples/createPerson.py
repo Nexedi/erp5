@@ -47,9 +47,13 @@ def createPerson(result, browser):
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
 
-  # Validate it after going back to the Person page
+  # Go back to the Person page before validating
   browser.open(person_url)
 
-  result('Validate', browser.mainForm.submitSelectWorkflow(value='validate_action'))
+  # Validate it (as the workflow action may not be available yet, try 5 times
+  # and sleep 5s between each attempts before failing)
+  result('Validate', browser.mainForm.submitSelectWorkflow(value='validate_action',
+                                                           maximum_attempt_number=5,
+                                                           sleep_between_attempt=5))
   result('Validated', browser.mainForm.submitDialogConfirm())
   assert browser.getTransitionMessage() == 'Status changed.'

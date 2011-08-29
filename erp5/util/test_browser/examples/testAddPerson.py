@@ -40,8 +40,12 @@ def benchmarkAddPerson(iteration_counter, result_dict):
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
 
-  # Validate the person and record confirmation
-  browser.mainForm.submitSelectWorkflow(value='validate_action')
+  # Validate the person (as the workflow action may not be available yet, try
+  # 5 times and sleep 5s between each attempts before failing) and record
+  # time spent on confirmation
+  browser.mainForm.submitSelectWorkflow(value='validate_action',
+                                        maximum_attempt_number=5,
+                                        sleep_between_attempt=5)
   result_dict.setdefault('Validate', []).append(
     browser.mainForm.submitDialogConfirm())
 
