@@ -138,11 +138,10 @@ class BenchmarkResultStatistic(object):
     self._variance_sum = 0
     self._mean = 0
 
-  def add(self, value):
-    if value == 0:
-      self.error_sum += 1
-      return
+  def add_error(self):
+    self.error_sum += 1
 
+  def add(self, value):
     if value < self.minimum:
       self.minimum = value
     if value > self.maximum:
@@ -239,7 +238,7 @@ class BenchmarkResult(object):
       expected_result_idx = self._result_idx_checkpoint_list[self._suite_idx]
       while self._result_idx != expected_result_idx:
         self.result_list.append(0)
-        self._stat_list[self._result_idx].add(0)
+        self._stat_list[self._result_idx].add_error()
         self._result_idx += 1
 
     self._suite_idx += 1
