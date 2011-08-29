@@ -483,9 +483,12 @@ class BenchmarkProcess(multiprocessing.Process):
       exit_msg = str(e)
       exit_status = 1
 
-    except Exception, e:
+    except BaseException, e:
       exit_msg = e
       exit_status = 2
+
+    if exit_msg:
+      self._logger.error(exit_msg)
 
     self._exit_msg_queue.put(exit_msg)
     sys.exit(exit_status)
