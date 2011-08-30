@@ -70,9 +70,10 @@ class BenchmarkProcess(multiprocessing.Process):
 
       try:
         target(result, self._browser)
-      except:
+      except BaseException, e:
         msg = "%s: %s" % (target, traceback.format_exc())
-        if self._argument_namespace.enable_debug:
+
+        if (self._argument_namespace.enable_debug and isinstance(e, Exception)):
           try:
             msg += self._browser.normalized_contents
           except:
