@@ -81,7 +81,8 @@ class BenchmarkProcess(multiprocessing.Process):
         msg = "%s: %s" % (target, traceback.format_exc())
 
         try:
-          msg += self._browser.contents
+          msg += "Last response headers:\n%s\nLast response contents:\n%s" % \
+              (self._browser.headers, self._browser.contents)
         except:
           pass
 
