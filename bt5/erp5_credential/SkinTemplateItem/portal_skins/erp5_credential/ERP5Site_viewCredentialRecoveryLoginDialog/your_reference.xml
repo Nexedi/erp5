@@ -9,7 +9,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>required</string>
+              </list>
             </value>
         </item>
         <item>
@@ -59,6 +61,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>required</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -78,11 +86,28 @@
                     <value> <string>Base_viewCredentialFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>required</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:request.form.get(\'field_your_choice\', \'\') == \'password\'</string> </value>
         </item>
       </dictionary>
     </pickle>
