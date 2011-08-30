@@ -664,18 +664,18 @@ class EmailDocument(TextDocument):
       additional_headers['In-Reply-To'] = destination_reference
 
     # To (multiple)
-    to_url_list = []
+    to_url_list = set()
     if to_url is None:
       for recipient in self.getDestinationValueList():
         email = recipient.getDefaultEmailText()
         if email:
-          to_url_list.append(formataddr((recipient.getTitle(), email)))
+          to_url_list.add(formataddr((recipient.getTitle(), email)))
         else:
           raise ValueError, 'Recipient %s has no defined email' % recipient
       if not to_url_list:
-        to_url_list.append(self.getRecipient())
+        to_url_list.add(self.getRecipient())
     elif type(to_url) in types.StringTypes:
-      to_url_list.append(to_url)
+      to_url_list.add(to_url)
 
     # Attachments
     if attachment_list is None:
