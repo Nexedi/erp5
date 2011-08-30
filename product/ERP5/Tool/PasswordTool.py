@@ -39,7 +39,6 @@ import time, random
 from hashlib import md5 as md5_new
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
-from Acquisition import aq_base
 from Products.ERP5Type.Globals import PersistentMapping
 from urllib import urlencode
 
@@ -90,18 +89,25 @@ class PasswordTool(BaseTool):
     return key
 
   security.declareProtected('Manage users', 'getResetPasswordUrl')
-  def getResetPasswordUrl(self, user_login=None, key=None, site_url):
+  def getResetPasswordUrl(self, user_login=None, key=None, site_url=None):
     if user_login is not None:
       # XXX Backward compatibility
       key = self.getResetPasswordKey(user_login)
 
-    parameter = urlencode(dict(reset_key=reset_key,
-                               user_login=user_login))
-    url = "%s/portal_password/%s?%s" % (
-                                site_url,
-                                'PasswordTool_viewResetPassword',
-                                parameter)
+    parameter = urlencode(dict(reset_key=key))
+    method = self._getTypeBasedMethod("getSiteUrl")
+    if method is not None:
+      base_url = method()
+    else:
+      base_url = "%s/portal_password/PasswordTool_viewResetPassword" % (
+        site_url,)
+    url = "%s?%s" %(base_url, parameter)
     return url
+
+  security.declareProtected('Manage users', 'getResetPasswordUrl')
+  def getExpirationDateForKey(self, key=None):
+    return self._password_request_dict[key][1]
+
 
   def mailPasswordResetRequest(self, user_login=None, REQUEST=None,
                               notification_message=None, sender=None,
@@ -160,7 +166,7 @@ class PasswordTool(BaseTool):
     # send mail
     message_dict = {'instance_name':self.getPortalObject().getTitle(),
                     'reset_password_link':url,
-                    'expiration_date':self._password_request_dict[key][1]}
+                    'expiration_date':self.getExpirationDateForKey(key).strftime('%Y/%m/%d %H:%M')}
 
     if notification_message is None:
       subject = translateString("[${instance_name}] Reset of your password",
