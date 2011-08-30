@@ -96,7 +96,12 @@ class ERP5UserInterface(_ERP5):
         related to funcional test run.
     """
     # Parse relevant information to update response information
-    summary, html_test_result = status_dict['stderr'].split("-"*79)[1:3]
+    try:
+      summary, html_test_result = status_dict['stderr'].split("-"*79)[1:3]
+    except ValueError:
+      # In case of error when parse the file, preserve the original 
+      # informations. This prevents we have unfinished tests.
+      return status_dict
     status_dict['html_test_result'] = html_test_result
     search = self.FTEST_PASS_FAIL_RE.search(summary)
     if search:
