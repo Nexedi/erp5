@@ -362,10 +362,10 @@ class FakeMovement:
     if total_quantity != 0:
       for movement in self.__movement_list:
         quantity = movement.getMappedProperty('quantity')
-        movement.edit(delivery_ratio=quantity*delivery_ratio/total_quantity)
+        movement.edit(delivery_ratio=quantity*float(delivery_ratio)/total_quantity)
     else:
       # Distribute equally ratio to all movement
-      mvt_ratio = 1. / len(self.__movement_list)
+      mvt_ratio = float(delivery_ratio) / len(self.__movement_list)
       for movement in self.__movement_list:
         movement.edit(delivery_ratio=mvt_ratio)
 
