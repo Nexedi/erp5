@@ -34,6 +34,7 @@ from Products.PluggableAuthService.interfaces import plugins
 from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.permissions import ManageUsers
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
+from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
 
 #Form for new plugin in ZMI
 manage_addERP5ExternalAuthenticationPluginForm = PageTemplateFile(
@@ -99,6 +100,9 @@ class ERP5ExternalAuthenticationPlugin(BasePlugin):
     user_id = getHeader(self.user_id_key)
     if user_id is not None:
       creds['external_login'] = user_id
+    else:
+      # fallback to default way
+      return DumbHTTPExtractor().extractCredentials(request)
 
     #Complete credential with some informations
     if creds:
