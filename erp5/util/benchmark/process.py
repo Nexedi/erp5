@@ -75,10 +75,9 @@ class BenchmarkProcess(multiprocessing.Process):
 
       try:
         target(result, self._browser)
-      except BaseException, e:
-        if isinstance(e, StopIteration):
-          raise
-
+      except StopIteration:
+        raise
+      except Exception, e:
         msg = "%s: %s" % (target, traceback.format_exc())
 
         try:
