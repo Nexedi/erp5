@@ -34,7 +34,9 @@ import sys
 import multiprocessing
 import xmlrpclib
 
-from benchmark import ArgumentType, BenchmarkProcess, ERP5BenchmarkResult
+from erp5.utils.benchmark.argument import ArgumentType
+from erp5.utils.benchmark.process import BenchmarkProcess
+from erp5.utils.benchmark.result import ERP5BenchmarkResult, CSVBenchmarkResult
 
 class PerformanceTester(object):
   def __init__(self, namespace=None):
@@ -166,10 +168,8 @@ class PerformanceTester(object):
 
   def getResultClass(self):
     if self._argument_namespace.erp5_publish_url:
-      from benchmark import ERP5BenchmarkResult
       return ERP5BenchmarkResult
     else:
-      from benchmark import CSVBenchmarkResult
       return CSVBenchmarkResult
 
   def preRun(self):

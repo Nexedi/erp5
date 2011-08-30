@@ -28,7 +28,7 @@
 #
 ##############################################################################
 
-from benchmark import CSVBenchmarkResult
+from erp5.utils.benchmark.result import CSVBenchmarkResult
 
 class CSVScalabilityBenchmarkResult(CSVBenchmarkResult):
   def flush(self, partial=True):
