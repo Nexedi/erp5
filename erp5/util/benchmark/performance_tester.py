@@ -33,10 +33,14 @@ import os
 import sys
 import multiprocessing
 import xmlrpclib
+import signal
+import errno
 
 from erp5.utils.benchmark.argument import ArgumentType
 from erp5.utils.benchmark.process import BenchmarkProcess
 from erp5.utils.benchmark.result import ERP5BenchmarkResult, CSVBenchmarkResult
+
+MAXIMUM_KEYBOARD_INTERRUPT = 5
 
 class PerformanceTester(object):
   def __init__(self, namespace=None):
@@ -45,6 +49,8 @@ class PerformanceTester(object):
           description='Run ERP5 benchmarking suites.'))
     else:
       self._argument_namespace = namespace
+
+    self._process_terminated_counter = 0
 
   @staticmethod
   def _add_parser_arguments(parser):
@@ -189,6 +195,9 @@ class PerformanceTester(object):
     ERP5BenchmarkResult.closeResultDocument(self._argument_namespace.erp5_publish_url,
                                             error_message_set)
 
+  def _child_terminated_handler(self, *args, **kwargs):
+    self._process_terminated_counter += 1
+
   def _run_constant(self, nb_users):
     process_list = []
     exit_msg_queue = multiprocessing.Queue(nb_users)
@@ -202,33 +211,41 @@ class PerformanceTester(object):
 
       process_list.append(process)
 
+    signal.signal(signal.SIGCHLD, self._child_terminated_handler)
+
     for process in process_list:
       process.start()
 
     error_message_set = set()
-    i = 0
-    while i != len(process_list):
+    interrupted_counter = 0
+    while self._process_terminated_counter != len(process_list):
       try:
-        msg = exit_msg_queue.get()
-      except KeyboardInterrupt:
-        if self._argument_namespace.repeat != -1:
-          print >>sys.stderr, "Stopping gracefully"
-          for process in process_list:
+        error_message = exit_msg_queue.get()
+
+      except KeyboardInterrupt, e:
+        if interrupted_counter == 0:
+          print >>sys.stderr, "\nInterrupted by user, stopping gracefully " \
+              "unless interrupted %d times" % MAXIMUM_KEYBOARD_INTERRUPT
+
+        interrupted_counter += 1
+
+        for process in process_list:
+          if (not getattr(process, '_stopping', False) or
+              interrupted_counter == MAXIMUM_KEYBOARD_INTERRUPT):
+            process._stopping = True
             process.terminate()
 
-          i = 0
+      # An IOError may be raised when receiving a SIGCHLD which interrupts the
+      # blocking system call above and the system call should not be restarted
+      # (using siginterrupt), otherwise the  process will stall forever as its
+      # child has already exited
+      except IOError, e:
+        if e.errno == errno.EINTR:
           continue
-        else:
-          msg = None
 
-      if msg is not None:
-        error_message_set.add(msg)
-        for process in process_list:
-          process.terminate()
-
-        break
-
-      i += 1
+      else:
+        if error_message is not None:
+          error_message_set.add(error_message)
 
     if error_message_set:
       return (error_message_set, 1)

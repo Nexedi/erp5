@@ -36,6 +36,9 @@ import sys
 
 from erp5.utils.test_browser.browser import Browser
 
+MAXIMUM_ERROR_COUNTER = 10
+RESULT_NUMBER_BEFORE_FLUSHING = 100
+
 class BenchmarkProcess(multiprocessing.Process):
   def __init__(self, exit_msg_queue, result_klass, argument_namespace,
                nb_users, user_index, *args, **kwargs):
@@ -48,6 +51,7 @@ class BenchmarkProcess(multiprocessing.Process):
     # Initialized when running the test
     self._browser = None
     self._current_repeat = 1
+    self._error_counter = 0
 
     super(BenchmarkProcess, self).__init__(*args, **kwargs)
 
@@ -71,6 +75,9 @@ class BenchmarkProcess(multiprocessing.Process):
       try:
         target(result, self._browser)
       except BaseException, e:
+        if isinstance(e, StopIteration):
+          raise
+
         msg = "%s: %s" % (target, traceback.format_exc())
 
         if (self._argument_namespace.enable_debug and isinstance(e, Exception)):
@@ -79,10 +86,11 @@ class BenchmarkProcess(multiprocessing.Process):
           except:
             pass
 
-        if self._current_repeat == 1:
-          self._logger.error(msg)
-          raise
+        if (self._current_repeat == 1 or
+            self._error_counter == MAXIMUM_ERROR_COUNTER):
+          raise RuntimeError(msg)
 
+        self._error_counter += 1
         self._logger.warning(msg)
 
       for stat in result.getCurrentSuiteStatList():
@@ -95,12 +103,10 @@ class BenchmarkProcess(multiprocessing.Process):
                              stat.standard_deviation,
                              stat.maximum))
 
-        if self._argument_namespace.max_global_average and \
-           mean > self._argument_namespace.max_global_average:
-          self._logger.info("Stopping as mean is greater than maximum "
-                            "global average")
-
-          raise StopIteration
+        if (self._argument_namespace.max_global_average and
+            mean > self._argument_namespace.max_global_average):
+          raise RuntimeError("Stopping as mean is greater than maximum "
+                             "global average")
 
       result.exitSuite()
 
@@ -113,8 +119,12 @@ class BenchmarkProcess(multiprocessing.Process):
 
     self._logger = result_instance.getLogger()
 
-    if self._argument_namespace.repeat != -1:
-      signal.signal(signal.SIGTERM, self.stopGracefully)
+    # Ensure the data are flushed before exiting, handled by Result class 
+    # __exit__ block
+    signal.signal(signal.SIGTERM, self.stopGracefully)
+ 
+    # Ignore KeyboardInterrupt as it is handled by the parent process
+    signal.signal(signal.SIGINT, signal.SIG_IGN)
 
     exit_status = 0
     exit_msg = None
@@ -128,16 +138,15 @@ class BenchmarkProcess(multiprocessing.Process):
           self.runBenchmarkSuiteList(result)
           self._current_repeat += 1
 
-          if self._current_repeat == 100:
+          if self._current_repeat == RESULT_NUMBER_BEFORE_FLUSHING:
             result.flush()
 
     except StopIteration, e:
-      exit_msg = str(e)
-      exit_status = 1
+      self._logger.error(e)
 
     except BaseException, e:
       exit_msg = e
-      exit_status = 2
+      exit_status = 1
 
     self._exit_msg_queue.put(exit_msg)
     sys.exit(exit_status)

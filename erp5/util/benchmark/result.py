@@ -214,15 +214,10 @@ class CSVBenchmarkResult(BenchmarkResult):
     super(CSVBenchmarkResult, self).__exit__(exc_type, exc_value, traceback)
     self._result_file.close()
 
-    if exc_type:
+    if exc_type and not issubclass(exc_type, StopIteration):
       msg = "An error occured, see: %s" % self._log_filename_path
-      from traceback import format_tb
-      self.getLogger().error("%s: %s\n%s" % (exc_type, exc_value,
-                                             ''.join(format_tb(traceback))))
-      if isinstance(exc_type, StopIteration):
-        raise StopIteration, msg
-      else:
-        raise RuntimeError, msg
+      self.getLogger().error("%s: %s" % (exc_type, exc_value))
+      raise RuntimeError(msg)
 
 from cStringIO import StringIO
 
