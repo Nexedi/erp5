@@ -1,4 +1,7 @@
 2011-08-30 tatuya
+* Fix the issue that the Stock tab in Production Order or Production Packing List returns all the inventories when the Deliveries do not have a resource.
+
+2011-08-30 tatuya
 * Fix to show quantity unit title in the listbox of the Stock tab.
 
 2011-07-01 yusei
