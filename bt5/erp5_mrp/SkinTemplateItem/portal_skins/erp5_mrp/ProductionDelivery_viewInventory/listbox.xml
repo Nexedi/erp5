@@ -10,13 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
+                <string>list_action</string>
                 <string>list_method</string>
                 <string>selection_name</string>
-                <string>domain_tree</string>
-                <string>domain_root_list</string>
-                <string>list_action</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -116,7 +116,7 @@
                           <string>Future</string>
                         </tuple>
                         <tuple>
-                          <string>getQuantityUnitTranslatedTitle</string>
+                          <string>quantity_unit_item</string>
                           <string>Quantity Unit</string>
                         </tuple>
                       </list>
@@ -175,10 +175,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="Method" module="Products.Formulator.MethodField"/>
-        <tuple/>
-      </tuple>
+      <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
     <pickle>
       <dictionary>
