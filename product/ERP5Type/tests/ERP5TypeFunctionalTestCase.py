@@ -305,9 +305,10 @@ class FunctionalTestRunner:
 <body>%s</body>
 </html>''' % detail
 
-    return detail.decode('ascii', "replace"), int(sucess_amount),\
+    # When return fix output for handle unicode issues.
+    return unicode(detail, "utf-8", "replace"), int(sucess_amount),\
            int(failure_amount),\
-           [i.decode('ascii', "replace") for i in error_title_list]
+           [unicode(i, "utf-8", "replace") for i in error_title_list]
 
 class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   run_only = ""
