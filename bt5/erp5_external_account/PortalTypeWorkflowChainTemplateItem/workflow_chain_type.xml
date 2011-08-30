@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Career</type>
+  <workflow>external_account_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Email Account</type>
+  <workflow>edit_workflow, external_account_validation_workflow</workflow>
+ </chain>
+</workflow_chain>
