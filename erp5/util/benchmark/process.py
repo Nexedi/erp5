@@ -52,7 +52,7 @@ class BenchmarkProcess(multiprocessing.Process):
     super(BenchmarkProcess, self).__init__(*args, **kwargs)
 
   def stopGracefully(self, *args, **kwargs):
-    raise StopIteration, "Interrupted by user"
+    raise StopIteration("Interrupted by user, flushing remaining results...")
 
   def getBrowser(self, log_file):
     info_list = tuple(self._argument_namespace.url) + \
