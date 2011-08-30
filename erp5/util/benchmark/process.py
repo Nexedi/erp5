@@ -138,7 +138,7 @@ class BenchmarkProcess(multiprocessing.Process):
           self.runBenchmarkSuiteList(result)
           self._current_repeat += 1
 
-          if self._current_repeat == RESULT_NUMBER_BEFORE_FLUSHING:
+          if not self._current_repeat % RESULT_NUMBER_BEFORE_FLUSHING:
             result.flush()
 
     except StopIteration, e:
