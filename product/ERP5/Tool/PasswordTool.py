@@ -70,20 +70,13 @@ class PasswordTool(BaseTool):
     # XXX no call to BaseTool.__init__ ?
     # BaseTool.__init__(self, id)
 
-
-  security.declareProtected('Manage users', 'getResetPasswordUrl')
-  def getResetPasswordUrl(self, user_login, site_url):
+  security.declareProtected('Manage users', 'getResetPasswordKey')
+  def getResetPasswordKey(self, user_login):
     # generate expiration date
     expiration_date = DateTime() + self._expiration_day
 
     # generate a random string
-    random_url = self._generateUUID()
-    parameter = urlencode(dict(reset_key=random_url,
-                               user_login=user_login))
-    url = "%s/portal_password/%s?%s" % (
-                                site_url,
-                                'PasswordTool_viewResetPassword',
-                                parameter)
+    key = self._generateUUID()
     # XXX before r26093, _password_request_dict was initialized by an OOBTree and
     # replaced by a dict on each request, so if it's data structure is not up
     # to date, we update it if needed
@@ -93,10 +86,24 @@ class PasswordTool(BaseTool):
       self._password_request_dict = PersistentMapping()
 
     # register request
-    self._password_request_dict[random_url] = (user_login, expiration_date)
+    self._password_request_dict[key] = (user_login, expiration_date)
+    return key
+
+  security.declareProtected('Manage users', 'getResetPasswordUrl')
+  def getResetPasswordUrl(self, user_login=None, key=None, site_url):
+    if user_login is not None:
+      # XXX Backward compatibility
+      key = self.getResetPasswordKey(user_login)
+
+    parameter = urlencode(dict(reset_key=reset_key,
+                               user_login=user_login))
+    url = "%s/portal_password/%s?%s" % (
+                                site_url,
+                                'PasswordTool_viewResetPassword',
+                                parameter)
     return url
 
-  def mailPasswordResetRequest(self, user_login=None, REQUEST=None, 
+  def mailPasswordResetRequest(self, user_login=None, REQUEST=None,
                               notification_message=None, sender=None,
                               store_as_event=False):
     """
@@ -104,7 +111,7 @@ class PasswordTool(BaseTool):
     Parameters:
     user_login -- Reference of the user to send password reset link
     REQUEST -- Request object
-    notification_message -- Notification Message Document used to build the email. 
+    notification_message -- Notification Message Document used to build the email.
                             As default, a standart text will be used.
     sender -- Sender (Person or Organisation) of the email.
             As default, the default email address will be used
@@ -138,7 +145,7 @@ class PasswordTool(BaseTool):
         msg = translateString(
             "User ${user} does not have an email address, please contact site "
             "administrator directly", mapping={'user':user_login})
-      
+
     if msg:
       if REQUEST is not None:
         parameter = urlencode(dict(portal_status_message=msg))
@@ -147,31 +154,13 @@ class PasswordTool(BaseTool):
         return REQUEST.RESPONSE.redirect( ret_url )
       return msg
 
-    # generate a random string
-    random_url = self._generateUUID()
-    parameter = urlencode(dict(reset_key=random_url))
-    url = "%s/portal_password/%s?%s" % (
-                                site_url,
-                                'PasswordTool_viewResetPassword',
-                                parameter)
-    # generate expiration date
-    expiration_date = DateTime() + self._expiration_day
-
-    # XXX before r26093, _password_request_dict was initialized by an OOBTree and
-    # replaced by a dict on each request, so if it's data structure is not up
-    # to date, we update it if needed
-    if not isinstance(self._password_request_dict, PersistentMapping):
-      LOG('ERP5.PasswordTool', INFO, 'Updating password_request_dict to'
-                                     ' PersistentMapping')
-      self._password_request_dict = PersistentMapping()
-
-    # register request
-    self._password_request_dict[random_url] = (user_login, expiration_date)
+    key = self.getResetPasswordKey(user_login)
+    url = self.getResetPasswordUrl(key, site_url)
 
     # send mail
     message_dict = {'instance_name':self.getPortalObject().getTitle(),
                     'reset_password_link':url,
-                    'expiration_date':expiration_date}
+                    'expiration_date':self._password_request_dict[key][1]}
 
     if notification_message is None:
       subject = translateString("[${instance_name}] Reset of your password",
@@ -227,6 +216,7 @@ class PasswordTool(BaseTool):
   def resetPassword(self, reset_key=None, REQUEST=None):
     """
     """
+    # XXX-Aurel : is it used ?
     if REQUEST is None:
       REQUEST = get_request()
     user_login, expiration_date = self._password_request_dict.get(reset_key, (None, None))
@@ -263,7 +253,7 @@ class PasswordTool(BaseTool):
   def changeUserPassword(self, user_login, password, password_confirmation,
                          password_key, REQUEST=None):
     """
-    Reset the password for a given login    
+    Reset the password for a given login
     """
     # check the key
     register_user_login, expiration_date = self._password_request_dict.get(
