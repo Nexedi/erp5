@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>Url</string> </value>
+            <value> <string>Item</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>
