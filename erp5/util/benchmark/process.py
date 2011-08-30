@@ -81,11 +81,10 @@ class BenchmarkProcess(multiprocessing.Process):
 
         msg = "%s: %s" % (target, traceback.format_exc())
 
-        if (self._argument_namespace.enable_debug and isinstance(e, Exception)):
-          try:
-            msg += self._browser.normalized_contents
-          except:
-            pass
+        try:
+          msg += self._browser.contents
+        except:
+          pass
 
         if (self._current_repeat == 1 or
             self._error_counter == MAXIMUM_ERROR_COUNTER):
