@@ -115,13 +115,7 @@ def WebSite_viewAsWebPost(self, *args, **kwargs):
   document = portal.portal_contributions.newContent(data=self.REQUEST.BODY,
     filename='shacache', discover_metadata=False, reference=sha512sum,
     content_type='application/octet-stream')
-
-  # We can only change the state of the object after all the activities and
-  # interaction workflow, to avoid any security problem.
-  document.activate(after_path_and_method_id=(document.getPath(), \
-            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat', \
-             'immediateReindexObject', 'recursiveImmediateReindexObject')))\
-            .publish()
+  document.publish()
 
   self.REQUEST.RESPONSE.setStatus(201)
   return sha512sum

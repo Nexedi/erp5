@@ -119,13 +119,6 @@ def WebSection_putFactory(self, name, typ, body):
   document = portal.portal_contributions.newContent(data=body,
                                                     filename=name,
                                                     discover_metadata=False)
-
-  # We can only change the state of the object after all the activities and
-  # interaction workflow, to avoid any security problem.
-  document.activate(after_path_and_method_id=(document.getPath(), \
-            ('convertToBaseFormat', 'Document_tryToConvertToBaseFormat', \
-             'immediateReindexObject', 'recursiveImmediateReindexObject')))\
-            .publish()
-
+  document.publish()
   return document
 
