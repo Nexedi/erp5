@@ -230,8 +230,9 @@ class PerformanceTester(object):
         interrupted_counter += 1
 
         for process in process_list:
-          if (not getattr(process, '_stopping', False) or
-              interrupted_counter == MAXIMUM_KEYBOARD_INTERRUPT):
+          if (process.is_alive() and
+              (not getattr(process, '_stopping', False) or
+               interrupted_counter == MAXIMUM_KEYBOARD_INTERRUPT)):
             process._stopping = True
             process.terminate()
 
@@ -246,6 +247,15 @@ class PerformanceTester(object):
       else:
         if error_message is not None:
           error_message_set.add(error_message)
+
+          # In case of error, kill  the other children because they are likely
+          # failing  as well (especially  because a  process only  exits after
+          # encountering 10 errors)
+          if interrupted_counter == 0:
+            for process in process_list:
+              if process.is_alive() and not getattr(process, '_stopping', False):
+                process._stopping = True
+                process.terminate()
 
     if error_message_set:
       return (error_message_set, 1)
