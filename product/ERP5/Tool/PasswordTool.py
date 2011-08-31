@@ -255,8 +255,8 @@ class PasswordTool(BaseTool):
         self._password_request_dict.pop(key)
 
 
-  def changeUserPassword(self, user_login, password, password_confirmation,
-                         password_key, REQUEST=None):
+  def changeUserPassword(self, password, password_confirmation,
+                         password_key, user_login=None, REQUEST=None):
     """
     Reset the password for a given login
     """
@@ -275,7 +275,7 @@ class PasswordTool(BaseTool):
       site_url = self.getWebSiteValue().absolute_url()
     if register_user_login is None:
       msg = "Key not known. Please ask reset password."
-    elif register_user_login != user_login:
+    elif user_login is not None and register_user_login != user_login:
       msg = translateString("Bad login provided.")
     elif current_date > expiration_date:
       msg = translateString("Date has expire.")
@@ -293,7 +293,7 @@ class PasswordTool(BaseTool):
 
     # all is OK, change password and remove it from request dict
     self._password_request_dict.pop(password_key)
-    persons = self.getPortalObject().acl_users.erp5_users.getUserByLogin(user_login)
+    persons = self.getPortalObject().acl_users.erp5_users.getUserByLogin(register_user_login)
     person = persons[0]
     person._forceSetPassword(password)
     person.reindexObject()
