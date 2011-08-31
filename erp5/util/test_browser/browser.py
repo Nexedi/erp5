@@ -158,7 +158,6 @@ class Browser(ExtendedTestBrowser):
     """
     # Meaningful to re-create the MainForm class every time the page
     # has been changed
-    self._main_form_counter = -1
     self._main_form = None
 
     assert base_url[-1] == '/'
@@ -259,10 +258,8 @@ class Browser(ExtendedTestBrowser):
     """
     # If the page has not changed, no need to re-create a class, so
     # just return the main_form instance
-    if self._main_form_counter == self._counter and self._main_form:
+    if self._main_form and self._counter == self._main_form._browser_counter:
       return self._main_form
-
-    self._main_form_counter = self._counter
 
     main_form = None
     for form in self.mech_browser.forms():
