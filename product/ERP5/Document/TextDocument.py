@@ -86,12 +86,13 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       method_id = self.getTextContentSubstitutionMappingMethodId()
       if method_id:
         try:
-          mapping = guarded_getattr(self, method_id)(**kw)
+          method = guarded_getattr(self, method_id)
         except AttributeError:
           LOG('TextDocument', WARNING, 'could not get the substitution'
               ' mapping method %s from %r, so the content will not be'
               ' substituted.' % (method_id, self.getRelativeUrl()))
           return text
+        mapping = method(**kw)
 
         is_str = isinstance(text, str)
         if is_str:
