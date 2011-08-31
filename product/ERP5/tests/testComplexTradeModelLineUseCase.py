@@ -198,7 +198,7 @@ return getBaseAmountQuantity""")
     self.appendBaseContributionCategory(order['2'], special_discount)
     transaction.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
-      SPECIAL_DISCOUNT_3CD_LINEAR=None,
+      SPECIAL_DISCOUNT_3CD_LINEAR=dict(total_price=0),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=8100),
       TOTAL_PRICE_WITH_VAT=dict(total_price=8505),
       VAT_AMOUNT=dict(total_price=405))
@@ -254,7 +254,7 @@ return lambda delivery_amount, base_application, **kw: \\
     self.appendBaseContributionCategory(order['2'], special_discount)
     transaction.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
-      SPECIAL_DISCOUNT_3CD_FIXED=None,
+      SPECIAL_DISCOUNT_3CD_FIXED=dict(total_price=0),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=11000),
       TOTAL_PRICE_WITH_VAT=dict(total_price=11550),
       VAT_AMOUNT=dict(total_price=550))
@@ -314,7 +314,7 @@ return getBaseAmountQuantity""")
     self.appendBaseContributionCategory(order['3'], special_discount)
     transaction.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
-      SPECIAL_DISCOUNT_3CD_LINEAR=None,
+      SPECIAL_DISCOUNT_3CD_LINEAR=dict(total_price=0),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=11000),
       TOTAL_PRICE_WITH_VAT=dict(total_price=11550),
       VAT_AMOUNT=dict(total_price=550))
@@ -374,7 +374,7 @@ return lambda delivery_amount, base_application, **kw: \\
     self.appendBaseContributionCategory(order['1'], poster_present_3cd)
     transaction.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
-      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=None,
+      SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=None),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=6000),
       TOTAL_PRICE_WITH_VAT=dict(total_price=6300),
       VAT_AMOUNT=dict(total_price=300))
@@ -450,7 +450,7 @@ return getBaseAmountQuantity""")
     self.appendBaseContributionCategory(order['4'], special_discount)
     transaction.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
-      SPECIAL_DISCOUNT_3CD=None,
+      SPECIAL_DISCOUNT_3CD=dict(total_price=0),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=12000),
       TOTAL_PRICE_WITH_VAT=dict(total_price=12600),
       VAT_AMOUNT=dict(total_price=600))

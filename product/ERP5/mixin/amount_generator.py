@@ -159,8 +159,7 @@ class AmountGeneratorMixin:
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGeneratedAmountList')
   def getGeneratedAmountList(self, amount_list=None, rounding=False,
-                             amount_generator_type_list=None,
-                             generate_empty_amounts=False):
+                             amount_generator_type_list=None):
     """
     Implementation of a generic transformation algorithm which is
     applicable to payroll, tax generation and BOMs. Return the
@@ -312,8 +311,14 @@ class AmountGeneratorMixin:
           if property_dict.get(key, 0) in (None, ''):
             del property_dict[key]
         quantity *= property_dict.pop('quantity', 1)
-        if not (quantity or generate_empty_amounts):
-          continue
+
+        # Before we ignore 'quantity==0' amount here for better
+        # performance, but it is not a good idea, especially when the
+        # first expand causes non-zero quantity and then quantity
+        # becomes zero.
+        # if not (quantity or generate_empty_amounts):
+        #   continue
+
         # Backward compatibility
         if getattr(self.aq_base, 'create_line', None) == 0:
           property_dict['resource'] = None
@@ -369,8 +374,7 @@ class AmountGeneratorMixin:
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAggregatedAmountList')
   def getAggregatedAmountList(self, amount_list=None, rounding=False,
-                              amount_generator_type_list=None,
-                              generate_empty_amounts=False):
+                              amount_generator_type_list=None):
     """
     Implementation of a generic transformation algorith which is
     applicable to payroll, tax generation and BOMs. Return the
@@ -378,8 +382,7 @@ class AmountGeneratorMixin:
     """
     generated_amount_list = self.getGeneratedAmountList(
       amount_list=amount_list, rounding=rounding,
-      amount_generator_type_list=amount_generator_type_list,
-      generate_empty_amounts=generate_empty_amounts)
+      amount_generator_type_list=amount_generator_type_list)
     # XXX: Do we handle rounding correctly ?
     #      What to do if only total price is rounded ??
     aggregate_dict = {}
@@ -394,10 +397,15 @@ class AmountGeneratorMixin:
       else:
         aggregate[1] += amount.getQuantity()
     for amount, quantity in aggregate_dict.itervalues():
-      if quantity or generate_empty_amounts:
-        amount._setQuantity(quantity)
-      else:
-        result_list.remove(amount)
+      # Before we ignore 'quantity==0' amount here for better
+      # performance, but it is not a good idea, especially when the
+      # first expand causes non-zero quantity and then quantity
+      # becomes zero.
+      # if quantity or generate_empty_amounts:
+      #   amount._setQuantity(quantity)
+      # else:
+      #   result_list.remove(amount)
+      amount._setQuantity(quantity)
     if 0:
       print 'getAggregatedAmountList(%r) -> (%s)' % (
         self.getRelativeUrl(),

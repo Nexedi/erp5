@@ -41,11 +41,6 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestComplexTradeModelLineUseCasePurchase))
   return suite
 
-def getAggregatedAmountList(self, amount_generator, *args, **kw):
-  kw.setdefault('generate_empty_amounts', False)
-  return amount_generator.getAggregatedAmountList(*args, **kw)
-TestTradeModelLineMixin.getAggregatedAmountList = getAggregatedAmountList
-
 ###
 ##  TestTradeModelLine
 ##

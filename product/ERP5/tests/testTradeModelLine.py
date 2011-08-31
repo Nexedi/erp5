@@ -425,10 +425,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       self.assertEqual(len(simulation_movement_list),
                        len(result_dict))
       for use in 'discount', 'tax':
-        total_price = expected_result_dict[use].get(line.getId())
-        if total_price:
+        total_price = expected_result_dict[use].get(line.getId()) or 0.0
+        if True:
           sm = result_dict.pop(use)
-          self.assertEqual(str(sm.getTotalPrice()), str(total_price))
+          self.assertEqual(str(sm.getTotalPrice() or 0.0), str(total_price))
           self.assertEqual(3, len(sm.getCausalityValueList()))
           self.assertEqual(1, len(sm.getCausalityValueList(
             portal_type=self.business_link_portal_type)))
@@ -853,7 +853,7 @@ return getBaseAmountQuantity""")
       ('tax_share/B',): .6,
       }, base_application=(0,))
     from Products.ERP5Type.Document import newTempAmount
-    for x in ((100, 30, 10, 20, 5, 12),
+    for x in ((100, 30, 10, 0, 0, 20, 5, 12),
               (500, 150, 20, 90, 40, 120, 55, 96)):
       amount = newTempAmount(self.portal, '_',
                             quantity=x[0], price=1,
@@ -880,7 +880,8 @@ return lambda *args, **kw: 1""")
     order = self.createOrder(trade_condition, (
       dict(),
       ))
-    self.assertEqual([], self.getAggregatedAmountList(order))
+    amount_list = order.getAggregatedAmountList()
+    self.assertEqual([0, 0], [x.getTotalPrice() for x in amount_list])
     for line in trade_condition.objectValues():
       line.setBaseApplication(fixed_quantity)
     amount_list = order.getAggregatedAmountList()
