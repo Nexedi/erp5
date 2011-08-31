@@ -796,8 +796,8 @@ class ContextMainForm(MainForm):
     else:
       current_attempt_counter = 0
       while current_attempt_counter != maximum_attempt_number:
-        self.submitSelect('select_jump', 'Base_doJump:method',
-                          label, value, **kw)
+        self.browser.mainForm.submitSelect('select_jump', 'Base_doJump:method',
+                                           label, value, **kw)
 
         if no_jump_transition_message != self.browser.getTransitionMessage():
           return current_attempt_counter * sleep_between_attempt
@@ -909,15 +909,14 @@ class ContextMainForm(MainForm):
     """
     def tryLegacyAndNew():
       try:
-        self.submitSelect('select_action', 'Base_doAction:method', label,
-                          value and '%s?workflow_action=%s' % (script_id, value),
-                          **kw)
+        self.browser.mainForm.submitSelect(
+          'select_action', 'Base_doAction:method', label,
+          value and '%s?workflow_action=%s' % (script_id, value), **kw)
 
       except LookupError:
-        self.submitSelect('select_action', 'Base_doAction:method', label,
-                          value and '%s?field_my_workflow_action=%s' % (script_id,
-                                                                        value),
-                          **kw)
+        self.browser.mainForm.submitSelect(
+          'select_action', 'Base_doAction:method', label,
+          value and '%s?field_my_workflow_action=%s' % (script_id, value), **kw)
     
     if maximum_attempt_number == 1:
       tryLegacyAndNew()
