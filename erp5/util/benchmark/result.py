@@ -31,6 +31,7 @@ import math
 import os
 import csv
 import logging
+import signal
 
 class BenchmarkResultStatistic(object):
   def __init__(self, suite, label):
@@ -163,6 +164,7 @@ class BenchmarkResult(object):
 
   @abc.abstractmethod
   def __exit__(self, exc_type, exc_value, traceback):
+    signal.signal(signal.SIGTERM, signal.SIG_IGN)
     self.flush(partial=False)
     return True
 

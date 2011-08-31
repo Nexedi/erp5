@@ -56,6 +56,7 @@ class BenchmarkProcess(multiprocessing.Process):
     super(BenchmarkProcess, self).__init__(*args, **kwargs)
 
   def stopGracefully(self, *args, **kwargs):
+    signal.signal(signal.SIGTERM, signal.SIG_IGN)
     raise StopIteration("Interrupted by user or because of an error from "
                         "another process, flushing remaining results...")
 

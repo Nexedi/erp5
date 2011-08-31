@@ -50,8 +50,6 @@ class PerformanceTester(object):
     else:
       self._argument_namespace = namespace
 
-    self._process_terminated_counter = 0
-
   @staticmethod
   def _add_parser_arguments(parser):
     # Optional arguments
@@ -195,9 +193,6 @@ class PerformanceTester(object):
     ERP5BenchmarkResult.closeResultDocument(self._argument_namespace.erp5_publish_url,
                                             error_message_set)
 
-  def _child_terminated_handler(self, *args, **kwargs):
-    self._process_terminated_counter += 1
-
   def _run_constant(self, nb_users):
     process_list = []
     exit_msg_queue = multiprocessing.Queue(nb_users)
@@ -211,32 +206,24 @@ class PerformanceTester(object):
 
       process_list.append(process)
 
-    signal.signal(signal.SIGCHLD, self._child_terminated_handler)
-
     for process in process_list:
       process.start()
 
     error_message_set = set()
-    interrupted_counter = 0
-    while self._process_terminated_counter != len(process_list):
+    process_terminated_counter = 0
+
+    # Ensure that SIGTERM signal (sent by terminate()) is not sent twice
+    do_exit = False
+
+    while process_terminated_counter != len(process_list):
       try:
         error_message = exit_msg_queue.get()
 
       except KeyboardInterrupt, e:
-        if interrupted_counter == 0:
-          print >>sys.stderr, "\nInterrupted by user, stopping gracefully " \
-              "unless interrupted %d times" % MAXIMUM_KEYBOARD_INTERRUPT
+        print >>sys.stderr, "\nInterrupted by user, stopping gracefully..."
+        do_exit = True
 
-        interrupted_counter += 1
-
-        for process in process_list:
-          if (process.is_alive() and
-              (not getattr(process, '_stopping', False) or
-               interrupted_counter == MAXIMUM_KEYBOARD_INTERRUPT)):
-            process._stopping = True
-            process.terminate()
-
-      # An IOError may be raised when receiving a SIGCHLD which interrupts the
+      # An IOError may be raised  when receiving a SIGINT which interrupts the
       # blocking system call above and the system call should not be restarted
       # (using siginterrupt), otherwise the  process will stall forever as its
       # child has already exited
@@ -247,15 +234,18 @@ class PerformanceTester(object):
       else:
         if error_message is not None:
           error_message_set.add(error_message)
+          do_exit = True
 
-          # In case of error, kill  the other children because they are likely
-          # failing  as well (especially  because a  process only  exits after
-          # encountering 10 errors)
-          if interrupted_counter == 0:
-            for process in process_list:
-              if process.is_alive() and not getattr(process, '_stopping', False):
-                process._stopping = True
-                process.terminate()
+        process_terminated_counter += 1
+
+      # In case of  error or SIGINT, kill the other  children because they are
+      # likely failing as well (especially  because a process only exits after
+      # encountering 10 errors)
+      if do_exit:
+        for process in process_list:
+          if process.is_alive():
+            process.terminate()
+            process.join()
 
     if error_message_set:
       return (error_message_set, 1)
