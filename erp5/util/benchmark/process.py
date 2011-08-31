@@ -51,6 +51,8 @@ class BenchmarkProcess(multiprocessing.Process):
     # Initialized when running the test
     self._browser = None
     self._current_repeat = 1
+
+    # TODO: Per target error counter instead of global one?
     self._error_counter = 0
 
     super(BenchmarkProcess, self).__init__(*args, **kwargs)
@@ -75,6 +77,7 @@ class BenchmarkProcess(multiprocessing.Process):
       result.enterSuite(target.__name__)
 
       try:
+        self._browser.open()
         target(result, self._browser)
       except StopIteration:
         raise
