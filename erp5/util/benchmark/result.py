@@ -102,7 +102,8 @@ class BenchmarkResult(object):
   def getLogger(self):
     if not self._logger:
       logging.basicConfig(stream=self.log_file, level=self._log_level)
-      return logging.getLogger('erp5.utils.benchmark')
+      self._logger = logging.getLogger('erp5.utils.benchmark')
+      return self._logger
 
     return self._logger
 
