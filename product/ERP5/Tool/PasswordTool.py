@@ -165,7 +165,7 @@ class PasswordTool(BaseTool):
     # send mail
     message_dict = {'instance_name':self.getPortalObject().getTitle(),
                     'reset_password_link':url,
-                    'expiration_date':self.getExpirationDateForKey(key).strftime('%Y/%m/%d %H:%M')}
+                    'expiration_date':self.getExpirationDateForKey(key)}
 
     if notification_message is None:
       subject = translateString("[${instance_name}] Reset of your password",
