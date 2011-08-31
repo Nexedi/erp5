@@ -579,6 +579,7 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     # associate it with barney
     credential_recovery.setDestinationDecisionValue(person)
+    credential_recovery.setReference(person.getReference())
     sequence.edit(credential_recovery=credential_recovery)
 
   def stepRequestCredentialRecoveryWithERP5Site_newCredentialRecovery(self,
@@ -668,10 +669,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEqual(barney.getDefaultEmailText(), send_to)
 
   def stepCheckPasswordChange(self, sequence=None, sequence_list=None, **kw):
-    '''
+    """
       check it's possible to change the user password using the link in the
       email
-    '''
+    """
     # get the url
     last_message = self.portal.MailHost._last_message
     rawstr = r"""PasswordTool_viewResetPassword"""
