@@ -151,7 +151,6 @@ class PasswordTool(BaseTool):
         msg = translateString(
             "User ${user} does not have an email address, please contact site "
             "administrator directly", mapping={'user':user_login})
-
     if msg:
       if REQUEST is not None:
         parameter = urlencode(dict(portal_status_message=msg))
@@ -160,8 +159,8 @@ class PasswordTool(BaseTool):
         return REQUEST.RESPONSE.redirect( ret_url )
       return msg
 
-    key = self.getResetPasswordKey(user_login)
-    url = self.getResetPasswordUrl(key, site_url)
+    key = self.getResetPasswordKey(user_login=user_login)
+    url = self.getResetPasswordUrl(key=key, site_url=site_url)
 
     # send mail
     message_dict = {'instance_name':self.getPortalObject().getTitle(),
