@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildVirtuemartSaleOrderBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>VirtuemartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/virtuemart/http_connector</string>
+                <string>destination/portal_integrations/virtuemart/sale_order_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getSaleOrderList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/Virtuemart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2020/01/01\'), \'start_date\': DateTime(\'2010/01/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.1.34/tiosafe_virtuemart/getSaleOrderList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<xml><object><id>3</id><title>Sale Order 3</title><person_id>78</person_id><reference>78_26918d95b7e909e94677da583490e</reference><currency>USD</currency><delivery_price>124.35</delivery_price><delivery_title>standard_shipping|DHL|World_2 > 20kg|124.35|20</delivery_title><delivery_tax_rate>0.00</delivery_tax_rate><discount_price>0.00</discount_price><discount_code></discount_code><discount_title>0.00</discount_title><discount_tax_rate>0.00</discount_tax_rate><payment_method>Credit Card</payment_method><shipping_company>ADIE</shipping_company><shipping_firstname>Sokhna Zahra</shipping_firstname><shipping_lastname>Diop</shipping_lastname><user_email>sokhna@hotmail.com</user_email><billing_company>ADIE</billing_company><billing_firstname>Sokhna Zahra</billing_firstname><billing_lastname>Diop</billing_lastname><billing_user_email>sokhna@hotmail.com</billing_user_email><start_date></start_date></object><object><id>4</id><title>Sale Order 4</title><person_id>90</person_id><reference>90_fbc648fe44ce526aeb09d5fd299db</reference><currency>USD</currency><delivery_price>9.88</delivery_price><delivery_title>standard_shipping|UPS|UPS Express|9.88|21</delivery_title><delivery_tax_rate>0.00</delivery_tax_rate><discount_price>103.64</discount_price><discount_code>test2</discount_code><discount_title>Discount test2</discount_title><discount_tax_rate>0.00</discount_tax_rate><payment_method>Cash On Delivery</payment_method><shipping_company></shipping_company><shipping_firstname>Aissatou</shipping_firstname><shipping_lastname>Keita</shipping_lastname><user_email>aicha@loves.you</user_email><billing_company></billing_company><billing_firstname>Aissatou</billing_firstname><billing_lastname>Keita</billing_lastname><billing_user_email>aicha@loves.you</billing_user_email><start_date></start_date></object></xml>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Sale Order">\n
+  <reference>3</reference>\n
+  <currency>USD</currency>\n
+  <payment_mode>cb</payment_mode>\n
+  <arrow type="">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> ADIE sokhna@hotmail.com</destination>\n
+  </arrow>\n
+  <arrow type="Administration">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> ADIE sokhna@hotmail.com</destination>\n
+  </arrow>\n
+  <arrow type="Decision">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> Sokhna Zahra Diop sokhna@hotmail.com</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> ADIE sokhna@hotmail.com</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource> L01</resource>\n
+    <title>Metal Ladder</title>\n
+    <reference>L01</reference>\n
+    <quantity>3.00</quantity>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Delivery</resource>\n
+    <title>standard_shipping|DHL|World_2 &gt; 20kg|124.35|20</title>\n
+    <reference>standard_shipping|DHL|World_2 &gt; 20kg|124.35|20</reference>\n
+    <quantity>1.00</quantity>\n
+    <price>124.350000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Discount</resource>\n
+    <title>0.00</title>\n
+    <reference>0.00</reference>\n
+    <quantity>-1.00</quantity>\n
+    <price>0.000000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Sale Order">\n
+  <reference>4</reference>\n
+  <currency>USD</currency>\n
+  <payment_mode>cash_on_delivery</payment_mode>\n
+  <arrow type="">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+  </arrow>\n
+  <arrow type="Administration">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> Aissatou Keita aicha@loves.you</destination>\n
+  </arrow>\n
+  <arrow type="Decision">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> Aissatou Keita aicha@loves.you</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> Aissatou Keita aicha@loves.you</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource> L01</resource>\n
+    <title>Metal Ladder</title>\n
+    <reference>L01</reference>\n
+    <quantity>2.00</quantity>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> P02</resource>\n
+    <title>Circular Saw</title>\n
+    <reference>P02</reference>\n
+    <quantity>2.00</quantity>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Delivery</resource>\n
+    <title>standard_shipping|UPS|UPS Express|9.88|21</title>\n
+    <reference>standard_shipping|UPS|UPS Express|9.88|21</reference>\n
+    <quantity>1.00</quantity>\n
+    <price>9.880000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Discount</resource>\n
+    <title>Discount test2</title>\n
+    <reference>Discount test2</reference>\n
+    <quantity>-1.00</quantity>\n
+    <price>103.640000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getSaleOrderParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get One Sale Order</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

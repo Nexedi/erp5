@@ -28,7 +28,6 @@
 
 from Products.ERP5Type.Utils import cartesianProduct
 from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
-from Products.ERP5SyncML.Document.Conflict import Conflict
 from lxml import etree
 from zLOG import LOG
 
@@ -38,6 +37,9 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
   """
   def __init__(self):
     self.xml_object_tag = 'resource'
+
+  def getObjectAsXML(self, object, domain):
+    return object.asXML()
 
   def _createContent(self, xml=None, object=None, object_id=None, sub_object=None,
       reset_local_roles=0, reset_workflow=0, simulate=0, **kw):
@@ -118,7 +120,7 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     return object[new_id]
 
 
-  def _deleteContent(self, object=None, object_id=None):
+  def _deleteContent(self, object=None, object_id=None, **kw):
     """ This method allows to remove a product in the integration site """
     delete_method_id = "deleteProduct" # XXX-AUREL : must find a way to fix this
     delete_method = getattr(object, delete_method_id, None)
@@ -157,7 +159,7 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     if tag.split('[')[0] == 'category':
       # call the method which allows to work on a specific part, the update of
       # categories
-      conflict_list += self._updateCategory(document, xml, previous_value)
+      conflict_list += self._updateCategory(document, xml, previous_value, signature=kw['signature'])
     else:
       # getter used to retrieve the current values and to check conflicts
       property_list = ['sale_price', 'purchase_price', 'ean13']
@@ -176,14 +178,13 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
       if isinstance(current_value, unicode):
         current_value = current_value.encode('utf-8')
       if current_value not in [new_value, previous_value]:
-        conflict = Conflict(
-            object_path=document.getPhysicalPath(),
-            keyword=tag,
-        )
-        conflict.setXupdate(etree.tostring(xml, encoding='utf-8'))
-        conflict.setLocalValue(current_value)
-        conflict.setRemoteValue(new_value)
-        conflict_list.append(conflict)
+        conflict_list.append(self._generateConflict(path=document.getPhysicalPath(),
+                                      tag=tag,
+                                      xml=xml,
+                                      current_value=current_value,
+                                      new_value=new_value,
+                                      signature=kw['domain'],
+                                      ))
       else:
         keyword = {'product_id': document.getId(), tag: new_value , }
         document.context.product_module.updateProduct(**keyword)
@@ -193,49 +194,50 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     return conflict_list
 
 
-  def _updateXupdateDel(self, document=None, xml=None, previous_xml=None, **kw):
+  def _updateXupdateDel(self, document=None, object_xml=None, xml=None, previous_xml=None, **kw):
     """ This method is called in updateNode and allows to remove elements. """
     conflict_list = []
     tag = xml.get('select').split('/')[-1]
     integration_site = document.context.getParentValue()
-
     if tag.split('[')[0] == 'category':
       # retrieve the previous xml etree through xpath
-      previous_xml = previous_xml.xpath(tag)
+      selected_previous_xml = previous_xml.xpath(tag)
       try:
         previous_value = integration_site.getMappingFromCategory(
-            previous_xml[0].text,
+            selected_previous_xml[0].text,
         )
       except IndexError:
         raise IndexError, 'Too little or too many value, only one is required for %s' % (
             previous_xml
         )
-
+      LOG("TiosafeResourceConduit.del", 300, "will remove category %s from %s" %(tag, previous_xml.text))
       # retrieve the current value to check if exists a conflict
-      current_value = etree.XML(document.asXML()).xpath(tag)[0].text
-      current_value = integration_site.getMappingFromCategory(current_value)
-
+      current_value = etree.XML(object_xml).xpath(tag)[0].text
+      mapped_current_value = integration_site.getMappingFromCategory(current_value)
 
       # work on variations
       variation_brain_list = document.context.getProductCategoryList()
       for brain in variation_brain_list:
-        if brain.category == current_value and previous_value == current_value:
-          base_category, variation = current_value.split('/', 1)
+        LOG("TioSafeResourceConduit.delete", 300,
+            "comparing brain %s with current %s and previous %s" %(brain.category,
+                                                                   mapped_current_value,
+                                                                   previous_value),)
+        if brain.category == mapped_current_value and previous_value == mapped_current_value:
+          base_category, variation = mapped_current_value.split('/', 1)
           document.context.product_module.deleteProductAttributeCombination(
               product_id=document.getId(),
               base_category=base_category,
               variation=variation,
           )
+          break
       else:
         # previous value different from current value
-        conflict = Conflict(
-            object_path=document.getPhysicalPath(),
-            keyword=tag,
-        )
-        conflict.setXupdate(etree.tostring(xml, encoding='utf-8'))
-        conflict.setLocalValue(previous_value)
-        conflict.setRemoteValue(current_value)
-        conflict_list.append(conflict)
+        self._generateConflict(document.getPhysicalPath(),
+                               tag,
+                               xml, 
+                               previous_value,
+                               current_value,
+                               kw["signature"])
     else:
       keyword = {'product_id': document.getId(), tag: 'NULL' , }
       document.context.product_module.updateProduct(**keyword)
@@ -291,7 +293,7 @@ class TioSafeResourceConduit(TioSafeBaseConduit):
     return conflict_list
 
 
-  def _updateCategory(self, document=None, xml=None, previous_value=None):
+  def _updateCategory(self, document=None, xml=None, previous_value=None, signature=None):
     """ This method allows to update a Category in the Integration Site. """
     conflict_list = []
     return conflict_list

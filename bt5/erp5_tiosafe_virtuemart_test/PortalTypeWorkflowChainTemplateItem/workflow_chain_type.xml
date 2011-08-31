@@ -1,0 +1,22 @@
+<workflow_chain>
+ <chain>
+  <type>Virtuemart Test Organisation</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Virtuemart Test Person</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Virtuemart Test Product</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Virtuemart Test Sale Order</type>
+  <workflow>edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Virtuemart Test Sale Order Item</type>
+  <workflow>edit_workflow</workflow>
+ </chain>
+</workflow_chain>

@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildVirtuemartProductListBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>VirtuemartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>ProductResource</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/virtuemart/http_connector</string>
+                <string>destination/portal_integrations/virtuemart/product_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getProductList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Product</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/Virtuemart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2020/01/01\'), \'start_date\': DateTime(\'2010/01/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml>\n
+  <object>\n
+    <id>18</id>\n
+    <reference>PRDNew</reference>\n
+    <title>New Product updated</title>\n
+    <sale_price>100.0</sale_price>\n
+    <purchase_price></purchase_price>\n
+    <description>Description New Product updated</description>\n
+    <category></category>\n
+  </object>\n
+  <object>\n
+    <id>16</id>\n
+    <reference>PRD3</reference>\n
+    <title>iPad1</title>\n
+    <sale_price></sale_price>\n
+    <purchase_price></purchase_price>\n
+    <description>La tablette qui va changer votre vie</description>\n
+    <category></category>\n
+  </object>\n
+  <object>\n
+    <id>15</id>\n
+    <reference>PRD2</reference>\n
+    <title>iPhone 4</title>\n
+    <sale_price></sale_price>\n
+    <purchase_price></purchase_price>\n
+    <description>Le telephone du futur</description>\n
+    <category></category>\n
+  </object>\n
+  <object>\n
+    <id>1</id>\n
+    <reference>PRD1</reference>\n
+    <title>iPhone 3GS</title>\n
+    <sale_price></sale_price>\n
+    <purchase_price></purchase_price>\n
+    <description>Le telephone du futur</description>\n
+    <category></category>\n
+  </object>\n
+</xml>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<resource type="Product">\n
+  <title>New Product updated</title>\n
+  <reference>PRDNew</reference>\n
+  <description>Description New Product updated</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>iPad1</title>\n
+  <reference>PRD3</reference>\n
+  <description>La tablette qui va changer votre vie</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>iPhone 4</title>\n
+  <reference>PRD2</reference>\n
+  <description>Le telephone du futur</description>\n
+  <category>colour/blanc</category>\n
+  <category>memory/32Go</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>iPhone 3GS</title>\n
+  <reference>PRD1</reference>\n
+  <description>Le telephone du futur</description>\n
+  <category>colour/noir</category>\n
+  <category>memory/16Go</category>\n
+  <category>memory/32Go</category>\n
+</resource>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getProductParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Product List</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

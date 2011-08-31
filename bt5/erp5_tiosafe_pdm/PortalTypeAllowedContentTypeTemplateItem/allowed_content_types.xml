@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="Mapped Property Type">
+  <item>Mapped Property Cell</item>
+ </portal_type>
+ <portal_type id="Product">
+  <item>Mapped Property Type</item>
+ </portal_type>
+</allowed_content_type_list>

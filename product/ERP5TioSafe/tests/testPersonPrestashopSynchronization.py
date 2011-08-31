@@ -29,7 +29,7 @@
 import transaction
 from Products.ERP5TioSafe.tests.testPrestashopMixin import testPrestashopMixin
 
-class testPersonPrestashopSynchronization(testPrestashopMixin):
+class TestPersonPrestashopSynchronization(testPrestashopMixin):
   """ This class allows to check different cases of Person's sync. """
   def afterSetUp(self):
     """ This method is called after the SetUp method. """
@@ -39,11 +39,28 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
     self.prestashop = self.portal.portal_integrations.prestashop
     self.root_xml = '<directory>\n%s\n</directory>'
 
+  def createPerson(self, **kw):
+    """
+     This method create the person and the related sale trade condition
+    """
+    person = self.person_module.newContent(**kw)
+    person.validate()
+    person_url = person.getRelativeUrl()
+    stc = self.getPortalObject().sale_trade_condition_module.newContent(destination=person_url,
+                                                                        destination_secion=person_url,
+                                                                        destination_decision=person_url,
+                                                                        destination_administration=person_url,
+                                                                        specialise=self.prestashop.getSourceTrade())
+    stc.validate()
+    transaction.commit()
+    self.tic()
+    return person
+
   def test_PrestashopSimplestXMLSync(self):
     """ This test checks the person sync with the simplest XML. """
     # Initialize the instance and prestashop
     self.initPrestashopTest()
-    person = self.person_module.newContent(
+    person = self.createPerson(
         portal_type='Person',
         title='John DOE',
         first_name='John',
@@ -51,7 +68,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
         default_email_text='john@doe.com',
         career_role_list = ['client'],
     )
-    person.validate()
+    
     transaction.commit()
     self.tic()
 
@@ -71,7 +88,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    person = self.person_module.newContent(
+    person = self.createPerson(
         portal_type='Person',
         title='Jean GRAY',
         first_name='Jean',
@@ -84,7 +101,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
     person.setDefaultAddressZipCode('75000')
     person.setDefaultAddressCity('Paris')
     person.setDefaultAddressRegion('france')
-    person.validate()
+    
     transaction.commit()
     self.tic()
 
@@ -104,7 +121,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    person = self.person_module.newContent(
+    person = self.createPerson(
         portal_type='Person',
         title='Jenifer-Dylan COX',
         first_name='Jenifer-Dylan',
@@ -118,7 +135,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
     person.setDefaultAddressZipCode('72160')
     person.setDefaultAddressCity('Stuttgart')
     person.setDefaultAddressRegion('europe/western_europe/allemagne')
-    person.validate()
+    person.default_address.setIntIndex(1)
     # second address
     person.newContent(
         portal_type='Address',
@@ -127,6 +144,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
         zip_code='75000',
         city='Paris',
         region='france',
+        int_index=2,
     )
     # third address
     person.newContent(
@@ -136,6 +154,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
         zip_code='44001',
         city='Dortmund',
         region='europe/western_europe/allemagne',
+        int_index=3,
     )
     transaction.commit()
     self.tic()
@@ -155,7 +174,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
     """ Check that the delete during a person's sync invalidate the person. """
     # Initialize the instance and prestashop
     self.initPrestashopTest()
-    person = self.person_module.newContent(
+    person = self.createPerson(
         portal_type='Person',
         title='John DOE',
         first_name='John',
@@ -163,7 +182,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
         default_email_text='john@doe.com',
         career_role_list = ['client'],
     )
-    person.validate()
+    
     transaction.commit()
     self.tic()
 
@@ -181,7 +200,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    person = self.person_module.newContent(
+    person = self.createPerson(
         portal_type='Person',
         title='Chris TURK',
         first_name='Chris',
@@ -193,7 +212,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
         default_address_region='france',
         career_role_list = ['client'],
     )
-    person.validate()
+    
     transaction.commit()
     self.tic()
 
@@ -226,7 +245,7 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    person = self.person_module.newContent(
+    person = self.createPerson(
         portal_type='Person',
         title='Perry COX',
         first_name='Perry',
@@ -239,12 +258,13 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
         default_address_region='france',
         career_role_list = ['client'],
     )
-    person.validate()
+    person.default_address.setIntIndex(1)
     address2 = person.newContent(
         portal_type='Address',
         street_address='789 avenue des Fleurs',
         zip_code='44001',
         city='Dortmund',
+        int_index=2,
         region='europe/western_europe/allemagne',
     )
     transaction.commit()
@@ -274,13 +294,14 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
     # The second update check the add of a simple element and the add of
     # address
     person.setStartDate('1959-08-03') # TODO: Why it doesn't work ???
-    person.setDefaultAddressCity('Stuttgart')
+    person.setDefaultAddressCity('Lille')
     address2 = person.newContent(
         portal_type='Address',
         street_address='789 avenue des Fleurs',
         zip_code='44001',
         city='Dortmund',
         region='europe/western_europe/allemagne',
+        int_index=3,
     )
     self.loadSync([self.prestashop.person_module, ])
     self.assertEqual(len(self.prestashop.person_module()), 1)
@@ -300,3 +321,8 @@ class testPersonPrestashopSynchronization(testPrestashopMixin):
         xsd_path='../XSD/nodes.xsd',
     )
 
+import unittest
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestPersonPrestashopSynchronization))
+  return suite

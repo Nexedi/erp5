@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Resource</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/OSCommerce/product_mapping</string>
+                <string>source/portal_integrations/OSCommerce/http_connector</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getListeProduct</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Product</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/OSCommerce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.3.34/osc/catalog/admin/tiosafe/getListeProduct</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<xml><object><id>1</id><title>Matrox G200 MMS</title></object><object><id>2</id><title>Matrox G400 32MB</title></object><object><id>3</id><title>Microsoft IntelliMouse Pro</title></object><object><id>4</id><title>The Replacement Killers</title></object><object><id>5</id><title>Blade Runner - Director\'s Cut</title></object><object><id>6</id><title>The Matrix</title></object><object><id>7</id><title>You\'ve Got Mail</title></object><object><id>8</id><title>A Bug\'s Life</title></object><object><id>9</id><title>Under Siege</title></object><object><id>10</id><title>Under Siege 2 - Dark Territory</title></object><object><id>11</id><title>Fire Down Below</title></object><object><id>12</id><title>Die Hard With A Vengeance</title></object><object><id>13</id><title>Lethal Weapon</title></object><object><id>14</id><title>Red Corner</title></object><object><id>15</id><title>Frantic</title></object><object><id>16</id><title>Courage Under Fire</title></object><object><id>17</id><title>Speed</title></object><object><id>18</id><title>Speed 2: Cruise Control</title></object><object><id>19</id><title>There\'s Something About Mary</title></object><object><id>20</id><title>Beloved</title></object><object><id>21</id><title>SWAT 3: Close Quarters Battle</title></object><object><id>23</id><title>The Wheel Of Time</title></object><object><id>24</id><title>Disciples: Sacred Lands</title></object><object><id>25</id><title>Microsoft Internet Keyboard PS/2</title></object><object><id>26</id><title>Microsoft IntelliMouse Explorer</title></object><object><id>44</id><title>Bibouloumaniatope</title></object></xml>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<resource>\n
+  <title>Matrox G200 MMS</title>\n
+  <category>Memory/16 mb</category>\n
+  <category>Memory/4 mb</category>\n
+  <category>Memory/8 mb</category>\n
+  <category>Model/Premium</category>\n
+  <category>Model/Value</category>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Matrox G400 32MB</title>\n
+  <category>Memory/16 mb</category>\n
+  <category>Memory/32 mb</category>\n
+  <category>Model/Deluxe</category>\n
+  <category>Model/Premium</category>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Microsoft IntelliMouse Pro</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>The Replacement Killers</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Blade Runner - Director\'s Cut</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>The Matrix</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>You\'ve Got Mail</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>A Bug\'s Life</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Under Siege</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Under Siege 2 - Dark Territory</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Fire Down Below</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Die Hard With A Vengeance</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Lethal Weapon</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Red Corner</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Frantic</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Courage Under Fire</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Speed</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Speed 2: Cruise Control</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>There\'s Something About Mary</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Beloved</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>SWAT 3: Close Quarters Battle</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>The Wheel Of Time</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Disciples: Sacred Lands</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Microsoft Internet Keyboard PS/2</title>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Microsoft IntelliMouse Explorer</title>\n
+  <category>Model/PS/2</category>\n
+  <category>Model/USB</category>\n
+</resource>\n
+\n
+<resource>\n
+  <title>Bibouloumaniatope</title>\n
+</resource>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Retrieve Product</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

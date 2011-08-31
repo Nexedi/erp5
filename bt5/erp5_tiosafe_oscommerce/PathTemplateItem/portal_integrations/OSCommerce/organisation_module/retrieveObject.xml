@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>OscommerceBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Organisation</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/OSCommerce/http_connector</string>
+                <string>destination/portal_integrations/OSCommerce/organisation_dict Oscommerce</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getOrganisationInfo</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Organisation</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/OSCommerce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'organisation_id\': \'30\'}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.3.34/osc/catalog/admin/tiosafe/getOrganisationInfo</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml><object><id>30</id><country_id>210</country_id><title>Diopart</title><email>dieynabadiop@gmail.com</email><phone>0623473199</phone><fax></fax></object></xml>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Organisation">\n
+  <title>Diopart</title>\n
+  <email>dieynabadiop@gmail.com</email>\n
+  <phone>0623473199</phone>\n
+  <address>\n
+    <street>B. Clementine 2</street>\n
+    <zip>34298</zip>\n
+    <city>Portland</city>\n
+    <country>togo</country>\n
+  </address>\n
+  <category>role/client</category>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Retrieve Organisation Info</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

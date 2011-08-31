@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts99848559.98</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SaleOrderList.xsd</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?>\n
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">\n
+  <xs:element name="xml">\n
+    <xs:complexType>\n
+      <xs:sequence>\n
+        <xs:element ref="OrderList"/>\n
+      </xs:sequence>\n
+    </xs:complexType>\n
+  </xs:element>\n
+  <xs:element name="OrderList">\n
+    <xs:complexType>\n
+      <xs:sequence>\n
+        <xs:element maxOccurs="unbounded" ref="OrderID"/>\n
+      </xs:sequence>\n
+    </xs:complexType>\n
+  </xs:element>\n
+  <xs:element name="OrderID">\n
+    <xs:complexType>\n
+      <xs:sequence>\n
+        <xs:element ref="id"/>\n
+        <xs:element ref="start_date"/>\n
+        <xs:element ref="currency"/>\n
+        <xs:element ref="billing_first_name"/>\n
+        <xs:element ref="billing_last_name"/>\n
+        <xs:element ref="billing_company"/>\n
+        <xs:element ref="delivery_first_name"/>\n
+        <xs:element ref="delivery_last_name"/>\n
+        <xs:element ref="delivery_company"/>\n
+        <xs:element ref="payment_method"/>\n
+        <xs:element ref="primary_email"/>\n
+        <xs:element ref="delivery_title"/>\n
+        <xs:element ref="delivery_price"/>\n
+        <xs:element ref="delivery_tax_rate"/>\n
+        <xs:element ref="discount_code"/>\n
+        <xs:element ref="discount_title"/>\n
+        <xs:element ref="discount_price"/>\n
+        <xs:element ref="discount_tax_rate"/>\n
+        <xs:element ref="billing_country"/>\n
+        <xs:element ref="delivery_country"/>\n
+      </xs:sequence>\n
+    </xs:complexType>\n
+  </xs:element>\n
+  <xs:element name="id" type="xs:integer"/>\n
+  <xs:element name="start_date" type="xs:string"/>\n
+  <xs:element name="currency" type="xs:NCName"/>\n
+  <xs:element name="billing_first_name" type="xs:NCName"/>\n
+  <xs:element name="billing_last_name" type="xs:NCName"/>\n
+  <xs:element name="billing_company" type="xs:string"/>\n
+  <xs:element name="delivery_first_name" type="xs:NCName"/>\n
+  <xs:element name="delivery_last_name" type="xs:NCName"/>\n
+  <xs:element name="delivery_company" type="xs:NCName"/>\n
+  <xs:element name="payment_method" type="xs:NCName"/>\n
+  <xs:element name="primary_email" type="xs:string"/>\n
+  <xs:element name="delivery_title" type="xs:string"/>\n
+  <xs:element name="delivery_price" type="xs:decimal"/>\n
+  <xs:element name="delivery_tax_rate" type="xs:decimal"/>\n
+  <xs:element name="discount_code">\n
+    <xs:complexType/>\n
+  </xs:element>\n
+  <xs:element name="discount_title">\n
+    <xs:complexType/>\n
+  </xs:element>\n
+  <xs:element name="discount_price">\n
+    <xs:complexType/>\n
+  </xs:element>\n
+  <xs:element name="discount_tax_rate" type="xs:decimal"/>\n
+  <xs:element name="billing_country" type="xs:string"/>\n
+  <xs:element name="delivery_country" type="xs:string"/>\n
+</xs:schema>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2655</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

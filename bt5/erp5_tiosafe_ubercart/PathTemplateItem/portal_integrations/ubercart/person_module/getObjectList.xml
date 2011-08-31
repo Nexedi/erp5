@@ -1,0 +1,171 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildUbercartPersonListBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>UbercartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>PersonNode</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/ubercart/http_connector</string>
+                <string>destination/portal_integrations/ubercart/ubercart_person_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getPersonList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Person</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/ubercart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2011/12/31\'), \'start_date\': DateTime(\'2010/01/01\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml>\n
+  <object>\n
+    <id>6</id>\n
+    <reference>3554</reference>\n
+    <firstname>Mouhamadou</firstname>\n
+    <lastname>DIAGNE</lastname>\n
+    <email>mouhamad@diagne.sn</email>\n
+    <street>18 avenue Jena Jores</street>\n
+    <zip>3543</zip>\n
+    <city>Dakar</city>\n
+    <country>United States</country>\n
+    <company_id>Orange France</company_id>\n
+    <company>Orange France</company>\n
+    <category></category>\n
+  </object>\n
+  <object>\n
+    <id>9</id>\n
+    <reference>355</reference>\n
+    <firstname>Aida</firstname>\n
+    <lastname>DIOP</lastname>\n
+    <email>aida@yahoo.fr</email>\n
+    <street>ouest foire</street>\n
+    <zip>85575</zip>\n
+    <city>Dakar</city>\n
+    <country>United States</country>\n
+    <company_id>Orange France</company_id>\n
+    <company>Orange France</company>\n
+    <category></category>\n
+  </object>\n
+  <object>\n
+    <id>23</id>\n
+    <reference>34657</reference>\n
+    <firstname>Mamour</firstname>\n
+    <lastname>DIAFOUNE</lastname>\n
+    <email>mamdia@yahoo.fr</email>\n
+    <street>Nord Foire</street>\n
+    <zip>85575</zip>\n
+    <city>Dakar</city>\n
+    <country>United States</country>\n
+    <company_id>None</company_id>\n
+    <company></company>\n
+    <category></category>\n
+  </object>\n
+</xml>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Person">\n
+  <firstname>Mouhamadou</firstname>\n
+  <lastname>DIAGNE</lastname>\n
+  <email>mouhamad@diagne.sn</email>\n
+  <category>role/client</category>\n
+  <relation> Orange France united_states</relation>\n
+</node>\n
+\n
+<node type="Person">\n
+  <firstname>Aida</firstname>\n
+  <lastname>DIOP</lastname>\n
+  <email>aida@yahoo.fr</email>\n
+  <category>role/client</category>\n
+  <relation> Orange France united_states</relation>\n
+</node>\n
+\n
+<node type="Person">\n
+  <firstname>Mamour</firstname>\n
+  <lastname>DIAFOUNE</lastname>\n
+  <email>mamdia@yahoo.fr</email>\n
+  <address>\n
+    <street>Nord Foire</street>\n
+    <zip>85575</zip>\n
+    <city>Dakar</city>\n
+    <country>united_states</country>\n
+  </address>\n
+  <category>role/client</category>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getPersonParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get list of Person</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

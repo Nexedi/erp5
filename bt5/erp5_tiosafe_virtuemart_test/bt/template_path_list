@@ -1,0 +1,9 @@
+currency_module/**
+portal_categories/role/client
+portal_categories/role/virtuemart_delivery
+portal_integrations/virtuemart/Collection**
+portal_integrations/virtuemart/Color**
+portal_integrations/virtuemart/Country**
+portal_integrations/virtuemart/Memory**
+portal_integrations/virtuemart/PaymentMode**
+virtuemart_test_module/**

@@ -101,6 +101,10 @@
                         <string>my_reference</string>
                         <string>my_start_date</string>
                         <string>my_stop_date</string>
+                        <string>my_destination_title</string>
+                        <string>my_resource_title</string>
+                        <string>my_source_payment</string>
+                        <string>my_source_title</string>
                       </list>
                     </value>
                 </item>
@@ -114,6 +118,7 @@
                         <string>my_source_administration_title</string>
                         <string>my_source_carrier_title</string>
                         <string>my_destination_carrier_title</string>
+                        <string>my_price_currency</string>
                       </list>
                     </value>
                 </item>

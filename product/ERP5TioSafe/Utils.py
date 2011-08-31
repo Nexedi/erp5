@@ -29,6 +29,91 @@
 
 from zLOG import LOG, ERROR
 
+class NewEchoDictTarget:
+  """
+  This is an echo class used by lxml to parse xml data
+
+  See http://codespeak.net/lxml/parsing.html#the-target-parser-interface
+
+  This class takes a dict as init parameter defining how to parse the xml.
+
+  Dict must looks like :
+  { xml_tag : (wanted_dict_key, {sub_parser_dict}),...}
+
+  The result of the parsing will thus return a list of dictionnaries. Each time it finds an xml_tag which is a root element will create a new dict.
+
+  This allow to transform an xml string into a property dict wich can be used to easily create a new erp5 object
+
+  Parsing must be called this way :
+  parser = etree.XMLParser(target = EchoDictTarget(parser_dict))
+  result_list = etree.XML(str(xml), parser,)
+
+  """
+
+  def __init__(self, parser_dict):
+    self.result_list = []
+    self._current_object = None # This is a dict storing all properties parsed for one object
+    self._current_key = None #
+    self.current_parser = parser_dict
+    self.parser_stack = [] # Pile of parser dict to manage multiple tag level
+
+  def start(self, tag, attrib):
+    try:
+      value, subtag = self.current_parser[tag]
+      if subtag:
+        # We got a parser dict for the tag, this means it has subtag
+        if not self._current_object:
+          self._current_object = {}
+        self.parser_stack.append(self.current_parser.copy())
+        self.current_parser = subtag
+      else:
+        if self._current_object is not None and \
+               not self._current_object.has_key(value):
+          # Create default value
+          self._current_object[value] = ""
+          self._current_key = value
+        else:
+          # Tag already parse, this means it's the same
+          # from a subelement part, do not update it
+          self._current_key = None
+    except KeyError:
+      self._current_key = None
+    except TypeError:
+      LOG("EchoTargetDict.start", ERROR,
+          "got a key for %s, but no root tag exists ! Check your property mapping definition" %(tag,))
+      self._current_key = None
+
+  def end(self, tag):
+    #self._current_tag = None
+    try:
+      if len(self.parser_stack):
+        value , subtag = self.parser_stack[-1][tag]
+        if subtag:
+          if len(self.parser_stack) == 1:
+            # This is the end of an object
+            self.result_list.append(self._current_object.copy())
+            self._current_object = None
+
+          # This is the end of a subtag, put back parent parser
+          self.current_parser = self.parser_stack.pop(-1)
+    except KeyError:
+      pass
+
+  def data(self, data):
+    if self._current_key and len(data.strip()):
+      # for the element browsed several time
+      if self._current_object.has_key(self._current_key):
+        data = self._current_object[self._current_key] + data
+      self._current_object[self._current_key] = data
+
+
+  def comment(self, text):
+    pass
+
+  def close(self):
+    return self.result_list
+
+
 class EchoDictTarget:
   """
   This is an echo class used by lxml to parse xml data
@@ -36,7 +121,7 @@ class EchoDictTarget:
   See http://codespeak.net/lxml/parsing.html#the-target-parser-interface
 
   This class takes a dict as init parameter defining how to parse the xml.
-  
+
   Dict must looks like :
   { xml_tag : (wanted_dict_key, is_root_element),...}
 
@@ -74,7 +159,7 @@ class EchoDictTarget:
       LOG("EchoTargetDict.start", ERROR,
           "got a key for %s, but no root tag exists ! Check your property mapping definition" %(tag,))
       self._current_key = None
-      
+
   def end(self, tag):
     try:
       value , root = self.parser_dict[tag]
@@ -95,6 +180,3 @@ class EchoDictTarget:
 
   def close(self):
     return self.result_list
-
-
-  

@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Oxatis Test Sale Order Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>DiscountRate</string> </key>
+            <value> <string>22.67</string> </value>
+        </item>
+        <item>
+            <key> <string>EcoTaxValueTaxIncl</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>GrossAmount</string> </key>
+            <value> <string>497.52</string> </value>
+        </item>
+        <item>
+            <key> <string>GrossPrice</string> </key>
+            <value> <string>124.38</string> </value>
+        </item>
+        <item>
+            <key> <string>ItemName</string> </key>
+            <value> <string>Robe Jaune</string> </value>
+        </item>
+        <item>
+            <key> <string>ItemOxID</string> </key>
+            <value> <string>111114</string> </value>
+        </item>
+        <item>
+            <key> <string>ItemSKU</string> </key>
+            <value> <string>R004</string> </value>
+        </item>
+        <item>
+            <key> <string>ItemSKUOriginal</string> </key>
+            <value> <string>R001</string> </value>
+        </item>
+        <item>
+            <key> <string>NetAmount</string> </key>
+            <value> <string>384.72</string> </value>
+        </item>
+        <item>
+            <key> <string>NetPrice</string> </key>
+            <value> <string>96.18</string> </value>
+        </item>
+        <item>
+            <key> <string>Quantity</string> </key>
+            <value> <string>4</string> </value>
+        </item>
+        <item>
+            <key> <string>TaxRate</string> </key>
+            <value> <string>19.6</string> </value>
+        </item>
+        <item>
+            <key> <string>VATAmount</string> </key>
+            <value> <string>63.05</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Oxatis Test Sale Order Item</string> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Robe jaune</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

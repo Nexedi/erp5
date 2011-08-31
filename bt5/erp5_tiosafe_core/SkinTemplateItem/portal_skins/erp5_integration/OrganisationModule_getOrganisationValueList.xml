@@ -55,90 +55,47 @@
 \n
   Possibly look up a single object based on its ID, GID\n
 """\n
-organisation_list = []\n
-if not id:\n
-  organisation_list = [x.getObject() for x in context.organisation_module.searchFolder(validation_state="validated",\n
-                                                                   portal_type="Organisation")]\n
-else:\n
+if gid is not None and len(gid):\n
+  gid_generator_method_id = context_document.getGidGeneratorMethodId()\n
+  method = getattr(context_document, gid_generator_method_id)\n
+  for org in context.getPortalObject().organisation_module.contentValues():\n
+    org_gid = method(org)\n
+    if org_gid == gid:\n
+      return [org,]\n
+  return []\n
+elif id is not None and len(id):\n
+  # work on the defined organisation (id is not None)\n
   organisation = getattr(context.organisation_module, id)\n
-  if organisation.getValidationState() != \'deleted\':\n
-    organisation_list.append(organisation)\n
+  if organisation.getValidationState() not in [\'invalidated\', \'deleted\'] and \\\n
+      organisation.getTitle() != \'Unknown\':\n
+    return [organisation,]\n
+  return []\n
+else:\n
+  organisation_list = []\n
+  organisation_append = organisation_list.append\n
+  # first get the related integration site\n
+  while context_document.getParentValue().getPortalType() != "Synchronization Tool":\n
+    context_document = context_document.getParentValue()\n
+  site = [x for x in context_document.Base_getRelatedObjectList(portal_type="Integration Module")][0].getParentValue()\n
 \n
-return organisation_list\n
+  # then browse list of stc related to the site one\n
+  default_stc = site.getSourceTradeValue()\n
+  for document in default_stc.Base_getRelatedObjectList(portal_type="Sale Trade Condition",\n
+                                                        validation_state="validated"):\n
+    dest = document.getObject().getDestinationDecisionValue()\n
+    if dest is not None and dest.getPortalType() == "Organisation" and \\\n
+           dest.getValidationState() == "validated":\n
+      organisation_append(dest)\n
+  return organisation_list\n
 </string> </value>
-        </item>
-        <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>context_document, id="", gid=""</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>context_document</string>
-                            <string>id</string>
-                            <string>gid</string>
-                            <string>organisation_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>x</string>
-                            <string>getattr</string>
-                            <string>organisation</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-                <string></string>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>OrganisationModule_getOrganisationValueList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

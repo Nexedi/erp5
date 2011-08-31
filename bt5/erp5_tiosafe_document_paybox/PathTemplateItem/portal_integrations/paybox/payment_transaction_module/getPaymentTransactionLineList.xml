@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/paybox/document_connector</string>
+                <string>destination/portal_integrations/paybox/paybox_payment_transaction_line_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getPaymentTransactionLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Accounting Transaction Line</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getPaymentTransactionLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<exceptions.NotImplementedError instance at 0xac1d882c>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>erp5/DocumentConnector_getPaymentTransactionLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string>[{u\'origin\': \'toto@nexedi.com\', u\'numberofauthorization\': \'953524\', u\'shopname\': \'MYERP5.COM\', u\'reference\': \'12501\', u\'ip\': \'99.21.99.155\', u\'site\': \'6489210\', u\'rank\': \'1\', u\'currency\': \'978\', u\'idappel\': \'339934453\', \'id\': \'2\', u\'canal\': \'Paybox System\', u\'refarchive\': \'339456789\', u\'type\': \'Autorisation\', u\'status\': u\'T\\ufffdl\\ufffdcollect\\ufffd\', u\'idpaybox\': \'105159999\', u\'dateofissue\': \'23/07/2011\', u\'countryip\': \'FRA\', u\'date\': \'30/06/2011\', u\'transactionid\': \'339333402\', u\'payment\': \'CB-Visa\', u\'bank\': \'450004\', u\'remittancepaybox\': \'884712345\', u\'dateofexpiry\': \'23/07/2011\', u\'hourofissue\': \'955\', u\'amount\': \'41420\', u\'country\': \'FRA\'}, {u\'origin\': \'toto@nexedi.com\', u\'numberofauthorization\': \'953522\', u\'shopname\': \'MYERP5.COM\', u\'reference\': \'12502\', u\'ip\': \'99.21.99.155\', u\'site\': \'6489210\', u\'rank\': \'2\', u\'currency\': \'978\', u\'idappel\': \'339934454\', \'id\': \'3\', u\'canal\': \'Paybox System\', u\'refarchive\': \'339456789\', u\'type\': \'Autorisation\', u\'status\': u\'T\\ufffdl\\ufffdcollect\\ufffd\', u\'idpaybox\': \'105159999\', u\'dateofissue\': \'24/07/2011\', u\'countryip\': \'FRA\', u\'date\': \'30/06/2011\', u\'transactionid\': \'339333403\', u\'payment\': \'CB-Visa\', u\'bank\': \'450004\', u\'remittancepaybox\': \'884712346\', u\'dateofexpiry\': \'24/07/2011\', u\'hourofissue\': \'955\', u\'amount\': \'5000\', u\'country\': \'FRA\'}]</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Payment Transaction Line</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Node</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/OSCommerce/http_connector</string>
+                <string>destination/portal_integrations/OSCommerce/person_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getListePerson</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Person</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/OSCommerce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.3.34/o/catalog/admin/tiosafe/getListePerson</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml><object><id>1</id><firstname>Bruce</firstname><lastname>Lee</lastname><email>brucelee@shaolin-temple.com</email><birthday>2001-01-01 00:00:00</birthday><telephone>0623473199</telephone><fax></fax><nb_rel>5</nb_rel><relation> ACME Inc. united states</relation></object></xml> \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Person">\n
+  <firstname>Bruce</firstname>\n
+  <lastname>Lee</lastname>\n
+  <email>brucelee@shaolin-temple.com</email>\n
+  <birthday>2001/01/01</birthday>\n
+  <phone>0623473199</phone>\n
+  <address>\n
+    <street>1 Way Street</street>\n
+    <zip>12345</zip>\n
+    <city>NeverNever</city>\n
+    <country>united states</country>\n
+  </address>\n
+  <category>role/client</category>\n
+  <relation> ACME Inc. united states</relation>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>getListePersonParser</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>person_module</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

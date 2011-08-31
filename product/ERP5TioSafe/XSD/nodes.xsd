@@ -12,6 +12,9 @@
               <xs:element name="lastname" type="xs:string" minOccurs="0"/>
               <xs:element name="email" type="xs:string" minOccurs="0"/>
               <xs:element name="birthday" type="xs:string" minOccurs="0"/>
+              <xs:element name="phone" type="xs:string" minOccurs="0"/>
+              <xs:element name="cellphone" type="xs:string" minOccurs="0"/>
+              <xs:element name="fax" type="xs:string" minOccurs="0"/>
               <xs:element name="address" minOccurs="0" maxOccurs="unbounded">
                 <xs:complexType>
                   <xs:sequence>
@@ -23,6 +26,7 @@
                 </xs:complexType>
               </xs:element>
               <xs:element name="category" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+              <xs:element name="relation" type="xs:string" minOccurs="0"/>
             </xs:sequence>
             <xs:attribute name="type" use="required"/>
           </xs:complexType>

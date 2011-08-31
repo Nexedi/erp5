@@ -1,0 +1,208 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildVirtuemartProductBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>VirtuemartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>ProductResource</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/virtuemart/product_mapping</string>
+                <string>source/portal_integrations/virtuemart/http_connector</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getProductList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Product</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/Virtuemart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2020/01/01\'), \'start_date\': DateTime(\'2010/01/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.1.34/tiosafe_virtuemart/getProductList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<xml><object><id>7</id><title>Chain Saw</title><description>Don\'t do it with an axe.  Get a chain saw.</description><reference>P01</reference></object><object><id>8</id><title>Circular Saw</title><description>Cut rings around wood.  This saw can handle the most delicate projects.</description><reference>P02</reference></object><object><id>9</id><title>Drill</title><description>Drill through anything.  This drill has the power you need for those demanding hole boring duties.</description><reference>P03</reference></object><object><id>44</id><title>ERP5 Product 01</title><description></description><reference>EP01</reference></object><object><id>39</id><title>ERP5 Product 05 Decembre 2010</title><description></description><reference>REF_000</reference></object><object><id>2</id><title>Ladder 1112</title><description>A really long ladder to reach high places.</description><reference>G02</reference></object><object><id>14</id><title>Metal Ladder</title><description></description><reference>L01</reference></object><object><id>16</id><title>Plastic Ladder 002</title><description></description><reference>L03</reference></object><object><id>10</id><title>Power Sander</title><description>Blast away that paint job from the past.  Use this power sander to really show them you mean business.</description><reference>P04</reference></object><object><id>3</id><title>Shovel</title><description>Nice shovel.  You can dig your way to China with this one.</description><reference>G03</reference></object><object><id>4</id><title>Smaller Shovel</title><description>This shovel is smaller but you\'ll be able to dig real quick.</description><reference>G04</reference></object><object><id>24</id><title>SYK-404</title><description></description><reference>P011</reference></object><object><id>25</id><title>SYK-404</title><description></description><reference>P012</reference></object><object><id>17</id><title>SYK-404</title><description></description><reference>SYK-404</reference></object><object><id>18</id><title>SYK-407</title><description></description><reference>SYK-407</reference></object><object><id>19</id><title>SYK-408 409</title><description></description><reference>SYK-408 409</reference></object><object><id>20</id><title>SYK-416</title><description></description><reference>SYK-416</reference></object><object><id>15</id><title>Wooden Ladder</title><description></description><reference>L02</reference></object></xml>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<resource type="Product">\n
+  <title>Chain Saw</title>\n
+  <reference>P01</reference>\n
+  <description>Don\'t do it with an axe.  Get a chain saw.</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Circular Saw</title>\n
+  <reference>P02</reference>\n
+  <description>Cut rings around wood.  This saw can handle the most delicate projects.</description>\n
+  <category>features/middle</category>\n
+  <category>features/poor</category>\n
+  <category>features/strong</category>\n
+  <category>size/M</category>\n
+  <category>size/S</category>\n
+  <category>size/XL</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Drill</title>\n
+  <reference>P03</reference>\n
+  <description>Drill through anything.  This drill has the power you need for those demanding hole boring duties.</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>ERP5 Product 01</title>\n
+  <reference>EP01</reference>\n
+  <category>size/XXL</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>ERP5 Product 05 Decembre 2010</title>\n
+  <reference>REF_000</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Ladder 1112</title>\n
+  <reference>G02</reference>\n
+  <description>A really long ladder to reach high places.</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Metal Ladder</title>\n
+  <reference>L01</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Plastic Ladder 002</title>\n
+  <reference>L03</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Power Sander</title>\n
+  <reference>P04</reference>\n
+  <description>Blast away that paint job from the past.  Use this power sander to really show them you mean business.</description>\n
+  <category>features/100W</category>\n
+  <category>features/200W</category>\n
+  <category>features/300W</category>\n
+  <category>size/big</category>\n
+  <category>size/medium</category>\n
+  <category>size/small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Shovel</title>\n
+  <reference>G03</reference>\n
+  <description>Nice shovel.  You can dig your way to China with this one.</description>\n
+  <category>features/100W</category>\n
+  <category>features/11W</category>\n
+  <category>features/200W</category>\n
+  <category>size/XXXL</category>\n
+  <category>size/big</category>\n
+  <category>size/moyen</category>\n
+  <category>size/small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Smaller Shovel</title>\n
+  <reference>G04</reference>\n
+  <description>This shovel is smaller but you\'ll be able to dig real quick.</description>\n
+  <category>colour/green</category>\n
+  <category>colour/red</category>\n
+  <category>size/big</category>\n
+  <category>size/medium</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>SYK-404</title>\n
+  <reference>P011</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>SYK-404</title>\n
+  <reference>P012</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>SYK-404</title>\n
+  <reference>SYK-404</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>SYK-407</title>\n
+  <reference>SYK-407</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>SYK-408 409</title>\n
+  <reference>SYK-408 409</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>SYK-416</title>\n
+  <reference>SYK-416</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Wooden Ladder</title>\n
+  <reference>L02</reference>\n
+</resource>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get one product</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

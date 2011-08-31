@@ -1,0 +1,4 @@
+manage mapping tag in resource's XML (still missing the delete case)
+--Cette ligne, et les suivantes ci-dessous, seront ignorées--
+
+M    ERP5ResourceConduit.py

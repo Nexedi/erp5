@@ -53,6 +53,7 @@
             <value> <string>configurator = context.getPortalObject().portal_integrations[site_id][module_id]\n
 prefix = configurator.getGidPrefix("")\n
 property_list = configurator.getGidPropertyList()\n
+mapped_property_list = []\n
 \n
 gid = prefix\n
 \n
@@ -62,90 +63,31 @@ property_mapping = {"firstname" : "first_name",\n
                     "email" : "default_email_text"}\n
 \n
 for prop in property_list:\n
-  mapped_prop = property_mapping.get(prop, prop)\n
-  prop_value = object.getProperty(mapped_prop)\n
+  if prop == "country":\n
+    prop_value = object.contentValues(portal_type="Address")[0].getRegion("")\n
+  else:\n
+    mapped_prop = property_mapping.get(prop, prop)\n
+    if reverse:\n
+      mapped_property_list.append(mapped_prop)\n
+      continue\n
+    prop_value = object.getProperty(mapped_prop)\n
   if isinstance(prop_value, unicode):\n
     prop_value = prop_value.encode(\'utf-8\')\n
   gid += " %s" %(prop_value,)\n
+\n
+if reverse:\n
+  return mapped_property_list\n
 \n
 return gid\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>object, site_id, module_id</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>object</string>
-                            <string>site_id</string>
-                            <string>module_id</string>
-                            <string>_getitem_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>configurator</string>
-                            <string>prefix</string>
-                            <string>property_list</string>
-                            <string>gid</string>
-                            <string>property_mapping</string>
-                            <string>_getiter_</string>
-                            <string>prop</string>
-                            <string>mapped_prop</string>
-                            <string>prop_value</string>
-                            <string>isinstance</string>
-                            <string>unicode</string>
-                            <string>_inplacevar_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>object=None, site_id="", module_id="", reverse=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>Synchronization_getERP5ObjectGIDFromIntegrationSite</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

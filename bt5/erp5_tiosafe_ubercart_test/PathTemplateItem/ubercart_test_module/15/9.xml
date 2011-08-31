@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Ubercart Test Product Individual Variation" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>Catalog/Bijoux/Or/Or 18K/Or 18K local</string> </value>
+        </item>
+        <item>
+            <key> <string>distinction</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>9</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Ubercart Test Product Individual Variation</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

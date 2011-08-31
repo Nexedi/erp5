@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Magento Test Person" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>reference</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>countryID</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>addressID</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>addressID</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>city</string> </key>
+            <value> <string>Dallas</string> </value>
+        </item>
+        <item>
+            <key> <string>countryID</string> </key>
+            <value> <string>US</string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>email</string> </key>
+            <value> <string>mamemor@gmail.com</string> </value>
+        </item>
+        <item>
+            <key> <string>fax</string> </key>
+            <value> <string>0325458741</string> </value>
+        </item>
+        <item>
+            <key> <string>firstname</string> </key>
+            <value> <string>Momar</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>9</string> </value>
+        </item>
+        <item>
+            <key> <string>lastname</string> </key>
+            <value> <string>Ndiaye</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Magento Test Person</string> </value>
+        </item>
+        <item>
+            <key> <string>postcode</string> </key>
+            <value> <string>50000</string> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>relation</string> </key>
+            <value> <string>Zen info@zencorp.com</string> </value>
+        </item>
+        <item>
+            <key> <string>street</string> </key>
+            <value> <string>Zen Street</string> </value>
+        </item>
+        <item>
+            <key> <string>telephone</string> </key>
+            <value> <string>0623473199</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Simple person</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

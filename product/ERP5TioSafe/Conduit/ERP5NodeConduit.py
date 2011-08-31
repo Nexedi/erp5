@@ -32,7 +32,8 @@ from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit, 
 from DateTime import DateTime
 from lxml import etree
 from zLOG import LOG, INFO, ERROR
-from base64 import b16encode
+from base64 import b16encode, b16decode
+from zExceptions import BadRequest
 
 DEBUG=True
 
@@ -44,24 +45,104 @@ class ERP5NodeConduit(TioSafeBaseConduit):
   def __init__(self):
     self.xml_object_tag = 'node'
 
+  def getObjectAsXML(self, object, domain):
+    return object.Node_asTioSafeXML(context_document=domain)
+
+  def _createSaleTradeCondition(self, object, **kw):
+    """ Link person to a sale trade condition so that
+    we can filter person based on the plugin they came from
+    """
+    site = self.getIntegrationSite(kw['domain'])
+    default_stc = site.getSourceTrade()
+    # Create the STC
+    stc = object.getPortalObject().sale_trade_condition_module.newContent(title="%s %s" %(site.getReference(), object.getTitle()),
+                                                                          specialise=default_stc,
+                                                                          destination_section=object.getRelativeUrl(),
+                                                                          destination=object.getRelativeUrl(),
+                                                                          destination_decision=object.getRelativeUrl(),
+                                                                          destination_administration=object.getRelativeUrl(),
+                                                                          version=001)
+    stc.validate()
+
+  def _updateSaleTradeCondition(self, object, **kw):
+    """ Link person to a sale trade condition so that
+    we can filter person based on the plugin they came from
+    """
+    site = self.getIntegrationSite(kw['domain'])
+    default_stc = site.getSourceTrade()
+    # try to find the corresponding STC
+    stc_list = object.getPortalObject().sale_trade_condition_module.searchFolder(title="%s %s" %(site.getReference(), object.getTitle()),
+                                                                                validation_state="validated"
+                                                                                )
+    if len(stc_list) == 0:
+      self._createSaleTradeCondition(object, **kw)
+    elif len(stc_list) > 1:
+      raise ValueError, "Multiple trade condition (%s) retrieve for %s" %([x.path for x in stc_list], object.getTitle())
+    else:
+      stc = stc_list[0].getObject()
+      stc.edit(
+        destination_section=object.getRelativeUrl(),
+        destination=object.getRelativeUrl(),
+        destination_decision=object.getRelativeUrl(),
+        destination_administration=object.getRelativeUrl(),)
+
+  def _deleteSaleTradeCondition(self, object, **kw):
+    """ Unvalidate sale trade condition so that
+    we can filter person based on the plugin they came from
+    """
+    stc_list = object.Base_getRelatedObjectList(portal_type="Sale Trade Condition",
+                                                validation_state="validated")
+    for stc in stc_list:
+      stc = stc_list[0].getObject()
+      stc.invalidate()
+
+  def afterCreateMethod(self, object, **kw):
+    """ This method is for actions that has to be done just after object
+    creation and which required to have synchronization parameters
+
+    This is an example which create a sale trade condion for each person
+    thus allowing an easy listing of person related to a plugin
+    """
+    self._createSaleTradeCondition(object, **kw)
+
+  def afterUpdateMethod(self, object, **kw):
+    """ This method is for actions that has to be done just after object
+    update and which required to have synchronization parameters
+
+    This is an example which update a sale trade condion for each person
+    thus allowing an easy listing of person related to a plugin
+    """
+    self._updateSaleTradeCondition(object, **kw)
+
+  def afterDeleteMethod(self, object, **kw):
+    """ This method is for actions that has to be done just after object
+    has been deleted and which required to have synchronization parameters
+
+    This is an example which update a sale trade condion for each person
+    thus allowing an easy listing of person related to a plugin
+    """
+    self._deleteSaleTradeCondition(object, **kw)
+
   def afterNewObject(self, object):
     """ Realise actions after new object creation. """
     object.validate()
     object.updateLocalRolesOnSecurityGroups()
 
-  def _setRelation(self, document, previous_value, organisation_gid, domain, xml):
+  def _setRelation(self, document, previous_value, organisation_gid, domain, xml, signature):
     """ Retrieve the organisation from its gid and do the link """
-
     # first check if there is any conflict
     synchronization_list = self.getSynchronizationObjectListForType(domain, 'Organisation', 'publication')
     if previous_value is not None and xml is not None:
       current_relation = document.getCareerSubordinationValue()
-      for synchronization in synchronization_list:
-        current_value = synchronization.getGidFromObject(current_relation)
-        if current_value:
-          break
+      if current_relation:
+        for synchronization in synchronization_list:
+          current_value = b16decode(synchronization.getGidFromObject(current_relation))
+          if current_value:
+            break
+      else:
+        current_value = ""
       if current_value not in [organisation_gid, previous_value]:
-        return [self._generateConflict(document.getPhysicalPath(), 'relation', xml, current_value, organisation_gid),]
+        return [self._generateConflict(document.getPhysicalPath(), 'relation', xml, current_value, organisation_gid, signature),]
 
     # now set the value
     if organisation_gid is None:
@@ -75,16 +156,18 @@ class ERP5NodeConduit(TioSafeBaseConduit):
         document.setCareerSubordinationValue(link_object)
       else:
         raise ValueError, "Impossible to find organisation %s in %s" %(organisation_gid, synchronization_list)
+    document.reindexObject()
     return []
 
   def _createContent(self, xml=None, object=None, object_id=None, sub_object=None,
       reset_local_roles=0, reset_workflow=0, simulate=0, **kw):
     """ This is the method calling to create an object. """
-    if DEBUG:
-      LOG("ERP5NodeContuide._createContent", INFO, "xml = %s" %(etree.tostring(xml, pretty_print=True),))
+    # if DEBUG:
+    #   LOG("ERP5NodeContuide._createContent", INFO, "xml = %s" %(etree.tostring(xml, pretty_print=True),))
     if object_id is not None:
       sub_object = None
       if sub_object is None: # If so, it doesn't exist
+        # Check if we can find it in module
         sub_object, reset_local_roles, reset_workflow = self.constructContent(
             object,
             object_id,
@@ -108,6 +191,7 @@ class ERP5NodeConduit(TioSafeBaseConduit):
         address_tag_mapping = {"street" : "street_address",
                                "zip" : "zip_code",
                                "country" : "region",}
+        address_int_index = 0
         for node in xml.getchildren():
           # works on tags, no on comments
           if type(node.tag) is not str:
@@ -145,9 +229,13 @@ class ERP5NodeConduit(TioSafeBaseConduit):
               else:
                 address_id = None
               # Create the address object
-              address = sub_object.newContent(portal_type='Address', **address_data_dict)
+              address = sub_object.newContent(portal_type='Address',
+                                              int_index=address_int_index,
+                                              **address_data_dict)
+              address_int_index += 1
               # Rename to default if necessary
               if address_id is not None:
+                address.edit(int_index=0)
                 sub_object.activate(activity="SQLQueue",
                                     after_method_id="immediateReindexObject",
                                     priority=5
@@ -179,7 +267,7 @@ class ERP5NodeConduit(TioSafeBaseConduit):
 
         # Link to organisation
         if relation is not None:
-          self._setRelation(sub_object, None, relation, kw.get('domain'), None)
+          self._setRelation(sub_object, None, relation, kw.get('domain'), None, kw.get('signature'))
 
         # Set category
         if len(category_list):
@@ -198,25 +286,27 @@ class ERP5NodeConduit(TioSafeBaseConduit):
           simulate=simulate,
           reset_local_roles=reset_local_roles,
           reset_workflow=reset_workflow,
-    )
+          )
+      self.afterCreateMethod(sub_object, **kw)
+
     return sub_object
 
 
-  def _deleteContent(self, object=None, object_id=None):
+  def _deleteContent(self, object=None, object_id=None, **kw):
     """ We do not delete nodes """
-    if object[object_id].getValidationState() == "validated":
-      object[object_id].invalidate()
+    self.afterDeleteMethod(object[object_id])
 
   def editDocument(self, object=None, **kw):
     """ This editDocument method allows to set attributes of the object. """
-    if DEBUG:
-      LOG("ERP5NodeConduit.editDocument", INFO, "object = %s with %s" %(object, kw))
+    # if DEBUG:
+    #   LOG("ERP5NodeConduit.editDocument", INFO, "object = %s with %s" %(object.getPath(), kw))
     if kw.get('address_mapping') is None:
       mapping = {
           'title': 'title',
           'firstname': 'first_name',
           'lastname': 'last_name',
           'email': 'default_email_text',
+          'reference' : 'reference',
           'birthday': 'start_date',
           'description': 'description',
           'phone' : 'default_telephone_text',
@@ -237,7 +327,7 @@ class ERP5NodeConduit(TioSafeBaseConduit):
       property[k] = v
     object._edit(**property)
 
-  def checkAddressConflict(self, document, tag, xml, previous_value, new_value):
+  def checkAddressConflict(self, document, tag, xml, previous_value, new_value, signature):
     """
     """
     xpath_expression = xml.get('select')
@@ -263,7 +353,7 @@ class ERP5NodeConduit(TioSafeBaseConduit):
       try:
         address = address_list[address_index].getObject()
       except IndexError:
-        return [self._generateConflict(document.getPhysicalPath(), tag, xml, None, new_value),]
+        return [self._generateConflict(document.getPhysicalPath(), tag, xml, None, new_value, signature),]
 
     # getter used to retrieve the current values and to check conflicts
     getter_value_dict = {
@@ -275,9 +365,12 @@ class ERP5NodeConduit(TioSafeBaseConduit):
 
     # create and fill a conflict when the integration site value, the erp5
     # value and the previous value are differents
-    current_value = getter_value_dict[tag]
+    try:
+      current_value = getter_value_dict[tag].encode('utf-8')
+    except UnicodeDecodeError:
+      current_value = getter_value_dict[tag]
     if current_value not in [new_value, previous_value]:
-      return [self._generateConflict(document.getPhysicalPath(), tag, xml, current_value, new_value),]
+      return [self._generateConflict(document.getPhysicalPath(), tag, xml, current_value, new_value, signature),]
     else:
       keyword = {'address_mapping': True, tag: new_value}
       self.editDocument(object=address, **keyword)
@@ -290,31 +383,34 @@ class ERP5NodeConduit(TioSafeBaseConduit):
       elements.
     """
     if DEBUG:
-      LOG("ERP5NodeConduit._updateXupdateUpdate", INFO, "xml = %s" %(etree.tostring(xml, pretty_print=1),))
+      LOG("ERP5NodeConduit._updateXupdateUpdate", INFO, "doc = %s, xml = %s" %(document.getPath(),
+                                                                               etree.tostring(xml, pretty_print=1),))
     xpath_expression = xml.get('select')
     tag = xpath_expression.split('/')[-1]
-    new_value = xml.text
+    new_value = xml.text.encode('utf-8')
     keyword = {}
 
     # retrieve the previous xml etree through xpath
     selected_previous_xml = previous_xml.xpath(xpath_expression)
     try:
-      previous_value = selected_previous_xml[0].text
+      previous_value = selected_previous_xml[0].text.encode('utf-8')
     except IndexError:
       previous_value = None
 
     # check if it'a work on person or on address
     if tag in ADDRESS_TAG_LIST:
-      return self.checkAddressConflict(document, tag, xml, previous_value, new_value)
+      conflict_list = self.checkAddressConflict(document, tag, xml, previous_value, new_value, kw.get('signature'))
     else:
-      return self.checkConflict(tag, document, previous_value, new_value, kw.get('domain'), xml)
+      conflict_list = self.checkConflict(tag, document, previous_value, new_value, kw.get('domain'), xml, kw.get('signature'))
+    self.afterUpdateMethod(document, **kw)
 
-    return []
+    return conflict_list
 
   def _updateXupdateDel(self, document=None, xml=None, previous_xml=None, **kw):
     """ This method is called in updateNode and allows to remove elements. """
     if DEBUG:
-      LOG("ERP5NodeConduit._updateXupdateDel", INFO, "xml = %s" %(etree.tostring(xml, pretty_print=1),))
+      LOG("ERP5NodeConduit._updateXupdateDel", INFO, "doc = %s, xml = %s" %(document.getPath(),
+                                                                            etree.tostring(xml, pretty_print=1),))
     conflict_list = []
     tag = xml.get('select').split('/')[-1]
     # this variable is used to retrieve the id of address and to not remove the
@@ -325,8 +421,8 @@ class ERP5NodeConduit(TioSafeBaseConduit):
     xpath_expression = xml.get('select')
     selected_previous_xml = previous_xml.xpath(xpath_expression)
     try:
-      previous_value = selected_previous_xml[0].text
-    except IndexError:
+      previous_value = selected_previous_xml[0].text.encode('utf-8')
+    except (IndexError, AttributeError):
       previous_value = None
 
     # specific work for address and address elements
@@ -340,7 +436,7 @@ class ERP5NodeConduit(TioSafeBaseConduit):
         address_index = 1
 
       if address_index == 1:
-        address = document.getDefaultAddressValue()
+        address_id = "default_address"
       else:
         # the XUPDATE begin by one, so one is default_address and the
         # first python index list is zero, so x-2
@@ -351,23 +447,25 @@ class ERP5NodeConduit(TioSafeBaseConduit):
             sort_on=(['id', 'ASC'], ),
             where_expression='id != "default_address"',
         )
-        try:
-          document.manage_delObjects(address_list[address_index].getId(),)
-        except IndexError:
-          conflict_list.append(self._generateConflict(document.getPhysicalPath(), tag, xml, None, None))
-          return conflict_list
+        address_id = address_list[address_index].getId()
+      try:
+        document.manage_delObjects(address_id)
+      except (IndexError, BadRequest):
+        conflict_list.append(self._generateConflict(document.getPhysicalPath(), tag, xml, None, None, kw.get('signature')))
+        return conflict_list
 
     elif address_tag in ADDRESS_TAG_LIST:
-      return self.checkAddressConflict(document, address_tag, xml, previous_value, None)
+      return self.checkAddressConflict(document, address_tag, xml, previous_value, None, kw.get('signature'))
     else:
-      return self.checkConflict(tag, document, previous_value, None, kw.get('domain'), xml)
+      return self.checkConflict(tag, document, previous_value, None, kw.get('domain'), xml, kw.get('signature'))
 
     return conflict_list
 
   def _updateXupdateInsertOrAdd(self, document=None, xml=None, previous_xml=None, **kw):
     """ This method is called in updateNode and allows to add elements. """
     if DEBUG:
-      LOG("ERP5NodeConduit._updateXupdateInsertOrAdd", INFO, "xml = %s" %(etree.tostring(xml, pretty_print=1),))
+      LOG("ERP5NodeConduit._updateXupdateInsertOrAdd", INFO, "doc = %s, xml = %s" %(document.getPath(),
+                                                                                    etree.tostring(xml, pretty_print=1),))
     conflict_list = []
     keyword = {}
     default_address_created = False
@@ -376,8 +474,10 @@ class ERP5NodeConduit(TioSafeBaseConduit):
     for subnode in xml.getchildren():
       tag = subnode.attrib['name']
       new_value = subnode.text
+      if new_value:
+        new_value.encode("utf-8")
       if tag == 'address':
-        address = document.newContent(portal_type='Address', )
+        address = document.newContent(portal_type='Address', int_index=10)
         keyword['address_mapping'] = True
         for subsubnode in subnode.getchildren():
           keyword[subsubnode.tag] = subsubnode.text
@@ -385,25 +485,26 @@ class ERP5NodeConduit(TioSafeBaseConduit):
         if getattr(document, "default_address", None) is None and not default_address_created:
           # This will become the default address
           default_address_created = True
+          address.edit(int_index=0)
           document.activate(activity="SQLQueue",
                             after_method_id="immediateReindexObject",
                             priority=5
                             ).manage_renameObject(address.getId(), "default_address")
       elif tag in ADDRESS_TAG_LIST:
-        return self.checkAddressConflict(document, tag, xml, previous_value, new_value)
+        return self.checkAddressConflict(document, tag, xml, previous_value, new_value, kw.get('signature'))
       else:
-        return self.checkConflict(tag, document, previous_value, new_value, kw.get('domain'), xml)
+        return self.checkConflict(tag, document, previous_value, new_value, kw.get('domain'), xml, kw.get('signature'))
 
     return conflict_list
 
 
 
-  def checkConflict(self, tag, document, previous_value, new_value, domain, xml):
+  def checkConflict(self, tag, document, previous_value, new_value, domain, xml, signature):
     """
     Check conflict for each tag
     """
     if tag == "relation":
-      return self._setRelation(document, previous_value, new_value, domain, xml)
+      return self._setRelation(document, previous_value, new_value, domain, xml, signature)
     else:
       if tag == "phone":
         current_value = document.get('default_telephone', None) and \
@@ -416,26 +517,37 @@ class ERP5NodeConduit(TioSafeBaseConduit):
                         document.default_fax.getTelephoneNumber("")
       elif tag == "birthday":
         current_value = str(document.getStartDate(""))
+      elif tag == "email":
+        current_value = str(document.getDefaultEmailText(""))
       else:
         current_value = getattr(document, tag)
 
+      if current_value:
+        current_value = current_value.encode('utf-8')
       if current_value not in [new_value, previous_value, None]:
-        LOG("ERP5NodeConduit.checkConflict", ERROR, "Generating a conflict for tag %s, current is %s, previous is %s, new is %s" %(tag, current_value, new_value, previous_value))
-        return [self._generateConflict(document.getPhysicalPath(), tag, xml, current_value, new_value),]
+        LOG("ERP5NodeConduit.checkConflict", ERROR, "Generating a conflict for tag %s, current is %s, previous is %s, new is %s" %(tag, current_value, previous_value, new_value))
+        return [self._generateConflict(document.getPhysicalPath(), tag, xml, current_value, new_value, signature),]
       else:
         if new_value is None:
           # We are deleting some properties
           if tag == "fax":
-            document.manage_delObjects("default_fax")
+            if getattr(document, "default_fax", None):
+              document.manage_delObjects("default_fax")
           elif tag == "phone":
-            document.manage_delObjects("default_telephone")
+            if getattr(document, "default_telephone", None):
+              document.manage_delObjects("default_telephone")
           elif tag == "cellphone":
-            document.manage_delObjects("mobile_telephone")
+            if getattr(document, "mobile_telephone", None):
+              document.manage_delObjects("mobile_telephone")
+          elif tag == "email":
+            if getattr(document, "default_email", None):
+              document.manage_delObjects("default_email")
           else:
             kw = {tag : new_value}
             self.editDocument(object=document, **kw)
         else:
-          if tag == 'birthday':
+          if tag == 'birthday' and isinstance(new_value, str) \
+                 and len(new_value):
             new_value = DateTime(new_value)
           kw = {tag : new_value}
           self.editDocument(object=document, **kw)

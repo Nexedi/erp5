@@ -1,0 +1,16 @@
+currency_module/dollar**
+currency_module/euro**
+organisation_module/default_ubercart_shop**
+person_module/unknown_person**
+portal_integrations/ubercart
+portal_integrations/ubercart/*connector**
+portal_integrations/ubercart/*mapping**
+portal_integrations/ubercart/*module**
+portal_integrations/ubercart/*plugin
+portal_integrations/ubercart/IntegrationSite_checkCategoryExistency**
+portal_integrations/ubercart/IntegrationSite_lastID**
+portal_integrations/ubercart/IntegrationSite_lastProductID**
+portal_synchronizations/ubercart*
+product_module/unknown_product**
+sale_supply_module/1**
+sale_trade_condition_module/default_ubercart**

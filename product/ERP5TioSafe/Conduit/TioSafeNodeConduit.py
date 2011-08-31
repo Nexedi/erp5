@@ -27,7 +27,6 @@
 ##############################################################################
 
 from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
-from Products.ERP5SyncML.Document.Conflict import Conflict
 from lxml import etree
 
 class TioSafeNodeConduit(TioSafeBaseConduit):
@@ -37,6 +36,8 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
   def __init__(self):
     self.xml_object_tag = 'node'
 
+  def getObjectAsXML(self, object, domain):
+    return object.asXML()
 
   def _createContent(self, xml=None, object=None, object_id=None, sub_object=None,
       reset_local_roles=0, reset_workflow=0, simulate=0, **kw):
@@ -82,7 +83,7 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
     return object.person_module(person_id=new_id)[0]
 
 
-  def _deleteContent(self, object=None, object_id=None):
+  def _deleteContent(self, object=None, object_id=None, **kw):
     """ We do not delete nodes """
     pass
 
@@ -131,7 +132,7 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
                      address.country]),
            address)
           for address in address_list]
-      sorted_address_list.sort()
+      # sorted_address_list.sort()
       address_list = [t[1] for t in sorted_address_list]
 
       try:
@@ -139,28 +140,27 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
       except IndexError:
         # create and fill a conflict when the integration site value, the erp5
         # value and the previous value are differents
-        conflict = Conflict(
-            object_path=document.getPhysicalPath(),
-            keyword=tag,
-        )
-        conflict.setXupdate(etree.tostring(xml, encoding='utf-8'))
-        conflict.setLocalValue(None)
-        conflict.setRemoteValue(value)
-        conflict_list.append(conflict)
-        return conflict_list
+        return self._generateConflict(path=document.getPhysicalPath(),
+                                      tag=tag,
+                                      xml=xml,
+                                      current_value=None,
+                                      new_value=value,
+                                      signature=kw['domain'],
+                                      )
 
       current_value = getattr(address, tag, None)
+      if tag == 'country':
+        current_value = document.context.getMappingFromCategory('region/%s' % current_value)
       if current_value not in [value, previous_value]:
         # create and fill a conflict when the integration site value, the erp5
         # value and the previous value are differents
-        conflict = Conflict(
-            object_path=document.getPhysicalPath(),
-            keyword=tag,
-        )
-        conflict.setXupdate(etree.tostring(xml, encoding='utf-8'))
-        conflict.setLocalValue(current_value)
-        conflict.setRemoteValue(value)
-        conflict_list.append(conflict)
+        conflict_list.append(self._generateConflict(path=document.getPhysicalPath(),
+                                      tag=tag,
+                                      xml=xml,
+                                      current_value=current_value,
+                                      new_value=value,
+                                      signature=kw['domain'],
+                                      ))
       else:
         # set the keyword dict which defines what will be updated
         keyword = {
@@ -169,8 +169,8 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
         }
         if tag == 'country':
           # through the mapping retrieve the country
-          mapping = document.context.getMappingFromCategory('region/%s' % value)
-          value = mapping.split('/', 1)[-1]
+          #mapping = document.context.getMappingFromCategory('region/%s' % value)
+          value = current_value.split('/', 1)[-1]
         keyword[tag] = value
         document.context.person_module.updatePersonAddress(**keyword)
     else:
@@ -186,14 +186,13 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
       # value and the previous value are differents
       current_value = getter_value_dict[tag]
       if  current_value not in [value, previous_value]:
-        conflict = Conflict(
-            object_path=document.getPhysicalPath(),
-            keyword=tag,
-        )
-        conflict.setXupdate(etree.tostring(xml, encoding='utf-8'))
-        conflict.setLocalValue(current_value)
-        conflict.setRemoteValue(value)
-        conflict_list.append(conflict)
+        conflict_list.append(self._generateConflict(path=document.getPhysicalPath(),
+                                      tag=tag,
+                                      xml=xml,
+                                      current_value=current_value,
+                                      new_value=value,
+                                      signature=kw['domain'],
+                                      ))
       else:
         # XXX: when the DateTime format will be required to sync date
         #   - 1 - retrieve the format through the integration site
@@ -256,14 +255,15 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
       except IndexError:
         # create and fill a conflict when the integration site value, the erp5
         # value and the previous value are differents
-        conflict = Conflict(
-            object_path=document.getPhysicalPath(),
-            keyword=tag,
-        )
-        conflict.setXupdate(etree.tostring(xml, encoding='utf-8'))
-        conflict.setLocalValue(None)
-        conflict_list.append(conflict)
-        return conflict_list
+        # XXX-Aurel : is it necessary to generate a conflict as
+        # it seems the address has already been deleted ?
+        return self._generateConflict(path=document.getPhysicalPath(),
+                                      tag=tag,
+                                      xml=xml,
+                                      current_value=None,
+                                      new_value=None,
+                                      signature=kw['domain'],
+                                      )
 
       # remove the corresponding address or the element of the address
       keyword = {'person_id': document.getId(), 'address_id': address.getId()}
@@ -333,15 +333,13 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
         except IndexError:
           # create and fill a conflict when the integration site value, the erp5
           # value and the previous value are differents
-          conflict = Conflict(
-              object_path=document.getPhysicalPath(),
-              keyword=tag,
-          )
-          conflict.setXupdate(etree.tostring(xml, encoding='utf-8'))
-          conflict.setLocalValue(None)
-          conflict.setRemoteValue(value)
-          conflict_list.append(conflict)
-          return conflict_list
+          return self._generateConflict(path=document.getPhysicalPath(),
+                                        tag=tag,
+                                        xml=xml,
+                                        current_value=None,
+                                        new_value=value,
+                                        signature=kw['domain'],
+                                      )
 
         # set the keyword dict which defines what will be updated
         keyword = {

@@ -1,0 +1,370 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SyncML Subscription" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>sync_ml_alert_code</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>zope_user</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>remaining_object_path_list</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>lines</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>modification_date</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>date</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>creation_date</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>date</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>authentication_format</string> </key>
+            <value> <string>b64</string> </value>
+        </item>
+        <item>
+            <key> <string>authentication_type</string> </key>
+            <value> <string>syncml:auth-basic</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/Magento/person_module</string>
+                <string>syncml_alert_code/two_way</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>conduit_module_id</string> </key>
+            <value> <string>Extensions.TioSafeNodeConduit</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.syncml+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>creation_date</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global id="1.1" name="DateTime" module="DateTime.DateTime"/>
+                </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1283292000.0</float>
+                    <string>GMT+2</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_destination_reference</string> </key>
+            <value> <string>Magento_person_module_synchronization</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>Magento_person_module_synchronization_sub</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>gid_generator_method_id</string> </key>
+            <value> <string>Synchronization_getPersonBrainGIDFromMagento</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Magento_person_module_sub</string> </value>
+        </item>
+        <item>
+            <key> <string>is_activity_enabled</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>is_synchronized_with_erp5_portal</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>last_anchor</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_message_id</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>last_sent_message</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<syncml:SyncML xmlns:syncml="SYNCML:SYNCML1.2">\n
+  <syncml:SyncHdr>\n
+    <syncml:VerDTD>1.2</syncml:VerDTD>\n
+    <syncml:VerProto>SyncML/1.2</syncml:VerProto>\n
+    <syncml:SessionID>343</syncml:SessionID>\n
+    <syncml:MsgID>2</syncml:MsgID>\n
+    <syncml:Target>\n
+      <syncml:LocURI>https://www.tiolive.com/AGjKXoXm7</syncml:LocURI>\n
+    </syncml:Target>\n
+    <syncml:Source>\n
+      <syncml:LocURI>https://www.tiolive.com/AGjKXoXm7</syncml:LocURI>\n
+    </syncml:Source>\n
+  </syncml:SyncHdr>\n
+  <syncml:SyncBody>\n
+    <syncml:Status>\n
+      <syncml:CmdID>1</syncml:CmdID>\n
+      <syncml:MsgRef>1</syncml:MsgRef>\n
+      <syncml:CmdRef>0</syncml:CmdRef>\n
+      <syncml:Cmd>SyncHdr</syncml:Cmd>\n
+      <syncml:TargetRef>https://www.tiolive.com/AGjKXoXm7</syncml:TargetRef>\n
+      <syncml:SourceRef>https://www.tiolive.com/AGjKXoXm7</syncml:SourceRef>\n
+      <syncml:Data>200</syncml:Data>\n
+    </syncml:Status>\n
+    <syncml:Status>\n
+      <syncml:CmdID>2</syncml:CmdID>\n
+      <syncml:MsgRef>1</syncml:MsgRef>\n
+      <syncml:CmdRef>3</syncml:CmdRef>\n
+      <syncml:Cmd>Alert</syncml:Cmd>\n
+      <syncml:SourceRef>Magento_person_module_synchronization_sub</syncml:SourceRef>\n
+      <syncml:TargetRef>Magento_person_module_synchronization</syncml:TargetRef>\n
+      <syncml:Item>\n
+        <syncml:Data>\n
+          <syncml:Anchor>\n
+            <syncml:Next>20110615T142716Z</syncml:Next>\n
+          </syncml:Anchor>\n
+        </syncml:Data>\n
+      </syncml:Item>\n
+    </syncml:Status>\n
+    <syncml:Sync>\n
+      <syncml:CmdID>3</syncml:CmdID>\n
+      <syncml:Target>\n
+        <syncml:LocURI>Magento_person_module_synchronization</syncml:LocURI>\n
+      </syncml:Target>\n
+      <syncml:Source>\n
+        <syncml:LocURI>Magento_person_module_synchronization_sub</syncml:LocURI>\n
+      </syncml:Source>\n
+      <syncml:Add>\n
+        <syncml:CmdID>4</syncml:CmdID>\n
+        <syncml:Meta>\n
+          <syncml:Type>text/xml</syncml:Type>\n
+        </syncml:Meta>\n
+        <syncml:Item>\n
+          <syncml:Source>\n
+            <syncml:LocURI>204D6F6D6172204E6469617965206D616D656D6F72406D736E2E636F6D</syncml:LocURI>\n
+          </syncml:Source>\n
+          <syncml:Data>\n
+            <node type="Person">\n
+              <firstname>Momar</firstname>\n
+              <lastname>Ndiaye</lastname>\n
+              <email>mamemor@msn.com</email>\n
+              <phone>0623473199</phone>\n
+              <fax>0123473188</fax>\n
+              <address>\n
+                <street>Zen Star Street</street>\n
+                <zip>21514</zip>\n
+                <city>Dakota</city>\n
+                <country>united states</country>\n
+              </address>\n
+              <category>role/client</category>\n
+              <relation> ZenCorp mamemor@msn.com</relation>\n
+            </node>\n
+          </syncml:Data>\n
+        </syncml:Item>\n
+      </syncml:Add>\n
+    </syncml:Sync>\n
+  </syncml:SyncBody>\n
+</syncml:SyncML>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>list_method_id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>message_id</string> </key>
+            <value> <int>2</int> </value>
+        </item>
+        <item>
+            <key> <string>modification_date</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1285020000.0</float>
+                    <string>GMT+2</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>next_anchor</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <none/>
+                </tuple>
+                <state>
+                  <tuple>
+                    <float>1308140836.44</float>
+                    <string>GMT+2</string>
+                  </tuple>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>password</string> </key>
+            <value> <string>tiosafe_sync_user</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>SyncML Subscription</string> </value>
+        </item>
+        <item>
+            <key> <string>remaining_object_path_list</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>session_id</string> </key>
+            <value> <int>343</int> </value>
+        </item>
+        <item>
+            <key> <string>subscription_url_string</string> </key>
+            <value> <string>https://www.tiolive.com/AGjKXoXm7</string> </value>
+        </item>
+        <item>
+            <key> <string>sync_ml_alert_code</string> </key>
+            <value> <string>two_way</string> </value>
+        </item>
+        <item>
+            <key> <string>synchronization_id_generator_method_id</string> </key>
+            <value> <string>generateNewId</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Magento_person_module_sub_synchronization</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>https://www.tiolive.com/AGjKXoXm7</string> </value>
+        </item>
+        <item>
+            <key> <string>user_id</string> </key>
+            <value> <string>tiosafe_sync_user</string> </value>
+        </item>
+        <item>
+            <key> <string>xml_binding_generator_method_id</string> </key>
+            <value> <string>asXML</string> </value>
+        </item>
+        <item>
+            <key> <string>zope_user</string> </key>
+            <value> <string>tiosafe_sync_user</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

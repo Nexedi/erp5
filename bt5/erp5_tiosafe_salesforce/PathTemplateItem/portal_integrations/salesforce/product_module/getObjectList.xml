@@ -1,0 +1,219 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, ProductCode, Description\n
+    FROM\n
+      Product2\n
+    <tal:block tal:condition="python: options.get(\'product_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/product_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>SalesforceResourceBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/salesforce/salesforce_connector</string>
+                <string>destination/portal_integrations/salesforce/product_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, ProductCode, Description\n
+    FROM\n
+      Product2\n
+    <tal:block tal:condition="python: options.get(\'product_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/product_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getProductList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Product</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/salesforce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, Name, ProductCode, Description    FROM      Product2      </ns0:querystring></ns0:query>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>https://na3-api.salesforce.com/services/Soap/u/19.0/00D50000000IjTh</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com"><soapenv:Body><queryResponse><result xsi:type="QueryResult"><done>true</done><queryLocator xsi:nil="true"/><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDNAA4</sf:Id><sf:Id>01t50000001KUDNAA4</sf:Id><sf:Name>GenWatt Diesel 200kW</sf:Name><sf:ProductCode>GC1040</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDOAA4</sf:Id><sf:Id>01t50000001KUDOAA4</sf:Id><sf:Name>GenWatt Diesel 10kW</sf:Name><sf:ProductCode>GC1020</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDPAA4</sf:Id><sf:Id>01t50000001KUDPAA4</sf:Id><sf:Name>Installation: Industrial - High</sf:Name><sf:ProductCode>IN7080</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDQAA4</sf:Id><sf:Id>01t50000001KUDQAA4</sf:Id><sf:Name>SLA: Silver</sf:Name><sf:ProductCode>SL9040</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDRAA4</sf:Id><sf:Id>01t50000001KUDRAA4</sf:Id><sf:Name>GenWatt Propane 500kW</sf:Name><sf:ProductCode>GC3040</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDSAA4</sf:Id><sf:Id>01t50000001KUDSAA4</sf:Id><sf:Name>SLA: Platinum</sf:Name><sf:ProductCode>SL9080</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDTAA4</sf:Id><sf:Id>01t50000001KUDTAA4</sf:Id><sf:Name>GenWatt Propane 100kW</sf:Name><sf:ProductCode>GC3020</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDUAA4</sf:Id><sf:Id>01t50000001KUDUAA4</sf:Id><sf:Name>GenWatt Propane 1500kW</sf:Name><sf:ProductCode>GC3060</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDVAA4</sf:Id><sf:Id>01t50000001KUDVAA4</sf:Id><sf:Name>GenWatt Diesel 1000kW</sf:Name><sf:ProductCode>GC1060</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDWAA4</sf:Id><sf:Id>01t50000001KUDWAA4</sf:Id><sf:Name>SLA: Bronze</sf:Name><sf:ProductCode>SL9020</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDXAA4</sf:Id><sf:Id>01t50000001KUDXAA4</sf:Id><sf:Name>GenWatt Gasoline 750kW</sf:Name><sf:ProductCode>GC5040</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDYAA4</sf:Id><sf:Id>01t50000001KUDYAA4</sf:Id><sf:Name>Installation: Portable</sf:Name><sf:ProductCode>IN7020</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDZAA4</sf:Id><sf:Id>01t50000001KUDZAA4</sf:Id><sf:Name>SLA: Gold</sf:Name><sf:ProductCode>SL9060</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDaAAO</sf:Id><sf:Id>01t50000001KUDaAAO</sf:Id><sf:Name>GenWatt Gasoline 300kW</sf:Name><sf:ProductCode>GC5020</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDbAAO</sf:Id><sf:Id>01t50000001KUDbAAO</sf:Id><sf:Name>Installation: Industrial - Low</sf:Name><sf:ProductCode>IN7040</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDcAAO</sf:Id><sf:Id>01t50000001KUDcAAO</sf:Id><sf:Name>GenWatt Gasoline 2000kW</sf:Name><sf:ProductCode>GC5060</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t50000001KUDdAAO</sf:Id><sf:Id>01t50000001KUDdAAO</sf:Id><sf:Name>Installation: Industrial - Medium</sf:Name><sf:ProductCode>IN7060</sf:ProductCode><sf:Description xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Product2</sf:type><sf:Id>01t500000019c6IAAQ</sf:Id><sf:Id>01t500000019c6IAAQ</sf:Id><sf:Name>My Product Test</sf:Name><sf:ProductCode>2244331100</sf:ProductCode><sf:Description>It&apos;s a product used to test what it could be realised with this one.</sf:Description></records><size>18</size></result></queryResponse></soapenv:Body></soapenv:Envelope>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Product">\n
+  <title>GenWatt Diesel 200kW</title>\n
+  <reference>GC1040</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>GenWatt Diesel 10kW</title>\n
+  <reference>GC1020</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>Installation: Industrial - High</title>\n
+  <reference>IN7080</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>SLA: Silver</title>\n
+  <reference>SL9040</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>GenWatt Propane 500kW</title>\n
+  <reference>GC3040</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>SLA: Platinum</title>\n
+  <reference>SL9080</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>GenWatt Propane 100kW</title>\n
+  <reference>GC3020</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>GenWatt Propane 1500kW</title>\n
+  <reference>GC3060</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>GenWatt Diesel 1000kW</title>\n
+  <reference>GC1060</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>SLA: Bronze</title>\n
+  <reference>SL9020</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>GenWatt Gasoline 750kW</title>\n
+  <reference>GC5040</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>Installation: Portable</title>\n
+  <reference>IN7020</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>SLA: Gold</title>\n
+  <reference>SL9060</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>GenWatt Gasoline 300kW</title>\n
+  <reference>GC5020</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>Installation: Industrial - Low</title>\n
+  <reference>IN7040</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>GenWatt Gasoline 2000kW</title>\n
+  <reference>GC5060</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>Installation: Industrial - Medium</title>\n
+  <reference>IN7060</reference>\n
+</node>\n
+\n
+<node type="Product">\n
+  <title>My Product Test</title>\n
+  <reference>2244331100</reference>\n
+  <description>It\'s a product used to test what it could be realised with this one.</description>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Product</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

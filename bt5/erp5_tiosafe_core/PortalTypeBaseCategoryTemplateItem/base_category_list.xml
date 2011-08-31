@@ -3,6 +3,12 @@
   <item>destination_section</item>
   <item>source_section</item>
  </portal_type>
+ <portal_type id="Integration Site">
+  <item>resource</item>
+  <item>destination_payment</item>
+  <item>source_account</item>
+  <item>source_payment</item>
+ </portal_type>
  <portal_type id="Synchronization Configurator Item">
   <item>destination_section</item>
   <item>source_decision</item>

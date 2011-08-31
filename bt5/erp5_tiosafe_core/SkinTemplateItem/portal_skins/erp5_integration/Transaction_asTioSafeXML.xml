@@ -37,7 +37,8 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <transaction xmlns:tal="http://xml.zope.org/namespaces/tal"\n
-  xmlns:metal="http://xml.zope.org/namespaces/metal" tal:attributes="type here/getPortalType"><tal:block\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+  tal:attributes="type here/getPortalType" tal:define="context_path options/context_document"><tal:block\n
     tal:condition=\'here/getStartDate\'>\n
   <start_date tal:content="python: here.getStartDate()" /></tal:block><tal:block\n
     tal:condition=\'here/getStopDate\'>\n
@@ -49,13 +50,13 @@
   <payment_mode tal:content=\'here/getPaymentConditionPaymentMode\'/><tal:block\n
     tal:condition=\'here/getIncoterm\'>\n
   <category tal:content=\'here/getIncoterm\' /></tal:block>\n
-  <arrow tal:attributes=\'type arrow/category\' tal:repeat=\'arrow here/Transaction_getArrowList\'><tal:block\n
+  <arrow tal:attributes=\'type arrow/category\' tal:repeat=\'arrow python:here.Transaction_getArrowList(context_path)\'><tal:block\n
       tal:condition=\'arrow/source\'>\n
     <source tal:content=\'arrow/source\' /></tal:block><tal:block\n
       tal:condition=\'arrow/destination\'>\n
     <destination tal:content=\'arrow/destination\' /></tal:block>\n
   </arrow>\n
-  <movement tal:repeat=\'movement here/Transaction_getLineList\'><tal:block\n
+  <movement tal:repeat=\'movement python:here.Transaction_getLineList(context_path)\'><tal:block\n
       tal:condition=\'movement/resource\'>\n
     <resource tal:content=\'movement/resource\' /></tal:block><tal:block\n
       tal:condition=\'movement/title\'>\n
@@ -68,7 +69,7 @@
     <price tal:content=\'movement/price\' /></tal:block><tal:block\n
       tal:condition=\'movement/VAT\'>\n
     <VAT tal:content=\'movement/VAT\' /></tal:block>\n
-    <category tal:repeat=\'category movement/object/TransactionLine_getCategoryList\' tal:content="category" />\n
+    <category tal:repeat=\'category movement/variation_list\' tal:content="category" />\n
   </movement>\n
 </transaction>\n
 

@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildPayboxPaymentTransactionBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>PayBoxBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/paybox/document_connector</string>
+                <string>destination/portal_integrations/paybox/paybox_payment_transaction_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getPaymentTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Payment Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'dateofissue\': DateTime(\'2000/01/01\'), \'dateofexpiry\': DateTime(\'2020/12/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>erp5/DocumentConnector_getPaymentTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string>[{u\'origin\': \'toto@nexedi.com\', u\'numberofauthorization\': \'953524\', u\'shopname\': \'MYERP5.COM\', u\'reference\': \'12501\', u\'ip\': \'99.21.99.155\', u\'site\': \'6489210\', u\'rank\': \'1\', u\'currency\': \'978\', u\'idappel\': \'339934453\', \'id\': \'2\', u\'canal\': \'Paybox System\', u\'refarchive\': \'339456789\', u\'type\': \'Autorisation\', u\'status\': u\'T\\ufffdl\\ufffdcollect\\ufffd\', u\'idpaybox\': \'105159999\', u\'dateofissue\': \'23/07/2011\', u\'countryip\': \'FRA\', u\'date\': \'30/06/2011\', u\'transactionid\': \'339333402\', u\'payment\': \'CB-Visa\', u\'bank\': \'450004\', u\'remittancepaybox\': \'884712345\', u\'dateofexpiry\': \'23/07/2011\', u\'hourofissue\': \'955\', u\'amount\': \'41420\', u\'country\': \'FRA\'}, {u\'origin\': \'tutu@nexedi.com\', u\'numberofauthorization\': \'953522\', u\'shopname\': \'MYERP5.COM\', u\'reference\': \'12502\', u\'ip\': \'99.21.99.155\', u\'site\': \'6489210\', u\'rank\': \'2\', u\'currency\': \'978\', u\'idappel\': \'339934454\', \'id\': \'3\', u\'canal\': \'Paybox System\', u\'refarchive\': \'339456789\', u\'type\': \'Autorisation\', u\'status\': u\'T\\ufffdl\\ufffdcollect\\ufffd\', u\'idpaybox\': \'105159999\', u\'dateofissue\': \'24/07/2011\', u\'countryip\': \'FRA\', u\'date\': \'30/06/2011\', u\'transactionid\': \'339333403\', u\'payment\': \'CB-Visa\', u\'bank\': \'450004\', u\'remittancepaybox\': \'884712346\', u\'dateofexpiry\': \'24/07/2011\', u\'hourofissue\': \'955\', u\'amount\': \'5000\', u\'country\': \'FRA\'}, {u\'origin\': \'titi@nexedi.com\', u\'numberofauthorization\': \'953524\', u\'shopname\': \'MYERP5.COM\', u\'reference\': \'12503\', u\'ip\': \'99.21.99.155\', u\'site\': \'6489210\', u\'rank\': \'3\', u\'currency\': \'978\', u\'idappel\': \'339934453\', \'id\': \'4\', u\'canal\': \'Paybox System\', u\'refarchive\': \'339456789\', u\'type\': \'Autorisation\', u\'status\': u\'T\\ufffdl\\ufffdcollect\\ufffd\', u\'idpaybox\': \'105159999\', u\'dateofissue\': \'23/06/2011\', u\'countryip\': \'FRA\', u\'date\': \'30/06/2011\', u\'transactionid\': \'339333404\', u\'payment\': \'CB-Visa\', u\'bank\': \'450004\', u\'remittancepaybox\': \'884712347\', u\'dateofexpiry\': \'23/06/2011\', u\'hourofissue\': \'955\', u\'amount\': \'2420\', u\'country\': \'FRA\'}, {u\'origin\': \'tata@nexedi.com\', u\'numberofauthorization\': \'953522\', u\'shopname\': \'MYERP5.COM\', u\'reference\': \'12504\', u\'ip\': \'99.21.99.155\', u\'site\': \'6489210\', u\'rank\': \'4\', u\'currency\': \'978\', u\'idappel\': \'339934454\', \'id\': \'5\', u\'canal\': \'Paybox System\', u\'refarchive\': \'339456789\', u\'type\': \'Autorisation\', u\'status\': u\'T\\ufffdl\\ufffdcollect\\ufffd\', u\'idpaybox\': \'105159999\', u\'dateofissue\': \'24/09/2011\', u\'countryip\': \'FRA\', u\'date\': \'30/06/2011\', u\'transactionid\': \'339333405\', u\'payment\': \'CB-Visa\', u\'bank\': \'450004\', u\'remittancepaybox\': \'884712348\', u\'dateofexpiry\': \'24/09/2011\', u\'hourofissue\': \'955\', u\'amount\': \'129.8\', u\'country\': \'FRA\'}]</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Payment Transaction">\n
+  <title>12501 toto@nexedi.com</title>\n
+  <start_date>2011/07/23</start_date>\n
+  <stop_date>2011/07/23</stop_date>\n
+  <reference>12501</reference>\n
+  <payment_mode>cb</payment_mode>\n
+  <movement>\n
+    <price>41420.00</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>12502 tutu@nexedi.com</title>\n
+  <start_date>2011/07/24</start_date>\n
+  <stop_date>2011/07/24</stop_date>\n
+  <reference>12502</reference>\n
+  <payment_mode>cb</payment_mode>\n
+  <movement>\n
+    <price>5000.00</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>12503 titi@nexedi.com</title>\n
+  <start_date>2011/06/23</start_date>\n
+  <stop_date>2011/06/23</stop_date>\n
+  <reference>12503</reference>\n
+  <payment_mode>cb</payment_mode>\n
+  <movement>\n
+    <price>2420.00</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>12504 tata@nexedi.com</title>\n
+  <start_date>2011/09/24</start_date>\n
+  <stop_date>2011/09/24</stop_date>\n
+  <reference>12504</reference>\n
+  <payment_mode>cb</payment_mode>\n
+  <movement>\n
+    <price>129.80</price>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Payment Transaction List</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

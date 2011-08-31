@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -28,10 +27,11 @@
 ##############################################################################
 
 import transaction
+import unittest
 from DateTime import DateTime
 from Products.ERP5TioSafe.tests.testPrestashopMixin import testPrestashopMixin
 
-class testPersonERP5Synchronization(testPrestashopMixin):
+class TestPersonERP5Synchronization(testPrestashopMixin):
   """ This class allows to check different cases of Person's sync. """
   def afterSetUp(self):
     """ This method is called after the SetUp method. """
@@ -40,6 +40,12 @@ class testPersonERP5Synchronization(testPrestashopMixin):
     self.connection = self.portal.erp5_sql_connection
     self.prestashop = self.portal.portal_integrations.prestashop
     self.root_xml = '<directory>\n%s\n</directory>'
+    self.not_removable_id_list = [self.prestashop.getSourceAdministrationValue().getId(),
+                                  self.prestashop.getResourceValue().getId(),
+                                  self.prestashop.getDestinationValue().getId()]
+    for stc in self.getPortalObject().sale_trade_condition_module.objectValues():
+      if stc.getValidationState() == "draft":
+        stc.validate()
 
   def test_PrestashopSimplestXMLSync(self):
     """ This test checks the person sync with the simplest XML. """
@@ -53,9 +59,9 @@ class testPersonERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of persons and check person's data after sync
-    self.assertEqual(len(self.person_module.contentValues()), 0)
-    self.loadSync([self.prestashop.person_module, ])
     self.assertEqual(len(self.person_module.contentValues()), 1)
+    self.loadSync([self.prestashop.person_module, ])
+    self.assertEqual(len(self.person_module.contentValues()), 2)
     person = self.person_module.contentValues()[0]
     self.assertEqual(person.getTitle(), 'John DOE')
     self.assertEqual(person.getFirstName(), 'John')
@@ -81,9 +87,9 @@ class testPersonERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of persons and check person's data after sync
-    self.assertEqual(len(self.person_module.contentValues()), 0)
-    self.loadSync([self.prestashop.person_module, ])
     self.assertEqual(len(self.person_module.contentValues()), 1)
+    self.loadSync([self.prestashop.person_module, ])
+    self.assertEqual(len(self.person_module.contentValues()), 2)
     person = self.person_module.contentValues()[0]
     self.assertEqual(person.getTitle(), 'Jean GRAY')
     self.assertEqual(person.getFirstName(), 'Jean')
@@ -118,9 +124,9 @@ class testPersonERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of persons and check person's data after sync
-    self.assertEqual(len(self.person_module.contentValues()), 0)
-    self.loadSync([self.prestashop.person_module, ])
     self.assertEqual(len(self.person_module.contentValues()), 1)
+    self.loadSync([self.prestashop.person_module, ])
+    self.assertEqual(len(self.person_module.contentValues()), 2)
     person = self.person_module.contentValues()[0]
     self.assertEqual(person.getTitle(), 'Jenifer-Dylan COX')
     self.assertEqual(person.getFirstName(), 'Jenifer-Dylan')
@@ -175,9 +181,9 @@ class testPersonERP5Synchronization(testPrestashopMixin):
     # Check that an empty mapping is created in integration site
     self.assertTrue(self.prestashop.get('Country', None) is None)
     # Run the sync of persons and check person's data after sync
-    self.assertEqual(len(self.person_module.contentValues()), 0)
+    self.assertEqual(len(self.person_module.contentValues()), 1)
     self.loadSync([self.prestashop.person_module, ])
-    self.assertEqual(len(self.person_module.contentValues()), 0)
+    self.assertEqual(len(self.person_module.contentValues()), 1)
 
   def test_PrestashopDeletePerson(self):
     """ Check that the delete during a person's sync invalidate the person. """
@@ -191,9 +197,9 @@ class testPersonERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of persons
-    self.assertEqual(len(self.person_module.contentValues()), 0)
+    self.assertEqual(len(self.person_module.contentValues()), 1)
     self.loadSync([self.prestashop.person_module, ])
-    self.assertEqual(len(self.person_module.contentValues()), 3)
+    self.assertEqual(len(self.person_module.contentValues()), 4)
     # Move the persons as draft, validated and invalidated state
     john_doe = self.person_module.searchFolder(
         portal_type='Person',
@@ -222,11 +228,22 @@ class testPersonERP5Synchronization(testPrestashopMixin):
     self.assertEqual(john_doe.getValidationState(), 'validated')
     self.assertEqual(jane_doe.getValidationState(), 'validated')
     self.assertEqual(dan_doe.getValidationState(), 'invalidated')
+    for stc in self.getPortalObject().sale_trade_condition_module.objectValues():
+      self.assertEqual(stc.getValidationState(), "validated")
     self.loadSync([self.prestashop.person_module, ])
-    self.assertEqual(len(self.person_module.contentValues()), 3)
-    self.assertEqual(john_doe.getValidationState(), 'invalidated')
-    self.assertEqual(jane_doe.getValidationState(), 'invalidated')
+    self.assertEqual(len(self.person_module.contentValues()), 4)
+    # State of person does not change, this removal is managed through trade condition
+    self.assertEqual(john_doe.getValidationState(), 'validated')
+    self.assertEqual(jane_doe.getValidationState(), 'validated')
     self.assertEqual(dan_doe.getValidationState(), 'invalidated')
+    deleted_person_list = (john_doe.getRelativeUrl(),
+                           jane_doe.getRelativeUrl(),
+                           dan_doe.getRelativeUrl())
+    for stc in self.getPortalObject().sale_trade_condition_module.objectValues():
+      if stc.getDestination() in deleted_person_list:
+        self.assertEqual(stc.getValidationState(), "invalidated")
+      else:
+        self.assertEqual(stc.getValidationState(), "validated")
 
   def test_PrestashopUpdateSimpleElement(self):
     """ This test checks the simple update after sync of persons. """
@@ -241,9 +258,9 @@ class testPersonERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of persons and check person's data after sync
-    self.assertEqual(len(self.person_module.contentValues()), 0)
-    self.loadSync([self.prestashop.person_module, ])
     self.assertEqual(len(self.person_module.contentValues()), 1)
+    self.loadSync([self.prestashop.person_module, ])
+    self.assertEqual(len(self.person_module.contentValues()), 2)
     person = self.person_module.contentValues()[0]
     self.assertEqual(person.getTitle(), 'Chris TURK')
     self.assertEqual(person.getFirstName(), 'Chris')
@@ -264,7 +281,7 @@ class testPersonERP5Synchronization(testPrestashopMixin):
         '%s/dump_person_sync_08.sql' % self.ps_dump_path,
     )
     self.loadSync([self.prestashop.person_module, ])
-    self.assertEqual(len(self.person_module.contentValues()), 1)
+    self.assertEqual(len(self.person_module.contentValues()), 2)
     self.assertEqual(person.getTitle(), 'Chris TURK')
     self.assertEqual(person.getFirstName(), 'Chris')
     self.assertEqual(person.getLastName(), 'TURK')
@@ -301,9 +318,9 @@ class testPersonERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of persons and check person's data after sync
-    self.assertEqual(len(self.person_module.contentValues()), 0)
-    self.loadSync([self.prestashop.person_module, ])
     self.assertEqual(len(self.person_module.contentValues()), 1)
+    self.loadSync([self.prestashop.person_module, ])
+    self.assertEqual(len(self.person_module.contentValues()), 2)
     person = self.person_module.contentValues()[0]
     self.assertEqual(person.getTitle(), 'Perry COX')
     self.assertEqual(person.getFirstName(), 'Perry')
@@ -389,3 +406,7 @@ class testPersonERP5Synchronization(testPrestashopMixin):
         xsd_path='../XSD/nodes.xsd',
     )
 
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestPersonERP5Synchronization))
+  return suite

@@ -52,115 +52,17 @@
             <key> <string>_body</string> </key>
             <value> <string>""" Retrieve the address list of the node. """\n
 \n
-address_list = context.contentValues(\n
-    portal_type=\'Address\',\n
-)\n
-\n
-# Properties which allow to sort address(es)\n
-property_address_list = [\n
-    \'getTitle\',\n
-    \'getStreetAddress\',\n
-    \'getZipCode\',\n
-    \'getCity\',\n
-    \'getRegionTitle\',\n
-]\n
-\n
-# Build the dict which allows the sort of the address\n
-address_dict = {}\n
-for address in address_list:\n
-  # Build the key which will be sorted\n
-  key = \'\'\n
-  for property in property_address_list:\n
-    if getattr(address, property)() not in [None, \'\']:\n
-      key += getattr(address, property)()\n
-  if key != \'\':\n
-    address_dict[key] = address\n
-  else:\n
-    context.log(\n
-        \'FIXME: %s have an empty address\' % context.getPath()\n
-    )\n
-\n
-# Order the dict by using list\n
-ordered_key_list = address_dict.keys()\n
-ordered_key_list.sort()\n
-\n
-return [address_dict[key] for key in ordered_key_list]\n
+return context.contentValues(portal_type=\'Address\',\n
+                             sort_on=\'int_index\')\n
 </string> </value>
-        </item>
-        <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>address_list</string>
-                            <string>property_address_list</string>
-                            <string>address_dict</string>
-                            <string>_getiter_</string>
-                            <string>address</string>
-                            <string>key</string>
-                            <string>property</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>_inplacevar_</string>
-                            <string>_write_</string>
-                            <string>ordered_key_list</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>_getitem_</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>Node_getAddressList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

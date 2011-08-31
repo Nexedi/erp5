@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>CyberPlusBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/cyberplus/payment_transaction_mapping</string>
+                <string>source/portal_integrations/cyberplus/document_connector</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getPaymentTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Payment Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'date_operation\': DateTime(\'2011/01/01\'), \'date_de_comptabilisation\': DateTime(\'2011/12/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>erp5/DocumentConnector_getPaymentTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string>[{u\'montant\': \'3000\', u\'reference\': \'A38WC9P\', u\'date_operation\': \'2011-08-10\', u\'libelle\': \'VIR NEXEDI nexedi alpha\', u\'date_de_comptabilisation\': \'2011-08-10\', u\'date_valeur\': \'2011-08-10\', u\'compte\': \'40302122312\', \'id\': \'2\'}, {u\'montant\': \'-30\', u\'reference\': \'1980\', u\'date_operation\': \'2011-07-19\', u\'libelle\': \'COM CNV POTAX N 0001352960\', u\'date_de_comptabilisation\': \'2011-07-20\', u\'date_valeur\': \'2011-07-19\', u\'compte\': \'40302122312\', \'id\': \'3\'}, {u\'montant\': \'-52.3\', u\'reference\': \'9OC0ITP\', u\'date_operation\': \'2011-07-15\', u\'libelle\': \'PRLV FATOU SA PVT270073 000 N.EMETTEUR: 261011\', u\'date_de_comptabilisation\': \'2011-07-15\', u\'date_valeur\': \'2011-07-15\', u\'compte\': \'40302122312\', \'id\': \'4\'}, {u\'montant\': \'-0.9\', u\'reference\': \'1823\', u\'date_operation\': \'2011-06-28\', u\'libelle\': \'FRAIS VIR MAGNETIQUE 3 OPERATIONS\', u\'date_de_comptabilisation\': \'2011-06-28\', u\'date_valeur\': \'2011-06-28\', u\'compte\': \'40302122312\', \'id\': \'5\'}]</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Payment Transaction">\n
+  <title>VIR NEXEDI nexedi alpha</title>\n
+  <start_date>2011/08/10</start_date>\n
+  <stop_date>2011/08/10</stop_date>\n
+  <reference>2</reference>\n
+  <movement>\n
+    <price>3000.00</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>COM CNV POTAX N 0001352960</title>\n
+  <start_date>2011/07/19</start_date>\n
+  <stop_date>2011/07/20</stop_date>\n
+  <reference>3</reference>\n
+  <movement>\n
+    <price>-30.00</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>PRLV FATOU SA PVT270073 000 N.EMETTEUR: 261011</title>\n
+  <start_date>2011/07/15</start_date>\n
+  <stop_date>2011/07/15</stop_date>\n
+  <reference>4</reference>\n
+  <movement>\n
+    <price>-52.30</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>FRAIS VIR MAGNETIQUE 3 OPERATIONS</title>\n
+  <start_date>2011/06/28</start_date>\n
+  <stop_date>2011/06/28</stop_date>\n
+  <reference>5</reference>\n
+  <movement>\n
+    <price>-0.90</price>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

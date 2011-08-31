@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary/>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>action</string> </key>
+            <value> <string>Base_edit</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>enctype</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <list>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_title</string>
+                        <string>my_reference</string>
+                        <string>my_UserEmail</string>
+                        <string>my_Date</string>
+                        <string>my_NetAmountDue</string>
+                        <string>my_PaymentStatusCode</string>
+                        <string>my_UserOxID</string>
+                        <string>my_BillingFirstName</string>
+                        <string>my_BillingLastName</string>
+                        <string>my_BillingCompany</string>
+                        <string>my_BillingAddress</string>
+                        <string>my_BillingAddressL1</string>
+                        <string>my_BillingAddressFloor</string>
+                        <string>my_BillingAddressBuilding</string>
+                        <string>my_BillingAddressStreet</string>
+                        <string>my_BillingZipCode</string>
+                        <string>my_BillingCity</string>
+                        <string>my_BillingState</string>
+                        <string>my_BillingCountryISOCode</string>
+                        <string>my_BillingCountryName</string>
+                        <string>my_BillingPhone</string>
+                        <string>my_BillingCellPhone</string>
+                        <string>my_BillingFax</string>
+                        <string>my_CompanyVATNumber</string>
+                        <string>my_VATIncluded</string>
+                        <string>my_EcoTaxIncluded</string>
+                        <string>my_SubTotalNet</string>
+                        <string>my_SubTotalNetDiscounted</string>
+                        <string>my_GlobalDiscountRate</string>
+                        <string>my_GlobalDiscountAmount</string>
+                        <string>my_SubTotalVAT</string>
+                        <string>my_EcoTaxAmountTaxIncl</string>
+                        <string>my_TotalWeight</string>
+                        <string>my_Language</string>
+                        <string>my_PaymentMethodName</string>
+                        <string>my_PMProcessorCode</string>
+                        <string>my_PaymentStatusLastModifiedDate</string>
+                        <string>my_RemoteIPAddr</string>
+                        <string>my_SalesRepCode</string>
+                        <string>my_SpecialInstructions</string>
+                        <string>my_CurrencyCode</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list>
+                        <string>my_ShippingFirstName</string>
+                        <string>my_ShippingLastName</string>
+                        <string>my_ShippingCompany</string>
+                        <string>my_ShippingAddress</string>
+                        <string>my_ShippingAddressL1</string>
+                        <string>my_ShippingAddressFloor</string>
+                        <string>my_ShippingAddressBuilding</string>
+                        <string>my_ShippingAddressStreet</string>
+                        <string>my_ShippingAddressOtherInfo</string>
+                        <string>my_ShippingZipCode</string>
+                        <string>my_ShippingCity</string>
+                        <string>my_ShippingState</string>
+                        <string>my_ShippingCountryISOCode</string>
+                        <string>my_ShippingCountryName</string>
+                        <string>my_ShippingPhone</string>
+                        <string>my_ShippingInfo</string>
+                        <string>my_ShippingID</string>
+                        <string>my_ShippingMethodName</string>
+                        <string>my_ShippingTaxRate</string>
+                        <string>my_ShippingPriceTaxExcl</string>
+                        <string>my_ShippingPriceTaxIncl</string>
+                        <string>my_ShippingVATAmount</string>
+                      </list>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>OxatisTestSaleOrder_view</string> </value>
+        </item>
+        <item>
+            <key> <string>method</string> </key>
+            <value> <string>POST</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>OxatisTestSaleOrder_view</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>form_view</string> </value>
+        </item>
+        <item>
+            <key> <string>row_length</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>stored_encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Oxatis Test Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>unicode_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

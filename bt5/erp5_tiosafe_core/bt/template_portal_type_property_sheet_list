@@ -1,4 +1,6 @@
 Integration Module | IntegrationModule
+Integration Site | Arrow
+Integration Site | Resource
 Synchronization Configurator Item | SortIndex
 Synchronization Configurator Item | SynchronizationConfiguratorItem
 Web Service Request Group | Arrow

@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildZencartSaleOrderBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>ZencartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/zencart/sale_order_mapping</string>
+                <string>source/portal_integrations/zencart/http_connector</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getSaleOrderList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2020/01/01\'), \'start_date\': DateTime(\'2010/01/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.1.34/zen-cart/admin/tiosafe_zencart/getSaleOrderList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+\n
+<xml><object><id>4</id><title>Sale Order 4</title><person_id>4</person_id><reference>4</reference><currency>USD</currency><billing_company>Consulat Paris Delivery</billing_company><billing_firstname>Mohamadou</billing_firstname><billing_lastname>Mbengue</billing_lastname><billing_country>France</billing_country><email>mmbengue@gmail.com</email><delivery_company>Test Company</delivery_company><delivery_firstname>Aissatou</delivery_firstname><delivery_lastname>Keita Mbengue</delivery_lastname><delivery_country>Senegal</delivery_country><payment_method>Check/Money Order</payment_method><start_date>2011-04-01 10:37:11</start_date><delivery_price>5.0000</delivery_price><delivery_title>Flat Rate (Best Way)</delivery_title><delivery_tax_rate>0.00</delivery_tax_rate><discount_price>10.0000</discount_price><discount_code>CP001</discount_code><discount_title>Discount CP001</discount_title><discount_tax_rate>0.00</discount_tax_rate></object><object><id>5</id><title>Sale Order 5</title><person_id>4</person_id><reference>5</reference><currency>USD</currency><billing_company>Test Company</billing_company><billing_firstname>Aissatou</billing_firstname><billing_lastname>Keita Mbengue</billing_lastname><billing_country>Senegal</billing_country><email>mmbengue@gmail.com</email><delivery_firstname>ALias</delivery_firstname><delivery_lastname>Analyser</delivery_lastname><delivery_country>Belgium</delivery_country><payment_method>Check/Money Order</payment_method><start_date>2011-04-01 10:44:20</start_date><delivery_price>5.0000</delivery_price><delivery_title>Flat Rate (Best Way)</delivery_title><delivery_tax_rate>0.00</delivery_tax_rate><discount_price>10.0000</discount_price><discount_code>CP001</discount_code><discount_title>Discount CP001</discount_title><discount_tax_rate>0.00</discount_tax_rate></object></xml> \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Sale Order">\n
+  <title>Sale Order 4</title>\n
+  <start_date>2011/04/01 10:37:11 GMT+2</start_date>\n
+  <stop_date>2011/04/01 10:37:11 GMT+2</stop_date>\n
+  <reference>4</reference>\n
+  <currency>USD</currency>\n
+  <arrow type="">\n
+    <source> My Zencart Shop france</source>\n
+    <destination> Test Company senegal</destination>\n
+  </arrow>\n
+  <arrow type="Administration">\n
+    <source> My Zencart Shop france</source>\n
+    <destination> Consulat Paris Delivery france</destination>\n
+  </arrow>\n
+  <arrow type="Decision">\n
+    <source> My Zencart Shop france</source>\n
+    <destination> Mohamadou Mbengue mmbengue@gmail.com</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> My Zencart Shop france</source>\n
+    <destination> Consulat Paris Delivery france</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource> 1</resource>\n
+    <title>Matrox G200 MMS Updated</title>\n
+    <quantity>2.00</quantity>\n
+  </movement>\n
+  <movement>\n
+    <resource> 25</resource>\n
+    <title>Microsoft Internet Keyboard PS/2</title>\n
+    <quantity>2.00</quantity>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Delivery</resource>\n
+    <title>Flat Rate (Best Way)</title>\n
+    <reference>Flat Rate (Best Way)</reference>\n
+    <quantity>1.00</quantity>\n
+    <price>5.000000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Discount</resource>\n
+    <title>Discount CP001</title>\n
+    <reference>Discount CP001</reference>\n
+    <quantity>-1.00</quantity>\n
+    <price>10.000000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Sale Order">\n
+  <title>Sale Order 5</title>\n
+  <start_date>2011/04/01 10:44:20 GMT+2</start_date>\n
+  <stop_date>2011/04/01 10:44:20 GMT+2</stop_date>\n
+  <reference>5</reference>\n
+  <currency>USD</currency>\n
+  <arrow type="">\n
+    <source> My Zencart Shop france</source>\n
+    <destination> ALias Analyser mmbengue@gmail.com</destination>\n
+  </arrow>\n
+  <arrow type="Administration">\n
+    <source> My Zencart Shop france</source>\n
+    <destination> Test Company senegal</destination>\n
+  </arrow>\n
+  <arrow type="Decision">\n
+    <source> My Zencart Shop france</source>\n
+    <destination> Aissatou Keita Mbengue mmbengue@gmail.com</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> My Zencart Shop france</source>\n
+    <destination> Test Company senegal</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource> 13</resource>\n
+    <title>Lethal Weapon Linked</title>\n
+    <quantity>3.00</quantity>\n
+  </movement>\n
+  <movement>\n
+    <resource> 21</resource>\n
+    <title>SWAT 3: Close Quarters Battle Linked</title>\n
+    <quantity>1.00</quantity>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Delivery</resource>\n
+    <title>Flat Rate (Best Way)</title>\n
+    <reference>Flat Rate (Best Way)</reference>\n
+    <quantity>1.00</quantity>\n
+    <price>5.000000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Discount</resource>\n
+    <title>Discount CP001</title>\n
+    <reference>Discount CP001</reference>\n
+    <quantity>-1.00</quantity>\n
+    <price>10.000000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get One Sale Order</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

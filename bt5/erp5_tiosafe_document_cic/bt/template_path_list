@@ -1,0 +1,8 @@
+document_module/1**
+organisation_module/1**
+portal_integrations/cic
+portal_integrations/cic/*connector**
+portal_integrations/cic/*mapping**
+portal_integrations/cic/*module**
+portal_synchronizations/spreadsheet_cic*
+sale_trade_condition_module/default_cic**

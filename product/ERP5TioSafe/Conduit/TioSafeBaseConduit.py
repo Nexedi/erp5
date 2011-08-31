@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
-#               Aurelien Calonne <aurel@nexedi.com>
+#               Aurélien Calonne <aurel@nexedi.com>
 #               Hervé Poulain <herve@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
@@ -34,7 +35,6 @@ from zLOG import LOG, INFO, WARNING
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from lxml import etree
 from copy import deepcopy
-from Products.ERP5SyncML.Document.Conflict import Conflict
 parser = etree.XMLParser(remove_blank_text=True)
 
 XUPDATE_INSERT_LIST = ('xupdate:insert-after', 'xupdate:insert-before')
@@ -45,18 +45,40 @@ class TioSafeBaseConduit(ERP5Conduit):
   """
     This class provides some tools used by different TioSafe Conduits.
   """
-  
-  def _generateConflict(self, path, tag, xml, current_value, new_value):
+
+  def replaceIdFromXML(self, xml, attribute_name, new_id, as_string=True):
+    """XXX argument old_attribute_name is missing
+    XXX name of method is not good, because content is not necessarily XML
+    return a xml with id replaced by a new id
+    """
+    if isinstance(xml, str):
+      xml = etree.XML(xml, parser=parser)
+    else:
+      # copy of xml object for modification
+      xml = deepcopy(xml)
+    object_element = xml.find('object')
+    if object_element:
+      if attribute_name == 'id':
+        del object_element.attrib['gid']
+      else:
+        del object_element.attrib['id']
+      object_element.attrib[attribute_name] = new_id
+    if as_string:
+      return etree.tostring(xml, pretty_print=True, encoding="utf-8")
+    return xml
+
+  def _generateConflict(self, path, tag, xml, current_value, new_value, signature):
     """
     Generate the conflict object
     """
-    conflict = Conflict(
-      object_path=path,
-      keyword=tag,
-      )
-    conflict.setXupdate(etree.tostring(xml, encoding='utf-8'))
-    conflict.setLocalValue(current_value)
-    conflict.setRemoteValue(new_value)
+    LOG("_generateConflict", 300, "path %s\n, tag %s\n, xml %s\n, current_value %s\n, new_value %s\n" %(path, tag, xml, current_value, new_value))
+    conflict = signature.newContent(portal_type='SyncML Conflict',
+                                    origin=path,
+                                    property_id=tag,
+                                    local_value=current_value,
+                                    remote_value=new_value,
+                                    diff_chunk=etree.tostring(xml, encoding='utf-8')
+                                    )
     return conflict
 
   def addNode(self, xml=None, object=None, sub_object=None, reset=None,
@@ -107,19 +129,8 @@ class TioSafeBaseConduit(ERP5Conduit):
     # We must returns the object created
     return {'conflict_list':conflict_list, 'object': sub_object}
 
-  def replaceIdFromXML(self, xml, attribute_name, new_id, as_string=True):
-    """
-      return a xml with id replace by a new id
-    """
-    if isinstance(xml, str):
-      xml = etree.XML(xml, parser=parser)
-    else:
-      xml = deepcopy(xml)
-    if as_string:
-      return etree.tostring(xml)
-    return xml
 
-  def applyXupdate(self, object=None, xupdate=None, previous_xml=None, **kw):
+  def applyXupdate(self, object=None, object_xml=None, xupdate=None, previous_xml=None, **kw):
     """ Parse the xupdate and then it will call the conduit. """
     conflict_list = []
     if isinstance(xupdate, (str, unicode)):
@@ -129,6 +140,7 @@ class TioSafeBaseConduit(ERP5Conduit):
         conflict_list += self.updateNode(
             xml=self.getContextFromXpath(subnode, subnode.get('select')),
             object=object,
+            object_xml=object_xml,
             previous_xml=previous_xml,
             **kw
         )
@@ -172,22 +184,34 @@ class TioSafeBaseConduit(ERP5Conduit):
 
     return result_list
 
-  def updateNode(self, xml=None, object=None, previous_xml=None, force=False,
+  def getObjectAsXML(self, object, domain):
+    """
+    This method must be implemented by subclasses as the way to generate the
+    XML is specific to each side
+
+    XML of document must be generated at the beginning as the xml exchanged
+    by syncml always refer to it (exemple of item in a list of tag). So if
+    it has to be regenerated later, generated XML might differ from the original
+    """
+    raise NotImplementedError
+
+  def updateNode(self, xml=None, object=None, object_xml=None, previous_xml=None, force=False,
       simulate=False, reset=False, xpath_expression=None, **kw):
     """
       This method browse the xml which allows to update data and update the
       correpsonging object.
     """
     conflict_list = []
-    if simulate:
-      return conflict_list
     if xml is None:
       return {'conflict_list': conflict_list, 'object': object}
     xml = self.convertToXml(xml)
+    if object_xml is None:
+      object_xml = self.getObjectAsXML(object, kw["domain"].getPath())
     # we have an xupdate xml
     if xml.xpath('name()') == 'xupdate:modifications':
       conflict_list += self.applyXupdate(
           object=object,
+          object_xml=object_xml,
           xupdate=xml,
           conduit=self,
           previous_xml=previous_xml,
@@ -208,6 +232,7 @@ class TioSafeBaseConduit(ERP5Conduit):
         if xpath in XUPDATE_UPDATE:
           conflict_list += self._updateXupdateUpdate(
               document=object,
+              object_xml=object_xml,
               xml=xml,
               previous_xml=previous_xml,
               **kw
@@ -216,6 +241,7 @@ class TioSafeBaseConduit(ERP5Conduit):
         elif xpath in XUPDATE_DEL:
           conflict_list += self._updateXupdateDel(
               document=object,
+              object_xml=object_xml,
               xml=xml,
               previous_xml=previous_xml,
               **kw
@@ -224,11 +250,19 @@ class TioSafeBaseConduit(ERP5Conduit):
         elif xpath in XUPDATE_INSERT_OR_ADD_LIST:
           conflict_list += self._updateXupdateInsertOrAdd(
               document=object,
+              object_xml=object_xml,
               xml=xml,
               previous_xml=previous_xml,
               **kw
           )
+    self.afterUpdateMethod(object, **kw)
     return conflict_list
+
+  def afterUpdateMethod(self, object, **kw):
+    """ This method is for actions that has to be done just after object
+    update and which required to have synchronization parameters
+    """
+    pass
 
   def _updateXupdateUpdate(self, document=None, xml=None, previous_xml=None, **kw):
     """

@@ -1,0 +1,13 @@
+organisation_module/default_prestashop_shop**
+person_module/unknown_prestashop**
+portal_integrations/prestashop
+portal_integrations/prestashop/*_mapping
+portal_integrations/prestashop/*_mapping/**
+portal_integrations/prestashop/*_module
+portal_integrations/prestashop/*_module/**
+portal_integrations/prestashop/*connection_plugin
+portal_integrations/prestashop/IntegrationSite_*
+portal_synchronizations/prestashop*
+portal_synchronizations/ps_*
+product_module/unknown_prestashop**
+sale_trade_condition_module/default_prestashop**

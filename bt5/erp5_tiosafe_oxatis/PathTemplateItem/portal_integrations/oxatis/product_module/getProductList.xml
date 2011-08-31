@@ -1,0 +1,497 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?><ProductList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"><LatestModifiedDateStart tal:content="python:options[\'start_date\'].ISO8601()">2010-09-07T13:54:12.925183+02:00</LatestModifiedDateStart>\n
+<LatestModifiedDateEnd tal:content="python:options[\'stop_date\'].ISO8601()">2010-09-10T15:54:12.925183+02:00</LatestModifiedDateEnd> <ProductsID /></ProductList>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildProductBrainList</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Resource</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/oxatis/product_rest_connection_plugin</string>
+                <string>destination/portal_integrations/oxatis/product_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?><ProductList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"><LatestModifiedDateStart tal:content="python:options[\'start_date\'].ISO8601()">2010-09-07T13:54:12.925183+02:00</LatestModifiedDateStart>\n
+<LatestModifiedDateEnd tal:content="python:options[\'stop_date\'].ISO8601()">2010-09-10T15:54:12.925183+02:00</LatestModifiedDateEnd> <ProductsID /></ProductList>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>ProductGetList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Product</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getProductList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/oxatis</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<?xml version="1.0" encoding="utf-8"?><ProductList    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    xmlns:xsd="http://www.w3.org/2001/XMLSchema"><LatestModifiedDateStart>2010-01-15T00:00:00+01:00</LatestModifiedDateStart><LatestModifiedDateEnd>2011-12-24T00:00:00+01:00</LatestModifiedDateEnd> <ProductsID/></ProductList>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://webservices.oxatis.com/webservices/httpservices/productservices.aspx</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>\r\n
+<DataResultService>\r\n
+  <StatusCode>200</StatusCode>\r\n
+  <StatusSubCode>0</StatusSubCode>\r\n
+  <ErrorDetails />\r\n
+  <Data>\r\n
+    <ProductList>\r\n
+      <LatestModifiedDateStart>2010-01-15T00:00:00+01:00</LatestModifiedDateStart>\r\n
+      <LatestModifiedDateEnd>2011-12-24T00:00:00+01:00</LatestModifiedDateEnd>\r\n
+      <ProductsID>\r\n
+        <ProductID>\r\n
+          <OxID>4111417</OxID>\r\n
+          <ItemSKU>C0002</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>4111418</OxID>\r\n
+          <ItemSKU>C0001</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>4111419</OxID>\r\n
+          <ItemSKU>C0003</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>4111420</OxID>\r\n
+          <ItemSKU>C0006</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>6821464</OxID>\r\n
+          <ItemSKU>C0006blpt</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>6821465</OxID>\r\n
+          <ItemSKU>C0006blmy</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>6821466</OxID>\r\n
+          <ItemSKU>C0006blgd</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>6821467</OxID>\r\n
+          <ItemSKU>C0006nrpt</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>6821468</OxID>\r\n
+          <ItemSKU>C0007nrmy</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>6821469</OxID>\r\n
+          <ItemSKU>C0006nrgd</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>6821470</OxID>\r\n
+          <ItemSKU>C0006rgpt</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>6821471</OxID>\r\n
+          <ItemSKU>C0006rgmy</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+        <ProductID>\r\n
+          <OxID>6821472</OxID>\r\n
+          <ItemSKU>C0006rggd</ItemSKU>\r\n
+          <OptionValues1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues1>\r\n
+          <OptionValues2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues2>\r\n
+          <OptionValues3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionValues3>\r\n
+          <OptionTypes1>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes1>\r\n
+          <OptionTypes2>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes2>\r\n
+          <OptionTypes3>\r\n
+            <OxID>0</OxID>\r\n
+          </OptionTypes3>\r\n
+        </ProductID>\r\n
+      </ProductsID>\r\n
+    </ProductList>\r\n
+  </Data>\r\n
+</DataResultService>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<resource type="Product">\n
+  <title>Polo</title>\n
+  <reference>C0002</reference>\n
+  <description>Décrivez ici votre article en quelques lignes.</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Jupe mi-Courte</title>\n
+  <reference>C0001</reference>\n
+  <description>Ceci est la déscription d\'une jupe</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Robe Longue</title>\n
+  <reference>C0003</reference>\n
+  <description>Décrivez ici votre article en quelques lignes. Vous pouvez également compléter le champ "Description longue" qui permet de fournir une description plus complète de l’article avec toutes ses spécificités. La description courte est principalement affichée dans le catalogue et reprise dans la fiche article si la description longue n’est pas renseignée. Cet affichage dépend aussi de la mise en page sélectionnée pour le catalogue.</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0006</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0006blpt</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0006blmy</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0006blgd</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0006nrpt</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0007nrmy</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0006nrgd</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0006rgpt</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0006rgmy</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0006rggd</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getProductParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get list of products</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

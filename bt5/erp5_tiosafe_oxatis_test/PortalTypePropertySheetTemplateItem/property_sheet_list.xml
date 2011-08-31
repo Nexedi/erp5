@@ -1,0 +1,21 @@
+<property_sheet_list>
+ <portal_type id="Oxatis Test Person">
+  <item>OxatisTestPerson</item>
+  <item>Reference</item>
+  <item>StandardProperty</item>
+ </portal_type>
+ <portal_type id="Oxatis Test Product">
+  <item>OxatisTestProduct</item>
+  <item>Reference</item>
+  <item>StandardProperty</item>
+ </portal_type>
+ <portal_type id="Oxatis Test Sale Order">
+  <item>OxatisTestSaleOrder</item>
+  <item>Reference</item>
+  <item>StandardProperty</item>
+ </portal_type>
+ <portal_type id="Oxatis Test Sale Order Item">
+  <item>OxatisTestSaleOrderItem</item>
+  <item>StandardProperty</item>
+ </portal_type>
+</property_sheet_list>

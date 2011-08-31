@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Title, Body, OwnerId, ParentId\n
+    FROM\n
+      Note\n
+    <tal:block tal:condition="python: options.get(\'event_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/event_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>SalesforceEventBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/salesforce/event_mapping</string>
+                <string>source/portal_integrations/salesforce/salesforce_connector</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Title, Body, OwnerId, ParentId\n
+    FROM\n
+      Note\n
+    <tal:block tal:condition="python: options.get(\'event_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/event_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getNoteList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Event/Note</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getNoteList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/salesforce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, Title, Body, OwnerId, ParentId    FROM      Note      </ns0:querystring></ns0:query>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>https://na3-api.salesforce.com/services/Soap/u/19.0/00D50000000IjTh</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com"><soapenv:Body><queryResponse><result xsi:type="QueryResult"><done>true</done><queryLocator xsi:nil="true"/><records xsi:type="sf:sObject"><sf:type>Note</sf:type><sf:Id>0025000000HbogeAAB</sf:Id><sf:Id>0025000000HbogeAAB</sf:Id><sf:Title>MyOwnCampaign</sf:Title><sf:Body>Talk about:\r\n
+   - How to improve the ads ?\r\n
+   - How to target more people ?\r\n
+   - How to improve the product ?\r\n
+   - How to decrease the price with the same quality of product ?\r\n
+   - How to decrease the packing cost ?\r\n
+   - How to decrease the ecologic impact ?</sf:Body><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:ParentId>0035000000iyf7PAAQ</sf:ParentId></records><size>1</size></result></queryResponse></soapenv:Body></soapenv:Envelope>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Event/Note">\n
+  <title>MyOwnCampaign</title>\n
+  <description>Talk about:\n
+   - How to improve the ads ?\n
+   - How to target more people ?\n
+   - How to improve the product ?\n
+   - How to decrease the price with the same quality of product ?\n
+   - How to decrease the packing cost ?\n
+   - How to decrease the ecologic impact ?</description>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+    <destination> Z Doh john.z.doh@gmail.com</destination>\n
+  </arrow>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Note</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

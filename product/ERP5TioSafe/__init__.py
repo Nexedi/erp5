@@ -27,21 +27,23 @@
 
 # Update ERP5 Globals
 from Products.ERP5Type.Utils import initializeProduct, updateGlobals
-from Tool import IntegrationTool
+from Tool import IntegrationTool, OAuthTool
 import sys, Permissions
 this_module = sys.modules[ __name__ ]
-document_classes = updateGlobals( this_module, globals(), permissions_module = Permissions)
+document_classes = updateGlobals(this_module, globals(),
+                                 permissions_module=Permissions)
 
 # Finish installation
 def initialize( context ):
   import Document
   initializeProduct(context, this_module, globals(),
-                         document_module = Document,
-                         document_classes = document_classes,
-                         object_classes = (),
-                         portal_tools = (IntegrationTool.IntegrationTool,),
-                         content_constructors = (),
-                         content_classes = ())
+                    document_module=Document,
+                    document_classes=document_classes,
+                    object_classes=(),
+                    portal_tools=(IntegrationTool.IntegrationTool,
+                                  OAuthTool.OAuthTool),
+                    content_constructors=(),
+                    content_classes=())
 
 # Initialize Connection plugins
 from Products.ERP5Type.Tool.WebServiceTool import registerConnectionPlugin
@@ -50,8 +52,13 @@ from zLOG import LOG, WARNING
 handler_module_dict = {
   'http': 'HTTPConnection',
   'php_unit_test': 'PHPUnitTestConnection',
-  'rest' : 'RESTConnection',
-  'magento_xmlrpc' : 'MagentoXMLRPCConnection',
+  'rest': 'RESTConnection',
+  'oxatis': 'OxatisConnection',
+  'oxatis_test': 'OxatisTestConnection',
+  'ubercart_test': 'UbercartTestConnection',
+  'virtuemart_test': 'VirtueMartTestConnection',
+  'magento_xmlrpc': 'MagentoXMLRPCConnection',
+  'document': 'DocumentConnection',
 }
 
 for handler_id, module_id in handler_module_dict.iteritems():
@@ -76,5 +83,7 @@ for handler_id, module_id in handler_module_dict.iteritems():
           'Unable to register module %r. error is %r.' % \
           (module_id, msg),
           error=sys.exc_info())
+      
 
-
+# Initialise patches
+# from Products.ERP5TioSafe.patches import ClassTool

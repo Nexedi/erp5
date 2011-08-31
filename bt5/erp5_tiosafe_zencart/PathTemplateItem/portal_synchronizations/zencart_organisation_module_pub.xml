@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SyncML Publication" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>authentification_format</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>authentification_type</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>authentification_format</string> </key>
+            <value> <string>b64</string> </value>
+        </item>
+        <item>
+            <key> <string>authentification_type</string> </key>
+            <value> <string>syncml:auth-basic</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/organisation_module</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>conduit_module_id</string> </key>
+            <value> <string>Products.ERP5TioSafe.Conduit.ERP5NodeConduit</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.syncml+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>zencart_organisation_module_synchronization</string> </value>
+        </item>
+        <item>
+            <key> <string>gid_generator_method_id</string> </key>
+            <value> <string>Synchronization_getOrganisationERP5ObjectGIDFromZencart</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>zencart_organisation_module_pub</string> </value>
+        </item>
+        <item>
+            <key> <string>is_activity_enabled</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>is_synchronized_with_erp5_portal</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>last_id</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>list_method_id</string> </key>
+            <value> <string>OrganisationModule_getOrganisationValueList</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>SyncML Publication</string> </value>
+        </item>
+        <item>
+            <key> <string>synchronization_id_generator_method_id</string> </key>
+            <value> <string>generateNewId</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>zencart_organisation_module_pub_synchronization</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>https://www.tiolive.com/tsgPUt4vK</string> </value>
+        </item>
+        <item>
+            <key> <string>xml_binding_generator_method_id</string> </key>
+            <value> <string>Node_asTioSafeXML</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

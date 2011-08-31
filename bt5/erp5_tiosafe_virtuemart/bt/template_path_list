@@ -1,0 +1,14 @@
+organisation_module/default_virtuemart_shop**
+person_module/unknown_virtuemart**
+portal_integrations/virtuemart
+portal_integrations/virtuemart/*connector**
+portal_integrations/virtuemart/*mapping**
+portal_integrations/virtuemart/*module**
+portal_integrations/virtuemart/*plugin
+portal_integrations/virtuemart/IntegrationSite_checkCategoryExistency**
+portal_integrations/virtuemart/IntegrationSite_getPluginLanguageList**
+portal_integrations/virtuemart/IntegrationSite_lastID**
+portal_synchronizations/virtuemart*
+product_module/unknown_virtuemart**
+sale_supply_module/1**
+sale_trade_condition_module/default_virtuemart**

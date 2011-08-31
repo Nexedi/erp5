@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/Magento/xmlrpc_connector</string>
+                <string>destination/portal_integrations/Magento/sale_order_mapping/sale_order_mapping_line</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>sales_order.lines</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Order Line</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getSaleOrderLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/Magento</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<exceptions.NotImplementedError instance at 0x84c1440>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'order_id\': \'3\'}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>sales_order.lines</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string>[{\'resource\': \'zp01\', \'product_id\': \' zp01\', \'reference\': \'zp01\', \'title\': \'ZenProduct\', \'price\': \'14.0000\', \'id\': \'3\', \'vat\': \'0.0000\', \'quantity\': 0.0}, {\'reference\': \'Shipping Cost\', \'title\': \'Shipping Cost\', \'price\': \'5.0000\', \'id\': 7, \'vat\': 0.0, \'quantity\': 1}, {\'reference\': \'Discount Amount\', \'title\': \'Discount Amount\', \'price\': \'0.0000\', \'id\': 8, \'vat\': 0.0, \'quantity\': 1}, {\'reference\': \'ZenProduct Product Discount\', \'title\': \'ZenProduct Product Discount\', \'price\': \'0.0000\', \'id\': 17, \'vat\': 0.0, \'quantity\': 1}]</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>getSaleOrderLineList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

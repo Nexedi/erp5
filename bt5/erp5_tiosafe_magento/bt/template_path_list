@@ -1,0 +1,10 @@
+organisation_module/default_magento_shop**
+person_module/unknown_magento**
+portal_integrations/Magento
+portal_integrations/Magento/*mapping**
+portal_integrations/Magento/*module**
+portal_integrations/Magento/*plugin
+portal_integrations/Magento/IntegrationSite_*
+portal_synchronizations/Magento_*
+product_module/unknown_magento**
+sale_trade_condition_module/default_magento**

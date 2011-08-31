@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Virtuemart Test Organisation" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>city</string> </key>
+            <value> <string>Dakar</string> </value>
+        </item>
+        <item>
+            <key> <string>country</string> </key>
+            <value> <string>France</string> </value>
+        </item>
+        <item>
+            <key> <string>email</string> </key>
+            <value> <string>adie@adie.sn</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>8</string> </value>
+        </item>
+        <item>
+            <key> <string>phone</string> </key>
+            <value> <string>00221339876677</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Virtuemart Test Organisation</string> </value>
+        </item>
+        <item>
+            <key> <string>street</string> </key>
+            <value> <string>Bourguiba</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Simple organisation 2</string> </value>
+        </item>
+        <item>
+            <key> <string>zip</string> </key>
+            <value> <string>0000</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

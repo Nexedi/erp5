@@ -82,7 +82,9 @@ for sync in sync_list:\n
     sub.resetAnchorList()\n
     pub.resetSubscriberList()\n
   context.portal_synchronizations.activate(activity="SQLQueue", tag=tag,\n
-                                           after_method_id=[\'reset\', \'manage_delObjects\', \'unindexObject\'],\n
+                                           after_method_id=[\'reset\', \'manage_delObjects\', \'unindexObject\',\n
+                                                            \'sendHttpResponse\', \'PubSync\',\n
+                                                            \'activateSyncModif\', \'immediateReindexObject\'],\n
                                            after_tag=after_tag).SubSync(sub.getPath())\n
   afer_tag = [sub.getId(), pub.getId(), tag]\n
   portal_status_message = translateString("Synchronization started.")\n
@@ -90,91 +92,17 @@ for sync in sync_list:\n
 # Add to the integration site view the clock which show activities -Aurel : really necessary ?\n
 context.activate(after_tag=after_tag).getTitle()\n
 \n
-\n
-context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message))\n
+if not batch_mode:\n
+  context.Base_redirect(form_id, keep_items = dict(portal_status_message=portal_status_message))\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'view\', reset=False, synchronization_list=[], **kw</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>form_id</string>
-                            <string>reset</string>
-                            <string>synchronization_list</string>
-                            <string>kw</string>
-                            <string>sync_list</string>
-                            <string>_getiter_</string>
-                            <string>synchronization</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>synchronization_object</string>
-                            <string>cmp_sync</string>
-                            <string>translateString</string>
-                            <string>after_tag</string>
-                            <string>sync</string>
-                            <string>sub</string>
-                            <string>pub</string>
-                            <string>dict</string>
-                            <string>portal_status_message</string>
-                            <string>tag</string>
-                            <string>afer_tag</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string>view</string>
-                <int>0</int>
-                <list/>
-              </tuple>
-            </value>
+            <value> <string>form_id=\'view\', reset=False, synchronization_list=[], batch_mode=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>IntegrationSite_synchronize</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

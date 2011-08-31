@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts99848457.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>Product.xsd</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?>\n
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">\n
+  <xs:element name="xml">\n
+    <xs:complexType>\n
+      <xs:sequence>\n
+        <xs:element ref="Product"/>\n
+      </xs:sequence>\n
+    </xs:complexType>\n
+  </xs:element>\n
+  <xs:element name="Product">\n
+    <xs:complexType>\n
+      <xs:sequence>\n
+        <xs:element ref="id"/>\n
+        <xs:element ref="reference"/>\n
+        <xs:element ref="sale_price"/>\n
+        <xs:element ref="purchase_price"/>\n
+        <xs:element ref="title"/>\n
+        <xs:element ref="state"/>\n
+      </xs:sequence>\n
+    </xs:complexType>\n
+  </xs:element>\n
+  <xs:element name="id" type="xs:integer"/>\n
+  <xs:element name="reference" type="xs:NCName"/>\n
+  <xs:element name="sale_price" type="xs:decimal"/>\n
+  <xs:element name="purchase_price" type="xs:decimal"/>\n
+  <xs:element name="title" type="xs:NCName"/>\n
+  <xs:element name="state" type="xs:integer"/>\n
+</xs:schema>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>945</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

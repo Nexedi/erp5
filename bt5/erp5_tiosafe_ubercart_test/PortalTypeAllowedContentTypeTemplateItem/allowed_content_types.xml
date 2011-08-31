@@ -1,0 +1,14 @@
+<allowed_content_type_list>
+ <portal_type id="Ubercart Test Module">
+  <item>Ubercart Test Delivery Person</item>
+  <item>Ubercart Test Person</item>
+  <item>Ubercart Test Product</item>
+  <item>Ubercart Test Sale Order</item>
+ </portal_type>
+ <portal_type id="Ubercart Test Product">
+  <item>Ubercart Test Product Individual Variation</item>
+ </portal_type>
+ <portal_type id="Ubercart Test Sale Order">
+  <item>Ubercart Test Sale Order Item</item>
+ </portal_type>
+</allowed_content_type_list>

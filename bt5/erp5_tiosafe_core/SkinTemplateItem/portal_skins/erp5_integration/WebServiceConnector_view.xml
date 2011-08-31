@@ -97,6 +97,7 @@
                         <string>my_title</string>
                         <string>my_transport</string>
                         <string>my_url_string</string>
+                        <string>my_parser_method_id</string>
                       </list>
                     </value>
                 </item>

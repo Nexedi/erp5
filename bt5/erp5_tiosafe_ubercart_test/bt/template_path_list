@@ -1,0 +1,8 @@
+portal_categories/payment_mode/**
+portal_categories/region/**
+portal_categories/role/client
+portal_categories/role/ubercart_delivery
+portal_integrations/ubercart/Catalog**
+portal_integrations/ubercart/Country**
+portal_integrations/ubercart/PaymentMode**
+ubercart_test_module/**

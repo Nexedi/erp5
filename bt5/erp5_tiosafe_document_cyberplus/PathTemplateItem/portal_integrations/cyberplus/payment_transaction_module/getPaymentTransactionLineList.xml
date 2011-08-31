@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/cyberplus/document_connector</string>
+                <string>destination/portal_integrations/cyberplus/payment_transaction_line_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getPaymentTransactionLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Accounting Transaction Line</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getPaymentTransactionLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<exceptions.NotImplementedError instance at 0xf5417cc>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>erp5/DocumentConnector_getPaymentTransactionLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml><object><solde>81278.78</solde><libelle>VIR FRAIS ROBERT</libelle><quantity>1</quantity><price>-157.5</price><date_doperation>06/13/2011</date_doperation><date_de_valeur>06/13/2011</date_de_valeur><id>2</id></object><object><solde>81235.55</solde><libelle>VIR POSTE</libelle><quantity>1</quantity><price>-73.03</price><date_doperation>06/13/2011</date_doperation><date_de_valeur>06/13/2011</date_de_valeur><id>3</id></object><object><solde>81200.74</solde><libelle>PRLV FREE TELECOM FREE HAUTDEBIT</libelle><quantity>1</quantity><price>-46.78</price><date_doperation>06/14/2011</date_doperation><date_de_valeur>06/14/2011</date_de_valeur><id>4</id></object><object><quantity>1</quantity><price>2090.0</price><libelle>VIR SOCIETE X 2011</libelle><date_de_valeur>06/16/2011</date_de_valeur><id>5</id><solde>44437.67</solde></object></xml>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Cyber Plus Get Payment Transaction Line List</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

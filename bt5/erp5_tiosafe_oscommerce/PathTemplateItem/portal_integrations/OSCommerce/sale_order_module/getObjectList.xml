@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/OSCommerce/http_connector</string>
+                <string>destination/portal_integrations/OSCommerce/sale_order_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getSaleOrderList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/OSCommerce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.3.34/oscommerce/catalog/admin/tiosafe/getSaleOrderList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml><object><id>3</id><reference>3</reference><currency>USD</currency><destination> Momar Ndiaye mamemor@gmail.com</destination><destination_administration> Momar Ndiaye mamemor@gmail.com</destination_administration><destination_decision> Momar Ndiaye mamemor@gmail.com</destination_decision><destination_ownership> Momar Ndiaye mamemor@gmail.com</destination_ownership><payment_mode>Cash on Delivery</payment_mode></object></xml> \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Sale Order">\n
+  <reference>3</reference>\n
+  <currency>USD</currency>\n
+  <payment_mode>cash</payment_mode>\n
+  <arrow type="">\n
+    <source> My osCommerce Shop united states</source>\n
+    <destination> Unknown Oscommerce Client None unkown@oscommerce.com</destination>\n
+  </arrow>\n
+  <arrow type="Administration">\n
+    <source> My osCommerce Shop united states</source>\n
+    <destination> Unknown Oscommerce Client None unkown@oscommerce.com</destination>\n
+  </arrow>\n
+  <arrow type="Decision">\n
+    <source> My osCommerce Shop united states</source>\n
+    <destination> Unknown Oscommerce Client None unkown@oscommerce.com</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> My osCommerce Shop united states</source>\n
+    <destination> Unknown Oscommerce Client None unkown@oscommerce.com</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource> unknown-oscommerce-product</resource>\n
+    <title>Unreal Tournament</title>\n
+    <reference> Unreal Tournament</reference>\n
+    <quantity>2</quantity>\n
+    <price>89.9900</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>getListeSaleOrderParser</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>sale_order_module</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

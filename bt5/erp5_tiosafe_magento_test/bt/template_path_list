@@ -1,0 +1,7 @@
+magento_test_module/**
+portal_integrations/Magento
+portal_integrations/Magento/**
+portal_integrations/Magento/Country**
+portal_integrations/Magento/PaymentMode**
+portal_integrations/Magento/color**
+portal_integrations/Magento/size**

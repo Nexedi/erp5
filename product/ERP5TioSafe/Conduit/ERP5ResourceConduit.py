@@ -27,7 +27,6 @@
 ##############################################################################
 
 from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.ERP5SyncML.Document.Conflict import Conflict
 from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
 from lxml import etree
 parser = etree.XMLParser(remove_blank_text=True)
@@ -42,6 +41,8 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
     self.xml_object_tag = 'resource'
     self.system_pref = None
 
+  def getObjectAsXML(self, object, domain):
+    return object.Resource_asTioSafeXML(context_document=domain)
 
   def _createContent(self, xml=None, object=None, object_id=None,
       sub_object=None, reset_local_roles=0, reset_workflow=0, simulate=0,
@@ -70,6 +71,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
         )
         # if exist namespace retrieve only the tag
         index = 0
+        category_dict = {}
         if xml.nsmap not in [None, {}]:
           index = -1
 
@@ -77,6 +79,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
         sub_object.setUse('sale')
         portal = object.getPortalObject()
         # Browse the list to work on categories
+        mapping_list = []
         for node in xml.getchildren():
 
           # Only works on right tags, and no on the comments, ...
@@ -118,11 +121,30 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
                 self.updateSystemPreference(portal, base_category, True)
 
               variation_category = "/".join(category_split_list[1:])
-              sub_object.newContent(
-                  portal_type='Product Individual Variation',
-                  title=variation_category,
-                  variation_base_category=base_category,
-              )
+              category = sub_object.newContent(
+                portal_type='Product Individual Variation',
+                title=variation_category,
+                variation_base_category=base_category,
+                )
+            # Store a dict category_name -> category_path to use for mapping later
+            category_dict[category_xml_value] = base_category+'/'+category.getRelativeUrl()
+
+          elif tag == "mapping":
+            # build mapping list here
+            mapping_dict = {'category' : [],}
+            for item in node.getchildren():
+              split_tag = item.tag.split('}')
+              # Build the tag (without is Namespace)
+              tag = item.tag.split('}')[index]
+              if tag == "category":
+                mapping_dict['category'].append(category_dict[item.text.encode('utf-8')])
+              else:
+                mapping_dict[tag] = item.text.encode('utf-8')
+            mapping_list.append(mapping_dict)
+
+      conflict_list = self._createMapping(sub_object, mapping_list)
+      if len(conflict_list):
+        raise ValueError, "Conflict on creation of resource, should not happen, conflict = %r" %(conflict_list)
 
       self.newObject(
           object=sub_object,
@@ -132,14 +154,77 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
           reset_workflow=reset_workflow,
       )
 
-      
+
       # add to sale supply
       sync_name = self.getIntegrationSite(kw['domain']).getTitle()
       ss = self.getSaleSupply(sync_name, portal)
       if len(ss.searchFolder(resource_title=sub_object.getTitle())) == 0:
         ss.newContent(resource_value=sub_object)
-      
+
     return sub_object
+
+  def _getMappedPropertyLine(self, resource, prop):
+    """
+    Return the line, create it if it does not exits
+    """
+    # XXX-Aurel : Cache this method ?
+    mapped_line = None
+    for line in resource.contentValues(portal_type='Mapped Property Type'):
+      if getattr(line, 'mapped_property', None) == prop:
+        mapped_line = line
+        break
+    if not mapped_line:
+      mapped_line = resource.newContent(portal_type='Mapped Property Type',
+                                        mapped_property=prop)
+
+    return mapped_line
+
+  def _createMapping(self, resource, mapping_list):
+    conflict_list = []
+    for mapping in mapping_list:
+      category_list = mapping.pop('category')
+      base_category_list = [x.split('/', 1)[0] for x in category_list]
+      property_list = mapping.keys()
+      for prop in property_list:
+        line = self._getMappedPropertyLine(resource, prop)
+        line.edit(variation_base_category_list=base_category_list,
+                  variation_category_list =line.getVariationCategoryList([]) + category_list,)
+        line.updateCellRange(base_id=prop)
+        # Try to get the cell
+        try:
+          cell = line.getCell(base_id=prop, *category_list)
+        except KeyError:
+          cell = None
+        if cell is None:
+          cell = line.newCell(
+            base_id=prop,
+            portal_type='Mapped Property Cell',
+            *category_list
+            )
+        # set values on the cell
+        cell.setCategoryList(category_list)
+        cell.setMembershipCriterionCategoryList(category_list)
+        cell.setMembershipCriterionBaseCategoryList(
+          line.getVariationBaseCategoryList(),
+          )
+        cell.setMappedValuePropertyList([prop,])
+        # Check possible conflict
+        getter_id = "get%s" %(prop.capitalize())
+        getter = getattr(cell, getter_id, None)
+        if getter:
+          current_value = getter()
+        else:
+          current_value = getattr(cell, prop)
+        if current_value and current_value != mapping[prop]:
+          conflict_list.append((cell, current_value, mapping[prop]))
+          continue
+        setter_id = "set%s" %(prop.capitalize())
+        setter = getattr(cell, setter_id, None)
+        if setter:
+          setter(mapping[prop])
+        else:
+          setattr(cell, prop, mapping[prop])
+    return conflict_list
 
   def getSaleSupply(self, name, portal):
     """
@@ -159,13 +244,13 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
         ss = ss_list[0].getObject()
       self.sale_supply = ss
     return self.sale_supply
-      
+
   def updateSystemPreference(self, portal, base_category, individual=False):
     """ Update the system preference according to categories set on products
     so that UI is well configured in the end """
-    if not self.system_pref:
-      pref_list = portal.portal_preferences.searchFolder(portal_type="System Preference",
-                                                         validation_state="enabled")
+    if self.system_pref is None:
+      pref_list = [x for x in portal.portal_preferences.objectValues(portal_type="System Preference")\
+                   if x.getPreferenceState()=="global"]
       if len(pref_list) > 1:
         raise ValueError, "Too many system preferences, does not know which to choose"
       elif len(pref_list) == 0:
@@ -191,9 +276,8 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
   def afterNewObject(self, object):
     object.validate()
     object.updateLocalRolesOnSecurityGroups()
-    
 
-  def _deleteContent(self, object=None, object_id=None):
+  def _deleteContent(self, object=None, object_id=None, **kw):
     """ Move the product into "invalidated" state. """
     document = object.product_module._getOb(object_id)
     # dict which provides the list of transition to move into invalidated state
@@ -212,6 +296,14 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
             document.activate().validate()
           document.activate().invalidate()
 
+    # Remove related line from sale supply
+    sync_name = self.getIntegrationSite(kw['domain']).getTitle()
+    sale_supply_line_list = [x.getObject() for x in
+                             object.Base_getRelatedObjectList(portal_type="Sale Supply Line")]
+    for sale_supply_line in sale_supply_line_list:
+      sale_supply = sale_supply_line.getParentValue()
+      if sale_supply.getTitle() == sync_name:
+        sale_supply.manage_delObjects(ids=[sale_supply_line.getId(),])
 
   def editDocument(self, object=None, **kw):
     """
@@ -233,6 +325,33 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
     object._edit(**property)
 
 
+  def _getPropertyMappingCell(self, resource, prop, index):
+    cell_list = []
+    for mapping in resource.contentValues(portal_type="Mapped Property Type"):
+      if prop is not None and mapping.mapped_property != prop:
+        continue
+      else:
+        cell_dict = {}
+        for cell in mapping.contentValues():
+          cat_list = cell.getCategoryList()
+          lcat_list = []
+          for cat in cat_list:
+            base = cat.split('/', 1)[0]
+            try:
+              cat = resource.getPortalObject().portal_categories.restrictedTraverse(cat).getTitle()
+            except KeyError:
+              base, path = cat.split('/', 1)
+              iv = resource.restrictedTraverse(path)
+              cat = iv.getTitle()
+            lcat_list.append(base+"/"+cat)
+          cell_dict[str(lcat_list)] = cell
+        ordered_key_list = cell_dict.keys()
+        ordered_key_list.sort()
+        cell_key = ordered_key_list[index-1]
+        cell_list.append(cell_dict[cell_key])
+
+    return cell_list
+
   def _updateXupdateUpdate(self, document=None, xml=None, previous_xml=None, **kw):
     """
       This method is called in updateNode and allows to work on the update of
@@ -240,7 +359,18 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
     """
     conflict_list = []
     xpath_expression = xml.get('select')
-    tag = xpath_expression.split('/')[-1]
+    tag_list = xpath_expression.split('/')
+
+    base_tag = None
+    remaining_tag_list = []
+    for tag in tag_list:
+      if not len(tag) or tag == "resource":
+        continue
+      elif base_tag is None:
+        base_tag = tag
+      else:
+        remaining_tag_list.append(tag)
+
     new_value = xml.text
     keyword = {}
 
@@ -260,7 +390,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
       new_value = new_value.encode('utf-8')
 
     # check if it'a work on product or on categories
-    if tag.split('[')[0] == 'category':
+    if base_tag.startswith('category'):
       # init base category, variation and boolean which check update
       base_category, variation = new_value.split('/', 1)
       old_base_category, old_variation = previous_value.split('/', 1)
@@ -308,7 +438,7 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
           base_category_list.append(base_category)
           document.setIndividualVariationBaseCategoryList(base_category_list)
           self.updateSystemPreference(document.getPortalObject(), base_category, True)
-        
+
         # Then update or add variation
         if len(individual_variation):
           individual_variation = individual_variation[0].getObject()
@@ -343,6 +473,30 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
         if new_value not in variation_list:
           variation_list.append(new_value)
           document.setVariationCategoryList(variation_list)
+    elif base_tag.startswith('mapping'):
+      index_value = int(base_tag[-2]) # because it is tag[index]
+      if len(remaining_tag_list) > 1 or not(remaining_tag_list):
+        raise NotImplementedError
+      tag = remaining_tag_list[0]
+      # Retrieve the mapping cell
+      cell = self._getPropertyMappingCell(resource=document, prop=tag,
+                                          index=index_value)[0]
+      getter_id = "get%s" %(tag.capitalize(),)
+      getter = getattr(cell, getter_id)
+      current_value = getter()
+      if isinstance(current_value, unicode):
+        current_value = current_value.encode('utf-8')
+      if current_value not in [new_value, previous_value]:
+        conflict_list.append(self._generateConflict(document.getPhysicalPath(),
+                                                    base_tag+'/'+tag,
+                                                    etree.tostring(xml, encoding='utf-8'),
+                                                    current_value,
+                                                    new_value,
+                                                    kw['signature']))
+      else:
+        setter_id = "set%s" %(tag.capitalize(),)
+        setter = getattr(cell, setter_id)
+        current_value = setter(new_value)
     else:
       # getter used to retrieve the current values and to check conflicts
       getter_value_dict = {
@@ -354,22 +508,20 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
 
       # create and fill a conflict when the integration site value, the erp5
       # value and the previous value are differents
-      current_value = getter_value_dict[tag]
+      current_value = getter_value_dict[base_tag]
       if isinstance(current_value, float):
         current_value = '%.6f' % current_value
       if isinstance(current_value, unicode):
         current_value = current_value.encode('utf-8')
       if current_value not in [new_value, previous_value]:
-        conflict = Conflict(
-            object_path=document.getPhysicalPath(),
-            keyword=tag,
-        )
-        conflict.setXupdate(etree.tostring(xml, encoding='utf-8'))
-        conflict.setLocalValue(current_value)
-        conflict.setRemoteValue(new_value)
-        conflict_list.append(conflict)
+        conflict_list.append(self._generateConflict(document.getPhysicalPath(),
+                                                    base_tag,
+                                                    etree.tostring(xml, encoding='utf-8'),
+                                                    current_value,
+                                                    new_value,
+                                                    kw['signature']))
       else:
-        keyword[tag] = new_value
+        keyword[base_tag] = new_value
         self.editDocument(object=document, **keyword)
 
     return conflict_list
@@ -378,18 +530,30 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
   def _updateXupdateDel(self, document=None, xml=None, previous_xml=None, **kw):
     """ This method is called in updateNode and allows to remove elements. """
     conflict_list = []
-    tag = xml.get('select').split('/')[-1]
+    base_tag = None
+    remaining_tag_list = []
+    tag_list = xml.get('select').split('/')
+    for tag in tag_list:
+      if not len(tag) or tag == "resource":
+        continue
+      elif base_tag is None:
+        base_tag = tag
+      else:
+        remaining_tag_list.append(tag)
     keyword = {}
 
-    if tag.split('[')[0] == 'category':
+    if base_tag.startswith('category'):
       # retrieve the previous xml etree through xpath
-      previous_xml = previous_xml.xpath(tag)
+      previous_xml = previous_xml.xpath(base_tag)
       try:
         previous_value = previous_xml[0].text
       except IndexError:
         raise IndexError, 'Too little or too many value, only one is required for %s' % (
             previous_xml
         )
+
+      if isinstance(previous_value, unicode):
+        previous_value = previous_value.encode('utf-8')
 
       # boolean which check update
       updated = False
@@ -409,17 +573,63 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
         if len(individual_variation) == 1:
           individual_variation = individual_variation[0].getObject()
           document.manage_delObjects([individual_variation.getId(), ])
+    elif base_tag.startswith('mapping'):
+      index_value = int(base_tag[-2]) # because it is tag[index]
+      if not len(remaining_tag_list):
+        # We are deleting a cell
+        cell_list = self._getPropertyMappingCell(resource=document, prop=None,
+                                            index=index_value)
+        for cell in cell_list:
+          line = cell.getParentValue()
+          line.manage_delObjects(cell.getId())
+      else:
+        # We are deleting a property only
+        if len(remaining_tag_list) > 1:
+          raise NotImplementedError
+        tag = remaining_tag_list[0]
+        cell = self._getPropertyMappingCell(resource=document, prop=tag,
+                                            index=index_value)[0]
+        getter_id = "get%s" %(tag.capitalize(),)
+        getter = getattr(cell, getter_id)
+        current_value = getter()
+        if isinstance(current_value, unicode):
+          current_value = current_value.encode('utf-8')
+        if current_value not in [new_value, previous_value]:
+          conflict_list.append(self._generateConflict(document.getPhysicalPath(),
+                                                      base_tag+'/'+tag,
+                                                      etree.tostring(xml, encoding='utf-8'),
+                                                      current_value,
+                                                      new_value,
+                                                      kw['signature']))
+        else:
+          setter_id = "set%s" %(tag.capitalize(),)
+          setter = getattr(cell, setter_id)
+          current_value = setter(None)
     else:
-      keyword[tag] = None
+      keyword[base_tag] = None
       self.editDocument(object=document, **keyword)
     return conflict_list
 
+
+  def _getCategoryDict(self, resource=None):
+    """
+    Build a dict title -> path for variation categories of a resource
+    """
+    category_dict = {}
+    for category in resource.getVariationRangeCategoryList(display_base_category=1,
+                                                           omit_individual_variation=0):
+      base = category.split("/", 1)[0]
+      category_title = resource.portal_categories.restrictedTraverse(category).getTitle()
+      category_dict[base+"/"+category_title] = category
+
+    return category_dict
 
   def _updateXupdateInsertOrAdd(self, document=None, xml=None, previous_xml=None, **kw):
     """ This method is called in updateNode and allows to add elements. """
     conflict_list = []
     keyword = {}
-
+    mapping_list = []
+    category_dict = self._getCategoryDict(resource=document)
     # browse subnode of the insert and check what will be create
     for subnode in xml.getchildren():
       new_tag = subnode.attrib['name']
@@ -457,8 +667,32 @@ class ERP5ResourceConduit(TioSafeBaseConduit):
                 title=variation,
             )
             new_variation.setVariationBaseCategoryList([base_category, ])
+      elif new_tag == "mapping":
+        # build mapping list here
+        mapping_dict = {'category' : [],}
+        for item in subnode.getchildren():
+          # Build the tag (without is Namespace)
+          tag = item.tag
+          if tag == "category":
+            # Retrieve the category path
+            mapping_dict['category'].append(category_dict[item.text.encode('utf-8')])
+          else:
+            mapping_dict[tag] = item.text.encode('utf-8')
+        mapping_list.append(mapping_dict)
       else:
+        if len(subnode.getchildren()):
+          raise NotImplementedError
         keyword[new_tag] = new_value
         self.editDocument(object=document, **keyword)
+      if len(mapping_list):
+        conflict_list = self._createMapping(document, mapping_list)
+        for cell, current_value, new_value in conflict_list:
+          conflict_list.append(self._generateConflict(cell.getPhysicalPath(),
+                                                      'mapping',
+                                                      etree.tostring(xml, encoding='utf-8'),
+                                                      current_value,
+                                                      new_value,
+                                                      kw['signature']))
+
     return conflict_list
 

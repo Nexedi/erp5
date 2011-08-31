@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Connector" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>document_connector</string> </value>
+        </item>
+        <item>
+            <key> <string>parser_method_id</string> </key>
+            <value> <string>DocumentConnector_parseResult</string> </value>
+        </item>
+        <item>
+            <key> <string>password</string> </key>
+            <value> <string>tiosafe_sync_user</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Connector</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>CIC Document Connector</string> </value>
+        </item>
+        <item>
+            <key> <string>transport</string> </key>
+            <value> <string>document</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>CIC20110812-001</string> </value>
+        </item>
+        <item>
+            <key> <string>user_id</string> </key>
+            <value> <string>tiosafe_sync_user</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

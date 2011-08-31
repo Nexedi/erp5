@@ -28,15 +28,16 @@
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5TioSafe.Utils import EchoDictTarget
+from Products.ERP5TioSafe.Utils import EchoDictTarget, NewEchoDictTarget
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from App.Extensions import getBrain
 from lxml import etree
 from zLOG import LOG, ERROR, INFO
 from Products.ERP5Type.Tool.WebServiceTool import ConnectionError
-
+from Products.ERP5Type.Cache import CachingMethod
 
 ID_SEPARATOR="-"
+
 
 class WebServiceRequest(XMLObject, ZopePageTemplate):
   # CMF Type Definition
@@ -66,16 +67,18 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     """
     return integration site if the wsr
     """
-    # XXX this must become a caching method later
-    if getattr(self, "integration_site", None) is not None:
-      if not isinstance(getattr(self, "integration_site"), str):
-        self.integration_site = None
-    if getattr(self, "integration_site", None) is None:
+    def cached_getIntegrationSite(self):
       parent = self.getParentValue()
       while parent.getPortalType() != "Integration Site":
         parent = parent.getParentValue()
-      self.integration_site = parent.getPath()
-    return self.getPortalObject().portal_integrations.restrictedTraverse(self.integration_site)
+      return parent.getPath()
+
+    cached_getIntegrationSite = CachingMethod(cached_getIntegrationSite,
+                                   id="WebServiceRequest_getIntegrationSite",
+                                   cache_factory="erp5_content_long")
+
+    integration_site = cached_getIntegrationSite(self)
+    return self.getPortalObject().portal_integrations.restrictedTraverse(integration_site)
 
   def edit(self, **kw):
     """
@@ -89,16 +92,25 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     """
     Return the parameter name used for id
     """
-    if self.getDestinationObjectType():
-      return "%s_id" %(self.getDestinationObjectType().replace(" ", "_").lower())
-    else:
-      return "id"
+    def cached_getIDParameterName(self):
+      if self.getDestinationObjectType():
+        return "%s_id" %(self.getDestinationObjectType().replace(" ", "_").lower())
+      else:
+        return "id"
+    cached_getIDParameterName = CachingMethod(cached_getIDParameterName,
+                                   id="WebServiceRequest_getIDParameterName",
+                                   cache_factory="erp5_content_long")
+    return cached_getIDParameterName(self)
 
-  def __call__(self, context_document=None, test_mode=False, **kw):
+
+  def __call__(self, context_document=None, test_mode=False, REQUEST=None, **kw):
     """
     Make this object callable. It will call the method defined in reference using
     the web service connector it is related to
     """
+    if REQUEST is not None:
+      return self.view()
+    #LOG("_call__", 300, kw)
     if kw.has_key("id"):
       kw[self.getIDParameterName()] = str(kw.pop("id"))
 
@@ -137,7 +149,7 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
 
       
     # Render page template content
-    if getattr(self, "data", None) and len(self.data):
+    if self.hasData():
       #LOG("passing options %s to self %s" %(kw, self.getPath()), 300, "CALL")
       pt_data = self.pt_render(extra_context={'options': kw, })
       pt_data = pt_data.replace('\n', '')
@@ -160,9 +172,18 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     kw = new_kw
     #LOG("calling with params args = %s, kw = %s" %(args, kw), 300, self.getPath())
     error = None
+
+    def callRequest(self, method_name, *args, **kw):
+      connection = self.getSourceValue().getConnection()
+      return getattr(connection, method_name)(*args, **kw)
+
+    # cached_callRequest = CachingMethod(callRequest,
+    #                                    id="WebServiceRequest_callRequest",
+    #                                    cache_factory="erp5_content_short")
+    
     # Call the method
     try:
-      url, xml = getattr(connection, method_name)(*args, **kw)
+      url, xml = callRequest(self, method_name, *args, **kw)
     except ConnectionError, msg:
       if test_mode:
         error = msg
@@ -171,7 +192,6 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
       else:
         raise
 
-
     # Register information for testing/debug purposes
     if test_mode:
       self._edit(last_request_parameter="args = %s, kw = %s" %(str(args), str(kw)),
@@ -179,39 +199,44 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
                  last_request_path=url,
                  last_request_error=error)
 
-    def getSubMappingObject(object, parser_dict):
-      for mapping in object.objectValues():
-        if mapping.getPortalType() == "Integration Property Mapping":
-          parser_dict[str(mapping.getSourceReference())] = (mapping.getDestinationReference(), False)
-        # else:
-        #   # Sub mapping
-        #   parser_dict[str(mapping.getSourceReference())] = (mapping.getDestinationReference(), True)
-        #   getSubMappingObject(mapping, parser_dict)
+    def buildParserDict(root_mapping):
+      parser_dict = {}
+      for mapping in root_mapping.contentValues():
+        if len(mapping.contentValues()):
+          sub_parser_dict = buildParserDict(mapping)
+          parser_dict[mapping.getSourceReference()] = (mapping.getDestinationReference(), sub_parser_dict)
+        else:
+          parser_dict[mapping.getSourceReference()] = (mapping.getDestinationReference(), None)
+      return parser_dict
 
-    # Parse the result
-    if self.getDestination():
-      parser_dict = {str(self.getDestinationValue().getSourceReference()) : (self.getDestinationValue().getDestinationReference(), True)}
-      getSubMappingObject(self.getDestinationValue(), parser_dict)
+    if self.hasDestination():
+      sub_parser_dict = buildParserDict(self.getDestinationValue())
+      parser_dict = {self.getDestinationValue().getSourceReference() : (self.getDestinationValue().getDestinationReference(), sub_parser_dict)}
     else:
       return []
 
-
-    if type(xml) == list:
-      result_list = self.parse_dict(parser_dict, xml)
+    # Parse the result
+    if self.getSourceValue().getParserMethodId():
+      method = getattr(self, self.getSourceValue().getParserMethodId())
+      result_list = method(result=xml, parser_dict=parser_dict)
     else:
-      parser = etree.XMLParser(target = EchoDictTarget(parser_dict))
-      # FIXME: About prestashop sync, '&' and '&' char in xml cause problem
-      # xml = xml.replace('&', '')
-      #LOG("got XML from WSR %s = %s" %(method_name, xml), 300, "will call parser with %s" %(parser_dict))
-      result_list = []
-      try:
-        result_list = etree.XML(xml, parser,)
-      except etree.XMLSyntaxError:
-        LOG("WebServiceRequest", ERROR, "Bad XML returned by request %s with kw = %s, xml = %s" %(self.getPath(), kw, xml))
-        if test_mode:
-          self._edit(last_request_error="Bad XML returned by request, impossible to parse it")
-        else:
-          raise ValueError, "Bad XML returned by request %s with kw = %s, xml = %s" %(self.getPath(), kw, xml)
+      if type(xml) == list:
+        result_list = self.parse_dict(parser_dict, xml)
+      else:
+        parser = etree.XMLParser(target = NewEchoDictTarget(parser_dict))
+        # FIXME: About prestashop sync, '&' and '&' char in xml cause problem
+        # xml = xml.replace('&', '')
+        #LOG("got XML from WSR %s = %s" %(method_name, xml), 300, "will call parser with %s" %(parser_dict))
+        result_list = []
+        try:
+          result_list = etree.XML(xml, parser,)
+          #LOG("result_list = %r" %(result_list), 300, "")
+        except etree.XMLSyntaxError:
+          LOG("WebServiceRequest", ERROR, "Bad XML returned by request %s with kw = %s, xml = %s" %(self.getPath(), kw, xml))
+          if test_mode:
+            self._edit(last_request_error="Bad XML returned by request, impossible to parse it")
+          else:
+            raise ValueError, "Bad XML returned by request %s with kw = %s, xml = %s" %(self.getPath(), kw, xml)
 
     brain = getBrain(self.brain_class_file, self.brain_class_name, reload=1)
 
@@ -241,6 +266,11 @@ class WebServiceRequest(XMLObject, ZopePageTemplate):
     the web service
     """
     # build parameter name
+    try:
+      long(item)
+    except ValueError:
+      raise KeyError, "Item %s does not exists call by Web Service Request %s : not a long" % (item,
+                                                                                               self.getTitle(),)
     kw = {self.getIDParameterName() : str(item), }
     object_list = self(**kw)
     if len(object_list) == 1:

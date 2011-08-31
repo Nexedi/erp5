@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <tuple>
+        <global name="OAuthTool" module="Products.ERP5TioSafe.Tool.OAuthTool"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>consumer</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global id="1.1" name="_reconstructor" module="copy_reg"/>
+                </klass>
+                <tuple>
+                  <global name="OAuthConsumer" module="Products.ERP5TioSafe.Tool.OAuthTool"/>
+                  <global id="1.2" name="object" module="__builtin__"/>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>key</string> </key>
+                        <value> <string>e90f5a97ec5cecd1</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>secret</string> </key>
+                        <value> <string>9b5f6c60bb007b24</string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>my_access_token</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <global id="1.3" name="OAuthToken" module="Products.ERP5TioSafe.Tool.OAuthTool"/>
+                  <reference id="1.2"/>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>key</string> </key>
+                        <value> <string>accesskey</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>secret</string> </key>
+                        <value> <string>accesssecret</string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>my_request_token</string> </key>
+            <value>
+              <object>
+                <klass> <reference id="1.1"/> </klass>
+                <tuple>
+                  <reference id="1.3"/>
+                  <reference id="1.2"/>
+                  <none/>
+                </tuple>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>key</string> </key>
+                        <value> <string>requestkey</string> </value>
+                    </item>
+                    <item>
+                        <key> <string>secret</string> </key>
+                        <value> <string>requestsecret</string> </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>nonce</string> </key>
+            <value> <string>nonce</string> </value>
+        </item>
+        <item>
+            <key> <string>signature_methods</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>verifier</string> </key>
+            <value> <string>verifier</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>HMAC-SHA1</string> </key>
+                    <value>
+                      <object>
+                        <klass>
+                          <global id="2.1" name="_reconstructor" module="copy_reg"/>
+                        </klass>
+                        <tuple>
+                          <global name="OAuthSignatureMethod_HMAC_SHA1" module="Products.ERP5TioSafe.Tool.OAuthTool"/>
+                          <global id="2.2" name="object" module="__builtin__"/>
+                          <none/>
+                        </tuple>
+                      </object>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>PLAINTEXT</string> </key>
+                    <value>
+                      <object>
+                        <klass> <reference id="2.1"/> </klass>
+                        <tuple>
+                          <global name="OAuthSignatureMethod_PLAINTEXT" module="Products.ERP5TioSafe.Tool.OAuthTool"/>
+                          <reference id="2.2"/>
+                          <none/>
+                        </tuple>
+                      </object>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

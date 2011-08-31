@@ -1,0 +1,437 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildZencartProductBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>ZencartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>ProductResource</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/zencart/product_mapping</string>
+                <string>source/portal_integrations/zencart/http_connector</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getProductList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Product</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2020/01/01\'), \'start_date\': DateTime(\'2010/01/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.1.34/zen-cart/admin/tiosafe_zencart/getProductList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+\n
+<xml><object><id>76</id><title>TEST 25% special 10% Sale</title></object><object><id>78</id><title>TEST 25% special 10% Sale Attribute Priced</title></object><object><id>79</id><title>TEST 25% Special Attribute Priced</title></object><object><id>80</id><title>TEST 25% Special</title></object><object><id>82</id><title>TEST $120 Sale -$5.00</title></object><object><id>83</id><title>TEST $120 Special $90.00 Sale -$5.00</title></object><object><id>84</id><title>TEST $120</title></object><object><id>85</id><title>TEST $120 Special $90</title></object><object><id>88</id><title>TEST $120 Sale Special $90 Skip</title></object><object><id>89</id><title>TEST $120 Sale 10% Special off Skip</title></object><object><id>90</id><title>TEST $120 Sale 10% Special</title></object><object><id>92</id><title>TEST $120 Sale 10% Special off</title></object><object><id>93</id><title>TEST $120 Special off Sale New Price $100</title></object><object><id>94</id><title>TEST $120 Special 25% Sale New Price $100</title></object><object><id>95</id><title>TEST $120 Special 25% Sale New Price $100 Skip Specials</title></object><object><id>96</id><title>TEST $120 Special off Sale New Price $100 Skip Specials</title></object><object><id>97</id><title>TEST $120 Sale 10% Special - Apply to price</title></object><object><id>98</id><title>TEST $120 Sale 10% Special off - Apply to Price</title></object><object><id>99</id><title>Free Shipping Product with Weight</title></object><object><id>112</id><title>Test Two</title></object><object><id>113</id><title>Test Four</title></object><object><id>114</id><title>Test Five</title></object><object><id>115</id><title>Test One</title></object><object><id>116</id><title>Test Eight</title></object><object><id>117</id><title>Test Three</title></object></xml>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<resource type="Product">\n
+  <title>TEST 25% special 10% Sale</title>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST 25% special 10% Sale Attribute Priced</title>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST 25% Special Attribute Priced</title>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST 25% Special</title>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Sale -$5.00</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Special $90.00 Sale -$5.00</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Special $90</title>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Sale Special $90 Skip</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Sale 10% Special off Skip</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Sale 10% Special</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Sale 10% Special off</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Special off Sale New Price $100</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Special 25% Sale New Price $100</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Special 25% Sale New Price $100 Skip Specials</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Special off Sale New Price $100 Skip Specials</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Sale 10% Special - Apply to price</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>TEST $120 Sale 10% Special off - Apply to Price</title>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Yellow</category>\n
+  <category>features/Custom Handling</category>\n
+  <category>features/Quality Design</category>\n
+  <category>features/Same Day Shipping</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Embossed Collector\'s Tin</category>\n
+  <category>gift_options/None</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Free Shipping Product with Weight</title>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Test Two</title>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Test Four</title>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Test Five</title>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Test One</title>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Test Eight</title>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Test Three</title>\n
+</resource>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get one product</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

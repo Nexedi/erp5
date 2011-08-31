@@ -74,11 +74,39 @@ class TioSafeBrain(Explicit):
       else:
         raise
 
-  def _getSynchronizationObjectList(self, sync_type, object_type):
+  def getDefaultUnknownNodeGID(self):
+    """
+    Resource the gid of the node used when no node can be found
+    """
+    integration_site = self.getIntegrationSite()
+    default_node = integration_site.getDestinationValue()
+    return integration_site.person_module.getSourceSectionValue().getGidFromObject(default_node, encoded=False)
+
+  def getDefaultUnknownResourceGID(self):
+    """
+    Resource the gid of the node used when no node can be found
+    """
+    integration_site = self.getIntegrationSite()
+    default_node = integration_site.getResourceValue()
+    return integration_site.product_module.getSourceSectionValue().getGidFromObject(default_node, encoded=False)
+
+  def getDefaultOrganisationGID(self):
+    """
+    Return the gid of the shop
+    """
+    integration_site = self.getIntegrationSite()
+    default_source = integration_site.getSourceAdministrationValue()
+    return integration_site.organisation_module.getSourceSectionValue().getGidFromObject(default_source, encoded=False)
+
+
+  def _getSynchronizationObjectList(self, sync_type, object_type_list):
     """
       Render the 'SyncML Publication' or the 'SyncML Subscription' list which
       correspond to the sync_type and the object_type.
     """
+    if not isinstance(object_type_list, list):
+      object_type_list = [object_type_list,]
+
     def cached_getSynchronizationObjectList(sync_type, object_type):
       context = self.context
       module_list = []
@@ -123,20 +151,23 @@ class TioSafeBrain(Explicit):
     cached_getSynchronizationObjectList = CachingMethod(cached_getSynchronizationObjectList,
                                                         id="TioSafeBrain_getSynchronizationObjectList",
                                                         cache_factory='erp5_content_long')
-    object_list = cached_getSynchronizationObjectList(sync_type, object_type)
-    return [self.context.restrictedTraverse(x) for x in object_list]
+    object_list = []
+    for object_type in object_type_list:
+      object_list.extend(cached_getSynchronizationObjectList(sync_type, object_type))
+    portal = self.context.getPortalObject()
+    return [portal.restrictedTraverse(x) for x in object_list]
 
   def getTioSafeSynchronizationObjectList(self, object_type):
     """ return the synchronization pub/sub which is used
     to retrieve object from plugin
     """
-    return self._getSynchronizationObjectList(sync_type="tiosafe", object_type=object_type)
+    return self._getSynchronizationObjectList(sync_type="tiosafe", object_type_list=object_type)
 
   def getERP5SynchronizationObjectList(self, object_type):
     """ return the synchronization pub/sub which is used
     to retrieve object from ERP5
     """
-    return self._getSynchronizationObjectList(sync_type="erp5", object_type=object_type)
+    return self._getSynchronizationObjectList(sync_type="erp5", object_type_list=object_type)
 
   def getPortalType(self):
     """ return the portal type """
@@ -240,17 +271,13 @@ class TioSafeBrain(Explicit):
             except (ValueError, AttributeError):
               # This is not a document, might be a category, or the gid previously built
               # pass it anyway in xml
-              node_gid = object_id
+              node_gid = None
+
+          if node_gid is None:
+            node_gid = self.getDefaultUnknownNodeGID()
           movement.text = node_gid
         else:
-          # XXX-Aurel : tmp code, must find another way to define default source
-          # in xml code and make tiosafe PT use it too
-          integration_site = self.getIntegrationSite()
-          default_source = integration_site.getSourceAdministrationValue()
-          movement.text = " %s %s" % (
-              default_source.getTitle(),
-              default_source.getDefaultEmailText(),
-          )
+          movement.text = self.getDefaultOrganisationGID()
 
   def _setArrowTagList(self, document=None, xml=None):
     """ This method set all possible arrows on the XML. """
@@ -306,8 +333,23 @@ class Node(TioSafeBrain):
   """
   __allow_access_to_unprotected_subobjects__ = 1
 
-  def _getAddressListAsXML(self, node):
-    """ Generate the XML for addresses sub-objects """
+  def _generateCoordinatesXML(self, node):
+    """ Generate the XML for addresses sub-objects & phones"""
+
+    # Phones
+    phone_tag_list = ['phone', 'cellphone']
+    for tag in phone_tag_list:
+      value = getattr(self, "%s" %(tag), '')
+      if value:
+        element = etree.SubElement(node, tag)
+        element.text = value
+
+    # Fax
+    value = getattr(self, "fax", '')
+    if value:
+      element = etree.SubElement(node, 'fax')
+      element.text = value
+
     MARKER = object()
     node_address_method = "get%sAddressList" %(self.getPortalType(),)
     module_id = "%s_module" %(self.getPortalType().lower(),)
@@ -354,25 +396,28 @@ class Node(TioSafeBrain):
     """
     Add the relation tag which link a person to an organisation
     """
-    if self.object_type == "Person" and \
-           getattr(self, "relation", None) is not None:
-      # this must be the gid of organisatin
-      # we suppose here that we get the id in self.relation
-      # in other cases, this method must be overriden
-      tiosafe_sync_list = self.getTioSafeSynchronizationObjectList(object_type='Organisation')
-      for tiosafe_sync in tiosafe_sync_list:
-        try:
-          brain_node = tiosafe_sync.getObjectFromId(self.relation)
-          organisation_gid = brain_node.getGid()
-          break
-        except (ValueError, AttributeError):
-          organisation_gid = None
+    if self.object_type == "Person":
+      if getattr(self, "relation", None) is not None:
+        # this must be the gid of organisatin
+        # we suppose here that we get the id in self.relation
+        # in other cases, this method must be overriden
+        tiosafe_sync_list = self.getTioSafeSynchronizationObjectList(object_type='Organisation')
+        for tiosafe_sync in tiosafe_sync_list:
+          try:
+            brain_node = tiosafe_sync.getObjectFromId(self.relation)
+            organisation_gid = brain_node.getGid()
+            break
+          except (ValueError, AttributeError):
+            organisation_gid = None
 
-      if organisation_gid is None:
-        raise ValueError, "Impossible to find organisation for id %s on node %s" %(self.relation, self.path)
+        if organisation_gid is None:
+          raise ValueError, "Impossible to find organisation for id %s on node %s" %(self.relation, self.path)
+      else:
+        organisation_gid = ""
       # set the tag
-      element = etree.SubElement(node, 'relation')
-      element.text = organisation_gid
+      if organisation_gid:
+        element = etree.SubElement(node, 'relation')
+        element.text = organisation_gid
 
   def _asXML(self):
     node_type = self.context.getDestinationObjectType()
@@ -380,12 +425,12 @@ class Node(TioSafeBrain):
 
     # list of possible tags for a node
     tag_list = (
-      'title', 'firstname', 'lastname', 'email', 'phone', 'fax', 'birthday', 
+      'title', 'firstname', 'lastname', 'email', 'birthday',
       )
     self._setTagList(self, node, tag_list)
 
     try:
-      self._getAddressListAsXML(node)
+      self._generateCoordinatesXML(node)
     except ValueError:
       # Missing mapping
       return None
@@ -405,30 +450,54 @@ class Resource(TioSafeBrain):
   """
   __allow_access_to_unprotected_subobjects__ = 1
 
+  def __init__(self, *args, **kw):
+    self.category = []
+    self.mapping_property_list = []
+    TioSafeBrain.__init__(self, *args, **kw)
+
+  def _generateMappingXML(self, resource):
+    """
+    Specific part for the mapped property
+    """
+    # sort categories
+    def cat_cmp(a, b):
+      return cmp(a['category_list'], b['category_list'])
+    self.mapping_property_list.sort(cmp=cat_cmp)
+
+    for mapping in self.mapping_property_list:
+      element = etree.SubElement(resource, 'mapping')
+      category_list = mapping['category_list']
+      category_list.sort()
+      for category_value in category_list:
+        category = etree.SubElement(element, 'category')
+        category.text = category_value
+      mapping.pop('category_list')
+      for k, v in mapping.iteritems():
+        prop = etree.SubElement(element, k)
+        prop.text = v
+
   def _asXML(self):
     resource_type = self.context.getDestinationObjectType()
     resource = etree.Element('resource', type=resource_type)
 
-    # list of possible tags for an product
+    # First defined basic tags
     tag_list = (
-      'title', 'reference', 'sale_price', 'purchase_price', 'ean13',
+      'title', 'reference', 'ean13',
       'description',
     )
     self._setTagList(self, resource, tag_list)
 
-    # marker for checking property existency
-    MARKER = object()
-
-    # build the list of categories
+    # Then build & add the list of variations
     category_list = []
-    if getattr(self, 'category', MARKER) is not MARKER:
-      for category in self.category.split(SEPARATOR):
-        category_list.append(category)
-
+    # - Categorie can already have been retrieve
+    if isinstance(self.category, str):
+      self.category = self.category.split(SEPARATOR)
+    category_list = self.category[:]
+    # - Categories can also be retrieved using specific query
     module_id = "%s_module" %(self.getPortalType().lower(),)
     module = getattr(self.context, module_id)
-
     get_category_method = "get%sCategoryList" % self.getPortalType()
+    MARKER = object()
     if getattr(module, get_category_method, MARKER) is not MARKER:
       # add category list
       parameter_kw = {"%s_id" %(self.getPortalType().replace(" ", "_").lower(),) : str(self.getId())}
@@ -442,13 +511,14 @@ class Resource(TioSafeBrain):
           return None
         category_list.append(category)
 
-    # order the category list
+    # - Order the category list
     category_list.sort()
-
-    # add the categories to the product's xml
+    # - Add the categories to the product's xml
     for category_value in category_list:
       category = etree.SubElement(resource, 'category')
       category.text = category_value
+
+    self._generateMappingXML(resource)
 
     xml = etree.tostring(resource, pretty_print=True, encoding='utf-8')
     LOG("Resource asXML returns : %s" % (xml, ), 300, "")
@@ -471,15 +541,30 @@ class Transaction(TioSafeBrain):
     """
     This returns the VAT category according to the value set
     """
-    # XXX-AUREL this must be cached for performance reason
-    vat_dict = {}
-    trade_condition = self.getIntegrationSite().getDefaultSourceTradeValue()
-    for vat_line in trade_condition.contentValues(portal_type="Trade Model Line"):
-      #LOG("browsing line %s" %(vat_line.getPath(), 300, "%s" %(vat_line.getBaseApplicationList(),)))
-      for app in vat_line.getBaseApplicationList():
-        if "base_amount/trade/base/taxable/vat/" in app:
-          vat_dict["%.2f" %(vat_line.getPrice()*100.)] = app.split('/')[-1]
-    LOG("vat_dict is %s" %(vat_dict), 300, "")
+    def cached_buildVATDict():
+      vat_dict = {}
+      trade_condition = self.getIntegrationSite().getDefaultSourceTradeValue()
+
+      while len(trade_condition.contentValues(portal_type="Trade Model Line")) == 0:
+        # Must find a better way to browse specialised objects
+        specialized_trade_condition = trade_condition.getSpecialiseValue()
+        if specialized_trade_condition is None or specialized_trade_condition.getPortalType() == "Business Process":
+          raise ValueError, 'Impossible to find a trade condition containing VAT lines, last trade condition was %s, parent was %s' %(specialized_trade_condition, trade_condition)
+        else:
+          trade_condition = specialized_trade_condition
+
+      for vat_line in trade_condition.contentValues(portal_type="Trade Model Line"):
+        # LOG("browsing line %s" %(vat_line.getPath(), 300, "%s" %(vat_line.getBaseApplicationList(),)))
+        for app in vat_line.getBaseApplicationList():
+          if "base_amount/trade/base/taxable/vat/" in app:
+            vat_dict["%.2f" %(vat_line.getPrice()*100.)] = app.split('/')[-1]
+      # LOG("vat_dict is %s" %(vat_dict), 300, "")
+      return vat_dict
+
+    cached_getSynchronizationObjectList = CachingMethod(cached_buildVATDict,
+                                                        id="TioSafeBrain_cached_buildVATDict",
+                                                        cache_factory='erp5_content_long')
+    vat_dict = cached_buildVATDict()
     return vat_dict["%.2f" %(float(vat_value))]
 
   def _setPaymentMode(self, txn):
@@ -509,7 +594,6 @@ class Transaction(TioSafeBrain):
     # list of possible tags for a sale order
     tag_list = (
         'title', 'start_date', 'stop_date', 'reference', 'currency',
-        'causality', 'description',
     )
     self._setTagList(self, transaction, tag_list)
     self._setTagList(self, transaction, ['category', ], SEPARATOR)
@@ -568,7 +652,11 @@ class Transaction(TioSafeBrain):
                 resource_gid = brain_node.getGid()
                 break
               except (ValueError, AttributeError):
-                resource_gid = " Unknown"
+                resource_gid = None
+
+            if resource_gid is None:
+              resource_gid = self.getDefaultUnknownResourceGID()
+
             for erp5_sync in erp5_sync_list:
               try:
                 resource = erp5_sync.getObjectFromGid(b16encode(resource_gid))
@@ -641,7 +729,9 @@ class Transaction(TioSafeBrain):
 
     # Sort the movement list for fix point
     def cmp_resource(a,b):
-      return cmp(a['resource'], b['resource'])
+      a_str = "%s %s %s" %(a['resource'], a['title'], ' '.join(a['category']))
+      b_str = "%s %s %s" %(b['resource'], b['title'], ' '.join(b['category']))
+      return cmp(a_str, b_str)
 
     movement_list.sort(cmp=cmp_resource)
 
@@ -667,3 +757,150 @@ class Transaction(TioSafeBrain):
     xml = etree.tostring(transaction, pretty_print=True, encoding='utf-8')
     LOG("Transactions asXML returns : %s" % (xml, ), 300, "")
     return xml
+
+
+# All the following classes has to be removed from the brain
+# Use & improve abstract classes instead
+
+# class Opportunity(TioSafeBrain):
+#   """
+#     This class allows to build the TioSafe XML of an Opportunity and to sync.
+#   """
+#   __allow_access_to_unprotected_subobjects__ = 1
+
+#   def asXML(self):
+#     """
+#       Generate the TioSafe Opportunity XML through the properties of an object.
+#     """
+#     resource = etree.Element('resource', reference=self.getGid())
+
+#     # list of possible tags for an product
+#     tag_list = (
+#         'title', 'reference', 'source', 'account', 'campaign', 'probability',
+#         'price',
+#     )
+#     self._setTags(self, resource, tag_list)
+#     self._setTags(self, resource, ['category', ], SEPARATOR)
+
+#     return etree.tostring(resource, pretty_print=True, encoding='utf-8')
+
+
+# class Campaign(TioSafeBrain):
+#   """
+#     This class allows to build the TioSafe XML of an Camapign and to sync.
+#   """
+#   __allow_access_to_unprotected_subobjects__ = 1
+
+#   def asXML(self):
+#     """
+#       Generate the TioSafe Campaign XML through the properties of an object.
+#     """
+#     resource = etree.Element('resource', reference=self.getGid())
+
+#     # list of possible tags for an product
+#     tag_list = (
+#         'title', 'reference', 'start_date', 'stop_date', 'source', 'price',
+#         'description',
+#     )
+#     self._setTags(self, resource, tag_list)
+#     self._setTags(self, resource, ['category', ], SEPARATOR)
+
+#     return etree.tostring(resource, pretty_print=True, encoding='utf-8')
+
+
+# # ########## Brain for TioSafe Transactions ########## #
+# class Accounting(TioSafeBrain):
+#   """
+#     This class allows to build the TioSafe XML of an Accounting and to sync.
+#   """
+#   __allow_access_to_unprotected_subobjects__ = 1
+
+#   def getGid(self):
+#     """ Return the GID of the object. """
+#     # FIXME: Why we must remove -, / and : ???
+#     return self.gid.replace('-', '').replace('/', '').replace(':', '')
+
+#   def asXML(self):
+#     """
+#       Generate the TioSafe Accounting XML through the properties of an object.
+#     """
+#     transaction = etree.Element('transaction', reference=self.getGid())
+
+#     # list of possible tags for an accounting
+#     tag_list = (
+#         'start_date', 'stop_date', 'reference', 'currency', 'causality',
+#     )
+#     self._setTags(self, transaction, tag_list)
+#     self._setTags(self, transaction, ['category', ], SEPARATOR)
+
+#     # set arrow list
+#     self._setArrowTagList(self, transaction)
+
+#     # add the movements list to the XML
+#     for element in self.accounting_line(id_accounting=self.getId()):
+#       movement = etree.SubElement(transaction, 'movement')
+#       # set arrow list
+#       self._setArrowTagList(element, movement)
+#       # list of possible tags for an accounting movement
+#       tag_list = ('title', 'resource', 'quantity', 'price', )
+#       self._setTags(element, movement, tag_list)
+#       self._setTags(element, movement, ['category', ], SEPARATOR)
+
+#     return etree.tostring(transaction, pretty_print=True, encoding='utf-8')
+
+
+
+
+# # The brain of a Trasaction type: Event
+# class Event(TioSafeBrain):
+#   """
+#     This is the Brain which works on Sale Orders.
+#   """
+
+#   __allow_access_to_unprotected_subobjects__ = 1
+
+#   def asXML(self):
+#     """
+#       Return the GID of the object.
+#     """
+#     # Declare the main xml node and build the first xml level
+#     event = etree.Element('event', reference=self.getGid())
+#     tag_list = (
+#         'title', 'start_date', 'stop_date', 'reference', 'location',
+#         'description', 'product', 'account',
+#     )
+#     self._setTags(self, event, tag_list)
+#     self._setTags(self, event, ['category', ], SEPARATOR)
+#     # Set arrows in the first xml level
+#     self._setArrowTagList(self, event)
+
+#     return etree.tostring(event, pretty_print=True, encoding='utf-8')
+
+
+# # ########## WebService Brain ########## #
+# class LastIdWebServiceBrain(TioSafeBrain, LastId):
+#   __allow_access_to_unprotected_subobjects__ = 1
+
+
+# # ---------- SF ---------- #
+# class PersonSalesforceBrain(TioSafeBrain, Node):
+#   __allow_access_to_unprotected_subobjects__ = 1
+
+#   def __init__(self, context, **kw):
+#     super(PersonSalesforceBrain, self).__init__(context, **kw)
+#     # add properties
+#     setattr(self, 'path', '%s/%s' % (context.getPath(), self.getId()))
+#     setattr(self, 'gid', 'Person %s %s' % (self.title, self.email))
+
+# class EventSalesforceBrain(TioSafeBrain, Event):
+#   __allow_access_to_unprotected_subobjects__ = 1
+
+#   def __init__(self, context, **kw):
+#     super(EventSalesforceBrain, self).__init__(context, **kw)
+#     # Use person GIDs for source and destination, here context is the
+#     # integration site
+#     self.source = context.person_module(id=self.source)[0].getGid()
+#     self.destination = context.person_module(id=self.destination)[0].getGid()
+#     # add properties
+#     setattr(self, 'path', '%s/%s' % (context.getPath(), self.id))
+#     setattr(self, 'gid', 'Event %s %s %s' % (self.start_date, self.source, self.destination))

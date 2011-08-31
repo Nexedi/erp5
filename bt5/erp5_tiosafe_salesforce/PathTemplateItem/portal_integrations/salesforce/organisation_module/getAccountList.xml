@@ -1,0 +1,297 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, Fax, Phone, Description, AccountNumber, BillingStreet, BillingPostalCode, BillingCity, BillingCountry\n
+    FROM\n
+      Account\n
+    <tal:block tal:condition="python: options.get(\'organisation_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/organisation_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>SalesforceNodeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/salesforce/salesforce_connector</string>
+                <string>destination/portal_integrations/salesforce/account_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, Fax, Phone, Description, AccountNumber, BillingStreet, BillingPostalCode, BillingCity, BillingCountry\n
+    FROM\n
+      Account\n
+    <tal:block tal:condition="python: options.get(\'organisation_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/organisation_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getAccountList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Organisation</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getAccountList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/salesforce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, Name, Fax, Phone, Description, AccountNumber, BillingStreet, BillingPostalCode, BillingCity, BillingCountry    FROM      Account      </ns0:querystring></ns0:query>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>https://na3-api.salesforce.com/services/Soap/u/19.0/00D50000000IjTh</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com"><soapenv:Body><queryResponse><result xsi:type="QueryResult"><done>true</done><queryLocator xsi:nil="true"/><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VMVRKAA5</sf:Id><sf:Id>0015000000VMVRKAA5</sf:Id><sf:Name>my_buyer_account</sf:Name><sf:Fax xsi:nil="true"/><sf:Phone>555 922100</sf:Phone><sf:Description>This society will always buy in this test</sf:Description><sf:AccountNumber>55643</sf:AccountNumber><sf:BillingStreet>9090</sf:BillingStreet><sf:BillingPostalCode>92210</sf:BillingPostalCode><sf:BillingCity>Beverly Hills</sf:BillingCity><sf:BillingCountry>USA</sf:BillingCountry></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQncqAAD</sf:Id><sf:Id>0015000000VQncqAAD</sf:Id><sf:Name>GenePoint</sf:Name><sf:Fax>(650) 867-9895</sf:Fax><sf:Phone>(650) 867-3450</sf:Phone><sf:Description>Genomics company engaged in mapping and sequencing of the human genome and developing gene-based drugs</sf:Description><sf:AccountNumber>CC978213</sf:AccountNumber><sf:BillingStreet>345 Shoreline Park\n
+Mountain View, CA 94043\n
+USA</sf:BillingStreet><sf:BillingPostalCode xsi:nil="true"/><sf:BillingCity>Mountain View</sf:BillingCity><sf:BillingCountry xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQncrAAD</sf:Id><sf:Id>0015000000VQncrAAD</sf:Id><sf:Name>United Oil &amp; Gas, UK</sf:Name><sf:Fax>+44 191 4956620</sf:Fax><sf:Phone>+44 191 4956203</sf:Phone><sf:Description xsi:nil="true"/><sf:AccountNumber>CD355119-A</sf:AccountNumber><sf:BillingStreet>Kings Park, 17th Avenue, Team Valley Trading Estate,\n
+Gateshead, Tyne and Wear NE26 3HS\n
+United Kingdom</sf:BillingStreet><sf:BillingPostalCode xsi:nil="true"/><sf:BillingCity xsi:nil="true"/><sf:BillingCountry xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQncsAAD</sf:Id><sf:Id>0015000000VQncsAAD</sf:Id><sf:Name>United Oil &amp; Gas, Singapore</sf:Name><sf:Fax>(650) 450-8820</sf:Fax><sf:Phone>(650) 450-8810</sf:Phone><sf:Description xsi:nil="true"/><sf:AccountNumber>CD355120-B</sf:AccountNumber><sf:BillingStreet>9 Tagore Lane\n
+Singapore, Singapore 787472\n
+Singapore</sf:BillingStreet><sf:BillingPostalCode xsi:nil="true"/><sf:BillingCity>Singapore</sf:BillingCity><sf:BillingCountry xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQnctAAD</sf:Id><sf:Id>0015000000VQnctAAD</sf:Id><sf:Name>Edge Communications</sf:Name><sf:Fax>(512) 757-9000</sf:Fax><sf:Phone>(512) 757-6000</sf:Phone><sf:Description>Edge, founded in 1998, is a start-up based in Austin, TX. The company designs and manufactures a device to convert music from one digital format to another. Edge sells its product through retailers and its own website.</sf:Description><sf:AccountNumber>CD451796</sf:AccountNumber><sf:BillingStreet>312 Constitution Place\n
+Austin, TX 78767\n
+USA</sf:BillingStreet><sf:BillingPostalCode xsi:nil="true"/><sf:BillingCity>Austin</sf:BillingCity><sf:BillingCountry xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQncuAAD</sf:Id><sf:Id>0015000000VQncuAAD</sf:Id><sf:Name>Burlington Textiles Corp of America</sf:Name><sf:Fax>(336) 222-8000</sf:Fax><sf:Phone>(336) 222-7000</sf:Phone><sf:Description xsi:nil="true"/><sf:AccountNumber>CD656092</sf:AccountNumber><sf:BillingStreet>525 S. Lexington Ave</sf:BillingStreet><sf:BillingPostalCode>27215</sf:BillingPostalCode><sf:BillingCity>Burlington</sf:BillingCity><sf:BillingCountry>USA</sf:BillingCountry></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQncvAAD</sf:Id><sf:Id>0015000000VQncvAAD</sf:Id><sf:Name>Pyramid Construction Inc.</sf:Name><sf:Fax>(014) 427-4428</sf:Fax><sf:Phone>(014) 427-4427</sf:Phone><sf:Description xsi:nil="true"/><sf:AccountNumber>CC213425</sf:AccountNumber><sf:BillingStreet>2 Place Jussieu</sf:BillingStreet><sf:BillingPostalCode>75251</sf:BillingPostalCode><sf:BillingCity>Paris</sf:BillingCity><sf:BillingCountry>France</sf:BillingCountry></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQncwAAD</sf:Id><sf:Id>0015000000VQncwAAD</sf:Id><sf:Name>Dickenson plc</sf:Name><sf:Fax>(785) 241-6201</sf:Fax><sf:Phone>(785) 241-6200</sf:Phone><sf:Description xsi:nil="true"/><sf:AccountNumber>CC634267</sf:AccountNumber><sf:BillingStreet>1301 Hoch Drive</sf:BillingStreet><sf:BillingPostalCode>66045</sf:BillingPostalCode><sf:BillingCity>Lawrence</sf:BillingCity><sf:BillingCountry>USA</sf:BillingCountry></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQncxAAD</sf:Id><sf:Id>0015000000VQncxAAD</sf:Id><sf:Name>Grand Hotels &amp; Resorts Ltd</sf:Name><sf:Fax>(312) 596-1500</sf:Fax><sf:Phone>(312) 596-1000</sf:Phone><sf:Description>Chain of hotels and resorts across the US, UK, Eastern Europe, Japan, and SE Asia.</sf:Description><sf:AccountNumber>CD439877</sf:AccountNumber><sf:BillingStreet>2334 N. Michigan Avenue, Suite 1500\n
+Chicago, IL 60601, USA</sf:BillingStreet><sf:BillingPostalCode xsi:nil="true"/><sf:BillingCity>Chicago</sf:BillingCity><sf:BillingCountry xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQncyAAD</sf:Id><sf:Id>0015000000VQncyAAD</sf:Id><sf:Name>Express Logistics and Transport</sf:Name><sf:Fax>(503) 421-7801</sf:Fax><sf:Phone>(503) 421-7800</sf:Phone><sf:Description>Commerical logistics and transportation company.</sf:Description><sf:AccountNumber>CC947211</sf:AccountNumber><sf:BillingStreet>620 SW 5th Avenue Suite 400\n
+Portland, Oregon 97204\n
+United States</sf:BillingStreet><sf:BillingPostalCode xsi:nil="true"/><sf:BillingCity>Portland</sf:BillingCity><sf:BillingCountry xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQnczAAD</sf:Id><sf:Id>0015000000VQnczAAD</sf:Id><sf:Name>University of Arizona</sf:Name><sf:Fax>(520) 773-9060</sf:Fax><sf:Phone>(520) 773-9050</sf:Phone><sf:Description>Leading university in AZ offering undergraduate and graduate programs in arts and humanities, pure sciences, engineering, business, and medicine.</sf:Description><sf:AccountNumber>CD736025</sf:AccountNumber><sf:BillingStreet>888 N Euclid \n
+Hallis Center, Room 501\n
+Tucson, AZ 85721\n
+United States</sf:BillingStreet><sf:BillingPostalCode xsi:nil="true"/><sf:BillingCity>Tucson</sf:BillingCity><sf:BillingCountry xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQnd0AAD</sf:Id><sf:Id>0015000000VQnd0AAD</sf:Id><sf:Name>United Oil &amp; Gas Corp.</sf:Name><sf:Fax>(212) 842-5501</sf:Fax><sf:Phone>(212) 842-5500</sf:Phone><sf:Description>World&apos;s third largest oil and gas company.</sf:Description><sf:AccountNumber>CD355118</sf:AccountNumber><sf:BillingStreet>1301 Avenue of the Americas \n
+New York, NY 10019\n
+USA</sf:BillingStreet><sf:BillingPostalCode xsi:nil="true"/><sf:BillingCity>New York</sf:BillingCity><sf:BillingCountry xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VQnd1AAD</sf:Id><sf:Id>0015000000VQnd1AAD</sf:Id><sf:Name>sForce</sf:Name><sf:Fax>(415) 901-7002</sf:Fax><sf:Phone>(415) 901-7000</sf:Phone><sf:Description xsi:nil="true"/><sf:AccountNumber xsi:nil="true"/><sf:BillingStreet>The Landmark @ One Market</sf:BillingStreet><sf:BillingPostalCode>94087</sf:BillingPostalCode><sf:BillingCity>San Francisco</sf:BillingCity><sf:BillingCountry>US</sf:BillingCountry></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VMVO6AAP</sf:Id><sf:Id>0015000000VMVO6AAP</sf:Id><sf:Name>z_society_account</sf:Name><sf:Fax>555 123987</sf:Fax><sf:Phone>555 987321</sf:Phone><sf:Description>This society works to check many test</sf:Description><sf:AccountNumber>0864208642</sf:AccountNumber><sf:BillingStreet>35 road 24</sf:BillingStreet><sf:BillingPostalCode>48239</sf:BillingPostalCode><sf:BillingCity>Detroit</sf:BillingCity><sf:BillingCountry>United Stats</sf:BillingCountry></records><records xsi:type="sf:sObject"><sf:type>Account</sf:type><sf:Id>0015000000VMVNOAA5</sf:Id><sf:Id>0015000000VMVNOAA5</sf:Id><sf:Name>camera_cafe_account</sf:Name><sf:Fax xsi:nil="true"/><sf:Phone>555 012345</sf:Phone><sf:Description>This account is the camera cafe organisation to test what are the account elements in salesforce</sf:Description><sf:AccountNumber>122334</sf:AccountNumber><sf:BillingStreet>3500 main street</sf:BillingStreet><sf:BillingPostalCode>48239</sf:BillingPostalCode><sf:BillingCity>Detroit</sf:BillingCity><sf:BillingCountry>United Stats</sf:BillingCountry></records><size>15</size></result></queryResponse></soapenv:Body></soapenv:Envelope>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Organisation">\n
+  <title>my_buyer_account</title>\n
+  <phone>555 922100</phone>\n
+  <reference>55643</reference>\n
+  <description>This society will always buy in this test</description>\n
+  <address>\n
+    <street>9090</street>\n
+    <zip>92210</zip>\n
+    <city>Beverly Hills</city>\n
+    <country>USA</country>\n
+  </address>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>GenePoint</title>\n
+  <phone>(650) 867-3450</phone>\n
+  <fax>(650) 867-9895</fax>\n
+  <reference>CC978213</reference>\n
+  <description>Genomics company engaged in mapping and sequencing of the human genome and developing gene-based drugs</description>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>United Oil &amp; Gas, UK</title>\n
+  <phone>+44 191 4956203</phone>\n
+  <fax>+44 191 4956620</fax>\n
+  <reference>CD355119-A</reference>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>United Oil &amp; Gas, Singapore</title>\n
+  <phone>(650) 450-8810</phone>\n
+  <fax>(650) 450-8820</fax>\n
+  <reference>CD355120-B</reference>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>Edge Communications</title>\n
+  <phone>(512) 757-6000</phone>\n
+  <fax>(512) 757-9000</fax>\n
+  <reference>CD451796</reference>\n
+  <description>Edge, founded in 1998, is a start-up based in Austin, TX. The company designs and manufactures a device to convert music from one digital format to another. Edge sells its product through retailers and its own website.</description>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>Burlington Textiles Corp of America</title>\n
+  <phone>(336) 222-7000</phone>\n
+  <fax>(336) 222-8000</fax>\n
+  <reference>CD656092</reference>\n
+  <address>\n
+    <street>525 S. Lexington Ave</street>\n
+    <zip>27215</zip>\n
+    <city>Burlington</city>\n
+    <country>USA</country>\n
+  </address>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>Pyramid Construction Inc.</title>\n
+  <phone>(014) 427-4427</phone>\n
+  <fax>(014) 427-4428</fax>\n
+  <reference>CC213425</reference>\n
+  <address>\n
+    <street>2 Place Jussieu</street>\n
+    <zip>75251</zip>\n
+    <city>Paris</city>\n
+    <country>France</country>\n
+  </address>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>Dickenson plc</title>\n
+  <phone>(785) 241-6200</phone>\n
+  <fax>(785) 241-6201</fax>\n
+  <reference>CC634267</reference>\n
+  <address>\n
+    <street>1301 Hoch Drive</street>\n
+    <zip>66045</zip>\n
+    <city>Lawrence</city>\n
+    <country>USA</country>\n
+  </address>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>Grand Hotels &amp; Resorts Ltd</title>\n
+  <phone>(312) 596-1000</phone>\n
+  <fax>(312) 596-1500</fax>\n
+  <reference>CD439877</reference>\n
+  <description>Chain of hotels and resorts across the US, UK, Eastern Europe, Japan, and SE Asia.</description>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>Express Logistics and Transport</title>\n
+  <phone>(503) 421-7800</phone>\n
+  <fax>(503) 421-7801</fax>\n
+  <reference>CC947211</reference>\n
+  <description>Commerical logistics and transportation company.</description>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>University of Arizona</title>\n
+  <phone>(520) 773-9050</phone>\n
+  <fax>(520) 773-9060</fax>\n
+  <reference>CD736025</reference>\n
+  <description>Leading university in AZ offering undergraduate and graduate programs in arts and humanities, pure sciences, engineering, business, and medicine.</description>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>United Oil &amp; Gas Corp.</title>\n
+  <phone>(212) 842-5500</phone>\n
+  <fax>(212) 842-5501</fax>\n
+  <reference>CD355118</reference>\n
+  <description>World\'s third largest oil and gas company.</description>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>sForce</title>\n
+  <phone>(415) 901-7000</phone>\n
+  <fax>(415) 901-7002</fax>\n
+  <address>\n
+    <street>The Landmark @ One Market</street>\n
+    <zip>94087</zip>\n
+    <city>San Francisco</city>\n
+    <country>US</country>\n
+  </address>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>z_society_account</title>\n
+  <phone>555 987321</phone>\n
+  <fax>555 123987</fax>\n
+  <reference>0864208642</reference>\n
+  <description>This society works to check many test</description>\n
+  <address>\n
+    <street>35 road 24</street>\n
+    <zip>48239</zip>\n
+    <city>Detroit</city>\n
+    <country>United Stats</country>\n
+  </address>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>camera_cafe_account</title>\n
+  <phone>555 012345</phone>\n
+  <reference>122334</reference>\n
+  <description>This account is the camera cafe organisation to test what are the account elements in salesforce</description>\n
+  <address>\n
+    <street>3500 main street</street>\n
+    <zip>48239</zip>\n
+    <city>Detroit</city>\n
+    <country>United Stats</country>\n
+  </address>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Account List</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

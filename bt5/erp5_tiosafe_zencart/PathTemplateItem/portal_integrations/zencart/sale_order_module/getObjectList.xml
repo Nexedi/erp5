@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildZencartSaleOrderListBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>ZencartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/zencart/http_connector</string>
+                <string>destination/portal_integrations/zencart/sale_order_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getSaleOrderList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/ZenCart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'language\': \'en\'}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.1.34/zen-cart/admin/tiosafe_zencart/getSaleOrderList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+\n
+<xml><object><id>1</id><person_id>4</person_id><reference>1</reference><currency>USD</currency><title>Sale Order 1</title><destination>4</destination><destination_ownership>4</destination_ownership><source>TioSafe Test Shop</source><start_date>2010-09-15 11:04:57</start_date></object></xml> \n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Sale Order">\n
+  <title>Sale Order 1</title>\n
+  <start_date>2010/09/15 11:04:57 GMT+2</start_date>\n
+  <reference>1</reference>\n
+  <currency>USD</currency>\n
+  <arrow type="">\n
+    <source>TioSafe Test Shop</source>\n
+    <destination>4</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <destination>4</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource>Virtuemart G02</resource>\n
+    <title>Matrox G200 MMS</title>\n
+    <reference/>\n
+    <quantity>1</quantity>\n
+    <price>449.9900</price>\n
+    <category></category>\n
+    <category>memory/8 mb</category>\n
+    <category>model/Premium</category>\n
+  </movement>\n
+  <movement>\n
+    <resource> Unknown</resource>\n
+    <title>Unreal Tournament Linked</title>\n
+    <reference/>\n
+    <quantity>1</quantity>\n
+    <price>89.9900</price>\n
+    <category></category>\n
+    <category>version/Box: Windows - English</category>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Sale order</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

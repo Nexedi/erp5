@@ -1,0 +1,260 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>\n
+<Order xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <OxID tal:content="options/sale_order_id">0</OxID>\n
+  <OrderItems />\n
+  <OrderTaxDetails />\n
+</Order>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildOxatisSaleOrderBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>OxatisBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/oxatis/order_rest_connection_plugin</string>
+                <string>destination/portal_integrations/oxatis/order_detail_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>\n
+<Order xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <OxID tal:content="options/sale_order_id">0</OxID>\n
+  <OrderItems />\n
+  <OrderTaxDetails />\n
+</Order>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>OrderGetDetails</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/oxatis</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<?xml version="1.0" encoding="utf-8"?><Order xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"       xmlns:xsd="http://www.w3.org/2001/XMLSchema">  <OxID>666</OxID>  <OrderItems/>  <OrderTaxDetails/></Order>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<DataResultService>\n
+  <StatusCode>200</StatusCode>\n
+  <StatusSubCode/>\n
+  <ErrorDetails/>\n
+  <Data>\n
+    <Order>\n
+      <OxID>666</OxID>\n
+      <UserEmail>john@nexedi.com</UserEmail>\n
+      <Date>2010-09-02T15:58:39</Date>\n
+      <NetAmountDue>399.07</NetAmountDue>\n
+      <PaymentStatusCode>40</PaymentStatusCode>\n
+      <UserOxID>9876543</UserOxID>\n
+      <BillingFirstName>test-john</BillingFirstName>\n
+      <BillingLastName>doe</BillingLastName>\n
+      <BillingCompany></BillingCompany>\n
+      <BillingAddress>24 Rue blanche</BillingAddress>\n
+      <BillingAddressL1></BillingAddressL1>\n
+      <BillingAddressFloor></BillingAddressFloor>\n
+      <BillingAddressBuilding></BillingAddressBuilding>\n
+      <BillingAddressStreet></BillingAddressStreet>\n
+      <BillingZipCode>59000</BillingZipCode>\n
+      <BillingCity>Lille</BillingCity>\n
+      <BillingState></BillingState>\n
+      <BillingCountryISOCode>FR</BillingCountryISOCode>\n
+      <BillingCountryName></BillingCountryName>\n
+      <BillingPhone>12345678</BillingPhone>\n
+      <BillingCellPhone>98765432</BillingCellPhone>\n
+      <BillingFax></BillingFax>\n
+      <CompanyVATNumber></CompanyVATNumber>\n
+      <ShippingFirstName>john</ShippingFirstName>\n
+      <ShippingLastName>doe</ShippingLastName>\n
+      <ShippingCompany>Nexedi</ShippingCompany>\n
+      <ShippingAddress>270 Bvd clemenceau</ShippingAddress>\n
+      <ShippingAddressL1></ShippingAddressL1>\n
+      <ShippingAddressFloor></ShippingAddressFloor>\n
+      <ShippingAddressBuilding></ShippingAddressBuilding>\n
+      <ShippingAddressStreet></ShippingAddressStreet>\n
+      <ShippingAddressOtherInfo></ShippingAddressOtherInfo>\n
+      <ShippingZipCode>59700</ShippingZipCode>\n
+      <ShippingCity>Marcq</ShippingCity>\n
+      <ShippingState></ShippingState>\n
+      <ShippingCountryISOCode>FR</ShippingCountryISOCode>\n
+      <ShippingCountryName></ShippingCountryName>\n
+      <ShippingPhone></ShippingPhone>\n
+      <ShippingInfo></ShippingInfo>\n
+      <VATIncluded></VATIncluded>\n
+      <EcoTaxIncluded></EcoTaxIncluded>\n
+      <SubTotalNet>384.72</SubTotalNet>\n
+      <SubTotalNetDiscounted>384.72</SubTotalNetDiscounted>\n
+      <GlobalDiscountRate></GlobalDiscountRate>\n
+      <GlobalDiscountAmount></GlobalDiscountAmount>\n
+      <SubTotalVAT>63.05</SubTotalVAT>\n
+      <ShippingID>1</ShippingID>\n
+      <ShippingMethodName>La Poste</ShippingMethodName>\n
+      <ShippingTaxRate>19.6</ShippingTaxRate>\n
+      <ShippingPriceTaxExcl>12</ShippingPriceTaxExcl>\n
+      <ShippingPriceTaxIncl>14.35</ShippingPriceTaxIncl>\n
+      <ShippingVATAmount>2.35</ShippingVATAmount>\n
+      <EcoTaxAmountTaxIncl>0</EcoTaxAmountTaxIncl>\n
+      <TotalWeight>0</TotalWeight>\n
+      <PaymentMethodName>Ch&#232;que</PaymentMethodName>\n
+      <PMProcessorCode>70</PMProcessorCode>\n
+      <PaymentStatusLastModifiedDate>2010-09-02T15:59:00</PaymentStatusLastModifiedDate>\n
+      <RemoteIPAddr></RemoteIPAddr>\n
+      <SalesRepCode></SalesRepCode>\n
+      <SpecialInstructions></SpecialInstructions>\n
+      <CurrencyCode>EUR</CurrencyCode>\n
+      <Description></Description>\n
+    </Order>\n
+  </Data>\n
+  <OrderItems>\n
+    <Item>\n
+      <ItemOxID>111111</ItemOxID>\n
+      <ItemSKU>R001</ItemSKU>\n
+      <ItemSKUOriginal>R001</ItemSKUOriginal>\n
+      <ItemName>Robe</ItemName>\n
+      <Quantity>4</Quantity>\n
+      <GrossPrice>124.38</GrossPrice>\n
+      <GrossAmount>497.52</GrossAmount>\n
+      <TaxRate>19.6</TaxRate>\n
+      <DiscountRate>22.67</DiscountRate>\n
+      <NetPrice>96.18</NetPrice>\n
+      <NetAmount>384.72</NetAmount>\n
+      <VATAmount>63.05</VATAmount>\n
+      <EcoTaxValueTaxIncl>0</EcoTaxValueTaxIncl>\n
+    </Item>\n
+  </OrderItems>\n
+</DataResultService>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Sale Order">\n
+  <start_date>2010/09/02 15:58:39 GMT+0</start_date>\n
+  <stop_date>2010/09/02 15:58:39 GMT+0</stop_date>\n
+  <reference>666</reference>\n
+  <currency>EUR</currency>\n
+  <payment_mode>cheque</payment_mode>\n
+  <arrow type="">\n
+    <source> TioSafe Default Organisation </source>\n
+    <destination> Nexedi france</destination>\n
+  </arrow>\n
+  <arrow type="Administration">\n
+    <source> TioSafe Default Organisation </source>\n
+    <destination> test-john doe john@nexedi.com</destination>\n
+  </arrow>\n
+  <arrow type="Decision">\n
+    <source> TioSafe Default Organisation </source>\n
+    <destination> test-john doe john@nexedi.com</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> TioSafe Default Organisation </source>\n
+    <destination> test-john doe john@nexedi.com</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource> R001</resource>\n
+    <title>Robe</title>\n
+    <reference>R001</reference>\n
+    <quantity>4.00</quantity>\n
+    <price>103.996656</price>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Delivery</resource>\n
+    <title>La Poste</title>\n
+    <reference>La Poste</reference>\n
+    <quantity>1.00</quantity>\n
+    <price>12.000000</price>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Discount</resource>\n
+    <title>discount on Robe / R001</title>\n
+    <reference>discount on Robe / R001</reference>\n
+    <quantity>-4.00</quantity>\n
+    <price>23.578595</price>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get One Order</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

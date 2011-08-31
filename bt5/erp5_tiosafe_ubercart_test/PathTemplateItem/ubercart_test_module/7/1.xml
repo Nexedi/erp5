@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Ubercart Test Sale Order Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>currency</string> </key>
+            <value> <string>USD</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>id_product</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>net_price</string> </key>
+            <value> <float>387.0</float> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Ubercart Test Sale Order Item</string> </value>
+        </item>
+        <item>
+            <key> <string>price</string> </key>
+            <value> <float>129.0</float> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>FRET685</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Fleure</string> </value>
+        </item>
+        <item>
+            <key> <string>vat</string> </key>
+            <value> <string>0.0</string> </value>
+        </item>
+        <item>
+            <key> <string>vat_price</string> </key>
+            <value> <float>0.0</float> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

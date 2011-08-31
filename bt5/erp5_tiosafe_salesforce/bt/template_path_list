@@ -1,0 +1,6 @@
+portal_integrations/salesforce
+portal_integrations/salesforce
+portal_integrations/salesforce/*connector
+portal_integrations/salesforce/*mapping**
+portal_integrations/salesforce/*module**
+portal_integrations/salesforce/*plugin

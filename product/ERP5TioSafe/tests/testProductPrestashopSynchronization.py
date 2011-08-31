@@ -29,8 +29,9 @@
 import transaction
 from Products.ERP5TioSafe.tests.testPrestashopMixin import testPrestashopMixin
 
-class testProductPrestashopSynchronization(testPrestashopMixin):
+class TestProductPrestashopSynchronization(testPrestashopMixin):
   """ This class allows to check different cases of Product's sync. """
+
   def afterSetUp(self):
     """ This method is called after the SetUp method. """
     # Shortcut for modules and tools
@@ -40,18 +41,37 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     self.connection = self.portal.erp5_sql_connection
     self.prestashop = self.portal.portal_integrations.prestashop
     self.root_xml = '<catalog>\n%s\n</catalog>'
+    self.sale_supply = self.portal.sale_supply_module.newContent(title=self.prestashop.getTitle())
+    self.sale_supply.validate()
+    transaction.commit()
+    self.tic()
+
+  def beforeTearDown(self):
+    testPrestashopMixin.beforeTearDown(self)
+    self.sale_supply.invalidate()
+    transaction.commit()
+    self.tic()
+
+  def createProduct(self, **kw):
+    """
+    Create product & add it to the sale supply
+    """
+    product = self.product_module.newContent(**kw)
+    product.validate()
+    self.sale_supply.newContent(resource=product.getRelativeUrl())
+    return product
 
   def test_PrestashopSimplestXMLSync(self):
     """ This test checks the product sync with the simplest XML. """
     # Initialize the instance and prestashop
     self.initPrestashopTest()
-    product = self.product_module.newContent(
+    product = self.createProduct(
         portal_type='Product',
         title='Tee-Shirt',
         reference='my_ref',
         use='sale',
     )
-    product.validate()
+    
     transaction.commit()
     self.tic()
 
@@ -89,7 +109,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     for mapping in mapping_dict_list:
       self.createMapping(integration_site=self.prestashop, **mapping)
     # create and init the product
-    product = self.product_module.newContent(
+    product = self.createProduct(
         portal_type='Product',
         title='Ballon de Foot',
         reference='0123456789',
@@ -98,7 +118,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=2.123456,
         purchase_supply_line_base_price=1.123456,
     )
-    product.validate()
+    
     individual_variation_dict_list = [
         {'variation_base_category': 'ball_size', 'title': 's4', },
         {'variation_base_category': 'ball_size', 'title': 's5', },
@@ -134,7 +154,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     )
     self.initMapping(self.prestashop)
     # create and init the product
-    product = self.product_module.newContent(
+    product = self.createProduct(
         portal_type='Product',
         title='Ballon de Foot',
         reference='0123456789',
@@ -143,7 +163,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=2.123456,
         purchase_supply_line_base_price=1.123456,
     )
-    product.validate()
+    
     product.setVariationBaseCategoryList(['ball_size', 'colour'])
     product.setVariationCategoryList(
         ['ball_size/x4', 'ball_size/x5', 'colour/black', 'colour/white'],
@@ -193,7 +213,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     for mapping in mapping_dict_list:
       self.createMapping(integration_site=self.prestashop, **mapping)
     # create and init the product
-    product = self.product_module.newContent(
+    product = self.createProduct(
         portal_type='Product',
         title='Ballon de Foot',
         reference='0123456789',
@@ -202,7 +222,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=2.123456,
         purchase_supply_line_base_price=1.123456,
     )
-    product.validate()
+    
     product.setVariationBaseCategoryList(['colour'])
     product.setVariationCategoryList(['colour/black', 'colour/white'])
     individual_variation_dict_list = [
@@ -259,7 +279,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     for mapping in mapping_dict_list:
       self.createMapping(integration_site=self.prestashop, **mapping)
     # create and init the product one
-    product_1 = self.product_module.newContent(
+    product_1 = self.createProduct(
         portal_type='Product',
         title='Stylo',
         reference='01111',
@@ -267,9 +287,8 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=2.1,
         purchase_supply_line_base_price=1.1,
     )
-    product_1.validate()
     # create and init the product two
-    product_2 = self.product_module.newContent(
+    product_2 = self.createProduct(
         portal_type='Product',
         title='Ballon',
         reference='02222',
@@ -278,7 +297,6 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=20.2,
         purchase_supply_line_base_price=10.2,
     )
-    product_2.validate()
     individual_variation_dict_list = [
         {'variation_base_category': 'ball_size', 'title': 's4', },
         {'variation_base_category': 'ball_size', 'title': 's5', },
@@ -289,7 +307,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
           **individual_variation
       )
     # create and init the product three
-    product_3 = self.product_module.newContent(
+    product_3 = self.createProduct(
         portal_type='Product',
         title='Ballon de Foot',
         reference='03333',
@@ -298,11 +316,10 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=200.3,
         purchase_supply_line_base_price=100.3,
     )
-    product_3.validate()
     product_3.setVariationBaseCategoryList(['colour', ])
     product_3.setVariationCategoryList(['colour/black', 'colour/white'])
     # create and init the product four
-    product_4 = self.product_module.newContent(
+    product_4 = self.createProduct(
         portal_type='Product',
         title='Ballon de Basket',
         reference='04444',
@@ -311,7 +328,6 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=2000.4,
         purchase_supply_line_base_price=1000.4,
     )
-    product_4.validate()
     product_4.setVariationBaseCategoryList(['colour'])
     product_4.setVariationCategoryList(['colour/black', 'colour/white'])
     individual_variation_dict_list = [
@@ -332,22 +348,22 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     self.assertEqual(len(self.prestashop.product_module()), 4)
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
-        plugin_xml=self.root_xml % self.prestashop.product_module[13].asXML(),
+        plugin_xml=self.root_xml % self.prestashop.product_module[10].asXML(),
         tiosafe_xml= self.root_xml % product_1.Resource_asTioSafeXML(),
         xsd_path='../XSD/resources.xsd',
     )
     self.checkTioSafeXML(
-        plugin_xml=self.root_xml % self.prestashop.product_module[12].asXML(),
+        plugin_xml=self.root_xml % self.prestashop.product_module[11].asXML(),
         tiosafe_xml= self.root_xml % product_2.Resource_asTioSafeXML(),
         xsd_path='../XSD/resources.xsd',
     )
     self.checkTioSafeXML(
-        plugin_xml=self.root_xml % self.prestashop.product_module[11].asXML(),
+        plugin_xml=self.root_xml % self.prestashop.product_module[12].asXML(),
         tiosafe_xml= self.root_xml % product_3.Resource_asTioSafeXML(),
         xsd_path='../XSD/resources.xsd',
     )
     self.checkTioSafeXML(
-        plugin_xml=self.root_xml % self.prestashop.product_module[10].asXML(),
+        plugin_xml=self.root_xml % self.prestashop.product_module[13].asXML(),
         tiosafe_xml= self.root_xml % product_4.Resource_asTioSafeXML(),
         xsd_path='../XSD/resources.xsd',
     )
@@ -357,13 +373,13 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     product_module = self.portal.product_module
     self.initPrestashopTest()
-    product = self.product_module.newContent(
+    product = self.createProduct(
         portal_type='Product',
         title='Tee-Shirt',
         reference='0123456789',
         use='sale',
     )
-    product.validate()
+    
     transaction.commit()
     self.tic()
 
@@ -386,7 +402,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     )
     self.initMapping(self.prestashop)
     # create and init the product
-    product = self.product_module.newContent(
+    product = self.createProduct(
         portal_type='Product',
         title='Ballon de Foot',
         reference='0123456789',
@@ -395,7 +411,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=2000.4,
         purchase_supply_line_base_price=1000.4,
     )
-    product.validate()
+    
     product.setVariationBaseCategoryList(['ball_size', 'colour'])
     product.setVariationCategoryList(
         ['ball_size/x4', 'ball_size/x5', 'colour/black', 'colour/white'],
@@ -427,6 +443,45 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         xsd_path='../XSD/resources.xsd',
     )
 
+  def updateSystemPreference(self, portal, base_category, individual=False):
+    pref_list = portal.portal_preferences.searchFolder(portal_type="System Preference",
+                                                       validation_state="enabled")
+    if len(pref_list) > 1:
+      raise ValueError, "Too many system preferences, does not know which to choose"
+    elif len(pref_list) == 0:
+      pref = portal.portal_preferences.newContent(portal_type="System Preference",
+                                           title="default system preference for TioSafe",
+                                           priority=1)
+      pref.enable()
+    else:
+      pref = pref_list[0].getObject()
+    self.system_pref = pref
+
+    if individual:
+      cat_list = self.system_pref.getPreferredProductIndividualVariationBaseCategoryList()
+      if base_category not in cat_list:
+        cat_list.append(base_category)
+        self.system_pref.edit(preferred_product_individual_variation_base_category_list = cat_list)
+    else:
+      cat_list = self.system_pref.getPreferredProductVariationBaseCategoryList()
+      if base_category not in cat_list:
+        cat_list.append(base_category)
+        self.system_pref.edit(preferred_product_variation_base_category_list = cat_list)
+
+  def checkConflicts(self, module, nb_pub_conflicts=0, nb_sub_conflicts=0, in_conflict=True):
+    module = self.prestashop[module]
+    pub = module.getSourceSectionValue()
+    sub = module.getDestinationSectionValue()
+    self.assertEqual(len(pub.getConflictList()), nb_pub_conflicts)
+    self.assertEqual(len(sub.getConflictList()), nb_sub_conflicts)
+    for conflict in pub.getConflictList() + sub.getConflictList():
+      state = conflict.getParentValue().getValidationState()
+      if in_conflict:
+        self.assertEqual(state, 'conflict')
+      else:
+        self.assertEqual(state, 'synchronized')
+
+
   def test_PrestashopComplexeUpdateElement(self):
     """
       This test checks the complexe update after sync of products.
@@ -444,7 +499,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         { 'title': 'Taille du Ballon',
           'path': 'TailleduBallon',
           'source_reference': 'Taille du Ballon',
-          'destination_reference':'ball', },
+          'destination_reference':'ball_size', },
         { 'title': 'Couleur',
           'path': 'Couleur',
           'source_reference': 'Couleur',
@@ -465,7 +520,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     for mapping in mapping_dict_list:
       self.createMapping(integration_site=self.prestashop, **mapping)
     # create and init the product
-    product = self.product_module.newContent(
+    product = self.createProduct(
         portal_type='Product',
         title='Ballon de Plage',
         reference='a5962z',
@@ -473,13 +528,15 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         sale_supply_line_base_price=200.25,
         purchase_supply_line_base_price=100.25,
     )
-    product.validate()
+    self.updateSystemPreference(self.getPortalObject(), 'colour')
+    self.updateSystemPreference(self.getPortalObject(), 'ball_size', True)
     product.setVariationBaseCategoryList(['colour'])
     product.setVariationCategoryList(['colour/black', 'colour/white'])
     individual_variation_dict_list = [
-        {'variation_base_category': 'ball', 'title': 's4', },
-        {'variation_base_category': 'ball', 'title': 's5', },
-    ]
+      {'variation_base_category': 'ball_size', 'title': 's4', },
+      {'variation_base_category': 'ball_size', 'title': 's5', },
+      ]
+    product.setIndividualVariationBaseCategoryList(['ball_size'])
     for individual_variation in individual_variation_dict_list:
       product.newContent(
           portal_type='Product Individual Variation',
@@ -492,6 +549,7 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     self.assertEqual(len(self.prestashop.product_module()), 0)
     self.loadSync([self.prestashop.product_module, ])
     self.assertEqual(len(self.prestashop.product_module()), 1)
+    self.checkConflicts('product_module')
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
         plugin_xml=self.root_xml % self.prestashop.product_module()[0].asXML(),
@@ -508,9 +566,12 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
         title='s5',
     )[0].getObject()
     individual_variation.setTitle('s6')
+    transaction.commit()
+    self.tic()
     self.assertEqual(len(self.prestashop.product_module()), 1)
     self.loadSync([self.prestashop.product_module, ])
     self.assertEqual(len(self.prestashop.product_module()), 1)
+    self.checkConflicts('product_module')
     self.checkTioSafeXML(
         plugin_xml=self.root_xml % self.prestashop.product_module()[0].asXML(),
         tiosafe_xml=self.root_xml % product.Resource_asTioSafeXML(),
@@ -519,9 +580,12 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     # The second update remove variations (individuals and shareds)
     product.setVariationCategoryList(['colour/white', ])
     product.manage_delObjects([individual_variation.getId(), ])
+    transaction.commit()
+    self.tic()
     self.assertEqual(len(self.prestashop.product_module()), 1)
     self.loadSync([self.prestashop.product_module, ])
     self.assertEqual(len(self.prestashop.product_module()), 1)
+    self.checkConflicts('product_module')
     self.checkTioSafeXML(
         plugin_xml=self.root_xml % self.prestashop.product_module()[0].asXML(),
         tiosafe_xml=self.root_xml % product.Resource_asTioSafeXML(),
@@ -543,9 +607,15 @@ class testProductPrestashopSynchronization(testPrestashopMixin):
     self.assertEqual(len(self.prestashop.product_module()), 1)
     self.loadSync([self.prestashop.product_module, ])
     self.assertEqual(len(self.prestashop.product_module()), 1)
+    self.checkConflicts('product_module')
     self.checkTioSafeXML(
         plugin_xml=self.root_xml % self.prestashop.product_module()[0].asXML(),
         tiosafe_xml=self.root_xml % product.Resource_asTioSafeXML(),
         xsd_path='../XSD/resources.xsd',
     )
 
+import unittest
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestProductPrestashopSynchronization))
+  return suite

@@ -67,7 +67,7 @@ class IntegrationModule(XMLObject):
       # WSR not present
       return []
 
-  def __call__(self, **kw):
+  def __call__(self, REQUEST=None, **kw):
     """
     calling this object will call :
     - retrieveObject if exists and parameters are pass
@@ -75,6 +75,8 @@ class IntegrationModule(XMLObject):
     as method to retrieve list of object can not always be used
     to retrieve just one object
     """
+    if REQUEST is not None:
+      return self.view()
     if len(kw) and getattr(self, "retrieveObject", None) is not None:
       return self.retrieveObject(**kw)
     else:
@@ -89,7 +91,10 @@ class IntegrationModule(XMLObject):
       if getattr(self, "retrieveObject", None) is not None:
         return self.retrieveObject[item]
       else:
-        return self.getObjectList[item]
+        if self.getObjectList.getPortalType() == 'Python Script':
+          return self.getObjectList(id=item)
+        else:
+          return self.getObjectList[item]
     except ValueError, msg:
       raise KeyError, msg
 

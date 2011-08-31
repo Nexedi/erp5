@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Oxatis Test Person" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>BillingAddress</string> </key>
+            <value> <string>56 rue vert</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingCity</string> </key>
+            <value> <string>Lille</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingCountryISOCode</string> </key>
+            <value> <string>FR</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingCountryName</string> </key>
+            <value> <string>France</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingZipCode</string> </key>
+            <value> <string>59000</string> </value>
+        </item>
+        <item>
+            <key> <string>CustomerAccount</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>Email</string> </key>
+            <value> <string>star@nexedi.com</string> </value>
+        </item>
+        <item>
+            <key> <string>FirstName</string> </key>
+            <value> <string>test-star</string> </value>
+        </item>
+        <item>
+            <key> <string>LastName</string> </key>
+            <value> <string>killer</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingAddress</string> </key>
+            <value> <string>1 rue jaune</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingCity</string> </key>
+            <value> <string>Lille</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingCountryISOCode</string> </key>
+            <value> <string>FR</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingCountryName</string> </key>
+            <value> <string>France</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingFirstName</string> </key>
+            <value> <string>luke</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingLastName</string> </key>
+            <value> <string>skywalker</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingPhone</string> </key>
+            <value> <string>1234567890</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingZipCode</string> </key>
+            <value> <string>59000</string> </value>
+        </item>
+        <item>
+            <key> <string>SubscribeToNewletters</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>2345678</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>4</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Oxatis Test Person</string> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>2345678</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Person shipping to another person</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

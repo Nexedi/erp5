@@ -1,0 +1,10 @@
+<allowed_content_type_list>
+ <portal_type id="Oxatis Test Module">
+  <item>Oxatis Test Person</item>
+  <item>Oxatis Test Product</item>
+  <item>Oxatis Test Sale Order</item>
+ </portal_type>
+ <portal_type id="Oxatis Test Sale Order">
+  <item>Oxatis Test Sale Order Item</item>
+ </portal_type>
+</allowed_content_type_list>

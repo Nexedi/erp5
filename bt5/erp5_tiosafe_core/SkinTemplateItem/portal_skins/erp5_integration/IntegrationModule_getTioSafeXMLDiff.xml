@@ -66,11 +66,11 @@ sub_xml = []\n
 def tiosafe_sort(a,b):\n
   if getattr(a, \'email\', None):\n
     return cmp(a.email, b.email)\n
-  elif getattr(a, \'getDefaultEmailText\', None):\n
+  elif getattr(a, \'getDefaultEmailText\', None) and len(a.getDefaultEmailText("")):\n
     return cmp(a.getDefaultEmailText(), b.getDefaultEmailText())\n
   elif getattr(a, \'reference\', None):\n
     return cmp(a.reference, b.reference)\n
-  elif getattr(a, \'getReference\', None):\n
+  elif getattr(a, \'getReference\', None) and len(a.getReference("")):\n
     return cmp(a.getReference(), b.getReference())\n
   elif getattr(a, \'title\', None):\n
     return cmp(a.title, b.title)\n
@@ -79,101 +79,38 @@ def tiosafe_sort(a,b):\n
   \n
 \n
 if pub_method is not None and sub_method is not None:\n
-  pub_object = pub_method(im.getSourceSectionValue())\n
+  pub_object = pub_method(context_document=im.getSourceSectionValue())\n
   pub_object.sort(cmp=tiosafe_sort)\n
   for ob in pub_object:\n
-    pub_xml.append(getattr(ob, pub_xml_method)())\n
-  sub_object = sub_method(im.getDestinationSectionValue())\n
+    try:\n
+      pub_xml.append(getattr(ob, pub_xml_method)(context_document=im.getSourceSection()))\n
+    except TypeError:\n
+      pub_xml.append(getattr(ob, pub_xml_method)())\n
+\n
+  sub_object = sub_method(context_document=im.getDestinationSectionValue())\n
   sub_object.sort(cmp=tiosafe_sort)\n
   for ob in sub_object:\n
-    sub_xml.append(getattr(ob, sub_xml_method)())\n
+    try:\n
+      sub_xml.append(getattr(ob, sub_xml_method)(context_document=im.getDestinationSection()))\n
+    except TypeError:\n
+      sub_xml.append(getattr(ob, sub_xml_method)())\n
+\n
 else:\n
   raise ValueError, "Impossible to get method, pub_method = %s from %s, sub_method = %s from %s" %(pub_method, pub_list, sub_method, sub_list,)\n
 \n
 pub_xml = \'\\n\'.join(pub_xml)\n
 sub_xml = \'\\n\'.join(sub_xml)\n
 \n
-return context.diffXML(sub_xml, pub_xml)\n
+return context.diffXML(xml_plugin=sub_xml, xml_erp5=pub_xml, html=html)\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>context</string>
-                            <string>im</string>
-                            <string>_getattr_</string>
-                            <string>pub_source</string>
-                            <string>pub_list</string>
-                            <string>pub_xml_method</string>
-                            <string>sub_source</string>
-                            <string>sub_list</string>
-                            <string>sub_xml_method</string>
-                            <string>getattr</string>
-                            <string>None</string>
-                            <string>pub_method</string>
-                            <string>sub_method</string>
-                            <string>pub_xml</string>
-                            <string>sub_xml</string>
-                            <string>tiosafe_sort</string>
-                            <string>pub_object</string>
-                            <string>_getiter_</string>
-                            <string>ob</string>
-                            <string>sub_object</string>
-                            <string>ValueError</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>html=True</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>IntegrationModule_getTioSafeXMLDiff</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

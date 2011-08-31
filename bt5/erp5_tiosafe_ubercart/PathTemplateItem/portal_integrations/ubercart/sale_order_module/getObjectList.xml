@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildBrainList</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>UbercartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/ubercart/http_connector</string>
+                <string>destination/portal_integrations/ubercart/sale_order_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getSaleOrderList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/ubercart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2011/12/31\'), \'start_date\': DateTime(\'2010/01/01\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml>\n
+  <object>\n
+    <id>7</id>\n
+    <start_date>2011/04/29</start_date>\n
+    <reference>201105002</reference>\n
+    <currency>Dollar</currency>\n
+    <billing_first_name>Aida</billing_first_name>\n
+    <billing_last_name>DIOP</billing_last_name>\n
+    <billing_company></billing_company>\n
+    <billing_country>United States</billing_country>\n
+    <delivery_first_name>Aida</delivery_first_name>\n
+    <delivery_last_name>DIOP</delivery_last_name>\n
+    <delivery_company></delivery_company>\n
+    <delivery_country>United States</delivery_country>\n
+    <payment_method>check</payment_method>\n
+    <primary_email>aida@yahoo.fr</primary_email>\n
+    <delivery_title>achat comptant</delivery_title>\n
+    <delivery_price></delivery_price>\n
+    <delivery_tax_rate></delivery_tax_rate>\n
+    <discount_code></discount_code>\n
+    <discount_title></discount_title>\n
+    <discount_price></discount_price>\n
+    <discount_tax_rate></discount_tax_rate>\n
+  </object>\n
+</xml>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Sale Order">\n
+  <start_date>2011/04/29</start_date>\n
+  <stop_date>2011/04/29</stop_date>\n
+  <reference>7</reference>\n
+  <currency>Dollar</currency>\n
+  <payment_mode>cheque</payment_mode>\n
+  <arrow type="">\n
+    <source> Genesis united_states</source>\n
+  </arrow>\n
+  <arrow type="Administration">\n
+    <source> Genesis united_states</source>\n
+    <destination> Aida DIOP aida@yahoo.fr</destination>\n
+  </arrow>\n
+  <arrow type="Decision">\n
+    <source> Genesis united_states</source>\n
+    <destination> Aida DIOP aida@yahoo.fr</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Genesis united_states</source>\n
+    <destination> Aida DIOP aida@yahoo.fr</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource> FRET685</resource>\n
+    <title>Fleure</title>\n
+    <reference>FRET685</reference>\n
+    <quantity>3.00</quantity>\n
+    <price>129.000000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getSaleOrderParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Sale Order List</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

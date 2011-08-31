@@ -1,0 +1,363 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Oxatis Test Product" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>DaysToShip</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>DimensionHeight</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>DimensionLength</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>DimensionWidth</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>EcotaxTI</string> </key>
+            <value> <string>0.0</string> </value>
+        </item>
+        <item>
+            <key> <string>HandlingSurcharge1ST</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>HandlingSurchargeOthers</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>ItemSKU</string> </key>
+            <value> <string>R002-nr-gd</string> </value>
+        </item>
+        <item>
+            <key> <string>LastUpdateDate</string> </key>
+            <value> <string>2010-10-12T10:07:00</string> </value>
+        </item>
+        <item>
+            <key> <string>Name</string> </key>
+            <value> <string>Jupe</string> </value>
+        </item>
+        <item>
+            <key> <string>OptionTypes1</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>OptionTypes2</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>OptionValues1</string> </key>
+            <value> <string>13</string> </value>
+        </item>
+        <item>
+            <key> <string>OptionValues2</string> </key>
+            <value> <string>21</string> </value>
+        </item>
+        <item>
+            <key> <string>ParentItemID</string> </key>
+            <value> <string>111122</string> </value>
+        </item>
+        <item>
+            <key> <string>SaleIfOutOfStock</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>SaleIfOutOfStockScenario</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>ShipPrice</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>ShowDaysToship</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>ShowIfOutOfStock</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>ShowInStockNote</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>ShowStockLevel</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>TaxRate</string> </key>
+            <value> <string>19.6</string> </value>
+        </item>
+        <item>
+            <key> <string>Weight</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>TaxRate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>float</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>EcotaxTI</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>float</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>HandlingSurchargeOthers</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>HandlingSurcharge1ST</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>ShowInStockNote</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>ShipPrice</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>DimensionWidth</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>SaleIfOutOfStock</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>DimensionLength</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>SaleIfOutOfStockScenario</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>DaysToShip</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>ShowIfOutOfStock</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>DimensionHeight</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>Weight</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>ShowDaysToship</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>ShowStockLevel</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>int</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>LastUpdateDate</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>111125</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Une jupe</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>9</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Oxatis Test Product</string> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>111122</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Jupe</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

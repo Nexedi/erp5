@@ -2,7 +2,6 @@ Integration Base Category Mapping | view
 Integration Base Property Mapping | view
 Integration Category Mapping | view
 Integration Module | generate_sync_objects
-Integration Module | test_create_view
 Integration Module | view
 Integration Module | view_signature_diff
 Integration Module | view_xml_diff
