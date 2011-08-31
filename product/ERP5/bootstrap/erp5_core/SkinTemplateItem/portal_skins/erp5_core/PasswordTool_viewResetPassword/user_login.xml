@@ -140,7 +140,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -235,7 +237,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
@@ -268,6 +270,19 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>request/__ac_name | nothing</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: not(getattr(preferences, \'getPreferredAskLoginOnPasswordRecovery\', None) is not None and not(preferences.getPreferredAskLoginOnPasswordRecovery()))</string> </value>
         </item>
       </dictionary>
     </pickle>
