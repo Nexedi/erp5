@@ -284,7 +284,7 @@ class FunctionalTestRunner:
       xvfb.quit()
 
   def processResult(self):
-    file_content = self.getStatus()
+    file_content = self.getStatus().encode("utf-8", "replace")
     sucess_amount = TEST_PASS_RE.search(file_content).group(1)
     failure_amount = TEST_FAILURE_RE.search(file_content).group(1)
     error_title_list = [re.compile('\s+').sub(' ', x).strip()
@@ -306,9 +306,7 @@ class FunctionalTestRunner:
 </html>''' % detail
 
     # When return fix output for handle unicode issues.
-    return unicode(detail, "utf-8", "replace"), int(sucess_amount),\
-           int(failure_amount),\
-           [unicode(i, "utf-8", "replace") for i in error_title_list]
+    return detail, int(sucess_amount), int(failure_amount), error_title_list
 
 class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   run_only = ""
