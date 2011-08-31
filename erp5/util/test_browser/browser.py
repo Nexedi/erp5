@@ -794,7 +794,7 @@ class ContextMainForm(MainForm):
       self.submitSelect('select_jump', 'Base_doJump:method',
                         label, value, **kw)
     else:
-      current_attempt_number = 0
+      current_attempt_counter = 0
       while current_attempt_counter != maximum_attempt_number:
         self.submitSelect('select_jump', 'Base_doJump:method',
                           label, value, **kw)
