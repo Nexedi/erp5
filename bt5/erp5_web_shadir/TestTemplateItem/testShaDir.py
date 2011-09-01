@@ -255,4 +255,4 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEquals(3, len(self.portal.document_module))
 
     result, document3 = self.getInformation()
-    self.assertEquals(2, len(json.loads(document3)))
+    self.assertEquals(1, len(json.loads(document3)))
