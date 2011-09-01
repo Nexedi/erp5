@@ -162,6 +162,31 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEqual(sorted(['published', 'archived']), sorted([
         q.getValidationState() for q in document_list]))
 
+  def test_post_information_more_than_once_no_tic(self):
+    """
+      Check if posting information is working.
+    """
+    self.postInformation()
+    transaction.commit()
+
+    self.postInformation()
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(1, self.portal.portal_catalog.countResults(
+      reference=self.key)[0][0])
+    data_set = self.portal.portal_catalog.getResultValue(
+      reference=self.key)
+    self.assertEqual(self.key, data_set.getReference())
+    self.assertEqual('published', data_set.getValidationState())
+
+    document_list = data_set.getFollowUpRelatedValueList()
+
+    self.assertEqual([self.sha512sum, self.sha512sum], [q.getReference() for q \
+        in document_list])
+    self.assertEqual(sorted(['published', 'archived']), sorted([
+        q.getValidationState() for q in document_list]))
+
   def test_get_information_for_single_data_set(self):
     """
       check if return the temp document with text content.
