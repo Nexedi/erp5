@@ -142,9 +142,6 @@ class BenchmarkResult(object):
     self._suite_idx = 0
     self._result_idx = 0
 
-  def getStatList(self):
-    return self._stat_list
-
   def getCurrentSuiteStatList(self):
     start_index = self._suite_idx and \
         self._result_idx_checkpoint_list[self._suite_idx - 1] or 0
