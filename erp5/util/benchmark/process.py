@@ -33,6 +33,7 @@ import os
 import logging
 import signal
 import sys
+import datetime
 
 from ..testbrowser.browser import Browser
 
@@ -137,7 +138,8 @@ class BenchmarkProcess(multiprocessing.Process):
         self._browser = self.getBrowser(result_instance.log_file)
 
         while self._current_repeat != (self._argument_namespace.repeat + 1):
-          self._logger.info("Iteration: %d" % self._current_repeat)
+          self._logger.info("%s: Iteration: %d" % (datetime.datetime.now(),
+                                                   self._current_repeat))
           self.runBenchmarkSuiteList(result)
 
           if not self._current_repeat % RESULT_NUMBER_BEFORE_FLUSHING:
