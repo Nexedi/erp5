@@ -1501,7 +1501,7 @@ class SynchronizationTool(BaseTool):
     #create element 'SyncML' with a default namespace
     xml = E.SyncML()
     # syncml header
-    data = "%s:%s" % (subscription.getUserId(), subscription.getPassword())
+    data = "%s:%s" % (subscription.getUserId(''), subscription.getPassword(''))
     data = encode(subscription.getAuthenticationFormat(), data)
     xml.append(self.SyncMLHeader(
       subscription.incrementSessionId(),
