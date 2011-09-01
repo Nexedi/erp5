@@ -121,7 +121,7 @@ class BenchmarkProcess(multiprocessing.Process):
                                          self._nb_users,
                                          self._user_index)
 
-    self._logger = result_instance.getLogger()
+    self._logger = result_instance.logger
 
     # Ensure the data are flushed before exiting, handled by Result class 
     # __exit__ block

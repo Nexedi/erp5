@@ -100,7 +100,8 @@ class BenchmarkResult(object):
     self.label_list = []
     self._logger = None
 
-  def getLogger(self):
+  @property
+  def logger(self):
     if not self._logger:
       logging.basicConfig(stream=self.log_file, level=self._log_level)
       self._logger = logging.getLogger('erp5.util.benchmark')
@@ -131,7 +132,7 @@ class BenchmarkResult(object):
     if self._first_iteration:
       self.label_list = self.getLabelList()
 
-    self.getLogger().debug("RESULTS: %s" % self.result_list)
+    self.logger.debug("RESULTS: %s" % self.result_list)
     self.result_list = []
     self._first_iteration = False
     self._suite_idx = 0
@@ -219,7 +220,7 @@ class CSVBenchmarkResult(BenchmarkResult):
 
     if exc_type and not issubclass(exc_type, StopIteration):
       msg = "An error occured, see: %s" % self._log_filename_path
-      self.getLogger().error("%s: %s" % (exc_type, exc_value))
+      self.logger.error("%s: %s" % (exc_type, exc_value))
       raise RuntimeError(msg)
 
 from cStringIO import StringIO
