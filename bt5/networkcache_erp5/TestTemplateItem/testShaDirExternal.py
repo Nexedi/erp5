@@ -76,8 +76,7 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     # HTTP Connection properties
     self.host = self.portal.REQUEST.get('SERVER_NAME')
     self.port = self.portal.REQUEST.get('SERVER_PORT')
-    web_site_path = self.portal.web_site_module.shadir.getPath()
-    self.path = os.path.join(web_site_path, self.key)
+    self.path = os.path.join(self.shadir.getPath(), self.key)
 
   def test_external_post(self):
     """

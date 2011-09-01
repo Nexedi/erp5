@@ -77,8 +77,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     # HTTP Connection properties
     self.host = self.portal.REQUEST.get('SERVER_NAME')
     self.port = self.portal.REQUEST.get('SERVER_PORT')
-    web_site_path = self.portal.data_set_module.web_site_module.shacache.getPath()
-    self.path = os.path.join(web_site_path, self.key)
+    self.path = os.path.join(self.shacache.getPath(), self.key)
 
   def test_external_post(self):
     """
