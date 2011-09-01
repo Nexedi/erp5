@@ -162,6 +162,13 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEqual(sorted(['published', 'archived']), sorted([
         q.getValidationState() for q in document_list]))
 
+    result, data = self.getInformation()
+    self.assertEqual(result, httplib.OK)
+    information_list = json.loads(data)
+
+    self.assertEquals(1, len(information_list))
+    self.assertEquals(json.dumps(information_list[0]), self.data)
+
   def test_post_information_more_than_once_no_tic(self):
     """
       Check if posting information is working.
