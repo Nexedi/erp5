@@ -276,7 +276,7 @@ class FunctionalTestRunner:
       self.browser.run(self._getTestURL() , xvfb.display)
       while self.getStatus() is None:
         time.sleep(10)
-        if (start - time.time()) > float(self.timeout):
+        if (time.time() - start) > float(self.timeout):
           raise TimeoutError("Test took more them %s seconds" % self.timeout)
 
     finally:
