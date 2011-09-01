@@ -63,7 +63,7 @@ def parseArguments():
 
 import csv
 
-from erp5.utils.benchmark.result import BenchmarkResultStatistic
+from .result import BenchmarkResultStatistic
 
 def computeStatisticFromFilenameList(argument_namespace, filename_list):
   reader_list = []

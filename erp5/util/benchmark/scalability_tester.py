@@ -28,7 +28,7 @@
 #
 ##############################################################################
 
-from erp5.utils.benchmark.result import CSVBenchmarkResult
+from .result import CSVBenchmarkResult
 
 class CSVScalabilityBenchmarkResult(CSVBenchmarkResult):
   def flush(self, partial=True):
@@ -37,7 +37,7 @@ class CSVScalabilityBenchmarkResult(CSVBenchmarkResult):
                                            self._result_file.tell(),
                                            partial=partial)
 
-from erp5.utils.benchmark.performance_tester import PerformanceTester
+from .performance_tester import PerformanceTester
 
 class ScalabilityTester(PerformanceTester):
   def preRun(self, *args, **kwargs):

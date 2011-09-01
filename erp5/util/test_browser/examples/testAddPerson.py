@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from erp5.utils.test_browser.browser import Browser
+from erp5.util.test_browser.browser import Browser
 
 ITERATION = 20
 

@@ -36,9 +36,9 @@ import xmlrpclib
 import signal
 import errno
 
-from erp5.utils.benchmark.argument import ArgumentType
-from erp5.utils.benchmark.process import BenchmarkProcess
-from erp5.utils.benchmark.result import ERP5BenchmarkResult, CSVBenchmarkResult
+from .argument import ArgumentType
+from .process import BenchmarkProcess
+from .result import ERP5BenchmarkResult, CSVBenchmarkResult
 
 MAXIMUM_KEYBOARD_INTERRUPT = 5
 

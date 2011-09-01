@@ -34,7 +34,7 @@ import logging
 import signal
 import sys
 
-from erp5.utils.test_browser.browser import Browser
+from ..test_browser.browser import Browser
 
 MAXIMUM_ERROR_COUNTER = 10
 RESULT_NUMBER_BEFORE_FLUSHING = 100
