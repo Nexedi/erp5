@@ -147,4 +147,4 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
       self.tic()
     finally:
       connection.close()
-    self.assertEquals(302, result.status)
+    self.assertEquals(httplib.FOUND, result.status)
