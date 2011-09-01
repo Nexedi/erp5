@@ -137,4 +137,15 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.assertEquals('published', document2.getValidationState())
     self.assertEquals('archived', document.getValidationState())
 
+  def test_put_file_twice_no_tic(self):
+    self.postFile()
+    transaction.commit()
+    self.postFile()
+    transaction.commit()
+    self.tic()
 
+    document_list = self.portal.portal_catalog(reference=self.key)
+
+    self.assertEqual(2, len(document_list))
+    self.assertEqual(sorted(['archived', 'published']), sorted([
+        q.getValidationState() for q in document_list]))
