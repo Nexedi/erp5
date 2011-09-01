@@ -158,8 +158,12 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEqual(self.key, data_set.getReference())
     self.assertEqual('published', data_set.getValidationState())
 
-    self.assertEqual(2, self.portal.portal_catalog.countResults(
-      reference=self.sha512sum)[0][0])
+    document_list = data_set.getFollowUpRelatedValueList()
+
+    self.assertEqual([self.sha512sum, self.sha512sum], [q.getReference() for q \
+        in document_list])
+    self.assertEqual(sorted(['published', 'archived']), sorted([
+        q.getValidationState() for q in document_list]))
 
   def test_get_information_for_single_data_set(self):
     """
