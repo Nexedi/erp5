@@ -140,17 +140,23 @@ class BenchmarkProcess(multiprocessing.Process):
         while self._current_repeat != (self._argument_namespace.repeat + 1):
           self._logger.info("Iteration: %d" % self._current_repeat)
           self.runBenchmarkSuiteList(result)
-          self._current_repeat += 1
 
           if not self._current_repeat % RESULT_NUMBER_BEFORE_FLUSHING:
             result.flush()
 
+          self._current_repeat += 1
+
     except StopIteration, e:
       self._logger.error(e)
 
-    except BaseException, e:
+    except RuntimeError, e:
       exit_msg = str(e)
       exit_status = 1
+
+    except BaseException, e:
+      exit_msg = traceback.format_exc()
+      self._logger.error(exit_msg)
+      exit_status = 2
 
     self._exit_msg_queue.put(exit_msg)
     sys.exit(exit_status)
