@@ -62,11 +62,13 @@ kw[\'grand_grand_parent_specialise_reference\'] = [\n
 if context.Invoice_isAdvanced():\n
   kw[\'explanation_portal_type\']       = [\'%s Order\' % trade_type,\n
                                          \'%s Invoice\' % trade_type,\n
-                                         \'%s Packing List\' % trade_type]\n
+                                         \'%s Packing List\' % trade_type,\n
+                                         \'Returned %s Packing List\' % trade_type]\n
 else:\n
   kw[\'explanation_portal_type\']       = [\'%s Order\' % trade_type,\n
                                          \'%s Invoice Transaction\' % trade_type,\n
-                                         \'%s Packing List\' % trade_type]\n
+                                         \'%s Packing List\' % trade_type,\n
+                                         \'Returned %s Packing List\' % trade_type]\n
 kw[\'portal_type\']                   = \'Simulation Movement\'\n
 kw[\'grand_parent_simulation_state\'] = [\'started\']\n
 \n
