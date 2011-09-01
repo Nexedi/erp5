@@ -147,4 +147,10 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
       self.tic()
     finally:
       connection.close()
-    self.assertEquals(httplib.FOUND, result.status)
+    # For now ERP5 returns httplib.FOUND which is wrong reply in case of trying
+    # to POST resource while begin not authorised
+    # One of UNAUTHORIZED or FORBIDDEN shall be returned
+    # Ref: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4
+    # self.assertEquals(httplib.UNAUTHORIZED, result.status)
+    # FORBIDDEN seems more suitable for RESTful server...
+    self.assertEquals(httplib.FORBIDDEN, result.status)
