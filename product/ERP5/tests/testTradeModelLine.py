@@ -400,8 +400,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     def check(movement, movement_id):
       kw = {}
       for reference, result in expected_result_dict.iteritems():
-        total_price = result.get(movement_id)
-        if total_price:
+        total_price = result.get(movement_id) or 0.0
+        if True:
           model_line = self['trade_model_line/' + reference]
           kw[reference] = dict(total_price=total_price,
             causality_value_list=[model_line],
