@@ -39,6 +39,10 @@ setup(name=name,
       ],
       extras_require={
         'testnode': ['slapos.core', 'xml_marshaller'],
+        'test_browser': ['zope.testbrowser >= 3.11.1', 'z3c.etestbrowser'],
+        'benchmark': [name+'[test_browser]'],
+        'benchmark-report': [name+'[benchmark]', 'matplotlib', 'numpy'],
+        'scalability_tester': [name+'[benchmark]', 'slapos.tool.nosqltester'],
       },
       zip_safe=True,
       packages=find_packages(),
@@ -46,6 +50,9 @@ setup(name=name,
       entry_points={
         'console_scripts': [
           'testnode = erp5.util.testnode:main [testnode]',
+          'performance_tester_erp5 = erp5.util.benchmark.performance_tester:main [benchmark]',
+          'scalability_tester_erp5 = erp5.util.benchmark.scalability_tester:main [scalability_tester]',
+          'generate_erp5_tester_report = erp5.util.benchmark.report:generateReport [benchmark-report]',
         ],
       }
     )

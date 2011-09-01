@@ -4,7 +4,12 @@ Changes
 0.2 (unreleased)
 ----------------
 
- * No changes yet.
+ * Imported from https://svn.erp5.org/repos/public/erp5/trunk/utils/
+
+   - erp5.util.test_browser:
+     Programmable browser for functional and performance tests for ERP5
+   - erp5.util.benchmark:
+     Performance benchmarks for ERP5 with erp5.utils.test_browser
 
 0.1 (2011-08-08)
 ----------------
