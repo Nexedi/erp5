@@ -29,7 +29,6 @@
 
 
 import base64
-import os
 import transaction
 import httplib
 from DateTime import DateTime
@@ -77,7 +76,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     # HTTP Connection properties
     self.host = self.portal.REQUEST.get('SERVER_NAME')
     self.port = self.portal.REQUEST.get('SERVER_PORT')
-    self.path = os.path.join(self.shacache.getPath(), self.key)
+    self.path = self.shacache.getPath()
 
   def test_external_post(self):
     """
@@ -86,15 +85,15 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     now = DateTime()
     connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
-      connection.request('PUT', self.path, self.data, self.header_dict)
+      connection.request('POST', self.path, self.data, self.header_dict)
       result = connection.getresponse()
       transaction.commit()
       self.tic()
       data = result.read()
     finally:
       connection.close()
-    self.assertEquals('', data)
-    self.assertEquals(201, result.status)
+    self.assertEquals(self.key, data)
+    self.assertEquals(httplib.CREATED, result.status)
 
     # Check Document
     document = self.portal.portal_catalog.getResultValue(portal_type='File',
@@ -117,13 +116,14 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
 
     connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
-      connection.request('GET', self.path, headers=header_dict)
+      connection.request('GET', '/'.join([self.path, self.key]),
+        headers=header_dict)
       result = connection.getresponse()
       data = result.read()
     finally:
       connection.close()
     self.assertEquals(self.data, data)
-    self.assertEquals(200, result.status)
+    self.assertEquals(httplib.OK, result.status)
     self.assertEquals(self.expected_content_type,
                            result.getheader("content-type"))
 
@@ -141,7 +141,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
     header_dict = {'Content-Type': self.content_type}
     try:
-      connection.request('PUT', self.path, self.data, header_dict)
+      connection.request('POST', self.path, self.data, header_dict)
       result = connection.getresponse()
       transaction.commit()
       self.tic()
