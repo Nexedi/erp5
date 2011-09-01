@@ -66,7 +66,9 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
   # Return the SIGNATURE file, if the document exists.
   if data_set is not None:
     document_list = [json.loads(document.getData()) \
-                       for document in data_set.getFollowUpRelatedValueList()]
+                       for document in portal.portal_catalog(
+                         follow_up_uid=data_set.getUid(),
+                         validation_state='published')]
 
     temp_file = newTempFile(self, '%s.txt' % key)
     temp_file.setData(json.dumps(document_list))
