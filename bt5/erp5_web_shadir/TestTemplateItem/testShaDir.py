@@ -143,11 +143,17 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     """
       Check if posting information is working.
     """
-    self.postInformation()
+    result, data = self.postInformation()
+
+    self.assertEqual(result, httplib.CREATED)
+    self.assertEqual(data, '')
     transaction.commit()
     self.tic()
 
-    self.postInformation()
+    result, data = self.postInformation()
+
+    self.assertEqual(result, httplib.CREATED)
+    self.assertEqual(data, '')
     transaction.commit()
     self.tic()
 
