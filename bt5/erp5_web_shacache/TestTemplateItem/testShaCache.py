@@ -124,7 +124,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     transaction.commit()
     self.tic()
     document = self.portal.portal_catalog.getResultValue(reference=self.key)
-    self.assertEquals('Published', document.getValidationStateTitle())
+    self.assertEquals('published', document.getValidationState())
 
     self.postFile()
     transaction.commit()
@@ -134,7 +134,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
 
     document2 = self.portal.portal_catalog.getResultValue(reference=self.key,
       sort_on=(('uid', 'ASC'),))
-    self.assertEquals('Published', document2.getValidationStateTitle())
+    self.assertEquals('published', document2.getValidationState())
     self.assertEquals('archived', document.getValidationState())
 
 
