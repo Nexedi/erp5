@@ -70,21 +70,26 @@ class ArgumentType(object):
     return obj
 
   @classmethod
-  def strictlyPositiveIntType(cls, value):
-    try:
-      converted_value = int(value)
-    except ValueError:
-      pass
-    else:
-      if converted_value > 0:
-        return converted_value
+  def checkIntValueWrapper(cls, minimum):
+    def checkIntValue(value):
+      try:
+        converted_value = int(value)
+      except ValueError:
+        pass
+      else:
+        if converted_value >= minimum:
+          return converted_value
 
-    raise argparse.ArgumentTypeError('expects a strictly positive integer')
+      raise argparse.ArgumentTypeError('Expected an integer >= %d' % minimum)
+
+    return checkIntValue
 
   @classmethod
   def strictlyPositiveIntOrRangeType(cls, value):
+    checkIntValue = cls.checkIntValueWrapper(minimum=1)
+
     try:
-      return cls.strictlyPositiveIntType(value)
+      return checkIntValue(value)
     except argparse.ArgumentTypeError:
       try:
         min_max_list = value.split(',')
@@ -92,8 +97,8 @@ class ArgumentType(object):
         pass
       else:
         if len(min_max_list) == 2:
-          minimum, maximum = cls.strictlyPositiveIntType(min_max_list[0]), \
-              cls.strictlyPositiveIntType(min_max_list[1])
+          minimum, maximum = checkIntValue(min_max_list[0]), \
+              checkIntValue(min_max_list[1])
 
           if minimum >= maximum:
             raise argparse.ArgumentTypeError('%d >= %d' % (minimum, maximum))

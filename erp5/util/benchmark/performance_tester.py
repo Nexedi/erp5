@@ -80,11 +80,18 @@ class PerformanceTester(object):
                         help="Import users from ``user_tuple'' in MODULE")
 
     parser.add_argument('--users-range-increment',
-                        type=ArgumentType.strictlyPositiveIntType,
+                        type=ArgumentType.checkIntValueWrapper(minimum=1),
                         default=1,
                         metavar='N',
                         help='Number of users being added after each repetition '
                              '(default: 1)')
+
+    parser.add_argument('--max-errors',
+                        dest='max_error_number',
+                        type=ArgumentType.checkIntValueWrapper(minimum=0),
+                        default=10,
+                        help='Stop execution after N consecutive errors '
+                             '(default: 10)')
 
     parser.add_argument('--enable-debug', '-d',
                         action='store_true',
@@ -98,7 +105,7 @@ class PerformanceTester(object):
                         help='Enable legacy listbox for Browser')
 
     parser.add_argument('--repeat',
-                        type=ArgumentType.strictlyPositiveIntType,
+                        type=ArgumentType.checkIntValueWrapper(minimum=1),
                         default=-1,
                         metavar='N',
                         help='Repeat the benchmark suite N times '

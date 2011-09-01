@@ -36,7 +36,6 @@ import sys
 
 from ..testbrowser.browser import Browser
 
-MAXIMUM_ERROR_COUNTER = 10
 RESULT_NUMBER_BEFORE_FLUSHING = 100
 
 class BenchmarkProcess(multiprocessing.Process):
@@ -90,11 +89,11 @@ class BenchmarkProcess(multiprocessing.Process):
         except:
           pass
 
+        self._error_counter += 1
         if (self._current_repeat == 1 or
-            self._error_counter == MAXIMUM_ERROR_COUNTER):
+            self._error_counter >= self._argument_namespace.max_error_number):
           raise RuntimeError(msg)
 
-        self._error_counter += 1
         self._logger.warning(msg)
 
       for stat in result.getCurrentSuiteStatList():
