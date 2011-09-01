@@ -103,6 +103,7 @@ def WebSection_setObject(self, id, ob, **kw):
   ob.setReference(reference)
   if expiration_date is not None:
     ob.setExpirationDate(expiration_date)
+  ob.publish()
   return ob
 
 def WebSection_putFactory(self, name, typ, body):
@@ -119,6 +120,5 @@ def WebSection_putFactory(self, name, typ, body):
   document = portal.portal_contributions.newContent(data=body,
                                                     filename=name,
                                                     discover_metadata=False)
-  document.publish()
   return document
 
