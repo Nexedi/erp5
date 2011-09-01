@@ -62,7 +62,8 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       data = result.read()
     finally:
       connection.close()
-    return result.status, data
+    self.assertEqual(result.status, httplib.CREATED)
+    self.assertEqual(data, '')
 
   def getInformation(self, key=None):
     """
@@ -96,11 +97,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     """
       Check if posting information is working.
     """
-    result, data = self.postInformation()
-
-    self.assertEqual(result, httplib.CREATED)
-    self.assertEqual(data, '')
-
+    self.postInformation()
     transaction.commit()
     self.tic()
 
@@ -143,17 +140,11 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     """
       Check if posting information is working.
     """
-    result, data = self.postInformation()
-
-    self.assertEqual(result, httplib.CREATED)
-    self.assertEqual(data, '')
+    self.postInformation()
     transaction.commit()
     self.tic()
 
-    result, data = self.postInformation()
-
-    self.assertEqual(result, httplib.CREATED)
-    self.assertEqual(data, '')
+    self.postInformation()
     transaction.commit()
     self.tic()
 
@@ -176,9 +167,9 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       check if return the temp document with text content.
     """
     self.postInformation()
-
     transaction.commit()
     self.tic()
+
     result, data = self.getInformation()
     self.assertEqual(result, httplib.OK)
     information_list = json.loads(data)
@@ -197,7 +188,6 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       This relation is controlled by Data Set object.
     """
     self.postInformation()
-
     transaction.commit()
     self.tic()
 
@@ -213,9 +203,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
                       'architecture': self.architecture},
                       "User SIGNATURE goes here."]
     data_2 = json.dumps(data_list_2)
-    result, data = self.postInformation(key_2, data_2)
-    self.assertEqual(result, httplib.CREATED)
-
+    self.postInformation(key_2, data_2)
     transaction.commit()
     self.tic()
 
@@ -228,9 +216,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     result, document2 = self.getInformation(key_2)
     self.assertEquals(1, len(json.loads(document2)))
 
-    result, data = self.postInformation()
-    self.assertEqual(result, httplib.CREATED)
-
+    self.postInformation()
     transaction.commit()
     self.tic()
     self.assertEquals(2, len(self.portal.data_set_module))
