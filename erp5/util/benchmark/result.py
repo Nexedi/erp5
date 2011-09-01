@@ -85,10 +85,6 @@ class BenchmarkResult(object):
     self._argument_namespace = argument_namespace
     self._nb_users = nb_users
     self._user_index = user_index
-
-    self._log_level = self._argument_namespace.enable_debug and \
-        logging.DEBUG or logging.INFO
-
     self._stat_list = []
     self._suite_idx = 0
     self._result_idx = 0
@@ -103,7 +99,10 @@ class BenchmarkResult(object):
   @property
   def logger(self):
     if not self._logger:
-      logging.basicConfig(stream=self.log_file, level=self._log_level)
+      logging.basicConfig(stream=self.log_file,
+                          level=(self._argument_namespace.enable_debug and
+                                 logging.DEBUG or logging.INFO))
+
       self._logger = logging.getLogger('erp5.util.benchmark')
       return self._logger
 
@@ -117,11 +116,16 @@ class BenchmarkResult(object):
 
   def __call__(self, label, value):
     self.result_list.append(value)
-    if self._first_iteration:
-      self._stat_list.append(BenchmarkResultStatistic(self._current_suite_name,
-                                                      label))
 
-    self._stat_list[self._result_idx].add(value)
+    try:
+      result_statistic = self._stat_list[self._result_idx]
+    except IndexError:
+      result_statistic = BenchmarkResultStatistic(self._current_suite_name,
+                                                  label)
+
+      self._stat_list.append(result_statistic)
+
+    result_statistic.add(value)
     self._result_idx += 1
 
   def getLabelList(self):
