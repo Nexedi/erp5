@@ -255,8 +255,8 @@ class PasswordTool(BaseTool):
         self._password_request_dict.pop(key)
 
 
-  def changeUserPassword(self, password, password_confirmation,
-                         password_key, user_login=None, REQUEST=None):
+  def changeUserPassword(self, password, password_key, password_confirm=None,
+                         user_login=None, REQUEST=None, **kw):
     """
     Reset the password for a given login
     """
@@ -279,10 +279,6 @@ class PasswordTool(BaseTool):
       msg = translateString("Bad login provided.")
     elif current_date > expiration_date:
       msg = translateString("Date has expire.")
-    elif not password:
-      msg = translateString("Password must be entered.")
-    elif password != password_confirmation:
-      msg = translateString("Passwords do not match.")
     if msg is not None:
       if REQUEST is not None:
         parameter = urlencode(dict(portal_status_message=msg))
