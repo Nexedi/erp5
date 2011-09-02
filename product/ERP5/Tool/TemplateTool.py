@@ -124,7 +124,7 @@ class TemplateTool (BaseTool):
       latest_bt = None
       latest_revision = 0
       for bt in self.contentValues(filter={'portal_type':'Business Template'}):
-        if bt.getTitle() == title:
+        if bt.getTitle() == title or title in bt.getProvisionList():
           installation_state = bt.getInstallationState()
           if installation_state == 'installed':
             latest_bt = bt
@@ -906,7 +906,7 @@ class TemplateTool (BaseTool):
                     # Something like "(>= 1.0rc6)".
                     version_restriction = version_restriction[1:-1]
                 require_update = False
-                installed_bt = self.portal_templates.getInstalledBusinessTemplate(dependency)
+                installed_bt = self.getInstalledBusinessTemplate(dependency)
                 if version_restriction is not None:
                   if installed_bt is not None:
                     # Check if the installed version require an update
