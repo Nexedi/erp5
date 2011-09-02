@@ -74,11 +74,14 @@ if reply_url:\n
 \n
 # To (multiple)\n
 to_url_list = []\n
+to_email_list = []\n
 if to_url is None:\n
   for recipient in context.getDestinationValueList():\n
     email = recipient.getDefaultEmailText()\n
     if email:\n
-      to_url_list.append(formataddr((recipient.getTitle(), email)))\n
+      if email not in to_email_list:\n
+        to_email_list.append(email)\n
+        to_url_list.append(formataddr((recipient.getTitle(), email)))\n
     else:\n
       raise ValueError, \'Recipient %s has no defined email\' % recipient\n
 elif same_type(to_url, \'\'):\n
