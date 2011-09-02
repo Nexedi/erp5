@@ -722,8 +722,11 @@ class TestERP5Credential(ERP5TypeTestCase):
     '''
     person_list = sequence.get('person_list')
     email = sequence.get('default_email_text')
-    # after accept, an email is send containing the reset link
+    # after accept, only one email is send containing the reset link
+    previous_message = self.portal.MailHost._previous_message
     last_message = self.portal.MailHost._last_message
+    if len(previous_message):
+      self.assertNotEqual(previous_message[2], last_message[2])
     decoded_message = self.decode_email(last_message[2])
     body_message = decoded_message['body']
 
@@ -766,7 +769,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self._assertUserExists('barney', 'secret')
     self.portal.portal_password.changeUserPassword(user_login="barney",
                                                    password="new_password",
-                                                   password_confirmation="new_password",
+                                                   password_confirm="new_password",
                                                    password_key=key)
     transaction.commit()
     self.tic()
