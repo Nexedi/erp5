@@ -377,11 +377,17 @@ class MovementHistoryListBrain(InventoryListBrain):
     # the brain is accessed from the Shared.DC.ZRDB.Results.Results instance
     obj = self.getObject()
     if obj is not None:
+      timezone = None
       if self.node_relative_url == obj.getSource():
-        timezone = obj.getStartDate().timezone()
+        start_date = obj.getStartDate()
+        if start_date is not None:
+          timezone = start_date.timezone()
       else:
-        timezone = obj.getStopDate().timezone()
-      self.date = self.date.toZone(timezone)
+        stop_date = obj.getStopDate()
+        if stop_date is not None:
+          timezone = stop_date.timezone()
+      if timezone is not None:
+        self.date = self.date.toZone(timezone)
 
   def _debit(self):
     if self.getObject().isCancellationAmount():
