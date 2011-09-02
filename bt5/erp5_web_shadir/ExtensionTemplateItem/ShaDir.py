@@ -85,6 +85,10 @@ def WebSection_setObject(self, id, ob, **kw):
   data = self.REQUEST.get('BODY')
   schema = self.WebSite_getJSONSchema()
   structure = json.loads(data)
+  # 0 elementh in structure is json in json
+  # 1 elementh is just signature
+  structure = [json.loads(structure[0]), structure[1]]
+
   validictory.validate(structure, schema)
 
   file_name = structure[0].get('file', None)
