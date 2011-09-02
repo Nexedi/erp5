@@ -665,11 +665,14 @@ class EmailDocument(TextDocument):
 
     # To (multiple)
     to_url_list = set()
+    to_email_list = []
     if to_url is None:
       for recipient in self.getDestinationValueList():
         email = recipient.getDefaultEmailText()
         if email:
-          to_url_list.add(formataddr((recipient.getTitle(), email)))
+          if email not in to_email_list:
+            to_email_list.append(email)
+            to_url_list.add(formataddr((recipient.getTitle(), email)))
         else:
           raise ValueError, 'Recipient %s has no defined email' % recipient
       if not to_url_list:
