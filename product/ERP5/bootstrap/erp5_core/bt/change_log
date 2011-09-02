@@ -1,12 +1,3 @@
-2011-08-03 gabriel.oliveira
-* Automatically display available text editors
-
-2011-07-01 yusei
-* Add portal_solvers to reindexall script.
-
-2011-07-01 yusei
-* Set proper title to interaction workflows.
-
 2011-06-23 yusei
 * Add an action to call alarm.activeSense() for developer.
 
