@@ -92,7 +92,7 @@
               <label>&nbsp;</label>\n
               <div class="input">\n
                 <a tal:attributes="href string:${here/portal_url}/ERP5Site_viewCredentialRecoveryLoginDialog"\n
-                   i18n:translate="" i18n:domain="ui">Can\'t access your account</a>\n
+                   i18n:translate="" i18n:domain="ui">Can\'t access your account ?</a>\n
               </div>\n
             </div>\n
           </fieldset>\n
