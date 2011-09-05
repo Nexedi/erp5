@@ -90,7 +90,7 @@ for uid in uids:\n
         provider_list = context.getProviderList(dep_id)\n
         provider_installed = False\n
         for provider in provider_list:\n
-          if provider+\'.bt5\' in id_list:\n
+          if provider+\'.bt5\' in id_list or provider in id_list:\n
             provider_installed = True\n
             break\n
         if not provider_installed:\n
