@@ -159,7 +159,8 @@ class AmountGeneratorMixin:
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getGeneratedAmountList')
   def getGeneratedAmountList(self, amount_list=None, rounding=False,
-                             amount_generator_type_list=None):
+                             amount_generator_type_list=None,
+                             generate_empty_amounts=True):
     """
     Implementation of a generic transformation algorithm which is
     applicable to payroll, tax generation and BOMs. Return the
@@ -374,7 +375,8 @@ class AmountGeneratorMixin:
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAggregatedAmountList')
   def getAggregatedAmountList(self, amount_list=None, rounding=False,
-                              amount_generator_type_list=None):
+                              amount_generator_type_list=None,
+                              generate_empty_amounts=True):
     """
     Implementation of a generic transformation algorith which is
     applicable to payroll, tax generation and BOMs. Return the
