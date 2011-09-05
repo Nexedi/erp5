@@ -34,7 +34,7 @@ import logging
 import signal
 import sys
 
-from ..test_browser.browser import Browser
+from ..testbrowser.browser import Browser
 
 MAXIMUM_ERROR_COUNTER = 10
 RESULT_NUMBER_BEFORE_FLUSHING = 100

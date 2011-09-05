@@ -174,7 +174,7 @@ class Browser(ExtendedTestBrowser):
     stream = log_file and log_file or sys.stderr
     logging.basicConfig(stream=stream, level=logging_level)
 
-    self._logger = logging.getLogger('erp5.util.test_browser')
+    self._logger = logging.getLogger('erp5.util.testbrowser')
     self._is_legacy_listbox = is_legacy_listbox
     self._is_logged_in = False
 
@@ -964,7 +964,7 @@ class ContextMainForm(MainForm):
     from 1), excluding hidden control and those whose class is hidden
     too. The position of a cell from a column or line number can be
     obtained through calling
-    L{erp5.util.test_browser.browser.Browser.getListboxPosition}.
+    L{erp5.util.testbrowser.browser.Browser.getListboxPosition}.
 
     Also, there may be several elements within a cell, thus
     C{cell_element_index} allows to select which one to get (starting
