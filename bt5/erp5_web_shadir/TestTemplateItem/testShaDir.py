@@ -226,13 +226,13 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     urlmd5_2 = 'anotherurlmd5' + str(random.random())
     sha512_2 = 'anothersha512_2' + str(random.random())
     key_2 = 'another_key' + str(random.random())
-    data_list_2 = [{'file': self.file_name,
+    data_list_2 = [json.dumps({'file': self.file_name,
                       'urlmd5': urlmd5_2,
                       'sha512': sha512_2,
                       'creation_date': str(self.creation_date),
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
-                      'architecture': self.architecture},
+                      'architecture': self.architecture}),
                       "User SIGNATURE goes here."]
     data_2 = json.dumps(data_list_2)
     self.postInformation(key_2, data_2)

@@ -77,13 +77,13 @@ class ShaDirMixin(object):
     libc_version = '%s %s' % (platform.libc_ver()[0], platform.libc_ver()[1])
     self.architecture = '%s %s' % (platform.machine(), libc_version)
 
-    self.data_list = [{'file': self.file_name,
+    self.data_list = [json.dumps({'file': self.file_name,
                       'urlmd5': self.urlmd5,
                       'sha512': self.file_sha512sum,
                       'creation_date': str(self.creation_date),
                       'expiration_date': str(self.expiration_date),
                       'distribution': self.distribution,
-                      'architecture': self.architecture},
+                      'architecture': self.architecture}),
                       "User SIGNATURE goes here."]
 
     self.data = json.dumps(self.data_list)
