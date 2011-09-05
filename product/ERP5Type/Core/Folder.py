@@ -261,7 +261,7 @@ class FolderMixIn(ExtensionClass.Base):
     return self.hasObject(id)
 
   # Get the content
-  security.declareProtected(Permissions.View, 'searchFolder')
+  security.declareProtected(Permissions.AccessContentsInformation, 'searchFolder')
   def searchFolder(self, **kw):
     """
       Search the content of a folder by calling
@@ -293,7 +293,7 @@ class FolderMixIn(ExtensionClass.Base):
 
     return self.portal_catalog.searchResults(**kw)
 
-  security.declareProtected(Permissions.View, 'countFolder')
+  security.declareProtected(Permissions.AccessContentsInformation, 'countFolder')
   def countFolder(self, **kw):
     """
       Search the content of a folder by calling
