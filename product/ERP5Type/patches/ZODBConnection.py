@@ -19,6 +19,8 @@
 
 from ZODB.Connection import Connection
 
+FORCE_STORAGE_SYNC_ON_CONNECTION_OPENING = False
+
 if 1: # keep indentation. Also good for quick disabling.
 
     def ping(self):
@@ -38,3 +40,37 @@ if 1: # keep indentation. Also good for quick disabling.
     Connection.ping = ping
     Connection.newTransaction = newTransaction
 
+    # See also neo/client/__init__.py from NEOPPOD project
+    if FORCE_STORAGE_SYNC_ON_CONNECTION_OPENING:
+
+        # Whenever an connection is opened (and there's usually an existing one
+        # in DB pool that can be reused) whereas the transaction is already
+        # started, we must make sure that proper storage setup is done by
+        # calling Connection.newTransaction.
+        # For example, there's no open transaction when a ZPublisher/Publish
+        # transaction begins.
+
+        def open(self, *args, **kw):
+            def _flush_invalidations():
+                acquire = self._db._a
+                try:
+                    self._db._r()
+                except thread.error:
+                    acquire = lambda: None
+                try:
+                    del self._flush_invalidations
+                    self.newTransaction()
+                finally:
+                    acquire()
+                    self._flush_invalidations = _flush_invalidations
+            self._flush_invalidations = _flush_invalidations
+            try:
+                Connection_open(self, *args, **kw)
+            finally:
+                del self._flush_invalidations
+        try:
+            Connection_open = Connection._setDB
+            Connection._setDB = open
+        except AttributeError: # recent ZODB
+            Connection_open = Connection.open
+            Connection.open = open
