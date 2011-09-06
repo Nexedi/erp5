@@ -15,6 +15,14 @@ long_description += open("CHANGES.erp5.util.txt").read() + "\n"
 if not os.path.exists('README.txt'):
   os.symlink('README.erp5.util.txt', 'README.txt')
 
+benchmark_install_require_list = [name+'[testbrowser]']
+
+# argparse needed for erp5.util.benchmark is only available from python >= 2.7
+import sys
+python_major_version, python_minor_version = sys.version_info[:2]
+if python_major_version == 2 and python_minor_version < 7:
+  benchmark_install_require_list.append('argparse')
+
 setup(name=name,
       version=version,
       description="ERP5 related utilities.",
@@ -40,7 +48,7 @@ setup(name=name,
       extras_require={
         'testnode': ['slapos.core', 'xml_marshaller'],
         'testbrowser': ['zope.testbrowser >= 3.11.1', 'z3c.etestbrowser'],
-        'benchmark': [name+'[testbrowser]'],
+        'benchmark': benchmark_install_require_list,
         'benchmark-report': [name+'[benchmark]', 'matplotlib', 'numpy'],
         'scalability_tester': [name+'[benchmark]', 'slapos.tool.nosqltester'],
       },
