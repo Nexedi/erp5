@@ -153,6 +153,11 @@ class PerformanceTester(object):
       object_benchmark_suite_list.append(ArgumentType.objectFromModule(benchmark_suite,
                                                                        callable_object=True))
 
+    if namespace.repeat > 0:
+      namespace.max_error_number = \
+          min(len(namespace.benchmark_suite_list) * namespace.repeat,
+              namespace.max_error_number)
+
     namespace.benchmark_suite_name_list = namespace.benchmark_suite_list
     namespace.benchmark_suite_list = object_benchmark_suite_list
 
