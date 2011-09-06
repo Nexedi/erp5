@@ -81,10 +81,13 @@ import abc
 class BenchmarkResult(object):
   __metaclass__ = abc.ABCMeta
 
-  def __init__(self, argument_namespace, nb_users, user_index):
+  def __init__(self, argument_namespace, nb_users, user_index,
+               current_repeat_range):
     self._argument_namespace = argument_namespace
     self._nb_users = nb_users
     self._user_index = user_index
+    self._current_repeat_range = current_repeat_range
+
     self._logger = None
     self._label_list = None
 
@@ -229,11 +232,18 @@ class CSVBenchmarkResult(BenchmarkResult):
     self.log_file = open(self._log_filename_path, 'w')
 
   def _getFilenamePrefix(self):
-    max_nb_users = isinstance(self._argument_namespace.users, int) and \
-        self._argument_namespace.users or self._argument_namespace.users[1]
+    if isinstance(self._argument_namespace.users, int):
+      max_nb_users = self._argument_namespace.users
+      suffix = ''
+    else:
+      max_nb_users = self._argument_namespace.users[1]
+      suffix = '-rrepeat%%0%dd' % len(str(self._argument_namespace.repeat_range))
 
-    fmt = "%%s-%%drepeat-%%0%ddusers-process%%0%dd" % \
-        (len(str(max_nb_users)), len(str(self._nb_users)))
+      suffix = suffix % self._current_repeat_range
+
+    fmt = "%%s-%%drepeat-%%0%ddusers-process%%0%dd%s" % \
+        (len(str(max_nb_users)), len(str(self._nb_users)),
+         suffix)
 
     return fmt % (self._argument_namespace.filename_prefix,
                   self._argument_namespace.repeat,

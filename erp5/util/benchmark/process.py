@@ -43,12 +43,14 @@ RESULT_NUMBER_BEFORE_FLUSHING = 100
 
 class BenchmarkProcess(multiprocessing.Process):
   def __init__(self, exit_msg_queue, result_klass, argument_namespace,
-               nb_users, user_index, *args, **kwargs):
+               nb_users, user_index, current_repeat_range, *args, **kwargs):
     self._exit_msg_queue = exit_msg_queue
     self._result_klass = result_klass
     self._argument_namespace = argument_namespace
     self._nb_users = nb_users
     self._user_index = user_index
+    self._current_repeat_range = current_repeat_range
+
     self._base_url, self._erp5_site_id = argument_namespace.url
 
     try:
@@ -137,7 +139,8 @@ class BenchmarkProcess(multiprocessing.Process):
   def run(self):
     result_instance = self._result_klass(self._argument_namespace,
                                          self._nb_users,
-                                         self._user_index)
+                                         self._user_index,
+                                         self._current_repeat_range)
 
     self._logger = result_instance.logger
 

@@ -108,8 +108,15 @@ class PerformanceTester(object):
                         type=ArgumentType.checkIntValueWrapper(minimum=1),
                         default=-1,
                         metavar='N',
-                        help='Repeat the benchmark suite N times '
-                             '(default: infinite)')
+                        help='Repeat the benchmark suite N times for a given '
+                             'number of users (default: infinite)')
+
+    parser.add_argument('--repeat-range',
+                        type=ArgumentType.checkIntValueWrapper(minimum=1),
+                        default=-1,
+                        metavar='N',
+                        help='Repeat the benchmark suite N times for the whole '
+                             'range of users (default: infinite)')
 
     parser.add_argument('--user-index',
                         type=int,
@@ -158,6 +165,10 @@ class PerformanceTester(object):
           min(len(namespace.benchmark_suite_list) * namespace.repeat,
               namespace.max_error_number)
 
+    if isinstance(namespace.users, tuple) and namespace.repeat == -1:
+        raise argparse.ArgumentTypeError("Repeat cannot be infinite for a "
+                                         "range of users")
+
     namespace.benchmark_suite_name_list = namespace.benchmark_suite_list
     namespace.benchmark_suite_list = object_benchmark_suite_list
 
@@ -205,7 +216,7 @@ class PerformanceTester(object):
     ERP5BenchmarkResult.closeResultDocument(self._argument_namespace.erp5_publish_url,
                                             error_message_set)
 
-  def _run_constant(self, nb_users):
+  def _run_constant(self, nb_users, current_repeat_range=None):
     process_list = []
     exit_msg_queue = multiprocessing.Queue(nb_users)
 
@@ -214,7 +225,8 @@ class PerformanceTester(object):
     for user_index in range(nb_users):
       process = BenchmarkProcess(exit_msg_queue, result_class,
                                  self._argument_namespace, nb_users,
-                                 user_index)
+                                 user_index,
+                                 current_repeat_range)
 
       process_list.append(process)
 
@@ -269,14 +281,31 @@ class PerformanceTester(object):
     self.preRun()
 
     if isinstance(self._argument_namespace.users, tuple):
-      nb_users, max_users = self._argument_namespace.users
-      while True:
-        error_message_set, exit_status = self._run_constant(nb_users)
-        if exit_status != 0 or nb_users == max_users:
-          break
+      min_user_number, max_user_number = self._argument_namespace.users
+      repeat_counter = 0
+      exit_with_error = False
 
-        nb_users = min(nb_users + self._argument_namespace.users_range_increment,
-                       max_users)
+      while (repeat_counter != self._argument_namespace.repeat_range and
+             not exit_with_error):
+        current_user_number = min_user_number
+
+        while True:
+          error_message_set, exit_status = \
+              self._run_constant(current_user_number, repeat_counter)
+
+          if exit_status != 0:
+            exit_with_error = True
+            break
+          elif current_user_number == max_user_number:
+            break
+
+          current_user_number = \
+              min((current_user_number +
+                   self._argument_namespace.users_range_increment),
+                  max_user_number)
+
+        repeat_counter += 1
+
     else:
       error_message_set, exit_status = self._run_constant(
         self._argument_namespace.users)
