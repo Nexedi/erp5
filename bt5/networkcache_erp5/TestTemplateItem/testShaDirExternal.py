@@ -161,12 +161,15 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
       If the data does not follow the schema it must return the error.
     """
     # Removing a required property
-    self.data_list[0].pop('file')
-    self.data = json.dumps(self.data_list)
+    data = json.loads(self.data)
+    data[0] = json.loads(data[0])
+    data[0].pop('file')
+    data[0] = json.dumps(data[0])
+    data = json.dumps(data)
 
     connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
-      connection.request('PUT', self.path, self.data, self.header_dict)
+      connection.request('PUT', self.path, data, self.header_dict)
       result = connection.getresponse()
       transaction.commit()
       self.tic()
