@@ -106,20 +106,21 @@ class BenchmarkProcess(multiprocessing.Process):
 
         self._logger.warning(msg)
 
-      for stat in result.getCurrentSuiteStatList():
-        mean = stat.mean
+      else:
+        for stat in result.getCurrentSuiteStatList():
+          mean = stat.mean
 
-        self._logger.info("%s: min=%.3f, mean=%.3f (+/- %.3f), max=%.3f" % \
-                            (stat.full_label,
-                             stat.minimum,
-                             mean,
-                             stat.standard_deviation,
-                             stat.maximum))
+          self._logger.info("%s: min=%.3f, mean=%.3f (+/- %.3f), max=%.3f" % \
+                              (stat.full_label,
+                               stat.minimum,
+                               mean,
+                               stat.standard_deviation,
+                               stat.maximum))
 
-        if (self._argument_namespace.max_global_average and
-            mean > self._argument_namespace.max_global_average):
-          raise RuntimeError("Stopping as mean is greater than maximum "
-                             "global average")
+          if (self._argument_namespace.max_global_average and
+              mean > self._argument_namespace.max_global_average):
+            raise RuntimeError("Stopping as mean is greater than maximum "
+                               "global average")
 
       result.exitSuite()
 
