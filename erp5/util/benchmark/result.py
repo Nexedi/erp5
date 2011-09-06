@@ -223,8 +223,12 @@ class CSVBenchmarkResult(BenchmarkResult):
 
     if exc_type and not issubclass(exc_type, StopIteration):
       msg = "An error occured, see: %s" % self._log_filename_path
-      self.logger.error("%s:\n%s" % (exc_value,
-                                     ''.join(traceback.format_tb(traceback_object))))
+
+      logged_msg = str(exc_value)
+      if not issubclass(exc_type, RuntimeError):
+        logged_msg += ''.join(traceback.format_tb(traceback_object))
+
+      self.logger.error(logged_msg)
       raise RuntimeError(msg)
 
 from cStringIO import StringIO
