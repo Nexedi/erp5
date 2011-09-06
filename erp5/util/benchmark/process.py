@@ -124,6 +124,12 @@ class BenchmarkProcess(multiprocessing.Process):
             raise RuntimeError("Stopping as mean is greater than maximum "
                                "global average")
 
+      finally:
+        # Clear the Browser history (which keeps (request, response))
+        # otherwise it will consume a lot of memory after some time. Also it
+        # does make sense to keep it as suites are independent of each other
+        self._browser.mech_browser.clear_history()
+
       result.exitSuite(with_error)
 
     result.iterationFinished()
