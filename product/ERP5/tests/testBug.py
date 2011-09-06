@@ -216,7 +216,7 @@ class TestBug(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    self.assertEquals('"dummy" <loggedperson@localhost>', mfrom)
+    self.assertEquals('dummy <loggedperson@localhost>', mfrom)
     self.assertEquals(['person1@localhost'], mto)
     self.failUnless(bug.getTitle().replace(" ", "_") in messageText)
 
