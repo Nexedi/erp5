@@ -453,7 +453,7 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   sys.path.extend(project_bt5_test_list)
 
   sys.path.extend((os.path.join(real_instance_home, 'tests'), tests_home))
-
+  sys.path.append(instance_home)
   # Make sure that locally overridden python modules are used
   sys.path.insert(0, os.path.join(real_instance_home, 'lib', 'python'))
 
