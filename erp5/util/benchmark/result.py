@@ -44,7 +44,6 @@ class BenchmarkResultStatistic(object):
     self.minimum = sys.maxint
     self.maximum = -1
     self.n = 0
-    self.error_sum = 0
 
     # For calculating the mean
     self._value_sum = 0
@@ -52,9 +51,6 @@ class BenchmarkResultStatistic(object):
     # For calculating the standard deviation
     self._variance_sum = 0
     self._mean = 0
-
-  def add_error(self):
-    self.error_sum += 1
 
   def add(self, value):
     if value < self.minimum:
@@ -77,6 +73,9 @@ class BenchmarkResultStatistic(object):
   def standard_deviation(self):
     return math.sqrt(self._variance_sum / self.n)
 
+class NothingFlushedException(Exception):
+  pass
+
 import abc
 
 class BenchmarkResult(object):
@@ -86,16 +85,14 @@ class BenchmarkResult(object):
     self._argument_namespace = argument_namespace
     self._nb_users = nb_users
     self._user_index = user_index
-    self._stat_list = []
-    self._suite_idx = 0
-    self._result_idx = 0
-    self.result_list = []
-    self._all_result_list = []
-    self._first_iteration = True
-    self._current_suite_name = None
-    self._result_idx_checkpoint_list = []
-    self.label_list = []
     self._logger = None
+    self._label_list = None
+
+    self._all_suite_list = []
+    self._current_suite_index = 0
+    self._all_result_list = []
+    self._current_suite_dict = None
+    self._current_result_list = None
 
   @property
   def logger(self):
@@ -113,62 +110,106 @@ class BenchmarkResult(object):
     return self
 
   def enterSuite(self, name):
-    self._current_suite_name = name
+    try:
+      self._current_suite_dict = self._all_suite_list[self._current_suite_index]
+    except IndexError:
+      self._current_suite_dict = {'name': name,
+                                  'all_result_list': [],
+                                  'stat_list': [],
+                                  # Number of expected results
+                                  'expected': -1}
+
+      self._all_suite_list.append(self._current_suite_dict)
+
+    self._current_result_list = []
 
   def __call__(self, label, value):
-    self.result_list.append(value)
-
     try:
-      result_statistic = self._stat_list[self._result_idx]
-    except IndexError:
-      result_statistic = BenchmarkResultStatistic(self._current_suite_name,
-                                                  label)
+      result_statistic = \
+          self._current_suite_dict['stat_list'][len(self._current_result_list)]
 
-      self._stat_list.append(result_statistic)
+    except IndexError:
+      result_statistic = BenchmarkResultStatistic(
+        self._current_suite_dict['name'], label)
+
+      self._current_suite_dict['stat_list'].append(result_statistic)
 
     result_statistic.add(value)
-    self._result_idx += 1
+    self._current_result_list.append(value)
 
-  def getLabelList(self):
-    return [ stat.full_label for stat in self._stat_list ]
+  @property
+  def label_list(self):
+    if self._label_list:
+      return self._label_list
 
-  def iterationFinished(self):
-    self._all_result_list.append(self.result_list)
-    if self._first_iteration:
-      self.label_list = self.getLabelList()
+    # TODO: Should perhaps be cached...
+    label_list = []
+    for suite_dict in self._all_suite_list:
+      if suite_dict['expected'] == -1:
+        return None
 
-    self.logger.debug("RESULTS: %s" % self.result_list)
-    self.result_list = []
-    self._first_iteration = False
-    self._suite_idx = 0
-    self._result_idx = 0
+      label_list.extend([ stat.full_label for stat in suite_dict['stat_list'] ])
+
+    self._label_list = label_list
+    return label_list
 
   def getCurrentSuiteStatList(self):
-    start_index = self._suite_idx and \
-        self._result_idx_checkpoint_list[self._suite_idx - 1] or 0
+    return self._current_suite_dict['stat_list']
 
-    return self._stat_list[start_index:self._result_idx]
+  @staticmethod
+  def _addResultWithError(result_list, expected_len):
+    missing_result_n = expected_len - len(result_list)
+    if missing_result_n > 0:
+      result_list.extend(missing_result_n * [-1])
 
-  def exitSuite(self):
-    if self._first_iteration:
-      self._result_idx_checkpoint_list.append(self._result_idx)
+  def exitSuite(self, with_error=False):
+    if with_error:
+      if self._current_suite_dict['expected'] != -1:
+        self._addResultWithError(self._current_result_list,
+                                 self._current_suite_dict['expected'])
+
     else:
-      expected_result_idx = self._result_idx_checkpoint_list[self._suite_idx]
-      while self._result_idx != expected_result_idx:
-        self.result_list.append(0)
-        self._stat_list[self._result_idx].add_error()
-        self._result_idx += 1
+      if self._current_suite_dict['expected'] == -1:
+        self._current_suite_dict['expected'] = len(self._current_result_list)
 
-    self._suite_idx += 1
+        # Fix previous results
+        for result_list in self._current_suite_dict['all_result_list']:
+          self._addResultWithError(result_list,
+                                   self._current_suite_dict['expected'])
+
+    self._current_suite_dict['all_result_list'].append(self._current_result_list)
+    self._current_suite_index += 1
+
+  def iterationFinished(self):
+    self._current_suite_index = 0
 
   @abc.abstractmethod
   def flush(self, partial=True):
-    self._all_result_list = []
+    # TODO: Should perhaps be cached...
+    all_result_list = []
+    for result_dict in self._all_suite_list:
+      if result_dict['expected'] == -1:
+        raise NothingFlushedException()
+
+      for index, result_list in enumerate(result_dict['all_result_list']):
+        try:
+          all_result_list[index].extend(result_list)
+        except IndexError:
+          all_result_list.append(result_list)
+
+      result_dict['all_result_list'] = []
+
+    return all_result_list
 
   @abc.abstractmethod
   def __exit__(self, exc_type, exc_value, traceback_object):
     signal.signal(signal.SIGTERM, signal.SIG_IGN)
-    self.flush(partial=False)
+
+    try:
+      self.flush(partial=False)
+    except NothingFlushedException:
+      pass
+
     return True
 
 class CSVBenchmarkResult(BenchmarkResult):
@@ -207,14 +248,14 @@ class CSVBenchmarkResult(BenchmarkResult):
     return self
 
   def flush(self, partial=True):
+    result_list = super(CSVBenchmarkResult, self).flush(partial)
+
     if self._result_file.tell() == 0:
       self._csv_writer.writerow(self.label_list)
 
-    self._csv_writer.writerows(self._all_result_list)
+    self._csv_writer.writerows(result_list)
     self._result_file.flush()
     os.fsync(self._result_file.fileno())
-
-    super(CSVBenchmarkResult, self).flush(partial)
 
   def __exit__(self, exc_type, exc_value, traceback_object):
     super(CSVBenchmarkResult, self).__exit__(exc_type, exc_value,
@@ -251,6 +292,8 @@ class ERP5BenchmarkResult(BenchmarkResult):
     self.log_file.seek(0)
 
   def flush(self, partial=True):
+    result_list = super(ERP5BenchmarkResult, self).flush()
+
     benchmark_result = xmlrpclib.ServerProxy(
       self._argument_namespace.erp5_publish_url,
       verbose=True,
@@ -261,11 +304,9 @@ class ERP5BenchmarkResult(BenchmarkResult):
       self._argument_namespace.repeat,
       self._nb_users,
       self._argument_namespace.benchmark_suite_name_list,
-      self.getLabelList(),
-      self._all_result_list,
+      self.label_list,
+      result_list,
       self._log_buffer_list)
-
-    super(ERP5BenchmarkResult, self).flush()
 
   def __exit__(self, exc_type, exc_value, traceback_object):
     super(ERP5BenchmarkResult, self).__exit__(exc_type, exc_value,

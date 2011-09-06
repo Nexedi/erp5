@@ -28,14 +28,18 @@
 #
 ##############################################################################
 
-from .result import CSVBenchmarkResult
+from .result import CSVBenchmarkResult, NothingFlushedException
 
 class CSVScalabilityBenchmarkResult(CSVBenchmarkResult):
   def flush(self, partial=True):
-    super(CSVScalabilityBenchmarkResult, self).flush(partial)
-    self._argument_namespace.notify_method(self._result_filename,
-                                           self._result_file.tell(),
-                                           partial=partial)
+    try:
+      super(CSVScalabilityBenchmarkResult, self).flush(partial)
+    except NothingFlushedException:
+      pass
+    else:
+      self._argument_namespace.notify_method(self._result_filename,
+                                             self._result_file.tell(),
+                                             partial=partial)
 
 from .performance_tester import PerformanceTester
 

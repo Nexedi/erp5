@@ -37,6 +37,7 @@ import datetime
 import socket
 
 from ..testbrowser.browser import Browser
+from .result import NothingFlushedException
 
 RESULT_NUMBER_BEFORE_FLUSHING = 100
 
@@ -84,6 +85,7 @@ class BenchmarkProcess(multiprocessing.Process):
     for target_idx, target in enumerate(self._argument_namespace.benchmark_suite_list):
       self._logger.debug("EXECUTE: %s" % target)
       result.enterSuite(target.__name__)
+      with_error = False
 
       try:
         self._browser.open()
@@ -100,11 +102,11 @@ class BenchmarkProcess(multiprocessing.Process):
           pass
 
         self._error_counter += 1
-        if (self._current_repeat == 1 or
-            self._error_counter >= self._argument_namespace.max_error_number):
+        if self._error_counter >= self._argument_namespace.max_error_number:
           raise RuntimeError(msg)
 
         self._logger.warning(msg)
+        with_error = True
 
       else:
         for stat in result.getCurrentSuiteStatList():
@@ -122,7 +124,7 @@ class BenchmarkProcess(multiprocessing.Process):
             raise RuntimeError("Stopping as mean is greater than maximum "
                                "global average")
 
-      result.exitSuite()
+      result.exitSuite(with_error)
 
     result.iterationFinished()
 
@@ -167,7 +169,10 @@ class BenchmarkProcess(multiprocessing.Process):
           self.runBenchmarkSuiteList(result)
 
           if not self._current_repeat % RESULT_NUMBER_BEFORE_FLUSHING:
-            result.flush()
+            try:
+              result.flush()
+            except NothingFlushedException:
+              pass
 
           self._current_repeat += 1
 
