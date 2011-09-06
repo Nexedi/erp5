@@ -32,6 +32,7 @@ import os
 import csv
 import logging
 import signal
+import traceback
 
 class BenchmarkResultStatistic(object):
   def __init__(self, suite, label):
@@ -165,7 +166,7 @@ class BenchmarkResult(object):
     self._all_result_list = []
 
   @abc.abstractmethod
-  def __exit__(self, exc_type, exc_value, traceback):
+  def __exit__(self, exc_type, exc_value, traceback_object):
     signal.signal(signal.SIGTERM, signal.SIG_IGN)
     self.flush(partial=False)
     return True
@@ -215,13 +216,15 @@ class CSVBenchmarkResult(BenchmarkResult):
 
     super(CSVBenchmarkResult, self).flush(partial)
 
-  def __exit__(self, exc_type, exc_value, traceback):
-    super(CSVBenchmarkResult, self).__exit__(exc_type, exc_value, traceback)
+  def __exit__(self, exc_type, exc_value, traceback_object):
+    super(CSVBenchmarkResult, self).__exit__(exc_type, exc_value,
+                                             traceback_object)
     self._result_file.close()
 
     if exc_type and not issubclass(exc_type, StopIteration):
       msg = "An error occured, see: %s" % self._log_filename_path
-      self.logger.error("%s: %s" % (exc_type, exc_value))
+      self.logger.error("%s:\n%s" % (exc_value,
+                                     ''.join(traceback.format_tb(traceback_object))))
       raise RuntimeError(msg)
 
 from cStringIO import StringIO
@@ -260,8 +263,9 @@ class ERP5BenchmarkResult(BenchmarkResult):
 
     super(ERP5BenchmarkResult, self).flush()
 
-  def __exit__(self, exc_type, exc_value, traceback):
-    super(ERP5BenchmarkResult, self).__exit__(exc_type, exc_value, traceback)
+  def __exit__(self, exc_type, exc_value, traceback_object):
+    super(ERP5BenchmarkResult, self).__exit__(exc_type, exc_value,
+                                              traceback_object)
 
   @staticmethod
   def createResultDocument(publish_url, publish_project, repeat, nb_users):
