@@ -33,6 +33,9 @@ import threading
 
 from testnode import SubprocessError
 
+SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
+SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
+
 _format_command_search = re.compile("[[\\s $({?*\\`#~';<>&|]").search
 _format_command_escape = lambda s: "'%s'" % r"'\''".join(s.split("'"))
 def format_command(*args, **kw):
