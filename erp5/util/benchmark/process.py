@@ -47,6 +47,8 @@ class BenchmarkProcess(multiprocessing.Process):
     self._argument_namespace = argument_namespace
     self._nb_users = nb_users
     self._user_index = user_index
+    self._base_url, self._erp5_site_id = argument_namespace.url
+    self._username, self._password = argument_namespace.user_tuple[user_index]
 
     # Initialized when running the test
     self._browser = None
@@ -63,10 +65,10 @@ class BenchmarkProcess(multiprocessing.Process):
                         "another process, flushing remaining results...")
 
   def getBrowser(self, log_file):
-    info_list = tuple(self._argument_namespace.url) + \
-        tuple(self._argument_namespace.user_tuple[self._user_index])
-
-    return Browser(*info_list,
+    return Browser(base_url=self._base_url,
+                   erp5_site_id=self._erp5_site_id,
+                   username=self._username,
+                   password=self._password,
                    is_debug=self._argument_namespace.enable_debug,
                    log_file=log_file,
                    is_legacy_listbox=self._argument_namespace.is_legacy_listbox)
