@@ -34,6 +34,7 @@ import logging
 import signal
 import sys
 import datetime
+import socket
 
 from ..testbrowser.browser import Browser
 
@@ -48,7 +49,13 @@ class BenchmarkProcess(multiprocessing.Process):
     self._nb_users = nb_users
     self._user_index = user_index
     self._base_url, self._erp5_site_id = argument_namespace.url
-    self._username, self._password = argument_namespace.user_tuple[user_index]
+
+    try:
+      self._username, self._password, self._source_ip = \
+          argument_namespace.user_tuple[user_index]
+    except ValueError:
+      self._source_ip = None
+      self._username, self._password = argument_namespace.user_tuple[user_index]
 
     # Initialized when running the test
     self._browser = None
@@ -124,6 +131,20 @@ class BenchmarkProcess(multiprocessing.Process):
                                          self._user_index)
 
     self._logger = result_instance.logger
+
+    # Set up the source IP address in order to be more realistic (can be given
+    # as the third element in userInfo.user_tuple) by monkey-patching
+    # socket.socket() as mechanize doesn't provide a way to call bind after
+    # creating the new socket and before calling connect()
+    if self._source_ip:
+      _socket = socket.socket
+      def _patched_socket(*args, **kwargs):
+        new_socket = _socket(*args, **kwargs)
+        self._logger.debug("source IP: %s" % self._source_ip)
+        new_socket.bind((self._source_ip, 0))
+        return new_socket
+
+      socket.socket = _patched_socket
 
     # Ensure the data are flushed before exiting, handled by Result class 
     # __exit__ block
