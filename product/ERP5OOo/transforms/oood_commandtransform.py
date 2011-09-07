@@ -147,7 +147,7 @@ class OOOdCommandTransform(commandtransform):
                 format = mimetype_object.extensions[0]
                 break
               elif mimetype_object.globs:
-                format = mimetype_object.globs.strip('*.')
+                format = mimetype_object.globs[0].strip('*.')
                 break
           if getattr(image, 'meta_type', None) == 'ERP5 Image':
             #ERP5 API
