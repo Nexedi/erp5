@@ -3,7 +3,6 @@ from Products.PortalTransforms.libtransforms.commandtransform import commandtran
 from Products.PortalTransforms.interfaces import idatastream
 from Products.ERP5Type.Document import newTempOOoDocument
 from Products.ERP5.Document.Document import ConversionError
-from Products.CMFCore.utils import getToolByName
 from Acquisition import aq_base
 from zope.interface import implements
 from OFS.Image import Image as OFSImage
@@ -137,18 +136,7 @@ class OOOdCommandTransform(commandtransform):
         if image is not None:
           odt_content_modified = True
           content_type = image.getContentType()
-          mimetype_list = getToolByName(self.context.getPortalObject(),
-                                     'mimetypes_registry').lookup(content_type)
-
           format = image_parameter_dict.pop('format', None)
-          if not format:
-            for mimetype_object in mimetype_list:
-              if mimetype_object.extensions:
-                format = mimetype_object.extensions[0]
-                break
-              elif mimetype_object.globs:
-                format = mimetype_object.globs[0].strip('*.')
-                break
           if getattr(image, 'meta_type', None) == 'ERP5 Image':
             #ERP5 API
             # resize image according parameters
@@ -163,6 +151,16 @@ class OOOdCommandTransform(commandtransform):
             frame.attrib.update({'{%s}height' % SVG_NAMESPACE: '%.3fcm' % (height * ratio_px_cm)})
           if width:
             frame.attrib.update({'{%s}width' % SVG_NAMESPACE: '%.3fcm' % (width * ratio_px_cm)})
+          if not format:
+            mimetype_list = self.context.getPortalObject().mimetypes_registry.lookup(content_type)
+            # guess a format with help of mimetypes_registry
+            for mimetype_object in mimetype_list:
+              if mimetype_object.extensions:
+                format = mimetype_object.extensions[0]
+                break
+              elif mimetype_object.globs:
+                format = mimetype_object.globs[0].strip('*.')
+                break
           new_path = builder.addImage(data, format=format)
           image_tag.attrib.update({'{%s}href' % XLINK_NAMESPACE: new_path})
     if odt_content_modified:
