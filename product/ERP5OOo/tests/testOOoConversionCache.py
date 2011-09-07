@@ -41,6 +41,10 @@ from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
 from zLOG import LOG
 import os
 
+try:
+  import magic
+except ImportError:
+  magic = None
 
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_document', name)
@@ -72,6 +76,41 @@ class TestDocumentConversionCache(TestDocumentMixin):
     return "OOo Conversion Cache"
 
   ## tests
+
+  def test_image_conversion(self):
+    filename = 'TEST-en-002.doc'
+    file = makeFileUpload(filename)
+    document = self.portal.portal_contributions.newContent(file=file)
+    transaction.commit()
+    self.tic()
+    format = 'png'
+
+    self.assertFalse(document.hasConversion(format=format))
+    document.convert(format)
+    self.assertTrue(document.hasConversion(format=format))
+
+    self.assertFalse(document.hasConversion(format=format, display='large'))
+    document.convert(format, display='large')
+    self.assertTrue(document.hasConversion(format=format, display='large'))
+
+    self.assertFalse(document.hasConversion(format=format,
+                                           display='large',
+                                           quality=40))
+    document.convert(format, display='large', quality=40)
+    self.assertTrue(document.hasConversion(format=format,
+                                           display='large',
+                                           quality=40))
+    if magic is not None:
+      mime_detector = magic.Magic(mime=True)
+      self.assertEquals(mime_detector.from_buffer(document.getConversion(format=format)[1]),
+                        'image/png')
+      self.assertEquals(mime_detector.from_buffer(document.getConversion(format=format,
+                                                                         display='large')[1]),
+                        'image/png')
+      self.assertEquals(mime_detector.from_buffer(document.getConversion(format=format,
+                                                                         display='large',
+                                                                         quality=40)[1]),
+                        'image/png')
 
   def test_01_PersistentCacheConversion(self):
     """

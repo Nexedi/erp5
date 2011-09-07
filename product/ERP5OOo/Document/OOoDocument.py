@@ -59,7 +59,6 @@ from Products.ERP5Type.ConnectionPlugin.TimeoutTransport import TimeoutTransport
 enc=base64.encodestring
 dec=base64.decodestring
 
-_MARKER = []
 EMBEDDED_FORMAT = '_embedded'
 OOO_SERVER_PROXY_TIMEOUT = 360
 
@@ -278,11 +277,20 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     return response_dict['mime'], Pdata(dec(response_dict['data']))
 
   # Conversion API
-  def _convert(self, format, display=None, quality=_MARKER, frame=0, **kw):
+  def _convert(self, format, frame=0, **kw):
     """Convert the document to the given format.
 
     If a conversion is already stored for this format, it is returned
     directly, otherwise the conversion is stored for the next time.
+
+    frame: Only used for image conversion
+
+    XXX Cascading conversions must be delegated to conversion server,
+    not by OOoDocument._convert (ie: convert to pdf, then convert to image, then resize)
+    *OR* as an optimisation we can read cached intermediate conversions
+    instead of compute them each times.
+      1- odt->pdf->png
+      2- odt->cached(pdf)->jpg
     """
     #XXX if document is empty, stop to try to convert.
     #XXX but I don't know what is a appropriate mime-type.(Yusei)
@@ -338,22 +346,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
     # Raise an error if the format is not supported
     if not self.isTargetFormatAllowed(format):
       raise ConversionError("OOoDocument: target format %s is not supported" % format)
-    if quality is _MARKER:
-      # we need to determine quality before image conversion happens due to cache
-      quality = getDefaultImageQuality(self.getPortalObject(), format)
-    # Return converted file
-    if requires_pdf_first:
-      # We should use original_format whenever we wish to
-      # display an image version of a document which needs to go
-      # through PDF
-      if display is None:
-        has_format = self.hasConversion(format=original_format)
-      else:
-        has_format = self.hasConversion(format=original_format, display=display, quality=quality)
-    elif display is None or original_format not in VALID_IMAGE_FORMAT_LIST:
-      has_format = self.hasConversion(format=original_format)
-    else:
-      has_format = self.hasConversion(format=original_format, display=display)
+    has_format = self.hasConversion(format=original_format, **kw)
     if not has_format:
       # Do real conversion
       mime, data = self._getConversionFromProxyServer(format)
@@ -376,9 +369,9 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                                          # better usability
         z.close()
         cs.close()
-      if (display is None or original_format not in VALID_IMAGE_FORMAT_LIST) \
+      if original_format not in VALID_IMAGE_FORMAT_LIST \
         and not requires_pdf_first:
-        self.setConversion(data, mime, format=original_format)
+        self.setConversion(data, mime, format=original_format, **kw)
       else:
         # create temporary image and use it to resize accordingly
         temp_image = self.portal_contributions.newContent(
@@ -388,19 +381,16 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
                                        temp_object=1)
         temp_image._setData(data)
         # we care for first page only but as well for image quality
-        mime, data = temp_image.convert(original_format, display=display, frame=frame, quality=quality, **kw)
+        mime, data = temp_image.convert(original_format, frame=frame, **kw)
         # store conversion
-        if display is None:
-          self.setConversion(data, mime, format=original_format)
-        else:
-          self.setConversion(data, mime, format=original_format, display=display, quality=quality)
+        self.setConversion(data, mime, format=original_format, **kw)
 
     if requires_pdf_first:
       format = original_format
-    if display is None or original_format not in VALID_IMAGE_FORMAT_LIST:
+    if original_format not in VALID_IMAGE_FORMAT_LIST:
       return self.getConversion(format=original_format)
     else:
-      return self.getConversion(format=original_format, display=display, quality=quality)
+      return self.getConversion(format=original_format, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             '_populateConversionCacheWithHTML')
