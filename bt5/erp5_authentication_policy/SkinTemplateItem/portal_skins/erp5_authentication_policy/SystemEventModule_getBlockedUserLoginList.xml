@@ -53,76 +53,56 @@
             <value> <string encoding="cdata"><![CDATA[
 
 """\n
-  Return true if user account is blocked.\n
+  Return list of blocked user logins in a \'listbox\' format\n
 """\n
-\n
 from DateTime import DateTime\n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
+from Products.ERP5Type.Document import newTempBase\n
 \n
-request = context.REQUEST\n
 portal = context.getPortalObject()\n
 portal_preferences = portal.portal_preferences\n
 \n
-if not portal_preferences.isAuthenticationPolicyEnabled():\n
-  # no policy, no sense to block account\n
-  return 0\n
+blocked_user_login_list = []\n
+all_blocked_user_login_dict = {}\n
 \n
 now = DateTime()\n
 one_second = 1/24.0/60.0/60.0\n
 check_duration = portal_preferences.getPreferredAuthenticationFailureCheckDuration()\n
-block_duration = portal_preferences.getPreferredAuthenticationFailureBlockDuration()\n
 max_authentication_failures = portal_preferences.getPreferredMaxAuthenticationFailure()\n
 check_time = now - check_duration*one_second\n
 \n
-# some failures might be still unindexed\n
-tag = \'authentication_event_%s\' %context.getReference()\n
-unindexed_failures = portal.portal_activities.countMessageWithTag(tag)\n
-\n
-if unindexed_failures >= max_authentication_failures:\n
-  # no need to check further\n
-  return 1\n
-\n
-# some are already indexed\n
 kw = {\'portal_type\': \'Authentication Event\',\n
-      \'default_destination_uid\': context.getUid(),\n
       \'creation_date\': Query(creation_date = check_time,\n
                              range=\'min\'),\n
-      \'validation_state\' : \'confirmed\',\n
-      \'sort_on\' : ((\'creation_date\', \'ASC\',),),\n
-      \'limit\': max_authentication_failures\n
-      }\n
-indexed_failure_list = portal.portal_catalog(**kw)\n
-indexed_failures = len(indexed_failure_list)\n
+      \'validation_state\' : \'confirmed\'}\n
+failure_list = portal.portal_catalog(**kw)\n
+for failure in failure_list:\n
+  person = failure.getDestinationValue()\n
+  if person not in all_blocked_user_login_dict.keys():\n
+    all_blocked_user_login_dict[person] = []\n
+  all_blocked_user_login_dict[person].append(failure)\n
 \n
-#context.log(\'== %s %s %s\' %(unindexed_failures, indexed_failures, max_authentication_failures))\n
-if (indexed_failures + unindexed_failures) >= max_authentication_failures:\n
-  last_authentication_failure = indexed_failure_list[-1].getObject()\n
-  block_timeout = last_authentication_failure.getCreationDate() + block_duration*one_second\n
-  if block_timeout >= now:\n
-    #context.log(\'block %s\' %context.getReference())\n
-    request.set(\'is_user_account_blocked\', True)\n
-    return 1\n
-\n
-return 0\n
+# leave only ones that are blocked:\n
+for person, failure_list in all_blocked_user_login_dict.items():\n
+  if len(failure_list) >= max_authentication_failures:\n
+    blocked_user_login_list.append(newTempBase(portal, \n
+                                               person.getTitle(), \n
+                                               **{\'title\': person.getTitle(),\n
+                                                  \'count\':len(failure_list),\n
+                                                  \'reference\': person.getReference(),\n
+                                                  \'url\': person.absolute_url()}))\n
+return blocked_user_login_list\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_isLoginBlocked</string> </value>
+            <value> <string>SystemEventModule_getBlockedUserLoginList</string> </value>
         </item>
       </dictionary>
     </pickle>

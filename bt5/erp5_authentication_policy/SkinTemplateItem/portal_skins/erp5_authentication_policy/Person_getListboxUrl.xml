@@ -50,53 +50,19 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query\n
-\n
-portal = context.getPortalObject()\n
-portal_preferences = portal.portal_preferences\n
-\n
-if not portal.portal_preferences.isAuthenticationPolicyEnabled():\n
-  # no policy, no sense to unblock account\n
-  return 0\n
-\n
-now = DateTime()\n
-one_second = 1/24.0/60.0/60.0\n
-check_duration = portal_preferences.getPreferredAuthenticationFailureCheckDuration()\n
-block_duration = portal_preferences.getPreferredAuthenticationFailureBlockDuration()\n
-max_authentication_failures = portal_preferences.getPreferredMaxAuthenticationFailure()\n
-check_time = now - check_duration*one_second\n
-\n
-# acknowledge last authentication events for user\n
-kw = {\'portal_type\': \'Authentication Event\',\n
-      \'default_destination_uid\': context.getUid(),\n
-      \'creation_date\': Query(creation_date = check_time,\n
-                             range=\'min\'),\n
-      \'validation_state\' : \'confirmed\',\n
-      \'sort_on\' : ((\'creation_date\', \'ASC\',),),\n
-      }\n
-\n
-authentication_event_list = [x.getObject() for x in portal.portal_catalog(**kw)]\n
-\n
-for authentication_event in authentication_event_list:\n
-  authentication_event.activate().acknowledge(comment=\'User account unblocked.\')\n
-\n
-if not batch_mode:\n
-  message = context.Base_translateString(\'User Login unblocked.\')\n
-  if cancel_url is None:\n
-    context.Base_redirect(form_id=form_id, keep_items={\'portal_status_message\': message})\n
-  else:\n
-    context.REQUEST.RESPONSE.redirect(\'%s?portal_status_message=%s\' %(cancel_url, message))\n
-\n
-return\n
+            <value> <string>"""\n
+  Used to generate an URL to person object in a listbox.\n
+"""\n
+return brain.url\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id="view", cancel_url=None, batch_mode=False</string> </value>
+            <value> <string>brain, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_unblockLogin</string> </value>
+            <value> <string>Person_getListboxUrl</string> </value>
         </item>
       </dictionary>
     </pickle>
