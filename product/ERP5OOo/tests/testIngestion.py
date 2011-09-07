@@ -47,6 +47,10 @@ from zLOG import LOG, INFO, ERROR
 from Products.CMFCore.utils import getToolByName
 from zExceptions import BadRequest
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+import urllib
+import urllib2
+import httplib
+import urlparse
 
 # test files' home
 TEST_FILES_HOME = os.path.join(os.path.dirname(__file__), 'test_document')
@@ -2004,6 +2008,41 @@ return result
                       reference='I.want.a.pdf',
                       portal_type='PDF')
 
+  def test_newContent_trough_http(self):
+    filename = 'import_region_category.xls'
+    path = makeFilePath(filename)
+    data = open(path, 'r').read()
+    reference = 'ITISAREFERENCE'
+
+    portal_url = self.portal.absolute_url()
+    url_split = urlparse.urlsplit(portal_url)
+    url_dict = dict(protocol=url_split[0],
+                    hostname=url_split[1])
+    uri = '%(protocol)s://%(hostname)s' % url_dict
+    password_mgr = urllib2.HTTPPasswordMgrWithDefaultRealm() 
+    password_mgr.add_password(realm=None, uri=uri, user='ERP5TypeTestCase',
+                              passwd='')
+    opener = urllib2.build_opener(urllib2.HTTPDigestAuthHandler(password_mgr),
+                                  urllib2.HTTPBasicAuthHandler(password_mgr))
+    urllib2.install_opener(opener)
+
+    push_url = '%s%s/newContent' % (uri, self.portal.portal_contributions.getPath(),)
+    request = urllib2.Request(push_url, urllib.urlencode(
+                                        {'data': data,
+                                        'filename': filename,
+                                        'reference': reference,
+                                        'disable_cookie_login__': 1,
+                                        }))
+    # disable_cookie_login__ is required to force zope to raise Unauthorized (401)
+    # then HTTPDigestAuthHandler can perform HTTP Authentication
+    response = urllib2.urlopen(request)
+    self.assertEquals(response.getcode(), httplib.OK)
+    transaction.commit()
+    self.tic()
+    document = self.portal.portal_catalog.getResultValue(portal_type='Spreadsheet',
+                                                         reference=reference)
+    self.assertTrue(document is not None)
+    self.assertEquals(document.getData(), data)
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -43,6 +43,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import reencodeUrlEscapes
 from Products.ERP5 import _dtmldir
 from Products.ERP5.Document.Url import no_crawl_protocol_list
+from Products.ERP5Type.Utils import fill_args_from_request
 from AccessControl import Unauthorized
 
 from DateTime import DateTime
@@ -97,7 +98,9 @@ class ContributionTool(BaseTool):
   manage_overview = DTMLFile( 'explainContributionTool', _dtmldir )
 
   security.declareProtected(Permissions.AddPortalContent, 'newContent')
-  def newContent(self, **kw):
+  @fill_args_from_request('data', 'filename', 'portal_type', 'container_path',
+                          'discover_metadata', 'temp_object', 'reference')
+  def newContent(self, REQUEST=None, **kw):
     """
       The newContent method is overriden to implement smart content
       creation by detecting the portal type based on whatever information
@@ -225,6 +228,8 @@ class ContributionTool(BaseTool):
               .discoverMetadata(filename=filename, 
                                 user_login=user_login,
                                 input_parameter_dict=input_parameter_dict)
+      if REQUEST is not None:
+        return REQUEST.RESPONSE.redirect(self.absolute_url())
       return document
 
     #
@@ -275,6 +280,8 @@ class ContributionTool(BaseTool):
       # Document does not have such attribute
       pass
     document.reindexObject()
+    if REQUEST is not None:
+      return REQUEST.RESPONSE.redirect(self.absolute_url())
     return document
 
   security.declareProtected( Permissions.AddPortalContent, 'newXML' )
