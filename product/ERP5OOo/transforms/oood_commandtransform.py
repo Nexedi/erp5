@@ -137,10 +137,12 @@ class OOOdCommandTransform(commandtransform):
           odt_content_modified = True
           content_type = image.getContentType()
           format = image_parameter_dict.pop('format', None)
-          if getattr(image, 'meta_type', None) == 'ERP5 Image':
-            #ERP5 API
-            # resize image according parameters
+          if getattr(image, 'convert', None) is not None:
+            # The document support conversion so perform conversion
+            # according given parameters
             mime, image_data = image.convert(format, **image_parameter_dict)
+            # wrapp converted data into OFSImage in order to compute metadatas
+            # on converted result
             image = OFSImage(image.getId(), image.getTitle(), image_data)
 
           # image should be OFSImage

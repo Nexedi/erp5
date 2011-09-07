@@ -1493,6 +1493,30 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals(builder.extract('Pictures/%s.jpeg' % image_count),
                       converted_image, failure_message)
 
+    # Let's continue with Presentation Document as embbeded image
+    document = self.portal.document_module.newContent(portal_type='Presentation')
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    image_reference = 'IMAGE-odp'
+    document.edit(file=upload_file, reference=image_reference)
+    document.publish()
+    transaction.commit()
+    self.tic()
+    html_content = '<p><img src="%s?format=png&amp;display=%s&amp;quality=75"/></p>' % \
+                                              (image_reference, image_display)
+    web_page.edit(text_content=html_content)
+    mime_type, odt_archive = web_page.convert('odt')
+    builder = OOoBuilder(odt_archive)
+    image_count = builder._image_count
+    # compute resized image for comparison
+    mime, converted_image = document.convert(format='png',
+                                             display=image_display,
+                                             quality=75)
+    # fetch image from zipped archive content
+    # then compare with resized ERP5 Image
+    self.assertEquals(builder.extract('Pictures/%s.png' % image_count),
+                      converted_image, failure_message)
+
+
   def test_addContributorToDocument(self):
     """
       Test if current authenticated user is added to contributor list of document
