@@ -8,24 +8,20 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Event is considered as submitted to the system but still no human has acknowledge it.</string> </value>
+            <value> <string>A system event which is considered for expired either automatically through trigerring a time based alarm or manually.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>confirmed</string> </value>
+            <value> <string>expired</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Submitted</string> </value>
+            <value> <string>Expired</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>acknowledge</string>
-                <string>acknowledge_action</string>
-                <string>expire</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>
