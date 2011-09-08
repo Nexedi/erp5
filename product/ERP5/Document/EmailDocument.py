@@ -166,6 +166,13 @@ class EmailDocument(TextDocument):
       self._v_message = result
     return result
 
+  def _setData(self, data):
+    super(EmailDocument, self)._setData(data)
+    try:
+      del self._v_message
+    except AttributeError:
+      pass
+
   def _getMessageTextPart(self):
     """
     Return the main text part of the message data
