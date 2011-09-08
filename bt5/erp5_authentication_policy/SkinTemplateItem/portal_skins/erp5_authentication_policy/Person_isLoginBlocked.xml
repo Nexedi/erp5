@@ -55,7 +55,6 @@
 """\n
   Return true if user account is blocked.\n
 """\n
-\n
 from DateTime import DateTime\n
 from Products.ZSQLCatalog.SQLCatalog import Query\n
 \n
