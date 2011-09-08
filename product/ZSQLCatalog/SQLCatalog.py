@@ -2448,8 +2448,7 @@ class Catalog(Folder,
     """ Returns the number of items which satisfy the where_expression """
     # Get the search method
     method = getattr(self, self.sql_count_results)
-    kw['only_group_columns'] = True
-    return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), **kw)
+    return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), only_group_columns=True, **kw)
 
   def isAdvancedSearchText(self, search_text):
     return isAdvancedSearchText(search_text, self.isValidColumn)
