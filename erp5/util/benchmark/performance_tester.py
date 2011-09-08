@@ -32,8 +32,6 @@ import argparse
 import os
 import sys
 import multiprocessing
-import xmlrpclib
-import signal
 import errno
 
 from .argument import ArgumentType
