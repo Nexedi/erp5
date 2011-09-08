@@ -28,7 +28,6 @@
 
 import os
 import argparse
-import functools
 
 class ArgumentType(object):
   @classmethod

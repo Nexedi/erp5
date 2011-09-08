@@ -27,13 +27,9 @@
 ##############################################################################
 
 import multiprocessing
-import csv
 import traceback
-import os
-import logging
 import signal
 import sys
-import datetime
 import socket
 
 from ..testbrowser.browser import Browser
