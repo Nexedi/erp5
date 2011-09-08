@@ -2437,22 +2437,36 @@ class Catalog(Folder,
     sql_kw = self._queryResults(REQUEST=REQUEST, build_sql_query_method=build_sql_query_method, **kw)
     return sql_method(src__=src__, **sql_kw)
 
+  def getSearchResultsMethod(self):
+    return getattr(self, self.sql_search_results)
+
   def searchResults(self, REQUEST=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
     if 'only_group_columns' in kw:
       # searchResults must be consistent in API with countResults
       raise ValueError('only_group_columns does not belong to this API '
         'level, use queryResults directly')
-    method = getattr(self, self.sql_search_results)
-    return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), **kw)
+    return self.queryResults(
+      self.getSearchResultsMethod(),
+      REQUEST=REQUEST,
+      extra_column_list=self.getCatalogSearchResultKeys(),
+      **kw
+    )
 
   __call__ = searchResults
 
+  def getCountResultsMethod(self):
+    return getattr(self, self.sql_count_results)
+
   def countResults(self, REQUEST=None, **kw):
     """ Returns the number of items which satisfy the where_expression """
-    # Get the search method
-    method = getattr(self, self.sql_count_results)
-    return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), only_group_columns=True, **kw)
+    return self.queryResults(
+      self.getCountResultsMethod(),
+      REQUEST=REQUEST,
+      extra_column_list=self.getCatalogSearchResultKeys(),
+      only_group_columns=True,
+      **kw
+    )
 
   def isAdvancedSearchText(self, search_text):
     return isAdvancedSearchText(search_text, self.isValidColumn)
