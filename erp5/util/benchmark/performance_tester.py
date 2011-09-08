@@ -277,26 +277,28 @@ class PerformanceTester(object):
     return ((), 0)
 
   def run(self):
-    error_message_set, exit_status = (), 0
+    error_message_set, exit_status = set(), 0
     self.preRun()
 
     if isinstance(self._argument_namespace.users, tuple):
       min_user_number, max_user_number = self._argument_namespace.users
       repeat_counter = 0
-      exit_with_error = False
+      error_counter = 0
 
       while (repeat_counter != self._argument_namespace.repeat_range and
-             not exit_with_error):
+             error_counter != self._argument_namespace.max_error_number):
         current_user_number = min_user_number
 
         while True:
-          error_message_set, exit_status = \
+          current_error_message_set, exit_status = \
               self._run_constant(current_user_number, repeat_counter)
 
           if exit_status != 0:
-            exit_with_error = True
-            break
-          elif current_user_number == max_user_number:
+            error_counter += 1
+            error_message_set.update(current_error_message_set)
+
+          if (current_user_number == max_user_number or
+              error_counter == self._argument_namespace.max_error_number):
             break
 
           current_user_number = \
