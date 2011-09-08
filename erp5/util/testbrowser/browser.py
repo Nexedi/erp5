@@ -172,7 +172,9 @@ class Browser(ExtendedTestBrowser):
     # Only display WARNING message if debugging is not enabled
     logging_level = is_debug and logging.DEBUG or logging.WARNING
     stream = log_file and log_file or sys.stderr
-    logging.basicConfig(stream=stream, level=logging_level)
+    logging.basicConfig(
+      stream=stream, level=logging_level,
+      format='%(asctime)s: %(levelname)s: %(message)s [%(name)s]')
 
     self._logger = logging.getLogger('erp5.util.testbrowser')
     self._is_legacy_listbox = is_legacy_listbox

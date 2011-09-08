@@ -152,7 +152,6 @@ class BenchmarkProcess(multiprocessing.Process):
       _socket = socket.socket
       def _patched_socket(*args, **kwargs):
         new_socket = _socket(*args, **kwargs)
-        self._logger.debug("source IP: %s" % self._source_ip)
         new_socket.bind((self._source_ip, 0))
         return new_socket
 
@@ -173,8 +172,7 @@ class BenchmarkProcess(multiprocessing.Process):
         self._browser = self.getBrowser(result_instance.log_file)
 
         while self._current_repeat != (self._argument_namespace.repeat + 1):
-          self._logger.info("%s: Iteration: %d" % (datetime.datetime.now(),
-                                                   self._current_repeat))
+          self._logger.info("Iteration: %d" % self._current_repeat)
           self.runBenchmarkSuiteList(result)
 
           if not self._current_repeat % RESULT_NUMBER_BEFORE_FLUSHING:

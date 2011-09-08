@@ -100,9 +100,11 @@ class BenchmarkResult(object):
   @property
   def logger(self):
     if not self._logger:
-      logging.basicConfig(stream=self.log_file,
-                          level=(self._argument_namespace.enable_debug and
-                                 logging.DEBUG or logging.INFO))
+      logging.basicConfig(
+        stream=self.log_file,
+        level=(self._argument_namespace.enable_debug and
+               logging.DEBUG or logging.INFO),
+        format='%(asctime)s: %(levelname)s: %(message)s [%(name)s]')
 
       self._logger = logging.getLogger('erp5.util.benchmark')
       return self._logger
