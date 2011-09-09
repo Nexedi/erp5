@@ -74,18 +74,18 @@ class InternetProtocolAddress(Base, Coordinate):
     """
     result = Coordinate.asText(self)
     if result is None:
-      if self.hasData():
-        result = '\n'.join(('%s:%s' % (k, v) for k, v in\
-                                    self._splitCoordinateText(self.getData())))
-      else:
-        tmp = []
+      if self.isDetailed():
+        tmp_list = []
         for prop in PropertySheet.InternetProtocolAddress._properties:
           property_id = prop['id']
           getter_name = 'get%s' % convertToUpperCase(property_id)
           getter_method = getattr(self, getter_name)
-          value = getter_method() or ''
-          tmp.append('%s:%s' % (property_id, value))
-        result = '\n'.join(tmp)
+          value = getter_method('')
+          tmp_list.append('%s:%s' % (property_id, value))
+        result = '\n'.join(tmp_list)
+      else:
+        result = '\n'.join(('%s:%s' % (k, v) for k, v in\
+                                    self._splitCoordinateText(self.getCoordinateText())))
     return result
 
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
@@ -94,7 +94,7 @@ class InternetProtocolAddress(Base, Coordinate):
     """Save given data then continue parsing 
     (deprecated because computed values are stored)
     """
-    self._setData(coordinate_text)
+    self._setCoordinateText(coordinate_text)
     kw_dict = self._splitCoordinateText(coordinate_text)
 
     for name, value in kw_dict.iteritems():
@@ -116,3 +116,14 @@ broadcast_address:192.168.0.255
 dns_server_ip_address:192.168.0.1
 gateway_ip_address:192.168.0.1
 network_interface:eth0"""
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  def isDetailed(self):
+    for prop in PropertySheet.InternetProtocolAddress._properties:
+      property_id = prop['id']
+      tester_name = 'has%s' % convertToUpperCase(property_id)
+      tester_method = getattr(self, tester_name)
+      value = tester_method()
+      if value:
+        return True
+    return False

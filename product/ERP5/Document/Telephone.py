@@ -301,7 +301,7 @@ class Telephone(Coordinate, Base):
     """Save given data then continue parsing 
     (deprecated because computed values are stored)
     """
-    self._setData(coordinate_text)
+    self._setCoordinateText(coordinate_text)
     method = self._getTypeBasedMethod('fromText')
     if method is not None:
       return method(text=coordinate_text)
@@ -327,18 +327,16 @@ class Telephone(Coordinate, Base):
     if script is not None:
       return script()
 
-    if self.hasData():
-      coordinate_text = self.getData()
-      country, area, city, number, extension =\
-                                     self._splitCoordinateText(coordinate_text)
-    else:
-      # BBB if one of old slice is stored on current document
-      # then use old API in order to recompute coordinate string
+    if self.isDetailed():
       country = self.getTelephoneCountry('')
       area = self.getTelephoneArea('')
       city = self.getTelephoneCity('')
       number = self.getTelephoneNumber('')
       extension = self.getTelephoneExtension('')
+    else:
+      coordinate_text = self.getCoordinateText()
+      country, area, city, number, extension =\
+                                     self._splitCoordinateText(coordinate_text)
 
     if (country or area or city or number or extension):
       # Define the notation
@@ -396,6 +394,14 @@ class Telephone(Coordinate, Base):
       Returns the standard text formats for telephone numbers
     """
     return ("+33(0)6-62 05 76 14",)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  def isDetailed(self):
+    return self.hasTelephoneCountry() or\
+          self.hasTelephoneArea() or\
+          self.hasTelephoneCity() or\
+          self.hasTelephoneNumber() or\
+          self.hasTelephoneExtension()
 
   def _getNotation(self):
     """

@@ -92,13 +92,13 @@ class GeographicAddress(Coordinate, Base):
     """
     result = Coordinate.asText(self)
     if result is None:
-      if self.hasData():
-        street_address, city, zip_code = self._splitCoordinateText(self.getData(''))
-      else:
+      if self.isDetailed():
         street_address = self.getStreetAddress('')
-        city = self.getCity('')
         zip_code = self.getZipCode('')
-      result = '%s\n%s %s' % (street_address, city, zip_code,)
+        city = self.getCity('')
+      else:
+        street_address, zip_code, city = self._splitCoordinateText(self.getCoordinateText(''))
+      result = '%s\n%s %s' % (street_address, zip_code, city)
     if not result.strip():
       return ''
     return result
@@ -109,8 +109,8 @@ class GeographicAddress(Coordinate, Base):
     """Save given data then continue parsing 
     (deprecated because computed values are stored)
     """
-    self._setData(coordinate_text)
-    street_address, city, zip_code = self._splitCoordinateText(coordinate_text)
+    self._setCoordinateText(coordinate_text)
+    street_address, zip_code, city = self._splitCoordinateText(coordinate_text)
     self.setStreetAddress(street_address)
     self.setZipCode(zip_code)
     self.setCity(city)
@@ -128,3 +128,6 @@ c/o Jean-Paul Sartre
 """,
 )
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  def isDetailed(self):
+    return self.hasStreetAddress() or self.hasZipCode() or self.hasCity()

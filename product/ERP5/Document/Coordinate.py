@@ -35,6 +35,8 @@ from Products.ERP5Type.Utils import deprecated
 from Products.CMFDefault.utils import formatRFC822Headers
 import re
 
+_marker = object()
+
 class Coordinate(Base):
     """
         Coordinates is a mix-in class which is used to store elementary
@@ -138,6 +140,24 @@ class Coordinate(Base):
       """
       return self.asText()
 
+    security.declareProtected(Permissions.AccessContentsInformation, 'getCoordinateText')
+    def getCoordinateText(self, default=_marker):
+      """Fallback on splitted values (old API)
+      """
+      if not self.hasCoordinateText() and self.isDetailed():
+        # Display old values (parsed ones)
+        # empty value is None, not ''
+        value = self.asText()
+        if value:
+          return value
+        if default is _marker:
+          return None
+        else:
+          return default
+      if default is _marker:
+        return self._baseGetCoordinateText()
+      return self._baseGetCoordinateText(default)
+
     security.declareProtected( Permissions.ModifyPortalContent, 'fromText' )
     @deprecated
     def fromText(self, coordinate_text):
@@ -163,6 +183,10 @@ class Coordinate(Base):
       Returns the standard text formats for telephone numbers
       """
       pass
+
+    security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+    def isDetailed(self):
+      return False
 
     security.declarePrivate( '_writeFromPUT' )
     def _writeFromPUT( self, body ):

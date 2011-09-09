@@ -52,3 +52,7 @@ class ICoordinate(Interface):
       string format for that coordinate
     """
     pass
+
+  def isDetailed():
+    """return True if one of detailed properties is defined
+    """

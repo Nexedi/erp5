@@ -71,9 +71,9 @@ class Url(Coordinate, Base, UrlMixin):
     users just enter www.erp5.com or info@erp5.com rather than
     http://www.erp5.com or mailto:info@erp5.com
     """
-    if self.hasData():
-      return self.getData('')
-    return self.getUrlString('')
+    if self.isDetailed():
+      return self.getUrlString('')
+    return self.getCoordinateText('')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
   @deprecated
@@ -81,7 +81,7 @@ class Url(Coordinate, Base, UrlMixin):
     """
     Sets url_string a.k.a. scheme-specific-part of a URL
     """
-    self._setData(text)
+    self._setCoordinateText(text)
     self.setUrlString(text)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -97,18 +97,21 @@ class Url(Coordinate, Base, UrlMixin):
   def getUrlString(self, default=_marker):
     if not self.hasUrlString():
       if default is _marker:
-        return self.getData()
+        return self.getCoordinateText()
       else:
-        return self.getData(default)
+        return self.getCoordinateText(default)
     else:
       if default is _marker:
         return self._baseGetUrlString()
       else:
         return self._baseGetUrlString(default)
 
-
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  def isDetailed(self):
+    return self.hasUrlString()
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
+  @deprecated
   def send(self, from_url=None, to_url=None, msg=None,
            subject=None, attachment_list=None, extra_headers=None):
     """
