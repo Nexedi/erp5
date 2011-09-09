@@ -133,10 +133,7 @@ class PerformanceTester(object):
                         help='ERP5 publish project')
 
     # Mandatory arguments
-    parser.add_argument('url',
-                        type=ArgumentType.ERP5UrlType,
-                        metavar='URL',
-                        help='ERP5 base URL')
+    parser.add_argument('erp5_base_url', metavar='ERP5_URL')
 
     parser.add_argument('users',
                         type=ArgumentType.strictlyPositiveIntOrRangeType,

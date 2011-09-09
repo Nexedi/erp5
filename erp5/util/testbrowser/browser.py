@@ -130,22 +130,17 @@ class Browser(ExtendedTestBrowser):
   __metaclass__ = measurementMetaClass(prefix='open')
 
   def __init__(self,
-               base_url,
-               erp5_site_id,
+               erp5_base_url,
                username,
                password,
                log_file=None,
                is_debug=False,
                is_legacy_listbox=False):
     """
-    Create a browser object, allowing to log in right away with the
-    given username and password. The base URL must contain an I{/} at
-    the end.
+    Create a browser object.
 
-    @param base_url: Base HTTP URL
-    @type base_url: str
-    @param erp5_site_id: ERP5 site name
-    @type erp5_site_id: str
+    @param erp5_base_url: ERP5 HTTP URL
+    @type erp5_base_url: str
     @param username: Username to be used to log into ERP5
     @type username: str
     @param password: Password to be used to log into ERP5
@@ -160,11 +155,9 @@ class Browser(ExtendedTestBrowser):
     # has been changed
     self._main_form = None
 
-    assert base_url[-1] == '/'
-
-    self._base_url = base_url
-    self._erp5_site_id = erp5_site_id
-    self._erp5_base_url = urljoin(self._base_url, self._erp5_site_id) + '/'
+    self._erp5_base_url = erp5_base_url
+    if self._erp5_base_url[-1] != '/':
+      self._erp5_base_url += '/'
 
     self._username = username
     self._password = password

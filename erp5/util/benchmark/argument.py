@@ -107,16 +107,3 @@ class ArgumentType(object):
     raise argparse.ArgumentTypeError(
       'expects either a strictly positive integer or a range of strictly '
       'positive integer separated by a comma')
-
-  @classmethod
-  def ERP5UrlType(cls, url):
-    if url[-1] == '/':
-      url_list = url.rsplit('/', 2)[:-1]
-    else:
-      url_list = url.rsplit('/', 1)
-
-    url_list[0] = url_list[0] + '/'
-    if len(url_list) != 2:
-      raise argparse.ArgumentTypeError("Invalid URL given")
-
-    return url_list

@@ -47,8 +47,6 @@ class BenchmarkProcess(multiprocessing.Process):
     self._user_index = user_index
     self._current_repeat_range = current_repeat_range
 
-    self._base_url, self._erp5_site_id = argument_namespace.url
-
     try:
       self._username, self._password, self._source_ip = \
           argument_namespace.user_tuple[user_index]
@@ -71,13 +69,12 @@ class BenchmarkProcess(multiprocessing.Process):
                         "another process, flushing remaining results...")
 
   def getBrowser(self, log_file):
-    return Browser(base_url=self._base_url,
-                   erp5_site_id=self._erp5_site_id,
-                   username=self._username,
-                   password=self._password,
-                   is_debug=self._argument_namespace.enable_debug,
-                   log_file=log_file,
-                   is_legacy_listbox=self._argument_namespace.is_legacy_listbox)
+    return Browser(self._argument_namespace.erp5_base_url,
+                   self._username,
+                   self._password,
+                   log_file,
+                   self._argument_namespace.enable_debug,
+                   self._argument_namespace.is_legacy_listbox)
 
   def runBenchmarkSuiteList(self, result):
     for target_idx, target in enumerate(self._argument_namespace.benchmark_suite_list):
