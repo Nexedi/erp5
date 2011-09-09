@@ -580,7 +580,43 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test', 'used_ALREADY_1234')    
     response = self.publish(path) 
     self.assertTrue('Welcome to ERP5' in response.getBody())
+
+  def test_06_ExpireOldAuthenticationEventList(self):
+    """
+      Check that expiring old Authentication Event list works.
+    """
+    portal = self.getPortal()
+    person = portal.portal_catalog.getResultValue(portal_type = 'Person', 
+                                                  reference = 'test')
+    preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
+                                                      title = 'Authentication',)
+    # file some failures so we should detect and block account
+    person.notifyLoginFailure()
+    person.notifyLoginFailure()
+    person.notifyLoginFailure()
+    self.stepTic()
+
+    # should be blocked
+    self.assertTrue(person.isLoginBlocked())
     
+    # set 0 check interval
+    preference.setPreferredAuthenticationFailureCheckDuration(0)
+    self.stepTic()
+    self._clearCache()
+    
+    time.sleep(1) # we need to give a moment
+    self.assertFalse(person.isLoginBlocked())
+    
+    # expire manually old
+    portal.system_event_module.SystemEventModule_expireAuthenticationEventList()
+    self.stepTic()
+    
+    self.assertEqual(3, len(portal.portal_catalog(portal_type ="Authentication Event",
+                                                 default_destination_uid = person.getUid(),    
+                                                 validation_state = "expired")))
+                                                
+
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAuthenticationPolicy))
