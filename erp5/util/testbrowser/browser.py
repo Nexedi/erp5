@@ -182,8 +182,6 @@ class Browser(ExtendedTestBrowser):
 
     super(Browser, self).__init__()
 
-    self.login()
-
   def open(self, url_or_path=None, data=None):
     """
     Open a relative (to the ERP5 base URL) or absolute URL. If the
@@ -199,27 +197,6 @@ class Browser(ExtendedTestBrowser):
 
     self._logger.debug("Opening url: " + absolute_url)
     super(Browser, self).open(absolute_url, data)
-
-  def login(self, force=False):
-    """
-    Log in only if not already logged in unless explicitely specified
-    to do so.
-
-    @param force: Log in even if already logged in
-    @type force: bool
-    """
-    if force or not self._is_logged_in:
-      try:
-        url_before_login = self.url
-      except:
-        url_before_login = None
-
-      self.open('login_form')
-      self.mainForm.submitLogin()
-
-      # Go back to the page before trying to log in if any URL, or to
-      # the homepage otherwise
-      self.open(url_before_login)
 
   def getCookieValue(self, name, default=None):
     """
@@ -685,30 +662,41 @@ class MainForm(Form):
     """
     Log into ERP5 using the username and password provided in the
     browser. It is assumed that the current page is the login page (by
-    calling C{open('login_form')} beforehand).
+    calling C{open('login_form')} beforehand), otherwise it will open
+    that page before logging in.
 
-    This method should rarely be used by scripts as login is already
-    performed upon instanciation of Browser class.
+    Note that if the user is already logged in, it will do nothing.
 
     @raise LoginError: Login failed
 
     @todo: Use information sent back as headers rather than looking
            into the page content?
     """
+    if 'Logged In as' in self.browser.contents:
+      self.browser._logger.debug("Already logged in")
+      # TODO: Perhaps zope.testbrowser should be patched instead?
+      self.browser.timer.start_time = self.browser.timer.end_time = 0
+      return
+
     self.browser._logger.debug("Logging in: username='%s', password='%s'" % \
                                  (self.browser._username, self.browser._password))
 
-    self.getControl(name='__ac_name').value = self.browser._username
-    self.getControl(name='__ac_password').value = self.browser._password
-    self.submit()
+    def login(form):
+      form.getControl(name='__ac_name').value = self.browser._username
+      form.getControl(name='__ac_password').value = self.browser._password
+      form.submit()
+
+    try:
+      login(self)
+    except LookupError:
+      self.browser.open('login_form')
+      login(self.browser.mainForm)
 
     if 'Logged In as' not in self.browser.contents:
       raise LoginError("%s: Could not log in as '%s:%s'" % \
                          (self.browser._erp5_base_url,
                           self.browser._username,
                           self.browser._password))
-
-    self.browser._is_logged_in = True
 
   def submitSelectFavourite(self, label=None, value=None, **kw):
     """

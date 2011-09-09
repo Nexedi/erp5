@@ -13,8 +13,9 @@ def benchmarkAddPerson(iteration_counter, result_dict):
   browser = Browser('http://localhost:18080/', 'erp5',
                     username='zope', password='zope')
 
-  # Open ERP5 homepage
+  # Open ERP5 homepage and log in
   browser.open()
+  browser.mainForm.submitLogin()
 
   # Go to Persons module (person_module)
   browser.mainForm.submitSelectModule(value='/person_module')

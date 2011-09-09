@@ -12,6 +12,9 @@ def createPerson(result, browser):
   script  and userInfo.py.  Further information  about performance_tester_erp5
   options and arguments are available by specifying ``--help''.
   """
+  # Log in unless already logged in by a previous test suite
+  browser.mainForm.submitLogin()
+
   # Go to Persons module (person_module)
   result('Go to person module',
          browser.mainForm.submitSelectModule(value='/person_module'))
