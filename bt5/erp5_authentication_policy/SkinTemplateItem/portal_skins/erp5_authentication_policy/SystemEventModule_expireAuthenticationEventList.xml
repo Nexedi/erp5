@@ -72,8 +72,14 @@ kw = {\'portal_type\': \'Authentication Event\',\n
 failure_list = portal.portal_catalog(**kw)\n
 \n
 for failure in failure_list:\n
-  failure.activate().expire(comment=\'System expire.\')\n
+  tag = \'expire_%s\' %failure.getUid()\n
+  failure.activate(tag = tag).expire(comment=\'System expire.\')\n
+  failure.activate(after_tag = tag).reindexObject()\n
 </string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

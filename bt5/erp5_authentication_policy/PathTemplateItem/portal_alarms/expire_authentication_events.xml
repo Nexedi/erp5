@@ -25,6 +25,12 @@
             <value> <string>expire_authentication_events</string> </value>
         </item>
         <item>
+            <key> <string>periodicity_day_frequency</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>periodicity_hour</string> </key>
             <value>
               <tuple/>
@@ -38,7 +44,9 @@
         </item>
         <item>
             <key> <string>periodicity_minute_frequency</string> </key>
-            <value> <int>5</int> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>periodicity_month</string> </key>
