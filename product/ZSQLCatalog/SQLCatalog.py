@@ -1444,8 +1444,12 @@ class Catalog(Folder,
             raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
           if uid != index or isinstance(uid, int):
             # We want to make sure that uid becomes long if it is an int
-            raise ValueError('uid of %r changed from %r (property) to %r '
-                '(catalog, by path) !!! This can be fatal' % (object, uid, index))
+            error_message = 'uid of %r changed from %r (property) to %r '\
+	                    '(catalog, by path) !!! This can be fatal' % (object, uid, index)
+            if not self.sql_catalog_raise_error_on_uid_check:
+              LOG("SQLCatalog.catalogObjectList", ERROR, error_message)
+            else:
+              raise ValueError(error_message)
         else:
           # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
           # This can be very dangerous with relations stored in a category table (CMFCategory)
