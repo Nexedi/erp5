@@ -1704,6 +1704,11 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertTrue('AZERTYY' not in safe_html)
     self.assertTrue('#FFAA44' in safe_html)
 
+    filename = 'broken_html.html'
+    file_object = makeFileUpload(filename)
+    web_page.edit(file=file_object)
+    converted = web_page.convert('html')[1]
+
   def test_safeHTML_impossible_conversion(self):
     """Some html are not parsable.
     """

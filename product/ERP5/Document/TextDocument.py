@@ -333,17 +333,17 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
         message = 'Conversion to base format succeeds'
         if re_match is not None:
           charset = re_match.group('charset')
-          if charset.lower() != 'utf-8':
-            try:
-              # Use encoding in html document
-              text_content = text_content.decode(charset).encode('utf-8')
-            except (UnicodeDecodeError, LookupError):
-              # Encoding read from document is wrong
-              text_content, message = guessCharsetAndConvert(self,
-                                                    text_content, content_type)
-            else:
-              message = 'Conversion to base format with charset %r succeeds'\
-                                                                      % charset
+          try:
+            # Use encoding in html document
+            text_content = text_content.decode(charset).encode('utf-8')
+          except (UnicodeDecodeError, LookupError):
+            # Encoding read from document is wrong
+            text_content, message = guessCharsetAndConvert(self,
+                                                  text_content, content_type)
+          else:
+            message = 'Conversion to base format with charset %r succeeds'\
+                                                                    % charset
+            if charset.lower() != 'utf-8':
               charset = 'utf-8' # Override charset if convertion succeeds
               # change charset value in html_document as well
               def subCharset(matchobj):
