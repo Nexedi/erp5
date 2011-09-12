@@ -1726,6 +1726,26 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
       expectedFailure(self.fail)(
         'Even BeautifulSoup is not able to parse such HTML')
 
+  def test_safeHTML_unknown_codec(self):
+    """Some html declare unknown codecs.
+    """
+    web_page_portal_type = 'Web Page'
+    module = self.portal.getDefaultModule(web_page_portal_type)
+    web_page = module.newContent(portal_type=web_page_portal_type)
+
+    html_content = """
+    <html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=unicode" />
+        <title>BLa</title>
+      </head>
+      <body><p> blablabla</p></body>
+    </html>"""
+    web_page.edit(text_content=html_content)
+    safe_html = web_page.convert('html')[1]
+    self.assertTrue('unicode' not in safe_html)
+    self.assertTrue('utf-8' in safe_html)
+
   def test_parallel_conversion(self):
     """Check that conversion engine is able to fill in
     cache without overwrite previous conversion
