@@ -1239,12 +1239,15 @@ def initialize( context ):
         global global_stream
         global_stream = StringIO()
         from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
-        result = runLiveTest(test_list,
-                             run_only=run_only,
-                             debug=debug,
-                             path=path,
-                             stream=global_stream,
-                             verbosity=verbosity)
+        try:
+          result = runLiveTest(test_list,
+                              run_only=run_only,
+                              debug=debug,
+                              path=path,
+                              stream=global_stream,
+                              verbosity=verbosity)
+        except ImportError:
+          traceback.print_exc(file=global_stream)
         global_stream.seek(0)
         return global_stream.read()
 
