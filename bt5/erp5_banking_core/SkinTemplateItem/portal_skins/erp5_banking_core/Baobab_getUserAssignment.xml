@@ -52,35 +52,25 @@
             <key> <string>_body</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-# get the current logged user site\n
 if user_id is None:\n
-  login = context.portal_membership.getAuthenticatedMember().getUserName()\n
-else:\n
-  login = user_id\n
-persons = context.acl_users.erp5_users.getUserByLogin(login)\n
-\n
-if len(persons) == 0:\n
-  #context.log(\'Baobab_getUserAssignementList\', \'Person %s not found\' %(login))\n
-  return []\n
-else:\n
-  #person = persons[0].getObject()\n
-  person = persons[0]\n
-\n
-assignment_list = person.contentValues(filter={\'portal_type\': \'Assignment\'})\n
-\n
-if len(assignment_list) == 0:\n
-  return []\n
-\n
-valid_assignment_list = []\n
-#context.log("Baobab_getUserAssignmentList", "assignment_list = %s" %(assignment_list,))\n
-for a in assignment_list:\n
-  if a.getValidationState() == \'open\':\n
-    stop  = a.getStopDate()\n
-    start = a.getStartDate()\n
-    if (stop > DateTime() or stop == None) and (start < DateTime() or start == None): \n
-      valid_assignment_list.append(a)\n
-\n
-return valid_assignment_list\n
+  user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
+person_list = context.acl_users.erp5_users.getUserByLogin(user_id)\n
+if not person_list:\n
+  return None\n
+assignment_list = person_list[0].contentValues(filter={\'portal_type\': \'Assignment\'})\n
+if not assignment_list:\n
+  return None\n
+valid_assignment = None\n
+now = DateTime()\n
+for assignment in assignment_list:\n
+  if assignment.getValidationState() == \'open\':\n
+    stop = assignment.getStopDate()\n
+    start = assignment.getStartDate()\n
+    if (stop is None or stop > now) and (start is None or start < now):\n
+      if valid_assignment is not None:\n
+        raise ValueError(\'There are too many valid assignments for user %r\' % (user_id, ))\n
+      valid_assignment = assignment\n
+return valid_assignment\n
 
 
 ]]></string> </value>
@@ -99,7 +89,7 @@ return valid_assignment_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_getUserAssignmentList</string> </value>
+            <value> <string>Baobab_getUserAssignment</string> </value>
         </item>
       </dictionary>
     </pickle>

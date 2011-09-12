@@ -50,28 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># get the current logged user root site (agency)\n
-\n
-valid_assignment_list = context.Baobab_getUserAssignmentList(user_id=user_id)\n
-\n
-site_list = []\n
-for a in valid_assignment_list:\n
-  new_site = a.getSiteValue()\n
-  while new_site.getVaultType()!=\'site\':\n
-    new_site = new_site.getParentValue()\n
-  if object:\n
-    if new_site not in site_list:\n
-      site_list.append(new_site)\n
-  else:\n
-    site_url = new_site.getRelativeUrl()\n
-    if site_url not in site_list:\n
-      site_list.append(site_url)\n
-return site_list\n
+            <value> <string>new_site = context.Baobab_getUserAssignment(user_id=user_id).getSiteValue()\n
+while new_site.getVaultType() != \'site\':\n
+  new_site = new_site.getParentValue()\n
+if not object:\n
+  new_site = new_site.getRelativeUrl()\n
+return new_site\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>user_id=None, object=0, **kw</string> </value>
+            <value> <string>user_id=None, object=False</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
@@ -83,7 +72,7 @@ return site_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Baobab_getUserAssignedRootSiteList</string> </value>
+            <value> <string>Baobab_getUserAssignedRootSite</string> </value>
         </item>
       </dictionary>
     </pickle>

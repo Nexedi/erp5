@@ -236,11 +236,11 @@ def split_head(CD_file_line_list):\n
     return {\'error\':True, \'message\':message_dict[\'12\'], \'head_dict\':{}}\n
 \n
   # Define destination\n
-  user_site_list = context.Baobab_getUserAssignedRootSiteList()\n
-  if user_site_list is None:\n
+  user_site = context.Baobab_getUserAssignedRootSite()\n
+  if user_site is None:\n
     return {\'error\':True, \'message\':message_dict[\'13\'], \'head_dict\':{}}\n
 \n
-  head_destination  = \'%s/%s\' % (user_site_list[0],\'caveau/serre\')\n
+  head_destination  = \'%s/%s\' % (user_site,\'caveau/serre\')\n
   if head_emission_letter in context.Baobab_getUserEmissionLetterList():\n
     head_destination = \'%s/%s\' % (head_destination,\'encaisse_des_billets_neufs_non_emis\')\n
   else:\n

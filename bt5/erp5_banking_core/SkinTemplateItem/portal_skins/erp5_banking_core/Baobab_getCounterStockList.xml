@@ -57,7 +57,7 @@ if site is None:\n
   if getattr(context,\'getSiteValue\',None) is not None:\n
     site = context.getSiteValue()\n
 if site is None:\n
-  root_site_url = context.Baobab_getUserAssignedRootSiteList()[0]\n
+  root_site_url = context.Baobab_getUserAssignedRootSite()\n
   site = context.portal_categories.restrictedTraverse(root_site_url)\n
 \n
 resource_uid_list = [x.uid for x in context.currency_cash_module.searchFolder()]\n
