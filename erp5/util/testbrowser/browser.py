@@ -887,6 +887,8 @@ class ContextMainForm(MainForm):
     @param sleep_between_attempt: Sleep N seconds between attempts
     @type sleep_between_attempt: int
     """
+    url_before = self.browser.url
+
     def tryLegacyAndNew():
       try:
         self.browser.mainForm.submitSelect(
@@ -911,6 +913,9 @@ class ContextMainForm(MainForm):
 
           current_attempt_number += 1
           time.sleep(sleep_between_attempt)
+
+          # The page needs to be reloaded before the next attempt
+          self.browser.open(url_before)
         else:
           break
 
