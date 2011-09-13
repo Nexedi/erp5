@@ -44,6 +44,7 @@ class BenchmarkResultStatistic(object):
     self.minimum = sys.maxint
     self.maximum = -1
     self.n = 0
+    self.error_sum = 0
 
     # For calculating the mean
     self._value_sum = 0
@@ -53,6 +54,10 @@ class BenchmarkResultStatistic(object):
     self._mean = 0
 
   def add(self, value):
+    if value < 0:
+      self.error_sum += 1
+      return
+
     if value < self.minimum:
       self.minimum = value
     if value > self.maximum:
