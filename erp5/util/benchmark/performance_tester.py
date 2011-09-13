@@ -232,7 +232,7 @@ class PerformanceTester(object):
     process_terminated_counter = 0
 
     # Ensure that SIGTERM signal (sent by terminate()) is not sent twice
-    do_exit = False
+    exit_status = 0
 
     while process_terminated_counter != len(process_list):
       try:
@@ -240,7 +240,7 @@ class PerformanceTester(object):
 
       except KeyboardInterrupt, e:
         print >>sys.stderr, "\nInterrupted by user, stopping gracefully..."
-        do_exit = True
+        exit_status = 2
 
       # An IOError may be raised  when receiving a SIGINT which interrupts the
       # blocking system call above and the system call should not be restarted
@@ -253,23 +253,20 @@ class PerformanceTester(object):
       else:
         if error_message is not None:
           error_message_set.add(error_message)
-          do_exit = True
+          exit_status = 1
 
         process_terminated_counter += 1
 
       # In case of  error or SIGINT, kill the other  children because they are
       # likely failing as well (especially  because a process only exits after
       # encountering 10 errors)
-      if do_exit:
+      if exit_status != 0:
         for process in process_list:
           if process.is_alive():
             process.terminate()
             process.join()
 
-    if error_message_set:
-      return (error_message_set, 1)
-
-    return ((), 0)
+    return (error_message_set, exit_status)
 
   def run(self):
     error_message_set, exit_status = set(), 0
@@ -281,7 +278,8 @@ class PerformanceTester(object):
       error_counter = 0
 
       while (repeat_counter != self._argument_namespace.repeat_range and
-             error_counter != self._argument_namespace.max_error_number):
+             error_counter != self._argument_namespace.max_error_number and
+             exit_status != 2):
         current_user_number = min_user_number
 
         while True:
@@ -293,7 +291,8 @@ class PerformanceTester(object):
             error_message_set.update(current_error_message_set)
 
           if (current_user_number == max_user_number or
-              error_counter == self._argument_namespace.max_error_number):
+              error_counter == self._argument_namespace.max_error_number or
+              exit_status == 2):
             break
 
           current_user_number = \
