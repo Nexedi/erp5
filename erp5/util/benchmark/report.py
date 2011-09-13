@@ -227,6 +227,8 @@ import re
 
 user_re = re.compile('-(\d+)users-')
 
+DIAGRAM_PER_PAGE = 6
+
 def generateReport():
   argument_namespace = parseArguments()
 
@@ -248,11 +250,13 @@ def generateReport():
       argument_namespace, report_dict['filename'])
 
     title = "Ran suites with %d users" % len(report_dict['filename'])
-    for slice_start_idx in range(0, len(stat_list), 12):
-      if slice_start_idx != 0:
+    for slice_start_idx in range(0, len(stat_list), DIAGRAM_PER_PAGE):
+      if slice_start_idx == DIAGRAM_PER_PAGE:
         title += ' (Ctd.)'
 
-      drawBarDiagram(pdf, title, stat_list[slice_start_idx:slice_start_idx + 12])
+      drawBarDiagram(pdf, title,
+                     stat_list[slice_start_idx:slice_start_idx +
+                               DIAGRAM_PER_PAGE])
 
     report_dict['stats'] = stat_list
 
