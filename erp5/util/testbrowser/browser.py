@@ -65,6 +65,8 @@ def measurementMetaClass(prefix):
           ret = method(self, *args, **kwargs)
           if ret is None:
             return self.lastRequestSeconds
+          elif isinstance(ret, tuple):
+            return (self.lastRequestSeconds,) + ret
           else:
             return (self.lastRequestSeconds, ret)
 
@@ -866,7 +868,10 @@ class ContextMainForm(MainForm):
 
   def submitSelectWorkflow(self, label=None, value=None,
                            script_id='viewWorkflowActionDialog',
-                           maximum_attempt_number=1, sleep_between_attempt=0,
+                           maximum_attempt_number=1,
+                           sleep_between_attempt=0,
+                           dialog_name=None,
+                           dialog_expected_transition_message=None,
                            **kw):
     """
     Select and submit a workflow action, given either by its label
@@ -874,11 +879,24 @@ class ContextMainForm(MainForm):
     in I{/Person_viewCreateUserActionDialog?workflow_action=create_user_action},
     with C{script_id=Person_viewCreateUserActionDialog}). See L{submitSelect}.
 
-    When validating an object, L{submitDialogConfirm} allows to
-    perform the validation required on the next page.
+    When validating an object, L{submitDialogConfirm} allows to perform the
+    validation required on the next page, and can be called directly by
+    passing the function object in C{dialog_name} parameter.
 
     As the Workflow action may not be available yet, it is possible to set the
     maximum number of attempts and the sleep duration between each attempt.
+
+    The return value depends on the parameters (see C{timeInSecondDecorator}):
+    - C{dialog_name} is given:
+      - If C{maximum_attempt_number} equals to 1:
+        (show_page_after_dialog_time, show_dialog_time)
+      - Otherwise:
+        (show_page_after_dialog_time, show_dialog_time, wait_time)
+    - Otherwise:
+      - If C{maximum_attempt_number} equals to 1:
+        show_dialog_time
+      - Otherwise:
+        (show_dialog_time, wait_time)
 
     @param script_id: Script identifier
     @type script_id: str
@@ -886,6 +904,10 @@ class ContextMainForm(MainForm):
     @type maximum_attempt_number: int
     @param sleep_between_attempt: Sleep N seconds between attempts
     @type sleep_between_attempt: int
+    @param dialog_name: Function to call after the workflow action ('cancel' or 'confirm')
+    @type dialog_name: str
+    @param dialog_expected_transition_message: Expected dialog transition message
+    @type dialog_expected_transition_message: str
     """
     url_before = self.browser.url
 
@@ -899,15 +921,32 @@ class ContextMainForm(MainForm):
         self.browser.mainForm.submitSelect(
           'select_action', 'Base_doAction:method', label,
           value and '%s?field_my_workflow_action=%s' % (script_id, value), **kw)
-    
+
+      if dialog_name:
+        show_dialog_time = self.lastRequestSeconds
+
+        # TODO: Should it fail completely if the dialog could not be found?
+        getattr(self.browser.mainForm,
+                'submitDialog' + dialog_name.capitalize())()
+
+        if dialog_expected_transition_message:
+          transition_message = self.browser.getTransitionMessage()
+          if transition_message != dialog_expected_transition_message:
+            raise AssertionError("Expected transition message: %s, got: %s" % \
+                                   (dialog_expected_transition_message,
+                                    transition_message))
+
+        return show_dialog_time
+
     if maximum_attempt_number == 1:
-      tryLegacyAndNew()
+      return tryLegacyAndNew()
     else:
+      show_dialog_time = None
       current_attempt_number = 1
       while True:
         try:
-          tryLegacyAndNew()
-        except LookupError:
+          show_dialog_time = tryLegacyAndNew()
+        except (AssertionError, LookupError):
           if current_attempt_number == maximum_attempt_number:
             raise
 
@@ -919,7 +958,11 @@ class ContextMainForm(MainForm):
         else:
           break
 
-      return (current_attempt_number - 1) * sleep_between_attempt
+      wait_time = (current_attempt_number - 1) * sleep_between_attempt
+      if show_dialog_time is not None:
+        return (show_dialog_time, wait_time)
+
+      return wait_time
 
   def submitDialogCancel(self):
     """
