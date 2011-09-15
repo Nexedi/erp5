@@ -1,3 +1,6 @@
+2011-09-15 tatuya
+* Fix the issue that Sale Packing List wrongly has Root Applied Rule sometimes when it is created by Delivery Builder with a site which has many activity nodes.
+
 2011-06-23 tatuya
 * Show the owner at Inventory module listbox because the inventories can be owned by multiple sections.
 
