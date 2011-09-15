@@ -39,6 +39,10 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
 from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email.MIMEText import MIMEText
+from email import Encoders
 
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_data', 'crm_emails', name)
@@ -783,6 +787,38 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEquals('Hi, this is the Message.\nERP5 is a free software.\n\n',
                       mixed_document.getTextContent())
     self.assertEquals('text/plain', mixed_document.getContentType())
+
+  def test_flawed_html_attachment(self):
+    portal_type = 'Mail Message'
+    event = self.portal.getDefaultModule(portal_type).newContent(portal_type=portal_type)
+    # build message content with flwd attachment
+    plain_text_message = 'You can read this'
+    html_filename = 'broken_html.html'
+    file_path = '%s/test_data/%s' % (__file__.rstrip('c').replace(__name__+'.py', ''),
+                                     html_filename,)
+    html_message = open(file_path, 'r').read()
+    message = MIMEMultipart('alternative')
+    message.attach(MIMEText('text plain content', _charset='utf-8'))
+    part = MIMEBase('text', 'html')
+    part.set_payload(html_message)
+    Encoders.encode_base64(part)
+
+    part.add_header('Content-Disposition', 'attachment',
+                    filename=html_filename)
+    part.add_header('Content-ID', '<%s>' % \
+                    ''.join(['%s' % ord(i) for i in html_filename]))
+    message.attach(part)
+    event.setData(message.as_string())
+    transaction.commit()
+    self.tic()
+    self.assertTrue('html' in event.getTextContent())
+    self.assertEquals(len(event.getAttachmentInformationList()), 2)
+    self.assertTrue(bool(event.getAttachmentData(1)))
+    self.assertTrue(bool(event.getAttachmentData(2)))
+
+
+
+
 
 
 ## TODO:
