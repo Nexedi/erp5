@@ -793,7 +793,8 @@ class SelectionTool( BaseTool, SimpleItem ):
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'nextPage')
-    def nextPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
+    def nextPage(self, list_selection_name, listbox_uid, uids=None,
+                 list_start=0, REQUEST=None):
       """
         Access the next page of a list
       """
@@ -802,21 +803,23 @@ class SelectionTool( BaseTool, SimpleItem ):
       if selection is not None:
         params = selection.getParams()
         lines = int(params.get('list_lines', 0))
-        form = REQUEST.form
-        if form.has_key('page_start'):
-          try:
-            list_start = (int(form.pop('page_start', 0)) - 1) * lines
-          except (ValueError, TypeError):
-            list_start = 0
-        else:
-          list_start = int(form.pop('list_start', 0))
+        if REQUEST is not None:
+          form = REQUEST.form
+          if form.has_key('page_start'):
+            try:
+              list_start = (int(form.pop('page_start', 0)) - 1) * lines
+            except (ValueError, TypeError):
+              list_start = 0
+          else:
+            list_start = int(form.pop('list_start', 0))
         params['list_start'] = max(list_start + lines, 0)
         selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
       return self.checkAll(list_selection_name, uids, REQUEST=REQUEST)
 
     security.declareProtected(ERP5Permissions.View, 'previousPage')
-    def previousPage(self, list_selection_name, listbox_uid, uids=None, REQUEST=None):
+    def previousPage(self, list_selection_name, listbox_uid, uids=None,
+                     list_start=0, REQUEST=None):
       """
         Access the previous page of a list
       """
@@ -825,14 +828,15 @@ class SelectionTool( BaseTool, SimpleItem ):
       if selection is not None:
         params = selection.getParams()
         lines = int(params.get('list_lines', 0))
-        form = REQUEST.form
-        if form.has_key('page_start'):
-          try:
-            list_start = (int(form.pop('page_start', 0)) - 1) * lines
-          except (ValueError, TypeError):
-            list_start = 0
-        else:
-          list_start = int(form.pop('list_start', 0))
+        if REQUEST is not None:
+          form = REQUEST.form
+          if form.has_key('page_start'):
+            try:
+              list_start = (int(form.pop('page_start', 0)) - 1) * lines
+            except (ValueError, TypeError):
+              list_start = 0
+          else:
+            list_start = int(form.pop('list_start', 0))
         params['list_start'] = max(list_start - lines, 0)
         selection.edit(params=params)
       self.uncheckAll(list_selection_name, listbox_uid)
