@@ -50,39 +50,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Render a "normal" form or an OOo template in an activity and send it by email\n
-from Products.ERP5Type.Message import translateString\n
+            <value> <string>from Products.ERP5Type.Message import translateString\n
 portal = context.getPortalObject()\n
 request = portal.REQUEST\n
-request.form.update(request_form)\n
 \n
-if skin_name and skin_name != \'None\': # make_query serializes None as \'None\'\n
-  portal.portal_skins.changeSkin(skin_name)\n
+if not attachment_list:\n
+  raise ValueError\n
+attachment_name = attachment_list[0][\'name\']\n
 \n
-report_data = getattr(context, deferred_style_dialog_method)(**params)\n
-\n
-attachment_name = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
-                        \'content-disposition\') or \'\').split(\';\')\n
-                      if x.startswith(\' filename=\')][0]\n
-if attachment_name.startswith(\'"\'):\n
-  attachment_name = attachment_name[1:]\n
-if attachment_name.endswith(\'"\'):\n
-  attachment_name = attachment_name[:-1]\n
-attachment_list = (\n
-  {\'mime_type\': (request.RESPONSE.getHeader(\'content-type\') or \'application/octet-stream;\').split(\';\')[0],\n
-   \'content\': \'%s\' % report_data,\n
-   \'name\': attachment_name},)\n
-\n
-return context.Base_sendReportByEmail(attachment_list, user_name)\n
+portal.portal_notifications.sendMessage(\n
+  recipient=user_name,\n
+  subject=attachment_name.rsplit(\'.\', 1)[0],\n
+  message=str(translateString(\'Your report is attached.\\n\')),\n
+  message_text_format=\'text/plain\',\n
+  notifier_list=(\'Mail Message\',),\n
+  store_as_event=False,\n
+  attachment_list=attachment_list,\n
+  )\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>localizer_language, skin_name, request_form, deferred_style_dialog_method, user_name, params</string> </value>
+            <value> <string>attachment_list, user_name</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_renderSimpleView</string> </value>
+            <value> <string>Base_sendReportByEmail</string> </value>
         </item>
       </dictionary>
     </pickle>

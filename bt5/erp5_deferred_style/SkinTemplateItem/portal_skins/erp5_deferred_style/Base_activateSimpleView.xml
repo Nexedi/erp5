@@ -108,15 +108,26 @@ if hasattr(form, \'ZScriptHTML_tryParams\'):\n
 else:\n
   params[\'format\'] = format\n
 \n
-activity_context.activate(\n
-    activity=\'SQLQueue\', tag=tag, priority=priority).Base_renderSimpleView(\n
-           localizer_language=localizer_language,\n
-           skin_name=skin_name,\n
-           request_form=request_form,\n
-           deferred_style_dialog_method=deferred_style_dialog_method,\n
-           user_name=user_name,\n
-           params=params,\n
-          )\n
+if \'form_id\' in params:\n
+  list_form = getattr(context, params[\'form_id\'], None)\n
+else:\n
+  list_form = form\n
+if params.get(\'print_mode\') == \'list\' and getattr(list_form, \'listbox\', None) is not None: # XXX harcoded id\n
+  # If a listbox is present in form, use deferred renderer\n
+  tag = list_form.listbox.initDeferredRendering(user_name=user_name,\n
+                                                skin_name=skin_name,\n
+                                                format=format,\n
+                                                **params)\n
+else:\n
+  activity_context.activate(\n
+      activity=\'SQLQueue\', tag=tag, priority=priority).Base_renderSimpleView(\n
+            localizer_language=localizer_language,\n
+            skin_name=skin_name,\n
+            request_form=request_form,\n
+            deferred_style_dialog_method=deferred_style_dialog_method,\n
+            user_name=user_name,\n
+            params=params,\n
+            )\n
 \n
 context.activate(activity=\'SQLQueue\', after_tag=tag).getTitle()\n
 \n

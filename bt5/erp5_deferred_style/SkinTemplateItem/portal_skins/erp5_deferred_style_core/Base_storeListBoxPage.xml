@@ -50,39 +50,50 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># Render a "normal" form or an OOo template in an activity and send it by email\n
-from Products.ERP5Type.Message import translateString\n
-portal = context.getPortalObject()\n
-request = portal.REQUEST\n
-request.form.update(request_form)\n
+            <value> <string>portal = context.getPortalObject()\n
+REQUEST = portal.REQUEST\n
+selection = portal.portal_selections.getSelectionFor(selection_name)\n
+listbox = portal.restrictedTraverse(listbox_path)\n
 \n
-if skin_name and skin_name != \'None\': # make_query serializes None as \'None\'\n
-  portal.portal_skins.changeSkin(skin_name)\n
+REQUEST[\'PARENTS\'][0] = context\n
+REQUEST.set(\'here\', context)\n
+parameter_dict = selection.getParams()\n
+list_start = parameter_dict.get(\'list_start\', 0)\n
 \n
-report_data = getattr(context, deferred_style_dialog_method)(**params)\n
-\n
-attachment_name = [x[len(\' filename=\'):] for x in (request.RESPONSE.getHeader(\n
-                        \'content-disposition\') or \'\').split(\';\')\n
-                      if x.startswith(\' filename=\')][0]\n
-if attachment_name.startswith(\'"\'):\n
-  attachment_name = attachment_name[1:]\n
-if attachment_name.endswith(\'"\'):\n
-  attachment_name = attachment_name[:-1]\n
-attachment_list = (\n
-  {\'mime_type\': (request.RESPONSE.getHeader(\'content-type\') or \'application/octet-stream;\').split(\';\')[0],\n
-   \'content\': \'%s\' % report_data,\n
-   \'name\': attachment_name},)\n
-\n
-return context.Base_sendReportByEmail(attachment_list, user_name)\n
+renderer = listbox.get_value(\'default\', render_format=\'deferred_list\')\n
+renderer.setSelectionName(selection_name)\n
+line_list = renderer.call_render(*renderer.positinal_argument_list, **renderer.named_argument_list)\n
+if list_start != 0:\n
+  # remove header column for all pages except first one\n
+  line_list = line_list[1:]\n
+total_pages = renderer.total_pages\n
+current_page = renderer.current_page + 1\n
+if total_pages != current_page:\n
+  portal.portal_selections.nextPage(selection_name, [], list_start=list_start)\n
+  context.activate(active_process=active_process_path,\n
+                   activity=\'SQLQueue\',\n
+                   tag=selection_name).Base_storeListBoxPage(listbox_path,\n
+                                                             selection_name,\n
+                                                             active_process_path,\n
+                                                             skin_name,\n
+                                                             user_name,\n
+                                                             format)\n
+else:\n
+  context.activate(after_tag=selection_name).Base_finaliseDeferredListBox(listbox_path,\n
+                                                                          active_process_path,\n
+                                                                          skin_name,\n
+                                                                          \'Base_sendReportByEmail\',\n
+                                                                          user_name, format)\n
+return line_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>localizer_language, skin_name, request_form, deferred_style_dialog_method, user_name, params</string> </value>
+            <value> <string>listbox_path, selection_name, active_process_path, skin_name, user_name, format</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_renderSimpleView</string> </value>
+            <value> <string>Base_storeListBoxPage</string> </value>
         </item>
       </dictionary>
     </pickle>
