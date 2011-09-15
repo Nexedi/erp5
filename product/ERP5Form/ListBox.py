@@ -502,7 +502,7 @@ def lazyMethod(func):
   decorated.__name__ = func.__name__
   return decorated
 
-class ListBoxRenderer:
+class ListBoxRenderer(object):
   """This class deals with rendering of a ListBox field.
 
   In ListBox, rendering is not only viewing but also setting parameters in a selection
