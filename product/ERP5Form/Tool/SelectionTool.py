@@ -50,7 +50,7 @@ from zLOG import LOG, INFO
 from Acquisition import aq_base
 from Products.ERP5Type.Message import translateString
 import warnings
-
+from copy import deepcopy
 
 _MARKER = []
 
@@ -269,6 +269,21 @@ class SelectionTool( BaseTool, SimpleItem ):
       selection = self._getSelectionFromContainer(selection_name)
       if selection is not None:
         return selection.__of__(self)
+
+    security.declareProtected(ERP5Permissions.AddPortalContent, 'cloneSelectionFor')
+    def cloneSelectionFor(self, selection_name, prefix='cloned_'):
+      """For deferred listbox
+      """
+      if not selection_name or not prefix:
+        return None
+      selection = self._getSelectionFromContainer(selection_name)
+      cloned_selection = deepcopy(selection)
+      selection_name = '%s%s' % (prefix, selection_name)
+      self.setSelectionFor(selection_name, cloned_selection)
+      parameter_dict = cloned_selection.getParams()
+      parameter_dict['selection_name'] = selection_name
+      cloned_selection.edit(params=parameter_dict)
+      return cloned_selection.__of__(self)
 
     def __getitem__(self, key):
         return self.getSelectionParamsFor(key)
