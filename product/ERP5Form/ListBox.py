@@ -498,6 +498,8 @@ def lazyMethod(func):
       result = func(self, *args, **kw)
       setattr(self, key, result)
       return result
+  decorated.__doc__ = func.__doc__
+  decorated.__name__ = func.__name__
   return decorated
 
 class ListBoxRenderer:
