@@ -34,39 +34,31 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
 
-class TestZeleniumCore(ERP5TypeFunctionalTestCase):
+class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
 
-    def getBusinessTemplateList(self):
-        """
-          Return the list of business templates.
-        """
-        return ('erp5_core_proxy_field_legacy', 'erp5_full_text_myisam_catalog',
-                'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',
-                'erp5_dhtml_style', 'erp5_dhtml_ui_test',
-                'erp5_xhtml_jquery_style', 'erp5_jquery', 'erp5_jquery_ui',
-                'erp5_knowledge_pad',
-                'erp5_trade', 'erp5_pdm', 'erp5_ooo_import',
-                'erp5_accounting', 'erp5_invoicing',
-                'erp5_simplified_invoicing', 'erp5_project',
-                'erp5_simulation', 'erp5_simulation_test',
-                'erp5_accounting_ui_test',
-                'erp5_pdm_ui_test',
-                'erp5_trade_ui_test',
-                'erp5_project_ui_test',
-                'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-                'erp5_web', 'erp5_dms', 'erp5_dms_ui_test',
-                'erp5_knowledge_pad_ui_test',
-                'erp5_credential',
-                'erp5_rss_style', 'erp5_discussion',
-                'erp5_l10n_fr',
-                'erp5_crm',
-                # erp5_web_ui_test must run at the last, because it logs out
-                # manager user and continue other tests as a user created in
-                # that test.
-                'erp5_web_ui_test',
-                )
+  run_only = "user_tutorial_zuite"
+
+  def getBusinessTemplateList(self):
+    """
+      Return the list of business templates.
+    """
+    return ('erp5_core_proxy_field_legacy', 'erp5_full_text_myisam_catalog',
+            'erp5_base', 'erp5_ui_test_core', 'erp5_ui_test', 'erp5_forge',
+            'erp5_dhtml_style',
+            'erp5_xhtml_jquery_style', 'erp5_jquery', 'erp5_jquery_ui',
+            'erp5_knowledge_pad',
+            'erp5_trade', 'erp5_pdm', 'erp5_ooo_import',
+            'erp5_accounting', 'erp5_invoicing',
+            'erp5_simplified_invoicing', 'erp5_project',
+            'erp5_simulation', 'erp5_simulation_test',
+            'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_web', 'erp5_dms', 'erp5_credential',
+            'erp5_rss_style', 'erp5_discussion',
+            'erp5_l10n_fr', 'erp5_crm',
+            'erp5_user_tutorial_ui_test',
+           )
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestZeleniumCore))
+    suite.addTest(unittest.makeSuite(TestZeleniumStandaloneUserTutorial))
     return suite
