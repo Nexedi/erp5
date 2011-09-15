@@ -54,6 +54,12 @@ def parseArguments():
                       metavar='FILENAME',
                       help='PDF output file (default: results.pdf)')
 
+  parser.add_argument('--merge-identical-labels',
+                      dest='do_merge_label',
+                      action='store_true',
+                      default=False,
+                      help='Merge identical labels (default: False)')
+
   parser.add_argument('report_directory',
                       help='Reports directory')
 
@@ -69,6 +75,7 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list):
   reader_list = []
   stat_list = []
   label_list = []
+  merged_label_dict = {}
 
   for filename in filename_list:
     reader = csv.reader(open(filename, 'rb'), delimiter=',',
@@ -80,7 +87,15 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list):
     row_list = reader.next()
     if not label_list:
       label_list = row_list
+      label_merged_index = 0
       for label in label_list:
+        if argument_namespace.do_merge_label:
+          if label in merged_label_dict:
+            continue
+
+          merged_label_dict[label] = label_merged_index
+          label_merged_index += 1
+
         stat_list.append(BenchmarkResultStatistic(*label.split(': ', 1)))
 
     if row_list != label_list:
@@ -89,7 +104,8 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list):
 
     for row_list in reader:
       for idx, row in enumerate(row_list):
-        stat_list[idx].add(float(row))
+        index = merged_label_dict.get(label_list[idx], idx)
+        stat_list[index].add(float(row))
 
   return stat_list
 
