@@ -53,7 +53,7 @@
             <value> <string># By default, there are three cache_managers, http_cache and anonymous_http_cache and user_ram_cache.\n
 cache_manager_id = \'http_cache\'\n
 message_list = []\n
-return type(upgrade)\n
+\n
 def setCache(skin):\n
   for o in skin.objectValues():\n
     id = o.id\n
