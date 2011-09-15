@@ -479,6 +479,9 @@ class ListBoxWidget(Widget.Widget):
         if render_format == 'list':
           renderer = ListBoxListRenderer(self, field, REQUEST,
                                          render_prefix=render_prefix)
+        elif render_format == 'deferred_list':
+          renderer = ListBoxDeferredListRenderer(self, field, REQUEST,
+                                                 render_prefix=render_prefix)
         else:
           renderer = ListBoxHTMLRenderer(self, field, REQUEST, render_prefix=render_prefix)
 
@@ -2734,6 +2737,46 @@ class ListBoxListRenderer(ListBoxRenderer):
 
     return listboxline_list
 
+class ListBoxDeferredListRenderer(ListBoxListRenderer):
+
+  def getSelectionName(self):
+    """Return the selection name.
+    """
+    return self.selection_name
+
+  def getLineStart(self):
+    """Return a requested start number.
+    """
+    return int(self.getParamDict().get('list_start', 0))
+
+  getLineStart = lazyMethod(getLineStart)
+
+  def getMaxLineNumber(self):
+    """Return the maximum number of lines shown in a page.
+    """
+    return self.field.get_value('lines')
+
+  def setSelectionName(self, selection_name):
+    self.selection_name = selection_name
+
+  def render(self, *args, **kw):
+    self.positinal_argument_list = args
+    self.named_argument_list = kw
+    if 'active_process_path' in kw:
+      portal = self.getContext().getPortalObject()
+      active_process_path = kw['active_process_path']
+      active_process = portal.restrictedTraverse(active_process_path)
+      listbox_list = []
+      for active_result in active_process.getResultList():
+        listbox_list.extend(active_result.getResult())
+      return listbox_list
+    return self
+
+  def call_render(self):
+    return super(ListBoxDeferredListRenderer, self).render()
+
+allow_class(ListBoxDeferredListRenderer)
+
 class ListBoxValidator(Validator.Validator):
     property_names = Validator.Validator.property_names
     message_names = Validator.Validator.message_names + ['required_not_found']
@@ -2937,7 +2980,8 @@ class ListBox(ZMIField):
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
     if (id == 'default'):
-      if (kw.get('render_format') in ('list', )):
+      render_format = kw.get('render_format')
+      if render_format in ('list', 'deferred_list',):
         request = kw.get('REQUEST', None)
         if request is None:
           request = get_request()
@@ -2949,7 +2993,7 @@ class ListBox(ZMIField):
           self)
         return self.widget.render(field, self.generate_field_key(), None,
                                   request,
-                                  render_format=kw.get('render_format'),
+                                  render_format=render_format,
                                   render_prefix=kw.get('render_prefix'))
       else:
         return None
