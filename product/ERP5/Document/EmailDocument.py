@@ -230,20 +230,7 @@ class EmailDocument(TextDocument):
             'Failed to decode %s header of %s with error: %s' %
             (name, self.getPath(), error_message))
       for text, encoding in decoded_header:
-        try:
-          if encoding is not None:
-            text = text.decode(encoding).encode('utf-8')
-          else:
-            text = text.decode().encode('utf-8')
-        except (UnicodeDecodeError, LookupError), error_message:
-          encoding = guessEncodingFromText(text, content_type='text/plain')
-          if encoding is not None:
-            try:
-              text = text.decode(encoding).encode('utf-8')
-            except (UnicodeDecodeError, LookupError), error_message:
-              text = repr(text)[1:-1]
-          else:
-            text = repr(text)[1:-1]
+        text, encoding = testCharsetAndConvert(text, 'text/plain', encoding)
         if name in result:
           result[name] = '%s %s' % (result[name], text)
         else:
@@ -322,9 +309,15 @@ class EmailDocument(TextDocument):
             RESPONSE.setHeader('Content-disposition',
                                'attachment; filename="%s"' % filename)
         if 'text/html' in content_type:
+          part_encoding = part.get_content_charset()
+          message_text = part.get_payload(decode=1)
+          text_result, encoding = testCharsetAndConvert(message_text,
+                                                        content_type,
+                                                        part_encoding)
           # Strip out html content in safe mode.
           mime, content = self.convert(format='html',
-                                       text_content=part.get_payload(decode=1),
+                                       text_content=text_result,
+                                       encoding=part_encoding,
                                        index=index) # add index to generate
                                        # a unique cache key per attachment
         else:
@@ -465,32 +458,13 @@ class EmailDocument(TextDocument):
       else:
         part_encoding = part.get_content_charset()
         message_text = part.get_payload(decode=1)
+        text_result, encoding = testCharsetAndConvert(message_text,
+                                                      part.get_content_type(),
+                                                      part_encoding)
         if part.get_content_type() == 'text/html':
           mime, text_result = self.convert(format='html',
-                                           text_content=message_text,
+                                           text_content=text_result,
                                            charset=part_encoding)
-        else:
-          if part_encoding != 'utf-8':
-            try:
-              if part_encoding is not None:
-                text_result = message_text.decode(part_encoding).encode('utf-8')
-              else:
-                text_result = message_text.decode().encode('utf-8')
-            except (UnicodeDecodeError, LookupError), error_message:
-              LOG('EmailDocument.getTextContent', INFO, 
-                  'Failed to decode %s TEXT message of %s with error: %s' % 
-                  (part_encoding, self.getPath(), error_message))
-              codec = guessEncodingFromText(message_text,
-                                            content_type=part.get_content_type())
-              if codec is not None:
-                try:
-                  text_result = message_text.decode(codec).encode('utf-8')
-                except (UnicodeDecodeError, LookupError):
-                  text_result = repr(message_text)
-              else:
-                text_result = repr(message_text)
-          else:
-            text_result = message_text
 
     if default is _MARKER:
       return text_result
@@ -765,3 +739,20 @@ class EmailDocument(TextDocument):
   # getData must be implemented like File.getData is.
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   getData = File.getData
+
+def testCharsetAndConvert(text_content, content_type, encoding):
+  try:
+    if encoding is not None:
+      text_content = text_content.decode(encoding).encode('utf-8')
+    else:
+      text_content = text_content.decode().encode('utf-8')
+  except (UnicodeDecodeError, LookupError), error_message:
+    encoding = guessEncodingFromText(text_content, content_type)
+    if encoding is not None:
+      try:
+        text_content = text_content.decode(encoding).encode('utf-8')
+      except (UnicodeDecodeError, LookupError):
+        text_content = repr(text_content)[1:-1]
+    else:
+      text_content = repr(text_content)[1:-1]
+  return text_content, encoding
