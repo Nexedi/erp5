@@ -223,6 +223,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 
 import glob
 import os
+import sys
 import re
 
 user_re = re.compile('-(\d+)users-')
@@ -238,6 +239,11 @@ def generateReport():
 
   per_nb_users_report_dict = {}
   for filename in filename_iter:
+    # There may be no results at all in case of errors
+    if not os.stat(filename).st_size:
+      print >>sys.stderr, "Ignoring empty file %s" % filename
+      continue
+
     report_dict = per_nb_users_report_dict.setdefault(
       int(user_re.search(filename).group(1)), {'filename': []})
 
