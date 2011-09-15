@@ -1926,7 +1926,7 @@ class ListBoxRenderer(object):
       selection.edit(report = None)
     else:
       # Flat list mode or domain tree mode.
-      selection.edit(params = param_dict, report = None)
+      selection.edit(report=None)
 
       domain_found = 0
       if self.isDomainTreeMode():
