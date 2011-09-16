@@ -12,13 +12,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Purchase Packing List to Validate (%(count)s)</string> </value>
+            <value> <string>Sale Packing List to Validate (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-purchase_packing_list_module/view?simulation_state=stopped&portal_type=Purchase+Packing+List&local_roles:list=Assignor&reset=1
+sale_packing_list_module/view?simulation_state=started&portal_type=Sale+Packing+List&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
@@ -34,7 +34,7 @@ purchase_packing_list_module/view?simulation_state=stopped&portal_type=Purchase+
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>3_stopped_purchase_packing_list_list</string> </value>
+            <value> <string>14_started_sale_packing_list_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -76,7 +76,7 @@ purchase_packing_list_module/view?simulation_state=stopped&portal_type=Purchase+
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Purchase Packing List</string>
+                        <string>Sale Packing List</string>
                       </tuple>
                     </value>
                 </item>
@@ -84,7 +84,7 @@ purchase_packing_list_module/view?simulation_state=stopped&portal_type=Purchase+
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>stopped</string>
+                        <string>started</string>
                       </tuple>
                     </value>
                 </item>

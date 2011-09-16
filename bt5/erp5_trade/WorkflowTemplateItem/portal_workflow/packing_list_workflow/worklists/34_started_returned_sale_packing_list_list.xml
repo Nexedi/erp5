@@ -11,14 +11,18 @@
             <value> <string>global</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sale Packing List to Ship (%(count)s)</string> </value>
+            <value> <string>Returned Sale Packing List to Receive (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_packing_list_module/view?simulation_state=ready&portal_type=Sale+Packing+List&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
+returned_sale_packing_list_module/view?simulation_state=started&portal_type=Returned+Sale+Packing+List&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
@@ -34,7 +38,7 @@ sale_packing_list_module/view?simulation_state=ready&portal_type=Sale+Packing+Li
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>6_ready_sale_packing_list_list</string> </value>
+            <value> <string>34_started_returned_sale_packing_list_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -55,7 +59,6 @@ sale_packing_list_module/view?simulation_state=ready&portal_type=Sale+Packing+Li
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
                 <string>Assignor</string>
               </tuple>
             </value>
@@ -77,7 +80,7 @@ sale_packing_list_module/view?simulation_state=ready&portal_type=Sale+Packing+Li
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Sale Packing List</string>
+                        <string>Returned Sale Packing List</string>
                       </tuple>
                     </value>
                 </item>
@@ -85,7 +88,7 @@ sale_packing_list_module/view?simulation_state=ready&portal_type=Sale+Packing+Li
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>ready</string>
+                        <string>started</string>
                       </tuple>
                     </value>
                 </item>

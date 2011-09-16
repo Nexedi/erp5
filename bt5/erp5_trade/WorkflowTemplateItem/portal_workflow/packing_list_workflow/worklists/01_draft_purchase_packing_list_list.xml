@@ -12,13 +12,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sale Packing List to Prepare (%(count)s)</string> </value>
+            <value> <string>Purchase Packing List to Confirm (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_packing_list_module/view?simulation_state=confirmed&portal_type=Sale+Packing+List&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
+purchase_packing_list_module/view?simulation_state=draft&portal_type=Purchase+Packing+List&local_roles:list=Owner&reset=1
 
 ]]></string> </value>
         </item>
@@ -34,7 +34,7 @@ sale_packing_list_module/view?simulation_state=confirmed&portal_type=Sale+Packin
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>5_confirmed_sale_packing_list_list</string> </value>
+            <value> <string>01_draft_purchase_packing_list_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -55,8 +55,7 @@ sale_packing_list_module/view?simulation_state=confirmed&portal_type=Sale+Packin
             <key> <string>roles</string> </key>
             <value>
               <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
+                <string>Owner</string>
               </tuple>
             </value>
         </item>
@@ -77,7 +76,7 @@ sale_packing_list_module/view?simulation_state=confirmed&portal_type=Sale+Packin
                     <key> <string>portal_type</string> </key>
                     <value>
                       <tuple>
-                        <string>Sale Packing List</string>
+                        <string>Purchase Packing List</string>
                       </tuple>
                     </value>
                 </item>
@@ -85,7 +84,7 @@ sale_packing_list_module/view?simulation_state=confirmed&portal_type=Sale+Packin
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>confirmed</string>
+                        <string>draft</string>
                       </tuple>
                     </value>
                 </item>

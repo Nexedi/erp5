@@ -12,13 +12,13 @@
         </item>
         <item>
             <key> <string>actbox_name</string> </key>
-            <value> <string>Sale Packing List to Validate (%(count)s)</string> </value>
+            <value> <string>Sale Packing List to Ship (%(count)s)</string> </value>
         </item>
         <item>
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-sale_packing_list_module/view?simulation_state=started&portal_type=Sale+Packing+List&local_roles:list=Assignor&reset=1
+sale_packing_list_module/view?simulation_state=ready&portal_type=Sale+Packing+List&local_roles:list=Assignee&local_roles:list=Assignor&reset=1
 
 ]]></string> </value>
         </item>
@@ -34,7 +34,7 @@ sale_packing_list_module/view?simulation_state=started&portal_type=Sale+Packing+
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>7_started_sale_packing_list_list</string> </value>
+            <value> <string>13_ready_sale_packing_list_list</string> </value>
         </item>
         <item>
             <key> <string>var_matches</string> </key>
@@ -55,6 +55,7 @@ sale_packing_list_module/view?simulation_state=started&portal_type=Sale+Packing+
             <key> <string>roles</string> </key>
             <value>
               <tuple>
+                <string>Assignee</string>
                 <string>Assignor</string>
               </tuple>
             </value>
@@ -84,7 +85,7 @@ sale_packing_list_module/view?simulation_state=started&portal_type=Sale+Packing+
                     <key> <string>simulation_state</string> </key>
                     <value>
                       <tuple>
-                        <string>started</string>
+                        <string>ready</string>
                       </tuple>
                     </value>
                 </item>
