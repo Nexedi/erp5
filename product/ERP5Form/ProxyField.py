@@ -138,6 +138,8 @@ class ProxyWidget(Widget.Widget):
   render_odg = WidgetDelegatedMethod('render_odg', default=None)
   get_javascript_list = WidgetDelegatedMethod(
                             'get_javascript_list', default=[])
+  initDeferredRendering = WidgetDelegatedMethod('initDeferredRendering',
+                                                default=None)
 
 
 class ProxyValidator(Validator.Validator):

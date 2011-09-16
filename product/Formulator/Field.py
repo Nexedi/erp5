@@ -454,6 +454,10 @@ class Field:
                          (self.values.values()+self.tales.values()+
                           self.overrides.values())))
 
+    security.declareProtected('Access contents information', 'initDeferredRendering')
+    def initDeferredRendering(self, **kw):
+      return self.widget.initDeferredRendering(self, **kw)
+
 InitializeClass(Field)
     
 class ZMIField(

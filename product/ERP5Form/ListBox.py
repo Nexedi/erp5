@@ -40,6 +40,7 @@ from Products.ERP5Type.Document import newTempBase
 from Products.CMFCore.utils import getToolByName
 from Products.ZSQLCatalog.zsqlbrain import ZSQLBrain
 from Products.ERP5Type.Message import Message
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 from Acquisition import aq_base, aq_self, aq_inner
 import Acquisition
@@ -52,6 +53,8 @@ from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from warnings import warn
 from hashlib import md5
 import cgi
+import random
+from DateTime import DateTime
 
 DEFAULT_LISTBOX_DISPLAY_STYLE = 'table'
 DEFAULT_LISTBOX_PAGE_NAVIGATION_TEMPLATE = 'ListBox_viewSliderPageNavigationRenderer'
@@ -486,6 +489,30 @@ class ListBoxWidget(Widget.Widget):
           renderer = ListBoxHTMLRenderer(self, field, REQUEST, render_prefix=render_prefix)
 
         return renderer()
+    @UnrestrictedMethod
+    def initDeferredRendering(self, field, skin_name=None, user_name=None,
+                              format=None, **kw):
+        """
+        """
+        selection_name = field.get_value('selection_name')
+        portal = field.getPortalObject()
+        prefix = '%s%s' % (DateTime(), random.randint(100, 10000))
+        selection = portal.portal_selections.cloneSelectionFor(selection_name, prefix)
+        parameter_dict = selection.getParams()
+        parameter_dict['list_start'] = 0
+        selection.edit(params=parameter_dict)
+        active_process = portal.portal_activities.newActiveProcess()
+        listbox_path = '%s/%s/%s' % (field.aq_parent.aq_parent.getPath(),
+                                     field.aq_parent.getId(),
+                                     field.getId())
+        field.activate(active_process=active_process, activity='SQLQueue',
+                       tag=selection.name).Base_storeListBoxPage(listbox_path,
+                                                                 selection.name,
+                                                                 active_process.getPath(),
+                                                                 skin_name,
+                                                                 user_name,
+                                                                 format)
+        return selection.name
 
 ListBoxWidgetInstance = ListBoxWidget()
 
