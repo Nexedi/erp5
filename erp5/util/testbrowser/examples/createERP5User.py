@@ -13,20 +13,22 @@ import sys
 from erp5.util.testbrowser.browser import Browser
 
 try:
-  url, site_id, username, password, user_nbr, new_username_prefix, \
+  url, username, password, user_nbr, new_username_prefix, \
       new_password = sys.argv[1:]
 
   user_nbr = int(user_nbr)
 
 except ValueError:
-  print >>sys.stderr, "ERROR: Missing arguments: %s URL SITE_ID USERNAME " \
+  print >>sys.stderr, "ERROR: Missing arguments: %s URL USERNAME " \
       "PASSWORD NUMBER_OF_USERS NEW_USERNAME_PREFIX NEW_USERS_PASSWORD" % \
       sys.argv[0]
 
   sys.exit(1)
 
 # Create a browser instance
-browser = Browser(url, site_id, username=username, password=password)
+browser = Browser(url, username, password)
+browser.open()
+browser.mainForm.submitLogin()
 
 erp5_role_tuple = ('Assignee',
                    'Assignor',
@@ -41,12 +43,15 @@ erp5_role_tuple = ('Assignee',
 post_data_format = "submit=Add&roles:list=Manager&roles:list=Owner&name=" \
     "%(username)s&password=%(password)s&confirm=%(password)s"
 
+# TODO: Because of post() not wrapped properly
+zope_url = url.rsplit('/', 2)[0]
+
 for index in range(user_nbr):
   new_username = "%s%d" % (new_username_prefix, index)
 
   browser.open('/acl_users/manage_users')
 
-  browser.post('%s/acl_users/manage_users' % url,
+  browser.post('%s/acl_users/manage_users' % zope_url,
                post_data_format % {'username': new_username,
                                    'password': new_password})
 
