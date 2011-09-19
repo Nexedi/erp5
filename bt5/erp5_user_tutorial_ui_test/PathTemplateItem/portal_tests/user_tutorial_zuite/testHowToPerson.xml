@@ -40,13 +40,17 @@
       xmlns:metal="http://xml.zope.org/namespaces/metal">\n
 <head>\n
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n
-<title>How-To Person</title>\n
+<title>How-To Person - Tutorial Reference -user-Howto.Create.Persons</title>\n
 </head>\n
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">How-To Person</td></tr>\n
-</thead><tbody>\n
+<tr>\n
+  <td rowspan="1" colspan="3">How-To Person - Tutorial Reference -user-Howto.Create.Persons</td>\n
+</tr>\n
+</thead>\n
+\n
+<tbody>\n
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
 \n
@@ -65,16 +69,24 @@
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_functional_test_user">Login As Functional Test User</span>\n
 \n
+\n
+<!-- Screenshot on slide 3 of user-Howto.Create.Persons -->\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_module"]</td>\n
   <td>Persons</td>\n
 </tr>\n
+\n
+\n
+<!-- Screenshot on slide 4 of user-Howto.Create.Persons -->\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
   <td>Add Person</td>\n
 </tr>\n
+\n
+\n
+<!-- Screenshot on slide 5 of user-Howto.Create.Persons -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//div[@id="transition_message"]</td>\n
@@ -85,6 +97,9 @@
   <td>//li[@class="selected"]/a/span</td>\n
   <td>View</td>\n
 </tr>\n
+\n
+\n
+<!-- Screenshot on slide 6 of user-Howto.Create.Persons -->\n
 <tr>\n
   <td>type</td>\n
   <td>//input[@name="field_my_first_name"]</td>\n
@@ -100,13 +115,11 @@
   <td>//input[@name="field_my_career_subordination_title"]</td>\n
   <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_organisation_title\']"></td>\n
 </tr>\n
-\n
 <tr>\n
   <td>type</td>\n
   <td>//input[@name="field_my_default_email_text"]</td>\n
   <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_email\']"></td>\n
 </tr>\n
-\n
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="subfield_field_my_career_role_list_default:list"]</td>\n
@@ -115,13 +128,16 @@
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_my_career_function"]</td>\n
-  <td>Marketing/Manager</td>\n
+  <td>Marketing/Marketing Manager</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@name="Base_edit:method"]</td>\n
   <td></td>\n
 </tr>\n
+\n
+\n
+<!-- Screenshot on slide 7 of user-Howto.Create.Persons -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//div[@id="information_area"]</td>\n
@@ -147,11 +163,16 @@
   <td>Input data has errors. Please look at the error messages below.</td>\n
   <td></td>\n
 </tr>\n
+\n
+\n
+<!-- Screenshot on slide 8 and 9 of user-Howto.Create.Persons -->\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>link=Details</td>\n
   <td></td>\n
 </tr>\n
+\n
+<!-- Screenshot on slide 10-11 of user-Howto.Create.Persons -->\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
@@ -167,6 +188,9 @@
   <td>//li[@class="selected"]/a/span</td>\n
   <td>Details</td>\n
 </tr>\n
+\n
+\n
+<!-- Screenshot on slide 12 of user-Howto.Create.Persons -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//div[@id="transition_message"]</td>\n
@@ -188,11 +212,17 @@
   <td>${base_url}/view</td>\n
   <td></td>\n
 </tr>\n
+\n
+\n
+<!-- Screenshot on slide 13 of user-Howto.Create.Persons -->\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_module"]</td>\n
   <td>Persons</td>\n
 </tr>\n
+\n
+\n
+<!-- Screenshot on slide 14 of user-Howto.Create.Persons -->\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//div[@id="breadcrumb"]/a[1]</td>\n
@@ -203,6 +233,9 @@
   <td>//div[@id="breadcrumb"]/a[2]</td>\n
   <td>Persons</td>\n
 </tr>\n
+\n
+\n
+<!-- Screenshot on slide 15 of user-Howto.Create.Persons -->\n
 <tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'person_howto_title\']],), enter_object=True)"/>\n
 <tr>\n
   <td>pause</td>\n
@@ -210,7 +243,9 @@
   <td></td>\n
 </tr>\n
 \n
-<!-- Create second person -->\n
+\n
+\n
+<!-- Create second person. The user-Howto.Create.Persons does not create this person. -->\n
 <tr>\n
   <td>open</td>\n
   <td>${base_url}/view</td>\n
