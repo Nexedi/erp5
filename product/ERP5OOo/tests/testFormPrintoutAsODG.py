@@ -322,10 +322,11 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
 
     # check the image is in the odg file
     try:
-      builder.extract("Pictures/0.png")
+      image_data = builder.extract("Pictures/0.png")
     except KeyError:
       self.fail('image "Pictures/0.png" not found in odg document')
-
+    self.assertEquals(image.getData(), image_data,
+                      '%s != %s' % (len(image.getData()), len(image_data)))
     content = etree.XML(content_xml)
     image_frame_xpath = '//draw:frame[@draw:name="image_view"]'
     image_frame_list = content.xpath(image_frame_xpath, namespaces=content.nsmap)
