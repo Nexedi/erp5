@@ -133,8 +133,12 @@ class ImageFieldWidget(Widget.TextWidget):
       image_object = field.getPortalObject().restrictedTraverse(path)
       display = field.get_value('image_display')
       format = field.get_value('image_format')
-      image_parameter_dict = { 'display': display,
-                               'format':format}
+      resolution = field.get_value('image_resolution')
+      image_parameter_dict = {'format': format}
+      if display:
+        image_parameter_dict['display'] = display
+      if resolution:
+        image_parameter_dict['resolution'] = resolution
       # convert the image using fields parameters. In this way, if an image
       # is displayed in the form as a thumbnail, it will be added in the odg
       # document as thumbnail size/quality
