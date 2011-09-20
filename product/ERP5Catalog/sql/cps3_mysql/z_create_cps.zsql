@@ -35,4 +35,4 @@ CREATE TABLE `cps` (
   FULLTEXT KEY `PrincipiaSearchSource` (`PrincipiaSearchSource`),
   FULLTEXT KEY `SearchableText` (`SearchableText`),
   FULLTEXT KEY `ZCTitle` (`ZCTitle`)
-) TYPE=MyISAM;
+) ENGINE=MyISAM;
