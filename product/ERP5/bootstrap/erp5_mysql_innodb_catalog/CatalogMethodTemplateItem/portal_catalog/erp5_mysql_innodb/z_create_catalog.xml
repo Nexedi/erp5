@@ -113,7 +113,7 @@ CREATE TABLE `catalog` (\n
   KEY `invoice_state` (`invoice_state`),\n
   KEY `payment_state` (`payment_state`),\n
   KEY `event_state` (`event_state`)\n
-) TYPE=InnoDB;\n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

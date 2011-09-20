@@ -76,7 +76,7 @@ CREATE TABLE `movement` (\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `is_accountable` (`is_accountable`),\n
   KEY `variation_text` (`variation_text`)\n
-) TYPE=InnoDB;\n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

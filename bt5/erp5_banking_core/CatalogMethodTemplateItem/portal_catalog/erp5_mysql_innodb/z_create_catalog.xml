@@ -92,7 +92,7 @@ CREATE TABLE `catalog` (\n
   KEY `Path` (`path`),\n
   KEY `relative_url` (`relative_url`),\n
   KEY `indexation_date` (`indexation_date`)\n
-) TYPE=InnoDB;\n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

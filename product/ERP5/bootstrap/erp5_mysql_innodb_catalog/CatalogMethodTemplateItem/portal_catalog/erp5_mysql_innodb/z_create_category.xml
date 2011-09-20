@@ -63,7 +63,7 @@ CREATE TABLE `category` (\n
   `category_strict_membership` tinyint(1) default \'0\',\n
   PRIMARY KEY (`uid`, `category_uid`, `base_category_uid`, `category_strict_membership`),\n
   KEY `Membership` (`category_uid`,`base_category_uid`)\n
-) TYPE = InnoDB;</string> </value>
+) ENGINE=InnoDB;</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -66,7 +66,7 @@ CREATE TABLE `alarm` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
   `alarm_date` DATETIME,\n
   PRIMARY KEY  (`uid`)\n
-) TYPE=InnoDB;\n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

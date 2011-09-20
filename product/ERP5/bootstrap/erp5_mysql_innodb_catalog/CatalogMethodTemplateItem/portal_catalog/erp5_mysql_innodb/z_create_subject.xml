@@ -57,7 +57,7 @@
   subject VARCHAR(255),\n
   KEY `subject_set_uid` (`subject_set_uid`),\n
   KEY `subject` (`subject`)\n
-) TYPE=InnoDB; \n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

@@ -35,4 +35,4 @@ CREATE TABLE `compatibility` (
   PRIMARY KEY  (`uid`),
   KEY `Type` (`Type`),
   KEY `review_state` (`review_state`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;

@@ -88,7 +88,7 @@ CREATE TABLE `stock` (\n
   KEY `resource_payment_uid` (`resource_uid`, `payment_uid`),\n
   KEY `resource_payment_state_date` (`resource_uid`, `payment_uid`, `simulation_state`, `date`),\n
   KEY `node_resource_variation_state_date` (`node_uid`, `resource_uid`, `variation_text`, `simulation_state`, `date`)\n
-) TYPE = InnoDB;\n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

@@ -77,7 +77,7 @@ CREATE TABLE `item` (\n
   KEY `variation_text` (`variation_text`),\n
   KEY `aggregate_simulation_state_date` (`aggregate_uid`,`simulation_state`,`date`),\n
   KEY `node_simulation_state_date` (`node_uid`,`simulation_state`,`date`)\n
-) TYPE=InnoDB;\n
+) ENGINE=InnoDB;\n
 \n
 </string> </value>
         </item>

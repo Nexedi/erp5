@@ -13,4 +13,4 @@ CREATE TABLE local_users_with_roles (
   localUsersWithRoles VARCHAR(40),
   KEY `uid` (`uid`),
   KEY `localUsersWithRoles` (`localUsersWithRoles`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;

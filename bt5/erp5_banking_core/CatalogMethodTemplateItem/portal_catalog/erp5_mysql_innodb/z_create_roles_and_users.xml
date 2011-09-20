@@ -57,7 +57,7 @@
   allowedRolesAndUsers VARCHAR(255) NOT NULL,\n
   KEY `uid` (`uid`),\n
   KEY `allowedRolesAndUsers` (`allowedRolesAndUsers`)\n
-)  TYPE=InnoDB; \n
+)  ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

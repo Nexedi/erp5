@@ -72,7 +72,7 @@
   KEY `destination_section_uid` (`destination_section_uid`),\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `start_date` (`start_date`)\n
-) TYPE=InnoDB\n
+) ENGINE=InnoDB\n
 </string> </value>
         </item>
         <item>

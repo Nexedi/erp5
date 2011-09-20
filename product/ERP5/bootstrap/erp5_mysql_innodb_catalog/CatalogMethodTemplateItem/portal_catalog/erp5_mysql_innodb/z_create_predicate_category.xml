@@ -65,7 +65,7 @@ CREATE TABLE `predicate_category` (\n
   KEY `category_strict_membership` (`category_strict_membership`),\n
   KEY `Membership` (`category_uid`,`base_category_uid`),\n
   KEY `FuzzyMembership` (`category_uid`)\n
-) TYPE = InnoDB; \n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

@@ -36,4 +36,4 @@ CREATE TABLE `movement` (
   KEY `is_orderable` (`is_orderable`),
   KEY `is_deliverable` (`is_deliverable`),
   KEY `variation_text` (`variation_text`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;

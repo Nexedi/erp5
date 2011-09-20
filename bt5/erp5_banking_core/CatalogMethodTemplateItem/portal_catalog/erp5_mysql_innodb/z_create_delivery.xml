@@ -79,7 +79,7 @@
   KEY `resource_uid` (`resource_uid`),\n
   KEY `source_reference` (`source_payment_reference`),\n
   KEY `destination_payment_reference` (`destination_payment_reference`)\n
-) TYPE=InnoDB\n
+) ENGINE=InnoDB\n
 </string> </value>
         </item>
         <item>

@@ -21,4 +21,4 @@ CREATE TABLE `predicate_category` (
   KEY `category_strict_membership` (`category_strict_membership`),
   KEY `Membership` (`category_uid`,`base_category_uid`),
   KEY `FuzzyMembership` (`category_uid`)
-) TYPE = InnoDB; 
+) ENGINE=InnoDB;

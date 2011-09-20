@@ -32,7 +32,7 @@
   `creation_date_index` INT,\n
   PRIMARY KEY  (`uid`),\n
   KEY `creation_date_index` (`creation_date_index`, `frequency_index`)\n
-) TYPE=InnoDB;\n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

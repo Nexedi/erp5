@@ -25,5 +25,5 @@ CREATE TABLE `item` (
   KEY `section_uid` (`section_uid`),
   KEY `resource_uid` (`resource_uid`),
   KEY `variation_text` (`variation_text`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
 

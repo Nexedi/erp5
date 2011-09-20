@@ -42,4 +42,4 @@ CREATE TABLE `stock` (
   KEY `simulation_state` (`simulation_state`),
   KEY `resource_node_uid` (`resource_uid`, `node_uid`),
   KEY `resource_section_node_uid` (`resource_uid`, `section_uid`, `node_uid`, `simulation_state`)
-) TYPE = InnoDB;
+) ENGINE=InnoDB;

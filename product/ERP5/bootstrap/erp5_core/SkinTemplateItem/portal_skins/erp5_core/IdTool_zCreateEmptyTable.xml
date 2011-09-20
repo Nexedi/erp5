@@ -62,7 +62,7 @@
   `id_group` VARBINARY(255),\n
   `last_id` BIGINT UNSIGNED,\n
   PRIMARY KEY  (`id_group`)\n
-) TYPE=InnoDB;</string> </value>
+) ENGINE=InnoDB;</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

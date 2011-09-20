@@ -67,7 +67,7 @@
   KEY `message` (`translated_message`),\n
   KEY `original_message` (`original_message`),\n
   KEY `portal_type` (`portal_type`)\n
-) TYPE=InnoDB;\n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

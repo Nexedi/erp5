@@ -34,4 +34,4 @@ CREATE TABLE `message` (
   KEY (`priority`),
   KEY (`tag`),
   KEY (`order_validation_text`)
-) TYPE = InnoDB
+) ENGINE=InnoDB

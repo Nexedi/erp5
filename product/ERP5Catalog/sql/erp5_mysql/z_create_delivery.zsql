@@ -27,4 +27,4 @@ CREATE TABLE `delivery` (
   KEY `source_section_uid` (`source_section_uid`),
   KEY `destination_section_uid` (`destination_section_uid`),
   KEY `resource_uid` (`resource_uid`)
-) TYPE=InnoDB
+) ENGINE=InnoDB

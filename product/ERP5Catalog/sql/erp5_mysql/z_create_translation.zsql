@@ -15,4 +15,4 @@ CREATE TABLE translation (
   translated_message VARCHAR(255),
   KEY `message` (`translated_message`),
   KEY `original_message` (`original_message`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;

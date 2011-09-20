@@ -1702,7 +1702,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     `uid` BIGINT UNSIGNED NOT NULL,
     `dummy_title` varchar(32) NOT NULL default '',
     PRIMARY KEY  (`uid`)
-    ) TYPE=InnoDB;
+    ) ENGINE=InnoDB;
     """
     drop_summy_table_sql = """
     DROP TABLE IF EXISTS `dummy`
@@ -2706,7 +2706,7 @@ CREATE TABLE `%s` (
   `owner_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `version` (`owner_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -2899,7 +2899,7 @@ CREATE TABLE `%s` (
   PRIMARY KEY  (`uid`),
   KEY `assignee_reference` (`assignee_reference`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -3063,7 +3063,7 @@ CREATE TABLE `%s` (
   PRIMARY KEY  (`uid`),
   KEY `assignee_reference` (`assignee_reference`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -3319,7 +3319,7 @@ CREATE TABLE `%s` (
   `viewable_assignee_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -3549,7 +3549,7 @@ CREATE TABLE `%s` (
   `viewable_assignee_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,

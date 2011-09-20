@@ -13,4 +13,4 @@ CREATE TABLE subject (
   subject VARCHAR(255),
   PRIMARY KEY `uid` (`uid`),
   KEY `allowedRolesAndUsers` (`Subject`)
-) TYPE=InnoDB; 
+) ENGINE=InnoDB;
