@@ -1,7 +1,7 @@
 Changes
 =======
 
-0.2 (unreleased)
+0.2 (2011-09-20)
 ----------------
 
  * Imported from https://svn.erp5.org/repos/public/erp5/trunk/utils/
