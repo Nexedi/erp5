@@ -2885,6 +2885,10 @@ class Base( CopyContainer,
     """
     return getattr(aq_base(self), 'guid', None)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTypeBasedMethod')
+  def getTypeBasedMethod(self, *args, **kw):
+    return self._getTypeBasedMethod(*args, **kw)
+
   # Type Casting
   def _getTypeBasedMethod(self, method_id, fallback_script_id=None,
                                 script_id=None,**kw):
