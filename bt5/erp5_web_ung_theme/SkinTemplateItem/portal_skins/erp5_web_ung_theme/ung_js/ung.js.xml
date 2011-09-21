@@ -86,7 +86,7 @@ function getObjectPropertyValue(method_name){\n
 }\n
 \n
 function showNotImplementedMessage(tag){\n
-  $(tag).fadeIn(400).delay(1000).slideUp(1000);\n
+  $(tag).fadeIn(500).delay(1000).fadeOut(800);\n
 }\n
 \n
 function updateWebPage(){\n

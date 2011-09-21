@@ -1,4 +1,7 @@
 2011-09-21 gabriel.oliveira
+* Move 'Not implemented yet' message to left side
+
+2011-09-21 gabriel.oliveira
 * Make "Refresh" button correctly reset UNG listbox checked items, asynchronously
 
 2011-07-01 gabriel.oliveira

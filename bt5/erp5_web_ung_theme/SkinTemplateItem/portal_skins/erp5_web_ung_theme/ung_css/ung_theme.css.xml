@@ -818,6 +818,8 @@ p#more_properties:hover, p#hide_properties:hover {\n
 a#left_message, a#right_message {\n
   display: none;\n
   color: #FD0A0A;\n
+  float: left;\n
+  margin-right: 10px;\n
 }\n
 \n
 div.listbox-domain-tree-container select {\n
