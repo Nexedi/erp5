@@ -259,6 +259,7 @@ $().ready(function(){\n
   $("p.clear").remove();\n
   if ($("a#login").html() != null){\n
     displayLoginForm();\n
+    return 0;\n
   }\n
   if ($("div.gadget-column").length == 0) {\n
     parameterList = getUrlParameterList();\n
