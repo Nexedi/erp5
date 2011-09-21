@@ -44,7 +44,7 @@
    <a id="login" href="#" i18n:translate="" i18n:domain="ui">Sign in</a>\n
  </tal:block>\n
  <tal:block tal:condition="python:not here.portal_membership.isAnonymousUser()">\n
-   <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
+   | <a tal:content="here/portal_membership/getAuthenticatedMember"/>\n
  </tal:block>\n
  <tal:block tal:condition="python: not here.portal_membership.isAnonymousUser()">\n
    | <a id="settings" href="#" i18n:translate="" i18n:domain="ui">Settings</a> \n
