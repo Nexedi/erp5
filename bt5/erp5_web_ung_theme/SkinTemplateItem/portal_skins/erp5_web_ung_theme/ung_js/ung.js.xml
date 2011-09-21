@@ -268,29 +268,31 @@ $().ready(function(){\n
       $("a#loading_message").show();\n
       setTimeout(checkConversion(), 1000);\n
     }\n
-    switch (getPortalTypeFromContext()) {\n
-      case "Web Page":\n
-        $("div.content").css({"position":"fixed", "bottom": "0px",\n
-                              "left": "0px", "right": "0px"});\n
-        $("div.content").css({"top": "5em"});\n
-        break;\n
-      case "Web Table":\n
-        $("div.content").css({"position":"fixed", "bottom": "0px",\n
-                              "left": "0px", "right": "0px"});\n
-        $("div.content").css({"top": "6em"});\n
-        $.getJSON("Base_getPreferencePathList", function(data){\n
-          var ungPreferencePath = data.preference;\n
-          $.get(ungPreferencePath + \'/getPreferredThemeSheetEditor\', function(data){\n
-            link = $("<link>");\n
-            link.attr("id", "dynamic_css");\n
-            link.attr({type: \'text/css\', rel:\'stylesheet\', href:data});\n
-            $("head").append(link);\n
+    else {\n
+      switch (getPortalTypeFromContext()) {\n
+        case "Web Page":\n
+          $("div.content").css({"position":"fixed", "bottom": "0px",\n
+                                "left": "0px", "right": "0px"});\n
+          $("div.content").css({"top": "5em"});\n
+          break;\n
+        case "Web Table":\n
+          $("div.content").css({"position":"fixed", "bottom": "0px",\n
+                                "left": "0px", "right": "0px"});\n
+          $("div.content").css({"top": "6em"});\n
+          $.getJSON("Base_getPreferencePathList", function(data){\n
+            var ungPreferencePath = data.preference;\n
+            $.get(ungPreferencePath + \'/getPreferredThemeSheetEditor\', function(data){\n
+              link = $("<link>");\n
+              link.attr("id", "dynamic_css");\n
+              link.attr({type: \'text/css\', rel:\'stylesheet\', href:data});\n
+              $("head").append(link);\n
+            });\n
           });\n
-        });\n
-        break;\n
+          break;\n
+      }\n
+      displayDocumentTitle(null);\n
     }\n
   }\n
-  displayDocumentTitle(null);\n
   $("input#upload").click(function(event){\n
     event.preventDefault();\n
     $("#upload_document").dialog("open");\n
