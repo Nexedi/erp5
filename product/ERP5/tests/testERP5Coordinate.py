@@ -95,6 +95,7 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     # check acquired accessors
     person.setDefaultEmailCoordinateText(email_text)
     self.assertEquals(person.getDefaultEmailCoordinateText(), email_text)
+    self.assertEquals(person.getDefaultEmailText(), email_text)
 
   # Old API check backward compatibility
   def test_TelephoneAsText(self):
