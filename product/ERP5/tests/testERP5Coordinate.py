@@ -84,6 +84,14 @@ class TestERP5Coordinate(ERP5TypeTestCase):
     self.assertEquals(address.getCoordinateText(), address_text)
     self.assertEquals(address.asText(), address_text)
 
+    # Check Email
+    email = person.newContent(portal_type='Email')
+    self.assertEquals(email.getCoordinateText(), None)
+    self.assertEquals(email.getCoordinateText(''), '')
+    email_text = 'toto@example.com'
+    email.setCoordinateText(email_text)
+    self.assertEquals(email.getCoordinateText(), email_text)
+    self.assertEquals(email.asText(), email_text)
 
   # Old API check backward compatibility
   def test_TelephoneAsText(self):
