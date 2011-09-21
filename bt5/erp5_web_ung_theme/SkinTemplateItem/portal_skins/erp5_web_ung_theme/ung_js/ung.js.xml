@@ -655,6 +655,7 @@ $().ready(function(){\n
 });\n
 \n
 function configureUNGSearch(data_script) {\n
+  ung_listbox_updater_call = data_script\n
   $(\'input#search_button\').click(function(event){\n
     event.preventDefault();\n
     var searched_text = $(\'input[name="field_your_search_text"]\').val()\n
@@ -733,6 +734,9 @@ function separateUNGListboxGadgetFields() {\n
   // TODO: analyze if this css is breaking layout of \'global scope\'\n
 //  $("body").css("overflow", "hidden");\n
 \n
+  // configure Refresh button\n
+  configureRefreshButton();\n
+\n
   // detach listbox-page-navigation\n
   var gadget_navigation = data.find("div.listbox-footer div.listbox-page-navigation");\n
   if (gadget_navigation) {\n
@@ -789,6 +793,26 @@ function separateUNGListboxGadgetFields() {\n
     event.preventDefault();\n
     changeCheckBoxValue(false);\n
   });\n
+}\n
+\n
+function configureRefreshButton() {\n
+  $(\'a#refresh_button\').click(function(event){\n
+    event.preventDefault();\n
+    // keep old function to call\n
+    var originalUpdater = updater;\n
+    // overwrite (shadowing) to change \'params\' param on the fly\n
+    updater = function() {\n
+      // \'params\' is the fifth param, so treat it\n
+      params = arguments[4]\n
+      params[\'reset:int\'] = 1\n
+      originalUpdater.apply(this, arguments);\n
+    }\n
+    // eval script\n
+    eval(ung_listbox_updater_call)\n
+\n
+    // restore old function\n
+    updater = originalUpdater;\n
+  })\n
 }\n
 \n
 function setPortalStatusMessage(status_message) {\n

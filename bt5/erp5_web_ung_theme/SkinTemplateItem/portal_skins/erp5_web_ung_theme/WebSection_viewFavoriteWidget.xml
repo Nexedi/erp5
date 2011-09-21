@@ -45,7 +45,7 @@
     <a class="domain_selected"></a>\n
     <div tal:content="request/portal_status_message | nothing" class="portal_status_message"/>\n
     <tal:block tal:condition="python: not has_editor">\n
-      <a i18n:translate="" i18n:domain="ui" tal:attributes="href python: request.get(\'URL\') + \'?unfoldDomain=%s.0&\' % domain_url + \n
+      <a id="refresh_button" i18n:translate="" i18n:domain="ui" tal:attributes="href python: request.get(\'URL\') + \'?unfoldDomain=%s.0&\' % domain_url + \n
                                                            \'form_id=erp5_web_ung_layout&\' + \n
                                                            \'list_selection_name=ung_document_list_selection&\' + \n
                                                            \'reset:int=1\'">Refresh</a>\n
