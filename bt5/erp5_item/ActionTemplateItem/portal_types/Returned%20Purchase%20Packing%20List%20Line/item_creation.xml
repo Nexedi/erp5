@@ -16,17 +16,19 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>action_type/object_view</string>
+                <string>action_type/object_fast_input</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>category</string> </key>
-            <value> <string>object_view</string> </value>
+            <value> <string>object_fast_input</string> </value>
         </item>
         <item>
             <key> <string>condition</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -38,23 +40,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>aggregate_item</string> </value>
+            <value> <string>item_creation</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
             <value>
               <tuple>
-                <string>View</string>
+                <string>Modify portal content</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>10.0</float> </value>
+            <value> <float>4.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Aggregated Items</string> </value>
+            <value> <string>Create Items</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -71,7 +73,20 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/Delivery_viewAggregatedItemList</string> </value>
+            <value> <string>string:${object_url}/DeliveryLine_viewItemCreationDialog</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: object.getResource() and object.getResourceValue().getAggregatedPortalTypeList()</string> </value>
         </item>
       </dictionary>
     </pickle>
