@@ -31,6 +31,7 @@ import os
 import shutil
 import tempfile
 import inspect
+import traceback
 from pprint import pformat
 
 from Products.CMFCore.utils import UniqueObject
