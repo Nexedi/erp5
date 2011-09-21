@@ -180,7 +180,7 @@ div.listbox-content table.listbox tbody tr td {\n
   padding:2.2px;\n
 }\n
 \n
-div.listbox-content tr {\n
+div.listbox-content tr, div#change_state_dialog tr {\n
   font-size:13px;\n
   empty-cells:show;\n
   white-space:nowrap;\n
@@ -1151,13 +1151,16 @@ span#no-input-file {\n
   cursor: pointer;\n
 }\n
 \n
-\n
-\n
-\n
 div#change_state_dialog {\n
   display:none;\n
-  width: 480px !important;\n
+  width: inherit !important;\n
   font-size: 14px;\n
+  padding-left: .3em;\n
+  overflow: auto;\n
+}\n
+\n
+div#change_state_dialog table {\n
+  margin-left: 0;\n
 }\n
 \n
 div.xunda {\n

@@ -238,6 +238,23 @@ function displayDocumentTitle(title){\n
   };\n
 }\n
 \n
+// XXX: refactor to upgrade performance of \'updateListboxSelection\' function\n
+function updateListboxSelection() {\n
+  var data_params = $(\'form#main_form\').serializeArray();\n
+  $(\'input[name="knowledge_pad_module_ung_knowledge_pad_ung_docs_listbox_content_listbox_uid:list"]\')\n
+    .each(function() {\n
+      data_params.push({\'name\': \'listbox_uid:list\',\n
+                        \'value\': this.value,}\n
+      );\n
+    })\n
+  $.ajax({\n
+        async: false,\n
+        type: \'POST\',\n
+        url: \'Base_updateListboxSelection\',\n
+        data: $.param(data_params),\n
+  });\n
+}\n
+\n
 $().ready(function(){\n
   $("p.clear").remove();\n
   if ($("a#login").html() != null){\n
@@ -457,13 +474,8 @@ $().ready(function(){\n
     .click(function(event){\n
       event.preventDefault();\n
       $("div#change_state_dialog").html(\'\');\n
-      $.ajax({\n
-        async: false,\n
-        url: \'WebSection_changeStateHelperUpdatePortalSelections\',\n
-        data: $("form#main_form").serialize(),\n
-        success: function(datax){\n
-        }\n
-      });\n
+      // update portal selections\n
+      updateListboxSelection();\n
       $.ajax({\n
         async: false,\n
         url: \'erp5/Folder_viewWorkflowActionDialog\',\n
@@ -497,8 +509,8 @@ $().ready(function(){\n
     });\n
   $("div#change_state_dialog").dialog({\n
     autoOpen: false,\n
-    height: 400,\n
-    width: 600,\n
+    height: \'auto\',\n
+    width: 680,\n
     modal:true,\n
     buttons: {\n
       \'Change State\': function() {\n
@@ -531,7 +543,6 @@ $().ready(function(){\n
       Cancel: function() {\n
         $( this ).dialog("close");\n
       },\n
-\n
     }\n
   });\n
 \n
