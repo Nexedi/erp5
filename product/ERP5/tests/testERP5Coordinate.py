@@ -61,8 +61,8 @@ class TestERP5Coordinate(ERP5TypeTestCase):
   def test_data_coordinate_text_property(self):
     """Check New Coordinate API:
     asText compute printable value
-    setData store user value
-    getData return user value
+    setCoordinateText store user value
+    getCoordinateText return user value
     """
     person = self.getPersonModule().newContent(portal_type='Person')
     # check telephone
