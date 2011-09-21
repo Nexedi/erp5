@@ -297,7 +297,7 @@ def deleteSkinSelection(skin_tool, skin_name):
                                   del_skin=1)
       skin_tool.getPortalObject().changeSkin(None)
 
-def unregisterSkinFolder(skin_tool, skin_folder, skin_selection_list):
+def unregisterSkinFolderId(skin_tool, skin_folder_id, skin_selection_list):
   skin_folder_id = skin_folder.getId()
 
   for skin_selection in skin_selection_list:
@@ -1296,8 +1296,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if container.meta_type == 'CMF Skins Tool':
           # we are removing a skin folder, check and 
           # remove if registered skin selection
-          skin_folder = container[object_id]
-          unregisterSkinFolder(container, skin_folder,
+          unregisterSkinFolderId(container, object_id,
               container.getSkinSelections())
 
         container.manage_delObjects([object_id])
@@ -1697,8 +1696,8 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
               'business_template_registered_skin_selections',
               selection_list)
 
-        unregisterSkinFolder(skin_tool, skin_folder,
-                             skin_tool.getSkinSelections())
+        unregisterSkinFolderId(skin_tool, skin_folder_id,
+                               skin_tool.getSkinSelections())
         registerSkinFolder(skin_tool, skin_folder)
 
   def uninstall(self, context, **kw):
@@ -1712,16 +1711,18 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
       object_keys = self._objects.keys()
 
     for skin_folder_id in object_keys:
-      skin_folder = skin_tool[skin_folder_id]
-      current_selection_list = skin_folder.getProperty(
-        'business_template_registered_skin_selections', [])
+      current_selection_list = []
+      skin_folder = skin_tool.get(skin_folder_id, None)
+      if skin_folder is not None:
+        current_selection_list = skin_folder.getProperty(
+          'business_template_registered_skin_selections', [])
       current_selection_set = set(current_selection_list)
 
       skin_selection_list = self._objects[skin_folder_id]
       if isinstance(skin_selection_list, str):
         skin_selection_list = skin_selection_list.replace(',', ' ').split(' ')
       for skin_selection in skin_selection_list:
-        current_selection_set.remove(skin_selection)
+        current_selection_set.discard(skin_selection)
 
       current_selection_list = list(current_selection_set)
       if current_selection_list:
@@ -1730,15 +1731,16 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
             current_selection_list)
 
         # Unregister skin folder from skin selection
-        unregisterSkinFolder(skin_tool, skin_folder, skin_selection_list)
+        unregisterSkinFolderId(skin_tool, skin_folder_id, skin_selection_list)
       else:
-        delattr(skin_folder, 'business_template_registered_skin_selections')
-
         # Delete all skin selection
         for skin_selection in skin_selection_list:
           deleteSkinSelection(skin_tool, skin_selection)
-        # Register to all other skin selection
-        registerSkinFolder(skin_tool, skin_folder)
+        if skin_folder is not None:
+          delattr(skin_folder, 'business_template_registered_skin_selections')
+          # Register to all other skin selection
+          registerSkinFolder(skin_tool, skin_folder)
+
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
