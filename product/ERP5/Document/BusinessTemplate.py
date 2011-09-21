@@ -298,8 +298,6 @@ def deleteSkinSelection(skin_tool, skin_name):
       skin_tool.getPortalObject().changeSkin(None)
 
 def unregisterSkinFolderId(skin_tool, skin_folder_id, skin_selection_list):
-  skin_folder_id = skin_folder.getId()
-
   for skin_selection in skin_selection_list:
     selection = skin_tool.getSkinPath(skin_selection)
     selection = selection.split(',')
