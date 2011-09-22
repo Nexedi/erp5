@@ -768,7 +768,7 @@ function separateUNGListboxGadgetFields() {\n
   configureRefreshButton();\n
 \n
   // detach listbox-page-navigation\n
-  var gadget_navigation = data.find("div.listbox-footer div.listbox-page-navigation");\n
+  var gadget_navigation = data.find("div.listbox-page-navigation");\n
   if (gadget_navigation) {\n
     ung_toolbar_navigation = $(\'div.toolbar\').find(\'div.listbox-navigation\');\n
     ung_toolbar_navigation.html(gadget_navigation.html());\n
