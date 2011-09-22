@@ -95,6 +95,8 @@ class Url(Coordinate, Base, UrlMixin):
 
 
   def getUrlString(self, default=_marker):
+    """Fallback on coordinate_text
+    """
     if not self.hasUrlString():
       if default is _marker:
         return self.getCoordinateText()
@@ -108,6 +110,8 @@ class Url(Coordinate, Base, UrlMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
   def isDetailed(self):
+    """
+    """
     return self.hasUrlString()
 
   security.declareProtected(Permissions.UseMailhostServices, 'send')
