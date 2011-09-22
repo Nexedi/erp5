@@ -498,7 +498,7 @@ div#select_language li span {\n
   text-decoration:none;\n
 }\n
 \n
-.menu_create_object li a, div#select_language li a {\n
+.menu_create_object li a, div#select_language ul li span {\n
   display:block;\n
   text-decoration:none;\n
 }\n
@@ -529,20 +529,23 @@ div#select_language li li {\n
   width: 100%;\n
 }\n
 \n
-.menu_create_object li li, {\n
-  display:block;\n
-  margin-left:0;\n
+.menu_create_object li li {\n
+  display:block; !important;\n
+  margin-left:0; !important;\n
+  float: none; !important;\n
+  top: 0px;\n
+  margin-top: 5px;\n
 }\n
 \n
 .menu_create_object p {\n
   clear:left;\n
 }\n
 \n
-\n
-.menu_create_object li ul {\n
+.menu_create_object li ul, div#select_language li ul {\n
   border:1px solid #D1D1D1;\n
   background-color: #FFF;\n
 }\n
+\n
 .menu_create_object li ul, div#select_language li ul {\n
   display:none;\n
   height:auto;\n
