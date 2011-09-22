@@ -972,6 +972,7 @@ div.block div.content {\n
 \n
 div.portal-column {\n
   width: 100% !important;\n
+  min-height: 0 !important;\n
 }\n
 \n
 div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left,\n
@@ -1012,6 +1013,10 @@ div#add_new_gadget_link {\n
   border-bottom: 0px;\n
   padding-top: 5px;\n
   width: 50% !important;\n
+}\n
+\n
+div#page_wrapper {\n
+  min-height: 0 !important;\n
 }\n
 \n
 div.front_pad div#page_wrapper {\n
