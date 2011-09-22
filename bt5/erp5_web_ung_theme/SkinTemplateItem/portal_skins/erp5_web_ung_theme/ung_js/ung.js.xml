@@ -400,9 +400,10 @@ $().ready(function(){\n
   });\n
   $("div#preference_dialog").dialog({\n
     autoOpen: false,\n
-    height: 215,\n
-    width: 319,\n
+    height: \'auto\',\n
+    width: \'auto\',\n
     modal:true,\n
+    show: \'drop\',\n
     buttons: {\n
       "Save": function(){\n
         var erp5PreferenceArgument = $("form#erp5_preference").serialize();\n
@@ -454,20 +455,35 @@ $().ready(function(){\n
     .click(function(event){\n
       event.preventDefault();\n
       if ($("div#preference_dialog").html() == ""){\n
-        $.getJSON("Base_getPreferencePathList", function(data){\n
-          ungPreferencePath = data.preference;\n
-          $.get(ungPreferencePath + \'/Preference_viewHtmlStyle?editable_mode:int=1\', function(data){\n
-            $("div#preference_dialog").append("<form id=\'erp5_preference\'>" +\n
-                                              "<fieldset class=\'center editable\'>" +\n
-                                              $(data).find(\'fieldset.center.editable\').html() +\n
-                                              "</fieldset></form>");\n
-          });\n
-          $.get(ungPreferencePath + \'/UNGPreference_view?editable_mode:int=1\', function(data){\n
-            $("div#preference_dialog").append("<form id=\'ung_preference\'>" +\n
-                                              "<fieldset class=\'center editable\'>" +\n
-                                              $(data).find(\'fieldset.center.editable\').html() +\n
-                                              "</fieldset></form>");\n
-          });\n
+        $.ajax({\n
+          url: "Base_getPreferencePathList",\n
+          async: false,\n
+          dataType: \'json\',\n
+          success: function(data){\n
+            ungPreferencePath = data.preference;\n
+            $.ajax({\n
+              url: ungPreferencePath + \'/Preference_viewHtmlStyle?editable_mode:int=1\',\n
+              async: false,\n
+              method: \'get\',\n
+              success: function(data){\n
+                $("div#preference_dialog").append("<form id=\'erp5_preference\'>" +\n
+                                                  "<fieldset class=\'center editable\'>" +\n
+                                                  $(data).find(\'fieldset.center.editable\').html() +\n
+                                                  "</fieldset></form>");\n
+                }\n
+            });\n
+            $.ajax({\n
+              url: ungPreferencePath + \'/UNGPreference_view?editable_mode:int=1\',\n
+              async: false,\n
+              method: \'get\',\n
+              success: function(data){\n
+                $("div#preference_dialog").append("<form id=\'ung_preference\'>" +\n
+                                                  "<fieldset class=\'center editable\'>" +\n
+                                                  $(data).find(\'fieldset.center.editable\').html() +\n
+                                                  "</fieldset></form>");\n
+                }\n
+            });\n
+          }\n
         });\n
       }\n
       $("div#preference_dialog").dialog("open");\n

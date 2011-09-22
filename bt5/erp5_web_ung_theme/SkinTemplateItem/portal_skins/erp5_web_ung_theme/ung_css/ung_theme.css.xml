@@ -892,8 +892,8 @@ div#login-box input.submit {\n
 \n
 div#preference_dialog {\n
   display:none;\n
-  width: 308px !important;\n
   font-size: 14px;\n
+  white-space: nowrap;\n
 }\n
 \n
 fieldset.center.editable, fieldset.right.editable {\n
