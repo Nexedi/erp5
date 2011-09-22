@@ -775,6 +775,9 @@ function separateUNGListboxGadgetFields() {\n
     gadget_navigation.remove();\n
   }\n
 \n
+  // remove \'listbox-title\' from header\n
+  $(\'div.listbox-title\').remove()\n
+\n
   // detach css of listbox-tree\n
   var listboxTreeHeight = data.find("div.listbox-tree").css("height").replace("px", "");\n
   try {\n
