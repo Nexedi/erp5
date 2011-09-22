@@ -866,7 +866,7 @@ fieldset#file_box {\n
   margin-top: -4px;\n
 }\n
 input#submit_document {\n
-  background: url("images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
+  background: url("jquery/ui/css/erp5-theme/images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
   border: 1px solid #3D6474;\n
   color: #555555;\n
   font-weight: normal;\n
