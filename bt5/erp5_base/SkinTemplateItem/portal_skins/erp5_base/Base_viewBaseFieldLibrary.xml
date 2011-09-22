@@ -99,6 +99,8 @@
                         <string>my_view_mode_telephone_country</string>
                         <string>my_view_mode_telephone_extension</string>
                         <string>my_view_mode_telephone_number</string>
+                        <string>my_view_mode_email_coordinate_text</string>
+                        <string>my_view_mode_email_url_string</string>
                       </list>
                     </value>
                 </item>
