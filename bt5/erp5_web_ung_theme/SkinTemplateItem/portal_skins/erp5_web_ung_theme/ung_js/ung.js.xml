@@ -668,7 +668,7 @@ $().ready(function(){\n
         ung_listbox_container.html(data_html);\n
         // attach listener\n
         ung_listbox_container.live(\'DOMSubtreeModified\', checkUNGListbox)\n
-        // eval script\n
+        // eval script to update listbox\n
         eval(data_script)\n
         // remove class \'portal-column\' from main listbox\n
         // (as it should not interfere in user\'s box layout)\n
@@ -731,7 +731,7 @@ function wrappedUpdater() {\n
 }\n
 \n
 function checkUNGListbox() {\n
-  gadget_listbox_container = $(\'div#main_listbox-container div.listbox-container\')\n
+  gadget_listbox_container = $(\'div#main_listbox-container div.listbox-container\');\n
   if (gadget_listbox_container.length >= 1) {\n
     // XXX: the .die and .live calls are because of the call to .find function\n
     // that is triggered recursively without stop if parent has the .live\n
@@ -781,7 +781,7 @@ function separateUNGListboxGadgetFields() {\n
     var domainTreeHeight = data.find("div.listbox-domain-tree-container").css("height").replace("px", "");\n
   } catch(e) {\n
     // this maybe categorize first access of user, needing\n
-    // to reload page, in time to create \'selection\' in portal_selections\n
+    // to reload page in time to create \'selection\' in portal_selections\n
     window.location.reload();\n
     return false;\n
   }\n
