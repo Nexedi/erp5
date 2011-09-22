@@ -141,7 +141,6 @@ div.gadget-column div.file-selection div.file-quick-browser,\n
   padding-top: 5px;\n
   padding-bottom: 5px;\n
   border-bottom: 1px solid #DDD;\n
-  width:14.3em;\n
 }\n
 \n
 div.quick-search-item, td.listbox-table-domain-tree-cell a {\n
@@ -324,8 +323,7 @@ div.header-right {\n
   width: 41.3%;;\n
 }\n
 \n
-div.main-left, div.main-right, div.main {\n
-  height: 45em;\n
+div.main-left, div.main-right {\n
   margin-top: -0.6em;\n
 }\n
 \n
@@ -403,9 +401,11 @@ div.content {\n
   border-top:4px solid #BBCCFF;\n
 }\n
 \n
+/* XXX: This was creating a fixed background colored block of 27em\n
 div.main-right div.content {\n
   height:27em;\n
 }\n
+*/\n
 \n
 div.listbox-body div.main-right tbody {\n
   height:25.35em;\n
@@ -828,8 +828,6 @@ div.listbox-domain-tree-container select {\n
 \n
 div.listbox-tree {\n
   font-size: 13px;\n
-  width: 98.7%;\n
-  overflow: hidden;\n
   height: 233px;\n
 }\n
 \n
