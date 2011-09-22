@@ -1177,29 +1177,6 @@ div#change_state_dialog table {\n
   margin-left: 0;\n
 }\n
 \n
-div.xunda {\n
-  border: 0;\n
-  padding: 0.15em 0.35em 0.400em;\n
-  font-size: 14px;\n
-  margin-left: 5px;\n
-}\n
-\n
-div.xunda div.field label {\n
-  display: block;\n
-}\n
-\n
-div.xunda .sort-button {\n
-  color: #FFFFFF;\n
-}\n
-\n
-/*span#ui-dialog-title-change_state_dialog {*/\n
-/*  margin: 0;*/\n
-/*  margin-top: -2px;*/\n
-/*  margin-left: -10px;*/\n
-/*  font-size: 15px;*/\n
-/*  color: #222222 !important;*/\n
-/*}*/\n
-\n
 div#change_state_dialog div.field {\n
   padding-bottom: 1px;\n
   padding-top: 1px;\n
