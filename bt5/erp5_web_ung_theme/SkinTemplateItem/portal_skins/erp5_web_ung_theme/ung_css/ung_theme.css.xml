@@ -188,7 +188,7 @@ div.listbox-content tr, div#change_state_dialog tr {\n
 }\n
 \n
 tr.DataA:hover, tr.DataB:hover {\n
-  background-color: #DAE6F6;\n
+  background-color: #DAE6F6 !important;\n
 }\n
 \n
 div.listbox-content a img, div.main-content a img {\n
