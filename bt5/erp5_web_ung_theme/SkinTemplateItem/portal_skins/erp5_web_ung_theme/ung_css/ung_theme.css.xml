@@ -512,10 +512,21 @@ div#select_language li span {\n
   display:block;\n
 }\n
 \n
+div#select_language li {\n
+  width: 40px;\n
+  cursor: pointer;\n
+}\n
+\n
+div#select_language li ul {\n
+  width:70px;\n
+}\n
+\n
 div#select_language li li {\n
   background:none repeat scroll 0 0 #FFFFFF;\n
   border-left: 1px solid #C9D7F1;\n
   border-right: 1px solid #C9D7F1;\n
+  border-top: 2px solid transparent;\n
+  width: 100%;\n
 }\n
 \n
 .menu_create_object li li, {\n
@@ -527,9 +538,6 @@ div#select_language li li {\n
   clear:left;\n
 }\n
 \n
-div#select_language li ul {\n
-  width:70px;\n
-}\n
 \n
 .menu_create_object li ul {\n
   border:1px solid #D1D1D1;\n
