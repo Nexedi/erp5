@@ -42,7 +42,11 @@
           type="submit" class="delete"\n
           i18n:translate="" i18n:domain="ui">Delete</button>\n
 \n
-  <button name="WebSection_changeStateOnUNGDocs:method" type="submit" class="change_state"\n
+  <!--<button name="WebSection_changeStateOnUNGDocs:method" type="submit" class="change_state"\n
+          i18n:translate="" i18n:domain="ui">Change State</button>-->\n
+\n
+  <!--<a id="change_state" href="#" i18n:translate="" i18n:domain="ui">Change State</a> -->\n
+  <button id="change_state" name="WebSection_changeStateHelper:method" type="submit" class="change_state"\n
           i18n:translate="" i18n:domain="ui">Change State</button>\n
 \n
   <div class="listbox-navigation"></div>\n
