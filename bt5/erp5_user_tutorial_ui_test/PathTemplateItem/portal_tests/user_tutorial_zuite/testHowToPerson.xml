@@ -116,19 +116,39 @@
   <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_organisation_title\']"></td>\n
 </tr>\n
 <tr>\n
-  <td>type</td>\n
-  <td>//input[@name="field_my_default_email_text"]</td>\n
-  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_email\']"></td>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_gender"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_gender\']"></td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="subfield_field_my_career_role_list_default:list"]</td>\n
-  <td>Client</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_role\']"></td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_my_career_function"]</td>\n
-  <td>Marketing/Marketing Manager</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_career_function\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_career_activity"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_career_activity\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_nationality"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_nationality\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_default_email_coordinate_text"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_email\']"></td>\n
+</tr>\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_default_telephone_my_default_telephone_coordinate_text"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'person_howto_telephone\']"></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
