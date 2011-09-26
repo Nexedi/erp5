@@ -53,6 +53,18 @@
             <value> <string>request = context.REQUEST\n
 isAnon = context.portal_membership.isAnonymousUser()\n
 isAnonymousKnowledgePadUsed = request.get(\'is_anonymous_knowledge_pad_used\', 0);\n
+from zExceptions import Unauthorized\n
+\n
+def safe_filter(func, list):\n
+  ret = []\n
+  append = ret.append\n
+  for e in list:\n
+    try:\n
+      if func(e):\n
+        append(e)\n
+    except Unauthorized:\n
+      pass\n
+  return ret\n
 \n
 def filterKnowledgePadListForContext(results, mode, \n
                                      default_pad_group):\n
@@ -66,15 +78,15 @@ def filterKnowledgePadListForContext(results, mode, \n
   if mode == \'erp5_front\':\n
     # leave only those not having a publication_section as \n
     # this means belonging to root\n
-    results = filter(lambda x: x.getPublicationSection() is None and \\\n
+    results = safe_filter(lambda x: x.getPublicationSection() is None and \\\n
                               x.getGroup() is None, results)\n
   elif mode == \'web_front\':\n
     # Web Site must at least one Pad referenced by context\n
-    results = filter(lambda x: x.getPublicationSectionValue() == real_context and \\\n
+    results = safe_filter(lambda x: x.getPublicationSectionValue() == real_context and \\\n
                               x.getGroup() is None, results)\n
   elif mode == \'web_section\':\n
     # Web Sections, Web Pages can "reuse" tabs\n
-    results = filter(lambda x: x.getPublicationSectionValue() == real_context or \\\n
+    results = safe_filter(lambda x: x.getPublicationSectionValue() == real_context or \\\n
                                 x.getGroup() == default_pad_group, results)\n
   return results\n
 \n
