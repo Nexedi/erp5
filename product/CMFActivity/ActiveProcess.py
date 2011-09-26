@@ -35,7 +35,7 @@ from Products.ERP5Type.ConflictFree import ConflictFreeLog
 from BTrees.Length import Length
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, \
   VALIDATE_ERROR_STATE
-from random import randint
+from random import randrange
 
 manage_addActiveProcessForm = DTMLFile('dtml/ActiveProcess_add', globals())
 
