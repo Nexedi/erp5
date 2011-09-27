@@ -395,7 +395,7 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 \n
 #km_left .document > .content{\n
   float:left;\n
-  margin: 10px;\n
+  margin: 26px 10px 10px;\n
   background-color: #fff;\n
   border:1px solid #c0bfb3;\n
 }\n
