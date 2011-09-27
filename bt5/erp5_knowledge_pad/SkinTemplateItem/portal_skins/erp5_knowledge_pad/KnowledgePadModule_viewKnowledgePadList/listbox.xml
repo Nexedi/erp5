@@ -10,10 +10,10 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
-                <string>selection_name</string>
                 <string>editable_columns</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -93,6 +93,10 @@
                         <tuple>
                           <string>publication_section_title</string>
                           <string>Section</string>
+                        </tuple>
+                        <tuple>
+                          <string>owner</string>
+                          <string>Owner</string>
                         </tuple>
                         <tuple>
                           <string>translated_validation_state_title</string>
