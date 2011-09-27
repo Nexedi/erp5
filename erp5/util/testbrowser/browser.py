@@ -54,6 +54,13 @@ def measurementMetaClass(prefix):
     besides of Browser.
     """
     def __new__(metacls, name, bases, dictionary):
+      def nonBrowserClass_getattr(self, attribute):
+        """
+        Some attributes, such as lastRequestSeconds, are only defined in the
+        Browser class
+        """
+        return getattr(self.browser, attribute)
+
       def timeInSecondDecorator(method):
         def wrapper(self, *args, **kwargs):
           """
@@ -103,14 +110,8 @@ def measurementMetaClass(prefix):
           if callable(attribute) and not getattr(attribute, '__is_wrapper__', False):
             applyMeasure(attribute)
 
-      # lastRequestSeconds properties are only defined on classes inheriting
-      # from zope.testbrowser.browser.Browser, so create these properties for
-      # all other classes too
       if 'Browser' not in bases[0].__name__:
-        time_method = lambda self: self.browser.lastRequestSeconds
-        time_method.func_name = 'lastRequestSeconds'
-        time_method.__doc__ = Browser.lastRequestSeconds.__doc__
-        dictionary['lastRequestSeconds'] = property(time_method)
+        dictionary['__getattr__'] = nonBrowserClass_getattr
 
       return super(MeasurementMetaClass,
                    metacls).__new__(metacls, name, bases, dictionary)
@@ -566,7 +567,7 @@ class MainForm(Form):
                         class attribute name, if class_attribute
                         parameter is given.
     """
-    self.browser._logger.debug(
+    self._logger.debug(
       "Submitting (name='%s', label='%s', class='%s')" % (name, label,
                                                           class_attribute))
 
@@ -645,7 +646,7 @@ class MainForm(Form):
           value = item
           break
 
-    self.browser._logger.debug("select_id='%s', label='%s', value='%s'" % \
+    self._logger.debug("select_id='%s', label='%s', value='%s'" % \
                                  (select_name, label, value))
 
     select_control.getControl(label=label, value=value,
@@ -668,13 +669,13 @@ class MainForm(Form):
            into the page content?
     """
     if 'Logged In as' in self.browser.contents:
-      self.browser._logger.debug("Already logged in")
+      self._logger.debug("Already logged in")
       # TODO: Perhaps zope.testbrowser should be patched instead?
       self.browser.timer.start_time = self.browser.timer.end_time = 0
       return
 
-    self.browser._logger.debug("Logging in: username='%s', password='%s'" % \
-                                 (self.browser._username, self.browser._password))
+    self._logger.debug("Logging in: username='%s', password='%s'" % \
+                         (self.browser._username, self.browser._password))
 
     def login(form):
       form.getControl(name='__ac_name').value = self.browser._username
