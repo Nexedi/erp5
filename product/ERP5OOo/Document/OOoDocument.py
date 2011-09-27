@@ -385,12 +385,7 @@ class OOoDocument(OOoDocumentExtensibleTraversableMixin, BaseConvertableFileMixi
         # store conversion
         self.setConversion(data, mime, format=original_format, **kw)
 
-    if requires_pdf_first:
-      format = original_format
-    if original_format not in VALID_IMAGE_FORMAT_LIST:
-      return self.getConversion(format=original_format)
-    else:
-      return self.getConversion(format=original_format, **kw)
+    return self.getConversion(format=original_format, **kw)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             '_populateConversionCacheWithHTML')
