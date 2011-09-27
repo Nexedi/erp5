@@ -138,8 +138,8 @@ class TestGeographicalAddress(ERP5TypeTestCase):
     self.assertEquals(address.asText(),
         "%s %s\n%s %s" % (self.street_address_number,
                           self.street_address_text,
-                          self.city_text,
-                          self.zip_code_text))
+                          self.zip_code_text,
+                          self.city_text,))
 
   def test_01_standardAddress(self, quiet=0, run=run_all_test):
     """
@@ -163,7 +163,7 @@ class TestGeographicalAddress(ERP5TypeTestCase):
     """
     createZODBPythonScript(self.getPortal().portal_skins.custom,
                            'Address_asText', '', """
-return '%s\\n%s %s' % \\
+return '%s\\n%s %s COUNTRY' % \\
        (context.getStreetAddress(),
         context.getZipCode(), context.getCity())
 """)
@@ -178,7 +178,7 @@ return '%s\\n%s %s' % \\
     """
     address = sequence.get('address')
     self.assertEquals(address.asText(),
-        "%s %s\n%s %s" % (self.street_address_number,
+        "%s %s\n%s %s COUNTRY" % (self.street_address_number,
                           self.street_address_text,
                           self.zip_code_text,
                           self.city_text))
