@@ -192,7 +192,7 @@ fieldset.hidden_fieldset { \n
 \n
 #km_left .text,\n
 #km_front .text {\n
-  padding:10px;\n
+  padding:5px 15px;\n
   width: auto;\n
 }\n
 \n
@@ -444,7 +444,6 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 .content .field label, \n
 .content .field .input {\n
   width: 100%;\n
-  padding-left:10px;\n
 }\n
 \n
 .content .field label {\n
