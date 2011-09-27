@@ -55,10 +55,6 @@ isAnon = context.portal_membership.isAnonymousUser()\n
 isAnonymousKnowledgePadUsed = request.get(\'is_anonymous_knowledge_pad_used\', 0);\n
 from zExceptions import Unauthorized\n
 \n
-if default_pad_group == \'default_content_pad\':\n
-  raise\n
-  context.log(context.getRelativeUrl())\n
-\n
 def filterKnowledgePadListForContext(results, mode, \n
                                      default_pad_group):\n
   # when we use URL as a way to determine site\'s language do not\n
