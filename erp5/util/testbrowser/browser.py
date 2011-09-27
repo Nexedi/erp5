@@ -69,6 +69,10 @@ def measurementMetaClass(prefix):
           return a tuple with the time spent on the request and the time spent
           on waiting
           """
+          if 'sleep' in kwargs:
+            minimum_sleep, maximum_sleep = kwargs.pop('sleep')
+            self.randomSleep(minimum_sleep, maximum_sleep)
+
           ret = method(self, *args, **kwargs)
           if ret is None:
             return self.lastRequestSeconds
@@ -117,6 +121,9 @@ def measurementMetaClass(prefix):
                    metacls).__new__(metacls, name, bases, dictionary)
 
   return MeasurementMetaClass
+
+import random
+import time
 
 class Browser(ExtendedTestBrowser):
   """
@@ -193,6 +200,28 @@ class Browser(ExtendedTestBrowser):
 
     self._logger.debug("Opening url: " + absolute_url)
     super(Browser, self).open(absolute_url, data)
+
+  def randomSleep(self, minimum, maximum):
+    """
+    Allow to randomly sleep in seconds in the interval [minimum,
+    maximum] and is meaningful to simulate an user more realistically.
+
+    It is also called automatically when passing sleep argument to
+    click* (C{Link} classes), submit* (C{Form} classes) or open*
+    (C{Browser} classes) functions, see C{timeInSecondDecorator} wrapper.
+
+    @param minimum: Minimum number of seconds to sleep
+    @type minimum: int
+    @param maximum: Maximum number of seconds to sleep
+    @type maximum: int
+    """
+    sleep_time = random.randint(minimum, maximum)
+
+    self._logger.debug("Sleeping %ds ([%d, %d])" % (sleep_time,
+                                                   minimum,
+                                                   maximum))
+
+    time.sleep(sleep_time)
 
   def getCookieValue(self, name, default=None):
     """
@@ -733,8 +762,6 @@ class MainForm(Form):
     Perform logout.
     """
     self.submitSelectFavourite(value='/logout')
-
-import time
 
 class ContextMainForm(MainForm):
   """
