@@ -602,12 +602,11 @@ class TestCRMMailIngestion(BaseTestCRM):
     self.assertEquals('Hello,\nContent of the mail.\n', str(new_event.getTextContent()))
     self.assertEquals('Mail Message', new_event.getPortalType())
     self.assertEquals('text/plain', new_event.getContentType())
-    # check if parsing of metadata from content is working
-    content_dict = {'source_list': ['person_module/sender'],
-                    'destination_list': ['person_module/me',
-                                         'person_module/he']}
-    self.assertEquals(new_event.getPropertyDictFromContent(), content_dict)
 
+    # check that metadatas read from data are copied on cloned event
+    self.assertEquals(new_event.getSourceList(), ['person_module/sender'])
+    self.assertEquals(new_event.getDestinationList(), ['person_module/me',
+                                                       'person_module/he'])
 
   def test_follow_up(self):
     # follow up is found automatically, based on the content of the mail, and
