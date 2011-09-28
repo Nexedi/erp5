@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_default_email_coordinate_text</string> </value>
+            <value> <string>my_default_email_url_string</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -83,11 +83,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_email</string> </value>
+                    <value> <string>my_view_mode_email_url_string</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewBaseFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -107,7 +107,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: (here.hasDefaultEmail() and not here.getDefaultEmail().isDetailed()) or not here.hasDefaultEmail()</string> </value>
+            <value> <string>python: here.getDefaultEmail().isDetailed()</string> </value>
         </item>
       </dictionary>
     </pickle>
