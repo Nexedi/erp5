@@ -558,7 +558,7 @@ fieldset.registration {\n
 \n
 <tal:block tal:condition="not:display_anonymous_user_registration">\n
 /* We hide registration form fieldset and expand login fieldset*/\n
-fieldset.right{\n
+fieldset.registration.right {\n
   display:none;\n
 }\n
 fieldset.left{\n
