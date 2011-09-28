@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Base_edit</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -59,7 +59,7 @@
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>gadget</string>
+                <string>left</string>
               </list>
             </value>
         </item>
@@ -68,10 +68,11 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>gadget</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_preferred_section_relative_url</string>
+                        <string>my_listbox_selection_list_lines</string>
                       </list>
                     </value>
                 </item>
@@ -88,7 +89,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>Document_viewHistoryGadget</string> </value>
+            <value> <string>WebSection_viewLatestDocumentListGadgetPreferenceDialog</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -112,6 +113,10 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
             <value> <string></string> </value>
         </item>
       </dictionary>
