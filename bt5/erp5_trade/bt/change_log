@@ -1,4 +1,7 @@
 2011-09-28 yusei
+* Improve stock report and show stock also by group.
+
+2011-09-28 yusei
 * Improve Base_getBySiteCurrentStockList and support group category.
 
 2011-09-20 tatuya
