@@ -66,7 +66,9 @@ kw</string> </value>
 
 <dtml-let query="buildSQLQuery(query=portal_catalog.getSecurityQuery(**kw), **kw)"\n
           is_translation_order_by="query[\'order_by_expression\'] is not None and\n
-            \'translated_message\' in query[\'order_by_expression\']">\n
+            \'translated_message\' in query[\'order_by_expression\']"\n
+          selection_domain="kw.get(\'selection_domain\', None)"\n
+          selection_report="kw.get(\'selection_report\', None)">\n
 \n
   <dtml-comment>\n
     Currently, there is no other choice to implement this method as an SQL catalog until SQLCatalog\n
@@ -107,6 +109,12 @@ kw</string> </value>
         <dtml-in prefix="table" expr="query[\'from_table_list\']">\n
           <dtml-var table_item> AS <dtml-var table_key>,\n
         </dtml-in>\n
+        <dtml-if selection_domain>\n
+          <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_domain)">,\n
+        </dtml-if>\n
+        <dtml-if selection_report>\n
+          <dtml-var "portal_selections.buildSQLJoinExpressionFromDomainSelection(selection_report)">,\n
+        </dtml-if>\n
         versioning AS my_versioning\n
         <dtml-if is_translation_order_by>\n
           , translation AS related_translation_intermediate\n
@@ -116,7 +124,12 @@ kw</string> </value>
         <dtml-if "query[\'where_expression\']">\n
           AND <dtml-var "query[\'where_expression\']">\n
         </dtml-if>\n
-\n
+        <dtml-if selection_domain>\n
+          AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_domain)">\n
+        </dtml-if>\n
+        <dtml-if selection_report>\n
+          AND <dtml-var "portal_selections.buildSQLExpressionFromDomainSelection(selection_report)">\n
+        </dtml-if>\n
         <dtml-if all_languages>\n
         <dtml-else>\n
           AND my_versioning.language IN (<dtml-sqlvar language type="string">, \'\')\n
