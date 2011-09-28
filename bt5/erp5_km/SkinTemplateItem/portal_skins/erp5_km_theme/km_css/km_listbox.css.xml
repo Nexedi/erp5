@@ -47,6 +47,9 @@ div.listbox-tree{\n
 div.listbox-content{\n
   width: 85%;\n
 }\n
+div.maximal-width {\n
+  width: 100%;\n
+}\n
 /* Listbox action bar at bottom */\n
 div.listbox-action-widget {\n
   float:none;\n
