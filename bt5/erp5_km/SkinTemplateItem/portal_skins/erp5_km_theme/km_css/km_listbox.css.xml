@@ -41,10 +41,11 @@
             <value> <unicode encoding="cdata"><![CDATA[
 
 <tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
-div.listbox-content-fixed-width,\n
 div.listbox-tree{\n
-  width: auto;\n
-  float: none;\n
+  max-width: 15%;\n
+}\n
+div.listbox-content{\n
+  width: 85%;\n
 }\n
 /* Listbox action bar at bottom */\n
 div.listbox-action-widget {\n
@@ -167,6 +168,7 @@ div.block div.listbox-head-content{\n
   background-color:#FFF;\n
   background: none;\n
   margin-left:0px;\n
+  padding:0;\n
   border: none;\n
 }\n
 div.listbox-title span{\n
