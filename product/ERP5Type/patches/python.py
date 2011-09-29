@@ -113,6 +113,62 @@ if sys.version_info < (2, 7):
   collections.OrderedDict = OrderedDict
 
 
+if 1:
+    # Speed up email parsing (see also http://bugs.python.org/issue1243730)
+    from email import Parser as parser, FeedParser as feedparser # BBB
+
+    NLCRE_crack_split = feedparser.NLCRE_crack.split
+    def push(self, data):
+        """Push some new data into this object."""
+        # <patch>
+        if self._partial[-1:] == '\r':
+            parts = NLCRE_crack_split('\r' + data)
+            parts[0] = self._partial[:-1]
+        else:
+            parts = NLCRE_crack_split(data)
+            parts[0] = self._partial + parts[0]
+        # </patch>
+        # The *ahem* interesting behaviour of re.split when supplied grouping
+        # parentheses is that the last element of the resulting list is the
+        # data after the final RE.  In the case of a NL/CR terminated string,
+        # this is the empty string.
+        self._partial = parts.pop()
+        #GAN 29Mar09  bugs 1555570, 1721862  Confusion at 8K boundary ending with \r:
+        # is there a \n to follow later?
+        if not self._partial and parts and parts[-1].endswith('\r'):
+            self._partial = parts.pop(-2)+parts.pop()
+        # parts is a list of strings, alternating between the line contents
+        # and the eol character(s).  Gather up a list of lines after
+        # re-attaching the newlines.
+        lines = []
+        for i in range(len(parts) // 2):
+            lines.append(parts[i*2] + parts[i*2+1])
+        self.pushlines(lines)
+    feedparser.BufferedSubFile.push = push
+
+    FeedParser = feedparser.FeedParser
+    def parse(self, fp, headersonly=False):
+        """Create a message structure from the data in a file.
+
+        Reads all the data from the file and returns the root of the message
+        structure.  Optional headersonly is a flag specifying whether to stop
+        parsing after reading the headers or not.  The default is False,
+        meaning it parses the entire contents of the file.
+        """
+        feedparser = FeedParser(self._class)
+        if headersonly:
+            feedparser._set_headersonly()
+        while True:
+            # <patch>
+            data = fp.read(65536)
+            # </patch>
+            if not data:
+                break
+            feedparser.feed(data)
+        return feedparser.close()
+    parser.Parser.parse = parse
+
+
 # Workaround bad use of getcwd() in docutils.
 # Required by PortalTransforms.transforms.rest
 from docutils import utils
