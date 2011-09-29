@@ -132,7 +132,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
         restrictedTraverse = self.getPortalObject().restrictedTraverse
         movement_list = [restrictedTraverse(relative_url) for relative_url \
                          in movement_relative_url_list]
-    LOG('movement_list', 0, repr(movement_list))
+    #Please uncomment if you want to debug.
+    #LOG('movement_list', 0, repr(movement_list))
     if not movement_list:
       return []
     # Collect
