@@ -81,6 +81,7 @@
                         <string>your_searchabletext_phrase</string>
                         <string>your_searchabletext_without</string>
                         <string>my_search_portal_type</string>
+                        <string>your_publication_section_relative_url</string>
                         <string>your_creation_from</string>
                         <string>your_creation_to</string>
                       </list>
