@@ -32,9 +32,10 @@ import argparse
 class ArgumentType(object):
   @classmethod
   def directoryType(cls, path):
-    if not (os.path.isdir(path) and os.access(path, os.W_OK)):
-      raise argparse.ArgumentTypeError("'%s' is not a valid directory or is "\
-                                         "not writable" % path)
+    if not os.path.exists(path):
+      os.makedirs(path)
+    elif not (os.path.isdir(path) and os.access(path, os.W_OK)):
+      raise argparse.ArgumentTypeError("'%s' does not seem to be writable" % path)
 
     return path
 
