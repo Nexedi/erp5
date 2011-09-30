@@ -35,7 +35,7 @@ import socket
 from ..testbrowser.browser import Browser
 from .result import NothingFlushedException
 
-RESULT_NUMBER_BEFORE_FLUSHING = 100
+REPEAT_NUMBER_BEFORE_FLUSHING = 10
 
 class BenchmarkProcess(multiprocessing.Process):
   def __init__(self, exit_msg_queue, result_klass, argument_namespace,
@@ -168,7 +168,7 @@ class BenchmarkProcess(multiprocessing.Process):
           self._logger.info("Iteration: %d" % self._current_repeat)
           self.runBenchmarkSuiteList(result)
 
-          if not self._current_repeat % RESULT_NUMBER_BEFORE_FLUSHING:
+          if not self._current_repeat % REPEAT_NUMBER_BEFORE_FLUSHING:
             try:
               result.flush()
             except NothingFlushedException:
