@@ -70,9 +70,7 @@
                 <item>
                     <key> <string>webcontent header bottom</string> </key>
                     <value>
-                      <list>
-                        <string>my_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
