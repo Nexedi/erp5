@@ -46,7 +46,7 @@
               format python: here.getObject().portal_preferences.getPreference(\'preferred_image_format\', \'png\');\n
               description python: here.getDescription();\n
               box_relative_url python: request.get(\'box_relative_url\', \'\');\n
-              dom_id python: modules[\'base64\'].urlsafe_b64encode(\'%s-%s\' %(box_relative_url, here.getUid()))[:-1]">\n
+              dom_id python: modules[\'base64\'].urlsafe_b64encode(\'%s-%s\' %(box_relative_url, here.getUid())).replace(\'=\', \'\')">\n
   <div class="document-gadget-quick-preview">\n
   <div class="teaser"\n
        tal:attributes="onclick string:$(\'#${dom_id}\').toggle();">\n
