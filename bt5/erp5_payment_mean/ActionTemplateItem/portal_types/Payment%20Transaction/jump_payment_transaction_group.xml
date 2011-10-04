@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Payment Transaction Group</string> </value>
+            <value> <string>Related Payment Transaction Group</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
