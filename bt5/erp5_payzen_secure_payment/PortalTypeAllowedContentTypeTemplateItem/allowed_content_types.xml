@@ -1,0 +1,8 @@
+<allowed_content_type_list>
+ <portal_type id="Payzen Service">
+  <item>Link</item>
+ </portal_type>
+ <portal_type id="Secure Payment Tool">
+  <item>Payzen Service</item>
+ </portal_type>
+</allowed_content_type_list>
