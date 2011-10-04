@@ -104,7 +104,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_payzen_url</string>
+                        <string>my_link_url_string</string>
                         <string>my_payzen_site_id</string>
                         <string>my_payzen_ctx_mode</string>
                       </list>
