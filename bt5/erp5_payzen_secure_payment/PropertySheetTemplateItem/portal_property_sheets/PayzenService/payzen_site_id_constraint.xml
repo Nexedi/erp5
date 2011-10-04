@@ -39,7 +39,7 @@
             <key> <string>constraint_property</string> </key>
             <value>
               <tuple>
-                <string>payzen_site_id</string>
+                <string>service_username</string>
               </tuple>
             </value>
         </item>

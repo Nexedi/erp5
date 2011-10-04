@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_payzen_url</string> </value>
+            <value> <string>my_service_username</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -237,7 +237,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Payzen URL</string> </value>
+                    <value> <string>vads_site_id</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
