@@ -106,6 +106,7 @@
                       <list>
                         <string>my_link_url_string</string>
                         <string>my_service_username</string>
+                        <string>my_service_password</string>
                         <string>my_payzen_ctx_mode</string>
                       </list>
                     </value>
