@@ -30,9 +30,15 @@ def makeSuite(node_quantity=None, test_suite=None, revision=None,
 
 def safeRpcCall(function, *args):
   retry = 64
+  xmlrpc_arg_list = []
+  for argument in args:
+    if isinstance(argument, dict):
+      argument = dict([(x, isinstance(y,str) and xmlrpclib.Binary(y) or y) \
+           for (x,y) in argument.iteritems()])
+    xmlrpc_arg_list.append(argument)
   while True:
     try:
-      return function(*args)
+      return function(*xmlrpc_arg_list)
     except (socket.error, xmlrpclib.ProtocolError), e:
       print >>sys.stderr, e
       pprint.pprint(args, file(function._Method__name, 'w'))
