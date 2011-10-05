@@ -44,7 +44,11 @@ class IPaymentService(Interface):
     """
     
   def navigate(self, REQUEST=None, **kw):
-    """Redirect User to the payment page.
+    """Redirects User to the payment page.
+
+    Implementation shall prepare service's expected HTTP query and return
+    correct HTTP response to browser which will lead to external payment page
+    with all required parameters.
     """
     
   def reportPaymentStatus(self, REQUEST=None):
