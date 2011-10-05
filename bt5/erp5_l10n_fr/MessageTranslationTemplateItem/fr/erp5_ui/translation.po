@@ -5548,6 +5548,9 @@ msgstr "Lignes d'inventaire"
 msgid "Inventory Module"
 msgstr "Module des inventaires"
 
+msgid "Inventory Report"
+msgstr "Rapport d'inventaire"
+
 msgid "Inventory State"
 msgstr "État de l'inventaire"
 
