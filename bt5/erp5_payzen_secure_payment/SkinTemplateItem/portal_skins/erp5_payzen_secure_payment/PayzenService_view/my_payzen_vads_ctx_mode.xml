@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_payzen_ctx_mode</string> </value>
+            <value> <string>my_payzen_vads_ctx_mode</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -256,7 +256,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>vads_ctx_mode</string> </value>
+                    <value> <string>Payzen vads_ctx_mode</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>

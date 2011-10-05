@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>payzen_ctx_mode_property</string> </value>
+            <value> <string>payzen_vads_ctx_mode_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
