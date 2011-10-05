@@ -272,6 +272,7 @@ branch = %(branch)s
           # XXX: is it good for all cases (eg: test runner fails too early for
           # any custom code to pick the failure up and react ?)
           remote_test_result_needs_cleanup = False
+          log("call process : %r", (invocation_list,))
           run_test_suite = subprocess.Popen(invocation_list,
             preexec_fn=os.setsid, cwd=config['test_suite_directory'],
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
