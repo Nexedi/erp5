@@ -47,35 +47,36 @@ class PayzenService(XMLObject):
     return self._getTypeBasedMethod("abortPayment")(**kw)
 
   # proposed methods
-  def getFormString(self, document, **kw):
+  def getFormString(self, document, content_dict=None):
     """Returns unterminated form for current document
 
     The responsiblity of the caller is to finish the form."""
     self.Base_checkConsistency()
-    content_kw = dict()
-    content_kw['vads_action_mode'] = self.getPayzenVadsActionMode()
-    content_kw['vads_amount'] = int(document.getTotalPrice() * 100)
+    if content_dict is None:
+      content_dict = dict()
+    content_dict['vads_action_mode'] = self.getPayzenVadsActionMode()
+    content_dict['vads_amount'] = int(document.getTotalPrice() * 100)
     integration_tool = self.restrictedTraverse(self.getIntegrationSite())
-    content_kw['vads_currency'] = integration_tool.getMappingFromCategory(
+    content_dict['vads_currency'] = integration_tool.getMappingFromCategory(
       'resource/currency_module/%s' % document.getPriceCurrencyReference()
       ).split('/')[-1]
-    content_kw['vads_ctx_mode'] = self.getPayzenVadsCtxMode()
-    content_kw['vads_page_action'] = self.getPayzenVadsPageAction()
-    content_kw['vads_payment_config'] = document\
+    content_dict['vads_ctx_mode'] = self.getPayzenVadsCtxMode()
+    content_dict['vads_page_action'] = self.getPayzenVadsPageAction()
+    content_dict['vads_payment_config'] = document\
       .Base_getPayzenServicePaymentConfig()
-    content_kw['vads_site_id'] = self.getServiceUsername()
+    content_dict['vads_site_id'] = self.getServiceUsername()
     # date as YYYYMMDDHHMMSS
-    content_kw['vads_trans_date'] = document.getStartDate().strftime(
+    content_dict['vads_trans_date'] = document.getStartDate().strftime(
       '%Y%m%d%H%M%S')
-    content_kw['vads_trans_id'] = document.Base_getPayzenTransId()
-    content_kw['vads_version'] = self.getPayzenVadsVersion()
+    content_dict['vads_trans_id'] = document.Base_getPayzenTransId()
+    content_dict['vads_version'] = self.getPayzenVadsVersion()
     # all data are completed, now it is time to create signature
-    sorted_keys = content_kw.keys()
+    sorted_keys = content_dict.keys()
     sorted_keys.sort()
     signature = ''
     form = '<FORM METHOD="POST" ACTION="%s">\n' % self.getLinkUrlString()
     for k in sorted_keys:
-      v = str(content_kw[k])
+      v = str(content_dict[k])
       signature += v + '+'
       form += '<INPUT TYPE="HIDDEN" NAME="%s" VALUE="%s">\n' % (k, v)
     signature += self.getServicePassword()
