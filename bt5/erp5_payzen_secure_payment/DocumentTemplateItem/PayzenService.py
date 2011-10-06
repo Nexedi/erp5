@@ -23,9 +23,12 @@ class PayzenService(XMLObject):
     pass
 
   def navigate(self, REQUEST=None, **kw):
-    """Redirect to payzen.eu"""
-    self.Base_checkConsistency()
-    raise NotImplementedError
+    """Navigation not implemented
+
+    Payzen.eu assumes that POST is done directly to the website thus there is
+    no need to provide "proxy" method.
+    """
+    raise NotImplementedError('Method will not be implemented')
 
   def notifySuccess(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
