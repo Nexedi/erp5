@@ -1,5 +1,4 @@
 import zope
-import hashlib
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
@@ -48,40 +47,7 @@ class PayzenService(XMLObject):
 
   # proposed methods
   def getFormString(self, document, **kw):
-    """Returns unterminated form for current document
-
-    The responsiblity of the caller is to finish the form."""
-    self.Base_checkConsistency()
-    content_kw = dict()
-    content_kw['vads_action_mode'] = self.getPayzenVadsActionMode()
-    content_kw['vads_amount'] = int(document.getTotalPrice() * 100)
-    integration_tool = self.restrictedTraverse(self.getIntegrationSite())
-    content_kw['vads_currency'] = integration_tool.getMappingFromCategory(
-      'resource/currency_module/%s' % document.getPriceCurrencyReference()
-      ).split('/')[-1]
-    content_kw['vads_ctx_mode'] = self.getPayzenVadsCtxMode()
-    content_kw['vads_page_action'] = self.getPayzenVadsPageAction()
-    content_kw['vads_payment_config'] = document\
-      .Base_getPayzenServicePaymentConfig()
-    content_kw['vads_site_id'] = self.getServiceUsername()
-    # date as YYYYMMDDHHMMSS
-    content_kw['vads_trans_date'] = document.getStartDate().strftime(
-      '%Y%m%d%H%M%S')
-    content_kw['vads_trans_id'] = document.Base_getPayzenTransId()
-    content_kw['vads_version'] = self.getPayzenVadsVersion()
-    # all data are completed, now it is time to create signature
-    sorted_keys = content_kw.keys()
-    sorted_keys.sort()
-    signature = ''
-    form = '<FORM METHOD="POST" ACTION="%s">\n' % self.getLinkUrlString()
-    for k in sorted_keys:
-      v = str(content_kw[k])
-      signature += v + '+'
-      form += '<INPUT TYPE="HIDDEN" NAME="%s" VALUE="%s">\n' % (k, v)
-    signature += self.getServicePassword()
-    form += '<INPUT TYPE="HIDDEN" NAME="signature" VALUE="%s">' % \
-      hashlib.sha1(signature).hexdigest()
-    return form
+    """Returns form string of against passed document"""
 
   def getSignature(self, document):
     """Returns signature for current document"""
