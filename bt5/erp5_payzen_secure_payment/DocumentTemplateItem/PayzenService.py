@@ -44,13 +44,3 @@ class PayzenService(XMLObject):
     """See Payment Service Interface Documentation"""
     raise NotImplementedError
     return self._getTypeBasedMethod("abortPayment")(**kw)
-
-  # proposed methods
-  def getFormString(self, document, **kw):
-    """Returns form string of against passed document"""
-
-  def getSignature(self, document):
-    """Returns signature for current document"""
-
-  def validateSignature(self, document, signature):
-    """Checks if documents validates against signature"""
