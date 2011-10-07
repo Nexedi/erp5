@@ -133,7 +133,7 @@ div.gadget-column {\n
 \n
 div.gadget-column div.file-selection {\n
   background-color:#fff;\n
-  margin:15px -4px -4px;\n
+  margin:15px -14px -4px -4px;\n
 }\n
 \n
 div.gadget-column div.file-selection div.file-quick-browser,\n
