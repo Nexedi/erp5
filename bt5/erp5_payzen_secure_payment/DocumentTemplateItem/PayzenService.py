@@ -2,6 +2,8 @@ import zope
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Document import newTempDocument
+import hashlib
 
 class PayzenService(XMLObject):
   meta_type = 'Payzen Service'
@@ -22,13 +24,37 @@ class PayzenService(XMLObject):
     """See Payment Service Interface Documentation"""
     pass
 
-  def navigate(self, REQUEST=None, **kw):
-    """Navigation not implemented
-
-    Payzen.eu assumes that POST is done directly to the website thus there is
-    no need to provide "proxy" method.
-    """
-    raise NotImplementedError('Method will not be implemented')
+  def navigate(self, page_template, REQUEST=None, **kw):
+    """Returns configured template used to do the payment"""
+    self.Base_checkConsistency()
+    temp_document = newTempDocument(self, 'id')
+    field_list = [
+      ('vads_action_mode', self.getPayzenVadsActionMode()),
+      ('vads_ctx_mode', self.getPayzenVadsCtxMode()),
+      ('vads_page_action', self.getPayzenVadsPageAction()),
+      ('vads_payment_config', 'SINGLE'),
+      ('vads_site_id', self.getServiceUsername()),
+      ('vads_version', self.getPayzenVadsVersion())
+    ]
+    # fetch all prepared vads_ values and remove them from dict
+    for k in kw.copy():
+      if k.startswith('vads_'):
+        field_list.append((k, kw.pop(k)))
+    field_list.sort()
+    signature = ''
+    for k, v in field_list:
+      signature += v + '+'
+    signature += self.getServicePassword()
+    signature = hashlib.sha1(signature).hexdigest()
+    field_list.append(('signature', signature))
+    temp_document.edit(
+      link_url_string=self.getLinkUrlString(),
+      title='title',
+      field_list=field_list,
+      # append the rest of transmitted parameters page template
+      **kw
+    )
+    return getattr(temp_document, page_template)()
 
   def notifySuccess(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
