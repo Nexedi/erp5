@@ -24,33 +24,39 @@ class PayzenService(XMLObject):
     """See Payment Service Interface Documentation"""
     pass
 
-  def navigate(self, page_template, REQUEST=None, **kw):
-    """Returns configured template used to do the payment"""
-    self.Base_checkConsistency()
-    temp_document = newTempDocument(self, 'id')
+  def _getSignature(self, field_list):
+    field_list.sort()
+    signature = ''
+    for k, v in field_list:
+      signature += v + '+'
+    signature += self.getServicePassword()
+    return hashlib.sha1(signature).hexdigest()
+
+  def _getFieldList(self, payzen_dict):
     field_list = [
       ('vads_action_mode', self.getPayzenVadsActionMode()),
       ('vads_ctx_mode', self.getPayzenVadsCtxMode()),
+      ('vads_contrib', 'ERP5'),
       ('vads_page_action', self.getPayzenVadsPageAction()),
       ('vads_payment_config', 'SINGLE'),
       ('vads_site_id', self.getServiceUsername()),
       ('vads_version', self.getPayzenVadsVersion())
     ]
     # fetch all prepared vads_ values and remove them from dict
-    for k in kw.copy():
-      if k.startswith('vads_'):
-        field_list.append((k, kw.pop(k)))
-    field_list.sort()
-    signature = ''
-    for k, v in field_list:
-      signature += v + '+'
-    signature += self.getServicePassword()
-    signature = hashlib.sha1(signature).hexdigest()
+    for k,v in payzen_dict.iteritems():
+      field_list.append((k, v))
+    signature = self._getSignature(field_list)
     field_list.append(('signature', signature))
+    return field_list
+
+  def navigate(self, page_template, payzen_dict, REQUEST=None, **kw):
+    """Returns configured template used to do the payment"""
+    self.Base_checkConsistency()
+    temp_document = newTempDocument(self, 'id')
     temp_document.edit(
       link_url_string=self.getLinkUrlString(),
       title='title',
-      field_list=field_list,
+      field_list=self._getFieldList(payzen_dict),
       # append the rest of transmitted parameters page template
       **kw
     )
