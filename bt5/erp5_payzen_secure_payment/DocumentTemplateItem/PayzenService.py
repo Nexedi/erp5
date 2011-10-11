@@ -14,17 +14,46 @@ else:
   import time
   class PayzenSOAP:
     """SOAP communication
-    
+
     Methods are returning list of:
       * parsed response
+      * signature check (True or False)
       * sent XML
       * received XML
-    
+
     SOAP protocol is assumed as untrusted and dangerous, users of those methods
     are encouraged to log such messages for future debugging."""
+    def _check_transcationInfoSignature(self, data):
+      received_sorted_keys = ['errorCode', 'extendedErrorCode',
+        'transactionStatus', 'shopId', 'paymentMethod', 'contractNumber',
+        'orderId', 'orderInfo', 'orderInfo2', 'orderInfo3', 'transmissionDate',
+        'transactionId', 'sequenceNb', 'amount', 'initialAmount', 'devise',
+        'cvAmount', 'cvDevise', 'presentationDate', 'type', 'multiplePaiement',
+        'ctxMode', 'cardNumber', 'cardNetwork', 'cardType', 'cardCountry',
+        'cardExpirationDate', 'customerId', 'customerTitle', 'customerName',
+        'customerPhone', 'customerMail', 'customerAddress', 'customerZipCode',
+        'customerCity', 'customerCountry', 'customerLanguage', 'customerIP',
+        'transactionCondition', 'vadsEnrolled', 'vadsStatus', 'vadsECI',
+        'vafdsXID', 'vadsCAVVAlgorithm', 'vadsCAVV', 'vadsSignatureValid',
+        'directoryServer', 'authMode', 'markAmount', 'markDevise', 'markDate',
+        'markNb', 'markResult', 'markCVV2_CVC2', 'authAmount', 'authDevise',
+        'authDate', 'authNb', 'authResult', 'authCVV2_CVC2', 'warrantlyResult',
+        'captureDate', 'captureNumber', 'rapprochementStatut', 'refoundAmount',
+        'refundDevise', 'timestamp']
+      signature = ''
+      for k in received_sorted_keys:
+        v = getattr(data, k, None)
+        if v is not None:
+          signature += str(v) + '+'
+        else:
+          signature += '+'
+      signature += self.getServicePassword()
+      signature = hashlib.sha1(signature).hexdigest()
+      return signature == data.signature
+
     def soap_getInfo(self, transmissionDate, transactionId):
       """Returns getInfo
-      
+
       transmissionDate is "raw" date in format YYYYMMDD, without any marks
       transactionId is id of transaction for this date"""
       client = suds.client.Client(self.wsdl_link.getUrlString())
@@ -49,7 +78,8 @@ else:
       signature += self.getServicePassword()
       kw['wsSignature'] = hashlib.sha1(signature).hexdigest()
       data = client.service.getInfo(**kw)
-      return [data, str(client.last_sent()), str(client.last_received())]
+      return [data, self._check_transcationInfoSignature(data),
+        str(client.last_sent()), str(client.last_received())]
 
 class PayzenService(XMLObject, PayzenSOAP):
   meta_type = 'Payzen Service'
