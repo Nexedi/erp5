@@ -42,11 +42,17 @@ else:
         'refundDevise', 'timestamp']
       signature = ''
       for k in received_sorted_keys:
-        v = getattr(data, k, None)
-        if v is not None:
-          signature += str(v) + '+'
+        try:
+          v = getattr(data, k)
+        except AttributeError:
+          pass
         else:
-          signature += '+'
+          if k in ['transmissionDate', 'presentationDate', 'cardExpirationDate',
+            'markDate', 'authDate', 'captureDate']:
+            # crazyiness again
+            v = time.strftime('%Y%m%d', time.strptime(str(v), '%Y-%m-%d %H:%M:%S'))
+          v = str(v)
+          signature += v + '+'
       signature += self.getServicePassword()
       signature = hashlib.sha1(signature).hexdigest()
       return signature == data.signature
