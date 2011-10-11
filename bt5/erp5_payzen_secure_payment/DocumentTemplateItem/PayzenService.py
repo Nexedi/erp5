@@ -5,7 +5,39 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Document import newTempDocument
 import hashlib
 
-class PayzenService(XMLObject):
+try:
+  import suds
+except ImportError:
+  class PayzenSOAP:
+    pass
+else:
+  import time
+  class PayzenSOAP:
+    def soap_getInfo(self, transmissionDate, transactionId):
+      client = suds.client.Client(self.wsdl_link.getUrlString())
+      sorted_keys = ('shopId', 'transmissionDate', 'transactionId',
+        'sequenceNb', 'ctxMode')
+      kw = dict(
+        transactionId=transactionId,
+        ctxMode=self.getPayzenVadsCtxMode(),
+        shopId=self.getServiceUsername(),
+        sequenceNb=1,
+      )
+      date = time.strptime(transmissionDate, '%Y%m%d')
+      signature = ''
+      for k in sorted_keys:
+        if k == 'transmissionDate':
+          # craziness: date format in signature is different then in sent message
+          v = time.strftime('%Y%m%d', date)
+          kw['transmissionDate'] = time.strftime('%Y-%m-%dT%H:%M:%S', date)
+        else:
+          v = kw[k]
+        signature += str(v) + '+'
+      signature += self.getServicePassword()
+      kw['wsSignature'] = hashlib.sha1(signature).hexdigest()
+      return client.service.getInfo(**kw)
+
+class PayzenService(XMLObject, PayzenSOAP):
   meta_type = 'Payzen Service'
   portal_type = 'Payzen Service'
 
