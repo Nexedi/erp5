@@ -160,10 +160,11 @@ def getClosestDate(date=None, target_date=None,
     -> return DateTime('2004/02/14')
 
   """
-  if date is None:
-    date = DateTime('2000/01/01')
   if target_date is None:
     target_date = DateTime()
+  if date is None:
+    date = DateTime('2000/01/01')
+    date._tz = target_date._tz
 
   earlier_target_date = target_date - millis
 
