@@ -13,7 +13,20 @@ except ImportError:
 else:
   import time
   class PayzenSOAP:
+    """SOAP communication
+    
+    Methods are returning list of:
+      * parsed response
+      * sent XML
+      * received XML
+    
+    SOAP protocol is assumed as untrusted and dangerous, users of those methods
+    are encouraged to log such messages for future debugging."""
     def soap_getInfo(self, transmissionDate, transactionId):
+      """Returns getInfo
+      
+      transmissionDate is "raw" date in format YYYYMMDD, without any marks
+      transactionId is id of transaction for this date"""
       client = suds.client.Client(self.wsdl_link.getUrlString())
       sorted_keys = ('shopId', 'transmissionDate', 'transactionId',
         'sequenceNb', 'ctxMode')
@@ -35,7 +48,8 @@ else:
         signature += str(v) + '+'
       signature += self.getServicePassword()
       kw['wsSignature'] = hashlib.sha1(signature).hexdigest()
-      return client.service.getInfo(**kw)
+      data = client.service.getInfo(**kw)
+      return [data, str(client.last_sent()), str(client.last_received())]
 
 class PayzenService(XMLObject, PayzenSOAP):
   meta_type = 'Payzen Service'
