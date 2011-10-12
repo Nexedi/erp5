@@ -686,7 +686,8 @@ def main(argument_list=None):
       os.environ["erp5_tests_data_fs_path"] = arg
       os.environ["erp5_tests_recreate_catalog"] = "1"
     elif opt ==  '--bt5_path':
-      os.environ["erp5_tests_bt5_path"] = arg
+      os.environ["erp5_tests_bt5_path"] = \
+          os.environ.get("erp5_tests_bt5_path", "") + arg
     elif opt == '--recreate_catalog':
       os.environ["erp5_tests_recreate_catalog"] = arg
     elif opt == "--erp5_sql_connection_string":

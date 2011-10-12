@@ -138,6 +138,7 @@ def run(config):
 [buildout]
 extends = %(software_config_path)s
 """ %  {'software_config_path': os.path.join(repository_path, profile_path)}
+
     if not(buildout_section_id is None):
       profile_content += """
 [%(buildout_section_id)s]
@@ -267,6 +268,9 @@ branch = %(branch)s
                                   '--test_suite_title', test_suite_title,
                                   '--node_quantity', config['node_quantity'],
                                   '--master_url', config['test_suite_master_url']])
+          bt5_path_list = config.get("bt5_path")
+          if bt5_path_list is not None:
+            invocation_list.extend(["--bt5_path", bt5_path_list])
           # From this point, test runner becomes responsible for updating test
           # result.
           # XXX: is it good for all cases (eg: test runner fails too early for

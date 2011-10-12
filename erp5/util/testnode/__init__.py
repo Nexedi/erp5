@@ -105,8 +105,14 @@ def main(*args):
   for section in config.sections():
     if section.startswith('vcs_repository'):
       vcs_repository_list.append(dict(config.items(section)))
-  CONFIG['vcs_repository_list'] = vcs_repository_list
 
+  CONFIG['bt5_path'] = None
+  if 'bt5_path' in config.options("testnode"):
+    bt5_path = config.get("testnode", 'bt5_path')
+    if bt5_path.lower() != "none":
+      CONFIG['bt5_path'] = bt5_path
+
+  CONFIG['vcs_repository_list'] = vcs_repository_list
   CONFIG['test_suite_title'] = geto('test_suite_title')
   CONFIG['test_node_title'] = geto('test_node_title')
   CONFIG['test_suite'] = geto('test_suite')
@@ -127,5 +133,4 @@ def main(*args):
   if 'instance_dict' in config.sections():
     instance_dict = dict(config.items('instance_dict'))
   CONFIG['instance_dict'] = instance_dict
-
   testnode.run(CONFIG)

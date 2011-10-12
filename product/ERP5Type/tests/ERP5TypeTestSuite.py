@@ -301,6 +301,8 @@ class SavedTestSuite(ERP5TypeTestSuite):
     super(SavedTestSuite, self).__init__(*args, **kw)
 
   def __runUnitTest(self, *args, **kw):
+    if self.__dict__.has_key("bt5_path"):
+      args = ("--bt5_path=%s" % self.bt5_path,) + args
     return super(SavedTestSuite, self).runUnitTest(
       '--portal_id=' + self._portal_id,
       *args, **kw)
