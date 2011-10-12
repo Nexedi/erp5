@@ -83,6 +83,7 @@
                         <string>my_preferred_accounting_section_category_strict</string>
                         <string>my_preferred_accounting_transaction_source_section</string>
                         <string>my_preferred_accounting_transaction_currency</string>
+                        <string>my_preferred_accounting_bank_account_display_method</string>
                       </list>
                     </value>
                 </item>

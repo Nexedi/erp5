@@ -95,10 +95,18 @@ if multiple_sections:\n
   else:\n
     a((\'getSourceSectionTitle\', \'Third Party\'))\n
 if multiple_payment:\n
+  bank_account_display_method = \\\n
+    context.portal_preferences.getPreferredAccountingBankAccountDisplayMethod()\n
   if source:\n
-    a((\'getSourcePaymentReference\', \'Bank Account\'))\n
+    if bank_account_display_method == \'bank_account_title\':\n
+      a((\'getSourcePaymentTitle\', \'Bank Account\'))\n
+    else:\n
+      a((\'getSourcePaymentReference\', \'Bank Account\'))\n
   else:\n
-    a((\'getDestinationPaymentReference\', \'Bank Account\'))\n
+    if bank_account_display_method == \'bank_account_title\':\n
+      a((\'getDestinationPaymentTitle\', \'Bank Account\'))\n
+    else:\n
+      a((\'getDestinationPaymentReference\', \'Bank Account\'))\n
 if source:\n
   a((\'source_debit\', \'Debit\'))\n
   a((\'source_credit\', \'Credit\'))\n
