@@ -200,7 +200,7 @@ class OxatisTestConnector:
     xml_element = etree.XML(xml)
     validated = xml_schema.validate(xml_element)
     if validated is False:
-      LOG("validateXMLSchema failed with", ERROR, "%s, xsd = %s\nxml = %s\n" %(xml_schema.error_log.filter_from_errors()[0], xsd.data, xml))
+      LOG("validateXMLSchema failed with", ERROR, "%s, xsd = %s\nxml = %s\n" %(str(xml_schema.error_log.filter_from_errors()[0]), xsd.data, xml))
     assert validated is True
     return validated
 
