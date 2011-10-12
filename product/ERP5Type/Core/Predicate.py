@@ -517,7 +517,9 @@ class Predicate(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'generatePredicate')
   def generatePredicate(self, multimembership_criterion_base_category_list=(),
                         membership_criterion_base_category_list=(),
-                        criterion_property_list=()):
+                        criterion_property_list=(),
+                        identity_criterion=None,
+                        range_criterion=None,):
     """
     This method generates a new temporary predicate based on an ad-hoc
     interpretation of local properties of an object. For example,
@@ -554,16 +556,11 @@ class Predicate(XMLObject):
     # We need to build new criteria for asContext, and we should not
     # modify the original, so we always make copies. Since the usage is
     # temporary, use dicts instead of persistent mappings.
-    identity_criterion = getattr(self, '_identity_criterion', None)
-    if identity_criterion is None:
-      identity_criterion = {}
-    else:
-      identity_criterion = dict(identity_criterion)
-    range_criterion = getattr(self, '_range_criterion', None)
-    if range_criterion is None:
-      range_criterion = {}
-    else:
-      range_criterion = dict(range_criterion)
+    new_identity_criterion = dict(getattr(self, '_identity_criterion', None) or
+                                  {})
+    new_identity_criterion.update(identity_criterion or {})
+    new_range_criterion = dict(getattr(self, '_range_criterion', None) or {})
+    new_range_criterion.update(range_criterion or {})
 
     # Look at local properties and make it criterion properties
     for property in criterion_property_list:
@@ -574,11 +571,11 @@ class Predicate(XMLObject):
           property_max = property + '_range_max'
           if getattr(self, 'get%s' % convertToUpperCase(property), None) is not None\
             and self.getProperty(property) is not None:
-            identity_criterion[property] = self.getProperty(property)
+            new_identity_criterion[property] = self.getProperty(property)
           elif getattr(self, 'get%s' % convertToUpperCase(property_min), None) is not None:
             min = self.getProperty(property_min)
             max = self.getProperty(property_max)
-            range_criterion[property] = (min,max)
+            new_range_criterion[property] = (min,max)
     # Return a new context with new properties, like if
     # we have a predicate with local properties
     new_self = self.asContext(
@@ -586,8 +583,8 @@ class Predicate(XMLObject):
         membership_criterion_base_category=new_membership_criterion_base_category_list,
         multimembership_criterion_base_category=new_multimembership_criterion_base_category_list,
         criterion_property_list=new_criterion_property_list,
-        _identity_criterion=identity_criterion,
-        _range_criterion=range_criterion)
+        _identity_criterion=new_identity_criterion,
+        _range_criterion=new_range_criterion)
 
     return new_self
 
