@@ -109,7 +109,7 @@ def run(config):
   custom_profile_path = os.path.join(config['working_directory'], 'software.cfg')
   config['custom_profile_path'] = custom_profile_path
   vcs_repository_list = config['vcs_repository_list']
-  profile_content = None
+  profile_content = ''
   assert len(vcs_repository_list), "we must have at least one repository"
   try:
     # BBB: Accept global profile_path, which is the same as setting it for the
@@ -119,6 +119,7 @@ def run(config):
     pass
   else:
     vcs_repository_list[0][PROFILE_PATH_KEY] = profile_path
+  profile_path_count = 0
   for vcs_repository in vcs_repository_list:
     url = vcs_repository['url']
     buildout_section_id = vcs_repository.get('buildout_section_id', None)
@@ -132,7 +133,8 @@ def run(config):
     except KeyError:
       pass
     else:
-      if profile_content is not None:
+      profile_path_count += 1
+      if profile_path_count > 1:
         raise ValueError(PROFILE_PATH_KEY + ' defined more than once')
       profile_content = """
 [buildout]
@@ -148,7 +150,7 @@ branch = %(branch)s
         'repository_path' : repository_path,
         'branch' : vcs_repository.get('branch','master')}
 
-  if profile_content is None:
+  if not profile_path_count:
     raise ValueError(PROFILE_PATH_KEY + ' not defined')
   custom_profile = open(custom_profile_path, 'w')
   custom_profile.write(profile_content)
