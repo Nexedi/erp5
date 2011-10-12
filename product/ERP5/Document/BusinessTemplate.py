@@ -3106,15 +3106,15 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     xml = parse(file)
-    property_node = xml.getroot()[0]
-    property_id = property_node.find('id').text
-    prop_type = property_node.find('type').text
-    value_node = property_node.find('value')
-    if prop_type in ('lines', 'tokens'):
-      value = [item.text for item in value_node.findall('item')]
-    else:
-      value = value_node.text
-    self._objects[property_id] = (prop_type, value)
+    for property_node in xml.getroot().findall('property'):
+      property_id = property_node.find('id').text
+      prop_type = property_node.find('type').text
+      value_node = property_node.find('value')
+      if prop_type in ('lines', 'tokens'):
+        value = [item.text for item in value_node.findall('item')]
+      else:
+        value = value_node.text
+      self._objects[property_id] = (prop_type, value)
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
