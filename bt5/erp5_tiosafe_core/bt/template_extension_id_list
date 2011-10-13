@@ -4,3 +4,4 @@ TioSafeBaseConduit
 TioSafeNodeConduit
 TioSafeResourceConduit
 TioSafeDoNothingConduit
+__init__
