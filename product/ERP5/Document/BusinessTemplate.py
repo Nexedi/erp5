@@ -1603,7 +1603,7 @@ class SkinTemplateItem(ObjectTemplateItem):
           if not force:
             if update_dict[relative_url] == 'nothing':
               continue
-      folder = p.unrestrictedTraverse(relative_url)
+      folder = self.unrestrictedResolveValue(p, relative_url)
       for obj in folder.objectValues(spec=('Z SQL Method',)):
         fixZSQLMethod(p, obj)
       if folder.aq_parent.meta_type == 'CMF Skins Tool':
