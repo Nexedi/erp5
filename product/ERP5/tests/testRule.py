@@ -258,7 +258,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
                            'return True')
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
-    # but  add  a  predicate  building  script that  only  matches  on
+    # but add a predicate building script that only matches on
     # Simulation Movements, to affect all rules
     createZODBPythonScript(skin_folder, 'RuleMixin_asPredicate', '',
         """
@@ -290,12 +290,67 @@ return context.generatePredicate(
     self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 1)
     self.assertEqual(len(self.getRuleTool().searchRuleList(self.sm)), 0)
     # Note that we added a range criterion above, which means that if
-    # the packing list no longer falls within the range:
+    # the packing list no longer falls within the range...
     self.pl.setStartDate(self.pl.getStartDate() - 1)
     transaction.commit()
     self.tic()
-    # the rule no longer matches the packing list:
+    # ... then the rule no longer matches the packing list:
     self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 0)
+    # But if we push back the date on the criterion...
+    predicate_script.write("""
+return context.generatePredicate(
+  identity_criterion=dict(portal_type=('Sale Packing List',)),
+  range_criterion=dict(start_date=(%r, None)),
+)
+      """ % self.pl.getStartDate())
+    delivery_rule.reindexObject()
+    transaction.commit()
+    self.tic()
+    # ... it will match again
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 1)
+
+  def test_071_empty_rule_category_matching(self):
+    """
+    test that a category criteria on a rule that doesn't have that category
+    allows the rule to match contexts with and without that category
+    """
+    skin_folder = self.getPortal().portal_skins.custom
+    rule_tool = self.getRuleTool()
+    # add an always-matching predicate test script to the rule
+    createZODBPythonScript(skin_folder, 'good_script', 'rule',
+                           'return True')
+    delivery_rule = self.getRule('default_delivery_rule')
+    delivery_rule.setTestMethodId('good_script')
+    # and  add  a  predicate  building  script that  only  matches  on
+    # Simulation Movements, to affect all rules
+    createZODBPythonScript(skin_folder, 'RuleMixin_asPredicate', '',
+        """
+return context.generatePredicate(
+  identity_criterion=dict(portal_type=(context.movement_type,)),
+  membership_criterion_base_category_list=('trade_phase',),
+)
+        """)
+    # and validate it, which will indirectly reindex the predicate.
+    delivery_rule.validate()
+    transaction.commit()
+    self.tic()
+    # Now since the rule has a trade_phase
+    self.assertEqual(delivery_rule.getTradePhase(), 'default/delivery')
+    # ...then it won't match the Simulation Movement
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 0)
+    # unless it gets a trade_phase itself
+    self.sm.setTradePhase('default/delivery')
+    self.stepTic()
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
+    # But if the rule itself has no trade_phase...
+    delivery_rule.setTradePhase(None)
+    self.stepTic()
+    # then it should match the simulation movement with or without
+    # trade_phase
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
+    self.sm.setTradePhase(None)
+    self.stepTic()
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
 
   def test_08_updateAppliedRule(self, quiet=quiet, run=run_all_test):
     """
