@@ -2165,18 +2165,20 @@ class SynchronizationTool(BaseTool):
             if reset:
               #After a reset we want copy the LAST XML view on Signature.
               #this implementation is not sufficient, need to be improved.
-              if not isinstance(xml_object, str):
+              if not isinstance(xml_object, (str, unicode)):
                 xml_object = etree.tostring(xml_object, encoding='utf-8',
                                             pretty_print=True)
-            else: 
+            else:
               xml_object = conduit.getXMLFromObjectWithId(object,
                                        xml_mapping=\
                                        domain.getXmlBindingGeneratorMethodId(),
                                        context_document=subscriber.getPath())
             #if signature.getValidationState() != 'synchronized':
+            if isinstance(xml_object, unicode):
+              xml_object = xml_object.encode('utf-8')
             signature.synchronize()
             signature.setReference(object.getPath())
-            signature.setData(xml_object)
+            signature.setData(str(xml_object))
             xml_confirmation_list.append(self.SyncMLConfirmation(
                                                         cmd_id=cmd_id,
                                                         cmd='Add',

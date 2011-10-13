@@ -132,6 +132,8 @@ class SyncMLSignature(XMLObject):
     if we want to know if an objects has changed or not
     Returns 1 if MD5 are equals, else it returns 0
     """
+    if isinstance(xml_string, unicode):
+      xml_string = xml_string.encode('utf-8')
     return ((md5.new(xml_string).hexdigest()) == self.getContentMd5())
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setPartialData')

@@ -32,7 +32,7 @@ import unittest
 from zLOG import LOG
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
-import os
+
 
 class TestOxatisSynchronization(ERP5TypeTestCase):
   """
@@ -66,7 +66,7 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
     """
     self.portal = self.getPortal()
     self.oxatis = self.portal.portal_integrations.oxatis
-    
+
     # Create a user for sync
     acl_users = self.portal.acl_users
     acl_users._doAddUser('TioSafeUser', 'TioSafeUserPassword', ['Manager'], [])
@@ -85,7 +85,7 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
     self.oxatis.getResourceValue().validate()
     self.default_resource_id = self.oxatis.getResourceValue().getId()
     self.default_source_id = self.oxatis.getSourceAdministrationValue().getId()
-    
+
     for connector in self.oxatis.contentValues(portal_type="Web Service Connector"):
       # use the test connector
       connector.setTransport("oxatis_test")
@@ -147,7 +147,7 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
             diff += "%s\n" %(line)
           raise AssertionError, diff
 
-          
+
 
   def checkConflicts(self, module, nb_pub_conflicts=0, nb_sub_conflicts=0, in_conflict=True):
     module = self.oxatis[module]
@@ -190,7 +190,7 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
         if document.getTitle() not in excluded_title_list:
           self.assertEqual(len([x for x in document.Base_getRelatedObjectList() if x.getPortalType() == "Sale Trade Condition"]), 1)
         else:
-         self.assertEqual(len([x for x in document.Base_getRelatedObjectList() if x.getPortalType() == "Sale Trade Condition"]), 0) 
+         self.assertEqual(len([x for x in document.Base_getRelatedObjectList() if x.getPortalType() == "Sale Trade Condition"]), 0)
 
   def runPersonSync(self):
     """
@@ -371,7 +371,7 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
 
 
       #
-      # Modify person on both side 
+      # Modify person on both side
       #
       for person in self.portal.person_module.searchFolder(validation_state="validated"):
         if person.getTitle() == "test-Aurélien Calonne":

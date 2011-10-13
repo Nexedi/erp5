@@ -26,7 +26,6 @@
 ##############################################################################
 
 from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
-from lxml import etree
 
 class AccountERP5IntegrationConduit(TioSafeBaseConduit):
   """

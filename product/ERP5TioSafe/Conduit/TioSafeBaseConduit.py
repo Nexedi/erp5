@@ -51,20 +51,24 @@ class TioSafeBaseConduit(ERP5Conduit):
     XXX name of method is not good, because content is not necessarily XML
     return a xml with id replaced by a new id
     """
-    if isinstance(xml, str):
-      xml = etree.XML(xml, parser=parser)
+    if isinstance(xml, str) or isinstance(xml, unicode):
+      xml = etree.XML(str(xml), parser=parser)
     else:
       # copy of xml object for modification
       xml = deepcopy(xml)
     object_element = xml.find('object')
-    if object_element:
+    if object_element and object_element != -1:
       if attribute_name == 'id':
         del object_element.attrib['gid']
       else:
         del object_element.attrib['id']
       object_element.attrib[attribute_name] = new_id
     if as_string:
-      return etree.tostring(xml, pretty_print=True, encoding="utf-8")
+      try:
+        return etree.tostring(xml, pretty_print=True, encoding="utf-8")
+      except:
+        import pdb
+        pdb.set_trace()
     return xml
 
   def _generateConflict(self, path, tag, xml, current_value, new_value, signature):

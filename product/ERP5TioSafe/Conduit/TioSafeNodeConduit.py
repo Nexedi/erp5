@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#               Hervé Poulain <herve@nexedi.com>
+#               HervÃ© Poulain <herve@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,7 +28,7 @@
 ##############################################################################
 
 from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
-from lxml import etree
+
 
 class TioSafeNodeConduit(TioSafeBaseConduit):
   """
@@ -205,7 +206,7 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
 #          value = DateTime(value).strftime(format)
         keyword = {'person_id': document.getId(), tag: value, }
         document.context.person_module.updatePerson(**keyword)
-        
+
     new_document = document.context.person_module[document.getId()]
     document.updateProperties(new_document)
     return conflict_list
@@ -364,10 +365,8 @@ class TioSafeNodeConduit(TioSafeBaseConduit):
 #          value = DateTime(value).strftime(format)
         keyword = {'person_id': document.getId(), tag:value, }
         document.context.person_module.updatePerson(**keyword)
-        
+
 
     new_document = document.context.person_module[document.getId()]
     document.updateProperties(new_document)
     return conflict_list
-
-
