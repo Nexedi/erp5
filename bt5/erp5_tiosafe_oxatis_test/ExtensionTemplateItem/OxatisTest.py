@@ -225,10 +225,10 @@ class OxatisTestConnector:
     if not kw.has_key('data'):
       raise ValueError, "No data passed to UserGetList, got %s / %s" %(args, kw)
     # parse the data to retrieve the date
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="LatestModifiedDateStart")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="LatestModifiedDateStart")
     for event, element in context:
       date_start = element.text
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="LatestModifiedDateEnd")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="LatestModifiedDateEnd")
     for event, element in context:
       date_end = element.text
     date = etree.SubElement(user_list, 'LatestModifiedDateStart')
@@ -264,7 +264,7 @@ class OxatisTestConnector:
       raise ValueError, "No data passed to UserGet, got %s / %s" %(args, kw)
     # Must check xml validity here
     # parse the data to retrieve the user id
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OxID")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OxID")
     for event, element in context:
       user_id = element.text
     # retrieve the person inside the test module
@@ -274,7 +274,7 @@ class OxatisTestConnector:
       raise KeyError(user_id)
     else:
       person = person_list[0].getObject()
-    context = etree.iterparse(StringIO(kw['data']), events=('end',))
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',))
     person_dict = {}
     for event, element in context:
       if element.text is None:
@@ -296,7 +296,7 @@ class OxatisTestConnector:
       raise ValueError, "No data passed to UserGet, got %s / %s" %(args, kw)
     # Must check xml validity here
     # parse the data to retrieve the user id
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OxID")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OxID")
     for event, element in context:
       user_id = element.text
     # retrieve the person inside the test module
@@ -343,10 +343,10 @@ class OxatisTestConnector:
     if not kw.has_key('data'):
       raise ValueError, "No data passed to UserGetList, got %s / %s" %(args, kw)
     # parse the data to retrieve the date
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="LatestModifiedDateStart")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="LatestModifiedDateStart")
     for event, element in context:
       date_start = element.text
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="LatestModifiedDateEnd")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="LatestModifiedDateEnd")
     for event, element in context:
       date_end = element.text
     date = etree.SubElement(products, 'LatestModifiedDateStart')
@@ -375,7 +375,7 @@ class OxatisTestConnector:
       raise ValueError, "No data passed to ProductGet, got %s / %s" %(args, kw)
     # Must check xml validity here
     # parse the data to retrieve the product id
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OxID")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OxID")
     for event, element in context:
       resource_id = element.text
     # retrieve the product inside the test module
@@ -424,7 +424,7 @@ class OxatisTestConnector:
       raise ValueError, "No data passed to ProductGet, got %s / %s" %(args, kw)
     # Must check xml validity here
     # parse the data to retrieve the product id
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OxID")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OxID")
     for event, element in context:
       resource_id = element.text
     # retrieve the product inside the test module
@@ -446,7 +446,7 @@ class OxatisTestConnector:
       raise ValueError, "No data passed to ProductGet, got %s / %s" %(args, kw)
     # Must check xml validity here
     # parse the data to retrieve the product id
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OxID")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OxID")
     for event, element in context:
       resource_id = element.text
     # retrieve the product inside the test module
@@ -457,7 +457,7 @@ class OxatisTestConnector:
       raise KeyError(resource_id)
     else:
       resource = resource_list[0].getObject()
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="Name")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="Name")
     for event, element in context:
       name = element.text
     resource.edit(name=name)
@@ -471,7 +471,7 @@ class OxatisTestConnector:
       raise ValueError, "No data passed to ProductGet, got %s / %s" %(args, kw)
     # Must check xml validity here
     # parse the data to retrieve the product id
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OxID")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OxID")
     for event, element in context:
       resource_id = element.text
     # retrieve the product inside the test module
@@ -482,7 +482,7 @@ class OxatisTestConnector:
       raise KeyError(resource_id)
     else:
       resource = resource_list[0].getObject()
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="Description")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="Description")
     for event, element in context:
       desc = element.text
     resource.edit(description=desc)
@@ -500,11 +500,11 @@ class OxatisTestConnector:
       raise ValueError, "No data passed to OrderGet, got %s / %s" %(args, kw)
     # Must check xml validity here
     # parse the data to retrieve the order id
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OrderDateStart")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OrderDateStart")
     for event, element in context:
       start_date = DateTime(element.text)
       date_start = element.text
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OrderDateEnd")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OrderDateEnd")
     for event, element in context:
       stop_date = DateTime(element.text)
       date_end = element.text
@@ -552,7 +552,7 @@ class OxatisTestConnector:
       raise ValueError, "No data passed to OrderGet, got %s / %s" %(args, kw)
     # Must check xml validity here
     # parse the data to retrieve the order id
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OxID")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OxID")
     for event, element in context:
       sale_order_id = element.text
     # retrieve the order inside the test module
@@ -595,7 +595,7 @@ class OxatisTestConnector:
       raise ValueError, "No data passed to OptionTypesGet, got %s / %s" %(args, kw)
     # Must check xml validity here
     # parse the data to retrieve the base category id
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OxID")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OxID")
     for event, element in context:
       base_category_id = element.text
 
@@ -624,7 +624,7 @@ class OxatisTestConnector:
       raise ValueError, "No data passed to OptionsValuesGet, got %s / %s" %(args, kw)
     # Must check xml validity here
     # parse the data to retrieve the base category id
-    context = etree.iterparse(StringIO(kw['data']), events=('end',), tag="OxID")
+    context = etree.iterparse(StringIO(str(kw['data'])), events=('end',), tag="OxID")
     for event, element in context:
       category_id = element.text
 
