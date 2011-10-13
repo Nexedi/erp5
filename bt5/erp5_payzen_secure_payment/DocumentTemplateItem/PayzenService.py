@@ -84,7 +84,12 @@ else:
       signature += self.getServicePassword()
       kw['wsSignature'] = hashlib.sha1(signature).hexdigest()
       data = client.service.getInfo(**kw)
-      return [data, self._check_transcationInfoSignature(data),
+      data_kw = dict(data)
+      for k in data_kw.keys():
+        v = data_kw[k]
+        if not isinstance(v, str):
+          data_kw[k] = str(v)
+      return [data_kw, self._check_transcationInfoSignature(data),
         str(client.last_sent()), str(client.last_received())]
 
 class PayzenService(XMLObject, PayzenSOAP):
