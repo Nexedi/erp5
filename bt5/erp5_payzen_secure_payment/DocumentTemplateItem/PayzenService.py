@@ -34,7 +34,7 @@ else:
         'customerPhone', 'customerMail', 'customerAddress', 'customerZipCode',
         'customerCity', 'customerCountry', 'customerLanguage', 'customerIP',
         'transactionCondition', 'vadsEnrolled', 'vadsStatus', 'vadsECI',
-        'vafdsXID', 'vadsCAVVAlgorithm', 'vadsCAVV', 'vadsSignatureValid',
+        'vadsXID', 'vadsCAVVAlgorithm', 'vadsCAVV', 'vadsSignatureValid',
         'directoryServer', 'authMode', 'markAmount', 'markDevise', 'markDate',
         'markNb', 'markResult', 'markCVV2_CVC2', 'authAmount', 'authDevise',
         'authDate', 'authNb', 'authResult', 'authCVV2_CVC2', 'warrantlyResult',
