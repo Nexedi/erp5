@@ -5,6 +5,9 @@ def createWebPage(result, browser):
 
   Note : you need your user to have Assignor role to do workflow transition
   """
+  # Open ERP5 homepage
+  browser.open()
+
   # Log in unless already logged in by a previous test suite
   browser.mainForm.submitLogin()
   browser.randomSleep(2, 6)

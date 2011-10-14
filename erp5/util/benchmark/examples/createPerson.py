@@ -14,6 +14,9 @@ def createPerson(result, browser):
   This tests requires the bt5 erp5_simulation_performance_test
   to be isntalled for relation with organisation
   """
+  # Open ERP5 homepage
+  browser.open()
+
   # Log in unless already logged in by a previous test suite
   browser.mainForm.submitLogin()
   browser.randomSleep(2, 6)

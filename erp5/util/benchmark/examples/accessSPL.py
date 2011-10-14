@@ -12,6 +12,7 @@ def accessSPL(result, browser):
   spl = module.searchFolder(limit=(i,1))
   return spl.getId()
   """
+  browser.open()
   browser.mainForm.submitLogin()
   base_url = browser.url
   result('Get ID',

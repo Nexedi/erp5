@@ -83,7 +83,6 @@ class BenchmarkProcess(multiprocessing.Process):
       with_error = False
 
       try:
-        self._browser.open()
         target(result, self._browser)
       except StopIteration:
         raise
