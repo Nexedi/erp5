@@ -1,0 +1,7 @@
+<allowed_content_type_list>
+ <portal_type id="SMS Tool">
+  <item>Dummy Gateway</item>
+  <item>Essendex Gateway</item>
+  <item>Mobyt Gateway</item>
+ </portal_type>
+</allowed_content_type_list>
