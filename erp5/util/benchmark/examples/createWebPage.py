@@ -57,7 +57,7 @@ def createWebPage(result, browser):
 
   result('Waiting for publish_action', waiting_for_publish_action)
   result('Show publish', show_publish_time)
-  result('Published', browser.mainForm.submit(name='Base_callDialogMethod:method'))
+  result('Published', browser.mainForm.submitDialogConfirm())
 
   assert browser.getTransitionMessage() == 'Status changed.'
 

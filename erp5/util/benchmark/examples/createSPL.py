@@ -76,7 +76,7 @@ def createSPL(result, browser):
 
   result('Waiting for start_action', waiting_for_start_action)
   result('Show start', show_start_time)
-  result('Started', browser.mainForm.submit(name='Base_callDialogMethod:method'))
+  result('Started', browser.mainForm.submitDialogConfirm())
 
   assert browser.getTransitionMessage() == 'Status changed.'
 
@@ -89,6 +89,6 @@ def createSPL(result, browser):
 
   result('Waiting for stop_action', waiting_for_stop_action)
   result('Show stop', show_stop_time)
-  result('Stopped', browser.mainForm.submit(name='Base_callDialogMethod:method'))
+  result('Stopped', browser.mainForm.submitDialogConfirm())
 
   assert browser.getTransitionMessage() == 'Status changed.'
