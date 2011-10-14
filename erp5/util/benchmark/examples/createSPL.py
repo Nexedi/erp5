@@ -6,16 +6,16 @@ def createSPL(result, browser):
   to be installed & configured
   """
   # Open ERP5 homepage
-  browser.open()
+  browser.open(sleep=(2, 6))
 
   # Log in unless already logged in by a previous test suite
-  browser.mainForm.submitLogin()
-  browser.randomSleep(2, 6)
-  # Go to SPL module (person_module)
+  browser.mainForm.submitLogin(sleep=(2, 6))
 
+  # Go to SPL module (person_module)
   result('Go to spl module',
-         browser.mainForm.submitSelectModule(value='/sale_packing_list_module'))
-  browser.randomSleep(2, 6)
+         browser.mainForm.submitSelectModule(value='/sale_packing_list_module',
+                                             sleep=(2, 6)))
+
   # Create a new person and record the time elapsed in seconds
   result('Add SPL', browser.mainForm.submitNew())
 
@@ -34,10 +34,8 @@ def createSPL(result, browser):
   browser.mainForm.getControl(name='field_my_destination_administration_title').value = "Recipient 2"
   browser.mainForm.getControl(name='field_my_comment').value = "Benchmark test"
 
-
-  browser.randomSleep(5, 15)
   # Submit the changes, record the time elapsed in seconds
-  result('Save', browser.mainForm.submitSave())
+  result('Save', browser.mainForm.submitSave(sleep=(5, 15)))
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
@@ -49,10 +47,8 @@ def createSPL(result, browser):
   for i in xrange(1,10):
     browser.mainForm.getControl(name='field_listbox_title_new_%s' %(i,)).value = 'Luxury %s' %(i,)
     browser.mainForm.getControl(name='field_listbox_quantity_new_%s' %(i,)).value = '%s' %(i,)
-  browser.randomSleep(10, 30)
-  result("Update fast input", browser.mainForm.submitDialogUpdate())
-  browser.randomSleep(3, 9)
-  result("Save fast input", browser.mainForm.submitDialogConfirm())
+  result("Update fast input", browser.mainForm.submitDialogUpdate(sleep=(10, 30)))
+  result("Save fast input", browser.mainForm.submitDialogConfirm(sleep=(3, 9)))
   assert browser.getTransitionMessage() ==   "Sale Packing List Line Created."
 
   # Go back to the SPL page before validating
@@ -60,11 +56,11 @@ def createSPL(result, browser):
 
   # Confirm it (as the workflow action may not be available yet, try 5 times
   # and sleep 5s between each attempts before failing)
-  browser.randomSleep(2, 6)
   show_confirm_time, waiting_for_confirm_action = \
       browser.mainForm.submitSelectWorkflow(value='confirm_action',
                                             maximum_attempt_number=5,
-                                            sleep_between_attempt=5)
+                                            sleep_between_attempt=5,
+                                            sleep=(2, 6))
 
   result('Waiting for confirm_action', waiting_for_confirm_action)
   result('Show confirm', show_confirm_time)
@@ -72,11 +68,11 @@ def createSPL(result, browser):
   assert browser.getTransitionMessage() == 'Status changed.'
 
   # Ship it
-  browser.randomSleep(2, 6)
   show_start_time, waiting_for_start_action = \
       browser.mainForm.submitSelectWorkflow(value='start_action',
                                             maximum_attempt_number=5,
-                                            sleep_between_attempt=5)
+                                            sleep_between_attempt=5,
+                                            sleep=(2, 6))
 
   result('Waiting for start_action', waiting_for_start_action)
   result('Show start', show_start_time)
@@ -85,11 +81,11 @@ def createSPL(result, browser):
   assert browser.getTransitionMessage() == 'Status changed.'
 
   # Receive it
-  browser.randomSleep(2, 6)
   show_stop_time, waiting_for_stop_action = \
       browser.mainForm.submitSelectWorkflow(value='stop_action',
                                             maximum_attempt_number=5,
-                                            sleep_between_attempt=5)
+                                            sleep_between_attempt=5,
+                                            sleep=(2, 6))
 
   result('Waiting for stop_action', waiting_for_stop_action)
   result('Show stop', show_stop_time)

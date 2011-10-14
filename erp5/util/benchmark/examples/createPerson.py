@@ -21,15 +21,16 @@ def createPerson(result, browser):
   instance).
   """
   # Open ERP5 homepage
-  browser.open()
+  browser.open(sleep=(2, 6))
 
   # Log in unless already logged in by a previous test suite
-  browser.mainForm.submitLogin()
-  browser.randomSleep(2, 6)
+  browser.mainForm.submitLogin(sleep=(2, 6))
+
   # Go to Persons module (person_module)
   result('Go to person module',
-         browser.mainForm.submitSelectModule(value='/person_module'))
-  browser.randomSleep(2, 6)
+         browser.mainForm.submitSelectModule(value='/person_module',
+                                             sleep=(2, 6)))
+
   # Create a new person and record the time elapsed in seconds
   result('Add Person', browser.mainForm.submitNew())
 
@@ -41,29 +42,25 @@ def createPerson(result, browser):
   browser.mainForm.getControl(name='field_my_last_name').value = 'Person'
   # Link to organisation, this will add subobjects
   browser.mainForm.getControl(name='field_my_career_subordination_title').value = 'Supplier'
-  browser.randomSleep(5, 15)
 
   # Submit the changes, record the time elapsed in seconds
-  result('Save', browser.mainForm.submitSave())
+  result('Save', browser.mainForm.submitSave(sleep=(5, 15)))
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
   person_url = browser.url
 
   # Add phone number
-  browser.randomSleep(2, 6)
-
   result('Add telephone',
-         browser.mainForm.submitSelectAction(value='add Telephone'))
+         browser.mainForm.submitSelectAction(value='add Telephone',
+                                             sleep=(2, 6)))
 
   # Fill telephone title and number
   browser.mainForm.getControl(name='field_my_title').value = 'Personal'
   browser.mainForm.getControl(name='field_my_telephone_number').value = '0123456789'
 
   # Submit the changes, record the time elapsed in seconds
-  browser.randomSleep(3, 9)
-
-  result('Save', browser.mainForm.submitSave())
+  result('Save', browser.mainForm.submitSave(sleep=(3, 9)))
 
   # Check whether the changes have been successfully updated
   assert browser.getTransitionMessage() == 'Data updated.'
@@ -73,11 +70,11 @@ def createPerson(result, browser):
 
   # Validate it (as the workflow action may not be available yet, try 5 times
   # and sleep 5s between each attempts before failing)
-  browser.randomSleep(2, 6)
   show_validate_time, waiting_for_validate_action = \
       browser.mainForm.submitSelectWorkflow(value='validate_action',
                                             maximum_attempt_number=5,
-                                            sleep_between_attempt=5)
+                                            sleep_between_attempt=5,
+                                            sleep=(2, 6))
 
   result('Waiting for validate_action', waiting_for_validate_action)
   result('Show validate', show_validate_time)
