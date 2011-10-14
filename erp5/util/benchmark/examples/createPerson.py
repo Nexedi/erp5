@@ -11,8 +11,8 @@ def createPerson(result, browser):
   script  and userInfo.py.  Further information  about performance_tester_erp5
   options and arguments are available by specifying ``--help''.
 
-  This tests requires the bt5 erp5_simulation_performance_test
-  to be isntalled for relation with organisation
+  This test requires the  bt5 erp5_simulation_performance_test to be installed
+  for relation with organisation.
 
   Also, in order  to get more realistic results  with concurrent users, random
   sleep must be introduced to simulate a "real" user. This can be done through
@@ -57,7 +57,7 @@ def createPerson(result, browser):
          browser.mainForm.submitSelectAction(value='add Telephone'))
 
   # Fill telephone title and number
-  browser.mainForm.getControl(name='field_my_title'). value = 'Personal'
+  browser.mainForm.getControl(name='field_my_title').value = 'Personal'
   browser.mainForm.getControl(name='field_my_telephone_number').value = '0123456789'
 
   # Submit the changes, record the time elapsed in seconds

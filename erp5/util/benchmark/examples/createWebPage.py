@@ -40,7 +40,7 @@ def createWebPage(result, browser):
   # Edit content
   WebPage_url = '/'.join(WebPage_url.split('/')[:-1])
   browser.open(WebPage_url+"/WebPage_viewEditor")
-  browser.mainForm.getControl(name='field_my_text_content'). value = '<html><body><h1>Test</h1><p>Content if test</p></body></html>'
+  browser.mainForm.getControl(name='field_my_text_content').value = '<html><body><h1>Test</h1><p>Content if test</p></body></html>'
   # Submit the changes, record the time elapsed in seconds
   browser.randomSleep(10, 30)
   result('Save', browser.mainForm.submitSave())
