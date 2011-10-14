@@ -13,6 +13,12 @@ def createPerson(result, browser):
 
   This tests requires the bt5 erp5_simulation_performance_test
   to be isntalled for relation with organisation
+
+  Also, in order  to get more realistic results  with concurrent users, random
+  sleep must be introduced to simulate a "real" user. This can be done through
+  'sleep' parameter  (a tuple  giving the minimum  and maximum sleep  time) to
+  open*()  (Browser instance),  submit*() (Form  instance) and  click*() (Link
+  instance).
   """
   # Open ERP5 homepage
   browser.open()
