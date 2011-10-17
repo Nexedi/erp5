@@ -352,6 +352,37 @@ return context.generatePredicate(
     self.stepTic()
     self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
 
+  def test_072_search_with_extra_catalog_keywords(self):
+    """
+    test that a category criteria on a rule that doesn't have that category
+    allows the rule to match contexts with and without that category
+    """
+    skin_folder = self.getPortal().portal_skins.custom
+    rule_tool = self.getRuleTool()
+    # add an always-matching predicate test script to the rule
+    createZODBPythonScript(skin_folder, 'good_script', 'rule',
+                           'return True')
+    delivery_rule = self.getRule('default_delivery_rule')
+    delivery_rule.setTestMethodId('good_script')
+    delivery_rule.validate()
+    transaction.commit()
+    self.tic()
+    # Now since the rule has a trade_phase
+    self.assertEqual(delivery_rule.getTradePhaseList(), ['default/delivery'])
+    # then it should be possible to find it by passing this trade_phase
+    # as an additional catalog keyword
+    kw = {'trade_phase_relative_url':
+            ['trade_phase/' + path for path in delivery.getTradePhaseList()]}
+    # XXX-Leo: Fugly catalog syntax for category search above.
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm, **kw)), 1)
+    # and also not to match it if we pass a different trade_phase
+    kw['trade_phase_relative_url'] = ['trade_phase/' + 'default/order']
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm, **kw)), 0)
+    # but match it again if we pass an empty list for trade_phase
+    # (with a warning in the log about discarding empty values)
+    kw['trade_phase_relative_url'] = []
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm, **kw)), 1)
+
   def test_08_updateAppliedRule(self, quiet=quiet, run=run_all_test):
     """
     test that when updateAppliedRule is called, the rule with the correct

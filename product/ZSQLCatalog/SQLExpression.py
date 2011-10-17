@@ -395,7 +395,7 @@ class SQLExpression(object):
     from_expression_dict = self.getFromExpression()
     if from_expression_dict is not None:
       from_expression = SQL_LIST_SEPARATOR.join(
-        from_expression_dict.get(table, '`%s` AS `%s`' % (table, alias))
+        from_expression_dict.get(alias, '`%s` AS `%s`' % (table, alias))
         for alias, table in table_alias_dict.iteritems())
     else:
       from_expression = None
