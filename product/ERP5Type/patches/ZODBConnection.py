@@ -43,12 +43,20 @@ if 1: # keep indentation. Also good for quick disabling.
     # See also neo/client/__init__.py from NEOPPOD project
     if FORCE_STORAGE_SYNC_ON_CONNECTION_OPENING:
 
+      try:
+        if Connection._nexedi_fix != 4:
+            raise Exception("A different ZODB fix is already applied")
+      except AttributeError:
+        Connection._nexedi_fix = 4
+
         # Whenever an connection is opened (and there's usually an existing one
         # in DB pool that can be reused) whereas the transaction is already
         # started, we must make sure that proper storage setup is done by
         # calling Connection.newTransaction.
         # For example, there's no open transaction when a ZPublisher/Publish
         # transaction begins.
+
+        import thread
 
         def open(self, *args, **kw):
             def _flush_invalidations():
@@ -68,9 +76,6 @@ if 1: # keep indentation. Also good for quick disabling.
                 Connection_open(self, *args, **kw)
             finally:
                 del self._flush_invalidations
-        try:
-            Connection_open = Connection._setDB
-            Connection._setDB = open
-        except AttributeError: # recent ZODB
-            Connection_open = Connection.open
-            Connection.open = open
+
+        Connection_open = Connection.open
+        Connection.open = open
