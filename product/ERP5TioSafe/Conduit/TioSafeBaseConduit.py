@@ -64,11 +64,7 @@ class TioSafeBaseConduit(ERP5Conduit):
         del object_element.attrib['id']
       object_element.attrib[attribute_name] = new_id
     if as_string:
-      try:
-        return etree.tostring(xml, pretty_print=True, encoding="utf-8")
-      except:
-        import pdb
-        pdb.set_trace()
+      return etree.tostring(xml, pretty_print=True, encoding="utf-8")
     return xml
 
   def _generateConflict(self, path, tag, xml, current_value, new_value, signature):
