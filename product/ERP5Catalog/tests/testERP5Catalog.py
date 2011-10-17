@@ -427,13 +427,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     #if uid_buffer_key in uid_buffer_dict:
     #  del uid_buffer_dict[uid_buffer_key]
     def getUIDBuffer(*args, **kw):
-      uid_lock = catalog.__class__._reserved_uid_lock
-      uid_lock.acquire()
-      try:
-        result = catalog.getUIDBuffer(*args, **kw)
-      finally:
-        uid_lock.release()
-      return result
+      with catalog.__class__._reserved_uid_lock:
+        return catalog.getUIDBuffer(*args, **kw)
 
     getUIDBuffer(force_new_buffer=True)
 

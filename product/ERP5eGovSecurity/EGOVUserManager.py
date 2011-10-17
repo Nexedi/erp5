@@ -214,43 +214,41 @@ class EGOVUserManager(ERP5UserManager):
           sm = getSecurityManager()
           if sm.getUser().getId() != SUPER_USER:
             newSecurityManager(self, self.getUser(SUPER_USER))
-  
           try:
-            try:
-              result = portal.portal_catalog.unrestrictedSearchResults(
+            result = portal.portal_catalog.unrestrictedSearchResults(
                             select_expression='reference',
                             portal_type=self.portal_type_list, reference=login)
-              if len(result) != 1: # we won't proceed with groups
-                if len(result) > 1: # configuration is screwed
-                  raise ConsistencyError, 'There is more than one Person whose \
-                      login is %s : %s' % (user_name,
-                      repr([r.getObject() for r in catalog_result]))
-                else: # no person is linked to this user login
-                  # this permit to get the module of the application
-                  # the goal is to work with anonymous applications, even if 
-                  # they are not reindexed
-                  module_id = self.REQUEST.get('anonymous_module', None)
-                  if module_id:
-                    module =  getattr(portal, module_id, None)
-                    if module is not None:
-                      result = module._getOb(login[0], None)
-                      if result is not None:
-                        return [result.getPath(),]
-                      else:
-                        return []
-                  else:
-                    return []
-            except ConflictError:
-              raise
-            except:
-              LOG('ERP5Security', PROBLEM, 'getUserByLogin failed', error=sys.exc_info())
-              # Here we must raise an exception to prevent callers from caching
-              # a result of a degraded situation.
-              # The kind of exception does not matter as long as it's catched by
-              # PAS and causes a lookup using another plugin or user folder.
-              # As PAS does not define explicitely such exception, we must use
-              # the _SWALLOWABLE_PLUGIN_EXCEPTIONS list.
-              raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
+            if len(result) != 1: # we won't proceed with groups
+              if len(result) > 1: # configuration is screwed
+                raise ConsistencyError('There is more than one Person whose'
+                    ' login is %s : %s' % (user_name,
+                    repr([r.getObject() for r in catalog_result]))
+              else: # no person is linked to this user login
+                # this permit to get the module of the application
+                # the goal is to work with anonymous applications, even if 
+                # they are not reindexed
+                module_id = self.REQUEST.get('anonymous_module', None)
+                if module_id:
+                  module =  getattr(portal, module_id, None)
+                  if module is not None:
+                    result = module._getOb(login[0], None)
+                    if result is not None:
+                      return [result.getPath(),]
+                    else:
+                      return []
+                else:
+                  return []
+          except ConflictError:
+            raise
+          except:
+            LOG('ERP5Security', PROBLEM, 'getUserByLogin failed', error=sys.exc_info())
+            # Here we must raise an exception to prevent callers from caching
+            # a result of a degraded situation.
+            # The kind of exception does not matter as long as it's catched by
+            # PAS and causes a lookup using another plugin or user folder.
+            # As PAS does not define explicitely such exception, we must use
+            # the _SWALLOWABLE_PLUGIN_EXCEPTIONS list.
+            raise _SWALLOWABLE_PLUGIN_EXCEPTIONS[0]
           finally:
             setSecurityManager(sm)
           # XXX: Here, we filter catalog result list ALTHOUGH we did pass

@@ -143,12 +143,8 @@ class Browser:
 
   def _createFile(self, filename, content):
     file_path = os.path.join(self.profile_dir, filename)
-    f = open(file_path, 'w')
-    try:
+    with open(file_path, 'w') as f:
       f.write(content)
-    finally:
-      f.close()
-
     return file_path
 
   def _setDisplay(self, display):

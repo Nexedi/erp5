@@ -298,13 +298,10 @@ class TemplateTool (BaseTool):
       """
         Import template from a temp file (as uploaded by the user)
       """
-      file = open(path, 'rb')
-      try:
+      with open(path, 'rb') as file:
         # read magic key to determine wich kind of bt we use
         file.seek(0)
         magic = file.read(5)
-      finally:
-        file.close()
 
       if magic == '<?xml': # old version
         self._importObjectFromFile(path, id=id)
@@ -342,11 +339,8 @@ class TemplateTool (BaseTool):
           prop_dict.pop('id', '')
           bt.edit(**prop_dict)
           # import all other files from bt
-          fobj = open(path, 'rb')
-          try:
+          with open(path, 'rb') as fobj:
             bt.importFile(file=fobj)
-          finally:
-            fobj.close()
         finally:
           tar.close()
       return bt
@@ -398,7 +392,8 @@ class TemplateTool (BaseTool):
           if not os.path.exists(prop_path):
             value = None
           else:
-            value = open(prop_path, 'rb').read()
+            with open(prop_path, 'rb') as f:
+              value = f.read()
           if value is 'None':
             # At export time, we used to export non-existent properties:
             #   str(obj.getProperty('non-existing')) == 'None'
@@ -523,11 +518,8 @@ class TemplateTool (BaseTool):
       tempid, temppath = mkstemp()
       try:
         os.close(tempid) # Close the opened fd as soon as possible
-        tempfile = open(temppath, 'wb')
-        try:
+        with open(temppath, 'wb') as tempfile:
           tempfile.write(import_file.read())
-        finally:
-          tempfile.close()
         bt = self._importBT(temppath, id)
       finally:
         os.remove(temppath)

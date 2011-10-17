@@ -697,8 +697,7 @@ class Catalog(Folder,
     """
       Import properties from an XML file.
     """
-    f = open(file)
-    try:
+    with open(file) as f:
       doc = parse(f)
       root = doc.documentElement
       try:
@@ -747,8 +746,6 @@ class Catalog(Folder,
             self.filter_dict[id]['expression_instance'] = None
       finally:
         doc.unlink()
-    finally:
-      f.close()
 
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):

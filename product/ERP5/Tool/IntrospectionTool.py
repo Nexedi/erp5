@@ -141,8 +141,10 @@ class IntrospectionTool(LogMixin, BaseTool):
     if compressed:
       tmp_file_path = tempfile.mktemp(dir=tmp_file_path)
       tmp_file = tarfile.open(tmp_file_path,"w:gz")
-      tmp_file.add(file_path)
-      tmp_file.close()
+      try:
+        tmp_file.add(file_path)
+      finally:
+        tmp_file.close()
       RESPONSE.setHeader('Content-type', 'application/x-tar')
       RESPONSE.setHeader('Content-Disposition', \
                  'attachment;filename="%s.tar.gz"' % file_path.split('/')[-1])
@@ -154,13 +156,10 @@ class IntrospectionTool(LogMixin, BaseTool):
       tmp_file_path = file_path
 
 
-    f = open(tmp_file_path)
-    try:
+    with open(tmp_file_path) as f:
       RESPONSE.setHeader('Content-Length', os.stat(tmp_file_path).st_size)
       for data in f:
         RESPONSE.write(data)
-    finally:
-      f.close()
 
     if compressed:
       os.remove(tmp_file_path)
@@ -190,30 +189,21 @@ class IntrospectionTool(LogMixin, BaseTool):
 
     char_per_line = 75
 
-    tailed_file = open(log_file,'r')
-    while 1:
-      try:
-        tailed_file.seek(-1 * char_per_line * line_number, 2)
-      except IOError:
-        tailed_file.seek(0)
-      if tailed_file.tell() == 0:
-        at_start = 1
-      else:
-        at_start = 0
+    with open(log_file,'r') as tailed_file:
+      while 1:
+        try:
+          tailed_file.seek(-1 * char_per_line * line_number, 2)
+        except IOError:
+          tailed_file.seek(0)
+        pos = tailed_file.tell()
 
-      lines = tailed_file.read().split("\n")
-      if (len(lines) > (line_number + 1)) or at_start:
-        break
-      # The lines are bigger than we thought
-      char_per_line = char_per_line * 1.3  # Inc for retry
+        lines = tailed_file.read().split("\n")
+        if len(lines) > (line_number + 1) or not pos:
+          break
+        # The lines are bigger than we thought
+        char_per_line *= 1.3  # Inc for retry
 
-    tailed_file.close()
-
-    if len(lines) > line_number:
-      start = len(lines) - line_number - 1
-    else:
-      start = 0
-
+    start = max(len(lines) - line_number - 1, 0)
     return "\n".join(lines[start:len(lines)])
 
   security.declareProtected(Permissions.ManagePortal, 'tailEventLog')
@@ -330,20 +320,17 @@ class IntrospectionTool(LogMixin, BaseTool):
     """
     def cached_getSystemVersionDict():
       import pkg_resources
-      def tuple_to_format_str(t):
-         return '.'.join([str(i) for i in t])
-
       version_dict = {}
       for dist in pkg_resources.working_set:
         version_dict[dist.key] = dist.version
 
       from Products import ERP5 as erp5_product
-      erp5_product_path = erp5_product.__file__.split("/")[:-1]
+      erp5_product_path = os.path.dirname(erp5_product.__file__)
       try:
-        erp5_v = open("/".join((erp5_product_path) + ["VERSION.txt"])).read().strip()
-        erp5_version = erp5_v.replace("ERP5 ", "")
-      except:
-         erp5_version = None
+        with open(os.path.join(erp5_product_path, "VERSION.txt")) as f:
+          erp5_version = f.read().strip().replace("ERP5 ", "")
+      except Exception:
+        erp5_version = None
 
       version_dict["ProductS.ERP5"] = erp5_version
       return version_dict

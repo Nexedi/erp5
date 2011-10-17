@@ -206,8 +206,7 @@ class AlarmTool(BaseTool):
       This method is called by TimerService in the interval given
       in zope.conf. The Default is every 5 seconds.
     """
-    acquired = last_tic_lock.acquire(0)
-    if not acquired:
+    if not last_tic_lock.acquire(0):
       return
     try:
       # make sure our skin is set-up. On CMF 1.5 it's setup by acquisition,

@@ -179,11 +179,9 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
     msg += 'This does not modify anything by default. If you really want to fix skin names, specify %s/ERP5Site_fixSkinNames?file=NAME&dry_run=0 \n\n' % self.absolute_url()
     return msg
 
-  file = os.path.join(data_dir, file)
-  file = open(file, 'r')
-  class NamingInformation: pass
-  info_list = []
-  try:
+  with open(os.path.join(data_dir, file)) as file:
+    class NamingInformation: pass
+    info_list = []
     reader = csv.reader(file)
     for row in reader:
       folder, name, new_name, meta_type = row[:4]
@@ -205,8 +203,6 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
       info.regexp = re.compile('\\b' + re.escape(name) + '\\b') # This is used to search the name
       info.removed = removed
       info_list.append(info)
-  finally:
-    file.close()
 
   # Now we have information enough. Check the skins.
   msg = ''
@@ -232,11 +228,8 @@ def fixSkinNames(self, REQUEST=None, file=None, dry_run=0):
         msg += '%s\n' % line
         if not dry_run:
           if skin.meta_type in fs_skin_spec:
-            f = open(expandpath(skin.getObjectFSPath()), 'w')
-            try:
+            with open(expandpath(skin.getObjectFSPath()), 'w') as f:
               f.write(text)
-            finally:
-              f.close()
           else:
             REQUEST['BODY'] = text
             skin.manage_FTPput(REQUEST, REQUEST.RESPONSE)

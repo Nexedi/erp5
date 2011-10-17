@@ -2343,8 +2343,8 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
     url_column_dict = dict(renderer.getUrlColumnList())
     selection = renderer.getSelection()
     selection_name = renderer.getSelectionName()
-    ignore_layout = int(request.get('ignore_layout', \
-                        not request.get('is_web_mode', False) and 1 or 0))
+    ignore_layout = int(request.get('ignore_layout',
+                        0 if request.get('is_web_mode') else 1))
     editable_mode = int(request.get('editable_mode', 0))
     ui_domain = 'erp5_ui'
     # We need a way to pass the current line object (ie. brain) to the

@@ -209,11 +209,8 @@ class WorkingCopy(Implicit):
       revision = int(self.showOld(path)) + 1
     except NotVersionedError:
       return 1
-    file = open(os.path.join(self.working_copy, path), 'w')
-    try:
+    with open(os.path.join(self.working_copy, path), 'w') as file:
       file.write(str(revision))
-    finally:
-      file.close()
     return revision
 
   def hasDiff(self, path):
@@ -279,11 +276,8 @@ class WorkingCopy(Implicit):
     head = '<span style="font-weight: bold; color: black;">%s</span>' \
            % real_path
     try:
-      f = open(os.path.join(self.working_copy, path), 'rU')
-      try:
+      with open(os.path.join(self.working_copy, path), 'rU') as f:
         text = f.read()
-      finally:
-        f.close()
     except IOError, e:
       if e.errno == errno.EISDIR:
         return '%s<hr/>%r is a folder!' % (head, path)

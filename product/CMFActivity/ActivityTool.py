@@ -877,16 +877,14 @@ class ActivityTool (Folder, UniqueObject):
           LOG('CMFActivity', INFO, "Shutdown: Activities finished.")
 
     def process_timer(self, tick, interval, prev="", next=""):
-        """
-        Call distribute() if we are the Distributing Node and call tic()
-        with our node number.
-        This method is called by TimerService in the interval given
-        in zope.conf. The Default is every 5 seconds.
-        """
-        # Prevent TimerService from starting multiple threads in parallel
-        acquired = timerservice_lock.acquire(0)
-        if not acquired:
-          return
+      """
+      Call distribute() if we are the Distributing Node and call tic()
+      with our node number.
+      This method is called by TimerService in the interval given
+      in zope.conf. The Default is every 5 seconds.
+      """
+      # Prevent TimerService from starting multiple threads in parallel
+      if timerservice_lock.acquire(0):
         try:
           # make sure our skin is set-up. On CMF 1.5 it's setup by acquisition,
           # but on 2.2 it's by traversal, and our site probably wasn't traversed
@@ -896,37 +894,37 @@ class ActivityTool (Folder, UniqueObject):
           self.setupCurrentSkin(self.REQUEST)
           old_sm = getSecurityManager()
           try:
+            # get owner of portal_catalog, so normally we should be able to
+            # have the permission to invoke all activities
+            user = self.portal_catalog.getWrappedOwner()
+            newSecurityManager(self.REQUEST, user)
+
+            currentNode = self.getCurrentNode()
+            self.registerNode(currentNode)
+            processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
+
+            # only distribute when we are the distributingNode
+            if self.getDistributingNode() == currentNode:
+              self.distribute(len(processing_node_list))
+
+            # SkinsTool uses a REQUEST cache to store skin objects, as
+            # with TimerService we have the same REQUEST over multiple
+            # portals, we clear this cache to make sure the cache doesn't
+            # contains skins from another portal.
             try:
-              # get owner of portal_catalog, so normally we should be able to
-              # have the permission to invoke all activities
-              user = self.portal_catalog.getWrappedOwner()
-              newSecurityManager(self.REQUEST, user)
+              self.getPortalObject().portal_skins.changeSkin(None)
+            except AttributeError:
+              pass
 
-              currentNode = self.getCurrentNode()
-              self.registerNode(currentNode)
-              processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
-
-              # only distribute when we are the distributingNode
-              if (self.getDistributingNode() == currentNode):
-                self.distribute(len(processing_node_list))
-
-              # SkinsTool uses a REQUEST cache to store skin objects, as
-              # with TimerService we have the same REQUEST over multiple
-              # portals, we clear this cache to make sure the cache doesn't
-              # contains skins from another portal.
-              try:
-                self.getPortalObject().portal_skins.changeSkin(None)
-              except AttributeError:
-                pass
-
-              # call tic for the current processing_node
-              # the processing_node numbers are the indices of the elements in the node tuple +1
-              # because processing_node starts form 1
-              if currentNode in processing_node_list:
-                self.tic(processing_node_list.index(currentNode)+1)
-            except:
-              # Catch ALL exception to avoid killing timerserver.
-              LOG('ActivityTool', ERROR, 'process_timer received an exception', error=sys.exc_info())
+            # call tic for the current processing_node
+            # the processing_node numbers are the indices of the elements
+            # in the node tuple +1 because processing_node starts form 1
+            if currentNode in processing_node_list:
+              self.tic(processing_node_list.index(currentNode) + 1)
+          except:
+            # Catch ALL exception to avoid killing timerserver.
+            LOG('ActivityTool', ERROR, 'process_timer received an exception',
+                error=sys.exc_info())
           finally:
             setSecurityManager(old_sm)
         finally:
@@ -984,8 +982,7 @@ class ActivityTool (Folder, UniqueObject):
         while has_awake_activity:
           has_awake_activity = 0
           for activity in activity_list:
-            acquired = is_running_lock.acquire(0)
-            if acquired:
+            if is_running_lock.acquire(0):
               try:
                 activity.tic(inner_self, processing_node) # Transaction processing is the responsability of the activity
                 has_awake_activity = has_awake_activity or activity.isAwake(inner_self, processing_node)

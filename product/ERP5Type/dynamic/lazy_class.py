@@ -287,47 +287,46 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     ERP5Base.aq_method_lock.acquire()
     try:
       try:
-        try:
-          class_definition = generatePortalTypeClass(site, portal_type)
-        except AttributeError:
-          LOG("ERP5Type.Dynamic", WARNING,
-              "Could not access Portal Type Object for type %r"
-              % portal_type, error=sys.exc_info())
-          base_tuple = (ERP5BaseBroken, )
-          portal_type_category_list = []
-          attribute_dict = dict(_categories=[], constraints=[])
-          interface_list = []
-        else:
-          base_tuple, portal_type_category_list, \
-            interface_list, attribute_dict = class_definition
+        class_definition = generatePortalTypeClass(site, portal_type)
+      except AttributeError:
+        LOG("ERP5Type.Dynamic", WARNING,
+            "Could not access Portal Type Object for type %r"
+            % portal_type, error=sys.exc_info())
+        base_tuple = (ERP5BaseBroken, )
+        portal_type_category_list = []
+        attribute_dict = dict(_categories=[], constraints=[])
+        interface_list = []
+      else:
+        base_tuple, portal_type_category_list, \
+          interface_list, attribute_dict = class_definition
 
-        klass.__isghost__ = False
-        klass.__bases__ = base_tuple
+      klass.__isghost__ = False
+      klass.__bases__ = base_tuple
 
-        klass.resetAcquisition()
+      klass.resetAcquisition()
 
-        for key, value in attribute_dict.iteritems():
-          setattr(klass, key, value)
+      for key, value in attribute_dict.iteritems():
+        setattr(klass, key, value)
 
-        if getattr(klass.__setstate__, 'im_func', None) is \
-           persistent_migration.__setstate__:
-          # optimization to reduce overhead of compatibility code
-          klass.__setstate__ = persistent_migration.Base__setstate__
+      if getattr(klass.__setstate__, 'im_func', None) is \
+         persistent_migration.__setstate__:
+        # optimization to reduce overhead of compatibility code
+        klass.__setstate__ = persistent_migration.Base__setstate__
 
-        for interface in interface_list:
-          classImplements(klass, interface)
+      for interface in interface_list:
+        classImplements(klass, interface)
 
-        # skip this during the early Base Type / Types Tool generation
-        # because they dont have accessors, and will mess up
-        # workflow methods. We KNOW that we will re-load this type anyway
-        if len(base_tuple) > 1:
-          klass.generatePortalTypeAccessors(site, portal_type_category_list)
-          # need to set %s__roles__ for generated methods
-          cls.setupSecurity()
+      # skip this during the early Base Type / Types Tool generation
+      # because they dont have accessors, and will mess up
+      # workflow methods. We KNOW that we will re-load this type anyway
+      if len(base_tuple) > 1:
+        klass.generatePortalTypeAccessors(site, portal_type_category_list)
+        # need to set %s__roles__ for generated methods
+        cls.setupSecurity()
 
-      except Exception:
-        import traceback; traceback.print_exc()
-        raise
+    except Exception:
+      import traceback; traceback.print_exc()
+      raise
     finally:
       ERP5Base.aq_method_lock.release()
 

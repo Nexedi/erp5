@@ -15,14 +15,11 @@ class DummyTaskDistributionTool(object):
     return None, revision
 
   def startUnitTest(self, test_result_path, exclude_list=()):
-    self.lock.acquire()
-    try:
+    with self.lock:
       for i, test in enumerate(self.test_name_list):
         if test not in exclude_list:
           del self.test_name_list[i]
           return None, test
-    finally:
-      self.lock.release()
 
   def stopUnitTest(self, test_path, status_dict):
     pass
