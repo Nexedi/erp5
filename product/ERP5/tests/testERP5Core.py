@@ -28,7 +28,7 @@
 ##############################################################################
 
 import unittest
-import md5
+from hashlib import md5
 import pprint
 
 import transaction
@@ -38,16 +38,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyTranslationService
 
-try:
-  # BACK: Zope 2.8
-  # When we drop support, refactor the tests to use the i18n utilities
-  # directly
-  from Products.PageTemplates.GlobalTranslationService import \
-                                setGlobalTranslationService
-  def unregister_translation_domain_fallback():
-    """dummy function to keep the beforeTearDown() code neat"""
-
-except ImportError:
+if 1: # BBB
   # Zope 2.12, simulate setting the globalTranslationService with
   # zope.i18n utilities
   import zope.interface
@@ -425,7 +416,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
           'test_selection', dict(uids=uid_list))
     transaction.commit()
     self.tic()
-    md5_string = md5.new(str(sorted([str(x) for x in uid_list]))).hexdigest()
+    md5_string = md5(str(sorted(map(str, uid_list)))).hexdigest()
     redirect = module.Folder_delete(selection_name='test_selection',
                                     uids=uid_list,
                                     md5_object_uid_list=md5_string)
@@ -451,7 +442,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       uid_list = [obj.getUid()]
       self.portal.portal_selections.setSelectionParamsFor(
                           'test_selection', dict(uids=uid_list))
-      md5_string = md5.new(str(sorted(str(x) for x in uid_list))).hexdigest()
+      md5_string = md5(str(sorted(map(str, uid_list)))).hexdigest()
       redirect = obj.getParentValue().Folder_delete(uids=uid_list,
         selection_name='test_selection', md5_object_uid_list=md5_string)
       self.assertTrue(('Sorry, 1 item is in use.', 'Deleted.')[assert_deleted]
@@ -484,7 +475,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.tic()
     self.assertEquals([document_1],
         self.portal.portal_categories.getRelatedValueList(document_2))
-    md5_string = md5.new(str(sorted([str(x) for x in uid_list]))).hexdigest()
+    md5_string = md5(str(sorted(map(str, uid_list)))).hexdigest()
 
     document_1.manage_permission('View', [], acquire=0)
     document_1.manage_permission('Access contents information', [], acquire=0)

@@ -33,8 +33,8 @@ from Products.ERP5Type.Utils import deprecated
 from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
 from Products.CMFCore.utils import getToolByName
 from DateTime.DateTime import DateTime
-from email.MIMEBase import MIMEBase
-from email import Encoders
+from email.mime.base import MIMEBase
+from email import encoders
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
@@ -418,7 +418,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if keyword == 'binary_data':
         #LOG('ERP5Conduit.getFormatedArgs', DEBUG, 'binary_data keyword: %s' % str(keyword))
         msg = MIMEBase('application','octet-stream')
-        Encoders.encode_base64(msg)
+        encoders.encode_base64(msg)
         msg.set_payload(data)
         data = msg.get_payload(decode=True)
       new_args[keyword] = data

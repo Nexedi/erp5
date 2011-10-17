@@ -219,14 +219,7 @@ if ReportTool:
 
   from Products.CMFReportTool.RenderPDF.Parser import TemplateParser,DocumentParser
 
-  try:
-      # Zope 2.10 and later.
-      from Products.PageTemplates.Expressions import boboAwareZopeTraverse
-  except ImportError:
-      # Zope 2.9 and earlier.
-      boboAwareZopeTraverse = None
-      from Products.PageTemplates.Expressions import restrictedTraverse
-
+  from Products.PageTemplates.Expressions import boboAwareZopeTraverse
   from StringIO import StringIO
   import xml.dom.minidom
   import urllib,os.path
@@ -239,12 +232,9 @@ if ReportTool:
       def handleZODB(self,path):
 
         path = path.split('/')
-        if boboAwareZopeTraverse is None:
-            obj = restrictedTraverse(self.context,path,getSecurityManager())
-        else:
-            # XXX only the request should be required, but this looks ad-hoc..
-            econtext = dict(request=self.context.REQUEST)
-            obj = boboAwareZopeTraverse(self.context, path, econtext)
+        # XXX only the request should be required, but this looks ad-hoc..
+        econtext = dict(request=self.context.REQUEST)
+        obj = boboAwareZopeTraverse(self.context, path, econtext)
 
 
         # check type and e.g. call object if script ...
@@ -276,12 +266,9 @@ if ReportTool:
       def zodb_open(self, req):
         path = req.get_selector()
         path = path.split('/')
-        if boboAwareZopeTraverse is None:
-            obj = restrictedTraverse(self.context,path,getSecurityManager())
-        else:
-            # XXX only the request should be required, but this looks ad-hoc..
-            econtext = dict(request=self.context.REQUEST)
-            obj = boboAwareZopeTraverse(self.context, path, econtext)
+        # XXX only the request should be required, but this looks ad-hoc..
+        econtext = dict(request=self.context.REQUEST)
+        obj = boboAwareZopeTraverse(self.context, path, econtext)
 
         # check type and e.g. call object if script ...
         if callable(obj):

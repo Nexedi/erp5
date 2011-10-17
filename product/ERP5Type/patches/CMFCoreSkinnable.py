@@ -14,11 +14,6 @@
 
 from Products.CMFCore import Skinnable
 from Products.CMFCore.Skinnable import SKINDATA, SkinnableObjectManager
-try:
-    from Products.CMFCore.Skinnable import superGetAttr
-except ImportError:
-    # Removed on CMFCore 2.x
-    superGetAttr = None
 
 from thread import get_ident
 from zLOG import LOG, WARNING, DEBUG
@@ -117,9 +112,7 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
                   LOG('__getattr__', WARNING, 'Skin folder %s is in selection list '\
                       'but does not exist.' % (candidate_folder_id, ))
           ignore[name] = None
-  if superGetAttr is None:
-    raise AttributeError, name
-  return superGetAttr(self, name)
+  raise AttributeError(name)
 
 def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname, REQUEST=None):
   '''

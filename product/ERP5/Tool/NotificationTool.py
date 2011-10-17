@@ -35,13 +35,13 @@ from AccessControl import ModuleSecurityInfo
 from Products.ERP5 import _dtmldir
 
 from mimetypes import guess_type
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
-from email.MIMEBase import MIMEBase
-from email.MIMEAudio import MIMEAudio
-from email.MIMEImage import MIMEImage
-from email.Header import make_header
-from email import Encoders
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.audio import MIMEAudio
+from email.mime.image import MIMEImage
+from email.header import make_header
+from email import encoders
 
 class ConversionError(Exception): pass
 class MimeTypeException(Exception): pass
@@ -168,7 +168,7 @@ def buildEmailMessage(from_url, to_url, msg=None,
         #  encode non-plaintext attachment in base64      
         part = MIMEBase(major, minor)
         part.set_payload(attachment['content'])
-        Encoders.encode_base64(part)
+        encoders.encode_base64(part)
 
     part.add_header('Content-Disposition', 'attachment',
                     filename=attachment_name)

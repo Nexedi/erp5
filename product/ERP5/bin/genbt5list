@@ -33,7 +33,6 @@
 
 import tarfile
 import os
-import os.path
 import sys
 import tempfile
 import shutil
@@ -66,7 +65,7 @@ def readProperty(property_dict, property_name, property_file):
     try:
       text = property_file.read()
       if property_name.endswith('_list'):
-        property_dict[property_name[:-5]] = text and text.split('\n') or []
+        property_dict[property_name[:-5]] = text.splitlines()
       else:
         property_dict[property_name] = text
     finally:
@@ -118,12 +117,9 @@ def generateInformation(fd):
       property_dict = readBusinessTemplateDirectory(file)
     else:
       continue
-    property_id_list = property_dict.keys()
-    property_id_list.sort()
     os.write(fd, '  <template id="%s">\n' % (file,))
-    for property_id in property_id_list:
-      property_value = property_dict[property_id]
-      if type(property_value) == type(''):
+    for property_id, property_value in sorted(property_dict.items()):
+      if type(property_value) is str:
         os.write(fd, '    <%s>%s</%s>\n' % (
               property_id, cgi.escape(property_value), property_id))
       else:
@@ -140,143 +136,24 @@ def main():
   else:
     dir_list = sys.argv[1:]
 
+  cur_umask = os.umask(0666)
+  os.umask(cur_umask)
   cwd = os.getcwd()
   for d in dir_list:
     os.chdir(d)
-    fd, path = tempfile.mkstemp()
     try:
+      fd, path = tempfile.mkstemp(dir='.')
       try:
         generateInformation(fd)
+        os.fchmod(fd, 0666 & ~cur_umask)
+        os.rename(path, 'bt5list')
+      except:
+        os.remove(path)
+        raise
       finally:
         os.close(fd)
-    except:
-      os.remove(path)
-      raise
-    else:
-      shutil.move(path, 'bt5list')
-      cur_umask = os.umask(0666)
-      os.chmod('bt5list', 0666 & ~cur_umask)
-      os.umask(cur_umask)
-    os.chdir(cwd)
-
-# monkey patch tarfile library if python version is 2.4.
-if sys.version_info[0:2] == (2, 4):
-    from tarfile import BLOCKSIZE, GNUTYPE_SPARSE, SUPPORTED_TYPES, TarFile, \
-         TarInfo, calc_chksum, normpath, nts
-
-    def frombuf(cls, buf):
-        """Construct a TarInfo object from a 512 byte string buffer.
-        """
-        tarinfo = cls()
-        tarinfo.name   = nts(buf[0:100])
-        tarinfo.mode   = int(buf[100:108], 8)
-        tarinfo.uid    = int(buf[108:116],8)
-        tarinfo.gid    = int(buf[116:124],8)
-
-        # There are two possible codings for the size field we
-        # have to discriminate, see comment in tobuf() below.
-        if buf[124] != chr(0200):
-            tarinfo.size = long(buf[124:136], 8)
-        else:
-            tarinfo.size = 0L
-            for i in range(11):
-                tarinfo.size <<= 8
-                tarinfo.size += ord(buf[125 + i])
-
-        tarinfo.mtime  = long(buf[136:148], 8)
-        tarinfo.chksum = int(buf[148:156], 8)
-        tarinfo.type   = buf[156:157]
-        tarinfo.linkname = nts(buf[157:257])
-        tarinfo.uname  = nts(buf[265:297])
-        tarinfo.gname  = nts(buf[297:329])
-        try:
-            tarinfo.devmajor = int(buf[329:337], 8)
-            tarinfo.devminor = int(buf[337:345], 8)
-        except ValueError:
-            tarinfo.devmajor = tarinfo.devmajor = 0
-        tarinfo.prefix = buf[345:500]
-
-        # The prefix field is used for filenames > 100 in
-        # the POSIX standard.
-        # name = prefix + '/' + name
-        if tarinfo.type != GNUTYPE_SPARSE:
-            tarinfo.name = normpath(os.path.join(nts(tarinfo.prefix), tarinfo.name))
-
-        # Directory names should have a '/' at the end.
-        if tarinfo.isdir() and tarinfo.name[-1:] != "/":
-            tarinfo.name += "/"
-        return tarinfo
-
-    TarInfo.frombuf = classmethod(frombuf)
-
-    def next(self):
-        """Return the next member of the archive as a TarInfo object, when
-           TarFile is opened for reading. Return None if there is no more
-           available.
-        """
-        self._check("ra")
-        if self.firstmember is not None:
-            m = self.firstmember
-            self.firstmember = None
-            return m
-
-        # Read the next block.
-        self.fileobj.seek(self.offset)
-        while True:
-            buf = self.fileobj.read(BLOCKSIZE)
-            if not buf:
-                return None
-            try:
-                tarinfo = TarInfo.frombuf(buf)
-            except ValueError:
-                if self.ignore_zeros:
-                    if buf.count(NUL) == BLOCKSIZE:
-                        adj = "empty"
-                    else:
-                        adj = "invalid"
-                    self._dbg(2, "0x%X: %s block" % (self.offset, adj))
-                    self.offset += BLOCKSIZE
-                    continue
-                else:
-                    # Block is empty or unreadable.
-                    if self.offset == 0:
-                        # If the first block is invalid. That does not
-                        # look like a tar archive we can handle.
-                        raise ReadError,"empty, unreadable or compressed file"
-                    return None
-            break
-
-        # We shouldn't rely on this checksum, because some tar programs
-        # calculate it differently and it is merely validating the
-        # header block. We could just as well skip this part, which would
-        # have a slight effect on performance...
-        if tarinfo.chksum != calc_chksum(buf):
-            self._dbg(1, "tarfile: Bad Checksum %r" % tarinfo.name)
-
-        # Set the TarInfo object's offset to the current position of the
-        # TarFile and set self.offset to the position where the data blocks
-        # should begin.
-        tarinfo.offset = self.offset
-        self.offset += BLOCKSIZE
-
-        # Check if the TarInfo object has a typeflag for which a callback
-        # method is registered in the TYPE_METH. If so, then call it.
-        if tarinfo.type in self.TYPE_METH:
-            return self.TYPE_METH[tarinfo.type](self, tarinfo)
-
-        tarinfo.offset_data = self.offset
-        if tarinfo.isreg() or tarinfo.type not in SUPPORTED_TYPES:
-            # Skip the following data blocks.
-            self.offset += self._block(tarinfo.size)
-
-        if tarinfo.isreg() and tarinfo.name[:-1] == "/":
-            # some old tar programs don't know DIRTYPE
-            tarinfo.type = DIRTYPE
-
-        self.members.append(tarinfo)
-        return tarinfo
-
-    TarFile.next = next
+    finally:
+      os.chdir(cwd)
 
 if __name__ == "__main__":
   main()

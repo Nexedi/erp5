@@ -32,13 +32,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-
 import transaction
-
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 
 class TestCMFCategory(ERP5TypeTestCase):
 
@@ -368,13 +362,13 @@ class TestCMFCategory(ERP5TypeTestCase):
     p2 = self.getPersonModule()._getOb(self.id2)
     o1 = self.getOrganisationModule()._getOb(self.id1)
     p1.setGenderValue(o1)
-    get_transaction().commit()
+    transaction.commit()
     self.tic() # This is required
 
     self.assertEqual(p1.getGenderValue(),o1)
     self.assertEqual(o1.getGenderRelatedValueList(),[p1])
     p2.setGenderValue(o1) # reindex implicit
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(len(o1.getGenderRelatedValueList()),2)
@@ -386,12 +380,12 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion('europe/west/france')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     west = self.portal.portal_categories.resolveCategory('region/europe/west')
     west.setId("ouest")
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(west,
@@ -406,14 +400,14 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion('europe/west/france')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     europe = self.portal.portal_categories.resolveCategory('region/europe')
     west = europe.west
     cb_data = europe.manage_cutObjects(['west'])
     self.portal.portal_categories.region.manage_pasteObjects(cb_data)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(west,
@@ -428,14 +422,14 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     p1 = self.getPersonModule()._getOb(self.id1)
     p1.setRegion('europe/west/france')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     europe = self.portal.portal_categories.resolveCategory('region/europe')
     west = europe.west
     cb_data = europe.manage_copyObjects(['west'])
     self.portal.portal_categories.region.manage_pasteObjects(cb_data)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEqual(west,
@@ -524,7 +518,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     pc = self.getCategoriesTool()
     bc = pc.newContent(portal_type='Base Category', id='related_value_test')
     self.failUnless(bc is not None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     # A newly created base category should be referred to only by itself
     value_list = pc.getRelatedValueList(bc)
@@ -532,7 +526,7 @@ class TestCMFCategory(ERP5TypeTestCase):
 
     c = bc.newContent(portal_type='Category', id='1')
     self.failUnless(c is not None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     value_list = pc.getRelatedValueList(bc)
     # Now the base category should be referred to by itself and this sub category
@@ -546,7 +540,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     org = self.portal.organisation_module.newContent(
                                   id='organisation_test',
                                   destination='person_module/person_test')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assertEquals(person.getDefaultDestinationRelated(),
                                   'organisation_module/organisation_test' )
@@ -561,7 +555,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     obj = self.getOrganisationModule().newContent(
           portal_type = 'Organisation')
     obj.setCategoryList(['test_base_cat/test_cat'])
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     self.assert_(obj in [x.getObject() for x in test.getCategoryMemberValueList()])
 
@@ -594,7 +588,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     organisation = self.getOrganisationModule().newContent(
               portal_type='Organisation', region='west/france')
 
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     self.assertEquals([x.getObject() for x in
@@ -938,7 +932,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     bc = self.portal.portal_categories.newContent(
                           portal_type='Base Category',
                           id='first_id')
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
     bc.setId('new_id')
     self.assertEquals('new_id', bc.getId())
@@ -953,7 +947,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertNotEquals(line, None)
     cell = line.newContent(id='baz', portal_type='Sale Order Cell')
     self.assertNotEquals(cell, None)
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     for relative_url, value in (
@@ -983,7 +977,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     #First remove Base Category
     self.portal.portal_categories.manage_delObjects(['region'])
     obj = self.portal.person_module.newContent(portal_type='Person')
-    get_transaction().commit()
+    transaction.commit()
     try:
       #Setters
       self.assertRaises(AttributeError, getattr, obj, 'setRegion')
@@ -999,7 +993,7 @@ class TestCMFCategory(ERP5TypeTestCase):
     finally:
       #add Base Category
       self.portal.portal_categories.newContent(id='region', portal_type='Base Category')
-    get_transaction().commit()
+    transaction.commit()
     #check Method exists after base_category creation
     #Setters
     self.assertTrue(getattr(obj, 'setRegion') is not None)

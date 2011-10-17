@@ -13,7 +13,6 @@
 ##############################################################################
 
 #from Products.CMFCore.PortalFolder import PortalFolder
-#from Products.CMFCore.PortalFolder import PortalFolder
 try:
   from Products.CMFCore.CMFBTreeFolder import CMFBTreeFolder
 except ImportError:

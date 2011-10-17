@@ -1,5 +1,6 @@
-import feedparser, md5, urllib2, socket
- 
+import feedparser, urllib2, socket
+from hashlib import md5
+
 def getRssDataAsDict(self, url, username=None, password=None):
   result = {}
   translate = self.Base_translateString
@@ -46,7 +47,7 @@ def getRssDataAsDict(self, url, username=None, password=None):
     entry_dict['title'] = entry['title']
     entry_dict['link'] = entry['link']
     entry_dict['other_links'] = [x['href'] for x in entry['links']]
-    entry_dict['md5'] = md5.new(entry['link']).hexdigest() 
+    entry_dict['md5'] = md5(entry['link']).hexdigest()
     entry_dict['content'] = entry.get('summary', '')
     entry_dict['date'] = entry.get('updated', None)
     entry_dict['img'] = [x['href'] for x in entry.get('enclosures', [])]

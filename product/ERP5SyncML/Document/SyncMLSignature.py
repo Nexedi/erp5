@@ -35,7 +35,7 @@ from Products.ERP5Type import PropertySheet
 
 from zLOG import LOG, DEBUG, INFO
 from Products.ERP5SyncML.Utils import PdataHelper
-import md5
+from hashlib import md5
 
 _MARKER = []
 
@@ -134,7 +134,7 @@ class SyncMLSignature(XMLObject):
     """
     if isinstance(xml_string, unicode):
       xml_string = xml_string.encode('utf-8')
-    return ((md5.new(xml_string).hexdigest()) == self.getContentMd5())
+    return md5(xml_string).hexdigest() == self.getContentMd5()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setPartialData')
   def setPartialData(self, value):

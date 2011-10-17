@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-import fnmatch, gc, glob, imp, os, re, shutil, sys, time
+import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
@@ -80,7 +80,6 @@ from gzip import GzipFile
 from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
-from Products.ERP5Type import tarfile
 from urllib import quote, unquote
 from difflib import unified_diff
 import posixpath
@@ -2737,22 +2736,15 @@ class ActionTemplateItem(ObjectTemplateItem):
         return obj._exportOldAction(action)
 
   def _getPortalToolActionCopy(self, obj, context, value):
-    try:
-      from Products.CMFCore.interfaces import IActionProvider
-    except ImportError:
-      # BACK:
-      # we still don't load ZCML on tests on 2.8, but on 2.8 actions from other
-      # tools are not redirected to portal_actions
-      pass
-    else:
-      if not IActionProvider.providedBy(obj):
-        # look for the action in portal_actions, instead of the original object
-        LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
-            'Redirected action export',
-            'Attempted to retrieve action %r from %r which is no longer an '
-            'IActionProvided. Retrieving action from portal_actions instead' %
-            (value, obj.getId()))
-        obj = context.getPortalObject().portal_actions
+    from Products.CMFCore.interfaces import IActionProvider
+    if not IActionProvider.providedBy(obj):
+      # look for the action in portal_actions, instead of the original object
+      LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
+          'Redirected action export',
+          'Attempted to retrieve action %r from %r which is no longer an '
+          'IActionProvided. Retrieving action from portal_actions instead' %
+          (value, obj.getId()))
+      obj = context.getPortalObject().portal_actions
     id_id = 'id'
     for action in obj.listActions():
       if getattr(action, id_id, None) == value:
@@ -2815,23 +2807,16 @@ class ActionTemplateItem(ObjectTemplateItem):
 
           # Following code is for actions outside Types Tool.
           # It will be removed when they are also converted to ERP5 actions.
-          try:
-            from Products.CMFCore.interfaces import IActionProvider
-          except ImportError:
-              # BACK:
-              # we still don't load ZCML on tests on 2.8, but on 2.8 we don't
-              # need to redirect actions to portal_actions.
-              pass
-          else:
-            if not IActionProvider.providedBy(container):
-              # some tools stopped being ActionProviders in CMF 2.x. Drop the
-              # action into portal_actions.
-              LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
-                  'Redirected action import',
-                  'Attempted to store action %r in %r which is no longer an '
-                  'IActionProvided. Storing action on portal_actions instead' %
-                  (id, path))
-              container = p.portal_actions
+          from Products.CMFCore.interfaces import IActionProvider
+          if not IActionProvider.providedBy(container):
+            # some tools stopped being ActionProviders in CMF 2.x. Drop the
+            # action into portal_actions.
+            LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
+                'Redirected action import',
+                'Attempted to store action %r in %r which is no longer an '
+                'IActionProvided. Storing action on portal_actions instead' %
+                (id, path))
+            container = p.portal_actions
           obj, action = container, obj
           action_list = obj.listActions()
           for index in range(len(action_list)):

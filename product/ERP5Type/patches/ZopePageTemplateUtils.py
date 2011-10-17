@@ -20,17 +20,7 @@
 # FOR A PARTICULAR PURPOSE
 ##############################################################################
 
-NEED_PATCH = False
-try:
-    from Products.PageTemplates.utils import convertToUnicode
-except ImportError:
-    # Not present in Zope 2.8
-    pass
-else:
-    try:
-        convertToUnicode(u'')
-    except TypeError:
-        NEED_PATCH = True
+from Products.PageTemplates.utils import convertToUnicode
 
 def patched_convertToUnicode(source, content_type, preferred_encodings):
     """ Convert 'source' to unicode.
@@ -64,8 +54,9 @@ def patched_convertToUnicode(source, content_type, preferred_encodings):
 
     return unicode(source), None
 
-if NEED_PATCH:
+try:
+    convertToUnicode(u'', 'text/xml', ())
+except TypeError:
     # We need to monkey patch in-place, as it is a top-level function and
     # already imported in other places.
     convertToUnicode.func_code = patched_convertToUnicode.func_code
-

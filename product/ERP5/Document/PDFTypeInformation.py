@@ -28,7 +28,7 @@
 ##############################################################################
 
 import StringIO
-from hashlib import md5 as md5_new
+from hashlib import md5
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type import Permissions, PropertySheet
@@ -431,7 +431,7 @@ class PDFTypeInformation(ERP5TypeInformation):
 
     generateParsedScribus = CachingMethod(generateParsedScribus,
                                         ('PDFTypeInformation_generateParsedScribus',
-                                        md5_new(scribus_form.getData()).digest()),
+                                        md5(scribus_form.getData()).digest()),
                                         cache_factory='dms_cache_factory')
     return generateParsedScribus()
 
@@ -544,7 +544,7 @@ class PDFTypeInformation(ERP5TypeInformation):
       return form
     #generateERP5Form = CachingMethod(generateERP5Form,
     #                                ('PDFTypeInformation_generateERP5Form',
-    #                                md5_new(self.getDefaultScribusFormValue().getData()).digest()),
+    #                                md5(self.getDefaultScribusFormValue().getData()).digest()),
     #                                cache_factory='dms_cache_factory')
     return generateERP5Form().__of__(self)
 
@@ -594,7 +594,7 @@ class PDFTypeInformation(ERP5TypeInformation):
 
     generateERP5FormCSS = CachingMethod(generateERP5FormCSS,
                                         ('PDFTypeInformation_generateERP5FormCSS',
-                                        md5_new(self.getDefaultScribusFormValue().getData()).digest()),
+                                        md5(self.getDefaultScribusFormValue().getData()).digest()),
                                         cache_factory='dms_cache_factory')
     self.REQUEST.RESPONSE.setHeader('Content-Type', 'text/css')
     return generateERP5FormCSS()

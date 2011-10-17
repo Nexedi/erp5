@@ -17,13 +17,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 from Products.CMFCore.ActionsTool import ActionsTool
-try:
-  from Products.CMFCore.interfaces import IActionProvider
-  IActionProvider_providedBy = IActionProvider.providedBy
-except ImportError:
-  # XXX Do not initialize ZCML in unit tests on Zope 2.8 for the moment
-  from Products.CMFCore.ActionsTool import IActionProvider
-  IActionProvider_providedBy = IActionProvider.isImplementedBy
+from Products.CMFCore.interfaces import IActionProvider
 
 def migrateNonProviders(portal_actions):
   portal_actions_path = '/'.join(portal_actions.getPhysicalPath())
@@ -38,9 +32,8 @@ def migrateNonProviders(portal_actions):
       portal_actions._actions += provider._actions
       del provider._actions
     if (getattr(provider, 'listActionInfos', None) is None and
-        getattr(provider, '_listActionInfos', None) is None and
         getattr(provider, 'getActionListFor', None) is None and
-        not(IActionProvider_providedBy(provider))):
+        not(IActionProvider.providedBy(provider))):
       action_providers.remove(provider_name)
   portal_actions.action_providers = tuple(action_providers)
 
@@ -70,14 +63,8 @@ def listFilteredActionsFor(self, object=None):
             actions.extend(action.cook(ec)
                            for action in provider.getActionListFor(object)
                            if action.test(ec))
-        elif IActionProvider_providedBy(provider):
+        elif IActionProvider.providedBy(provider):
             actions.extend( provider.listActionInfos(object=object) )
-        elif getattr(provider, '_listActionInfos', None) is not None:
-            # BACK: drop this clause and the 'else' clause below when we
-            # drop CMF 1.5
-
-            # for Action Providers written for CMF versions before 1.5
-            actions.extend( self._listActionInfos(provider, object) )
         else:
             # This should only be triggered once
             # We're in 2.12 and we need to migrate objects that are no longer

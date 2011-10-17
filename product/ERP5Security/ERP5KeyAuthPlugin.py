@@ -32,10 +32,7 @@ from urllib import quote, unquote
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
 from Products.ERP5Type.Globals import InitializeClass
-try:
-    from zope.interface import Interface
-except ImportError:
-    from Products.PluggableAuthService.utils import Interface
+from zope.interface import Interface
 
 from AccessControl import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager,\

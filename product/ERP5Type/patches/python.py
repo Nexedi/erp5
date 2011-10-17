@@ -26,81 +26,7 @@
 #
 ##############################################################################
 
-import os, sys, types
-
-if sys.version_info < (2, 5):
-  import __builtin__, imp
-
-  def all(iterable):
-    """
-    Return True if bool(x) is True for all values x in the iterable.
-    """
-    for x in iterable:
-      if not x:
-        return False
-    return True
-  __builtin__.all = all
-
-  def any(iterable):
-    """
-    Return True if bool(x) is True for any x in the iterable.
-    """
-    for x in iterable:
-      if x:
-        return True
-    return False
-  __builtin__.any = any
-
-  import md5, sha
-  sys.modules['hashlib'] = hashlib = imp.new_module('hashlib')
-  hashlib.md5 = md5.new
-  hashlib.sha1 = sha.new
-
-  import email.Utils
-  sys.modules['email.utils'] = email.Utils
-
-  # A business template exported by Python 2.4 may contain:
-  # <klass>
-  #   <global id="xxx" name="_compile" module="sre"/>
-  # </klass>
-  #
-  # A business template exported by Python 2.6 may contain:
-  # <klass>
-  #   <global id="xxx" name="_compile" module="re"/>
-  # </klass>
-  #
-  # Python 2.6 provides 'sre._compile', but Python 2.4 does not provide
-  # 're._compile', so we provide re._compile here for the backward
-  # compatilibility.
-
-  import re, sre
-  re._compile = sre._compile
-
-  # Monkey-patch pprint to sort keys of dictionaries
-  class _ordered_dict(dict):
-    def iteritems(self):
-      return sorted(self.items())
-
-  import pprint as _pprint
-  orig_safe_repr = _pprint._safe_repr
-  def _safe_repr(object, context, maxlevels, level):
-    if type(object) is dict:
-      object = _ordered_dict(object)
-    return orig_safe_repr(object, context, maxlevels, level)
-  _pprint._safe_repr = _safe_repr
-
-
-if sys.version_info < (2, 6):
-
-  try:
-    import simplejson as json
-  except ImportError, missing_simplejson:
-    class dummy(types.ModuleType):
-      def __getattr__(self, name):
-        raise missing_simplejson
-    json = dummy('dummy_json')
-  sys.modules['json'] = json
-
+import os, sys
 
 if sys.version_info < (2, 7):
 
@@ -115,7 +41,7 @@ if sys.version_info < (2, 7):
 
 if 1:
     # Speed up email parsing (see also http://bugs.python.org/issue1243730)
-    from email import Parser as parser, FeedParser as feedparser # BBB
+    from email import parser, feedparser
 
     NLCRE_crack_split = feedparser.NLCRE_crack.split
     def push(self, data):

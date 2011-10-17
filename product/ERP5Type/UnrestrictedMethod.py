@@ -30,10 +30,7 @@ from AccessControl.User import UnrestrictedUser
 from AccessControl.SpecialUsers import system
 from AccessControl.SecurityManagement import getSecurityManager, \
         newSecurityManager, setSecurityManager
-try:
-  from Zope2 import app
-except ImportError:
-  from Zope import app
+from Zope2 import app
 from Products.ERP5Type.Utils import simple_decorator
 
 class PrivilegedUser(UnrestrictedUser):

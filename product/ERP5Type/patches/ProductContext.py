@@ -13,7 +13,7 @@
 ##############################################################################
 
 # AttrDict patch for more dict-like methods.
-try:
+if 1:
     from App.ProductContext import AttrDict
 
     def AttrDict_getitem(self, name):
@@ -35,5 +35,3 @@ try:
     AttrDict.has_key = AttrDict_has_key
     AttrDict.items = AttrDict_items
     AttrDict.keys = AttrDict_keys
-except ImportError:
-    pass

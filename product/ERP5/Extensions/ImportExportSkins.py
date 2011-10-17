@@ -4,13 +4,8 @@
 # have to be patched with a manage_FTPget wich contains
 # a section <dtml-comment></dtml-comment>
 
-#instance_home = getConfiguration().instancehome
-# Zope 2.6.x does not have App.Config
-try:
-    from App.config import getConfiguration
-except ImportError:
-    getConfiguration = None
-
+import os
+from App.config import getConfiguration
 
 fs_skin_ids = ('fs_erp5_core', 'fs_erp5_trade', 'fs_erp5_accounting', 'fs_erp5_crm')
 fs_skin_spec = ('ERP5 Filesystem Formulator Form',
@@ -19,10 +14,7 @@ fs_skin_spec = ('ERP5 Filesystem Formulator Form',
                 'Filesystem Page Template',
                 'Filesystem Script (Python)',
                 'Filesystem Z SQL Method')
-if getConfiguration is None:
-  fs_skin_dir = '/var/lib/zope/Products'
-else:
-  fs_skin_dir = getConfiguration().instancehome + '/Products'
+fs_skin_dir = os.path.join(getConfiguration().instancehome,  'Products')
 zodb_skin_ids = ('erp5_core', 'erp5_trade', 'erp5_accounting', 'erp5_crm')
 zodb_skin_spec = ('ERP5 Form', 'ERP5 PDF Template', 'Page Template', 'Script', 'Script (Python)','Z SQL Method')
 

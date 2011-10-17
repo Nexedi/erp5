@@ -10,7 +10,6 @@ __version__ = '0.3.0'
 import base64
 import errno
 import httplib
-import md5
 import os
 import random
 import re
@@ -23,6 +22,7 @@ import urllib
 from cStringIO import StringIO
 from cPickle import dumps
 from glob import glob
+from hashlib import md5
 from warnings import warn
 from ExtensionClass import pmc_init_of
 from ZTUtils import make_query
@@ -51,13 +51,7 @@ def get_request():
 Products.ERP5Type.Utils.get_request = get_request
 Globals.get_request = get_request
 
-try:
-  from zope.site.hooks import setSite
-except ImportError:
-  # BACK: Zope 2.8. setSite is somewhere else, and we can't use it anyway
-  # since ERP5Site is not yet an ISite. Remove once we drop support for 2.8
-  def setSite(site=None):
-    pass
+from zope.site.hooks import setSite
 
 try:
   import itools.zope
@@ -102,19 +96,12 @@ ZopeTestCase.installProduct('ExternalMethod', quiet=install_product_quiet)
 ZopeTestCase.installProduct('Sessions', quiet=install_product_quiet)
 ZopeTestCase.installProduct('ZODBMountPoint', quiet=install_product_quiet)
 
-try:
-  from Testing.ZopeTestCase.layer import onsetup
-  # On Zope 2.12, installProduct() is a delayed call, so imports that depend on
-  # products being "initialize"d should only be called "on setup". The
-  # decorator above delays calls to the decorated function until after Product
-  # initialization.
-  # Also, we need Five to wire all our CMF dependencies.
-  ZopeTestCase.installProduct('Five', quiet=install_product_quiet)
-except ImportError:
-  # On Zope 2.8 the call does not have to be delayed as product installation
-  # happens immediately
-  def onsetup(decorated):
-    return decorated
+from Testing.ZopeTestCase.layer import onsetup
+# installProduct() is a delayed call, so imports that depend on products being
+# "initialize"d should only be called "on setup". The decorator above delays
+# calls to the decorated function until after Product initialization.
+# Also, we need Five to wire all our CMF dependencies.
+ZopeTestCase.installProduct('Five', quiet=install_product_quiet)
 
 try:
   # Workaround iHotFix patch that doesn't work with
@@ -689,11 +676,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       forced_portal_id = os.environ.get('erp5_tests_portal_id')
       if forced_portal_id:
         return str(forced_portal_id)
-      m = md5.new()
-      m.update(repr(self.getBusinessTemplateList())+ self.getTitle())
-      uid = m.hexdigest()
-
-      return portal_name + '_' + uid
+      m = md5(repr(self.getBusinessTemplateList()) + self.getTitle())
+      return portal_name + '_' + m.hexdigest()
 
     def getPortal(self):
       """Returns the portal object, i.e. the "fixture root".
@@ -705,7 +689,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       """
       portal = self.app[self.getPortalName()]
       # Make sure skins are correctly set-up (it's not implicitly set up
-      # by Acquisition on Zope 2.12 as it is on 2.8)
+      # by Acquisition on recent Zope)
       portal.setupCurrentSkin(portal.REQUEST)
       self.REQUEST = portal.REQUEST
       setSite(portal)

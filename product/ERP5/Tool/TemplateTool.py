@@ -33,6 +33,7 @@ from App.config import getConfiguration
 import os
 import shutil
 import sys
+import tarfile
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
@@ -40,7 +41,7 @@ from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type import Permissions, tarfile
+from Products.ERP5Type import Permissions
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp

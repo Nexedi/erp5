@@ -16,9 +16,6 @@ class ConflictFreeLog(Persistent):
   def __len__(self):
     return self._tail_count + len(self._log)
 
-  if not hasattr(Persistent, '_p_estimated_size'): # BBB: Zope 2.8
-    _p_estimated_size = property(lambda self: len(self._log) * 64)
-
   def _maybe_rotate(self):
     if self._p_estimated_size < self._bucket_size:
       self._p_changed = 1

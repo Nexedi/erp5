@@ -23,14 +23,10 @@ from logging import getLogger
 import traceback
 logger = getLogger(__name__)
 
-try:
-  from Products.PageTemplates.unicodeconflictresolver \
+from Products.PageTemplates.unicodeconflictresolver \
        import PreferredCharsetResolver
-except ImportError:
-  # do nothing for Zope-2.8
-  pass
-else:
-  def PreferredCharsetResolver_resolve(context, text, expression):
+
+def PreferredCharsetResolver_resolve(context, text, expression):
     # Since we use UTF-8 only in PageTemplate, it is enough here. It is
     # faster than the original implementation, and it is compatible with
     # requests that do not contain Accept-Charset header.
@@ -42,5 +38,4 @@ else:
                   (e, text, tb_info))
       result = unicode(text, 'utf-8', 'replace')
     return result
-  PreferredCharsetResolver.resolve = PreferredCharsetResolver_resolve
-
+PreferredCharsetResolver.resolve = PreferredCharsetResolver_resolve

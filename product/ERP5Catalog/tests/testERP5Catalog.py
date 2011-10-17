@@ -47,10 +47,6 @@ from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 import transaction
 
 from OFS.ObjectManager import ObjectManager

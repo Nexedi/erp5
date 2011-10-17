@@ -19,12 +19,6 @@ from Acquisition import aq_parent, aq_inner, aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.CMFCore.PortalContent import ResourceLockedError
-try:
-    from Products.CMFCore.PortalContent import NoWL
-except ImportError:
-    # NoWL has been 0 for a long time now
-    NoWL = 0
-    
 from Products.CMFCore.utils import getToolByName
 from Products.CMFDefault.utils import parseHeadersBody
 from Products.CMFDefault.utils import html_headcheck
@@ -120,9 +114,8 @@ class TextContent:
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
   def PUT(self, REQUEST, RESPONSE):
     """ Handle HTTP (and presumably FTP?) PUT requests """
-    if not NoWL:
-      self.dav__init(REQUEST, RESPONSE)
-      self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+    self.dav__init(REQUEST, RESPONSE)
+    self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
     body = REQUEST.get('BODY', '')
 
     try:
@@ -201,12 +194,7 @@ class TextContent:
     return len(self.manage_FTPget())
 
 from webdav.common import Locked, PreconditionFailed
-try:
-  from webdav.interfaces import IWriteLock
-  providesIWriteLock = IWriteLock.providedBy
-except ImportError: # BBB: Zope 2.8
-  from webdav.WriteLockInterface import WriteLockInterface
-  providesIWriteLock = WriteLockInterface.isImplementedBy
+from webdav.interfaces import IWriteLock
 from webdav.NullResource import NullResource
 NullResource_PUT = NullResource.PUT
 
@@ -222,7 +210,7 @@ def PUT(self, REQUEST, RESPONSE):
         parent = self.__parent__
 
         ifhdr = REQUEST.get_header('If', '')
-        if providesIWriteLock(parent) and parent.wl_isLocked():
+        if IWriteLock.providedBy(parent) and parent.wl_isLocked():
             if ifhdr:
                 parent.dav__simpleifhandler(REQUEST, RESPONSE, col=1)
             else:

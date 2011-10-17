@@ -43,10 +43,7 @@ from cStringIO import StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
 import os
-try:
-    from hashlib import md5
-except ImportError:
-    from md5 import md5
+from hashlib import md5
 
 from interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass

@@ -63,14 +63,9 @@ from Products.ERP5Type.patches import StateChangeInfoPatch
 from Products.ERP5Type.patches import transforms
 from Products.ERP5Type.patches import OFSPdata
 from Products.ERP5Type.patches import make_hidden_input
-from Products.ERP5Type.patches import ClientStorage
 from Products.ERP5Type.patches import DemoStorage
 from Products.ERP5Type.patches import unicodeconflictresolver
 from Products.ERP5Type.patches import ZODBConnection
-# BACK: Forward Compatibility with Zope 2.12 or CMF 2.2. Remove when we've
-# dropped support for older versions.
-from Products.ERP5Type.patches import TransactionAddBeforeCommitHook
-from Products.ERP5Type.patches import ZopePageTemplate
 from Products.ERP5Type.patches import ZopePageTemplateUtils
 from Products.ERP5Type.patches import OFSHistory
 from Products.ERP5Type.patches import OFSItem

@@ -311,7 +311,7 @@ class TestBug(ERP5TypeTestCase):
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
     mfrom, mto, messageText = last_message
-    from email.Parser import Parser
+    from email.parser import Parser
     p = Parser()
     m = p.parsestr(messageText)
     self.assertTrue('Re-assign!' in m.get_payload()[0].get_payload(decode=True))

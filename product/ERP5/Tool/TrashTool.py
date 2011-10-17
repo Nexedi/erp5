@@ -116,18 +116,13 @@ class TrashTool(BaseTool):
           try:
             backup = connection.importFile(copy)
             backup.isIndexable = ConstantGetter('isIndexable', value=False)
-            try:
-              # the isIndexable setting above avoids the recursion of
-              # manage_afterAdd on
-              # Products.ERP5Type.CopySupport.CopySupport.manage_afterAdd()
-              # but not on event subscribers, so we need to suppress_events,
-              # otherwise subobjects will be reindexed
-              backup_object_container._setObject(object_id, backup,
-                                                 suppress_events=True)
-            except TypeError:
-              # BACK: On Zope 2.8. _setObject does not accept "suppress_events"
-              # remove when we drop support
-              backup_object_container._setObject(object_id, backup)
+            # the isIndexable setting above avoids the recursion of
+            # manage_afterAdd on
+            # Products.ERP5Type.CopySupport.CopySupport.manage_afterAdd()
+            # but not on event subscribers, so we need to suppress_events,
+            # otherwise subobjects will be reindexed
+            backup_object_container._setObject(object_id, backup,
+                                               suppress_events=True)
           except (AttributeError, ImportError):
             # XXX we can go here due to formulator because attribute
             # field_added doesn't not exists on parent if it is a Trash

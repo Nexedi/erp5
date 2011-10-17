@@ -56,11 +56,7 @@ trust_dict=dict((x, request[x]) for x in (\n
 \n
 context.getVcsTool().acceptSSLServer(trust_dict, True)\n
 \n
-try:\n
-  traverseName = request.traverseName\n
-except AttributeError: # BBB: Zope2.8\n
-  return request.traverse(\'%s/%s\' % (context.getPath(), caller))(**dict(caller_kw))\n
-return traverseName(context, caller)(**caller_kw)\n
+return request.traverseName(context, caller)(**caller_kw)\n
 </string> </value>
         </item>
         <item>

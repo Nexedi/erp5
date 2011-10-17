@@ -159,7 +159,7 @@ ActionInformation.getMapping = getMapping
 
 PatchedActionInformation = ActionInformation
 
-try:
+if 1:
   from Products.CMFCore.ActionInformation import ActionInfo
 
   original_init = ActionInfo.__init__
@@ -181,6 +181,3 @@ try:
     self.data['name'] = self['title']
 
   ActionInfo.__init__ = __init__
-
-except ImportError:
-  pass

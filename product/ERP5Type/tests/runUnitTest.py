@@ -1,4 +1,4 @@
-#!/usr/bin/python2.4
+#!/usr/bin/env python2.6
 import os
 import sys
 import pdb
@@ -214,20 +214,9 @@ def initializeInstanceHome(tests_framework_home,
     "INSTANCE_HOME": instance_home,
     "SOFTWARE_HOME": software_home,
     }
-  try:
-    # attempt to import copyzopeskel from its new home on Zope 2.12
-    from Zope2.utilities import copyzopeskel
-    # and use the 2.12 version of our skeleton
-    skeldir = 'skel2.12'
-    kw['ZOPE_SCRIPTS'] = os.environ['ZOPE_SCRIPTS']
-  except ImportError:
-    # add some paths where we can find copyzopeskel
-    sys.path.append(os.path.join(zope_home, "bin"))
-    sys.path.append(os.path.join(zope_home, "utilities"))
-    import copyzopeskel
-    kw['ZOPE_HOME'] = zope_home
-    skeldir = 'skel'
-  skelsrc = os.path.abspath(os.path.join(tests_framework_home, skeldir))
+  from Zope2.utilities import copyzopeskel
+  kw['ZOPE_SCRIPTS'] = os.environ['ZOPE_SCRIPTS']
+  skelsrc = os.path.abspath(os.path.join(tests_framework_home, 'skel'))
   copyzopeskel.copyskel(skelsrc, instance_home, None, None, **kw)
 
 # site specific variables
@@ -244,7 +233,6 @@ else:
   common_paths = [
     '/usr/lib/erp5/lib/python',
     '/usr/lib64/zope/lib/python',
-    '/usr/lib/zope2.8/lib/python',
     '/usr/lib/zope/lib/python',
   ]
   if WIN:
@@ -389,11 +377,8 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   cfg = App.config.getConfiguration()
   cfg.testinghome = instance_home
   cfg.instancehome = instance_home
-  try:
-    from Zope2.Startup.datatypes import DBTab
-    cfg.dbtab = DBTab({}, {})
-  except ImportError: # Zope 2.8
-    pass
+  from Zope2.Startup.datatypes import DBTab
+  cfg.dbtab = DBTab({}, {})
   App.config.setConfiguration(cfg)
 
   if WIN:
@@ -403,38 +388,29 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   else:
     products_home = os.path.join(instance_home, 'Products')
 
-  # The following un-monkey-patch is only required for Zope 2.8.
-  # On Zope 2.12, import_products() is called by ERP5TestCase before it is
-  # patched by the layer.setUp() call.
   import OFS.Application
-  import_products = OFS.Application.import_products
-  from Testing import ZopeTestCase # Zope 2.8: this will import custom_zodb.py
-  OFS.Application.import_products = import_products
+  from Testing import ZopeTestCase
 
   from ZConfig.components.logger import handlers, logger, loghandler
   import logging
   root_logger = logging.getLogger()
-  try:
-    # On Zope 2.8, ZopeTestCase does not have any logging facility.
-    # So we must emulate the usual Zope startup code to catch log
-    # messages.
-    from ZConfig.matcher import SectionValue
-    section = SectionValue({'dateformat': '%Y-%m-%d %H:%M:%S',
-                            'format': '%(asctime)s.%(msecs)03d %(levelname)s %(name)s %(message)s',
-                            'level': logging.INFO,
-                            'path': os.environ['EVENT_LOG_FILE'],
-                            'max_size': None,
-                            'old_files': None,
-                            'when': None,
-                            'interval': None,
-                            'formatter': None,
-                            },
-                           None, None)
-    section.handlers = [handlers.FileHandlerFactory(section)]
-    root_logger.handlers = []
-    logger.EventLogFactory(section)()
-  except ImportError:
-    pass
+  # On recent Zope, ZopeTestCase does not have any logging facility.
+  # So we must emulate the usual Zope startup code to catch log messages.
+  from ZConfig.matcher import SectionValue
+  section = SectionValue({'dateformat': '%Y-%m-%d %H:%M:%S',
+                          'format': '%(asctime)s.%(msecs)03d %(levelname)s %(name)s %(message)s',
+                          'level': logging.INFO,
+                          'path': os.environ['EVENT_LOG_FILE'],
+                          'max_size': None,
+                          'old_files': None,
+                          'when': None,
+                          'interval': None,
+                          'formatter': None,
+                          },
+                         None, None)
+  section.handlers = [handlers.FileHandlerFactory(section)]
+  root_logger.handlers = []
+  logger.EventLogFactory(section)()
 
   # allow unit tests of our Products or business templates to be reached.
   product_test_list = glob(os.path.join(products_home, '*', 'tests'))
@@ -472,25 +448,21 @@ def runUnitTestList(test_list, verbosity=1, debug=0, run_only=None):
   #     remaining 'onsetup' hooks just before executing the test suite.
   from Products.ERP5Type.tests.ERP5TypeTestCase import \
       ProcessingNodeTestCase, ZEOServerTestCase, dummy_setUp, dummy_tearDown
-  try:
-    from Testing.ZopeTestCase import layer
-  except ImportError:
-    #  Zope 2.8, no need to set-up the ZopeLite layer
-    pass
-  else:
-    # Since we're not using the zope.testing testrunner, we need to set up
-    # the layer ourselves
-    # FIXME: We should start using Zope layers. Our setup will probably
-    # be faster and we could drop most of this code we currently maintain
-    # ourselves
-    layer.ZopeLite.setUp() # Zope 2.12: this will import custom_zodb.py
-    def assertFalse():
-      assert False
-    layer.onsetup = assertFalse
+  from Testing.ZopeTestCase import layer
 
-    from Products.ERP5Type.tests.utils import DbFactory
-    root_db_name, = cfg.dbtab.databases.keys()
-    DbFactory(root_db_name).addMountPoint('/')
+  # Since we're not using the zope.testing testrunner, we need to set up
+  # the layer ourselves
+  # FIXME: We should start using Zope layers. Our setup will probably
+  # be faster and we could drop most of this code we currently maintain
+  # ourselves
+  layer.ZopeLite.setUp() # this will import custom_zodb.py
+  def assertFalse():
+    assert False
+  layer.onsetup = assertFalse
+
+  from Products.ERP5Type.tests.utils import DbFactory
+  root_db_name, = cfg.dbtab.databases.keys()
+  DbFactory(root_db_name).addMountPoint('/')
 
   TestRunner = backportUnittest.TextTestRunner
 
@@ -769,13 +741,6 @@ def main(argument_list=None):
                            debug=debug,
                            run_only=run_only,
                            )
-  try:
-    from Testing.ZopeTestCase import profiler
-  except ImportError:
-    if os.environ.get('PROFILE_TESTS') == '1':
-      _print("Profiler support is not available from ZopeTestCase in Zope 2.12\n")
-  else:
-    profiler.print_stats()
   return result and len(result.failures) + len(result.errors) and 1 or 0
 
 if __name__ == '__main__':

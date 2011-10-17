@@ -37,8 +37,8 @@ from zLOG import LOG
 import transaction
 import random
 import email
-from email.Header import decode_header, make_header
-from email.Utils import parseaddr
+from email.header import decode_header, make_header
+from email.utils import parseaddr
 
 class TestEGovMixin(SecurityTestCase):
   """Usefull methods for eGov Unit Tests."""

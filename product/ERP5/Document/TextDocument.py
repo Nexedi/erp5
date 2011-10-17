@@ -38,14 +38,11 @@ from Products.ERP5Type.WebDAVSupport import TextContent
 import re
 from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
 import cStringIO
+from string import Template
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
-try:
-  from string import Template
-except ImportError:
-  from Products.ERP5Type.patches.string import Template
 from Products.ERP5Type.Utils import guessEncodingFromText
 
 from lxml import html as etree_html

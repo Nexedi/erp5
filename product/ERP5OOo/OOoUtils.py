@@ -38,10 +38,7 @@ from xml.dom import Node
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, get_request
 from zipfile import ZipFile, ZIP_DEFLATED
-try:
-  from cStringIO import StringIO
-except ImportError:
-  from StringIO import StringIO
+from cStringIO import StringIO
 import imghdr
 import random
 from Products.ERP5Type import Permissions

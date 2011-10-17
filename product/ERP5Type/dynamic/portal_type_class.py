@@ -354,10 +354,7 @@ def synchronizeDynamicModules(context, force=False):
         tool = getattr(portal, tool_id, None)
         if tool is None:
           tool = tool_class()
-          try:
-            portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
-          except TypeError:
-            portal._setObject(tool_id, tool, set_owner=False)
+          portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
           tool = getattr(portal, tool_id)
         elif tool._isBootstrapRequired():
           migrate = True

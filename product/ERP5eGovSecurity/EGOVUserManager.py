@@ -34,11 +34,7 @@ from ZODB.POSException import ConflictError
 import sys
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
-
-try :
-  from AccessControl.AuthEncoding import pw_validate
-except ImportError:
-  pw_validate = lambda reference, attempt: reference == attempt
+from AccessControl.AuthEncoding import pw_validate
 
 # This user is used to bypass all security checks.
 SUPER_USER = '__erp5security-=__'

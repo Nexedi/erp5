@@ -255,8 +255,6 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
           continue
         try:
           portal.portal_activities.process_timer(None, None)
-        except (KeyboardInterrupt, SystemExit): # BACK: Not needed for
-          raise                                 #       Python >= 2.5
         except Exception:
           LOG('Invoking Activity Tool', ERROR, '', error=sys.exc_info())
     except KeyboardInterrupt:

@@ -28,14 +28,7 @@
 
 import unittest
 import os
-
-try:
-    from zope.app.testing.placelesssetup import PlacelessSetup
-except ImportError:
-    # BACK: Zope 2.8. Remove when we no longer support it
-    from zope.component.tests.placelesssetup import PlacelessSetup
-
-
+from zope.app.testing.placelesssetup import PlacelessSetup
 from Products.ERP5Form.PDFForm import PDFForm
 from Products.ERP5.Document.Document import Document
 
@@ -51,11 +44,8 @@ class TestPDFForm(PlacelessSetup, unittest.TestCase):
     """Creates a PDFForm, and a document on which the PDF form is rendered.
     """
     super(TestPDFForm, self).setUp()
-    try:
-        from Products.CMFCore.tests.base.utils import _setUpDefaultTraversable
-        _setUpDefaultTraversable()
-    except ImportError:
-        pass # On Zope 2.8, remove when we no longer support it
+    from Products.CMFCore.tests.base.utils import _setUpDefaultTraversable
+    _setUpDefaultTraversable()
     self.document = Document('doc_id')
     pdf_file = open(os.path.join(os.path.dirname(__file__),
                                       'data', 'test_1.pdf'), 'rb')

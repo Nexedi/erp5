@@ -421,12 +421,8 @@ class SQLBase:
         # should they be just made available again ?
         if uid_to_duplicate_uid_list_dict is not None:
           make_available_uid_list += uid_to_duplicate_uid_list_dict.get(uid, ())
-        # BACK: Only exceptions can be classes in Python 2.6.
-        # Once we drop support for Python 2.4,
-        # please, remove the "type(m.exc_type) is type(ConflictError)" check
-        # and leave only the "issubclass(m.exc_type, ConflictError)" check.
-        if type(m.exc_type) is type(ConflictError) and \
-           m.conflict_retry and issubclass(m.exc_type, ConflictError):
+        if (m.exc_type and # m.exc_type may be None
+            m.conflict_retry and issubclass(m.exc_type, ConflictError)):
           delay_uid_list.append(uid)
         else:
           max_retry = m.max_retry

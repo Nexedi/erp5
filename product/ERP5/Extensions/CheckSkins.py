@@ -6,16 +6,9 @@ import csv
 from Products.CMFCore.utils import expandpath
 
 from zLOG import LOG
+from App.config import getConfiguration
 
-try:
-    from App.config import getConfiguration
-except ImportError:
-    getConfiguration = None
-
-if getConfiguration is None:
-  data_dir = '/var/lib/zope/data'
-else:
-  data_dir = getConfiguration().instancehome + '/data'
+data_dir = os.path.join(getConfiguration().instancehome, 'data')
 
 fs_skin_spec = ('ERP5 Filesystem Formulator Form',
                 'ERP5 Filesystem PDF Template',

@@ -28,8 +28,6 @@
 
 import unittest
 import os
-import email.Header
-
 import transaction
 
 from Products.CMFCore.WorkflowCore import WorkflowException
@@ -39,10 +37,11 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
 from Products.ERP5OOo.tests.testIngestion import FILENAME_REGULAR_EXPRESSION
 from Products.ERP5OOo.tests.testIngestion import REFERENCE_REGULAR_EXPRESSION
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEBase import MIMEBase
-from email.MIMEText import MIMEText
-from email import Encoders
+from email.header import decode_header
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.mime.text import MIMEText
+from email import encoders, message_from_string
 
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_data', 'crm_emails', name)
@@ -632,7 +631,7 @@ class TestCRMMailIngestion(BaseTestCRM):
       return object_list[-1]
 
     portal = self.portal
-    message = email.message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'Visit:Company A')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -641,7 +640,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
 
-    message = email.message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'Fax:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -650,7 +649,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Fax Message')
 
-    message = email.message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'TEST:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -659,7 +658,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Mail Message')
 
-    message = email.message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'visit:Company A')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -668,7 +667,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
 
-    message = email.message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'phone:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -677,7 +676,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = portal.event_module[portal.event_module.objectIds()[-1]]
     self.assertEqual(document.getPortalType(), 'Phone Call')
 
-    message = email.message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple'))
     message.replace_header('subject', 'LETTER:Company C')
     data = message.as_string()
     self._ingestMail(data=data)
@@ -686,7 +685,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Letter')
 
-    message = email.message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple'))
     body = message.get_payload()
     message.set_payload('Visit:%s' % body)
     data = message.as_string()
@@ -696,7 +695,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
 
-    message = email.message_from_string(self._readTestData('simple'))
+    message = message_from_string(self._readTestData('simple'))
     body = message.get_payload()
     message.set_payload('PHONE CALL:%s' % body)
     data = message.as_string()
@@ -800,7 +799,7 @@ class TestCRMMailIngestion(BaseTestCRM):
     message.attach(MIMEText('text plain content', _charset='utf-8'))
     part = MIMEBase('text', 'html')
     part.set_payload(html_message)
-    Encoders.encode_base64(part)
+    encoders.encode_base64(part)
 
     part.add_header('Content-Disposition', 'attachment',
                     filename=html_filename)
@@ -901,10 +900,9 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEquals('"Me," <me@erp5.org>', mfrom)
     self.assertEquals(['"Recipient," <recipient@example.com>'], mto)
     self.assertEquals(event.getTextContent(), text_content)
-    message = email.message_from_string(messageText)
+    message = message_from_string(messageText)
 
-    self.assertEquals('A Mail',
-                      email.Header.decode_header(message['Subject'])[0][0])
+    self.assertEquals('A Mail', decode_header(message['Subject'])[0][0])
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1011,7 +1009,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEquals('"Me," <me@erp5.org>', mfrom)
     self.assertEquals(['"Recipient," <recipient@example.com>'], mto)
 
-    message = email.message_from_string(messageText)
+    message = message_from_string(messageText)
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/html':
@@ -1055,10 +1053,9 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEquals('"Me," <me@erp5.org>', mfrom)
     self.assertEquals(['"Recipient," <recipient@example.com>'], mto)
     
-    message = email.message_from_string(messageText)
+    message = message_from_string(messageText)
 
-    self.assertEquals('Héhé',
-                      email.Header.decode_header(message['Subject'])[0][0])
+    self.assertEquals('Héhé', decode_header(message['Subject'])[0][0])
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1098,7 +1095,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_text = event.send(download=True)
 
     # Check mail text.
-    message = email.message_from_string(mail_text)
+    message = message_from_string(mail_text)
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1146,7 +1143,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_text = event.send(download=True)
 
     # Check mail text.
-    message = email.message_from_string(mail_text)
+    message = message_from_string(mail_text)
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1193,7 +1190,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_text = event.send(download=True)
 
     # Check mail text.
-    message = email.message_from_string(mail_text)
+    message = message_from_string(mail_text)
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1241,7 +1238,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_text = event.send(download=True)
 
     # Check mail text.
-    message = email.message_from_string(mail_text)
+    message = message_from_string(mail_text)
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1289,7 +1286,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_text = event.send(download=True)
 
     # Check mail text.
-    message = email.message_from_string(mail_text)
+    message = message_from_string(mail_text)
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1388,7 +1385,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_text = event.send(download=True)
 
     # Check mail text.
-    message = email.message_from_string(mail_text)
+    message = message_from_string(mail_text)
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':
@@ -1447,7 +1444,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_text = event.send(download=True)
 
     # Check mail text.
-    message = email.message_from_string(mail_text)
+    message = message_from_string(mail_text)
     part = None
     for i in message.get_payload():
       if i.get_content_type()=='text/plain':

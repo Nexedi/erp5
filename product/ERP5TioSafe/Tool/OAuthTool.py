@@ -41,7 +41,7 @@ import random
 import urlparse
 import hmac
 import binascii
-
+from hashlib import sha1
 
 
 CONSUMER_KEY = "e90f5a97ec5cecd1"
@@ -434,12 +434,7 @@ class OAuthSignatureMethod_HMAC_SHA1(OAuthSignatureMethod):
             token)
 
         # HMAC object.
-        try:
-            import hashlib # 2.5
-            hashed = hmac.new(key, raw, hashlib.sha1)
-        except:
-            import sha # Deprecated
-            hashed = hmac.new(key, raw, sha)
+        hashed = hmac.new(key, raw, sha1)
 
         # Calculate the digest base 64.
         return binascii.b2a_base64(hashed.digest())[:-1]

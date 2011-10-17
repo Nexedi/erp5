@@ -78,10 +78,7 @@ except ImportError:
   def getTimerService(self):
     pass
 
-try:
-  from traceback import format_list, extract_stack
-except ImportError:
-  format_list = extract_stack = None
+from traceback import format_list, extract_stack
 
 # minimal IP:Port regexp
 NODE_RE = re.compile('^\d+\.\d+\.\d+\.\d+:\d+$')
@@ -356,11 +353,6 @@ Exception: %s %s
        self.user_name, path, self.method_id, self.args, self.kw,
        call_traceback, self.exc_type, self.exc_value, self.traceback)
 
-    if isinstance(mail_text, unicode):
-      # __traceback_info__ can turn the tracebacks into unicode strings, but
-      # MailHost.send (in Zope 2.8) will not be able to parse headers if the
-      # mail_text is passed as a unicode.
-      mail_text = mail_text.encode('utf8')
     try:
       activity_tool.MailHost.send( mail_text )
     except (socket.error, MailHostError), message:

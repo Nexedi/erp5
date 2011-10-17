@@ -213,9 +213,7 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
     LOG("%s:%u %s: %s" % (filename, lineno, category.__name__, message),
         WARNING, '')
   else:
-    # BACK: In Python 2.6 we need to pass along the "line" parameter to
-    # formatwarning(). For now we don't to keep backward compat with Python 2.4
-    file.write(warnings.formatwarning(message, category, filename, lineno))
+    file.write(warnings.formatwarning(message, category, filename, lineno, line))
 warnings.showwarning = _showwarning
 
 def deprecated(message=''):

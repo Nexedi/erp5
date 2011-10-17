@@ -30,21 +30,12 @@
 ##############################################################################
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl.AuthEncoding import pw_encrypt, pw_validate
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
-
-try:
-  from AccessControl.AuthEncoding import pw_encrypt
-except ImportError:
-  pw_encrypt = lambda pw:pw
-
-try:
-  from AccessControl.AuthEncoding import pw_validate
-except ImportError:
-  pw_validate = lambda reference, attempt: reference == attempt
 
 class EncryptedPasswordMixin:
 

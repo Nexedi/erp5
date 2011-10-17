@@ -16,13 +16,7 @@ from lxml.etree import ParseError, Element
 from lxml.etree import SubElement
 
 from urllib import unquote
-from urlparse import urlparse
-try:
-  # Python >= 2.6
-  from urlparse import parse_qsl
-except ImportError:
-  from cgi import parse_qsl
-
+from urlparse import parse_qsl, urlparse
 
 # XXX Must be replaced by portal_data_adapters soon
 from Products.ERP5OOo.Document.OOoDocument import OOoServerProxy

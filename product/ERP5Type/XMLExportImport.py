@@ -30,8 +30,6 @@
 from Acquisition import aq_base, aq_inner
 
 from cStringIO import StringIO
-from email.MIMEBase import MIMEBase
-from email import Encoders
 from pickle import Pickler, EMPTY_DICT, MARK, DICT, PyStringMap, DictionaryType
 from xml.sax.saxutils import escape, unescape
 from lxml import etree

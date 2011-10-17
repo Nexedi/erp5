@@ -32,8 +32,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.tests.Sequence import SequenceList
 import email, re
-from email.Header import decode_header, make_header
-from email.Utils import parseaddr
+from email.header import decode_header, make_header
+from email.utils import parseaddr
 import transaction
 import cgi
 from urlparse import urlparse

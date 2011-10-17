@@ -53,8 +53,8 @@ except ImportError:
     """
 
 from email import message_from_string
-from email.Header import decode_header, HeaderParseError
-from email.Utils import parsedate_tz, mktime_tz
+from email.header import decode_header, HeaderParseError
+from email.utils import parsedate_tz, mktime_tz
 
 DEFAULT_TEXT_FORMAT = 'text/html'
 COMMASPACE = ', '

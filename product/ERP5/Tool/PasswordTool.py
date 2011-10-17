@@ -36,7 +36,7 @@ from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 from zLOG import LOG, INFO
 import time, random
-from hashlib import md5 as md5_new
+from hashlib import md5
 from DateTime import DateTime
 from Products.ERP5Type.Message import translateString
 from Products.ERP5Type.Globals import PersistentMapping
@@ -214,9 +214,7 @@ class PasswordTool(BaseTool):
       # if we can't get a network address, just imagine one
       a = random.random()*100000000000000000L
     data = ' '.join((str(t), str(r), str(a), str(args)))
-    data = md5_new(data).hexdigest()
-    return data
-
+    return md5(data).hexdigest()
 
   def resetPassword(self, reset_key=None, REQUEST=None):
     """

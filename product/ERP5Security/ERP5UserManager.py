@@ -17,6 +17,7 @@
 
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.AuthEncoding import pw_validate
 from AccessControl.SecurityManagement import getSecurityManager,\
     setSecurityManager, newSecurityManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -31,11 +32,6 @@ from ZODB.POSException import ConflictError
 import sys
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
-
-try :
-  from AccessControl.AuthEncoding import pw_validate
-except ImportError:
-  pw_validate = lambda reference, attempt: reference == attempt
 
 # This user is used to bypass all security checks.
 SUPER_USER = '__erp5security-=__'

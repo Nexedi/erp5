@@ -31,6 +31,7 @@ import os
 import sys
 import tempfile
 import json
+import tarfile
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
@@ -42,7 +43,6 @@ from Products.ERP5Type.Utils import _setSuperSecurityManager
 from App.config import getConfiguration
 from AccessControl import Unauthorized
 from Products.ERP5Type.Cache import CachingMethod
-from Products.ERP5Type import tarfile
 from cgi import escape
 
 import logging

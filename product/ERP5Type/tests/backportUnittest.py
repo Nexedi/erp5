@@ -91,26 +91,11 @@ def expectedFailure(func):
     wrapper.__doc__ = func.__doc__
     return wrapper
 
-try:
-    BaseException
-except NameError:
-    # BACK: python < 2.5
-    BaseException = Exception
-
 class TestCase(unittest.TestCase):
     """We redefine here the run() method, and add a skipTest() method.
-
-    We also provide forward-compatible ._testMethodName and ._testMethodDoc
-    properties smooth over differences between Python 2.4 and 2.5+.
     """
 
     failureException = AssertionError
-
-    if sys.version_info < (2, 5):
-      # BACK: in Python 2.5, __testMethodName becomes _testMethodName.
-      # Same for __testMethodDoc
-      _testMethodName = property(lambda self: self.__testMethodName)
-      _testMethodDoc = property(lambda self: self.__testMethodDoc)
 
     def run(self, result=None):
         orig_result = result

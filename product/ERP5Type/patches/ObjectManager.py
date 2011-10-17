@@ -32,11 +32,7 @@ def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1, id
       id=ob.id
     if hasattr(id, 'im_func'): id=id()
 
-    if getZopeVersion()[1] >= 10:
-      # only in Zope > 2.10
-      self._setObject(id, ob, set_owner=set_owner, suppress_events=suppress_events)
-    else:
-      self._setObject(id, ob, set_owner=set_owner)
+    self._setObject(id, ob, set_owner=set_owner, suppress_events=suppress_events)
 
     # try to make ownership implicit if possible in the context
     # that the object was imported into.
@@ -46,9 +42,3 @@ def ObjectManager_importObjectFromFile(self, filepath, verify=1, set_owner=1, id
     return ob
 
 ObjectManager._importObjectFromFile=ObjectManager_importObjectFromFile
-
-# BACK: allow using 'some_id in folder' construct in 2.8
-def ObjectManager_contains(self, name):
-  return name in self.objectIds()
-if '__contains__' not in ObjectManager.__dict__:
-  ObjectManager.__contains__ = ObjectManager_contains

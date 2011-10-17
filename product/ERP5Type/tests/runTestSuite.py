@@ -1,4 +1,4 @@
-#!/usr/bin/python2.6
+#!/usr/bin/env python2.6
 import argparse, pprint, socket, sys, time, xmlrpclib
 from DummyTaskDistributionTool import DummyTaskDistributionTool
 from ERP5TypeTestSuite import ERP5TypeTestSuite

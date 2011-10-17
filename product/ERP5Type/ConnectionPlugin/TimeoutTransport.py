@@ -37,13 +37,7 @@ class TimeoutTransport(SafeTransport):
   def __init__(self, timeout=None, scheme='http'):
     self._timeout = timeout
     self._scheme = scheme
-    # On Python 2.6, .__init__() of Transport and SafeTransport must be called
-    # to set up the ._use_datetime attribute.
-    # sigh... too bad we can't use super() here, as SafeTransport is not
-    # a new-style class (as of Python 2.4 to 2.6)
-    # remove the gettattr below when we drop support for Python 2.4
-    super__init__ = getattr(SafeTransport, '__init__', lambda self: None)
-    super__init__(self)
+    SafeTransport.__init__(self)
 
   def send_content(self, connection, request_body):
     try:
