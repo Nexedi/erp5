@@ -368,11 +368,12 @@ return context.generatePredicate(
     transaction.commit()
     self.tic()
     # Now since the rule has a trade_phase
-    self.assertEqual(delivery_rule.getTradePhaseList(), ['default/delivery'])
+    trade_phase_list = delivery_rule.getTradePhaseList()
+    self.assertEqual(trade_phase_list, ['default/delivery'])
     # then it should be possible to find it by passing this trade_phase
     # as an additional catalog keyword
     kw = {'trade_phase_relative_url':
-            ['trade_phase/' + path for path in delivery.getTradePhaseList()]}
+            ['trade_phase/' + path for path in trade_phase_list]}
     # XXX-Leo: Fugly catalog syntax for category search above.
     self.assertEqual(len(rule_tool.searchRuleList(self.sm, **kw)), 1)
     # and also not to match it if we pass a different trade_phase
