@@ -222,7 +222,7 @@ class EGOVUserManager(ERP5UserManager):
               if len(result) > 1: # configuration is screwed
                 raise ConsistencyError('There is more than one Person whose'
                     ' login is %s : %s' % (user_name,
-                    repr([r.getObject() for r in catalog_result]))
+                    repr([r.getObject() for r in catalog_result])))
               else: # no person is linked to this user login
                 # this permit to get the module of the application
                 # the goal is to work with anonymous applications, even if 
