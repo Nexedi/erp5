@@ -290,13 +290,6 @@ class SQLBase:
 
   # Queue semantic
   def dequeueMessage(self, activity_tool, processing_node):
-    def makeMessageListAvailable(uid_list, uid_to_duplicate_uid_list_dict):
-      final_uid_list = []
-      for uid in uid_list:
-        final_uid_list.append(uid)
-        final_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
-      self.makeMessageListAvailable(activity_tool=activity_tool,
-                                    uid_list=final_uid_list)
     message_list, group_method_id, uid_to_duplicate_uid_list_dict = \
       self.getProcessableMessageList(activity_tool, processing_node)
     if message_list:
@@ -339,16 +332,6 @@ class SQLBase:
           self._log(PANIC,
               'abort failed, thus some objects may be modified accidentally')
           raise
-        # XXX Is it still useful to free messages now that this node is able
-        #     to reselect them ?
-        to_free_uid_list = [x.uid for x in message_list]
-        try:
-          makeMessageListAvailable(to_free_uid_list,
-                                   uid_to_duplicate_uid_list_dict)
-        except:
-          self._log(ERROR, 'Failed to free messages: %r' % to_free_uid_list)
-        else:
-          self._log(TRACE, 'Freed messages %r' % to_free_uid_list)
       # Abort if something failed.
       if [m for m in message_list if m.getExecutionState() == MESSAGE_NOT_EXECUTED]:
         endTransaction = transaction.abort
@@ -373,14 +356,6 @@ class SQLBase:
         exc_info = sys.exc_info()
         for m in message_list:
           m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
-        try:
-          makeMessageListAvailable([x.uid for x in message_list],
-                                   uid_to_duplicate_uid_list_dict)
-        except:
-          self._log(ERROR, 'Failed to free remaining messages: %r'
-                           % (message_list, ))
-        else:
-          self._log(TRACE, 'Freed messages %r' % (message_list, ))
       self.finalizeMessageExecution(activity_tool, message_list,
                                     uid_to_duplicate_uid_list_dict)
     transaction.commit()
