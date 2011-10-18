@@ -53,7 +53,14 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block metal:use-macro="here/embedded_form_view/macros/master" />
+<tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n">\n
+  <tal:block metal:define-macro="master">\n
+    <tal:block metal:use-macro="here/global_definitions/macros/header_definitions" />\n
+    <tal:block metal:use-macro="here/form_render/macros/master" />\n
+  </tal:block>\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -71,7 +78,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>embedded_form_render</string> </value>
+            <value> <string>embedded_form_view</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

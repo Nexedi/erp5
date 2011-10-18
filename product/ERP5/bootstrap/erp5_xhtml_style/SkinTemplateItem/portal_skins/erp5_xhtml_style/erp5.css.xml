@@ -711,7 +711,12 @@ fieldset.right {\n
   margin-left: -12px; /* 5px margin *2 + 2px for left & right border width */\n
 }\n
 \n
-table.fake fieldset {\n
+/* BBB: don\'t display borders on left-group fieldsets in a formbox in any\n
+ * bordered fieldset (ie left, right or center). */\n
+fieldset.left fieldset.left,\n
+fieldset.right fieldset.left,\n
+fieldset.center fieldset.left,\n
+table.fake > tr > td > fieldset {\n
   border-width: 0;\n
   padding: 0;\n
   margin: 0;\n
@@ -728,7 +733,7 @@ fieldset.bottom {\n
   border-width: 0;\n
 }\n
 \n
-fieldset.bottom .field label {\n
+fieldset.bottom > .field > label {\n
   display: none;\n
 }\n
 \n
