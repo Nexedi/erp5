@@ -42,6 +42,7 @@ def sort_message_key(message):
   # same sort key as in SQL{Dict,Queue}_readMessageList
   return message.line.priority, message.line.date, message.uid
 
+_DequeueMessageException = Exception()
 
 class SQLBase:
   """
@@ -288,6 +289,15 @@ class SQLBase:
         self._log(TRACE, '(no message was reserved)')
       return [], 0, None, {}
 
+  def _abort(self):
+    try:
+      transaction.abort()
+    except:
+      # Unfortunately, database adapters may raise an exception against abort.
+      self._log(PANIC,
+          'abort failed, thus some objects may be modified accidentally')
+      raise
+
   # Queue semantic
   def dequeueMessage(self, activity_tool, processing_node):
     message_list, group_method_id, uid_to_duplicate_uid_list_dict = \
@@ -320,42 +330,36 @@ class SQLBase:
       # Try to invoke
       try:
         method(*args)
-      except:
-        self._log(WARNING,
-          'Exception raised when invoking messages (uid, path, method_id) %r'
-          % [(m.uid, m.object_path, m.method_id) for m in message_list])
-        try:
-          transaction.abort()
-        except:
-          # Unfortunately, database adapters may raise an exception against
-          # abort.
-          self._log(PANIC,
-              'abort failed, thus some objects may be modified accidentally')
-          raise
-      # Abort if something failed.
-      if [m for m in message_list if m.getExecutionState() == MESSAGE_NOT_EXECUTED]:
-        endTransaction = transaction.abort
-      else:
-        endTransaction = transaction.commit
-      try:
-        endTransaction()
-      except:
-        self._log(WARNING,
-          'Failed to end transaction for messages (uid, path, method_id) %r'
-          % [(m.uid, m.object_path, m.method_id) for m in message_list])
-        if endTransaction == transaction.abort:
-          self._log(PANIC, 'Failed to abort executed messages.'
-            ' Some objects may be modified accidentally.')
-        else:
-          try:
-            transaction.abort()
-          except:
-            self._log(PANIC, 'Failed to abort executed messages which also'
-              ' failed to commit. Some objects may be modified accidentally.')
-            raise
-        exc_info = sys.exc_info()
+        # Abort if at least 1 message failed. On next tic, only those that
+        # succeeded will be selected because their at_date won't have been
+        # increased.
         for m in message_list:
-          m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
+          if m.getExecutionState() == MESSAGE_NOT_EXECUTED:
+            raise _DequeueMessageException
+        transaction.commit()
+      except:
+        exc_info = sys.exc_info()
+        if exc_info[1] is not _DequeueMessageException:
+          self._log(WARNING,
+            'Exception raised when invoking messages (uid, path, method_id) %r'
+            % [(m.uid, m.object_path, m.method_id) for m in message_list])
+          for m in message_list:
+            m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
+        self._abort()
+        exc_info = message_list[0].exc_info
+        if exc_info:
+          try:
+            # Register it again.
+            tv['activity_runtime_environment'] = activity_runtime_environment
+            cancel = message.on_error_callback(*exc_info)
+            del exc_info, message.exc_info
+            transaction.commit()
+            if cancel:
+              message.setExecutionState(MESSAGE_EXECUTED)
+          except:
+            self._log(WARNING, 'Exception raised when processing error callbacks')
+            message.setExecutionState(MESSAGE_NOT_EXECUTED)
+            self._abort()
       self.finalizeMessageExecution(activity_tool, message_list,
                                     uid_to_duplicate_uid_list_dict)
     transaction.commit()

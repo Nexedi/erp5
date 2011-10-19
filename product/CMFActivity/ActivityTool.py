@@ -161,10 +161,10 @@ class Message(BaseMessage):
   active_process = None
   active_process_uid = None
   call_traceback = None
+  exc_info = None
   is_executed = MESSAGE_NOT_EXECUTED
   processing = None
   traceback = None
-  exc_type = None
 
   def __init__(self, obj, active_process, activity_kw, method_id, args, kw):
     if isinstance(obj, str):
@@ -394,6 +394,8 @@ Named Parameters: %r
     if is_executed != MESSAGE_EXECUTED:
       if not exc_info:
         exc_info = sys.exc_info()
+      if self.on_error_callback is not None:
+        self.exc_info = exc_info
       self.exc_type = exc_info[0]
       if exc_info[0] is None:
         # Raise a dummy exception, ignore it, fetch it and use it as if it was the error causing message non-execution. This will help identifyting the cause of this misbehaviour.
