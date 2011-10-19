@@ -93,9 +93,13 @@ def makeFileUpload(name, as_name=None):
 class TestDocumentMixin(ERP5TypeTestCase):
   
   bussiness_template_list = ['erp5_core_proxy_field_legacy',
-                             'erp5_full_text_myisam_catalog','erp5_base',
-                             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-                             'erp5_web', 'erp5_dms']
+                             'erp5_jquery',
+                             'erp5_full_text_myisam_catalog',
+                             'erp5_base',
+                             'erp5_ingestion_mysql_innodb_catalog', 
+                             'erp5_ingestion',
+                             'erp5_web', 
+                             'erp5_dms']
 
   def setUpOnce(self):
     # set a dummy localizer (because normally it is cookie based)
@@ -131,8 +135,8 @@ class TestDocumentMixin(ERP5TypeTestCase):
     preference_list = self.portal.portal_preferences.contentValues(
                                                        portal_type=portal_type)
     if not preference_list:
-      preference = self.portal.portal_preferences.newContent(
-                                                       portal_type=portal_type)
+      preference = self.portal.portal_preferences.newContent(title="Default System Preference",
+                                                             portal_type=portal_type)
     else:
       preference = preference_list[0]
     if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
@@ -2131,6 +2135,42 @@ return 1
 
     # if PDF size is larger than A4 format system should deny conversion
     self.assertRaises(Unauthorized, pdf.convert, format='jpeg')
+  
+  def test_preConversionOnly(self):
+    """
+      Test usage of pre_converted_only argument - i.e. return a conversion only form cache otherwise
+      return a default (i.e. indicating a conversion failures)
+    """
+    doc = self.portal.document_module.newContent(portal_type='Presentation')
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    doc.edit(file=upload_file)    
+    doc.publish()
+    self.stepTic()
+    
+    default_conversion_failure_image_size, default_conversion_failure_image_file_size = \
+                            self.getURLSizeList('%s/default_conversion_failure_image' %self.portal.absolute_url())
+    
+    doc_url = '%s/%s' %(self.portal.absolute_url(), doc.getPath())
+    converted_image_size_70, converted_file_size_70 = self.getURLSizeList(doc_url, \
+                                                             **{'format':'png', 'quality':70.0})
+    self.assertTrue(doc.hasConversion(**{'format': 'png', 'quality': 70.0}))                                                             
+
+    # try with new quality and pre_converted_only now a default image 
+    # with content "No image available" should be returned
+    failure_image_size, failure_file_size = self.getURLSizeList(doc_url, \
+                                                   **{'format':'png', 'quality':80.0, 'pre_converted_only':1})
+    self.assertSameSet(failure_image_size, default_conversion_failure_image_size)
+    
+
+    converted_image_size_80, converted_file_size_80 = self.getURLSizeList(doc_url, \
+                                                             **{'format':'png', 'quality':80.0})
+    self.assertSameSet(converted_image_size_80, converted_image_size_70)    
+    self.assertTrue(doc.hasConversion(**{'format': 'png', 'quality': 80.0}))
+    
+    # as conversion is cached we should get it
+    converted_image_size_80n, converted_file_size_80n = self.getURLSizeList(doc_url, 
+                                                               **{'format':'png', 'quality':80.0, 'pre_converted_only':1})
+    self.assertSameSet(converted_image_size_80n, converted_image_size_70)
 
   def test_getSearchText(self):
     """

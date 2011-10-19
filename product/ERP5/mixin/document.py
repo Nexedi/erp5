@@ -67,10 +67,31 @@ class DocumentMixin:
       # to bypass such check one should use _convert directly
       del transaction_variable[LOCK_PERMISSION_KEY]
     self._checkConversionFormatPermission(format, lock_checking=True, **kw)
-    result = self._convert(format, **kw)
+    
+    pre_converted_only = kw.pop('pre_converted_only', False)
+    if pre_converted_only:
+      # we will use ONLY cache to return converted content
+      # if respective document is not in cache we will return a good default content
+      try:
+        kw['format'] = format
+        result = self.getConversion(**kw)
+      except KeyError:
+        # respective document is not cached yet and we should return a failure safe content instead
+        result = self.getFailsafeConversion(**kw)
+    else:
+      # generate conversion on the fly or get it from cache (if already stored)
+      result = self._convert(format, **kw)
     if LOCK_PERMISSION_KEY in transaction_variable:
       del transaction_variable[LOCK_PERMISSION_KEY]
     return result
+  
+  def getFailsafeConversion(self, **kw):
+    """
+      Return a failure resistent conversion of a document
+    """
+    method = self._getTypeBasedMethod('getFailsafeConversion',
+                   fallback_script_id='Document_getFailsafeConversion')
+    return method(**kw)
 
   def _convert(self, format, **kw):
     """Private method which make the transformation.
