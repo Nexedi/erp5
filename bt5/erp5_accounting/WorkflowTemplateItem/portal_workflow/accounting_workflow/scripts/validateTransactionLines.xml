@@ -103,7 +103,7 @@ for line in transaction_lines:\n
              mapping=dict(bank_account_reference=unicode(\n
                             bank_account.getReference(), \'utf8\')))\n
       \n
-      if account is not None:\n
+      if account is not None and account.isMemberOf(\'account_type/asset/cash/bank\'):\n
         # also check that currencies are consistent if we use this quantity for\n
         # accounting.\n
         bank_account_currency = bank_account.getProperty(\'price_currency\')\n
