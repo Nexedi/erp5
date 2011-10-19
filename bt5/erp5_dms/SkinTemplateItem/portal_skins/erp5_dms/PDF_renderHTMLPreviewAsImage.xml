@@ -43,7 +43,7 @@
                  format python: request.get(\'format\', context.portal_preferences.getPreference(\'preferred_image_format\', \'png\'))">\n
   <img src="" alt=""\n
       tal:attributes="src\n
-        string:${here/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}&resolution:int=300"/>\n
+        string:${here/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}"/>\n
 </div>
 
 ]]></unicode> </value>
