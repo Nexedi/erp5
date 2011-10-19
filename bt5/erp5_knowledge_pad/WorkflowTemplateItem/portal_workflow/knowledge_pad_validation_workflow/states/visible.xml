@@ -47,10 +47,7 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <global name="PersistentMapping" module="Persistence.mapping"/>
-        <tuple/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -61,25 +58,29 @@
                 <item>
                     <key> <string>Access contents information</string> </key>
                     <value>
-                      <list>
+                      <tuple>
                         <string>Assignor</string>
-                      </list>
+                        <string>Auditor</string>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Add portal content</string> </key>
                     <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
                     <key> <string>Copy or Move</string> </key>
                     <value>
-                      <list>
-                        <string>Owner</string>
-                      </list>
+                      <tuple>
+                        <string>Assignor</string>
+                        <string>Manager</string>
+                      </tuple>
                     </value>
                 </item>
                 <item>
@@ -88,7 +89,6 @@
                       <tuple>
                         <string>Assignor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
@@ -97,8 +97,8 @@
                     <value>
                       <tuple>
                         <string>Assignor</string>
+                        <string>Auditor</string>
                         <string>Manager</string>
-                        <string>Owner</string>
                       </tuple>
                     </value>
                 </item>
