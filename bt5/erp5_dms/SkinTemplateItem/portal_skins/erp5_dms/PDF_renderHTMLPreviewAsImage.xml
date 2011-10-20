@@ -41,7 +41,7 @@
                    python:here.PDF_getPageNumberFromSelectionIndex(request.get(\'selection_index\', 0));\n
                  display python: request.get(\'display\', context.portal_preferences.getPreference(\'preferred_image_size\', \'large\'));\n
                  format python: request.get(\'format\', context.portal_preferences.getPreference(\'preferred_image_format\', \'png\'))">\n
-  <img src="" alt=""\n
+  <img src="" alt="" style="background-color:white;"\n
       tal:attributes="src\n
         string:${here/absolute_url}/index_html?display=${display}&format=${format}&frame=${frame}"/>\n
 </div>

@@ -43,12 +43,11 @@
               format python: request.get(\'format\', \n
                                context.portal_preferences.getPreference(\'preferred_image_format\', \'png\'))">\n
   <a tal:attributes="href string:PDF_viewHTMLPreviewAsImage?selection_index=${frame}">\n
-    <img title="Thumbnail"\n
+    <img title="Thumbnail" style="background-color:white;"\n
          i18n:attributes="title" i18n:domain="ui"\n
          tal:attributes="src string:index_html?display=${display}&format=${format}&frame=${frame}"/>\n
   </a>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
