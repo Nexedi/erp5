@@ -12545,24 +12545,3 @@ msgstr "la largeur en pixel des micro-images."
 
 msgid "the width in pixel of nano image"
 msgstr "La largeur en pixel des images nano."
-
-msgid "Apply Sale Trade Condition"
-msgstr "Apply Sale Participant Condition"
-
-msgid "Related Sale Trade Condition"
-msgstr "Related Sale Participant Condition"
-
-msgid "Sale Trade Condition"
-msgstr "Sale Participant Condition"
-
-msgid "Sale Trade Condition List"
-msgstr "Sale Participant Condition List"
-
-msgid "Sale Trade Condition Module"
-msgstr "Sale Participant Condition Module"
-
-msgid "Sale Trade Conditions"
-msgstr "Sale Participant Conditions"
-
-msgid "Sale Trade Conditions to Validate"
-msgstr "Sale Participant Conditions to Validate"
