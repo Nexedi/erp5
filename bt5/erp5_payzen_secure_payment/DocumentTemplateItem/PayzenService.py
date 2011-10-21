@@ -5,6 +5,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Document import newTempDocument
 import hashlib
 import datetime
+from zLOG import LOG, WARNING
 
 try:
   import suds
@@ -93,8 +94,14 @@ else:
         v = data_kw[k]
         if not isinstance(v, str):
           data_kw[k] = str(v)
-      return [data_kw, self._check_transcationInfoSignature(data),
-        str(client.last_sent()), str(client.last_received())]
+      try:
+        signature = self._check_transcationInfoSignature(data)
+      except Exception:
+        LOG('PayzenService', WARNING, 'Issue during signature calculation:',
+          error=True)
+        signature = False
+      return [data_kw, signature, str(client.last_sent()),
+        str(client.last_received())]
 
 class PayzenService(XMLObject, PayzenSOAP):
   meta_type = 'Payzen Service'
