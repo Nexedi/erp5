@@ -44,7 +44,8 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import fill_args_from_request
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, ConversionError,\
-                     VALID_TEXT_FORMAT_LIST, DEFAULT_DISPLAY_ID_LIST, DEFAULT_IMAGE_QUALITY, _MARKER
+                     VALID_TEXT_FORMAT_LIST, VALID_TRANSPARENT_IMAGE_FORMAT_LIST,\
+                     DEFAULT_DISPLAY_ID_LIST, DEFAULT_IMAGE_QUALITY, _MARKER
 from os.path import splitext
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
@@ -310,6 +311,8 @@ class Image(TextConvertableMixin, File, OFSImage):
 
     parameter_list = ['convert']
     parameter_list.extend(['-colorspace', 'RGB'])
+    if format not in VALID_TRANSPARENT_IMAGE_FORMAT_LIST:
+      parameter_list.append('-flatten')
     if resolution:
       parameter_list.extend(['-density', '%sx%s' % (resolution, resolution)])
     parameter_list.extend(['-quality', str(quality)])

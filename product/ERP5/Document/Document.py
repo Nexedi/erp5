@@ -70,6 +70,7 @@ VALID_TEXT_FORMAT_LIST = ('text', 'txt', 'html', 'base_html',
                           'stripped-html')
 
 VALID_IMAGE_FORMAT_LIST = ('jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm', 'tiff')
+VALID_TRANSPARENT_IMAGE_FORMAT_LIST = ('png', 'gif', 'tiff')
 
 DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
                             'xsmall', 'small', 'medium',
