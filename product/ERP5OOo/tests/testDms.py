@@ -136,6 +136,8 @@ class TestDocumentMixin(ERP5TypeTestCase):
                                                        portal_type=portal_type)
     if not preference_list:
       preference = self.portal.portal_preferences.newContent(title="Default System Preference",
+                                                             # use local RAM based cache as some tests need it
+                                                             preferred_conversion_cache_factory = 'erp5_content_long',
                                                              portal_type=portal_type)
     else:
       preference = preference_list[0]
@@ -1348,7 +1350,9 @@ class TestDocument(TestDocumentMixin):
 
     # Delete base_data
     document.edit(base_data=None)
+    document.edit(data=None)    
     self.stepTic()
+    
     # As document is not converted, text conversion is impossible
     self.assertRaises(NotConvertedError, document.asText)
     self.assertRaises(NotConvertedError, document.getSearchableText)
