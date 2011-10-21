@@ -88,6 +88,9 @@ else:
         signature += str(v) + '+'
       signature += self.getServicePassword()
       kw['wsSignature'] = hashlib.sha1(signature).hexdigest()
+
+      # Note: Code shall not raise since now, as communication begin and caller
+      #       will have to log sent/received messages.
       data = client.service.getInfo(**kw)
       data_kw = dict(data)
       for k in data_kw.keys():
