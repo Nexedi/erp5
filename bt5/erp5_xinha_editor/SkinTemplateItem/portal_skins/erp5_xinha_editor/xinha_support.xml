@@ -40,10 +40,10 @@
   <tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();\n
                          portal_url   python: site_root.absolute_url();">\n
   <script type="text/javascript" tal:content="structure string:\n
-     _editor_url = \'${portal_url}/portal_skins/erp5_xinha_editor\'">\n
+     _editor_url = \'${portal_url}/xinha\'">\n
   </script>\n
-  <script type="text/javascript" tal:attributes="src string:${portal_url}/XinhaCore.js"/>\n
-  <script type="text/javascript" tal:attributes="src string:${portal_url}/LoadEditor.js"/>\n
+  <script type="text/javascript" tal:attributes="src string:${portal_url}/xinha/XinhaCore.js"></script>\n
+  <script type="text/javascript" tal:attributes="src string:${portal_url}/xinha/LoadEditor.js"></script>\n
   </tal:block>\n
 </head>\n
 <body>\n
