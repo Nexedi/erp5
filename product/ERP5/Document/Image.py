@@ -312,7 +312,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     parameter_list = ['convert']
     parameter_list.extend(['-colorspace', 'RGB'])
     if format not in VALID_TRANSPARENT_IMAGE_FORMAT_LIST:
-      parameter_list.append('-flatten')
+      parameter_list.extend(['-alpha', 'off'])
     if resolution:
       parameter_list.extend(['-density', '%sx%s' % (resolution, resolution)])
     parameter_list.extend(['-quality', str(quality)])
