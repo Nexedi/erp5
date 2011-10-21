@@ -36,27 +36,13 @@ from Products.ERP5Type.Core.Folder import Folder
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
+from Products.ERP5.mixin.timer_service import TimerServiceMixin
 from DateTime import DateTime
-import urllib
-import socket
-
-from zLOG import LOG, INFO
-
-import re
-# minimal IP:Port regexp
-NODE_RE = re.compile('^\d+\.\d+\.\d+\.\d+:\d+$')
-
-try:
-  from Products.TimerService import getTimerService
-except ImportError:
-  def getTimerService(self):
-    pass
 
 last_tic = time.time()
 last_tic_lock = threading.Lock()
-current_node = None
 
-class AlarmTool(BaseTool):
+class AlarmTool(TimerServiceMixin, BaseTool):
   """
     This tool manages alarms.
 
@@ -150,55 +136,6 @@ class AlarmTool(BaseTool):
           continue
         alarm.activeSense()
 
-  security.declareProtected(Permissions.ManageProperties, 'isSubscribed')
-  def isSubscribed(self):
-    """ return True, if we are subscribed to TimerService.
-    Otherwise return False.
-    """
-    service = getTimerService(self)
-    if not service:
-      LOG('AlarmTool', INFO, 'TimerService not available')
-      return False
-
-    path = '/'.join(self.getPhysicalPath())
-    if path in service.lisSubscriptions():
-      return True
-    return False
-
-  security.declareProtected(Permissions.ManageProperties, 'subscribe')
-  def subscribe(self):
-    """
-      Subscribe to the global Timer Service.
-    """
-    service = getTimerService(self)
-    if not service:
-      LOG('AlarmTool', INFO, 'TimerService not available')
-      return
-    service.subscribe(self)
-    return "Subscribed to Timer Service"
-
-  security.declareProtected(Permissions.ManageProperties, 'unsubscribe')
-  def unsubscribe(self):
-    """
-      Unsubscribe from the global Timer Service.
-    """
-    service = getTimerService(self)
-    if not service:
-      LOG('AlarmTool', INFO, 'TimerService not available')
-      return
-    service.unsubscribe(self)
-    return "Usubscribed from Timer Service"
-
-  security.declareProtected(Permissions.ManageProperties, 'manage_beforeDelete')
-  def manage_beforeDelete(self, item, container):
-    self.unsubscribe()
-    BaseTool.inheritedAttribute('manage_beforeDelete')(self, item, container)
-
-  security.declareProtected(Permissions.ManageProperties, 'manage_afterAdd')
-  def manage_afterAdd(self, item, container):
-    self.subscribe()
-    BaseTool.inheritedAttribute('manage_afterAdd')(self, item, container)
-
   security.declarePrivate('process_timer')
   def process_timer(self, interval, tick, prev="", next=""):
     """
@@ -230,25 +167,6 @@ class AlarmTool(BaseTool):
     finally:
       last_tic_lock.release()
 
-  security.declarePublic('getCurrentNode')
-  def getCurrentNode(self):
-      """ Return current node in form ip:port """
-      global current_node
-      if current_node is None:
-        ip = port = ''
-        from asyncore import socket_map
-        for k, v in socket_map.items():
-            if hasattr(v, 'addr'):
-                # see Zope/lib/python/App/ApplicationManager.py: def getServers(self)
-                type = str(getattr(v, '__class__', 'unknown'))
-                if type == 'ZServer.HTTPServer.zhttp_server':
-                    ip, port = v.addr
-                    break
-        if ip == '0.0.0.0':
-          ip = socket.gethostbyname(socket.gethostname())
-        current_node = '%s:%s' %(ip, port)
-      return current_node
-      
   security.declarePublic('getAlarmNode')
   def getAlarmNode(self):
       """ Return the alarmNode """
@@ -266,10 +184,6 @@ class AlarmTool(BaseTool):
     else:
       self.alarmNode = None
 
-  def _isValidNodeName(self, node_name) :
-    """Check we have been provided a good node name"""
-    return isinstance(node_name, str) and NODE_RE.match(node_name)
-      
   security.declareProtected(Permissions.ManageProperties, 'manage_setAlarmNode')
   def manage_setAlarmNode(self, alarmNode, REQUEST=None):
       """ set the alarm node """   
