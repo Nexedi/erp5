@@ -47,7 +47,8 @@ else:
         try:
           v = getattr(data, k)
         except AttributeError:
-          pass
+          # not transmitted: just add +
+          signature += '+'
         else:
           if k in ['transmissionDate', 'presentationDate', 'cardExpirationDate',
             'markDate', 'authDate', 'captureDate']:
@@ -55,8 +56,13 @@ else:
             if isinstance(v, datetime.datetime):
               v = v.strftime('%Y%m%d')
             else:
-              v = time.strftime('%Y%m%d', time.strptime(str(v), '%Y-%m-%d %H:%M:%S'))
-          v = str(v)
+              v = time.strftime('%Y%m%d', time.strptime(str(v),
+                  '%Y-%m-%d %H:%M:%S'))
+          if v is not None:
+            v = str(v)
+          else:
+            # empty transmitted: just add +
+            v = ''
           signature += v + '+'
       signature += self.getServicePassword()
       signature = hashlib.sha1(signature).hexdigest()
