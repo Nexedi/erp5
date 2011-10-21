@@ -32,7 +32,7 @@ import unittest
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.ERP5TypeTestCase import _getPersistentMemcachedServerDict
+from Products.ERP5Type.tests.ERP5TypeTestCase import _getPersistentMemcachedServerDict, _getVolatileMemcachedServerDict
 from Products.ERP5Type.CachePlugins.DummyCache import DummyCache
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Cache import CachingMethod
@@ -97,10 +97,16 @@ class TestCacheTool(ERP5TypeTestCase):
 
   def createPersistentMemcachedPlugin(self):
     portal_memcached = self.getPortal().portal_memcached
+    connection_dict = _getVolatileMemcachedServerDict()
+    url_string = '%(hostname)s:%(port)s' % connection_dict    
+    # setup default volatile distributed memcached
+    portal_memcached.default_memcached_plugin.setUrlString(url_string)
+   
+    # setup persistent memcached
     memcached_plugin_id = 'flare'
     if getattr(portal_memcached, memcached_plugin_id, None) is None:
       connection_dict = _getPersistentMemcachedServerDict()
-      url_string = '%(hostname)s:%(port)s' % connection_dict
+      url_string = '%(hostname)s:%(port)s' % connection_dict 
       portal_memcached.newContent(portal_type='Memcached Plugin',
                                   id=memcached_plugin_id,
                                   url_string=url_string,
