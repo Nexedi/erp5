@@ -69,10 +69,13 @@ else:
       return signature == data.signature
 
     def soap_getInfo(self, transmissionDate, transactionId):
-      """Returns getInfo
+      """Returns getInfo as dict, booelan, string, string
 
       transmissionDate is "raw" date in format YYYYMMDD, without any marks
-      transactionId is id of transaction for this date"""
+      transactionId is id of transaction for this date
+
+      As soon as communication happeneded does not raise.
+      """
       client = suds.client.Client(self.wsdl_link.getUrlString())
       sorted_keys = ('shopId', 'transmissionDate', 'transactionId',
         'sequenceNb', 'ctxMode')
@@ -98,19 +101,40 @@ else:
       # Note: Code shall not raise since now, as communication begin and caller
       #       will have to log sent/received messages.
       data = client.service.getInfo(**kw)
-      data_kw = dict(data)
-      for k in data_kw.keys():
-        v = data_kw[k]
-        if not isinstance(v, str):
-          data_kw[k] = str(v)
       try:
-        signature = self._check_transcationInfoSignature(data)
+        data_kw = dict(data)
+        for k in data_kw.keys():
+          v = data_kw[k]
+          if not isinstance(v, str):
+            data_kw[k] = str(v)
       except Exception:
-        LOG('PayzenService', WARNING, 'Issue during signature calculation:',
-          error=True)
+        data_kw = {}
         signature = False
-      return [data_kw, signature, str(client.last_sent()),
-        str(client.last_received())]
+        LOG('PayzenService', WARNING,
+          'Issue during processing data_kw:', error=True)
+      else:
+        try:
+          signature = self._check_transcationInfoSignature(data)
+        except Exception:
+          LOG('PayzenService', WARNING, 'Issue during signature calculation:',
+            error=True)
+          signature = False
+
+      try:
+        last_sent = str(client.last_sent())
+      except Exception:
+        LOG('PayzenService', WARNING,
+          'Issue during converting last_sent to string:', error=True)
+        signature = False
+
+      try:
+        last_received = str(client.last_received())
+      except Exception:
+        LOG('PayzenService', WARNING,
+          'Issue during converting last_received to string:', error=True)
+        signature = False
+
+      return [data_kw, signature, last_sent, last_received]
 
 class PayzenService(XMLObject, PayzenSOAP):
   meta_type = 'Payzen Service'
