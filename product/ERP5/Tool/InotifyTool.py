@@ -45,6 +45,8 @@ timerservice_lock = threading.Lock()
 inotify_state_dict = {}
 
 class InotifyTool(TimerServiceMixin, BaseTool):
+  """
+  """
 
   id = 'portal_inotify'
   meta_type = 'ERP5 Inotify Tool'
