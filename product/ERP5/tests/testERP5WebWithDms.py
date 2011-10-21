@@ -76,7 +76,8 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     return ('erp5_core_proxy_field_legacy',
             'erp5_base',
-            'erp5_jquery',    
+            'erp5_jquery',
+            'erp5_knowledge_pad',
             'erp5_web',
             'erp5_ingestion',
             'erp5_ingestion_mysql_innodb_catalog',
