@@ -1350,7 +1350,6 @@ class TestDocument(TestDocumentMixin):
 
     # Delete base_data
     document.edit(base_data=None)
-    self.stepTic()
     
     # As document is not converted, text conversion is impossible
     self.assertRaises(NotConvertedError, document.asText)

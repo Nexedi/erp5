@@ -52,14 +52,16 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 portal_id = portal.getId()\n
+MARKER = (None, \'\',)\n
 \n
 for index_uid in range(len(uid)):\n
   document_relative_url = getPath[index_uid].replace("/%s/" %portal_id, "")\n
   document = portal.restrictedTraverse(document_relative_url)\n
   if getattr(document, "convert", None) is not None and \\\n
      getattr(document, "getData", None) is not None and \\\n
-     (document.getData() not in (None, \'\',) or document.getBaseData() not in (None, \'\',)):\n
-    document.Base_preConvert()\n
+     (document.getData() not in MARKER or document.getBaseData() not in MARKER):\n
+    #context.log("preconvert %s" %document.getRelativeUrl())\n
+    document.activate(serialize_tag="conversion").Base_preConvert()\n
 </string> </value>
         </item>
         <item>
