@@ -26,6 +26,9 @@ else:
     SOAP protocol is assumed as untrusted and dangerous, users of those methods
     are encouraged to log such messages for future debugging."""
     def _check_transcationInfoSignature(self, data):
+      """Checks transactionInfo signature
+      Can raise.
+      """
       received_sorted_keys = ['errorCode', 'extendedErrorCode',
         'transactionStatus', 'shopId', 'paymentMethod', 'contractNumber',
         'orderId', 'orderInfo', 'orderInfo2', 'orderInfo3', 'transmissionDate',
@@ -44,26 +47,23 @@ else:
         'refundDevise', 'litige', 'timestamp']
       signature = ''
       for k in received_sorted_keys:
-        try:
-          v = getattr(data, k)
-        except AttributeError:
-          # not transmitted: just add +
-          signature += '+'
-        else:
-          if k in ['transmissionDate', 'presentationDate', 'cardExpirationDate',
-            'markDate', 'authDate', 'captureDate']:
-            # crazyiness again
-            if isinstance(v, datetime.datetime):
-              v = v.strftime('%Y%m%d')
-            else:
-              v = time.strftime('%Y%m%d', time.strptime(str(v),
-                  '%Y-%m-%d %H:%M:%S'))
-          if v is not None:
-            v = str(v)
+        v = getattr(data, k, None)
+        if v is None:
+          # empty or not transmitted: add as empty string
+          v = ''
+        elif k in ['transmissionDate', 'presentationDate', 'cardExpirationDate',
+          'markDate', 'authDate', 'captureDate'] \
+          or isinstance(v, datetime.datetime):
+          # dates (or field like dates) shall be converted to YYYYMMDD
+          if isinstance(v, datetime.datetime):
+            v = v.strftime('%Y%m%d')
           else:
-            # empty transmitted: just add +
-            v = ''
-          signature += v + '+'
+            # defensive: maybe date-like field is represented not as datetime?
+            v = time.strftime('%Y%m%d', time.strptime(str(v),
+                '%Y-%m-%d %H:%M:%S'))
+        # convert to string (there could be ints, longs, etc)
+        v = str(v)
+        signature += v + '+'
       signature += self.getServicePassword()
       signature = hashlib.sha1(signature).hexdigest()
       return signature == data.signature
