@@ -40,7 +40,7 @@ else:
         'markNb', 'markResult', 'markCVV2_CVC2', 'authAmount', 'authDevise',
         'authDate', 'authNb', 'authResult', 'authCVV2_CVC2', 'warrantlyResult',
         'captureDate', 'captureNumber', 'rapprochementStatut', 'refoundAmount',
-        'refundDevise', 'timestamp']
+        'refundDevise', 'litige', 'timestamp']
       signature = ''
       for k in received_sorted_keys:
         try:
