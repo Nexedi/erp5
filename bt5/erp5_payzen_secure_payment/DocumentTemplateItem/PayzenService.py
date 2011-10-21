@@ -4,6 +4,7 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Document import newTempDocument
 import hashlib
+import datetime
 
 try:
   import suds
@@ -50,7 +51,10 @@ else:
           if k in ['transmissionDate', 'presentationDate', 'cardExpirationDate',
             'markDate', 'authDate', 'captureDate']:
             # crazyiness again
-            v = time.strftime('%Y%m%d', time.strptime(str(v), '%Y-%m-%d %H:%M:%S'))
+            if isinstance(v, datetime.datetime):
+              v = v.strftime('%Y%m%d')
+            else:
+              v = time.strftime('%Y%m%d', time.strptime(str(v), '%Y-%m-%d %H:%M:%S'))
           v = str(v)
           signature += v + '+'
       signature += self.getServicePassword()
