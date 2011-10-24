@@ -607,7 +607,7 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     bt5list = template_tool.resolveBusinessTemplateListDependency(('erp5_credential',))
     # because erp5_base is already installed, it is not returned
-    # by resolveBusinessTemplateListDependency, so happen it manualy
+    # by resolveBusinessTemplateListDependency, so append it manualy
     bt5list.append((repository, 'erp5_base.bt5'))
 
     # add some entropy by disorder bt5list returned by
