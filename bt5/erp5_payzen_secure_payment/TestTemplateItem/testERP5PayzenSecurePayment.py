@@ -28,6 +28,7 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 import hashlib
 import DateTime
+import random
 
 def sha1(s):
   return hashlib.sha1(s).hexdigest()
@@ -122,3 +123,37 @@ class TestERP5PayzenSecurePayment(TestERP5PayzenSecurePaymentMixin):
     )
     # dict was updated with passed format
     self.assertEqual(d['keyDaTe'], now.strftime('%Y-%m-%dT%H:%M:%S'))
+
+  def test_navigate(self):
+    self.service.edit(
+      link_url_string='http://payzen/',
+      payzen_vads_action_mode='INTERACTIVE',
+      payzen_vads_ctx_mode='TEST',
+      payzen_vads_page_action='REGISTER',
+      payzen_vads_version='V2',
+      service_username='0123456'
+    )
+    pt_id = str(random.random())
+    self.portal.portal_skins.custom.manage_addProduct['PageTemplates']\
+                .manage_addPageTemplate(id = pt_id, text='''<tal:block tal:repeat="value here/field_list">key=<tal:block tal:replace="python: value[0]"/> value=<tal:block tal:replace="python: value[1]"/>
+</tal:block>''')
+    # flush skin cache
+    self.portal.changeSkin(None)
+    try:
+      result = self.service.navigate(pt_id, {"key": 'value'})
+      signature = sha1('value+INTERACTIVE+ERP5+TEST+REGISTER+SINGLE+0123456+V2+'
+        + self.service_password)
+      self.assertEqual(result, """key=vads_site_id value=0123456
+key=vads_payment_config value=SINGLE
+key=vads_action_mode value=INTERACTIVE
+key=vads_contrib value=ERP5
+key=vads_page_action value=REGISTER
+key=vads_ctx_mode value=TEST
+key=key value=value
+key=signature value=%s
+key=vads_version value=V2
+""" % signature)
+    finally:
+      self.portal.portal_skins.custom.manage_delObjects([pt_id])
+      # flush skin cache
+      self.portal.changeSkin(None)
