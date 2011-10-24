@@ -1423,13 +1423,13 @@ div.pdf-preview-navigation img.last{\n
     width: 70%; /* because label width is 30%*/\n
 }\n
 \n
-.horizontal_align_form_box > div.input > div.field {\n
+.horizontal_align_form_box >  div.input > fieldset > div.field {\n
     clear: none;\n
     float: left;\n
     width: auto;\n
 }\n
 \n
-.horizontal_align_form_box > div.input > div.field > label {\n
+.horizontal_align_form_box >  div.input > fieldset > div.field > label {\n
     width: auto;\n
     padding-top: 2px;\n
 }
