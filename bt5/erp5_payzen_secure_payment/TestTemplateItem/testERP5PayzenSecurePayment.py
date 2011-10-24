@@ -59,6 +59,57 @@ class TestERP5PayzenSecurePaymentMixin(ERP5TypeTestCase):
       portal_type='Payzen Service')
     self.stepTic()
 
+def getMessageList(o):
+  return [str(q.getMessage()) for q in o.checkConsistency()]
+
+class TestERP5PayzenSecurePaymenConstraint(TestERP5PayzenSecurePaymentMixin):
+  def _test(self, message, prop, value='12345'):
+    self.assertTrue(message in getMessageList(self.service))
+    self.service.edit(**{prop: value})
+    self.assertFalse(message in getMessageList(self.service))
+
+  def test_service_username(self):
+    self._test('vads_site_id have to be set', 'service_username')
+
+  def test_service_password(self):
+    self._test('Certificate has to be set.', 'service_password')
+
+  def test_link_url_string(self):
+    self._test('Payzen URL have to be set', 'link_url_string')
+
+  def test_payzen_vads_version(self):
+    message = 'Payzen vads_version have to be V2'
+    self.assertRaises(AssertionError, self._test,
+      message, 'payzen_vads_version')
+    self._test(message, 'payzen_vads_version', 'V2')
+
+  def test_payzen_vads_page_action(self):
+    message = 'Payzen vads_page_action have to be one of REGISTER, '\
+      'REGISTER_UPDATE, REGISTER_PAY, REGISTER_SUBSCRIBE, '\
+      'REGISTER_PAY_SUBSCRIBE, PAYMENT'
+    self.assertRaises(AssertionError, self._test,
+      message, 'payzen_vads_page_action')
+    for v in ['REGISTER', 'REGISTER_UPDATE', 'REGISTER_PAY',
+        'REGISTER_SUBSCRIBE', 'REGISTER_PAY_SUBSCRIBE', 'PAYMENT']:
+      self._test(message, 'payzen_vads_page_action', v)
+      self.service.edit(payzen_vads_page_action='')
+
+  def test_payzen_vads_action_mode(self):
+    message = 'Payzen vads_action_mode have to be SILENT or INTERACTIVE'
+    self.assertRaises(AssertionError, self._test,
+      message, 'payzen_vads_action_mode')
+    self._test(message, 'payzen_vads_action_mode', 'INTERACTIVE')
+    self.service.edit(payzen_vads_action_mode='')
+    self._test(message, 'payzen_vads_action_mode', 'SILENT')
+
+  def test_payzen_vads_ctx_mode(self):
+    message = 'Payzen vads_ctx_mode have to be TEST or PRODUCTION'
+    self.assertRaises(AssertionError, self._test,
+      message, 'payzen_vads_ctx_mode')
+    self._test(message, 'payzen_vads_ctx_mode', 'TEST')
+    self.service.edit(payzen_vads_ctx_mode='')
+    self._test(message, 'payzen_vads_ctx_mode', 'PRODUCTION')
+
 class TestERP5PayzenSecurePayment(TestERP5PayzenSecurePaymentMixin):
   def afterSetUp(self):
     super(TestERP5PayzenSecurePayment, self).afterSetUp()
