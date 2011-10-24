@@ -5,6 +5,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Document import newTempDocument
 import hashlib
 from zLOG import LOG, WARNING
+import datetime
 
 try:
   import suds
@@ -12,7 +13,6 @@ except ImportError:
   class PayzenSOAP:
     pass
 else:
-  import time
   class PayzenSOAP:
     """SOAP communication
 
@@ -219,10 +219,12 @@ class PayzenService(XMLObject, PayzenSOAP):
       elif k.lower().endswith('date'):
         # maybe date?
         try:
-          v = time.strftime('%Y%m%d', time.strptime(str(v),
-                '%Y-%m-%d %H:%M:%S'))
+          v = datetime.datetime.strptime(str(v), '%Y-%m-%d %H:%M:%S')
         except Exception:
           v = str(v)
+        else:
+          ob[k] = v.strftime(output_date_format)
+          v = v.strftime(signature_date_format)
       else:
         # anything else cast to string
         v = str(v)
