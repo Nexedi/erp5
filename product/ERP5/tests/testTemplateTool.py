@@ -31,6 +31,7 @@ import os
 import shutil
 import unittest
 import transaction
+import random
 from App.config import getConfiguration
 from Products.ERP5VCS.WorkingCopy import getVcsTool
 
@@ -597,6 +598,47 @@ class TestTemplateTool(ERP5TypeTestCase):
       self.assertNotEquals(bt, None)
       bt = template_tool.getInstalledBusinessTemplate("erp5_workflow")
       self.assertNotEquals(bt, None)
+
+  def test_sortBusinessTemplateList(self):
+    """Check sorting of a list of business template by their dependencies
+    """
+    repository = "http://www.erp5.org/dists/snapshot/bt5/"
+    template_tool = self.portal.portal_templates
+
+    bt5list = template_tool.resolveBusinessTemplateListDependency(('erp5_credential',))
+    # because erp5_base is already installed, it is not returned
+    # by resolveBusinessTemplateListDependency, so happen it manualy
+    bt5list.append((repository, 'erp5_base.bt5'))
+
+    # add some entropy by disorder bt5list returned by
+    # resolveBusinessTemplateListDependency
+    position_list = range(len(bt5list))
+    new_bt5_list = []
+    while position_list:
+      position = random.choice(position_list)
+      position_list.remove(position)
+      new_bt5_list.append(bt5list[position])
+
+    ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
+    # group orders
+    first_group =  range(0, 2)
+    second_group = range(2, 4)
+    third_group = range(4, 7)
+    fourth_group = range(7, 8)
+    expected_position_dict = dict((('erp5_ingestion_mysql_innodb_catalog.bt5',
+                                    first_group),
+                                   ('erp5_base.bt5', first_group),
+                                   ('erp5_jquery.bt5', second_group),
+                                   ('erp5_ingestion.bt5', second_group),
+                                   ('erp5_xhtml_jquery_style.bt5', third_group),
+                                   ('erp5_web.bt5', third_group),
+                                   ('erp5_crm.bt5', third_group),
+                                   ('erp5_credential.bt5', fourth_group)))
+    for bt in ordered_list:
+      self.assertTrue(ordered_list.index(bt) in expected_position_dict[bt[1]],
+            'Expected positions for %r: %r, got %r' % (bt[1], 
+                                                  expected_position_dict[bt[1]],
+                                                  ordered_list.index(bt)))
 
 def test_suite():
   suite = unittest.TestSuite()
