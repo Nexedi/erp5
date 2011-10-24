@@ -4,7 +4,6 @@ from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Document import newTempDocument
 import hashlib
-import datetime
 from zLOG import LOG, WARNING
 
 try:
@@ -25,7 +24,7 @@ else:
 
     SOAP protocol is assumed as untrusted and dangerous, users of those methods
     are encouraged to log such messages for future debugging."""
-    def _check_transcationInfoSignature(self, data):
+    def _check_transactionInfoSignature(self, data):
       """Checks transactionInfo signature
       Can raise.
       """
@@ -45,27 +44,8 @@ else:
         'authDate', 'authNb', 'authResult', 'authCVV2_CVC2', 'warrantlyResult',
         'captureDate', 'captureNumber', 'rapprochementStatut', 'refoundAmount',
         'refundDevise', 'litige', 'timestamp']
-      signature = ''
-      for k in received_sorted_keys:
-        v = getattr(data, k, None)
-        if v is None:
-          # empty or not transmitted: add as empty string
-          v = ''
-        elif k in ['transmissionDate', 'presentationDate', 'cardExpirationDate',
-          'markDate', 'authDate', 'captureDate'] \
-          or isinstance(v, datetime.datetime):
-          # dates (or field like dates) shall be converted to YYYYMMDD
-          if isinstance(v, datetime.datetime):
-            v = v.strftime('%Y%m%d')
-          else:
-            # defensive: maybe date-like field is represented not as datetime?
-            v = time.strftime('%Y%m%d', time.strptime(str(v),
-                '%Y-%m-%d %H:%M:%S'))
-        # convert to string (there could be ints, longs, etc)
-        v = str(v)
-        signature += v + '+'
-      signature += self.getServicePassword()
-      signature = hashlib.sha1(signature).hexdigest()
+
+      signature = self._getSignature(data, received_sorted_keys)
       return signature == data.signature
 
     def soap_getInfo(self, transmissionDate, transactionId):
@@ -77,30 +57,20 @@ else:
       As soon as communication happeneded does not raise.
       """
       client = suds.client.Client(self.wsdl_link.getUrlString())
-      sorted_keys = ('shopId', 'transmissionDate', 'transactionId',
-        'sequenceNb', 'ctxMode')
+      sorted_keys = ['shopId', 'transmissionDate', 'transactionId',
+        'sequenceNb', 'ctxMode']
       kw = dict(
         transactionId=transactionId,
         ctxMode=self.getPayzenVadsCtxMode(),
         shopId=self.getServiceUsername(),
         sequenceNb=1,
+        transmissionDate=transmissionDate,
       )
-      date = time.strptime(transmissionDate, '%Y%m%d')
-      signature = ''
-      for k in sorted_keys:
-        if k == 'transmissionDate':
-          # craziness: date format in signature is different then in sent message
-          v = time.strftime('%Y%m%d', date)
-          kw['transmissionDate'] = time.strftime('%Y-%m-%dT%H:%M:%S', date)
-        else:
-          v = kw[k]
-        signature += str(v) + '+'
-      signature += self.getServicePassword()
-      kw['wsSignature'] = hashlib.sha1(signature).hexdigest()
+      kw['wsSignature'] = self._getSignature(kw, sorted_keys)
 
+      data = client.service.getInfo(**kw)
       # Note: Code shall not raise since now, as communication begin and caller
       #       will have to log sent/received messages.
-      data = client.service.getInfo(**kw)
       try:
         data_kw = dict(data)
         for k in data_kw.keys():
@@ -114,7 +84,68 @@ else:
           'Issue during processing data_kw:', error=True)
       else:
         try:
-          signature = self._check_transcationInfoSignature(data)
+          signature = self._check_transactionInfoSignature(data)
+        except Exception:
+          LOG('PayzenService', WARNING, 'Issue during signature calculation:',
+            error=True)
+          signature = False
+
+      try:
+        last_sent = str(client.last_sent())
+      except Exception:
+        LOG('PayzenService', WARNING,
+          'Issue during converting last_sent to string:', error=True)
+        signature = False
+
+      try:
+        last_received = str(client.last_received())
+      except Exception:
+        LOG('PayzenService', WARNING,
+          'Issue during converting last_received to string:', error=True)
+        signature = False
+
+      return [data_kw, signature, last_sent, last_received]
+
+    def soap_duplicate(self, transmissionDate, transactionId, presentationDate,
+      newTransactionId, amount, devise, orderId='', orderInfo='', orderInfo2='',
+      orderInfo3='', validationMode=0, comment=''):
+      # prepare with passed parameters
+      kw = dict(transmissionDate=transmissionDate, transactionId=transactionId,
+        presentationDate=presentationDate, newTransactionId=newTransactionId,
+        amount=amount, devise=devise, orderId=orderId, orderInfo=orderInfo,
+        orderInfo2=orderInfo2, orderInfo3=orderInfo3,
+        validationMode=validationMode, comment=comment)
+
+      signature_sorted_key_list= ['shopId', 'transmissionDate', 'transactionId',
+        'sequenceNb', 'ctxMode', 'orderId', 'orderInfo', 'orderInfo2',
+        'orderInfo3', 'amount', 'devise', 'newTransactionId',
+        'presentationDate', 'validationMode', 'comment']
+      kw.update(
+        ctxMode=self.getPayzenVadsCtxMode(),
+        shopId=self.getServiceUsername(),
+        sequenceNb=1,
+      )
+      kw['wsSignature'] = self._getSignature(kw, signature_sorted_key_list)
+      # Note: Code shall not raise since now, as communication begin and caller
+      #       will have to log sent/received messages.
+      client = suds.client.Client(self.wsdl_link.getUrlString())
+      data = client.service.duplicate(**kw)
+      # Note: Code shall not raise since now, as communication begin and caller
+      #       will have to log sent/received messages.
+      try:
+        data_kw = dict(data)
+        for k in data_kw.keys():
+          v = data_kw[k]
+          if not isinstance(v, str):
+            data_kw[k] = str(v)
+      except Exception:
+        data_kw = {}
+        signature = False
+        LOG('PayzenService', WARNING,
+          'Issue during processing data_kw:', error=True)
+      else:
+        try:
+          signature = self._check_transactionInfoSignature(data)
         except Exception:
           LOG('PayzenService', WARNING, 'Issue during signature calculation:',
             error=True)
@@ -155,29 +186,67 @@ class PayzenService(XMLObject, PayzenSOAP):
     """See Payment Service Interface Documentation"""
     pass
 
-  def _getSignature(self, field_list):
-    field_list.sort()
+  def _getSignature(self, ob, sorted_key_list,
+    output_date_format='%Y-%m-%dT%H:%M:%S', signature_date_format='%Y%m%d'):
+    """Calculates signature from ob
+
+    ob can be dict or getattr capable object
+
+    in case if ob is a dict all .strftime callable values
+    are converted to datetime soapish format
+    """
+    if isinstance(ob, dict):
+      isdict = True
+    else:
+      isdict = False
+
     signature = ''
-    for k, v in field_list:
+    for k in sorted_key_list:
+      if isdict:
+        v = ob[k]
+      else:
+        v = getattr(ob, k, None)
+      if v is None:
+        # empty or not transmitted -- add as empty
+        v = ''
+      elif getattr(v, 'strftime', None) is not None:
+        # for sure date
+        # Manipulate a dict
+        if isdict:
+          ob[k] = v.strftime(output_date_format)
+        # set acceptable date in signature
+        v = v.strftime(signature_date_format)
+      elif k.lower().endswith('date'):
+        # maybe date?
+        try:
+          v = time.strftime('%Y%m%d', time.strptime(str(v),
+                '%Y-%m-%d %H:%M:%S'))
+        except Exception:
+          v = str(v)
+      else:
+        # anything else cast to string
+        v = str(v)
       signature += v + '+'
     signature += self.getServicePassword()
     return hashlib.sha1(signature).hexdigest()
 
   def _getFieldList(self, payzen_dict):
-    field_list = [
-      ('vads_action_mode', self.getPayzenVadsActionMode()),
-      ('vads_ctx_mode', self.getPayzenVadsCtxMode()),
-      ('vads_contrib', 'ERP5'),
-      ('vads_page_action', self.getPayzenVadsPageAction()),
-      ('vads_payment_config', 'SINGLE'),
-      ('vads_site_id', self.getServiceUsername()),
-      ('vads_version', self.getPayzenVadsVersion())
-    ]
+    payzen_dict.update(
+      vads_action_mode=self.getPayzenVadsActionMode(),
+      vads_ctx_mode=self.getPayzenVadsCtxMode(),
+      vads_contrib='ERP5',
+      vads_page_action=self.getPayzenVadsPageAction(),
+      vads_payment_config='SINGLE',
+      vads_site_id=self.getServiceUsername(),
+      vads_version=self.getPayzenVadsVersion()
+    )
     # fetch all prepared vads_ values and remove them from dict
+    signature = self._getSignature(payzen_dict,
+      sorted(payzen_dict.keys()), '%Y%m%d%H%M%S', '%Y%m%d%H%M%S')
+    payzen_dict['signature'] = signature
+    field_list = []
     for k,v in payzen_dict.iteritems():
       field_list.append((k, v))
-    signature = self._getSignature(field_list)
-    field_list.append(('signature', signature))
     return field_list
 
   def navigate(self, page_template, payzen_dict, REQUEST=None, **kw):
