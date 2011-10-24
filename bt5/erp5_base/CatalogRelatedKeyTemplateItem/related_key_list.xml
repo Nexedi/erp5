@@ -1,5 +1,6 @@
 <key_list>
  <key>child_address_SearchableText | catalog,full_text/SearchableText/z_related_child_address</key>
+ <key>child_telephone_SearchableText | catalog,full_text/SearchableText/z_related_child_telephone</key>
  <key>default_email_text | catalog,email/url_string/z_related_default_email</key>
  <key>destination_person_title | category,catalog/title/z_related_destination_person</key>
  <key>owner_title | catalog/title/z_related_owner_title</key>

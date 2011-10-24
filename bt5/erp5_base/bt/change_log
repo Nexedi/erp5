@@ -1,3 +1,6 @@
+2011-10-24 Kazuhiko
+* make telephone field searchable in person_module view and organisation_module view.
+
 2011-07-01 yusei
 * Set proper title to interaction workflow.
 

@@ -170,7 +170,7 @@
                           <string>Activity</string>
                         </tuple>
                         <tuple>
-                          <string>default_telephone_text</string>
+                          <string>child_telephone_SearchableText</string>
                           <string>Telephone</string>
                         </tuple>
                         <tuple>
@@ -259,6 +259,10 @@
                           <string>Name</string>
                         </tuple>
                         <tuple>
+                          <string>child_telephone_SearchableText</string>
+                          <string>Telephone</string>
+                        </tuple>
+                        <tuple>
                           <string>default_email_text</string>
                           <string>Email</string>
                         </tuple>
@@ -325,7 +329,7 @@
                           <string>Entity_getDefaultEmailAsURL</string>
                         </tuple>
                         <tuple>
-                          <string>default_telephone_text</string>
+                          <string>child_telephone_SearchableText</string>
                           <string>Entity_getDefaultTelephoneAsURL</string>
                         </tuple>
                       </list>
