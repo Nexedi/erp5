@@ -1188,6 +1188,9 @@ msgstr "Planifié automatiquement"
 msgid "Auto Planned [state in task_workflow]"
 msgstr "Planifié automatiquement"
 
+msgid "Automatic Detection"
+msgstr "Détection automatique"
+
 msgid "Automatically disabled when enabling ${preference_title}."
 msgstr "Désactivé automatiquement lors de l'activation de la préférence ${preference_title}."
 
