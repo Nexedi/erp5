@@ -58,7 +58,7 @@ portal = context.getPortalObject()\n
 \n
 portal_type = context.getPortalType()\n
 format = portal.portal_preferences.getPreferredImageFormat()\n
-quality = int(portal.portal_preferences.getPreferredImageQuality())\n
+quality = portal.portal_preferences.getPreferredImageQuality()\n
 preferred_image_size = portal.portal_preferences.getPreferredImageSize()\n
 \n
 # thumbnail is required always\n
