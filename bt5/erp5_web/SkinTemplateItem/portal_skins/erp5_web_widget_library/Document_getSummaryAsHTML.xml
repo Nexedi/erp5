@@ -39,11 +39,12 @@
 <tal:block \n
   tal:define="document_url here/absolute_url;\n
               thumbnail_url here/Base_getThumbnailAbsoluteUrl;\n
-              display string:thumbnail;\n
               icon here/getIconURL;\n
               title here/getTitle;\n
               modification_date python: here.Base_FormatDate(here.getModificationDate(),hour_minute=1);\n
-              format python: here.getObject().portal_preferences.getPreference(\'preferred_image_format\', \'png\');\n
+              image_conversion_dict here/Base_getImageArgumentDict;\n
+              dummy python: image_conversion_dict.update(**{\'display\':\'thumbnail\'});\n
+              image_conversion_arguments python: \'&\'.join([\'%s=%s\' % (k, v) for k, v in image_conversion_dict.items()]);\n
               description python: here.getDescription();\n
               box_relative_url python: request.get(\'box_relative_url\', \'\');\n
               dom_id python: modules[\'base64\'].urlsafe_b64encode(\'%s-%s\' %(box_relative_url, here.getUid())).rstrip(\'=\')">\n
@@ -68,7 +69,7 @@
        tal:attributes="href string:${document_url}/view">\n
       <img alt="Thumbnail" class="document-thumbnail"\n
          tal:condition="python: thumbnail_url is not None"\n
-         tal:attributes="src string:${thumbnail_url}/index_html?display=${display}&format=${format}"/>\n
+         tal:attributes="src string:${thumbnail_url}/index_html?${image_conversion_arguments}"/>\n
       <br/>\n
       <span class="description"\n
             tal:content="description"/>\n
