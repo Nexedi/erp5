@@ -1,3 +1,6 @@
+2011-10-25 yusei
+* Fix Base_resetListSetting. It did not work with "Set List Setting" dialog. Now it accepts any parameters.
+
 2011-06-23 yusei
 * Add an action to call alarm.activeSense() for developer.
 

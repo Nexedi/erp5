@@ -63,7 +63,7 @@ return context.Base_redirect(form_id, keep_items=dict(\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id, selection_name</string> </value>
+            <value> <string>form_id, selection_name, *args, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
