@@ -186,8 +186,7 @@ class PayzenService(XMLObject, PayzenSOAP):
     """See Payment Service Interface Documentation"""
     pass
 
-  def _getSignature(self, ob, sorted_key_list,
-    output_date_format='%Y-%m-%dT%H:%M:%S', signature_date_format='%Y%m%d'):
+  def _getSignature(self, ob, sorted_key_list):
     """Calculates signature from ob
 
     ob can be dict or getattr capable object
@@ -211,7 +210,7 @@ class PayzenService(XMLObject, PayzenSOAP):
         v = ''
       elif isinstance(v, datetime.datetime):
         # for sure date
-        v = v.strftime(signature_date_format)
+        v = v.strftime('%Y%m%d')
       else:
         # anything else cast to string
         v = str(v)
@@ -230,8 +229,7 @@ class PayzenService(XMLObject, PayzenSOAP):
       vads_version=self.getPayzenVadsVersion()
     )
     # fetch all prepared vads_ values and remove them from dict
-    signature = self._getSignature(payzen_dict,
-      sorted(payzen_dict.keys()), '%Y%m%d%H%M%S', '%Y%m%d%H%M%S')
+    signature = self._getSignature(payzen_dict, sorted(payzen_dict.keys()))
     payzen_dict['signature'] = signature
     field_list = []
     for k,v in payzen_dict.iteritems():
