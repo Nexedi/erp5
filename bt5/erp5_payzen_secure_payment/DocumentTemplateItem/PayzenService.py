@@ -209,22 +209,9 @@ class PayzenService(XMLObject, PayzenSOAP):
       if v is None:
         # empty or not transmitted -- add as empty
         v = ''
-      elif getattr(v, 'strftime', None) is not None:
+      elif isinstance(v, datetime.datetime):
         # for sure date
-        # Manipulate a dict
-        if isdict:
-          ob[k] = v.strftime(output_date_format)
-        # set acceptable date in signature
         v = v.strftime(signature_date_format)
-      elif k.lower().endswith('date'):
-        # maybe date?
-        try:
-          v = datetime.datetime.strptime(str(v), '%Y-%m-%d %H:%M:%S')
-        except Exception:
-          v = str(v)
-        else:
-          ob[k] = v.strftime(output_date_format)
-          v = v.strftime(signature_date_format)
       else:
         # anything else cast to string
         v = str(v)
