@@ -56,7 +56,7 @@ class ImageFieldWidget(Widget.TextWidget):
     The image size is calculated using 'image_display'.
     """
     property_names = Widget.TextWidget.property_names + \
-      ['image_display', 'image_format','image_resolution']
+      ['image_display', 'image_format','image_quality', 'image_pre_converted_only']
 
     image_display = fields.StringField('image_display',
                                title='Image Display',
@@ -74,12 +74,20 @@ class ImageFieldWidget(Widget.TextWidget):
                                default='',
                                required=0)
 
-    image_resolution = fields.IntegerField('image_resolution',
-                               title='Image Resolution',
+    image_quality = fields.IntegerField('image_quality',
+                               title='Image Quality',
                                description=(
-        "The resolution used when converting the image. "
+        "The quality used when converting the image. "
         "This is only used with ERP5 Images."),
                                default=75,
+                               required=0)
+    
+    image_pre_converted_only = fields.CheckBoxField('image_pre_converted_only',
+                               title='Image Pre Converted Only',
+                               description=(
+        "Return image only if it is already pre converted in cache. "
+        "This is only used with ERP5 Images."),
+                               default=False,
                                required=0)
 
     def render(self, field, key, value, REQUEST, render_prefix=None):
@@ -101,7 +109,12 @@ class ImageFieldWidget(Widget.TextWidget):
         options = {}
         options['display'] = field.get_value('image_display')
         options['format'] = field.get_value('image_format')
-        options['resolution'] = field.get_value('image_resolution')
+        options['quality'] = field.get_value('image_quality')
+        pre_converted_only = field.get_value('image_pre_converted_only')
+        if pre_converted_only:
+          # only add if it's True as conversion machine assume that if it is missing
+          # then conversion should happen "on the fly"
+          options['pre_converted_only'] = pre_converted_only
         parameters = '&'.join(['%s=%s' % (k, v) for k, v in options.items() \
                                if v])
         if parameters:
