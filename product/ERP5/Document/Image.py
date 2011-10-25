@@ -279,19 +279,23 @@ class Image(TextConvertableMixin, File, OFSImage):
     quality = kw.get('quality', _MARKER)
     if quality is _MARKER:
       quality = self.getDefaultImageQuality(format)
-    #print "image._convert", kw, quality, self.getRelativeUrl(), self.getPortalType()
-    convert_kw = {'quality': quality,
-                  'resolution': kw.get('resolution'),
-                  'frame': kw.get('frame'),
-                  'image_size': image_size,
-                  'format': format,
-                 }
+    kw['format'] = format
+    kw['quality'] = quality
     try:
-      mime, image = self.getConversion(**convert_kw)
+      mime, image_data = self.getConversion(**kw)
     except KeyError:
-      mime, image = self._makeDisplayPhoto(**convert_kw)
-      self.setConversion(image, mime, **convert_kw)
-    return mime, image.data
+      # we need to convert string representation (i.e. display=small) to a 
+      # pixel (number of it = 128x128)
+      kw['image_size'] = image_size    
+      display = kw.pop('display', None)
+      mime, image = self._makeDisplayPhoto(**kw)
+      image_data = image.data
+      # as image will always be requested through a display not by passing exact
+      # pixels we need to restore this way in cache
+      kw['display'] = display
+      image_size = kw.pop('image_size', None)
+      self.setConversion(image_data, mime, **kw)
+    return mime, image_data
 
   # Display
   security.declareProtected(Permissions.View, 'index_html')
