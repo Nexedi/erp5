@@ -145,16 +145,6 @@ class TestERP5PayzenSecurePayment(TestERP5PayzenSecurePaymentMixin):
     # dict was updated
     self.assertEqual(d['key'], now)
 
-  def test_getSignature_dict_date_as_string(self):
-    now = DateTime.DateTime()
-    d = {'keyDaTe': now.strftime('%Y-%m-%d %H:%M:%S')}
-    self.assertEqual(
-      self.service._getSignature(d, ['keyDaTe']),
-      sha1(now.strftime('%Y%m%d') + '+' + self.service_password)
-    )
-    # dict was updated with passed format
-    self.assertEqual(d['keyDaTe'], now.strftime('%Y-%m-%dT%H:%M:%S'))
-
   def test_navigate(self):
     self.service.edit(
       link_url_string='http://payzen/',
