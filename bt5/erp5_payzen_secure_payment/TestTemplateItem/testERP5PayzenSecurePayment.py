@@ -135,15 +135,15 @@ class TestERP5PayzenSecurePayment(TestERP5PayzenSecurePaymentMixin):
       sha1('value1+value+' + self.service_password)
     )
 
-  def test_getSignature_dict_date_as_DateTime(self):
-    now = DateTime.DateTime()
+  def test_getSignature_dict_date_as_datetime(self):
+    now = DateTime.DateTime().asdatetime()
     d = {'key': now}
     self.assertEqual(
       self.service._getSignature(d, ['key']),
       sha1(now.strftime('%Y%m%d') + '+' + self.service_password)
     )
     # dict was updated
-    self.assertEqual(d['key'], now.strftime('%Y-%m-%dT%H:%M:%S'))
+    self.assertEqual(d['key'], now)
 
   def test_getSignature_dict_date_as_string(self):
     now = DateTime.DateTime()
