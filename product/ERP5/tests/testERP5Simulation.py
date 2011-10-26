@@ -208,3 +208,68 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
 
     sequence_list.play(self, quiet=quiet)
+
+  def stepIncreasePackingListLineQuantity1000(self, sequence=None, sequence_list=None, **kw):
+    self._modifyPackingListLineQuantity(sequence, sequence_list, 1000.0)
+
+  def stepCheckPackingListSplittedForTest02(self, sequence=None, sequence_list=None, **kw):
+    """
+      Test if packing list was splitted
+    """
+    order = sequence.get('order')
+    packing_list_list = order.getCausalityRelatedValueList(
+                               portal_type=self.packing_list_portal_type)
+    self.assertEquals(2,len(packing_list_list))
+    packing_list1 = None
+    packing_list2 = None
+    for packing_list in packing_list_list:
+      if packing_list.getUid() == sequence.get('packing_list').getUid():
+        packing_list1 = packing_list
+      else:
+        packing_list2 = packing_list
+    sequence.edit(new_packing_list=packing_list2)
+    for line in packing_list1.objectValues(
+          portal_type= self.packing_list_line_portal_type):
+      self.assertEquals(self.default_quantity-10,line.getQuantity())
+    for line in packing_list2.objectValues(
+          portal_type= self.packing_list_line_portal_type):
+      self.assertEquals(10+1000,line.getQuantity())
+
+  def test_02_splitAndDeferAfterAcceptDecision(self, quiet=quiet, run=run_all_test):
+    """
+      Change the quantity on an delivery line, then
+      see if the packing list is divergent and then
+      accept decision, then change the quantity again
+      and see if the packing list is divergent and then
+      split and defer the packing list and then see
+      if two packing lists has correct quantity and 
+      they are not diverged.
+    """
+    if not run: return
+    sequence_list = SequenceList()
+
+    # Test with a simply order without cell
+    sequence_string = self.default_sequence + '\
+                      stepIncreasePackingListLineQuantity1000 \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepAcceptDecisionQuantity \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsNotDivergent \
+                      stepCheckPackingListIsSolved \
+                      stepDecreasePackingListLineQuantity10 \
+                      stepCheckPackingListIsCalculating \
+                      stepTic \
+                      stepCheckPackingListIsDiverged \
+                      stepSplitAndDeferPackingList \
+                      stepCheckSolverIsSolving \
+                      stepTic \
+                      stepCheckPackingListSplittedForTest02 \
+                      stepCheckPackingListIsSolved \
+                      stepCheckSolverIsSolved \
+                      '
+    sequence_list.addSequenceString(sequence_string)
+
+    sequence_list.play(self, quiet=quiet)
