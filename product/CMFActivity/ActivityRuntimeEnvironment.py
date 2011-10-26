@@ -1,4 +1,6 @@
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 
 def getActivityRuntimeEnvironment():
   """
@@ -34,10 +36,12 @@ class BaseMessage:
 
 
 class ActivityRuntimeEnvironment(object):
+  security = ClassSecurityInfo()
 
   def __init__(self, message):
     self._message = message
 
+  security.declarePublic('edit')
   def edit(self, **kw):
     # There is no point allowing to modify other attributes from a message
     for k in kw:
@@ -46,3 +50,5 @@ class ActivityRuntimeEnvironment(object):
          self._message.activity_kw.get(k) is not None:
         raise RuntimeError("An error callback is already registered")
     self._message.activity_kw.update(kw)
+
+InitializeClass(ActivityRuntimeEnvironment)
