@@ -33,6 +33,8 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.TransactionalVariable import TransactionalResource
 from Products.ERP5Type import Permissions
 from Products.ERP5.mixin.timer_service import TimerServiceMixin
+from AccessControl.SecurityManagement import newSecurityManager, \
+  getSecurityManager, setSecurityManager
 
 # TODO: Current API was designed to avoid compability issues in case it is
 #       reimplemented using http://pypi.python.org/pypi/inotifyx
@@ -70,36 +72,42 @@ class InotifyTool(TimerServiceMixin, BaseTool):
             for x in self.objectValues()
             if x.isEnabled() and current_node in x.getNodeList()]
         update_state_dict = {}
+        original_security_manager = getSecurityManager()
         for notify_id in notify_list:
           notify = self._getOb(notify_id)
-          inode_path = notify.getInodePath()
-          if inode_path:
-            path = notify.getPath()
-            state = inotify_state_dict.get(path, {})
-            new_state = {}
-            for inode_path in glob.glob(inode_path):
-              for name in os.listdir(inode_path):
-                p = os.path.join(inode_path, name)
-                try:
-                  s = os.lstat(p)
-                except OSError, e:
-                  if e.errno != errno.ENOENT:
-                    raise
-                else:
-                  new_state[p] = s.st_mtime, s.st_size
-            if new_state != state:
-              update_state_dict[path] = new_state
-              events = [{'path': p, 'mask': IN_DELETE}
-                for p in set(state).difference(new_state)]
-              for p, m in new_state.iteritems():
-                if p in state:
-                  if m == state[p]:
-                    continue
-                  mask = IN_MODIFY
-                else:
-                  mask = IN_CREATE
-                events.append({'path': p, 'mask': mask})
-              getattr(notify, notify.getSenseMethodId())(events)
+          newSecurityManager(None, notify.getWrappedOwner())
+          try:
+            inode_path = notify.getInodePath()
+            if inode_path:
+              path = notify.getPath()
+              state = inotify_state_dict.get(path, {})
+              new_state = {}
+              for inode_path in glob.glob(inode_path):
+                for name in os.listdir(inode_path):
+                  p = os.path.join(inode_path, name)
+                  try:
+                    s = os.lstat(p)
+                  except OSError, e:
+                    if e.errno != errno.ENOENT:
+                      raise
+                  else:
+                    new_state[p] = s.st_mtime, s.st_size
+              if new_state != state:
+                update_state_dict[path] = new_state
+                events = [{'path': p, 'mask': IN_DELETE}
+                  for p in set(state).difference(new_state)]
+                for p, m in new_state.iteritems():
+                  if p in state:
+                    if m == state[p]:
+                      continue
+                    mask = IN_MODIFY
+                  else:
+                    mask = IN_CREATE
+                  events.append({'path': p, 'mask': mask})
+                getattr(notify, notify.getSenseMethodId())(events)
+          finally:
+            setSecurityManager(original_security_manager)
+
         if update_state_dict:
           TransactionalResource(tpc_finish=lambda txn:
             inotify_state_dict.update(update_state_dict))
