@@ -54,14 +54,20 @@
 portal_id = portal.getId()\n
 MARKER = (None, \'\',)\n
 \n
-for index_uid in range(len(uid)):\n
-  document_relative_url = getPath[index_uid].replace("/%s/" %portal_id, "")\n
-  document = portal.restrictedTraverse(document_relative_url)\n
-  if getattr(document, "convert", None) is not None and \\\n
-     getattr(document, "getData", None) is not None and \\\n
-     (document.getData() not in MARKER or document.getBaseData() not in MARKER):\n
-    #context.log("preconvert %s" %document.getRelativeUrl())\n
-    document.activate(serialize_tag="conversion").Base_preConvert()\n
+address = portal.portal_preferences.getPreferredOoodocServerAddress()\n
+port = portal.portal_preferences.getPreferredOoodocServerPortNumber()\n
+# make sure cloudoo is available. this check is required ONLY due to\n
+# unit test nature where a bt5 with a data content which is to be reindexed \n
+# is installed BEFORE the real cloudoo is setup in preferences.\n
+if address not in MARKER and port not in MARKER:\n
+  for index_uid in range(len(uid)):\n
+    document_relative_url = getPath[index_uid].replace("/%s/" %portal_id, "")\n
+    document = portal.restrictedTraverse(document_relative_url)\n
+    if getattr(document, "convert", None) is not None and \\\n
+       getattr(document, "getData", None) is not None and \\\n
+       (document.getData() not in MARKER or document.getBaseData() not in MARKER):\n
+      #context.log("preconvert %s" %document.getRelativeUrl())\n
+      document.activate(serialize_tag="conversion").Base_preConvert()\n
 </string> </value>
         </item>
         <item>
