@@ -371,25 +371,24 @@ class ERP5TypeInformation(XMLObject,
       klass = portal.portal_types.getPortalTypeClass(
           self.getId(),
           temp=temp_object)
-      ob = klass(id)
+      base_ob = klass(id)
+      ob = base_ob.__of__(container)
 
       if temp_object:
-        ob = ob.__of__(container)
         # Setup only Owner local role on Document like
         # container._setObject(set_owner=True) does.
         user_id = getCurrentUserIdOrAnonymousToken()
         ob.manage_setLocalRoles(user_id, ['Owner'])
       else:
         if activate_kw is not None:
-          ob.__of__(container).setDefaultActivateParameters(**activate_kw)
+          ob.setDefaultActivateParameters(**activate_kw)
         if reindex_kw is not None:
-          ob.__of__(container).setDefaultReindexParameters(**reindex_kw)
+          ob.setDefaultReindexParameters(**reindex_kw)
         if is_indexable is not None:
-          ob.isIndexable = is_indexable
-        container._setObject(id, ob)
-        ob = container._getOb(id)
+          base_ob.isIndexable = is_indexable
+        container._setObject(id, base_ob)
         # if no activity tool, the object has already an uid
-        if getattr(aq_base(ob), 'uid', None) is None:
+        if getattr(base_ob, 'uid', None) is None:
           ob.uid = portal.portal_catalog.newUid()
 
       # Portal type has to be set before setting other attributes
