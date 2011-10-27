@@ -80,7 +80,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_text_content</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -97,7 +99,6 @@
                         <string>your_portal_type</string>
                         <string>your_resource</string>
                         <string>your_direction</string>
-                        <string>your_text_content</string>
                       </list>
                     </value>
                 </item>
