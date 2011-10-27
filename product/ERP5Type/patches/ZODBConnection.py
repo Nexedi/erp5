@@ -44,10 +44,10 @@ if 1: # keep indentation. Also good for quick disabling.
     if FORCE_STORAGE_SYNC_ON_CONNECTION_OPENING:
 
       try:
-        if Connection._nexedi_fix != 4:
+        if Connection._nexedi_fix != 5:
             raise Exception("A different ZODB fix is already applied")
       except AttributeError:
-        Connection._nexedi_fix = 4
+        Connection._nexedi_fix = 5
 
         # Whenever an connection is opened (and there's usually an existing one
         # in DB pool that can be reused) whereas the transaction is already
@@ -56,14 +56,12 @@ if 1: # keep indentation. Also good for quick disabling.
         # For example, there's no open transaction when a ZPublisher/Publish
         # transaction begins.
 
-        import thread
-
         def open(self, *args, **kw):
             def _flush_invalidations():
                 acquire = self._db._a
                 try:
-                    self._db._r()
-                except thread.error:
+                    self._db._r() # this is a RLock
+                except RuntimeError:
                     acquire = lambda: None
                 try:
                     del self._flush_invalidations
