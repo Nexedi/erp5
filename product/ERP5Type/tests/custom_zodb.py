@@ -47,7 +47,8 @@ if save_mysql:
     command = 'mysqldump %s > %s' % (getMySQLArguments(), dump_sql_path,)
     if verbosity:
       _print('Dumping MySQL database with %s...' % command)
-    os.system(command)
+    ret = os.system(command)
+    assert not ret
 
 _print("Cleaning static files ... ")
 for static_dir in static_dir_list:
