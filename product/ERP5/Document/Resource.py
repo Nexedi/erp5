@@ -1136,9 +1136,9 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
                             resource_uid=self.getUid())
       try:
         return query[0].quantity
-      except:
-        raise LookupError('Can not find the Quantity Unit Conversion '\
-                          'Definition. Please make sure that Unit '\
-                          'Conversion Definitions are indexed.'\
-                          'quantity_unit_uid: %s, resource_uid: %s' \
-                           % (quantity_unit_uid, self.getUid()))
+      except IndexError:
+        raise IndexError('Can not find the Quantity Unit Conversion '\
+                         'Definition. Please make sure that Unit '\
+                         'Conversion Definitions are indexed and validated. '\
+                         'quantity_unit_uid: %s, resource_uid: %s' \
+                          % (quantity_unit_uid, self.getUid()))
