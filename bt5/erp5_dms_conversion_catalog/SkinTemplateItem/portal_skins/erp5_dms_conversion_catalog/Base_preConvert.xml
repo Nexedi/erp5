@@ -51,26 +51,28 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Pre convert to know good defaults.\n
-  Use type based methods to allow finer granularity (for example in case of PDF we support many frames inside a document).\n
+  Do actual conversion of any Base type.\n
 """\n
 portal = context.getPortalObject()\n
 \n
-portal_type = context.getPortalType()\n
-format = portal.portal_preferences.getPreferredImageFormat()\n
-quality = portal.portal_preferences.getPreferredImageQuality()\n
-preferred_image_size = portal.portal_preferences.getPreferredImageSize()\n
-\n
-# thumbnail is required always\n
-display_list = ["thumbnail"]\n
-method_id = \'%s_preConvert\' %portal_type.replace(\' \', \'\')\n
-method = getattr(context, method_id, context.Document_preConvert)\n
-return method(**dict(format=format, quality=quality, display_list = display_list))\n
+format_kw = {\'format\': format,\n
+            \'quality\': quality}\n
+for display in display_list:\n
+  format_kw[\'display\'] = display\n
+  context.convert(**format_kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>format, quality, display_list</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

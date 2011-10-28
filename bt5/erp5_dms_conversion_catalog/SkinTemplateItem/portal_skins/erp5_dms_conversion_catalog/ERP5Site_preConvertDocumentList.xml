@@ -56,7 +56,7 @@
   It will do that recursively in entire ERP5 instance.\n
 \n
 """\n
-context.ERP5Site_checkDataWithScript("Base_preConvert", \n
+context.ERP5Site_checkDataWithScript("Base_callPreConvert", \n
                                      tag="pre_convert",\n
                                      packet=2,\n
                                      id_list=["document_module", "image_module"])\n

@@ -51,27 +51,30 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Do actual conversion of Spreadsheet type.\n
+  Pre convert to know good defaults.\n
+  Use type based methods to allow finer granularity (for example in case of PDF we support many frames inside a document).\n
 """\n
-context.convert(**{\'format\': \'html\'})\n
-context.Document_preConvert(format, quality, display_list)\n
+portal = context.getPortalObject()\n
+\n
+portal_type = context.getPortalType()\n
+format = portal.portal_preferences.getPreferredImageFormat()\n
+quality = portal.portal_preferences.getPreferredImageQuality()\n
+preferred_image_size = portal.portal_preferences.getPreferredImageSize()\n
+\n
+# thumbnail is required always\n
+display_list = ["thumbnail"]\n
+method = context.getTypeBasedMethod(\'preConvert\')\n
+context.log(method)\n
+return method(**dict(format=format, quality=quality, display_list = display_list))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>format, quality, display_list</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Spreadsheet_preConvert</string> </value>
+            <value> <string>Base_callPreConvert</string> </value>
         </item>
       </dictionary>
     </pickle>

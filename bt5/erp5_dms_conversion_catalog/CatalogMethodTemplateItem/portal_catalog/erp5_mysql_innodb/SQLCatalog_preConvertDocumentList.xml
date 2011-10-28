@@ -51,7 +51,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
-portal_id = portal.getId()\n
 MARKER = (None, \'\',)\n
 \n
 address = portal.portal_preferences.getPreferredOoodocServerAddress()\n
@@ -61,18 +60,16 @@ port = portal.portal_preferences.getPreferredOoodocServerPortNumber()\n
 # is installed BEFORE the real cloudoo is setup in preferences.\n
 if address not in MARKER and port not in MARKER:\n
   for index_uid in range(len(uid)):\n
-    document_relative_url = getPath[index_uid].replace("/%s/" %portal_id, "")\n
+    document_relative_url = getRelativeUrl[index_uid]\n
     document = portal.restrictedTraverse(document_relative_url)\n
-    if getattr(document, "convert", None) is not None and \\\n
-       getattr(document, "getData", None) is not None and \\\n
-       (document.getData() not in MARKER or document.getBaseData() not in MARKER):\n
+    if (document.getData() not in MARKER or document.getBaseData() not in MARKER):\n
       #context.log("preconvert %s" %document.getRelativeUrl())\n
-      document.activate(serialize_tag="conversion").Base_preConvert()\n
+      document.activate(serialize_tag="conversion").Base_callPreConvert()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>uid, getPath</string> </value>
+            <value> <string>uid, getRelativeUrl</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

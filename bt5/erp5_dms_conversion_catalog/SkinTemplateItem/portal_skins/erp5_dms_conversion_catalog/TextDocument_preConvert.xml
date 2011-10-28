@@ -51,15 +51,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Do actual conversion of any Document type.\n
+  Do actual conversion of any Image type.\n
 """\n
-portal = context.getPortalObject()\n
-\n
-format_kw = {\'format\': format,\n
-            \'quality\': quality}\n
-for display in display_list:\n
-  format_kw[\'display\'] = display\n
-  context.convert(**format_kw)\n
+context.Base_preConvert(format, quality, display_list)\n
 </string> </value>
         </item>
         <item>
@@ -76,7 +70,7 @@ for display in display_list:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Document_preConvert</string> </value>
+            <value> <string>TextDocument_preConvert</string> </value>
         </item>
       </dictionary>
     </pickle>

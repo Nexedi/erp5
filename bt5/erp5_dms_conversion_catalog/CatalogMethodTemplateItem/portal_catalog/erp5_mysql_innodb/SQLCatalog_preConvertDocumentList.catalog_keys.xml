@@ -2,4 +2,13 @@
  <item key="sql_catalog_object_list" type="int">
   <value>1</value>
  </item>
+ <item key="_is_filtered_archive" type="int">
+  <value>1</value>
+ </item>
+ <item key="_filter_expression_archive" type="str">
+  <value>python: context.isDocument()</value>
+ </item>
+ <item key="_filter_expression_cache_key_archive" type="tuple">
+  <value>portal_type</value>
+ </item>
 </catalog_method>

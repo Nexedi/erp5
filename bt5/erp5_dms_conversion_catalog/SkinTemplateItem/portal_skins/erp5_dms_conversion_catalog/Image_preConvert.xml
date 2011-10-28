@@ -51,10 +51,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Do actual conversion of Spreadsheet type.\n
+  Do actual conversion of any Image type.\n
 """\n
-context.convert(**{\'format\': \'html\'})\n
-context.Document_preConvert(format, quality, display_list)\n
+context.Base_preConvert(format, quality, display_list)\n
 </string> </value>
         </item>
         <item>
@@ -71,7 +70,7 @@ context.Document_preConvert(format, quality, display_list)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Text_preConvert</string> </value>
+            <value> <string>Image_preConvert</string> </value>
         </item>
       </dictionary>
     </pickle>
