@@ -1134,4 +1134,11 @@ class Resource(XMLObject, XMLMatrix, VariatedMixin):
       query = self.ResourceModule_zGetQuantityUnitDefinitionRatio(
                             quantity_unit_uid=quantity_unit_uid,
                             resource_uid=self.getUid())
-      return query[0].quantity
+      try:
+        return query[0].quantity
+      except:
+        raise LookupError('Can not find the Quantity Unit Conversion '\
+                          'Definition. Please make sure that Unit '\
+                          'Conversion Definitions are indexed.'\
+                          'quantity_unit_uid: %s, resource_uid: %s' \
+                           % (quantity_unit_uid, self.getUid()))
