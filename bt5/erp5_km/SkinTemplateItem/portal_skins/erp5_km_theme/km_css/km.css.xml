@@ -444,6 +444,7 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 .content .field label, \n
 .content .field .input {\n
   width: 100%;\n
+  margin-top: 4px;\n
 }\n
 \n
 .content .field label {\n
