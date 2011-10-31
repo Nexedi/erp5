@@ -1165,7 +1165,7 @@ class SynchronizationTool(BaseTool):
     """
     response = None #check if subsync replies to this messages
     subscription = self.unrestrictedTraverse(subscription_path)
-    if msg is None and (subscription.getSubscriptionUrlString()).find('file') >= 0:
+    if msg is None and subscription.getSubscriptionUrlString('').find('file') >= 0:
       msg = self.readResponse(sync_id=subscription.getDestinationReference(),
                               from_url=subscription.getSubscriptionUrlString())
     if msg is None:
