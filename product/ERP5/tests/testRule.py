@@ -524,15 +524,6 @@ return context.generatePredicate(
     createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
         "return context.getParentValue().getSpecialiseReference() == 'default_delivery_rule'")
 
-    # XXX-Leo: This script should become the default in erp5_simulation. Remove
-    # it from here when no longer needed:
-    createZODBPythonScript(skin_folder, 'RuleMixin_asPredicate', '',
-        """
-kw = dict(criterion_property_list=("start_date",),
-          membership_criterion_base_category_list=('trade_phase',),)
-return context.generatePredicate(**kw)
-        """.strip())
-
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.validate()
 

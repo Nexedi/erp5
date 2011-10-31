@@ -328,32 +328,24 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     context.edit(trade_phase_list=successor_trade_phase_list)
     return context
 
-  security.declarePrivate('_checkSuccessorContext')
-  def _checkSuccessorContext(self):
-    # XXX turn this into a decorator?
-    if not (self.isTempObject() and
-            'trade_phase_list' in self._v_modified_property_dict):
-      raise RuntimeError(
-        'Method should only be called on self._asSuccessorContext()'
-      )
- 
-  security.declarePrivate('_isSuccessorContext')
-  def _isRuleStillApplicable(self, rule):
-    self._checkSuccessorContext()
-    return rule.test(self)
-
   security.declarePrivate('_getApplicableRuleList')
   def _getApplicableRuleList(self):
     """ Search rules that match this movement
     """
-    self._checkSuccessorContext()
+    successor_trade_phase_list = self._getSuccessorTradePhaseList()
     portal_rules = self.getPortalObject().portal_rules
     # XXX-Leo: According to JP, the 'version' search below is wrong and
     # should be replaced by a check that there are not two rules with the
     # same reference that can be returned.
-    return portal_rules.searchRuleList(self,
-                                       sort_on='version',
-                                       sort_order='descending')
+    return portal_rules.searchRuleList(
+      self,
+      # XXX-Leo: Fugly catalog syntax for category search. We should
+      # fix the catalog to accept just 'trade_phase' for the keyword,
+      # and not to require prefixing the values with 'trade_phase/' again:
+      trade_phase_relative_url=['trade_phase/' + path
+                                for path in successor_trade_phase_list],
+      sort_on='version',
+      sort_order='descending')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
   def expand(self, **kw):
@@ -377,8 +369,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     applied_rule_dict = {}
     applicable_rule_dict = {}
-    successor_self = self._asSuccessorContext()
-    for rule in successor_self._getApplicableRuleList():
+    for rule in self._getApplicableRuleList():
       reference = rule.getReference()
       if reference:
         # XXX-Leo: We should complain loudly if there is more than one
@@ -388,9 +379,14 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
       # check if applied rule is already expanded, or if its portal
-      # rule is still applicable to this Simulation Movement with
-      # successor trade_phases
-      if (successor_self._isRuleStillApplicable(rule) or
+      # rule is still applicable to this Simulation Movement
+
+      # XXX-Leo: possible optimization, it is likely that 'rule' is in
+      # applicable_rule_dict.values() (or actually, in
+      # self._getApplicableRuleList()). We should check if this is the
+      # case, and then not call rule.test(self), since the predicate
+      # tool will already have done it once.
+      if (rule.test(self) or
           applied_rule._isTreeDelivered()):
         applied_rule_dict[rule.getReference()] = applied_rule
       else:
