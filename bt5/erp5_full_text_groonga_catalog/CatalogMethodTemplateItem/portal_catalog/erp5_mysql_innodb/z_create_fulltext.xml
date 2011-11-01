@@ -67,7 +67,7 @@ CREATE TABLE `full_text` (\n
   `SearchableText` MEDIUMTEXT,\n
   PRIMARY KEY  (`uid`),\n
   FULLTEXT `SearchableText` (`SearchableText`)\n
-) ENGINE=groonga;\n
+) ENGINE=groonga COMMENT=\'engine "innodb"\';\n
 </string> </value>
         </item>
         <item>
