@@ -188,6 +188,12 @@ class Updater(object):
           h = revision[1]
         if h != self._git('rev-parse', 'HEAD'):
           self.deletePycFiles('.')
+          # For performance reasons, 'reset --merge' only looks at mtime & ctime
+          # to check is the index is correct and conflicts immediately if
+          # contents or metadata changed. Even hardlinking a file changes its
+          # ctime, so at least for buildout (local download), we need to
+          # refresh index first.
+          self._git('update-index', '--refresh')
           self._git('reset', '--merge', h)
       else:
         self.deletePycFiles('.')
