@@ -178,18 +178,20 @@
                 </item>
                 <item>
                     <key> <string>image_pre_converted_only</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>image_quality</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
                 </item>
                 <item>
-                    <key> <string>image_resolution</string> </key>
+                    <key> <string>image_quality</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>image_resolution</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -277,7 +279,7 @@
                 </item>
                 <item>
                     <key> <string>image_pre_converted_only</string> </key>
-                    <value> <int>1</int> </value>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>image_quality</string> </key>
@@ -351,12 +353,25 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.portal_preferences.getPreferredImageQuality()</string> </value>
+            <value> <string>python: here.portal_preferences.getPreferredPreConvertedOnly()</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.portal_preferences.getPreferredImageQuality()</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
     <pickle>
       <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
