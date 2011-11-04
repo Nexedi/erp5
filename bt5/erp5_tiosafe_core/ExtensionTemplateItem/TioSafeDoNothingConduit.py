@@ -36,7 +36,7 @@ class TioSafeDoNothingConduit(TioSafeBaseConduit):
     return {'conflict_list': [], 'object': None}
 
   def updateNode(self, *args, **kw):
-    return {'conflict_list': [], 'object': None}
+    return []
 
   def deleteNode(self, *args, **kw):
-    return {'conflict_list': [], 'object': None}
+    pass

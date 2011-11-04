@@ -50,103 +50,37 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if context_document.getParentValue().getPortalType() == \'SyncML Publication\':\n
-  context_document = context_document.getParentValue()\n
-site = context_document.Base_getRelatedObjectList()[0].getObject().getParentValue()\n
-sale_order_list = []\n
+            <value> <string>sale_order_list = []\n
 if gid:\n
   return []\n
 \n
 if not id:\n
+  while context_document.getParentValue().getPortalType() != "Synchronization Tool":\n
+    context_document = context_document.getParentValue()\n
+\n
+  site = context_document.Base_getRelatedObjectList(portal_type="Integration Module")[0].getObject().getParentValue()\n
   params = {\'delivery.start_date\' : {\'query\' : site.getStartDate(), \'range\' : "min"},\n
-            \'delivery.stop_date\' : {\'query\' : site.getStopDate(), \'range\' : "max"}}\n
-  for sale_order in context.portal_catalog(portal_type=\'Sale Order\',\n
-                                           simulation_state=\'confirmed\',\n
-                                           **params):\n
-    sale_order = sale_order.getObject()\n
-    if sale_order.getSimulationState() == \'confirmed\':\n
-      sale_order_list.append(sale_order)\n
-  return sale_order_list\n
-# work on defined sale order (id is not None)\n
-sale_order = getattr(context.sale_order_module, id)\n
-if sale_order.getSimulationState() != \'confirmed\':\n
-  sale_order_list.append(sale_order)\n
+            \'delivery.stop_date\' : {\'query\' : site.getStopDate(), \'range\' : "max"},\n
+            \'default_specialise_uid\' : site.getSourceTradeUid()}\n
+  sale_order_list = [x.getObject() for x in context.portal_catalog(portal_type=\'Sale Order\',\n
+                                                                   simulation_state=\'confirmed\',\n
+                                                                   **params)]\n
+else:\n
+  # work on defined sale order (id is not None)\n
+  sale_order = getattr(context.sale_order_module, id)\n
+  if sale_order.getSimulationState() != \'confirmed\':\n
+    sale_order_list.append(sale_order)\n
+\n
 return sale_order_list\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string>context_document, id="", gid=""</string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>context_document</string>
-                            <string>id</string>
-                            <string>gid</string>
-                            <string>_getattr_</string>
-                            <string>_getitem_</string>
-                            <string>site</string>
-                            <string>sale_order_list</string>
-                            <string>params</string>
-                            <string>_getiter_</string>
-                            <string>_apply_</string>
-                            <string>context</string>
-                            <string>sale_order</string>
-                            <string>getattr</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <string></string>
-                <string></string>
-              </tuple>
-            </value>
+            <value> <string>context_document, full=False, id="", gid=""</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>SaleOrderModule_getSaleOrderValueList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

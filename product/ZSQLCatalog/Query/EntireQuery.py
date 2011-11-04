@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+import warnings
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.ColumnMap import ColumnMap
 from zLOG import LOG
@@ -190,6 +191,8 @@ class EntireQuery(object):
       # BBB self.from_expression forces use of implicit inner join
       table_alias_dict = column_map.getTableAliasDict()
       if self.from_expression:
+        warnings.warn("Providing a 'from_expression' is deprecated.",
+                      DeprecationWarning)
         # XXX: perhaps move this code to ColumnMap?
         legacy_from_expression = self.from_expression
         from_expression = LegacyTableDefinition(legacy_from_expression,

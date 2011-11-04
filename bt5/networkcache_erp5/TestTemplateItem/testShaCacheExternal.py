@@ -29,7 +29,6 @@
 
 
 import base64
-import os
 import transaction
 import httplib
 from DateTime import DateTime
@@ -77,8 +76,7 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     # HTTP Connection properties
     self.host = self.portal.REQUEST.get('SERVER_NAME')
     self.port = self.portal.REQUEST.get('SERVER_PORT')
-    web_site_path = self.portal.data_set_module.web_site_module.shacache.getPath()
-    self.path = os.path.join(web_site_path, self.key)
+    self.path = self.shacache.getPath()
 
   def test_external_post(self):
     """
@@ -87,15 +85,15 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     now = DateTime()
     connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
-      connection.request('PUT', self.path, self.data, self.header_dict)
+      connection.request('POST', self.path, self.data, self.header_dict)
       result = connection.getresponse()
       transaction.commit()
       self.tic()
       data = result.read()
     finally:
       connection.close()
-    self.assertEquals('', data)
-    self.assertEquals(201, result.status)
+    self.assertEquals(self.key, data)
+    self.assertEquals(httplib.CREATED, result.status)
 
     # Check Document
     document = self.portal.portal_catalog.getResultValue(portal_type='File',
@@ -118,13 +116,14 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
 
     connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
     try:
-      connection.request('GET', self.path, headers=header_dict)
+      connection.request('GET', '/'.join([self.path, self.key]),
+        headers=header_dict)
       result = connection.getresponse()
       data = result.read()
     finally:
       connection.close()
     self.assertEquals(self.data, data)
-    self.assertEquals(200, result.status)
+    self.assertEquals(httplib.OK, result.status)
     self.assertEquals(self.expected_content_type,
                            result.getheader("content-type"))
 
@@ -142,10 +141,16 @@ class TestShaCacheExternal(ShaCacheMixin, ShaSecurityMixin, ERP5TypeTestCase):
     connection = httplib.HTTPConnection('%s:%s' % (self.host, self.port))
     header_dict = {'Content-Type': self.content_type}
     try:
-      connection.request('PUT', self.path, self.data, header_dict)
+      connection.request('POST', self.path, self.data, header_dict)
       result = connection.getresponse()
       transaction.commit()
       self.tic()
     finally:
       connection.close()
-    self.assertEquals(302, result.status)
+    # For now ERP5 returns httplib.FOUND which is wrong reply in case of trying
+    # to POST resource while begin not authorised
+    # One of UNAUTHORIZED or FORBIDDEN shall be returned
+    # Ref: http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.4
+    # self.assertEquals(httplib.UNAUTHORIZED, result.status)
+    # FORBIDDEN seems more suitable for RESTful server...
+    self.assertEquals(httplib.FORBIDDEN, result.status)

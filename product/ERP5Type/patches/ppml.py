@@ -734,9 +734,8 @@ class Tuple(Sequence): pass
 
 ppml.Tuple = Tuple
 
-# not a patch, but imported and used directly by
-# Products.ERP5.Document.BusinessTemplate. It is a copy of
-# from OFS.XMLExportImport.importXML from Zope 2.12
+# Copied from OFS.XMLExportImport.importXML (of Zope 2.12)
+# Imported and used directly by Products.ERP5.Document.BusinessTemplate
 def importXML(jar, file, clue=''):
     from OFS.XMLExportImport import save_record, save_zopedata, start_zopedata
     from tempfile import TemporaryFile
@@ -751,12 +750,13 @@ def importXML(jar, file, clue=''):
     F.start_handlers['ZopeData'] = start_zopedata
     F.binary=1
     F.file=outfile
+    # <patch>
     # Our BTs XML files don't declare encoding but have accented chars in them
     # So we have to declare an encoding but not use unicode, so the unpickler
     # can deal with the utf-8 strings directly
     p=xml.parsers.expat.ParserCreate('utf-8')
     p.returns_unicode = False
-
+    # </patch>
     p.CharacterDataHandler=F.handle_data
     p.StartElementHandler=F.unknown_starttag
     p.EndElementHandler=F.unknown_endtag

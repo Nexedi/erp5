@@ -1,3 +1,6 @@
+2011-09-28 Kazuhiko
+* support domain_tree and report_tree in WebSection_getDocumentValueList.
+
 2011-02-22 Kazuhiko
 * remove portal_type configuration from listbox of WebSection_viewAsWeb,  WebSection_viewContent and WebSection_viewContentList.
 

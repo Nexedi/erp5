@@ -11,6 +11,10 @@
             <value> <string>global</string> </value>
         </item>
         <item>
+            <key> <string>actbox_icon</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
             <key> <string>actbox_name</string> </key>
             <value> <string>Payment Transaction Groups to Deliver (%(count)s)</string> </value>
         </item>
@@ -18,7 +22,7 @@
             <key> <string>actbox_url</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-payment_transaction_group_module/view?reset:int=1&portal_type=Payment Transaction Group&local_roles=Assignee&validation_state=closed
+payment_transaction_group_module/view?reset:int=1&portal_type=Payment Transaction Group&local_roles=Assignor&validation_state=closed
 
 ]]></string> </value>
         </item>

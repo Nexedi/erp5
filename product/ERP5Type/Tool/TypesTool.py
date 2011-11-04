@@ -393,12 +393,7 @@ OldRoleInformation.RoleInformation = SimpleItem
 
 def _eventLessSetObject(container):
   _setObject = container._setObject
-  def wrapper(*args, **kw):
-    try:
-      return _setObject(suppress_events=True, *args, **kw)
-    except TypeError:
-      return _setObject(*args, **kw)
-  return wrapper
+  return lambda *args, **kw: _setObject(suppress_events=True, *args, **kw)
 
 class OldTypesTool(OFSFolder):
 

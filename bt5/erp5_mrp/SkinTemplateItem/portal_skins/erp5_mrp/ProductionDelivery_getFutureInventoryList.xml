@@ -52,6 +52,18 @@
             <key> <string>_body</string> </key>
             <value> <string>"""List Method script to show only inventory for destination"""\n
 \n
+# When the delivery does not have a resource, returns empty list.\n
+# Otherwise it returns all the inventories in your ERP5 site.\n
+production_delivery = context\n
+movement_list = production_delivery.getMovementList()\n
+empty = True\n
+for movement in movement_list:\n
+  if movement.getResource() not in (None, \'\'):\n
+    empty = False\n
+    break           \n
+if empty:\n
+  return []\n
+\n
 portal_type_dict_mapping = {\n
   \'Production Order\' : {\'node_uid\' : context.getDestinationUid()},\n
 }\n

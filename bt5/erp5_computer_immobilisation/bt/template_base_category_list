@@ -1,0 +1,12 @@
+allocation_scope
+cpu_core
+cpu_frequency
+cpu_type
+local_area_network_type
+memory_size
+memory_type
+storage_capacity
+storage_interface
+storage_redundancy
+storage_technology
+wide_area_network_type

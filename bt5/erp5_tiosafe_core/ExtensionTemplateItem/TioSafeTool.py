@@ -42,13 +42,14 @@ def callAddNodeOnConduit(self, conduit_id, uid):
   conduit.addNode(xml=etree.fromstring(xml), object=self)
 
 
-def diffXML(self, xml_plugin, xml_erp5):
+def diffXML(xml_plugin="", xml_erp5="", html=True):
   diff_list = list(unified_diff(xml_plugin.split('\n'), xml_erp5.split('\n'), tofile="erp5 xml", fromfile="plugin xml", lineterm=''))
   if len(diff_list) != 0:
     diff_msg = '\n\nTioSafe XML Diff :\n'
     diff_msg += '\n'.join(diff_list)
-    #return diff_msg
-    return DiffFile(diff_msg).toHTML()
+    if html:
+      return DiffFile(diff_msg).toHTML()
+    return diff_msg
   else:
     return 'No diff'
 

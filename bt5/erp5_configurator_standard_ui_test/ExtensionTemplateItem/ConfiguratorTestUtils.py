@@ -31,10 +31,10 @@
 import os
 from Products.ERP5Configurator import tests
 
-def Zuite_getTestDocumentsHome(self):
+def Zuite_getTestDocumentPath(self, filename):
   """
-    Get test documents folder as string.
+    Get the full path of the document to be used into the test.
   """
   return os.path.join(
                os.path.abspath(
-                  os.path.dirname(tests.__file__)),'test_data') 
+                  os.path.dirname(tests.__file__)),'test_data/%s' % filename) 

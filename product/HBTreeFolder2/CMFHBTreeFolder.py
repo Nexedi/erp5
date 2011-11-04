@@ -15,13 +15,7 @@
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from App.class_init import default__class_init__ as InitializeClass
 from Products.HBTreeFolder2.HBTreeFolder2 import HBTreeFolder2Base
-
-try:
-    from Products.CMFCore.PortalFolder import PortalFolderBase as PortalFolder
-except ImportError:
-    from Products.CMFCore.PortalFolder import PortalFolder
-
-from Products.CMFCore.utils import getToolByName
+from Products.CMFCore.PortalFolder import PortalFolderBase
 
 _actions = ({'action': 'string:${object_url}',
            'id': 'view',
@@ -76,18 +70,18 @@ def manage_addCMFHBTreeFolder(dispatcher, id, title='', REQUEST=None):
         REQUEST['RESPONSE'].redirect(ob.absolute_url() + '/manage_main' )
 
 
-class CMFHBTreeFolder(HBTreeFolder2Base, PortalFolder):
+class CMFHBTreeFolder(HBTreeFolder2Base, PortalFolderBase):
     """HBTree folder for CMF sites.
     """
     meta_type = 'CMF HBTree Folder'
     security = ClassSecurityInfo()
 
     def __init__(self, id, title=''):
-        PortalFolder.__init__(self, id, title)
+        PortalFolderBase.__init__(self, id, title)
         HBTreeFolder2Base.__init__(self, id)
 
     def _checkId(self, id, allow_dup=0):
-        PortalFolder._checkId(self, id, allow_dup)
+        PortalFolderBase._checkId(self, id, allow_dup)
         HBTreeFolder2Base._checkId(self, id, allow_dup)
 
 

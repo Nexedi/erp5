@@ -19,6 +19,7 @@ import urllib2, os, dircache, urllib
 from StringIO import StringIO
 from urllib2 import FileHandler, url2pathname, addinfourl, URLError
 import mimetypes, mimetools
+from email.utils import formatdate
 
 class DirectoryFileHandler(FileHandler):
     """
@@ -37,13 +38,12 @@ class DirectoryFileHandler(FileHandler):
 
     # not entirely sure what the rules are here
     def open_local_file(self, req):
-        import email.Utils
         host = req.get_host()
         file = req.get_selector()
         localfile = url2pathname(file)
         stats = os.stat(localfile)
         size = stats.st_size
-        modified = email.Utils.formatdate(stats.st_mtime, usegmt=True)
+        modified = formatdate(stats.st_mtime, usegmt=True)
         mtype = mimetypes.guess_type(file)[0]
         headers = mimetools.Message(StringIO(
             'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %

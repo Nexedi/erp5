@@ -70,12 +70,24 @@
             <value> <int>1</int> </value>
         </item>
         <item>
+            <key> <string>acquisition_object_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>acquisition_portal_type</string> </key>
             <value> <string>python: (\'Organisation\',)</string> </value>
         </item>
         <item>
             <key> <string>acquisition_sync_value</string> </key>
             <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>alt_accessor_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>categories</string> </key>
@@ -89,13 +101,21 @@
             <key> <string>content_acquired_property_id</string> </key>
             <value>
               <tuple>
+                <string>coordinate_text</string>
                 <string>text</string>
+                <string>url_string</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>content_portal_type</string> </key>
             <value> <string>python: (\'Email\',)</string> </value>
+        </item>
+        <item>
+            <key> <string>content_translation_acquired_property_id</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
             <key> <string>description</string> </key>

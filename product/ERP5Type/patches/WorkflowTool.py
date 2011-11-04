@@ -807,13 +807,9 @@ class WorkflowMethod( Method ):
             res = wf.wrapWorkflowMethod(instance, self._id, self._m,
                                         (instance,) + args, kw)
 
-try:
-  from Products.CMFCore.WorkflowCore import WorkflowMethod
-except ImportError:
-  from Products.CMFCore import WorkflowCore
-  # We're on CMF 2, where WorkflowMethod has been removed from CMFCore
-  #WorkflowCore.WorkflowMethod = WorkflowMethod
-  WorkflowCore.WorkflowAction = WorkflowMethod
+from Products.CMFCore import WorkflowCore
+# BBB: WorkflowMethod has been removed from CMFCore 2
+WorkflowCore.WorkflowAction = WorkflowMethod
 
 def _jumpToStateFor(self, ob, state_id, wf_id=None, *args, **kw):
   """Inspired from doActionFor.

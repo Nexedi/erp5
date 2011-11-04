@@ -33,8 +33,8 @@ from Products.ERP5Type.Utils import deprecated
 from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
 from Products.CMFCore.utils import getToolByName
 from DateTime.DateTime import DateTime
-from email.MIMEBase import MIMEBase
-from email import Encoders
+from email.mime.base import MIMEBase
+from email import encoders
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
@@ -418,7 +418,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if keyword == 'binary_data':
         #LOG('ERP5Conduit.getFormatedArgs', DEBUG, 'binary_data keyword: %s' % str(keyword))
         msg = MIMEBase('application','octet-stream')
-        Encoders.encode_base64(msg)
+        encoders.encode_base64(msg)
         msg.set_payload(data)
         data = msg.get_payload(decode=True)
       new_args[keyword] = data
@@ -1018,19 +1018,19 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if object_id is not None:
       if sub_object is None:
         sub_object = object._getOb(object_id, None)
-      if sub_object is None: # If so, it doesn't exist
-        portal_type = ''
-        if xml.xpath('local-name()') == XML_OBJECT_TAG:
-          portal_type = self.getObjectType(xml)
-        sub_object, reset_local_roles, reset_workflow = self.constructContent(
-                                                        object,
-                                                        object_id,
-                                                        portal_type)
-      self.newObject(object=sub_object,
-                     xml=xml,
-                     simulate=simulate,
-                     reset_local_roles=reset_local_roles,
-                     reset_workflow=reset_workflow)
+    if sub_object is None: # If so, it doesn't exist
+      portal_type = ''
+      if xml.xpath('local-name()') == XML_OBJECT_TAG:
+        portal_type = self.getObjectType(xml)
+      sub_object, reset_local_roles, reset_workflow = self.constructContent(
+                                                      object,
+                                                      object_id,
+                                                      portal_type)
+    self.newObject(object=sub_object,
+                    xml=xml,
+                    simulate=simulate,
+                    reset_local_roles=reset_local_roles,
+                    reset_workflow=reset_workflow)
     return sub_object
 
   def _updateContent(self, object=None, **args):

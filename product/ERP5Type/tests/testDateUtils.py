@@ -54,7 +54,9 @@ ZopeTestCase.installProduct('ERP5Type')
 
 
 from DateTime import DateTime
-from Products.ERP5Type.DateUtils import addToDate, getIntervalListBetweenDates, atTheEndOfPeriod
+
+from Products.ERP5Type.DateUtils import addToDate, getIntervalListBetweenDates, \
+    atTheEndOfPeriod, getClosestDate
 
 class TestDateUtils(unittest.TestCase):
   """
@@ -185,6 +187,18 @@ class TestDateUtils(unittest.TestCase):
       atTheEndOfPeriod(DateTime('2008/10/26 23:59:59 US/Eastern'), 'day').pCommonZ())
     self.assertEqual('Nov. 1, 2008 12:00 am US/Eastern',
       atTheEndOfPeriod(DateTime('2008/10/01 US/Eastern'), 'month').pCommonZ())
+
+  def test_getClosestDate(self):
+    target_date = DateTime('2008/08/15 00:00:00 GMT+2')
+    self.assertEqual('Aug. 1, 2008 12:00 am GMT+2',
+      getClosestDate(target_date=target_date, precision='month', before=True).pCommonZ())
+    self.assertEqual('Sep. 1, 2008 12:00 am GMT+2',
+      getClosestDate(target_date=target_date, precision='month', before=False).pCommonZ())
+    date = DateTime('2008/01/10 00:00:00 GMT-2')
+    self.assertEqual('Aug. 10, 2008 12:00 am GMT-2',
+      getClosestDate(date=date, target_date=target_date, precision='month', before=True).pCommonZ())
+    self.assertEqual('Sep. 10, 2008 12:00 am GMT-2',
+      getClosestDate(date=date, target_date=target_date, precision='month', before=False).pCommonZ())
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -1,0 +1,10 @@
+<workflow_chain>
+ <chain>
+  <type>Inotify</type>
+  <workflow>edit_workflow, inotify_interaction_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Inotify Tool</type>
+  <workflow>inotify_interaction_workflow</workflow>
+ </chain>
+</workflow_chain>

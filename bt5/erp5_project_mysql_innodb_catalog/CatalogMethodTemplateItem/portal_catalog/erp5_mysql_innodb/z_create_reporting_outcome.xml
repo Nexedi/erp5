@@ -56,7 +56,7 @@
   uid BIGINT UNSIGNED NOT NULL,\n
   outcome_description VARCHAR(255),\n
   PRIMARY KEY `uid` (`uid`)\n
-) TYPE=InnoDB; \n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

@@ -53,16 +53,10 @@ def getActionTitleListFromAllActionProvider(portal):
 
 
 from StringIO import StringIO
-try:
-  from TAL.HTMLTALParser import HTMLTALParser
-  from TAL.TALParser import TALParser
-  from TAL.TALGenerator import TALGenerator
-  from TAL.DummyEngine import name_match
-except ImportError:
-  from zope.tal.htmltalparser import HTMLTALParser
-  from zope.tal.talparser import TALParser
-  from zope.tal.talgenerator import TALGenerator
-  from zope.tal.dummyengine import name_match
+from zope.tal.htmltalparser import HTMLTALParser
+from zope.tal.talparser import TALParser
+from zope.tal.talgenerator import TALGenerator
+from zope.tal.dummyengine import name_match
 def findStaticTranslationText(page_template, func_name_list):
   def iterate(node, target_name, function):
     if type(node) is list:
@@ -131,12 +125,8 @@ def findStaticTranslationText(page_template, func_name_list):
 #
 # Utility class for findStaticTranslationText
 #
-try:
-  from TAL.TALInterpreter import TALInterpreter
-  from TAL.DummyEngine import DummyEngine
-except ImportError:
-  from zope.tal.talinterpreter import TALInterpreter
-  from zope.tal.dummyengine import DummyEngine
+from zope.tal.talinterpreter import TALInterpreter
+from zope.tal.dummyengine import DummyEngine
 class MyDummyEngine(DummyEngine):
 
   def evaluate(self, expression):

@@ -29,7 +29,7 @@
 import transaction
 from Products.ERP5TioSafe.tests.testPrestashopMixin import testPrestashopMixin
 
-class testProductERP5Synchronization(testPrestashopMixin):
+class TestProductERP5Synchronization(testPrestashopMixin):
   """ This class allows to check different cases of Product's sync. """
   def afterSetUp(self):
     """ This method is called after the SetUp method. """
@@ -40,6 +40,9 @@ class testProductERP5Synchronization(testPrestashopMixin):
     self.connection = self.portal.erp5_sql_connection
     self.prestashop = self.portal.portal_integrations.prestashop
     self.root_xml = '<catalog>\n%s\n</catalog>'
+    self.not_removable_id_list = [self.prestashop.getSourceAdministrationValue().getId(),
+                                  self.prestashop.getResourceValue().getId(),
+                                  self.prestashop.getDestinationValue().getId()]
 
   def test_PrestashopSimplestXMLSync(self):
     """ This test checks the product sync with the simplest XML. """
@@ -53,9 +56,9 @@ class testProductERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of products and check product's data after sync
-    self.assertEqual(len(self.product_module.contentValues()), 0)
-    self.loadSync([self.prestashop.product_module, ])
     self.assertEqual(len(self.product_module.contentValues()), 1)
+    self.loadSync([self.prestashop.product_module, ])
+    self.assertEqual(len(self.product_module.contentValues()), 2)
     product = self.product_module.contentValues()[0]
     self.assertEqual(product.getTitle(), 'Tee-Shirt')
     self.assertEqual(product.getReference(), 'my_ref')
@@ -93,9 +96,9 @@ class testProductERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of products and check product's data after sync
-    self.assertEqual(len(self.product_module.contentValues()), 0)
-    self.loadSync([self.prestashop.product_module, ])
     self.assertEqual(len(self.product_module.contentValues()), 1)
+    self.loadSync([self.prestashop.product_module, ])
+    self.assertEqual(len(self.product_module.contentValues()), 2)
     product = self.product_module.contentValues()[0]
     self.assertEqual(product.getTitle(), 'Ballon de Foot')
     self.assertEqual(product.getReference(), '0123456789')
@@ -152,9 +155,9 @@ class testProductERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of products and check product's data after sync
-    self.assertEqual(len(self.product_module.contentValues()), 0)
-    self.loadSync([self.prestashop.product_module, ])
     self.assertEqual(len(self.product_module.contentValues()), 1)
+    self.loadSync([self.prestashop.product_module, ])
+    self.assertEqual(len(self.product_module.contentValues()), 2)
     product = self.product_module.contentValues()[0]
     self.assertEqual(product.getTitle(), 'Ballon de Foot')
     self.assertEqual(product.getReference(), '0123456789')
@@ -221,9 +224,9 @@ class testProductERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of products and check product's data after sync
-    self.assertEqual(len(self.product_module.contentValues()), 0)
-    self.loadSync([self.prestashop.product_module, ])
     self.assertEqual(len(self.product_module.contentValues()), 1)
+    self.loadSync([self.prestashop.product_module, ])
+    self.assertEqual(len(self.product_module.contentValues()), 2)
     product = self.product_module.contentValues()[0]
     self.assertEqual(product.getTitle(), 'Ballon de Foot')
     self.assertEqual(product.getReference(), '0123456789')
@@ -303,9 +306,9 @@ class testProductERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of products and check product's data after sync
-    self.assertEqual(len(self.product_module.contentValues()), 0)
+    self.assertEqual(len(self.product_module.contentValues()), 1)
     self.loadSync([self.prestashop.product_module, ])
-    self.assertEqual(len(self.product_module.contentValues()), 4)
+    self.assertEqual(len(self.product_module.contentValues()), 5)
     # Check the product 'Stylo'
     product_1 = self.product_module.searchFolder(
         portal_type='Product',
@@ -444,9 +447,9 @@ class testProductERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of products
-    self.assertEqual(len(self.product_module.contentValues()), 0)
+    self.assertEqual(len(self.product_module.contentValues()), 1)
     self.loadSync([self.prestashop.product_module, ])
-    self.assertEqual(len(self.product_module.contentValues()), 3)
+    self.assertEqual(len(self.product_module.contentValues()), 4)
     # Move the products as validated and invalidated state
     tee_shirt = product_module.searchFolder(
         portal_type='Product',
@@ -470,7 +473,7 @@ class testProductERP5Synchronization(testPrestashopMixin):
     self.assertEqual(short.getValidationState(), 'validated')
     self.assertEqual(pull_over.getValidationState(), 'invalidated')
     self.loadSync([self.prestashop.product_module, ])
-    self.assertEqual(len(self.product_module.contentValues()), 3)
+    self.assertEqual(len(self.product_module.contentValues()), 4)
     self.assertEqual(tee_shirt.getValidationState(), 'invalidated')
     self.assertEqual(short.getValidationState(), 'invalidated')
     self.assertEqual(pull_over.getValidationState(), 'invalidated')
@@ -488,9 +491,9 @@ class testProductERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of persons and check person's data after sync
-    self.assertEqual(len(self.product_module.contentValues()), 0)
-    self.loadSync([self.prestashop.product_module, ])
     self.assertEqual(len(self.product_module.contentValues()), 1)
+    self.loadSync([self.prestashop.product_module, ])
+    self.assertEqual(len(self.product_module.contentValues()), 2)
     product = self.product_module.contentValues()[0]
     self.assertEqual(product.getTitle(), 'Ballon de Basket')
     self.assertEqual(product.getReference(), 'b246b')
@@ -513,7 +516,7 @@ class testProductERP5Synchronization(testPrestashopMixin):
         '%s/dump_product_sync_07.sql' % self.ps_dump_path,
     )
     self.loadSync([self.prestashop.product_module, ])
-    self.assertEqual(len(self.product_module.contentValues()), 1)
+    self.assertEqual(len(self.product_module.contentValues()), 2)
     self.assertEqual(product.getTitle(), 'Ballon de Basket')
     self.assertEqual(product.getReference(), 'b246b')
     self.assertEqual(product.getEan13Code(), '0987654321098')
@@ -577,9 +580,9 @@ class testProductERP5Synchronization(testPrestashopMixin):
     self.tic()
 
     # Run the sync of persons and check person's data after sync
-    self.assertEqual(len(self.product_module.contentValues()), 0)
-    self.loadSync([self.prestashop.product_module, ])
     self.assertEqual(len(self.product_module.contentValues()), 1)
+    self.loadSync([self.prestashop.product_module, ])
+    self.assertEqual(len(self.product_module.contentValues()), 2)
     product = self.product_module.contentValues()[0]
     self.assertEqual(product.getTitle(), 'Ballon de Plage')
     self.assertEqual(product.getReference(), 'a5962z')
@@ -626,7 +629,7 @@ class testProductERP5Synchronization(testPrestashopMixin):
         '%s/dump_product_sync_09.sql' % self.ps_dump_path,
     )
     self.loadSync([self.prestashop.product_module, ])
-    self.assertEqual(len(self.product_module.contentValues()), 1)
+    self.assertEqual(len(self.product_module.contentValues()), 2)
     self.assertEqual(product.getTitle(), 'Ballon de Plage')
     self.assertEqual(product.getReference(), 'a5962z')
     self.assertEqual(product.getEan13Code(), '1357913579130')
@@ -669,7 +672,7 @@ class testProductERP5Synchronization(testPrestashopMixin):
         '%s/dump_product_sync_10.sql' % self.ps_dump_path,
     )
     self.loadSync([self.prestashop.product_module, ])
-    self.assertEqual(len(self.product_module.contentValues()), 1)
+    self.assertEqual(len(self.product_module.contentValues()), 2)
     base_category_list = product.getVariationBaseCategoryList()
     base_category_list.sort()
     self.assertEqual(len(base_category_list), 2)
@@ -694,7 +697,7 @@ class testProductERP5Synchronization(testPrestashopMixin):
         '%s/dump_product_sync_11.sql' % self.ps_dump_path,
     )
     self.loadSync([self.prestashop.product_module, ])
-    self.assertEqual(len(self.product_module.contentValues()), 1)
+    self.assertEqual(len(self.product_module.contentValues()), 2)
     base_category_list = product.getVariationBaseCategoryList()
     base_category_list.sort()
     self.assertEqual(len(base_category_list), 2)
@@ -735,3 +738,8 @@ class testProductERP5Synchronization(testPrestashopMixin):
         xsd_path='../XSD/resources.xsd',
     )
 
+import unittest
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestProductERP5Synchronization))
+  return suite

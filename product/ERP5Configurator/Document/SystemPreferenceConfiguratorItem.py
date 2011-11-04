@@ -102,10 +102,10 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     if preference is None:
       preference = portal.portal_preferences.newContent(
                                portal_type = 'System Preference',
-                               id = self.object_id,
-                               title = self.title,
-                               description = self.description,
-                               priority = 1)
+                               id=self.object_id,
+                               title=self.title,
+                               description=self.description,
+                               priority=1)
 
     # XXX this have to be translated in user language.
     preference_dict = {}

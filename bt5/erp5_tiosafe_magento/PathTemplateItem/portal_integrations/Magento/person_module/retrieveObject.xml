@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Node</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/Magento/person_mapping</string>
+                <string>source/portal_integrations/Magento/xmlrpc_connector</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>customer.info</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Person</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/Magento</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'customerId\': \'3\'}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>customer.info</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string>[{\'store_id\': \'1\', \'website_id\': \'1\', \'updated_at\': \'2011-06-08 11:45:58\', \'prefix\': None, \'relation\': \' ZenCorp mamemor@msn.com\', \'created_in\': \'Default Store View\', \'password_hash\': \'259987981df8e5077e93a5af00d80574:pS\', \'taxvat\': None, \'increment_id\': \'\', \'default_billing\': \'4\', \'customer_id\': \'3\', \'default_shipping\': \'4\', \'email\': \'mamemor@msn.com\', \'fax\': \'0123473188\', \'confirmation\': None, \'firstname\': \'Momar\', \'middlename\': None, \'lastname\': \'Ndiaye\', \'telephone\': \'0623473199\', \'dob\': None, \'gender\': None, \'created_at\': \'2011-06-08 11:28:30\', \'suffix\': None, \'group_id\': \'1\'}]</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Person">\n
+  <firstname>Momar</firstname>\n
+  <lastname>Ndiaye</lastname>\n
+  <email>mamemor@msn.com</email>\n
+  <phone>0623473199</phone>\n
+  <fax>0123473188</fax>\n
+  <address>\n
+    <street>Zen Star Street</street>\n
+    <zip>21514</zip>\n
+    <city>Dakota</city>\n
+    <country>united states</country>\n
+  </address>\n
+  <category>role/client</category>\n
+  <relation> ZenCorp mamemor@msn.com</relation>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Retrieve Object</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

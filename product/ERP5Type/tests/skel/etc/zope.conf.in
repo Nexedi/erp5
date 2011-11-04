@@ -5,14 +5,24 @@
 # This is the Zope configuration file.  The Zope configuration file
 # shows what the default configuration directives are, and show
 # examples for each directive.  To declare a directive, make sure that
-# you add it to a line that does not begin with '#'.  Note that comments 
+# you add it to a line that does not begin with '#'.  Note that comments
 # are only allowed at the beginning of a line: you may not add comments
 # after directive text on the same line.
+#
+# Note for Developers
+# ===================
+#
+# This file is *not* auto-generated. If you create a new directive you
+# very likely want to include an example of how to use the new
+# directive in this file.
+#
+# You shouldn't modify 'zope.conf.in' to change
+# configuration. Instead, you should make a copy into 'zope.conf' and
+# modify that to avoid checking in changes to this file by mistake.
 
 # ZConfig "defines" used for later textual substitution
 
 %define INSTANCE <<INSTANCE_HOME>>
-%define ZOPE <<ZOPE_HOME>>
 
 # Directive: instancehome
 #
@@ -113,11 +123,10 @@ instancehome $INSTANCE
 #       will detect these changes in real time.  When this switch is
 #       off, you must restart the server to see the changes.
 #
-#     Setting this to 'off' when Zope is in a
-#     production environment is encouraged, as it speeds execution (sometimes
-#     dramatically).
+#     Setting this to 'off' when Zope is in a production environment is
+#     encouraged, as it speeds execution (sometimes dramatically).
 #
-# Default: on
+# Default: off
 #
 # Example:
 #
@@ -147,13 +156,13 @@ instancehome $INSTANCE
 #     at startup. Turning this off can speed Zope/ZEO startup time,
 #     but it can also cause your Control_Panel Product list to become
 #     desynchronized with the contents of your Products
-#     directories.   NOTE: Zope *must* be started at least once with
+#     directories.  NOTE: Zope *must* be started at least once with
 #     this directive set to "on" or you will receive an error.  If using ZEO,
 #     at least one ZEO client must be run with this directive set to "on"
-#     once, the others can have it turned off.  
-#     NOTE: If your main storage is mounted read-only, 
+#     once, the others can have it turned off.
+#     NOTE: If your main storage is mounted read-only,
 #     you must set this directive to "off".
-# 
+#
 # Default: on
 #
 # Example:
@@ -331,7 +340,7 @@ instancehome $INSTANCE
 #
 #    rest-header-level 2
 
-# Directive: rest-language-code 
+# Directive: rest-language-code
 #
 # Description:
 #    Language code used for some internal translations inside of the docutils
@@ -433,6 +442,70 @@ instancehome $INSTANCE
 #
 #     http-header-max-length 16384
 
+# Directive: enable-ms-author-via
+#
+# Description:
+#     Set this directive to 'true' to enable the "MS-Author-Via" header
+#     in response to an OPTIONS WebDAV request. Early versions of
+#     Microsoft Web Folders and Microsoft Office require this header to
+#     be present to be able to connect to Zope via WebDAV.
+#
+#     This is disabled by default since it makes a lot of standards-compliant
+#     things unhappy AND it tricks Microsoft Office into trying to edit Office
+#     files stored in Zope via WebDAV even when the user isn't allowed to edit
+#     them and is only trying to download them.
+#
+#     Check this collector entry for more information:
+#     http://www.zope.org/Collectors/Zope/1441
+#
+#     Recent versions of Microsoft Web Folders, updated after January
+#     2005, do not require this header anymore, and instead require a
+#     "Public" header to be present in reply to the OPTIONS WebDAV
+#     request.
+#     (http://www.redmountainsw.com/wordpress/archives/webfolders-zope)
+# 
+#     To get a recent Microsoft Web Folders implementation, refer to
+#     Microsoft KB Article 907306.
+#     (Software Update for Web Folders: May 18, 2007).
+#
+# Default: off
+#
+# Example:
+#
+#    enable-ms-author-via on
+
+# Directive: enable-ms-public-header
+#
+# Description:
+#     Set this directive to 'on' to enable sending the "Public" header
+#     in response to an WebDAV OPTIONS request.
+#
+#     Though recent WebDAV drafts mention this header, the original
+#     WebDAV RFC did not mention it as part of the standard. Very few
+#     web servers out there include this header in their replies, most
+#     notably IIS and Netscape Enterprise 3.6.
+#
+#     Since many best practices documents out in the web mention
+#     turning off this header with the subject of "Mask Your Web Server
+#     For Enhanced Security", this setting is off by
+#     default. Presumably malicious people might take the presence of
+#     this header as indication of an IIS Web Server and try to attack
+#     your site, so be careful when turning it on.
+#
+#     Recent versions of Microsoft Web Folders, updated after January
+#     2005, *do* require this header to be present in reply to the
+#     OPTIONS WebDAV request.
+#     (http://www.redmountainsw.com/wordpress/archives/webfolders-zope)
+#
+#     To get a recent Microsoft Web Folders implementation, refer to
+#     Microsoft KB Article 907306.
+#     (Software Update for Web Folders: May 18, 2007).
+#
+# Default: off
+#
+# Example:
+#
+#    enable-ms-public-header on
 
 # Directive: automatically-quote-dtml-request-data
 #
@@ -490,12 +563,11 @@ instancehome $INSTANCE
 # Directive: security-policy-implementation
 #
 # Description:
-#     The default Zope security machinery is implemented in C.
-#     Change this to "python" to use the Python version of the
-#     Zope security machinery.  This impacts performance but
-#     is useful for debugging purposes and required by Products such as
-#     VerboseSecurity, which need to "monkey-patch" the security
-#     machinery.
+#     The default Zope security machinery is implemented in C.  Change
+#     this to "python" to use the Python version of the Zope security
+#     machinery.  This setting may impact performance but is useful
+#     for debugging purposes.  See also the "verbose-security" option
+#     below.
 #
 # Default: C
 #
@@ -531,6 +603,24 @@ instancehome $INSTANCE
 # Example:
 #
 #    skip-ownership-checking on
+
+
+# Directive: verbose-security
+#
+# Description:
+#     By default, Zope reports authorization failures in a terse manner in
+#     order to avoid revealing unnecessary information.  This option
+#     modifies the Zope security policy to report more information about
+#     the reason for authorization failures.  It's designed for debugging.
+#     If you enable this option, you must also set the
+#     'security-policy-implementation' to 'python'.
+#
+# Default: off
+#
+# Example:
+#
+#    security-policy-implementation python
+#    verbose-security on
 
 
 # Directive: maximum-number-of-session-objects
@@ -646,19 +736,6 @@ instancehome $INSTANCE
 #    database-quota-size 1000000
 
 
-# Directive: read-only-database
-#
-# Description:
-#     This causes the main Zope FileStorage-backed ZODB to be opened in
-#     read-only mode.
-#
-# Default: off
-#
-# Example:
-#
-#    read-only-database on
-
-
 # Directive: zeo-client-name
 #
 # Description:
@@ -709,7 +786,7 @@ instancehome $INSTANCE
 #     will not be written anywhere.
 
 <eventlog>
-  level INFO
+  level info
   <logfile>
     path $INSTANCE/log/event.log
     level info
@@ -731,6 +808,24 @@ instancehome $INSTANCE
 #     format %(message)s
 #   </logfile>
 # </logger>
+
+
+# Directive: conflict-error-log-level
+#
+# Description:
+#     Specifies at which level conflict errors are logged. Conflict
+#     errors, when occuring in small numbers, are a normal part of the
+#     Zope optimistic transaction conflict resolution algorithms. They
+#     are retried automatically a few times, and are therefore usually
+#     not visible by the user. You can specify 'notset' if you don't
+#     want them logged, or use any other logger level (see above).
+#
+# Default: info
+#
+# Example:
+#
+#    conflict-error-log-level blather
+
 
 # Directive: warnfilter
 #
@@ -808,6 +903,7 @@ instancehome $INSTANCE
 #
 #     port-base 1000
 
+
 # Directive: large-file-threshold
 #
 # Description:
@@ -820,7 +916,7 @@ instancehome $INSTANCE
 #
 #    large-file-threshold 1Mb
 
-# Directive: default_zpublisher_encoding
+# Directive: default-zpublisher-encoding
 #
 # Description:
 #     This controls what character set is used to encode unicode
@@ -830,43 +926,50 @@ instancehome $INSTANCE
 #
 # Example:
 #
-#    default_zpublisher_encoding utf-8
+#    default-zpublisher-encoding utf-8
 
 # Directives: servers
 #
 # Description:
 #     A set of sections which allow the specification of Zope's various
-#     ZServer servers.  7 different server types may be defined:
+#     ZServer servers.  8 different server types may be defined:
 #     http-server, ftp-server, webdav-source-server, persistent-cgi,
-#     fast-cgi, monitor-server, and icp-server.  If no servers are
-#     defined, the default servers are used.
+#     fast-cgi, monitor-server, icp-server, and clock-server.  If no servers
+#     are defined, the default servers are used.
 #
 #     Ports may be specified using the 'address' directive either in simple
 #     form (80) or in complex form including hostname 127.0.0.1:80.  If the
 #     hostname is "left off", the default-ip-address is used as the hostname.
 #
+#     Port numbers are offset by the setting of port-base.
+#
 #     To run the monitor-server an emergency user must be defined 
 #     (through an 'access' file).
 #
-#     Port numbers are offset by the setting of port-base.
-#
 # Default:
 #
-#     An HTTP server starts on port 8080, an FTP server starts on port
-#     8021.
+#     An HTTP server starts on port 8080.
 
 <http-server>
   # valid keys are "address" and "force-connection-close"
   address 8080
+
   # force-connection-close on
+  #
+  # You can also use the WSGI interface between ZServer and ZPublisher:
+  # use-wsgi on
+  #
+  # To defer the opening of the HTTP socket until the end of the 
+  # startup phase: 
+  # fast-listen off
 </http-server>
 
-<ftp-server>
-  # valid key is "address"
-  address 8021
-</ftp-server>
-
 # Examples:
+#
+#  <ftp-server>
+#    # valid key is "address"
+#    address 8021
+#  </ftp-server>
 #
 #  <webdav-source-server>
 #    # valid keys are "address" and "force-connection-close"
@@ -887,14 +990,21 @@ instancehome $INSTANCE
 #
 #  <monitor-server>
 #    # valid keys are "address"
-#    address 99
+#    address 8099
 #  </monitor-server>
 #
 #  <icp-server>
 #    # valid key is "address"
 #    address 888
 #  </icp-server>
-
+#
+#  <clock-server>
+#    # starts a clock which calls /foo/bar every 30 seconds
+#    method /foo/bar
+#    period 30
+#    user admin
+#    password 123
+#  </clock-server>
 
 # Database (zodb_db) section
 #
@@ -909,6 +1019,8 @@ instancehome $INSTANCE
 <zodb_db main>
     # Main FileStorage database
     <filestorage>
+      # See .../ZODB/component.xml for directives (sectiontype
+      # "filestorage").
       path $INSTANCE/var/Data.fs
     </filestorage>
     mount-point /
@@ -928,10 +1040,19 @@ instancehome $INSTANCE
 # ZEO client storage:
 #
 # <zodb_db main>
+#   # The full mount-point syntax is:
+#   #
+#   # mount-point <localpath>[:<remotepath>]
+#   #
+#   # localpath - the path where the storage is mounted in this instance
+#   # remotepath - is the path to the object in the storage where it is mounted
+#   #              from. This defaults to whatever is supplied for localpath.
 #   mount-point /
 #   # ZODB cache, in number of objects
 #   cache-size 5000
 #   <zeoclient>
+#     # See .../ZODB/component.xml for directives (sectiontype
+#     # "zeoclient").
 #     server localhost:8100
 #     storage 1
 #     name zeostorage
@@ -943,8 +1064,57 @@ instancehome $INSTANCE
 #   </zeoclient>
 # </zodb_db>
 
-# The Timer Server replace the ERP5 zope_tic_loop script
-%import timerserver
-<timer-server>
-  interval 5
-</timer-server>
+# Product configuration (product-config) section(s)
+#
+# Description:
+#    Add-on products may need to allow the user to specify policy /
+#    configuration.  Such policies may be expressed as a set of
+#    name-value pairs, grouped into a named section (there may
+#    be many such sections, typically one per product).
+#    These sections will be captured in an attribute, 'product_config'
+#    of the top-level config object, under the key corresponding to
+#    the section name.  E.g., the sample section below would be
+#    parsed into a dict, {'bar': 'baz'}, available as
+#    config.product_config['foo']
+#
+#    Products may also register their own section types, extending
+#    
+#
+# Example: 
+#
+# 1. Simple "bag of strings" section:
+#
+#    <product-config foo>
+#       bar baz
+#    </product-config>
+#
+# 2. Custom section type
+#
+#    Products/Foo/component.xml:
+#
+#    <component>
+#     <description>
+#       Some product-specific hackery.
+#     </description>
+#     <sectiontype name="myproduct" implements="zope.product.base">
+#      <description>
+#       Product-specific configuration.
+#      </description>
+#      <key name="foo" />
+#     </sectiontype>
+#    </component>
+#
+#    In zope.conf:
+#
+#    %import Products.Foo
+#
+#    <myproduct bar>
+#      foo qux
+#    </myproduct>
+
+# The clock server replaces the old timeserver package, but still calls the
+# method installed by the TimeService product.
+<clock-server>
+  method /Control_Panel/timer_service/process_timer?interval:int=5
+  period 5
+</clock-server>

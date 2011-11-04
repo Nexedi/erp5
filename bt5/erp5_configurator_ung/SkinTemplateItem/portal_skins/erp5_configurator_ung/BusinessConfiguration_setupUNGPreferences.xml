@@ -129,6 +129,14 @@ if default_available_language and default_available_language != "en":\n
             <value> <string>**kw</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>BusinessConfiguration_setupUNGPreferences</string> </value>
         </item>

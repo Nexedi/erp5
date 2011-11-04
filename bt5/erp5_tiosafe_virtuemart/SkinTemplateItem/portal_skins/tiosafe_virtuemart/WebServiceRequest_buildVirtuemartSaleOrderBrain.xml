@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>so_dict = parameter_dict.copy()\n
+\n
+so_dict[\'reference\'] = parameter_dict[\'reference\']\n
+\n
+billing_country = ""\n
+shipping_country = ""\n
+\n
+if (parameter_dict[\'billing_country\']!=""):\n
+  try:\n
+    billing_country = context.getIntegrationSite().getCategoryFromMapping(\n
+      category = \'Country/%s\' % parameter_dict[\'billing_country\'], create_mapping=True,\n
+      create_mapping_line=True,\n
+      ).split(\'/\', 1)[-1]\n
+  except ValueError, msg:\n
+    context.log("WebServiceRequest_buildVirtuemartSaleOrderBrain Getting category for %s raise with msg = %s" %(value, msg))\n
+\n
+\n
+if (parameter_dict[\'shipping_country\']!=""):\n
+  try:\n
+    shipping_country = context.getIntegrationSite().getCategoryFromMapping(\n
+      category = \'Country/%s\' % parameter_dict[\'shipping_country\'], create_mapping=True,\n
+      create_mapping_line=True,\n
+      ).split(\'/\', 1)[-1]\n
+  except ValueError, msg:\n
+    context.log("WebServiceRequest_buildVirtuemartSaleOrderBrain Getting category for %s raise with msg = %s" %(value, msg))\n
+\n
+\n
+billing_user = "%s %s" %(parameter_dict[\'billing_firstname\'], parameter_dict[\'billing_lastname\'])\n
+billing_user_gid = " %s %s" %(billing_user, parameter_dict[\'billing_user_email\'])\n
+billing_company_gid = " %s %s" %(parameter_dict[\'billing_company\'],billing_country)\n
+shipping_user = "%s %s" %(parameter_dict[\'shipping_firstname\'], parameter_dict[\'shipping_lastname\'])\n
+shipping_user_gid = " %s %s" %(shipping_user, parameter_dict[\'email\'])\n
+shipping_company_gid = " %s %s" %(parameter_dict[\'shipping_company\'], shipping_country)\n
+\n
+if parameter_dict.get("shipping_company", None):\n
+  so_dict[\'destination_administration\'] = shipping_company_gid\n
+  so_dict[\'destination_ownership\'] = shipping_company_gid\n
+  so_dict[\'destination_decision\'] = shipping_user_gid\n
+else:\n
+  so_dict[\'destination_administration\'] = shipping_user_gid\n
+  so_dict[\'destination_ownership\'] = shipping_user_gid\n
+  so_dict[\'destination_decision\'] = shipping_user_gid\n
+\n
+if parameter_dict.get("billing_company", None):\n
+  so_dict[\'destination\'] = billing_company_gid\n
+else:\n
+  if shipping_user != billing_user:\n
+    so_dict[\'destination\'] = billing_user_gid\n
+\n
+brain_list = [brain(context=context,\n
+                    object_type=context.getDestinationObjectType(),\n
+                    **so_dict),]\n
+\n
+return brain_list\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>parameter_dict, brain</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebServiceRequest_buildVirtuemartSaleOrderBrain</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

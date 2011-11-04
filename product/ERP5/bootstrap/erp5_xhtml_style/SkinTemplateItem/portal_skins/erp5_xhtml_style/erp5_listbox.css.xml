@@ -819,7 +819,9 @@ table.listbox-thumbnail tr.DataA, table.listbox-thumbnail tr.DataB,\n
 table.listbox-thumbnail tr.DataA:hover, table.listbox-thumbnail tr.DataB:hover{\n
   background-color: transparent; /* in thumbnail mode we don\'t care for hoover */\n
 }\n
-\n
+table.listbox-thumbnail td{\n
+  border:none;\n
+}\n
 \n
 /* in search mode listbox may contain top/bottom quick search inputs */\n
 div.search-text-listbox{\n

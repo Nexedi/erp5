@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Subject, StartDateTime, EndDateTime, Description, OwnerId, WhoId, AccountId, WhatId\n
+    FROM\n
+      Event\n
+    <tal:block tal:condition="python: options.get(\'event_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/event_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>SalesforceEventBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/salesforce/salesforce_connector</string>
+                <string>destination/portal_integrations/salesforce/event_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Subject, StartDateTime, EndDateTime, Description, OwnerId, WhoId, AccountId, WhatId\n
+    FROM\n
+      Event\n
+    <tal:block tal:condition="python: options.get(\'event_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/event_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getEventPartList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Event/Visit</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getEventPartList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/salesforce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, Subject, StartDateTime, EndDateTime, Description, OwnerId, WhoId, AccountId, WhatId    FROM      Event      </ns0:querystring></ns0:query>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>https://na3-api.salesforce.com/services/Soap/u/19.0/00D50000000IjTh</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com"><soapenv:Body><queryResponse><result xsi:type="QueryResult"><done>true</done><queryLocator xsi:nil="true"/><records xsi:type="sf:sObject"><sf:type>Event</sf:type><sf:Id>00U50000009UhIcEAK</sf:Id><sf:Id>00U50000009UhIcEAK</sf:Id><sf:Subject>Meeting for the campaing</sf:Subject><sf:StartDateTime>2010-10-07T16:30:00.000Z</sf:StartDateTime><sf:EndDateTime>2010-10-08T06:00:00.000Z</sf:EndDateTime><sf:Description>Idea of evolutions that can occurs on this campaign.</sf:Description><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:WhoId>0035000000iyf7PAAQ</sf:WhoId><sf:AccountId>0015000000VMVNOAA5</sf:AccountId><sf:WhatId>70150000000AlhIAAS</sf:WhatId></records><records xsi:type="sf:sObject"><sf:type>Event</sf:type><sf:Id>00U50000009Uhk9EAC</sf:Id><sf:Id>00U50000009Uhk9EAC</sf:Id><sf:Subject>Another diner</sf:Subject><sf:StartDateTime>2010-10-16T02:30:00.000Z</sf:StartDateTime><sf:EndDateTime>2010-10-16T05:00:00.000Z</sf:EndDateTime><sf:Description>Private diner with Natata.</sf:Description><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:WhoId>0035000000iyf96AAA</sf:WhoId><sf:AccountId>0015000000VMVO6AAP</sf:AccountId><sf:WhatId xsi:nil="true"/></records><size>2</size></result></queryResponse></soapenv:Body></soapenv:Envelope>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Event/Visit">\n
+  <title>Meeting for the campaing</title>\n
+  <start_date>2010/10/07 16:30:00 GMT+0</start_date>\n
+  <causality> MyOwnCamapaign</causality>\n
+  <description>Idea of evolutions that can occurs on this campaign.</description>\n
+  <arrow type="">\n
+    <source> Convenant jean.claude@convenant.com</source>\n
+  </arrow>\n
+  <arrow type="Accounting">\n
+    <source> camera_cafe_account</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Event/Visit">\n
+  <title>Another diner</title>\n
+  <start_date>2010/10/16 02:30:00 GMT+0</start_date>\n
+  <description>Private diner with Natata.</description>\n
+  <arrow type="">\n
+    <source> Portman natata@portman.net</source>\n
+  </arrow>\n
+  <arrow type="Accounting">\n
+    <source> z_society_account</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Event Part</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

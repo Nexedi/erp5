@@ -1,0 +1,6 @@
+<allowed_content_type_list>
+ <portal_type id="System Event Module">
+  <item>Authentication Event</item>
+  <item>Password Event</item>
+ </portal_type>
+</allowed_content_type_list>

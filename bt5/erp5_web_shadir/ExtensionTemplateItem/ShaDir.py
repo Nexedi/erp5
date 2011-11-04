@@ -66,7 +66,9 @@ def WebSection_getDocumentValue(self, key, portal=None, language=None,\
   # Return the SIGNATURE file, if the document exists.
   if data_set is not None:
     document_list = [json.loads(document.getData()) \
-                       for document in data_set.getFollowUpRelatedValueList()]
+                       for document in portal.portal_catalog(
+                         follow_up_uid=data_set.getUid(),
+                         validation_state='published')]
 
     temp_file = newTempFile(self, '%s.txt' % key)
     temp_file.setData(json.dumps(document_list))
@@ -83,6 +85,10 @@ def WebSection_setObject(self, id, ob, **kw):
   data = self.REQUEST.get('BODY')
   schema = self.WebSite_getJSONSchema()
   structure = json.loads(data)
+  # 0 elementh in structure is json in json
+  # 1 elementh is just signature
+  structure = [json.loads(structure[0]), structure[1]]
+
   validictory.validate(structure, schema)
 
   file_name = structure[0].get('file', None)
@@ -103,4 +109,22 @@ def WebSection_setObject(self, id, ob, **kw):
   ob.setReference(reference)
   if expiration_date is not None:
     ob.setExpirationDate(expiration_date)
+  ob.publish()
   return ob
+
+def WebSection_putFactory(self, name, typ, body):
+  """
+   API SHACACHE
+     - PUT /<key>
+        + parameters required:
+          * data:  it is the file content
+       The key is the file name.
+  """
+  portal = self.getPortalObject()
+  if name is None:
+    name = 'shacache'
+  document = portal.portal_contributions.newContent(data=body,
+                                                    filename=name,
+                                                    discover_metadata=False)
+  return document
+

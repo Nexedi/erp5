@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-from hashlib import md5 as md5_new
+from hashlib import md5
 import string
 
 from Acquisition import aq_base
@@ -47,7 +47,7 @@ def hashPdataObject(pdata_object):
   """Pdata objects are iterable, use this feature strongly
   to minimize memory footprint.
   """
-  md5_hash = md5_new()
+  md5_hash = md5()
   next = pdata_object
   while next is not None:
     md5_hash.update(next.data)
@@ -134,11 +134,11 @@ class CachedConvertableMixin:
       size = len(cached_value)
     elif isinstance(data, OFSImage):
       cached_value = data
-      conversion_md5 = md5_new(str(data.data)).hexdigest()
+      conversion_md5 = md5(str(data.data)).hexdigest()
       size = len(data.data)
     elif isinstance(data, (str, unicode,)):
       cached_value = data
-      conversion_md5 = md5_new(cached_value).hexdigest()
+      conversion_md5 = md5(cached_value).hexdigest()
       size = len(cached_value)
     elif isinstance(data, dict):
       # Dict instance are used to store computed metadata
@@ -249,7 +249,7 @@ class CachedConvertableMixin:
       if isinstance(data, Pdata):
         self._setContentMd5(hashPdataObject(aq_base(data)))
       else:
-        self._setContentMd5(md5_new(data).hexdigest()) # Reindex is useless
+        self._setContentMd5(md5(data).hexdigest()) # Reindex is useless
     else:
       self._setContentMd5(None)
 

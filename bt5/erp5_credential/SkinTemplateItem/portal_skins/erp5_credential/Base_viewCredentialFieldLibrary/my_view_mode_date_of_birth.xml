@@ -12,7 +12,16 @@
               <list>
                 <string>default</string>
                 <string>description</string>
+                <string>end_datetime</string>
                 <string>title</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>delegated_message_list</string> </key>
+            <value>
+              <list>
+                <string>datetime_out_of_range</string>
               </list>
             </value>
         </item>
@@ -25,8 +34,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <key> <string>datetime_out_of_range</string> </key>
+                    <value> <string>The birthday should be in the past.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -65,6 +74,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>end_datetime</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -98,6 +113,12 @@
                     <value> <string>The date of birth for the person.</string> </value>
                 </item>
                 <item>
+                    <key> <string>end_datetime</string> </key>
+                    <value>
+                      <none/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_date</string> </value>
                 </item>
@@ -128,6 +149,19 @@
         <item>
             <key> <string>_text</string> </key>
             <value> <string>python: here.getDateOfBirth() or here.getBirthday() or None</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:DateTime()</string> </value>
         </item>
       </dictionary>
     </pickle>

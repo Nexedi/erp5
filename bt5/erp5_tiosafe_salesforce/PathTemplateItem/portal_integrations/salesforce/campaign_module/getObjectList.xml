@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, StartDate, EndDate, ActualCost, Description, OwnerId\n
+    FROM\n
+      Campaign\n
+    <tal:block tal:condition="python: options.get(\'campaign_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/campaign_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>SalesforceTicketBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/salesforce/salesforce_connector</string>
+                <string>destination/portal_integrations/salesforce/campaign_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, StartDate, EndDate, ActualCost, Description, OwnerId\n
+    FROM\n
+      Campaign\n
+    <tal:block tal:condition="python: options.get(\'campaign_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/campaign_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getCampaignList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Campaign</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/salesforce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, Name, StartDate, EndDate, ActualCost, Description, OwnerId    FROM      Campaign      </ns0:querystring></ns0:query>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>https://na3-api.salesforce.com/services/Soap/u/19.0/00D50000000IjTh</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com"><soapenv:Body><queryResponse><result xsi:type="QueryResult"><done>true</done><queryLocator xsi:nil="true"/><records xsi:type="sf:sObject"><sf:type>Campaign</sf:type><sf:Id>70150000000AlhIAAS</sf:Id><sf:Id>70150000000AlhIAAS</sf:Id><sf:Name>MyOwnCamapaign</sf:Name><sf:StartDate>2010-09-21</sf:StartDate><sf:EndDate>2010-12-31</sf:EndDate><sf:ActualCost>1000.0</sf:ActualCost><sf:Description>MyOwnCampaign is a test camapaign which will be removed later</sf:Description><sf:OwnerId>0055000000153W9AAI</sf:OwnerId></records><records xsi:type="sf:sObject"><sf:type>Campaign</sf:type><sf:Id>70150000000TAxtAAG</sf:Id><sf:Id>70150000000TAxtAAG</sf:Id><sf:Name>GC Product Webinar - Jan 7, 2002</sf:Name><sf:StartDate>2004-03-04</sf:StartDate><sf:EndDate>2004-03-04</sf:EndDate><sf:ActualCost>11400.0</sf:ActualCost><sf:Description xsi:nil="true"/><sf:OwnerId>0055000000153W9AAI</sf:OwnerId></records><records xsi:type="sf:sObject"><sf:type>Campaign</sf:type><sf:Id>70150000000TAxuAAG</sf:Id><sf:Id>70150000000TAxuAAG</sf:Id><sf:Name>User Conference - Jun 17-19, 2002</sf:Name><sf:StartDate>2004-08-12</sf:StartDate><sf:EndDate>2004-08-14</sf:EndDate><sf:ActualCost xsi:nil="true"/><sf:Description xsi:nil="true"/><sf:OwnerId>0055000000153W9AAI</sf:OwnerId></records><records xsi:type="sf:sObject"><sf:type>Campaign</sf:type><sf:Id>70150000000TAxvAAG</sf:Id><sf:Id>70150000000TAxvAAG</sf:Id><sf:Name>DM Campaign to Top Customers - Nov 12-23, 2001</sf:Name><sf:StartDate>2004-01-08</sf:StartDate><sf:EndDate>2004-01-19</sf:EndDate><sf:ActualCost>23500.0</sf:ActualCost><sf:Description xsi:nil="true"/><sf:OwnerId>0055000000153W9AAI</sf:OwnerId></records><records xsi:type="sf:sObject"><sf:type>Campaign</sf:type><sf:Id>70150000000TAxwAAG</sf:Id><sf:Id>70150000000TAxwAAG</sf:Id><sf:Name>International Electrical Engineers Association Trade Show - Mar 4-5, 2002</sf:Name><sf:StartDate>2004-04-29</sf:StartDate><sf:EndDate>2004-04-30</sf:EndDate><sf:ActualCost xsi:nil="true"/><sf:Description xsi:nil="true"/><sf:OwnerId>0055000000153W9AAI</sf:OwnerId></records><size>5</size></result></queryResponse></soapenv:Body></soapenv:Envelope>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Campaign">\n
+  <title>MyOwnCamapaign</title>\n
+  <start_date>2010/09/21</start_date>\n
+  <stop_date>2010/12/31</stop_date>\n
+  <description>MyOwnCampaign is a test camapaign which will be removed later</description>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Campaign">\n
+  <title>GC Product Webinar - Jan 7, 2002</title>\n
+  <start_date>2004/03/04</start_date>\n
+  <stop_date>2004/03/04</stop_date>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Campaign">\n
+  <title>User Conference - Jun 17-19, 2002</title>\n
+  <start_date>2004/08/12</start_date>\n
+  <stop_date>2004/08/14</stop_date>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Campaign">\n
+  <title>DM Campaign to Top Customers - Nov 12-23, 2001</title>\n
+  <start_date>2004/01/08</start_date>\n
+  <stop_date>2004/01/19</stop_date>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Campaign">\n
+  <title>International Electrical Engineers Association Trade Show - Mar 4-5, 2002</title>\n
+  <start_date>2004/04/29</start_date>\n
+  <stop_date>2004/04/30</stop_date>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Campaign</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

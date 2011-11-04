@@ -29,15 +29,7 @@
 
 # Required modules - some modules are imported later to prevent circular deadlocks
 import persistent
-try:
-  # Python 2.5 or later
-  from hashlib import md5 as md5_new
-  from hashlib import sha1 as sha_new
-except ImportError:
-  # Python 2.4
-  from md5 import new as md5_new
-  from sha import new as sha_new
-
+from hashlib import md5
 
 #####################################################
 # Avoid importing from (possibly unpatched) Globals
@@ -146,7 +138,7 @@ class PdataHelper(persistent.Persistent):
   def _digest_md5_hash_from_pdata(self, pdata):
     """Compute hash part by part
     """
-    md5_hash = md5_new()
+    md5_hash = md5()
     next = pdata
     while next is not None:
       md5_hash.update(next.data)

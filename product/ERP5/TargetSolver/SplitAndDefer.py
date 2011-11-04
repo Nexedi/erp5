@@ -74,6 +74,13 @@ class SplitAndDefer(CopyToTarget):
         **self.additional_parameters
       )
       new_movement = applied_rule.newContent(**movement_dict)
+      # record zero quantity property, because this was originally zero.
+      # without this, splitanddefer after accept decision does not work
+      # properly.
+      current_quantity = new_movement.getQuantity()
+      new_movement.setQuantity(0)
+      new_movement.recordProperty('quantity')
+      new_movement.setQuantity(current_quantity)
       start_date = getattr(self, 'start_date', None)
       if start_date is not None:
         new_movement.recordProperty('start_date')

@@ -94,6 +94,24 @@ class TestWebDavSupport(ERP5TypeTestCase):
   def getWebPageModule(self):
     return self.portal.getDefaultModule('Web Page')
 
+  def test_PUT_embedded_file(self):
+    """Test a file can be uploaded on a document allowing embedded files
+    """
+    person = self.portal.person_module.newContent()
+    transaction.commit()
+    self.tic()
+    file_object = makeFileUpload('images/erp5_logo.png')
+    response = self.publish(person.getPath() + '/erp5_logo.png',
+                            request_method='PUT',
+                            stdin=file_object,
+                            basic=self.authentication)
+    self.assertEqual(response.getStatus(), httplib.CREATED)
+    image = person['erp5_logo.png']
+    self.assertEqual(image.getPortalType(), 'Embedded File')
+    self.assertEqual(image.getContentType(), 'image/png')
+    file_object.seek(0)
+    self.assertEqual(image.getData(), file_object.read())
+
   def test_PUT_on_contributionTool(self):
     """Test Portal Contribution through Webdav calls
     Create a document

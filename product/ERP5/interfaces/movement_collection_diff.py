@@ -64,15 +64,7 @@ class IMovementCollectionDiff(Interface):
 
   def getUpdatableMovementList():
     """
-    Returns the list of movements which need 
-    to be updated.
-    """
-
-  def getMovementPropertyDict(movement):
-    """
-    Returns a dict of all properties and values
-    to update an existing movement or to 
-    create a new movement.
+    Returns movements which need to be updated, with properties to update
     """
 
   def addUpdatableMovement(movement, property_dict):

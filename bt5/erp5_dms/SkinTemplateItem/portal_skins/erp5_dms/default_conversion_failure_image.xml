@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Image" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts18922384.14</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>default_conversion_failure_image</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>image/png</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="base64">iVBORw0KGgoAAAANSUhEUgAAAPAAAAC0CAYAAACqnKHoAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
+/wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9sKEgcTF+P+EykAAAAdaVRYdENv
+bW1lbnQAAAAAAENyZWF0ZWQgd2l0aCBHSU1QZC5lBwAACNxJREFUeNrt2llIlG0fx/Gf2t4Yxii5
+RDRlmRKRbQcxeFIk2UEFFdVZBy1GoZlDBxVhUZS02J5kexEdRAQFBVkaeVY5ErRHREJhktpCi+b/
+OXkVdUabxffRnr4fmAPvub3mmmvu79yzRZiZCcAfKZIlAAgYAAEDIGCAgAEQMAACBkDAAAEDIGAA
+BAwQMAACBkDAAAgYIGAABAyAgAEQMEDAAAgYAAEDBAyAgAEQMAACBggYAAEDIGAABAwQMAACBkDA
+AAEDIGAABAyAgAECBkDAAAgYIGAABAyAgAEQMEDAAAgYAAEDIGCAgAEQMAACBggYAAEDIGAABAwQ
+MAACBkDAAAgYIGAABAyAgAECBkDAAAgYAAEDBAyAgAEQMAACBgj4TxQREaGIiAiOgF6y9uE+HsH8
+/3/psY/sLQ+mx+MhNCDYfszMejpgSerbt68ePXqklJQUv9f38DTxLx0HoT7Owfz/f+mY6jUvoRsb
+G5WTk8ORDPyJAc+ePVs3b97U1atXf7uvmenYsWPKyMhQXFyc4uLilJGRoePHjwf8rNrV+7DGxkbl
+5ubK5XJpypQpOnv2rCTp8+fPysvL0+jRozVy5Ejt3LnT79j37t3T/PnzlZiYqNjYWM2cOVMPHz70
+u29NTY0WL16s+Ph4paamasOGDWpqaur0rcONGzeUlZUll8ul6OhoTZ48WQUFBfrx40dA9zuQudXW
+1mrAgAHq06eP3r9/7zPG169fFRMTo2HDhqmxsTHo+xzo26JgxmzR1NSkDRs2KDU1VQkJCVq6dKlq
+a2sDWptw17ZHWA+TZJLsyZMn1qdPH3O5XPbt2zef61s0NzdbZmZm6/aOl6ysLGtubg74dv1tW7ly
+Zbsxo6KizOv12oIFC3xu7/r1652O3fbSv39/e/z4cbv9GhoabMSIET77rl692u/8Vq1a1en9Tk9P
+tx8/fgR8v383t8WLF5sk27t3r88YJSUlJsny8/ODHvd3ax/KXNvu23btWi4ul8s+f/7c5W11x9r2
+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</string> </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>180</int> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>2437</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Default Image returned if conversion failed</string> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>240</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

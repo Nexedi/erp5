@@ -33,7 +33,7 @@ class SpecialiseEquivalenceTester(CategoryMembershipEquivalenceTester):
   """
   The purpose of this divergence tester is to check the
   consistency between delivery movement and simulation movement
-  for a specific category.
+  for 'specialise' category.
   """
   meta_type = 'ERP5 Specialise Equivalence Tester'
   portal_type = 'Specialise Equivalence Tester'
@@ -45,11 +45,10 @@ class SpecialiseEquivalenceTester(CategoryMembershipEquivalenceTester):
 
   def _getTestedPropertyValue(self, movement, property):
     if movement.getPortalType() == 'Simulation Movement':
-      return movement.getSpecialiseList()
+      return movement.getCategoryMembershipList(property)
     # following line would work for prevision movements, but it is slower
-    kw = dict(
-      specialise_type_list=self.getMovementSpecialiseTypeList(),
-      exclude_specialise_type_list=self.getMovementExcludeSpecialiseTypeList(),
-    )
     return [x.getRelativeUrl()
-      for x in movement.getInheritedSpecialiseValueList(**kw)]
+      for x in movement.getInheritedSpecialiseValueList(
+        self.getMovementSpecialiseTypeList(),
+        self.getMovementExcludeSpecialiseTypeList(),
+        )]

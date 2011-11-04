@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, Street, PostalCode, City, Country, Fax, Phone\n
+    FROM\n
+      Organization\n
+    <tal:block tal:condition="python: (options.get(\'organisation_id\', None) is not None) or (options.get(\'organisation_name\', None) is not None)">\n
+    WHERE\n
+      <tal:block tal:condition="python: options.get(\'organisation_id\', None) is not None">\n
+        Id = \'<tal:block tal:content="options/organisation_id" />\'\n
+      </tal:block><tal:block tal:condition="python: options.get(\'organisation_name\', None) is not None">\n
+        Name = \'<tal:block tal:content="options/organisation_name" />\'\n
+      </tal:block>\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>SalesforceNodeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/salesforce/salesforce_connector</string>
+                <string>destination/portal_integrations/salesforce/organisation_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, Street, PostalCode, City, Country, Fax, Phone\n
+    FROM\n
+      Organization\n
+    <tal:block tal:condition="python: (options.get(\'organisation_id\', None) is not None) or (options.get(\'organisation_name\', None) is not None)">\n
+    WHERE\n
+      <tal:block tal:condition="python: options.get(\'organisation_id\', None) is not None">\n
+        Id = \'<tal:block tal:content="options/organisation_id" />\'\n
+      </tal:block><tal:block tal:condition="python: options.get(\'organisation_name\', None) is not None">\n
+        Name = \'<tal:block tal:content="options/organisation_name" />\'\n
+      </tal:block>\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getOrganisationList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Organisation</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getOrganisationList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/salesforce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, Name, Street, PostalCode, City, Country, Fax, Phone    FROM      Organization      </ns0:querystring></ns0:query>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>https://na3-api.salesforce.com/services/Soap/u/19.0/00D50000000IjTh</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com"><soapenv:Body><queryResponse><result xsi:type="QueryResult"><done>true</done><queryLocator xsi:nil="true"/><records xsi:type="sf:sObject"><sf:type>Organization</sf:type><sf:Id>00D50000000IjThEAK</sf:Id><sf:Id>00D50000000IjThEAK</sf:Id><sf:Name>48 239</sf:Name><sf:Street xsi:nil="true"/><sf:PostalCode>Detroit</sf:PostalCode><sf:City xsi:nil="true"/><sf:Country>US</sf:Country><sf:Fax xsi:nil="true"/><sf:Phone xsi:nil="true"/></records><size>1</size></result></queryResponse></soapenv:Body></soapenv:Envelope>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Organisation">\n
+  <title>48 239</title>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Organisation List</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

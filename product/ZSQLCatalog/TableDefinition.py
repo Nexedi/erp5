@@ -276,6 +276,6 @@ class LegacyTableDefinition(TableDefinition):
     from_expression_dict = self.from_expression
     table_alias_map = self.table_alias_map
     from_expression = SQL_LIST_SEPARATOR.join(
-      from_expression_dict.get(table, '`%s` AS `%s`' % (table, alias))
+      from_expression_dict.get(alias, '`%s` AS `%s`' % (table, alias))
       for alias, table in table_alias_map.iteritems())
     return from_expression

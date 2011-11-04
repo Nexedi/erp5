@@ -121,10 +121,6 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Web Service Connector</string>
-                          <string>Web Service Connector</string>
-                        </tuple>
-                        <tuple>
                           <string>Web Service Request</string>
                           <string>Web Service Request</string>
                         </tuple>
@@ -133,8 +129,8 @@
                           <string>Web Service Request Group</string>
                         </tuple>
                         <tuple>
-                          <string>Integration Module</string>
-                          <string>Integration Module</string>
+                          <string>Python Script</string>
+                          <string>Python Script</string>
                         </tuple>
                       </list>
                     </value>

@@ -26,6 +26,7 @@
 ##############################################################################
 import ConfigParser
 import argparse
+import logging
 import os
 import pkg_resources
 
@@ -40,10 +41,25 @@ def main(*args):
   parser = argparse.ArgumentParser()
   parser.add_argument("configuration_file", nargs=1, type=argparse.FileType(),
       help="Configuration file.")
+  parser.add_argument('-c', '--console', action='store_true',
+      help="Enable console output.")
+  parser.add_argument('-l', '--logfile', help="Enable output into logfile.")
   if args:
     parsed_argument = parser.parse_args(list(args))
   else:
     parsed_argument = parser.parse_args()
+  logger = logging.getLogger('erp5testnode')
+  if parsed_argument.console or parsed_argument.logfile:
+    logger.setLevel(logging.INFO)
+    if parsed_argument.console:
+      logger.addHandler(logging.StreamHandler())
+      logger.info('Activated console output.')
+    if parsed_argument.logfile:
+      logger.addHandler(logging.FileHandler(filename=parsed_argument.logfile))
+      logger.info('Activated logfile %r output' % parsed_argument.logfile)
+  else:
+    logger.addHandler(logging.NullHandler())
+  CONFIG['logger'] = logger.info
   config = ConfigParser.SafeConfigParser()
   # do not change case of option keys
   config.optionxform = str
@@ -89,8 +105,14 @@ def main(*args):
   for section in config.sections():
     if section.startswith('vcs_repository'):
       vcs_repository_list.append(dict(config.items(section)))
-  CONFIG['vcs_repository_list'] = vcs_repository_list
 
+  CONFIG['bt5_path'] = None
+  if 'bt5_path' in config.options("testnode"):
+    bt5_path = config.get("testnode", 'bt5_path')
+    if bt5_path.lower() != "none":
+      CONFIG['bt5_path'] = bt5_path
+
+  CONFIG['vcs_repository_list'] = vcs_repository_list
   CONFIG['test_suite_title'] = geto('test_suite_title')
   CONFIG['test_node_title'] = geto('test_node_title')
   CONFIG['test_suite'] = geto('test_suite')
@@ -107,5 +129,8 @@ def main(*args):
   CONFIG['bot_environment'] = bot_environment
   CONFIG['environment'] = dict(config.items('environment'))
   CONFIG['slapproxy_binary'] = geto('slapproxy_binary')
-
+  instance_dict = {}
+  if 'instance_dict' in config.sections():
+    instance_dict = dict(config.items('instance_dict'))
+  CONFIG['instance_dict'] = instance_dict
   testnode.run(CONFIG)

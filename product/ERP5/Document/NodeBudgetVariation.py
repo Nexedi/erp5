@@ -201,18 +201,20 @@ class NodeBudgetVariation(BudgetVariation):
 
     portal_categories = self.getPortalObject().portal_categories
     query_dict = dict()
+    uid_based_axis = False
     if axis == 'movement':
       axis = 'default_%s_uid' % base_category
       query_dict['select_list'] = [axis]
       query_dict['group_by'] = [axis]
+      uid_based_axis = True
     elif axis == 'movement_strict_membership':
       axis = 'default_strict_%s_uid' % base_category
       query_dict['select_list'] = [axis]
       query_dict['group_by'] = [axis]
+      uid_based_axis = True
     else:
       query_dict['group_by_%s' % axis] = True
 
-    uid_based_axis = False
     if axis in ('node', 'section', 'payment', 'function', 'project',
                 'mirror_section', 'mirror_node', 'funding' ):
       axis = '%s_uid' % axis

@@ -10,6 +10,8 @@ Purchase Order Line | item_creation
 Purchase Order | aggregate_item
 Purchase Packing List Line | item_creation
 Purchase Packing List | aggregate_item
+Returned Purchase Packing List Line | item_creation
+Returned Purchase Packing List | aggregate_item
 Returned Sale Packing List Line | item_creation
 Returned Sale Packing List | aggregate_item
 Sale Order Line | item_creation

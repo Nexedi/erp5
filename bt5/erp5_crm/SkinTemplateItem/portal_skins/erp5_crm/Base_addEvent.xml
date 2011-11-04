@@ -86,12 +86,12 @@ if context.getPortalType() in portal_entity_type_list:\n
 else:\n
   follow_up = context.getRelativeUrl()\n
 \n
-if direction == \'out\':\n
+if direction == \'outgoing\':\n
   source_url = person\n
   source_section_url = organisation\n
   destination_url = person_relative_url or organisation_relative_url\n
   destination_section_url = organisation_relative_url\n
-elif direction == \'in\':\n
+elif direction == \'incoming\':\n
   source_url = person_relative_url or organisation_relative_url\n
   source_section_url = organisation_relative_url\n
   destination_url = person\n
@@ -110,6 +110,7 @@ event_kw[\'destination_section\'] = destination_section_url\n
 event_kw[\'start_date\'] = start_date\n
 event_kw[\'follow_up\'] = follow_up\n
 event_kw[\'text_content\'] = text_content\n
+event_kw[\'content_type\'] = portal.portal_preferences.getPreferredTextEditor() and \'text/html\' or \'text/plain\',\n
 \n
 # Create event\n
 module = portal.getDefaultModule(portal_type=portal_type)\n

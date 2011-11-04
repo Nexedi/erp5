@@ -36,14 +36,6 @@ from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition
 # ERP5 workflow factory definitions
 _workflow_factories = {}
 
-try:
-  from Products.CMFCore.WorkflowTool import addWorkflowFactory as baseAddWorkflowFactory
-  # We're on CMF 1.5
-except ImportError:
-  # We're on CMF 2
-  def baseAddWorkflowFactory(factory, id, tittle):
-    pass
-
 def addWorkflowFactory(factory, id, title):
     """addWorkflowFactory replacement
     
@@ -63,8 +55,6 @@ def addWorkflowFactory(factory, id, title):
       'id': id,
       'title': title,
     }
-    # register with CMF 1 if it's still there
-    baseAddWorkflowFactory(factory, id, title)
 
 # Workflow Creation DTML
 manage_addWorkflowFormDtml = HTMLFile('dtml/addWorkflow', globals())

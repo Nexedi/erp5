@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts07623168.89</string> </value>
+            <value> <string>ts17114423.84</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -190,7 +190,7 @@ div.right-gadget div.portal-column {\n
 div.gadget-management{\n
   display:block;\n
   float:right;\n
-  height: 1.65em;\n
+  height: 20px;\n
 }\n
 \n
 div.right-gadget{\n
@@ -709,7 +709,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12118</int> </value>
+            <value> <int>12116</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

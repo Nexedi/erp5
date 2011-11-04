@@ -57,19 +57,27 @@ from DateTime import DateTime\n
 \n
 return {\'now\': DateTime(),\n
 \n
-        \'person_howto_title\': \'ZUITE-TEST-PERSON USER-001\',\n
-        \'person_howto_first_name\': \'ZUITE-TEST-PERSON\',\n
-        \'person_howto_last_name\': \'USER-001\',\n
-        \'person_howto_email\': \'USER-001@test.com\',\n
-        \'person_howto_reference\': \'ZUITE-TEST-PERSON\',\n
+        \'person_howto_title\': \'John Doh\',\n
+        \'person_howto_first_name\': \'John\',\n
+        \'person_howto_last_name\': \'Doh\',\n
+        \'person_howto_gender\': \'Male\',\n
+        \'person_howto_role\': \'Client\',\n
+        \'person_howto_career_function\': \'Marketing/Marketing Manager\',\n
+        \'person_howto_career_activity\': \'Education\',\n
+        \'person_howto_nationality\': \'French\',\n
+        \'person_howto_email\': \'jdoh@zcompany.com\',\n
+        \'person_howto_telephone\': \'+33(0)6-218765/00\',\n
+        \'person_howto_reference\': \'johndoh\',\n
         \'person_howto_password\': \'secret\',\n
 \n
         \'person_howto_title2\': \'ZUITE-TEST-PERSON2 USER-002\',\n
         \'person_howto_first_name2\': \'ZUITE-TEST-PERSON2\',\n
         \'person_howto_last_name2\': \'USER-002\',\n
         \'person_howto_email2\': \'USER-002@test.com\',\n
-        \'person_howto_organisation_title\': \'ZUITE-TEST-PERSON-ORGANISATION-001\',\n
-        \'organisation_howto_organisation_title\': \'ZUITE-TEST-ORGANISATION-ORGANISATION-001\',\n
+        \'person_howto_organisation_title\': \'Z Company\',\n
+\n
+        \'organisation_howto_organisation_title\': \'Z Company\',\n
+\n
         \'link_howto_person_title\' : \'ZUITE-TEST-LINK USER-001\',\n
         \'link_howto_person_first_name\': \'ZUITE-TEST-LINK\',\n
         \'link_howto_person_last_name\': \'USER-001\',\n

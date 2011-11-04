@@ -105,7 +105,7 @@ class InvoicingRuleMovementGenerator(MovementGeneratorMixin):
     specialise_list = [x.getRelativeUrl()
       for x in input_movement.getSpecialiseValueList()
       if x.providesIBusinessProcess() or
-         x.getPortalType().endswith('Trade Condition')]
+         x.isInternalType() or x.isPurchaseType() or x.isSaleType()]
     return {'delivery': None, 'specialise': specialise_list}
 
   def _getInputMovementList(self, movement_list=None, rounding=None):

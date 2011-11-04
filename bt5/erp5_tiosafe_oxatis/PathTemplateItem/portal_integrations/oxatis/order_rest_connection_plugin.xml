@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Connector" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>transport</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>order_rest_connection_plugin</string> </value>
+        </item>
+        <item>
+            <key> <string>password</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Connector</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Oxatis REST plugin for sale orders</string> </value>
+        </item>
+        <item>
+            <key> <string>transport</string> </key>
+            <value> <string>oxatis</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>http://webservices.oxatis.com/webservices/httpservices/orderservices.aspx</string> </value>
+        </item>
+        <item>
+            <key> <string>user_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

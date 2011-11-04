@@ -41,7 +41,7 @@
   KEY `bcc_recipient` (`bcc_recipient`),\n
   KEY `validation_state` (`validation_state`),\n
   KEY `start_date` (`start_date`, `validation_state`)\n
-) TYPE = InnoDB;</string> </value>
+) ENGINE=InnoDB;</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

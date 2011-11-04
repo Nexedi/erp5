@@ -1,0 +1,9 @@
+organisation_module/default_oxatis_shop**
+person_module/unknown_oxatis**
+portal_integrations/oxatis
+portal_integrations/oxatis/*mapping**
+portal_integrations/oxatis/*module**
+portal_integrations/oxatis/*plugin
+portal_synchronizations/oxatis*
+product_module/unknown_oxatis**
+sale_trade_condition_module/default_oxatis**

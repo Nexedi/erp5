@@ -1,0 +1,183 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts94923372.95</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>ProductList.xsd</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/octet-stream</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+﻿<?xml version="1.0" encoding="utf-8"?>\r\n
+<xs:schema elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">\r\n
+  <xs:element name="ProductList" nillable="true" type="ProductListEntity" />\r\n
+  <xs:complexType name="ProductListEntity">\r\n
+    <xs:sequence>\r\n
+      <xs:element minOccurs="1" maxOccurs="1" name="LatestModifiedDateStart" type="xs:dateTime" />\r\n
+      <xs:element minOccurs="1" maxOccurs="1" name="LatestModifiedDateEnd" type="xs:dateTime" />\r\n
+      <xs:element minOccurs="0" maxOccurs="1" name="ProductsID" type="ArrayOfProductIdEntity" />\r\n
+    </xs:sequence>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="ArrayOfProductIdEntity">\r\n
+    <xs:sequence>\r\n
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ProductID" nillable="true" type="ProductIdEntity" />\r\n
+    </xs:sequence>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="ProductIdEntity">\r\n
+    <xs:complexContent mixed="false">\r\n
+      <xs:extension base="OxatisEntity">\r\n
+        <xs:sequence>\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="ItemSKU" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="ProductLanguage" type="xs:string" />\r\n
+        </xs:sequence>\r\n
+      </xs:extension>\r\n
+    </xs:complexContent>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="OxatisEntity">\r\n
+    <xs:sequence>\r\n
+      <xs:element minOccurs="1" maxOccurs="1" name="OxID" nillable="true" type="xs:int" />\r\n
+    </xs:sequence>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="ImagesListIdEntity">\r\n
+    <xs:complexContent mixed="false">\r\n
+      <xs:extension base="OxatisEntity">\r\n
+        <xs:sequence>\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="ThumbnailImgFileName" type="xs:string" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="ItemOxId" nillable="true" type="xs:int" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="ItemSKU" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="ImgFileName" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="ZoomImgFileName" type="xs:string" />\r\n
+        </xs:sequence>\r\n
+      </xs:extension>\r\n
+    </xs:complexContent>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="BrandEntity">\r\n
+    <xs:complexContent mixed="false">\r\n
+      <xs:extension base="OxatisEntity">\r\n
+        <xs:sequence>\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />\r\n
+        </xs:sequence>\r\n
+      </xs:extension>\r\n
+    </xs:complexContent>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="CategoryEntity">\r\n
+    <xs:complexContent mixed="false">\r\n
+      <xs:extension base="OxatisEntity">\r\n
+        <xs:sequence>\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="ParentOxId" nillable="true" type="xs:int" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />\r\n
+        </xs:sequence>\r\n
+      </xs:extension>\r\n
+    </xs:complexContent>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="ProductEntity">\r\n
+    <xs:complexContent mixed="false">\r\n
+      <xs:extension base="ProductIdEntity">\r\n
+        <xs:sequence>\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="OptPropertyID" nillable="true" type="xs:int" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Name" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Price" type="PriceVATModeEntity" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="TaxRate" nillable="true" type="xs:double" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="EcotaxTI" nillable="true" type="xs:double" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="LongDescription" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="BigImgFileName" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="SmallImgFileName" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Category1" type="CategoryEntity" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Category2" type="CategoryEntity" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Category3" type="CategoryEntity" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Brand" type="BrandEntity" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="QuantityInStock" type="QuantityEntity" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="QuantityReorder" type="QuantityEntity" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="ShowInStockNote" nillable="true" type="xs:boolean" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="ShowStockLevel" nillable="true" type="xs:boolean" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="DaysToShip" nillable="true" type="xs:int" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="ShowIfOutOfStock" nillable="true" type="xs:boolean" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="SaleIfOutOfStock" nillable="true" type="xs:boolean" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="SaleIfOutOfStockScenario" nillable="true" type="xs:int" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="ShowDaysToship" nillable="true" type="xs:boolean" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="Weight" nillable="true" type="xs:int" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="DimensionHeight" nillable="true" type="xs:int" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="DimensionWidth" nillable="true" type="xs:int" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="DimensionLength" nillable="true" type="xs:int" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="HandlingSurcharge1ST" nillable="true" type="xs:double" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="HandlingSurchargeOthers" nillable="true" type="xs:double" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="ShipPrice" nillable="true" type="xs:double" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="DiscountGridCode" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="MetaTitle" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="MetaDescription" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="MetaKeywords" type="xs:string" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Price1" type="PriceVATModeEntity" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Price2" type="PriceVATModeEntity" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Price3" type="PriceVATModeEntity" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="Price4" type="PriceVATModeEntity" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="LastUpdateDate" nillable="true" type="xs:dateTime" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="AdditionalImagesWidth" nillable="true" type="xs:short" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="AdditionalImagesHeight" nillable="true" type="xs:short" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="AdditionalImagesThumbnailWidth" nillable="true" type="xs:short" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="AdditionalImagesThumbnailChangeMode" nillable="true" type="xs:unsignedByte" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="AdditionalImagesZoomWidth" nillable="true" type="xs:short" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="AdditionalImagesZoomPosition" nillable="true" type="xs:unsignedByte" />\r\n
+          <xs:element minOccurs="1" maxOccurs="1" name="AdditionalImagesZoomHeight" nillable="true" type="xs:short" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="ProductImagesListEntity" type="ArrayOfImagesListIdEntity" />\r\n
+          <xs:element minOccurs="0" maxOccurs="1" name="ProductImagesList" type="ArrayOfImagesListIdEntity1" />\r\n
+        </xs:sequence>\r\n
+      </xs:extension>\r\n
+    </xs:complexContent>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="PriceVATModeEntity">\r\n
+    <xs:sequence>\r\n
+      <xs:element minOccurs="1" maxOccurs="1" name="Value" nillable="true" type="xs:double" />\r\n
+      <xs:element minOccurs="1" maxOccurs="1" name="VATIncluded" type="xs:boolean" />\r\n
+    </xs:sequence>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="QuantityEntity">\r\n
+    <xs:sequence>\r\n
+      <xs:element minOccurs="1" maxOccurs="1" name="Value" nillable="true" type="xs:int" />\r\n
+      <xs:element minOccurs="1" maxOccurs="1" name="Append" nillable="true" type="xs:boolean" />\r\n
+    </xs:sequence>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="ArrayOfImagesListIdEntity">\r\n
+    <xs:sequence>\r\n
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ImagesListIdEntity" nillable="true" type="ImagesListIdEntity" />\r\n
+    </xs:sequence>\r\n
+  </xs:complexType>\r\n
+  <xs:complexType name="ArrayOfImagesListIdEntity1">\r\n
+    <xs:sequence>\r\n
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Images_x0020__x0020__x0020_List" nillable="true" type="ImagesListIdEntity" />\r\n
+    </xs:sequence>\r\n
+  </xs:complexType>\r\n
+</xs:schema>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>9127</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>ProductList.xsd</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

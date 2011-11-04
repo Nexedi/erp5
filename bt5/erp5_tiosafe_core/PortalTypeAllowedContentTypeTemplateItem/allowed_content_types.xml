@@ -10,6 +10,7 @@
   <item>Integration Category Mapping</item>
  </portal_type>
  <portal_type id="Integration Module">
+  <item>Python Script</item>
   <item>Web Service Request</item>
   <item>Web Service Request Group</item>
  </portal_type>

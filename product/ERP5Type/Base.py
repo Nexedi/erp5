@@ -2737,14 +2737,12 @@ class Base( CopyContainer,
 
       reindex_kw = self.getDefaultReindexParameterDict()
       if reindex_kw is not None:
-        reindex_activate_kw = reindex_kw.pop('activate_kw', None)
-        if reindex_activate_kw is not None:
-          reindex_activate_kw = reindex_activate_kw.copy()
-          if activate_kw is not None:
-            # activate_kw parameter takes precedence
-            reindex_activate_kw.update(activate_kw)
-          activate_kw = reindex_activate_kw
-        kw.update(reindex_kw)
+        reindex_kw = reindex_kw.copy()
+        reindex_activate_kw = reindex_kw.pop('activate_kw', None) or {}
+        reindex_activate_kw.update(activate_kw)
+        reindex_kw.update(kw)
+        kw = reindex_kw
+        activate_kw = reindex_activate_kw
 
       group_id_list  = []
       if kw.get("group_id", "") not in ('', None):
@@ -2884,6 +2882,10 @@ class Base( CopyContainer,
     Get the global and unique id
     """
     return getattr(aq_base(self), 'guid', None)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTypeBasedMethod')
+  def getTypeBasedMethod(self, *args, **kw):
+    return self._getTypeBasedMethod(*args, **kw)
 
   # Type Casting
   def _getTypeBasedMethod(self, method_id, fallback_script_id=None,
@@ -3249,7 +3251,7 @@ class Base( CopyContainer,
   def serialize(self):
     """Make the transaction accessing to this object atomic
     """
-    self.id = self.id
+    self._p_changed = 1
 
   # Helpers
   def getQuantityPrecisionFromResource(self, resource, d=2):
@@ -3664,20 +3666,12 @@ class Base( CopyContainer,
 
 InitializeClass(Base)
 
-try:
-  from Products.CMFCore.interfaces import IContentish
-except ImportError:
-  # We're on CMF 1.5 where the IContentish is not yet bridged as a Zope3
-  # interface, so no need to worry about events here. Remove this "try:" once
-  # we abandon Zope 2.8
-  def removeIContentishInterface(cls):
-    pass
-else:
-  # suppress CMFCore event machinery from trying to reindex us through events
-  # by removing Products.CMFCore.interfaces.IContentish interface.
-  # We reindex ourselves in manage_afterAdd thank you very much.
-  def removeIContentishInterface(cls):
-    classImplementsOnly(cls, implementedBy(cls) - IContentish)
+from Products.CMFCore.interfaces import IContentish
+# suppress CMFCore event machinery from trying to reindex us through events
+# by removing Products.CMFCore.interfaces.IContentish interface.
+# We reindex ourselves in manage_afterAdd thank you very much.
+def removeIContentishInterface(cls):
+  classImplementsOnly(cls, implementedBy(cls) - IContentish)
 
 removeIContentishInterface(Base)
 
@@ -3728,7 +3722,7 @@ class TempBase(Base):
   security.declarePublic('edit')
 
 # Persistence.Persistent is one of the superclasses of TempBase, and on Zope2.8
-# it's __class_init__ method is InitializeClass. This is not the case on
+# its __class_init__ method is InitializeClass. This is not the case on
 # Zope2.12 which requires us to call InitializeClass manually, otherwise
 # allow_class(TempBase) in ERP5Type/Document/__init__.py will trample our
 # ClassSecurityInfo with one that doesn't declare our public methods

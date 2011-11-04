@@ -254,108 +254,12 @@ return site.Base_redirect(keep_items=dict(portal_status_message=message))\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>reference, connector_list, module_list, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>3</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>reference</string>
-                            <string>connector_list</string>
-                            <string>module_list</string>
-                            <string>kw</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>portal_object</string>
-                            <string>acl_users</string>
-                            <string>mapping_type_dict</string>
-                            <string>integration_tool</string>
-                            <string>site</string>
-                            <string>created_connector_list</string>
-                            <string>i</string>
-                            <string>_getiter_</string>
-                            <string>connector</string>
-                            <string>new_connector</string>
-                            <string>base_request_name_list</string>
-                            <string>len</string>
-                            <string>_getitem_</string>
-                            <string>default_connector</string>
-                            <string>None</string>
-                            <string>append</string>
-                            <string>$append0</string>
-                            <string>x</string>
-                            <string>ordered_module_list</string>
-                            <string>module</string>
-                            <string>sort_tuple</string>
-                            <string>$append1</string>
-                            <string>y</string>
-                            <string>k</string>
-                            <string>v</string>
-                            <string>sync_tool</string>
-                            <string>module_id</string>
-                            <string>abstract_class_name</string>
-                            <string>module_portal_type</string>
-                            <string>module_name</string>
-                            <string>True</string>
-                            <string>pub</string>
-                            <string>sub</string>
-                            <string>integration_module</string>
-                            <string>_inplacevar_</string>
-                            <string>allowed_type</string>
-                            <string>allowed_type_name</string>
-                            <string>base_request_name</string>
-                            <string>message</string>
-                            <string>dict</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>IntegrationTool_createIntegrationSite</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

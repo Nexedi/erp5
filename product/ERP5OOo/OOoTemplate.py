@@ -36,10 +36,7 @@ from Products.CMFCore.FSPageTemplate import FSPageTemplate
 from Products.CMFCore.DirectoryView import registerFileExtension, registerMetaType
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-try:
-    from TAL.TALInterpreter import FasterStringIO
-except ImportError:
-    from zope.tal.talinterpreter import FasterStringIO
+from zope.tal.talinterpreter import FasterStringIO
 from Products.ERP5Type import PropertySheet
 from urllib import quote
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, get_request
@@ -48,10 +45,7 @@ from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from OOoUtils import OOoBuilder
 from zipfile import ZipFile, ZIP_DEFLATED
-try:
-  from cStringIO import StringIO
-except ImportError:
-  from StringIO import StringIO
+from cStringIO import StringIO
 import re
 import itertools
 
@@ -111,30 +105,26 @@ class OOoTemplateStringIO(FasterStringIO):
       s = s.encode('utf-8')
     FasterStringIO.write(self, s)
 
-try:
-  from Products.PageTemplates.Expressions import ZopeContext, createZopeEngine
-except ImportError:
-  # BACK: remove when we drop support for Zope 2.8
-  _engine = None
-else:
-  # On Zope 2.12, we need an engine to decode non-unicode-strings for us 
-  class OOoContext(ZopeContext):
-    """ ZopeContext variant that ALWAYS converts standard strings through utf-8,
-    as needed by OpenOffice, ignoring the preferred encodings in the request.
-    """
-  
-    def _handleText(self, text, expr):
-      if isinstance(text, str):
-        # avoid calling the IUnicodeEncodingConflictResolver utility
-        return unicode(text, 'utf-8')
-      return ZopeContext._handleText(self, text, expr)
-  
-  def createOOoZopeEngine():
-      e = createZopeEngine()
-      e._create_context = OOoContext
-      return e
+from Products.PageTemplates.Expressions import ZopeContext, createZopeEngine
 
-  _engine = createOOoZopeEngine()
+# On recent Zope, we need an engine to decode non-unicode-strings for us
+class OOoContext(ZopeContext):
+  """ ZopeContext variant that ALWAYS converts standard strings through utf-8,
+  as needed by OpenOffice, ignoring the preferred encodings in the request.
+  """
+
+  def _handleText(self, text, expr):
+    if isinstance(text, str):
+      # avoid calling the IUnicodeEncodingConflictResolver utility
+      return unicode(text, 'utf-8')
+    return ZopeContext._handleText(self, text, expr)
+
+def createOOoZopeEngine():
+    e = createZopeEngine()
+    e._create_context = OOoContext
+    return e
+
+_engine = createOOoZopeEngine()
 
 class OOoTemplate(ZopePageTemplate):
   """
@@ -208,20 +198,13 @@ class OOoTemplate(ZopePageTemplate):
     self.OLE_documents_zipstring = None
     self.ooo_xml_file_id = xml_file_id
 
-  if _engine is not None:
-    # Zope 2.12 relies on the ZTK implementation of page templates, 
-    # passing it a special expression evaluation context that converts strings
-    # to unicode in the presence of the proper request headers.
-    # Here we do the same, but forcing utf-8 conversion insteado of expecting
-    # request headers.
-    def pt_getEngine(self):
-      return _engine
-  else:
-    # BACK: Remove when we drop support for Zope 2.8!
-    # Every OOoTemplate uses UTF-8 or Unicode, so a special StringIO class
-    # must be used, which does not care about response.
-    def StringIO(self):
-      return OOoTemplateStringIO()
+  # Recent Zope relies on the ZTK implementation of page templates,
+  # passing it a special expression evaluation context that converts strings
+  # to unicode in the presence of the proper request headers.
+  # Here we do the same, but forcing utf-8 conversion insteado of expecting
+  # request headers.
+  def pt_getEngine(self):
+    return _engine
 
   def pt_upload(self, REQUEST, file=''):
     """Replace the document with the text in file."""

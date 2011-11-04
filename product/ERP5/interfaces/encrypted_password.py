@@ -42,6 +42,11 @@ class IEncryptedPassword(Interface):
     Check the password, usefull when changing password
     """
 
+  def checkPasswordValueAcceptable(value):
+    """
+    Check if the password value is acceptable - i.e. follows site rules.
+    """
+
   def setEncodedPassword(value, format='default'):
     """
     Set an already encoded password.

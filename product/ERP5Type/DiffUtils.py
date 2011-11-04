@@ -57,11 +57,10 @@ class DiffFile(object):
   """
 
   def __init__(self, raw_diff):
-    if '@@' not in raw_diff:
-      self.binary = True
+    self.children = []
+    self.binary = raw_diff and '@@' not in raw_diff
+    if self.binary or not raw_diff:
       return
-    else:
-      self.binary = False
     self.header = raw_diff.split('@@')[0][:-1]
     # Getting file path in header
     self.path = self.header.split('====')[0][:-1].strip()
@@ -84,7 +83,6 @@ class DiffFile(object):
     if not self.body.startswith('@@'):
        self.body = os.linesep.join(raw_diff.strip().splitlines()[4:])
     # Now splitting modifications
-    self.children = []
     first = True
     tmp = []
     for line in self.body.splitlines():
@@ -96,6 +94,9 @@ class DiffFile(object):
           first = False
           tmp.append(line)
     self.children.append(CodeBlock(os.linesep.join(tmp)))
+
+  def __nonzero__(self):
+    return self.binary or bool(self.children)
 
   def __len__(self):
     return len(self.children)

@@ -1,0 +1,20 @@
+<property_sheet_list>
+ <portal_type id="Ubercart Test Delivery Person">
+  <item>UbercartTestPerson</item>
+ </portal_type>
+ <portal_type id="Ubercart Test Person">
+  <item>UbercartTestPerson</item>
+ </portal_type>
+ <portal_type id="Ubercart Test Product">
+  <item>UbercartTestProduct</item>
+ </portal_type>
+ <portal_type id="Ubercart Test Product Individual Variation">
+  <item>UbercartTestProductIndividualVariation</item>
+ </portal_type>
+ <portal_type id="Ubercart Test Sale Order">
+  <item>UbercartTestSaleOrder</item>
+ </portal_type>
+ <portal_type id="Ubercart Test Sale Order Item">
+  <item>UbercartTestSaleOrderItem</item>
+ </portal_type>
+</property_sheet_list>

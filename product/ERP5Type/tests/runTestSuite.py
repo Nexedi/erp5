@@ -1,10 +1,10 @@
-#!/usr/bin/python2.6
+#!/usr/bin/env python2.6
 import argparse, pprint, socket, sys, time, xmlrpclib
 from DummyTaskDistributionTool import DummyTaskDistributionTool
 from ERP5TypeTestSuite import ERP5TypeTestSuite
 
 def makeSuite(node_quantity=None, test_suite=None, revision=None,
-              db_list=None):
+              db_list=None, **kwargs):
   # BBB tests (plural form) is only checked for backward compatibility
   for k in sys.modules.keys():
     if k in ('tests', 'test',) or k.startswith('tests.') or k.startswith('test.'):
@@ -25,14 +25,20 @@ def makeSuite(node_quantity=None, test_suite=None, revision=None,
   suite = suite_class(revision=revision,
                       max_instance_count=node_quantity,
                       mysql_db_list=db_list.split(','),
-                      )
+                      **kwargs)
   return suite
 
 def safeRpcCall(function, *args):
   retry = 64
+  xmlrpc_arg_list = []
+  for argument in args:
+    if isinstance(argument, dict):
+      argument = dict([(x, isinstance(y,str) and xmlrpclib.Binary(y) or y) \
+           for (x,y) in argument.iteritems()])
+    xmlrpc_arg_list.append(argument)
   while True:
     try:
-      return function(*args)
+      return function(*xmlrpc_arg_list)
     except (socket.error, xmlrpclib.ProtocolError), e:
       print >>sys.stderr, e
       pprint.pprint(args, file(function._Method__name, 'w'))
@@ -63,8 +69,11 @@ def main():
   parser.add_argument('--volatile_memcached_server_port', default=None)
   parser.add_argument('--persistent_memcached_server_hostname', default=None)
   parser.add_argument('--persistent_memcached_server_port', default=None)
+  parser.add_argument('--bt5_path', default=None)
   
   args = parser.parse_args()
+  if args.bt5_path is not None:
+    sys.path[0:0] = args.bt5_path.split(",")
   if args.master_url is not None:
     master_url = args.master_url
     if master_url[-1] != '/':
@@ -80,7 +89,8 @@ def main():
   suite = makeSuite(test_suite=args.test_suite,
                     node_quantity=args.node_quantity,
                     revision=revision,
-                    db_list=args.db_list)
+                    db_list=args.db_list,
+                    bt5_path=args.bt5_path)
   test_result = safeRpcCall(master.createTestResult,
     args.test_suite, revision, suite.getTestList(),
     suite.allow_restart, test_suite_title, args.test_node_title,

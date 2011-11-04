@@ -33,6 +33,12 @@
             </value>
         </item>
         <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value> <string>XXX \r\n
 The purpose of this interaction is to reindex the simulation movement related to an order when the simulation state is changed.\r\n
@@ -79,6 +85,10 @@ Currently, method ids are hardcoded, and it could be better to use a generic tri
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

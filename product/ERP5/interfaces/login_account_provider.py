@@ -39,6 +39,11 @@ class ILoginAccountProvider(Interface):
     """
     Notify an authentication failure.
     """
+
+  def notifyPasswordExpire(**kw):
+    """
+    Notify a password expire event.
+    """
     
   def isLoginBlocked(**kw):
     """
@@ -54,10 +59,18 @@ class ILoginAccountProvider(Interface):
     """
     Is password valid?
     """
+    
+  def analyzePassword(password, **kw):
+    """
+    Analyze password validity.
+    Return status code indicating if password is acceptable and if not status code
+    for reason for not being a valid one (i.e. too short, not complex, etc ...)
+    """    
 
   def isPasswordAlreadyUsed(self, password):
     """
       Return if password has already been used.
     """
+
 
   

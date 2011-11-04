@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -49,26 +48,31 @@ class testTioSafeMixin(ERP5TypeTestCase):
   def getBusinessTemplateList(self):
     """ Return the list of BT required by unit tests. """
     return (
+        'erp5_core_proxy_field_legacy',
+        'erp5_full_text_myisam_catalog',
         'erp5_base',
         'erp5_pdm',
+        'erp5_simulation',
         'erp5_trade',
-        'erp5_accounting',
-        'erp5_invoicing',
-        'erp5_simplified_invoicing',
+        # 'erp5_accounting',
+        # 'erp5_invoicing',
+        # 'erp5_simplified_invoicing',
         'erp5_syncml',
         'erp5_tiosafe_core',
         'erp5_tiosafe_test',
-        'erp5_tiosafe_accounting',
-        'erp5_tiosafe_prestashop',
-        'erp5_oauth',
+        # 'erp5_tiosafe_accounting',
+        # 'erp5_tiosafe_prestashop',
+        # 'erp5_oauth',
     )
 
   def beforeTearDown(self):
     """ Call the methods which remove all created elements. """
     # remove the main elements, person, account
+    if getattr(self, "not_removable_id_list", None) is None:
+      self.not_removable_id_list = []
     for module_id in ["person_module", "product_module", "sale_order_module"]:
       module = getattr(self.portal, module_id)
-      module.manage_delObjects([x for x in module.objectIds()])
+      module.manage_delObjects([x for x in module.objectIds() if x not in self.not_removable_id_list])
 
     # delete the category integration mapping of the full integration site
     for integration_site in self.portal.portal_integrations.contentValues():
@@ -302,28 +306,6 @@ class testTioSafeMixin(ERP5TypeTestCase):
     for category in integration_site.contentValues(
         portal_type='Integration Base Category Mapping'):
       integration_site.manage_delObjects(category.getId())
-
-  def createUnknownObject(self):
-    """ This method declare the unknown element like Persons and Product. """
-    person_module = self.portal.person_module
-    product_module = self.portal.product_module
-    # Person unknown
-    if getattr(person_module, '404', None) is None:
-      person_module.newContent(
-          portal_type='Person',
-          id='404',
-          title='Unknown',
-          default_email_text='unknown@person.com',
-          # FIXME: Require to build source/destination because email is required
-      )
-    # Product unknown
-    if getattr(product_module, '404', None) is None:
-      product_module.newContent(
-          portal_type='Product',
-          id='404',
-          title='Unknown',
-          reference="Unknown",
-      )
 
   def checkTioSafeXML(self, plugin_xml=None, tiosafe_xml=None, xsd_path=None):
     """

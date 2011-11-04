@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildPaypalPaymentTransactionBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>PayPalBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/paypal/paypal_payment_transaction_mapping</string>
+                <string>source/portal_integrations/paypal/document_connector</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getPaymentTransactionLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Payment Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'date\': DateTime(\'2000/01/01\'), \'stop_date\': DateTime(\'2020/12/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>erp5/DocumentConnector_getPaymentTransactionLineList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string>[{u\'etat\': u\'Termin\\ufffd\', u\'nom\': \'Rue du commerce\', u\'montant\': \'-36,80\', u\'devise\': \'EUR\', u\'heure\': \'12:58:18\', u\'fuseau_horaire\': \'CEST\', u\'date\': \'11/08/2011\', u\'type\': u\'Paiement express envoy\\ufffd\', \'id\': \'2\'}, {u\'etat\': u\'Termin\\ufffd\', u\'nom\': \'Digital world\', u\'montant\': \'-411,97\', u\'devise\': \'EUR\', u\'heure\': \'08:02:37\', u\'fuseau_horaire\': \'CEST\', u\'date\': \'11/08/2011\', u\'type\': u\'Paiement express envoy\\ufffd\', \'id\': \'3\'}, {u\'etat\': u\'Termin\\ufffd\', u\'nom\': \'Virement X\', u\'montant\': \'-109,50\', u\'devise\': \'EUR\', u\'heure\': \'18:26:15\', u\'fuseau_horaire\': \'CEST\', u\'date\': \'13/07/2011\', u\'type\': u\'Paiement sur site marchand envoy\\ufffd\', \'id\': \'4\'}, {u\'etat\': u\'Termin\\ufffd\', u\'nom\': \'Virement XUUU\', u\'montant\': \'200\', u\'devise\': \'EUR\', u\'heure\': \'18:26:15\', u\'fuseau_horaire\': \'CEST\', u\'date\': \'23/07/2011\', u\'type\': u\'Paiement sur site marchand envoy\\ufffd\', \'id\': \'5\'}]</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Payment Transaction">\n
+  <title>Rue du commerce</title>\n
+  <start_date>2011/11/08</start_date>\n
+  <stop_date>2011/11/08</stop_date>\n
+  <reference>2</reference>\n
+  <movement>\n
+    <price>-36.80</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>Digital world</title>\n
+  <start_date>2011/11/08</start_date>\n
+  <stop_date>2011/11/08</stop_date>\n
+  <reference>3</reference>\n
+  <movement>\n
+    <price>-411.97</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>Virement X</title>\n
+  <start_date>2011/07/13</start_date>\n
+  <stop_date>2011/07/13</stop_date>\n
+  <reference>4</reference>\n
+  <movement>\n
+    <price>-109.50</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>Virement XUUU</title>\n
+  <start_date>2011/07/23</start_date>\n
+  <stop_date>2011/07/23</stop_date>\n
+  <reference>5</reference>\n
+  <movement>\n
+    <price>200.00</price>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Payment Transaction List</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

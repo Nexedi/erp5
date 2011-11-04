@@ -164,7 +164,7 @@ class subprocesstransform:
           process = Popen(argument_list, stdin=PIPE, stdout=PIPE,
                           stderr=PIPE, close_fds=True)
           data_out, data_err = process.communicate(input=data)
-        if data_err:
+        if process.returncode:
           raise OSError, data_err
         cache.setData(data_out)
         return cache

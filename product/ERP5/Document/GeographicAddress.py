@@ -30,90 +30,104 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 
 import string
 
 class GeographicAddress(Coordinate, Base):
+  """
+      A geographic address holds a complete set of
+      geographic coordinates including street, number,
+      city, zip code, region.
+
+      Geographic address is a terminating leaf
+      in the OFS. It can not contain anything.
+
+      Geographic address inherits from Base and
+      from the mix-in Coordinate
+  """
+  meta_type = 'ERP5 Geographic Address'
+  portal_type = 'Address'
+  add_permission = Permissions.AddPortalContent
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  # Declarative properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.SimpleItem
+                    , PropertySheet.SortIndex
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.Coordinate
+                    , PropertySheet.GeographicAddress
+                    )
+
+
+  def _splitCoordinateText(self, coordinate_text):
+    """return street_address, zip_code, city tuple parsed from string
     """
-        A geographic address holds a complete set of
-        geographic coordinates including street, number,
-        city, zip code, region.
+    line_list = coordinate_text.splitlines()
+    street_address = zip_code = city = ''
+    zip_city = None
+    if len(line_list) > 1:
+      street_address = ''.join(line_list[0:-1])
+      zip_city = line_list[-1].split()
+    elif len(line_list):
+      street_address = ''
+      zip_city = line_list[-1].split()
+    if zip_city:
+      zip_code = zip_city[0]
+      if len(zip_city) > 1:
+        city = ''.join(zip_city[1:])
+    return street_address, zip_code, city
 
-        Geographic address is a terminating leaf
-        in the OFS. It can not contain anything.
-
-        Geographic address inherits from Base and
-        from the mix-in Coordinate
+  security.declareProtected(Permissions.AccessContentsInformation, 'asText')
+  def asText(self):
     """
-    meta_type = 'ERP5 Geographic Address'
-    portal_type = 'Address'
-    add_permission = Permissions.AddPortalContent
+      Returns the address as a complete formatted string
+      with street address, zip, and city
+    """
+    result = Coordinate.asText(self)
+    if result is None:
+      if self.isDetailed():
+        street_address = self.getStreetAddress('')
+        zip_code = self.getZipCode('')
+        city = self.getCity('')
+      else:
+        street_address, zip_code, city = self._splitCoordinateText(self.getCoordinateText(''))
+      result = '%s\n%s %s' % (street_address, zip_code, city)
+    if not result.strip():
+      return ''
+    return result
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  @deprecated
+  def fromText(self, coordinate_text):
+    """Save given data then continue parsing 
+    (deprecated because computed values are stored)
+    """
+    self._setCoordinateText(coordinate_text)
+    street_address, zip_code, city = self._splitCoordinateText(coordinate_text)
+    self.setStreetAddress(street_address)
+    self.setZipCode(zip_code)
+    self.setCity(city)
 
-    # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.SimpleItem
-                      , PropertySheet.SortIndex
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.GeographicAddress
-                      )
-
-
-    security.declareProtected(Permissions.AccessContentsInformation, 'asText')
-    def asText(self):
-        """
-          Returns the address as a complete formatted string
-          with street address, zip, city and region
-        """
-        result = Coordinate.asText(self)
-        if result is None:
-          result = ('%s\n%s %s') % (self.getStreetAddress() or '',
-                      self.getCity() or '', self.getZipCode() or '')
-        if not result.strip():
-          return ''
-        return result
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
-    def fromText(self, coordinate_text):
-        """
-          Tries to recognize the coordinate_text to update
-          this address
-          XXX fromText will be removed.
-          Instead, store text value as user filled in text attribute,
-          then display text value through a configurable output filter, suitable
-          for all addresses patterns.
-        """
-        lines = string.split(coordinate_text, '\n')
-        self.setStreetAddress('')
-        self.setZipCode('')
-        self.setCity('')
-        zip_city = None
-        if len(lines ) > 1:
-          self.setStreetAddress(lines[0:-1])
-          zip_city = string.split(lines[-1])
-        elif len(lines ) > 0:
-          self.setStreetAddress('')
-          zip_city = string.split(lines[-1])
-        if zip_city:
-          self.setZipCode(zip_city[0])
-          if len(zip_city) > 1:
-            self.setCity(string.join(zip_city[1:]))
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'standardTextFormat')
-    def standardTextFormat(self):
-        """
-          Returns the standard text format for geographic addresses
-        """
-        return ("""\
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'standardTextFormat')
+  def standardTextFormat(self):
+    """
+      Returns the standard text format for geographic addresses
+    """
+    return ("""\
 c/o Jean-Paul Sartre
 43, avenue Kleber
 75118 Paris Cedex 5
 """,
 )
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  def isDetailed(self):
+    return self.hasStreetAddress() or self.hasZipCode() or self.hasCity()

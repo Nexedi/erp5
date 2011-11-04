@@ -403,7 +403,7 @@ class BusinessProcess(Path, XMLObject):
 
     trade_state -- a Trade State category
     """
-    return len(self.getBusinessLinkValueList(successor=trade_state)) == 0
+    return not self.getBusinessLinkValueList(successor=trade_state)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isFinalTradeState')
   def isFinalTradeState(self, trade_state):
@@ -412,7 +412,7 @@ class BusinessProcess(Path, XMLObject):
 
     trade_state -- a Trade State category
     """
-    return len(self.getBusinessLinkValueList(predecessor=trade_state)) == 0
+    return not self.getBusinessLinkValueList(predecessor=trade_state)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getSuccessorTradeStateList')
   def getSuccessorTradeStateList(self, explanation, trade_state):
@@ -761,14 +761,12 @@ class BusinessProcess(Path, XMLObject):
           amount, None))
 
     # Arrow categories
-    for base_category, category_url_list in \
-            trade_model_path.getArrowCategoryDict(context=amount).iteritems():
-      property_dict[base_category] = category_url_list
+    property_dict.update(trade_model_path.getArrowCategoryDict(context=amount))
 
     # More categories
     for base_category in ('delivery_mode', 'incoterm', 'payment_mode'):
       value = trade_model_path.getPropertyList(base_category)
-      if len(value) > 0:
+      if value:
         property_dict[base_category] = value
 
     # Amount quantities - XXX-JPS maybe we should consider handling unit conversions here
@@ -824,7 +822,7 @@ class BusinessProcess(Path, XMLObject):
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
     """
-    return len(self.getBuildableBusinessLinkValueList(explanation)) != 0
+    return not not self.getBuildableBusinessLinkValueList(explanation)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'isPartiallyBuildable')
   def isPartiallyBuildable(self, explanation):
@@ -834,7 +832,7 @@ class BusinessProcess(Path, XMLObject):
     explanation -- an Order, Order Line, Delivery or Delivery Line or
                    Applied Rule which implicitely defines a simulation subtree
     """
-    return len(self.getPartiallyBuildableBusinessLinkValueList(explanation)) != 0
+    return not not self.getPartiallyBuildableBusinessLinkValueList(explanation)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'build')
   def build(self, explanation):

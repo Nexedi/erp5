@@ -252,6 +252,17 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
       self.assertEquals([1], result)
 
+    def test_FolderMixinSecurity(self):
+      """ Test if FolderMix methods cannot be called by URL """
+      type_list = ['Folder']
+      self._setAllowedContentTypesForFolderType(type_list)
+      obj = self.folder.newContent(portal_type='Folder')
+      transaction.commit()
+      response = self.publish('%s/deleteContent?id=%s' % (
+              self.folder.absolute_url(relative=True), obj.getId()))
+      self.assertTrue(obj.getId() in self.folder.objectIds())
+      self.assertEquals(302, response.getStatus())
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestFolder))

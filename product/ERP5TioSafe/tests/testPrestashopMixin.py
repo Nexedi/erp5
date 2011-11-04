@@ -36,18 +36,9 @@ class testPrestashopMixin(testTioSafeMixin):
 
   def getBusinessTemplateList(self):
     """ Return the list of BT required by unit tests. """
-    return (
-        'erp5_base',
-        'erp5_pdm',
-        'erp5_trade',
-        'erp5_simulation',
-        'erp5_simulation_legacy',
-        'erp5_trade_simulation_legacy',
-        'erp5_syncml',
-        'erp5_tiosafe_core',
-        'erp5_tiosafe_prestashop',
-        'erp5_tiosafe_test',
-    )
+    return testTioSafeMixin.getBusinessTemplateList(self) + (
+      'erp5_tiosafe_prestashop',
+      )
 
   def initPrestashopTest(self):
     """ This method is called after the SetUp method. """
@@ -70,7 +61,7 @@ class testPrestashopMixin(testTioSafeMixin):
     connection_plugin.setUrlString(url)
     connection_plugin.setTransport('php_unit_test')
     self.updateSynchronizationObjects()
-    self.organisation = self.portal.organisation_module.tiosafe_default_organisation
+    self.organisation = self.prestashop.getSourceAdministrationValue()
     self.prestashop.recursiveReindexObject()
     transaction.commit()
     self.tic()

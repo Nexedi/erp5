@@ -47,10 +47,6 @@ from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 import transaction
 
 from OFS.ObjectManager import ObjectManager
@@ -439,13 +435,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     #if uid_buffer_key in uid_buffer_dict:
     #  del uid_buffer_dict[uid_buffer_key]
     def getUIDBuffer(*args, **kw):
-      uid_lock = catalog.__class__._reserved_uid_lock
-      uid_lock.acquire()
-      try:
-        result = catalog.getUIDBuffer(*args, **kw)
-      finally:
-        uid_lock.release()
-      return result
+      with catalog.__class__._reserved_uid_lock:
+        return catalog.getUIDBuffer(*args, **kw)
 
     getUIDBuffer(force_new_buffer=True)
 
@@ -1711,7 +1702,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     `uid` BIGINT UNSIGNED NOT NULL,
     `dummy_title` varchar(32) NOT NULL default '',
     PRIMARY KEY  (`uid`)
-    ) TYPE=InnoDB;
+    ) ENGINE=InnoDB;
     """
     drop_summy_table_sql = """
     DROP TABLE IF EXISTS `dummy`
@@ -2715,7 +2706,7 @@ CREATE TABLE `%s` (
   `owner_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `version` (`owner_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -2908,7 +2899,7 @@ CREATE TABLE `%s` (
   PRIMARY KEY  (`uid`),
   KEY `assignee_reference` (`assignee_reference`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -3072,7 +3063,7 @@ CREATE TABLE `%s` (
   PRIMARY KEY  (`uid`),
   KEY `assignee_reference` (`assignee_reference`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -3328,7 +3319,7 @@ CREATE TABLE `%s` (
   `viewable_assignee_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -3558,7 +3549,7 @@ CREATE TABLE `%s` (
   `viewable_assignee_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,

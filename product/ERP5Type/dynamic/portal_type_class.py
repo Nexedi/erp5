@@ -354,10 +354,7 @@ def synchronizeDynamicModules(context, force=False):
         tool = getattr(portal, tool_id, None)
         if tool is None:
           tool = tool_class()
-          try:
-            portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
-          except TypeError:
-            portal._setObject(tool_id, tool, set_owner=False)
+          portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
           tool = getattr(portal, tool_id)
         elif tool._isBootstrapRequired():
           migrate = True
@@ -367,9 +364,7 @@ def synchronizeDynamicModules(context, force=False):
         tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
 
       if migrate:
-        from Products.ERP5Type.dynamic.persistent_migration import PickleUpdater
-        if PickleUpdater.get:
-          portal.migrateToPortalTypeClass()
+        portal.migrateToPortalTypeClass()
         portal.portal_skins.changeSkin(None)
         TransactionalResource(tpc_finish=lambda txn:
             _bootstrapped.add(portal.id))

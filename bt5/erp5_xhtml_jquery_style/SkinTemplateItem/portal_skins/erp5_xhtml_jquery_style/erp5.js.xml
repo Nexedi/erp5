@@ -86,6 +86,7 @@ function autoFocus() {\n
 function buildTables(element_list, rowPredicate, columnPredicate,\n
                     tableClassName) {\n
   /* Generic code to build a table from elements in element_list.\n
+   * XXX: not used anymore ?\n
    * rowPredicate(element) -> bool\n
    *   When it returns a true value, a new line is started with element.\n
    *   When is returns a false value, element is skipped.\n
@@ -146,11 +147,13 @@ function buildTables(element_list, rowPredicate, columnPredicate,\n
 }\n
 \n
 function matchLeftFieldset(element) {\n
+// XXX: not used anymore ?\n
   return (element.tagName == "FIELDSET" &&\n
        element.className.toLowerCase().indexOf(\'left\') != -1)\n
 }\n
 \n
 function matchRightFieldset(element, ignored) {\n
+// XXX: not used anymore ?\n
   if (element.tagName == "FIELDSET" &&\n
        element.className.toLowerCase().indexOf(\'right\') != -1)\n
     return 7; /* End row, table and use element */\n
@@ -159,9 +162,25 @@ function matchRightFieldset(element, ignored) {\n
 \n
 function fixLeftRightHeightAndFocus(fix_height) {\n
   if (fix_height == 1) {\n
-     buildTables(document.getElementsByTagName(\'fieldset\'),\n
-                matchLeftFieldset, matchRightFieldset,\n
-                "fake");\n
+    var right_xpath = "following-sibling::fieldset[contains(@class, \'right\')]";\n
+    var matched_left_element_list = document.evaluate("//fieldset[contains(@class, \'left\') and " + right_xpath + "]", document, null, XPathResult.UNORDERED_NODE_SNAPSHOT_TYPE, null);\n
+    var element_index;\n
+    for (element_index = 0; element_index < matched_left_element_list.snapshotLength; element_index++) {\n
+      var element = matched_left_element_list.snapshotItem(element_index);\n
+      var right = document.evaluate(right_xpath, element, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;\n
+      var cell;\n
+      var row = document.createElement("tr");\n
+      var table = document.createElement("table");\n
+      table.className = "fake";\n
+      element.parentNode.insertBefore(table, element);\n
+      cell = document.createElement("td");\n
+      cell.appendChild(element);\n
+      row.appendChild(cell);\n
+      cell = document.createElement("td");\n
+      cell.appendChild(right);\n
+      row.appendChild(cell);\n
+      table.appendChild(row);\n
+    }\n
   }\n
   autoFocus();\n
 }\n

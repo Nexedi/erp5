@@ -191,6 +191,9 @@ class ERP5TypeTestSuite(TestSuite):
     \)
     """, re.DOTALL | re.VERBOSE)
 
+  FTEST_PASS_FAIL_RE = re.compile(
+    '.*Functional Tests (?P<total>\d+) Tests, (?P<failures>\d+) Failures')
+
   def setup(self):
     instance_home = self.instance and 'unit_test.%u' % self.instance \
                                    or 'unit_test'
@@ -298,6 +301,8 @@ class SavedTestSuite(ERP5TypeTestSuite):
     super(SavedTestSuite, self).__init__(*args, **kw)
 
   def __runUnitTest(self, *args, **kw):
+    if self.__dict__.has_key("bt5_path"):
+      args = ("--bt5_path=%s" % self.bt5_path,) + args
     return super(SavedTestSuite, self).runUnitTest(
       '--portal_id=' + self._portal_id,
       *args, **kw)

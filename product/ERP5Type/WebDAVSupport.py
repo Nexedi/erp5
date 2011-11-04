@@ -19,12 +19,6 @@ from Acquisition import aq_parent, aq_inner, aq_base
 from AccessControl import ClassSecurityInfo, ModuleSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, Constraint
 from Products.CMFCore.PortalContent import ResourceLockedError
-try:
-    from Products.CMFCore.PortalContent import NoWL
-except ImportError:
-    # NoWL has been 0 for a long time now
-    NoWL = 0
-    
 from Products.CMFCore.utils import getToolByName
 from Products.CMFDefault.utils import parseHeadersBody
 from Products.CMFDefault.utils import html_headcheck
@@ -120,9 +114,8 @@ class TextContent:
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
   def PUT(self, REQUEST, RESPONSE):
     """ Handle HTTP (and presumably FTP?) PUT requests """
-    if not NoWL:
-      self.dav__init(REQUEST, RESPONSE)
-      self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+    self.dav__init(REQUEST, RESPONSE)
+    self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
     body = REQUEST.get('BODY', '')
 
     try:
@@ -200,36 +193,47 @@ class TextContent:
     """ Used for FTP and apparently the ZMI now too """
     return len(self.manage_FTPget())
 
+from webdav.common import Locked, PreconditionFailed
+from webdav.interfaces import IWriteLock
+from webdav.NullResource import NullResource
+NullResource_PUT = NullResource.PUT
 
-class Folder:
-  """
-  Taken from CMFCore.PortalFolder
-  """
-  def PUT_factory( self, name, typ, body ):
-    """ Factory for PUT requests to objects which do not yet exist.
+def PUT(self, REQUEST, RESPONSE):
+        """Create a new non-collection resource.
+        """
+        if getattr(self.__parent__, 'PUT_factory', None) is not None: # BBB
+          return NullResource_PUT(self, REQUEST, RESPONSE)
 
-    Used by NullResource.PUT.
+        self.dav__init(REQUEST, RESPONSE)
 
-    Returns -- Bare and empty object of the appropriate type (or None, if
-    we don't know what to do)
-    """
-    portal = self.getPortalObject()
-    registry = portal.portal_contribution_registry
-    portal_type = registry.findPortalTypeName(filename=name,
-                                              content_type=typ)
-    if portal_type is None:
-      return None
+        name = self.__name__
+        parent = self.__parent__
 
-    # The code bellow is inspired from ERP5Type.Core.Folder.newContent
-    pt = self._getTypesTool()
-    myType = pt.getTypeInfo(self)
-    if myType is not None and not myType.allowType( portal_type ) and \
-       'portal_contributions' not in self.getPhysicalPath():
-      raise ValueError('Disallowed subobject type: %s' % portal_type)
-    container = portal.getDefaultModule(portal_type)
-    pt.constructContent(type_name=portal_type,
-                        container=container,
-                        id=name)
+        ifhdr = REQUEST.get_header('If', '')
+        if IWriteLock.providedBy(parent) and parent.wl_isLocked():
+            if ifhdr:
+                parent.dav__simpleifhandler(REQUEST, RESPONSE, col=1)
+            else:
+                # There was no If header at all, and our parent is locked,
+                # so we fail here
+                raise Locked
+        elif ifhdr:
+            # There was an If header, but the parent is not locked
+            raise PreconditionFailed
 
-    document = container._getOb(name)
-    return document
+        # <ERP5>
+        # XXX: Do we really want to force 'id'
+        #      when PUT is called on Contribution Tool ?
+        kw = {'id': name, 'data': None, 'filename': name}
+        contribution_tool = parent.getPortalObject().portal_contributions
+        if aq_base(contribution_tool) is not aq_base(parent):
+          kw.update(container=parent, discover_metadata=False)
+        ob = contribution_tool.newContent(**kw)
+        # </ERP5>
+
+        ob.PUT(REQUEST, RESPONSE)
+        RESPONSE.setStatus(201)
+        RESPONSE.setBody('')
+        return RESPONSE
+
+NullResource.PUT = PUT

@@ -5,3 +5,4 @@ default_email_text | catalog,email/url_string/z_related_default_email
 related_resource_use_uid | category,category,catalog,catalog/uid/z_related_resource_use
 owner_title | catalog/title/z_related_owner_title
 child_address_SearchableText | catalog,full_text/SearchableText/z_related_child_address
+child_telephone_SearchableText | catalog,full_text/SearchableText/z_related_child_telephone

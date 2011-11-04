@@ -192,7 +192,7 @@ class TradeModelPath(Path):
     #  * remove categories which base name is not category
     #  * respect base parameter
     prefix = category + '/'
-    start_index = not base and len(prefix) or 0
+    start_index = 0 if base else len(prefix)
     return [category[start_index:]
             for category in category_list
             if category.startswith(prefix)]

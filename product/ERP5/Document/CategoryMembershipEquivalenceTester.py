@@ -56,7 +56,8 @@ class CategoryMembershipEquivalenceTester(Predicate, EquivalenceTesterMixin):
 
   @staticmethod
   def _getTestedPropertyValue(movement, property):
-    return movement.getPropertyList(property)
+    # What about using getCategoryMembershipList for Simulation Movements ?
+    return movement.getAcquiredCategoryMembershipList(property)
 
   def _compare(self, prevision_movement, decision_movement):
     """

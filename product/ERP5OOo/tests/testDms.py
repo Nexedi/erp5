@@ -93,9 +93,13 @@ def makeFileUpload(name, as_name=None):
 class TestDocumentMixin(ERP5TypeTestCase):
   
   bussiness_template_list = ['erp5_core_proxy_field_legacy',
-                             'erp5_full_text_myisam_catalog','erp5_base',
-                             'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog',
-                             'erp5_web', 'erp5_dms']
+                             'erp5_jquery',
+                             'erp5_full_text_myisam_catalog',
+                             'erp5_base',
+                             'erp5_ingestion_mysql_innodb_catalog', 
+                             'erp5_ingestion',
+                             'erp5_web', 
+                             'erp5_dms']
 
   def setUpOnce(self):
     # set a dummy localizer (because normally it is cookie based)
@@ -131,8 +135,10 @@ class TestDocumentMixin(ERP5TypeTestCase):
     preference_list = self.portal.portal_preferences.contentValues(
                                                        portal_type=portal_type)
     if not preference_list:
-      preference = self.portal.portal_preferences.newContent(
-                                                       portal_type=portal_type)
+      preference = self.portal.portal_preferences.newContent(title="Default System Preference",
+                                                             # use local RAM based cache as some tests need it
+                                                             preferred_conversion_cache_factory = 'erp5_content_long',
+                                                             portal_type=portal_type)
     else:
       preference = preference_list[0]
     if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
@@ -1330,7 +1336,7 @@ class TestDocument(TestDocumentMixin):
     upload_file = makeFileUpload('cmyk_sample.jpg')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEquals('Image', document.getPortalType())
-    self.assertEquals('ERP5 is a free software.\n', document.asText())
+    self.assertEquals('ERP5 is a free software\n\n', document.asText())
 
   def test_Base_showFoundText(self):
     # Create document with good content
@@ -1344,7 +1350,7 @@ class TestDocument(TestDocumentMixin):
 
     # Delete base_data
     document.edit(base_data=None)
-    self.stepTic()
+    
     # As document is not converted, text conversion is impossible
     self.assertRaises(NotConvertedError, document.asText)
     self.assertRaises(NotConvertedError, document.getSearchableText)
@@ -1492,6 +1498,30 @@ class TestDocument(TestDocumentMixin):
     # then compare with resized ERP5 Image
     self.assertEquals(builder.extract('Pictures/%s.jpeg' % image_count),
                       converted_image, failure_message)
+
+    # Let's continue with Presentation Document as embbeded image
+    document = self.portal.document_module.newContent(portal_type='Presentation')
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    image_reference = 'IMAGE-odp'
+    document.edit(file=upload_file, reference=image_reference)
+    document.publish()
+    transaction.commit()
+    self.tic()
+    html_content = '<p><img src="%s?format=png&amp;display=%s&amp;quality=75"/></p>' % \
+                                              (image_reference, image_display)
+    web_page.edit(text_content=html_content)
+    mime_type, odt_archive = web_page.convert('odt')
+    builder = OOoBuilder(odt_archive)
+    image_count = builder._image_count
+    # compute resized image for comparison
+    mime, converted_image = document.convert(format='png',
+                                             display=image_display,
+                                             quality=75)
+    # fetch image from zipped archive content
+    # then compare with resized ERP5 Image
+    self.assertEquals(builder.extract('Pictures/%s.png' % image_count),
+                      converted_image, failure_message)
+
 
   def test_addContributorToDocument(self):
     """
@@ -1680,6 +1710,11 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     self.assertTrue('AZERTYY' not in safe_html)
     self.assertTrue('#FFAA44' in safe_html)
 
+    filename = 'broken_html.html'
+    file_object = makeFileUpload(filename)
+    web_page.edit(file=file_object)
+    converted = web_page.convert('html')[1]
+
   def test_safeHTML_impossible_conversion(self):
     """Some html are not parsable.
     """
@@ -1701,6 +1736,26 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     except HTMLParseError:
       expectedFailure(self.fail)(
         'Even BeautifulSoup is not able to parse such HTML')
+
+  def test_safeHTML_unknown_codec(self):
+    """Some html declare unknown codecs.
+    """
+    web_page_portal_type = 'Web Page'
+    module = self.portal.getDefaultModule(web_page_portal_type)
+    web_page = module.newContent(portal_type=web_page_portal_type)
+
+    html_content = """
+    <html>
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=unicode" />
+        <title>BLa</title>
+      </head>
+      <body><p> blablabla</p></body>
+    </html>"""
+    web_page.edit(text_content=html_content)
+    safe_html = web_page.convert('html')[1]
+    self.assertTrue('unicode' not in safe_html)
+    self.assertTrue('utf-8' in safe_html)
 
   def test_parallel_conversion(self):
     """Check that conversion engine is able to fill in
@@ -1841,7 +1896,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     module = self.portal.getDefaultModule(portal_type)
     upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
     document = module.newContent(portal_type=portal_type, file=upload_file)
-    self.assertEquals(document.asText(), 'ERP5 is a free software.\n')
+    self.assertEquals(document.asText(), 'ERP5 is a free software\n\n')
 
   def createRestrictedSecurityHelperScript(self):
     script_content_list = ['format=None, **kw', """
@@ -2054,10 +2109,22 @@ return 1
       image_document_image_size_no_quality,image_document_file_size_no_quality = self.getURLSizeList(url, **convert_kw)
       # check file sizes
       self.assertTrue(image_document_file_size_100p > image_document_file_size_no_quality and \
-                      image_document_file_size_no_quality > image_document_file_size_5p)
+                      image_document_file_size_no_quality > image_document_file_size_5p,
+                      "%s should be more then %s and %s should be more them %s" % \
+                       (image_document_file_size_100p,
+                        image_document_file_size_no_quality,
+                        image_document_file_size_no_quality, 
+                        image_document_file_size_5p)
+                      )
       # no matter of quality image sizes whould be the same
       self.assertTrue(image_document_image_size_100p==image_document_image_size_5p and \
-                        image_document_image_size_5p==image_document_image_size_no_quality)
+                        image_document_image_size_5p==image_document_image_size_no_quality,
+                      "%s should be equals to %s and %s should be equals to %s" % \
+                       (image_document_image_size_100p,
+                        image_document_image_size_5p,
+                        image_document_image_size_5p,
+                        image_document_image_size_no_quality)
+                      )
 
   def test_checkConversionFormatPermission(self):
     """
@@ -2070,6 +2137,42 @@ return 1
 
     # if PDF size is larger than A4 format system should deny conversion
     self.assertRaises(Unauthorized, pdf.convert, format='jpeg')
+  
+  def test_preConversionOnly(self):
+    """
+      Test usage of pre_converted_only argument - i.e. return a conversion only form cache otherwise
+      return a default (i.e. indicating a conversion failures)
+    """
+    doc = self.portal.document_module.newContent(portal_type='Presentation')
+    upload_file = makeFileUpload('TEST-en-003.odp')
+    doc.edit(file=upload_file)    
+    doc.publish()
+    self.stepTic()
+    
+    default_conversion_failure_image_size, default_conversion_failure_image_file_size = \
+                            self.getURLSizeList('%s/default_conversion_failure_image' %self.portal.absolute_url())
+    
+    doc_url = '%s/%s' %(self.portal.absolute_url(), doc.getPath())
+    converted_image_size_70, converted_file_size_70 = self.getURLSizeList(doc_url, \
+                                                             **{'format':'png', 'quality':70.0})
+    self.assertTrue(doc.hasConversion(**{'format': 'png', 'quality': 70.0}))                                                             
+
+    # try with new quality and pre_converted_only now a default image 
+    # with content "No image available" should be returned
+    failure_image_size, failure_file_size = self.getURLSizeList(doc_url, \
+                                                   **{'format':'png', 'quality':80.0, 'pre_converted_only':1})
+    self.assertSameSet(failure_image_size, default_conversion_failure_image_size)
+    
+
+    converted_image_size_80, converted_file_size_80 = self.getURLSizeList(doc_url, \
+                                                             **{'format':'png', 'quality':80.0})
+    self.assertSameSet(converted_image_size_80, converted_image_size_70)    
+    self.assertTrue(doc.hasConversion(**{'format': 'png', 'quality': 80.0}))
+    
+    # as conversion is cached we should get it
+    converted_image_size_80n, converted_file_size_80n = self.getURLSizeList(doc_url, 
+                                                               **{'format':'png', 'quality':80.0, 'pre_converted_only':1})
+    self.assertSameSet(converted_image_size_80n, converted_image_size_70)
 
   def test_getSearchText(self):
     """
@@ -2541,7 +2644,9 @@ class TestDocumentPerformance(TestDocumentMixin):
     after = time.time()
     req_time = (after - before)
     # we should have image converted in less than 20s
-    self.assertTrue(req_time < 30.0)
+    self.assertTrue(req_time < 30.0, 
+      "Conversion took %s seconds and it is not less them 30.0 seconds" % \
+        req_time)
 
 def test_suite():
   suite = unittest.TestSuite()

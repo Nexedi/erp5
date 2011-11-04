@@ -47,6 +47,11 @@
     tal:condition="here/getDescription">\n
   <description tal:content="here/getDescription" /></tal:block>\n
   <category tal:repeat="category here/Resource_getCategoryList" tal:content="category" />\n
+  <mapping tal:repeat="mapping here/Resource_getMappingList">\n
+    <category tal:repeat="category mapping/category" tal:content="category" /><tal:block\n
+      tal:condition="mapping/reference">\n
+    <reference tal:content="mapping/reference" /></tal:block>\n
+  </mapping>\n
 </resource>\n
 
 

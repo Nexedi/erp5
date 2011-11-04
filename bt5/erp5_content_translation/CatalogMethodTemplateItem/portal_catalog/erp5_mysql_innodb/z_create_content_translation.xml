@@ -65,7 +65,7 @@
   `translated_text` TEXT,\n
   PRIMARY KEY (`uid`, `property_name`, `content_language`),\n
   FULLTEXT `Translated Text` (`translated_text`)\n
-) TYPE=MyISAM;\n
+) ENGINE=MyISAM;\n
 </string> </value>
         </item>
         <item>

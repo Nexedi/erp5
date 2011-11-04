@@ -1,2 +1,4 @@
 Payment Transaction Group Module | view
 Payment Transaction Group | view
+Payment Transaction | jump_payment_transaction_group
+Payment Transaction | remove_from_payment_transaction_group_action

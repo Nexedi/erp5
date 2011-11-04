@@ -64,7 +64,7 @@
   `translated_validation_state_title` VARCHAR(255) DEFAULT \'\',\n
   `modification_date` DATETIME,\n
   PRIMARY KEY (`uid`)\n
-) TYPE=InnoDB\n
+) ENGINE=InnoDB\n
 </string> </value>
         </item>
         <item>

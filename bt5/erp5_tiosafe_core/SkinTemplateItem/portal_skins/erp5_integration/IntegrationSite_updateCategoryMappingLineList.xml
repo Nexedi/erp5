@@ -170,100 +170,12 @@ return getattr(context, request.form[\'dialog_id\'])(listbox=listbox, kw=kw)\n
 ]]></string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string>listbox={}, **kw</string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>1</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>listbox</string>
-                            <string>kw</string>
-                            <string>mapping_dict</string>
-                            <string>destination_list</string>
-                            <string>getMappingUid</string>
-                            <string>getMappingChildUid</string>
-                            <string>resetListBox</string>
-                            <string>_getiter_</string>
-                            <string>line</string>
-                            <string>_getattr_</string>
-                            <string>_getitem_</string>
-                            <string>line_id</string>
-                            <string>_write_</string>
-                            <string>bad_destination_list</string>
-                            <string>destination</string>
-                            <string>context</string>
-                            <string>request</string>
-                            <string>integration_site</string>
-                            <string>len</string>
-                            <string>repr</string>
-                            <string>status_message</string>
-                            <string>getattr</string>
-                            <string>line_list</string>
-                            <string>len_line_list</string>
-                            <string>reset_uid_list</string>
-                            <string>uid</string>
-                            <string>your_mapping</string>
-                            <string>your_destination_reference</string>
-                            <string>your_destination_reference_text</string>
-                            <string>parent_mapping</string>
-                            <string>parent_destination_reference</string>
-                            <string>parent_destination_reference_text</string>
-                            <string>parent_uid</string>
-                            <string>None</string>
-                            <string>line_uid</string>
-                            <string>destination_reference</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <tuple>
-                <dictionary/>
-              </tuple>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>IntegrationSite_updateCategoryMappingLineList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

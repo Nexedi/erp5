@@ -36,7 +36,6 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type import Permissions
 from Products.ERP5Configurator import _dtmldir
-from Products.CMFCore.utils import getToolByName
 from Products.Formulator.Errors import FormValidationError
 import cookielib
 from base64 import encodestring
@@ -430,8 +429,8 @@ class ConfiguratorTool(BaseTool):
         activities should not exists.
     """
     global installation_status
-    portal_activities = getToolByName(self.getPortalObject(),
-        'portal_activities')
+    portal_activities = self.getPortalObject().portal_activities
+
     is_bt5_installation_over = (portal_activities.countMessageWithTag(
       'initialERP5Setup') == 0)
     if 0 == len(portal_activities.getMessageList()) and \

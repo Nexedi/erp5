@@ -390,7 +390,7 @@ class BusinessConfiguration(Item):
       Remove all traces from user input (i.e. Configuration Saves, workflow history).
     """
     object_ids = []
-    for obj in self.contentValues(filter={'portal_type': ['Configuration Save', 'File', 'Link']}):
+    for obj in self.contentValues(filter={'portal_type': ['Configuration Save']}):
       object_ids.append(obj.getId())
     self.manage_delObjects(object_ids)
     del self.workflow_history

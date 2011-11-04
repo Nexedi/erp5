@@ -1,3 +1,6 @@
+2011-10-12 tatuya
+* Make it selectable in Accounting Preference how to display bank account.
+
 2011-04-04 Kazuhiko
 * configure searchable text property ids for Accounting Period, Accounting Transaction, Balance Transaction, Internal Invoice Transaction, Payment Transaction, Purchase Invoice Transaction and Sale Invoice Transaction.
 

@@ -46,10 +46,6 @@ class SubprocessError(EnvironmentError):
 
 from Updater import Updater
 
-def log(message):
-  # Log to stdout, with a timestamp.
-  print time.strftime('%Y/%m/%d %H:%M:%S'), message
-
 supervisord_pid_file = None
 process_group_pid_set = set()
 def sigterm_handler(signal, frame):
@@ -62,13 +58,14 @@ def sigterm_handler(signal, frame):
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
+import logging
 def safeRpcCall(function, *args):
   retry = 64
   while True:
     try:
       return function(*args)
     except (socket.error, xmlrpclib.ProtocolError), e:
-      print >>sys.stderr, e
+      logging.warning(e)
       pprint.pprint(args, file(function._Method__name, 'w'))
       time.sleep(retry)
       retry += retry >> 1
@@ -100,12 +97,11 @@ def killPreviousRun():
 PROFILE_PATH_KEY = 'profile_path'
 
 def run(config):
+  log = config['logger']
   slapgrid = None
   global supervisord_pid_file
   supervisord_pid_file = os.path.join(config['instance_root'], 'var', 'run',
         'supervisord.pid')
-  subprocess.check_call([config['git_binary'],
-                "config", "--global", "http.sslVerify", "false"])
   previous_revision = None
 
   run_software = True
@@ -113,7 +109,7 @@ def run(config):
   custom_profile_path = os.path.join(config['working_directory'], 'software.cfg')
   config['custom_profile_path'] = custom_profile_path
   vcs_repository_list = config['vcs_repository_list']
-  profile_content = None
+  profile_content = ''
   assert len(vcs_repository_list), "we must have at least one repository"
   try:
     # BBB: Accept global profile_path, which is the same as setting it for the
@@ -123,6 +119,7 @@ def run(config):
     pass
   else:
     vcs_repository_list[0][PROFILE_PATH_KEY] = profile_path
+  profile_path_count = 0
   for vcs_repository in vcs_repository_list:
     url = vcs_repository['url']
     buildout_section_id = vcs_repository.get('buildout_section_id', None)
@@ -136,12 +133,14 @@ def run(config):
     except KeyError:
       pass
     else:
-      if profile_content is not None:
+      profile_path_count += 1
+      if profile_path_count > 1:
         raise ValueError(PROFILE_PATH_KEY + ' defined more than once')
       profile_content = """
 [buildout]
 extends = %(software_config_path)s
 """ %  {'software_config_path': os.path.join(repository_path, profile_path)}
+
     if not(buildout_section_id is None):
       profile_content += """
 [%(buildout_section_id)s]
@@ -151,7 +150,7 @@ branch = %(branch)s
         'repository_path' : repository_path,
         'branch' : vcs_repository.get('branch','master')}
 
-  if profile_content is None:
+  if not profile_path_count:
     raise ValueError(PROFILE_PATH_KEY + ' not defined')
   custom_profile = open(custom_profile_path, 'w')
   custom_profile.write(profile_content)
@@ -179,10 +178,10 @@ branch = %(branch)s
             if vcs_repository.get('branch') is not None:
               parameter_list.extend(['-b',vcs_repository.get('branch')])
             parameter_list.append(repository_path)
-            subprocess.check_call(parameter_list)
+            log(subprocess.check_output(parameter_list, stderr=subprocess.STDOUT))
           # Make sure we have local repository
           updater = Updater(repository_path, git_binary=config['git_binary'],
-            log=log)
+            log=log, realtime_output=False)
           updater.checkout()
           revision = "-".join(updater.getRevision())
           full_revision_list.append('%s=%s' % (repository_id, revision))
@@ -225,12 +224,17 @@ branch = %(branch)s
               # revision
               log('  %s at %s' % (repository_path, revision))
               updater = Updater(repository_path, git_binary=config['git_binary'],
-                                revision=revision)
+                                revision=revision, log=log,
+                                realtime_output=False)
               updater.checkout()
 
           # Now prepare the installation of SlapOS and create instance
+          slapproxy_log = os.path.join(config['log_directory'],
+              'slapproxy.log')
+          log('Configured slapproxy log to %r' % slapproxy_log)
           slapos_controler = SlapOSControler.SlapOSControler(config,
-            process_group_pid_set=process_group_pid_set, log=log)
+            process_group_pid_set=process_group_pid_set, log=log,
+            slapproxy_log=slapproxy_log)
           for method_name in ("runSoftwareRelease", "runComputerPartition"):
             stdout, stderr = getInputOutputFileList(config, method_name)
             slapos_method = getattr(slapos_controler, method_name)
@@ -256,9 +260,7 @@ branch = %(branch)s
           if isinstance(revision, tuple):
             revision = ','.join(revision)
           # Deal with Shebang size limitation
-          file_object = open(run_test_suite_path, 'r')
-          line = file_object.readline()
-          file_object.close()
+          line = open(run_test_suite_path, 'r').readline()
           invocation_list = []
           if line[:2] == '#!':
             invocation_list = line[2:].split()
@@ -268,15 +270,20 @@ branch = %(branch)s
                                   '--test_suite_title', test_suite_title,
                                   '--node_quantity', config['node_quantity'],
                                   '--master_url', config['test_suite_master_url']])
+          bt5_path_list = config.get("bt5_path")
+          if bt5_path_list is not None:
+            invocation_list.extend(["--bt5_path", bt5_path_list])
           # From this point, test runner becomes responsible for updating test
           # result.
           # XXX: is it good for all cases (eg: test runner fails too early for
           # any custom code to pick the failure up and react ?)
           remote_test_result_needs_cleanup = False
+          log("call process : %r", (invocation_list,))
           run_test_suite = subprocess.Popen(invocation_list,
-            preexec_fn=os.setsid, cwd=config['test_suite_directory'])
+            preexec_fn=os.setsid, cwd=config['test_suite_directory'],
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
           process_group_pid_set.add(run_test_suite.pid)
-          run_test_suite.wait()
+          log(run_test_suite.communicate()[0])
           process_group_pid_set.remove(run_test_suite.pid)
       except SubprocessError, e:
         if remote_test_result_needs_cleanup:

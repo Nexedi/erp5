@@ -29,7 +29,7 @@
 from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
 from Products.ERP5SyncML.SyncMLConstant import XUPDATE_INSERT_OR_ADD_LIST
 from base64 import b16encode
-from zLOG import LOG
+from zLOG import LOG, WARNING
 from copy import deepcopy
 
 class ERP5TransactionConduit(TioSafeBaseConduit):
@@ -40,6 +40,8 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
     # Define the object_tag element to add object
     self.xml_object_tag = 'transaction'
 
+  def getObjectAsXML(self, object, domain):
+    return object.Transaction_asTioSafeXML(context_document=domain)
 
   def updateNode(self, xml=None, object=None, previous_xml=None, force=0,
       simulate=0,  **kw):
@@ -156,37 +158,45 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
         arrow_dict = {
         'source': {
           'synchronization': sync_object_list,
-          'setter': document.setSourceSectionValue},
+          'setter': document.setSourceSectionValue,
+          'free_text_setter': document.setSourceSectionFreeText},
         'destination': {
           'synchronization': sync_object_list,
-          'setter': document.setDestinationSectionValue},
+          'setter': document.setDestinationSectionValue,
+          'free_text_setter': document.setDestinationSectionFreeText},
           }
       elif category == 'Payment':
         arrow_dict = {
         'source': {
           'synchronization': sync_object_list,
-          'setter': document.setSourcePaymentValue},
+          'setter': document.setSourcePaymentValue,
+          'free_text_setter': document.setSourcePaymentFreeText},
         'destination': {
           'synchronization': sync_object_list,
-          'setter': document.setDestinationPaymentValue},
+          'setter': document.setDestinationPaymentValue,
+          'free_text_setter': document.setDestinationPaymentFreeText},
         }
       elif category == 'Administration':
         arrow_dict = {
         'source': {
           'synchronization': sync_object_list,
-          'setter': document.setSourceAdministrationValue},
+          'setter': document.setSourceAdministrationValue,
+          'free_text_setter': document.setSourceAdministrationFreeText},
         'destination': {
           'synchronization': sync_object_list,
-          'setter': document.setDestinationAdministrationValue},
+          'setter': document.setDestinationAdministrationValue,
+          'free_text_setter': document.setDestinationAdministrationFreeText},
         }
       elif category == 'Decision':
         arrow_dict = {
         'source': {
           'synchronization': sync_object_list,
-          'setter': document.setSourceDecisionValue},
+          'setter': document.setSourceDecisionValue,
+          'free_text_setter': document.setSourceDecisionFreeText},
         'destination': {
           'synchronization': sync_object_list,
-          'setter': document.setDestinationDecisionValue},
+          'setter': document.setDestinationDecisionValue,
+          'free_text_setter': document.setDestinationDecisionFreeText},
         }
       else:
         raise Exception('visitArrow: Unexpected Category %s' %(category))
@@ -194,17 +204,21 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
       arrow_dict = {
       'source': {
         'synchronization': sync_object_list,
-        'setter': document.setSourceValue},
+        'setter': document.setSourceValue,
+        'free_text_setter': document.setSourceFreeText},
       'destination': {
         'synchronization': sync_object_list,
-        'setter': document.setDestinationValue},
+        'setter': document.setDestinationValue,
+        'free_text_setter': document.setDestinationFreeText},
       }
 
     # browse the xml and save the source and destination in the sale order
     integration_site = self.getIntegrationSite(kw.get('domain'))
     default_source = integration_site.getSourceAdministrationValue()
-    default_org_gid = " %s %s" %(default_source.getTitle(), default_source.getDefaultEmailText())
-    
+    default_org_gid = integration_site.organisation_module.getSourceSectionValue().getGidFromObject(default_source, encoded=False)
+    default_node = integration_site.getDestinationValue()
+    default_node_gid = integration_site.person_module.getSourceSectionValue().getGidFromObject(default_node, encoded=False)
+
     for subnode in xml.getchildren():
       # only works on tags, no on the comments or other kind of tag
       if type(subnode.tag) is not str:
@@ -216,22 +230,20 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
         synchronization_list = arrow_dict[tag]['synchronization']
         link_object = None
         link_gid = subnode.text.encode('utf-8')
-        for synchronization in synchronization_list:
-          # encode to the output type
-          if getattr(synchronization, 'getObjectFromGid', None) is not None:
-            link_object = synchronization.getObjectFromGid(b16encode(link_gid))
-            #LOG("trying to get %s from %s, got %s" %(link_gid, synchronization.getPath(), link_object), 300, "This is for category type %s" %(category))
-            if link_object is not None:
-              break
-
-        # default organisation
-        # XXX-Aurel : must be changed on default organisation defined well
-        if link_object is None and link_gid == default_org_gid:
+        if link_gid == default_org_gid:
           link_object = default_source
+        else:
+          for synchronization in synchronization_list:
+            # encode to the output type
+            if getattr(synchronization, 'getObjectFromGid', None) is not None:
+              link_object = synchronization.getObjectFromGid(b16encode(link_gid))
+              #LOG("trying to get %s from %s, got %s" %(link_gid, synchronization.getPath(), link_object), 300, "This is for category type %s" %(category))
+              if link_object is not None:
+                break
 
-        # unknown person if the link object is none
         if link_object is None:
-          link_object = document.person_module['404']
+          arrow_dict[tag]['free_text_setter'](link_gid)
+          link_object = default_node
 
         # set person to the sale order
         arrow_dict[tag]['setter'](link_object)
@@ -251,6 +263,10 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
     if xml.nsmap not in [None, {}]:
       index = -1
 
+    integration_site = self.getIntegrationSite(kw.get('domain'))
+    default_resource = integration_site.getResourceValue()
+    default_resource_gid = integration_site.product_module.getSourceSectionValue().getGidFromObject(default_resource, encoded=False)
+
     # browse the xml and save the sale order line values
     for subnode in xml.getchildren():
       # only works on tags, no on the comments or other kind of tag
@@ -258,23 +274,24 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
         continue
       tag = subnode.tag.split('}')[index]
       if tag == 'resource':
-        synchronization_list = self.getSynchronizationObjectListForType(kw.get('domain'), 'Product', 'publication')
         # encode to the output type
         link_gid = subnode.text #.encode('utf-8')
-        # FIXME: Work on specific GID, what about this ???
-        integration_site = self.getIntegrationSite(kw.get('domain'))
         if link_gid == ' Service Discount':
           link_object = integration_site.getSourceCarrierValue()
         elif link_gid == ' Service Delivery':
           link_object = integration_site.getDestinationCarrierValue()
+        elif link_gid == default_resource_gid:
+          link_object = default_resource
         else:
+          synchronization_list = self.getSynchronizationObjectListForType(kw.get('domain'), 'Product', 'publication')
           for synchronization in synchronization_list:
             link_object = synchronization.getObjectFromGid(b16encode(link_gid))
             if link_object is not None:
               break
         # in the worse case save the line with the unknown product
         if link_object is None:
-          link_object = document.product_module['404']
+          raise ValueError, "Impossible to find related resource for gid %s" %(link_gid)
+
         # set the resource in the dict
         movement_dict_value[tag] = link_object
       elif tag == "VAT":
@@ -289,12 +306,12 @@ class ERP5TransactionConduit(TioSafeBaseConduit):
         # set line values in the dict
         if subnode.text is not None:
           movement_dict_value[tag] = subnode.text#.encode('utf-8')
-
+    LOG("visitMovement", 300, "movement_dict_value = %s" %(movement_dict_value))
     if 'quantity' not in movement_dict_value:
       return
 
     # no variations will be use for the unknown product
-    if document.product_module.get('404', None) and movement_dict_value['resource'] == document.product_module['404']:
+    if movement_dict_value['resource'] == default_resource:
       movement_dict_value['category'] = []
 
     # Create the new Sale Order Line

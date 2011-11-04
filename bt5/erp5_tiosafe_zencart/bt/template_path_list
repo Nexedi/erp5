@@ -1,0 +1,14 @@
+organisation_module/default_zencart_shop**
+person_module/unknown_zencart**
+portal_integrations/zencart
+portal_integrations/zencart/*connector**
+portal_integrations/zencart/*mapping**
+portal_integrations/zencart/*module**
+portal_integrations/zencart/*plugin
+portal_integrations/zencart/IntegrationSite_checkCategoryExistency**
+portal_integrations/zencart/IntegrationSite_getPluginLanguageList**
+portal_integrations/zencart/IntegrationSite_lastID**
+portal_synchronizations/zencart*
+product_module/unknown_zencart**
+sale_supply_module/2**
+sale_trade_condition_module/default_zencart**

@@ -1,0 +1,180 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?> <UserList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"><LatestModifiedDateStart tal:content="python:options[\'start_date\'].ISO8601()">2010-09-07T13:54:12.925183+02:00</LatestModifiedDateStart>\n
+<LatestModifiedDateEnd tal:content="python:options[\'stop_date\'].ISO8601()">2010-09-10T15:54:12.925183+02:00</LatestModifiedDateEnd>\n
+ <UsersID/> </UserList>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildBrainList</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Node</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/oxatis/person_mapping</string>
+                <string>source/portal_integrations/oxatis/person_rest_connection_plugin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?> <UserList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"><LatestModifiedDateStart tal:content="python:options[\'start_date\'].ISO8601()">2010-09-07T13:54:12.925183+02:00</LatestModifiedDateStart>\n
+<LatestModifiedDateEnd tal:content="python:options[\'stop_date\'].ISO8601()">2010-09-10T15:54:12.925183+02:00</LatestModifiedDateEnd>\n
+ <UsersID/> </UserList>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>UserGetList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Person</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/oxatis</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<?xml version="1.0" encoding="utf-8"?> <UserList    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    xmlns:xsd="http://www.w3.org/2001/XMLSchema"><LatestModifiedDateStart>2010-01-15T00:00:00+01:00</LatestModifiedDateStart><LatestModifiedDateEnd>2011-12-24T00:00:00+01:00</LatestModifiedDateEnd> <UsersID/> </UserList>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<DataResultService>\n
+  <StatusCode>200</StatusCode>\n
+  <StatusSubCode/>\n
+  <ErrorDetails/>\n
+  <Data>\n
+    <UserList/>\n
+    <UsersID>\n
+      <UserID>\n
+        <OxID>2345678</OxID>\n
+        <Email>star@nexedi.com</Email>\n
+      </UserID>\n
+      <UserID>\n
+        <OxID>7654321</OxID>\n
+        <Email>obi@nexedi.com</Email>\n
+      </UserID>\n
+      <UserID>\n
+        <OxID>9876543</OxID>\n
+        <Email>john@nexedi.com</Email>\n
+      </UserID>\n
+      <UserID>\n
+        <OxID>1234567</OxID>\n
+        <Email>aurel@nexedi.com</Email>\n
+      </UserID>\n
+      <UserID>\n
+        <OxID>72516</OxID>\n
+        <Email>org@org.com</Email>\n
+      </UserID>\n
+    </UsersID>\n
+  </Data>\n
+</DataResultService>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Person">\n
+  <firstname>luke</firstname>\n
+  <lastname>skywalker</lastname>\n
+  <email>star@nexedi.com</email>\n
+  <phone>1234567890</phone>\n
+  <category>role/internal</category>\n
+</node>\n
+\n
+<node type="Person">\n
+  <firstname>john</firstname>\n
+  <lastname>doe</lastname>\n
+  <email>john@nexedi.com</email>\n
+  <category>role/internal</category>\n
+  <relation> Nexedi france</relation>\n
+</node>\n
+\n
+<node type="Person">\n
+  <firstname>John</firstname>\n
+  <lastname>Morrison</lastname>\n
+  <email>org@org.com</email>\n
+  <category>role/internal</category>\n
+  <relation> WEE france</relation>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getPersonParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>request_data_method</string> </key>
+            <value> <string>PersonModule_getRequestData</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get list of persons</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

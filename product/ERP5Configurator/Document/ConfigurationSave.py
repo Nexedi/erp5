@@ -57,5 +57,5 @@ class ConfigurationSave(Path):
     if kw.has_key('conf_title'):
       self.setTitle(kw['conf_title'])
       kw.pop('conf_title')
-    conf_item = self.newContent(portal_type = configuration_item_class_name, **kw)
-    return conf_item
+    return self.newContent(portal_type=configuration_item_class_name,
+                           **kw)

@@ -52,6 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Message import translateString\n
 from Products.ERP5Type.Document import newTempBase\n
+from zExceptions import Redirect\n
 portal = context.getPortalObject()\n
 \n
 # Initialise some general variables\n
@@ -109,9 +110,9 @@ else:\n
     # action taken when an invalid spreadsheet is provided.\n
     # we *raise* a Redirect, because we don\'t want the transaction to succeed\n
     # note, we could make a dialog parameter to allow import invalid spreadsheet:\n
-    raise \'Redirect\', \'%s/view?portal_status_message=%s\' % (\n
+    raise Redirect(\'%s/view?portal_status_message=%s\' % (\n
                            context.portal_categories.absolute_url(),\n
-                           message)\n
+                           message))\n
 \n
 category_list_spreadsheet_mapping = context.Base_getCategoriesSpreadSheetMapping(import_file,\n
                               invalid_spreadsheet_error_handler=invalid_category_spreadsheet_handler)\n

@@ -1,0 +1,4 @@
+
+1. Si il y'a une erreur lors du second Appel de WSR (getPersonAddressList ou getSaleOrderLineList ou getCatagoryList), ca plante.
+
+2. 

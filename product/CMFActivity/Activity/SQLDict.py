@@ -66,8 +66,13 @@ class SQLDict(RAMDict, SQLBase):
       priority_list = [message.activity_kw.get('priority', 1) for message in registered_message_list]
       dumped_message_list = [self.dumpMessage(message) for message in registered_message_list]
       date_list = [message.activity_kw.get('at_date', None) for message in registered_message_list]
-      group_method_id_list = ['\0'.join([message.activity_kw.get('group_method_id', ''), message.activity_kw.get('group_id', '')])
-                              for message in registered_message_list]
+      group_method_id_list = []
+      for m in registered_message_list:
+        group_method_id = m.activity_kw.get('group_method_id', '')
+        if group_method_id is None:
+          group_method_id = 'portal_activities/dummyGroupMethod/' + m.method_id
+        group_method_id_list.append(group_method_id + '\0' +
+                                    m.activity_kw.get('group_id', ''))
       tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
       serialization_tag_list = [message.activity_kw.get('serialization_tag', '') for message in registered_message_list]
       order_validation_text_list = [self.getOrderValidationText(message) for message in registered_message_list]
@@ -316,11 +321,11 @@ class SQLDict(RAMDict, SQLBase):
             # Sort list of messages to validate the message with highest score
             message_list.sort(key=sort_message_key)
             distributable_uid_set.add(message_list[0].uid)
-            group_method_id = message_list[0].activity_kw.get('group_method_id')
-            if group_method_id is None:
+            group_method_id = message_list[0].line.group_method_id
+            if group_method_id == '\0':
               continue
             for message in message_list[1:]:
-              if group_method_id == message.activity_kw.get('group_method_id'):
+              if group_method_id == message.line.group_method_id:
                 distributable_uid_set.add(message.uid)
           if deletable_uid_list:
             activity_tool.SQLBase_delMessage(table=self.sql_table,

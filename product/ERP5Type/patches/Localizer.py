@@ -12,13 +12,7 @@
 #
 ##############################################################################
 
-# Template() is a new method of python 2.4, that's why we have the string.py
-#   file in patches directory.
-try:
-  from string import Template
-except ImportError:
-  from Products.ERP5Type.patches.string import Template
-
+from string import Template
 from itools import i18n
 from Products.ERP5Type.Message import Message
 from zLOG import LOG, ERROR
@@ -89,31 +83,10 @@ def Localizer_translate(self, domain, msgid, lang=None, mapping=None, *args, **k
       translated_str = Template(translated_str).substitute(unicode_mapping)
     return translated_str
 
-# BACK: This method is not used in Zope 2.12. Drop when we drop support for
-# Zope 2.8
-def GlobalTranslationService_translate(self, domain, msgid, *args, **kw):
-  context = kw.get('context')
-  if context is None:
-    # Placeless!
-    return msgid
-
-  localizer = getattr(context.getPortalObject(), 'Localizer', None)
-  if localizer is None:
-    LOG('ERP5Type.patches.Localizer', ERROR, 'could not find a Localizer '
-         'object in acquisition context, message will not be translated')
-    return msgid
-  return localizer.translate(domain, msgid, *args, **kw)
-
 # Apply the monkey patch.
 from Products.Localizer.Localizer import Localizer
 Localizer.translate = Localizer_translate
 Localizer.translate__roles__ = None # public
-try:
-  from Products.Localizer import GlobalTranslationService
-  GlobalTranslationService.translate = GlobalTranslationService_translate
-except ImportError:
-  pass
-
 
 # Fix MessageCatalog's manage_export that fails with unicode strings
 from Products.Localizer.MessageCatalog import MessageCatalog
@@ -273,12 +246,9 @@ Localizer.InitializeClass(Localizer.Localizer)
 # BACK: Can't write a configure.zcml that works on both Zope 2.8 and Zope 2.12
 # So we monkeypatch the subscriber instead. When we drop support for Zope 2.8
 # write a proper subscriber for MessageCatalog and IObjectMovedEvent
-try:
+if 1:
   from Products.Localizer.MessageCatalog import (MessageCatalog_moved as
                                                  MessageCatalog_moved_orig)
-except ImportError:
-  pass # Zope 2.8
-else:
   from zope.component import getSiteManager
   from zope.i18n.interfaces import ITranslationDomain
   import Products.Localizer.MessageCatalog

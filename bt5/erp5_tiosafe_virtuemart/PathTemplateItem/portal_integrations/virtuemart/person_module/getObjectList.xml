@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildVirtuemartPersonListBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>VirtuemartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>PersonNode</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/virtuemart/http_connector</string>
+                <string>destination/portal_integrations/virtuemart/person_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getPersonList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Person</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/Virtuemart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2020/01/01\'), \'start_date\': DateTime(\'2010/01/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml>\n
+  <object>\n
+    <id>9</id>\n
+    <reference></reference>\n
+    <firstname>Aissatou</firstname>\n
+    <lastname>Keita Mbengue</lastname>\n
+    <email>achakmb@gmail.com</email>\n
+    <street>Bourguiba</street>\n
+    <zip>22222</zip>\n
+    <city>Dakar</city>\n
+    <country>Senegal</country>\n
+    <company_id></company_id>\n
+    <company></company>\n
+    <category></category>\n
+  </object>\n
+  <object>\n
+    <id>7</id>\n
+    <reference></reference>\n
+    <firstname>Mohamadou</firstname>\n
+    <lastname>Mbengue</lastname>\n
+    <email>mmbengue@gmail.com</email>\n
+    <street>6 rue Saint Andr&#233;</street>\n
+    <zip>76000</zip>\n
+    <city>Rouen</city>\n
+    <country>France</country>\n
+    <company_id></company_id>\n
+    <company> </company>\n
+    <category></category>\n
+  </object>\n
+</xml>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Person">\n
+  <firstname>Aissatou</firstname>\n
+  <lastname>Keita Mbengue</lastname>\n
+  <email>achakmb@gmail.com</email>\n
+  <address>\n
+    <street>Bourguiba</street>\n
+    <zip>22222</zip>\n
+    <city>Dakar</city>\n
+    <country>senegal</country>\n
+  </address>\n
+  <category>role/client</category>\n
+</node>\n
+\n
+<node type="Person">\n
+  <firstname>Mohamadou</firstname>\n
+  <lastname>Mbengue</lastname>\n
+  <email>mmbengue@gmail.com</email>\n
+  <address>\n
+    <street>6 rue Saint André</street>\n
+    <zip>76000</zip>\n
+    <city>Rouen</city>\n
+    <country>france</country>\n
+  </address>\n
+  <category>role/client</category>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getPersonParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Person List</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

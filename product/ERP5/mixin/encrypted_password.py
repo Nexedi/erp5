@@ -30,21 +30,12 @@
 ##############################################################################
 import zope.interface
 from AccessControl import ClassSecurityInfo
+from AccessControl.AuthEncoding import pw_encrypt, pw_validate
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.utils import _checkPermission
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
-
-try:
-  from AccessControl.AuthEncoding import pw_encrypt
-except ImportError:
-  pw_encrypt = lambda pw:pw
-
-try:
-  from AccessControl.AuthEncoding import pw_validate
-except ImportError:
-  pw_validate = lambda reference, attempt: reference == attempt
 
 class EncryptedPasswordMixin:
 
@@ -62,6 +53,19 @@ class EncryptedPasswordMixin:
     if value is not None :
       return pw_validate(self.getPassword(), value)
     return False
+
+  def checkPasswordValueAcceptable(self, value):
+    """
+    Check the password. This method is defined explicitly, because:
+
+     - we want to apply an authentication policy which itself may contain explicit password rules
+    """
+    if not self.getPortalObject().portal_preferences.isAuthenticationPolicyEnabled():
+      # not a policy so basically all passwords are accceptable
+      return True
+    result = self.isPasswordValid(value)
+    if result <= 0:
+      raise ValueError, "Bad password (%s)." %result
 
   def checkUserCanChangePassword(self):
     if not _checkPermission(Permissions.SetOwnPassword, self):
@@ -87,6 +91,7 @@ class EncryptedPasswordMixin:
 
   def _setPassword(self, value):
     self.checkUserCanChangePassword()
+    self.checkPasswordValueAcceptable(value)
     self._forceSetPassword(value)
 
   security.declarePublic('setPassword')

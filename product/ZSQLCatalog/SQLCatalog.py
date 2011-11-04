@@ -43,10 +43,7 @@ from cStringIO import StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
 import os
-try:
-    from hashlib import md5
-except ImportError:
-    from md5 import md5
+from hashlib import md5
 
 from interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass
@@ -700,8 +697,7 @@ class Catalog(Folder,
     """
       Import properties from an XML file.
     """
-    f = open(file)
-    try:
+    with open(file) as f:
       doc = parse(f)
       root = doc.documentElement
       try:
@@ -750,8 +746,6 @@ class Catalog(Folder,
             self.filter_dict[id]['expression_instance'] = None
       finally:
         doc.unlink()
-    finally:
-      f.close()
 
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):
@@ -1444,8 +1438,12 @@ class Catalog(Folder,
             raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
           if uid != index or isinstance(uid, int):
             # We want to make sure that uid becomes long if it is an int
-            raise ValueError('uid of %r changed from %r (property) to %r '
-                '(catalog, by path) !!! This can be fatal' % (object, uid, index))
+            error_message = 'uid of %r changed from %r (property) to %r '\
+	                    '(catalog, by path) !!! This can be fatal' % (object, uid, index)
+            if not self.sql_catalog_raise_error_on_uid_check:
+              LOG("SQLCatalog.catalogObjectList", ERROR, error_message)
+            else:
+              raise ValueError(error_message)
         else:
           # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
           # This can be very dangerous with relations stored in a category table (CMFCategory)
@@ -2447,18 +2445,36 @@ class Catalog(Folder,
     sql_kw = self._queryResults(REQUEST=REQUEST, build_sql_query_method=build_sql_query_method, **kw)
     return sql_method(src__=src__, **sql_kw)
 
+  def getSearchResultsMethod(self):
+    return getattr(self, self.sql_search_results)
+
   def searchResults(self, REQUEST=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
-    method = getattr(self, self.sql_search_results)
-    return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), **kw)
+    if 'only_group_columns' in kw:
+      # searchResults must be consistent in API with countResults
+      raise ValueError('only_group_columns does not belong to this API '
+        'level, use queryResults directly')
+    return self.queryResults(
+      self.getSearchResultsMethod(),
+      REQUEST=REQUEST,
+      extra_column_list=self.getCatalogSearchResultKeys(),
+      **kw
+    )
 
   __call__ = searchResults
 
+  def getCountResultsMethod(self):
+    return getattr(self, self.sql_count_results)
+
   def countResults(self, REQUEST=None, **kw):
     """ Returns the number of items which satisfy the where_expression """
-    # Get the search method
-    method = getattr(self, self.sql_count_results)
-    return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), only_group_columns=True, **kw)
+    return self.queryResults(
+      self.getCountResultsMethod(),
+      REQUEST=REQUEST,
+      extra_column_list=self.getCatalogSearchResultKeys(),
+      only_group_columns=True,
+      **kw
+    )
 
   def isAdvancedSearchText(self, search_text):
     return isAdvancedSearchText(search_text, self.isValidColumn)

@@ -78,7 +78,6 @@ WHERE\n
   <dtml-if where_expression>\n
     AND <dtml-var where_expression> \n
   </dtml-if>\n
-  AND simulation_movement.source_uid <> simulation_movement.destination_uid\n
   AND simulation_movement.source_uid is not NULL\n
   AND simulation_movement.destination_uid is not NULL\n
   AND simulation_movement.uid = catalog.uid\n

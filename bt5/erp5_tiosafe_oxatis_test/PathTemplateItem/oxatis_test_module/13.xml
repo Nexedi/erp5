@@ -1,0 +1,282 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Oxatis Test Sale Order" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>BillingAddress</string> </key>
+            <value> <string>24 Rue blanche</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingCellPhone</string> </key>
+            <value> <string>98765432</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingCity</string> </key>
+            <value> <string>Lille</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingCountryISOCode</string> </key>
+            <value> <string>FR</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingFirstName</string> </key>
+            <value> <string>test-john</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingLastName</string> </key>
+            <value> <string>doe</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingPhone</string> </key>
+            <value> <string>12345678</string> </value>
+        </item>
+        <item>
+            <key> <string>BillingZipCode</string> </key>
+            <value> <string>59000</string> </value>
+        </item>
+        <item>
+            <key> <string>CurrencyCode</string> </key>
+            <value> <string>EUR</string> </value>
+        </item>
+        <item>
+            <key> <string>Date</string> </key>
+            <value> <string>2010-09-02T15:58:39</string> </value>
+        </item>
+        <item>
+            <key> <string>EcoTaxAmountTaxIncl</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>GlobalDiscountAmount</string> </key>
+            <value> <string>0.0</string> </value>
+        </item>
+        <item>
+            <key> <string>GlobalDiscountRate</string> </key>
+            <value> <string>0.0</string> </value>
+        </item>
+        <item>
+            <key> <string>NetAmountDue</string> </key>
+            <value> <string>399.07</string> </value>
+        </item>
+        <item>
+            <key> <string>PMProcessorCode</string> </key>
+            <value> <string>70</string> </value>
+        </item>
+        <item>
+            <key> <string>PaymentMethodName</string> </key>
+            <value> <string>Chèque</string> </value>
+        </item>
+        <item>
+            <key> <string>PaymentStatusCode</string> </key>
+            <value> <string>40</string> </value>
+        </item>
+        <item>
+            <key> <string>PaymentStatusLastModifiedDate</string> </key>
+            <value> <string>2010-09-02T15:59:00</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingAddress</string> </key>
+            <value> <string>270 Bvd clemenceau</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingCity</string> </key>
+            <value> <string>Marcq</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingCompany</string> </key>
+            <value> <string>Nexedi</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingCountryISOCode</string> </key>
+            <value> <string>FR</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingFirstName</string> </key>
+            <value> <string>john</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingID</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingLastName</string> </key>
+            <value> <string>doe</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingMethodName</string> </key>
+            <value> <string>La Poste</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingPriceTaxExcl</string> </key>
+            <value> <string>12</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingPriceTaxIncl</string> </key>
+            <value> <string>14.35</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingTaxRate</string> </key>
+            <value> <string>19.6</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingVATAmount</string> </key>
+            <value> <string>2.35</string> </value>
+        </item>
+        <item>
+            <key> <string>ShippingZipCode</string> </key>
+            <value> <string>59700</string> </value>
+        </item>
+        <item>
+            <key> <string>SubTotalNet</string> </key>
+            <value> <string>384.72</string> </value>
+        </item>
+        <item>
+            <key> <string>SubTotalNetDiscounted</string> </key>
+            <value> <string>384.72</string> </value>
+        </item>
+        <item>
+            <key> <string>SubTotalTVA</string> </key>
+            <value> <string>63.05</string> </value>
+        </item>
+        <item>
+            <key> <string>SubTotalVAT</string> </key>
+            <value> <string>63.05</string> </value>
+        </item>
+        <item>
+            <key> <string>TotalWeight</string> </key>
+            <value> <string>0</string> </value>
+        </item>
+        <item>
+            <key> <string>UserEmail</string> </key>
+            <value> <string>john@nexedi.com</string> </value>
+        </item>
+        <item>
+            <key> <string>UserOxID</string> </key>
+            <value> <string>9876543</string> </value>
+        </item>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Associate</string>
+                <string>Auditor</string>
+                <string>Author</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_count</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_mt_index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>_tree</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>666</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>13</string> </value>
+        </item>
+        <item>
+            <key> <string>last_id</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Oxatis Test Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>666</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Commande</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Length" module="BTrees.Length"/>
+    </pickle>
+    <pickle> <int>0</int> </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+  <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="OOBTree" module="BTrees.OOBTree"/>
+    </pickle>
+    <pickle>
+      <none/>
+    </pickle>
+  </record>
+</ZopeData>

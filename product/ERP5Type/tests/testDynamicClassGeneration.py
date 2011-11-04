@@ -97,48 +97,40 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     old_object = connection.get(unload(obj_id))
     check(0)
 
-    try:
-      from ZODB import __version__
+    # Test persistent migration
+    old_object.migrateToPortalTypeClass()
+    old_object = None
+    transaction.commit()
+    old_object = connection.get(unload(obj_id))
+    check(1)
+    # but the container still have the old class
+    old_object = None
+    unload(obj_id)
+    old_object = person_module[obj_id]
+    check(0)
 
-    except ImportError: # recent ZODB
-      # Test persistent migration
-      old_object.migrateToPortalTypeClass()
-      old_object = None
-      transaction.commit()
-      old_object = connection.get(unload(obj_id))
-      check(1)
-      # but the container still have the old class
-      old_object = None
-      unload(obj_id)
-      old_object = person_module[obj_id]
-      check(0)
+    # Test persistent migration of containers
+    obj_id = newId()
+    person_module._setObject(obj_id, Person(obj_id))
+    transaction.commit()
+    unload(obj_id)
+    person_module.migrateToPortalTypeClass()
+    transaction.commit()
+    unload(obj_id)
+    old_object = person_module[obj_id]
+    check(1)
+    # not recursive by default
+    old_object = None
+    old_object = connection.get(unload(obj_id))
+    check(0)
 
-      # Test persistent migration of containers
-      obj_id = newId()
-      person_module._setObject(obj_id, Person(obj_id))
-      transaction.commit()
-      unload(obj_id)
-      person_module.migrateToPortalTypeClass()
-      transaction.commit()
-      unload(obj_id)
-      old_object = person_module[obj_id]
-      check(1)
-      # not recursive by default
-      old_object = None
-      old_object = connection.get(unload(obj_id))
-      check(0)
-
-      # Test recursive migration
-      old_object = None
-      unload(obj_id)
-      person_module.migrateToPortalTypeClass(True)
-      transaction.commit()
-      old_object = connection.get(unload(obj_id))
-      check(1)
-
-    else: # Zope 2.8
-      # compatibility code not implemented
-      self.assertRaises(AssertionError, old_object.migrateToPortalTypeClass)
+    # Test recursive migration
+    old_object = None
+    unload(obj_id)
+    person_module.migrateToPortalTypeClass(True)
+    transaction.commit()
+    old_object = connection.get(unload(obj_id))
+    check(1)
 
   def testChangeMixin(self):
     """

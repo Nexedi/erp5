@@ -30,6 +30,7 @@ from AccessControl import ClassSecurityInfo
 
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 import re
@@ -63,6 +64,7 @@ class Telephone(Coordinate, Base):
                     , PropertySheet.SimpleItem
                     , PropertySheet.CategoryCore
                     , PropertySheet.SortIndex
+                    , PropertySheet.Coordinate
                     , PropertySheet.Telephone
                     )
   # This is a list of regex.
@@ -230,14 +232,12 @@ class Telephone(Coordinate, Base):
     # + (111) 111-111/111 or + (111) 111-111/  or + (111) 111-111
     "\+(?P<spaces>[\ ]*)\((?P<country>\d+)\)\ (?P<number>[\d\ \-\.]*)(?:\/)?(?P<ext>\d+|)"
   ]
+  
+  compiled_regex_list = [re.compile(pattern) for pattern in regex_list]
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
-  def fromText(self, coordinate_text):
-    """ See ICoordinate.fromText """
-    method = self._getTypeBasedMethod('fromText')
-    if method is not None:
-      return method(text=coordinate_text)
+  compiled_input_regex_without_markup = re.compile('[0-9A-Za-z]')
 
+  def _splitCoordinateText(self, coordinate_text):
     if coordinate_text is None:
       coordinate_text = ''
 
@@ -246,15 +246,14 @@ class Telephone(Coordinate, Base):
 
     # This regexp get the coordinate text
     # and extract number and letters
-    input_regex_without_markup = '[0-9A-Za-z]'
-    input_without_markup = ''.join(re.findall(input_regex_without_markup,\
-                                              coordinate_text))
+    input_without_markup = ''.join(self.compiled_input_regex_without_markup.\
+                                                      findall(coordinate_text))
     # Test if coordinate_text has or not markups.
     if len(coordinate_text) > len(input_without_markup):
       number_match = None
       for regex in self._getRegexList():
-        possible_number_match = re.match(regex, coordinate_text)
-        if possible_number_match not in [None]:
+        possible_number_match = regex.match(coordinate_text)
+        if possible_number_match is not None:
           number_match = possible_number_match
           number_dict = number_match.groupdict()
           break
@@ -263,30 +262,24 @@ class Telephone(Coordinate, Base):
         msg = "Doesn't exist a regex to handle this telephone: ", \
                                                                coordinate_text
         LOG('Telephone.fromText', WARNING, msg)
-        number_dict = {'number' : input_without_markup}
+        number_dict = {'number': input_without_markup}
     else:
-      number_dict = {'number' : coordinate_text}
+      number_dict = {'number': coordinate_text}
 
-    country = number_dict.get('country','')
-    area = number_dict.get('area','')
-    city = number_dict.get('city','')
-    number = number_dict.get('number','')
-    extension = number_dict.get('ext','')
-    if ((country in ['', None]) and \
-        (area in ['', None]) and \
-        (city in ['', None]) and \
-        (number in ['', None]) and \
-        (extension in ['', None])):
-      country = area = city = number = extension = ''
-    else:
+    country = number_dict.get('country') or ''
+    area = number_dict.get('area') or ''
+    city = number_dict.get('city') or ''
+    number = number_dict.get('number') or ''
+    extension = number_dict.get('ext') or ''
+    if (country or area or city or number or extension):
       # Trying to get the country and area from dict,
       # but if it fails must be get from preference
-      preference_tool = self.portal_preferences
-      if country in ['', None]:
+      preference_tool = self.getPortalObject().portal_preferences
+      if not country:
         country = preference_tool.getPreferredTelephoneDefaultCountryNumber('')
-      if area in ['', None]:
+      if not area:
         area = preference_tool.getPreferredTelephoneDefaultAreaNumber('')
-      if city in ['', None]:
+      if not city:
         city = preference_tool.getPreferredTelephoneDefaultCityNumber('')
 
       country =  country.strip()
@@ -297,15 +290,30 @@ class Telephone(Coordinate, Base):
 
       # Formating the number.
       # Removing any ")", "(", "-", "." and " "
-      for token in [")", "(", "-" ,"." ," "]:
+      for token in ')(-. ':
         country = country.replace(token, '')
         number = number.replace(token, '')
+    return country, area, city, number, extension
 
-    self.edit(telephone_country = country,
-              telephone_area = area,
-              telephone_city = city,
-              telephone_number = number,
-              telephone_extension = extension)
+  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  @deprecated
+  def fromText(self, coordinate_text):
+    """Save given data then continue parsing 
+    (deprecated because computed values are stored)
+    """
+    self._setCoordinateText(coordinate_text)
+    method = self._getTypeBasedMethod('fromText')
+    if method is not None:
+      return method(text=coordinate_text)
+
+    country, area, city, number, extension =\
+                                     self._splitCoordinateText(coordinate_text)
+
+    self.edit(telephone_country=country,
+              telephone_area=area,
+              telephone_city=city,
+              telephone_number=number,
+              telephone_extension=extension)
 
   security.declareProtected(Permissions.ModifyPortalContent, '_setText')
   _setText = fromText
@@ -319,37 +327,35 @@ class Telephone(Coordinate, Base):
     if script is not None:
       return script()
 
-    country = self.getTelephoneCountry('')
-    area = self.getTelephoneArea('')
-    city = self.getTelephoneCity('')
-    number = self.getTelephoneNumber('')
-    extension = self.getTelephoneExtension('')
+    if self.isDetailed():
+      country = self.getTelephoneCountry('')
+      area = self.getTelephoneArea('')
+      city = self.getTelephoneCity('')
+      number = self.getTelephoneNumber('')
+      extension = self.getTelephoneExtension('')
+    else:
+      coordinate_text = self.getCoordinateText()
+      country, area, city, number, extension =\
+                                     self._splitCoordinateText(coordinate_text)
 
-    # If country, area, number, extension are blank
-    # the method should to return blank.
-    if ((country == '') and \
-        (area == '') and \
-        (city == '') and \
-        (number == '') and \
-        (extension == '')):
-      return ''
+    if (country or area or city or number or extension):
+      # Define the notation
+      notation = self._getNotation()
+      if notation:
+        notation = notation.replace('<country>', country)
+        notation = notation.replace('<area>', area)
+        if city == "":
+          notation = notation.replace('<city>-', '')
+        else:
+          notation = notation.replace('<city>', city)
+        notation = notation.replace('<number>', number)
+        notation = notation.replace('<ext>', extension)
 
-    # Define the notation
-    notation = self._getNotation()
-    if notation not in [None, '']:
-      notation = notation.replace('<country>',country)
-      notation = notation.replace('<area>',area)
-      if city == "":
-        notation = notation.replace('<city>-', '')
-      else:
-        notation = notation.replace('<city>',city)
-      notation = notation.replace('<number>',number)
-      notation = notation.replace('<ext>',extension)
+      if extension == '':
+        notation = notation.replace('/', '')
 
-    if extension == '':
-      notation = notation.replace('/','')
-
-    return notation
+      return notation
+    return ''
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'asURL')
@@ -389,6 +395,14 @@ class Telephone(Coordinate, Base):
     """
     return ("+33(0)6-62 05 76 14",)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  def isDetailed(self):
+    return self.hasTelephoneCountry() or\
+          self.hasTelephoneArea() or\
+          self.hasTelephoneCity() or\
+          self.hasTelephoneNumber() or\
+          self.hasTelephoneExtension()
+
   def _getNotation(self):
     """
       Returns the notation that will be used by asText method.
@@ -401,4 +415,4 @@ class Telephone(Coordinate, Base):
     """
       Returns the regex list that will be used by fromText method.
     """
-    return self.regex_list
+    return self.compiled_regex_list

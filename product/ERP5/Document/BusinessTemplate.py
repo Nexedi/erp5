@@ -27,7 +27,7 @@
 #
 ##############################################################################
 
-import fnmatch, gc, glob, imp, os, re, shutil, sys, time
+import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
 from Products.ERP5Type.DiffUtils import DiffFile
@@ -80,7 +80,6 @@ from gzip import GzipFile
 from lxml.etree import parse
 from xml.sax.saxutils import escape
 from Products.CMFCore.Expression import Expression
-from Products.ERP5Type import tarfile
 from urllib import quote, unquote
 from difflib import unified_diff
 import posixpath
@@ -297,9 +296,7 @@ def deleteSkinSelection(skin_tool, skin_name):
                                   del_skin=1)
       skin_tool.getPortalObject().changeSkin(None)
 
-def unregisterSkinFolder(skin_tool, skin_folder, skin_selection_list):
-  skin_folder_id = skin_folder.getId()
-
+def unregisterSkinFolderId(skin_tool, skin_folder_id, skin_selection_list):
   for skin_selection in skin_selection_list:
     selection = skin_tool.getSkinPath(skin_selection)
     selection = selection.split(',')
@@ -554,7 +551,7 @@ class BaseTemplateItem(Implicit, Persistent):
     klass = obj.__class__
     classname = klass.__name__
 
-    attr_set = set(('_dav_writelocks', '_filepath', '_owner', 'uid',
+    attr_set = set(('_dav_writelocks', '_filepath', '_owner', 'last_id', 'uid',
                     '__ac_local_roles__'))
     if export:
       if not keep_workflow_history:
@@ -1296,8 +1293,7 @@ class ObjectTemplateItem(BaseTemplateItem):
         if container.meta_type == 'CMF Skins Tool':
           # we are removing a skin folder, check and 
           # remove if registered skin selection
-          skin_folder = container[object_id]
-          unregisterSkinFolder(container, skin_folder,
+          unregisterSkinFolderId(container, object_id,
               container.getSkinSelections())
 
         container.manage_delObjects([object_id])
@@ -1606,7 +1602,7 @@ class SkinTemplateItem(ObjectTemplateItem):
           if not force:
             if update_dict[relative_url] == 'nothing':
               continue
-      folder = p.unrestrictedTraverse(relative_url)
+      folder = self.unrestrictedResolveValue(p, relative_url)
       for obj in folder.objectValues(spec=('Z SQL Method',)):
         fixZSQLMethod(p, obj)
       if folder.aq_parent.meta_type == 'CMF Skins Tool':
@@ -1697,8 +1693,8 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
               'business_template_registered_skin_selections',
               selection_list)
 
-        unregisterSkinFolder(skin_tool, skin_folder,
-                             skin_tool.getSkinSelections())
+        unregisterSkinFolderId(skin_tool, skin_folder_id,
+                               skin_tool.getSkinSelections())
         registerSkinFolder(skin_tool, skin_folder)
 
   def uninstall(self, context, **kw):
@@ -1712,16 +1708,18 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
       object_keys = self._objects.keys()
 
     for skin_folder_id in object_keys:
-      skin_folder = skin_tool[skin_folder_id]
-      current_selection_list = skin_folder.getProperty(
-        'business_template_registered_skin_selections', [])
+      current_selection_list = []
+      skin_folder = skin_tool.get(skin_folder_id, None)
+      if skin_folder is not None:
+        current_selection_list = skin_folder.getProperty(
+          'business_template_registered_skin_selections', [])
       current_selection_set = set(current_selection_list)
 
       skin_selection_list = self._objects[skin_folder_id]
       if isinstance(skin_selection_list, str):
         skin_selection_list = skin_selection_list.replace(',', ' ').split(' ')
       for skin_selection in skin_selection_list:
-        current_selection_set.remove(skin_selection)
+        current_selection_set.discard(skin_selection)
 
       current_selection_list = list(current_selection_set)
       if current_selection_list:
@@ -1730,15 +1728,16 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
             current_selection_list)
 
         # Unregister skin folder from skin selection
-        unregisterSkinFolder(skin_tool, skin_folder, skin_selection_list)
+        unregisterSkinFolderId(skin_tool, skin_folder_id, skin_selection_list)
       else:
-        delattr(skin_folder, 'business_template_registered_skin_selections')
-
         # Delete all skin selection
         for skin_selection in skin_selection_list:
           deleteSkinSelection(skin_tool, skin_selection)
-        # Register to all other skin selection
-        registerSkinFolder(skin_tool, skin_folder)
+        if skin_folder is not None:
+          delattr(skin_folder, 'business_template_registered_skin_selections')
+          # Register to all other skin selection
+          registerSkinFolder(skin_tool, skin_folder)
+
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}
@@ -2737,22 +2736,15 @@ class ActionTemplateItem(ObjectTemplateItem):
         return obj._exportOldAction(action)
 
   def _getPortalToolActionCopy(self, obj, context, value):
-    try:
-      from Products.CMFCore.interfaces import IActionProvider
-    except ImportError:
-      # BACK:
-      # we still don't load ZCML on tests on 2.8, but on 2.8 actions from other
-      # tools are not redirected to portal_actions
-      pass
-    else:
-      if not IActionProvider.providedBy(obj):
-        # look for the action in portal_actions, instead of the original object
-        LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
-            'Redirected action export',
-            'Attempted to retrieve action %r from %r which is no longer an '
-            'IActionProvided. Retrieving action from portal_actions instead' %
-            (value, obj.getId()))
-        obj = context.getPortalObject().portal_actions
+    from Products.CMFCore.interfaces import IActionProvider
+    if not IActionProvider.providedBy(obj):
+      # look for the action in portal_actions, instead of the original object
+      LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
+          'Redirected action export',
+          'Attempted to retrieve action %r from %r which is no longer an '
+          'IActionProvided. Retrieving action from portal_actions instead' %
+          (value, obj.getId()))
+      obj = context.getPortalObject().portal_actions
     id_id = 'id'
     for action in obj.listActions():
       if getattr(action, id_id, None) == value:
@@ -2815,23 +2807,16 @@ class ActionTemplateItem(ObjectTemplateItem):
 
           # Following code is for actions outside Types Tool.
           # It will be removed when they are also converted to ERP5 actions.
-          try:
-            from Products.CMFCore.interfaces import IActionProvider
-          except ImportError:
-              # BACK:
-              # we still don't load ZCML on tests on 2.8, but on 2.8 we don't
-              # need to redirect actions to portal_actions.
-              pass
-          else:
-            if not IActionProvider.providedBy(container):
-              # some tools stopped being ActionProviders in CMF 2.x. Drop the
-              # action into portal_actions.
-              LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
-                  'Redirected action import',
-                  'Attempted to store action %r in %r which is no longer an '
-                  'IActionProvided. Storing action on portal_actions instead' %
-                  (id, path))
-              container = p.portal_actions
+          from Products.CMFCore.interfaces import IActionProvider
+          if not IActionProvider.providedBy(container):
+            # some tools stopped being ActionProviders in CMF 2.x. Drop the
+            # action into portal_actions.
+            LOG('Products.ERP5.Document.BusinessTemplate', WARNING,
+                'Redirected action import',
+                'Attempted to store action %r in %r which is no longer an '
+                'IActionProvided. Storing action on portal_actions instead' %
+                (id, path))
+            container = p.portal_actions
           obj, action = container, obj
           action_list = obj.listActions()
           for index in range(len(action_list)):
@@ -3106,15 +3091,15 @@ class SitePropertyTemplateItem(BaseTemplateItem):
       LOG('Business Template', 0, 'Skipping file "%s"' % (file_name, ))
       return
     xml = parse(file)
-    property_node = xml.getroot()[0]
-    property_id = property_node.find('id').text
-    prop_type = property_node.find('type').text
-    value_node = property_node.find('value')
-    if prop_type in ('lines', 'tokens'):
-      value = [item.text for item in value_node.findall('item')]
-    else:
-      value = value_node.text
-    self._objects[property_id] = (prop_type, value)
+    for property_node in xml.getroot().findall('property'):
+      property_id = property_node.find('id').text
+      prop_type = property_node.find('type').text
+      value_node = property_node.find('value')
+      if prop_type in ('lines', 'tokens'):
+        value = [item.text for item in value_node.findall('item')]
+      else:
+        value = value_node.text
+      self._objects[property_id] = (prop_type, value)
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')

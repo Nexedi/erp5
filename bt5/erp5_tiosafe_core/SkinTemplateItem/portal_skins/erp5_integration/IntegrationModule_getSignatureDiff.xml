@@ -52,7 +52,13 @@
             <key> <string>_body</string> </key>
             <value> <string>im = context\n
 pub = im.getSourceSectionValue()\n
-pub_sub = im.getSourceSectionValue().objectValues()[0]\n
+pub_sub_list = pub.objectValues()\n
+if not len(pub_sub_list):\n
+  raise ValueError, "%s sub in pub %s for im %s" %(len(pub_sub_list), pub.getPath(), im.getPath())\n
+else:\n
+  pub_sub = pub_sub_list[0]\n
+#pub_sub = im.getSourceSectionValue().objectValues()[0]\n
+\n
 sub = im.getDestinationSectionValue()\n
 \n
 pub_xml = []\n
@@ -70,74 +76,12 @@ return context.diffXML(sub_xml, pub_xml)\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
             <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>context</string>
-                            <string>im</string>
-                            <string>_getattr_</string>
-                            <string>pub</string>
-                            <string>_getitem_</string>
-                            <string>pub_sub</string>
-                            <string>sub</string>
-                            <string>pub_xml</string>
-                            <string>sub_xml</string>
-                            <string>_getiter_</string>
-                            <string>sign</string>
-                            <string>pub_sign</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>id</string> </key>
             <value> <string>IntegrationModule_getSignatureDiff</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

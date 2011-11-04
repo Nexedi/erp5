@@ -90,6 +90,7 @@
                         <string>my_string_field</string>
                         <string>my_file_field</string>
                         <string>my_list_mode_listbox</string>
+                        <string>my_dialog_mode_portal_type</string>
                       </list>
                     </value>
                 </item>

@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="WebServiceRequest" module="Products.ERP5Type.Document.WebServiceRequest"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Node</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/prestashop/http_connection_plugin</string>
+                <string>destination/portal_integrations/prestashop/person_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getPersonList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Person</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>{\'language\': \'\'}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://localhost/~aurel/prestashop_stable/modules/oneclickconnect/getPersonList.php</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml><object><id>8</id><title>A B</title><firstname>A</firstname><lastname>B</lastname><email>aurelcalonne@free.fr</email><birthday></birthday><category>type/person</category></object><object><id>9</id><title>Aurelien CALONNE</title><firstname>Aurelien</firstname><lastname>CALONNE</lastname><email>aurel@erp5.org</email><birthday>19850906</birthday><category>type/person</category></object><object><id>2</id><title>Aurelien test TEST SOCIETE CLIENTE</title><firstname>Aurelien test</firstname><lastname>TEST SOCIETE CLIENTE</lastname><email>aurel@nexedi.com</email><birthday></birthday><category>type/person</category></object><object><id>1</id><title>John DOE</title><firstname>John</firstname><lastname>DOE</lastname><email>pub@prestashop.com</email><birthday>19700115</birthday><category>type/person</category></object><object><id>3</id><title>Presta Shop</title><firstname>Presta</firstname><lastname>Shop</lastname><email>prestashop@prestashop.com</email><birthday></birthday><category>type/person</category></object></xml>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Person</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

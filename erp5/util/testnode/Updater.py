@@ -33,6 +33,9 @@ import threading
 
 from testnode import SubprocessError
 
+SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
+SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
+
 _format_command_search = re.compile("[[\\s $({?*\\`#~';<>&|]").search
 _format_command_escape = lambda s: "'%s'" % r"'\''".join(s.split("'"))
 def format_command(*args, **kw):
@@ -82,20 +85,16 @@ SVN_TYPE = 'svn'
 class Updater(object):
 
   _git_cache = {}
-  realtime_output = True
   stdin = file(os.devnull)
 
-  def log(self, message):
-    print message
-
-  def __init__(self, repository_path, revision=None, git_binary=None,
-      log=None):
-    if log is not None:
-      self.log = log
+  def __init__(self, repository_path, log, revision=None, git_binary=None,
+      realtime_output=True):
+    self.log = log
     self.revision = revision
     self._path_list = []
     self.repository_path = repository_path
     self.git_binary = git_binary
+    self.realtime_output = realtime_output
 
   def getRepositoryPath(self):
     return self.repository_path
@@ -141,9 +140,8 @@ class Updater(object):
       stdout, stderr = subprocess_capture(p, quiet)
     else:
       stdout, stderr = p.communicate()
-      if not quiet:
-        sys.stdout.write(stdout)
-      sys.stderr.write(stderr)
+      self.log(stdout)
+      self.log(stderr)
     result = dict(status_code=p.returncode, command=command,
                   stdout=stdout, stderr=stderr)
     if p.returncode:
@@ -190,13 +188,21 @@ class Updater(object):
           h = revision[1]
         if h != self._git('rev-parse', 'HEAD'):
           self.deletePycFiles('.')
+          # For performance reasons, 'reset --merge' only looks at mtime & ctime
+          # to check is the index is correct and conflicts immediately if
+          # contents or metadata changed. Even hardlinking a file changes its
+          # ctime, so at least for buildout (local download), we need to
+          # refresh index first.
+          self._git('update-index', '--refresh')
           self._git('reset', '--merge', h)
       else:
         self.deletePycFiles('.')
         if os.path.exists('.git/svn'):
           self._git('svn', 'rebase')
         else:
-          self._git('pull', '--ff-only')
+          self._git('fetch')
+          self._git('update-index', '--refresh') # see note above
+          self._git('reset', '--merge', '@{u}')
         self.revision = self._git_find_rev(self._git('rev-parse', 'HEAD'))
     elif self.getRepositoryType() == SVN_TYPE:
       # following code allows sparse checkout

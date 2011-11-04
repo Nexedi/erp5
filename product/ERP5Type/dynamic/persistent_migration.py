@@ -77,7 +77,6 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
   """Function-like class to update obsolete references in pickle"""
 
   def __new__(cls, obj, recursive=False):
-    assert cls.get, "Persistent migration of pickle requires ZODB >= 3.5"
     self = object.__new__(cls)
     obj = aq_base(obj)
     connection = obj._p_jar
@@ -88,7 +87,7 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
     oid_set = set((obj._p_oid,))
     while oid_set:
       oid = oid_set.pop()
-      obj = self.get(oid)
+      obj = ObjectReader.load_oid(self, oid)
       obj._p_activate()
       klass = obj.__class__
       self.lazy = None
@@ -123,8 +122,6 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
         self.setGhostState(obj, self.serialize(obj))
         obj._p_changed = 1
 
-  get = getattr(ObjectReader, 'load_oid', None)
-
   def getOid(self, obj):
     if isinstance(obj, (Persistent, type, wref.WeakRef)):
       return getattr(obj, '_p_oid', None)
@@ -134,7 +131,7 @@ class PickleUpdater(ObjectReader, ObjectWriter, object):
       if self.lazy:
         return self.lazy(oid)
       self.oid_set.add(oid)
-    return self.get(oid)
+    return ObjectReader.load_oid(self, oid)
 
   def load_persistent(self, oid, klass):
     obj = ObjectReader.load_persistent(self, oid, klass)

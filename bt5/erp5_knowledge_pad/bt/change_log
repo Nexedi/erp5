@@ -1,3 +1,6 @@
+2011-09-26 Kazuhiko
+* ERP5Site_getKnowledgePadListForUser should handle Unauthorized exception.
+
 2011-07-01 yusei
 * Set proper title to interaction workflow.
 

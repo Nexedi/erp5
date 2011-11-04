@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import glob
 import os
 
-version = '0.1-dev'
+version = '0.3-dev'
 name = 'erp5.util'
 long_description = open("README.erp5.util.txt").read() + "\n"
 
@@ -14,6 +14,14 @@ long_description += open("CHANGES.erp5.util.txt").read() + "\n"
 # silence setuptools, create README.txt
 if not os.path.exists('README.txt'):
   os.symlink('README.erp5.util.txt', 'README.txt')
+
+benchmark_install_require_list = [name+'[testbrowser]']
+
+# argparse needed for erp5.util.benchmark is only available from python >= 2.7
+import sys
+python_major_version, python_minor_version = sys.version_info[:2]
+if python_major_version == 2 and python_minor_version < 7:
+  benchmark_install_require_list.append('argparse')
 
 setup(name=name,
       version=version,
@@ -39,6 +47,10 @@ setup(name=name,
       ],
       extras_require={
         'testnode': ['slapos.core', 'xml_marshaller'],
+        'testbrowser': ['zope.testbrowser >= 3.11.1', 'z3c.etestbrowser'],
+        'benchmark': benchmark_install_require_list,
+        'benchmark-report': [name+'[benchmark]', 'matplotlib', 'numpy'],
+        'scalability_tester': [name+'[benchmark]', 'slapos.tool.nosqltester'],
       },
       zip_safe=True,
       packages=find_packages(),
@@ -46,6 +58,9 @@ setup(name=name,
       entry_points={
         'console_scripts': [
           'testnode = erp5.util.testnode:main [testnode]',
+          'performance_tester_erp5 = erp5.util.benchmark.performance_tester:main [benchmark]',
+          'scalability_tester_erp5 = erp5.util.benchmark.scalability_tester:main [scalability_tester]',
+          'generate_erp5_tester_report = erp5.util.benchmark.report:generateReport [benchmark-report]',
         ],
       }
     )

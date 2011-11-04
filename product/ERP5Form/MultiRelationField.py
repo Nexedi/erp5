@@ -350,6 +350,14 @@ class MultiRelationStringFieldWidget(Widget.LinesTextAreaWidget,
       relation_html_string = self.render_relation_link(field, value, REQUEST)
       if relation_html_string != '':
         html_string += '&nbsp;&nbsp;%s' % relation_html_string
+    extra = field.get_value('extra')
+    if extra not in (None, ''):
+      html_string = "<div %s>%s</div>" % (extra, html_string)
+    css_class = field.get_value('css_class')
+    if css_class not in ('', None):
+      # All strings should be escaped before rendering in HTML
+      # except for editor field
+      html_string = "<span class='%s'>%s</span>" % (css_class, html_string)
     return html_string
 
   def render_wheel(self, field, value, REQUEST, relation_index=0,

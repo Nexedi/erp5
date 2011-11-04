@@ -28,6 +28,7 @@
 ##############################################################################
 
 import re, types
+from email.utils import formataddr
 from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, Unauthorized
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -52,8 +53,8 @@ except ImportError:
     """
 
 from email import message_from_string
-from email.Header import decode_header, HeaderParseError
-from email.Utils import parsedate_tz, mktime_tz
+from email.header import decode_header, HeaderParseError
+from email.utils import parsedate_tz, mktime_tz
 
 DEFAULT_TEXT_FORMAT = 'text/html'
 COMMASPACE = ', '
@@ -165,6 +166,13 @@ class EmailDocument(TextDocument):
       self._v_message = result
     return result
 
+  def _setData(self, data):
+    super(EmailDocument, self)._setData(data)
+    try:
+      del self._v_message
+    except AttributeError:
+      pass
+
   def _getMessageTextPart(self):
     """
     Return the main text part of the message data
@@ -222,20 +230,7 @@ class EmailDocument(TextDocument):
             'Failed to decode %s header of %s with error: %s' %
             (name, self.getPath(), error_message))
       for text, encoding in decoded_header:
-        try:
-          if encoding is not None:
-            text = text.decode(encoding).encode('utf-8')
-          else:
-            text = text.decode().encode('utf-8')
-        except (UnicodeDecodeError, LookupError), error_message:
-          encoding = guessEncodingFromText(text, content_type='text/plain')
-          if encoding is not None:
-            try:
-              text = text.decode(encoding).encode('utf-8')
-            except (UnicodeDecodeError, LookupError), error_message:
-              text = repr(text)[1:-1]
-          else:
-            text = repr(text)[1:-1]
+        text, encoding = testCharsetAndConvert(text, 'text/plain', encoding)
         if name in result:
           result[name] = '%s %s' % (result[name], text)
         else:
@@ -314,9 +309,15 @@ class EmailDocument(TextDocument):
             RESPONSE.setHeader('Content-disposition',
                                'attachment; filename="%s"' % filename)
         if 'text/html' in content_type:
+          part_encoding = part.get_content_charset()
+          message_text = part.get_payload(decode=1)
+          text_result, encoding = testCharsetAndConvert(message_text,
+                                                        content_type,
+                                                        part_encoding)
           # Strip out html content in safe mode.
           mime, content = self.convert(format='html',
-                                       text_content=part.get_payload(decode=1),
+                                       text_content=text_result,
+                                       encoding=part_encoding,
                                        index=index) # add index to generate
                                        # a unique cache key per attachment
         else:
@@ -457,32 +458,13 @@ class EmailDocument(TextDocument):
       else:
         part_encoding = part.get_content_charset()
         message_text = part.get_payload(decode=1)
+        text_result, encoding = testCharsetAndConvert(message_text,
+                                                      part.get_content_type(),
+                                                      part_encoding)
         if part.get_content_type() == 'text/html':
           mime, text_result = self.convert(format='html',
-                                           text_content=message_text,
+                                           text_content=text_result,
                                            charset=part_encoding)
-        else:
-          if part_encoding != 'utf-8':
-            try:
-              if part_encoding is not None:
-                text_result = message_text.decode(part_encoding).encode('utf-8')
-              else:
-                text_result = message_text.decode().encode('utf-8')
-            except (UnicodeDecodeError, LookupError), error_message:
-              LOG('EmailDocument.getTextContent', INFO, 
-                  'Failed to decode %s TEXT message of %s with error: %s' % 
-                  (part_encoding, self.getPath(), error_message))
-              codec = guessEncodingFromText(message_text,
-                                            content_type=part.get_content_type())
-              if codec is not None:
-                try:
-                  text_result = message_text.decode(codec).encode('utf-8')
-                except (UnicodeDecodeError, LookupError):
-                  text_result = repr(message_text)
-              else:
-                text_result = repr(message_text)
-          else:
-            text_result = message_text
 
     if default is _MARKER:
       return text_result
@@ -646,11 +628,8 @@ class EmailDocument(TextDocument):
     if from_url is None:
       sender = self.getSourceValue()
       if sender is not None:
-        if sender.getTitle():
-          from_url = '"%s" <%s>' % (sender.getTitle(),
-                                  sender.getDefaultEmailText())
-        else:
-          from_url = sender.getDefaultEmailText()
+        from_url = formataddr((sender.getTitle(),
+                               sender.getDefaultEmailText()))
       else:
         from_url = self.getSender() # Access sender directly
 
@@ -666,21 +645,21 @@ class EmailDocument(TextDocument):
       additional_headers['In-Reply-To'] = destination_reference
 
     # To (multiple)
-    to_url_list = []
+    to_url_list = set()
+    to_email_list = []
     if to_url is None:
       for recipient in self.getDestinationValueList():
         email = recipient.getDefaultEmailText()
         if email:
-          if recipient.getTitle():
-            to_url_list.append('"%s" <%s>' % (recipient.getTitle(), email))
-          else:
-            to_url_list.append(email)
+          if email not in to_email_list:
+            to_email_list.append(email)
+            to_url_list.add(formataddr((recipient.getTitle(), email)))
         else:
           raise ValueError, 'Recipient %s has no defined email' % recipient
       if not to_url_list:
-        to_url_list.append(self.getRecipient())
+        to_url_list.add(self.getRecipient())
     elif type(to_url) in types.StringTypes:
-      to_url_list.append(to_url)
+      to_url_list.add(to_url)
 
     # Attachments
     if attachment_list is None:
@@ -760,3 +739,20 @@ class EmailDocument(TextDocument):
   # getData must be implemented like File.getData is.
   security.declareProtected(Permissions.AccessContentsInformation, 'getData')
   getData = File.getData
+
+def testCharsetAndConvert(text_content, content_type, encoding):
+  try:
+    if encoding is not None:
+      text_content = text_content.decode(encoding).encode('utf-8')
+    else:
+      text_content = text_content.decode().encode('utf-8')
+  except (UnicodeDecodeError, LookupError), error_message:
+    encoding = guessEncodingFromText(text_content, content_type)
+    if encoding is not None:
+      try:
+        text_content = text_content.decode(encoding).encode('utf-8')
+      except (UnicodeDecodeError, LookupError):
+        text_content = repr(text_content)[1:-1]
+    else:
+      text_content = repr(text_content)[1:-1]
+  return text_content, encoding

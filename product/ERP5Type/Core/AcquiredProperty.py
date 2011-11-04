@@ -314,10 +314,11 @@ class AcquiredProperty(StandardProperty):
     if property_dict['elementary_type'] == 'content':
       argument_list = (property_dict['elementary_type'],
                        property_dict['storage_id'])
-
-      cls._applyDefinitionFormatDictOnAccessorHolder(
-        property_dict['reference'], cls._content_type_tester_definition_dict,
-        accessor_holder, argument_list, property_dict['read_permission'])
+      reference = property_dict['reference']
+      for composed_id in (reference, 'default_' + reference,):
+        cls._applyDefinitionFormatDictOnAccessorHolder(
+          composed_id, cls._content_type_tester_definition_dict,
+          accessor_holder, argument_list, property_dict['read_permission'])
 
     else:
       super(AcquiredProperty, cls)._applyTesterDefinitionDictOnAccessorHolder(
@@ -484,6 +485,10 @@ class AcquiredProperty(StandardProperty):
     '_set%s': ContentProperty.Setter
   }
 
+  _content_type_acquired_property_id_tester_definition_dict = {
+    'has%s': ContentProperty.Tester
+  }
+
   @classmethod
   def _applyContentTypeAcquiredPropertyOnAccessorHolder(cls,
                                                         aq_id,
@@ -516,6 +521,13 @@ class AcquiredProperty(StandardProperty):
         property_dict['write_permission'])
 
       cls._applyDefinitionFormatDictOnAccessorHolder(
+        composed_id,
+        cls._content_type_acquired_property_id_tester_definition_dict,
+        accessor_holder,
+        acquired_property_id_argument_list,
+        property_dict['read_permission'])
+
+      cls._applyDefinitionFormatDictOnAccessorHolder(
         composed_id + '_list',
         cls._content_type_acquired_property_id_getter_definition_dict,
         accessor_holder,
@@ -529,6 +541,13 @@ class AcquiredProperty(StandardProperty):
         acquired_property_id_list_argument_list,
         property_dict['write_permission'])
 
+      cls._applyDefinitionFormatDictOnAccessorHolder(
+        composed_id + '_list',
+        cls._content_type_acquired_property_id_tester_definition_dict,
+        accessor_holder,
+        acquired_property_id_argument_list,
+        property_dict['read_permission'])
+
   @classmethod
   def applyDefinitionOnAccessorHolder(cls,
                                       property_dict,
@@ -541,7 +560,7 @@ class AcquiredProperty(StandardProperty):
                                                     portal)
 
     if property_dict['elementary_type'] == 'content':
-      if property_dict['acquisition_base_category'] is not None:
+      if property_dict['acquisition_base_category']:
         apply_method = cls._applyAcquisitionBaseCategoryAcquiredPropertyOnAccessorHolder
       else:
         apply_method = cls._applyContentTypeAcquiredPropertyOnAccessorHolder

@@ -33,6 +33,7 @@ from App.config import getConfiguration
 import os
 import shutil
 import sys
+import tarfile
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
@@ -40,7 +41,7 @@ from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type import Permissions, tarfile
+from Products.ERP5Type import Permissions
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
 from Acquisition import aq_base
 from tempfile import mkstemp, mkdtemp
@@ -124,7 +125,7 @@ class TemplateTool (BaseTool):
       latest_bt = None
       latest_revision = 0
       for bt in self.contentValues(filter={'portal_type':'Business Template'}):
-        if bt.getTitle() == title:
+        if bt.getTitle() == title or title in bt.getProvisionList():
           installation_state = bt.getInstallationState()
           if installation_state == 'installed':
             latest_bt = bt
@@ -297,13 +298,10 @@ class TemplateTool (BaseTool):
       """
         Import template from a temp file (as uploaded by the user)
       """
-      file = open(path, 'rb')
-      try:
+      with open(path, 'rb') as file:
         # read magic key to determine wich kind of bt we use
         file.seek(0)
         magic = file.read(5)
-      finally:
-        file.close()
 
       if magic == '<?xml': # old version
         self._importObjectFromFile(path, id=id)
@@ -341,11 +339,8 @@ class TemplateTool (BaseTool):
           prop_dict.pop('id', '')
           bt.edit(**prop_dict)
           # import all other files from bt
-          fobj = open(path, 'rb')
-          try:
+          with open(path, 'rb') as fobj:
             bt.importFile(file=fobj)
-          finally:
-            fobj.close()
         finally:
           tar.close()
       return bt
@@ -397,7 +392,8 @@ class TemplateTool (BaseTool):
           if not os.path.exists(prop_path):
             value = None
           else:
-            value = open(prop_path, 'rb').read()
+            with open(prop_path, 'rb') as f:
+              value = f.read()
           if value is 'None':
             # At export time, we used to export non-existent properties:
             #   str(obj.getProperty('non-existing')) == 'None'
@@ -522,11 +518,8 @@ class TemplateTool (BaseTool):
       tempid, temppath = mkstemp()
       try:
         os.close(tempid) # Close the opened fd as soon as possible
-        tempfile = open(temppath, 'wb')
-        try:
+        with open(temppath, 'wb') as tempfile:
           tempfile.write(import_file.read())
-        finally:
-          tempfile.close()
         bt = self._importBT(temppath, id)
       finally:
         os.remove(temppath)
@@ -906,7 +899,7 @@ class TemplateTool (BaseTool):
                     # Something like "(>= 1.0rc6)".
                     version_restriction = version_restriction[1:-1]
                 require_update = False
-                installed_bt = self.portal_templates.getInstalledBusinessTemplate(dependency)
+                installed_bt = self.getInstalledBusinessTemplate(dependency)
                 if version_restriction is not None:
                   if installed_bt is not None:
                     # Check if the installed version require an update

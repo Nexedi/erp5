@@ -19,11 +19,24 @@ def changeObjectClass(self, object_id, new_class):
   """Creates a copy of object_id inside self, changing its class to
   new_class"""
   old_obj = self._getOb(object_id)
-  self._delObject(object_id)
+  self._delOb(object_id)
   new_obj = new_class(object_id)
   new_obj.__dict__.update(old_obj.__dict__)
-  self._setObject(object_id, new_obj)
- 
+  if new_class.__module__ == 'erp5.portal_type':
+    new_obj.portal_type = new_class.__name__
+  self._setOb(object_id, new_obj)
+  if self._delOb.__module__ == 'OFS.ObjectManager':
+    # Workaround OFS updating '_objects' in _[ds]etObject instead of _[ds]etOb
+    for i in self._objects:
+      if i['id'] == object_id:
+        i['meta_type'] = getattr(new_obj, 'meta_type', None)
+        break
+  new_obj = self._getOb(object_id, new_obj)
+  if new_obj.isIndexable:
+    new_obj.reindexObject()
+  else:
+    old_obj.unindexObject()
+  return new_obj
 
 def updateBalanceTransactionClass(self):
   """Update Balance Transactions new indexing that occured around r16371

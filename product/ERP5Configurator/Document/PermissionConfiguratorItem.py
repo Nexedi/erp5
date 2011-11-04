@@ -58,7 +58,7 @@ class PermissionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     template_module_id_list = []
     module_permissions_map = {}
     sheets_dict = business_configuration.ConfigurationTemplate_readOOCalcFile(\
-                                                                              self.filename)
+                           self.filename)
     for module_id, permissions in sheets_dict.items():
       module_permissions = {}
       for permission in permissions:

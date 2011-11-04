@@ -40,5 +40,4 @@ def migrateToEmbeddedFile(self, force=0):
     id = self.id
     if force == 1:
       changeObjectClass(container, id, getattr(erp5.portal_type, embedded_type))
-      container._getOb(id).portal_type = embedded_type
     return '%s: %s -> %s' % (self.getRelativeUrl(), portal_type, embedded_type),

@@ -580,11 +580,8 @@ class TestProxyField(ERP5TypeTestCase):
                                ERP5Form('Base_viewProxyFieldLibrary', 'Proxys'))
     self.container._setObject('Base_view',
                                ERP5Form('Base_view', 'View'))
-    try:
-        from Products.CMFCore.tests.base.utils import _setUpDefaultTraversable
-        _setUpDefaultTraversable()
-    except ImportError:
-        pass # On Zope 2.8, remove when we no longer support it
+    from Products.CMFCore.tests.base.utils import _setUpDefaultTraversable
+    _setUpDefaultTraversable()
 
 
   def addField(self, form, id, title, field_type):

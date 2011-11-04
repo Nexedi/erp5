@@ -171,12 +171,12 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     if order is not None:
       return order.getSimulationState()
 
+    parent = self.getParentValue()
     try:
-      parent_state = None
       try:
-        parent_state = self.getParentValue().getSimulationState()
+        parent_state = parent.getSimulationState()
       except AttributeError:
-        item = self.getParentValue().getCausalityValue(
+        item = parent.getCausalityValue(
                 portal_type=self.getPortalItemTypeList())
         if interfaces.IExpandableItem.providedBy(item):
           return item.getSimulationMovementSimulationState(self)
@@ -284,69 +284,10 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
           tv[key] = None # disallow further calls to 'calculate'
         transaction.get().addBeforeCommitHook(before_commit)
 
-  security.declarePrivate('_getSuccessorTradePhaseList')
-  def _getSuccessorTradePhaseList(self):
-    """
-    Get the list of future trade_phase categories from this simulation
-    movement according to the related business process
-    """
-    # XXX-Leo this method could be smaller if (one or more of):
-    #  * Simulation Movements had trade_state instead of trade_phase categories,
-    #  * .asComposedDocument() also included the causality Business Link,
-    #  * BusinessLink objects had a '.getSucessorTradePhaseList' method (accepting
-    #      a context parameter for predicate checking).
-    #  * .getBusinessLinkValueList() accepted a predecessor_link parameter,
-    #  * some of the work below was done by a Business Process method,
-    portal = self.getPortalObject()
-    business_process = self.asComposedDocument()
-    business_link_type_list = portal.getPortalBusinessLinkTypeList()
-    business_link = self.getCausalityValue(portal_type=business_link_type_list)
-    if business_link is None:
-      # XXX-Leo we could just return self.getTradePhaseList() for
-      # backward compatibility
-      from Products.ERP5Type.Errors import SimulationError
-      raise SimulationError('No Business Link Causality for %r. Cannot enumerate successor trade_phases.' % 
-                            (self,))
-    # from this Business Process, get the Business Links which
-    # predecessor state match the successor state of our Business Link
-    # causality
-    successor_trade_state = business_link.getSuccessor()
-    successor_link_list = business_process.getBusinessLinkValueList(
-      context=self,
-      predecessor=successor_trade_state)
-    successor_trade_phase_list = [link.getTradePhase()
-                                  for link in successor_link_list]
-
-    return successor_trade_phase_list
-
-  security.declarePrivate('_asSuccessorContext')
-  def _asSuccessorContext(self):
-    """ Returns a version of self with future trade phases
-    """
-    successor_trade_phase_list = self._getSuccessorTradePhaseList()
-    context = self.asContext()
-    context.edit(trade_phase_list=successor_trade_phase_list)
-    return context
-
-  security.declarePrivate('_checkSuccessorContext')
-  def _checkSuccessorContext(self):
-    # XXX turn this into a decorator?
-    if not (self.isTempObject() and
-            'trade_phase_list' in self._v_modified_property_dict):
-      raise RuntimeError(
-        'Method should only be called on self._asSuccessorContext()'
-      )
- 
-  security.declarePrivate('_isSuccessorContext')
-  def _isRuleStillApplicable(self, rule):
-    self._checkSuccessorContext()
-    return rule.test(self)
-
   security.declarePrivate('_getApplicableRuleList')
   def _getApplicableRuleList(self):
     """ Search rules that match this movement
     """
-    self._checkSuccessorContext()
     portal_rules = self.getPortalObject().portal_rules
     # XXX-Leo: According to JP, the 'version' search below is wrong and
     # should be replaced by a check that there are not two rules with the
@@ -377,8 +318,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     applied_rule_dict = {}
     applicable_rule_dict = {}
-    successor_self = self._asSuccessorContext()
-    for rule in successor_self._getApplicableRuleList():
+    for rule in self._getApplicableRuleList():
       reference = rule.getReference()
       if reference:
         # XXX-Leo: We should complain loudly if there is more than one
@@ -388,9 +328,14 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
       # check if applied rule is already expanded, or if its portal
-      # rule is still applicable to this Simulation Movement with
-      # successor trade_phases
-      if (successor_self._isRuleStillApplicable(rule) or
+      # rule is still applicable to this Simulation Movement
+
+      # XXX-Leo: possible optimization, it is likely that 'rule' is in
+      # applicable_rule_dict.values() (or actually, in
+      # self._getApplicableRuleList()). We should check if this is the
+      # case, and then not call rule.test(self), since the predicate
+      # tool will already have done it once.
+      if (rule.test(self) or
           applied_rule._isTreeDelivered()):
         applied_rule_dict[rule.getReference()] = applied_rule
       else:

@@ -35,7 +35,7 @@ from Products.ERP5Type import PropertySheet
 
 from zLOG import LOG, DEBUG, INFO
 from Products.ERP5SyncML.Utils import PdataHelper
-import md5
+from hashlib import md5
 
 _MARKER = []
 
@@ -132,7 +132,9 @@ class SyncMLSignature(XMLObject):
     if we want to know if an objects has changed or not
     Returns 1 if MD5 are equals, else it returns 0
     """
-    return ((md5.new(xml_string).hexdigest()) == self.getContentMd5())
+    if isinstance(xml_string, unicode):
+      xml_string = xml_string.encode('utf-8')
+    return md5(xml_string).hexdigest() == self.getContentMd5()
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setPartialData')
   def setPartialData(self, value):

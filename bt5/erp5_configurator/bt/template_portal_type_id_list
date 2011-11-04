@@ -10,7 +10,6 @@ Configuration Save
 Configurator Tool
 Currency Configurator Item
 Customer BT5 Configurator Item
-Export Customer BT5 Configurator Item
 Organisation Configurator Item
 Permission Configurator Item
 Person Configurator Item
@@ -26,5 +25,4 @@ Site Property Configurator Item
 Solver Configurator Item
 Standard BT5 Configurator Item
 System Preference Configurator Item
-Trash Fake Site Configurator Item
 Workflow Security Configurator Item

@@ -1,4 +1,6 @@
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from AccessControl import ClassSecurityInfo
+from Products.ERP5Type.Globals import InitializeClass
 
 def getActivityRuntimeEnvironment():
   """
@@ -25,15 +27,28 @@ class BaseMessage:
   # For errors happening after message invocation (ConflictError),
   # should we retry quickly without increasing 'retry' count ?
   conflict_retry = __property(conflict_retry=True)
+  # Called if any error happened, after the transaction is aborted.
+  # The message is cancelled if a non zero value is returned.
+  # A transaction commit is done after it is called.
+  # If the callback fails, the transaction is aborted again and the
+  # notification contains this failure instead of the original one.
+  on_error_callback = __property(on_error_callback=None)
 
 
 class ActivityRuntimeEnvironment(object):
+  security = ClassSecurityInfo()
 
   def __init__(self, message):
     self._message = message
 
+  security.declarePublic('edit')
   def edit(self, **kw):
     # There is no point allowing to modify other attributes from a message
     for k in kw:
       getattr(BaseMessage, k)
+      if k == 'on_error_callback' and \
+         self._message.activity_kw.get(k) is not None:
+        raise RuntimeError("An error callback is already registered")
     self._message.activity_kw.update(kw)
+
+InitializeClass(ActivityRuntimeEnvironment)
