@@ -89,7 +89,7 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_start_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Date</string>
                         </tuple>
                         <tuple>
@@ -120,8 +120,12 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>delivery_start_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
                         </tuple>
                         <tuple>
                           <string>payment_mode_translated_title</string>

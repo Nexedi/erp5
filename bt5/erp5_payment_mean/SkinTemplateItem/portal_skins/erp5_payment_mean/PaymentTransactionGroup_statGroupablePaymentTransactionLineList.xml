@@ -50,16 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-\n
-search_kw = dict(\n
-  parent_portal_type=\'Payment Transaction\',\n
-  section_uid=context.getSourceSectionUid(),\n
-  default_aggregate_uid=context.getUid(),\n
-  node_category=\'account_type/asset/cash/bank\',\n
-)\n
-\n
-return portal.portal_simulation.getMovementHistoryList(**search_kw)\n
+            <value> <string># request is filled by PaymentTransactionGroup_getGroupablePaymentTransactionLineList\n
+from Products.PythonScripts.standard import Object\n
+return Object(total_quantity=container.REQUEST[\'PaymentTransactionGroup_statGroupablePaymentTransactionLineList.total_quantity\']),\n
 </string> </value>
         </item>
         <item>
@@ -68,7 +61,7 @@ return portal.portal_simulation.getMovementHistoryList(**search_kw)\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaymentTransactionGroup_getGroupedPaymentTransactionLineList</string> </value>
+            <value> <string>PaymentTransactionGroup_statGroupablePaymentTransactionLineList</string> </value>
         </item>
       </dictionary>
     </pickle>

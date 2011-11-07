@@ -50,26 +50,25 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.PythonScripts.standard import Object\n
-portal = context.getPortalObject()\n
-\n
-search_kw = dict(\n
-  parent_portal_type=\'Payment Transaction\',\n
-  section_uid=context.getSourceSectionUid(),\n
-  default_aggregate_uid=context.getUid(),\n
-  node_category=\'account_type/asset/cash/bank\',\n
-)\n
-\n
-return Object(total_quantity=portal.portal_simulation.getInventory(**search_kw)),\n
+            <value> <string>context.setDefaultActivateParameters(activate_kw=activate_kw)\n
+context.setAggregate(aggregate)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>aggregate, activate_kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaymentTransactionGroup_statPaymentTransactionLineList</string> </value>
+            <value> <string>PaymentTransactionLine_setAggregate</string> </value>
         </item>
       </dictionary>
     </pickle>
