@@ -1547,7 +1547,7 @@ class TestCRMMailSend(BaseTestCRM):
       ### Incoming on Person ###
       # Submit the dialog on person
       title = 'Incoming email'
-      direction = 'in'
+      direction = 'incoming'
       portal_type = 'Note'
       resource = resource['1'].getCategoryRelativeUrl()
       person.Base_addEvent(title, direction, portal_type, resource)
@@ -1570,7 +1570,7 @@ class TestCRMMailSend(BaseTestCRM):
       ### Outgoing on Person ###
       # Check another direction
       title = 'Outgoing email'
-      direction = 'out'
+      direction = 'outgoing'
       another_person.Base_addEvent(title, direction, portal_type, resource)
 
       # Index Event
