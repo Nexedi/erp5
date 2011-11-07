@@ -112,7 +112,9 @@ class DomainTool(BaseTool):
                      if x.startswith('predicate.')]
       expression_list = []
       checked_column_list = []
-      sql_kw = {}
+      # XXX-Leo: Please remove implicit_join below, while making sure
+      # testDomainTool.py still passes
+      sql_kw = dict(implicit_join=True)
       query_list = []
       if query is not None:
         query_list = [query]
