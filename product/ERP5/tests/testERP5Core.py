@@ -82,6 +82,8 @@ if 1: # BBB
     portal = Acquisition.aq_parent(sm)
     ui_domain = getattr(portal, '_save_ui_domain', [None]).pop()
     if ui_domain is not None:
+      # aq_base() to remove acquisition wrapping
+      ui_domain = Acquisition.aq_base(ui_domain)
       sm.registerUtility(ui_domain, ITranslationDomain, 'ui')
       del portal._save_ui_domain
 
