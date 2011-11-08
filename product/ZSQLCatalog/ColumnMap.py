@@ -680,7 +680,7 @@ class ColumnMap(object):
     catalog_table_alias = self.getCatalogTableAlias()
     for (group, table_name), column_set in self.join_table_map.items():
       # if any of the columns for this implicit join was requested as a
-      #left-join, then all columns will be subject to a left-join.
+      # left-join, then all columns will be subject to a left-join.
       # XXX What if one of the columns was an actual query, as opposed to a
       # sort column or select_dict? This would cause results in the main
       # catalog that don't match the query to be present as well. We expect

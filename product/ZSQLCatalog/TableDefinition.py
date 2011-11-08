@@ -80,7 +80,7 @@ class TableDefinition(object):
 
   def getSuperSet(self, other):
     """Checks if this TableDefinition is a subset of the other table
-    definition or vice-versa.
+    definition or vice-versa. Return which one is the superset.
 
     Returns whichever is the superset of the other or None
     """
@@ -232,15 +232,17 @@ class InnerJoin(Join):
      - other is a TableAlias (or None) equal to our
        left_side. I.e. "other" is at the end of it's inner-join chain.
 
-     - other is an InnerJoin, and it's left-side is equal to our left-side (both TableAliases or None), and it's righ
+     - other is an InnerJoin, and it's left-side is equal to our
+       left-side (both TableAliases or None), and our right-side is a
+       super-set of it's right-side.
     """
     if self.left_tabledef == other:
-      # other and left-side are both None or TableAliases
+      # other and left-side are both None or matching TableAliases
       return self
     if (isinstance(other, InnerJoin) and
         self.left_tabledef == other.left_tabledef):
       # our left-sides match. If one of our right sides is a superset of the
-      # other, then one of is is the superset
+      # other right side, then we found the superset
       sub_superset = self.right_tabledef.getSuperSet(other.right_tabledef)
       if sub_superset is self.right_tabledef:
         return self
