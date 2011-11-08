@@ -17,7 +17,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_quantity_range_max</string> </value>
+            <value> <string>your_start_date_range_min</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -74,11 +74,11 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>The maximum number of payment transactions that will be aggregated in this payment transaction group</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_integer_field</string> </value>
+                    <value> <string>my_date_time_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -90,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Maximum Transactions Count</string> </value>
+                    <value> <string>Minimum Date</string> </value>
                 </item>
               </dictionary>
             </value>

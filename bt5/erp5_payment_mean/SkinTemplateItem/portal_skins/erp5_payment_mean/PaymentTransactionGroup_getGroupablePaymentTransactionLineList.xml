@@ -54,12 +54,16 @@
 \n
 search_kw = dict(\n
   parent_portal_type=\'Payment Transaction\',\n
+  limit=None,\n
   simulation_state=(\'delivered\', \'stopped\'),\n
   section_uid=context.getSourceSectionUid(),\n
   payment_uid=context.getSourcePaymentUid(),\n
   resource_uid=context.getPriceCurrencyUid(),\n
   node_category=\'account_type/asset/cash/bank\',\n
 #  group_by=(\'parent_uid\', ), # The limit is not applied on the number of payment transactions, but on the number of lines (to simplify setting aggregate relation).\n
+\n
+  # For better performance, add \'payment_transaction_group_aggregate_uid\' column in stock table\n
+  # and use payment_transaction_group_aggregate_uid=None here\n
   where_expression= """\n
 NOT EXISTS (\n
   SELECT * FROM\n
@@ -74,28 +78,40 @@ NOT EXISTS (\n
 """ % portal.portal_categories.aggregate.getUid()\n
 )\n
 \n
-if context.isMemberOf(\'payment_transaction_group_type/incoming\'):\n
-  search_kw[\'omit_asset_decrease\'] = True\n
-if context.isMemberOf(\'payment_transaction_group_type/outgoing\'):\n
-  search_kw[\'omit_asset_increase\'] = True\n
-\n
 if context.getPaymentMode():\n
   search_kw[\'payment_transaction_line_payment_mode_uid\'] = context.getPaymentModeUid()\n
 \n
-if context.getQuantityRangeMax():\n
-  search_kw[\'limit\'] = int(context.getQuantityRangeMax())\n
+if limit:\n
+  search_kw[\'limit\'] = limit\n
 \n
-if context.getStartDateRangeMax():\n
-  search_kw[\'at_date\'] = context.getStartDateRangeMax().latestTime()\n
-if context.getStartDateRangeMin():\n
-  search_kw[\'from_date\'] = context.getStartDateRangeMin()\n
+if start_date_range_max:\n
+  search_kw[\'at_date\'] = start_date_range_max.latestTime()\n
+if start_date_range_min:\n
+  search_kw[\'from_date\'] = start_date_range_min\n
 \n
-return portal.portal_simulation.getMovementHistoryList(**search_kw)\n
+if sign == \'out\':\n
+  search_kw[\'omit_asset_increase\'] = True\n
+elif sign == \'in\':\n
+  search_kw[\'omit_asset_decrease\'] = True\n
+\n
+movement_history_list = portal.portal_simulation.getMovementHistoryList(**search_kw)\n
+\n
+# XXX this will be read by PaymentTransactionGroup_statGroupablePaymentTransactionLineList\n
+# ( we could be using getInventoryStat there but this does not support limit\n
+# parameter )\n
+stat_total_quantity = 0\n
+if movement_history_list:\n
+  stat_total_quantity = movement_history_list[-1].running_total_quantity\n
+container.REQUEST.set(\n
+  \'PaymentTransactionGroup_statGroupablePaymentTransactionLineList.total_quantity\',\n
+  stat_total_quantity)\n
+\n
+return movement_history_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>limit=None, start_date_range_min=None, start_date_range_max=None, sign=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
