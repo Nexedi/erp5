@@ -202,6 +202,7 @@ class DummyCatalog(SQLCatalog):
     assert 'query_table' in kw
     assert 'table_0' in kw
     assert 'table_1' in kw
+    assert 'AND' in kw.pop('RELATED_QUERY_SEPARATOR')
     assert len(kw) == 4
     return '%(table_0)s.uid = %(query_table)s.uid AND %(table_0)s.other_uid = %(table_1)s' % kw
 
