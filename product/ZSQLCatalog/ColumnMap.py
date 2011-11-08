@@ -426,6 +426,7 @@ class ColumnMap(object):
 
     # now that we have all aliases, calculate missing joins comming from
     # non-RelatedKey relationships (like full_text).
+    self.registerCatalog()
     self._calculateMissingJoins()
     # and all left joins that did not come from explicit queries
     # (i.e. joins comming from 'sort_on', 'select_dict', etc.)
