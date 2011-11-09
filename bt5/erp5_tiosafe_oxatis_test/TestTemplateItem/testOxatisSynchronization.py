@@ -33,6 +33,7 @@ from zLOG import LOG
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestOxatisSynchronization(ERP5TypeTestCase):
   """
@@ -646,7 +647,7 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
         self.assertNotEqual(sale_order.getDestinationAdministration(), self.oxatis.getDestination())
 
 
-
+  @expectedFailure
   def testFullSync(self):
     self.runPersonSync()
     self.runProductSync()

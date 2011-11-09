@@ -34,6 +34,8 @@ from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 import os
 
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
+
 class TestVirtuemartSynchronization(ERP5TypeTestCase):
   """
   """
@@ -874,7 +876,7 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
         self.assertNotEqual(sale_order.getDestinationDecision(), self.virtuemart.getDestination())
         self.assertNotEqual(sale_order.getDestinationAdministration(), self.virtuemart.getDestination())
 
-
+  @expectedFailure
   def testFullSync(self):
     self.runOrganisationSync()
     self.runPersonSync()
