@@ -65,6 +65,14 @@ return account_list[0]\n
             <value> <string>site=None</string> </value>
         </item>
         <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>id</string> </key>
             <value> <string>Baobab_getAccountForSite</string> </value>
         </item>
