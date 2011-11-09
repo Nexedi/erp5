@@ -50,11 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if isinstance(site, str):\n
-  site = context.portal_categories.site.restrictedTraverse(site)\n
-orga_id = "site_%3s" %(site.getCodification())\n
-organisation = context.organisation_module[orga_id]\n
-\n
+            <value> <string>portal = context.getPortalObject()\n
+if isinstance(site, str):\n
+  site = portal.portal_categories.site.restrictedTraverse(site)\n
+organisation = portal.organisation_module[\'site_%3s\' % (site.getCodification(), )]\n
 account_list = [x for x in organisation.objectValues(portal_type=\'Bank Account\') if x.getValidationState() == \'valid\']\n
 if len(account_list) != 1:\n
   raise ValueError(\'Must not get %d account for the organisation %s\' % (len(account_list), organisation.getTitleOrId()))\n
