@@ -3018,9 +3018,22 @@ class TestPayroll(TestPayrollMixin):
                                            'product_line/payroll_tax_1'],
        **kw)
 
+  def createPayrollAccountingBusinessLink(self):
+    invoiced = self.portal.portal_categories.trade_state.invoiced
+    completed_state_list = ['delivered']
+    frozen_state_list = ['delivered', 'confirmed']
+    self.createBusinessLink(
+      self.business_process,
+      successor_value=invoiced,
+      trade_phase='default/accounting',
+      completed_state_list=completed_state_list,
+      frozen_state_list=frozen_state_list,
+      delivery_builder_list=('portal_deliveries/pay_sheet_transaction_builder',))
+
   def test_AccountingLineGeneration(self):
     # create a pay sheet
     self.createPayrollBusinesProcess()
+    self.createPayrollAccountingBusinessLink()
     eur = self.portal.currency_module.EUR
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',
