@@ -92,14 +92,14 @@ def makeFileUpload(name, as_name=None):
 
 class TestDocumentMixin(ERP5TypeTestCase):
   
-  bussiness_template_list = ['erp5_core_proxy_field_legacy',
-                             'erp5_jquery',
-                             'erp5_full_text_myisam_catalog',
-                             'erp5_base',
-                             'erp5_ingestion_mysql_innodb_catalog', 
-                             'erp5_ingestion',
-                             'erp5_web', 
-                             'erp5_dms']
+  business_template_list = ['erp5_core_proxy_field_legacy',
+                            'erp5_jquery',
+                            'erp5_full_text_myisam_catalog',
+                            'erp5_base',
+                            'erp5_ingestion_mysql_innodb_catalog', 
+                            'erp5_ingestion',
+                            'erp5_web', 
+                            'erp5_dms']
 
   def setUpOnce(self):
     # set a dummy localizer (because normally it is cookie based)
@@ -149,7 +149,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
     return getattr(self.getPortal(),'document_module')
 
   def getBusinessTemplateList(self):
-    return self.bussiness_template_list
+    return self.business_template_list
 
   def getNeededCategoryList(self):
     return ()
@@ -1759,7 +1759,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
   def test_parallel_conversion(self):
     """Check that conversion engine is able to fill in
-    cache without overwrite previous conversion
+    cache without overwriting previous conversion
     when processed at the same time.
     """
     portal_type = 'PDF'
@@ -1781,7 +1781,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
                   'resolution': None}
 
     class ThreadWrappedConverter(Thread):
-      """Use this class to run different convertion
+      """Use this class to run different conversions
       inside distinct Thread.
       """
       def __init__(self, publish_method, document_path,
@@ -1809,7 +1809,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     # assume there is no password
     credential = '%s:' % (getSecurityManager().getUser().getId(),)
     tested_list = []
-    frame_list = list(xrange(pages_number))
+    frame_list = range(pages_number)
     # assume that ZServer is configured with 4 Threads
     conversion_per_tread = pages_number / 4
     while frame_list:
