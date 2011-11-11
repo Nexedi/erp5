@@ -2377,6 +2377,26 @@ return 1
     self.assertNotEquals(previous_md5, document.getContentMd5())
     self.assertEquals(document.getExternalProcessingState(), 'converted')
 
+  # Currently, 'empty' state in processing_status_workflow is only set
+  # when creating a document and before uploading any file. Once the
+  # document has been uploaded and then the content is cleared, the
+  # document state stays at 'converting' state as empty base_data is
+  # not handled
+  @expectedFailure
+  def test_base_convertable_behaviour_when_deleted(self):
+    """
+    Check that deleting the content of a previously uploaded document
+    actually clear base_data and md5 and check that the document goes
+    back to empty state
+    """
+    # create a document
+    upload_file = makeFileUpload('TEST-en-002.doc')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
+    document = self.portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(document.hasBaseData())
+    self.assertTrue(document.hasContentMd5())
+
     # Delete content: base_data must be deleted
     document.edit(data=None)
     self.stepTic()
