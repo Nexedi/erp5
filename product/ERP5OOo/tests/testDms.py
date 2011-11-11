@@ -1828,7 +1828,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
     convert_kw = {'format': 'png',
                   'quality': 75,
-                  'image_size': image_size,
+                  'display': 'thumbnail',
                   'resolution': None}
 
     result_list = []
