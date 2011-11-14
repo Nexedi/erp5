@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Gadget" module="Products.ERP5.Document.Gadget"/>
+      <global name="Gadget" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -81,7 +81,59 @@
             <key> <string>view_form_id</string> </key>
             <value> <string>WebSite_loginForm</string> </value>
         </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+            </value>
+        </item>
       </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>knowledge_pad_validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>visible</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>public</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
     </pickle>
   </record>
 </ZopeData>
