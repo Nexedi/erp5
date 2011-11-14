@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Gadget" module="Products.ERP5.Document.Gadget"/>
+      <global name="Gadget" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -207,10 +207,6 @@
         </item>
         <item>
             <key> <string>image_id</string> </key>
-            <value> <string>2</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
             <value> <string>2</string> </value>
         </item>
         <item>

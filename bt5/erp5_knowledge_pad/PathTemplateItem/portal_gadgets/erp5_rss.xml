@@ -2,24 +2,60 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Gadget" module="Products.ERP5.Document.Gadget"/>
+      <global name="Gadget" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
-              <list>
-                <string>Anonymous</string>
-              </list>
+              <tuple>
+                <string>Assignor</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>_View_Permission</string> </key>
             <value>
-              <list>
-                <string>Anonymous</string>
-              </list>
+              <tuple>
+                <string>Assignor</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+                <string>Owner</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -131,10 +167,6 @@
         </item>
         <item>
             <key> <string>image_id</string> </key>
-            <value> <string>1</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
             <value> <string>1</string> </value>
         </item>
         <item>
