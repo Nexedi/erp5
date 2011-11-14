@@ -58,6 +58,10 @@
             <value>
               <list>
                 <string>_set.*</string>
+                <string>confirm</string>
+                <string>start</string>
+                <string>stop</string>
+                <string>deliver</string>
               </list>
             </value>
         </item>
@@ -76,6 +80,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
