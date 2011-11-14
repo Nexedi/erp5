@@ -1,3 +1,2 @@
 2011-11-01 kazuhiko
-* use wrapper mode because it seems more stable than storage mode with 'REPLACE INTO'.
 * initial commit that is quite close to erp5_full_text_myisam_catalog.
