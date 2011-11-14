@@ -90,6 +90,10 @@ if current_web_site is None and parent_web_section_url is not None:\n
   # XXX-JPS This shows inconsistent API between async and non async mode\n
   #          Some unification is needed\n
   current_web_site = portal.restrictedTraverse(parent_web_section_url).getWebSiteValue()\n
+\n
+if current_web_site is None:\n
+  current_web_site = context.getWebSiteValue()\n
+\n
 if current_web_site is None:\n
   current_web_site = portal\n
 \n
