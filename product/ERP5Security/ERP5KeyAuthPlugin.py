@@ -342,7 +342,6 @@ class ERP5KeyAuthPlugin(ERP5UserManager, CookieAuthHelper):
         if sm.getUser().getId() != SUPER_USER:
           newSecurityManager(self, self.getUser(SUPER_USER))
           try:
-            portal = self.getPortalObject()
             # get assignment list
             assignment_list = [x for x in user.contentValues(portal_type="Assignment") \
                                  if x.getValidationState() == "open"]
