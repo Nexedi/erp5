@@ -190,6 +190,11 @@ fieldset.hidden_fieldset { \n
   width: 100%;\n
 }\n
 \n
+#km_left .page,\n
+#km_front .page{\n
+  width: 100%; \n
+}\n
+\n
 #km_left .text,\n
 #km_front .text {\n
   padding:5px 15px;\n
