@@ -219,7 +219,7 @@ branch = %(branch)s
             for i, repository_revision in enumerate(test_revision.split(',')):
               vcs_repository = vcs_repository_list[i]
               repository_path = vcs_repository['repository_path']
-              revision = repository_revision.split('-')[1]
+              revision = repository_revision.rsplit('-', 1)[1]
               # other testnodes on other boxes are already ready to test another
               # revision
               log('  %s at %s' % (repository_path, revision))
