@@ -553,12 +553,14 @@ fieldset.right .field {\n
 }\n
 \n
 /* Login & Registration form  CSS */\n
+/*\n
 fieldset.left{\n
   float:left;\n
 }\n
 fieldset.right{\n
   float:right;\n
 }\n
+*/\n
 \n
 fieldset.registration {\n
   width:36%;\n
