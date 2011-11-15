@@ -27,6 +27,7 @@
  <portal_type id="Pay Sheet Transaction">
   <item>Annotation Line</item>
   <item>Pay Sheet Line</item>
+  <item>Pay Sheet Model Ratio Line</item>
   <item>Pay Sheet Transaction Line</item>
   <item>Payment Condition</item>
  </portal_type>
