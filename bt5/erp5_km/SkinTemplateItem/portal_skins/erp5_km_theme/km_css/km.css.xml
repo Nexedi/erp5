@@ -843,7 +843,8 @@ div.pdf-preview-navigation img.last{\n
   display: block;\n
   width: 924px;\n
   height: 283px;\n
-  margin:10px 14px 10px;\n
+  margin-left:auto;\n
+  margin-right:auto;\n
 }\n
 \n
 .homebanner h2 {\n
