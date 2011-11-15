@@ -33,7 +33,7 @@ import httplib
 import urlparse
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from ShaCacheMixin import ShaCacheMixin
-
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
   """
@@ -137,6 +137,7 @@ class TestShaCache(ShaCacheMixin, ERP5TypeTestCase):
     self.assertEquals('published', document2.getValidationState())
     self.assertEquals('archived', document.getValidationState())
 
+  @expectedFailure
   def test_put_file_twice_no_tic(self):
     self.postFile()
     transaction.commit()
