@@ -370,7 +370,31 @@ class AmountGeneratorMixin:
       # Browse recursively the amount generator lines and accumulate
       # applicable values - now execute the method
       accumulateAmountList(self)
-    return result
+
+    # finally check if base_application matches with input or other
+    # generated amounts, because we no longer ignore 'quantity==0'
+    # amount thus non-matched amount can exist here.
+    delivery_contribution_list = self.getBaseContributionList()
+    index_list = range(len(result))
+    application_set_list = [set(result[i].getBaseApplicationList()) for i in index_list]
+    contribution_list_list = [result[i].getBaseContributionList() for i in index_list]
+    bad_index_list = []
+    good_index_list = []
+    flag = True
+    while flag:
+      flag = False
+      for i in index_list:
+        if i in bad_index_list or i in good_index_list:
+          continue
+        if application_set_list[i].intersection(delivery_contribution_list):
+          good_index_list.append(i)
+          continue
+        if application_set_list[i].intersection(
+          sum([contribution_list_list[j] for j in index_list if j!=i and j not in bad_index_list], [])):
+          continue
+        flag = True
+        bad_index_list.append(i)
+    return [result[i] for i in index_list if i not in bad_index_list]
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getAggregatedAmountList')
