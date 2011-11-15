@@ -553,12 +553,18 @@ fieldset.right .field {\n
 }\n
 \n
 /* Login & Registration form  CSS */\n
-fieldset.registration {\n
+fieldset.left{\n
   float:left;\n
-  width:49.5%;\n
+}\n
+fieldset.right{\n
+  float:right;\n
+}\n
+\n
+fieldset.registration {\n
+  width:36%;\n
   background-color: #FFFFFF;\n
   margin-right: 0.5%;\n
-  height: 775px;\n
+  height: auto;\n
 }\n
 \n
 \n
@@ -919,6 +925,7 @@ fieldset.left h4,\n
 fieldset.center h4,\n
 fieldset.right h4 {\n
   background-color:#efeee8;\n
+  padding:5px;\n
 }\n
 \n
 .document > .content ul li {\n

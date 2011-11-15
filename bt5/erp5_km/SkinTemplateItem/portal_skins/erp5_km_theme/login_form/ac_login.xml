@@ -211,7 +211,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<input name="__ac_name" id="__ac_name" value="" type="text" size="30" />
+<input name="__ac_name" id="__ac_name" value="" type="text" />
 
 ]]></string> </value>
                 </item>

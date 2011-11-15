@@ -51,7 +51,6 @@
 \n
   <tal:block tal:content="structure python: here.WebSection_viewSubsectionRenderer(section_list = section_list, \n
                                                                                    collapse_depth=collapse_depth)"/>\n
-\n
   <tal:block tal:condition="python: len(section_list)==0">\n
     <p i18n:domain="erp5_ui" i18n:translate=""> No subsections found. </p>\n
   </tal:block>\n
