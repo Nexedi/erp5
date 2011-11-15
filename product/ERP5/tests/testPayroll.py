@@ -187,14 +187,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
             'base_amount/payroll/base/contribution',
             'base_amount/payroll/report/salary/net',
             'base_amount/payroll/report/salary/gross',
-            'base_amount/payroll/l10n/fr/salary_range/a',
-            'base_amount/payroll/l10n/fr/salary_range/b',
-            'base_amount/payroll/l10n/fr/salary_range/c',
-            'base_amount/payroll/l10n/fr/salary_range/forfait',
-            'base_amount/payroll/l10n/fr/salary_range/slice_0_to_200',
-            'base_amount/payroll/l10n/fr/salary_range/slice_200_to_400',
-            'base_amount/payroll/l10n/fr/salary_range/slice_400_to_5000',
-            'base_amount/payroll/l10n/fr/salary_range/slice_600_to_800',
             'grade/worker',
             'grade/engineer',
             'quantity_unit/time/month',
@@ -578,10 +570,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
                     quantity=150,
                     resource_value=sequence.get('labour_service'),
                     base_contribution_list=['base_amount/payroll/base/contribution',
-                                            'base_amount/payroll/l10n/fr/salary_range/slice_0_to_200',
-                                            'base_amount/payroll/l10n/fr/salary_range/slice_200_to_400',
-                                            'base_amount/payroll/l10n/fr/salary_range/slice_400_to_5000',
-                                            'base_amount/payroll/l10n/fr/salary_range/slice_600_to_800',
                                             'base_amount/payroll/report/salary/gross'])
     sequence.edit(labour_paysheet_line = paysheet_line)
 
