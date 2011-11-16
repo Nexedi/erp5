@@ -796,8 +796,7 @@ class BusinessProcess(Path, XMLObject):
           property_dict['start_date'], property_dict['stop_date'] = \
             self.getExpectedTradeModelPathStartAndStopDate(
               explanation, trade_model_path, delay_mode=delay_mode)
-    else:
-      raise TypeError("Explanation must be an Applied Rule in expand process") # Nothing to do
+    # Else, nothing to do. This method can be used without Applied Rule.
     return property_dict
 
   # IBusinessProcess global API
