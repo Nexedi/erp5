@@ -40,6 +40,7 @@
   <tal:block  \n
     tal:define="global mode python: options.get(\'mode\', request.get(\'gadget_mode\', \'erp5_front\'));\n
                 global default_pad_group python: options.get(\'default_pad_group\', request.get(\'gadget_default_pad_group\', \'\'));\n
+                global default_pad_group python: test(default_pad_group!=\'\', context.WebSection_getDefaultPadGroup(default_pad_group), default_pad_group);\n
                 kw python: dict(mode=mode, default_pad_group=default_pad_group);\n
                 global isAnonymousKnowledgePadUsed python: options.get(\'use_anonymous_knowledge_pad\',request.get(\'use_anonymous_knowledge_pad\', False));\n
                 dummy python: request.set(\'is_anonymous_knowledge_pad_used\', isAnonymousKnowledgePadUsed);\n
