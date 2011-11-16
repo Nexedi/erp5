@@ -205,10 +205,11 @@ class PaySheetTransaction(Invoice):
       for trade_phase in movement_list_trade_phase_dic.keys():
         business_link_list = business_process.getBusinessLinkValueList(trade_phase=\
             trade_phase)
-
+        # convert Amount into Simulation Movement with Business Link
         movement_list = []
         for amount in movement_list_trade_phase_dic[trade_phase]:
-          variation_dict = dict([tuple(x.split('/',1)) for x in amount.getVariationCategoryList()])
+          variation_dict = dict(
+            [tuple(x.split('/', 1)) for x in amount.getVariationCategoryList()])
           movement_list.extend(
             business_process.getTradePhaseMovementList(
               self, amount, trade_phase, update_property_dict=variation_dict))
