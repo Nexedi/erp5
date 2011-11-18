@@ -342,6 +342,11 @@ def synchronizeDynamicModules(context, force=False):
     # Thanks to TransactionalResource, the '_bootstrapped' global variable
     # is updated in a transactional way. Without it, it would be required to
     # restart the instance if anything went wrong.
+    # XXX: In fact, TransactionalResource does not solve anything here, because
+    #      portal cookie is unlikely to change and this function will return
+    #      immediately, forcing the user to restart.
+    #      This may not be so bad after all: it enables the user to do easily
+    #      some changes that are required for the migration.
     if portal.id not in _bootstrapped and \
        TransactionalResource.registerOnce(__name__, 'bootstrap', portal.id):
       migrate = False
