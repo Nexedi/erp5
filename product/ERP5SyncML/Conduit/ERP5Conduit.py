@@ -894,7 +894,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     time = status.get('time')
     for action in action_list:
       this_one = True
-      if time > action.get('time'):
+      if time <= action.get('time'):
         # action in the past are not append
         addable = False
       for key in action.keys():
