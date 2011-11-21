@@ -301,10 +301,6 @@ def _aq_reset():
   from Products.ERP5.ERP5Site import getSite
   getSite().portal_types.resetDynamicDocuments()
 
-global method_registration_cache
-method_registration_cache = {}
-
-
 class PropertyHolder(object):
   isRADContent = 1
   WORKFLOW_METHOD_MARKER = ('Base._doNothing',)
