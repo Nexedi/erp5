@@ -100,6 +100,8 @@
                         <string>my_translated_causality_state_title</string>
                         <string>my_translated_simulation_state_title</string>
                         <string>my_price</string>
+                        <string>my_view_mode_listbox_read_only_stop_date</string>
+                        <string>my_view_mode_listbox_read_only_start_date</string>
                       </list>
                     </value>
                 </item>

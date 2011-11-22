@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>columns</string>
+                <string>editable_columns</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
                 <string>sort</string>
@@ -93,7 +94,7 @@
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Invoice Date</string>
                         </tuple>
                         <tuple>
@@ -103,6 +104,17 @@
                         <tuple>
                           <string>translated_simulation_state_title</string>
                           <string>State</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>delivery.stop_date</string>
+                          <string>Invoice Date</string>
                         </tuple>
                       </list>
                     </value>
@@ -132,7 +144,7 @@
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Invoice Date</string>
                         </tuple>
                         <tuple>
@@ -155,7 +167,7 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>delivery.stop_date</string>
                           <string>ASC</string>
                         </tuple>
                       </list>
@@ -178,7 +190,7 @@
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
-                          <string>delivery.start_date</string>
+                          <string>delivery.stop_date</string>
                           <string>Invoice Date</string>
                         </tuple>
                         <tuple>
