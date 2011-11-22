@@ -16,4 +16,5 @@ Sale Order Line | OutcomeDescription
 Sale Order Milestone | OutcomeDescription
 Sale Order Milestone | SortIndex
 Sale Packing List Line | OutcomeDescription
+Task | OutcomeDescription
 Task | TaskOrder
