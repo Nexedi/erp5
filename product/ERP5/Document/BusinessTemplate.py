@@ -1609,6 +1609,14 @@ class SkinTemplateItem(ObjectTemplateItem):
         registerSkinFolder(skin_tool, folder)
 
 class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
+  # BUG: Let's suppose old BT defines
+  #         some_skin | Skin1
+  #         some_skin | Skin2
+  #      and new BT has:
+  #         some_skin | Skin1
+  #      Because 'some_skin' is still defined, it will be updated (actually
+  #      'install') and not removed ('uninstall'). But we don't compare with
+  #      old BT so we don't know we must unregister Skin2.
 
   def build(self, context, **kw):
     portal = context.getPortalObject()
