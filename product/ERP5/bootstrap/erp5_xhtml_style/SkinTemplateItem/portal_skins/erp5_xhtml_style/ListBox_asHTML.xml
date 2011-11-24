@@ -402,7 +402,8 @@
                          tal:define ="params python: {alias:\'this.value\'};"\n
                          size="8"\n
                          type="text" \n
-                         tal:attributes=\'value python: selection.getParams().get(alias,"");\n
+                         tal:attributes=\'name string:${field_id}_${alias};\n
+                                         value python: selection.getParams().get(alias,"");\n
                                          onkeypress python:"if(event.keyCode==13){" + real_context.KnowledgePad_generateAjaxCall(context_url+"/"+form_id,box,dom_id,params).replace("\\"this.value\\"","this.value")+ "return false;;}"\'/>\n
                 </tal:block>\n
               </tal:block>\n
