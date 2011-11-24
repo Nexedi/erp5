@@ -6,4 +6,7 @@
  <portal_type id="Web Section">
   <item>SortIndex</item>
  </portal_type>
+ <portal_type id="Web Site">
+  <item>WebSitePreference</item>
+ </portal_type>
 </property_sheet_list>
