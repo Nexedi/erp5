@@ -1493,6 +1493,10 @@ class Base( CopyContainer,
                       reindex_object=reindex_object, restricted=1, **kw)
 
   # XXX Is this useful ? (Romain)
+  #     Probably not. Even if it should speed up portal_type initialization and
+  #     save some memory because edit_workflow is used in many places, I (jm)
+  #     think it's negligible compared to the performance loss on all
+  #     classes/types that are not bound to edit_workflow.
   edit = WorkflowMethod(edit)
 
   # Accessing object property through ERP5ish interface
