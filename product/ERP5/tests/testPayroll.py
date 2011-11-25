@@ -187,14 +187,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
             'base_amount/payroll/base/contribution',
             'base_amount/payroll/report/salary/net',
             'base_amount/payroll/report/salary/gross',
-            'base_amount/payroll/l10n/fr/salary_range/a',
-            'base_amount/payroll/l10n/fr/salary_range/b',
-            'base_amount/payroll/l10n/fr/salary_range/c',
-            'base_amount/payroll/l10n/fr/salary_range/forfait',
-            'base_amount/payroll/l10n/fr/salary_range/slice_0_to_200',
-            'base_amount/payroll/l10n/fr/salary_range/slice_200_to_400',
-            'base_amount/payroll/l10n/fr/salary_range/slice_400_to_5000',
-            'base_amount/payroll/l10n/fr/salary_range/slice_600_to_800',
             'grade/worker',
             'grade/engineer',
             'quantity_unit/time/month',
@@ -578,10 +570,6 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
                     quantity=150,
                     resource_value=sequence.get('labour_service'),
                     base_contribution_list=['base_amount/payroll/base/contribution',
-                                            'base_amount/payroll/l10n/fr/salary_range/slice_0_to_200',
-                                            'base_amount/payroll/l10n/fr/salary_range/slice_200_to_400',
-                                            'base_amount/payroll/l10n/fr/salary_range/slice_400_to_5000',
-                                            'base_amount/payroll/l10n/fr/salary_range/slice_600_to_800',
                                             'base_amount/payroll/report/salary/gross'])
     sequence.edit(labour_paysheet_line = paysheet_line)
 
@@ -652,7 +640,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEqual(len(paysheet_line_list), 0)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
-        'Pay Sheet Cell')), 0) # 2 because labour line contain no movement
+        'Pay Sheet Cell')), 0) # 0 because labour line contain no movement
 
   def stepCheckPaysheetLineAreCreatedUsingBonus(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -1490,6 +1478,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_application=self.fixed_quantity,
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
+        price=0.01,
         quantity=10000.0)
     
     # create the paysheet
@@ -1539,6 +1528,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_application=self.fixed_quantity,
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
+        price=0.01,
         quantity=10000.0)
     self.stepTic()
 
@@ -2218,8 +2208,7 @@ class TestPayroll(TestPayrollMixin):
 
   def test_modelLineWithNonePrice(self):
     '''
-      test the creation of lines when the price is not set, but only the
-      quantity. This means that no ratio is applied on this line.
+      Test that no line is created when quantity is set but not price
     '''
     sequence_list = SequenceList()
     sequence_string = """
@@ -2238,10 +2227,7 @@ class TestPayroll(TestPayrollMixin):
                CheckUpdateAggregatedAmountListReturn
                PaysheetApplyTransformation
                Tic
-               CheckPaysheetLineAreCreated
-               CheckPaysheetLineAmountsWithQuantityOnly
-               CheckUpdateAggregatedAmountListReturnNothing
-               CheckPaysheetLineAmountsWithQuantityOnly
+               CheckThereIsOnlyOnePaysheetLine
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
@@ -3018,9 +3004,22 @@ class TestPayroll(TestPayrollMixin):
                                            'product_line/payroll_tax_1'],
        **kw)
 
+  def createPayrollAccountingBusinessLink(self):
+    invoiced = self.portal.portal_categories.trade_state.invoiced
+    completed_state_list = ['delivered']
+    frozen_state_list = ['delivered', 'confirmed']
+    self.createBusinessLink(
+      self.business_process,
+      successor_value=invoiced,
+      trade_phase='default/accounting',
+      completed_state_list=completed_state_list,
+      frozen_state_list=frozen_state_list,
+      delivery_builder_list=('portal_deliveries/pay_sheet_transaction_builder',))
+
   def test_AccountingLineGeneration(self):
     # create a pay sheet
     self.createPayrollBusinesProcess()
+    self.createPayrollAccountingBusinessLink()
     eur = self.portal.currency_module.EUR
     employer = self.portal.organisation_module.newContent(
                       portal_type='Organisation',

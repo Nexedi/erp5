@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -28,7 +29,9 @@
 
 import transaction
 from Products.ERP5TioSafe.tests.testPrestashopMixin import testPrestashopMixin
+from Products.ERP5Type.tests.backportUnittest import skip
 
+@skip("must be checked against zope2.12")
 class TestProductPrestashopSynchronization(testPrestashopMixin):
   """ This class allows to check different cases of Product's sync. """
 

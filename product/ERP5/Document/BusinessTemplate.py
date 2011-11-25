@@ -279,21 +279,15 @@ def createSkinSelection(skin_tool, skin_name):
 def deleteSkinSelection(skin_tool, skin_name):
   # Do not delete default skin
   if skin_tool.getDefaultSkin() != skin_name:
-
-    skin_selection_registered = False
     for skin_folder in skin_tool.objectValues():
       try:
-        skin_selection_list = skin_folder.getProperty(
-               'business_template_registered_skin_selections', ())
-        if skin_name in skin_selection_list:
-          skin_selection_registered = True
+        if skin_name in skin_folder.getProperty(
+               'business_template_registered_skin_selections', ()):
           break
       except AttributeError:
         pass
-
-    if (not skin_selection_registered):
-      skin_tool.manage_skinLayers(chosen=[skin_name], 
-                                  del_skin=1)
+    else:
+      skin_tool.manage_skinLayers(chosen=[skin_name], del_skin=1)
       skin_tool.getPortalObject().changeSkin(None)
 
 def unregisterSkinFolderId(skin_tool, skin_folder_id, skin_selection_list):
@@ -1609,6 +1603,14 @@ class SkinTemplateItem(ObjectTemplateItem):
         registerSkinFolder(skin_tool, folder)
 
 class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
+  # BUG: Let's suppose old BT defines
+  #         some_skin | Skin1
+  #         some_skin | Skin2
+  #      and new BT has:
+  #         some_skin | Skin1
+  #      Because 'some_skin' is still defined, it will be updated (actually
+  #      'install') and not removed ('uninstall'). But we don't compare with
+  #      old BT so we don't know we must unregister Skin2.
 
   def build(self, context, **kw):
     portal = context.getPortalObject()
@@ -1700,44 +1702,30 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
   def uninstall(self, context, **kw):
     portal = context.getPortalObject()
     skin_tool = getToolByName(portal, 'portal_skins')
-
-    object_path = kw.get('object_path', None)
-    if object_path is not None:
-      object_keys = [object_path]
-    else:
-      object_keys = self._objects.keys()
-
-    for skin_folder_id in object_keys:
-      current_selection_list = []
-      skin_folder = skin_tool.get(skin_folder_id, None)
-      if skin_folder is not None:
-        current_selection_list = skin_folder.getProperty(
-          'business_template_registered_skin_selections', [])
-      current_selection_set = set(current_selection_list)
-
+    object_path = kw.get('object_path')
+    for skin_folder_id in (object_path,) if object_path else self._objects:
       skin_selection_list = self._objects[skin_folder_id]
       if isinstance(skin_selection_list, str):
         skin_selection_list = skin_selection_list.replace(',', ' ').split(' ')
-      for skin_selection in skin_selection_list:
-        current_selection_set.discard(skin_selection)
-
-      current_selection_list = list(current_selection_set)
-      if current_selection_list:
-        skin_folder._updateProperty(
+      skin_folder = skin_tool.get(skin_folder_id)
+      if skin_folder is not None:
+        current_selection_set = set(skin_folder.getProperty(
+          'business_template_registered_skin_selections', ()))
+        current_selection_set.difference_update(skin_selection_list)
+        if current_selection_set:
+          skin_folder._updateProperty(
             'business_template_registered_skin_selections',
-            current_selection_list)
-
-        # Unregister skin folder from skin selection
-        unregisterSkinFolderId(skin_tool, skin_folder_id, skin_selection_list)
-      else:
-        # Delete all skin selection
-        for skin_selection in skin_selection_list:
-          deleteSkinSelection(skin_tool, skin_selection)
-        if skin_folder is not None:
-          delattr(skin_folder, 'business_template_registered_skin_selections')
-          # Register to all other skin selection
-          registerSkinFolder(skin_tool, skin_folder)
-
+            list(current_selection_set))
+          # Unregister skin folder from skin selection
+          unregisterSkinFolderId(skin_tool, skin_folder_id, skin_selection_list)
+          continue
+      # Delete all skin selection
+      for skin_selection in skin_selection_list:
+        deleteSkinSelection(skin_tool, skin_selection)
+      if skin_folder is not None:
+        del skin_folder.business_template_registered_skin_selections
+        # Register to all other skin selection
+        registerSkinFolder(skin_tool, skin_folder)
 
   def preinstall(self, context, installed_item, **kw):
     modified_object_list = {}

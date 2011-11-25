@@ -92,14 +92,14 @@ def makeFileUpload(name, as_name=None):
 
 class TestDocumentMixin(ERP5TypeTestCase):
   
-  bussiness_template_list = ['erp5_core_proxy_field_legacy',
-                             'erp5_jquery',
-                             'erp5_full_text_myisam_catalog',
-                             'erp5_base',
-                             'erp5_ingestion_mysql_innodb_catalog', 
-                             'erp5_ingestion',
-                             'erp5_web', 
-                             'erp5_dms']
+  business_template_list = ['erp5_core_proxy_field_legacy',
+                            'erp5_jquery',
+                            'erp5_full_text_myisam_catalog',
+                            'erp5_base',
+                            'erp5_ingestion_mysql_innodb_catalog', 
+                            'erp5_ingestion',
+                            'erp5_web', 
+                            'erp5_dms']
 
   def setUpOnce(self):
     # set a dummy localizer (because normally it is cookie based)
@@ -149,7 +149,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
     return getattr(self.getPortal(),'document_module')
 
   def getBusinessTemplateList(self):
-    return self.bussiness_template_list
+    return self.business_template_list
 
   def getNeededCategoryList(self):
     return ()
@@ -1759,7 +1759,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
   def test_parallel_conversion(self):
     """Check that conversion engine is able to fill in
-    cache without overwrite previous conversion
+    cache without overwriting previous conversion
     when processed at the same time.
     """
     portal_type = 'PDF'
@@ -1781,7 +1781,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
                   'resolution': None}
 
     class ThreadWrappedConverter(Thread):
-      """Use this class to run different convertion
+      """Use this class to run different conversions
       inside distinct Thread.
       """
       def __init__(self, publish_method, document_path,
@@ -1809,7 +1809,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     # assume there is no password
     credential = '%s:' % (getSecurityManager().getUser().getId(),)
     tested_list = []
-    frame_list = list(xrange(pages_number))
+    frame_list = range(pages_number)
     # assume that ZServer is configured with 4 Threads
     conversion_per_tread = pages_number / 4
     while frame_list:
@@ -1828,7 +1828,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
 
     convert_kw = {'format': 'png',
                   'quality': 75,
-                  'image_size': image_size,
+                  'display': 'thumbnail',
                   'resolution': None}
 
     result_list = []
@@ -2376,6 +2376,26 @@ return 1
                          'base data is not refreshed')
     self.assertNotEquals(previous_md5, document.getContentMd5())
     self.assertEquals(document.getExternalProcessingState(), 'converted')
+
+  # Currently, 'empty' state in processing_status_workflow is only set
+  # when creating a document and before uploading any file. Once the
+  # document has been uploaded and then the content is cleared, the
+  # document state stays at 'converting' state as empty base_data is
+  # not handled
+  @expectedFailure
+  def test_base_convertable_behaviour_when_deleted(self):
+    """
+    Check that deleting the content of a previously uploaded document
+    actually clear base_data and md5 and check that the document goes
+    back to empty state
+    """
+    # create a document
+    upload_file = makeFileUpload('TEST-en-002.doc')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
+    document = self.portal.Base_contribute(**kw)
+    self.stepTic()
+    self.assertTrue(document.hasBaseData())
+    self.assertTrue(document.hasContentMd5())
 
     # Delete content: base_data must be deleted
     document.edit(data=None)

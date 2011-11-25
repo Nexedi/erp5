@@ -423,7 +423,7 @@ class TestUNG(ERP5TypeTestCase):
     self.portal.web_site_module.ung.WebSection_addGadgetList(gadget_id_list)
     self.stepTic()
     gadget = self.portal.portal_catalog.getResultValue(portal_type="Gadget",
-                                                       validation_state="visible")
+                                                       validation_state="public")
     self.assertEquals(gadget_id_list, gadget.getId())
     self.portal.knowledge_pad_module.deleteContent(id=obj.getId())
     self.stepTic()

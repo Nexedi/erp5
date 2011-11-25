@@ -129,7 +129,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.getLayoutProperty(\'layout_display_anonymous_user_registration\',True)</string> </value>
+            <value> <string>python: here.getWebSiteValue().isUserAllowedRequestNewAccount()</string> </value>
         </item>
       </dictionary>
     </pickle>

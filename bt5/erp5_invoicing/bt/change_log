@@ -1,3 +1,6 @@
+2011-11-22 yusei
+* Fix InvoiceTransaction_zSelectMovement. Maximum rows to retrieve is now 100. If there are more simulation movements then the rest is built next building time.
+
 2011-11-04 tatuya
 * Add default_tax_rule reference into  InvoiceTransaction_selectInvoiceMovement because it was wrongly removed at c7f1a35c1abdb9f93c6353c5024aaa47bf6505e0 when replacing to specify the portal type with the rule reference.
 

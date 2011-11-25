@@ -1469,10 +1469,6 @@
             <value> <string>None</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>10</string> </value>
-        </item>
-        <item>
             <key> <string>short_title</string> </key>
             <value>
               <none/>

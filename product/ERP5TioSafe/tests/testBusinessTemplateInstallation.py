@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 # -*- coding: utf8 -*-
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -10,6 +11,7 @@
 """Test suites for packaging of tiosafe
 """
 
+import transaction
 from testTioSafeMixin import testTioSafeMixin
 from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
@@ -37,7 +39,7 @@ class TestPackaging(testTioSafeMixin):
                           start_date=DateTime(),
                           stop_date=DateTime() + 10,)
     assignment.open()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     zodb_roles = self.portal.acl_users.zodb_roles

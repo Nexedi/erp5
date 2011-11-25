@@ -59,7 +59,7 @@
 context.ERP5Site_checkDataWithScript("Base_callPreConvert", \n
                                      tag="pre_convert",\n
                                      packet=2,\n
-                                     id_list=["document_module", "image_module"])\n
+                                     id_list=["document_module", "image_module", "web_page_module"])\n
 print "OK"\n
 return printed\n
 </string> </value>

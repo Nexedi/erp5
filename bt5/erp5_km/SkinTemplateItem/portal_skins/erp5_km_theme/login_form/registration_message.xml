@@ -140,9 +140,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -269,20 +267,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.Base_translateString("If you have not created an account yet, please fill all the fields below to register yourself and create a new account.")</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: context.getLayoutProperty(\'layout_display_anonymous_user_registration\',True)</string> </value>
+            <value> <string>python: test(here.isUserAllowedRequestNewAccount(), here.Base_translateString("If you have not created an account yet, please fill all the fields below to register yourself and create a new account."), here.Base_translateString("User registration is not allowed for this web site."))</string> </value>
         </item>
       </dictionary>
     </pickle>

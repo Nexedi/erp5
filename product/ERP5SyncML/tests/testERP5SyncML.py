@@ -375,7 +375,7 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
     self.tic()
 
   def assertXMLViewIsEqual(self, sub_id, object_pub=None, object_sub=None,
-                                                                  force=False):
+                           force=False, ignore_processing_status_workflow=False):
     """
       Check the equality between two xml objects with gid as id
     """
@@ -401,7 +401,12 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
     # revision is based on workflow history, can not be checked
     exclude_property_list = ('edit_workflow',)
     if object_pub.getPortalType() in self.portal.getPortalDocumentTypeList():
-      exclude_property_list += ('revision', 'processing_status_workflow',)
+      exclude_property_list += ('revision',)
+      # XXX: perhaps the tag could be added (insert-after or remove
+      # for example) to check more precisely what property to ignore
+      # in either the source or destination
+      if ignore_processing_status_workflow:
+        exclude_property_list += ('processing_status_workflow',)
     for update in result:
       select = update.get('select', '')
       new_edit_workflow_entry_xpath = 'xupdate:element/xupdate:attribute'\

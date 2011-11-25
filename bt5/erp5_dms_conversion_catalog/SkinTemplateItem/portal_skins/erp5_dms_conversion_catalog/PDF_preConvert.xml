@@ -65,7 +65,7 @@ if \'large\' not in display_list:\n
   display_list.append(\'large\') \n
 \n
 # support frames\n
-frames = int(context.getContentInformation()[\'Pages\'])\n
+frames = int(context.getContentInformation().get(\'Pages\', 0))\n
 if frames==0:\n
   frame_list = [0]\n
 else:\n

@@ -61,7 +61,7 @@ from Products.ERP5Type import interfaces
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
-from Products.ERP5Type.Utils import createExpressionContext
+from Products.ERP5Type.Utils import createExpressionContext, simple_decorator
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
@@ -256,6 +256,34 @@ class WorkflowMethod(Method):
     # Return result finally
     return result
 
+  _do_interaction = __call__
+  _no_interaction_lock = threading.Lock()
+  _no_interaction_log = None
+
+  def _no_interaction(self, *args, **kw):
+    log = "skip interactions for %r" % args[0]
+    if WorkflowMethod._no_interaction_log != log:
+      WorkflowMethod._no_interaction_log = log
+      LOG("WorkflowMethod", INFO, log)
+    return self.__dict__['_m'](*args, **kw)
+
+  @staticmethod
+  @simple_decorator
+  def disable(func):
+    def wrapper(*args, **kw):
+      WorkflowMethod._no_interaction_lock.acquire()
+      try:
+        WorkflowMethod.__call__ = WorkflowMethod.__dict__['_no_interaction']
+        return func(*args, **kw)
+      finally:
+        WorkflowMethod.__call__ = WorkflowMethod.__dict__['_do_interaction']
+        WorkflowMethod._no_interaction_lock.release()
+    return wrapper
+
+  @staticmethod
+  def disabled():
+    return WorkflowMethod._no_interaction_lock.locked()
+
   def registerTransitionAlways(self, portal_type, workflow_id, transition_id):
     """
       Transitions registered as always will be invoked always
@@ -301,10 +329,6 @@ def _aq_reset():
   from Products.ERP5.ERP5Site import getSite
   getSite().portal_types.resetDynamicDocuments()
 
-global method_registration_cache
-method_registration_cache = {}
-
-
 class PropertyHolder(object):
   isRADContent = 1
   WORKFLOW_METHOD_MARKER = ('Base._doNothing',)
@@ -332,6 +356,7 @@ class PropertyHolder(object):
 
     workflow_method = getattr(self, id, None)
     if workflow_method is None:
+      # XXX: We should pass 'tr_id' as second parameter.
       workflow_method = WorkflowMethod(Base._doNothing)
       setattr(self, id, workflow_method)
     if once_per_transaction:

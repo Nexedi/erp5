@@ -72,13 +72,18 @@ def simple_decorator(decorator):
   See also http://wiki.python.org/moin/PythonDecoratorLibrary
 
   XXX We should use http://pypi.python.org/pypi/decorator/ instead,
-      to make decorators ZPublisher-friendly.
+      to make decorators ZPublisher-friendly (but it is probably to slow).
   """
   def new_decorator(f):
     g = decorator(f)
-    g.__name__ = f.__name__
-    g.__doc__ = f.__doc__
-    g.__dict__.update(f.__dict__)
+    try:
+      g.__name__ = f.__name__
+    except AttributeError:
+      # XXX: Should be "convertToMixedCase(f._transition_id)"
+      g.__name__ = f._m.__name__ # WorkflowMethod
+    else:
+      g.__doc__ = f.__doc__
+      g.__dict__.update(f.__dict__)
     g._original = f # for tab_completion navigation in IPython
     return g
   # Now a few lines needed to make simple_decorator itself

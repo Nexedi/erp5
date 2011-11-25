@@ -35,7 +35,7 @@ class TestDocumentWithPreConversion(TestDocument):
     Test basic document - related operations
     with Flare
   """
-  bussiness_template_list = TestDocument.bussiness_template_list + ["erp5_dms_conversion_catalog"]
+  business_template_list = TestDocument.business_template_list + ["erp5_dms_conversion_catalog"]
 
   def getTitle(self):
     return "DMS with Preconversion"

@@ -94,6 +94,7 @@ class TestXHTML(ERP5TypeTestCase):
       'erp5_dms',
 
       'erp5_commerce',
+      'erp5_credential',
 
       'erp5_forge',
 

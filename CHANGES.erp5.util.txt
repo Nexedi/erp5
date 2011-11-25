@@ -4,7 +4,10 @@ Changes
 0.3 (unreleased)
 ----------------
 
- * No changes yet
+ * Imported from https://svn.erp5.org/repos/public/erp5/trunk/utils/
+
+   - erp5.util.webchecker:
+     Utility to check caching policy of websites
 
 0.2 (2011-09-20)
 ----------------

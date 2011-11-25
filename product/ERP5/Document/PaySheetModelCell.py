@@ -28,9 +28,9 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions
 from Products.ERP5.Document.TradeModelCell import TradeModelCell
-import zope.interface
+from Products.ERP5Type.Core.Predicate import Predicate
 
 class PaySheetModelCell(TradeModelCell):
     """Trade Model Line
@@ -49,3 +49,10 @@ class PaySheetModelCell(TradeModelCell):
             if not self.hasCellContent(base_id='variation'):
                 result = self.getVariationRangeBaseCategoryList() # The current resource variation
         return result + ['trade_phase', 'quantity_unit']
+
+    # Redefine some methods as we do not want to turn cells into predicate
+    def edit(self, **kw):
+        return super(Predicate, self).edit(**kw)
+
+    def setPredicateCategoryList(self, *args, **kw):
+        pass

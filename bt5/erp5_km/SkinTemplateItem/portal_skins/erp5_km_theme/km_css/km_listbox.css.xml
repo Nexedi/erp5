@@ -346,6 +346,7 @@ div.listbox-search-mode div.maximal-width{\n
   -moz-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
   -webkit-box-shadow:4px 4px 4px rgba(0, 0, 0, 0.5);\n
   min-height:180px;\n
+  z-index:100;\n
 }\n
 \n
 /* forum */\n

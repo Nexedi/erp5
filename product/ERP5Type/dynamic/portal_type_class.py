@@ -30,6 +30,7 @@
 import sys
 import os
 import inspect
+import transaction
 from types import ModuleType
 
 from Products.ERP5Type.dynamic.dynamic_module import registerDynamicModule
@@ -42,7 +43,7 @@ from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderModuleType, 
     createAllAccessorHolderList
 from Products.ERP5Type.TransactionalVariable import TransactionalResource
 
-from zLOG import LOG, ERROR, INFO, WARNING
+from zLOG import LOG, ERROR, INFO, WARNING, PANIC
 
 def _importClass(classpath):
   try:
@@ -341,37 +342,50 @@ def synchronizeDynamicModules(context, force=False):
     # Thanks to TransactionalResource, the '_bootstrapped' global variable
     # is updated in a transactional way. Without it, it would be required to
     # restart the instance if anything went wrong.
+    # XXX: In fact, TransactionalResource does not solve anything here, because
+    #      portal cookie is unlikely to change and this function will return
+    #      immediately, forcing the user to restart.
+    #      This may not be so bad after all: it enables the user to do easily
+    #      some changes that are required for the migration.
     if portal.id not in _bootstrapped and \
        TransactionalResource.registerOnce(__name__, 'bootstrap', portal.id):
       migrate = False
       from Products.ERP5Type.Tool.PropertySheetTool import PropertySheetTool
       from Products.ERP5Type.Tool.TypesTool import TypesTool
-      for tool_class in TypesTool, PropertySheetTool:
-        # if the instance has no property sheet tool, or incomplete
-        # property sheets, we need to import some data to bootstrap
-        # (only likely to happen on the first run ever)
-        tool_id = tool_class.id
-        tool = getattr(portal, tool_id, None)
-        if tool is None:
-          tool = tool_class()
-          portal._setObject(tool_id, tool, set_owner=False, suppress_events=True)
-          tool = getattr(portal, tool_id)
-        elif tool._isBootstrapRequired():
-          migrate = True
-        else:
-          continue
-        tool._bootstrap()
-        tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
+      try:
+        for tool_class in TypesTool, PropertySheetTool:
+          # if the instance has no property sheet tool, or incomplete
+          # property sheets, we need to import some data to bootstrap
+          # (only likely to happen on the first run ever)
+          tool_id = tool_class.id
+          tool = getattr(portal, tool_id, None)
+          if tool is None:
+            tool = tool_class()
+            portal._setObject(tool_id, tool, set_owner=False,
+                              suppress_events=True)
+            tool = getattr(portal, tool_id)
+          elif tool._isBootstrapRequired():
+            migrate = True
+          else:
+            continue
+          tool._bootstrap()
+          tool.__class__ = getattr(erp5.portal_type, tool.portal_type)
 
-      if migrate:
-        portal.migrateToPortalTypeClass()
-        portal.portal_skins.changeSkin(None)
-        TransactionalResource(tpc_finish=lambda txn:
-            _bootstrapped.add(portal.id))
-        LOG('ERP5Site', INFO, 'Transition successful, please update your'
-            ' business templates')
-      else:
-        _bootstrapped.add(portal.id)
+        if migrate:
+          portal.migrateToPortalTypeClass()
+          portal.portal_skins.changeSkin(None)
+          TransactionalResource(tpc_finish=lambda txn:
+              _bootstrapped.add(portal.id))
+          LOG('ERP5Site', INFO, 'Transition successful, please update your'
+              ' business templates')
+        else:
+          _bootstrapped.add(portal.id)
+      except:
+        # Required because the exception may be silently dropped by the caller.
+        transaction.doom()
+        LOG('ERP5Site', PANIC, "Automatic migration of type and"
+            " property sheet tool failed", error=sys.exc_info())
+        raise
 
     LOG("ERP5Type.dynamic", 0, "Resetting dynamic classes")
     try:

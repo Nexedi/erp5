@@ -49,8 +49,9 @@
                        thumbnail_url python: options.get(\'thumbnail_url\', None);\n
                        url python: options.get(\'url\', None);\n
                        sections python: options.get(\'sections\', None);\n
-                       format python: request.get(\'format\', context.portal_preferences.getPreference(\'preferred_image_format\', \'png\'));\n
-                       quality python: request.get(\'format\', context.portal_preferences.getPreference(\'preferred_image_quality\', \'75.0\'))">\n
+                       image_conversion_dict here/Base_getImageArgumentDict;\n
+                       dummy python: image_conversion_dict.update(**{\'display\':\'thumbnail\'});\n
+                       image_conversion_arguments python: \'&\'.join([\'%s=%s\' % (k, v) for k, v in image_conversion_dict.items()]);">\n
 \n
   <span id="listbox-preview-connector"></span>\n
 \n
@@ -58,7 +59,7 @@
     <a tal:attributes="href url">\n
       <img alt="Thumbnail" \n
          i18n:translate="alt" i18n:domain="ui"\n
-         tal:attributes="src string:${thumbnail_url}?display=thumbnail&amp;format=${format}&amp;quality=${quality}"/>\n
+         tal:attributes="src string:${thumbnail_url}/index_html?${image_conversion_arguments}"/>\n
     </a>\n
   </div>\n
 \n

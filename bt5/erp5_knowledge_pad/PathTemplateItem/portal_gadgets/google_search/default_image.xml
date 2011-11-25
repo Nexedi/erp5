@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="EmbeddedFile" module="Products.ERP5.Document.EmbeddedFile"/>
+      <global name="Embedded File" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>

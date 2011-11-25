@@ -32,7 +32,7 @@ import subprocess
 import sys
 import time
 import xmlrpclib
-
+import glob
 import SlapOSControler
 
 class SubprocessError(EnvironmentError):
@@ -219,7 +219,7 @@ branch = %(branch)s
             for i, repository_revision in enumerate(test_revision.split(',')):
               vcs_repository = vcs_repository_list[i]
               repository_path = vcs_repository['repository_path']
-              revision = repository_revision.split('-')[1]
+              revision = repository_revision.rsplit('-', 1)[1]
               # other testnodes on other boxes are already ready to test another
               # revision
               log('  %s at %s' % (repository_path, revision))
@@ -247,15 +247,10 @@ branch = %(branch)s
               retry_software = True
               raise SubprocessError(status_dict)
 
-          run_test_suite_path = config['runTestSuite']
-          if not os.path.exists(run_test_suite_path):
-            raise SubprocessError({
-              'command': 'os.path.exists(run_test_suite_path)',
-              'status_code': 1,
-              'stdout': '',
-              'stderr': 'File does not exist: %r' % (run_test_suite_path, ),
-            })
-
+          run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" %config['instance_root'])
+          if not len(run_test_suite_path_list):
+            raise ValueError('No runTestSuite provided in installed partitions.')
+          run_test_suite_path = run_test_suite_path_list[0]
           run_test_suite_revision = revision
           if isinstance(revision, tuple):
             revision = ','.join(revision)

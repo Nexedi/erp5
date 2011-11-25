@@ -40,9 +40,7 @@ order_by_expression</string> </value>
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -58,7 +56,7 @@ order_by_expression</string> </value>
         </item>
         <item>
             <key> <string>max_rows_</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>100</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>

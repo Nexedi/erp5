@@ -261,19 +261,13 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Products.Formulator.TALESField</string>
-          <string>TALESMethod</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.Base_translateString("Existing users please log in by entering your email address and password in the two fields below.")</string> </value>
+            <value> <string>python:test(here.getWebSiteValue().isUserAllowedLogin(), here.Base_translateString("Existing users please log in by entering your email address and password in the two fields below."), here.Base_translateString("This web site does not allow user login."))</string> </value>
         </item>
       </dictionary>
     </pickle>

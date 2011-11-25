@@ -1,3 +1,6 @@
+2011-11-22 yusei
+* Stop showing detailed DateTime in listbox. This problem started occur due to recent specification change of zope's DateTime.
+
 2011-05-27 arnaud.fontaine
 * Remove meaningless 'Order Quantity Unit' and 'Order Quantity' columns, and use the translated title for the 'Quantity Unit' cells in Transformation Stock view.
 

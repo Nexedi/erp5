@@ -193,6 +193,8 @@
                         <string>my_view_mode_template_transformation_title_list</string>
                         <string>my_view_mode_transformation_variation_base_category_list</string>
                         <string>my_view_mode_version</string>
+                        <string>my_view_mode_listbox_read_only_start_date_range_min</string>
+                        <string>my_view_mode_listbox_read_only_start_date_range_max</string>
                       </list>
                     </value>
                 </item>

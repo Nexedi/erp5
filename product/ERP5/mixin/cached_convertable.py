@@ -245,7 +245,7 @@ class CachedConvertableMixin:
     """Update md5 checksum from the original file
     """
     data = self.getData()
-    if data is not None:
+    if data not in (None, ''):
       if isinstance(data, Pdata):
         self._setContentMd5(hashPdataObject(aq_base(data)))
       else:

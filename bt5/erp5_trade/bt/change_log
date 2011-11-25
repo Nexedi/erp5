@@ -1,3 +1,9 @@
+2011-11-22 yusei
+* Stop showing detailed DateTime in listbox. This problem started occur due to recent specification change of zope's DateTime.
+
+2011-11-12 yusei
+* source_trade and destination_trade must be copied from trade condition to order/delivery.
+
 2011-09-28 yusei
 * Improve stock report and show stock also by group.
 

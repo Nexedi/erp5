@@ -190,6 +190,11 @@ fieldset.hidden_fieldset { \n
   width: 100%;\n
 }\n
 \n
+#km_left .page,\n
+#km_front .page{\n
+  width: 100%; \n
+}\n
+\n
 #km_left .text,\n
 #km_front .text {\n
   padding:5px 15px;\n
@@ -548,12 +553,20 @@ fieldset.right .field {\n
 }\n
 \n
 /* Login & Registration form  CSS */\n
-fieldset.registration {\n
+/*\n
+fieldset.left{\n
   float:left;\n
-  width:49.5%;\n
+}\n
+fieldset.right{\n
+  float:right;\n
+}\n
+*/\n
+\n
+fieldset.registration {\n
+  width:36%;\n
   background-color: #FFFFFF;\n
   margin-right: 0.5%;\n
-  height: 775px;\n
+  height: auto;\n
 }\n
 \n
 \n
@@ -843,7 +856,8 @@ div.pdf-preview-navigation img.last{\n
   display: block;\n
   width: 924px;\n
   height: 283px;\n
-  margin:10px 14px 10px;\n
+  margin-left:auto;\n
+  margin-right:auto;\n
 }\n
 \n
 .homebanner h2 {\n
@@ -913,6 +927,7 @@ fieldset.left h4,\n
 fieldset.center h4,\n
 fieldset.right h4 {\n
   background-color:#efeee8;\n
+  padding:5px;\n
 }\n
 \n
 .document > .content ul li {\n

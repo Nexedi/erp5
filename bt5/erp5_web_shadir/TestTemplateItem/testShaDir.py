@@ -35,7 +35,7 @@ import transaction
 import random
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from ShaDirMixin import ShaDirMixin
-
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
   """
@@ -169,6 +169,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEquals(1, len(information_list))
     self.assertEquals(json.dumps(information_list[0]), self.data)
 
+  @expectedFailure
   def test_post_information_more_than_once_no_tic(self):
     """
       Check if posting information is working.

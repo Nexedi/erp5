@@ -1,3 +1,6 @@
+2011-11-15 tatuya
+* Follow Gadget objects default validation sate changing, now they are public.
+
 2011-06-09 gabriel.oliveira
 * Force listbox page navigation to work
 

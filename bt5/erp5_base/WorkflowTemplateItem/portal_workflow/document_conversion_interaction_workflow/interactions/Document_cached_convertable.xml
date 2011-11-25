@@ -57,6 +57,7 @@
             <value>
               <list>
                 <string>_setFile</string>
+                <string>_setData</string>
                 <string>_setTextContent</string>
               </list>
             </value>

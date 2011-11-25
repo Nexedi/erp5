@@ -227,6 +227,11 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
         packing_list1 = packing_list
       else:
         packing_list2 = packing_list
+
+    destination_value = sequence.get('organisation3')
+    self.assertEquals(packing_list1.getDestinationValue(), destination_value)
+    self.assertEquals(packing_list2.getDestinationValue(), destination_value)
+
     sequence.edit(new_packing_list=packing_list2)
     for line in packing_list1.objectValues(
           portal_type= self.packing_list_line_portal_type):
@@ -251,9 +256,11 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     # Test with a simply order without cell
     sequence_string = self.default_sequence + '\
                       stepIncreasePackingListLineQuantity1000 \
+                      stepChangePackingListDestination \
                       stepCheckPackingListIsCalculating \
                       stepTic \
                       stepCheckPackingListIsDiverged \
+                      stepAcceptDecisionDestination \
                       stepAcceptDecisionQuantity \
                       stepCheckPackingListIsCalculating \
                       stepTic \

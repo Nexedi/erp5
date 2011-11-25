@@ -1,3 +1,6 @@
+2011-11-09 tatuya
+* Add same_total_quantity into PaySheetModel.
+
 2011-10-12 tatuya
 * Add preferred_accounting_bank_account_display_method into AccountingPreference to select the way to display bank account.
 

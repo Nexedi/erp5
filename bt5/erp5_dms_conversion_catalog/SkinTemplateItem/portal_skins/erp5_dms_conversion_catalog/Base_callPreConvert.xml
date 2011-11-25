@@ -64,7 +64,6 @@ preferred_image_size = portal.portal_preferences.getPreferredImageSize()\n
 # thumbnail is required always\n
 display_list = ["thumbnail"]\n
 method = context.getTypeBasedMethod(\'preConvert\')\n
-context.log(method)\n
 return method(**dict(format=format, quality=quality, display_list = display_list))\n
 </string> </value>
         </item>

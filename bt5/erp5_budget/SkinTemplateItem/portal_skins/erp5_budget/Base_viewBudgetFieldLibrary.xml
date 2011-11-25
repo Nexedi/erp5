@@ -84,6 +84,7 @@
                     <value>
                       <list>
                         <string>my_report_mode_date</string>
+                        <string>my_view_mode_listbox_read_only_start_date</string>
                       </list>
                     </value>
                 </item>

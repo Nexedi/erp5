@@ -30,7 +30,6 @@
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from Products.ERP5Type import Permissions
 from AccessControl import ClassSecurityInfo
-from StringIO import StringIO
 
 # Declarative security
 security = ClassSecurityInfo()
