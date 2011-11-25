@@ -67,7 +67,7 @@
     tal:content="user_name"/>\n
 </tal:block>\n
 \n
-<tal:block tal:condition="is_anonymous_user">\n
+<tal:block tal:condition="python: is_anonymous_user and current_web_site.isUserAllowedLogin()">\n
   <a id="login-logout-link" \n
      href="#" \n
      tal:attributes="href string:${portal_path}/login_form"\n
@@ -76,8 +76,7 @@
      title="Log in">Log in</a>\n
 </tal:block>\n
 \n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -99,7 +98,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>
