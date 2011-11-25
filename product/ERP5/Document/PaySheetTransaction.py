@@ -196,7 +196,7 @@ class PaySheetTransaction(Invoice):
       business_process = business_process_list[0]
       movement_list_trade_phase_dic = {}
       for movement in movement_dict['movement_to_add_list']:
-        if movement.getTotalPrice() != 0:
+        if movement.getTotalPrice() not in (0, None):
           # remove movement with 0 total_price
           trade_phase = movement.getTradePhase()
           if not movement_list_trade_phase_dic.has_key(trade_phase):
