@@ -1478,6 +1478,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_application=self.fixed_quantity,
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
+        price=0.01,
         quantity=10000.0)
     
     # create the paysheet
@@ -1527,6 +1528,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         base_application=self.fixed_quantity,
         base_contribution_list=['base_amount/payroll/base/contribution',
           'base_amount/payroll/report/salary/gross'],
+        price=0.01,
         quantity=10000.0)
     self.stepTic()
 
