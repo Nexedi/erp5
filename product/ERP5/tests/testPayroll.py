@@ -640,7 +640,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
     paysheet_line_list = paysheet.contentValues(portal_type='Pay Sheet Line')
     self.assertEqual(len(paysheet_line_list), 0)
     self.assertEqual(len(paysheet.getMovementList(portal_type=\
-        'Pay Sheet Cell')), 0) # 2 because labour line contain no movement
+        'Pay Sheet Cell')), 0) # 0 because labour line contain no movement
 
   def stepCheckPaysheetLineAreCreatedUsingBonus(self, sequence=None, **kw):
     paysheet = sequence.get('paysheet')
@@ -2206,8 +2206,7 @@ class TestPayroll(TestPayrollMixin):
 
   def test_modelLineWithNonePrice(self):
     '''
-      test the creation of lines when the price is not set, but only the
-      quantity. This means that no ratio is applied on this line.
+      Test that no line is created when quantity is set but not price
     '''
     sequence_list = SequenceList()
     sequence_string = """
@@ -2226,10 +2225,7 @@ class TestPayroll(TestPayrollMixin):
                CheckUpdateAggregatedAmountListReturn
                PaysheetApplyTransformation
                Tic
-               CheckPaysheetLineAreCreated
-               CheckPaysheetLineAmountsWithQuantityOnly
-               CheckUpdateAggregatedAmountListReturnNothing
-               CheckPaysheetLineAmountsWithQuantityOnly
+               CheckThereIsOnlyOnePaysheetLine
     """
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
