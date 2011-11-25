@@ -27,10 +27,13 @@
 #
 ##############################################################################
 
+from collections import deque
 import zope.interface
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Base import WorkflowMethod
+from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -279,3 +282,153 @@ class AppliedRule(XMLObject, ExplainableMixin):
       group_id=group_id,
       serialization_tag=self.getRootDocumentPath(),
       **activate_kw).recursiveImmediateReindexSimulationMovement(**kw)
+
+  def _migrateSimulationTree(self, get_matching_key,
+                             get_original_property_dict, root_rule=None):
+    """Migrate an entire simulation tree in order to use new rules
+
+    This must be called on a root applied rule, with interaction workflows
+    disabled. It is required that:
+    - All related simulation trees are properly indexed (due to use of
+      isSimulated). Unfortunately, this method temporarily unindexes everything,
+      so you have to be careful when migrating several trees at once.
+    - All simulation trees it may depend on are already migrated. It is adviced
+      to first migrate all root applied rule for the first phase (usually
+      order) and to continue respecting the order of phases.
+
+    def get_matching_key(simulation_movement):
+      # Return arbitrary value to match old and new simulation movements,
+      # or null if the old simulation movement is dropped.
+
+    def get_original_property_dict(tester, old_sm, sm, movement):
+      # Return values to override on the new simulation movement.
+      # In most cases, it would return the result of:
+      #   tester.getUpdatablePropertyDict(old_sm, movement)
+
+    root_rule # If not null and tree is about to be regenerated, 'specialise'
+              # is changed on self to this relative url.
+    """
+    assert WorkflowMethod.disabled(), \
+      "Interaction workflows must be disabled using WorkflowMethod.disable"
+    simulation_tool = self.getParentValue()
+    assert simulation_tool.getPortalType() == 'Simulation Tool'
+    portal = simulation_tool.getPortalObject()
+    delivery = self.getCausalityValue()
+    # Check the whole history to not drop simulation in case of redraft
+    draft_state_list = portal.getPortalDraftOrderStateList()
+    workflow, = [wf for wf in portal.portal_workflow.getWorkflowsFor(delivery)
+                    if wf.isInfoSupported(delivery, 'simulation_state')]
+    for history_item in workflow.getInfoFor(delivery, 'history', ()):
+      if history_item['simulation_state'] in draft_state_list:
+        continue
+      # Delivery is/was not is draft state
+      order_dict = {}
+      old_dict = {}
+      for sm in list(self.objectValues()):
+        old_dict[sm.getOrder() or sm.getDelivery()] = sm_dict = {}
+        recurse_list = deque(({get_matching_key(sm): (sm,)},))
+        while recurse_list:
+          for k, x in recurse_list.popleft().iteritems():
+            if not k:
+              continue
+            if len(x) > 1:
+              x = [x for x in x if x.getDelivery() or x.getQuantity()]
+            sm_dict.setdefault(k, []).extend(x)
+            for x in x:
+              r = {}
+              for x in x.objectValues():
+                sm_list = x.getMovementList()
+                if sm_list:
+                  r.setdefault(x.getSpecialise(), []).append(sm_list)
+              for x in r.values():
+                if len(x) > 1:
+                  x = [y for y in x if any(z.getDelivery() for z in y)] or x[:1]
+                x, = x
+                r = {}
+                for x in x:
+                  r.setdefault(get_matching_key(x), []).append(x)
+                recurse_list.append(r)
+        self._delObject(sm.getId())
+      # Here Delivery.isSimulated works because Movement.isSimulated
+      # does not see the simulated movements we've just deleted.
+      if delivery.isSimulated():
+        break
+      if root_rule:
+        self.setSpecialise(root_rule)
+      delivery_set = set((delivery,))
+      def updateMovementCollection(rule, context, *args, **kw):
+        orig_updateMovementCollection(rule, context, *args, **kw)
+        new_parent = context.getParentValue()
+        for sm in context.getMovementList():
+          delivery = sm.getDelivery()
+          if delivery:
+            sm_dict = old_dict.pop(delivery)
+          else:
+            sm_dict = order_dict[new_parent]
+          order_dict[sm] = sm_dict
+          k = get_matching_key(sm)
+          sm_list = sm_dict.pop(k, ())
+          if len(sm_list) > 1:
+            # Heuristic to find matching old simulation movements for the
+            # currently expanded applied rule. We first try to preserve same
+            # tree structure (new & old parent SM match), then we look for an
+            # old possible parent that is in the same branch.
+            old_parent = old_dict[new_parent]
+            best_dict = {}
+            for old_sm in sm_list:
+              parent = old_sm.getParentValue().getParentValue()
+              if parent is old_parent:
+                parent = None
+              elif not (parent.aq_inContextOf(old_parent) or
+                        old_parent.aq_inContextOf(parent)):
+                continue
+              best_dict.setdefault(parent, []).append(old_sm)
+            try:
+              best_sm_list = best_dict[None]
+            except KeyError:
+              best_sm_list, = best_dict.values()
+            if len(best_sm_list) < len(sm_list):
+              sm_dict[k] = list(set(sm_list).difference(best_sm_list))
+            sm_list = best_sm_list
+            if len(sm_list) > 1:
+              kw = sm.__dict__.copy()
+          # We may have several old matching SM, e.g. in case of split.
+          for old_sm in sm_list:
+            movement = old_sm.getDeliveryValue()
+            if delivery:
+              assert movement.getRelativeUrl() == delivery
+            elif movement is not None:
+              if sm is None:
+                sm = context.newContent(portal_type=rule.movement_type)
+                sm.__dict__ = dict(kw, **sm.__dict__)
+                order_dict[sm] = sm_dict
+              sm._setDeliveryValue(movement)
+              delivery_set.add(sm.getExplanationValue())
+            recorded_property_dict = {}
+            edit_kw = {}
+            for tester in rule._getUpdatingTesterList():
+              old = get_original_property_dict(tester, old_sm, sm, movement)
+              if old is not None:
+                new = tester.getUpdatablePropertyDict(sm, movement)
+                if old != new:
+                  recorded_property_dict.update(new)
+                  edit_kw.update(old)
+            if recorded_property_dict:
+              sm._recorded_property_dict = PersistentMapping(
+                recorded_property_dict)
+            sm._edit(**edit_kw)
+            old_dict[sm] = old_sm
+            sm = None
+      deleted = old_dict.items()
+      from Products.ERP5.mixin.movement_collection_updater import \
+          MovementCollectionUpdaterMixin as mixin
+      # Patch is already protected by WorkflowMethod.disable lock.
+      orig_updateMovementCollection = mixin.__dict__['updateMovementCollection']
+      try:
+        mixin.updateMovementCollection = updateMovementCollection
+        self.expand()
+      finally:
+        mixin.updateMovementCollection = orig_updateMovementCollection
+      assert str not in map(type, old_dict), old_dict
+      return dict((k, sum(v.values(), [])) for k, v in deleted), delivery_set
+    simulation_tool._delObject(self.getId())
