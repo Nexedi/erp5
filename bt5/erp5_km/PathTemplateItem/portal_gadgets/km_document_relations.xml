@@ -131,7 +131,9 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Document_viewRelationGadget</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>edit_form_id</string> </key>
@@ -163,7 +165,7 @@
         </item>
         <item>
             <key> <string>view_form_id</string> </key>
-            <value> <string>A</string> </value>
+            <value> <string>Document_viewRelationGadget</string> </value>
         </item>
         <item>
             <key> <string>workflow_history</string> </key>
@@ -264,7 +266,7 @@
                 <value>
                   <object>
                     <klass>
-                      <global name="DateTime" module="DateTime.DateTime"/>
+                      <global id="6.1" name="DateTime" module="DateTime.DateTime"/>
                     </klass>
                     <tuple>
                       <none/>
@@ -272,6 +274,51 @@
                     <state>
                       <tuple>
                         <float>1321342719.17</float>
+                        <string>GMT+2</string>
+                      </tuple>
+                    </state>
+                  </object>
+                </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>action</string> </key>
+                <value> <string>edit</string> </value>
+            </item>
+            <item>
+                <key> <string>actor</string> </key>
+                <value> <string>superi</string> </value>
+            </item>
+            <item>
+                <key> <string>comment</string> </key>
+                <value>
+                  <none/>
+                </value>
+            </item>
+            <item>
+                <key> <string>error_message</string> </key>
+                <value> <string></string> </value>
+            </item>
+            <item>
+                <key> <string>serial</string> </key>
+                <value> <string>914.39217.24307.15735</string> </value>
+            </item>
+            <item>
+                <key> <string>state</string> </key>
+                <value> <string>current</string> </value>
+            </item>
+            <item>
+                <key> <string>time</string> </key>
+                <value>
+                  <object>
+                    <klass> <reference id="6.1"/> </klass>
+                    <tuple>
+                      <none/>
+                    </tuple>
+                    <state>
+                      <tuple>
+                        <float>1322050549.16</float>
                         <string>GMT+2</string>
                       </tuple>
                     </state>
