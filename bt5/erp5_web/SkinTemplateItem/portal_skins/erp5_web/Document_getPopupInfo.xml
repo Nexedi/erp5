@@ -114,11 +114,12 @@ doc_info[\'thumbnail_url\'] = context.Base_getThumbnailAbsoluteUrl()\n
 if website is None:\n
   website = context.getWebSiteValue() or context.REQUEST.get(\'current_web_site\')\n
 \n
-sections = []\n
-for websection in website.getWebSectionValueList(context):\n
-  sections.append({\'title\': websection.getCompactTranslatedTitle(),\n
-                   \'url\': websection.absolute_url()})\n
-doc_info[\'sections\'] = sections\n
+doc_info[\'sections\'] = []\n
+if document_web_section_list is None:\n
+  document_web_section_list = website.getWebSectionValueList(context)\n
+for websection in document_web_section_list:\n
+  doc_info[\'sections\'].append({\'title\': websection.getCompactTranslatedTitle(),\n
+                               \'url\': websection.absolute_url()})\n
 doc_info[\'url\'] = context.absolute_url()\n
 \n
 return context.Document_viewPopupTemplate(**doc_info)\n
@@ -126,7 +127,7 @@ return context.Document_viewPopupTemplate(**doc_info)\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>website=None</string> </value>
+            <value> <string>website=None, document_web_section_list=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
