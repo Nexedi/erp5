@@ -41,8 +41,8 @@
                 <string>title</string>
                 <string>reference</string>
                 <string>int_index</string>
-                <string>base_contribution_list</string>
                 <string>base_application_list</string>
+                <string>base_contribution_list</string>
               </tuple>
             </value>
         </item>
@@ -51,6 +51,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>update_always</string> </key>
+            <value> <int>0</int> </value>
         </item>
       </dictionary>
     </pickle>
