@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>translateString = context.Base_translateString\n
 request = context.REQUEST\n
-quantity_renderer = context.Base_viewFieldLibrary.my_money_quantity.render_pdf\n
+quantity_renderer = context.Base_viewFieldLibrary.my_view_mode_money_quantity.render_pdf\n
 \n
 model = context.getSpecialiseValue().getEffectiveModel(\\\n
     start_date=context.getStartDate(),\n
