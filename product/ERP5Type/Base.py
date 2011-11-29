@@ -174,6 +174,16 @@ class WorkflowMethod(Method):
       # XXX I must think that what is a correct behavior.(Yusei)
       return self._m(instance, *args, **kw)
 
+    # XXX Ugly hack to avoid calling interaction workflow when synchronizing
+    # objects with ERP5SyncML as it leads to unwanted side-effects on the
+    # object being synchronized, such as undesirable workflow history being
+    # added (for example edit_workflow) and double conversion for OOo
+    # documents (for example document_conversion_interaction_workflow defined
+    # for _setData()) making the source and destination XML representation
+    # different.
+    if getattr(instance, '_v_inhibit_workflow', False):
+      return apply(self.__dict__['_m'], (instance,) + args, kw)
+
     # Build a list of transitions which may need to be invoked
     instance_path = instance.getPhysicalPath()
     portal_type = instance.portal_type

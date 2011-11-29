@@ -984,7 +984,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     This is the default editDocument method. This method
     can easily be overwritten.
     """
-    object._edit(**kw)
+    object._v_inhibit_workflow = True
+    try:
+      object._edit(**kw)
+    finally:
+      object._v_inhibit_workflow = False
 
   security.declareProtected(Permissions.ModifyPortalContent, 'getProperty')
   def getProperty(self, object, kw):
