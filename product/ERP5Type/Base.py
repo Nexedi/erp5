@@ -31,7 +31,7 @@ from struct import unpack
 from copy import copy
 import warnings
 import types
-import threading
+import thread, threading
 
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
@@ -266,11 +266,19 @@ class WorkflowMethod(Method):
     # Return result finally
     return result
 
+  # Interactions should not be disabled during normal operation. Only in very
+  # rare and specific cases like data migration. That's why it is implemented
+  # with temporary monkey-patching, instead of slowing down __call__ with yet
+  # another condition.
+
   _do_interaction = __call__
   _no_interaction_lock = threading.Lock()
   _no_interaction_log = None
+  _no_interaction_thread_id = None
 
   def _no_interaction(self, *args, **kw):
+    if WorkflowMethod._no_interaction_thread_id != thread.get_ident():
+      return self._do_interaction(*args, **kw)
     log = "skip interactions for %r" % args[0]
     if WorkflowMethod._no_interaction_log != log:
       WorkflowMethod._no_interaction_log = log
@@ -281,12 +289,17 @@ class WorkflowMethod(Method):
   @simple_decorator
   def disable(func):
     def wrapper(*args, **kw):
+      thread_id = thread.get_ident()
+      if WorkflowMethod._no_interaction_thread_id == thread_id:
+        return func(*args, **kw)
       WorkflowMethod._no_interaction_lock.acquire()
       try:
+        WorkflowMethod._no_interaction_thread_id = thread_id
         WorkflowMethod.__call__ = WorkflowMethod.__dict__['_no_interaction']
         return func(*args, **kw)
       finally:
         WorkflowMethod.__call__ = WorkflowMethod.__dict__['_do_interaction']
+        WorkflowMethod._no_interaction_thread_id = None
         WorkflowMethod._no_interaction_lock.release()
     return wrapper
 
