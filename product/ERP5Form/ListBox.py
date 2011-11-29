@@ -2383,7 +2383,7 @@ class ListBoxHTMLRendererLine(ListBoxRendererLine):
         editable_field = renderer.getEditableField(alias)
 
       # Prepare link value - we now use it for both static and field rendering
-      no_link = False
+      no_link = self.isSummary()
       url_method = None
       url = None
 
