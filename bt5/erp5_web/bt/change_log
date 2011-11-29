@@ -1,3 +1,6 @@
+2011-11-30 Kazuhiko
+* add WebSite_viewSiteMapAsXML that returns the XML sitemap defined in http://www.sitemaps.org/protocol.html .
+
 2011-09-28 Kazuhiko
 * support domain_tree and report_tree in WebSection_getDocumentValueList.
 
