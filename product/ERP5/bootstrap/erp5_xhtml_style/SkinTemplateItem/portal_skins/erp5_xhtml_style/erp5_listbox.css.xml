@@ -561,7 +561,8 @@ div.listbox-list-style-selection li a{\n
 div.listbox-list-style-selection li a.selected,\n
 .listbox-table-report-tree-selection-cell a.selected,\n
 .listbox-table-domain-tree-cell a.selected,\n
-.listbox-page-navigation-text a.selected{\n
+.listbox-page-navigation-text a.selected,\n
+table.listbox td.listbox-table-summary-cell {\n
   font-weight: bold;\n
 }\n
 \n
@@ -764,6 +765,11 @@ table.listbox input.listbox-select-action{\n
 }\n
 \n
 .listbox-table-data-cell > a > .figure{\n
+  float:right;\n
+  display:block;\n
+}\n
+\n
+.listbox-table-summary-cell > .figure{\n
   float:right;\n
   display:block;\n
 }\n

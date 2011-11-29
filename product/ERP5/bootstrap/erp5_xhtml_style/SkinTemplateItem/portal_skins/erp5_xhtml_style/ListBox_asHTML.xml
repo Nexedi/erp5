@@ -474,6 +474,7 @@
                   <!-- Data cells -->\n
                   <tal:block tal:repeat="value render_result">\n
                     <td class="listbox-table-data-cell"\n
+                        tal:attributes="class python: line.isSummary() and \'listbox-table-summary-cell\' or \'listbox-table-data-cell\'"\n
                         tal:define="html  python: value[0];">\n
                         <input tal:condition="not: repeat/value/index"\n
                                type="hidden" value="1" name="listbox_uid:list"\n
