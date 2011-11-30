@@ -545,7 +545,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       for movement in (order, order['taxed'], order['discounted'],
                        order['taxed_discounted']):
         self.checkComposition(movement, [trade_condition], {
-          self.trade_model_path_portal_type: 11,
+          self.trade_model_path_portal_type: 12,
           self.business_link_portal_type: 7,
           "Trade Model Line": 2})
 
@@ -796,7 +796,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
     for movement in order, order['taxed'], order['discounted']:
       self.checkComposition(movement, [trade_condition], {
-        self.trade_model_path_portal_type: 11,
+        self.trade_model_path_portal_type: 12,
         self.business_link_portal_type: 7,
         "Trade Model Line": 5})
 
