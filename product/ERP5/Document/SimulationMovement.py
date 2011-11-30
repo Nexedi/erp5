@@ -373,8 +373,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """Returns the delivery if any or the order related to the root
     applied rule if any.
     """
-    delivery_value = self.getDeliveryValue()
-    if delivery_value is None:
+    explanation_value = self.getDeliveryValue()
+    if explanation_value is None:
       # If the parent is not an Applied Rule, self does not have the method.
       getRootAppliedRule = getattr(self, 'getRootAppliedRule', None)
       if getRootAppliedRule is None:
@@ -386,16 +386,14 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       else:
         # Ex. zero stock rule
         return ra
-    else:
-      explanation_value = delivery_value
-      portal = self.getPortalObject()
-      delivery_type_list = self.getPortalDeliveryTypeList() \
-              + self.getPortalOrderTypeList()
-      while explanation_value.getPortalType() not in delivery_type_list and \
-          explanation_value != portal:
-            explanation_value = explanation_value.getParentValue()
-      if explanation_value != portal:
-        return explanation_value
+    portal = self.getPortalObject()
+    delivery_type_list = portal.getPortalDeliveryTypeList() \
+                       + portal.getPortalOrderTypeList()
+    while explanation_value.getPortalType() not in delivery_type_list:
+      explanation_value = explanation_value.getParentValue()
+      if explanation_value == portal:
+        return
+    return explanation_value
 
   # Deliverability / orderability
   security.declareProtected( Permissions.AccessContentsInformation,
