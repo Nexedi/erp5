@@ -54,7 +54,7 @@
 \n
 software_product = context.getFollowUpValue(portal_type=\'Software Product\')\n
 if software_product:\n
-    r = \'p:\' + software_product.getProductLineTitle() + \' \' + software_product.getDescription() + software_product.getTitle()\n
+    r = software_product.getProductLineTitle() + \' \' + software_product.getDescription() + software_product.getTitle()\n
 return r\n
 </string> </value>
         </item>
