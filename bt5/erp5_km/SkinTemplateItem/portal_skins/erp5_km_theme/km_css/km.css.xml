@@ -62,7 +62,7 @@
                    menu_opacity python:here.getLayoutProperty(\'layout_navigation_menu_opacity\', \'0.80\');\n
                    menu_width python:here.getLayoutProperty(\'layout_navigation_menu_width\', \'145px\');\n
                    menu_indent python:here.getLayoutProperty(\'layout_navigation_menu_indent\', \'155px\');\n
-                   display_anonymous_user_registration python: context.getLayoutProperty(\'layout_display_anonymous_user_registration\',True);" >\n
+                   display_anonymous_user_registration python: 1" >\n
 \n
 body, html {\n
   margin:0;\n
