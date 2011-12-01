@@ -1,3 +1,6 @@
+2011-12-01 Kazuhiko
+* add a sample robots.txt that returns the location of the XML sitemap.
+
 2011-11-30 Kazuhiko
 * add WebSite_viewSiteMapAsXML that returns the XML sitemap defined in http://www.sitemaps.org/protocol.html .
 
