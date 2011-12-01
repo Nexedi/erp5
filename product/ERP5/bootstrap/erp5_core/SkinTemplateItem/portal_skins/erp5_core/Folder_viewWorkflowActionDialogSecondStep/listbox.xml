@@ -10,19 +10,25 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>lines</string>
-                <string>columns</string>
                 <string>all_columns</string>
-                <string>search_columns</string>
-                <string>sort_columns</string>
-                <string>list_method</string>
+                <string>columns</string>
                 <string>count_method</string>
-                <string>selection_name</string>
-                <string>search</string>
-                <string>select</string>
-                <string>editable_columns</string>
-                <string>stat_columns</string>
+                <string>domain_root_list</string>
+                <string>domain_tree</string>
                 <string>editable</string>
+                <string>editable_columns</string>
+                <string>enabled</string>
+                <string>hide_rows_on_no_search_criterion</string>
+                <string>lines</string>
+                <string>list_method</string>
+                <string>report_root_list</string>
+                <string>report_tree</string>
+                <string>search</string>
+                <string>search_columns</string>
+                <string>select</string>
+                <string>selection_name</string>
+                <string>sort_columns</string>
+                <string>stat_columns</string>
               </list>
             </value>
         </item>
@@ -79,8 +85,26 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>editable_columns</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>enabled</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -89,8 +113,12 @@
                 <item>
                     <key> <string>form_id</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
@@ -98,6 +126,14 @@
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>report_tree</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -118,6 +154,10 @@
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>stat_columns</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -165,6 +205,16 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>domain_root_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>domain_tree</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>editable</string> </key>
                     <value> <int>1</int> </value>
                 </item>
@@ -184,6 +234,10 @@
                     </value>
                 </item>
                 <item>
+                    <key> <string>enabled</string> </key>
+                    <value> <int>1</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>listbox</string> </value>
                 </item>
@@ -192,14 +246,28 @@
                     <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>lines</string> </key>
                     <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAQ=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>report_root_list</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>report_tree</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>search</string> </key>
@@ -267,12 +335,25 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.portal_selections.getSelectionParamsFor(\'workflow_action_dialog_proxy_selection\').get(\'proxy_form_id\', \'Folder_viewContentList\')</string> </value>
+            <value> <string>request/enable_detail_list | nothing</string> </value>
         </item>
       </dictionary>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>request/form_id | string:Folder_viewContentList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>

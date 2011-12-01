@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox_portal_type</string> </value>
+            <value> <string>workflow_action_listbox_workflow_state</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -118,7 +118,9 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -237,7 +239,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Portal Type</string> </value>
+                    <value> <string>Workflow State</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -253,6 +255,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>cell/workflow_state</string> </value>
         </item>
       </dictionary>
     </pickle>

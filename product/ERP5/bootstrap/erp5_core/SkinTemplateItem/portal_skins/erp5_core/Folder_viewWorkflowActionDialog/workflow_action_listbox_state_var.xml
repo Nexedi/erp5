@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_comment</string> </value>
+            <value> <string>workflow_action_listbox_state_var</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -191,7 +191,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>invisible</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
@@ -199,7 +199,7 @@
                 </item>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Comments which can be read by internal users but unlike description, are not printed out on official documents.</string> </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>display_maxwidth</string> </key>
@@ -239,7 +239,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Comments</string> </value>
+                    <value> <string>Portal Type</string> </value>
                 </item>
                 <item>
                     <key> <string>truncate</string> </key>
@@ -267,7 +267,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>request/comment</string> </value>
+            <value> <string>cell/state_var</string> </value>
         </item>
       </dictionary>
     </pickle>

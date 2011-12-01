@@ -50,27 +50,22 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>selection_name = \'workflow_action_dialog_proxy_selection\'\n
-selection_tool = context.getPortalObject().portal_selections\n
+            <value> <string>if len([choice for choice in editor.values() if choice[\'workflow_action\']]) == 1:\n
+  return True\n
 \n
-selection_tool.setSelectionParamsFor(selection_name,\n
-                              dict(proxy_form_id=form_id))\n
-\n
-request = container.REQUEST\n
-request.set(\'proxy_form_id\', form_id)\n
-request.set(\'reset\', 1)\n
-request.set(\'ignore_hide_rows\', 1)\n
-\n
-return context.Folder_viewWorkflowActionDocumentListDialogRenderer(REQUEST=request)\n
+from Products.ERP5Type.Message import translateString\n
+# XXX listbox validator does not show the validation failed message, so use portal status message instead\n
+container.REQUEST.set(\'portal_status_message\', translateString("You must select one action."))\n
+return False\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>form_id=\'\', **kw</string> </value>
+            <value> <string>editor, request</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Folder_viewWorkflowActionDocumentListDialog</string> </value>
+            <value> <string>Base_validateFolderWorkflowActionDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

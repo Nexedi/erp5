@@ -10,17 +10,18 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
                 <string>columns</string>
+                <string>editable_columns</string>
+                <string>external_validator</string>
                 <string>list_method</string>
                 <string>selection_name</string>
-                <string>editable_columns</string>
+                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>workflow_action_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -111,6 +112,10 @@
                           <string>workflow_state</string>
                           <string></string>
                         </tuple>
+                        <tuple>
+                          <string>relative_url</string>
+                          <string></string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -134,7 +139,17 @@
                           <string>workflow_action</string>
                           <string>Workflow Action</string>
                         </tuple>
+                        <tuple>
+                          <string>relative_url</string>
+                          <string>relative_url</string>
+                        </tuple>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>external_validator</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -148,7 +163,7 @@
                 <item>
                     <key> <string>list_method</string> </key>
                     <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
                     </value>
                 </item>
                 <item>
@@ -170,6 +185,19 @@
     </pickle>
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Method" module="Products.Formulator.MethodField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>method_name</string> </key>
+            <value> <string>Base_validateFolderWorkflowActionDialog</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
     <pickle>
       <global name="Method" module="Products.Formulator.MethodField"/>
     </pickle>
