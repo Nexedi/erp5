@@ -2979,7 +2979,6 @@ class Base( CopyContainer,
 
   security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
   def skinSuper(self, skin, id):
-    self.pdb()
     if id[:1] != '_' and id[:3] != 'aq_':
       skin_info = SKINDATA.get(thread.get_ident())
       if skin_info is not None:
