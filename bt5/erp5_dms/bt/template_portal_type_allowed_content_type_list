@@ -14,9 +14,7 @@ Document Module | PDF
 Document Module | Presentation
 Document Module | Spreadsheet
 Document Module | Text
-Drawing | Image
 Drawing | Role Definition
-Drawing | Web Page
 External Source Module | RSS Feed
 External Source Module | URL Crawler
 File | Role Definition
@@ -24,15 +22,9 @@ File | Role Definition
 Image Module | Image
 Image | Role Definition
 PDF | Role Definition
-Presentation | Image
 Presentation | Role Definition
-Presentation | Web Page
-Spreadsheet | Image
 Spreadsheet | Role Definition
-Spreadsheet | Web Page
-Text | Image
 Text | Role Definition
-Text | Web Page
 URL Crawler | Drawing
 URL Crawler | File
 URL Crawler | Image
