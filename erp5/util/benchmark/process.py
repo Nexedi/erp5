@@ -119,6 +119,11 @@ class BenchmarkProcess(multiprocessing.Process):
 
       result.exitSuite(with_error)
 
+      try:
+        self._logger.info(str(result.getCurrentSuiteUseCaseStat()))
+      except:
+        pass
+
     result.iterationFinished()
 
   def run(self):
