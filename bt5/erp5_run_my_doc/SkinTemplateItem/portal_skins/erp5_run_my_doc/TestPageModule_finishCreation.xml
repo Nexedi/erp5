@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+   Generate the html code from the listbox after adding the current chapter to the listbox\n
+"""\n
+\n
+from Products.ERP5Type.Document import newTempBase\n
+\n
+# Add the last chapter to the listbox\n
+context.TestPageModule_createChapter(chapter_title, slide_type, file, text_content, slide_content, tested, **kw)\n
+\n
+translateString = context.Base_translateString\n
+portal_status_message = ""\n
+\n
+session = context.ERP5RunMyDocs_acquireSession()\n
+test_page = context.restrictedTraverse(session[\'test_page_path\'])\n
+listbox = session[\'listbox\']\n
+title = session[\'title\']\n
+author = session[\'author\']\n
+author_mail = session[\'author_mail\']\n
+\n
+# Headers and first chapter/slide\n
+text_content = """<!DOCTYPE html>\n
+<html>\n
+  <head>\n
+<base href="" />\n
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">\n
+    <link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">\n
+    <meta charset="utf-8">\n
+    <title>""" + title + """</title>\n
+  </head>\n
+  <body>\n
+<section class="master">\n
+  <h1>""" + title + """</h1>\n
+  """ + listbox[0].slide_content\n
+\n
+if not (author is None or not author):\n
+  if author_mail is None or not author:\n
+    text_content +="""\n
+  <footer>by """+ author +""".</footer>"""\n
+  else:\n
+    text_content +="""\n
+  <footer>by <a href="mailto:"""+ author_mail +"""">"""+ author +"""</a>.</footer>"""\n
+\n
+text_content +="""\n
+  <details>\n
+    """+ listbox[0].text_content +"""\n
+  </details>\n
+</section>\n
+"""\n
+\n
+first = True\n
+for chapter in listbox[1:]:\n
+  title = chapter.title\n
+  image_id = chapter.image_id\n
+  text = chapter.text_content\n
+  slide_content = chapter.slide_content\n
+  slide_type = chapter.slide_type\n
+\n
+  # title of this slide and content to appear in the slide\n
+  text_content += \'\'\'\n
+<section class="\'\'\'+ slide_type.lower() +"""">\n
+  <h1>"""+ title +"""</h1>"""\n
+  if not(image_id is None or not image_id):\n
+    text_content +=\'\'\'\n
+  <img type="image/svg+xml" alt="" src="\'\'\'+ image_id + \'\'\'?format=" width="90%"/>\'\'\'\n
+  if not(slide_content is None or not slide_content):\n
+    text_content += """\n
+  """+ slide_content\n
+\n
+  # details will only appear in the web page version of the tutorial\n
+  text_content +="""\n
+  <details>\n
+    """+ text +"""\n
+  </details>"""\n
+\n
+  # let\'s add a template test to this chapter\n
+  if chapter.tested:\n
+    text_content += """\n
+  <test>\n
+    <table class="test" cellpadding="1" cellspacing="1" border="1" style="display:none;">"""\n
+    if first:\n
+      text_content += """\n
+      <thead>\n
+        <tr><th rowspan="1" colspan="3">""" + session[\'title\'] + """</th></tr>\n
+      </thead>"""\n
+      first = False\n
+    text_content += """\n
+      <tbody>\n
+        <tr>\n
+          <td colspan=3 >&lt;span metal:use-macro="container/ERP5RunMyDocs_initTest/macros/init_test_environment" style="display:none;"&gt;init&lt;/span&gt;</td>\n
+        </tr>\n
+        <tr>\n
+\t  <td>selectAndWait</td>\n
+\t  <td>name=select_module</td>\n
+\t  <td>label=Test Pages</td>\n
+        </tr>\n
+        <tr>\n
+          <td>verifyTextPresent</td>\n
+          <td>Test Pages</td>\n
+          <td></td>\n
+        </tr>"""\n
+    if slide_type == "Screenshot":\n
+      text_content +="""\n
+        <tr>\n
+          <td>captureEntirePageScreenshot</td>\n
+          <td>"""+ image_id +"""</td>\n
+          <td></td>\n
+        </tr>"""\n
+    text_content += """\n
+      </tbody>\n
+    </table>\n
+  </test>"""\n
+  text_content +="""\n
+</section>\n
+"""\n
+\n
+text_content +="""\n
+  </body>\n
+</html>"""\n
+\n
+test_page.setTextContent(text_content)\n
+\n
+return test_page.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message))\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>chapter_title, slide_type, file, text_content, slide_content, tested, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TestPageModule_finishCreation</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

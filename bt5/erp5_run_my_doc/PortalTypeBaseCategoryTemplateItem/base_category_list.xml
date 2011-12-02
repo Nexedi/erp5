@@ -1,0 +1,14 @@
+<base_category_list>
+ <portal_type id="Test Page">
+  <item>follow_up</item>
+  <item>function</item>
+  <item>group</item>
+  <item>predecessor</item>
+  <item>publication_section</item>
+  <item>similar</item>
+  <item>site</item>
+ </portal_type>
+ <portal_type id="Test Page Module">
+  <item>business_application</item>
+ </portal_type>
+</base_category_list>
