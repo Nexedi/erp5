@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts11000946.61</string> </value>
+            <value> <string>ts22818918.05</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -111,7 +111,7 @@ function toggleContent() {\n
   if (s) {\n
       var video = s.querySelector("video");\n
       if (video) {\n
-          if (video.ended || video.paused) {\n
+          if (video.ended || video.paused) {\n
               video.play();\n
           } else {\n
               video.pause();\n
@@ -179,7 +179,7 @@ function setSlide() {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>3715</int> </value>
+            <value> <int>3714</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
