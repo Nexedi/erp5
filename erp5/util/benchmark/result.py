@@ -53,6 +53,14 @@ class BenchmarkResultStatistic(object):
     self._variance_sum = 0
     self._mean = 0
 
+  def __str__(self):
+    return "%s: min=%.3f, mean=%.3f (+/- %.3f), max=%.3f" % \
+        (self.full_label,
+         self.minimum,
+         self.mean,
+         self.standard_deviation,
+         self.maximum)
+
   def add(self, value):
     if value < 0:
       self.error_sum += 1
