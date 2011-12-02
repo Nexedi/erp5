@@ -51,7 +51,7 @@ class BenchmarkResultStatistic(object):
 
     # For calculating the standard deviation
     self._variance_sum = 0
-    self._mean = 0
+    self._variance_mean = 0
 
   def __str__(self):
     return "%s: min=%.3f, mean=%.3f (+/- %.3f), max=%.3f" % \
@@ -74,9 +74,9 @@ class BenchmarkResultStatistic(object):
     self._value_sum += value
     self.n += 1
 
-    delta = value - self._mean
-    self._mean += delta / self.n
-    self._variance_sum += delta * (value - self._mean)
+    delta = value - self._variance_mean
+    self._variance_mean += delta / self.n
+    self._variance_sum += delta * (value - self._variance_mean)
 
   @property
   def mean(self):
