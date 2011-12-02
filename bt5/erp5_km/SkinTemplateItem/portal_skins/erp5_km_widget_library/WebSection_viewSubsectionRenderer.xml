@@ -58,7 +58,7 @@
         </a>\n
 \n
       <tal:block tal:condition="show_collapse"\n
-                 tal:define="section_dom_id python: section[\'url\'].replace(\'http://\', \'\').replace(\'/\', \'_\').replace(\':\', \'_\');\n
+                 tal:define="section_dom_id python: section[\'url\'].replace(\'http://\', \'\').replace(\'/\', \'_\').replace(\':\', \'_\').replace(\'.\', \'_\');\n
                              image_dom_id string:image_${section_dom_id};">\n
 \n
         <img src="images/tree_closed.png" \n
