@@ -32,6 +32,7 @@
 ##############################################################################
 
 import argparse
+import re
 
 def parseArguments():
   parser = argparse.ArgumentParser(
@@ -68,12 +69,15 @@ def parseArguments():
   return namespace
 
 import csv
+import collections
 
 from .result import BenchmarkResultStatistic
 
 def computeStatisticFromFilenameList(argument_namespace, filename_list):
   reader_list = []
   stat_list = []
+  use_case_suite_dict = collections.OrderedDict()
+  row_use_case_mapping_dict = {}
   label_list = []
   merged_label_dict = {}
 
@@ -88,26 +92,59 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list):
     if not label_list:
       label_list = row_list
       label_merged_index = 0
-      for label in label_list:
-        if argument_namespace.do_merge_label:
-          if label in merged_label_dict:
-            continue
+      for index, label in enumerate(label_list):
+        try:
+          suite_name, result_name = label.split(': ', 1)
+        except ValueError:
+          # This is an use case as all results are prefixed by the
+          # suite name
+          #
+          # TODO: Assuming that there was at least one test result
+          #       before
+          use_case_suite_dict[suite_name] = [[], []]
+          row_use_case_mapping_dict[index] = suite_name
+        else:
+          if argument_namespace.do_merge_label:
+            if label in merged_label_dict:
+              continue
 
-          merged_label_dict[label] = label_merged_index
-          label_merged_index += 1
+            merged_label_dict[label] = label_merged_index
+            label_merged_index += 1
 
-        stat_list.append(BenchmarkResultStatistic(*label.split(': ', 1)))
+          stat_list.append(BenchmarkResultStatistic(suite_name, result_name))
 
     if row_list != label_list:
       raise AssertionError, "ERROR: Result labels: %s != %s" % \
           (label_list, row_list)
 
+    row_index = 0
     for row_list in reader:
-      for idx, row in enumerate(row_list):
-        index = merged_label_dict.get(label_list[idx], idx)
-        stat_list[index].add(float(row))
+      row_iter = iter(enumerate(row_list))
+      for idx, row in row_iter:
+        use_case_suite = row_use_case_mapping_dict.get(idx, None)
+        if use_case_suite:
+          try:
+            stat_use_case = use_case_suite_dict[use_case_suite][0][row_index]
+            stat_time_elapsed = use_case_suite_dict[use_case_suite][1][row_index]
+          except IndexError:
+            stat_use_case = BenchmarkResultStatistic(use_case_suite,
+                                                     'Use cases count')
 
-  return stat_list
+            stat_time_elapsed = BenchmarkResultStatistic(use_case_suite,
+                                                         'Time elapsed')
+
+            use_case_suite_dict[use_case_suite][0].append(stat_use_case)
+            use_case_suite_dict[use_case_suite][1].append(stat_time_elapsed)
+
+          stat_use_case.add(int(row))
+          stat_time_elapsed.add(int(row_iter.next()[1]) / 60.0)
+        else:
+          index = merged_label_dict.get(label_list[idx], idx)
+          stat_list[index].add(float(row))
+
+      row_index += 1
+
+  return stat_list, use_case_suite_dict
 
 def formatFloatList(value_list):
   return [ format(value, ".3f") for value in value_list ]
@@ -155,7 +192,7 @@ def drawBarDiagram(pdf, title, stat_list):
   axes.yaxis.set_minor_locator(ticker.MultipleLocator(0.25))
   axes.yaxis.grid(True, 'major', linewidth=1.5)
   axes.yaxis.grid(True, 'minor')
- 
+
   # Create the bars
   ind = numpy.arange(len(label_list))
   width = 0.33
@@ -186,6 +223,88 @@ def drawBarDiagram(pdf, title, stat_list):
              colLoc='center',
              rowLoc='center',
              cellLoc='center')
+
+  pdf.savefig()
+  pylab.close()
+
+def drawUseCasePerNumberOfUser(pdf, title, use_case_count_list,
+                               time_elapsed_list, is_single_plot=False):
+  """
+  TODO: Merge with drawConcurrentUsersPlot?
+  """
+  figure = pyplot.figure(figsize=(11.69, 8.29), frameon=False)
+  figure.subplots_adjust(bottom=0.1, right=0.98, left=0.07, top=0.95)
+  pyplot.title(title)
+  pyplot.grid(True, linewidth=1.5)
+
+  axes = figure.add_subplot(111)
+
+  def get_cum_stat(stat_list):
+    cum_min_list = []
+    cum_min = 0
+    cum_mean_list = []
+    cum_mean = 0
+    cum_max_list = []
+    cum_max = 0
+    for stat in stat_list:
+      cum_min += stat.minimum
+      cum_min_list.append(cum_min)
+
+      cum_mean += stat.mean
+      cum_mean_list.append(cum_mean)
+
+      cum_max += stat.maximum
+      cum_max_list.append(cum_max)
+
+    return cum_min_list, cum_mean_list, cum_max_list
+
+  use_case_cum_min_list, use_case_cum_mean_list, use_case_cum_max_list = \
+      get_cum_stat(use_case_count_list)
+
+  time_cum_min_list, time_cum_mean_list, time_cum_max_list = \
+      get_cum_stat(time_elapsed_list)
+
+  # TODO: cleanup
+  if is_single_plot:
+    axes.plot(time_cum_max_list, use_case_cum_max_list, 'gs-')
+  else:
+    axes.plot(time_cum_min_list, use_case_cum_min_list, 'yo-', label='Minimum')
+
+    xerr_list = [stat.standard_deviation for stat in time_elapsed_list]
+
+    xerr_left = numpy.minimum([(cum_mean - time_cum_min_list[i]) for i, cum_mean in \
+                                 enumerate(time_cum_mean_list)],
+                              xerr_list)
+
+    xerr_right = numpy.minimum([(cum_mean + time_cum_max_list[i]) for i, cum_mean in \
+                                  enumerate(time_cum_mean_list)],
+                               xerr_list)
+
+    axes.errorbar(time_cum_mean_list,
+                  use_case_cum_min_list,
+                  xerr=[xerr_left, xerr_right],
+                  color='r',
+                  ecolor='b',
+                  label='Mean',
+                  elinewidth=2,
+                  fmt='D-',
+                  capsize=10.0)
+
+    axes.plot(time_cum_max_list, use_case_cum_max_list, 'gs-', label='Maximum')
+
+  use_case_count_max = use_case_count_list[0].maximum
+  axes.yaxis.set_major_locator(ticker.MultipleLocator(use_case_count_max * 2))
+  axes.yaxis.set_minor_locator(ticker.MultipleLocator(use_case_count_max))
+  axes.yaxis.grid(True, 'minor')
+
+  # TODO: Must be dynamic...
+  axes.xaxis.set_major_locator(ticker.MultipleLocator(120))
+  axes.xaxis.set_minor_locator(ticker.MultipleLocator(15))
+  axes.xaxis.grid(True, 'minor')
+
+  axes.legend(loc=0)
+  axes.set_xlabel('Time elapsed (in hours)')
+  axes.set_ylabel('Use cases')
 
   pdf.savefig()
   pylab.close()
@@ -268,7 +387,7 @@ def generateReport():
   pdf = PdfPages(argument_namespace.output_filename)
 
   for nb_users, report_dict in per_nb_users_report_dict.items():
-    stat_list = computeStatisticFromFilenameList(
+    stat_list, use_case_dict = computeStatisticFromFilenameList(
       argument_namespace, report_dict['filename'])
 
     title = "Ran suites with %d users" % len(report_dict['filename'])
@@ -280,7 +399,16 @@ def generateReport():
                      stat_list[slice_start_idx:slice_start_idx +
                                DIAGRAM_PER_PAGE])
 
+    for suite_name, (use_case_count_list, time_elapsed_list) in \
+          use_case_dict.viewitems():
+      title = "Scalability for %s with %d users" % (suite_name, nb_users)
+      drawUseCasePerNumberOfUser(pdf, title,
+                                 use_case_count_list,
+                                 time_elapsed_list,
+                                 is_single_plot=(nb_users == 1))
+
     report_dict['stats'] = stat_list
+    report_dict['use_cases'] = use_case_dict
 
   if len(per_nb_users_report_dict) != 1:
     for i in range(len(report_dict['stats'])):
