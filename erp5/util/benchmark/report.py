@@ -61,6 +61,11 @@ def parseArguments():
                       default=False,
                       help='Merge identical labels (default: False)')
 
+  parser.add_argument('--ignore-labels-regex',
+                      dest='ignore_label_re',
+                      type=re.compile,
+                      help='Ignore labels with the specified regex')
+
   parser.add_argument('report_directory',
                       help='Reports directory')
 
@@ -75,6 +80,7 @@ from .result import BenchmarkResultStatistic
 
 def computeStatisticFromFilenameList(argument_namespace, filename_list):
   reader_list = []
+  ignore_result_set = set()
   stat_list = []
   use_case_suite_dict = collections.OrderedDict()
   row_use_case_mapping_dict = {}
@@ -93,6 +99,11 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list):
       label_list = row_list
       label_merged_index = 0
       for index, label in enumerate(label_list):
+        if (argument_namespace.ignore_label_re and
+            argument_namespace.ignore_label_re.match(label)):
+          ignore_result_set.add(index)
+          continue
+
         try:
           suite_name, result_name = label.split(': ', 1)
         except ValueError:
@@ -121,6 +132,9 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list):
     for row_list in reader:
       row_iter = iter(enumerate(row_list))
       for idx, row in row_iter:
+        if idx in ignore_result_set:
+          continue
+
         use_case_suite = row_use_case_mapping_dict.get(idx, None)
         if use_case_suite:
           try:
