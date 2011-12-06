@@ -86,11 +86,11 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_section_title</string>
+                          <string>destination_section_title</string>
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>destination_section_title</string>
+                          <string>source_section_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
@@ -136,11 +136,11 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_section_title</string>
+                          <string>destination_section_title</string>
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>destination_section_title</string>
+                          <string>source_section_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
@@ -182,11 +182,11 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>source_section_title</string>
+                          <string>destination_section_title</string>
                           <string>Client</string>
                         </tuple>
                         <tuple>
-                          <string>destination_section_title</string>
+                          <string>source_section_title</string>
                           <string>Supplier</string>
                         </tuple>
                         <tuple>
