@@ -265,7 +265,7 @@ class CertificateAuthorityTool(BaseTool):
   def _getValidSerial(self, common_name):
     index = open(self.index).read().splitlines()
     valid_line_list = [q for q in index if q.startswith('V') and
-      ('CN=%s' % common_name in q)]
+      ('CN=%s/' % common_name in q)]
     if len(valid_line_list) != 1:
       raise ValueError('No certificate for %r' % common_name)
     return valid_line_list[0].split('\t')[3]
