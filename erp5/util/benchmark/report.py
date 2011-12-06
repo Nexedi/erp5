@@ -317,7 +317,7 @@ def drawUseCasePerNumberOfUser(pdf, title, use_case_count_list,
   axes.xaxis.grid(True, 'minor')
 
   axes.legend(loc=0)
-  axes.set_xlabel('Time elapsed (in hours)')
+  axes.set_xlabel('Time elapsed (in minutes)')
   axes.set_ylabel('Use cases')
 
   pdf.savefig()
