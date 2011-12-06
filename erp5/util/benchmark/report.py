@@ -290,7 +290,7 @@ def drawUseCasePerNumberOfUser(pdf, title, use_case_count_list,
                                  enumerate(time_cum_mean_list)],
                               xerr_list)
 
-    xerr_right = numpy.minimum([(cum_mean + time_cum_max_list[i]) for i, cum_mean in \
+    xerr_right = numpy.minimum([(time_cum_max_list[i] - cum_mean) for i, cum_mean in \
                                   enumerate(time_cum_mean_list)],
                                xerr_list)
 
