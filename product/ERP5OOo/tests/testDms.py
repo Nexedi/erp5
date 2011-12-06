@@ -2663,9 +2663,11 @@ class TestDocumentPerformance(TestDocumentMixin):
     ooo_document.convert(format='png')
     after = time.time()
     req_time = (after - before)
-    # we should have image converted in less than 20s
-    self.assertTrue(req_time < 30.0, 
-      "Conversion took %s seconds and it is not less them 30.0 seconds" % \
+    # we should have image converted in less than Xs
+    # the 100s value is estimated one, it's equal to time for cloudood conversion (around 52s) +
+    # time for gs conversion. As normally test are executed in parallel some tollerance is needed.
+    self.assertTrue(req_time < 100.0, 
+      "Conversion took %s seconds and it is not less them 100.0 seconds" % \
         req_time)
 
 def test_suite():
