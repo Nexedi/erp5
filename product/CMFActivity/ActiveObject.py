@@ -154,7 +154,7 @@ class ActiveObject(ExtensionClass.Base):
     if path:
       return self.unrestrictedTraverse(path)
 
-  def setDefaultActivateParameteDict(self, parameter_dict, placeless=False):
+  def setDefaultActivateParameterDict(self, parameter_dict, placeless=False):
     # This method sets the default keyword parameters to activate. This is
     # useful when you need to specify special parameters implicitly (e.g. to
     # reindexObject).
@@ -167,8 +167,8 @@ class ActiveObject(ExtensionClass.Base):
 
   def setDefaultActivateParameters(self, placeless=False, **kw):
     warnings.warn('setDefaultActivateParameters is deprecated in favour of '
-      'setDefaultActivateParameteDict.', DeprecationWarning)
-    self.setDefaultActivateParameteDict(kw, placeless=placeless)
+      'setDefaultActivateParameterDict.', DeprecationWarning)
+    self.setDefaultActivateParameterDict(kw, placeless=placeless)
 
   def getDefaultActivateParameterDict(self, inherit_placeless=True):
     # This method returns default activate parameters to self.
