@@ -1,7 +1,0 @@
-<type_roles>
-  <role id='Auditor; Author'>
-   <property id='title'>Author</property>
-   <multi_property id='category'>function/runmydocs_user/author</multi_property>
-   <multi_property id='category'>function/runmydocs_user/assignor</multi_property>
-  </role>
-</type_roles>
