@@ -241,18 +241,45 @@ def drawBarDiagram(pdf, title, stat_list):
   pdf.savefig()
   pylab.close()
 
-def drawUseCasePerNumberOfUser(pdf, title, use_case_count_list,
-                               time_elapsed_list, is_single_plot=False):
-  """
-  TODO: Merge with drawConcurrentUsersPlot?
-  """
-  figure = pyplot.figure(figsize=(11.69, 8.29), frameon=False)
-  figure.subplots_adjust(bottom=0.1, right=0.98, left=0.07, top=0.95)
-  pyplot.title(title)
-  pyplot.grid(True, linewidth=1.5)
+def drawPlotDecorator(xlabel, ylabel):
+  def inner(f):
+    def decorate(pdf, title, *args, **kwargs):
+      figure = pyplot.figure(figsize=(11.69, 8.29), frameon=False)
+      figure.subplots_adjust(bottom=0.1, right=0.98, left=0.07, top=0.95)
+      pyplot.title(title)
+      pyplot.grid(True, linewidth=1.5)
 
-  axes = figure.add_subplot(111)
+      axes = figure.add_subplot(111)
 
+      x_major, x_minor, y_major, y_minor = f(axes, *args, **kwargs)
+
+      axes.xaxis.set_major_locator(x_major)
+      if x_minor:
+        axes.xaxis.set_minor_locator(x_minor)
+      axes.xaxis.grid(True, 'minor')
+
+      axes.yaxis.set_major_locator(y_major)
+      if y_minor:
+        axes.yaxis.set_minor_locator(y_minor)
+      axes.yaxis.grid(True, 'minor')
+
+      axes.legend(loc=0)
+      axes.set_xlabel(xlabel)
+      axes.set_ylabel(ylabel)
+
+      pdf.savefig()
+      pylab.close()
+
+    return decorate
+
+  return inner
+
+@drawPlotDecorator(xlabel='Time elapsed (in minutes)',
+                   ylabel='Use cases')
+def drawUseCasePerNumberOfUserPlot(axes,
+                                   use_case_count_list,
+                                   time_elapsed_list,
+                                   is_single_plot=False):
   def get_cum_stat(stat_list):
     cum_min_list = []
     cum_min = 0
@@ -307,30 +334,16 @@ def drawUseCasePerNumberOfUser(pdf, title, use_case_count_list,
     axes.plot(time_cum_max_list, use_case_cum_max_list, 'gs-', label='Maximum')
 
   use_case_count_max = use_case_count_list[0].maximum
-  axes.yaxis.set_major_locator(ticker.MultipleLocator(use_case_count_max * 2))
-  axes.yaxis.set_minor_locator(ticker.MultipleLocator(use_case_count_max))
-  axes.yaxis.grid(True, 'minor')
 
   # TODO: Must be dynamic...
-  axes.xaxis.set_major_locator(ticker.MultipleLocator(120))
-  axes.xaxis.set_minor_locator(ticker.MultipleLocator(15))
-  axes.xaxis.grid(True, 'minor')
+  return (ticker.MultipleLocator(120),
+          ticker.MultipleLocator(15),
+          ticker.MultipleLocator(use_case_count_max * 2),
+          ticker.MultipleLocator(use_case_count_max))
 
-  axes.legend(loc=0)
-  axes.set_xlabel('Time elapsed (in minutes)')
-  axes.set_ylabel('Use cases')
-
-  pdf.savefig()
-  pylab.close()
-
-def drawConcurrentUsersPlot(pdf, title, nb_users_list, stat_list):
-  figure = pyplot.figure(figsize=(11.69, 8.29), frameon=False)
-  figure.subplots_adjust(bottom=0.1, right=0.98, left=0.07, top=0.95)
-  pyplot.title(title)
-  pyplot.grid(True, linewidth=1.5)
-
-  axes = figure.add_subplot(111)
-
+@drawPlotDecorator(xlabel='Concurrent users',
+                   ylabel='Seconds')
+def drawConcurrentUsersPlot(axes, nb_users_list, stat_list):
   min_array = numpy.array([stat.minimum for stat in stat_list])
   mean_array = numpy.array([stat.mean for stat in stat_list])
   max_array = numpy.array([stat.maximum for stat in stat_list])
@@ -353,20 +366,11 @@ def drawConcurrentUsersPlot(pdf, title, nb_users_list, stat_list):
 
   axes.plot(nb_users_list, max_array, 'gs-', label='Maximum')
 
-  axes.yaxis.set_major_locator(ticker.MultipleLocator(0.5))
-  axes.yaxis.set_minor_locator(ticker.MultipleLocator(0.25))
-  axes.yaxis.grid(True, 'minor')
-
-  axes.xaxis.set_major_locator(ticker.FixedLocator(nb_users_list))
-
   axes.set_xticks(nb_users_list)
-  axes.legend(loc=0)
-  axes.set_xlabel('Concurrent users')
-  axes.set_ylabel('Seconds')
-
   pyplot.xlim(xmin=nb_users_list[0])
-  pdf.savefig()
-  pylab.close()
+
+  return (ticker.FixedLocator(nb_users_list), None,
+          ticker.MultipleLocator(0.5), ticker.MultipleLocator(0.25))
 
 from matplotlib.backends.backend_pdf import PdfPages
 
@@ -416,10 +420,10 @@ def generateReport():
     for suite_name, (use_case_count_list, time_elapsed_list) in \
           use_case_dict.viewitems():
       title = "Scalability for %s with %d users" % (suite_name, nb_users)
-      drawUseCasePerNumberOfUser(pdf, title,
-                                 use_case_count_list,
-                                 time_elapsed_list,
-                                 is_single_plot=(nb_users == 1))
+      drawUseCasePerNumberOfUserPlot(pdf, title,
+                                     use_case_count_list,
+                                     time_elapsed_list,
+                                     is_single_plot=(nb_users == 1))
 
     report_dict['stats'] = stat_list
     report_dict['use_cases'] = use_case_dict
