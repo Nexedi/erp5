@@ -99,8 +99,7 @@ class TradeModelSolver(AcceptSolver):
         continue
       for simulation_movement in simulation_movement_list:
         if activate_kw is not None:
-          simulation_movement.setDefaultActivateParameters(
-            activate_kw=activate_kw, **activate_kw)
+          simulation_movement.setDefaultActivateParameterDict(activate_kw)
         value_dict = {}
         for solved_property in solved_property_list:
           new_value = movement.getProperty(solved_property)
@@ -119,8 +118,7 @@ class TradeModelSolver(AcceptSolver):
     # XXX non-linear case is not yet supported.
     for movement in trade_model_related_movement_list:
       if activate_kw is not None:
-        movement.setDefaultActivateParameters(
-          activate_kw=activate_kw, **activate_kw)
+        movement.setDefaultActivateParameterDict(activate_kw)
       for solved_property in solved_property_list:
         if solved_property == 'quantity':
           simulation_movement_list = movement.getDeliveryRelatedValueList()

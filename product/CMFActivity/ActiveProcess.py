@@ -44,7 +44,7 @@ def addActiveProcess(self, id, title='', REQUEST=None, activate_kw=None, **kw):
   """
   o = ActiveProcess(id)
   if activate_kw is not None:
-    o.__of__(self).setDefaultActivateParameters(**activate_kw)
+    o.__of__(self).setDefaultActivateParameterDict(activate_kw)
   o.uid = self.portal_catalog.newUid()
   self._setObject(id, o)
   o = self._getOb(id)

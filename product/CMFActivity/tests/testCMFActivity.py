@@ -526,7 +526,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     self.assertEquals(o.getTitle(), 'b')
 
-    o.setDefaultActivateParameters(tag = 'toto')
+    o.setDefaultActivateParameterDict({'tag': 'toto'})
     def titi(self):
       self.setCorporateName(self.getTitle() + 'd')
     o.__class__.titi = titi

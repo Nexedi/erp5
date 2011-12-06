@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.setDefaultActivateParameters(activate_kw=activate_kw)\n
+            <value> <string>context.setDefaultActivateParameterDict({"activate_kw": activate_kw})\n
 context.setAggregate(aggregate)\n
 </string> </value>
         </item>

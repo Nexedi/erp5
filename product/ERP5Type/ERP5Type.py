@@ -381,9 +381,9 @@ class ERP5TypeInformation(XMLObject,
         ob.manage_setLocalRoles(user_id, ['Owner'])
       else:
         if activate_kw is not None:
-          ob.setDefaultActivateParameters(**activate_kw)
+          ob.setDefaultActivateParameterDict(activate_kw)
         if reindex_kw is not None:
-          ob.setDefaultReindexParameters(**reindex_kw)
+          ob.setDefaultReindexParameterDict(reindex_kw)
         if is_indexable is not None:
           base_ob.isIndexable = is_indexable
         container._setObject(id, base_ob)

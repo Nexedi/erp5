@@ -98,8 +98,7 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                    'quantity':split_quantity})
         new_movement = applied_rule.newContent(activate_kw=activate_kw, **kw)
         if activate_kw is not None:
-          new_movement.setDefaultActivateParameters(
-            activate_kw=activate_kw, **activate_kw)
+          new_movement.setDefaultActivateParameterDict(activate_kw)
         start_date = configuration_dict.get('start_date', None)
         if start_date is not None:
           new_movement.recordProperty('start_date')

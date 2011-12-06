@@ -114,14 +114,12 @@ class UnifySolver(AcceptSolver):
           solved_property,
       ))
       if activate_kw is not None:
-        movement.setDefaultActivateParameters(
-          activate_kw=activate_kw, **activate_kw)
+        movement.setDefaultActivateParameterDict(activate_kw)
       new_value = configuration_dict.get('value')
       movement.setProperty(solved_property, new_value)
       for simulation_movement in simulation_movement_set:
         if activate_kw is not None:
-          simulation_movement.setDefaultActivateParameters(
-            activate_kw=activate_kw, **activate_kw)
+          simulation_movement.setDefaultActivateParameterDict(activate_kw)
         value_dict = {solved_property:new_value}
         for property_id, value in value_dict.iteritems():
           if not simulation_movement.isPropertyRecorded(property_id):
