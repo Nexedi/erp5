@@ -143,7 +143,7 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
       raise AssertionError, "ERROR: Result labels: %s != %s" % \
           (label_list, row_list)
 
-    row_index = 0
+    iteration_index = 0
     for row_list in reader:
       row_iter = iter(enumerate(row_list))
       for idx, row in row_iter:
@@ -164,8 +164,8 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
           duration_stat_list = by_iteration_dict['duration_stats']
 
           try:
-            stat_count = count_stat_list[row_index]
-            stat_duration = duration_stat_list[row_index]
+            stat_count = count_stat_list[iteration_index]
+            stat_duration = duration_stat_list[iteration_index]
           except IndexError:
             stat_count = BenchmarkResultStatistic(use_case_suite,
                                                   'Use cases count')
@@ -183,7 +183,7 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
           index = merged_label_dict.get(label_list[idx], idx)
           stat_list[index].add(float(row))
 
-      row_index += 1
+      iteration_index += 1
 
   return stat_list, use_case_suite_dict
 
