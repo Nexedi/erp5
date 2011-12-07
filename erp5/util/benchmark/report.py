@@ -243,8 +243,8 @@ def drawBarDiagram(pdf, title, stat_list):
   axes.set_ylabel('Seconds')
   axes.set_xticks([])
 
-  axes.yaxis.set_major_locator(ticker.MultipleLocator(0.5))
-  axes.yaxis.set_minor_locator(ticker.MultipleLocator(0.25))
+  axes.yaxis.set_major_locator(ticker.MaxNLocator(nbins=20))
+  axes.yaxis.set_minor_locator(ticker.AutoMinorLocator())
   axes.yaxis.grid(True, 'major', linewidth=1.5)
   axes.yaxis.grid(True, 'minor')
 
@@ -374,13 +374,8 @@ def drawUseCasePerNumberOfUserPlot(axes,
 
     axes.plot(time_cum_max_list, use_case_cum_max_list, 'gs-', label='Maximum')
 
-  use_case_count_max = use_case_count_list[0].maximum
-
-  # TODO: Must be dynamic...
-  return (ticker.MultipleLocator(120),
-          ticker.MultipleLocator(15),
-          ticker.MultipleLocator(use_case_count_max * 2),
-          ticker.MultipleLocator(use_case_count_max))
+  return (ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator(),
+          ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator())
 
 @drawPlotDecorator(xlabel='Concurrent Users',
                    ylabel='Use cases/h')
@@ -477,7 +472,7 @@ def drawConcurrentUsersPlot(axes, nb_users_list, stat_list):
   pyplot.xlim(xmin=nb_users_list[0])
 
   return (ticker.FixedLocator(nb_users_list), None,
-          ticker.MultipleLocator(0.5), ticker.MultipleLocator(0.25))
+          ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator())
 
 from matplotlib.backends.backend_pdf import PdfPages
 
