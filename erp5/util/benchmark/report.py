@@ -469,7 +469,8 @@ def drawConcurrentUsersPlot(axes, nb_users_list, stat_list):
   axes.plot(nb_users_list, max_array, 'gs-', label='Maximum')
 
   axes.set_xticks(nb_users_list)
-  pyplot.xlim(xmin=nb_users_list[0])
+
+  pyplot.xlim(xmin=nb_users_list[0], xmax=nb_users_list[-1])
 
   return (ticker.FixedLocator(nb_users_list), None,
           ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator())
