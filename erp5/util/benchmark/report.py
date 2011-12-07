@@ -117,10 +117,17 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
           if suite_name in use_case_suite_dict:
             continue
 
-          use_case_suite_dict[suite_name] = {'duration_stats': [],
+          duration_stat_list = []
+
+          use_case_suite_dict[suite_name] = {'duration_stats': duration_stat_list,
                                              'count_stats': []}
 
           row_use_case_mapping_dict[index] = suite_name
+
+          if is_range_user:
+            report_dict['use_cases'].append({
+                'count': 0,
+                'duration_stats': duration_stat_list})
         else:
           if argument_namespace.do_merge_label:
             if label in merged_label_dict:
@@ -135,7 +142,8 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
           if is_range_user:
             report_dict = range_user_report_dict.setdefault(
               suite_name,
-              {'results': collections.OrderedDict()})
+              {'results': collections.OrderedDict(),
+               'use_cases': []})          
 
             report_dict['results'].setdefault(stat.full_label, []).append(stat)
 
@@ -179,6 +187,12 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
 
           stat_count.add(current_count)
           stat_duration.add(current_duration)
+
+          # For total stats, used later on to generate the number of
+          # cases/hour per users
+          if is_range_user:
+            total_dict = range_user_report_dict[use_case_suite]['use_cases'][-1]
+            total_dict['count'] += current_count
         else:
           index = merged_label_dict.get(label_list[idx], idx)
           stat_list[index].add(float(row))
@@ -368,6 +382,72 @@ def drawUseCasePerNumberOfUserPlot(axes,
           ticker.MultipleLocator(use_case_count_max * 2),
           ticker.MultipleLocator(use_case_count_max))
 
+@drawPlotDecorator(xlabel='Concurrent Users',
+                   ylabel='Use cases/h')
+def drawConcurrentUsersUseCasePlot(axes,
+                                    nb_users_list,
+                                    use_case_stat_list):
+  use_case_per_hour_min_list = []
+  use_case_per_hour_mean_list = []
+  use_case_per_hour_max_list = []
+
+  y_error_lower_list = []
+  y_error_upper_list = []
+
+  for use_case_stat in use_case_stat_list:
+    count = use_case_stat['count']
+
+    maximum_sum = 0
+    mean_sum = 0
+    minimum_sum = 0
+    stddev = 0
+    for stat in use_case_stat['duration_stats']:
+      minimum_sum += stat.minimum / 60.0
+      mean_sum += stat.mean / 60.0
+      maximum_sum += stat.maximum / 60.0
+      stddev = max(stddev, stat.standard_deviation / 60.0)
+
+    use_case_per_hour_min = count / maximum_sum
+    use_case_per_hour_min_list.append(use_case_per_hour_min)
+
+    use_case_per_hour_mean = count / mean_sum
+    use_case_per_hour_mean_list.append(use_case_per_hour_mean)
+
+    use_case_per_hour_max = count / minimum_sum
+    use_case_per_hour_max_list.append(use_case_per_hour_max)
+
+    if stddev:
+      y_error_lower = use_case_per_hour_mean - max(use_case_per_hour_min,
+                                                   count / (mean_sum + stddev))
+
+      y_error_upper = min(use_case_per_hour_max,
+                          count / (mean_sum - stddev)) - use_case_per_hour_mean
+    else:
+      y_error_lower = y_error_upper = 0
+
+    y_error_lower_list.append(y_error_lower)
+    y_error_upper_list.append(y_error_upper)
+
+  axes.plot(nb_users_list, use_case_per_hour_min_list, 'yo-', label='Minimum')
+
+  axes.errorbar(nb_users_list,
+                use_case_per_hour_mean_list,
+                yerr=[y_error_lower_list, y_error_upper_list],
+                color='r',
+                ecolor='b',
+                label='Mean',
+                elinewidth=2,
+                fmt='D-',
+                capsize=10.0)
+
+  axes.plot(nb_users_list, use_case_per_hour_max_list, 'gs-', label='Maximum')
+
+  axes.set_xticks(nb_users_list)
+  pyplot.xlim(xmin=nb_users_list[0], xmax=nb_users_list[-1])
+
+  return (ticker.FixedLocator(nb_users_list), None,
+          ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator()) 
+
 @drawPlotDecorator(xlabel='Concurrent users',
                    ylabel='Seconds')
 def drawConcurrentUsersPlot(axes, nb_users_list, stat_list):
@@ -458,10 +538,9 @@ def generateReport():
 
   if is_range_user:
     nb_users_list = per_nb_users_report_dict.keys()
-    title_fmt = "%%s from %d to %d users (step: %d)" % \
+    title_fmt = "%%s from %d to %d users" % \
         (nb_users_list[0],
-         nb_users_list[-1],
-         nb_users_list[1] - nb_users_list[0])
+         nb_users_list[-1])
 
     for suite_name, report_dict in range_user_report_dict.iteritems():
       for label, stat_list in report_dict['results'].iteritems():
@@ -470,6 +549,12 @@ def generateReport():
           title_fmt % label,
           nb_users_list,
           stat_list)
+
+      drawConcurrentUsersUseCasePlot(
+        pdf,
+        title_fmt % ("%s: Use cases" % suite_name),
+        nb_users_list,
+        report_dict['use_cases'])
 
   pdf.close()
 
