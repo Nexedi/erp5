@@ -78,7 +78,9 @@ import collections
 
 from .result import BenchmarkResultStatistic
 
-def computeStatisticFromFilenameList(argument_namespace, filename_list):
+def computeStatisticFromFilenameList(argument_namespace, filename_list,
+                                     range_user_report_dict,
+                                     is_range_user=False):
   reader_list = []
   ignore_result_set = set()
   stat_list = []
@@ -124,7 +126,15 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list):
             merged_label_dict[label] = label_merged_index
             label_merged_index += 1
 
-          stat_list.append(BenchmarkResultStatistic(suite_name, result_name))
+          stat = BenchmarkResultStatistic(suite_name, result_name)
+          stat_list.append(stat)
+
+          if is_range_user:
+            report_dict = range_user_report_dict.setdefault(
+              suite_name,
+              {'results': collections.OrderedDict()})
+
+            report_dict['results'].setdefault(stat.full_label, []).append(stat)
 
     if row_list != label_list:
       raise AssertionError, "ERROR: Result labels: %s != %s" % \
@@ -416,9 +426,13 @@ def generateReport():
 
   pdf = PdfPages(argument_namespace.output_filename)
 
-  for nb_users, report_dict in per_nb_users_report_dict.items():
+  is_range_user = len(per_nb_users_report_dict) > 1
+  range_user_report_dict = {}
+
+  for nb_users, report_dict in sorted(per_nb_users_report_dict.items()):
     stat_list, use_case_dict = computeStatisticFromFilenameList(
-      argument_namespace, report_dict['filename'])
+      argument_namespace, report_dict['filename'], range_user_report_dict,
+      is_range_user)
 
     title = "Ran suites with %d users" % len(report_dict['filename'])
     for slice_start_idx in range(0, len(stat_list), DIAGRAM_PER_PAGE):
@@ -437,24 +451,20 @@ def generateReport():
         use_case_dict['duration_stats'],
         is_single_plot=(nb_users == 1))
 
-    report_dict['stats'] = stat_list
-    report_dict['use_cases'] = use_case_dict
+  if is_range_user:
+    nb_users_list = per_nb_users_report_dict.keys()
+    title_fmt = "%%s from %d to %d users (step: %d)" % \
+        (nb_users_list[0],
+         nb_users_list[-1],
+         nb_users_list[1] - nb_users_list[0])
 
-  if len(per_nb_users_report_dict) != 1:
-    for i in range(len(report_dict['stats'])):
-      stat_list = []
-      nb_users_list = per_nb_users_report_dict.keys()
-      for report_dict in per_nb_users_report_dict.values():
-        stat_list.append(report_dict['stats'][i])
-
-      drawConcurrentUsersPlot(
-        pdf,
-        "%s from %d to %d users (step: %d)" % (stat_list[0].full_label,
-                                               nb_users_list[0],
-                                               nb_users_list[-1],
-                                               nb_users_list[1] - nb_users_list[0]),
-        nb_users_list,
-        stat_list)
+    for suite_name, report_dict in range_user_report_dict.iteritems():
+      for label, stat_list in report_dict['results'].iteritems():
+        drawConcurrentUsersPlot(
+          pdf,
+          title_fmt % label,
+          nb_users_list,
+          stat_list)
 
   pdf.close()
 
