@@ -112,7 +112,9 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list):
           #
           # TODO: Assuming that there was at least one test result
           #       before
-          use_case_suite_dict[suite_name] = [[], []]
+          use_case_suite_dict[suite_name] = {'duration_stats': [],
+                                             'count_stats': []}
+
           row_use_case_mapping_dict[index] = suite_name
         else:
           if argument_namespace.do_merge_label:
@@ -137,21 +139,31 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list):
 
         use_case_suite = row_use_case_mapping_dict.get(idx, None)
         if use_case_suite:
+          current_count = int(row)
+          current_duration = int(row_iter.next()[1]) / 60.0
+
+          # For stats by iteration, used later on to generate cases per
+          # minutes plot for a given number of users
+          by_iteration_dict = use_case_suite_dict[use_case_suite]
+          count_stat_list = by_iteration_dict['count_stats']
+          duration_stat_list = by_iteration_dict['duration_stats']
+
           try:
-            stat_use_case = use_case_suite_dict[use_case_suite][0][row_index]
-            stat_time_elapsed = use_case_suite_dict[use_case_suite][1][row_index]
+            stat_count = count_stat_list[row_index]
+            stat_duration = duration_stat_list[row_index]
           except IndexError:
-            stat_use_case = BenchmarkResultStatistic(use_case_suite,
-                                                     'Use cases count')
+            stat_count = BenchmarkResultStatistic(use_case_suite,
+                                                  'Use cases count')
 
-            stat_time_elapsed = BenchmarkResultStatistic(use_case_suite,
-                                                         'Time elapsed')
+            count_stat_list.append(stat_count)
 
-            use_case_suite_dict[use_case_suite][0].append(stat_use_case)
-            use_case_suite_dict[use_case_suite][1].append(stat_time_elapsed)
+            stat_duration = BenchmarkResultStatistic(use_case_suite,
+                                                     'Time elapsed')
 
-          stat_use_case.add(int(row))
-          stat_time_elapsed.add(int(row_iter.next()[1]) / 60.0)
+            duration_stat_list.append(stat_duration)
+
+          stat_count.add(current_count)
+          stat_duration.add(current_duration)
         else:
           index = merged_label_dict.get(label_list[idx], idx)
           stat_list[index].add(float(row))
@@ -417,13 +429,13 @@ def generateReport():
                      stat_list[slice_start_idx:slice_start_idx +
                                DIAGRAM_PER_PAGE])
 
-    for suite_name, (use_case_count_list, time_elapsed_list) in \
-          use_case_dict.viewitems():
-      title = "Scalability for %s with %d users" % (suite_name, nb_users)
-      drawUseCasePerNumberOfUserPlot(pdf, title,
-                                     use_case_count_list,
-                                     time_elapsed_list,
-                                     is_single_plot=(nb_users == 1))
+    for suite_name, use_case_dict in use_case_dict.viewitems():
+      drawUseCasePerNumberOfUserPlot(
+        pdf,
+        "Scalability for %s with %d users" % (suite_name, nb_users),
+        use_case_dict['count_stats'],
+        use_case_dict['duration_stats'],
+        is_single_plot=(nb_users == 1))
 
     report_dict['stats'] = stat_list
     report_dict['use_cases'] = use_case_dict
