@@ -27,6 +27,7 @@
 ##############################################################################
 
 import ExtensionClass
+import warnings
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
