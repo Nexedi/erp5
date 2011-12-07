@@ -109,11 +109,14 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
         try:
           suite_name, result_name = label.split(': ', 1)
         except ValueError:
-          # This is an use case as all results are prefixed by the
-          # suite name
+          # This is an use case as all results are prefixed by the suite
+          # name and they are two fields (count and time elapsed)
           #
           # TODO: Assuming that there was at least one test result
           #       before
+          if suite_name in use_case_suite_dict:
+            continue
+
           use_case_suite_dict[suite_name] = {'duration_stats': [],
                                              'count_stats': []}
 
