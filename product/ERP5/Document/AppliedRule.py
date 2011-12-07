@@ -324,8 +324,13 @@ class AppliedRule(XMLObject, ExplainableMixin):
       # Delivery is/was not is draft state
       order_dict = {}
       old_dict = {}
-      for sm in list(self.objectValues()):
-        old_dict[sm.getOrder() or sm.getDelivery()] = sm_dict = {}
+      # Caller may want to drop duplicate SM, like a unbuilt SM if there's
+      # already a built one, or one with no quantity. So first call
+      # 'get_matching_key' on SM that would be kept. 'get_matching_key' would
+      # remember them and returns None for duplicates.
+      sort_sm = lambda x: (not x.getDelivery(), not x.getQuantity(), x.getId())
+      for sm in sorted(self.objectValues(), key=sort_sm):
+        sm_dict = old_dict.setdefault(sm.getOrder() or sm.getDelivery(), {})
         recurse_list = deque(({get_matching_key(sm): (sm,)},))
         while recurse_list:
           for k, x in recurse_list.popleft().iteritems():
@@ -333,6 +338,8 @@ class AppliedRule(XMLObject, ExplainableMixin):
               continue
             if len(x) > 1:
               x = [x for x in x if x.getDelivery() or x.getQuantity()]
+              if len(x) > 1:
+                x.sort(key=sort_sm)
             sm_dict.setdefault(k, []).extend(x)
             for x in x:
               r = {}
@@ -353,8 +360,11 @@ class AppliedRule(XMLObject, ExplainableMixin):
       # does not see the simulated movements we've just deleted.
       if delivery.isSimulated():
         break
+      # Do not try to keep simulation tree for draft delivery
+      # if it was already out of sync.
       if delivery.getSimulationState() in draft_state_list and \
-         any(x not in old_dict for x in delivery.getMovementList()):
+         any(x.getRelativeUrl() not in old_dict
+             for x in delivery.getMovementList()):
         break
       if root_rule:
         self.setSpecialise(root_rule)
@@ -376,7 +386,10 @@ class AppliedRule(XMLObject, ExplainableMixin):
             # currently expanded applied rule. We first try to preserve same
             # tree structure (new & old parent SM match), then we look for an
             # old possible parent that is in the same branch.
-            old_parent = old_dict[new_parent]
+            try:
+              old_parent = old_dict[new_parent]
+            except KeyError:
+              old_parent = simulation_tool
             best_dict = {}
             for old_sm in sm_list:
               parent = old_sm.getParentValue().getParentValue()
@@ -398,24 +411,31 @@ class AppliedRule(XMLObject, ExplainableMixin):
           # We may have several old matching SM, e.g. in case of split.
           for old_sm in sm_list:
             movement = old_sm.getDeliveryValue()
+            if sm is None:
+              sm = context.newContent(portal_type=rule.movement_type)
+              sm.__dict__ = dict(kw, **sm.__dict__)
+              order_dict[sm] = sm_dict
             if delivery:
               assert movement.getRelativeUrl() == delivery
             elif movement is not None:
-              if sm is None:
-                sm = context.newContent(portal_type=rule.movement_type)
-                sm.__dict__ = dict(kw, **sm.__dict__)
-                order_dict[sm] = sm_dict
               sm._setDeliveryValue(movement)
               delivery_set.add(sm.getExplanationValue())
             recorded_property_dict = {}
             edit_kw = {}
+            kw['quantity'] = 0
             for tester in rule._getUpdatingTesterList():
               old = get_original_property_dict(tester, old_sm, sm, movement)
               if old is not None:
                 new = tester.getUpdatablePropertyDict(sm, movement)
                 if old != new:
-                  recorded_property_dict.update(new)
                   edit_kw.update(old)
+                  if 'quantity' in new and old_sm is not sm_list[-1]:
+                    quantity = new.pop('quantity')
+                    kw['quantity'] = quantity - old.pop('quantity')
+                    if new != old or sm.quantity != quantity:
+                      raise NotImplementedError # quantity_unit/efficiency ?
+                  else:
+                    recorded_property_dict.update(new)
             if recorded_property_dict:
               sm._recorded_property_dict = PersistentMapping(
                 recorded_property_dict)
@@ -423,6 +443,9 @@ class AppliedRule(XMLObject, ExplainableMixin):
             old_dict[sm] = old_sm
             sm = None
       deleted = old_dict.items()
+      for delivery, sm_dict in deleted:
+        if not sm_dict:
+          del old_dict[delivery]
       from Products.ERP5.mixin.movement_collection_updater import \
           MovementCollectionUpdaterMixin as mixin
       # Patch is already protected by WorkflowMethod.disable lock.
