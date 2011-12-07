@@ -154,6 +154,8 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
         if use_case_suite:
           current_count = int(row)
           current_duration = int(row_iter.next()[1]) / 60.0
+          if not current_count:
+            continue
 
           # For stats by iteration, used later on to generate cases per
           # minutes plot for a given number of users
