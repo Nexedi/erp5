@@ -587,30 +587,35 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
           created_site_list.append(site)
 
     # Create organisation + bank account for each site category.
-    newContent = self.organisation_module.newContent
+    organisation_module = self.organisation_module
+    newContent = organisation_module.newContent
     for site in created_site_list:
       codification = site.getCodification()
-      organisation = newContent(
-        portal_type='Organisation',
-        id='site_%s' % (codification, ),
-        site=site.getRelativeUrl(),
-        region=site_region_from_codification_dict.get(codification),
-        group='baobab',
-        role='internal',
-        function='banking')
-      site_reference = site_reference_from_codification_dict.get(codification)
-      if site_reference is not None:
-        self.createBankAccount(
-          person=organisation,
-          account_id='account_%s' % (codification, ),
-          currency=self.currency_1,
-          amount=0,
-          bank_country_code=site_reference[0],
-          bank_code=site_reference[1],
-          branch=site_reference[2],
-          bank_account_number=site_reference[3],
-          bank_account_key=site_reference[4],
-        )
+      organisation_id = 'site_%s' % (codification, )
+      try:
+        organisation_module[organisation_id]
+      except KeyError:
+        organisation = newContent(
+          portal_type='Organisation',
+          id=organisation_id,
+          site=site.getRelativeUrl(),
+          region=site_region_from_codification_dict.get(codification),
+          group='baobab',
+          role='internal',
+          function='banking')
+        site_reference = site_reference_from_codification_dict.get(codification)
+        if site_reference is not None:
+          self.createBankAccount(
+            person=organisation,
+            account_id='account_%s' % (codification, ),
+            currency=self.currency_1,
+            amount=0,
+            bank_country_code=site_reference[0],
+            bank_code=site_reference[1],
+            branch=site_reference[2],
+            bank_account_number=site_reference[3],
+            bank_account_key=site_reference[4],
+          )
 
     self.vault_type_base_category = getattr(self.category_tool, 'vault_type')
     site_vault_type = self._maybeNewContent(self.vault_type_base_category, id='site')
