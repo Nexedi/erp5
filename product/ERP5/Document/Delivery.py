@@ -819,18 +819,17 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       exclude_rule_path : do not expand this applied rule (or children
                           applied rule)
       """
-      if excluded_rule_path_list is None:
-        excluded_rule_path_list = []
-      to_expand_list = []
-      for sim_movement in self._getAllRelatedSimulationMovementList():
-        if sim_movement.getRootAppliedRule().getPath() \
-            not in excluded_rule_path_list:
-          parent_value = sim_movement.getParentValue()
-          if parent_value not in to_expand_list:
-            to_expand_list.append(parent_value)
-      for rule in to_expand_list:
-        rule.expand(activate_kw=activate_kw, **kw)
-        rule.recursiveReindexSimulationMovement(activate_kw=activate_kw)
+      excluded_rule_path_list = set(excluded_rule_path_list or ())
+      to_expand = sorted(set(sm.getParentValue()
+        for sm in self._getAllRelatedSimulationMovementList()
+        if sm.getRootAppliedRule().getPath() not in excluded_rule_path_list),
+        key=lambda x: x.getRelativeUrl())
+      prev_ar = None
+      for ar in to_expand:
+        if not ar.aq_inContextOf(prev_ar):
+          ar.expand(activate_kw=activate_kw, **kw)
+          ar.recursiveReindexSimulationMovement(activate_kw=activate_kw)
+          prev_ar = ar
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRootCausalityValueList')
@@ -966,14 +965,11 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       return disconnected_simulation_movement_list
 
     def _getAllRelatedSimulationMovementList(self, **kw):
-      search_method = \
-          self.getPortalObject().portal_catalog.unrestrictedSearchResults
       movement_uid_list = [x.getUid() for x in self.getMovementList()]
-      if len(movement_uid_list) == 0:
-        return []
-      sim_movement_list = search_method(portal_type='Simulation Movement',
-                                        delivery_uid=movement_uid_list, **kw)
-      return sim_movement_list
+      return movement_uid_list and \
+        self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+          portal_type='Simulation Movement',
+          delivery_uid=movement_uid_list, **kw)
 
     def getDivergentTesterAndSimulationMovementList(self):
       """
