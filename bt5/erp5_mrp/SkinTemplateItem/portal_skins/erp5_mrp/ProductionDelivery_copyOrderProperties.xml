@@ -65,6 +65,8 @@ packing_list.edit(\n
   activate_kw={\'tag\':tag},\n
 )\n
 \n
+packing_list.confirm()\n
+\n
 packing_list.startBuilding()\n
 packing_list.activate(after_tag=tag).updateCausalityState()\n
 \n
