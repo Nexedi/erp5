@@ -34,7 +34,7 @@ from Products.ZSQLCatalog.Query.ComplexQuery import ComplexQuery
 from Products.ZSQLCatalog.interfaces.search_key import ISearchKey
 from zope.interface.verify import verifyClass
 from zope.interface import implements
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.SQLCatalog import profiler_decorator, list_type_list
 
 single_operator_dict = {
   'min': '>=',
@@ -120,7 +120,7 @@ class SearchKey(object):
     operator_text = operator.getOperatorSearchText()
     if column is None:
       column = self.getColumn()
-    if isinstance(value, (list, tuple)):
+    if isinstance(value, list_type_list):
       assert operator_text == 'in'
       assert len(value)
       value = [self._renderValueAsSearchText(x, operator) for x in value]
@@ -272,14 +272,15 @@ class SearchKey(object):
             logical_operator = value_operator
         search_value = actual_value
     # Cast to list
-    if isinstance(search_value, (tuple, list)):
+    if isinstance(search_value, list_type_list):
       # Check list content (not empty, homogenous)
-      search_value_len = len(search_value)
-      if search_value_len == 0:
+      iter_search_value = iter(search_value)
+      try:
+        reference_class = iter_search_value.next().__class__
+      except StopIteration:
         raise ValueError, 'Value cannot be an empty list/tuple: %r' % \
                           (search_value, )
-      reference_class = search_value[0].__class__
-      for x in search_value[1:]:
+      for x in iter_search_value:
         if x.__class__ != reference_class:
           raise TypeError, 'List elements must be of the same class: %r' % \
                            (search_value, )

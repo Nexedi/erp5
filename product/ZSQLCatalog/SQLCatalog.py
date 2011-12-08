@@ -131,6 +131,7 @@ class transactional_cache_decorator:
       return result
     return wrapper
 
+list_type_list = list, tuple, set, frozenset
 try:
   from ZPublisher.HTTPRequest import record
 except ImportError:
@@ -2173,12 +2174,12 @@ class Catalog(Folder,
         value = dict(value)
       if ignore_empty_string and (
           value == ''
-          or (isinstance(value, (list, tuple)) and len(value) == 0)
+          or (isinstance(value, list_type_list) and not value)
           or (isinstance(value, dict) and (
             'query' not in value
             or value['query'] == ''
-            or (isinstance(value['query'], (list, tuple))
-              and len(value['query']) == 0)))):
+            or (isinstance(value['query'], list_type_list)
+              and not value['query'])))):
         # We have an empty value, do not create a query from it
         empty_value_dict[key] = value
       else:

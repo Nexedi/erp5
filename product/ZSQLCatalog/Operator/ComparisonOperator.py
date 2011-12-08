@@ -32,7 +32,7 @@ from OperatorBase import OperatorBase
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.interfaces.operator import IOperator
 from zope.interface.verify import verifyClass
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.SQLCatalog import profiler_decorator, list_type_list
 
 class ComparisonOperatorBase(OperatorBase):
   @profiler_decorator
@@ -58,10 +58,11 @@ class MonovaluedComparisonOperator(ComparisonOperatorBase):
     """
       value_list must either be a non-list or a single-value list.
     """
-    if isinstance(value_list, (tuple, list)):
-      if len(value_list) > 1:
+    if isinstance(value_list, list_type_list):
+      try:
+        value_list, = value_list
+      except ValueError:
         raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
-      value_list = value_list[0]
     return self._renderValue(value_list)
 
   @profiler_decorator
@@ -69,10 +70,11 @@ class MonovaluedComparisonOperator(ComparisonOperatorBase):
     """
       value_list must either be a non-list or a single-value list.
     """
-    if isinstance(value_list, (tuple, list)):
-      if len(value_list) > 1:
+    if isinstance(value_list, list_type_list):
+      try:
+        value_list, = value_list
+      except ValueError:
         raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
-      value_list = value_list[0]
     return self._render(column, value_list)
 
 verifyClass(IOperator, MonovaluedComparisonOperator)
@@ -83,18 +85,18 @@ class MultivaluedComparisonOperator(ComparisonOperatorBase):
     """
       value_list must be a multi-value list (more than one item).
     """
-    if not isinstance(value_list, (tuple, list)) or len(value_list) < 2:
+    if not isinstance(value_list, list_type_list) or len(value_list) < 2:
       raise ValueError, '%r: value_list must be a list of more than one item. Got %r' % (self, value_list)
-    return '(%s)' % (', '.join([self._renderValue(x) for x in value_list]), )
+    return '(%s)' % ', '.join(map(self._renderValue, value_list))
 
   @profiler_decorator
   def render(self, column, value_list):
     """
       value_list must be a multi-value list (more than one item).
     """
-    if not isinstance(value_list, (tuple, list)) or len(value_list) < 2:
+    if not isinstance(value_list, list_type_list) or len(value_list) < 2:
       raise ValueError, '%r: value_list must be a list of more than one item. Got %r' % (self, value_list)
-    return column, '(%s)' % (', '.join([self._renderValue(x) for x in value_list]), )
+    return column, '(%s)' % ', '.join(map(self._renderValue, value_list))
 
 verifyClass(IOperator, MultivaluedComparisonOperator)
 
@@ -140,10 +142,11 @@ class SphinxSEComparisonOperator(MonovaluedComparisonOperator):
     """
     * add ';mode=extended2' to invoke extended search
     """
-    if isinstance(value_list, (tuple, list)):
-      if len(value_list) > 1:
+    if isinstance(value_list, list_type_list):
+      try:
+        value_list, = value_list
+      except ValueError:
         raise ValueError, '%r: value_list must not contain more than one item. Got %r' % (self, value_list)
-      value_list = value_list[0]
     value_list = '%s;mode=extended2;limit=1000' % value_list
     return self._renderValue(value_list)
 
