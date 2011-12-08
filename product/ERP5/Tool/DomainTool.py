@@ -106,33 +106,20 @@ class DomainTool(BaseTool):
       portal = self.getPortalObject()
       portal_catalog = portal.portal_catalog
       portal_categories = portal.portal_categories
-      portal_preferences = portal.portal_preferences
       # Search the columns of the predicate table
-      column_list = [x.split('.')[1] for x in portal_catalog.getColumnIds()
-                     if x.startswith('predicate.')]
-      expression_list = []
-      checked_column_list = []
-      sql_kw = {}
-      query_list = []
-      if query is not None:
-        query_list = [query]
-
-      for column in column_list:
-        if column not in checked_column_list:
-          range_property = 0
-          if (column.endswith('_range_min')) or \
-             (column.endswith('_range_max')):
-            range_property = 1
-            property_name = column[:-len('_range_min')]
-          if ('%s_range_min' % column) in column_list:
-            range_property = 1
-            property_name = column
-          if range_property:
+      range_column_set = set()
+      query_list = [] if query is None else [query]
+      for column in portal_catalog.getColumnIds():
+        if column[:10] == 'predicate.' and \
+           column[-10:] in ('_range_min', '_range_max'):
+          property_name = column[10:-10]
+          if property_name not in range_column_set:
+            range_column_set.add(property_name)
             # We have to check a range property
-            equality = 'predicate.%s' % property_name
-            range_min = 'predicate.%s_range_min' % property_name
-            range_max = 'predicate.%s_range_max' % property_name
-            
+            equality = 'predicate.' + property_name
+            range_min = equality + '_range_min'
+            range_max = equality + '_range_max'
+
             value = context.getProperty(property_name)
 
             query = ComplexQuery(
@@ -166,10 +153,6 @@ class DomainTool(BaseTool):
 
             query_list.append(query)
 
-            checked_column_list.append('%s' % property_name)
-            checked_column_list.append('%s_range_min' % property_name)
-            checked_column_list.append('%s_range_max' % property_name)
-
       # Add category selection
       if tested_base_category_list is None:
         if acquired:
@@ -187,11 +170,11 @@ class DomainTool(BaseTool):
           extend(getter(tested_base_category, base=1))
 
       if tested_base_category_list != []:
-        preferred_predicate_category_list = portal_preferences.getPreferredPredicateCategoryList()
+        preferred_predicate_category_list = portal.portal_preferences.getPreferredPredicateCategoryList()
 
         if (preferred_predicate_category_list and
             tested_base_category_list is not None and
-            set(preferred_predicate_category_list).issuperset(set(tested_base_category_list))):
+            set(preferred_predicate_category_list).issuperset(tested_base_category_list)):
           # New behavior is enabled only if preferred predicate category is
           # defined and tested_base_category_list is passed.
           predicate_category_query_list = []
@@ -230,24 +213,21 @@ class DomainTool(BaseTool):
           query_list.append(predicate_category_query)
         else:
           # Traditional behavior
-          if len(category_list)==0:
-            category_list = ['NULL']
           category_expression_dict = portal_categories.buildAdvancedSQLSelector(
-                                             category_list,
+                                             category_list or ['NULL'],
                                              query_table='predicate_category',
                                              none_sql_value=0,
                                              strict=strict)
           where_expression = category_expression_dict['where_expression']
           if where_expression:
-            sql_kw['where_expression'] = SQLQuery(where_expression)
+            kw['where_expression'] = SQLQuery(where_expression)
 
           if 'from_expression' in category_expression_dict:
-            sql_kw['from_expression'] = category_expression_dict['from_expression']
+            kw['from_expression'] = category_expression_dict['from_expression']
           else:
             # Add predicate_category.uid for automatic join
-            sql_kw['predicate_category.uid'] = '!=NULL'
+            kw['predicate_category.uid'] = '!=NULL'
 
-      kw.update(sql_kw)
       if query_list:
         kw['query'] = ComplexQuery(logical_operator='AND', *query_list)
 
@@ -255,7 +235,8 @@ class DomainTool(BaseTool):
       if kw.get('src__'):
         return sql_result_list
       result_list = []
-      for predicate in [x.getObject() for x in sql_result_list]:
+      for predicate in sql_result_list:
+        predicate = predicate.getObject()
         if (not test) or predicate.test(
                        context,
                        tested_base_category_list=tested_base_category_list):
