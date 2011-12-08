@@ -168,12 +168,12 @@ def computeStatisticFromFilenameList(argument_namespace, filename_list,
         use_case_suite = row_use_case_mapping_dict.get(idx, None)
         if use_case_suite:
           current_count = int(row)
-          current_duration = int(row_iter.next()[1]) / 60.0
+          current_duration = int(row_iter.next()[1]) / 3600.0
           if not current_count:
             continue
 
           # For stats by iteration, used later on to generate cases per
-          # minutes plot for a given number of users
+          # hours plot for a given number of users
           by_iteration_dict = use_case_suite_dict[use_case_suite]
           count_stat_list = by_iteration_dict['count_stats']
           duration_stat_list = by_iteration_dict['duration_stats']
@@ -322,7 +322,7 @@ def drawPlotDecorator(xlabel, ylabel):
 
   return inner
 
-@drawPlotDecorator(xlabel='Time elapsed (in minutes)',
+@drawPlotDecorator(xlabel='Time (in hours)',
                    ylabel='Use cases')
 def drawUseCasePerNumberOfUserPlot(axes,
                                    use_case_count_list,
@@ -406,10 +406,10 @@ def drawConcurrentUsersUseCasePlot(axes,
     minimum_sum = 0
     stddev = 0
     for stat in use_case_stat['duration_stats']:
-      minimum_sum += stat.minimum / 60.0
-      mean_sum += stat.mean / 60.0
-      maximum_sum += stat.maximum / 60.0
-      stddev = max(stddev, stat.standard_deviation / 60.0)
+      minimum_sum += stat.minimum
+      mean_sum += stat.mean
+      maximum_sum += stat.maximum
+      stddev = max(stddev, stat.standard_deviation)
 
     use_case_per_hour_min = count / maximum_sum
     use_case_per_hour_min_list.append(use_case_per_hour_min)
