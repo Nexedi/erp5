@@ -9,17 +9,47 @@
         <item>
             <key> <string>_Access_contents_information_Permission</string> </key>
             <value>
-              <list>
+              <tuple>
                 <string>Anonymous</string>
-              </list>
+                <string>Assignor</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Copy_or_Move_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>_View_Permission</string> </key>
             <value>
-              <list>
+              <tuple>
                 <string>Anonymous</string>
-              </list>
+                <string>Assignor</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -74,10 +104,6 @@
             <value> <string>erp5_km_public_front_pad</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>9</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Knowledge Pad</string> </value>
         </item>
@@ -88,6 +114,12 @@
         <item>
             <key> <string>user_layout</string> </key>
             <value> <string>6|7##2|8##1|9</string> </value>
+        </item>
+        <item>
+            <key> <string>workflow_history</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
+            </value>
         </item>
       </dictionary>
     </pickle>
@@ -112,6 +144,52 @@
     </pickle>
     <pickle>
       <none/>
+    </pickle>
+  </record>
+  <record id="5" aka="AAAAAAAAAAU=">
+    <pickle>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>knowledge_pad_validation_workflow</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAY=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="6" aka="AAAAAAAAAAY=">
+    <pickle>
+      <global name="WorkflowHistoryList" module="Products.ERP5Type.patches.WorkflowTool"/>
+    </pickle>
+    <pickle>
+      <tuple>
+        <none/>
+        <list>
+          <dictionary>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>visible</string> </value>
+            </item>
+          </dictionary>
+          <dictionary>
+            <item>
+                <key> <string>validation_state</string> </key>
+                <value> <string>public</string> </value>
+            </item>
+          </dictionary>
+        </list>
+      </tuple>
     </pickle>
   </record>
 </ZopeData>
