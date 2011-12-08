@@ -116,7 +116,7 @@ class RuleTool(BaseTool):
           # We don't know why it failed so let searchPredicateList do the work.
           rule_uid_list.append(rule.getUid())
 
-      return rule_uid_list and portal.portal_domains.searchPredicateList(
+      return rule_uid_list and portal.portal_domains._searchPredicateList(
           context=movement, uid=rule_uid_list,
           tested_base_category_list=tested_base_category_list)
 

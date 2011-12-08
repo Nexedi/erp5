@@ -57,11 +57,15 @@ class DomainTool(BaseTool):
     # XXX FIXME method should not be public 
     # (some users are not able to see resource's price)
     security.declarePublic('searchPredicateList')
-    def searchPredicateList(self, context, test=1, sort_method=None,
-                            ignored_category_list=None,
-                            tested_base_category_list=None,
-                            filter_method=None, acquired=1,
-                            strict=True, sort_key_method=None, query=None, **kw):
+    def searchPredicateList(self, *args, **kw):
+      return self._searchPredicateList(restricted=True, *args, **kw)
+
+    def _searchPredicateList(self, context, test=1, sort_method=None,
+                             ignored_category_list=None,
+                             tested_base_category_list=None,
+                             filter_method=None, acquired=1,
+                             strict=True, sort_key_method=None, query=None,
+                             restricted=False, **kw):
       # XXX: about "strict" parameter: This is a transition parameter,
       # allowing someone hitting a bug to revert to original behaviour easily.
       # It is not a correct name, as pointed out by Jerome. But instead of
@@ -231,7 +235,10 @@ class DomainTool(BaseTool):
       if query_list:
         kw['query'] = ComplexQuery(logical_operator='AND', *query_list)
 
-      sql_result_list = portal_catalog.searchResults(**kw)
+      if restricted:
+        sql_result_list = portal_catalog.searchResults(**kw)
+      else:
+        sql_result_list = portal_catalog.unrestrictedSearchResults(**kw)
       if kw.get('src__'):
         return sql_result_list
       result_list = []
