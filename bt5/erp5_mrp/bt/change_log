@@ -1,3 +1,6 @@
+2011-12-8 yusei
+* Revert previous change on ProductionDelivery_copyOrderProperties. It was mistake.
+
 2011-12-7 yusei
 * Add ProductionOrderLine property sheet to Production Order Line portal type. It had to be added, but it did not.
 
