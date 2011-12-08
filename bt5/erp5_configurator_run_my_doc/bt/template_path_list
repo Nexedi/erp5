@@ -1,0 +1,4 @@
+business_configuration_module/runmydocs_configuration
+business_configuration_module/runmydocs_configuration/default_image
+workflow_module/runmydocs_configuration_workflow
+workflow_module/runmydocs_configuration_workflow/**
