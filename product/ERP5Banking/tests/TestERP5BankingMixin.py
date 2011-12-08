@@ -815,14 +815,11 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # the default currency for the site
     if not self.portal.hasProperty('reference_currency_id'):
       self.portal.manage_addProperty('reference_currency_id', 'EUR', type='string')
-    else:
-      self.portal._updateProperty('reference_currency_id', "EUR")
     # not working days
     if not self.portal.hasProperty('not_working_days'):
       self.portal.manage_addProperty('not_working_days', '', type='string')
     else:
-      self.portal._updateProperty('not_working_days', "")
-      
+      self.portal.not_working_days = ''
     setattr(self.portal, 'functionnal_test_mode', 1)
     # the person module
     self.person_module = self.getPersonModule()
