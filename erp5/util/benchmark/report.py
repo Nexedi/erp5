@@ -257,6 +257,11 @@ def drawDecorator(xlabel, ylabel, with_table=False):
       if ylabel:
         axes.set_ylabel(ylabel)
 
+      # Adjust X and Y axes automatically
+      if not with_table:
+        axes.relim()
+        axes.autoscale_view(True, True, True)
+
       pdf.savefig()
       pylab.close()
 
@@ -454,7 +459,6 @@ def drawConcurrentUsersUseCasePlot(axes,
     axes.plot(nb_users_list, use_case_per_hour_max_list, 'gs-', label='Maximum')
 
   axes.set_xticks(nb_users_list)
-  pyplot.xlim(xmin=nb_users_list[0], xmax=nb_users_list[-1])
 
   return (ticker.FixedLocator(nb_users_list), None,
           ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator()) 
@@ -485,8 +489,6 @@ def drawConcurrentUsersPlot(axes, nb_users_list, stat_list, only_average=False):
     axes.plot(nb_users_list, max_array, 'gs-', label='Maximum')
 
   axes.set_xticks(nb_users_list)
-
-  pyplot.xlim(xmin=nb_users_list[0], xmax=nb_users_list[-1])
 
   return (ticker.FixedLocator(nb_users_list), None,
           ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator())
