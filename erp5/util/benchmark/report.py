@@ -337,11 +337,12 @@ def drawBarDiagram(axes, stat_list, only_average=False):
 @drawDecorator(xlabel='Time (in hours)',
                ylabel='Use cases')
 def drawUseCasePerNumberOfUserPlot(axes,
+                                   nb_users,
                                    use_case_count_list,
                                    time_elapsed_list,
                                    is_single_plot=False,
                                    only_average=False):
-  def get_cum_stat(stat_list):
+  def get_cum_stat(stat_list, process_function=lambda x: x):
     cum_min_list = []
     cum_min = 0
     cum_mean_list = []
@@ -349,24 +350,24 @@ def drawUseCasePerNumberOfUserPlot(axes,
     cum_max_list = []
     cum_max = 0
     for stat in stat_list:
-      cum_min += stat.minimum
+      cum_min += process_function(stat.minimum)
       cum_min_list.append(cum_min)
 
-      cum_mean += stat.mean
+      cum_mean += process_function(stat.mean)
       cum_mean_list.append(cum_mean)
 
-      cum_max += stat.maximum
+      cum_max += process_function(stat.maximum)
       cum_max_list.append(cum_max)
 
     return cum_min_list, cum_mean_list, cum_max_list
 
   use_case_cum_min_list, use_case_cum_mean_list, use_case_cum_max_list = \
-      get_cum_stat(use_case_count_list)
+      get_cum_stat(use_case_count_list,
+                   process_function=lambda x: x * nb_users)
 
   time_cum_min_list, time_cum_mean_list, time_cum_max_list = \
       get_cum_stat(time_elapsed_list)
 
-  # TODO: cleanup
   if is_single_plot:
     axes.plot(time_cum_max_list, use_case_cum_max_list, 'gs-')
   else:
@@ -547,6 +548,7 @@ def generateReport():
       drawUseCasePerNumberOfUserPlot(
         pdf,
         "Scalability for %s with %d users" % (suite_name, nb_users),
+        nb_users,
         use_case_dict['count_stats'],
         use_case_dict['duration_stats'],
         is_single_plot=(nb_users == 1),
