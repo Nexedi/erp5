@@ -293,9 +293,16 @@ def drawBarDiagram(axes, stat_list, only_average=False):
 
   # Create the bars
   ind = numpy.arange(len(label_list))
-  width = 0.33
 
-  avg_rects = axes.bar(ind + width, mean_list, width, color='r', label='Mean')
+  if only_average:
+    width = 1
+    avg_rect_position = ind
+  else:
+    width = 0.33
+    avg_rect_position = ind + width
+
+  avg_rects = axes.bar(avg_rect_position, mean_list, width, color='r',
+                       label='Mean')
 
   axes.errorbar(numpy.arange(0.5, len(stat_list)), mean_list,
                 yerr=[yerr_lower, yerr_upper], fmt=None,
