@@ -216,7 +216,56 @@ import pylab
 
 from matplotlib import pyplot, ticker
 
-def drawBarDiagram(pdf, title, stat_list, only_average=False):
+def drawDecorator(xlabel, ylabel, with_table=False):
+  def inner(f):
+    def decorate(pdf, title, *args, **kwargs):
+      # Create the figure
+      figure = pyplot.figure(figsize=(11.69, 8.29))
+
+      if with_table:
+        figure.subplots_adjust(bottom=0.13, right=0.98, top=0.95)
+      else:
+        figure.subplots_adjust(bottom=0.1, right=0.98, left=0.07, top=0.95)
+
+      pyplot.title(title)
+
+      pyplot.grid(True, linewidth=1.5)
+
+      # Create the axes
+      axes = figure.add_subplot(111)
+
+      x_major, x_minor, y_major, y_minor = f(axes, *args, **kwargs)
+
+      if x_major:
+        axes.xaxis.set_major_locator(x_major)
+        axes.xaxis.grid(True, 'minor')
+      if x_minor:
+        axes.xaxis.set_minor_locator(x_minor)
+
+      if y_major:
+        axes.yaxis.set_major_locator(y_major)
+        axes.yaxis.grid(True, 'minor')
+      if y_minor:
+        axes.yaxis.set_minor_locator(y_minor)
+
+      # Display legend at the best position
+      axes.legend(loc=0)
+
+      # Add axes labels
+      if xlabel:
+        axes.set_xlabel(xlabel)
+      if ylabel:
+        axes.set_ylabel(ylabel)
+
+      pdf.savefig()
+      pylab.close()
+
+    return decorate
+
+  return inner
+
+@drawDecorator(xlabel=None, ylabel='Seconds', with_table=True)
+def drawBarDiagram(axes, stat_list, only_average=False):
   mean_list = []
   yerr_list = []
   minimum_list = []
@@ -240,20 +289,7 @@ def drawBarDiagram(pdf, title, stat_list, only_average=False):
   yerr_upper = numpy.minimum(max_array - mean_array, yerr_list)
 
   ## Draw diagrams
-  # Create the figure
-  figure = pyplot.figure(figsize=(11.69, 8.29))
-  figure.subplots_adjust(bottom=0.13, right=0.98, top=0.95)
-  pyplot.title(title)
-
-  # Create the axes along with their labels
-  axes = figure.add_subplot(111)
-  axes.set_ylabel('Seconds')
   axes.set_xticks([])
-
-  axes.yaxis.set_major_locator(ticker.MaxNLocator(nbins=20))
-  axes.yaxis.set_minor_locator(ticker.AutoMinorLocator())
-  axes.yaxis.grid(True, 'major', linewidth=1.5)
-  axes.yaxis.grid(True, 'minor')
 
   # Create the bars
   ind = numpy.arange(len(label_list))
@@ -270,9 +306,6 @@ def drawBarDiagram(pdf, title, stat_list, only_average=False):
     max_rects = axes.bar(ind + width * 2, maximum_list, width, label='Maximum',
                          color='g')
 
-  # Add the legend of bars
-  axes.legend(loc=0)
-
   axes.table(rowLabels=['Minimum', 'Average', 'Std. deviation', 'Maximum', 'Errors'],
              colLabels=label_list,
              cellText=[formatFloatList(minimum_list),
@@ -286,44 +319,11 @@ def drawBarDiagram(pdf, title, stat_list, only_average=False):
              rowLoc='center',
              cellLoc='center')
 
-  pdf.savefig()
-  pylab.close()
+  return (None, None,
+          ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator())
 
-def drawPlotDecorator(xlabel, ylabel):
-  def inner(f):
-    def decorate(pdf, title, *args, **kwargs):
-      figure = pyplot.figure(figsize=(11.69, 8.29), frameon=False)
-      figure.subplots_adjust(bottom=0.1, right=0.98, left=0.07, top=0.95)
-      pyplot.title(title)
-      pyplot.grid(True, linewidth=1.5)
-
-      axes = figure.add_subplot(111)
-
-      x_major, x_minor, y_major, y_minor = f(axes, *args, **kwargs)
-
-      axes.xaxis.set_major_locator(x_major)
-      if x_minor:
-        axes.xaxis.set_minor_locator(x_minor)
-      axes.xaxis.grid(True, 'minor')
-
-      axes.yaxis.set_major_locator(y_major)
-      if y_minor:
-        axes.yaxis.set_minor_locator(y_minor)
-      axes.yaxis.grid(True, 'minor')
-
-      axes.legend(loc=0)
-      axes.set_xlabel(xlabel)
-      axes.set_ylabel(ylabel)
-
-      pdf.savefig()
-      pylab.close()
-
-    return decorate
-
-  return inner
-
-@drawPlotDecorator(xlabel='Time (in hours)',
-                   ylabel='Use cases')
+@drawDecorator(xlabel='Time (in hours)',
+               ylabel='Use cases')
 def drawUseCasePerNumberOfUserPlot(axes,
                                    use_case_count_list,
                                    time_elapsed_list,
@@ -385,8 +385,8 @@ def drawUseCasePerNumberOfUserPlot(axes,
   return (ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator(),
           ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator())
 
-@drawPlotDecorator(xlabel='Concurrent Users',
-                   ylabel='Use cases/h')
+@drawDecorator(xlabel='Concurrent Users',
+               ylabel='Use cases/h')
 def drawConcurrentUsersUseCasePlot(axes,
                                    nb_users_list,
                                    use_case_stat_list,
@@ -452,8 +452,8 @@ def drawConcurrentUsersUseCasePlot(axes,
   return (ticker.FixedLocator(nb_users_list), None,
           ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator()) 
 
-@drawPlotDecorator(xlabel='Concurrent users',
-                   ylabel='Seconds')
+@drawDecorator(xlabel='Concurrent users',
+               ylabel='Seconds')
 def drawConcurrentUsersPlot(axes, nb_users_list, stat_list, only_average=False):
   min_array = numpy.array([stat.minimum for stat in stat_list])
   mean_array = numpy.array([stat.mean for stat in stat_list])
