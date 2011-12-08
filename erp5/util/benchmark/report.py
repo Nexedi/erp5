@@ -65,6 +65,13 @@ def parseArguments():
                       dest='ignore_label_re',
                       type=re.compile,
                       help='Ignore labels with the specified regex')
+  
+  parser.add_argument('--only-average-plots',
+                      dest='only_average',
+                      action='store_true',
+                      default=False,
+                      help='Do not create maximum and minimum plots, '
+                           'only average (with standard deviation)')
 
   parser.add_argument('report_directory',
                       help='Reports directory')
@@ -209,7 +216,7 @@ import pylab
 
 from matplotlib import pyplot, ticker
 
-def drawBarDiagram(pdf, title, stat_list):
+def drawBarDiagram(pdf, title, stat_list, only_average=False):
   mean_list = []
   yerr_list = []
   minimum_list = []
@@ -252,16 +259,16 @@ def drawBarDiagram(pdf, title, stat_list):
   ind = numpy.arange(len(label_list))
   width = 0.33
 
-  min_rects = axes.bar(ind, minimum_list, width, color='y', label='Minimum')
-
   avg_rects = axes.bar(ind + width, mean_list, width, color='r', label='Mean')
 
   axes.errorbar(numpy.arange(0.5, len(stat_list)), mean_list,
                 yerr=[yerr_lower, yerr_upper], fmt=None,
                 label='Standard deviation')
 
-  max_rects = axes.bar(ind + width * 2, maximum_list, width, label='Maximum',
-                       color='g')
+  if not only_average:
+    min_rects = axes.bar(ind, minimum_list, width, color='y', label='Minimum')
+    max_rects = axes.bar(ind + width * 2, maximum_list, width, label='Maximum',
+                         color='g')
 
   # Add the legend of bars
   axes.legend(loc=0)
@@ -320,7 +327,8 @@ def drawPlotDecorator(xlabel, ylabel):
 def drawUseCasePerNumberOfUserPlot(axes,
                                    use_case_count_list,
                                    time_elapsed_list,
-                                   is_single_plot=False):
+                                   is_single_plot=False,
+                                   only_average=False):
   def get_cum_stat(stat_list):
     cum_min_list = []
     cum_min = 0
@@ -350,8 +358,6 @@ def drawUseCasePerNumberOfUserPlot(axes,
   if is_single_plot:
     axes.plot(time_cum_max_list, use_case_cum_max_list, 'gs-')
   else:
-    axes.plot(time_cum_min_list, use_case_cum_min_list, 'yo-', label='Minimum')
-
     xerr_list = [stat.standard_deviation for stat in time_elapsed_list]
 
     xerr_left = numpy.minimum([(cum_mean - time_cum_min_list[i]) for i, cum_mean in \
@@ -372,7 +378,9 @@ def drawUseCasePerNumberOfUserPlot(axes,
                   fmt='D-',
                   capsize=10.0)
 
-    axes.plot(time_cum_max_list, use_case_cum_max_list, 'gs-', label='Maximum')
+    if not only_average:
+      axes.plot(time_cum_min_list, use_case_cum_min_list, 'yo-', label='Minimum')
+      axes.plot(time_cum_max_list, use_case_cum_max_list, 'gs-', label='Maximum')
 
   return (ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator(),
           ticker.MaxNLocator(nbins=20), ticker.AutoMinorLocator())
@@ -380,8 +388,9 @@ def drawUseCasePerNumberOfUserPlot(axes,
 @drawPlotDecorator(xlabel='Concurrent Users',
                    ylabel='Use cases/h')
 def drawConcurrentUsersUseCasePlot(axes,
-                                    nb_users_list,
-                                    use_case_stat_list):
+                                   nb_users_list,
+                                   use_case_stat_list,
+                                   only_average=False):
   use_case_per_hour_min_list = []
   use_case_per_hour_mean_list = []
   use_case_per_hour_max_list = []
@@ -423,8 +432,6 @@ def drawConcurrentUsersUseCasePlot(axes,
     y_error_lower_list.append(y_error_lower)
     y_error_upper_list.append(y_error_upper)
 
-  axes.plot(nb_users_list, use_case_per_hour_min_list, 'yo-', label='Minimum')
-
   axes.errorbar(nb_users_list,
                 use_case_per_hour_mean_list,
                 yerr=[y_error_lower_list, y_error_upper_list],
@@ -435,7 +442,9 @@ def drawConcurrentUsersUseCasePlot(axes,
                 fmt='D-',
                 capsize=10.0)
 
-  axes.plot(nb_users_list, use_case_per_hour_max_list, 'gs-', label='Maximum')
+  if not only_average:
+    axes.plot(nb_users_list, use_case_per_hour_min_list, 'yo-', label='Minimum')
+    axes.plot(nb_users_list, use_case_per_hour_max_list, 'gs-', label='Maximum')
 
   axes.set_xticks(nb_users_list)
   pyplot.xlim(xmin=nb_users_list[0], xmax=nb_users_list[-1])
@@ -445,7 +454,7 @@ def drawConcurrentUsersUseCasePlot(axes,
 
 @drawPlotDecorator(xlabel='Concurrent users',
                    ylabel='Seconds')
-def drawConcurrentUsersPlot(axes, nb_users_list, stat_list):
+def drawConcurrentUsersPlot(axes, nb_users_list, stat_list, only_average=False):
   min_array = numpy.array([stat.minimum for stat in stat_list])
   mean_array = numpy.array([stat.mean for stat in stat_list])
   max_array = numpy.array([stat.maximum for stat in stat_list])
@@ -453,8 +462,6 @@ def drawConcurrentUsersPlot(axes, nb_users_list, stat_list):
   yerr_list = [stat.standard_deviation for stat in stat_list]
   yerr_lower = numpy.minimum(mean_array - min_array, yerr_list)
   yerr_upper = numpy.minimum(max_array - mean_array, yerr_list)
-
-  axes.plot(nb_users_list, min_array, 'yo-', label='Minimum')
 
   axes.errorbar(nb_users_list,
                 mean_array,
@@ -466,7 +473,9 @@ def drawConcurrentUsersPlot(axes, nb_users_list, stat_list):
                 fmt='D-',
                 capsize=10.0)
 
-  axes.plot(nb_users_list, max_array, 'gs-', label='Maximum')
+  if not only_average:
+    axes.plot(nb_users_list, min_array, 'yo-', label='Minimum')
+    axes.plot(nb_users_list, max_array, 'gs-', label='Maximum')
 
   axes.set_xticks(nb_users_list)
 
@@ -522,7 +531,8 @@ def generateReport():
 
       drawBarDiagram(pdf, title,
                      stat_list[slice_start_idx:slice_start_idx +
-                               DIAGRAM_PER_PAGE])
+                               DIAGRAM_PER_PAGE],
+                     only_average=argument_namespace.only_average)
 
     for suite_name, use_case_dict in use_case_dict.viewitems():
       drawUseCasePerNumberOfUserPlot(
@@ -530,7 +540,8 @@ def generateReport():
         "Scalability for %s with %d users" % (suite_name, nb_users),
         use_case_dict['count_stats'],
         use_case_dict['duration_stats'],
-        is_single_plot=(nb_users == 1))
+        is_single_plot=(nb_users == 1),
+        only_average=argument_namespace.only_average)
 
   if is_range_user:
     nb_users_list = per_nb_users_report_dict.keys()
@@ -544,13 +555,15 @@ def generateReport():
           pdf,
           title_fmt % label,
           nb_users_list,
-          stat_list)
+          stat_list,
+          only_average=argument_namespace.only_average)
 
       drawConcurrentUsersUseCasePlot(
         pdf,
         title_fmt % ("%s: Use cases" % suite_name),
         nb_users_list,
-        report_dict['use_cases'])
+        report_dict['use_cases'],
+        only_average=argument_namespace.only_average)
 
   pdf.close()
 
