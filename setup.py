@@ -23,6 +23,11 @@ python_major_version, python_minor_version = sys.version_info[:2]
 if python_major_version == 2 and python_minor_version < 7:
   benchmark_install_require_list.append('argparse')
 
+# Only build/install erp5.util package, otherwise other directories may
+# be considered as part of erp5.util (such as product)
+package_list = ['erp5.%s' % subpackage for subpackage in find_packages('erp5')]
+package_list.append('erp5')
+
 setup(name=name,
       version=version,
       description="ERP5 related utilities.",
@@ -53,7 +58,7 @@ setup(name=name,
         'scalability_tester': [name+'[benchmark]', 'slapos.tool.nosqltester'],
       },
       zip_safe=True,
-      packages=find_packages(),
+      packages=package_list,
       include_package_data=True,
       entry_points={
         'console_scripts': [
