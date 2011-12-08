@@ -58,27 +58,6 @@ portal = context.getPortalObject()\n
 # setup DMS settings\n
 portal.Zuite_setupDMS()\n
 \n
-# publish web site so anonymous user may access it\n
-km_web_site = portal.web_site_module.km_test_web_site\n
-if km_web_site.getValidationState()!=\'published\':\n
-  km_web_site.publish()\n
-\n
-# publish the test web page so we can use it in tests for setting default WEb Section page\n
-for reference in (\'minimal_km_footer\', \'km.web.site.test.page\',):\n
-  km_page = portal.portal_catalog.getResultValue(portal_type = \'Web Page\',\n
-                                                 reference = reference)\n
-  if km_page.getValidationState()==\'draft\':\n
-    km_page.publish()\n
-\n
-# publish default knowledge pad \n
-pad = portal.restrictedTraverse("knowledge_pad_module/erp5_km_public_front_pad")\n
-if pad.getValidationState()!=\'public\':\n
-  pad.visible()\n
-  pad.public()\n
-  for box in pad.objectValues():\n
-    box.visible()\n
-    box.public()\n
-\n
 # clear cache so UI is regenarated\n
 portal.portal_caches.clearAllCache()\n
 \n
