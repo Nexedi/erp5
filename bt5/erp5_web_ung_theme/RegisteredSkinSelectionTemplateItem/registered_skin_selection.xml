@@ -1,6 +1,14 @@
 <registered_skin_selection>
  <skin_folder_selection>
+  <skin_folder>erp5_jquery</skin_folder>
+  <skin_selection>UNGDoc</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
   <skin_folder>erp5_web_ung_theme</skin_folder>
+  <skin_selection>UNGDoc</skin_selection>
+ </skin_folder_selection>
+ <skin_folder_selection>
+  <skin_folder>erp5_xhtml_style</skin_folder>
   <skin_selection>UNGDoc</skin_selection>
  </skin_folder_selection>
 </registered_skin_selection>
