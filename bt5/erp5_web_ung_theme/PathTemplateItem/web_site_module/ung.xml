@@ -173,10 +173,6 @@
             <value> <string>ung</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
             <key> <string>layout_configuration_form_id</string> </key>
             <value> <string>WebSection_viewDefaultThemeConfiguration</string> </value>
         </item>
@@ -189,6 +185,10 @@
             <value>
               <none/>
             </value>
+        </item>
+        <item>
+            <key> <string>skin_selection_name</string> </key>
+            <value> <string>UNGDoc</string> </value>
         </item>
         <item>
             <key> <string>static_language_selection</string> </key>
