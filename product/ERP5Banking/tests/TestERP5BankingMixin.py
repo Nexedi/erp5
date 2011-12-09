@@ -309,7 +309,8 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     #currency_list = (('EUR', 'Euro', 1/650., 'USD'), ('USD', 'Dollar', 650., 'EUR'))
     # first create currency
     for currency_id, title, base_price, cell_price, price_currency in currency_list:
-      currency = self.getCurrencyModule().newContent(id=currency_id, title=title, reference=currency_id)
+      self._maybeNewContent(self.getCurrencyModule(), id=currency_id,
+        title=title, reference=currency_id)
 
     if only_currency:
       return
