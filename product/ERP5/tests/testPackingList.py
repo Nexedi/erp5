@@ -1727,6 +1727,14 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                             portal_type=self.packing_list_line_portal_type,
                             reference='bbb',
                             int_index=1)
+    line_bbb_cell_bbb = line_bbb.newContent(
+                            portal_type=self.packing_list_cell_portal_type,
+                            reference='bbb',
+                            int_index=2)
+    line_bbb_cell_aaa = line_bbb.newContent(
+                            portal_type=self.packing_list_cell_portal_type,
+                            reference='aaa',
+                            int_index=1)
     line_aaa = packing_list.newContent(
                             portal_type=self.packing_list_line_portal_type,
                             reference='aaa',
@@ -1744,14 +1752,14 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # check it's possible to sort by reference
     reference_result = packing_list.getMovementList(sort_on=
         [('reference', 'descending')])
-    self.assertEquals(reference_result, [line_ddd, line_ccc, line_bbb,
-      line_aaa])
+    self.assertEquals(reference_result, [line_ddd, line_ccc,
+      line_bbb_cell_bbb, line_bbb_cell_aaa, line_aaa])
 
     # check it's possible to sort by int_index
     int_index_result = packing_list.getMovementList(sort_on=
         [('int_index', 'ascending')])
-    self.assertEquals(int_index_result, [line_bbb, line_aaa, line_ddd,
-      line_ccc])
+    self.assertEquals(int_index_result, [line_bbb_cell_aaa, line_bbb_cell_bbb,
+      line_aaa, line_ddd, line_ccc])
 
   def test_subcontent_reindexing_container_line_cell(self):
     """Tests, that indexation of Packing List are propagated to subobjects
