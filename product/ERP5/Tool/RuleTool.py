@@ -100,7 +100,7 @@ class RuleTool(BaseTool):
       rule_uid_list = []
       for rule in portal.portal_catalog.unrestrictedSearchResults(
           portal_type=portal.getPortalRuleTypeList(),
-          validation_state="validated", **kw): #XXX "validated" is hardcoded
+          validation_state="validated"): #XXX "validated" is hardcoded
         rule = rule.getObject()
         try:
           for test_method_id in rule.getTestMethodIdList():
@@ -118,7 +118,7 @@ class RuleTool(BaseTool):
 
       return rule_uid_list and portal.portal_domains._searchPredicateList(
           context=movement, uid=rule_uid_list,
-          tested_base_category_list=tested_base_category_list)
+          tested_base_category_list=tested_base_category_list, **kw)
 
 
 InitializeClass(RuleTool)
