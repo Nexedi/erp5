@@ -1744,14 +1744,14 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # check it's possible to sort by reference
     reference_result = packing_list.getMovementList(sort_on=
         [('reference', 'descending')])
-    self.assertEquals(reference_result, [line_aaa, line_bbb, line_ccc,
-      line_ddd])
+    self.assertEquals(reference_result, [line_ddd, line_ccc, line_bbb,
+      line_aaa])
 
     # check it's possible to sort by int_index
     int_index_result = packing_list.getMovementList(sort_on=
         [('int_index', 'ascending')])
-    self.assertEquals(int_index_result, [line_ccc, line_ddd, line_aaa,
-      line_bbb])
+    self.assertEquals(int_index_result, [line_bbb, line_aaa, line_ddd,
+      line_ccc])
 
   def test_subcontent_reindexing_container_line_cell(self):
     """Tests, that indexation of Packing List are propagated to subobjects
