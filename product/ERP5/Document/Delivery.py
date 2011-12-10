@@ -239,40 +239,61 @@ class Delivery(XMLObject, ImmobilisationDelivery,
                              '_getMovementList')
     def _getMovementList(self, portal_type=None, **kw):
       """
-        Return a list of movements.
-        First, we collect movements by movement type portal types, then
-        we filter the result by specified portal types.
+      Return a list of movements
       """
       movement_portal_type_list = self.getPortalMovementTypeList()
+      sub_object_list = self.objectValues(
+          portal_type=movement_portal_type_list, **kw)
+      if not sub_object_list:
+        return []
+
+      if isinstance(portal_type, str):
+        portal_type = set((portal_type,))
+      elif isinstance(portal_type, (list, tuple)):
+        portal_type = set(portal_type)
+
       movement_list = []
       add_movement = movement_list.append
-      extend_movement = movement_list.extend
-      sub_object_list = self.objectValues(\
-          portal_type=movement_portal_type_list, **kw)
-      extend_sub_object = sub_object_list.extend
-      append_sub_object = sub_object_list.append
-      while sub_object_list:
-        sub_object = sub_object_list.pop()
-        content_list = sub_object.objectValues(\
-            portal_type=movement_portal_type_list, **kw)
-        if sub_object.hasCellContent():
-          cell_list = sub_object.getCellValueList()
-          if len(cell_list) != len(content_list):
-            for x in content_list:
-              if x not in cell_list:
-                append_sub_object(x)
-          else:
-            extend_movement(content_list)
-        elif content_list:
-          extend_sub_object(content_list)
+      object_list_stack = [sub_object_list]
+      stack_index = 0
+      object_list_index_stack = []
+      object_index = 0
+      while object_list_stack:
+        try:
+          sub_object = object_list_stack[stack_index][object_index]
+        except IndexError:
+          object_list_stack.pop()
+          stack_index -= 1
+          if object_list_index_stack:
+            object_index = object_list_index_stack.pop()
         else:
-          add_movement(sub_object)
-      if isinstance(portal_type, (list, tuple)):
-        return [x for x in movement_list \
-                if x.getPortalType() in portal_type]
-      elif portal_type is not None:
-        return [x for x in movement_list \
-                if x.getPortalType() == portal_type]
+          content_list = sub_object.objectValues(
+              portal_type=movement_portal_type_list, **kw)
+
+          new_stack = []
+          if sub_object.hasCellContent():
+            cell_list = sub_object.getCellValueList()
+            if len(cell_list) != len(content_list):
+              for x in content_list:
+                if x not in cell_list:
+                  new_stack.append(x)
+            else:
+              for sub_object in content_list:
+                if (portal_type is None or
+                    sub_object.getPortalType() in portal_type):
+                  add_movement(sub_object)
+          elif content_list:
+            new_stack = content_list
+          elif portal_type is None or sub_object.getPortalType() in portal_type:
+            add_movement(sub_object)
+
+          object_index += 1
+          if new_stack:
+            object_list_stack.append(new_stack)
+            object_list_index_stack.append(object_index)
+            stack_index += 1
+            object_index = 0
+
       return movement_list
     
     security.declareProtected(Permissions.AccessContentsInformation,
