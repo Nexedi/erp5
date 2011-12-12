@@ -1,13 +1,12 @@
 ##############################################################################
 #
-# Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
-#          Ivan Tyagov <ivan@nexedi.com>
+# Copyright (c) 2011 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly adviced to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -22,25 +21,11 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
 
 from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
-
-def migrateToEmbeddedFile(self, force=0):
-  """Migrate all embedded "File" and "Image"
-     objects to an unified "Embedded File
-  """
-    
-  if portal_type in ('File', 'Image') and self.getValidationState()=='embedded':
-    embedded_type = 'Embedded File'
-    container = self.getParentValue()
-    id = self.id
-    if force == 1:
-      changeObjectClass(container, id, getattr(erp5.portal_type, embedded_type))
-    return '%s: %s -> %s' % (self.getRelativeUrl(), portal_type, embedded_type),
-
 
 def migrateEventWorkflowHistory(self):
   portal_type = self.getPortalType()
