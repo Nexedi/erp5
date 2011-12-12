@@ -600,11 +600,7 @@ return context.generatePredicate(
                           key=lambda x: x.getSpecialiseValue().getReference())
     # check the 1st applied rule is an application of invoicing_rule_1
     self.assertEquals(applied_rule_list[0].getSpecialise(),
-                      invoicing_rule_1.getRelativeUrl())
-    # but also check it's the same applied rule as before instead of a new
-    # one with the same specialization
-    self.assertEqual(applied_rule_list[0],
-                      invoicing_rule_1_applied_rule)
+        invoicing_rule_n.getRelativeUrl())
     self.assertEquals(applied_rule_list[1].getSpecialise(),
         invoicing_rule_2.getRelativeUrl())
 
@@ -655,7 +651,7 @@ return context.generatePredicate(
     self.assertEquals(applied_rule.getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
 
-    # invalidate the rule and test that it is still there
+    # invalidate the rule and test that it is gone
     invoicing_rule_1.invalidate()
     transaction.commit()
     self.tic()
@@ -670,10 +666,7 @@ return context.generatePredicate(
         delivery_rule.getRelativeUrl())
     self.assertEquals(root_applied_rule.objectCount(), 1)
     movement = root_applied_rule.objectValues()[0]
-    self.assertEquals(movement.objectCount(), 1)
-    applied_rule = movement.objectValues()[0]
-    self.assertEquals(applied_rule.getSpecialise(),
-        invoicing_rule_1.getRelativeUrl())
+    self.assertEquals(movement.objectCount(), 0)
 
     # change the test method to one that fails, and test that the rule is
     # removed

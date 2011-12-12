@@ -316,7 +316,6 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     if not cache_enabled:
       cache[TREE_DELIVERED_CACHE_ENABLED] = 1
 
-    applied_rule_dict = {}
     applicable_rule_dict = {}
     for rule in self._getApplicableRuleList():
       reference = rule.getReference()
@@ -325,31 +324,27 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         # applicable rule per reference. It indicates a configuration error.
         applicable_rule_dict.setdefault(reference, rule)
 
+    applicable_rule_list = applicable_rule_dict.values()
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
-      # check if applied rule is already expanded, or if its portal
-      # rule is still applicable to this Simulation Movement
-
-      # XXX-Leo: possible optimization, it is likely that 'rule' is in
-      # applicable_rule_dict.values() (or actually, in
-      # self._getApplicableRuleList()). We should check if this is the
-      # case, and then not call rule.test(self), since the predicate
-      # tool will already have done it once.
-      if (rule.test(self) or
-          applied_rule._isTreeDelivered()):
-        applied_rule_dict[rule.getReference()] = applied_rule
+      try:
+        applicable_rule_list.remove(rule)
+      except ValueError:
+        if applied_rule._isTreeDelivered():
+          reference = rule.getReference()
+          try:
+            applicable_rule_list.remove(applicable_rule_dict.pop(reference))
+          except KeyError:
+            pass
+        else:
+          self._delObject(applied_rule.getId())
       else:
-        self._delObject(applied_rule.getId())
+        applied_rule.expand(**kw)
 
-    for reference, rule in applicable_rule_dict.iteritems():
-      if reference not in applied_rule_dict:
-        applied_rule = rule.constructNewAppliedRule(self, **kw)
-        applied_rule_dict[reference] = applied_rule
+    for rule in applicable_rule_list:
+      rule.constructNewAppliedRule(self, **kw).expand(**kw)
 
     self.setCausalityState('expanded')
-    # expand
-    for applied_rule in applied_rule_dict.itervalues():
-      applied_rule.expand(**kw)
 
     # disable and clear cache
     if not cache_enabled:
