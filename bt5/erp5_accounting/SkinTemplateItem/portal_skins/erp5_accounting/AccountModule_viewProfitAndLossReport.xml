@@ -76,7 +76,9 @@ dQEAAAAA</string> </value>
   xmlns:i18n=\'http://xml.zope.org/namespaces/i18n\'\n
   xmlns:metal=\'http://xml.zope.org/namespaces/metal\'\n
   tal:attributes=\'dummy python:request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'\n
-  tal:define=\'at_date request/at_date/latestTime;\n
+  tal:define=\'money_quantity_style python:context.getPortalObject().portal_preferences.getPreferredMoneyQuantityStyle();\n
+              money_currency_do_grouping python:"1234" in money_quantity_style and "false" or "true";\n
+              at_date request/at_date/latestTime;\n
               at_date_previous_period python:modules["DateTime"].DateTime(at_date.year() - 1, at_date.month(), at_date.day()).latestTime();\n
               from_date python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date);\n
               from_date_previous_period python:context.Base_getAccountingPeriodStartDateForSectionCategory(section_category=request["section_category"], date=at_date_previous_period);\n
@@ -96,6 +98,30 @@ dQEAAAAA</string> </value>
     <style:font-face svg:font-family=\'Lucidasans\' style:font-family-generic=\'system\' style:name=\'Lucidasans\' style:font-pitch=\'variable\'/>\n
   </office:font-face-decls>\n
   <office:automatic-styles> <!-- {{{ -->\n
+   <number:number-style style:name="qus">\n
+     <number:number number:decimal-places="2" number:min-integer-digits="1"\n
+             tal:attributes="number:grouping money_currency_do_grouping"/>\n
+   </number:number-style>\n
+   <style:style style:name="report-content-currency" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="qus">\n
+     <style:table-cell-properties fo:border-bottom="none" fo:border-left="0.002cm solid #000000" fo:border-right="0.002cm solid #000000" fo:border-top="none"/>\n
+   <style:text-properties fo:font-size="11pt" fo:font-weight="bold"/>\n
+   </style:style>\n
+     <style:style style:name="report-content-currency2" style:family="table-cell" style:parent-style-name="report-content-currency" style:data-style-name="qus">\n
+     <style:table-cell-properties fo:border-bottom="none" fo:border-left="0.002cm solid #000000" fo:border-right="0.002cm solid #000000" fo:border-top="none"/>\n
+   <style:text-properties fo:font-size="10pt" fo:font-weight="normal"/>\n
+   </style:style>\n
+     <style:style style:name="report-content-currency3" style:family="table-cell" style:parent-style-name="report-content-currency" style:data-style-name="qus">\n
+     <style:table-cell-properties fo:border-bottom="none" fo:border-left="0.002cm solid #000000" fo:border-right="0.002cm solid #000000" fo:border-top="none"/>\n
+     <style:text-properties fo:font-size="9pt" fo:font-weight="normal"/>\n
+   </style:style>\n
+   <style:style style:name="report-stat-currency1" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="qus">\n
+     <style:table-cell-properties fo:border-bottom="none" fo:border-left="0.002cm solid #000000" fo:border-right="0.002cm solid #000000" fo:border-top="none"/>\n
+     <style:text-properties fo:font-size="11pt" fo:font-weight="bold"/>\n
+   </style:style>\n
+   <style:style style:name="report-stat-currency" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="qus">\n
+     <style:table-cell-properties fo:border-bottom="none" fo:border-left="0.002cm solid #000000" fo:border-right="0.002cm solid #000000" fo:border-top="none"/>\n
+     <style:text-properties fo:font-size="12pt" fo:font-weight="bold"/>\n
+   </style:style>\n
     <style:style style:family=\'table-column\' style:name=\'co1\'>\n
       <style:table-column-properties fo:break-before=\'auto\' style:column-width=\'6.21cm\'/>\n
     </style:style>\n

@@ -1,3 +1,6 @@
+2011-12-12 arnaud.fontaine
+* Display thousand separator of currency fields according to 'Money Quantity Style' user preference.
+
 2011-10-12 tatuya
 * Make it selectable in Accounting Preference how to display bank account.
 
