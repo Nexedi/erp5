@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
 
 class TestZeleniumKM(ERP5TypeFunctionalTestCase):
-    foreground = 1
+    foreground =0 
     # Run only the Knowledge Management Tests.
     run_only = "erp5_km_zuite"
 
