@@ -28,6 +28,9 @@
 from Products.ERP5Type.patches.WorkflowTool import WorkflowHistoryList
 
 def migrateEventWorkflowHistory(self):
+  """
+  Migrate event_workflow history to event_simulation_workflow history.
+  """
   portal_type = self.getPortalType()
   portal = self.getPortalObject()
   if portal_type not in portal.getPortalEventTypeList():
