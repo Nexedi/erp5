@@ -38,7 +38,6 @@ from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.PythonScripts.PythonScript import PythonScript
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type.Utils import readLocalDocument, \
                                     writeLocalDocument, \
@@ -4622,8 +4621,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
           item.is_bt_for_diff = 1
         item.build(self)
 
-    build = WorkflowMethod(build)
-
     def publish(self, url, username=None, password=None):
       """
         Publish in a format or another
@@ -4832,21 +4829,10 @@ Business Template is a set of definitions, such as skins, portal types and categ
       site.portal_caches.clearAllCache()
 
     security.declareProtected(Permissions.ManagePortal, 'install')
-    def install(self, **kw):
-      """
-        For install based on paramaters provided in **kw
-      """
-      return self._install(**kw)
-
-    install = WorkflowMethod(install)
+    install = _install
 
     security.declareProtected(Permissions.ManagePortal, 'reinstall')
-    def reinstall(self, **kw):
-      """Reinstall Business Template.
-      """
-      return self._install(**kw)
-
-    reinstall = WorkflowMethod(reinstall)
+    reinstall = _install
 
     security.declareProtected(Permissions.ManagePortal, 'trash')
     def trash(self, new_bt, **kw):
@@ -4864,8 +4850,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                 self,
                 getattr(new_bt, item_name))
 
-    security.declareProtected(Permissions.ManagePortal, 'uninstall')
-    def uninstall(self, **kw):
+    def _uninstall(self, **kw):
       """
         For uninstall based on paramaters provided in **kw
       """
@@ -4879,9 +4864,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # template deletes many things from the portal.
       self.getPortalObject().portal_caches.clearAllCache()
 
-    uninstall = WorkflowMethod(uninstall)
+    security.declareProtected(Permissions.ManagePortal, 'uninstall')
+    uninstall = _uninstall
 
-    security.declareProtected(Permissions.ManagePortal, 'clean')
     def _clean(self):
       """
         Clean built information.
@@ -4902,7 +4887,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       for item_name in self._item_name_list:
         setattr(self, item_name, None)
 
-    clean = WorkflowMethod(_clean)
+    security.declareProtected(Permissions.ManagePortal, 'clean')
+    clean = _clean
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getBuildingState')

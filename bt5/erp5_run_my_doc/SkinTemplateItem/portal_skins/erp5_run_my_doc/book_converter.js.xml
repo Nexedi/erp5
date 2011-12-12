@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>book_converter.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 2011 Nexedi SARL and Contributors. All Rights Reserved.\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+\n
+function convertBook(linkToBook, container){\n
+  $(function() {\n
+    //Getting the html content\n
+    $.get(linkToBook, function(data, textStatus, jqXHR){\n
+      linkToBook = linkToBook.replace(\'getTextContent\',\'\');\n
+      var bookContainer = $(\'<div>\').html(data);\n
+      var sections = bookContainer.children();\n
+      var firstSection = true;\n
+      var n = sections.length;\n
+      var partCounter = 1, matterCounter = 1;\n
+      for(var i = 0; i < n; i++){\n
+        var section = sections.eq(i);\n
+        var links = $(\'a\', section);\n
+        var firstChapter = true;\n
+        var chapterContainer = $(\'<div>\');\n
+        var p = links.length;\n
+        var isChapter = section[0].tagName.toUpperCase() == \'UL\';\n
+        for(var j = 0; j < p; j++){\n
+          var linkObj = links.eq(j);\n
+          var link = linkObj.attr(\'href\') + \'/getTextContent\';\n
+          //linkObj.parent().remove();          \n
+          convertChapter(linkObj.attr(\'href\') + \'/getTextContent\', chapterContainer, firstSection && firstChapter, isChapter);\n
+          firstChapter = false;\n
+          if(isChapter)\n
+            matterCounter = 1;\n
+        }\n
+        if(isChapter){\n
+          section.before(chapterContainer).remove();\n
+          chapterContainer.attr(\'id\',\'part-h-\' + partCounter).addClass(\'part\');\n
+          partCounter++;\n
+          p = chapterContainer.index() - 1;\n
+          chapterContainer.prepend(chapterContainer.parent().children().eq(p));\n
+        }\n
+        else if (p > 0){\n
+          section.after(chapterContainer).remove();\n
+          if(firstChapter)\n
+            chapterContainer.attr(\'id\',\'endmatter-h-\' + matterCounter).addClass(\'endmatter\');\n
+          else\n
+            chapterContainer.attr(\'id\',\'frontmatter-h-\' + matterCounter).addClass(\'frontmatter\');\n
+          matterCounter++;\n
+        }\n
+        firstSection = false;\n
+      }\n
+      container.append(bookContainer.children());\n
+      fetchTextInfo(true, data);\n
+    });\n
+  });\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

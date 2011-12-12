@@ -32,6 +32,7 @@ from Products.ERP5SyncML.XMLSyncUtils import getXupdateObject
 from Products.ERP5Type.Utils import deprecated
 from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Base import WorkflowMethod
 from DateTime.DateTime import DateTime
 from email.mime.base import MIMEBase
 from email import encoders
@@ -979,6 +980,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'editDocument')
+
+  # XXX Ugly hack to avoid calling interaction workflow when synchronizing
+  # objects with ERP5SyncML as it leads to unwanted side-effects on the object
+  # being synchronized, such as undesirable workflow history being added (for
+  # example edit_workflow) and double conversion for OOo documents (for
+  # example document_conversion_interaction_workflow defined for _setData())
+  # making the source and destination XML representation different.
+  @WorkflowMethod.disable
   def editDocument(self, object=None, **kw):
     """
     This is the default editDocument method. This method

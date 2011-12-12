@@ -65,6 +65,8 @@
   xmlns:metal=\'http://xml.zope.org/namespaces/metal\'>\n
   <tal:block metal:define-macro="other_informations" \n
              tal:define="data_dict here/PaySheetTransaction_getOtherInformationsDataDict;\n
+ quantity_renderer nocall:here/Base_viewFieldLibrary/my_view_mode_money_quantity/render_pdf;\n
+               default_language python:test(request.get(\'international_form\'), \'en\', here.Localizer.get_selected_language());\n
              hour_renderer nocall:here/AnnotationLine_viewFieldLibrary/my_work_time_annotation_line_quantity/render_pdf;">\n
     <table:table-row table:style-name=\'Tableau3.8\'>\n
       <table:table-cell table:style-name=\'Tableau3.A8\' office:value-type=\'string\'>\n
@@ -336,8 +338,7 @@
   <tal:block metal:define-macro="footer">\n
     <text:p text:style-name="Footer">Dans votre intérêt et pour vous aider à faire valoir vos droits, conservez ce bulletin de paie sans limitation de durée.</text:p>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>

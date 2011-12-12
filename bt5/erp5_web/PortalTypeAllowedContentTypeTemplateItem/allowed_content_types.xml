@@ -1,7 +1,6 @@
 <allowed_content_type_list>
  <portal_type id="Web Page">
-  <item>File</item>
-  <item>Image</item>
+  <item>Embedded File</item>
  </portal_type>
  <portal_type id="Web Page Module">
   <item>Web Page</item>

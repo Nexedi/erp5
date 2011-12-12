@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>test_editor.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 2011 Nexedi SARL and Contributors. All Rights Reserved.\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+\n
+var slideList, textContent, testPageHTML, editedElement;\n
+\n
+//Copy the content of text to textareas (switch this row to edit mode)\n
+function editContent(container){\n
+  if(editedElement != undefined)\n
+    validateContent();\n
+  editedElement = container;\n
+  var children = container.children();\n
+  // add a new validation button\n
+  children.eq(1).empty().append($(\'<div>\').addClass(\'validate\').click(function() {validationClick(this);}));\n
+  var n = children.length;\n
+  for(var i = 2; i < n; i++)\n
+    switchToEditMode(children.eq(i));\n
+}\n
+\n
+//Copy the content of textareas to text (switch this row to standard mode), and update the html code with this test line\n
+function validateContent(){\n
+  var children = editedElement.children();\n
+  // add a new edit button\n
+  children.eq(1).empty().append($(\'<div>\').addClass(\'edit\').click(function() {editClick(this);}));\n
+  var n = children.length;\n
+  for(var i = 2; i < n; i++)\n
+    switchToValidated(children.eq(i));\n
+  editedElement = undefined;\n
+  updateTextContent();\n
+}\n
+\n
+//Copy the content of an input contained in container, and paste it as text of the container (transform a textarea into a text)\n
+function switchToValidated(container){\n
+  var text = container.children().val();\n
+  container.empty().text(text);\n
+}\n
+\n
+//Copy the text contained in container, and paste it in a textarea (transform a text into a textarea)\n
+function switchToEditMode(container){\n
+  var textarea = $(\'<textarea>\').val(container.text()).attr(\'style\',\'width:95%;height:16px\');\n
+  container.empty().append(textarea);\n
+}\n
+\n
+//Remove a row\n
+function removeClick(trigger){\n
+  $(trigger).parent().parent().remove();\n
+  updateTextContent();\n
+  return false;\n
+}\n
+\n
+//Edit a row\n
+function editClick(trigger){\n
+  editContent($(trigger).parent().parent());\n
+  return false;\n
+}\n
+\n
+//Validate a row\n
+function validationClick(trigger){\n
+  validateContent();\n
+  return false;\n
+}\n
+\n
+//Update the HTML code of the test page\n
+function updateTextContent(){\n
+  var testLines = $(\'#list > tr\'), testBody;\n
+  var i = 0, n = testLines.length, sectionIndex = -1;\n
+  for(i = 0; i < n; i++){\n
+    var line = testLines.eq(i);\n
+    var firstCol = line.children().filter(\':first\');\n
+    var tagName = firstCol[0].tagName;\n
+    if(tagName == \'TH\' && (firstCol.attr(\'class\') == \'\' || firstCol.attr(\'class\') == undefined)){\n
+      sectionIndex++;\n
+      var currentSection = $(\'section:eq(\' + sectionIndex + \')\', testPageHTML);\n
+      testBody = $(\'test tbody\', currentSection);\n
+      if(testBody == undefined || testBody.length == 0){\n
+        currentSection.append($(\'<test>\').append($(\'<table>\').attr("style","display: none;").addClass("test").append($(\'<tbody>\'))));\n
+        testBody = $(\'test tbody\', currentSection);\n
+      }\n
+      else\n
+        testBody.empty();\n
+    }\n
+    else if(tagName == \'TD\'){\n
+      var lineToAdd = line.clone();\n
+      $(\'td:eq(0), td:eq(1)\', lineToAdd).remove();\n
+      testBody.append(lineToAdd);\n
+    }\n
+  }\n
+  testPageHTML.getElementsByTagName(\'body\')[0].innerHTML = indent(testPageHTML.getElementsByTagName(\'body\')[0].cloneNode(true), 2);\n
+  $(textContent).text("<!DOCTYPE html>\\n<" + "html" + ">\\n" + $(testPageHTML).html() + "\\n<" + "/html" + ">");\n
+}\n
+\n
+//Add an edit button and a remove button to a line\n
+function prependEditButtons(element){\n
+  return element.prepend($(\'<td>\').append($(\'<div>\').addClass(\'edit\'))).prepend($(\'<td>\').append($(\'<div>\').addClass(\'remove\')));\n
+}\n
+\n
+$(document).ready(function(){\n
+  $(function() {\n
+    //Extract slide list\n
+    textContent = window.top.document.getElementsByName(\'field_my_text_content\')[0];\n
+    var tmp = document.createElement(\'tmp\');\n
+    testPageHTML = document.createElement(\'html\');\n
+    testPageHTML.appendChild(document.createElement(\'head\'));\n
+    testPageHTML.appendChild(document.createElement(\'body\'));\n
+    $(tmp).html($(textContent).text());\n
+    $(\'body\',testPageHTML).append($(\'section\', tmp));\n
+    $(\'head\',testPageHTML).append($(\'> :not(section)\', tmp));\n
+    $(\'#test_table > thead\').append($(\'test thead > tr > th\', testPageHTML).attr(\'colspan\',5).parent());\n
+    slideList = $(\'section\', testPageHTML);\n
+    var n = slideList.length;\n
+    var body = $(\'#test_table > tbody\');\n
+\n
+    //Prepare chapters, and buttons to add instruction for each chapter\n
+    for(var i = 0; i < n; i++){\n
+      var slide = slideList.eq(i);\n
+      body.append($(\'<tr>\').append($(\'<th>\').attr(\'colspan\',5).html($(\'h1:first\',slide).html())));\n
+      body.append($(\'test tbody > tr\',slide));\n
+      body.append($(\'<tr>\').append($(\'<th>\').addClass(\'add_instr_button\').attr(\'id\',\'add_instr_\' + i).attr(\'colspan\',5).text(\'Add test instruction\')));\n
+      body.append($(\'<tr>\').append($(\'<th>\').addClass(\'add_metal_button\').attr(\'id\',\'add_metal_\' + i).attr(\'colspan\',5).text(\'Add metal instruction\')));\n
+    }\n
+    prependEditButtons($(\'#test_table tr:has(td)\'));\n
+\n
+    $("#list").sortable({ opacity: 0.7, cursor: \'move\', items: "tr:has(td)", update: function() {\n
+        updateTextContent();\n
+      }\n
+    });\n
+     $(\'#list .remove\').click(function() {\n
+      removeClick(this);\n
+    });\n
+\n
+    $(\'#list .edit\').click(function() {\n
+      editClick(this);\n
+    });\n
+\n
+    $(\'#list .validate\').click(function() {\n
+      validationClick(this);\n
+    });\n
+\n
+    $(\'#list .add_instr_button\').click(function() {\n
+      var newElement = prependEditButtons($(\'<tr>\').append(\'<td><td><td>\'));\n
+      $(\'.remove\', newElement).click(function(){removeClick(this);});\n
+      $(this).parent().before(newElement);\n
+      editContent(newElement);\n
+    });\n
+\n
+    $(\'#list .add_metal_button\').click(function() {\n
+      var i = parseInt($(this).attr(\'id\').split(\'_\')[2]);\n
+      var brother = $(\'#add_instr_\' + i, $(this).parent().parent()).parent();\n
+      var newElement = prependEditButtons($(\'<tr>\').append($(\'<td>\').attr(\'colspan\',3)));\n
+      $(\'.remove\', newElement).click(function(){removeClick(this);});\n
+      brother.before(newElement);\n
+      editContent(newElement);\n
+    });\n
+  });\n
+});
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

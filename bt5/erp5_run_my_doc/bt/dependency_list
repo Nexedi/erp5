@@ -1,0 +1,10 @@
+erp5_ui_test_core (>= 5.4.7)
+erp5_dms
+erp5_core (>= 5.4.3)
+erp5_xhtml_style (>= 5.4.7)
+erp5_base
+erp5_jquery
+erp5_jquery_ui
+erp5_web
+erp5_slideshow_style
+erp5_knowledge_pad

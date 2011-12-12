@@ -309,7 +309,7 @@ AAA=</string> </value>
   <office:master-styles>\n
     <style:master-page style:name="Standard" style:page-layout-name="pm1">\n
       <style:header tal:define="default_language python:test(request.get(\'international_form\'), \'en\', here.Localizer.get_selected_language());\n
-                    date_renderer nocall:here/Base_viewFieldLibrary/my_date/render_pdf;\n
+                    date_renderer nocall:here/Base_viewFieldLibrary/my_date_time_field/render_pdf;\n
                     orig_title python: \'Payslip\';\n
                     en_title python: unicode(here.Base_translateString(orig_title, lang=default_language), \'utf-8\');\n
                     my_title python: unicode(here.Base_translateString(orig_title), \'utf-8\');\n
@@ -367,14 +367,13 @@ AAA=</string> </value>
     </style:master-page>\n
     <style:master-page style:name="Endnote" style:page-layout-name="pm2"/>\n
   </office:master-styles>\n
-</office:document-styles>\n
-
+</office:document-styles>
 
 ]]></unicode> </value>
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>application/vnd.oasis.opendocument.text</string> </value>
+            <value> <string>text/xml</string> </value>
         </item>
         <item>
             <key> <string>expand</string> </key>

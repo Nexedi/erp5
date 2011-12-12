@@ -51,7 +51,15 @@ class BenchmarkResultStatistic(object):
 
     # For calculating the standard deviation
     self._variance_sum = 0
-    self._mean = 0
+    self._variance_mean = 0
+
+  def __str__(self):
+    return "%s: min=%.3f, mean=%.3f (+/- %.3f), max=%.3f" % \
+        (self.full_label,
+         self.minimum,
+         self.mean,
+         self.standard_deviation,
+         self.maximum)
 
   def add(self, value):
     if value < 0:
@@ -66,9 +74,9 @@ class BenchmarkResultStatistic(object):
     self._value_sum += value
     self.n += 1
 
-    delta = value - self._mean
-    self._mean += delta / self.n
-    self._variance_sum += delta * (value - self._mean)
+    delta = value - self._variance_mean
+    self._variance_mean += delta / self.n
+    self._variance_sum += delta * (value - self._variance_mean)
 
   @property
   def mean(self):
@@ -82,6 +90,7 @@ class NothingFlushedException(Exception):
   pass
 
 import abc
+import time
 
 class BenchmarkResult(object):
   __metaclass__ = abc.ABCMeta
@@ -120,14 +129,21 @@ class BenchmarkResult(object):
     return self
 
   def enterSuite(self, name):
+    self._current_use_case_elapsed_time = time.time()
+    self._current_use_case_counter = 0
+
     try:
       self._current_suite_dict = self._all_suite_list[self._current_suite_index]
+
     except IndexError:
-      self._current_suite_dict = {'name': name,
-                                  'all_result_list': [],
-                                  'stat_list': [],
-                                  # Number of expected results
-                                  'expected': -1}
+      self._current_suite_dict = {
+        'name': name,
+        'all_result_list': [],
+        'stat_list': [],
+        # Number of expected results
+        'expected': -1,
+        'all_use_case_result_list': [],
+        'use_case_stat': BenchmarkResultStatistic(name, 'Use cases/minutes')}
 
       self._all_suite_list.append(self._current_suite_dict)
 
@@ -137,7 +153,6 @@ class BenchmarkResult(object):
     try:
       result_statistic = \
           self._current_suite_dict['stat_list'][len(self._current_result_list)]
-
     except IndexError:
       result_statistic = BenchmarkResultStatistic(
         self._current_suite_dict['name'], label)
@@ -146,6 +161,9 @@ class BenchmarkResult(object):
 
     result_statistic.add(value)
     self._current_result_list.append(value)
+
+  def incrementCurrentSuiteUseCase(self):
+    self._current_use_case_counter += 1
 
   @property
   def label_list(self):
@@ -158,13 +176,19 @@ class BenchmarkResult(object):
       if suite_dict['expected'] == -1:
         return None
 
-      label_list.extend([ stat.full_label for stat in suite_dict['stat_list'] ])
+      suite_label_list = [ stat.full_label for stat in suite_dict['stat_list']]
+      suite_label_list.extend(('Use cases', 'Use cases seconds elapsed'))
+
+      label_list.extend(suite_label_list)
 
     self._label_list = label_list
     return label_list
 
   def getCurrentSuiteStatList(self):
     return self._current_suite_dict['stat_list']
+
+  def getCurrentSuiteUseCaseStat(self):
+    return self._current_suite_dict['use_case_stat']
 
   @staticmethod
   def _addResultWithError(result_list, expected_len):
@@ -173,12 +197,17 @@ class BenchmarkResult(object):
       result_list.extend(missing_result_n * [-1])
 
   def exitSuite(self, with_error=False):
+    elapsed_time = int(time.time() - self._current_use_case_elapsed_time)
+
     if with_error:
       if self._current_suite_dict['expected'] != -1:
         self._addResultWithError(self._current_result_list,
                                  self._current_suite_dict['expected'])
 
     else:
+      if self._current_use_case_counter == 0:
+        self._current_use_case_counter = 1
+
       if self._current_suite_dict['expected'] == -1:
         self._current_suite_dict['expected'] = len(self._current_result_list)
 
@@ -186,6 +215,13 @@ class BenchmarkResult(object):
         for result_list in self._current_suite_dict['all_result_list']:
           self._addResultWithError(result_list,
                                    self._current_suite_dict['expected'])
+
+    self._current_suite_dict['all_use_case_result_list'].append(
+      (self._current_use_case_counter, elapsed_time))
+
+    if self._current_use_case_counter != 0:
+      self._current_suite_dict['use_case_stat'].add(
+        self._current_use_case_counter / (elapsed_time / 60.0))
 
     self._current_suite_dict['all_result_list'].append(self._current_result_list)
     self._current_suite_index += 1
@@ -202,12 +238,15 @@ class BenchmarkResult(object):
         raise NothingFlushedException()
 
       for index, result_list in enumerate(result_dict['all_result_list']):
+        result_list.extend(result_dict['all_use_case_result_list'][index])
+
         try:
           all_result_list[index].extend(result_list)
         except IndexError:
           all_result_list.append(result_list)
 
       result_dict['all_result_list'] = []
+      result_dict['all_use_case_result_list'] = []
 
     return all_result_list
 

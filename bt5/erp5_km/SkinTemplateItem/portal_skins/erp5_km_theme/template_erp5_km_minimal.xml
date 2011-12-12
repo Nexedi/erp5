@@ -106,6 +106,7 @@
                              is_front_layout python: layout_form is not None and\n
                                                      layout_form.id == \'erp5_km_minimal_front_layout\';\n
                              subject_list python:here.getSubjectList() or here.getLayoutProperty(\'subject_list\') or [];\n
+                             description python:here.getDescription() or here.getLayoutProperty(\'description\') or \'\';\n
                              global header_title python:\'%s | %s\' % (here.getTranslatedTitleOrId(), website.getTranslatedTitleOrId());\n
                              global css_list_template python:[\n
                                     \'%s/erp5_listbox.css\' % portal_path,\n

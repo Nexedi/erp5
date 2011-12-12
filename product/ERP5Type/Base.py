@@ -31,7 +31,7 @@ from struct import unpack
 from copy import copy
 import warnings
 import types
-import threading
+import thread, threading
 
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
@@ -59,6 +59,7 @@ from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import interfaces
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
 from Products.ERP5Type.Utils import createExpressionContext, simple_decorator
@@ -256,11 +257,19 @@ class WorkflowMethod(Method):
     # Return result finally
     return result
 
+  # Interactions should not be disabled during normal operation. Only in very
+  # rare and specific cases like data migration. That's why it is implemented
+  # with temporary monkey-patching, instead of slowing down __call__ with yet
+  # another condition.
+
   _do_interaction = __call__
   _no_interaction_lock = threading.Lock()
   _no_interaction_log = None
+  _no_interaction_thread_id = None
 
   def _no_interaction(self, *args, **kw):
+    if WorkflowMethod._no_interaction_thread_id != thread.get_ident():
+      return self._do_interaction(*args, **kw)
     log = "skip interactions for %r" % args[0]
     if WorkflowMethod._no_interaction_log != log:
       WorkflowMethod._no_interaction_log = log
@@ -271,12 +280,17 @@ class WorkflowMethod(Method):
   @simple_decorator
   def disable(func):
     def wrapper(*args, **kw):
+      thread_id = thread.get_ident()
+      if WorkflowMethod._no_interaction_thread_id == thread_id:
+        return func(*args, **kw)
       WorkflowMethod._no_interaction_lock.acquire()
       try:
+        WorkflowMethod._no_interaction_thread_id = thread_id
         WorkflowMethod.__call__ = WorkflowMethod.__dict__['_no_interaction']
         return func(*args, **kw)
       finally:
         WorkflowMethod.__call__ = WorkflowMethod.__dict__['_do_interaction']
+        WorkflowMethod._no_interaction_thread_id = None
         WorkflowMethod._no_interaction_lock.release()
     return wrapper
 
@@ -1493,6 +1507,10 @@ class Base( CopyContainer,
                       reindex_object=reindex_object, restricted=1, **kw)
 
   # XXX Is this useful ? (Romain)
+  #     Probably not. Even if it should speed up portal_type initialization and
+  #     save some memory because edit_workflow is used in many places, I (jm)
+  #     think it's negligible compared to the performance loss on all
+  #     classes/types that are not bound to edit_workflow.
   edit = WorkflowMethod(edit)
 
   # Accessing object property through ERP5ish interface
@@ -2958,6 +2976,16 @@ class Base( CopyContainer,
       return script.__of__(self)
     if fallback_script_id is not None:
       return getattr(self, fallback_script_id)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
+  def skinSuper(self, skin, id):
+    if id[:1] != '_' and id[:3] != 'aq_':
+      skin_info = SKINDATA.get(thread.get_ident())
+      if skin_info is not None:
+        object = skinResolve(self.getPortalObject(), (skin_info[0], skin), id)
+        if object is not None:
+          return object.__of__(self)
+    raise AttributeError(id)
 
   # Predicate handling
   security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')

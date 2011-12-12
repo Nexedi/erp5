@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="OOoTemplate" module="Products.ERP5OOo.OOoTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>OLE_documents_zipstring</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<office:document-content\n
+  xmlns:office=\'urn:oasis:names:tc:opendocument:xmlns:office:1.0\'\n
+  xmlns:table=\'urn:oasis:names:tc:opendocument:xmlns:table:1.0\'\n
+  xmlns:tal=\'http://xml.zope.org/namespaces/tal\'\n
+  xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"\n
+  xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" \n
+  xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"\n
+  xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"\n
+  xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"\n
+\n
+  office:version="1.0"\n
+\n
+  tal:attributes=\'dummy python: request.RESPONSE.setHeader("Content-Type", "text/html;; charset=utf-8")\'>\n
+  \n
+  <office:font-face-decls>\n
+    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-family-generic="swiss"/>\n
+  </office:font-face-decls>\n
+  <office:automatic-styles>\n
+    <style:style style:name="header-passed" style:family="table-cell" style:parent-style-name="Default">\n
+      <style:table-cell-properties fo:background-color="#CCFFCC" fo:border-bottom="1.00pt solid #000000" fo:border-left="0.06pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000"/>\n
+      <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>\n
+    </style:style>\n
+\n
+    <style:style style:name="header-failed" style:family="table-cell" style:parent-style-name="Default">\n
+      <style:table-cell-properties fo:background-color="#FFCCCC" fo:border-bottom="1.00pt solid #000000" fo:border-left="0.06pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000"/>\n
+      <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="bold" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>\n
+    </style:style>\n
+\n
+    <style:style style:name="failed" style:family="table-cell" style:parent-style-name="Default">\n
+      <style:table-cell-properties fo:background-color="#FFCCCC" fo:border-bottom="0.06pt solid #000000" fo:border-left="0.06pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000"/>\n
+      <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>\n
+    </style:style>\n
+\n
+    <style:style style:name="done" style:family="table-cell" style:parent-style-name="Default">\n
+      <style:table-cell-properties fo:background-color="#EEFFEE" fo:border-bottom="0.06pt solid #000000" fo:border-left="0.06pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000"/>\n
+      <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>\n
+    </style:style>\n
+\n
+    <style:style style:name="passed" style:family="table-cell" style:parent-style-name="Default">\n
+      <style:table-cell-properties fo:background-color="#CCFFCC" fo:border-bottom="0.06pt solid #000000" fo:border-left="0.06pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000"/>\n
+      <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>\n
+    </style:style>\n
+\n
+    <style:style style:name="not_done" style:family="table-cell" style:parent-style-name="Default">\n
+      <style:table-cell-properties fo:background-color="#FFFFFF" fo:border-bottom="0.06pt solid #000000" fo:border-left="0.06pt solid #000000" fo:border-right="0.06pt solid #000000" fo:border-top="0.06pt solid #000000"/>\n
+      <style:text-properties style:use-window-font-color="true" style:text-outline="false" style:text-line-through-style="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>\n
+    </style:style>\n
+  </office:automatic-styles>\n
+  <office:body>\n
+    <office:spreadsheet>\n
+      <tal:block define="table context/TestPage_prepareTestReport">\n
+        <table:table>\n
+          <table:table-column tal:repeat="column table/column_list"/>\n
+          <table:table-header-rows>\n
+            <table:table-row>\n
+              <tal:block condition="table/status">\n
+                <table:table-cell table:number-columns-spanned="4" table:style-name="header-passed">\n
+                  <text:p tal:content="table/name"/>\n
+                </table:table-cell>\n
+              </tal:block>\n
+              <tal:block condition="not: table/status">\n
+                <table:table-cell table:number-columns-spanned="4" table:style-name="header-failed">\n
+                  <text:p tal:content="table/name"/>\n
+                </table:table-cell>\n
+              </tal:block>\n
+            </table:table-row>\n
+          </table:table-header-rows>\n
+            <table:table-row tal:repeat="row table/row_list">\n
+              <tal:block condition="row/failed">\n
+                <table:table-cell tal:repeat="cell row/cell_list" table:style-name="failed">\n
+                  <text:p tal:content="cell"/>\n
+                </table:table-cell>\n
+              </tal:block>\n
+              <tal:block condition="row/done">\n
+                <table:table-cell tal:repeat="cell row/cell_list" table:style-name="done">\n
+                  <text:p tal:content="cell"/>\n
+                </table:table-cell>\n
+              </tal:block>\n
+              <tal:block condition="row/passed">\n
+                <table:table-cell tal:repeat="cell row/cell_list" table:style-name="passed">\n
+                  <text:p tal:content="cell"/>\n
+                </table:table-cell>\n
+              </tal:block>\n
+              <tal:block condition="row/not_done">\n
+                <table:table-cell tal:repeat="cell row/cell_list" table:style-name="not_done">\n
+                  <text:p tal:content="cell"/>\n
+                </table:table-cell>\n
+              </tal:block>\n
+            </table:table-row>\n
+        </table:table>\n
+      </tal:block>\n
+    </office:spreadsheet>\n
+  </office:body>\n
+</office:document-content>\n
+<!--\n
+vim: filetype=xml\n
+-->
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>TestPage_testReport</string> </value>
+        </item>
+        <item>
+            <key> <string>ooo_xml_file_id</string> </key>
+            <value> <string>content.xml</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

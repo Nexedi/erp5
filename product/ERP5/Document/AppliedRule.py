@@ -353,6 +353,9 @@ class AppliedRule(XMLObject, ExplainableMixin):
       # does not see the simulated movements we've just deleted.
       if delivery.isSimulated():
         break
+      if delivery.getSimulationState() in draft_state_list and \
+         any(x not in old_dict for x in delivery.getMovementList()):
+        break
       if root_rule:
         self.setSpecialise(root_rule)
       delivery_set = set((delivery,))

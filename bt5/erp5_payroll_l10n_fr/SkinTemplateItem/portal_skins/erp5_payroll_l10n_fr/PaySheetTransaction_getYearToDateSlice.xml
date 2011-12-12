@@ -103,7 +103,7 @@ return yearly_slice_amount\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>slice_path</string> </value>
+            <value> <string>slice_path=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

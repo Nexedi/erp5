@@ -30,6 +30,7 @@ import unittest
 import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
 
 TESTED_SKIN_FOLDER_ID = 'custom'
@@ -130,6 +131,24 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
     self.assertTrue(getattr(tested_skin_folder, searched_object_id, None) is None)
     self.assertTrue(getattr(skinnable_object,   searched_object_other_id, None) is not None)
     self.assertTrue(getattr(tested_skin_folder, searched_object_other_id, None) is not None)
+
+  def test_05_skinSuper(self):
+    tested_skin_folder = self.getTestedSkinFolder()
+    script_id = 'Base_getOwnerId'
+    ob = self.portal.portal_activities
+    orig = getattr(ob, script_id)()
+    self.assertEqual(orig, 'ERP5TypeTestCase')
+    try:
+      script = createZODBPythonScript(tested_skin_folder, script_id, '',
+          'return not %r' % orig)
+      self.assertEqual(getattr(ob, script_id)(), not orig)
+      script.ZPythonScript_edit('', 'return context.skinSuper(%r, %r)()'
+                                    % (TESTED_SKIN_FOLDER_ID, script_id))
+      self.assertEqual(getattr(ob, script_id)(), orig)
+      self.getSkinsTool().erp5_core._delObject(script_id)
+      self.assertRaises(AttributeError, getattr(ob, script_id))
+    finally:
+      transaction.abort()
 
 if __name__ == '__main__':
   unittest.main()

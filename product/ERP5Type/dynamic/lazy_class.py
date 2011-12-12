@@ -20,12 +20,22 @@ from portal_type_class import generatePortalTypeClass
 from accessor_holder import AccessorHolderType
 import persistent_migration
 
-# PersistentBroken can't be reused directly
-# because its « layout differs from 'GhostPortalType' »
-ERP5BaseBroken = type('ERP5BaseBroken', (Broken, ERP5Base), dict(x
-  for x in PersistentBroken.__dict__.iteritems()
-  if x[0] not in ('__dict__', '__module__', '__weakref__')))
+class ERP5BaseBroken(Broken, ERP5Base):
+  # PersistentBroken can't be reused directly
+  # because its « layout differs from 'GhostPortalType' »
 
+  def __metaclass__(name, base, d):
+    d = dict(PersistentBroken.__dict__, **d)
+    for x in '__dict__', '__metaclass__', '__weakref__':
+      del d[x]
+    return type(name, base, d)
+
+  def __getattr__(self, name):
+    try:
+      return self.__dict__['__Broken_state__'][name]
+    except KeyError:
+      raise AttributeError("state of broken %r object has no %r key"
+                           % (self.__class__.__name__, name))
 
 # the meta class of a derived class must be a subclass of all of its bases:
 # since a portal type derives from both Zope Extension classes and

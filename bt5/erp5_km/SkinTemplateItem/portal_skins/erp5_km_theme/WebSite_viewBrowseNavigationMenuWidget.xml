@@ -79,7 +79,7 @@
     <tal:block tal:repeat="menu_item menu_item_list">\n
 \n
     <li tal:define="sub_item_list menu_item/subsection"\n
-        tal:attributes="class python: sub_item_list and \'collapse-menu\' or \'\'">\n
+        tal:attributes="class python:(sub_item_list and \'collapse-menu \' or \'\') + \'menu_item_%s\' % repeat[\'menu_item\'].index">\n
       <a tal:attributes="href menu_item/url" >\n
         <tal:block tal:replace="menu_item/compact_translated_title | menu_item/translated_title">Menu</tal:block>\n
       </a>\n

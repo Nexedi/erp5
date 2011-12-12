@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string>web_page_context = context.getPortalType() in [\'Web Page\', \'Test Page\']\n
+\n
+if web_page_context:\n
+  no_web_page = False\n
+  form_id = \'view\'\n
+else:\n
+  no_web_page = not request.has_key(\'web_page\') or request[\'web_page\'] is None or not request[\'web_page\']\n
+  form_id = \'Zuite_viewZeleniumTestLauncher\'\n
+\n
+no_reference = not request.has_key(\'web_page_reference\') or request[\'web_page_reference\'] is None or not request[\'web_page_reference\']\n
+no_url = not request.has_key(\'url\') or request[\'url\'] is None or not request[\'url\']\n
+\n
+if no_web_page and no_url and no_reference:\n
+  if validator:\n
+    return 0\n
+  else:\n
+    return dict(result = False, form_id = form_id, portal_status_message=context.Base_translateString("External Url (url), ERP5 Web Page Path (web_page) and ERP5 Web Page Reference (web_page_reference): were omitted, one of them must be set."))\n
+elif not (no_url or no_web_page) or not (no_reference or no_web_page) or not (no_url or reference_not_set):\n
+  if validator:\n
+    return 0\n
+  elif web_page_context:\n
+    return dict(result = False, form_id = form_id, portal_status_message=context.Base_translateString("url, web_page and web_page_reference don\'t need to be set in Web Page context."))\n
+  else:\n
+    return dict(result = False, form_id = form_id, portal_status_message=context.Base_translateString("You have to choose between External Url (url), ERP5 Web Page Path (web_page) and ERP5 Web Page Reference (web_page_reference). Only ONE of them must be set."))\n
+\n
+if validator:\n
+  return 1\n
+else:\n
+  return dict(result = True)\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>editor, request, validator = True</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Zuite_viewZeleniumTestLauncherValidator</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
