@@ -98,8 +98,7 @@ class Order(Delivery):
           return 0
         current_aggregated_amount_list = trade_condition.getAggregatedAmountList(self, rounding=rounding, force_create_line=True)
         trade_model_line = newTempTradeModelLine(
-            self,
-            '_temp_%s' % (self.getId()))
+            self, '_temp_' + self.getId(), notify_workflow=False)
         # prevent invoking interaction workflows.
         trade_model_line.portal_type = ''
         trade_model_line.edit(target_level=TARGET_LEVEL_MOVEMENT, price=1,

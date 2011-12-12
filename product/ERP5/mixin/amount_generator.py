@@ -325,7 +325,8 @@ class AmountGeneratorMixin:
         # Create an Amount object
         amount = newTempAmount(portal,
           # we only want the id to be unique so we pick a random causality
-          causality_value.getRelativeUrl().replace('/', '_'))
+          causality_value.getRelativeUrl().replace('/', '_'),
+          notify_workflow=False)
         amount._setCategoryList(property_dict.pop('category_list', ()))
         if amount.getQuantityUnit():
           del property_dict['quantity_unit']

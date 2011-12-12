@@ -2623,6 +2623,7 @@ class Base( CopyContainer,
               container=self.getParentValue(),
               id=self.getId(),
               temp_object=True,
+              notify_workflow=False,
               is_indexable=False)
 
       # Pass all internal data to new instance. Do not copy, but 
