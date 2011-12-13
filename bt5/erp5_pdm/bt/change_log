@@ -1,3 +1,6 @@
+2011-12-13 arnaud.fontaine
+* Allow to jump from Product to its related Transformation using it as Material as well.
+
 2011-11-22 yusei
 * Stop showing detailed DateTime in listbox. This problem started occur due to recent specification change of zope's DateTime.
 
