@@ -1,0 +1,6 @@
+<workflow_chain>
+ <chain>
+  <type>Web Page</type>
+  <workflow>-document_publication_workflow, document_conversion_interaction_workflow, document_security_interaction_workflow, edit_workflow, processing_status_workflow, ung_document_publication_workflow</workflow>
+ </chain>
+</workflow_chain>
