@@ -6,17 +6,17 @@ Campaign | ticket_workflow
 Fax Message | document_conversion_interaction_workflow
 Fax Message | edit_workflow
 Fax Message | event_interaction_workflow
-Fax Message | event_workflow
+Fax Message | event_simulation_workflow
 Fax Message | pricing_interaction_workflow
 Letter | document_conversion_interaction_workflow
 Letter | edit_workflow
 Letter | event_interaction_workflow
-Letter | event_workflow
+Letter | event_simulation_workflow
 Letter | pricing_interaction_workflow
 Mail Message | document_conversion_interaction_workflow
 Mail Message | edit_workflow
 Mail Message | event_interaction_workflow
-Mail Message | event_workflow
+Mail Message | event_simulation_workflow
 Mail Message | pricing_interaction_workflow
 Meeting | edit_workflow
 Meeting | pricing_interaction_workflow
@@ -25,12 +25,12 @@ Meeting | ticket_workflow
 Note | document_conversion_interaction_workflow
 Note | edit_workflow
 Note | event_interaction_workflow
-Note | event_workflow
+Note | event_simulation_workflow
 Note | pricing_interaction_workflow
 Phone Call | document_conversion_interaction_workflow
 Phone Call | edit_workflow
 Phone Call | event_interaction_workflow
-Phone Call | event_workflow
+Phone Call | event_simulation_workflow
 Phone Call | pricing_interaction_workflow
 Sale Opportunity | edit_workflow
 Sale Opportunity | pricing_interaction_workflow
@@ -39,12 +39,12 @@ Sale Opportunity | ticket_interaction_workflow
 Short Message | document_conversion_interaction_workflow
 Short Message | edit_workflow
 Short Message | event_interaction_workflow
-Short Message | event_workflow
+Short Message | event_simulation_workflow
 Short Message | pricing_interaction_workflow
 Site Message | document_conversion_interaction_workflow
 Site Message | edit_workflow
 Site Message | event_interaction_workflow
-Site Message | event_workflow
+Site Message | event_simulation_workflow
 Support Request | edit_workflow
 Support Request | pricing_interaction_workflow
 Support Request | ticket_interaction_workflow
@@ -52,10 +52,10 @@ Support Request | ticket_workflow
 Visit | document_conversion_interaction_workflow
 Visit | edit_workflow
 Visit | event_interaction_workflow
-Visit | event_workflow
+Visit | event_simulation_workflow
 Visit | pricing_interaction_workflow
 Web Message | document_conversion_interaction_workflow
 Web Message | edit_workflow
 Web Message | event_interaction_workflow
-Web Message | event_workflow
+Web Message | event_simulation_workflow
 Web Message | pricing_interaction_workflow

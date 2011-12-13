@@ -63,23 +63,23 @@ for ticket_type in context.getPortalTicketTypeList():\n
 selection_columns.append((\'unassigned\', \'Unassigned\'))\n
 selection_columns.append((\'total\', \'Total\'))\n
 \n
-#Incoming states\n
-params=dict(direction=context.Event_getIncomingStateList())\n
+#Future states\n
+params=dict(direction=context.Event_getFutureStateList())\n
 result.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
               selection_columns=selection_columns,\n
               listbox_display_mode=\'FlatListMode\',\n
-              title=context.Base_translateString(\'Incoming\'),\n
+              title=context.Base_translateString(\'Future Events\'),\n
               selection_params=params,\n
               form_id=\'EventModule_viewEventActivityList\'))\n
 \n
-#Outgoing states\n
-params=dict(direction=context.Event_getOutgoingStateList())\n
+#Past states\n
+params=dict(direction=context.Event_getPastStateList())\n
 result.append(ReportSection(\n
               path=context.getPhysicalPath(),\n
               selection_columns=selection_columns,\n
               listbox_display_mode=\'FlatListMode\',\n
-              title=context.Base_translateString(\'Outgoing\'),\n
+              title=context.Base_translateString(\'Past Events\'),\n
               selection_params=params,\n
               form_id=\'EventModule_viewEventActivityList\'))\n
 \n

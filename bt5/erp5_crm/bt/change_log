@@ -1,3 +1,6 @@
+2011-12-13 Kazuhiko
+* use event_simulation_workflow instead of event_workflow for Event-type portal types. use portal_alarms/upgrader_migrate_event_workflow_history for migration.
+
 2010-11-05 yusei
 * Simplify Event_init.
 

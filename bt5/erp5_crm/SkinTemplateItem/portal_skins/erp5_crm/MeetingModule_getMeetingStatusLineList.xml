@@ -60,8 +60,8 @@ request_stop_date = request.get(\'at_date\', None)\n
 request_ticket_type = request.get(\'meeting_type\', None)\n
 request_validation_state = request.get(\'validation_state\', None)\n
 \n
-outgoing_state_list = portal.Event_getOutgoingStateList()\n
-incoming_state_list = portal.Event_getIncomingStateList()\n
+future_state_list = portal.Event_getFutureStateList()\n
+past_state_list = portal.Event_getPastStateList()\n
 \n
 line_list = []\n
 \n
@@ -88,24 +88,24 @@ ticketlist=portal.portal_catalog.searchResults(portal_type="Meeting",\n
 # Get every result object\n
 for r_ticket in ticketlist:\n
   ticket=r_ticket.getObject()\n
-  outgoing = 0\n
-  incoming = 0\n
-  #count outgoing follow-up events\n
-  outgoing=int(portal.portal_catalog.countResults(portal_type=portal.getPortalEventTypeList(),\n
+  future = 0\n
+  past = 0\n
+  #count future follow-up events\n
+  future=int(portal.portal_catalog.countResults(portal_type=portal.getPortalEventTypeList(),\n
                                               follow_up_uid=ticket.getUid(),\n
-                                              simulation_state=outgoing_state_list)[0][0])\n
-  #count incoming follow-up events\n
-  incoming=int(portal.portal_catalog.countResults(portal_type=portal.getPortalEventTypeList(),\n
+                                              simulation_state=future_state_list)[0][0])\n
+  #count past follow-up events\n
+  past=int(portal.portal_catalog.countResults(portal_type=portal.getPortalEventTypeList(),\n
                                               follow_up_uid=ticket.getUid(),\n
-                                              simulation_state=incoming_state_list)[0][0])\n
-  #count incoming causality events\n
-  incoming+=int(portal.portal_catalog.countResults(event_causality_ticket_uid=ticket.getUid(),\n
+                                              simulation_state=past_state_list)[0][0])\n
+  #count past causality events\n
+  past+=int(portal.portal_catalog.countResults(event_causality_ticket_uid=ticket.getUid(),\n
                                               portal_type=portal.getPortalEventTypeList(),\n
-                                              simulation_state=incoming_state_list)[0][0])\n
-  #count outgoing causality events\n
-  outgoing+=int(portal.portal_catalog.countResults(event_causality_ticket_uid=ticket.getUid(),\n
+                                              simulation_state=past_state_list)[0][0])\n
+  #count future causality events\n
+  future+=int(portal.portal_catalog.countResults(event_causality_ticket_uid=ticket.getUid(),\n
                                               portal_type=portal.getPortalEventTypeList(),\n
-                                              simulation_state=outgoing_state_list)[0][0])  \n
+                                              simulation_state=future_state_list)[0][0])  \n
   line_list.append(Object(uid=\'new_\',\n
                    title = ticket.getTitle(),\n
                    ticket_type = ticket.getResourceTranslatedTitle(),\n
@@ -116,8 +116,8 @@ for r_ticket in ticketlist:\n
                    destination_title = ticket.getDestinationTitle(),\n
                    source = ticket.getSourceTitle(),\n
                    validation_state = ticket.getTranslatedSimulationStateTitle(),\n
-                   outgoing = outgoing,\n
-                   incoming = incoming))\n
+                   future = future,\n
+                   past = past))\n
 \n
 if line_list == []:\n
   line_list.append(Object(uid=\'new_\'))\n

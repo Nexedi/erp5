@@ -50,26 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Form.Report import ReportSection\n
-result=[]\n
-request = context.REQUEST\n
-\n
-selection_columns = [(\'ticket_title\', \'Title\')]\n
-selection_columns.append((\'ticket_type\', \'Module\'))\n
-selection_columns.append((\'resource\',\'Type\'))\n
-#Add dynamicaly event states columns to the form\n
-#The name of column must be without spaces\n
-for event_state in context.Base_getWorkflowStateItemList(\'event_simulation_workflow\'):\n
-  if event_state[1]!=\'deleted\':\n
-    selection_columns.append((event_state[1],event_state[0]))\n
-selection_columns.append((\'total\', \'Total\'))\n
-\n
-result.append(ReportSection(\n
-              path=context.getPhysicalPath(),\n
-              selection_columns=selection_columns,\n
-              listbox_display_mode=\'FlatListMode\',\n
-              form_id=\'EventModule_viewEventDetailedList\'))\n
-return result\n
+            <value> <string>return [\'draft\', \'planned\', \'confirmed\',]\n
 </string> </value>
         </item>
         <item>
@@ -78,7 +59,7 @@ return result\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>EventModule_getEventDetailedReportSectionList</string> </value>
+            <value> <string>Event_getPastStateList</string> </value>
         </item>
       </dictionary>
     </pickle>

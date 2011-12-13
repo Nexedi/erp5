@@ -9,15 +9,15 @@
  </chain>
  <chain>
   <type>Fax Message</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Letter</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Mail Message</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Meeting</type>
@@ -25,11 +25,11 @@
  </chain>
  <chain>
   <type>Note</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Phone Call</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Opportunity</type>
@@ -37,11 +37,11 @@
  </chain>
  <chain>
   <type>Short Message</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Site Message</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow</workflow>
  </chain>
  <chain>
   <type>Support Request</type>
@@ -49,10 +49,10 @@
  </chain>
  <chain>
   <type>Visit</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Web Message</type>
-  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_workflow, pricing_interaction_workflow</workflow>
+  <workflow>document_conversion_interaction_workflow, edit_workflow, event_interaction_workflow, event_simulation_workflow, pricing_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

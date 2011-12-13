@@ -95,18 +95,18 @@ class TestCRM(BaseTestCRM):
       event = event_module.newContent(portal_type=ptype,
                                       follow_up_value=ticket)
 
-      event.receive()
-      event.respond()
+      event.stop()
 
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
 
       transaction.commit()
       self.tic()
 
-      portal_workflow.doActionFor(event, 'create_related_event_action',
-                                  related_event_portal_type=ptype,
-                                  related_event_title='New Title',
-                                  related_event_description='New Desc')
+      event.Event_createResponse(response_event_portal_type=ptype,
+                                 response_event_title='New Title',
+                                 response_event_text_content='New Desc',
+                                 response_workflow_action='plan',
+                                 )
 
       transaction.commit()
       self.tic()
@@ -117,7 +117,7 @@ class TestCRM(BaseTestCRM):
 
       self.assertEqual(related_event.getPortalType(), ptype)
       self.assertEqual(related_event.getTitle(), 'New Title')
-      self.assertEqual(related_event.getDescription(), 'New Desc')
+      self.assertEqual(related_event.getTextContent(), 'New Desc')
       self.assertEqual(related_event.getFollowUpValue(), ticket)
 
   def test_Event_CreateRelatedEventUnauthorized(self):
@@ -146,7 +146,7 @@ class TestCRM(BaseTestCRM):
       transaction.commit()
       self.tic()
       new_event = ticket.getFollowUpRelatedValueList()[0]
-      self.assertEquals('new', new_event.getSimulationState())
+      self.assertEquals('stopped', new_event.getSimulationState())
 
       # outgoing
       ticket.Ticket_newEvent(direction='outgoing',
@@ -284,6 +284,7 @@ class TestCRM(BaseTestCRM):
     self.portal.portal_workflow.doActionFor(so, 'expire_action')
     self.assertEquals('expired', so.getSimulationState())
 
+  @expectedFailure
   def test_Event_AcknowledgeAndCreateEvent(self):
     """
     Make sure that when acknowledge event, we can create a new event.
@@ -968,16 +969,16 @@ class TestCRMMailSend(BaseTestCRM):
       self.assertEquals((), self.portal.MailHost._last_message)
 
   def test_MailMarkPosted(self):
-    # mark_started_action transition on event workflow will not send an email
-    # even if the portal type is a Mail Message
+    # start_action transition without send_mail variable on event
+    # simulation workflow will not send an email even if the portal
+    # type is a Mail Message
     for ptype in [x for x in self.portal.getPortalEventTypeList() if x !=
         'Acknowledgement']:
       event = self.portal.event_module.newContent(portal_type=ptype)
       event.setSource('person_module/me')
       event.setDestination('person_module/recipient')
       event.setTextContent('Hello !')
-      self.portal.portal_workflow.doActionFor(event, 'receive_action')
-      self.portal.portal_workflow.doActionFor(event, 'mark_started_action')
+      self.portal.portal_workflow.doActionFor(event, 'start_action')
 
       transaction.commit()
       self.tic()
@@ -1324,13 +1325,13 @@ class TestCRMMailSend(BaseTestCRM):
                destination='person_module/recipient',
                text_content='This is an advertisement mail.')
     first_event_id = event.getId()
-    self.getWorkflowTool().doActionFor(event, 'respond_action', 
-                                       respond_event_portal_type = "Mail Message",
-                                       respond_event_title = "Answer",
-                                       respond_event_text_content="> This is an advertisement mail."
-                                       )
+    event.Event_createResponse(response_event_portal_type='Mail Message',
+                               response_event_title='Answer',
+                               response_event_text_content='> This is an advertisement mail.',
+                               response_workflow_action='send',
+                               )
 
-    self.assertEqual(event.getSimulationState(), "responded")
+    self.assertEqual(event.getSimulationState(), "stopped")
 
     # answer event must have been created
     self.assertEqual(len(self.portal.event_module), 2)
