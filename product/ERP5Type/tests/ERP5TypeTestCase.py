@@ -317,6 +317,13 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
                       'Assignor', 'Author', 'Auditor', 'Associate'], [])
         return PortalTestCase.login(self, user_name)
 
+    def changeSkin(self, skin_name):
+      """
+        Change current Skin
+      """
+      request = self.app.REQUEST
+      self.getPortal().portal_skins.changeSkin(skin_name)
+      request.set('portal_skin', skin_name)
 
     def logout(self):
       PortalTestCase.logout(self)
