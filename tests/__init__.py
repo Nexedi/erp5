@@ -57,7 +57,6 @@ class ERP5(_ERP5):
       if test_case.startswith('testLive') or test_case.startswith('testVifib') \
          or test_case.startswith('testFunctional') \
          or test_case in ('testPerformance', 'testSimulationPerformance',
-                          'testDmsWithFlare', # XXX(Seb), put it back ASAP
                           'testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
                           'testERP5eGov', # it is not maintained any more
                           'testAccounting_l10n_fr_m9'):
