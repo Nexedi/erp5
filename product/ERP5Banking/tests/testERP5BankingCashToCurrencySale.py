@@ -28,43 +28,35 @@
 import os
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
-
-# Needed in order to have a log file inside the current folder
-os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
-# Define the level of log we want, here is all
+os.environ['EVENT_LOG_FILE'] = os.path.join(os.getcwd(), 'zLOG.log')
 os.environ['EVENT_LOG_SEVERITY'] = '-300'
 
 class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
-
-  # pseudo constants
-  RUN_ALL_TEST = 1 # we want to run all test
-  QUIET = 0 # we don't want the test to be quiet
+  RUN_ALL_TEST = 1
+  QUIET = 0
+  # Relative to "site" category
+  COUNTER_RELATIVE_URL = 'testsite/paris/surface/banque_interne/guichet_1'
+  # Relative to counter
+  INCOMING_COUNTER_RELATIVE_URL = 'encaisse_des_billets_et_monnaies/entrante'
+  OUTGOING_COUNTER_RELATIVE_URL = 'encaisse_des_devises/usd/sortante'
 
   outgoing_quantity_5000 = {'variation/1992': 4, 'variation/2003': 6}
   outgoing_quantity_100 = {'variation/1992': 163, 'variation/2003': 0}
 
   def getTitle(self):
-    """
-      Return the title of the test
-    """
     return "ERP5BankingCashToCurrencySale"
 
   def afterSetUp(self):
-    """
-      Method called before the launch of the test to initialize some data
-    """
     self.initDefaultVariable()
-    # Set some variables :
-    self.cash_to_currency_sale_module = \
-      self.getPortal().cash_to_currency_sale_module
-    # Create a user and login as manager to populate the erp5 portal with
-    # objects for tests.
+    self.cash_to_currency_sale_module = self.getPortal().cash_to_currency_sale_module
     self.createManagerAndLogin()
     self.createFunctionGroupSiteCategory()
-    """
-    Windows to create the BANKNOTES of 10 000 and 5000, coins 200.
-    It s same to click to the fast input button.
-    """
+    self.guichet = counter = self.getPortalObject().portal_categories.site.\
+      unrestrictedTraverse(self.COUNTER_RELATIVE_URL)
+    self.guichet_entrante = counter.unrestrictedTraverse(
+      self.INCOMING_COUNTER_RELATIVE_URL)
+    self.guichet_sortante = outgoing_counter = counter.unrestrictedTraverse(
+      self.OUTGOING_COUNTER_RELATIVE_URL)
     self.line_list = line_list_sortante = [{
       'id': 'inventory_line_1',
       'resource': self.usd_billet_20,
@@ -74,49 +66,36 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
       'variation_list': self.usd_variation_list,
       'quantity': self.quantity_usd_20,
     }, ]
-
-    self.guichet = counter = self.paris.surface.banque_interne.guichet_1
-    self.guichet_entrante = counter.encaisse_des_billets_et_monnaies.entrante
-    self.guichet_sortante = counter.encaisse_des_devises.usd.sortante
-    self.createCashInventory(source=None, destination=self.guichet_sortante,
-      currency=self.currency_2, line_list=line_list_sortante)
-
-    # now we need to create a user as Manager to do the test
-    # in order to have an assigment defined which is used to do transition
-    # Create an Organisation that will be used for users assignment
+    self.createCashInventory(
+      source=None,
+      destination=outgoing_counter,
+      currency=self.currency_2,
+      line_list=line_list_sortante,
+    )
     self.checkUserFolderType()
-    self.organisation = self.organisation_module.newContent(id='paris',
-      portal_type='Organisation', function='banking', group='baobab',
-      site=self.paris.getRelativeUrl())
-    # define the user
     self.createERP5Users({
-      'super_user' : [['Manager'], self.organisation, 'banking/comptable',
-        'baobab', counter.getRelativeUrl()],
-    }, )
+      'super_user' : [
+        ['Manager'],
+        self.organisation_module['site_P10'],
+        'banking/comptable',
+        'baobab',
+        counter.getCategoryRelativeUrl(),
+      ],
+    })
     self.logout()
     self.login('super_user')
-    # open counter date and counter
     self.openCounterDate(site=counter)
     self.openCounter(site=counter)
 
   def stepCheckObjects(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Check that all the objects we created in afterSetUp or
-    that were added by the business template and that we rely
-    on are really here.
-    """
     self.checkResourceCreated()
-    # check that CashToCurrencySale Module was created
-    self.assertEqual(self.cash_to_currency_sale_module.getPortalType(),
-      'Cash To Currency Sale Module')
-    # check cash sorting module is empty
-    self.assertEqual(len(self.cash_to_currency_sale_module.objectValues()), 0)
+    module = self.cash_to_currency_sale_module
+    self.assertEqual(module.getPortalType(), 'Cash To Currency Sale Module')
+    self.assertEqual(len(module), 0)
 
   def stepCheckInitialInventoryGuichet(self, sequence=None, sequence_list=None,
       **kwd):
-    """
-    Check the initial inventory before any operations
-    """
+    assertEqual = self.assertEqual
     simulation_tool = self.getSimulationTool()
     getCurrentInventory = simulation_tool.getCurrentInventory
     getFutureInventory = simulation_tool.getFutureInventory
@@ -141,40 +120,39 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
       resource=banknote_usd_20), 5.0)
 
   def stepCreateCashToCurrencySale(self, sequence=None, sequence_list=None, **kwd):
-    """
-    Create a cash sorting document and check it
-    """
+    portal = self.getPortalObject()
     module = self.cash_to_currency_sale_module
-    self.cash_to_currency_sale = cash_to_currency_sale = module.newContent(
-      id='cash_to_currency_sale_1', 
-      portal_type='Cash To Currency Sale', 
-      source_value=self.guichet, 
-      destination_value=None, 
+    self.cash_to_currency_sale = document = module.newContent(
+      id='cash_to_currency_sale_1',
+      portal_type='Cash To Currency Sale',
+      source_value=self.guichet,
+      destination_value=None,
       description='test',
-      resource_value=self.currency_2, 
-      source_total_asset_price=100.0, 
+      resource_value=self.currency_2,
+      source_total_asset_price=100.0,
       discount_ratio=0.02, # 1300
     )
-    self.assertEqual(len(module), 1)
-    self.assertEqual(cash_to_currency_sale.getSource(),
-      'site/testsite/paris/surface/banque_interne/guichet_1')
-    self.assertEqual(cash_to_currency_sale.getDestination(), None)
-    self.setDocumentSourceReference(cash_to_currency_sale)
     self.tic()
-    # Check the default exchange rate
-    rate = cash_to_currency_sale.CurrencyExchange_getExchangeRateList(from_currency=cash_to_currency_sale.getResource(),
-                                                                      to_currency='currency_module/%s' % (cash_to_currency_sale.Baobab_getPortalReferenceCurrencyID()),
-                                                                      currency_exchange_type='sale',
-                                                                      start_date=cash_to_currency_sale.getStartDate())[0]
+    self.assertEqual(len(module), 1)
+    self.assertEqual(document.getSource(), self.guichet.getRelativeUrl())
+    self.assertEqual(document.getDestination(), None)
+    self.setDocumentSourceReference(document)
+    self.tic()
+    rate = document.CurrencyExchange_getExchangeRateList(
+      from_currency=document.getResource(),
+      to_currency='currency_module/%s' % (
+        portal.Baobab_getPortalReferenceCurrencyID(), ),
+      currency_exchange_type='sale',
+      start_date=document.getStartDate(),
+    )[0]
     self.assertEqual(rate, 650.0)
-
 
   def stepCreateValidIncomingLine(self, sequence=None, sequence_list=None,
       **kwd):
-    container = self.cash_to_currency_sale
+    document = self.cash_to_currency_sale
     line_1_id = 'valid_incoming_line_1'
     self.addCashLineToDelivery(
-      container,
+      document,
       line_1_id,
       'Incoming Cash To Currency Sale Line',
       self.billet_5000,
@@ -183,14 +161,15 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
         self.variation_list,
       self.outgoing_quantity_5000,
     )
-    self.assertEqual(len(container), 1)
-    line_1 = getattr(container, line_1_id)
-    self.assertEqual(line_1.getResourceValue(), self.billet_5000)
-    self.assertEqual(line_1.getPrice(), 5000.0)
-    self.assertEqual(line_1.getQuantityUnit(), 'unit')
-    self.assertEqual(len(line_1), 2)
+    self.tic()
+    self.assertEqual(len(document), 1)
+    line = getattr(document, line_1_id)
+    self.assertEqual(line.getResourceValue(), self.billet_5000)
+    self.assertEqual(line.getPrice(), 5000.0)
+    self.assertEqual(line.getQuantityUnit(), 'unit')
+    self.assertEqual(len(line), 2)
     for variation in self.variation_list:
-      cell = line_1.getCell('emission_letter/not_defined', variation,
+      cell = line.getCell('emission_letter/not_defined', variation,
         'cash_status/valid')
       self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
       self.assertEqual(cell.getResourceValue(), self.billet_5000)
@@ -207,7 +186,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
 
     line_2_id = 'valid_incoming_line_2'
     self.addCashLineToDelivery(
-      container,
+      document,
       line_2_id,
       'Incoming Cash To Currency Sale Line',
       self.piece_100,
@@ -216,8 +195,9 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
         self.variation_list,
       self.outgoing_quantity_100,
     )
-    self.assertEqual(len(container), 2)
-    line_2 = getattr(self.cash_to_currency_sale, line_2_id)
+    self.tic()
+    self.assertEqual(len(document), 2)
+    line_2 = getattr(document, line_2_id)
     self.assertEqual(line_2.getPortalType(),
       'Incoming Cash To Currency Sale Line')
     self.assertEqual(line_2.getResourceValue(), self.piece_100)
@@ -239,26 +219,24 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
         self.assertEqual(cell.getQuantity(), 0.0)
       else:
         self.fail('Unexpected cell id: %s' % (cell_id, ))
-    # execute tic
     self.tic()
 
   def stepCheckSubTotal(self, sequence=None, sequence_list=None, **kwd):
     document = self.cash_to_currency_sale
-    # Check number of lines
     self.assertEqual(len(document), 2)
     self.assertEqual(document.getTotalQuantity(fast=0,
       portal_type="Incoming Cash To Currency Sale Line"), 173)
-    # Check the total price
     self.assertEqual(document.getTotalPrice(fast=0,
       portal_type="Incoming Cash To Currency Sale Line"),
       5000 * 4.0 + 100 * 0.0 + 5000 * 6.0 + 100 * 163.0)
 
   def stepCreateValidOutgoingLine(self, sequence=None, sequence_list=None,
       **kwd):
-    container = self.cash_to_currency_sale
+    assertEqual = self.assertEqual
+    document = self.cash_to_currency_sale
     line_id = 'valid_outgoing_line_1'
     self.addCashLineToDelivery(
-      container,
+      document,
       line_id,
       'Outgoing Cash To Currency Sale Line',
       self.usd_billet_20,
@@ -268,57 +246,51 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
       self.quantity_usd_20,
       variation_list=self.usd_variation_list,
     )
-    self.assertEqual(len(container), 3)
-    # get the cash exchange line
-    line = getattr(container, line_id)
-    # check its portal type
-    self.assertEqual(line.getPortalType(),
+    self.tic()
+    assertEqual(len(document), 3)
+    line = getattr(document, line_id)
+    assertEqual(line.getPortalType(),
       'Outgoing Cash To Currency Sale Line')
-    # check the resource is banknotes of 20
-    self.assertEqual(line.getResourceValue(), self.usd_billet_20)
-    # chek the value of the banknote
-    self.assertEqual(line.getPrice(), 20.0)
-    self.assertEqual(line.getQuantityUnit(), 'unit')
-    self.assertEqual(len(line), 1)
+    assertEqual(line.getResourceValue(), self.usd_billet_20)
+    assertEqual(line.getPrice(), 20.0)
+    assertEqual(line.getQuantityUnit(), 'unit')
+    assertEqual(len(line), 1)
     for variation in self.usd_variation_list:
       cell = line.getCell('emission_letter/not_defined', variation,
         'cash_status/not_defined')
-      self.assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
-      self.assertEqual(cell.getResourceValue(), self.usd_billet_20)
-      self.assertEqual(cell.getBaobabSource(),
+      assertEqual(cell.getPortalType(), 'Cash Delivery Cell')
+      assertEqual(cell.getResourceValue(), self.usd_billet_20)
+      assertEqual(cell.getBaobabSource(),
         self.guichet_sortante.getRelativeUrl())
-      self.assertEqual(cell.getBaobabDestination(), None)
+      assertEqual(cell.getBaobabDestination(), None)
       cell_id = cell.getId()
       if cell_id == 'movement_0_0_0':
-        self.assertEqual(cell.getQuantity(), 5.0)
+        assertEqual(cell.getQuantity(), 5.0)
       else:
-        self.fail('Wrong cell created : %s' % (cell_id, ))
+        self.fail('Unexpected cell id: %s' % (cell_id, ))
     self.tic()
 
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     document = self.cash_to_currency_sale
-    self.assertEqual(len(document), 3)
-    self.assertEqual(document.getTotalQuantity(fast=0,
+    assertEqual = self.assertEqual
+    assertEqual(len(document), 3)
+    assertEqual(document.getTotalQuantity(fast=0,
       portal_type="Outgoing Cash To Currency Sale Line"), 5.0)
-    self.assertEqual(document.getTotalPrice(fast=0,
+    assertEqual(document.getTotalPrice(fast=0,
       portal_type="Outgoing Cash To Currency Sale Line"), 20 * 5.0)
 
   def stepDeliverCashToCurrencySale(self, sequence=None, sequence_list=None, 
       **kwd):
-    #self.cash_to_currency_sale.setSourceTotalAssetPrice('52400.0')
-    #     self.security_manager = AccessControl.getSecurityManager()
-    #     self.user = self.security_manager.getUser()
-    # do the workflow transition "deliver_action"
     document = self.cash_to_currency_sale
     self.workflow_tool.doActionFor(document, 'deliver_action',
       wf_id='cash_to_currency_sale_workflow')
-    # check that state is delivered
+    self.tic()
     self.assertEqual(document.getSimulationState(), 'delivered')
-    # execute tic
     self.tic()
 
   def stepCheckFinalInventoryGuichet(self, sequence=None,
       sequence_list=None, **kwd):
+    assertEqual = self.assertEqual
     simulation_tool = self.getSimulationTool()
     getCurrentInventory = simulation_tool.getCurrentInventory
     getFutureInventory = simulation_tool.getFutureInventory
@@ -328,18 +300,18 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     coin_100 = self.piece_100.getRelativeUrl()
     banknote_usd_20 = self.usd_billet_20.getRelativeUrl()
 
-    self.assertEqual(getCurrentInventory(node=incoming_counter,
+    assertEqual(getCurrentInventory(node=incoming_counter,
       resource=banknote_5000), 10.0)
-    self.assertEqual(getFutureInventory(node=incoming_counter,
+    assertEqual(getFutureInventory(node=incoming_counter,
       resource=banknote_5000), 10.0)
-    self.assertEqual(getCurrentInventory(node=incoming_counter,
+    assertEqual(getCurrentInventory(node=incoming_counter,
       resource=coin_100), 163.0)
-    self.assertEqual(getFutureInventory(node=incoming_counter,
+    assertEqual(getFutureInventory(node=incoming_counter,
       resource=coin_100), 163.0)
 
-    self.assertEqual(getCurrentInventory(node=outgoing_counter,
+    assertEqual(getCurrentInventory(node=outgoing_counter,
       resource=banknote_usd_20), 0.0)
-    self.assertEqual(getFutureInventory(node=outgoing_counter,
+    assertEqual(getFutureInventory(node=outgoing_counter,
       resource=banknote_usd_20), 0.0)
 
   def stepDelCashToCurrencySale(self, sequence=None, sequence_list=None,
@@ -377,24 +349,29 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
 
   def test_01_ERP5BankingCashToCurrencySale(self, quiet=QUIET,
       run=RUN_ALL_TEST):
-    """
-    Define the sequence of step that will be play
-    """
     if not run:
       return
     sequence_list = SequenceList()
-    sequence_list.addSequenceString('stepTic stepCheckObjects stepTic '
-      'stepCheckInitialInventoryGuichet '
-      'stepCreateCashToCurrencySale '
-      'stepCreateValidIncomingLine stepCheckSubTotal '
-      'stepCreateValidOutgoingLine '
-      'stepTic stepCheckTotal '
-      'stepResetSourceInventory stepTic '
-      'stepDeliverCashToCurrencySaleFails stepTic '
-      'stepDeleteResetInventory stepTic '
-      'stepDeliverCashToCurrencySale stepTic '
-      'stepCheckFinalInventoryGuichet_Entrante '
-      'stepCheckFinalInventoryGuichet_Sortante'
-    )
+    sequence_list.addSequenceString("""
+      stepTic
+      stepCheckObjects
+      stepTic
+      stepCheckInitialInventoryGuichet
+      stepCreateCashToCurrencySale
+      stepCreateValidIncomingLine stepCheckSubTotal
+      stepCreateValidOutgoingLine
+      stepTic
+      stepCheckTotal
+      stepResetSourceInventory
+      stepTic
+      stepDeliverCashToCurrencySaleFails
+      stepTic
+      stepDeleteResetInventory
+      stepTic
+      stepDeliverCashToCurrencySale
+      stepTic
+      stepCheckFinalInventoryGuichet_Entrante
+      stepCheckFinalInventoryGuichet_Sortante
+    """)
     sequence_list.play(self)
 
