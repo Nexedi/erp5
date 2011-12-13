@@ -156,7 +156,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@class=\'listbox-data-line-6 DataA\']//input[@type=\'checkbox\']</td>\n
+  <td>//tr[@class=\'listbox-data-line-7 DataB\']//input[@type=\'checkbox\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -171,7 +171,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@class=\'listbox-data-line-7 DataB\']//input[@type=\'checkbox\']</td>\n
+  <td>//tr[@class=\'listbox-data-line-8 DataA\']//input[@type=\'checkbox\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -201,8 +201,7 @@
 </tr>\n
 </tal:block>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

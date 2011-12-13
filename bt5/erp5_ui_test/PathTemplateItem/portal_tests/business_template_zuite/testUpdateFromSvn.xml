@@ -73,7 +73,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//tr[@class=\'listbox-data-line-4 DataA\']//input[@type=\'checkbox\']</td>\n
+  <td>//tr[@class=\'listbox-data-line-5 DataB\']//input[@type=\'checkbox\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -124,7 +124,7 @@
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
-  <td>label=Revert & Update Business Template from SVN</td>\n
+  <td>label=Revert & Update Business Template from VCS</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
