@@ -1,2 +1,14 @@
+portal_categories/activity/education
+portal_categories/activity/education/**
+portal_categories/function/marketing
+portal_categories/function/marketing/**
+portal_categories/function/sales
+portal_categories/function/sales/**
+portal_categories/gender
+portal_categories/gender/**
+portal_categories/nationality/french
+portal_categories/nationality/french/**
+portal_categories/quantity_unit/time
+portal_categories/quantity_unit/time/**
 portal_tests/user_tutorial_zuite
 portal_tests/user_tutorial_zuite/**
