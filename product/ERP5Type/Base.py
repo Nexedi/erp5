@@ -3625,6 +3625,12 @@ class Base( CopyContainer,
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultReindexParameters' )
   def setDefaultReindexParameters(self, **kw):
+    warnings.warn('setDefaultReindexParameters is deprecated in favour of '
+      'setDefaultReindexParameterDict.', DeprecationWarning)
+    self.setDefaultReindexParameterDict(kw)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultReindexParameterDict' )
+  def setDefaultReindexParameterDict(self, kw):
     # This method sets the default keyword parameters to reindex. This is useful
     # when you need to specify special parameters implicitly (e.g. to reindexObject).
     tv = getTransactionalVariable()
