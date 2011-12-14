@@ -116,11 +116,6 @@
   <td>hidden_button</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td>link=Installed</td>\n
-  <td></td>\n
-</tr>\n
 <!--\n
 XXX (Ivan): Disable Revert & Update Business Template from VCS as this requires respective\n
 proper "Working Copy List" settings in preferences (otherwise Unauthorized is raised and UI test run is blocked). \n
@@ -128,6 +123,11 @@ As tests are executed under SlapOS environment this is still not properly define
 -->\n
 \n
 <!--\n
+<tr>\n
+  <td>clickAndWait</td>\n
+  <td>link=Installed</td>\n
+  <td></td>\n
+</tr>\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>select_action</td>\n
