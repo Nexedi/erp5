@@ -128,7 +128,7 @@ class TestICal(ERP5TypeTestCase):
     self.assertEquals(feed_dict['STATUS'], 'TENTATIVE')
     
     # set start date, description and change workflow state - new
-    event.receive()
+    event.plan()
     event.setStartDate('2007/08/15 08:30 UTC')
     event.setDescription('Event One description')
     transaction.commit()
@@ -152,7 +152,8 @@ class TestICal(ERP5TypeTestCase):
     self.assertTrue(feed_dict['CATEGORIES'] in ('NEWSALEOP', 'New Opportunity')) # forward compatibility
     
     # set stop date and change workflow state - assigned
-    event.assign()
+    event.confirm()
+    event.start()
     event.setStopDate('2007/08/15 13:30 UTC')
     transaction.commit()
     self.tic()
@@ -161,11 +162,13 @@ class TestICal(ERP5TypeTestCase):
     self.assertEquals(feed_dict['DTEND'], '20070815T133000Z')
     self.assertEquals(feed_dict['STATUS'], 'CONFIRMED')
     
-    # cancel event
-    event.cancel()
+    # cancel event but first remove previously created
+    module.manage_delObjects([event.getId()])
+    event2 = module.newContent(title='Event Two', portal_type='Phone Call')
+    event2.cancel()
     transaction.commit()
     self.tic()
-    
+     
     feed_dict = self.getICalFeed(module)
     self.assertEquals(feed_dict['STATUS'], 'CANCELLED')
 
