@@ -29,6 +29,8 @@
 
 import unittest
 from testDms import TestDocument
+from Products.ERP5Type.tests.ERP5TypeTestCase import _getPersistentMemcachedServerDict
+
 
 class TestDocumentWithFlare(TestDocument):
   """
@@ -41,7 +43,12 @@ class TestDocumentWithFlare(TestDocument):
 
   def setSystemPreference(self):
     system_preference = TestDocument.setSystemPreference(self)
+    memcached = _getPersistentMemcachedServerDict()
     system_preference.setPreferredConversionCacheFactory('dms_cache_factory')
+    persistent_memcached_plugin = self.portal.portal_memcached.persistent_memcached_plugin
+    persistent_memcached_plugin.setUrlString('%s:%s' %(memcached['hostname'], memcached['port']))
+    self.portal.portal_caches.dms_cache_factory.persistent_cache_plugin.setSpecialiseValue(persistent_memcached_plugin)
+
 
 def test_suite():
   suite = unittest.TestSuite()
