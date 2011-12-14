@@ -1,3 +1,6 @@
+2011-12-14 arnaud.fontaine
+* Allow to jump from Organisation to its related Sale Supplies, Internal Supplies and Purchase Supplies.
+
 2011-12-13 arnaud.fontaine
 * Allow to jump from Product to its related Transformation using it as Material as well.
 
