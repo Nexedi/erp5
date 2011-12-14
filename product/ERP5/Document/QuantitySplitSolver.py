@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5.mixin.solver import SolverMixin
 from Products.ERP5.mixin.configurable import ConfigurableMixin
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
@@ -97,8 +98,23 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
                    'delivery':None,
                    'quantity':split_quantity})
         new_movement = applied_rule.newContent(activate_kw=activate_kw, **kw)
+        # Dirty code until IPropertyRecordable is revised.
+        # Merge original simulation movement recorded property to new one.
+        recorded_property_dict = simulation_movement._getRecordedPropertyDict(None)
+        if recorded_property_dict:
+          new_movement_recorded_property_dict = new_movement._getRecordedPropertyDict(None)
+          if new_movement_recorded_property_dict is None:
+            new_movement_recorded_property_dict = new_movement._recorded_property_dict = PersistentMapping()
+          new_movement_recorded_property_dict.update(recorded_property_dict)
         if activate_kw is not None:
           new_movement.setDefaultActivateParameterDict(activate_kw)
+        # record zero quantity property, because this was originally zero.
+        # without this, splitanddefer after accept decision does not work
+        # properly.
+        current_quantity = new_movement.getQuantity()
+        new_movement.setQuantity(0)
+        new_movement.recordProperty('quantity')
+        new_movement.setQuantity(current_quantity)
         start_date = configuration_dict.get('start_date', None)
         if start_date is not None:
           new_movement.recordProperty('start_date')
