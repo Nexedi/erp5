@@ -28,6 +28,7 @@
 #
 ##############################################################################
 
+import warnings
 from Products.ZSQLCatalog.SQLExpression import SQLExpression
 from Products.ZSQLCatalog.ColumnMap import ColumnMap
 from zLOG import LOG
@@ -35,6 +36,7 @@ from Products.ZSQLCatalog.interfaces.entire_query import IEntireQuery
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.TableDefinition import LegacyTableDefinition
 
 def defaultDict(value):
   if value is None:
@@ -54,19 +56,28 @@ class EntireQuery(object):
   column_map = None
 
   @profiler_decorator
-  def __init__(self, query, order_by_list=(), group_by_list=(),
-               select_dict=None, limit=None, catalog_table_name=None,
-               extra_column_list=(), from_expression=None,
-               order_by_override_list=None):
+  def __init__(self, query,
+               order_by_list=(),
+               group_by_list=(),
+               select_dict=None,
+               left_join_list=(),
+               limit=None,
+               catalog_table_name=None,
+               extra_column_list=(),
+               from_expression=None,
+               order_by_override_list=None,
+               implicit_join=False):
     self.query = query
     self.order_by_list = list(order_by_list)
     self.order_by_override_set = frozenset(order_by_override_list)
     self.group_by_list = list(group_by_list)
     self.select_dict = defaultDict(select_dict)
+    self.left_join_list = left_join_list
     self.limit = limit
     self.catalog_table_name = catalog_table_name
     self.extra_column_list = list(extra_column_list)
     self.from_expression = from_expression
+    self.implicit_join = implicit_join
 
   def asSearchTextExpression(self, sql_catalog):
     return self.query.asSearchTextExpression(sql_catalog)
@@ -78,7 +89,12 @@ class EntireQuery(object):
       # XXX: should we provide a way to register column map as a separate 
       # method or do it here ?
       # Column Map was not built yet, do it.
-      self.column_map = column_map = ColumnMap(catalog_table_name=self.catalog_table_name)
+      column_map = ColumnMap(catalog_table_name=self.catalog_table_name,
+                             table_override_map=self.from_expression,
+                             left_join_list=self.left_join_list,
+                             implicit_join=self.implicit_join,
+                            )
+      self.column_map = column_map
       for extra_column in self.extra_column_list:
         table, column = extra_column.replace('`', '').split('.')
         if table != self.catalog_table_name:
@@ -145,30 +161,55 @@ class EntireQuery(object):
             None, ) * (3 - len(order_by)))
       self.order_by_list = new_order_by_list
       # generate SQLExpression from query
-      sql_expression_list = [self.query.asSQLExpression(sql_catalog, column_map, only_group_columns)]
-      # generate join expression based on column_map.getJoinTableAliasList
+      sql_expression_list = [self.query.asSQLExpression(sql_catalog,
+                                                        column_map,
+                                                        only_group_columns)]
       append = sql_expression_list.append
       for join_query in column_map.iterJoinQueryList():
-        append(join_query.asSQLExpression(sql_catalog, column_map, only_group_columns))
-      join_table_list = column_map.getJoinTableAliasList()
-      if len(join_table_list):
-        # XXX: Is there any special rule to observe when joining tables ?
-        # Maybe we could check which column is a primary key instead of
-        # hardcoding "uid".
-        where_pattern = '`%s`.`uid` = `%%s`.`uid`' % \
-          (column_map.getCatalogTableAlias(), )
-        # XXX: It would cleaner from completeness point of view to use column
-        # mapper to render column, but makes code much more complex to just do
-        # a simple text rendering. If there is any reason why we should have
-        # those column in the mapper, then we should use the clean way.
-        append(SQLExpression(self, where_expression=' AND '.join(
-          where_pattern % (x, ) for x in join_table_list
-        )))
+        append(join_query.asSQLExpression(sql_catalog,
+                                          column_map, 
+                                          only_group_columns))
+      # generate join expression based on column_map.getJoinTableAliasList
+      # XXX: This is now done by ColumnMap to its table_definition,
+      # during build()
+      #
+      # join_table_list = column_map.getJoinTableAliasList()
+      # if len(join_table_list):
+      #   # XXX: Is there any special rule to observe when joining tables ?
+      #   # Maybe we could check which column is a primary key instead of
+      #   # hardcoding "uid".
+      #   where_pattern = '`%s`.`uid` = `%%s`.`uid`' % \
+      #     (column_map.getCatalogTableAlias(), )
+      #   # XXX: It would cleaner from completeness point of view to use column
+      #   # mapper to render column, but makes code much more complex to just do
+      #   # a simple text rendering. If there is any reason why we should have
+      #   # those column in the mapper, then we should use the clean way.
+      #   append(SQLExpression(self, where_expression=' AND '.join(
+      #     where_pattern % (x, ) for x in join_table_list
+      #   )))
+
+      # BBB self.from_expression forces use of implicit inner join
+      table_alias_dict = column_map.getTableAliasDict()
+      if self.from_expression:
+        warnings.warn("Providing a 'from_expression' is deprecated.",
+                      DeprecationWarning)
+        # XXX: perhaps move this code to ColumnMap?
+        legacy_from_expression = self.from_expression
+        from_expression = LegacyTableDefinition(legacy_from_expression,
+                                                table_alias_dict)
+        table_alias_dict = None
+      else:
+        from_expression = column_map.getTableDefinition()
+        assert ((from_expression is None) !=
+                (table_alias_dict is None)), ("Got both a from_expression "
+                                              "and a table_alias_dict")
       self.sql_expression_list = sql_expression_list
+      # TODO: wrap the table_alias_dict above into a TableDefinition as well,
+      # even without a legacy_table_definition.
     return SQLExpression(
       self,
-      table_alias_dict=column_map.getTableAliasDict(),
-      from_expression=self.from_expression,
+      table_alias_dict=table_alias_dict,
+      from_expression=from_expression,
       order_by_list=self.order_by_list,
       group_by_list=self.group_by_list,
       select_dict=self.final_select_dict,

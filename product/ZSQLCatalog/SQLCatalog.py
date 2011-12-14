@@ -2291,6 +2291,13 @@ class Catalog(Folder,
         select_dict = None
     elif isinstance(select_dict, (list, tuple)):
       select_dict = dict([(x, None) for x in select_dict])
+    # Handle left_join_list
+    left_join_list = kw.pop('left_join_list', ())
+    # Handle implicit_join. It's True by default, as there's a lot of code
+    # in BT5s and elsewhere that calls buildSQLQuery() expecting implicit
+    # join. self._queryResults() defaults it to False for those using
+    # catalog.searchResults(...) or catalog(...) directly.
+    implicit_join = kw.pop('implicit_join', True)
     # Handle order_by_list
     order_by_list = kw.pop('order_by_list', None)
     sort_on = kw.pop('sort_on', None)
@@ -2328,6 +2335,8 @@ class Catalog(Folder,
       order_by_override_list=order_by_override_list,
       group_by_list=group_by_list,
       select_dict=select_dict,
+      left_join_list=left_join_list,
+      implicit_join=implicit_join,
       limit=limit,
       catalog_table_name=query_table,
       extra_column_list=extra_column_list,
@@ -2413,6 +2422,7 @@ class Catalog(Folder,
     """ Returns a list of brains from a set of constraints on variables """
     if build_sql_query_method is None:
       build_sql_query_method = self.buildSQLQuery
+    kw.setdefault('implicit_join', False)
     query = build_sql_query_method(REQUEST=REQUEST, **kw)
     # XXX: decide if this should be made normal
     ENFORCE_SEPARATION = True

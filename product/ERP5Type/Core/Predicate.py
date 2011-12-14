@@ -329,7 +329,10 @@ class Predicate(XMLObject):
       catalog_kw['where_expression'] = SQLQuery(sql_text)
     else:
       catalog_kw['where_expression'] = ''
+    # force implicit join
+    catalog_kw['implicit_join'] = True
     sql_query = portal_catalog.buildSQLQuery(**catalog_kw)
+    # XXX from_table_list is None most of the time after the explicit_join work
     for alias, table in sql_query['from_table_list']:
       if from_table_dict.has_key(alias):
         raise KeyError, "The same table is used twice for an identity criterion and for a membership criterion"

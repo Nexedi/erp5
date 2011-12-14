@@ -27,11 +27,18 @@
 #
 ##############################################################################
 
+import re
+import itertools
 from zLOG import LOG, WARNING, INFO
 from interfaces.column_map import IColumnMap
 from zope.interface.verify import verifyClass
 from zope.interface import implements
-from SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.interfaces.column_map import IColumnMap
+from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.TableDefinition import (PlaceHolderTableDefinition,
+                                                  TableAlias,
+                                                  InnerJoin,
+                                                  LeftJoin)
 
 DEFAULT_GROUP_ID = None
 
@@ -43,12 +50,18 @@ MAPPING_TRACE = False
 #       currently, it's not possible because related_key_dict is indexed by related key name, which makes 'source_title_1' lookup fail. It should be indexed by group (probably).
 # TODO: rename all "related_key" references into "virtual_column"
 
+re_sql_as = re.compile("\s+AS\s[^)]+$", re.IGNORECASE | re.MULTILINE)
+
 class ColumnMap(object):
 
   implements(IColumnMap)
 
   @profiler_decorator
-  def __init__(self, catalog_table_name=None):
+  def __init__(self,
+               catalog_table_name=None,
+               table_override_map=None,
+               left_join_list=None,
+               implicit_join=False):
     self.catalog_table_name = catalog_table_name
     # Key: group
     # Value: set of column names
@@ -81,15 +94,28 @@ class ColumnMap(object):
     self.raw_column_dict = {}
     # Entries: column name
     self.column_ignore_set = set()
-    self.join_table_set = set()
-    self.straight_join_table_list = []
-    self.left_join_table_list = []
+    self.join_table_map = dict()
+    # BBB: Remove join_query_list and its uses when all RelatedKey
+    # methods have been converted to properly return each Join
+    # condition separately, and all uses of catalog's from_expression
+    # have been removed.
     self.join_query_list = []
+    self.table_override_map = table_override_map or {}
+    self.table_definition = PlaceHolderTableDefinition()
+    # We need to keep track of the original definition to do inner joins on it
+    self._inner_table_definition = self.table_definition
+    self.left_join_list = left_join_list
+    self.implicit_join = implicit_join
+    assert not (self.implicit_join and self.left_join_list), (
+      "Cannot do left_joins while forcing implicit join"
+    )
 
   @profiler_decorator
   def registerColumn(self, raw_column, group=DEFAULT_GROUP_ID, simple_query=None):
     assert ' as ' not in raw_column.lower()
     # Sanitize input: extract column from raw column (might contain COUNT, ...).
+    # XXX This is not enough to parse something like: 
+    # GROUP_CONCAT(DISTINCT foo ORDER BY bar)
     if '(' in raw_column:
       function, column = raw_column.split('(')
       column = column.strip()
@@ -120,7 +146,7 @@ class ColumnMap(object):
         # When a column is registered  in default group and is explicitely
         # mapped to a table, we must mark its table as requiring a join with
         # catalog table (unless it's the catalog table, of course).
-        self._addJoinTable(table, group)
+        self._addJoinTableForColumn(table, table + "." + column, group)
 
   def ignoreColumn(self, column):
     self.column_ignore_set.add(column)
@@ -255,7 +281,7 @@ class ColumnMap(object):
           #   Although the list of tables those columns belong to is known
           #   earlier (in "build"), mapping them here
           #   - avoids code duplication (registerTable, resolveColumn,
-          #     _addJoinTable)
+          #     _addJoinTableForColumn)
           #   - offers user to vote for an unknown table, overriding this
           #     forced mapping.
           use_allowed = table_name == catalog_table_name or \
@@ -300,10 +326,11 @@ class ColumnMap(object):
       self.registerTable(table_name, group=group)
       self.resolveColumn(column_name, table_name, group=group)
       if table_name != catalog_table_name:
-        self._addJoinTable(table_name, group)
+        self._addJoinTableForColumn(table_name, column_name, group)
 
   @profiler_decorator
   def build(self, sql_catalog):
+    join_query_to_build_list = []
     catalog_table_name = self.catalog_table_name
     if catalog_table_name is None:
       return
@@ -319,7 +346,7 @@ class ColumnMap(object):
         if related_key_definition is not None:
           join_query = sql_catalog.getSearchKey(column_name, 'RelatedKey').buildQuery(sql_catalog=sql_catalog, related_key_definition=related_key_definition)
           join_query.registerColumnMap(sql_catalog, self)
-          self._addJoinQuery(join_query)
+          join_query_to_build_list.append(join_query)
 
     # List all possible tables, with all used column for each
     for group, column_set in self.registry.iteritems():
@@ -397,6 +424,20 @@ class ColumnMap(object):
         table_alias_number_dict[alias_table_name] = table_alias_number
       self.resolveTable(table_name, alias, group=group)
 
+    # now that we have all aliases, calculate missing joins comming from
+    # non-RelatedKey relationships (like full_text).
+    self.registerCatalog()
+    self._calculateMissingJoins()
+    # and all left joins that did not come from explicit queries
+    # (i.e. joins comming from 'sort_on', 'select_dict', etc.)
+    for join_query in join_query_to_build_list:
+      # XXX ugly use of inner attribute of join_query. Please Refactor:
+      # search_keys don't actually return SQLExpressions, but they add
+      # join definitions in the column_map
+      join_query.search_key.buildSQLExpression(sql_catalog=sql_catalog,
+                                               column_map=self,
+                                               only_group_columns=False,
+                                               group=join_query.group,)
     if MAPPING_TRACE:
       # Key: group
       # Value: 2-tuple
@@ -441,8 +482,28 @@ class ColumnMap(object):
   def getCatalogTableAlias(self, group=DEFAULT_GROUP_ID):
     return self.table_alias_dict[(group, self.catalog_table_name)]
 
+  def _isBackwardCompatibilityRequired(self):
+    return bool(
+      # if they explicitly ask for implicit
+      self.implicit_join or
+      # if they don't pass a catalog alias, we cannot do explicit joins
+      not self._setMinimalTableDefinition() or
+      # If one or more RelatedKey methods weren't converted, we'll get
+      # queries for an implicit inner join, so we have to do all joins
+      # as implicit.
+      self.join_query_list or
+      # for now, work in BW compat mode if a table_override
+      # is passed.  It only works for simple subselect
+      # definitions anyway, and it's being used primarily
+      # for writing left-joins manually.
+      self.table_override_map)
+
   def getTableAliasDict(self):
-    return self.table_map.copy()
+    if self._isBackwardCompatibilityRequired():
+      # BBB: Using implicit joins or explicit from_expression
+      return self.table_map.copy()
+    else:
+      return None
 
   @profiler_decorator
   def resolveColumn(self, column, table_name, group=DEFAULT_GROUP_ID):
@@ -472,16 +533,30 @@ class ColumnMap(object):
   def getTableAlias(self, table_name, group=DEFAULT_GROUP_ID):
     return self.table_alias_dict[(group, table_name)]
 
-  def _addJoinQuery(self, query):
+  def _addJoinQueryForColumn(self, column, query):
+    # BBB: This is a backward compatibility method that will be
+    # removed in the future, when all related key methods have been adapted
+    # to provide all Join conditions separately
+    if column in self.left_join_list:
+      raise RuntimeError('Left Join requested for column: %r, but rendered '
+                         'join query is not compatible and would result in an '
+                         'Implicit Inner Join:\n%s' % 
+                         (column, query,))
     self.join_query_list.append(query)
 
   def iterJoinQueryList(self):
-    return iter(self.join_query_list)
+    if self._isBackwardCompatibilityRequired():
+      # Return all join queries for implicit join, and all the other
+      # queries we were using to build explicit joins, but won't be able to.
+      return itertools.chain(self.join_query_list,
+                             self.table_definition.getJoinConditionQueryList())
+    return []
+    
 
   @profiler_decorator
-  def _addJoinTable(self, table_name, group=DEFAULT_GROUP_ID):
+  def _addJoinTableForColumn(self, table_name, column, group=DEFAULT_GROUP_ID):
     """
-      Declare given table as requiring to be joined with catalog table.
+      Declare given table as requiring to be joined with catalog table on uid.
 
       table_name (string)
         Table name.
@@ -497,17 +572,137 @@ class ColumnMap(object):
         # Register uid column if it is not already
         self.registerColumn('uid')
         self.resolveColumn('uid', catalog_table)
-      self.join_table_set.add((group, table_name))
+      self.join_table_map.setdefault((group, table_name), set()).add(column)
 
   def getJoinTableAliasList(self):
     return [self.getTableAlias(table_name, group=group)
-            for (group, table_name) in self.join_table_set]
+            for (group, table_name) in self.join_table_map.keys()]
 
-  def getStraightJoinTableList(self):
-    return self.straight_join_table_list[:]
+  def _getTableOverride(self, table_name):
+    # self.table_override_map is a dictionary mapping table names to
+    # strings containing aliases of arbitrary table definitions
+    # (including subselects). So we split the alias and discard it
+    # since we do our own aliasing.
+    table_override_w_alias = self.table_override_map.get(table_name)
+    if table_override_w_alias is None:
+      return table_name
+    # XXX move the cleanup of table alias overrides to EntireQuery
+    # class or ZSQLCatalog, so we don't need SQL syntax knowledge in
+    # ColumnMap. 
+    #
+    # Normalise the AS sql keyword to remove the last
+    # aliasing in the string if present. E.g.:
+    # 
+    # '(SELECT sub_catalog.* 
+    #   FROM catalog AS sub_catalog
+    #   WHERE sub_catalog.parent_uid=183) AS catalog'
+    #
+    # becomes:
+    #
+    # '(SELECT sub_catalog.* 
+    #   FROM catalog AS sub_catalog
+    #   WHERE sub_catalog.parent_uid=183)'
+    table_override, removed = re_sql_as.subn('', table_override_w_alias)
+    assert removed < 2, ('More than one table aliasing was removed from %r' %
+                        table_override_w_alias)
+    if removed:
+      LOG('ColumnMap', WARNING,
+          'Table overrides should not contain aliasing: %r' % table_override)
+    return table_override
 
-  def getLeftJoinTableList(self):
-    return self.left_join_table_list[:]
+  def makeTableAliasDefinition(self, table_name, table_alias):
+    """Make a table alias, giving a change to ColumnMap to override
+    the original table definition with another expression"""
+    table_name = self._getTableOverride(table_name)
+    assert table_name and table_alias, ("table_name (%r) and table_alias (%r) "
+                                        "must both be defined" %
+                                        (table_name, table_alias))
+    return TableAlias(table_name, table_alias)
+
+  def _setMinimalTableDefinition(self):
+    """ Set a minimal table definition: the main catalog alias
+
+    We don't do this at __init__ because we have neither the catalog
+    table name nor its intended alias at that point.
+    """
+    inner_def = self._inner_table_definition
+    if inner_def.table_definition is None:
+      try:
+        catalog_table_alias = self.getCatalogTableAlias()
+      except KeyError:
+        LOG('ColumnMap', WARNING,
+            '_setMinimalTableDefinition called but the main catalog has not '
+            'yet received an alias!')
+        return False
+      inner_def.replace(self.makeTableAliasDefinition(self.catalog_table_name,
+                                                      catalog_table_alias))
+    return True
+
+  def getTableDefinition(self):
+    if self._isBackwardCompatibilityRequired():
+      # BBB: One of the RelatedKeys registered an implicit join, do
+      # not return a table definition, self.getTableAliasDict() should
+      # be used instead
+      return None
+    self.table_definition.checkTableAliases()
+    return self.table_definition
+
+  def addRelatedKeyJoin(self, column, right_side, condition):
+    """ Wraps the current table_definition in the left-side of a new
+    join.  Use an InnerJoin or a LeftJoin depending on whether the
+    column is in the left_join_list or not.
+    """
+    # XXX: to fix TestERP5Catalog.test_52_QueryAndTableAlias, create
+    # here a list of joins and try to merge each new entry into one of
+    # the pre-existing entries by comparing their right-sides.
+    # 
+    # XXX 2: This is the place were we could do ordering of inner and left
+    # joins so as to get better performance. For instance, a quick win is to
+    # add all inner-joins first, and all left-joins later. We could also decide
+    # on the order of left-joins based on the order of self.left_join_list or
+    # even a catalog property/configuration/script.
+    #
+    # XXX 3: This is also the place where we could check if explicit
+    # table aliases should cause some of these table definitions to be
+    # collapsed into others.
+    assert self._setMinimalTableDefinition()
+    Join = (column in self.left_join_list) and LeftJoin or InnerJoin
+    join_definition = Join(self.table_definition, right_side,
+                           condition=condition)
+    self.table_definition = join_definition
+
+  # def getFinalTableDefinition(self):
+  #   self._calculateMissingJoins()
+  #   return self.getTableDefinition()
+
+  def _calculateMissingJoins(self):
+    left_join_set = set(self.left_join_list)
+    self._setMinimalTableDefinition()
+    catalog_table_alias = self.getCatalogTableAlias()
+    for (group, table_name), column_set in self.join_table_map.items():
+      # if any of the columns for this implicit join was requested as a
+      # left-join, then all columns will be subject to a left-join.
+      # XXX What if one of the columns was an actual query, as opposed to a
+      # sort column or select_dict? This would cause results in the main
+      # catalog that don't match the query to be present as well. We expect
+      # the user which passes a left_join_list to know what he is doing.
+      if column_set.intersection(left_join_set):
+        Join = LeftJoin
+      else:
+        Join = InnerJoin
+      table_alias = self.getTableAlias(table_name, group=group)
+      table_alias_def = self.makeTableAliasDefinition(table_name, table_alias)
+      # XXX: perhaps refactor some of the code below to do:
+      # self._inner_table_definition.addInnerJoin(TableAlias(...),
+      #                                           condition=(...))
+      self._inner_table_definition.replace(
+        Join(self._inner_table_definition.table_definition,
+                  table_alias_def,
+                  # XXX ColumnMap shouldn't have SQL knowledge
+                  condition=('`%s`.`uid` = `%s`.`uid`' %
+                             (table_alias, catalog_table_alias)),
+                  )
+        )
 
 verifyClass(IColumnMap, ColumnMap)
 
