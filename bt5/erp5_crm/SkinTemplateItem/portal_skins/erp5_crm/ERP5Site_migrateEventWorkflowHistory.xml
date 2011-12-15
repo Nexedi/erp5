@@ -51,8 +51,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>active_process = context.getPortalObject().portal_activities.newActiveProcess()\n
-context.ERP5Site_checkDataWithScript("Event_migrateEventWorkflowHistory",\n
+context.getPortalObject().ERP5Site_checkDataWithScript("Event_migrateEventWorkflowHistory",\n
                                      tag="migrate",\n
+                                     relative_url="event_module",\n
+                                     full=1,\n
                                      active_process=active_process.getPath())\n
 print "Migration started with process id: %s" %active_process.getPath()\n
 return printed\n
