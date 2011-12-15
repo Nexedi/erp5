@@ -1,3 +1,6 @@
+2011-12-15 yusei
+* Fix ProductionOrderLine.resource_category_existence. Any resource type document is ok to be used as resource on production order line.
+
 2011-11-09 tatuya
 * Add same_total_quantity into PaySheetModel.
 
