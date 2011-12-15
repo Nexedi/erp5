@@ -102,33 +102,35 @@ class InvoiceTransactionRuleMovementGenerator(MovementGeneratorMixin):
     # deliveryValue
     #  * price_currency from the top level simulation movement's
     # orderValue
-    invoice_line = input_movement.getDeliveryValue()
-    if invoice_line is None:
-      resource = None
-    else:
-      invoice = invoice_line.getExplanationValue()
-      resource = invoice.getProperty('resource',
-                  invoice.getProperty('price_currency', None))
-    portal = input_movement.getPortalObject()
+    resource = input_movement.getPriceCurrency()
     if resource is None:
-      # search the resource on parents simulation movement's deliveries
-      simulation_movement = input_movement
-      portal_simulation = portal.portal_simulation
-      while resource is None and \
-                  simulation_movement != portal_simulation :
-        delivery = simulation_movement.getDeliveryValue()
-        if delivery is not None:
-          resource = delivery.getProperty('price_currency', None)
-        if (resource is None) and \
-            (simulation_movement.getParentValue().getParentValue() \
-                                  == portal_simulation) :
-          # we are on the first simulation movement, we'll try
-          # to get the resource from it's order price currency.
-          order = simulation_movement.getOrderValue()
-          if order is not None:
-            resource = order.getProperty('price_currency', None)
-        simulation_movement = simulation_movement\
-                                    .getParentValue().getParentValue()
+      invoice_line = input_movement.getDeliveryValue()
+      if invoice_line is None:
+        resource = None
+      else:
+        invoice = invoice_line.getExplanationValue()
+        resource = invoice.getProperty('resource',
+                    invoice.getProperty('price_currency', None))
+      portal = input_movement.getPortalObject()
+      if resource is None:
+        # search the resource on parents simulation movement's deliveries
+        simulation_movement = input_movement
+        portal_simulation = portal.portal_simulation
+        while resource is None and \
+                    simulation_movement != portal_simulation :
+          delivery = simulation_movement.getDeliveryValue()
+          if delivery is not None:
+            resource = delivery.getProperty('price_currency', None)
+          if (resource is None) and \
+              (simulation_movement.getParentValue().getParentValue() \
+                                    == portal_simulation) :
+            # we are on the first simulation movement, we'll try
+            # to get the resource from it's order price currency.
+            order = simulation_movement.getOrderValue()
+            if order is not None:
+              resource = order.getProperty('price_currency', None)
+          simulation_movement = simulation_movement\
+                                      .getParentValue().getParentValue()
 
     kw = {'delivery': None, 'resource': resource, 'price': 1}
 
