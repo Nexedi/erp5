@@ -383,7 +383,7 @@ class FolderMixIn(ExtensionClass.Base):
     activate_kw.setdefault('active_process', None)
     activate = portal.portal_activities.activateObject
     validate = restricted and getSecurityManager().validate
-    cost = activate_kw.get('group_method_cost', .034) # 30 objects
+    cost = activate_kw.setdefault('group_method_cost', .034) # 30 objects
     if cost != 1:
       activate_kw.setdefault('group_method_id', None) # dummy group method
     activity_count = kw.get('activity_count', 1000)
@@ -394,7 +394,7 @@ class FolderMixIn(ExtensionClass.Base):
     try:
       recurse_stack = kw['_recurse_stack']
     except KeyError:
-      recurse_stack = [id_list and deque(id_list) or min_id or '']
+      recurse_stack = [deque(id_list) if id_list else min_id or '']
       kw['_recurse_stack'] = recurse_stack
     min_depth = kw.get('min_depth', 0)
     max_depth = kw.get('max_depth', 0)
@@ -445,9 +445,11 @@ class FolderMixIn(ExtensionClass.Base):
         method_id, method_args, method_kw, restricted=restricted, **kw)
 
   security.declarePublic('recurseCallMethod')
-  def recurseCallMethod(self, *args, **kw):
+  def recurseCallMethod(self, method_id, *args, **kw):
     """Restricted version of _recurseCallMethod"""
-    return self._recurseCallMethod(restricted=True, *args, **kw)
+    if method_id[0] == '_':
+        raise AccessControl_Unauthorized(method_id)
+    return self._recurseCallMethod(method_id, restricted=True, *args, **kw)
 
 OFS_HANDLER = 0
 BTREE_HANDLER = 1
