@@ -61,6 +61,9 @@ class TestZeleniumConfiguratorStandard(ERP5TypeFunctionalTestCase):
             'erp5_configurator', 'erp5_configurator_standard',
             # Test suite
            'erp5_ui_test_core', 'erp5_configurator_standard_ui_test',
+           'erp5_crm', 'erp5_ingestion', 'erp5_ingestion_catalog', 
+           'erp5_web', 
+           'erp5_dms', 'erp5_trade', 'erp5_accounting'
            'erp5_user_tutorial_ui_test')
 
 def test_suite():
