@@ -236,6 +236,17 @@ class TestFloatField(ERP5TypeTestCase):
     self.assertEquals(node.get('{%s}value-type' % NSMAP['office']), 'float')
     self.assertEquals(node.get('{%s}value' % NSMAP['office']), str(1000.0))
 
+  def test_fullwidth_number_conversion(self):
+    self.portal.REQUEST.set('field_test_field', '１2３．４5')
+    self.assertEquals(123.45,
+        self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
+
+  def test_fullwidth_minus_number_conversion(self):
+    self.portal.REQUEST.set('field_test_field', '−１2３．４5')
+    self.assertEquals(-123.45,
+        self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
+
+
 class TestIntegerField(ERP5TypeTestCase):
   """Tests integer field
   """
@@ -246,6 +257,7 @@ class TestIntegerField(ERP5TypeTestCase):
   def afterSetUp(self):
     self.field = IntegerField('test_field')
     self.widget = self.field.widget
+    self.validator = self.field.validator
 
   def test_render_odt(self):
     self.field.values['default'] = 34
@@ -268,6 +280,16 @@ class TestIntegerField(ERP5TypeTestCase):
     test_value = self.field.render_odg(value=0, as_string=False)\
       .xpath('%s/text()' % ODG_XML_WRAPPING_XPATH, namespaces=NSMAP)[0]
     self.assertEquals('0', test_value)
+
+  def test_fullwidth_number_conversion(self):
+    self.portal.REQUEST.set('field_test_field', '１２３４')
+    self.assertEquals(1234,
+        self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
+
+  def test_fullwidth_minus_number_conversion(self):
+    self.portal.REQUEST.set('field_test_field', 'ー１２３４')
+    self.assertEquals(-1234,
+        self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
 
 
 class TestStringField(ERP5TypeTestCase):
@@ -315,6 +337,7 @@ class TestDateTimeField(ERP5TypeTestCase):
   def afterSetUp(self):
     self.field = DateTimeField('test_field')
     self.widget = self.field.widget
+    self.validator = self.field.validator
 
   def test_render_odt(self):
     self.field.values['default'] = DateTime('2010/01/01 00:00:01 UTC')
@@ -338,6 +361,16 @@ class TestDateTimeField(ERP5TypeTestCase):
     self.field.values['default'] = None
     node = self.field.render_odt_variable(as_string=False)
     self.assertTrue(node is not None)
+
+  def test_fullwidth_number_conversion(self):
+    self.portal.REQUEST.set('subfield_field_test_field_year', '２０１１')
+    self.portal.REQUEST.set('subfield_field_test_field_month', '１２')
+    self.portal.REQUEST.set('subfield_field_test_field_day', '１５')
+    self.portal.REQUEST.set('subfield_field_test_field_hour', '０２')
+    self.portal.REQUEST.set('subfield_field_test_field_minute', '１８')
+    self.assertEquals(DateTime('2011/12/15 02:18:00'),
+        self.validator.validate(self.field, 'field_test_field', self.portal.REQUEST))
+
 
 class TestTextAreaField(ERP5TypeTestCase):
   """Tests TextArea field
