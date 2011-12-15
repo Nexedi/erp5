@@ -91,7 +91,7 @@
 <tr>\n
   <td>assertText</td>\n
   <td>breadcrumb</td>\n
-  <td>ERP5*/*Foos*/*short*/</td>\n
+  <td>ERP5*/*Foos*/*Title 0*/</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -100,7 +100,7 @@
 </tr>\n
 <tr>\n
   <td>assertAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}/foo_module/0" />\n
+  <td tal:content="string:glob:${here/portal_url}/foo_module/0/view" />\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -110,7 +110,7 @@
 </tr>\n
 <tr>\n
   <td>assertAbsoluteLocation</td>\n
-  <td tal:content="string:glob:${here/portal_url}" />\n
+  <td tal:content="string:glob:${here/portal_url}/view" />\n
   <td></td>\n
 </tr>\n
 \n
