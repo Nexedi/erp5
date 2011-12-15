@@ -57,6 +57,7 @@
 \n
 from Products.ERP5Type.Message import Message\n
 from Products.ERP5Type.Document import newTempBase\n
+from Products.PythonScripts.standard import url_quote\n
 from string import zfill\n
 portal = context.getPortalObject()\n
 request = context.REQUEST\n
@@ -116,8 +117,8 @@ if depth == 0:\n
     o.setProperty(\'title\', current_date.strftime(date_format))\n
     tp = \'%s %s\' % (Message(domain=\'erp5_ui\', message=current_date.Day(), mapping=None), str(current_date))\n
     o.setProperty(\'tooltip\', tp)\n
-\n
-    link = \'%s&bound_start=%s&lane_path=base_week_domain\' % ( default_link_url, current_date)\n
+    context.log(current_date)\n
+    link = \'%s&bound_start=%s&lane_path=base_week_domain\' % ( default_link_url, url_quote(str(current_date)))\n
     o.setProperty(\'link\', link) \n
 \n
     category_list.append(o) \n
