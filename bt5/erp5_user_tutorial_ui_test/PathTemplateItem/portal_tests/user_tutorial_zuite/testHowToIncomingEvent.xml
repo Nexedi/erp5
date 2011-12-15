@@ -113,7 +113,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//input[@name="field_your_direction" and @value="in"]</td>\n
+  <td>//input[@name="field_your_direction" and @value="incoming"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

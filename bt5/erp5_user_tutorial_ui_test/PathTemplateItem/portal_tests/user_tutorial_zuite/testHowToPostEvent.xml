@@ -80,7 +80,7 @@
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
-  <td>Post Event</td>\n
+  <td>Send</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -95,7 +95,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-  <td>Posted</td>\n
+  <td>Sent</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -120,7 +120,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[7]/</td>\n
-  <td>Posted</td>\n
+  <td>Sent</td>\n
 </tr>\n
 <tr>\n
   <td>selectAndWait</td>\n

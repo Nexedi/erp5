@@ -1,5 +1,7 @@
 portal_categories/activity/education
 portal_categories/activity/education/**
+portal_categories/base_amount/taxable
+portal_categories/base_amount/taxable/**
 portal_categories/function/marketing
 portal_categories/function/marketing/**
 portal_categories/function/sales
