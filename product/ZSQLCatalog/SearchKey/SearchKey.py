@@ -243,7 +243,9 @@ class SearchKey(object):
             LOG('SearchKey', 100,
                 '"range" and "operator" are mutualy exclusive, ignoring '\
                 'operator: %r' % (search_value, ))
-          if value_range in single_operator_dict:
+          if value_range in operator_list:
+            comparison_operator = value_range
+          elif value_range in single_operator_dict:
             comparison_operator = single_operator_dict[value_range]
           elif value_range in dual_operator_dict:
             if not isinstance(actual_value, (tuple, list)):
