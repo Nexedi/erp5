@@ -43,7 +43,7 @@ class TestRunMyDocsConfiguratorWorkflowMixin(ERP5TypeTestCase):
                          'erp5_slideshow_style',
                          'erp5_knowledge_pad',
                          'erp5_run_my_doc',
-                         'erp5_run_my_doc_roles')
+                         'erp5_run_my_doc_role')
 
   DEFAULT_SEQUENCE_LIST = """
      stepCreateBusinessConfiguration

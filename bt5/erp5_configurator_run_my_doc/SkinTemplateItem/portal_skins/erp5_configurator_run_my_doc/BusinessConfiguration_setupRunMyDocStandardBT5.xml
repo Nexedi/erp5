@@ -62,7 +62,7 @@ bt5_installation_list = (\'erp5_jquery\',\n
                          \'erp5_slideshow_style\',\n
                          \'erp5_knowledge_pad\',\n
                          \'erp5_run_my_doc\',\n
-                         \'erp5_run_my_doc_roles\')\n
+                         \'erp5_run_my_doc_role\')\n
 \n
 bt5_update_catalog = (\'erp5_ingestion_mysql_innodb_catalog\')\n
 \n
