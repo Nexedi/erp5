@@ -49,6 +49,7 @@ specific_reference\r\n
 group_by\r\n
 search_result_keys=\'\'\r\n
 delivery_mirror_section_title=""\r\n
+delivery_own_section_title=""\r\n
 source_section_where_expression\r\n
 destination_section_where_expression</string> </value>
         </item>
@@ -90,7 +91,7 @@ destination_section_where_expression</string> </value>
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), select_expression_key=(\'operation_date\', \'specific_reference\', \'delivery_mirror_section_title\',), **selection_params)">\n
+<dtml-let query="portal_catalog.buildSQLQuery(query=portal_catalog.getSecurityQuery(**selection_params), select_expression_key=(\'operation_date\', \'specific_reference\', \'delivery_mirror_section_title\', \'delivery_own_section_title\'), **selection_params)">\n
 <dtml-let search_result_keys="search_result_keys or portal_catalog.getCatalogSearchResultKeys()">\n
 <dtml-let use_movement_table="from_date or to_date or at_date or resource or stat or amount or amount_range_min or amount_range_max">\n
 <dtml-let accounting_movement_list="portal_url.getPortalObject().getPortalAccountingMovementTypeList()">\n
@@ -299,6 +300,7 @@ destination_section_where_expression</string> </value>
           <dtml-else>\n
            catalog.*,\n
           ( SELECT title FROM catalog as mirror_catalog WHERE mirror_catalog.uid=catalog.delivery_mirror_section_uid ) AS delivery_mirror_section_title,\n
+          ( SELECT title FROM catalog as own_catalog WHERE own_catalog.uid=catalog.delivery_own_section_uid ) AS delivery_own_section_title,\n
           ( SELECT IFNULL(SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price > 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS debit,\n
           ( SELECT IFNULL(-SUM(stock.total_price), 0) FROM stock, catalog AS child WHERE child.uid = stock.uid AND child.parent_uid = catalog.uid AND stock.section_uid=catalog.category_uid AND stock.total_price < 0 AND <dtml-sqltest accounting_movement_list type=string column=child.portal_type op=eq multiple>) AS credit\n
           </dtml-if>\n
@@ -325,6 +327,7 @@ destination_section_where_expression</string> </value>
             DISTINCT\n
             delivery.start_date as operation_date\n
             , delivery.destination_section_uid as delivery_mirror_section_uid\n
+            , delivery.source_section_uid as delivery_own_section_uid\n
             , \'source\' as section_mark\n
             , catalog.source_reference as specific_reference\n
             , catalog.*\n
@@ -355,6 +358,7 @@ destination_section_where_expression</string> </value>
               stock, catalog as child, </dtml-if>\n
           <dtml-if "section_category">category, catalog as section, </dtml-if>\n
           <dtml-if "delivery_mirror_section_title">delivery AS mirror_section_delivery, catalog AS mirror_section_catalog,</dtml-if>\n
+          <dtml-if "delivery_own_section_title">delivery AS own_section_delivery, catalog AS own_section_catalog,</dtml-if>\n
           catalog,\n
           delivery\n
         \n
@@ -419,6 +423,11 @@ destination_section_where_expression</string> </value>
             AND mirror_section_catalog.uid = mirror_section_delivery.destination_section_uid\n
             AND mirror_section_delivery.uid = catalog.uid\n
             AND <dtml-sqltest delivery_mirror_section_title type=string op=like column=mirror_section_catalog.title>\n
+          </dtml-if>\n
+          <dtml-if "delivery_own_section_title">\n
+            AND own_section_catalog.uid = own_section_delivery.source_section_uid\n
+            AND own_section_delivery.uid = catalog.uid\n
+            AND <dtml-sqltest delivery_own_section_title type=string op=like column=own_section_catalog.title>\n
           </dtml-if>\n
           \n
           <dtml-if from_date>\n
@@ -513,6 +522,7 @@ UNION\n
             DISTINCT\n
             delivery.stop_date as operation_date\n
             , delivery.source_section_uid as delivery_mirror_section_uid\n
+            , delivery.destination_section_uid as delivery_own_section_uid\n
             , \'destination\' as section_mark\n
             , catalog.destination_reference as specific_reference\n
             , catalog.*\n
@@ -543,6 +553,7 @@ UNION\n
               stock, catalog as child, </dtml-if>\n
           <dtml-if "section_category">category, catalog as section, </dtml-if>\n
           <dtml-if "delivery_mirror_section_title">delivery AS mirror_section_delivery, catalog AS mirror_section_catalog,</dtml-if>\n
+          <dtml-if "delivery_own_section_title">delivery AS own_section_delivery, catalog AS own_section_catalog,</dtml-if>\n
           catalog,\n
           delivery\n
         \n
@@ -607,6 +618,11 @@ UNION\n
             AND mirror_section_catalog.uid = mirror_section_delivery.source_section_uid\n
             AND mirror_section_delivery.uid = catalog.uid\n
             AND <dtml-sqltest delivery_mirror_section_title type=string op=like column=mirror_section_catalog.title>\n
+          </dtml-if>\n
+          <dtml-if "delivery_own_section_title">\n
+            AND own_section_catalog.uid = own_section_delivery.destination_section_uid\n
+            AND own_section_delivery.uid = catalog.uid\n
+            AND <dtml-sqltest delivery_own_section_title type=string op=like column=own_section_catalog.title>\n
           </dtml-if>\n
 \n
           <dtml-if from_date>\n

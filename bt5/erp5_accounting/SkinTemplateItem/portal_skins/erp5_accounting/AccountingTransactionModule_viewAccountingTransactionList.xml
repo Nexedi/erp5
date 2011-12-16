@@ -63,6 +63,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_delivery_own_section_title</string>
                       </list>
                     </value>
                 </item>

@@ -1,3 +1,6 @@
+2011-12-16 arnaud.fontaine
+* Display "Own Section" along "Third Party" in AccountingTransactionModule_viewAccountingTransactionList.
+
 2011-12-12 arnaud.fontaine
 * Display thousand separator of currency fields according to 'Money Quantity Style' user preference.
 
