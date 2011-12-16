@@ -123,7 +123,7 @@
 <tr>\n
   <td>type</td>\n
   <td>//input[@name="field_my_specialise_title"]</td>\n
-  <td>erp5_default_business_process</td>\n
+  <td>Default Sale Order Trade Condition</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n

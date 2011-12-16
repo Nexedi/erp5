@@ -63,6 +63,12 @@ business_process = context.portal_catalog.getResultValue(portal_type=\'Business 
 if isTransitionPossible(business_process, \'validate\'):\n
   business_process.validate()\n
 \n
+# XXX: add default sale order trade condition\n
+sale_order_trade_condition = context.portal_catalog.getResultValue(portal_type=\'Sale Trade Condition\',\n
+                                                                  reference=\'default-sale-order-trade-condition\')\n
+if isTransitionPossible(sale_order_trade_condition, \'validate\'):\n
+  sale_order_trade_condition.validate()\n
+\n
 # check if there is already the euro curency on the instance\n
 currency = context.portal_catalog.getResultValue(portal_type=\'Currency\',\n
                                                  title=howto_dict[\'sale_howto_currency_title\'])\n

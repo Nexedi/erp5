@@ -26,3 +26,5 @@ portal_categories/role
 portal_categories/role/**
 portal_tests/user_tutorial_zuite
 portal_tests/user_tutorial_zuite/**
+sale_trade_condition_module/1
+sale_trade_condition_module/1/**
