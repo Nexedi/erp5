@@ -26,14 +26,17 @@ class ImageMagickTransforms:
         if depth:
             parameter_list.extend(['-depth', '%s' % depth, '-type', 'Palette'])
         parameter_list.append('%s:-' % self.format)
-        with subprocess.Popen(parameter_list,
-                              stdin=subprocess.PIPE,
-                              stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE,
-                              close_fds=True) as p:
+        p = subprocess.Popen(parameter_list,
+                             stdin=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE,
+                             close_fds=True)
+        try:
             # XXX: The only portable way is to pass what stdin.write can accept,
             #      which is a string for PIPE.
             image, err = p.communicate(str(orig))
+        finally:
+            del p
 
         data.setData(image)
         return data
