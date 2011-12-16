@@ -50,12 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>active_process = context.getPortalObject().portal_activities.newActiveProcess()\n
-context.getPortalObject().ERP5Site_checkDataWithScript("Event_migrateEventWorkflowHistory",\n
-                                     tag="migrate",\n
-                                     relative_url="event_module",\n
-                                     full=1,\n
-                                     active_process=active_process.getPath())\n
+            <value> <string>portal = context.getPortalObject()\n
+active_process = portal.portal_activities.newActiveProcess()\n
+portal.event_module.recurseCallMethod(\n
+  \'Event_migrateEventWorkflowHistory\',\n
+  active_process=active_process,\n
+  min_depth=1,\n
+  max_depth=1)\n
 print "Migration started with process id: %s" %active_process.getPath()\n
 return printed\n
 </string> </value>
@@ -66,7 +67,7 @@ return printed\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>ERP5Site_migrateEventWorkflowHistory</string> </value>
+            <value> <string>EventModule_migrateEventWorkflowHistory</string> </value>
         </item>
       </dictionary>
     </pickle>

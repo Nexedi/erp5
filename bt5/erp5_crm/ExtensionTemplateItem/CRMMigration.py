@@ -62,5 +62,5 @@ def migrateEventWorkflowHistory(self):
     return
   workflow_tool = portal.portal_workflow
   workflow_tool._jumpToStateFor(self, new_state)
-  return ['Event workflow migration on %s : %s -> %s' % (
-      self.getPath(), current_state, new_state)]
+  return 'Event workflow migration on %s : %s -> %s' % (
+      self.getPath(), current_state, new_state)
