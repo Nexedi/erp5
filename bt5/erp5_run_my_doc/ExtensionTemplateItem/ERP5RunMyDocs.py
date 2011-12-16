@@ -102,3 +102,10 @@ def parseTutorial(text):
       stack.append(child)
   
   return dict(title = title, text = lxml.html.tostring(html))
+
+"""
+  Return the content of a web page
+"""
+def urlread(url):
+  import urllib
+  return urllib.urlopen(url).read()

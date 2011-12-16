@@ -48,7 +48,58 @@ along with this program; if not, write to the Free Software\n
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
   var textContent, testPageHTML, body;\n
-  var DEBUG = "";\n
+  function cleanForPrince(){\n
+    var temp = $(\'iframe\', window.top.document).contents().children().clone();\n
+    $(\'script\', temp).remove();\n
+    $(\'style, meta:not([name=author])\', temp).remove();\n
+    var images = $(\'img\', temp);\n
+    n = images.length;\n
+    for(var i = 0; i < n; i++){\n
+      var img = images.eq(i);\n
+      var src = img.attr(\'src\').split(\'?format\')[0].split(\'/\');\n
+      var extension = img.attr(\'type\');\n
+      if(extension == undefined)\n
+        extension = "png";\n
+      else\n
+        extension = extension.split(\'/\')[1].split(\'+\')[0];\n
+      img.attr(\'src\',src[src.length - 1] + \'.\' + extension);\n
+    }\n
+    var text = temp.html();\n
+    var result = "", tagName = "", c = "", chr = "";\n
+    var n = text.length;\n
+    var tag = false, tagNameParsing = false;\n
+    for(var i = 0; i < n; i++){\n
+      chr = text[i];\n
+      c = chr.toLowerCase();\n
+      if(c == \'<\' && tag == false){\n
+        tag = true;\n
+        tagNameParsing = true;\n
+      }\n
+      else if(tag){\n
+        if(c == \' \')\n
+          tagNameParsing = false;\n
+        else if(c == \'>\'){\n
+          tagNameParsing = false;\n
+          tag = false;\n
+          if(tagName == \'img\')\n
+            result += \'/\';\n
+          tagName = \'\';\n
+        }\n
+        else if(tagNameParsing){\n
+          if(c == \'i\' && tagName == \'\')\n
+            tagName += c;\n
+          else if(c == \'m\' && tagName == \'i\')\n
+            tagName += c;\n
+          else if(c == \'g\' && tagName == \'im\')\n
+            tagName += c;\n
+        }\n
+      }\n
+      result += chr;\n
+    }\n
+    $(\'textarea[name=field_book_text_content]\', window.top.document).val(\'<html>\\n\' + result + \'\\n</html>\');\n
+    return false;\n
+  }\n
+\n
   function changeTag(element, tag){\n
     var tag = $(\'<\' + tag + \'>\').html(element.html());\n
     element.after(tag);\n
@@ -145,14 +196,16 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       $(\'body\').prepend($(\'<div>\').addClass(\'titlepage\').append(titleObj.clone().addClass(\'no-toc\')).append(subtitle.clone().addClass(\'no-toc\')).append(edition.clone().addClass(\'no-toc\')).append($(\'<p>\').addClass(\'no-toc\').text(authors)));\n
       //Add Front Cover\n
       $(\'body\').prepend($(\'<div>\').addClass(\'frontcover\').append($(\'<img>\').attr(\'src\',\'canvas?format=\')).append(titleObj).append(subtitle).append(edition));\n
+      if(hasToC)\n
+        cleanForPrince();\n
     });\n
   }\n
 \n
-  function convertChapter(link, container, first, isChapter){\n
+  function convertChapter(link, container, first, isChapter, chapterCounter, partCounter){\n
     $(function() {\n
       //Getting the html content\n
       $.get(link, function(data, textStatus, jqXHR){\n
-        var chapterContainer = $(\'<div>\').addClass(\'chapter\').html(data);\n
+        var chapterContainer = $(\'<div>\').addClass(\'chapter\').attr(\'id\', \'chapter-h-\' + partCounter + \'-\' + chapterCounter).html(data);\n
         link = link.replace("getTextContent","");\n
         var sections = $(\'section\', chapterContainer);\n
         $(\'base,meta,link,title\', chapterContainer).remove();\n
@@ -198,8 +251,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         \n
         $(\'test\', chapterContainer).remove();\n
         //If it\'s a chapter and not the introduction or an appendix for instance\n
-        if(isChapter)\n
+        if(isChapter){\n
           container.append(chapterContainer);\n
+          cleanForPrince();\n
+        }\n
         else\n
           container.append(chapterContainer.children());\n
         if(container[0].tagName.toUpperCase() == \'BODY\'){\n

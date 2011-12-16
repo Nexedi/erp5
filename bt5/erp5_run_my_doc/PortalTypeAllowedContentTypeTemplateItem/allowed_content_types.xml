@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="Review Module">
+  <item>Review</item>
+ </portal_type>
  <portal_type id="Test Page">
   <item>File</item>
   <item>Image</item>

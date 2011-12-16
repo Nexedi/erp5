@@ -13,7 +13,6 @@
                 <string>description</string>
                 <string>editable</string>
                 <string>height</string>
-                <string>text_editor</string>
                 <string>title</string>
               </list>
             </value>
@@ -81,10 +80,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -95,6 +90,10 @@
             <key> <string>values</string> </key>
             <value>
               <dictionary>
+                <item>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
+                </item>
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>Content of the web page</string> </value>
@@ -118,10 +117,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string>text_area</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

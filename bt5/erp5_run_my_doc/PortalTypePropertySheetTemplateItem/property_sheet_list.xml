@@ -1,4 +1,7 @@
 <property_sheet_list>
+ <portal_type id="Review">
+  <item>Review</item>
+ </portal_type>
  <portal_type id="Test Page">
   <item>SortIndex</item>
   <item>TestPage</item>

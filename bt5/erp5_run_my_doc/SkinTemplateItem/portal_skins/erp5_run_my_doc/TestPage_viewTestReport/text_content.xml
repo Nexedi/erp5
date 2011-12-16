@@ -12,7 +12,6 @@
               <list>
                 <string>default</string>
                 <string>enabled</string>
-                <string>text_editor</string>
                 <string>title</string>
                 <string>whitespace_preserve</string>
                 <string>width</string>
@@ -82,10 +81,6 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -123,10 +118,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>text_editor</string> </key>
-                    <value> <string>text_area</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

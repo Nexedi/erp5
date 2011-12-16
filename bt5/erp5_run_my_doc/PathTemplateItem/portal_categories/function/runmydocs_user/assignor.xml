@@ -57,7 +57,6 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>function/runmydocs_user/author</string>
                 <string>function/runmydocs_user/assignor</string>
               </tuple>
             </value>
@@ -83,12 +82,6 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
-        </item>
-        <item>
-            <key> <string>short_title</string> </key>
-            <value>
-              <none/>
-            </value>
         </item>
         <item>
             <key> <string>title</string> </key>

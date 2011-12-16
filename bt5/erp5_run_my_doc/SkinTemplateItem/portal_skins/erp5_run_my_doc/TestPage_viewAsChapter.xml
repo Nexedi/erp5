@@ -45,14 +45,17 @@
     <script type="text/javascript" src="chapter_converter.js"></script>\n
     <script type="text/javascript">\n
       $(document).ready(function(){\n
-        convertChapter(\'getTextContent\', $(\'body\'), true, true);\n
+        $(\'input[name=clean_button]\', window.top.document).click(function(){\n
+          cleanForPrince();\n
+          return false;\n
+        });\n
+        convertChapter(\'getTextContent\', $(\'body\'), true, true, 1, 1);\n
       });\n
     </script>\n
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n
     <title>View as Chapter</title>\n
   </head>\n
-  <body> \n
-    <div id="content"></div>\n
+  <body>\n
   </body>\n
 </html>
 

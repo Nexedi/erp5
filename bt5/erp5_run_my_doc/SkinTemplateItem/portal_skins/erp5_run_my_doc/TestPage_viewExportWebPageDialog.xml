@@ -72,6 +72,8 @@
                     <value>
                       <list>
                         <string>book_content</string>
+                        <string>book_text_content</string>
+                        <string>clean_button</string>
                       </list>
                     </value>
                 </item>

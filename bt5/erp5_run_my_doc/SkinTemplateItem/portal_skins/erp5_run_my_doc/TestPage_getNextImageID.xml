@@ -57,10 +57,10 @@
 """\n
 \n
 path = context.getPath()\n
-image_id = title + "." + slide_type\n
+image_id = title + "_" + slide_type\n
 \n
 # We replace all the whitespaces by dots\n
-image_id = \'\'.join(c for c in (\'.\'.join(image_id.split(\' \'))) if c.isalnum() or c == \'.\')\n
+image_id = \'\'.join(c for c in (\'_\'.join(image_id.split(\' \'))) if c.isalnum() or c == \'_\')\n
 \n
 found = True\n
 while found:\n
@@ -75,15 +75,15 @@ while found:\n
   if found:\n
     # Check if the end is a number and increment in that case\n
     try:\n
-      end_number = int(image_id.split(\'.\')[-1])\n
+      end_number = int(image_id.split(\'_\')[-1])\n
     except:\n
       end_number = -1\n
     if end_number > 0:\n
-      image_id = image_id.split(\'.\')[0:-1]\n
+      image_id = image_id.split(\'_\')[0:-1]\n
       image_id.append(str(end_number+1))\n
-      image_id = \'.\'.join(image_id)\n
+      image_id = \'_\'.join(image_id)\n
     else:\n
-      image_id += \'.1\'\n
+      image_id += \'_1\'\n
 \n
 return image_id\n
 

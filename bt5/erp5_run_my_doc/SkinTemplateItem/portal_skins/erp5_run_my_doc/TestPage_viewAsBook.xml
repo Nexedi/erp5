@@ -46,6 +46,10 @@
     <script type="text/javascript" src="chapter_converter.js"></script>\n
     <script type="text/javascript">\n
       $(document).ready(function(){\n
+        $(\'input[name=clean_button]\', window.top.document).click(function(){\n
+          cleanForPrince();\n
+          return false;\n
+        });\n
         convertBook(\'getTextContent\', $(\'body\'));\n
       });\n
     </script>\n

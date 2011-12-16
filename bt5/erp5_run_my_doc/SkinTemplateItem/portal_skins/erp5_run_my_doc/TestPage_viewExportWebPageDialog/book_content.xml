@@ -13,6 +13,7 @@
                 <string>css_class</string>
                 <string>default</string>
                 <string>enabled</string>
+                <string>text_editor</string>
                 <string>title</string>
                 <string>whitespace_preserve</string>
                 <string>width</string>
@@ -86,6 +87,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -129,8 +134,12 @@
                     <value> <string>Click to edit the target</string> </value>
                 </item>
                 <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string>text_area</string> </value>
+                </item>
+                <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Page Content</string> </value>
+                    <value> <string>Book</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -156,7 +165,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'<iframe width="100%%" height="600" src="%s/TestPage_viewAsChapter"></iframe>\' % here.absolute_url()
+python:\'<iframe width="100%%" height="600" src="%s/TestPage_viewAsChapter" name="book_version" style="background-color:#FFFFFF;"></iframe>\' % here.absolute_url()
 
 ]]></string> </value>
         </item>
