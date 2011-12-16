@@ -322,6 +322,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
       if history_item['simulation_state'] in draft_state_list:
         continue
       # Delivery is/was not is draft state
+      resolveCategory = portal.portal_categories.resolveCategory
       order_dict = {}
       old_dict = {}
       # Caller may want to drop duplicate SM, like a unbuilt SM if there's
@@ -330,31 +331,35 @@ class AppliedRule(XMLObject, ExplainableMixin):
       # remember them and returns None for duplicates.
       sort_sm = lambda x: (not x.getDelivery(), not x.getQuantity(), x.getId())
       for sm in sorted(self.objectValues(), key=sort_sm):
-        sm_dict = old_dict.setdefault(sm.getOrder() or sm.getDelivery(), {})
-        recurse_list = deque(({get_matching_key(sm): (sm,)},))
-        while recurse_list:
-          for k, x in recurse_list.popleft().iteritems():
-            if not k:
-              continue
-            if len(x) > 1:
-              x = [x for x in x if x.getDelivery() or x.getQuantity()]
+        line = sm.getOrder() or sm.getDelivery()
+        # Check SM is not orphan, which happened with old buggy trees.
+        if resolveCategory(line) is not None:
+          sm_dict = old_dict.setdefault(line, {})
+          recurse_list = deque(({get_matching_key(sm): (sm,)},))
+          while recurse_list:
+            for k, x in recurse_list.popleft().iteritems():
+              if not k:
+                continue
               if len(x) > 1:
-                x.sort(key=sort_sm)
-            sm_dict.setdefault(k, []).extend(x)
-            for x in x:
-              r = {}
-              for x in x.objectValues():
-                sm_list = x.getMovementList()
-                if sm_list:
-                  r.setdefault(x.getSpecialise(), []).append(sm_list)
-              for x in r.values():
+                x = [x for x in x if x.getDelivery() or x.getQuantity()]
                 if len(x) > 1:
-                  x = [y for y in x if any(z.getDelivery() for z in y)] or x[:1]
-                x, = x
+                  x.sort(key=sort_sm)
+              sm_dict.setdefault(k, []).extend(x)
+              for x in x:
                 r = {}
-                for x in x:
-                  r.setdefault(get_matching_key(x), []).append(x)
-                recurse_list.append(r)
+                for x in x.objectValues():
+                  sm_list = x.getMovementList()
+                  if sm_list:
+                    r.setdefault(x.getSpecialise(), []).append(sm_list)
+                for x in r.values():
+                  if len(x) > 1:
+                    x = [y for y in x if any(z.getDelivery()
+                           for z in y)] or x[:1]
+                  x, = x
+                  r = {}
+                  for x in x:
+                    r.setdefault(get_matching_key(x), []).append(x)
+                  recurse_list.append(r)
         self._delObject(sm.getId())
       # Here Delivery.isSimulated works because Movement.isSimulated
       # does not see the simulated movements we've just deleted.
