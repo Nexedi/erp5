@@ -63,7 +63,6 @@
                     <value>
                       <list>
                         <string>listbox</string>
-                        <string>listbox_delivery_own_section_title</string>
                       </list>
                     </value>
                 </item>
@@ -78,6 +77,7 @@
                         <string>listbox_delivery_mirror_section_title_with_link</string>
                         <string>listbox_total_net_price</string>
                         <string>listbox_total_price</string>
+                        <string>listbox_delivery_own_section_title</string>
                       </list>
                     </value>
                 </item>
