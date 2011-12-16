@@ -12,6 +12,8 @@ portal_categories/nationality/french
 portal_categories/nationality/french/**
 portal_categories/quantity_unit/time
 portal_categories/quantity_unit/time/**
+portal_categories/region/brazil
+portal_categories/region/brazil/**
 portal_categories/role
 portal_categories/role/**
 portal_tests/user_tutorial_zuite
