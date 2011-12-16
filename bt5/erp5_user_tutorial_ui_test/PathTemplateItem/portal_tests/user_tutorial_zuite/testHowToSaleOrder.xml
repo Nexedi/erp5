@@ -91,6 +91,11 @@
   <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_product_title\']"></td>\n
 </tr>\n
 <tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_source_section"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
   <td>type</td>\n
   <td>//input[@name="field_my_source_title"]</td>\n
   <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation_title\']"></td>\n
@@ -120,6 +125,12 @@
   <td>//select[@name="field_my_delivery_mode"]</td>\n
   <td>AIR</td>\n
 </tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_incoterm"]</td>\n
+  <td>CPT</td>\n
+</tr>\n
+\n
 <tr>\n
   <td>type</td>\n
   <td>//input[@name="field_my_specialise_title"]</td>\n

@@ -10,6 +10,10 @@ portal_categories/function/sales
 portal_categories/function/sales/**
 portal_categories/gender
 portal_categories/gender/**
+portal_categories/group/my_group
+portal_categories/group/my_group/**
+portal_categories/incoterm/cpt
+portal_categories/incoterm/cpt/**
 portal_categories/nationality/french
 portal_categories/nationality/french/**
 portal_categories/order/normal
