@@ -2,6 +2,8 @@ portal_categories/activity/education
 portal_categories/activity/education/**
 portal_categories/base_amount/taxable
 portal_categories/base_amount/taxable/**
+portal_categories/delivery_mode/air
+portal_categories/delivery_mode/air/**
 portal_categories/function/marketing
 portal_categories/function/marketing/**
 portal_categories/function/sales
@@ -10,8 +12,14 @@ portal_categories/gender
 portal_categories/gender/**
 portal_categories/nationality/french
 portal_categories/nationality/french/**
+portal_categories/order/normal
+portal_categories/order/normal/**
+portal_categories/payment_mode/credit_card
+portal_categories/payment_mode/credit_card/**
 portal_categories/quantity_unit/time
 portal_categories/quantity_unit/time/**
+portal_categories/quantity_unit/unit
+portal_categories/quantity_unit/unit/**
 portal_categories/region/brazil
 portal_categories/region/brazil/**
 portal_categories/role
