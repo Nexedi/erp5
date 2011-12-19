@@ -170,7 +170,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from DateTime import DateTime\n
+            <value> <string encoding="cdata"><![CDATA[
+
+from DateTime import DateTime\n
 kw = {\'name\': cookie_name,\n
       \'value\': cookie_value,\n
       \'path\': \'/\'}\n
@@ -180,9 +182,9 @@ expire_interval = context.ERP5Site_getMaxUserInactivityDuration(user_name)\n
 \n
 # set cookie expire argument only if it\'s defined for current user\n
 if expire_interval not in (\'\', None):\n
-  expire_time_offset = 0.00069444444444444436 * (expire_interval / 60.0)\n
-  ac_expires = DateTime() + expire_time_offset\n
-  ac_renew = DateTime() + expire_time_offset / 2\n
+  expire_interval /= 86400. # seconds -> days\n
+  ac_expires = DateTime() + expire_interval\n
+  ac_renew = DateTime() + expire_interval / 2\n
   kw[\'expires\'] = ac_expires.toZone(\'GMT\').rfc822()\n
   # save next \'__ac\' renew time\n
   context.portal_sessions[ac_session_key_pattern %user_name][\'ac_renew\'] = ac_renew.millis()\n
@@ -193,7 +195,9 @@ else:\n
 \n
 # set cookie\n
 resp.setCookie(**kw)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
