@@ -90,12 +90,12 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-  <td>Outgoing</td>\n
+  <td>Planned</td>\n
 </tr>\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
-  <td>Request Processing</td>\n
+  <td>Confirm</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -110,7 +110,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//tr[@class=\'listbox-data-line-0 DataA\']/td[7]/</td>\n
-  <td>Pending</td>\n
+  <td>Confirmed</td>\n
 </tr>\n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>\n
 <tr>\n
@@ -138,16 +138,18 @@
   <td>//div[@id="breadcrumb"]/a[2]</td>\n
   <td>Events</td>\n
 </tr>\n
+<!--\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//span[@class="listbox-current-page-total-number"]</td>\n
   <td>1 records</td>\n
 </tr>\n
+-->\n
 <tal:block tal:content="structure python: here.Zuite_generateListboxBrowsing(listbox_selection=([\'title\', here.Zuite_getHowToInfo()[\'outgoing_event_howto_event_title\']],), enter_object=True)"/>\n
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
-  <td>Post Event</td>\n
+  <td>Send</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -157,7 +159,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-  <td>Posted</td>\n
+  <td>Sent</td>\n
 </tr>\n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>\n
 <tr>\n
