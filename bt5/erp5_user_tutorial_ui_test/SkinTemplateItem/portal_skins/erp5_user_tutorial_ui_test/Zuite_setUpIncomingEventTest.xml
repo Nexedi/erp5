@@ -130,6 +130,7 @@ if isTransitionPossible(system_preference, \'enable\'):\n
   system_preference.enable()\n
 \n
 system_preference.setPreferredEventResourceList([service.getRelativeUrl()])\n
+system_preference.setPreferredEventUseList([howto_dict[\'incoming_event_howto_service_id\']])\n
 \n
 pref = getattr(context.portal_preferences, howto_dict[\'howto_preference_id\'], None)\n
 if pref is None:\n
