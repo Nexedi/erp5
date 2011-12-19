@@ -149,7 +149,7 @@
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
-  <td>Receive Event</td>\n
+  <td>Declare as Received</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -159,7 +159,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-  <td>New</td>\n
+  <td>Received</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -169,7 +169,7 @@
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
-  <td>Assign Event</td>\n
+  <td>Create Follow Up Ticket</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
@@ -182,20 +182,30 @@
   <td>Support Request</td>\n
 </tr>\n
 <tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_follow_up_ticket_resource"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'incoming_event_howto_service_title\']"></td>\n
+</tr>\n
+\n
+<!--\n
+<tr>\n
   <td>type</td>\n
   <td>//textarea[@name="field_your_comment"]</td>\n
   <td tal:content="python: here.Zuite_getHowToInfo()[\'incoming_event_howto_ticket_comment\']"></td>\n
 </tr>\n
+-->\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@id="dialog_submit_button"]</td>\n
   <td></td>\n
 </tr>\n
+<!--\n
 <tr>\n
   <td>verifyText</td>\n
   <td>//label[normalize-space(text())=\'State\']/../div</td>\n
   <td>Assigned</td>\n
 </tr>\n
+-->\n
 <tr>\n
   <td>verifyValue</td>\n
   <td>//input[@name="field_my_default_follow_up_title"]</td>\n
