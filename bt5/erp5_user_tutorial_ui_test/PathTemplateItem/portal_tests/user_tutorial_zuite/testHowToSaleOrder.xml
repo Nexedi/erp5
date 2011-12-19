@@ -45,7 +45,7 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">How-to Sale Order / Packing List / Invoices / Payment (expected failure)</td></tr>\n
+<tr><td rowspan="1" colspan="3">How-to Sale Order / Packing List / Invoices / Payment</td></tr>\n
 </thead><tbody>\n
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
@@ -711,11 +711,11 @@ Wait for activities</span>\n
   <td>//select[@name="select_action"]</td>\n
   <td>Create Related Payment</td>\n
 </tr>\n
-<span tal:condition="python:\'51 - Bank\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n
+<span tal:condition="python:\'5 - Bank\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_your_node"]</td>\n
-  <td>51 - Bank</td>\n
+  <td>5 - Bank</td>\n
 </tr>\n
 </span>\n
 <span tal:condition="python:\'512 - Banques\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n
