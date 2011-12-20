@@ -213,8 +213,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         var n = sections.length;\n
         for(var i = 0; i < n; i++){\n
           element = changeTag(sections.eq(i), \'div\');\n
-          var images = $(\'> img\', element);\n
-          var otherImages = $(\'img:not(> img)\', element);\n
+          var images = $(\'> img, details > img\', element);\n
+          var otherImages = $(\'img:not(> img, details > img)\', element);\n
           var p = images.length;\n
           for(var j = 0; j < p; j++){\n
             var img = images[j];\n
@@ -222,8 +222,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             var caption = $(\'<p>\').addClass(\'caption\');\n
             $(img).attr(\'src\', link + $(img).attr(\'src\'));\n
             $(img).before(div);\n
-            div.addClass(\'figure\').append(caption).append($(\'<p>\').addClass(\'art\').append($(img).attr(\'width\',\'90%\')));\n
-            caption.load(link + img.src.split(\'?\')[0].split(\'/\').pop() + \'/getDescription\');\n
+            var imgToAppend = $(img);\n
+            var imgWidth = $(img).attr(\'width\');\n
+            if( imgWidth == undefined || imgWidth == \'\')\n
+              imgToAppend.attr(\'width\',\'90%\');\n
+            div.addClass(\'figure\').append(caption).append($(\'<p>\').addClass(\'art\').append(imgToAppend));\n
+            caption.text($(img).attr(\'title\'));\n
           }\n
           var p = otherImages.length;\n
           for(var j = 0; j < p; j++){\n
