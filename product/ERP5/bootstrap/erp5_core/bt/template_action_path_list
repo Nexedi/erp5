@@ -1,3 +1,4 @@
+Accessor Component | view
 Acquired Property | view
 Action Information | view
 Alarm Tool | alarm_report
@@ -57,6 +58,7 @@ Category Tool | view
 Category | view
 Class Tool | run_live_test
 Class Tool | view
+Component Tool | view
 Conceptual Id Generator | view
 Content Existence Constraint | predicate
 Content Existence Constraint | view
@@ -64,14 +66,18 @@ Contribution Predicate | view
 Contribution Registry Tool | view
 Distributed Ram Cache | view
 Document | view
+Document Component | view
 Domain Generator | view
 Domain Tool | view
 Domain | view
 Dynamic Category Property | view
+Extension Component | view
 Folder | view
 Id Tool | view
+Interface Component | view
 Memcached Plugin | view
 Memcached Tool | view
+Mixin Component | view
 Predicate | view
 Preference Tool Type | view
 Preference Tool | advanced
@@ -116,6 +122,7 @@ Template Tool | jump_trash_bins
 Template Tool | update
 Template Tool | upgrade_from_repository
 Template Tool | view
+Test Component | view
 Trash Bin | jump_bt5
 Trash Bin | view
 Trash Folder | view

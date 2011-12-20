@@ -1,4 +1,10 @@
 <property_sheet_list>
+ <portal_type id="Document Component">
+  <item>DocumentConstraint</item>
+  <item>Reference</item>
+  <item>SortIndex</item>
+  <item>Version</item>
+ </portal_type>
  <portal_type id="Trash Bin">
   <item>Base</item>
   <item>SimpleItem</item>

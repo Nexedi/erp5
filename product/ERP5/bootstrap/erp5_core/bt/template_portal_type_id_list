@@ -1,3 +1,4 @@
+Accessor Component
 Acknowledgement Tool
 Acquired Property
 Action Information
@@ -27,6 +28,7 @@ Category Related Membership Arity Constraint
 Category Related Membership State Constraint
 Category Tool
 Class Tool
+Component Tool
 Conceptual Id Generator
 Content Existence Constraint
 Contribution Predicate
@@ -34,6 +36,7 @@ Contribution Registry Tool
 Delivery Tool
 Distributed Ram Cache
 Document
+Document Component
 Documentation Helper
 Domain
 Domain Generator
@@ -41,11 +44,14 @@ Domain Tool
 Dummy Class Tool
 Dynamic Category Property
 Event
+Extension Component
 Folder
 Id Tool
+Interface Component
 Mapped Value
 Memcached Plugin
 Memcached Tool
+Mixin Component
 Movement
 Notification Tool
 Order Tool
@@ -74,6 +80,7 @@ Synchronization Tool
 System Preference
 TALES Constraint
 Template Tool
+Test Component
 Test Tool
 Trash Bin
 Trash Folder

@@ -1,3 +1,6 @@
+2012-12-20 arnaud.fontaine
+* Add initial ZODB component prototype.
+
 2011-10-25 yusei
 * Fix Base_resetListSetting. It did not work with "Set List Setting" dialog. Now it accepts any parameters.
 

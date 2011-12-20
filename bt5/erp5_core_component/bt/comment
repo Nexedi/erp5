@@ -1,0 +1,20 @@
+A prototype of pure ZODB source code management for ERP5 (mostly required for Cloud deployments and 24/7 operation).
+
+Migration idea:
+
+Anything which looks like source code in ERP5 (HTML, py, etc.) should be serialized automatically with 2 forks (à la MacOS 6/7/8/9). One fork represents the source code (ex. Order.py) and another fork represents extra metadata which is managed by ZODB (ex. Order.xml).
+
+ERP5 source code is thus moved (in the sens of git) from Products/ERP5/Document/Order.py to bt5/erp5_core_component/.../Order.py. No history is thus lost. It also leads to a quite simple structure since everything which was in Products is now moved to bt5 without any dependency problem.
+
+In the end, only ERP5Type remains. Everything else in ERP5 can be hot updated with nice transactional feature.
+
+First we have to start with Extensions and Documents (present in bt5). Then we should add all files present in Productrs/*/Document and Productrs/*/Tool. Then Mixins and Interfaces. At the end, Accessors. The core of ERP5.
+
+The core of ERP5 will eventually move from ERP5Type to a python library. A wrapper product (ERP5Site) main remain though for compatibility with Zope 2.X.
+
+How to develop in this environment:
+- all coding, debuging and testing should be handled TTW with a good AJAX editor or with external editor. The ERP5 runtime is supposed to be located remotely on the Cloud, no longer on a laptop or local server
+- users of kate, emacs, vi, etc. should remote mount ZODB to edit text files through WebDAV. FUSE/DAVS works well enough these days for this purpose
+
+git integration
+- this topic is still under discussion since ZODB plays here the role 
