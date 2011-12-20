@@ -119,7 +119,7 @@ function findId(object){\n
 }\n
 \n
 function getAuthor(){\n
-  return $(\'#logged_in_as\', window.top.document).text().replace(\'Logged In as :\', \'\').trim();\n
+  return $(\'#logged_in_as\', document).text().replace(\'Logged In as :\', \'\').trim();\n
 }\n
 \n
 function validateComment(object, clicked){\n
@@ -129,7 +129,7 @@ function validateComment(object, clicked){\n
     var color = $(\'#review_tooltip\').css(\'background-color\');\n
     //Saving\n
     var id = findId(editedObject);\n
-    var commentaryListObj = $("textarea[name=field_my_annotation]",window.top.document);\n
+    var commentaryListObj = $("textarea[name=field_my_annotation]", document);\n
     var commentaryList = commentaryListObj.val().split(\'\\n\');\n
     var commentArray = parseCommentLine(commentaryList[id]);\n
     commentArray[0] = text;\n
@@ -164,7 +164,7 @@ function editComment(object, e){\n
 }\n
 \n
 function removeLine(name, id){\n
-  var obj = $("textarea[name=field_" + name + "]",window.top.document);\n
+  var obj = $("textarea[name=field_" + name + "]", document);\n
   var text = obj.val().split(\'\\n\');\n
   text.splice(id,1);\n
   obj.val(text.join(\'\\n\'));\n
@@ -198,7 +198,7 @@ function addComment(commentArray, notSetup, e){\n
   var object = $(locator, context);\n
 \n
   if(notSetup){\n
-    var commentaryListObj = $("textarea[name=field_my_annotation]",window.top.document);\n
+    var commentaryListObj = $("textarea[name=field_my_annotation]", document);\n
     var commentaryList = commentaryListObj.val();\n
     if(commentaryList.trim() != \'\'){\n
       commentaryList += \'\\n\';\n
@@ -335,12 +335,11 @@ $(document).ready(function(){\n
       return false;\n
     });\n
     var cssLink = document.createElement("link");\n
-    cssLink.href = window.top.document.URL.split(\'review_module\')[0] + "reviewer.css"; \n
+    cssLink.href = document.URL.split(\'review_module\')[0] + "reviewer.css"; \n
     cssLink.rel = "stylesheet"; \n
     cssLink.type = "text/css"; \n
     this.contentDocument.body.appendChild(cssLink);\n
-\n
-    var commentaryListObj = $("textarea[name=field_my_annotation]",window.top.document);\n
+    var commentaryListObj = $("textarea[name=field_my_annotation]", document);\n
     var commentaryList = commentaryListObj.val().split(\'\\n\');\n
     var n = commentaryList.length;\n
     for(var i = 0; i < n; i++){\n

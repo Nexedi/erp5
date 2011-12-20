@@ -143,7 +143,7 @@ function prependEditButtons(element){\n
 $(document).ready(function(){\n
   $(function() {\n
     //Extract slide list\n
-    textContent = window.top.document.getElementsByName(\'field_my_text_content\')[0];\n
+    textContent = document.getElementsByName(\'field_my_text_content\')[0];\n
     var tmp = document.createElement(\'tmp\');\n
     testPageHTML = document.createElement(\'html\');\n
     testPageHTML.appendChild(document.createElement(\'head\'));\n

@@ -49,7 +49,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
   var textContent, testPageHTML, body;\n
   function cleanForPrince(){\n
-    var temp = $(\'iframe\', window.top.document).contents().children().clone();\n
+    var temp = $(\'iframe\', parent.document).contents().children().clone();\n
     $(\'script\', temp).remove();\n
     $(\'style, meta:not([name=author])\', temp).remove();\n
     var images = $(\'img\', temp);\n
@@ -96,7 +96,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       }\n
       result += chr;\n
     }\n
-    $(\'textarea[name=field_book_text_content]\', window.top.document).val(\'<html>\\n\' + result + \'\\n</html>\');\n
+    $(\'textarea[name=field_book_text_content]\', parent.document).val(\'<html>\\n\' + result + \'\\n</html>\');\n
     return false;\n
   }\n
 \n
