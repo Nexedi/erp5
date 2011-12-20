@@ -188,7 +188,7 @@ class ContributionTool(BaseTool):
       content_type = kw.pop('content_type', None) or content_type
       kw['file'] = file_object
 
-    if not filename:
+    if not filename and url is None:
       raise ValueError('filename must be provided')
 
     if not content_type:
