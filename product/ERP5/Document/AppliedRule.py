@@ -32,6 +32,7 @@ import zope.interface
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.XMLObject import XMLObject
@@ -365,6 +366,16 @@ class AppliedRule(XMLObject, ExplainableMixin):
       # does not see the simulated movements we've just deleted.
       if delivery.isSimulated():
         break
+      # XXX: delivery.isSimulated may wrongly return False when a duplicate RAR
+      #      was migrated but has not been reindexed yet. Delay migration of
+      #      this one.
+      rar_list = delivery.getCausalityRelatedList(portal_type='Applied Rule')
+      rar_list.remove(self.getRelativeUrl())
+      if rar_list and portal.portal_activities.countMessage(path=rar_list,
+        method_id=('immediateReindexObject',
+                   'recursiveImmediateReindexObject',
+                   'recursiveImmediateReindexSimulationMovement')):
+        raise ConflictError
       # Do not try to keep simulation tree for draft delivery
       # if it was already out of sync.
       if delivery.getSimulationState() in draft_state_list and \
@@ -372,7 +383,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
              for x in delivery.getMovementList()):
         break
       if root_rule:
-        self.setSpecialise(root_rule)
+        self._setSpecialise(root_rule)
       delivery_set = set((delivery,))
       def updateMovementCollection(rule, context, *args, **kw):
         orig_updateMovementCollection(rule, context, *args, **kw)
@@ -455,15 +466,20 @@ class AppliedRule(XMLObject, ExplainableMixin):
       for delivery, sm_dict in deleted:
         if not sm_dict:
           del old_dict[delivery]
+      from Products.ERP5.Document.SimulationMovement import SimulationMovement
       from Products.ERP5.mixin.movement_collection_updater import \
           MovementCollectionUpdaterMixin as mixin
       # Patch is already protected by WorkflowMethod.disable lock.
       orig_updateMovementCollection = mixin.__dict__['updateMovementCollection']
       try:
+        AppliedRule.isIndexable = SimulationMovement.isIndexable = \
+          ConstantGetter('isIndexable', value=False)
         mixin.updateMovementCollection = updateMovementCollection
         self.expand()
       finally:
         mixin.updateMovementCollection = orig_updateMovementCollection
+        del AppliedRule.isIndexable, SimulationMovement.isIndexable
+      self.recursiveReindexObject()
       assert str not in map(type, old_dict), old_dict
       return dict((k, sum(v.values(), [])) for k, v in deleted), delivery_set
     simulation_tool._delObject(self.getId())
