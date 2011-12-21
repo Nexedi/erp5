@@ -28,8 +28,10 @@
 ##############################################################################
 
 from collections import deque
+import sys
+import transaction
 import zope.interface
-
+from zExceptions import ExceptionFormatter
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -485,3 +487,38 @@ class AppliedRule(XMLObject, ExplainableMixin):
       assert str not in map(type, old_dict), old_dict
       return dict((k, sum(v.values(), [])) for k, v in deleted), delivery_set
     simulation_tool._delObject(self.getId())
+
+  def _checkExpand(self):
+    """Check that expand() would not fail nor do major changes to the subobjects
+
+    Transaction is aborted after 'expand' is called.
+
+    See also SimulationTool._checkExpandAll
+    """
+    property_dict = {'Applied Rule': ('specialise',),
+                     'Simulation Movement': ('delivery', 'quantity')}
+    def fillRuleDict():
+      rule_dict = {}
+      object_list = deque((self,))
+      while object_list:
+        document = object_list.popleft()
+        portal_type = document.getPortalType()
+        document_dict = {'portal_type': portal_type}
+        for property in property_dict[portal_type]:
+          document_dict[property] = document.getProperty(property)
+        rule_dict[document.getRelativeUrl()] = document_dict
+        object_list += document.objectValues()
+      return rule_dict
+    initial_rule_dict = fillRuleDict()
+    try:
+      self.expand()
+    except ConflictError:
+      raise
+    except Exception:
+      msg = ''.join(ExceptionFormatter.format_exception(*sys.exc_info())[1:])
+    else:
+      final_rule_dict = fillRuleDict()
+      msg = "%r != %r" % (initial_rule_dict, final_rule_dict) \
+            if initial_rule_dict != final_rule_dict else None
+    transaction.abort()
+    return msg

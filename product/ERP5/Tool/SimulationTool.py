@@ -2867,6 +2867,18 @@ class SimulationTool(BaseTool):
                           src__=src__))
       return sequence
 
+    def _checkExpandAll(self, activate_kw={}):
+      """Check all simulation trees using AppliedRule._checkExpand
+      """
+      portal = self.getPortalObject()
+      active_process = portal.portal_activities.newActiveProcess().getPath()
+      kw = dict(priority=3, tag='checkExpand')
+      kw.update(group_method_cost=1, max_retry=0,
+                active_process=active_process, **activate_kw)
+      self._recurseCallMethod('_checkExpand', min_depth=1, max_depth=1,
+                              activate_kw=kw)
+      return active_process
+
 from Products.ERP5Type.DateUtils import addToDate
 
 class SequenceItem:
