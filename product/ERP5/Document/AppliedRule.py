@@ -369,9 +369,11 @@ class AppliedRule(XMLObject, ExplainableMixin):
       # XXX: delivery.isSimulated may wrongly return False when a duplicate RAR
       #      was migrated but has not been reindexed yet. Delay migration of
       #      this one.
-      rar_list = delivery.getCausalityRelatedList(portal_type='Applied Rule')
-      rar_list.remove(self.getRelativeUrl())
-      if rar_list and portal.portal_activities.countMessage(path=rar_list,
+      rar_list = delivery.getCausalityRelatedValueList(
+        portal_type='Applied Rule')
+      rar_list.remove(self)
+      if rar_list and portal.portal_activities.countMessage(
+        path=[x.getPath() for x in rar_list],
         method_id=('immediateReindexObject',
                    'recursiveImmediateReindexObject',
                    'recursiveImmediateReindexSimulationMovement')):
