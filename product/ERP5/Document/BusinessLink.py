@@ -239,17 +239,18 @@ class BusinessLink(Path, Predicate):
         return False
     return True
 
-  def build(self, explanation=None):
+  def build(self, explanation=None, **kw):
     """Builds all related movements in the simulation using the builders
     defined on the Business Link.
 
     explanation -- the Order, Order Line, Delivery or Delivery Line which
                    implicitely defines a simulation subtree and a union 
                    business process.
+    kw -- optional parameters passed to build method
     """
     builder_list = self.getDeliveryBuilderValueList()
     for builder in builder_list: # XXX-JPS Do we really need a builder list ? wouldn't predicate be more useful ?
       # Call build on each builder
       # Provide 2 parameters: self and and explanation_cache
-      LOG('Invoking Builder', 0, repr((builder, self, explanation)))
-      builder.build(explanation=explanation, business_link=self)
+      LOG('Invoking Builder', 0, repr((builder, self, explanation, kw)))
+      builder.build(explanation=explanation, business_link=self, **kw)
