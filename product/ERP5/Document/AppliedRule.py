@@ -425,6 +425,10 @@ class AppliedRule(XMLObject, ExplainableMixin):
             elif movement is not None:
               sm._setDeliveryValue(movement)
               delivery_set.add(sm.getExplanationValue())
+            try:
+              sm.delivery_ratio = old_sm.aq_base.delivery_ratio
+            except AttributeError:
+              pass
             recorded_property_dict = {}
             edit_kw = {}
             kw['quantity'] = 0
