@@ -992,7 +992,7 @@ class ObjectTemplateItem(BaseTemplateItem):
           old_obj = container._getOb(object_id, None)
           object_existed = old_obj is not None
           if object_existed:
-            if context.isKeepObject(path):
+            if context.isKeepObject(path) and force:
               # do nothing if the object is specified in keep list in
               # force mode.
               continue
