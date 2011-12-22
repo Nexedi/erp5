@@ -81,8 +81,6 @@ class Queue:
   #scriptable_method_id_list = ['appendMessage', 'nextMessage', 'delMessage']
 
   def __init__(self):
-    self.is_alive = {}
-    self.is_awake = {}
     self.is_initialized = 0
 
   def initialize(self, activity_tool):
@@ -105,23 +103,8 @@ class Queue:
   def dequeueMessage(self, activity_tool, processing_node):
     pass
 
-  def tic(self, activity_tool, processing_node):
-    # Tic should return quickly to prevent locks or commit transactions at some point
-    if self.dequeueMessage(activity_tool, processing_node):
-      self.sleep(activity_tool, processing_node)
-
   def distribute(self, activity_tool, node_count):
     pass
-
-  def sleep(self, activity_tool, processing_node):
-    self.is_awake[processing_node] = 0
-
-  def wakeup(self, activity_tool, processing_node):
-    self.is_awake[processing_node] = 1
-
-  def terminate(self, activity_tool, processing_node):
-    self.is_awake[processing_node] = 0
-    self.is_alive[processing_node] = 0
 
   def validate(self, activity_tool, message, check_order_validation=1, **kw):
     """
@@ -220,9 +203,6 @@ class Queue:
     else:
       pass
 
-  def isAwake(self, activity_tool, processing_node):
-    return self.is_awake[processing_node]
-
   def hasActivity(self, activity_tool, object, processing_node=None, active_process=None, **kw):
     return 0
 
@@ -320,8 +300,7 @@ class Queue:
     """
       Get priority from this queue.
       Lower number means higher priority value.
-      Legal value range is [1, 6].
+      Legal value range is [-128, 127].
       Values out of this range might work, but are non-standard.
     """
-    return 6
-
+    return 128

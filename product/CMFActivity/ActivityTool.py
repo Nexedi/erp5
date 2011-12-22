@@ -962,25 +962,26 @@ class ActivityTool (Folder, UniqueObject):
       inner_self = aq_inner(self)
 
       try:
-        #Sort activity list by priority
-        activity_list = sorted(activity_dict.itervalues(),
-                               key=lambda activity: activity.getPriority(self))
-
-        # Wakeup each queue
-        for activity in activity_list:
-          activity.wakeup(inner_self, processing_node)
-
-        # Process messages on each queue in round robin
-        has_awake_activity = 1
-        while has_awake_activity:
-          has_awake_activity = 0
-          for activity in activity_list:
-            if is_running_lock.acquire(0):
-              try:
-                activity.tic(inner_self, processing_node) # Transaction processing is the responsability of the activity
-                has_awake_activity = has_awake_activity or activity.isAwake(inner_self, processing_node)
-              finally:
-                is_running_lock.release()
+        # Loop as long as there are activities. Always process the queue with
+        # "highest" priority. If several queues have same highest priority, do
+        # not choose one that has just been processed.
+        # This algorithm is fair enough because we actually use only 2 queues.
+        # Otherwise, a round-robin of highest-priority queues would be required.
+        # XXX: We always finish by iterating over all queues, in case that
+        #      getPriority does not see messages dequeueMessage would process.
+        last = None
+        def sort_key(activity):
+          return activity.getPriority(self), activity is last
+        while is_running_lock.acquire(0):
+          try:
+            for last in sorted(activity_dict.itervalues(), key=sort_key):
+              # Transaction processing is the responsability of the activity
+              if not last.dequeueMessage(inner_self, processing_node):
+                break
+            else:
+              break
+          finally:
+            is_running_lock.release()
       finally:
         # decrease the number of active_threads
         tic_lock.acquire()

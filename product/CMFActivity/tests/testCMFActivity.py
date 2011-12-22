@@ -3184,16 +3184,16 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       rendez_vous_event.set()
       # When this event is available, it means test has called process_shutdown.
       activity_event.wait()
-    from Products.CMFActivity.Activity.Queue import Queue
-    original_queue_tic = Queue.tic
+    from Products.CMFActivity.Activity.SQLDict import SQLDict
+    original_dequeue = SQLDict.dequeueMessage
     queue_tic_test_dict = {}
-    def Queue_tic(self, activity_tool, processing_node):
-      result = original_queue_tic(self, activity_tool, processing_node)
-      queue_tic_test_dict['isAlive'] = process_shutdown_thread.isAlive()
+    def dequeueMessage(self, activity_tool, processing_node):
       # This is a one-shot method, revert after execution
-      Queue.tic = original_queue_tic
+      SQLDict.dequeueMessage = original_dequeue
+      result = self.dequeueMessage(activity_tool, processing_node)
+      queue_tic_test_dict['isAlive'] = process_shutdown_thread.isAlive()
       return result
-    Queue.tic = Queue_tic
+    SQLDict.dequeueMessage = dequeueMessage
     Organisation.waitingActivity = waitingActivity
     try:
       # Use SQLDict with no group method so that both activities won't be
@@ -3258,7 +3258,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           pass
     finally:
       delattr(Organisation, 'waitingActivity')
-      Queue.tic = original_queue_tic
+      SQLDict.dequeueMessage = original_dequeue
 
   def test_hasActivity(self):
     active_object = self.portal.organisation_module.newContent(
