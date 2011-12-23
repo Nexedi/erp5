@@ -389,16 +389,12 @@ class ConfiguratorTool(BaseTool):
     global installation_status
     portal_activities = self.getPortalObject().portal_activities
 
-    is_bt5_installation_over = (portal_activities.countMessageWithTag(
-      'initialERP5Setup') == 0)
-    if 0 == len(portal_activities.getMessageList()) and \
-        is_bt5_installation_over:
+    if 0 == len(portal_activities.getMessageList()):
       html = self.ConfiguratorTool_viewSuccessfulConfigurationMessageRenderer()
     else:
-      if is_bt5_installation_over:
-        # only if bt5s are installed start tracking number of activities
-        activity_list = portal_activities.getMessageList()
-        installation_status['activity_list'].append(len(activity_list))
+      # only if bt5s are installed start tracking number of activities
+      activity_list = portal_activities.getMessageList()
+      installation_status['activity_list'].append(len(activity_list))
       html = self.ConfiguratorTool_viewRunningInstallationMessage(
           installation_status = installation_status)
     # set encoding as this is usually called from asynchronous JavaScript call
