@@ -142,68 +142,31 @@ class ConfiguratorTool(BaseTool):
   ######################################################
   def login(self, REQUEST):
     """ Login client and show next form. """
-    password = REQUEST.get('field_my_ac_key', '')
     bc = REQUEST.get('field_your_business_configuration')
-    if self._isCorrectConfigurationKey(password, bc):
-      # set user preferred configuration language
-      user_preferred_language = REQUEST.get(
-          'field_my_user_preferred_language', None)
-      if user_preferred_language:
-        # Set language value to request so that next page after login
-        # can get the value. Because cookie value is available from
-        # next request.
-        REQUEST.set(LANGUAGE_COOKIE_NAME, user_preferred_language)
-        REQUEST.RESPONSE.setCookie(LANGUAGE_COOKIE_NAME,
+    user_preferred_language = REQUEST.get(
+        'field_my_user_preferred_language', None)
+    if user_preferred_language:
+      # Set language value to request so that next page after login
+      # can get the value. Because cookie value is available from
+      # next request.
+      REQUEST.set(LANGUAGE_COOKIE_NAME, user_preferred_language)
+      REQUEST.RESPONSE.setCookie(LANGUAGE_COOKIE_NAME,
                                    user_preferred_language,
                                    path='/',
                                    expires=(DateTime() + 30).rfc822())
-      # set encoded __ac_key cookie at client's browser
-      __ac_key = quote(encodestring(password))
-      expires = (DateTime() + 1).toZone('GMT').rfc822()
-      REQUEST.RESPONSE.setCookie('__ac_key',
-                                 __ac_key,
-                                 expires=expires)
-      REQUEST.set('__ac_key', __ac_key)
-      REQUEST.RESPONSE.setCookie(BUSINESS_CONFIGURATION_COOKIE_NAME,
-                                 bc,
-                                 expires=expires)
-      REQUEST.set(BUSINESS_CONFIGURATION_COOKIE_NAME, bc)
-      return self.next(REQUEST=REQUEST)
-    else:
-      REQUEST.set('portal_status_message',
-                   self.Base_translateString('Incorrect Configuration Key'))
-      return self.view()
 
-  def _isCorrectConfigurationKey(self, password=None,
-                                       business_configuration=None):
-    """ Is configuration key correct """
-    if password is None:
-      password = self.REQUEST.get('__ac_key', None)
-    else:
-      password = quote(encodestring(password))
-    # Not still not finished yet.
-    if business_configuration is None:
-      business_configuration = self.REQUEST.get(
-               BUSINESS_CONFIGURATION_COOKIE_NAME, None)
-    if None not in [password, business_configuration]:
-      def is_key_valid(password, business_configuration):
-        bc = self.getPortalObject().unrestrictedTraverse(business_configuration)
-        return quote(encodestring(bc.getReference(''))) == password
-      return CachingMethod(is_key_valid,
-                           "ConfiguratorTool_is_key_valid",
-                           cache_factory='erp5_content_long')(
-                                     password, business_configuration)
-    return False
+    expires = (DateTime() + 1).toZone('GMT').rfc822()
+    REQUEST.RESPONSE.setCookie(BUSINESS_CONFIGURATION_COOKIE_NAME,
+                               bc,
+                               expires=expires)
+    REQUEST.set(BUSINESS_CONFIGURATION_COOKIE_NAME, bc)
+    return self.next(REQUEST=REQUEST)
 
   #security.declareProtected(Permissions.ModifyPortalContent, 'next')
   def next(self, REQUEST):
     """ Validate settings and return a new form to the user.  """
     # check if user is allowed to access service
     portal = self.getPortalObject()
-    if not self._isCorrectConfigurationKey():
-      REQUEST.set('portal_status_message',
-                  self.Base_translateString('Incorrect Configuration Key'))
-      return self.view()
     kw = self.REQUEST.form.copy()
     business_configuration = REQUEST.get(BUSINESS_CONFIGURATION_COOKIE_NAME)
     bc = portal.restrictedTraverse(business_configuration)
@@ -382,10 +345,6 @@ class ConfiguratorTool(BaseTool):
     """ Display the previous form. """
     # check if user is allowed to access service
     portal = self.getPortalObject()
-    if not self._isCorrectConfigurationKey():
-      REQUEST.set('portal_status_message',
-                  self.Base_translateString('Incorrect Configuration Key'))
-      return self.view()
     kw = self.REQUEST.form.copy()
     business_configuration = REQUEST.get(BUSINESS_CONFIGURATION_COOKIE_NAME)
     bc = portal.restrictedTraverse(business_configuration)
@@ -461,8 +420,6 @@ class ConfiguratorTool(BaseTool):
     installation_status['activity_list'] = []
     active_process = self.portal_activities.newActiveProcess()
     REQUEST.set('active_process_id', active_process.getId())
-    request_restore_dict = {'__ac_key': REQUEST.get('__ac_key',
-                                                       None), }
     self.activate(active_process=active_process, tag='initialERP5Setup'
         ).initialERP5Setup(business_configuration.getRelativeUrl(), request_restore_dict)
     return self.ConfiguratorTool_viewInstallationStatus(REQUEST)
