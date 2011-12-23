@@ -56,7 +56,7 @@ method = getattr(context, method)\n
 for id in id_list:\n
   ob = folder.get(id)\n
   new_id = method(ob)\n
-  ob.setDefaultActivateParameters(**activate_kw)\n
+  ob.setDefaultActivateParameterDict(activate_kw)\n
   ob.setId(new_id)\n
 </string> </value>
         </item>

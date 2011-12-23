@@ -51,10 +51,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string># We must copy these properties as they are retrieved from data\n
-title = context.getTitle()\n
-content = context.getTextContent()\n
-type = context.getContentType()\n
-context.edit(title=title, text_content=content, content_type=type, data=None)\n
+content_dict = context.getPropertyDictFromContent()\n
+content_dict[\'title\'] = context.getTitle()\n
+content_dict[\'text_content\'] = context.getTextContent()\n
+content_dict[\'content_type\'] = context.getContentType()\n
+content_dict[\'data\'] = None\n
+context.edit(**content_dict)\n
 </string> </value>
         </item>
         <item>

@@ -82,6 +82,7 @@
                     <value>
                       <list>
                         <string>my_url_string</string>
+                        <string>my_coordinate_text</string>
                       </list>
                     </value>
                 </item>

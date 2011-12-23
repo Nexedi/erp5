@@ -28,7 +28,6 @@
 ##############################################################################
 
 import smtplib
-from App.config import getConfiguration
 from Products.CMFCore.utils import getToolByName
 from ERP5Diff import ERP5Diff
 from zLOG import LOG, INFO
@@ -123,9 +122,8 @@ def getConduitByName(conduit_name):
     conduit_name = conduit_name.split('.')[-1]
     conduit_module = __import__(path, globals(), locals(), [''])
   elif conduit_name.startswith('Extensions'):
-    path = "%s/%s.py" %(getConfiguration().instancehome, conduit_name.replace('.', '/'))
+    conduit_module = __import__(conduit_name, globals(), locals(), [''])
     conduit_name = conduit_name.split('.')[-1]
-    conduit_module = load_source(conduit_name, path, file(path))
   else:
     from Products.ERP5SyncML import Conduit
     conduit_module = __import__('.'.join([Conduit.__name__, conduit_name]),

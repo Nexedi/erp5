@@ -4254,15 +4254,19 @@ class TestAccountingWithSequences(ERP5TypeTestCase):
                       lines_count - empty_lines_count)
     
     # we don't remove empty lines if there is only empty lines
-    accounting_transaction = self.portal.accounting_module.newContent(
+    another_accounting_transaction = self.portal.accounting_module.newContent(
                       portal_type=self.accounting_transaction_portal_type,
+                      start_date=accounting_transaction.getStartDate(),
+                      resource=accounting_transaction.getResource(),
+                      source_section=accounting_transaction.getSourceSection(),
+                      destination_section=accounting_transaction.getDestinationSection(),
                       created_by_builder=1)
     for i in range(3):
-      accounting_transaction.newContent(
+      another_accounting_transaction.newContent(
             portal_type=self.accounting_transaction_line_portal_type)
-    lines_count = len(accounting_transaction.getMovementList())
-    accounting_transaction.AccountingTransaction_deleteEmptyLines(redirect=0)
-    self.assertEquals(len(accounting_transaction.getMovementList()), lines_count)
+    lines_count = len(another_accounting_transaction.getMovementList())
+    self.getWorkflowTool().doActionFor(another_accounting_transaction, 'stop_action')
+    self.assertEquals(len(another_accounting_transaction.getMovementList()), lines_count)
     
   ############################################################################
   ## Test Methods ############################################################

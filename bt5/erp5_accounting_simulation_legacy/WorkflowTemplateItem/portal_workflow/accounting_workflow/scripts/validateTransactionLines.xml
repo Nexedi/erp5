@@ -70,8 +70,9 @@ container.validateTransaction(state_change)\n
 \n
 # Check that all lines uses open accounts, and doesn\'t use invalid third\n
 # parties or bank accounts\n
-for line in transaction.contentValues(filter=dict(\n
-       portal_type=transaction.getPortalAccountingMovementTypeList())):\n
+transaction_lines = transaction.objectValues(portal_type=transaction.getPortalAccountingMovementTypeList())\n
+id_to_delete_list = []\n
+for line in transaction_lines:\n
 \n
   for account, third_party, bank_account in (\n
     ( line.getSourceValue(portal_type=\'Account\'),\n
@@ -140,8 +141,16 @@ for line in transaction.contentValues(filter=dict(\n
       raise ValidationFailed(translateString(\n
               "Destination conversion should not be set."))\n
 \n
+  if line.getSourceInventoriatedTotalAssetPrice() or \\\n
+     line.getDestinationInventoriatedTotalAssetPrice() or \\\n
+     line.isSimulated():\n
+    continue\n
+  id_to_delete_list.append(line.getId())\n
+\n
 # Delete empty lines\n
-transaction.AccountingTransaction_deleteEmptyLines(redirect=0)\n
+# Don\'t delete everything\n
+if len(id_to_delete_list) != len(transaction_lines):\n
+  transaction.deleteContent(id_to_delete_list)\n
 </string> </value>
         </item>
         <item>

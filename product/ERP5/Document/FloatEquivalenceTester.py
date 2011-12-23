@@ -35,12 +35,11 @@ from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.equivalence_tester import EquivalenceTesterMixin
 
-# On Python 2.4, this dictionary doesn't include ROUND_05UP
 ROUNDING_OPTION_DICT = dict((name, value) 
                             for name, value in decimal.__dict__.items()
                             if name.startswith('ROUND_'))
 
-# On Python >= 2.6, we could compute a value based on sys.float_info.epsilon
+# XXX: We could compute a value based on sys.float_info.epsilon
 DEFAULT_PRECISION = 1e-12
 
 class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
@@ -173,9 +172,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
                  value=relative_tolerance_max))
 
   def _round(self, value):
-    # on Python 2.4, looking up 'ROUND_05UP' will return ROUND_DOWN here
-    rounding_option = ROUNDING_OPTION_DICT.get(self.getDecimalRoundingOption(),
-                                               decimal.ROUND_DOWN)
+    rounding_option = ROUNDING_OPTION_DICT[self.getDecimalRoundingOption()]
     exponent = decimal.Decimal(self.getDecimalExponent())
     # In Python 2.7, the str() below will no longer be necessary
     result = decimal.Decimal(str(value)).quantize(exponent,

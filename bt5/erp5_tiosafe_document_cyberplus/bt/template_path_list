@@ -1,0 +1,8 @@
+document_module/2**
+organisation_module/1**
+portal_integrations/cyberplus
+portal_integrations/cyberplus/*connector**
+portal_integrations/cyberplus/*mapping**
+portal_integrations/cyberplus/*module**
+portal_synchronizations/spreadsheet_cyber_plus*
+sale_trade_condition_module/default_cyberplus**

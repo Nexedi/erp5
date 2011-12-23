@@ -27,8 +27,7 @@ if '__getstate__' not in Uninstalled.BrokenClass.__dict__:
   cache = Uninstalled.broken_klasses
 
   def Broken(self, oid, pair):
-    lock.acquire()
-    try:
+    with lock:
       cached = pair in cache
       result = Uninstalled_Broken(self, oid, pair)
       if not cached:
@@ -36,8 +35,6 @@ if '__getstate__' not in Uninstalled.BrokenClass.__dict__:
         assert not issubclass(klass, PersistentBroken), \
           "This monkey-patch is not useful anymore"
         cache[pair] = persistentBroken(klass)
-    finally:
-      lock.release()
     return result
 
   Uninstalled.Broken = Broken

@@ -30,8 +30,6 @@ from Products.ERP5Type.Tool.BaseTool import BaseTool
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions
-from Products.CMFCore.utils import getToolByName
-
 from Products.ERP5 import _dtmldir
 
 class RuleTool(BaseTool):
@@ -96,13 +94,46 @@ class RuleTool(BaseTool):
       - the rule must be of a known portal type
       - Predicate criterions can be used (like start_date_range_min)
       """
-      domain_tool = getToolByName(self.getPortalObject(), "portal_domains")
+      portal = self.getPortalObject()
 
-      rule_list = domain_tool.searchPredicateList(context=movement,
-          tested_base_category_list=tested_base_category_list,
-          portal_type=self.getPortalRuleTypeList(),
-          validation_state="validated", **kw) #XXX "validated" is hardcoded
+      # XXX: For performance reasons, current implementation does not use
+      #      DomainTool._searchPredicateList anymore, because in most cases, it
+      #      does not filter anything before actualling calling Predicate.test()
+      #      Properties must be added on rules to minimize the number of test
+      #      scripts/expressions, like the portal types of the possible parent
+      #      applied rules, so that filtering can be done via the catalog.
+      #      Then it would be possible to use Domain Tool again.
+      #return portal.domain_tool._searchPredicateList(context=movement,
+      #  tested_base_category_list=tested_base_category_list,
+      #  portal_type=portal.getPortalRuleTypeList(),
+      #  validation_state="validated", **kw) #XXX "validated" is hardcoded
+
+      # Most rules are only configured through their test_method_id,
+      # so filter out them quickly before calling Predicate.test()
+      rule_list = []
+      for rule in portal.portal_catalog.unrestrictedSearchResults(
+          portal_type=portal.getPortalRuleTypeList(),
+          validation_state="validated", **kw): #XXX "validated" is hardcoded
+        rule = rule.getObject()
+        try:
+          for test_method_id in rule.getTestMethodIdList():
+            if test_method_id == 'Rule_testFalse' or \
+               not getattr(movement, test_method_id)(rule):
+              break
+          else:
+            if rule.test(movement,
+                tested_base_category_list=tested_base_category_list):
+              rule_list.append(rule)
+        except Exception:
+          # Maybe the script is old (= it takes no argument). Or we should not
+          # have called it (= rule would have been excluded before, depending
+          # on other criterions). Or there may be a bug.
+          # We don't know why it failed so let Predicate.test() do the work.
+          if rule.test(movement,
+              tested_base_category_list=tested_base_category_list):
+            rule_list.append(rule)
 
       return rule_list
+
 
 InitializeClass(RuleTool)

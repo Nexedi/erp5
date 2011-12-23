@@ -32,6 +32,8 @@
                 <string>cancel_action</string>
                 <string>start</string>
                 <string>start_action</string>
+                <string>stop</string>
+                <string>stop_action</string>
               </tuple>
             </value>
         </item>

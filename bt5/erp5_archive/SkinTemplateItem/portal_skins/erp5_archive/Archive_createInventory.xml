@@ -77,6 +77,7 @@ if len(payment_uid_list):\n
 \n
 inventory_module = context.getPortalObject().archive_inventory_module\n
 node_inventory_dict = {}\n
+activate_kw = {"tag": tag}\n
 for inventory in node_inventory_list:\n
   # Do only one inventory per node\n
   if not node_inventory_dict.has_key(inventory.node_relative_url):\n
@@ -84,22 +85,22 @@ for inventory in node_inventory_list:\n
     inv = inventory_module.newContent(portal_type="Archive Inventory",\n
                                       destination=inventory.node_relative_url,\n
                                       start_date = date,\n
-                                      activate_kw = {"tag" : tag},\n
+                                      activate_kw = activate_kw,\n
                                       reindex_kw = {"sql_catalog_id" : destination_sql_catalog_id})\n
     node_inventory_dict[inventory.node_relative_url] = inv\n
   else:\n
     inv = node_inventory_dict[inventory.node_relative_url]\n
 \n
-  inv.setDefaultActivateParameters(tag=tag)\n
-  inv.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  inv.setDefaultActivateParameterDict(activate_kw)\n
+  inv.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))\n
   # Create one line per resource\n
   inv_line = inv.newContent(portal_type = "Archive Inventory Line",\n
                             resource=inventory.resource_relative_url,\n
                             destination_section=inventory.section_relative_url,\n
-                            activate_kw = {"tag" : tag},\n
+                            activate_kw = activate_kw,\n
                             reindex_kw = {"sql_catalog_id" : destination_sql_catalog_id})\n
-  inv_line.setDefaultActivateParameters(tag=tag)\n
-  inv_line.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  inv_line.setDefaultActivateParameterDict(activate_kw)\n
+  inv_line.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))\n
   # This is a hack so that price is now and not at reindexing part\n
   inv_line.getPrice()\n
 \n
@@ -118,7 +119,7 @@ for inventory in node_inventory_list:\n
     inv_line.setVariationCategoryList(variation_category_list)\n
     context.log("construct cell", "base %s, %s" %(base_category_list,variation_category_list))\n
     base_id = "movement"\n
-    line_kwd = {\'base_id\':base_id, "activate_kw":{"tag":tag}}\n
+    line_kwd = {\'base_id\':base_id, "activate_kw": activate_kw}\n
     inv_line.updateCellRange(script_id=\'CashDetail_asCellRange\', base_id=base_id)\n
     # create cell\n
     cell_range_key_list = inv_line.getCellRangeKeyList(base_id=base_id)\n
@@ -126,8 +127,8 @@ for inventory in node_inventory_list:\n
       for k in cell_range_key_list:\n
         category_list = filter(lambda k_item: k_item is not None, k)\n
         cell = inv_line.newCell(*k, **line_kwd)\n
-        cell.setDefaultActivateParameters(tag=tag)\n
-        cell.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+        cell.setDefaultActivateParameterDict(activate_kw)\n
+        cell.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))\n
 \n
         mapped_value_list = [\'price\', \'quantity\']\n
         cell.edit( membership_criterion_category_list = category_list\n
@@ -141,8 +142,8 @@ for inventory in node_inventory_list:\n
 \n
 # deliver all inventory\n
 for inv in node_inventory_dict.values():  \n
-  inv.setDefaultActivateParameters(tag=tag)\n
-  inv.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  inv.setDefaultActivateParameterDict(activate_kw)\n
+  inv.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))\n
   inv.deliver()\n
 \n
 \n
@@ -158,22 +159,22 @@ for inventory in payment_inventory_list:\n
                                       destination=inventory.node_relative_url,\n
                                       destination_payment_uid=inventory.payment_uid,\n
                                       start_date = date,\n
-                                      activate_kw = {"tag" : tag},\n
+                                      activate_kw = activate_kw,\n
                                       reindex_kw = {"sql_catalog_id" : destination_sql_catalog_id})\n
     payment_inventory_dict[inventory.payment_uid] = inv\n
   else:\n
     inv = payment_inventory_dict[inventory.payment_uid]\n
 \n
-  inv.setDefaultActivateParameters(tag=tag)\n
-  inv.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  inv.setDefaultActivateParameterDict(activate_kw)\n
+  inv.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))\n
   # Create one line per resource\n
   inv_line = inv.newContent(portal_type = "Archive Inventory Line",\n
                             resource=inventory.resource_relative_url,\n
                             destination_section=inventory.section_relative_url,\n
-                            activate_kw = {"tag" : tag},\n
+                            activate_kw = activate_kw,\n
                             reindex_kw = {"sql_catalog_id" : destination_sql_catalog_id})\n
-  inv_line.setDefaultActivateParameters(tag=tag)\n
-  inv_line.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  inv_line.setDefaultActivateParameterDict(activate_kw)\n
+  inv_line.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))\n
   inv_line.edit(quantity=inventory.total_quantity)\n
   # This is a hack so that price is now and not at reindexing part\n
   inv_line.getPrice()\n
@@ -181,8 +182,8 @@ for inventory in payment_inventory_list:\n
 \n
 # deliver all inventory\n
 for inv in payment_inventory_dict.values():  \n
-  inv.setDefaultActivateParameters(tag=tag)\n
-  inv.setDefaultReindexParameters(sql_catalog_id=destination_sql_catalog_id)\n
+  inv.setDefaultActivateParameterDict(activate_kw)\n
+  inv.setDefaultReindexParameterDict(dict(sql_catalog_id=destination_sql_catalog_id))\n
   inv.deliver()\n
 
 

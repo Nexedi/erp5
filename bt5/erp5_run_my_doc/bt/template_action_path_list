@@ -1,0 +1,24 @@
+Review Module | view
+Review | import_page
+Review | view
+Review | view_annotations
+Test Page Module | convert_to_test_pages
+Test Page Module | convert_to_web_pages
+Test Page Module | fast_input
+Test Page Module | view
+Test Page | edit_slideshow
+Test Page | edit_test
+Test Page | export
+Test Page | export_book
+Test Page | export_report
+Test Page | launch
+Test Page | list
+Test Page | local_permission
+Test Page | related
+Test Page | send_email
+Test Page | slideshow
+Test Page | update_report
+Test Page | view
+Test Page | view_editor
+Test Page | view_test_report
+Test Page | web_view

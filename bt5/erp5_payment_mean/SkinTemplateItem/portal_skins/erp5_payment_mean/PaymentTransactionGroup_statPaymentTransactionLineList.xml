@@ -51,12 +51,16 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.PythonScripts.standard import Object\n
-if context.getValidationState() == \'open\':\n
-  line_list = context.PaymentTransactionGroup_getGroupablePaymentTransactionLineList()\n
-else:\n
-  line_list = context.PaymentTransactionGroup_getGroupedPaymentTransactionLineList()\n
+portal = context.getPortalObject()\n
 \n
-return Object(total_quantity=sum([line.total_quantity for line in line_list])),\n
+search_kw = dict(\n
+  parent_portal_type=\'Payment Transaction\',\n
+  section_uid=context.getSourceSectionUid(),\n
+  default_aggregate_uid=context.getUid(),\n
+  node_category=\'account_type/asset/cash/bank\',\n
+)\n
+\n
+return Object(total_quantity=portal.portal_simulation.getInventory(**search_kw)),\n
 </string> </value>
         </item>
         <item>

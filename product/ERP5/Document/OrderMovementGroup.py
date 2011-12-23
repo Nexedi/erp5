@@ -55,7 +55,4 @@ class OrderMovementGroup(MovementGroup):
       return # This is a temp movement
     # This is a simulation movement
     getCausality = getRootAppliedRule().getCausality
-    return (getCausality(portal_type=movement.getPortalOrderTypeList()) or
-            # In some cases (ex. DeliveryRule), there is no order
-            # we may consider a PackingList as the order in the OrderGroup
-            getCausality(portal_type=movement.getPortalDeliveryTypeList()))
+    return getCausality()

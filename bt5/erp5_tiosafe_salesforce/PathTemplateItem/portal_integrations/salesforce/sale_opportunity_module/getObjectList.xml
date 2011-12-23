@@ -1,0 +1,499 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, OwnerId, AccountId, CampaignId, CloseDate, Amount, Description, Type\n
+    FROM\n
+      Opportunity\n
+    <tal:block tal:condition="python: options.get(\'sale_opportunity_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/sale_opportunity_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>SalesforceTicketBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/salesforce/salesforce_connector</string>
+                <string>destination/portal_integrations/salesforce/opportunity_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, OwnerId, AccountId, CampaignId, CloseDate, Amount, Description, Type\n
+    FROM\n
+      Opportunity\n
+    <tal:block tal:condition="python: options.get(\'sale_opportunity_id\', None) is not None">\n
+    WHERE\n
+      Id = \'<tal:block tal:content="options/sale_opportunity_id" />\'\n
+    </tal:block>\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getSaleOpportunityList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Opportunity</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/salesforce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, Name, OwnerId, AccountId, CampaignId, CloseDate, Amount, Description, Type    FROM      Opportunity      </ns0:querystring></ns0:query>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>https://na3-api.salesforce.com/services/Soap/u/19.0/00D50000000IjTh</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns="urn:partner.soap.sforce.com" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sf="urn:sobject.partner.soap.sforce.com"><soapenv:Body><queryResponse><result xsi:type="QueryResult"><done>true</done><queryLocator xsi:nil="true"/><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsfAAH</sf:Id><sf:Id>0065000000FLKsfAAH</sf:Id><sf:Name>Edge SLA</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnctAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>60000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsTAAX</sf:Id><sf:Id>0065000000FLKsTAAX</sf:Id><sf:Name>Grand Hotels Kitchen Generator</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncxAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>15000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKspAAH</sf:Id><sf:Id>0065000000FLKspAAH</sf:Id><sf:Name>Grand Hotels SLA</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncxAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>90000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsaAAH</sf:Id><sf:Id>0065000000FLKsaAAH</sf:Id><sf:Name>Express Logistics Portable Truck Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncyAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>80000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKskAAH</sf:Id><sf:Id>0065000000FLKskAAH</sf:Id><sf:Name>Express Logistics SLA</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncyAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>120000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsRAAX</sf:Id><sf:Id>0065000000FLKsRAAX</sf:Id><sf:Name>Express Logistics Standby Generator</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncyAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>220000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>New Customer</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsjAAH</sf:Id><sf:Id>0065000000FLKsjAAH</sf:Id><sf:Name>University of AZ Installations</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnczAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>100000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsYAAX</sf:Id><sf:Id>0065000000FLKsYAAX</sf:Id><sf:Name>University of AZ Portable Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnczAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>50000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>New Customer</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKslAAH</sf:Id><sf:Id>0065000000FLKslAAH</sf:Id><sf:Name>University of AZ SLA</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnczAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>90000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsoAAH</sf:Id><sf:Id>0065000000FLKsoAAH</sf:Id><sf:Name>United Oil Emergency Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnd0AAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>440000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsgAAH</sf:Id><sf:Id>0065000000FLKsgAAH</sf:Id><sf:Name>United Oil Installations</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnd0AAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>270000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsdAAH</sf:Id><sf:Id>0065000000FLKsdAAH</sf:Id><sf:Name>United Oil Installations</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnd0AAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>270000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsQAAX</sf:Id><sf:Id>0065000000FLKsQAAX</sf:Id><sf:Name>United Oil Office Portable Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnd0AAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>125000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsSAAX</sf:Id><sf:Id>0065000000FLKsSAAX</sf:Id><sf:Name>GenePoint Standby Generator</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncqAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>85000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>New Customer</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsmAAH</sf:Id><sf:Id>0065000000FLKsmAAH</sf:Id><sf:Name>Burlington Textiles Weaving Plant Generator</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncuAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>235000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>New Customer</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsnAAH</sf:Id><sf:Id>0065000000FLKsnAAH</sf:Id><sf:Name>United Oil Installations</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnd0AAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>235000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKssAAH</sf:Id><sf:Id>0065000000FLKssAAH</sf:Id><sf:Name>United Oil Plant Standby Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnd0AAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>675000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsiAAH</sf:Id><sf:Id>0065000000FLKsiAAH</sf:Id><sf:Name>United Oil Refinery Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnd0AAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>915000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>New Customer</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsUAAX</sf:Id><sf:Id>0065000000FLKsUAAX</sf:Id><sf:Name>United Oil Refinery Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnd0AAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>270000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsVAAX</sf:Id><sf:Id>0065000000FLKsVAAX</sf:Id><sf:Name>United Oil SLA</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnd0AAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>120000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsqAAH</sf:Id><sf:Id>0065000000FLKsqAAH</sf:Id><sf:Name>United Oil Standby Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnd0AAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>120000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsbAAH</sf:Id><sf:Id>0065000000FLKsbAAH</sf:Id><sf:Name>GenePoint Lab Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncqAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>60000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKscAAH</sf:Id><sf:Id>0065000000FLKscAAH</sf:Id><sf:Name>GenePoint SLA</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncqAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>30000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsXAAX</sf:Id><sf:Id>0065000000FLKsXAAX</sf:Id><sf:Name>Edge Emergency Generator</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnctAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>75000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>New Customer</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKstAAH</sf:Id><sf:Id>0065000000FLKstAAH</sf:Id><sf:Name>Edge Emergency Generator</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnctAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>35000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Replacement</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKseAAH</sf:Id><sf:Id>0065000000FLKseAAH</sf:Id><sf:Name>Edge Installation</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQnctAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>50000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsZAAX</sf:Id><sf:Id>0065000000FLKsZAAX</sf:Id><sf:Name>Pyramid Emergency Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncvAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>100000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsPAAX</sf:Id><sf:Id>0065000000FLKsPAAX</sf:Id><sf:Name>Dickenson Mobile Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncwAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>15000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>New Customer</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsrAAH</sf:Id><sf:Id>0065000000FLKsrAAH</sf:Id><sf:Name>Grand Hotels Emergency Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncxAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>210000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>New Customer</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKshAAH</sf:Id><sf:Id>0065000000FLKshAAH</sf:Id><sf:Name>Grand Hotels Generator Installations</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncxAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>350000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000FLKsWAAX</sf:Id><sf:Id>0065000000FLKsWAAX</sf:Id><sf:Name>Grand Hotels Guest Portable Generators</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VQncxAAD</sf:AccountId><sf:CampaignId xsi:nil="true"/><sf:CloseDate>2008-08-31</sf:CloseDate><sf:Amount>250000.0</sf:Amount><sf:Description xsi:nil="true"/><sf:Type>Existing Customer - Upgrade</sf:Type></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000Ez1KgAAJ</sf:Id><sf:Id>0065000000Ez1KgAAJ</sf:Id><sf:Name>FirstOpportunityTest</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VMVO6AAP</sf:AccountId><sf:CampaignId>70150000000AlhIAAS</sf:CampaignId><sf:CloseDate>2010-09-23</sf:CloseDate><sf:Amount>1000.0</sf:Amount><sf:Description>Test and lost an opportunity with a society z_society</sf:Description><sf:Type xsi:nil="true"/></records><records xsi:type="sf:sObject"><sf:type>Opportunity</sf:type><sf:Id>0065000000Ez1MXAAZ</sf:Id><sf:Id>0065000000Ez1MXAAZ</sf:Id><sf:Name>SecondOpportunity</sf:Name><sf:OwnerId>0055000000153W9AAI</sf:OwnerId><sf:AccountId>0015000000VMVRKAA5</sf:AccountId><sf:CampaignId>70150000000AlhIAAS</sf:CampaignId><sf:CloseDate>2010-10-31</sf:CloseDate><sf:Amount>400000.0</sf:Amount><sf:Description>This opportunity as been win !</sf:Description><sf:Type xsi:nil="true"/></records><size>33</size></result></queryResponse></soapenv:Body></soapenv:Envelope>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Sale Opportunity">\n
+  <title>Edge SLA</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Edge Communications</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Grand Hotels Kitchen Generator</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Grand Hotels &amp; Resorts Ltd</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Grand Hotels SLA</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Grand Hotels &amp; Resorts Ltd</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Express Logistics Portable Truck Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Express Logistics and Transport</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Express Logistics SLA</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Express Logistics and Transport</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Express Logistics Standby Generator</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Express Logistics and Transport</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>University of AZ Installations</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> University of Arizona</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>University of AZ Portable Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> University of Arizona</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>University of AZ SLA</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> University of Arizona</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>United Oil Emergency Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> United Oil &amp; Gas Corp.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>United Oil Installations</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> United Oil &amp; Gas Corp.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>United Oil Installations</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> United Oil &amp; Gas Corp.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>United Oil Office Portable Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> United Oil &amp; Gas Corp.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>GenePoint Standby Generator</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> GenePoint</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Burlington Textiles Weaving Plant Generator</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Burlington Textiles Corp of America</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>United Oil Installations</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> United Oil &amp; Gas Corp.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>United Oil Plant Standby Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> United Oil &amp; Gas Corp.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>United Oil Refinery Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> United Oil &amp; Gas Corp.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>United Oil Refinery Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> United Oil &amp; Gas Corp.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>United Oil SLA</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> United Oil &amp; Gas Corp.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>United Oil Standby Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> United Oil &amp; Gas Corp.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>GenePoint Lab Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> GenePoint</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>GenePoint SLA</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> GenePoint</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Edge Emergency Generator</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Edge Communications</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Edge Emergency Generator</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Edge Communications</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Edge Installation</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Edge Communications</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Pyramid Emergency Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Pyramid Construction Inc.</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Dickenson Mobile Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Dickenson plc</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Grand Hotels Emergency Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Grand Hotels &amp; Resorts Ltd</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Grand Hotels Generator Installations</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Grand Hotels &amp; Resorts Ltd</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>Grand Hotels Guest Portable Generators</title>\n
+  <stop_date>2008/08/31</stop_date>\n
+  <arrow type="Accounting">\n
+    <source> Grand Hotels &amp; Resorts Ltd</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>FirstOpportunityTest</title>\n
+  <stop_date>2010/09/23</stop_date>\n
+  <description>Test and lost an opportunity with a society z_society</description>\n
+  <arrow type="">\n
+    <source> MyOwnCamapaign</source>\n
+  </arrow>\n
+  <arrow type="Accounting">\n
+    <source> z_society_account</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+\n
+<transaction type="Sale Opportunity">\n
+  <title>SecondOpportunity</title>\n
+  <stop_date>2010/10/31</stop_date>\n
+  <description>This opportunity as been win !</description>\n
+  <arrow type="">\n
+    <source> MyOwnCamapaign</source>\n
+  </arrow>\n
+  <arrow type="Accounting">\n
+    <source> my_buyer_account</source>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> Z Doh john.z.doh@gmail.com</source>\n
+  </arrow>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Sale opportunity</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

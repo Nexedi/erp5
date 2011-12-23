@@ -69,7 +69,7 @@ activity_tag = \'%s_CounterDay\' % (site_uid, )\n
 if context.getPortalObject().portal_activities.countMessageWithTag(activity_tag) != 0:\n
   msg = Message(domain=\'ui\',message="Sorry, there is a pending counter date opening, please retry later")\n
   raise ValidationFailed (msg,)\n
-counter_date.setDefaultActivateParameters(tag=activity_tag)\n
+counter_date.setDefaultActivateParameterDict({"tag": activity_tag})\n
 counter_date_list = [x.getObject() for x in counter_date.portal_catalog(portal_type=\'Counter Date\',site_uid=site_uid,simulation_state=\'open\')]\n
 for other_counter in counter_date_list:\n
   if other_counter.getUid()!=counter_date.getUid():\n

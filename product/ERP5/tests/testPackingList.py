@@ -1727,6 +1727,14 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                             portal_type=self.packing_list_line_portal_type,
                             reference='bbb',
                             int_index=1)
+    line_bbb_cell_bbb = line_bbb.newContent(
+                            portal_type=self.packing_list_cell_portal_type,
+                            reference='bbb',
+                            int_index=2)
+    line_bbb_cell_aaa = line_bbb.newContent(
+                            portal_type=self.packing_list_cell_portal_type,
+                            reference='aaa',
+                            int_index=1)
     line_aaa = packing_list.newContent(
                             portal_type=self.packing_list_line_portal_type,
                             reference='aaa',
@@ -1744,14 +1752,14 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
     # check it's possible to sort by reference
     reference_result = packing_list.getMovementList(sort_on=
         [('reference', 'descending')])
-    self.assertEquals(reference_result, [line_aaa, line_bbb, line_ccc,
-      line_ddd])
+    self.assertEquals(reference_result, [line_ddd, line_ccc,
+      line_bbb_cell_bbb, line_bbb_cell_aaa, line_aaa])
 
     # check it's possible to sort by int_index
     int_index_result = packing_list.getMovementList(sort_on=
         [('int_index', 'ascending')])
-    self.assertEquals(int_index_result, [line_ccc, line_ddd, line_aaa,
-      line_bbb])
+    self.assertEquals(int_index_result, [line_bbb_cell_aaa, line_bbb_cell_bbb,
+      line_aaa, line_ddd, line_ccc])
 
   def test_subcontent_reindexing_container_line_cell(self):
     """Tests, that indexation of Packing List are propagated to subobjects
@@ -1767,6 +1775,64 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         portal_type=self.container_cell_portal_type)
     self._testSubContentReindexing(container, [container_line,
       container_cell])
+
+  def stepSetAssignmentOrderProfile(self,sequence=None, sequence_list=None, **kw):
+    """
+      Configure an Assingnment Order.
+      This order represents that it transfers an ownership to somebody.
+      In this case, source and destination are not moving.
+    """
+    organisation1 = sequence.get('organisation1')
+    organisation2 = sequence.get('organisation2')
+    project1 = sequence.get('project1')
+    project2 = sequence.get('project2')
+    order = sequence.get('order')
+    order.edit(source_value = organisation1,
+               source_section_value = organisation1,
+               source_payment_value = organisation1['bank'],
+               destination_value = organisation1,  # set same organisation
+               destination_section_value = organisation2,
+               destination_payment_value = organisation2['bank'],
+               source_project_value = project1,
+               destination_project_value = project2 )
+    order.setPaymentConditionEfficiency(1.0)
+    self.failUnless('Site Error' not in order.view())
+
+
+  def testTransferOfOwnership(self, quiet=quiet):
+    """
+     Test that Packing List has a capability to represent transfer of an
+     ownership(rights).
+    """
+    sequence_list = SequenceList()
+    assignment_order_sequence = """
+        CreateOrganisation1
+        CreateOrganisation2
+        CreateOrganisation3
+        CreateProject1
+        CreateProject2
+        CreateOrder
+        CreateCurrency
+        SetOrderPriceCurrency
+        SetAssignmentOrderProfile
+    """
+    sequence_string = assignment_order_sequence + """
+        CreateNotVariatedResource
+        Tic
+        CreateOrderLine
+        SetOrderLineResource
+        SetOrderLineDefaultValues
+        OrderOrder
+        Tic
+        ConfirmOrder
+        Tic
+        CheckOrderSimulation
+        CheckDeliveryBuilding
+        CheckPackingListIsNotDivergent
+        CheckOrderPackingList
+    """
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self, quiet=quiet)
 
 class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
   quiet = 0

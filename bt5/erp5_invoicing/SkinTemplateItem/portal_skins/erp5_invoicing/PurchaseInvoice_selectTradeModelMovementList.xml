@@ -51,7 +51,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>kw[\'parent_specialise_portal_type\']  = [\'Trade Model Rule\', \'Trade Model Simulation Rule\']\n
-kw[\'explanation_portal_type\']        = [\'Purchase Order\', \'Purchase Packing List\', \'Purchase Invoice Transaction\', \'Purchase Invoice\']\n
+kw[\'explanation_portal_type\']        = [\'Purchase Order\', \'Purchase Packing List\', \'Returned Purchase Packing List\',\n
+                                        \'Purchase Invoice Transaction\', \'Purchase Invoice\']\n
 kw[\'portal_type\']                    = \'Simulation Movement\'\n
 kw[\'grand_parent_simulation_state\']  = [\'started\', \'stopped\', \'delivered\', \'confirmed\']\n
 \n

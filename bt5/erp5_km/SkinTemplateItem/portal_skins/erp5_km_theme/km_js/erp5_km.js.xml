@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts09346482.3</string> </value>
+            <value> <string>ts21283797.18</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -55,6 +55,8 @@ function toggleSection(section_id, image_id){\n
     section_obj.hide();\n
     image_obj.attr("src", "images/tree_closed.png");}\n
   } \n
+\n
+\n
 \n
 function toggleHiddenFormatDialogSelection(){\n
   /* Expand more download formats widget */\n
@@ -277,7 +279,7 @@ $(document).ready(initialize_form);\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8417</int> </value>
+            <value> <int>8419</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

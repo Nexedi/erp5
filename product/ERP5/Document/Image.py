@@ -44,7 +44,8 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import fill_args_from_request
 from Products.ERP5.Document.File import File
 from Products.ERP5.Document.Document import Document, ConversionError,\
-                     VALID_TEXT_FORMAT_LIST, DEFAULT_DISPLAY_ID_LIST, DEFAULT_IMAGE_QUALITY, _MARKER
+                     VALID_TEXT_FORMAT_LIST, VALID_TRANSPARENT_IMAGE_FORMAT_LIST,\
+                     DEFAULT_DISPLAY_ID_LIST, DEFAULT_IMAGE_QUALITY, _MARKER
 from os.path import splitext
 from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
@@ -278,19 +279,23 @@ class Image(TextConvertableMixin, File, OFSImage):
     quality = kw.get('quality', _MARKER)
     if quality is _MARKER:
       quality = self.getDefaultImageQuality(format)
-    #print "image._convert", kw, quality, self.getRelativeUrl(), self.getPortalType()
-    convert_kw = {'quality': quality,
-                  'resolution': kw.get('resolution'),
-                  'frame': kw.get('frame'),
-                  'image_size': image_size,
-                  'format': format,
-                 }
+    kw['format'] = format
+    kw['quality'] = quality
     try:
-      mime, image = self.getConversion(**convert_kw)
+      mime, image_data = self.getConversion(**kw)
     except KeyError:
-      mime, image = self._makeDisplayPhoto(**convert_kw)
-      self.setConversion(image, mime, **convert_kw)
-    return mime, image.data
+      # we need to convert string representation (i.e. display=small) to a 
+      # pixel (number of it = 128x128)
+      kw['image_size'] = image_size    
+      display = kw.pop('display', None)
+      mime, image = self._makeDisplayPhoto(**kw)
+      image_data = image.data
+      # as image will always be requested through a display not by passing exact
+      # pixels we need to restore this way in cache
+      kw['display'] = display
+      image_size = kw.pop('image_size', None)
+      self.setConversion(image_data, mime, **kw)
+    return mime, image_data
 
   # Display
   security.declareProtected(Permissions.View, 'index_html')
@@ -310,6 +315,8 @@ class Image(TextConvertableMixin, File, OFSImage):
 
     parameter_list = ['convert']
     parameter_list.extend(['-colorspace', 'RGB'])
+    if format not in VALID_TRANSPARENT_IMAGE_FORMAT_LIST:
+      parameter_list.extend(['-alpha', 'off'])
     if resolution:
       parameter_list.extend(['-density', '%sx%s' % (resolution, resolution)])
     parameter_list.extend(['-quality', str(quality)])

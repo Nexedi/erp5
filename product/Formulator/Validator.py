@@ -8,6 +8,7 @@ from urllib import urlopen
 from urlparse import urljoin
 from Errors import ValidationError
 from DateTime.DateTime import DateError, TimeError
+import unicodedata
 
 class ValidatorBase:
     """Even more minimalistic base class for validators.
@@ -268,6 +269,9 @@ class IntegerValidator(StringBaseValidator):
       # we need to add this check again
       if value == "" and not field.get_value('required'):
         return value
+
+      value = normalizeFullWidthNumber(value)
+
       try:
         if value.find(' ')>0:
           value = value.replace(' ','')
@@ -294,6 +298,8 @@ class FloatValidator(StringBaseValidator):
     value = StringBaseValidator.validate(self, field, key, REQUEST)
     if value == "" and not field.get_value('required'):
       return value
+
+    value = normalizeFullWidthNumber(value)
 
     input_style = field.get_value('input_style')
     decimal_separator = ''
@@ -823,3 +829,25 @@ class SuppressValidator(ValidatorBase):
         return 0
     
 SuppressValidatorInstance = SuppressValidator()
+
+
+fullwidth_minus_character_list = (
+    u'\u2010',
+    u'\u2011',
+    u'\u2012',
+    u'\u2013',
+    u'\u2014',
+    u'\u2015',
+    u'\u2212',
+    u'\u30fc',
+    u'\uff0d',
+    )
+def normalizeFullWidthNumber(value):
+  try:
+    value = unicodedata.normalize('NFKD', value.decode('UTF8'))
+    if value[0] in fullwidth_minus_character_list:
+      value = u'-' + value[1:]
+    value = value.encode('ASCII', 'ignore')
+  except UnicodeDecodeError:
+    pass
+  return value

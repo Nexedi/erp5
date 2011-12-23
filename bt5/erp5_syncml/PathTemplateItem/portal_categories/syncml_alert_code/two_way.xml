@@ -62,6 +62,12 @@
             <value> <string>200</string> </value>
         </item>
         <item>
+            <key> <string>description</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>effective_date</string> </key>
             <value>
               <none/>
@@ -74,6 +80,10 @@
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Category</string> </value>
+        </item>
+        <item>
+            <key> <string>short_title</string> </key>
+            <value> <string>Two Way</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

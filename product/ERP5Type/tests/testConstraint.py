@@ -1408,7 +1408,7 @@ class TestConstraint(PropertySheetTestCase):
     message = consistency_message_list[0]
     from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
     self.assertTrue(isinstance(message, ConsistencyMessage))
-    self.assertEquals(message.class_name, 'Temporary Attribute Equality Constraint')
+    self.assertEquals(message.class_name, 'Attribute Equality Constraint')
     obj.setTitle('a')
     self.assertEquals(obj.checkConsistency(), [])
 

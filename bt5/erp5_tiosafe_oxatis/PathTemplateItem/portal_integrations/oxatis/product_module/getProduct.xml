@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?><Product xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"><OxID tal:content="options/product_id">0</OxID><ItemSKU> </ItemSKU></Product>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Resource</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/oxatis/product_rest_connection_plugin</string>
+                <string>destination/portal_integrations/oxatis/product_detail_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?><Product xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal"><OxID tal:content="options/product_id">0</OxID><ItemSKU> </ItemSKU></Product>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>ProductGet</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Product</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getProduct</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/oxatis</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<?xml version="1.0" encoding="utf-8"?><Product    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    xmlns:xsd="http://www.w3.org/2001/XMLSchema"><OxID>6821466</OxID><ItemSKU> </ItemSKU></Product>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://webservices.oxatis.com/webservices/httpservices/productservices.aspx</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>\r\n
+<DataResultService>\r\n
+  <StatusCode>200</StatusCode>\r\n
+  <StatusSubCode>0</StatusSubCode>\r\n
+  <ErrorDetails />\r\n
+  <Data>\r\n
+    <Product>\r\n
+      <OxID>6821466</OxID>\r\n
+      <ItemSKU>C0006blgd</ItemSKU>\r\n
+      <ProductLanguage> </ProductLanguage>\r\n
+      <OptionValues1>\r\n
+        <OxID>409415</OxID>\r\n
+        <Code> </Code>\r\n
+      </OptionValues1>\r\n
+      <OptionValues2>\r\n
+        <OxID>409420</OxID>\r\n
+        <Code> </Code>\r\n
+      </OptionValues2>\r\n
+      <OptionValues3>\r\n
+        <Code> </Code>\r\n
+      </OptionValues3>\r\n
+      <OptionTypes1>\r\n
+        <OxID>81714</OxID>\r\n
+      </OptionTypes1>\r\n
+      <OptionTypes2>\r\n
+        <OxID>81715</OxID>\r\n
+      </OptionTypes2>\r\n
+      <OptionTypes3>\r\n
+      </OptionTypes3>\r\n
+      <ParentItemID>4111420</ParentItemID>\r\n
+      <Name>Sac à main</Name>\r\n
+      <Description>Ceci est un sac à main ou pas</Description>\r\n
+      <Price>\r\n
+        <Value>100</Value>\r\n
+        <VATIncluded>false</VATIncluded>\r\n
+      </Price>\r\n
+      <TaxRate>19.6</TaxRate>\r\n
+      <EcotaxTI>0</EcotaxTI>\r\n
+      <LongDescription>La description longue doit être la plus précise possible. Mentionnez-y toutes les caractéristiques et les bénéfices de l&amp;#8217;article susceptible d&amp;#8217;intéresser l&amp;#8217;acheteur. Mettez en valeur les points important concernant sa fabrication, ses matières, ses caractéristiques techniques, etc.\r\n
+La description longue est affichée dans la fiche article, c&amp;#8217;est souvent l&amp;#8217;endroit stratégique ou l&amp;#8217;acheteur décide d&amp;#8217;ajouter ou pas l&amp;#8217;article au panier. Ne laissez pas de place pour l&amp;#8217;approximation !</LongDescription>\r\n
+      <BigImgFileName>../0/Sample-Bag-Big.jpg</BigImgFileName>\r\n
+      <SmallImgFileName>../0/Sample-Bag-Small.jpg</SmallImgFileName>\r\n
+      <Category1>\r\n
+        <OxID>964658</OxID>\r\n
+        <Name>Sacs et Accessoires</Name>\r\n
+      </Category1>\r\n
+      <Category2>\r\n
+        <OxID>0</OxID>\r\n
+        <Name> </Name>\r\n
+      </Category2>\r\n
+      <Category3>\r\n
+        <OxID>0</OxID>\r\n
+        <Name> </Name>\r\n
+      </Category3>\r\n
+      <Brand>\r\n
+        <OxID>0</OxID>\r\n
+        <Name> </Name>\r\n
+      </Brand>\r\n
+      <QuantityInStock>\r\n
+        <Value>1</Value>\r\n
+      </QuantityInStock>\r\n
+      <QuantityReorder>\r\n
+        <Value>0</Value>\r\n
+      </QuantityReorder>\r\n
+      <ShowInStockNote>false</ShowInStockNote>\r\n
+      <ShowStockLevel>true</ShowStockLevel>\r\n
+      <DaysToShip>0</DaysToShip>\r\n
+      <ShowIfOutOfStock>false</ShowIfOutOfStock>\r\n
+      <SaleIfOutOfStock>false</SaleIfOutOfStock>\r\n
+      <SaleIfOutOfStockScenario>0</SaleIfOutOfStockScenario>\r\n
+      <ShowDaysToship>false</ShowDaysToship>\r\n
+      <Weight>0</Weight>\r\n
+      <DimensionHeight>0</DimensionHeight>\r\n
+      <DimensionWidth>0</DimensionWidth>\r\n
+      <DimensionLength>0</DimensionLength>\r\n
+      <HandlingSurcharge1ST>0</HandlingSurcharge1ST>\r\n
+      <HandlingSurchargeOthers>0</HandlingSurchargeOthers>\r\n
+      <ShipPrice>0</ShipPrice>\r\n
+      <Price1>\r\n
+        <Value>0</Value>\r\n
+        <VATIncluded>false</VATIncluded>\r\n
+      </Price1>\r\n
+      <Price2>\r\n
+        <Value>0</Value>\r\n
+        <VATIncluded>false</VATIncluded>\r\n
+      </Price2>\r\n
+      <Price3>\r\n
+        <Value>0</Value>\r\n
+        <VATIncluded>false</VATIncluded>\r\n
+      </Price3>\r\n
+      <Price4>\r\n
+        <Value>0</Value>\r\n
+        <VATIncluded>false</VATIncluded>\r\n
+      </Price4>\r\n
+      <LastUpdateDate>2010-10-08T10:17:00</LastUpdateDate>\r\n
+      <OptionIsDefault>false</OptionIsDefault>\r\n
+      <ProductImagesListEntity />\r\n
+      <ProductImagesList />\r\n
+    </Product>\r\n
+  </Data>\r\n
+</DataResultService>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<resource type="Product">\n
+  <title>Sac à main</title>\n
+  <reference>C0006blgd</reference>\n
+  <description>Ceci est un sac à main ou pas</description>\n
+</resource>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getProductCategoryParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get one product</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

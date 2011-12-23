@@ -6,23 +6,23 @@
   <input type="hidden" name=":default_method" value="doSettings">
   <table width="100%" cellspacing="0" cellpadding="2" border="0">
     <tr>
-      <td class="form-label">Title</td>
-      <td><input name="title" value="" type="text" size="20"
+      <td class="form-label" width="15%">Title</td>
+      <td><input name="title" value="" type="text" size="40"
                 tal:attributes="value request/title | here/title | nothing"/></td>
     </tr>
     <tr>
-      <td class="form-label">Form Name</td>
-      <td><input name="form_name" value="default_form_name" type="text" size="20"
+      <td class="form-label" width="15%">Form Name</td>
+      <td><input name="form_name" value="default_form_name" type="text" size="40"
                 tal:attributes="value request/form_name | here/form_name | nothing"/></td>
     </tr>
     <tr>
-      <td class="form-label">Template</td>
-      <td><input name="template" value="default_template" type="text" size="20"
+      <td class="form-label" width="15%">Template</td>
+      <td><input name="template" value="default_template" type="text" size="40"
                 tal:attributes="value request/template | here/template | nothing"/></td>
     </tr>
     <tr>
-      <td class="form-label">Filename</td>
-      <td><input name="filename" value="default_filename" type="text" size="20"
+      <td class="form-label" width="15%">Filename</td>
+      <td><input name="filename" value="default_filename" type="text" size="40"
                 tal:attributes="value request/filename | here/filename | nothing"/></td>
     </tr>
 

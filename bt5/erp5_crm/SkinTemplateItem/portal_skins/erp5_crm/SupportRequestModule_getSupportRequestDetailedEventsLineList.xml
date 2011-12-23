@@ -62,10 +62,8 @@ request_stop_date = request.get(\'at_date\', None)\n
 request_ticket_type = request.get(\'support_request_type\', None)\n
 request_validation_state = request.get(\'validation_state\', None)\n
 \n
-outgoing_state_list = portal.Event_getOutgoingStateList()\n
-incoming_state_list = portal.Event_getIncomingStateList()\n
-outgoing_title=portal.Base_translateString("Outgoing")\n
-incoming_title=portal.Base_translateString("Incoming")\n
+future_state_list = portal.Event_getFutureStateList()\n
+past_state_list = portal.Event_getPastStateList()\n
 \n
 line_list = []\n
 \n
@@ -91,10 +89,10 @@ ticketlist=portal.portal_catalog.searchResults(portal_type="Support Request",\n
 # Get every result object\n
 for r_ticket in ticketlist: \n
   ticket=r_ticket.getObject()\n
-  #show incoming follow-up events\n
+  #show past follow-up events\n
   eventlist=portal.portal_catalog.searchResults(portal_type=portal.getPortalEventTypeList(),\n
                                                  follow_up_uid=ticket.getUid(),\n
-                                                 simulation_state=incoming_state_list)\n
+                                                 simulation_state=past_state_list)\n
   #sort the list by source\n
   eventlist_sorted=[]\n
   for event in eventlist:\n
@@ -103,7 +101,6 @@ for r_ticket in ticketlist: \n
   for event in eventlist_sorted:\n
     line_list.append( Object(uid=\'new_\',\n
                            support_request = ticket.getTitle(),\n
-                           direction = incoming_title,\n
                            type = event.getTranslatedPortalType(),\n
                            destination_title_list = event.getDestinationTitleList(),\n
                            title = event.getTitle(),\n
@@ -111,22 +108,17 @@ for r_ticket in ticketlist: \n
                            start_date = event.getStartDate(),\n
                            source = event.getSourceTitle(),\n
                            validation_state = event.getTranslatedSimulationStateTitle()))\n
-    #show incoming or outgoing causality events of every incoming event\n
+    #show past or future causality events of every past event\n
     event_causality_list=portal.portal_catalog.searchResults(portal_type=\n
                                                       portal.getPortalEventTypeList(),\n
-                                                      simulation_state=outgoing_state_list+incoming_state_list,\n
+                                                      simulation_state=future_state_list+past_state_list,\n
                                                       causality_uid=event.getUid())\n
     for r_event_causality in event_causality_list:\n
       event_causality=r_event_causality.getObject()\n
       #check that one event it isn\'t related by causality and follow-up with the same ticket\n
       if ticket.getUid()<>event_causality.getFollowUpUid():\n
-        if event_causality.getSimulationState() in incoming_state_list:\n
-          direction_state = incoming_title\n
-        else:\n
-          direction_state = outgoing_title\n
         line_list.append( Object(uid=\'new_\',\n
                              support_request = "",\n
-                             direction = direction_state,\n
                              type = event_causality.getTranslatedPortalType(),\n
                              destination_title_list = event_causality.getDestinationTitleList(),\n
                              title = event_causality.getTitle(),\n
@@ -134,10 +126,10 @@ for r_ticket in ticketlist: \n
                              start_date = event_causality.getStartDate(),\n
                              source = event_causality.getSourceTitle(),\n
                              validation_state = event_causality.getTranslatedSimulationStateTitle()))\n
-  #show outgoing follow-up events\n
+  #show future follow-up events\n
   eventlist=portal.portal_catalog.searchResults(portal_type=portal.getPortalEventTypeList(),\n
                                                  follow_up_uid=ticket.getUid(),\n
-                                                 simulation_state=outgoing_state_list)\n
+                                                 simulation_state=future_state_list)\n
   #sort the list by destination (recipient)\n
   eventlist_sorted=[]\n
   for event in eventlist:\n
@@ -146,7 +138,6 @@ for r_ticket in ticketlist: \n
   for event in eventlist_sorted:\n
     line_list.append( Object(uid=\'new_\',\n
                            support_request = ticket.getTitle(),\n
-                           direction = outgoing_title,\n
                            type = event.getTranslatedPortalType(),\n
                            destination_title_list = event.getDestinationTitleList(),\n
                            title = event.getTitle(),\n
@@ -154,22 +145,17 @@ for r_ticket in ticketlist: \n
                            start_date = event.getStartDate(),\n
                            source = event.getSourceTitle(),\n
                            validation_state = event.getTranslatedSimulationStateTitle()))\n
-    #show incoming or outgoing causality events of every outgoing event\n
+    #show past or future causality events of every future event\n
     event_causality_list=portal.portal_catalog.searchResults(portal_type=\n
                                                       portal.getPortalEventTypeList(),\n
-                                                      simulation_state=outgoing_state_list+incoming_state_list,\n
+                                                      simulation_state=future_state_list+past_state_list,\n
                                                       causality_uid=event.getUid())\n
     for r_event_causality in event_causality_list:\n
       event_causality=r_event_causality.getObject()\n
       #check that one event it isn\'t related by causality and follow-up with the same ticket\n
       if ticket.getUid()<>event_causality.getFollowUpUid():\n
-        if event_causality.getSimulationState() in incoming_state_list:\n
-          direction_state = incoming_title\n
-        else:\n
-          direction_state = outgoing_title\n
         line_list.append( Object(uid=\'new_\',\n
                              support_request = "",\n
-                             direction = direction_state,\n
                              type = event_causality.getTranslatedPortalType(),\n
                              destination_title_list = event_causality.getDestinationTitleList(),\n
                              title = event_causality.getTitle(),\n

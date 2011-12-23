@@ -1,0 +1,10 @@
+organisation_module/default_paypal_shop**
+portal_categories/group/paypal
+portal_integrations/paypal
+portal_integrations/paypal/*connector**
+portal_integrations/paypal/*mapping**
+portal_integrations/paypal/*module**
+portal_integrations/paypal/*plugin
+portal_integrations/paypal/PaymentMode**
+portal_synchronizations/paypal*
+sale_trade_condition_module/default_tiosafe_paypal**

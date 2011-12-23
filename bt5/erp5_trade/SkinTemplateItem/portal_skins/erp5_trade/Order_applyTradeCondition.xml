@@ -59,9 +59,11 @@ category_list = [\n
   \'source\', \'source_section\', \'source_decision\',\n
   \'source_administration\', \'source_payment\', \'source_project\',\n
   \'source_carrier\', \'source_referral\', \'source_function\',\n
+  \'source_trade\',\n
   \'destination\', \'destination_section\', \'destination_decision\',\n
   \'destination_administration\', \'destination_payment\', \'destination_project\',\n
   \'destination_carrier\', \'destination_referral\', \'destination_function\',\n
+  \'destination_trade\',\n
   \'price_currency\', \'incoterm\', \'delivery_mode\',\n
 ]\n
 new_category_dict = {}\n

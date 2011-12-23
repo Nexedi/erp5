@@ -28,4 +28,4 @@ for f in MailBase.__dict__.itervalues():
       i = args.index('immediate') - len(args)
     except ValueError:
       continue
-    f.func_defaults = defaults[:i] + (True,) + defaults[i+1:]
+    f.func_defaults = defaults[:i] + (True,) + defaults[i+1 or len(args):]

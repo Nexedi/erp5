@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
@@ -29,14 +30,21 @@
 import transaction
 from DateTime import DateTime
 from Products.ERP5TioSafe.tests.testPrestashopMixin import testPrestashopMixin
+from Products.ERP5Type.tests.backportUnittest import skip
 
-class testSaleOrderERP5Synchronization(testPrestashopMixin):
+@skip("must be checked against zope2.12")
+class TestSaleOrderERP5Synchronization(testPrestashopMixin):
   """ This class allows to check different cases of Slae Order's sync. """
 
   def getBusinessTemplateList(self):
     return testPrestashopMixin.getBusinessTemplateList(self) + ('erp5_accounting',
                                                                 'erp5_invoicing',
                                                                 'erp5_simplified_invoicing',
+                                                                'erp5_simulation',
+                                                                'erp5_simulation_legacy',
+                                                                'erp5_trade_simulation_legacy',
+                                                                'erp5_accounting_simulation_legacy',
+                                                                'erp5_invoicing_simulation_legacy',
                                                                 )
 
   def afterSetUp(self):
@@ -55,13 +63,16 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     self.root_xml = '<journal>\n%s\n</journal>'
     self.delivery = self.service_module.tiosafe_delivery_service
     self.discount = self.service_module.tiosafe_discount_service
+    self.not_removable_id_list = [self.prestashop.getSourceAdministrationValue().getId(),
+                                  self.prestashop.getResourceValue().getId(),
+                                  self.prestashop.getDestinationValue().getId()]
+
 
   def test_PrestashopSimplestXMLSync(self):
     """ Check the sync of the simplest XML for a sale order. """
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    self.createUnknownObject()
     self.validateRules()
     self.loadSQLDump(
         self.connection,
@@ -91,7 +102,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         title='Stylo',
     )[0].getObject()
     currency = self.currency_module.contentValues()[0]
-    trade_condition = self.sale_trade_condition_module['tiosafe_sale_trade_condition']
+    trade_condition = self.prestashop.getSourceTradeValue()
     self.assertEqual(sale_order.getSourceValue(), self.organisation)
     self.assertEqual(sale_order.getSourceSectionValue(), self.organisation)
     self.assertEqual(sale_order.getDestinationValue(), person)
@@ -134,7 +145,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         self.failUnless(line.getTitle() in ['Delivery', 'Stylo'])
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
-        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(),
+        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
         plugin_xml=self.root_xml % self.prestashop.sale_order_module()[0].asXML(),
         xsd_path='../XSD/transactions.xsd',
     )
@@ -146,7 +157,6 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping()
-    self.createUnknownObject()
     self.validateRules()
     # Integration site country
     mapping_dict_list = [
@@ -213,7 +223,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         title='Ballon',
     )[0].getObject()
     currency = self.currency_module.contentValues()[0]
-    trade_condition = self.sale_trade_condition_module['tiosafe_sale_trade_condition']
+    trade_condition = self.prestashop.getSourceTradeValue()
     self.assertEqual(sale_order.getSourceValue(), self.organisation)
     self.assertEqual(sale_order.getSourceSectionValue(), self.organisation)
     self.assertEqual(sale_order.getDestinationValue(), person)
@@ -277,7 +287,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         raise 'A line has not been checked'
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
-        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(),
+        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
         plugin_xml=self.root_xml % self.prestashop.sale_order_module()[0].asXML(),
         xsd_path='../XSD/transactions.xsd',
     )
@@ -287,7 +297,6 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    self.createUnknownObject()
     self.validateRules()
     self.loadSQLDump(
         self.connection,
@@ -317,7 +326,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         title='Ballon de Foot',
     )[0].getObject()
     currency = self.currency_module.contentValues()[0]
-    trade_condition = self.sale_trade_condition_module['tiosafe_sale_trade_condition']
+    trade_condition = self.prestashop.getSourceTradeValue()
     self.assertEqual(sale_order.getSourceValue(), self.organisation)
     self.assertEqual(sale_order.getSourceSectionValue(), self.organisation)
     self.assertEqual(sale_order.getDestinationValue(), person)
@@ -380,7 +389,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         raise 'A line has not been checked'
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
-        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(),
+        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
         plugin_xml=self.root_xml % self.prestashop.sale_order_module()[0].asXML(),
         xsd_path='../XSD/transactions.xsd',
     )
@@ -390,7 +399,6 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping()
-    self.createUnknownObject()
     self.validateRules()
     # Integration site country
     mapping_dict_list = [
@@ -465,7 +473,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         title='Ballon de Basket',
     )[0].getObject()
     currency = self.currency_module.contentValues()[0]
-    trade_condition = self.sale_trade_condition_module['tiosafe_sale_trade_condition']
+    trade_condition = self.prestashop.getSourceTradeValue()
     self.assertEqual(sale_order.getSourceValue(), self.organisation)
     self.assertEqual(sale_order.getSourceSectionValue(), self.organisation)
     self.assertEqual(sale_order.getDestinationValue(), person)
@@ -536,7 +544,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         raise 'A line has not been checked'
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
-        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(),
+        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
         plugin_xml=self.root_xml % self.prestashop.sale_order_module()[0].asXML(),
         xsd_path='../XSD/transactions.xsd',
     )
@@ -546,7 +554,6 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    self.createUnknownObject()
     self.validateRules()
     self.loadSQLDump(
         self.connection,
@@ -576,7 +583,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         title='Stylo',
     )[0].getObject()
     currency = self.currency_module.contentValues()[0]
-    trade_condition = self.sale_trade_condition_module['tiosafe_sale_trade_condition']
+    trade_condition = self.prestashop.getSourceTradeValue()
     self.assertEqual(sale_order.getSourceValue(), self.organisation)
     self.assertEqual(sale_order.getSourceSectionValue(), self.organisation)
     self.assertEqual(sale_order.getDestinationValue(), person)
@@ -631,7 +638,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         self.failUnless(line.getTitle() in ['Delivery', 'Stylo', 'Discount'])
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
-        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(),
+        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
         plugin_xml=self.root_xml % self.prestashop.sale_order_module()[0].asXML(),
         xsd_path='../XSD/transactions.xsd',
     )
@@ -641,9 +648,8 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    self.createUnknownObject()
     self.validateRules()
-    person_unknown = self.person_module['404']
+    person_unknown = self.prestashop.getDestinationValue()
     self.loadSQLDump(
         self.connection,
         '%s/dump_sale_order_sync_06.sql' %  self.ps_dump_path,
@@ -668,7 +674,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         title='Stylo',
     )[0].getObject()
     currency = self.currency_module.contentValues()[0]
-    trade_condition = self.sale_trade_condition_module['tiosafe_sale_trade_condition']
+    trade_condition = self.prestashop.getSourceTradeValue()
     self.assertEqual(sale_order.getSourceValue(), self.organisation)
     self.assertEqual(sale_order.getSourceSectionValue(), self.organisation)
     self.assertEqual(sale_order.getDestinationValue(), person_unknown)
@@ -713,7 +719,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         self.failUnless(line.getTitle() in ['Delivery', 'Stylo'])
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
-        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(),
+        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
         plugin_xml=self.root_xml % self.prestashop.sale_order_module()[0].asXML(),
         xsd_path='../XSD/transactions.xsd',
     )
@@ -723,9 +729,8 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    self.createUnknownObject()
     self.validateRules()
-    product_unknown = self.product_module['404']
+    product_unknown = self.prestashop.getResourceValue()
     self.loadSQLDump(
         self.connection,
         '%s/dump_sale_order_sync_07.sql' %  self.ps_dump_path,
@@ -750,7 +755,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         title='Jean GRAY',
     )[0].getObject()
     currency = self.currency_module.contentValues()[0]
-    trade_condition = self.sale_trade_condition_module['tiosafe_sale_trade_condition']
+    trade_condition = self.prestashop.getSourceTradeValue()
     self.assertEqual(sale_order.getSourceValue(), self.organisation)
     self.assertEqual(sale_order.getSourceSectionValue(), self.organisation)
     self.assertEqual(sale_order.getDestinationValue(), person)
@@ -825,7 +830,7 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         raise 'A line has not been checked'
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
-        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(),
+        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
         plugin_xml=self.root_xml % self.prestashop.sale_order_module()[0].asXML(),
         xsd_path='../XSD/transactions.xsd',
     )
@@ -838,7 +843,6 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     # Initialize the instance and prestashop
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    self.createUnknownObject()
     self.validateRules()
     self.loadSQLDump(
         self.connection,
@@ -872,8 +876,17 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         portal_type='Service',
         title='VAT Normal',
     )[0].getObject()
+    vat_reduced = self.service_module.searchFolder(
+        portal_type='Service',
+        title='VAT Reduced',
+    )[0].getObject()
+    vat_exempted = self.service_module.searchFolder(
+        portal_type='Service',
+        title='VAT Exempted',
+    )[0].getObject()
+
     currency = self.currency_module.contentValues()[0]
-    trade_condition = self.sale_trade_condition_module['tiosafe_sale_trade_condition']
+    trade_condition = self.prestashop.getSourceTradeValue()
     self.assertEqual(sale_order.getSourceValue(), self.organisation)
     self.assertEqual(sale_order.getSourceSectionValue(), self.organisation)
     self.assertEqual(sale_order.getDestinationValue(), person)
@@ -928,20 +941,15 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     self.assertEqual(sale_packing_list.getSimulationState(), 'started')
     transaction.commit()
     self.tic()
-    self.assertEqual(
-        len(sale_packing_list.contentValues()),
-        len(sale_packing_list.contentValues(
-          portal_type='Sale Packing List Line'),
-        ),
-        2,
-    )
+    self.assertEqual(len(sale_packing_list.contentValues()), 3) # Two SPL + Payment condition
+    self.assertEqual(len(sale_packing_list.contentValues(portal_type='Sale Packing List Line'),), 2)
     # Check the sale invoice and the lines
     invoice = sale_packing_list.getCausalityRelatedValue(
         portal_type='Sale Invoice Transaction',
     )
     self.assertNotEqual(invoice, None)
     invoice_line_list = invoice.getMovementList(portal_type='Invoice Line')
-    self.assertEqual(len(invoice_line_list), 3)
+    self.assertEqual(len(invoice_line_list), 5)
     for line in invoice_line_list:
       if line.getResourceValue() == self.delivery:
         self.assertEqual(
@@ -965,11 +973,15 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
         self.assertEqual(line.getQuantity(), 6.672241 + 2.1)
         self.assertEqual(line.getPrice(), 0.196)
         self.assertEqual(line.getTotalPrice(), 6.672241 * 0.196 + 2.1 * 0.196)
+      elif line.getResourceValue() in [vat_reduced, vat_exempted]:
+        self.assertEqual(line.getQuantity(), 0.0)
+        self.assertEqual(line.getPrice(), 0.0)
+        self.assertEqual(line.getTotalPrice(), 0.0)
       else:
         raise 'The lines must contain VAT, Product or Delivery, nothing else.'
     # Check the XML schema and the fixed point
     self.checkTioSafeXML(
-        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(),
+        tiosafe_xml=self.root_xml % sale_order.Transaction_asTioSafeXML(context_document=self.portal.portal_synchronizations.ps_SaleOrder_pub.getPath()),
         plugin_xml=self.root_xml % self.prestashop.sale_order_module()[0].asXML(),
         xsd_path='../XSD/transactions.xsd',
     )
@@ -982,7 +994,6 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     portal_sync = self.portal.portal_synchronizations
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    self.createUnknownObject()
     self.validateRules()
     self.loadSQLDump(
         self.connection,
@@ -1024,7 +1035,6 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     portal_sync = self.portal.portal_synchronizations
     self.initPrestashopTest()
     self.initMapping(self.prestashop)
-    self.createUnknownObject()
     self.validateRules()
     self.loadSQLDump(
         self.connection,
@@ -1057,3 +1067,8 @@ class testSaleOrderERP5Synchronization(testPrestashopMixin):
     ])
     self.assertEqual(self.sale_order_module.objectValues()[0].getSimulationState(), "confirmed")
 
+import unittest
+def test_suite():
+  suite = unittest.TestSuite()
+  suite.addTest(unittest.makeSuite(TestSaleOrderERP5Synchronization))
+  return suite

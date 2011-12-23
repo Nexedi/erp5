@@ -56,8 +56,6 @@
     tal:condition="python: getattr(here, \'default_fax\', None) and here.default_fax.getTelephoneNumber()">\n
   <fax tal:content="python: here.default_fax.getTelephoneNumber()" /></tal:block>\n
   <address tal:repeat="address here/Node_getAddressList"><tal:block\n
-      tal:condition="address/getTitle">\n
-    <title tal:content="address/getTitle" /></tal:block><tal:block\n
       tal:condition="address/getStreetAddress">\n
     <street tal:content="address/getStreetAddress" /></tal:block><tal:block\n
       tal:condition="address/getZipCode">\n
@@ -70,7 +68,7 @@
   <category tal:repeat="role here/Node_getRoleList" tal:content="role"/><tal:block\n
     tal:condition="python: here.getPortalType() == \'Person\' and\n
     here.getSubordinationTitle()">\n
-  <relation tal:content="here/Node_getRelation"/></tal:block>\n
+  <relation tal:define="context_path options/context_document" tal:content="python: here.Node_getRelation(context_document=context_path)"/></tal:block>\n
 </node>\n
 
 

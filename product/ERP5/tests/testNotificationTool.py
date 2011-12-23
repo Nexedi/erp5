@@ -35,8 +35,8 @@ from AccessControl.SecurityManagement import getSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import DummyMailHost
 import email
-from email.Header import decode_header, make_header
-from email.Utils import parseaddr
+from email.header import decode_header, make_header
+from email.utils import parseaddr
 
 # Copied from ERP5Type/patches/CMFMailIn.py
 def decode_email(file):

@@ -11,6 +11,7 @@ Pay Sheet Model | Pay Sheet Model Slice
 Pay Sheet Model | Payment Condition
 Pay Sheet Transaction | Annotation Line
 Pay Sheet Transaction | Pay Sheet Line
+Pay Sheet Transaction | Pay Sheet Model Ratio Line
 Pay Sheet Transaction | Pay Sheet Transaction Line
 Pay Sheet Transaction | Payment Condition
 Preference | Pay Sheet Transaction

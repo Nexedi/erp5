@@ -174,6 +174,13 @@ allow_module('StringIO')
 allow_type(type(f))
 
 ModuleSecurityInfo('cgi').declarePublic('escape', 'parse_header')
+allow_module('datetime')
+import datetime
+ContainerAssertions[datetime.datetime] = 1
+ContainerAssertions[datetime.time] = 1
+ContainerAssertions[datetime.date] = 1
+ContainerAssertions[datetime.timedelta] = 1
+ContainerAssertions[datetime.tzinfo] = 1
 allow_module('difflib')
 allow_module('hashlib')
 allow_module('time')

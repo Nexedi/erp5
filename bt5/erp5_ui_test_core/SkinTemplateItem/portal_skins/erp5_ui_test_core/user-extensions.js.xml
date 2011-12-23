@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts79620529.1</string> </value>
+            <value> <string>ts20417149.43</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -88,6 +88,12 @@ Selenium.prototype.doType = function(locator, newText) {\n
 Selenium.prototype.getAbsoluteLocation = function() {\n
     return this.page().location || this.browserbot.getCurrentWindow().location;\n
 };\n
+\n
+Selenium.prototype.doPhantomRender = function(filename) {\n
+    if (window.page && window.page.render) {\n
+        page.render(filename);\n
+    }\n
+};\n
 
 
 ]]></string> </value>
@@ -98,7 +104,7 @@ Selenium.prototype.getAbsoluteLocation = function() {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2278</int> </value>
+            <value> <int>2422</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

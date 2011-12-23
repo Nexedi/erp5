@@ -39,14 +39,8 @@ from Products.ERP5Banking.BaobabMixin import BaobabMixin
 
 # Import classes to monkey-patch
 # XXX All patches must be moved in a Business Template !!
-try:
-  from Products.ERP5Type import dynamic
-except ImportError:
-  from Products.ERP5Type.Document.Currency import Currency
-  from Products.ERP5Type.Document.DeliveryCell import DeliveryCell
-else:
-  from Products.ERP5.Document.Currency import Currency
-  from Products.ERP5.Document.DeliveryCell import DeliveryCell
+from Products.ERP5.Document.Currency import Currency
+from Products.ERP5.Document.DeliveryCell import DeliveryCell
 
 
 class BankingOperation(BaobabMixin, AccountingTransaction):

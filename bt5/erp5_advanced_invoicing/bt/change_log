@@ -1,3 +1,9 @@
+2011-12-06 arnaud.fontaine
+* Fix inverted Supplier and Client columns labels.
+
+2011-11-22 yusei
+* Stop showing detailed DateTime in listbox. This problem started occur due to recent specification change of zope's DateTime.
+
 2010-11-04 tatuya
 * Fix stop_action on invoice_workflow. The settings were missing.
 

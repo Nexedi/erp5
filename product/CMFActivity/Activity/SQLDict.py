@@ -175,14 +175,6 @@ class SQLDict(RAMDict, SQLBase):
   def flush(self, activity_tool, object_path, invoke=0, method_id=None, commit=0, **kw):
     """
       object_path is a tuple
-
-      commit allows to choose mode
-        - if we commit, then we make sure no locks are taken for too long
-        - if we do not commit, then we can use flush in a larger transaction
-
-      commit should in general not be used
-
-      NOTE: commiting is very likely nonsenses here. We should just avoid to flush as much as possible
     """
     path = '/'.join(object_path)
     # LOG('Flush', 0, str((path, invoke, method_id)))

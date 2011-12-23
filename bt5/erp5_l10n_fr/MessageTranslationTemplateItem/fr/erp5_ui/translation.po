@@ -1188,6 +1188,9 @@ msgstr "Planifié automatiquement"
 msgid "Auto Planned [state in task_workflow]"
 msgstr "Planifié automatiquement"
 
+msgid "Automatic Detection"
+msgstr "Détection automatique"
+
 msgid "Automatically disabled when enabling ${preference_title}."
 msgstr "Désactivé automatiquement lors de l'activation de la préférence ${preference_title}."
 
@@ -2519,6 +2522,9 @@ msgstr "Contenu du document."
 
 msgid "Content of the web page"
 msgstr "Contenu de la page web."
+
+msgid "Content Translation Workflow"
+msgstr "Workflow de traduction"
 
 msgid "Contents"
 msgstr "Contenu"
@@ -5547,6 +5553,9 @@ msgstr "Lignes d'inventaire"
 
 msgid "Inventory Module"
 msgstr "Module des inventaires"
+
+msgid "Inventory Report"
+msgstr "Rapport d'inventaire"
 
 msgid "Inventory State"
 msgstr "État de l'inventaire"
@@ -9443,6 +9452,9 @@ msgstr "Inclure les comptes non mouvementés"
 msgid "Show All"
 msgstr "Tout Montrer"
 
+msgid "Show History"
+msgstr "Voir historique"
+
 msgid "Show tabs"
 msgstr "Montrer les onglets"
 
@@ -11538,6 +11550,9 @@ msgstr "Traduction demandée"
 msgid "Translation Requested [state in document_publication_workflow]"
 msgstr "Traduction demandée"
 
+msgid "Translation State"
+msgstr "État de la traduction"
+
 msgid "Translations"
 msgstr "Traductions"
 
@@ -11750,6 +11765,9 @@ msgstr "Charger un Business Template"
 
 msgid "Upload File"
 msgstr "Charger un fichier"
+
+msgid "Upload Image"
+msgstr "Charger une image"
 
 msgid "Upload Module"
 msgstr "Module des téléchargements"

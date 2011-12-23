@@ -1,3 +1,12 @@
+2011-10-11 Xavier
+* Selenium core updated (2.6.0)
+* captureEntirePageScreenshot is available to take screenshots with Selenium (Firefox only)
+* captureEntirePageScreenshotAndUpload is available to upload the screenshots to the instance
+* showOptions/hideOptions functions to help displaying drop down menus
+
+2011-11-01 Cedric
+* Add phantomRender Selenium user extension.
+
 2010-06-07 yusei
 * Remove short title.
 

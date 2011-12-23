@@ -32,9 +32,10 @@ from Products.ERP5SyncML.XMLSyncUtils import getXupdateObject
 from Products.ERP5Type.Utils import deprecated
 from Products.ERP5Type.XMLExportImport import MARSHALLER_NAMESPACE_URI
 from Products.CMFCore.utils import getToolByName
+from Products.ERP5Type.Base import WorkflowMethod
 from DateTime.DateTime import DateTime
-from email.MIMEBase import MIMEBase
-from email import Encoders
+from email.mime.base import MIMEBase
+from email import encoders
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
@@ -418,7 +419,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
       if keyword == 'binary_data':
         #LOG('ERP5Conduit.getFormatedArgs', DEBUG, 'binary_data keyword: %s' % str(keyword))
         msg = MIMEBase('application','octet-stream')
-        Encoders.encode_base64(msg)
+        encoders.encode_base64(msg)
         msg.set_payload(data)
         data = msg.get_payload(decode=True)
       new_args[keyword] = data
@@ -894,7 +895,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     time = status.get('time')
     for action in action_list:
       this_one = True
-      if time > action.get('time'):
+      if time <= action.get('time'):
         # action in the past are not append
         addable = False
       for key in action.keys():
@@ -979,6 +980,14 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     return conflict_list
 
   security.declareProtected(Permissions.ModifyPortalContent, 'editDocument')
+
+  # XXX Ugly hack to avoid calling interaction workflow when synchronizing
+  # objects with ERP5SyncML as it leads to unwanted side-effects on the object
+  # being synchronized, such as undesirable workflow history being added (for
+  # example edit_workflow) and double conversion for OOo documents (for
+  # example document_conversion_interaction_workflow defined for _setData())
+  # making the source and destination XML representation different.
+  @WorkflowMethod.disable
   def editDocument(self, object=None, **kw):
     """
     This is the default editDocument method. This method
@@ -1018,19 +1027,19 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if object_id is not None:
       if sub_object is None:
         sub_object = object._getOb(object_id, None)
-      if sub_object is None: # If so, it doesn't exist
-        portal_type = ''
-        if xml.xpath('local-name()') == XML_OBJECT_TAG:
-          portal_type = self.getObjectType(xml)
-        sub_object, reset_local_roles, reset_workflow = self.constructContent(
-                                                        object,
-                                                        object_id,
-                                                        portal_type)
-      self.newObject(object=sub_object,
-                     xml=xml,
-                     simulate=simulate,
-                     reset_local_roles=reset_local_roles,
-                     reset_workflow=reset_workflow)
+    if sub_object is None: # If so, it doesn't exist
+      portal_type = ''
+      if xml.xpath('local-name()') == XML_OBJECT_TAG:
+        portal_type = self.getObjectType(xml)
+      sub_object, reset_local_roles, reset_workflow = self.constructContent(
+                                                      object,
+                                                      object_id,
+                                                      portal_type)
+    self.newObject(object=sub_object,
+                    xml=xml,
+                    simulate=simulate,
+                    reset_local_roles=reset_local_roles,
+                    reset_workflow=reset_workflow)
     return sub_object
 
   def _updateContent(self, object=None, **args):

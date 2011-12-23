@@ -86,6 +86,14 @@ if classification not in MARKER:\n
 if follow_up_list:\n
   document_kw[\'follow_up_list\'] = follow_up_list\n
 \n
+if attach_document_to_context:\n
+  # attach document to current context using follow_up\n
+  follow_up_list = document_kw.setdefault(\'follow_up_list\', [])\n
+  if context_url not in follow_up_list:\n
+    # attach to context only if not already attached\n
+    follow_up_list.append(context_url)\n
+  document_kw[\'follow_up_list\'] = follow_up_list\n
+\n
 document_kw.update({\'discover_metadata\': not synchronous_metadata_discovery})\n
 if url is not None:\n
   # we contribute and URL, this happens entirely asynchronous\n
@@ -128,13 +136,7 @@ for key in property_id_list:\n
   value = form.get(key, kw.get(key, None))\n
   if value not in MARKER:\n
     document_edit_kw[key] = value\n
-if attach_document_to_context:\n
-  # attach document to current context using follow_up\n
-  follow_up_list = document.getFollowUpList()\n
-  if context_url not in follow_up_list:\n
-    # attach to context only if not already attached\n
-    follow_up_list.append(context_url)\n
-    document.setFollowUpList(follow_up_list)\n
+\n
 # edit document   \n
 if document_edit_kw is not {}:\n
   document.edit(**document_edit_kw)\n

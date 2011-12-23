@@ -54,7 +54,7 @@
   return\n
 \n
 for payment_transaction_line in context.getAggregateRelatedValueList():\n
-  payment_transaction_line.setDefaultActivateParameters(tag=tag)\n
+  payment_transaction_line.setDefaultActivateParameterDict({"tag": tag})\n
   payment_transaction_line.setAggregate(None)\n
 </string> </value>
         </item>

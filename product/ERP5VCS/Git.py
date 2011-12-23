@@ -217,7 +217,10 @@ class Git(WorkingCopy):
       template = 'Index: %%s\n%s%%s\n' % ('=' * 67)
       for diff in out:
         path = diff[:diff.index(' ')]
-        diff_dict[path] = template % (path, diff[diff.index('\n---'):])
+        try:
+          diff_dict[path] = template % (path, diff[diff.index('\n---'):])
+        except ValueError:
+          pass # empty file is deleted or only file mode is changed
     return stat_dict, diff_dict
 
   def getModifiedTree(self, show_unmodified=False):
@@ -320,7 +323,7 @@ class Git(WorkingCopy):
     if push:
       # if we can't push because we are not up-to-date, we'll either 'merge' or
       # 'rebase' depending on we already have local commits or not
-      merge = self.getAheadCount() and 'merge' or 'rebase'
+      merge = 'merge' if self.getAheadCount() else 'rebase'
 
     selected_set = set(added)
     selected_set.update(modified)

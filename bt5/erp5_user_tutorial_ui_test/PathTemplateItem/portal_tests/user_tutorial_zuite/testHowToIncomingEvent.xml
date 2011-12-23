@@ -113,7 +113,7 @@
 </tr>\n
 <tr>\n
   <td>click</td>\n
-  <td>//input[@name="field_your_direction" and @value="in"]</td>\n
+  <td>//input[@name="field_your_direction" and @value="incoming"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -149,7 +149,7 @@
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
-  <td>Receive Event</td>\n
+  <td>Declare as Received</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -159,7 +159,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-  <td>New</td>\n
+  <td>Received</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -169,7 +169,7 @@
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
-  <td>Assign Event</td>\n
+  <td>Create Follow Up Ticket</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
@@ -182,19 +182,14 @@
   <td>Support Request</td>\n
 </tr>\n
 <tr>\n
-  <td>type</td>\n
-  <td>//textarea[@name="field_your_comment"]</td>\n
-  <td tal:content="python: here.Zuite_getHowToInfo()[\'incoming_event_howto_ticket_comment\']"></td>\n
+  <td>select</td>\n
+  <td>//select[@name="field_your_follow_up_ticket_resource"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'incoming_event_howto_service_title\']"></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@id="dialog_submit_button"]</td>\n
   <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-  <td>Assigned</td>\n
 </tr>\n
 <tr>\n
   <td>verifyValue</td>\n
@@ -236,27 +231,17 @@
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
-  <td>Acknowledge Event</td>\n
+  <td>Create Response</td>\n
 </tr>\n
 <tr>\n
-  <td>click</td>\n
-  <td>//input[@name="field_your_create_event"]</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>click</td>\n
-  <td>//input[@name="field_your_quote_original_message"]</td>\n
-  <td></td>\n
+  <td>type</td>\n
+  <td>//textarea[@name="field_your_response_event_text_content"]</td>\n
+  <td>Some response</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@id="dialog_submit_button"]</td>\n
   <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyText</td>\n
-  <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-  <td>Acknowledged</td>\n
 </tr>\n
 <tr>\n
   <td>storeAttribute</td>\n
@@ -294,11 +279,13 @@
   <td>//input[@name="field_my_source_title"]</td>\n
   <td>${user_title}</td>\n
 </tr>\n
+<!--\n
 <tr>\n
   <td>type</td>\n
   <td>//textarea[@name="field_my_text_content"]</td>\n
   <td tal:content="python: here.Zuite_getHowToInfo()[\'incoming_event_howto_ticket_content\']"></td>\n
 </tr>\n
+-->\n
 <tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@name="Base_edit:method"]</td>\n
@@ -307,7 +294,7 @@
 <tr>\n
   <td>selectAndWait</td>\n
   <td>//select[@name="select_action"]</td>\n
-  <td>Post Event</td>\n
+  <td>Deliver</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -317,7 +304,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//label[normalize-space(text())=\'State\']/../div</td>\n
-  <td>Posted</td>\n
+  <td>Delivered</td>\n
 </tr>\n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>\n
 <tr>\n

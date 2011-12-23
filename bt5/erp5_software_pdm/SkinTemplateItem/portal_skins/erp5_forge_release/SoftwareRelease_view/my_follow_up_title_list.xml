@@ -10,7 +10,7 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>view_separator</string>
+                <string>portal_type</string>
               </list>
             </value>
         </item>
@@ -61,6 +61,12 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -80,20 +86,43 @@
                     <value> <string>Document_viewFieldLibrary</string> </value>
                 </item>
                 <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Person</string>
+                          <string>Person</string>
+                        </tuple>
+                        <tuple>
+                          <string>Organisation</string>
+                          <string>Organisation</string>
+                        </tuple>
+                        <tuple>
+                          <string>Project</string>
+                          <string>Project</string>
+                        </tuple>
+                      </list>
+                    </value>
+                </item>
+                <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
                 </item>
-                <item>
-                    <key> <string>view_separator</string> </key>
-                    <value> <string encoding="cdata"><![CDATA[
-
-<br />\n
-
-
-]]></string> </value>
-                </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python:  map(lambda x: [x,x], here.getPortalNodeTypeList() + here.getPortalProjectTypeList() +  here.getPortalTicketTypeList() + here.getPortalDeliveryTypeList() + here.getPortalProductTypeList())</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -65,7 +65,7 @@ CREATE TABLE `record` (\n
   PRIMARY KEY  (`uid`),\n
   KEY `played` (`played`),\n
   KEY `date` (`date`)\n
-) TYPE=InnoDB;\n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

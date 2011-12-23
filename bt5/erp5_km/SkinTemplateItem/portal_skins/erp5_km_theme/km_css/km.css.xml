@@ -62,7 +62,7 @@
                    menu_opacity python:here.getLayoutProperty(\'layout_navigation_menu_opacity\', \'0.80\');\n
                    menu_width python:here.getLayoutProperty(\'layout_navigation_menu_width\', \'145px\');\n
                    menu_indent python:here.getLayoutProperty(\'layout_navigation_menu_indent\', \'155px\');\n
-                   display_anonymous_user_registration python: context.getLayoutProperty(\'layout_display_anonymous_user_registration\',True);" >\n
+                   display_anonymous_user_registration python: 1" >\n
 \n
 body, html {\n
   margin:0;\n
@@ -190,9 +190,14 @@ fieldset.hidden_fieldset { \n
   width: 100%;\n
 }\n
 \n
+#km_left .page,\n
+#km_front .page{\n
+  width: 100%; \n
+}\n
+\n
 #km_left .text,\n
 #km_front .text {\n
-  padding:10px;\n
+  padding:5px 15px;\n
   width: auto;\n
 }\n
 \n
@@ -395,7 +400,7 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 \n
 #km_left .document > .content{\n
   float:left;\n
-  margin: 10px;\n
+  margin: 26px 10px 10px;\n
   background-color: #fff;\n
   border:1px solid #c0bfb3;\n
 }\n
@@ -444,7 +449,7 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 .content .field label, \n
 .content .field .input {\n
   width: 100%;\n
-  padding-left:10px;\n
+  margin-top: 4px;\n
 }\n
 \n
 .content .field label {\n
@@ -548,18 +553,26 @@ fieldset.right .field {\n
 }\n
 \n
 /* Login & Registration form  CSS */\n
-fieldset.registration {\n
+/*\n
+fieldset.left{\n
   float:left;\n
-  width:49.5%;\n
+}\n
+fieldset.right{\n
+  float:right;\n
+}\n
+*/\n
+\n
+fieldset.registration {\n
+  width:36%;\n
   background-color: #FFFFFF;\n
   margin-right: 0.5%;\n
-  height: 775px;\n
+  height: auto;\n
 }\n
 \n
 \n
 <tal:block tal:condition="not:display_anonymous_user_registration">\n
 /* We hide registration form fieldset and expand login fieldset*/\n
-fieldset.right{\n
+fieldset.registration.right {\n
   display:none;\n
 }\n
 fieldset.left{\n
@@ -843,7 +856,8 @@ div.pdf-preview-navigation img.last{\n
   display: block;\n
   width: 924px;\n
   height: 283px;\n
-  margin:10px 14px 10px;\n
+  margin-left:auto;\n
+  margin-right:auto;\n
 }\n
 \n
 .homebanner h2 {\n
@@ -913,6 +927,7 @@ fieldset.left h4,\n
 fieldset.center h4,\n
 fieldset.right h4 {\n
   background-color:#efeee8;\n
+  padding:5px;\n
 }\n
 \n
 .document > .content ul li {\n

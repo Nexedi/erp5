@@ -1,0 +1,199 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>brain_builder_script</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8" ?>\n
+<User xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <OxID tal:content="options/person_id">0</OxID>\n
+  <Email> </Email>\n
+</User>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildOxatisPersonBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>OxatisBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>PersonNode</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/oxatis/person_detail_mapping</string>
+                <string>source/portal_integrations/oxatis/person_rest_connection_plugin</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8" ?>\n
+<User xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <OxID tal:content="options/person_id">0</OxID>\n
+  <Email> </Email>\n
+</User>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>UserGet</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Person</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/oxatis</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<?xml version="1.0" encoding="utf-8" ?><User xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"      xmlns:xsd="http://www.w3.org/2001/XMLSchema">  <OxID>9876543</OxID>  <Email> </Email></User>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<DataResultService>\n
+  <StatusCode>200</StatusCode>\n
+  <StatusSubCode/>\n
+  <ErrorDetails/>\n
+  <Data>\n
+    <User>\n
+      <OxID>9876543</OxID>\n
+      <Email>john@nexedi.com</Email>\n
+      <FirstName>test-john</FirstName>\n
+      <LastName>doe</LastName>\n
+      <Password></Password>\n
+      <Company></Company>\n
+      <VATNumber></VATNumber>\n
+      <BillingAddress>24 Rue blanche</BillingAddress>\n
+      <BillingAddressL1></BillingAddressL1>\n
+      <BillingAddressL2></BillingAddressL2>\n
+      <BillingAddressL3></BillingAddressL3>\n
+      <BillingAddressL4></BillingAddressL4>\n
+      <BillingZipCode>59000</BillingZipCode>\n
+      <BillingCity>Lille</BillingCity>\n
+      <BillingCountryISOCode>FR</BillingCountryISOCode>\n
+      <BillingCountryName></BillingCountryName>\n
+      <BillingPhone>12345678</BillingPhone>\n
+      <BillingCellPhone>98765432</BillingCellPhone>\n
+      <BillingFax></BillingFax>\n
+      <ShippingFirstName>john</ShippingFirstName>\n
+      <ShippingLastName>doe</ShippingLastName>\n
+      <ShippingCompany>Nexedi</ShippingCompany>\n
+      <ShippingAddress>270 Bvd clemenceau</ShippingAddress>\n
+      <ShippingAddressL1></ShippingAddressL1>\n
+      <ShippingAddressL2></ShippingAddressL2>\n
+      <ShippingAddressL3></ShippingAddressL3>\n
+      <ShippingAddressL4></ShippingAddressL4>\n
+      <ShippingZipCode>59700</ShippingZipCode>\n
+      <ShippingCity>Marcq</ShippingCity>\n
+      <ShippingCountryISOCode>FR</ShippingCountryISOCode>\n
+      <ShippingCountryName>France</ShippingCountryName>\n
+      <ShippingPhone>099999999</ShippingPhone>\n
+      <SubscribeToNewletters>false</SubscribeToNewletters>\n
+      <CustomerAccount>false</CustomerAccount>\n
+    </User>\n
+  </Data>\n
+</DataResultService>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Person">\n
+  <firstname>test-john</firstname>\n
+  <lastname>doe</lastname>\n
+  <email>john@nexedi.com</email>\n
+  <phone>12345678</phone>\n
+  <cellphone>98765432</cellphone>\n
+  <category>role/internal</category>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getPersonParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>request_data_method</string> </key>
+            <value> <string>PersonModule_getRequestData</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get One Person</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

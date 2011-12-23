@@ -71,11 +71,11 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_telephone_city</string> </value>
+                    <value> <string>my_view_mode_telephone_city</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Telephone_viewFieldLibrary</string> </value>
+                    <value> <string>Base_viewBaseFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

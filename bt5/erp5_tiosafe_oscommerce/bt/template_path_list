@@ -1,0 +1,6 @@
+portal_integrations/OSCommerce
+portal_integrations/OSCommerce/*mapping**
+portal_integrations/OSCommerce/*module**
+portal_integrations/OSCommerce/*plugin
+portal_integrations/OSCommerce/IntegrationSite_*
+portal_synchronizations/OSCommerce_*

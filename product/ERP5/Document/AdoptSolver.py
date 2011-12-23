@@ -74,8 +74,7 @@ class AdoptSolver(SolverMixin, ConfigurableMixin, XMLObject):
                                []).append(simulation_movement)
     for movement, simulation_movement_list in delivery_dict.iteritems():
       if activate_kw is not None:
-        movement.setDefaultActivateParameters(
-          activate_kw=activate_kw, **activate_kw)
+        movement.setDefaultActivateParameterDict(activate_kw)
       for solved_property in solved_property_list:
         # XXX hardcoded
         if solved_property == 'quantity':

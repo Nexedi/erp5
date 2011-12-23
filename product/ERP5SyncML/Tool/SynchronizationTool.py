@@ -1165,7 +1165,7 @@ class SynchronizationTool(BaseTool):
     """
     response = None #check if subsync replies to this messages
     subscription = self.unrestrictedTraverse(subscription_path)
-    if msg is None and (subscription.getSubscriptionUrlString()).find('file') >= 0:
+    if msg is None and subscription.getSubscriptionUrlString('').find('file') >= 0:
       msg = self.readResponse(sync_id=subscription.getDestinationReference(),
                               from_url=subscription.getSubscriptionUrlString())
     if msg is None:
@@ -1501,7 +1501,7 @@ class SynchronizationTool(BaseTool):
     #create element 'SyncML' with a default namespace
     xml = E.SyncML()
     # syncml header
-    data = "%s:%s" % (subscription.getUserId(), subscription.getPassword())
+    data = "%s:%s" % (subscription.getUserId(''), subscription.getPassword(''))
     data = encode(subscription.getAuthenticationFormat(), data)
     xml.append(self.SyncMLHeader(
       subscription.incrementSessionId(),
@@ -2165,18 +2165,20 @@ class SynchronizationTool(BaseTool):
             if reset:
               #After a reset we want copy the LAST XML view on Signature.
               #this implementation is not sufficient, need to be improved.
-              if not isinstance(xml_object, str):
+              if not isinstance(xml_object, (str, unicode)):
                 xml_object = etree.tostring(xml_object, encoding='utf-8',
                                             pretty_print=True)
-            else: 
+            else:
               xml_object = conduit.getXMLFromObjectWithId(object,
                                        xml_mapping=\
                                        domain.getXmlBindingGeneratorMethodId(),
                                        context_document=subscriber.getPath())
             #if signature.getValidationState() != 'synchronized':
+            if isinstance(xml_object, unicode):
+              xml_object = xml_object.encode('utf-8')
             signature.synchronize()
             signature.setReference(object.getPath())
-            signature.setData(xml_object)
+            signature.setData(str(xml_object))
             xml_confirmation_list.append(self.SyncMLConfirmation(
                                                         cmd_id=cmd_id,
                                                         cmd='Add',

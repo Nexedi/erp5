@@ -28,7 +28,7 @@
 from PIL import ImageFont, Image, ImageDraw, ImageFilter
 from random import randrange, uniform
 from string import zfill
-from md5 import md5
+from hashlib import md5
 from tempfile import NamedTemporaryFile
 import sys, os
 import commands

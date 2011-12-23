@@ -31,7 +31,7 @@ from struct import unpack
 from copy import copy
 import warnings
 import types
-import threading
+import thread, threading
 
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from AccessControl import ClassSecurityInfo
@@ -59,9 +59,10 @@ from Products.ERP5Type import _dtmldir
 from Products.ERP5Type import PropertySheet
 from Products.ERP5Type import interfaces
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.patches.CMFCoreSkinnable import SKINDATA, skinResolve
 from Products.ERP5Type.Utils import UpperCase
 from Products.ERP5Type.Utils import convertToUpperCase, convertToMixedCase
-from Products.ERP5Type.Utils import createExpressionContext
+from Products.ERP5Type.Utils import createExpressionContext, simple_decorator
 from Products.ERP5Type.Accessor.Accessor import Accessor
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Accessor.TypeDefinition import list_types
@@ -256,6 +257,47 @@ class WorkflowMethod(Method):
     # Return result finally
     return result
 
+  # Interactions should not be disabled during normal operation. Only in very
+  # rare and specific cases like data migration. That's why it is implemented
+  # with temporary monkey-patching, instead of slowing down __call__ with yet
+  # another condition.
+
+  _do_interaction = __call__
+  _no_interaction_lock = threading.Lock()
+  _no_interaction_log = None
+  _no_interaction_thread_id = None
+
+  def _no_interaction(self, *args, **kw):
+    if WorkflowMethod._no_interaction_thread_id != thread.get_ident():
+      return self._do_interaction(*args, **kw)
+    log = "skip interactions for %r" % args[0]
+    if WorkflowMethod._no_interaction_log != log:
+      WorkflowMethod._no_interaction_log = log
+      LOG("WorkflowMethod", INFO, log)
+    return self.__dict__['_m'](*args, **kw)
+
+  @staticmethod
+  @simple_decorator
+  def disable(func):
+    def wrapper(*args, **kw):
+      thread_id = thread.get_ident()
+      if WorkflowMethod._no_interaction_thread_id == thread_id:
+        return func(*args, **kw)
+      WorkflowMethod._no_interaction_lock.acquire()
+      try:
+        WorkflowMethod._no_interaction_thread_id = thread_id
+        WorkflowMethod.__call__ = WorkflowMethod.__dict__['_no_interaction']
+        return func(*args, **kw)
+      finally:
+        WorkflowMethod.__call__ = WorkflowMethod.__dict__['_do_interaction']
+        WorkflowMethod._no_interaction_thread_id = None
+        WorkflowMethod._no_interaction_lock.release()
+    return wrapper
+
+  @staticmethod
+  def disabled():
+    return WorkflowMethod._no_interaction_lock.locked()
+
   def registerTransitionAlways(self, portal_type, workflow_id, transition_id):
     """
       Transitions registered as always will be invoked always
@@ -301,10 +343,6 @@ def _aq_reset():
   from Products.ERP5.ERP5Site import getSite
   getSite().portal_types.resetDynamicDocuments()
 
-global method_registration_cache
-method_registration_cache = {}
-
-
 class PropertyHolder(object):
   isRADContent = 1
   WORKFLOW_METHOD_MARKER = ('Base._doNothing',)
@@ -332,6 +370,7 @@ class PropertyHolder(object):
 
     workflow_method = getattr(self, id, None)
     if workflow_method is None:
+      # XXX: We should pass 'tr_id' as second parameter.
       workflow_method = WorkflowMethod(Base._doNothing)
       setattr(self, id, workflow_method)
     if once_per_transaction:
@@ -1468,6 +1507,10 @@ class Base( CopyContainer,
                       reindex_object=reindex_object, restricted=1, **kw)
 
   # XXX Is this useful ? (Romain)
+  #     Probably not. Even if it should speed up portal_type initialization and
+  #     save some memory because edit_workflow is used in many places, I (jm)
+  #     think it's negligible compared to the performance loss on all
+  #     classes/types that are not bound to edit_workflow.
   edit = WorkflowMethod(edit)
 
   # Accessing object property through ERP5ish interface
@@ -2580,6 +2623,7 @@ class Base( CopyContainer,
               container=self.getParentValue(),
               id=self.getId(),
               temp_object=True,
+              notify_workflow=False,
               is_indexable=False)
 
       # Pass all internal data to new instance. Do not copy, but 
@@ -2737,14 +2781,12 @@ class Base( CopyContainer,
 
       reindex_kw = self.getDefaultReindexParameterDict()
       if reindex_kw is not None:
-        reindex_activate_kw = reindex_kw.pop('activate_kw', None)
-        if reindex_activate_kw is not None:
-          reindex_activate_kw = reindex_activate_kw.copy()
-          if activate_kw is not None:
-            # activate_kw parameter takes precedence
-            reindex_activate_kw.update(activate_kw)
-          activate_kw = reindex_activate_kw
-        kw.update(reindex_kw)
+        reindex_kw = reindex_kw.copy()
+        reindex_activate_kw = reindex_kw.pop('activate_kw', None) or {}
+        reindex_activate_kw.update(activate_kw)
+        reindex_kw.update(kw)
+        kw = reindex_kw
+        activate_kw = reindex_activate_kw
 
       group_id_list  = []
       if kw.get("group_id", "") not in ('', None):
@@ -2885,6 +2927,10 @@ class Base( CopyContainer,
     """
     return getattr(aq_base(self), 'guid', None)
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'getTypeBasedMethod')
+  def getTypeBasedMethod(self, *args, **kw):
+    return self._getTypeBasedMethod(*args, **kw)
+
   # Type Casting
   def _getTypeBasedMethod(self, method_id, fallback_script_id=None,
                                 script_id=None,**kw):
@@ -2931,6 +2977,16 @@ class Base( CopyContainer,
       return script.__of__(self)
     if fallback_script_id is not None:
       return getattr(self, fallback_script_id)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'skinSuper')
+  def skinSuper(self, skin, id):
+    if id[:1] != '_' and id[:3] != 'aq_':
+      skin_info = SKINDATA.get(thread.get_ident())
+      if skin_info is not None:
+        object = skinResolve(self.getPortalObject(), (skin_info[0], skin), id)
+        if object is not None:
+          return object.__of__(self)
+    raise AttributeError(id)
 
   # Predicate handling
   security.declareProtected(Permissions.AccessContentsInformation, 'asPredicate')
@@ -3249,7 +3305,7 @@ class Base( CopyContainer,
   def serialize(self):
     """Make the transaction accessing to this object atomic
     """
-    self.id = self.id
+    self._p_changed = 1
 
   # Helpers
   def getQuantityPrecisionFromResource(self, resource, d=2):
@@ -3569,6 +3625,12 @@ class Base( CopyContainer,
 
   security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultReindexParameters' )
   def setDefaultReindexParameters(self, **kw):
+    warnings.warn('setDefaultReindexParameters is deprecated in favour of '
+      'setDefaultReindexParameterDict.', DeprecationWarning)
+    self.setDefaultReindexParameterDict(kw)
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'setDefaultReindexParameterDict' )
+  def setDefaultReindexParameterDict(self, kw):
     # This method sets the default keyword parameters to reindex. This is useful
     # when you need to specify special parameters implicitly (e.g. to reindexObject).
     tv = getTransactionalVariable()
@@ -3664,20 +3726,12 @@ class Base( CopyContainer,
 
 InitializeClass(Base)
 
-try:
-  from Products.CMFCore.interfaces import IContentish
-except ImportError:
-  # We're on CMF 1.5 where the IContentish is not yet bridged as a Zope3
-  # interface, so no need to worry about events here. Remove this "try:" once
-  # we abandon Zope 2.8
-  def removeIContentishInterface(cls):
-    pass
-else:
-  # suppress CMFCore event machinery from trying to reindex us through events
-  # by removing Products.CMFCore.interfaces.IContentish interface.
-  # We reindex ourselves in manage_afterAdd thank you very much.
-  def removeIContentishInterface(cls):
-    classImplementsOnly(cls, implementedBy(cls) - IContentish)
+from Products.CMFCore.interfaces import IContentish
+# suppress CMFCore event machinery from trying to reindex us through events
+# by removing Products.CMFCore.interfaces.IContentish interface.
+# We reindex ourselves in manage_afterAdd thank you very much.
+def removeIContentishInterface(cls):
+  classImplementsOnly(cls, implementedBy(cls) - IContentish)
 
 removeIContentishInterface(Base)
 
@@ -3728,7 +3782,7 @@ class TempBase(Base):
   security.declarePublic('edit')
 
 # Persistence.Persistent is one of the superclasses of TempBase, and on Zope2.8
-# it's __class_init__ method is InitializeClass. This is not the case on
+# its __class_init__ method is InitializeClass. This is not the case on
 # Zope2.12 which requires us to call InitializeClass manually, otherwise
 # allow_class(TempBase) in ERP5Type/Document/__init__.py will trample our
 # ClassSecurityInfo with one that doesn't declare our public methods

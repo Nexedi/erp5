@@ -29,12 +29,13 @@
 
 
 import httplib
+import urlparse
 import json
 import transaction
+import random
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from StringIO import StringIO
 from ShaDirMixin import ShaDirMixin
-
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
   """
@@ -47,41 +48,38 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     """
     return "SHADIR - HTTP Information Cache Server"
 
-  def postInformation(self, key=None):
+  def postInformation(self, key=None, data=None):
     """
       Post the information calling the Python Script.
       It simulates the real usage.
     """
-    if key is None:
-      key = self.key
-
+    parsed = urlparse.urlparse(self.shadir_url)
+    connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
     try:
-      data_file = StringIO()
-      data_file.write(self.data)
-      data_file.seek(0)
-
-      self.portal.changeSkin('SHADIR')
-      path = self.shadir.getPath()
-      response = self.publish('%s/%s' % (path, key),
-                        request_method='PUT',
-                        stdin=data_file,
-                        basic='ERP5TypeTestCase:')
-      self.stepTic()
-      self.assertEqual(response.getStatus(), httplib.CREATED)
+      connection.request('PUT', '/'.join([parsed.path, key or self.key]),
+        data or self.data, self.header_dict)
+      result = connection.getresponse()
+      data = result.read()
     finally:
-      data_file.close()
+      connection.close()
+    self.assertEqual(result.status, httplib.CREATED)
+    self.assertEqual(data, '')
 
   def getInformation(self, key=None):
     """
       Get the information calling the Python Script.
       It simulates the real usage.
     """
-    if key is None:
-      key = self.key
-
-    self.portal.changeSkin('SHADIR')
-    self.shadir.REQUEST.set('method', 'GET')
-    return self.shadir.WebSection_getDocumentValue(key)
+    parsed = urlparse.urlparse(self.shadir_url)
+    connection = httplib.HTTPConnection(parsed.hostname, parsed.port)
+    try:
+      connection.request('GET', '/'.join([parsed.path, key or self.key]),
+        self.data, self.header_dict)
+      result = connection.getresponse()
+      data = result.read()
+    finally:
+      connection.close()
+    return result.status, data
 
   def beforeTearDown(self):
     """
@@ -100,14 +98,18 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       Check if posting information is working.
     """
     self.postInformation()
+    transaction.commit()
+    self.tic()
 
     # Asserting Data Set
-    data_set = self.portal.data_set_module.contentValues()[0]
+    data_set = self.portal.portal_catalog.getResultValue(
+      reference=self.key)
     self.assertEquals(self.key, data_set.getReference())
-    self.assertEquals('Published', data_set.getValidationStateTitle())
+    self.assertEquals('published', data_set.getValidationState())
 
     # Asserting Document
-    document = self.portal.document_module.contentValues()[0]
+    document = self.portal.portal_catalog.getResultValue(
+      reference=self.sha512sum)
     self.assertEquals(self.sha512sum, document.getTitle())
     self.assertEquals(self.sha512sum, document.getReference())
     self.assertEquals(self.data, document.getData())
@@ -123,10 +125,12 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     """
     self.postInformation()
 
-    document = self.getInformation()
-    self.assertNotEquals(None, document)
+    transaction.commit()
+    self.tic()
 
-    data = document.getData()
+    result, data = self.getInformation()
+    self.assertEqual(result, httplib.OK)
+
     information_list = json.loads(data)
 
     self.assertEquals(1, len(information_list))
@@ -136,31 +140,71 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     """
       Check if posting information is working.
     """
-    self.assertEquals(0, len(self.portal.data_set_module))
-    self.assertEquals(0, len(self.portal.document_module))
+    self.postInformation()
+    transaction.commit()
+    self.tic()
 
     self.postInformation()
-    for x in xrange(10):
-      self.postInformation()
+    transaction.commit()
+    self.tic()
 
+    self.assertEqual(1, self.portal.portal_catalog.countResults(
+      reference=self.key)[0][0])
+    data_set = self.portal.portal_catalog.getResultValue(
+      reference=self.key)
+    self.assertEqual(self.key, data_set.getReference())
+    self.assertEqual('published', data_set.getValidationState())
 
-    self.assertEquals(1, len(self.portal.data_set_module))
-    data_set = self.portal.data_set_module.contentValues()[0]
-    self.assertEquals(self.key, data_set.getReference())
-    self.assertEquals('Published', data_set.getValidationStateTitle())
+    document_list = data_set.getFollowUpRelatedValueList()
 
-    self.assertEquals(11, len(self.portal.document_module))
+    self.assertEqual([self.sha512sum, self.sha512sum], [q.getReference() for q \
+        in document_list])
+    self.assertEqual(sorted(['published', 'archived']), sorted([
+        q.getValidationState() for q in document_list]))
+
+    result, data = self.getInformation()
+    self.assertEqual(result, httplib.OK)
+    information_list = json.loads(data)
+
+    self.assertEquals(1, len(information_list))
+    self.assertEquals(json.dumps(information_list[0]), self.data)
+
+  @expectedFailure
+  def test_post_information_more_than_once_no_tic(self):
+    """
+      Check if posting information is working.
+    """
+    self.postInformation()
+    transaction.commit()
+
+    self.postInformation()
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(1, self.portal.portal_catalog.countResults(
+      reference=self.key)[0][0])
+    data_set = self.portal.portal_catalog.getResultValue(
+      reference=self.key)
+    self.assertEqual(self.key, data_set.getReference())
+    self.assertEqual('published', data_set.getValidationState())
+
+    document_list = data_set.getFollowUpRelatedValueList()
+
+    self.assertEqual([self.sha512sum, self.sha512sum], [q.getReference() for q \
+        in document_list])
+    self.assertEqual(sorted(['published', 'archived']), sorted([
+        q.getValidationState() for q in document_list]))
 
   def test_get_information_for_single_data_set(self):
     """
       check if return the temp document with text content.
     """
     self.postInformation()
+    transaction.commit()
+    self.tic()
 
-    document = self.getInformation()
-    self.assertNotEquals(None, document)
-
-    data = document.getData()
+    result, data = self.getInformation()
+    self.assertEqual(result, httplib.OK)
     information_list = json.loads(data)
 
     self.assertEquals(1, len(information_list))
@@ -168,7 +212,7 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
 
   def test_get_information_from_different_data_set(self):
     """
-      POST information to /information and  to /information2
+      POST information with two different keys
       It must create two Data Set and two Text documents.
 
       When the user retrieve the content of a given key,
@@ -176,26 +220,40 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
 
       This relation is controlled by Data Set object.
     """
-    self.assertEquals(0, len(self.portal.data_set_module))
-    self.assertEquals(0, len(self.portal.document_module))
-
     self.postInformation()
-    self.assertEquals(1, len(self.portal.data_set_module))
-    self.assertEquals(1, len(self.portal.document_module))
+    transaction.commit()
+    self.tic()
 
-    self.postInformation(key='information2')
+    urlmd5_2 = 'anotherurlmd5' + str(random.random())
+    sha512_2 = 'anothersha512_2' + str(random.random())
+    key_2 = 'another_key' + str(random.random())
+    data_list_2 = [json.dumps({'file': self.file_name,
+                      'urlmd5': urlmd5_2,
+                      'sha512': sha512_2,
+                      'creation_date': str(self.creation_date),
+                      'expiration_date': str(self.expiration_date),
+                      'distribution': self.distribution,
+                      'architecture': self.architecture}),
+                      "User SIGNATURE goes here."]
+    data_2 = json.dumps(data_list_2)
+    self.postInformation(key_2, data_2)
+    transaction.commit()
+    self.tic()
+
     self.assertEquals(2, len(self.portal.data_set_module))
     self.assertEquals(2, len(self.portal.document_module))
 
-    document = self.getInformation()
-    self.assertEquals(1, len(json.loads(document.getData())))
+    result, document = self.getInformation()
+    self.assertEquals(1, len(json.loads(document)))
 
-    document2 = self.getInformation('information2')
-    self.assertEquals(1, len(json.loads(document2.getData())))
+    result, document2 = self.getInformation(key_2)
+    self.assertEquals(1, len(json.loads(document2)))
 
     self.postInformation()
+    transaction.commit()
+    self.tic()
     self.assertEquals(2, len(self.portal.data_set_module))
     self.assertEquals(3, len(self.portal.document_module))
 
-    document3 = self.getInformation()
-    self.assertEquals(2, len(json.loads(document3.getData())))
+    result, document3 = self.getInformation()
+    self.assertEquals(1, len(json.loads(document3)))

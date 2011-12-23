@@ -1,0 +1,10 @@
+<allowed_content_type_list>
+ <portal_type id="Magento Test Module">
+  <item>Magento Test Person</item>
+  <item>Magento Test Product</item>
+  <item>Magento Test Sale Order</item>
+ </portal_type>
+ <portal_type id="Magento Test Sale Order">
+  <item>Magento Test Sale Order Item</item>
+ </portal_type>
+</allowed_content_type_list>

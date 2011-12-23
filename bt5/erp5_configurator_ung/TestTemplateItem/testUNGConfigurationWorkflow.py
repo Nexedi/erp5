@@ -326,8 +326,10 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
   
   def _stepCheckWebSiteRoles(self):
     """ Check permission of Web Site with normal user """
+    self.changeSkin("UNGDoc")
     self.portal.web_page_module.ERP5Site_createNewWebDocument("web_page_template")
     self.stepTic()
+    self.changeSkin("UNGDoc")
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList()
     self.assertEquals(len(result_list), 1)
     self.assertEquals(result_list[0].getTitle(), "Web Page")
@@ -339,14 +341,17 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     new_object.edit(title="New")
     self.stepTic()
     kw = {"portal_type": "Web Page", "title": "New"}
+    self.changeSkin("UNGDoc")
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
     self.assertEquals(len(result_list), 1)
     self.assertEquals(result_list[0].getPortalType(), "Web Page")
     kw["portal_type"] = "Web Illustration"
+    self.changeSkin("UNGDoc")
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
     self.assertEquals(len(result_list), 1)
     self.assertEquals(result_list[0].getPortalType(), "Web Illustration")
     kw["portal_type"] = "Web Table"
+    self.changeSkin("UNGDoc")
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
     self.assertEquals(len(result_list), 1)
     self.assertEquals(result_list[0].getPortalType(), "Web Table")
@@ -359,6 +364,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     self.stepTic()
     gadget = self.portal.portal_gadgets.searchFolder()[0]
     gadget_id = gadget.getId()
+    self.changeSkin("UNGDoc")
     self.portal.web_site_module.ung.WebSection_addGadgetList(gadget_id)
     self.stepTic()
     box_list = pad.contentValues()
@@ -384,6 +390,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
                       stop_date_month=02,
                       stop_date_year=2011)
     portal.REQUEST.form.update(event_dict)
+    self.changeSkin("UNGDoc")
     portal.event_module.EventModule_createNewEvent()
     self.stepTic()
     event = portal.portal_catalog.getResultValue(portal_type="Note")

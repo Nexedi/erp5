@@ -49,10 +49,12 @@ class TestTemplate(ERP5TypeTestCase):
     """Returns list of BT to be installed."""
     return ('erp5_base', 'erp5_knowledge_pad', 'erp5_ui_test')
 
-  def createUserAndLogin(self, name=None):
-    """login with Member & Author roles."""
+  def createUserAndLogin(self, name=None, additional_role_list=[]):
+    """login with Member, Author and specified roles."""
     uf = self.getPortal().acl_users
-    uf._doAddUser(name, '', ['Member', 'Author'], [])
+    role_list = ['Member', 'Author']
+    role_list.extend(additional_role_list)
+    uf._doAddUser(name, '', role_list, [])
     user = uf.getUserById(name).__of__(uf)
     newSecurityManager(None, user)
 
@@ -367,12 +369,12 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEquals('enabled', preference.getPreferenceState())
     self.assertEqual(len(preference.objectIds()), 2)
 
-  def _testTemplateNotIndexable(self, document):
+  def _testTemplateNotIndexable(self, document, additional_role_list=[]):
     # template documents are not indexable
     self.portal.portal_activities.manage_enableActivityTracking()
     self.portal.portal_activities.manage_enableActivityTimingLogging()
     self.portal.portal_activities.manage_enableActivityCreationTrace()
-    self.createUserAndLogin(self.id())
+    self.createUserAndLogin(self.id(), additional_role_list=additional_role_list)
     preference = self.portal.portal_preferences.newContent(portal_type='Preference')
     preference.priority = Priority.USER
     preference.enable()
@@ -392,7 +394,7 @@ class TestTemplate(ERP5TypeTestCase):
     self.assertEqual(len(preference.objectIds()), 1)
     template = preference.objectValues()[0]
     self.assertFalse(template.isIndexable)
-    
+
     # Because they are not indexable, they cannot be found by catalog
     self.assertEquals(0, len(self.portal.portal_catalog(uid=template.getUid())))
     template_line = template.objectValues()[0]
@@ -428,7 +430,9 @@ class TestTemplate(ERP5TypeTestCase):
     document.newContent(portal_type='Knowledge Box')
     transaction.commit()
     self.tic()
-    self._testTemplateNotIndexable(document)
+    # Only Manager can Copy and Move at Knowlede Pad Document when it is
+    # 'invisible' state.
+    self._testTemplateNotIndexable(document, additional_role_list=['Manager'])
 
 
 def test_suite():

@@ -465,6 +465,11 @@ input.hidden_button {\n
   float: left;\n
 }\n
 \n
+.hidden { \n
+  display: none;\n
+}\n
+\n
+\n
 textarea[readonly] {\n
   background-color: inherit;\n
   border: inherit;\n
@@ -706,7 +711,12 @@ fieldset.right {\n
   margin-left: -12px; /* 5px margin *2 + 2px for left & right border width */\n
 }\n
 \n
-table.fake fieldset {\n
+/* BBB: don\'t display borders on left-group fieldsets in a formbox in any\n
+ * bordered fieldset (ie left, right or center). */\n
+fieldset.left fieldset.left,\n
+fieldset.right fieldset.left,\n
+fieldset.center fieldset.left,\n
+table.fake > tr > td > fieldset {\n
   border-width: 0;\n
   padding: 0;\n
   margin: 0;\n
@@ -723,7 +733,7 @@ fieldset.bottom {\n
   border-width: 0;\n
 }\n
 \n
-fieldset.bottom .field label {\n
+fieldset.bottom > .field > label {\n
   display: none;\n
 }\n
 \n
@@ -1407,7 +1417,22 @@ div.pdf-preview-navigation img.next{\n
 div.pdf-preview-navigation img.last{\n
   background-image:url("images/2rightarrowb.png");\n
 }\n
-
+\n
+.horizontal_align_form_box > div.input {\n
+    float: right;\n
+    width: 70%; /* because label width is 30%*/\n
+}\n
+\n
+.horizontal_align_form_box >  div.input > fieldset > div.field {\n
+    clear: none;\n
+    float: left;\n
+    width: auto;\n
+}\n
+\n
+.horizontal_align_form_box >  div.input > fieldset > div.field > label {\n
+    width: auto;\n
+    padding-top: 2px;\n
+}
 
 ]]></string> </value>
         </item>

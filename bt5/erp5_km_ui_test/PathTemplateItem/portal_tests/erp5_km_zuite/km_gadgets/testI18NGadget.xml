@@ -69,11 +69,6 @@
   <td>${base_url}/web_site_module/km_test_web_site/fr</td>\n
   <td></td>\n
 </tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Votre page d\'accueil est en cours de préparation</td>\n
-  <td></td>\n
-</tr>\n
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities"> Wait for activities</span>\n
 <tr>\n
   <td>openAndWait</td>\n

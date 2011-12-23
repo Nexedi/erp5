@@ -31,7 +31,7 @@
 from Query import Query
 from Products.ZSQLCatalog.interfaces.query import IQuery
 from zope.interface.verify import verifyClass
-from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.SQLCatalog import profiler_decorator, list_type_list
 from zLOG import LOG, WARNING
 
 class SimpleQuery(Query):
@@ -67,20 +67,20 @@ class SimpleQuery(Query):
     # already).
     comparison_operator = comparison_operator.lower()
     if comparison_operator == 'in':
-      if isinstance(value, (list, tuple)):
+      if isinstance(value, list_type_list):
         if len(value) == 0:
           raise ValueError, 'Empty lists are not allowed.'
         elif len(value) == 1:
-          value = value[0]
+          value, = value
           comparison_operator = '='
       else:
         comparison_operator = '='
     elif comparison_operator == '=':
-      if isinstance(value, (list, tuple)):
+      if isinstance(value, list_type_list):
         if len(value) == 0:
           raise ValueError, 'Empty lists are not allowed.'
         elif len(value) == 1:
-          value = value[0]
+          value, = value
         else:
           comparison_operator = 'in'
     if value is None:

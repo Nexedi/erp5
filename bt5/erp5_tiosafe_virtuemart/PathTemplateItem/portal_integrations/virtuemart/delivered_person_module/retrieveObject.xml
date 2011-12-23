@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildVirtuemartDeliveredPersonBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>VirtuemartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>PersonNode</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/virtuemart/http_connector</string>
+                <string>destination/portal_integrations/virtuemart/person_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getDeliveredPersonList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Person</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/Virtuemart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2020/01/01\'), \'start_date\': DateTime(\'2010/01/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.1.34/tiosafe_virtuemart/getDeliveredPersonList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+<xml><object><id>3</id><firstname>Sokhna Zahra</firstname><lastname>Diop</lastname><email>sokhna@hotmail.com</email><phone>0667222124</phone><street>2 Rue de la Gouvernance</street><zip>2222</zip><city>Tambacounda</city><country>Senegal</country><company>ADIE Livraison</company><category>type/person</category></object><object><id>4</id><firstname>Aissatou Livraison</firstname><lastname>Keita</lastname><email>aicha@loves.you</email><phone>0630388004</phone><street>6 Rue Saint André</street><zip>76000</zip><city>Rouen</city><country>France</country><company></company><category>type/person</category></object></xml>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Person">\n
+  <firstname>Sokhna Zahra</firstname>\n
+  <lastname>Diop</lastname>\n
+  <email>sokhna@hotmail.com</email>\n
+  <category>role/client</category>\n
+  <category>role/virtuemart_delivery</category>\n
+  <relation> ADIE Livraison senegal</relation>\n
+</node>\n
+\n
+<node type="Person">\n
+  <firstname>Aissatou Livraison</firstname>\n
+  <lastname>Keita</lastname>\n
+  <email>aicha@loves.you</email>\n
+  <phone>0630388004</phone>\n
+  <address>\n
+    <street>6 Rue Saint André</street>\n
+    <zip>76000</zip>\n
+    <city>Rouen</city>\n
+    <country>france</country>\n
+  </address>\n
+  <category>role/client</category>\n
+  <category>role/virtuemart_delivery</category>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getPersonParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Person</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

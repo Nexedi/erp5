@@ -9,7 +9,9 @@
         <item>
             <key> <string>delegated_list</string> </key>
             <value>
-              <list/>
+              <list>
+                <string>editable_columns</string>
+              </list>
             </value>
         </item>
         <item>
@@ -73,6 +75,21 @@
                     <key> <string>all_editable_columns</string> </key>
                     <value>
                       <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>editable_columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>start_date_range_min</string>
+                          <string>Valid From</string>
+                        </tuple>
+                        <tuple>
+                          <string>start_date_range_max</string>
+                          <string>Valid Until</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>

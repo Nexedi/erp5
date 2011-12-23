@@ -1,0 +1,280 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildZencartProductListBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>ZencartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>ProductResource</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/zencart/http_connector</string>
+                <string>destination/portal_integrations/zencart/product_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getProductList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Product</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/ZenCart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2020/01/01\'), \'start_date\': DateTime(\'2010/01/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>http://10.8.1.34/zen-cart/admin/tiosafe_zencart/getProductList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+\n
+\n
+<xml><object><id>1</id><title>Matrox G200 MMS Updated</title><reference>1</reference></object><object><id>3</id><title>Microsoft IntelliMouse Pro</title><reference>3</reference></object><object><id>4</id><title>The Replacement Killers</title><reference>4</reference></object><object><id>6</id><title>The Matrix Linked</title><reference>6</reference></object><object><id>7</id><title>You\'ve Got Mail Linked</title><reference>7</reference></object><object><id>9</id><title>Under Siege Linked</title><reference>9</reference></object><object><id>10</id><title>Under Siege 2 - Dark Territory</title><reference>10</reference></object><object><id>11</id><title>Fire Down Below Linked</title><reference>11</reference></object><object><id>13</id><title>Lethal Weapon Linked</title><reference>13</reference></object><object><id>14</id><title>Red Corner Linked</title><reference>14</reference></object><object><id>16</id><title>Courage Under Fire Linked</title><reference>16</reference></object><object><id>17</id><title>Speed Linked</title><reference>17</reference></object><object><id>18</id><title>Speed 2: Cruise Control</title><reference>18</reference></object><object><id>19</id><title>There\'s Something About Mary Linked</title><reference>19</reference></object><object><id>20</id><title>Beloved Linked ERP5 Update</title><reference>20</reference></object><object><id>21</id><title>SWAT 3: Close Quarters Battle Linked</title><reference>21</reference></object><object><id>22</id><title>Unreal Tournament Linked</title><reference>22</reference></object><object><id>23</id><title>The Wheel Of Time Linked</title><reference>23</reference></object><object><id>24</id><title>Disciples: Sacred Lands Linked</title><reference>24</reference></object><object><id>25</id><title>Microsoft Internet Keyboard PS/2</title><reference>25</reference></object><object><id>26</id><title>Microsoft IntelliMouse Explorer</title><reference>26</reference></object><object><id>27</id><title>Hewlett Packard LaserJet 1100Xi Linked</title><reference>27</reference></object><object><id>28</id><title>Gift Certificate $  5.00</title><reference>28</reference></object><object><id>29</id><title>Gift Certificate $ 10.00</title><reference>29</reference></object><object><id>30</id><title>Gift Certificate $ 25.00</title><reference>30</reference></object><object><id>31</id><title>Gift Certificate $ 50.00</title><reference>31</reference></object><object><id>32</id><title>Gift Certificate $100.00</title><reference>32</reference></object><object><id>34</id><title>A Bug\'s Life "Multi Pak" Special 2003 Collectors Edition</title><reference>34</reference></object><object><id>36</id><title>Hewlett Packard - by attributes SALE</title><reference>36</reference></object></xml>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<resource type="Product">\n
+  <title>Matrox G200 MMS Updated</title>\n
+  <reference>1</reference>\n
+  <category>memory/16 mb</category>\n
+  <category>memory/4 mb</category>\n
+  <category>memory/8 mb</category>\n
+  <category>model/Premium</category>\n
+  <category>model/Value</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Microsoft IntelliMouse Pro</title>\n
+  <reference>3</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>The Replacement Killers</title>\n
+  <reference>4</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>The Matrix Linked</title>\n
+  <reference>6</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>You\'ve Got Mail Linked</title>\n
+  <reference>7</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Under Siege Linked</title>\n
+  <reference>9</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Under Siege 2 - Dark Territory</title>\n
+  <reference>10</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Fire Down Below Linked</title>\n
+  <reference>11</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Lethal Weapon Linked</title>\n
+  <reference>13</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Red Corner Linked</title>\n
+  <reference>14</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Courage Under Fire Linked</title>\n
+  <reference>16</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Speed Linked</title>\n
+  <reference>17</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Speed 2: Cruise Control</title>\n
+  <reference>18</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>There\'s Something About Mary Linked</title>\n
+  <reference>19</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Beloved Linked ERP5 Update</title>\n
+  <reference>20</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>SWAT 3: Close Quarters Battle Linked</title>\n
+  <reference>21</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Unreal Tournament Linked</title>\n
+  <reference>22</reference>\n
+  <category>version/Box: Windows - English</category>\n
+  <category>version/Download: Windows - English</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>The Wheel Of Time Linked</title>\n
+  <reference>23</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Disciples: Sacred Lands Linked</title>\n
+  <reference>24</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Microsoft Internet Keyboard PS/2</title>\n
+  <reference>25</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Microsoft IntelliMouse Explorer</title>\n
+  <reference>26</reference>\n
+  <category>model/PS/2</category>\n
+  <category>model/USB</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Hewlett Packard LaserJet 1100Xi Linked</title>\n
+  <reference>27</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Gift Certificate $  5.00</title>\n
+  <reference>28</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Gift Certificate $ 10.00</title>\n
+  <reference>29</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Gift Certificate $ 25.00</title>\n
+  <reference>30</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Gift Certificate $ 50.00</title>\n
+  <reference>31</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Gift Certificate $100.00</title>\n
+  <reference>32</reference>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>A Bug\'s Life "Multi Pak" Special 2003 Collectors Edition</title>\n
+  <reference>34</reference>\n
+  <category>colour/Blue</category>\n
+  <category>colour/Brown</category>\n
+  <category>colour/Green</category>\n
+  <category>colour/Orange</category>\n
+  <category>colour/Purple</category>\n
+  <category>colour/Red</category>\n
+  <category>colour/Silver</category>\n
+  <category>colour/White</category>\n
+  <category>colour/Yellow</category>\n
+  <category>gift_options/Autographed Memorabilia Card</category>\n
+  <category>gift_options/Collector\'s Tin</category>\n
+  <category>gift_options/Wrapping</category>\n
+  <category>line_1/TEXT</category>\n
+  <category>line_2/TEXT</category>\n
+  <category>line_3/TEXT</category>\n
+  <category>logo_back/TEXT</category>\n
+  <category>logo_front/TEXT</category>\n
+  <category>media_type/DVD</category>\n
+  <category>media_type/DVD/VHS Combo Pak</category>\n
+  <category>media_type/VHS</category>\n
+  <category>size/Large</category>\n
+  <category>size/Medium</category>\n
+  <category>size/Small</category>\n
+  <category>size/X-Small</category>\n
+  <category>version/20th Century</category>\n
+</resource>\n
+\n
+<resource type="Product">\n
+  <title>Hewlett Packard - by attributes SALE</title>\n
+  <reference>36</reference>\n
+  <category>colour/Black</category>\n
+  <category>colour/Blue</category>\n
+  <category>colour/White</category>\n
+  <category>memory/16 mb</category>\n
+  <category>memory/4 mb</category>\n
+  <category>memory/8 mb</category>\n
+  <category>memory/None</category>\n
+</resource>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Product</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

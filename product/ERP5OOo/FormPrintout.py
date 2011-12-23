@@ -230,10 +230,13 @@ class FormPrintout(Implicit, Persistent, RoleManager, Item, PropertyManager):
                          report_method=report_method,
                          form=form,
                          here=obj)
-    # set property to do aquisition
+    # Never set value when rendering! If you do, then every time
+    # writing occur and it creates conflict error which kill ERP5
+    # scalability! To get acquisition, you just have to call __of__.
+    # Also frequent writing make data.fs very huge so quickly.
     content_type = printout_template.content_type
-    self.strategy = self._createStrategy(content_type)
-    printout = self.strategy.render(extra_context=extra_context)
+    strategy = self._createStrategy(content_type).__of__(self)
+    printout = strategy.render(extra_context=extra_context)
     return self._oooConvertByFormat(printout, content_type,
                                     extra_context, REQUEST, 
                                     format, batch_mode)

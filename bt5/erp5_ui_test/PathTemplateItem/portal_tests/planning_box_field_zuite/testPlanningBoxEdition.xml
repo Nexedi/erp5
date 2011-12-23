@@ -128,6 +128,17 @@
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>selectAndWait</td>\n
+  <td>//select[@name=\'report_root_url\']</td>\n
+  <td>parent</td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>SiteError</td>\n
+  <td></td>\n
+</tr>\n
+\n
+<tr>\n
   <td>clickAndWait</td>\n
   <td>//img[@name=\'JumpToCurrentDay\']</td>\n
   <td></td>\n
@@ -242,9 +253,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

@@ -60,20 +60,14 @@ class ShaSecurityMixin(object):
       self.stepTic()
 
     create = True
-    start_date = '10/10/2000'
-    stop_date = '10/10/2100'
     group=self.group
     for assignment in person.contentValues(portal_type="Assignment"):
-      if assignment.getStartDate() == start_date and \
-          assignment.getStopDate() == stop_date and \
-            assignment.getGroup() == self.group:
+      if assignment.getGroup() == self.group:
         create = False
 
     if create:
       assignment = person.newContent(portal_type='Assignment')
-      assignment.edit(start_date=start_date,
-                      stop_date=stop_date,
-                      group=self.group)
+      assignment.edit(group=self.group)
       assignment.open()
       self.stepTic()
 

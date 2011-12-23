@@ -1,0 +1,10 @@
+organisation_module/default_paybox_shop**
+portal_categories/group/paybox
+portal_integrations/paybox
+portal_integrations/paybox/*connector**
+portal_integrations/paybox/*mapping**
+portal_integrations/paybox/*module**
+portal_integrations/paybox/*plugin
+portal_integrations/paybox/PaymentMode**
+portal_synchronizations/paybox*
+sale_trade_condition_module/default_tiosafe_paybox**

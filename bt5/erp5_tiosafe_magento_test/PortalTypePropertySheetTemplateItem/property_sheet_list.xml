@@ -1,0 +1,22 @@
+<property_sheet_list>
+ <portal_type id="Magento Test Person">
+  <item>MagentoTestPerson</item>
+  <item>Reference</item>
+  <item>StandardProperty</item>
+ </portal_type>
+ <portal_type id="Magento Test Product">
+  <item>MagentoTestProduct</item>
+  <item>Reference</item>
+  <item>StandardProperty</item>
+ </portal_type>
+ <portal_type id="Magento Test Sale Order">
+  <item>MagentoTestSaleOrder</item>
+  <item>Reference</item>
+  <item>StandardProperty</item>
+ </portal_type>
+ <portal_type id="Magento Test Sale Order Item">
+  <item>MagentoTestSaleOrderItem</item>
+  <item>Reference</item>
+  <item>StandardProperty</item>
+ </portal_type>
+</property_sheet_list>

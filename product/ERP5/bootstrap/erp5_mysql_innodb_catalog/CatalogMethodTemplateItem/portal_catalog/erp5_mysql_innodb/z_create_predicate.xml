@@ -61,7 +61,7 @@
   `start_date_range_min` datetime ,\n
   `start_date_range_max` datetime ,\n
   PRIMARY KEY `uid` (`uid`)\n
-) TYPE=InnoDB; \n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

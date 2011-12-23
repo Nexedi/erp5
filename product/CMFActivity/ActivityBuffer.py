@@ -79,16 +79,15 @@ class ActivityBuffer(TM):
   def _finish(self):
     # LOG('ActivityBuffer', 0, '_finish %r' % (self,))
     try:
-      try:
-        # Try to push / delete all messages
-        for activity, message in self.flushed_activity:
-          activity.finishDeleteMessage(self._activity_tool_path, message)
-        for activity, message in self.queued_activity:
-          activity.finishQueueMessage(self._activity_tool_path, message)
-      except:
-        LOG('ActivityBuffer', ERROR, "exception during _finish",
-            error=sys.exc_info())
-        raise
+      # Try to push / delete all messages
+      for activity, message in self.flushed_activity:
+        activity.finishDeleteMessage(self._activity_tool_path, message)
+      for activity, message in self.queued_activity:
+        activity.finishQueueMessage(self._activity_tool_path, message)
+    except:
+      LOG('ActivityBuffer', ERROR, "exception during _finish",
+          error=sys.exc_info())
+      raise
     finally:
       self._clear()
 

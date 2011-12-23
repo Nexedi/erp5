@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>CicBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/cic/document_connector</string>
+                <string>destination/portal_integrations/cic/payment_transaction_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getPaymentTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Payment Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'date_doperation\': DateTime(\'2011/01/01\'), \'date_de_valeur\': DateTime(\'2011/12/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>erp5/DocumentConnector_getPaymentTransactionList</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string>[{u\'solde\': \'81278.78\', u\'libelle\': \'VIR FRAIS ROBERT\', u\'debit\': \'-157.50\', u\'date_doperation\': \'06/13/2011\', u\'date_de_valeur\': \'06/13/2011\', \'id\': \'2\'}, {u\'solde\': \'81235.55\', u\'libelle\': \'VIR POSTE\', u\'debit\': \'-73.03\', u\'date_doperation\': \'06/13/2011\', u\'date_de_valeur\': \'06/13/2011\', \'id\': \'3\'}, {u\'solde\': \'81200.74\', u\'libelle\': \'PRLV FREE TELECOM FREE HAUTDEBIT\', u\'debit\': \'-46.78\', u\'date_doperation\': \'06/14/2011\', u\'date_de_valeur\': \'06/14/2011\', \'id\': \'4\'}, {u\'solde\': \'44437.67\', u\'libelle\': \'VIR SOCIETE X 2011\', u\'credit\': \'2090\', u\'date_doperation\': \'06/16/2011\', u\'date_de_valeur\': \'06/16/2011\', \'id\': \'5\'}]</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Payment Transaction">\n
+  <title>VIR FRAIS ROBERT</title>\n
+  <start_date>2011/06/13</start_date>\n
+  <stop_date>2011/06/13</stop_date>\n
+  <reference>2</reference>\n
+  <movement>\n
+    <price>-157.50</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>VIR POSTE</title>\n
+  <start_date>2011/06/13</start_date>\n
+  <stop_date>2011/06/13</stop_date>\n
+  <reference>3</reference>\n
+  <movement>\n
+    <price>-73.03</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>PRLV FREE TELECOM FREE HAUTDEBIT</title>\n
+  <start_date>2011/06/14</start_date>\n
+  <stop_date>2011/06/14</stop_date>\n
+  <reference>4</reference>\n
+  <movement>\n
+    <price>-46.78</price>\n
+  </movement>\n
+</transaction>\n
+\n
+<transaction type="Payment Transaction">\n
+  <title>VIR SOCIETE X 2011</title>\n
+  <start_date>2011/06/16</start_date>\n
+  <stop_date>2011/06/16</stop_date>\n
+  <reference>5</reference>\n
+  <movement>\n
+    <price>2090.00</price>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

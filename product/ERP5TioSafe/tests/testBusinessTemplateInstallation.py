@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 # -*- coding: utf8 -*-
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -10,6 +11,7 @@
 """Test suites for packaging of tiosafe
 """
 
+import transaction
 from testTioSafeMixin import testTioSafeMixin
 from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
@@ -37,7 +39,7 @@ class TestPackaging(testTioSafeMixin):
                           start_date=DateTime(),
                           stop_date=DateTime() + 10,)
     assignment.open()
-    get_transaction().commit()
+    transaction.commit()
     self.tic()
 
     zodb_roles = self.portal.acl_users.zodb_roles
@@ -68,12 +70,8 @@ class TestPackaging(testTioSafeMixin):
     for skin_name in ( 'erp5_base',
                        'erp5_pdm',
                        'erp5_trade',
-                       'erp5_accounting',
-                       'erp5_invoicing',
-                       'erp5_simplified_invoicing',
                        'erp5_syncml',
                        'erp5_integration',
-                       'erp5_oauth',
                      ):
       self.failUnless(skin_name in self.skin_tool.objectIds(), skin_name)
 

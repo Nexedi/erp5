@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Generated Delivery Builder" module="erp5.portal_type"/>
+      <global name="Delivery Builder" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -132,10 +132,6 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>pay_sheet_builder</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>6</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

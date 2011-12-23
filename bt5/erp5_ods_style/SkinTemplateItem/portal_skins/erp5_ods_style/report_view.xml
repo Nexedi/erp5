@@ -104,8 +104,9 @@
                           <tal:block tal:condition="report_item/getTitle" tal:define="level report_item/getLevel;\n
                                                                                       column_len column_len | python: 5">\n
                               <table:table-cell table:style-name="report-title"\n
+                                                tal:define="level_style python: level &gt; 1 and level or \'\'"\n
                                                 tal:attributes="table:number-columns-spanned python: column_len;\n
-                                                                table:style-name python:test(level&gt;1, \'report-title%s\' % level, \'report-title\');" \n
+                                                                table:style-name string:report-title${level_style}" \n
                                                 office:value-type=\'string\'\n
                                                 table:number-rows-spanned=\'1\'>\n
                                 <text:p tal:content="report_item/getTitle" ></text:p>\n
@@ -145,8 +146,7 @@
       </tal:block>\n
     </office:spreadsheet>\n
   </office:body>\n
-</office:document-content>\n
-
+</office:document-content>
 
 ]]></unicode> </value>
         </item>
@@ -176,7 +176,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <unicode></unicode> </value>
         </item>
       </dictionary>
     </pickle>

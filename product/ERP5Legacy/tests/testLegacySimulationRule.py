@@ -31,3 +31,8 @@ from Products.ERP5.tests.testRule import *
 
 from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
 Legacy_getBusinessTemplateList(TestRuleMixin)
+
+# They are testing new feature on new simulation.
+TestRule.test_070_direct_criteria_specification = None
+TestRule.test_071_empty_rule_category_matching = None
+TestRule.test_072_search_with_extra_catalog_keywords = None

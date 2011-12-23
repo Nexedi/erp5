@@ -61,16 +61,17 @@ packing_list = context\n
 packing_list.PackingList_copyOrderProperties()\n
 \n
 # Then, modify state\n
-packing_list_state = packing_list.getSimulationState()\n
-\n
-if packing_list_state == "draft":\n
-  packing_list.confirm(comment=translateString(\'Initialised by Delivery Builder.\'))\n
+confirm_tag = \'%s_confirm\' % packing_list.getPath()\n
+packing_list.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
+  tag=confirm_tag).Delivery_confirm()\n
 \n
 # First set the packing_list in the building state\n
 packing_list.startBuilding()\n
 # Then an activity should put the causality state in diverged or solved\n
 packing_list.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))).updateCausalityState()\n
+  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
+  after_tag=confirm_tag).updateCausalityState()\n
 </string> </value>
         </item>
         <item>

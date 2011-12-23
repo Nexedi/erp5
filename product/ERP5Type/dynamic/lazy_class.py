@@ -20,12 +20,26 @@ from portal_type_class import generatePortalTypeClass
 from accessor_holder import AccessorHolderType
 import persistent_migration
 
-# PersistentBroken can't be reused directly
-# because its « layout differs from 'GhostPortalType' »
-ERP5BaseBroken = type('ERP5BaseBroken', (Broken, ERP5Base), dict(x
-  for x in PersistentBroken.__dict__.iteritems()
-  if x[0] not in ('__dict__', '__module__', '__weakref__')))
+class ERP5BaseBroken(Broken, ERP5Base):
+  # PersistentBroken can't be reused directly
+  # because its « layout differs from 'GhostPortalType' »
 
+  def __metaclass__(name, base, d):
+    d = dict(PersistentBroken.__dict__, **d)
+    for x in '__dict__', '__metaclass__', '__weakref__':
+      del d[x]
+    def get(*args):
+      return lambda self: self.__dict__['__Broken_state__'].get(*args)
+    for x in 'id', 'title':
+      d[x] = property(get(x, getattr(ERP5Base, x, None)))
+    return type(name, base, d)
+
+  def __getattr__(self, name):
+    try:
+      return self.__dict__['__Broken_state__'][name]
+    except KeyError:
+      raise AttributeError("state of broken %r object has no %r key"
+                           % (self.__class__.__name__, name))
 
 # the meta class of a derived class must be a subclass of all of its bases:
 # since a portal type derives from both Zope Extension classes and
@@ -287,47 +301,46 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     ERP5Base.aq_method_lock.acquire()
     try:
       try:
-        try:
-          class_definition = generatePortalTypeClass(site, portal_type)
-        except AttributeError:
-          LOG("ERP5Type.Dynamic", WARNING,
-              "Could not access Portal Type Object for type %r"
-              % portal_type, error=sys.exc_info())
-          base_tuple = (ERP5BaseBroken, )
-          portal_type_category_list = []
-          attribute_dict = dict(_categories=[], constraints=[])
-          interface_list = []
-        else:
-          base_tuple, portal_type_category_list, \
-            interface_list, attribute_dict = class_definition
+        class_definition = generatePortalTypeClass(site, portal_type)
+      except AttributeError:
+        LOG("ERP5Type.Dynamic", WARNING,
+            "Could not access Portal Type Object for type %r"
+            % portal_type, error=sys.exc_info())
+        base_tuple = (ERP5BaseBroken, )
+        portal_type_category_list = []
+        attribute_dict = dict(_categories=[], constraints=[])
+        interface_list = []
+      else:
+        base_tuple, portal_type_category_list, \
+          interface_list, attribute_dict = class_definition
 
-        klass.__isghost__ = False
-        klass.__bases__ = base_tuple
+      klass.__isghost__ = False
+      klass.__bases__ = base_tuple
 
-        klass.resetAcquisition()
+      klass.resetAcquisition()
 
-        for key, value in attribute_dict.iteritems():
-          setattr(klass, key, value)
+      for key, value in attribute_dict.iteritems():
+        setattr(klass, key, value)
 
-        if getattr(klass.__setstate__, 'im_func', None) is \
-           persistent_migration.__setstate__:
-          # optimization to reduce overhead of compatibility code
-          klass.__setstate__ = persistent_migration.Base__setstate__
+      if getattr(klass.__setstate__, 'im_func', None) is \
+         persistent_migration.__setstate__:
+        # optimization to reduce overhead of compatibility code
+        klass.__setstate__ = persistent_migration.Base__setstate__
 
-        for interface in interface_list:
-          classImplements(klass, interface)
+      for interface in interface_list:
+        classImplements(klass, interface)
 
-        # skip this during the early Base Type / Types Tool generation
-        # because they dont have accessors, and will mess up
-        # workflow methods. We KNOW that we will re-load this type anyway
-        if len(base_tuple) > 1:
-          klass.generatePortalTypeAccessors(site, portal_type_category_list)
-          # need to set %s__roles__ for generated methods
-          cls.setupSecurity()
+      # skip this during the early Base Type / Types Tool generation
+      # because they dont have accessors, and will mess up
+      # workflow methods. We KNOW that we will re-load this type anyway
+      if len(base_tuple) > 1:
+        klass.generatePortalTypeAccessors(site, portal_type_category_list)
+        # need to set %s__roles__ for generated methods
+        cls.setupSecurity()
 
-      except Exception:
-        import traceback; traceback.print_exc()
-        raise
+    except Exception:
+      import traceback; traceback.print_exc()
+      raise
     finally:
       ERP5Base.aq_method_lock.release()
 

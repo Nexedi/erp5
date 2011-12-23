@@ -36,36 +36,6 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<tal:block metal:define-macro="checked_logged_in_as_express_user_client_instance">\n
-  <!-- Check we\'re logged against client_instance -->\n
-  <tr>\n
-    <td>openAndWait</td>\n
-    <td>${client_instance_base_url}/view</td>\n
-    <td></td>\n
-  </tr>\n
-  <tr>\n
-    <td>verifyTextPresent</td>\n
-    <td tal:content="python: configuration[\'customer_user1_reference\']"></td>\n
-    <td></td>\n
-  </tr>\n
-</tal:block>\n
-\n
-\n
-<tal:block metal:define-macro="checked_logged_in_as_express_user_server_instance">\n
-  <!-- Check we\'re logged against server -->\n
-  <tr>\n
-    <td>openAndWait</td>\n
-    <td>${base_url}/view</td>\n
-    <td></td>\n
-  </tr>\n
-  <tr>\n
-    <td>verifyTextPresent</td>\n
-    <td tal:content="python: configuration[\'customer_user1_reference\']"></td>\n
-    <td></td>\n
-  </tr>\n
-</tal:block>\n
-\n
-\n
 <tal:block metal:define-macro="init_test_environment">\n
   <tr>\n
     <td>store</td>\n

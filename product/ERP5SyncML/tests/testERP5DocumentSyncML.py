@@ -880,7 +880,8 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     #self.assertEquals(self.size_filename_text, document_c1.get_size())
     document_s = document_server._getOb(self.id1)
     document_c = document_client1._getOb(self.id1)
-    self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c1)
+    self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c1,
+                              ignore_processing_status_workflow=True)
 
   def test_10_BrokenMessage(self):
     """
@@ -989,7 +990,9 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.checkSynchronizationStateIsSynchronized()
     document_s = document_server._getOb(self.id1)
     document_c = document_client1._getOb(self.id1)
-    self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c, force=1)
+    # Ignore processing status workflow as 
+    self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c, force=True,
+                              ignore_processing_status_workflow=True)
 
 def test_suite():
     suite = unittest.TestSuite()

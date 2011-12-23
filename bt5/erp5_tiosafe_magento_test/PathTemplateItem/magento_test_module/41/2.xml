@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Magento Test Sale Order Item" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>category</string> </key>
+            <value> <string>size/m\n
+color/red</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Magento Test Sale Order Item</string> </value>
+        </item>
+        <item>
+            <key> <string>price</string> </key>
+            <value> <string>15</string> </value>
+        </item>
+        <item>
+            <key> <string>quantity</string> </key>
+            <value> <string>1</string> </value>
+        </item>
+        <item>
+            <key> <string>reference</string> </key>
+            <value> <string>2</string> </value>
+        </item>
+        <item>
+            <key> <string>resource</string> </key>
+            <value> <string>Product with category</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Item 2</string> </value>
+        </item>
+        <item>
+            <key> <string>vat</string> </key>
+            <value> <string>12</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

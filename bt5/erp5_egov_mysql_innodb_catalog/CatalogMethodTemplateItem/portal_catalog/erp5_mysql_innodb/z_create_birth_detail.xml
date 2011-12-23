@@ -65,7 +65,7 @@
   PRIMARY KEY (`uid`),\n
   KEY `birthplace` (`birthplace_city`),\n
   KEY `birth_date` (`birth_date`)\n
-) TYPE=InnoDB\n
+) ENGINE=InnoDB\n
 </string> </value>
         </item>
         <item>

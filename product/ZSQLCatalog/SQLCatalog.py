@@ -43,10 +43,7 @@ from cStringIO import StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
 import os
-try:
-    from hashlib import md5
-except ImportError:
-    from md5 import md5
+from hashlib import md5
 
 from interfaces.query_catalog import ISearchKeyCatalog
 from zope.interface.verify import verifyClass
@@ -134,6 +131,7 @@ class transactional_cache_decorator:
       return result
     return wrapper
 
+list_type_list = list, tuple, set, frozenset
 try:
   from ZPublisher.HTTPRequest import record
 except ImportError:
@@ -700,8 +698,7 @@ class Catalog(Folder,
     """
       Import properties from an XML file.
     """
-    f = open(file)
-    try:
+    with open(file) as f:
       doc = parse(f)
       root = doc.documentElement
       try:
@@ -750,8 +747,6 @@ class Catalog(Folder,
             self.filter_dict[id]['expression_instance'] = None
       finally:
         doc.unlink()
-    finally:
-      f.close()
 
   def manage_historyCompare(self, rev1, rev2, REQUEST,
                             historyComparisonResults=''):
@@ -1444,8 +1439,12 @@ class Catalog(Folder,
             raise CatalogError, 'A negative uid %d is used for %s. Your catalog is broken. Recreate your catalog.' % (index, path)
           if uid != index or isinstance(uid, int):
             # We want to make sure that uid becomes long if it is an int
-            raise ValueError('uid of %r changed from %r (property) to %r '
-                '(catalog, by path) !!! This can be fatal' % (object, uid, index))
+            error_message = 'uid of %r changed from %r (property) to %r '\
+	                    '(catalog, by path) !!! This can be fatal' % (object, uid, index)
+            if not self.sql_catalog_raise_error_on_uid_check:
+              LOG("SQLCatalog.catalogObjectList", ERROR, error_message)
+            else:
+              raise ValueError(error_message)
         else:
           # Make sure no duplicates - ie. if an object with different path has same uid, we need a new uid
           # This can be very dangerous with relations stored in a category table (CMFCategory)
@@ -2175,12 +2174,12 @@ class Catalog(Folder,
         value = dict(value)
       if ignore_empty_string and (
           value == ''
-          or (isinstance(value, (list, tuple)) and len(value) == 0)
+          or (isinstance(value, list_type_list) and not value)
           or (isinstance(value, dict) and (
             'query' not in value
             or value['query'] == ''
-            or (isinstance(value['query'], (list, tuple))
-              and len(value['query']) == 0)))):
+            or (isinstance(value['query'], list_type_list)
+              and not value['query'])))):
         # We have an empty value, do not create a query from it
         empty_value_dict[key] = value
       else:
@@ -2292,6 +2291,13 @@ class Catalog(Folder,
         select_dict = None
     elif isinstance(select_dict, (list, tuple)):
       select_dict = dict([(x, None) for x in select_dict])
+    # Handle left_join_list
+    left_join_list = kw.pop('left_join_list', ())
+    # Handle implicit_join. It's True by default, as there's a lot of code
+    # in BT5s and elsewhere that calls buildSQLQuery() expecting implicit
+    # join. self._queryResults() defaults it to False for those using
+    # catalog.searchResults(...) or catalog(...) directly.
+    implicit_join = kw.pop('implicit_join', True)
     # Handle order_by_list
     order_by_list = kw.pop('order_by_list', None)
     sort_on = kw.pop('sort_on', None)
@@ -2329,6 +2335,8 @@ class Catalog(Folder,
       order_by_override_list=order_by_override_list,
       group_by_list=group_by_list,
       select_dict=select_dict,
+      left_join_list=left_join_list,
+      implicit_join=implicit_join,
       limit=limit,
       catalog_table_name=query_table,
       extra_column_list=extra_column_list,
@@ -2414,6 +2422,7 @@ class Catalog(Folder,
     """ Returns a list of brains from a set of constraints on variables """
     if build_sql_query_method is None:
       build_sql_query_method = self.buildSQLQuery
+    kw.setdefault('implicit_join', False)
     query = build_sql_query_method(REQUEST=REQUEST, **kw)
     # XXX: decide if this should be made normal
     ENFORCE_SEPARATION = True
@@ -2437,18 +2446,36 @@ class Catalog(Folder,
     sql_kw = self._queryResults(REQUEST=REQUEST, build_sql_query_method=build_sql_query_method, **kw)
     return sql_method(src__=src__, **sql_kw)
 
+  def getSearchResultsMethod(self):
+    return getattr(self, self.sql_search_results)
+
   def searchResults(self, REQUEST=None, **kw):
     """ Returns a list of brains from a set of constraints on variables """
-    method = getattr(self, self.sql_search_results)
-    return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), **kw)
+    if 'only_group_columns' in kw:
+      # searchResults must be consistent in API with countResults
+      raise ValueError('only_group_columns does not belong to this API '
+        'level, use queryResults directly')
+    return self.queryResults(
+      self.getSearchResultsMethod(),
+      REQUEST=REQUEST,
+      extra_column_list=self.getCatalogSearchResultKeys(),
+      **kw
+    )
 
   __call__ = searchResults
 
+  def getCountResultsMethod(self):
+    return getattr(self, self.sql_count_results)
+
   def countResults(self, REQUEST=None, **kw):
     """ Returns the number of items which satisfy the where_expression """
-    # Get the search method
-    method = getattr(self, self.sql_count_results)
-    return self.queryResults(method, REQUEST=REQUEST, extra_column_list=self.getCatalogSearchResultKeys(), only_group_columns=True, **kw)
+    return self.queryResults(
+      self.getCountResultsMethod(),
+      REQUEST=REQUEST,
+      extra_column_list=self.getCatalogSearchResultKeys(),
+      only_group_columns=True,
+      **kw
+    )
 
   def isAdvancedSearchText(self, search_text):
     return isAdvancedSearchText(search_text, self.isValidColumn)

@@ -142,7 +142,9 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -174,6 +176,10 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>text_editor</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -211,7 +217,7 @@
                     <key> <string>default</string> </key>
                     <value> <string encoding="cdata"><![CDATA[
 
-<input name="__ac_name" id="__ac_name" value="" type="text" size="30" />
+<input name="__ac_name" id="__ac_name" value="" type="text" />
 
 ]]></string> </value>
                 </item>
@@ -281,6 +287,19 @@
                 </item>
               </dictionary>
             </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string>python: here.getWebSiteValue().isUserAllowedLogin()</string> </value>
         </item>
       </dictionary>
     </pickle>

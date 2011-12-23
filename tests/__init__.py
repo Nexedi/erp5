@@ -1,4 +1,4 @@
-import glob, os, subprocess
+import glob, os, subprocess, re
 # test_suite is provided by 'run_test_suite'
 from test_suite import ERP5TypeTestSuite
 import sys
@@ -55,8 +55,9 @@ class ERP5(_ERP5):
         continue
       # skip some tests
       if test_case.startswith('testLive') or test_case.startswith('testVifib') \
+         or test_case.startswith('testFunctional') \
          or test_case in ('testPerformance', 'testSimulationPerformance',
-                          'testDmsWithFlare', # XXX(Seb), put it back ASAP
+                          'testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
                           'testERP5eGov', # it is not maintained any more
                           'testAccounting_l10n_fr_m9'):
         continue
@@ -85,3 +86,46 @@ class ERP5_simulation(_ERP5):
   def runUnitTest(self, *args, **kw):
     return super(ERP5_simulation, self).runUnitTest(
       erp5_report_new_simulation_failures='1', *args, **kw)
+
+
+class ERP5UserInterface(_ERP5):
+  """ Run Test Suites which runs Zelenium tests """
+
+  def _updateTestResponse(self, status_dict):
+    """ Convert the Unit Test output into more accurate information
+        related to funcional test run.
+    """
+    # Parse relevant information to update response information
+    try:
+      summary, html_test_result = status_dict['stderr'].split("-"*79)[1:3]
+    except ValueError:
+      # In case of error when parse the file, preserve the original 
+      # informations. This prevents we have unfinished tests.
+      return status_dict
+    status_dict['html_test_result'] = html_test_result
+    search = self.FTEST_PASS_FAIL_RE.search(summary)
+    if search:
+      group_dict = search.groupdict()
+      status_dict['failure_count'] = int(group_dict['failures'])
+      status_dict['test_count'] = int(group_dict['total'])
+
+    return status_dict
+
+  def run(self, test):
+    return self._updateTestResponse(self.runUnitTest(test))
+
+  def getTestList(self):
+    test_list = []
+    for test_path in glob.glob('%s/product/*/tests/testFunctional*.py' % sys.path[0]) + \
+               glob.glob('%s/bt5/*/TestTemplateItem/testFunctional*.py' % sys.path[0]):
+      test_case = test_path.split(os.sep)[-1][:-3] # remove .py
+      product = test_path.split(os.sep)[-3]
+      if test_case in ('testFunctionalConfigurator', 'testFunctionalConfiguratorConsulting',):
+        # disable configurator test until bug "Make configurator use new simulation" is fixed
+        continue
+      # don't test 3rd party products
+      if product in ('PortalTransforms', 'MailTemplates'):
+        continue
+      test_list.append(test_case)
+    return test_list
+

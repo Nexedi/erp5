@@ -94,6 +94,7 @@
                     <value>
                       <list>
                         <string>your_site</string>
+                        <string>your_group</string>
                         <string>your_at_date</string>
                         <string>your_portal_skin</string>
                         <string>your_format</string>

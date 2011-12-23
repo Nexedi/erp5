@@ -158,6 +158,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>delivery_own_section_title</string>
+                          <string>Own Section</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_portal_type</string>
                           <string>Type</string>
                         </tuple>
@@ -294,6 +298,10 @@
                           <string>operation_date</string>
                         </tuple>
                         <tuple>
+                          <string>delivery_own_section_title</string>
+                          <string>delivery_own_section_title</string>
+                        </tuple>
+                        <tuple>
                           <string>delivery_mirror_section_title</string>
                           <string>delivery_mirror_section_title</string>
                         </tuple>
@@ -380,6 +388,10 @@
                         <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>delivery_own_section_title</string>
+                          <string>Own Section</string>
                         </tuple>
                         <tuple>
                           <string>delivery_mirror_section_title</string>

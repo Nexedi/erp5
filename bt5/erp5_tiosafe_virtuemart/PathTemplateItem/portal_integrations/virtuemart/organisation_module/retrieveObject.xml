@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildVirtuemartOrganisationBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>VirtuemartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Organisation</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/virtuemart/organisation_mapping</string>
+                <string>source/portal_integrations/virtuemart/http_connector</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getOrganisationList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Organisation</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>retrieveObject</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/Virtuemart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'organisation_id\': \'6\', \'stop_date\': DateTime(\'2020/01/01\'), \'start_date\': DateTime(\'2010/01/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml>\n
+  <object>\n
+    <id>6</id>\n
+    <title>Consulat General</title>\n
+    <email>mmbengue@consulsen-paris.fr</email>\n
+    <street>6 rue Saint Andr&#233;</street>\n
+    <zip>76000</zip>\n
+    <city>Rouen</city>\n
+    <country>France</country>\n
+    <phone>0647675124</phone>\n
+  </object>\n
+  <object>\n
+    <id>8</id>\n
+    <title>ADIE</title>\n
+    <email>adie@adie.sn</email>\n
+    <street>Bourguiba</street>\n
+    <zip>0000</zip>\n
+    <city>Dakar</city>\n
+    <country>Senegal</country>\n
+    <phone>00221339876677</phone>\n
+  </object>\n
+</xml>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<node type="Organisation">\n
+  <title>Consulat General</title>\n
+  <email>mmbengue@consulsen-paris.fr</email>\n
+  <phone>0647675124</phone>\n
+  <address>\n
+    <street>6 rue Saint André</street>\n
+    <zip>76000</zip>\n
+    <city>Rouen</city>\n
+    <country>france</country>\n
+  </address>\n
+</node>\n
+\n
+<node type="Organisation">\n
+  <title>ADIE</title>\n
+  <email>adie@adie.sn</email>\n
+  <phone>00221339876677</phone>\n
+  <address>\n
+    <street>Bourguiba</street>\n
+    <zip>0000</zip>\n
+    <city>Dakar</city>\n
+    <country>senegal</country>\n
+  </address>\n
+</node>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get organisation</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

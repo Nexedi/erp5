@@ -16,6 +16,9 @@
                 <string>display_style_list</string>
                 <string>editable_columns</string>
                 <string>global_search_column</string>
+                <string>hide_rows_on_no_search_criterion</string>
+                <string>lines</string>
+                <string>list_action</string>
                 <string>list_method</string>
                 <string>select</string>
                 <string>style_columns</string>
@@ -184,6 +187,18 @@
                 <item>
                     <key> <string>global_search_column</string> </key>
                     <value> <string>search_text</string> </value>
+                </item>
+                <item>
+                    <key> <string>hide_rows_on_no_search_criterion</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>lines</string> </key>
+                    <value> <int>10</int> </value>
+                </item>
+                <item>
+                    <key> <string>list_action</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>list_method</string> </key>

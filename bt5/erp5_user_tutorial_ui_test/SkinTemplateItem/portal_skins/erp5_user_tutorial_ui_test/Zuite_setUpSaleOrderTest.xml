@@ -57,6 +57,28 @@ portal = context.getPortalObject()\n
 howto_dict = context.Zuite_getHowToInfo()\n
 isTransitionPossible = portal.portal_workflow.isTransitionPossible\n
 \n
+# validate rules\n
+for account in context.account_module.objectValues():\n
+  if isTransitionPossible(account, \'validate\'):\n
+    account.validate()\n
+\n
+# validate default business process\n
+business_process = context.portal_catalog.getResultValue(portal_type=\'Business Process\',\n
+                                                         reference=\'erp5_default_business_process\')\n
+business_process.account_debit_path.setTestTalesExpression(\'python: True\')\n
+business_process.account_credit_path.setTestTalesExpression(\'python: True\')\n
+business_process.account_debit_path.setSourceValue(context.account_module.goods_sales)\n
+business_process.account_credit_path.setSourceValue(context.account_module.receivable)\n
+\n
+if isTransitionPossible(business_process, \'validate\'):\n
+  business_process.validate()\n
+\n
+# add default sale order trade condition\n
+sale_order_trade_condition = context.portal_catalog.getResultValue(portal_type=\'Sale Trade Condition\',\n
+                                                                  reference=\'default-sale-order-trade-condition\')\n
+if isTransitionPossible(sale_order_trade_condition, \'validate\'):\n
+  sale_order_trade_condition.validate()\n
+\n
 # check if there is already the euro curency on the instance\n
 currency = context.portal_catalog.getResultValue(portal_type=\'Currency\',\n
                                                  title=howto_dict[\'sale_howto_currency_title\'])\n
@@ -98,6 +120,7 @@ pref = getattr(context.portal_preferences, howto_dict[\'howto_preference_id\'], 
 if pref is None:\n
   pref = context.portal_preferences.newContent(portal_type="Preference",\n
                                                id=howto_dict[\'howto_preference_id\'])\n
+  pref.setPreferredAccountingTransactionSectionCategory(\'group/my_group\')\n
 if isTransitionPossible(pref, \'enable\'):\n
   pref.enable()\n
 \n
@@ -112,11 +135,20 @@ my_organisation.activate(\n
     my_organisation.getPath(), \'immediateRecusriveReindexObject\', \'immediateReindexObject\')) \\\n
   .Organisation_addConditionallyAccountingPeriod()\n
 \n
-rule = portal.portal_rules.searchFolder(reference=\'default_order_rule\',\n
+for rule_reference in (\'default_delivering_rule\',\n
+                       \'default_delivery_rule\',\n
+                       \'default_accounting_transaction_rule\',\n
+                       \'default_trade_model_rule\',\n
+                       \'default_payment_rule\',\n
+                       \'default_order_rule\',\n
+                       \'default_invoice_transaction_rule\',\n
+                       \'default_invoicing_rule\',\n
+                       \'default_invoice_rule\',):\n
+  rule = portal.portal_rules.searchFolder(reference=rule_reference,\n
                                         sort_on=\'version\',\n
                                         sort_order=\'descending\')[0].getObject()\n
-if isTransitionPossible(rule, \'validate\'):\n
-  rule.validate()\n
+  if isTransitionPossible(rule, \'validate\'):\n
+    rule.validate()\n
 \n
 # Clear cache\n
 portal.portal_caches.clearAllCache()\n

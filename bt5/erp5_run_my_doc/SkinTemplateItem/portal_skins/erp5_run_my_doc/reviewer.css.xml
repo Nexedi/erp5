@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>reviewer.css</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string>.activated_review_tooltip {\n
+  position:absolute;\n
+  display:block;\n
+  left:-1000px;\n
+  top:-1000px;\n
+  padding:5px 5px 5px 5px;\n
+  border: 2px solid #000000;\n
+}\n
+\n
+.desactivated_review_tooltip {\n
+  display:none;\n
+  position:absolute;\n
+  left:-1000px;\n
+  top:-1000px;\n
+}\n
+\n
+div.added_comment{\n
+  border-radius: 5px; \n
+  -moz-border-radius: 5px; \n
+  -webkit-border-radius: 5px; \n
+  border: 1px solid #000000;\n
+  opacity:.20;\n
+  filter:alpha(opacity=20);\n
+  filter: "alpha(opacity=20)";\n
+  overflow:hidden;\n
+  text-align: center;\n
+  vertical-align: middle;\n
+  position:absolute;\n
+  z-index:10000;\n
+}\n
+\n
+div.added_comment:hover{\n
+  opacity: 0;\n
+  filter:alpha(opacity=0);\n
+  filter: "alpha(opacity=0)";\n
+  color: #000000;\n
+}\n
+\n
+div.added_comment_edited{\n
+  opacity: 1;\n
+  filter:alpha(opacity=100);\n
+  filter: "alpha(opacity=100)";\n
+  color: #000000;\n
+  position:absolute;\n
+  z-index:10000;\n
+}\n
+\n
+div.added_comment_edited textarea{\n
+  background-color: #0000FF;\n
+}\n
+\n
+.label_document_not_ready {\n
+  background-color: #FF0000;\n
+}\n
+\n
+.label_document_ready {\n
+  background-color: #00FF00;\n
+}\n
+\n
+.activated_review_tooltip div{\n
+  display:block;\n
+  width: 16px;\n
+  height: 16px;\n
+  background-repeat:no-repeat;\n
+  background-position:center;\n
+  background-color: transparent;\n
+  -webkit-background-size: 100%;\n
+  -moz-background-size: 100%;\n
+  -o-background-size: 100%;\n
+  background-size: 100%;\n
+  cursor:pointer;\n
+  opacity: 0.5;\n
+  filter:  alpha(opacity=50) ;\n
+  filter: "alpha(opacity=50)";\n
+  margin-top:5px;\n
+}\n
+\n
+.activated_review_tooltip div:hover{\n
+  opacity: 1;\n
+  filter:alpha(opacity=100);\n
+  filter: "alpha(opacity=100)";\n
+}\n
+\n
+.color_button{\n
+  border: 1px solid #000000;\n
+  margin-left: 1px;\n
+  margin-right: 1px;\n
+  width: 12px;\n
+  height: 12px;\n
+  float: left;\n
+}\n
+\n
+.remove_button{\n
+  background-image: url("images/editdelete.png");\n
+  float: left;\n
+}\n
+\n
+.validate_button{\n
+  background-image: url("images/save2.png");\n
+  float: right;\n
+}\n
+\n
+.activated_review_tooltip .tooltip_text{\n
+  display:block;\n
+}\n
+\n
+.activated_review_tooltip .tooltip_author{\n
+  display:block;\n
+  float:right;\n
+  margin-top:5px;\n
+}</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

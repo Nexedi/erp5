@@ -79,7 +79,12 @@ class TestRuleMixin(TestOrderMixin):
     else:
       self.pl = pl_module.objectValues()[0]
     #delete applied_rule
-    self._wipe(self.getSimulationTool())
+    simulation_tool = self.getSimulationTool()
+    self._wipe(simulation_tool)
+    # create one manual simulation movement for rule testing
+    self.ar = simulation_tool.newContent(portal_type='Applied Rule')
+    self.sm = self.ar.newContent(portal_type='Simulation Movement')
+    self.sm.setStartDate("2007-07-01") # for the date based rule tests
     # commit
     transaction.commit()
     self.tic()
@@ -138,7 +143,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     self.assertEquals(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
+    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
   def test_02_WrongTestMethod(self, quiet=quiet, run=run_all_test):
     """
@@ -157,7 +162,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     self.assertEquals(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
+    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
   def test_03_GoodTestMethod(self, quiet=quiet, run=run_all_test):
     """
@@ -176,7 +181,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     self.assertEquals(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 1)
+    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 1)
 
   def test_04_NotValidatedRule(self, quiet=quiet, run=run_all_test):
     """
@@ -197,7 +202,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     self.assertEquals(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 0)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
+    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
   def test_06_WrongDateRange(self, quiet=quiet, run=run_all_test):
     """
@@ -219,7 +224,7 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     self.assertEquals(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 0)
+    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 0)
 
   def test_07_GoodDateRange(self, quiet=quiet, run=run_all_test):
     """
@@ -241,7 +246,143 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     self.assertEquals(self.getRuleTool().countFolder(
       validation_state="validated")[0][0], 1)
-    self.assertEquals(len(self.getRuleTool().searchRuleList(self.pl)), 1)
+    self.assertEquals(len(self.getRuleTool().searchRuleList(self.sm)), 1)
+
+  def test_070_direct_criteria_specification(self):
+    """
+    test that rule-specific scripts can specify identity and range criteria
+    """
+    skin_folder = self.getPortal().portal_skins.custom
+    # add an always-matching predicate test script to the rule
+    createZODBPythonScript(skin_folder, 'good_script', 'rule',
+                           'return True')
+    delivery_rule = self.getRule('default_delivery_rule')
+    delivery_rule.setTestMethodId('good_script')
+    # but add a predicate building script that only matches on
+    # Simulation Movements, to affect all rules
+    createZODBPythonScript(skin_folder, 'RuleMixin_asPredicate', '',
+        """
+return context.generatePredicate(
+  identity_criterion=dict(portal_type=(context.movement_type,)),
+)
+        """)
+    # and validate it, which will indirectly reindex the predicate.
+    delivery_rule.validate()
+    transaction.commit()
+    self.tic()
+    # now rules don't match packing lists by default
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 0)
+    # only simulation movements
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.sm)), 1)
+    # unless they have more specific predicate script telling them otherwise:
+    predicate_script = createZODBPythonScript(
+      skin_folder, 'DeliveryRootSimulationRule_asPredicate', '',
+      """
+return context.generatePredicate(
+  identity_criterion=dict(portal_type=('Sale Packing List',)),
+  range_criterion=dict(start_date=(%r, None)),
+)
+      """ % self.pl.getStartDate())
+    delivery_rule.reindexObject()
+    transaction.commit()
+    self.tic()
+    # now they match the packing list, but not the simulation movement
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 1)
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.sm)), 0)
+    # Note that we added a range criterion above, which means that if
+    # the packing list no longer falls within the range...
+    self.pl.setStartDate(self.pl.getStartDate() - 1)
+    transaction.commit()
+    self.tic()
+    # ... then the rule no longer matches the packing list:
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 0)
+    # But if we push back the date on the criterion...
+    predicate_script.write("""
+return context.generatePredicate(
+  identity_criterion=dict(portal_type=('Sale Packing List',)),
+  range_criterion=dict(start_date=(%r, None)),
+)
+      """ % self.pl.getStartDate())
+    delivery_rule.reindexObject()
+    transaction.commit()
+    self.tic()
+    # ... it will match again
+    self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 1)
+
+  def test_071_empty_rule_category_matching(self):
+    """
+    test that a category criteria on a rule that doesn't have that category
+    allows the rule to match contexts with and without that category
+    """
+    skin_folder = self.getPortal().portal_skins.custom
+    rule_tool = self.getRuleTool()
+    # add an always-matching predicate test script to the rule
+    createZODBPythonScript(skin_folder, 'good_script', 'rule',
+                           'return True')
+    delivery_rule = self.getRule('default_delivery_rule')
+    delivery_rule.setTestMethodId('good_script')
+    # and  add  a  predicate  building  script that  only  matches  on
+    # Simulation Movements, to affect all rules
+    createZODBPythonScript(skin_folder, 'RuleMixin_asPredicate', '',
+        """
+return context.generatePredicate(
+  identity_criterion=dict(portal_type=(context.movement_type,)),
+  membership_criterion_base_category_list=('trade_phase',),
+)
+        """)
+    # and validate it, which will indirectly reindex the predicate.
+    delivery_rule.validate()
+    transaction.commit()
+    self.tic()
+    # Now since the rule has a trade_phase
+    self.assertEqual(delivery_rule.getTradePhase(), 'default/delivery')
+    # ...then it won't match the Simulation Movement
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 0)
+    # unless it gets a trade_phase itself
+    self.sm.setTradePhase('default/delivery')
+    self.stepTic()
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
+    # But if the rule itself has no trade_phase...
+    delivery_rule.setTradePhase(None)
+    self.stepTic()
+    # then it should match the simulation movement with or without
+    # trade_phase
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
+    self.sm.setTradePhase(None)
+    self.stepTic()
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
+
+  def test_072_search_with_extra_catalog_keywords(self):
+    """
+    test that a category criteria on a rule that doesn't have that category
+    allows the rule to match contexts with and without that category
+    """
+    skin_folder = self.getPortal().portal_skins.custom
+    rule_tool = self.getRuleTool()
+    # add an always-matching predicate test script to the rule
+    createZODBPythonScript(skin_folder, 'good_script', 'rule',
+                           'return True')
+    delivery_rule = self.getRule('default_delivery_rule')
+    delivery_rule.setTestMethodId('good_script')
+    delivery_rule.validate()
+    transaction.commit()
+    self.tic()
+    # Now since the rule has a trade_phase
+    trade_phase_list = delivery_rule.getTradePhaseList()
+    self.assertEqual(trade_phase_list, ['default/delivery'])
+    # then it should be possible to find it by passing this trade_phase
+    # as an additional catalog keyword
+    kw = {'trade_phase_relative_url':
+            ['trade_phase/' + path for path in trade_phase_list]}
+    # XXX-Leo: Fugly catalog syntax for category search above.
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm, **kw)), 1)
+    # and also not to match it if we pass a different trade_phase
+    kw['trade_phase_relative_url'] = ['trade_phase/' + 'default/order']
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm, **kw)), 0)
+    # but match it again if we pass an empty list for trade_phase
+    # (with a warning in the log about discarding empty values)
+    kw['trade_phase_relative_url'] = []
+    self.assertEqual(len(rule_tool.searchRuleList(self.sm, **kw)), 1)
 
   def test_08_updateAppliedRule(self, quiet=quiet, run=run_all_test):
     """
@@ -383,15 +524,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     createZODBPythonScript(skin_folder, 'invoice_rule_script', 'rule',
         "return context.getParentValue().getSpecialiseReference() == 'default_delivery_rule'")
 
-    # XXX-Leo: This script should become the default in erp5_simulation. Remove
-    # it from here when no longer needed:
-    createZODBPythonScript(skin_folder, 'RuleMixin_asPredicate', '',
-        """
-kw = dict(criterion_property_list=("start_date",),
-          membership_criterion_base_category_list=('trade_phase',),)
-return context.generatePredicate(**kw)
-        """.strip())
-
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.validate()
 
@@ -468,11 +600,7 @@ return context.generatePredicate(**kw)
                           key=lambda x: x.getSpecialiseValue().getReference())
     # check the 1st applied rule is an application of invoicing_rule_1
     self.assertEquals(applied_rule_list[0].getSpecialise(),
-                      invoicing_rule_1.getRelativeUrl())
-    # but also check it's the same applied rule as before instead of a new
-    # one with the same specialization
-    self.assertEqual(applied_rule_list[0],
-                      invoicing_rule_1_applied_rule)
+        invoicing_rule_n.getRelativeUrl())
     self.assertEquals(applied_rule_list[1].getSpecialise(),
         invoicing_rule_2.getRelativeUrl())
 
@@ -523,7 +651,7 @@ return context.generatePredicate(**kw)
     self.assertEquals(applied_rule.getSpecialise(),
         invoicing_rule_1.getRelativeUrl())
 
-    # invalidate the rule and test that it is still there
+    # invalidate the rule and test that it is gone
     invoicing_rule_1.invalidate()
     transaction.commit()
     self.tic()
@@ -538,10 +666,7 @@ return context.generatePredicate(**kw)
         delivery_rule.getRelativeUrl())
     self.assertEquals(root_applied_rule.objectCount(), 1)
     movement = root_applied_rule.objectValues()[0]
-    self.assertEquals(movement.objectCount(), 1)
-    applied_rule = movement.objectValues()[0]
-    self.assertEquals(applied_rule.getSpecialise(),
-        invoicing_rule_1.getRelativeUrl())
+    self.assertEquals(movement.objectCount(), 0)
 
     # change the test method to one that fails, and test that the rule is
     # removed

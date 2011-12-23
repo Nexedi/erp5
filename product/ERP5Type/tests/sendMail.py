@@ -31,9 +31,9 @@
 
 import smtplib
 import re
-from email.MIMEText import MIMEText
-from email.MIMEMultipart import MIMEMultipart
-from email.Message import Message
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.message import Message
 
 def sendMail(subject,
              body,

@@ -45,14 +45,8 @@
 <body>\n
 <table cellpadding="1" cellspacing="1" border="1">\n
 <thead>\n
-<tr><td rowspan="1" colspan="3">How-to Sale Order / Packing List / Invoices / Payment (expected failure)</td></tr>\n
+<tr><td rowspan="1" colspan="3">How-to Sale Order / Packing List / Invoices / Payment</td></tr>\n
 </thead><tbody>\n
-\n
-<tr>\n
-  <td>assertTextPresent</td>\n
-  <td>SKIP TO RUN THIS TEST UNTIL THIS TEST BE REFACTORED TO USE NEW SIMULATION.</td>\n
-  <td></td>\n
-</tr>\n
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment">init</span>\n
 \n
@@ -97,6 +91,11 @@
   <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_product_title\']"></td>\n
 </tr>\n
 <tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_source_section"]</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation_title\']"></td>\n
+</tr>\n
+<tr>\n
   <td>type</td>\n
   <td>//input[@name="field_my_source_title"]</td>\n
   <td tal:content="python: here.Zuite_getHowToInfo()[\'sale_howto_organisation_title\']"></td>\n
@@ -125,6 +124,17 @@
   <td>select</td>\n
   <td>//select[@name="field_my_delivery_mode"]</td>\n
   <td>AIR</td>\n
+</tr>\n
+<tr>\n
+  <td>select</td>\n
+  <td>//select[@name="field_my_incoterm"]</td>\n
+  <td>CPT</td>\n
+</tr>\n
+\n
+<tr>\n
+  <td>type</td>\n
+  <td>//input[@name="field_my_specialise_title"]</td>\n
+  <td>Default Sale Order Trade Condition</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
@@ -701,11 +711,11 @@ Wait for activities</span>\n
   <td>//select[@name="select_action"]</td>\n
   <td>Create Related Payment</td>\n
 </tr>\n
-<span tal:condition="python:\'51 - Bank\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n
+<span tal:condition="python:\'5 - Bank\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_your_node"]</td>\n
-  <td>51 - Bank</td>\n
+  <td>5 - Bank</td>\n
 </tr>\n
 </span>\n
 <span tal:condition="python:\'512 - Banques\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n

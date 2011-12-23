@@ -284,69 +284,10 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
           tv[key] = None # disallow further calls to 'calculate'
         transaction.get().addBeforeCommitHook(before_commit)
 
-  security.declarePrivate('_getSuccessorTradePhaseList')
-  def _getSuccessorTradePhaseList(self):
-    """
-    Get the list of future trade_phase categories from this simulation
-    movement according to the related business process
-    """
-    # XXX-Leo this method could be smaller if (one or more of):
-    #  * Simulation Movements had trade_state instead of trade_phase categories,
-    #  * .asComposedDocument() also included the causality Business Link,
-    #  * BusinessLink objects had a '.getSucessorTradePhaseList' method (accepting
-    #      a context parameter for predicate checking).
-    #  * .getBusinessLinkValueList() accepted a predecessor_link parameter,
-    #  * some of the work below was done by a Business Process method,
-    portal = self.getPortalObject()
-    business_process = self.asComposedDocument()
-    business_link_type_list = portal.getPortalBusinessLinkTypeList()
-    business_link = self.getCausalityValue(portal_type=business_link_type_list)
-    if business_link is None:
-      # XXX-Leo we could just return self.getTradePhaseList() for
-      # backward compatibility
-      from Products.ERP5Type.Errors import SimulationError
-      raise SimulationError('No Business Link Causality for %r. Cannot enumerate successor trade_phases.' % 
-                            (self,))
-    # from this Business Process, get the Business Links which
-    # predecessor state match the successor state of our Business Link
-    # causality
-    successor_trade_state = business_link.getSuccessor()
-    successor_link_list = business_process.getBusinessLinkValueList(
-      context=self,
-      predecessor=successor_trade_state)
-    successor_trade_phase_list = [link.getTradePhase()
-                                  for link in successor_link_list]
-
-    return successor_trade_phase_list
-
-  security.declarePrivate('_asSuccessorContext')
-  def _asSuccessorContext(self):
-    """ Returns a version of self with future trade phases
-    """
-    successor_trade_phase_list = self._getSuccessorTradePhaseList()
-    context = self.asContext()
-    context.edit(trade_phase_list=successor_trade_phase_list)
-    return context
-
-  security.declarePrivate('_checkSuccessorContext')
-  def _checkSuccessorContext(self):
-    # XXX turn this into a decorator?
-    if not (self.isTempObject() and
-            'trade_phase_list' in self._v_modified_property_dict):
-      raise RuntimeError(
-        'Method should only be called on self._asSuccessorContext()'
-      )
- 
-  security.declarePrivate('_isSuccessorContext')
-  def _isRuleStillApplicable(self, rule):
-    self._checkSuccessorContext()
-    return rule.test(self)
-
   security.declarePrivate('_getApplicableRuleList')
   def _getApplicableRuleList(self):
     """ Search rules that match this movement
     """
-    self._checkSuccessorContext()
     portal_rules = self.getPortalObject().portal_rules
     # XXX-Leo: According to JP, the 'version' search below is wrong and
     # should be replaced by a check that there are not two rules with the
@@ -375,36 +316,35 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     if not cache_enabled:
       cache[TREE_DELIVERED_CACHE_ENABLED] = 1
 
-    applied_rule_dict = {}
     applicable_rule_dict = {}
-    successor_self = self._asSuccessorContext()
-    for rule in successor_self._getApplicableRuleList():
+    for rule in self._getApplicableRuleList():
       reference = rule.getReference()
       if reference:
         # XXX-Leo: We should complain loudly if there is more than one
         # applicable rule per reference. It indicates a configuration error.
         applicable_rule_dict.setdefault(reference, rule)
 
+    applicable_rule_list = applicable_rule_dict.values()
     for applied_rule in list(self.objectValues()):
       rule = applied_rule.getSpecialiseValue()
-      # check if applied rule is already expanded, or if its portal
-      # rule is still applicable to this Simulation Movement with
-      # successor trade_phases
-      if (successor_self._isRuleStillApplicable(rule) or
-          applied_rule._isTreeDelivered()):
-        applied_rule_dict[rule.getReference()] = applied_rule
+      try:
+        applicable_rule_list.remove(rule)
+      except ValueError:
+        if applied_rule._isTreeDelivered():
+          reference = rule.getReference()
+          try:
+            applicable_rule_list.remove(applicable_rule_dict.pop(reference))
+          except KeyError:
+            pass
+        else:
+          self._delObject(applied_rule.getId())
       else:
-        self._delObject(applied_rule.getId())
+        applied_rule.expand(**kw)
 
-    for reference, rule in applicable_rule_dict.iteritems():
-      if reference not in applied_rule_dict:
-        applied_rule = rule.constructNewAppliedRule(self, **kw)
-        applied_rule_dict[reference] = applied_rule
+    for rule in applicable_rule_list:
+      rule.constructNewAppliedRule(self, **kw).expand(**kw)
 
     self.setCausalityState('expanded')
-    # expand
-    for applied_rule in applied_rule_dict.itervalues():
-      applied_rule.expand(**kw)
 
     # disable and clear cache
     if not cache_enabled:
@@ -428,8 +368,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """Returns the delivery if any or the order related to the root
     applied rule if any.
     """
-    delivery_value = self.getDeliveryValue()
-    if delivery_value is None:
+    explanation_value = self.getDeliveryValue()
+    if explanation_value is None:
       # If the parent is not an Applied Rule, self does not have the method.
       getRootAppliedRule = getattr(self, 'getRootAppliedRule', None)
       if getRootAppliedRule is None:
@@ -441,16 +381,14 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       else:
         # Ex. zero stock rule
         return ra
-    else:
-      explanation_value = delivery_value
-      portal = self.getPortalObject()
-      delivery_type_list = self.getPortalDeliveryTypeList() \
-              + self.getPortalOrderTypeList()
-      while explanation_value.getPortalType() not in delivery_type_list and \
-          explanation_value != portal:
-            explanation_value = explanation_value.getParentValue()
-      if explanation_value != portal:
-        return explanation_value
+    portal = self.getPortalObject()
+    delivery_type_list = portal.getPortalDeliveryTypeList() \
+                       + portal.getPortalOrderTypeList()
+    while explanation_value.getPortalType() not in delivery_type_list:
+      explanation_value = explanation_value.getParentValue()
+      if explanation_value == portal:
+        return
+    return explanation_value
 
   # Deliverability / orderability
   security.declareProtected( Permissions.AccessContentsInformation,

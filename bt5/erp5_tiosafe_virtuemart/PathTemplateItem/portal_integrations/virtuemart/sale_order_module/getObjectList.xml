@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildVirtuemartSaleOrderListBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>VirtuemartBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/virtuemart/http_connector</string>
+                <string>destination/portal_integrations/virtuemart/sale_order_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getSaleOrderList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/Virtuemart</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {\'stop_date\': DateTime(\'2020/01/01\'), \'start_date\': DateTime(\'2010/01/31\')}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<xml>\n
+  <object>\n
+    <id>11</id>\n
+    <reference></reference>\n
+    <start_date>2011/05/02</start_date>\n
+    <currency>USD</currency>\n
+    <billing_firstname>Mohamadou</billing_firstname>\n
+    <billing_lastname>Mbengue</billing_lastname>\n
+    <billing_company>Consulat General</billing_company>\n
+    <billing_country>France</billing_country>\n
+    <billing_user_email>mmbengue@gmail.com</billing_user_email>\n
+    <payment_method>Cash On Delivery</payment_method>\n
+    <primary_email></primary_email>\n
+    <delivery_title>standard_shipping|UPS</delivery_title>\n
+    <delivery_price>9.88</delivery_price>\n
+    <delivery_tax_rate>0.00</delivery_tax_rate>\n
+    <discount_code>test2</discount_code>\n
+    <discount_title>Discount test2</discount_title>\n
+    <discount_price>103.64</discount_price>\n
+    <discount_tax_rate>0.00</discount_tax_rate>\n
+    <shipping_company></shipping_company>\n
+    <shipping_country>France</shipping_country>\n
+    <shipping_firstname>Said Abdullah</shipping_firstname>\n
+    <shipping_lastname>Mbengue</shipping_lastname>\n
+    <user_email>said@gmail.com</user_email>\n
+    <user_email>said@gmail.com</user_email>\n
+  </object>\n
+</xml>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Sale Order">\n
+  <start_date>2011/05/02</start_date>\n
+  <stop_date>2011/05/02</stop_date>\n
+  <reference>11</reference>\n
+  <currency>USD</currency>\n
+  <payment_mode>cash</payment_mode>\n
+  <arrow type="">\n
+    <source> My Virtuemart Shop france</source>\n
+    <destination> Consulat General france</destination>\n
+  </arrow>\n
+  <arrow type="Administration">\n
+    <source> My Virtuemart Shop france</source>\n
+    <destination> Said Abdullah Mbengue said@gmail.com</destination>\n
+  </arrow>\n
+  <arrow type="Decision">\n
+    <source> My Virtuemart Shop france</source>\n
+    <destination> Said Abdullah Mbengue said@gmail.com</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> My Virtuemart Shop france</source>\n
+    <destination> Said Abdullah Mbengue said@gmail.com</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource> PRD1</resource>\n
+    <title>iPhone 3GS</title>\n
+    <reference>PRD1</reference>\n
+    <quantity>1.00</quantity>\n
+    <price>1000.000000</price>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> PRD2</resource>\n
+    <title>iPhone 4</title>\n
+    <reference>PRD2</reference>\n
+    <quantity>2.00</quantity>\n
+    <price>100.000000</price>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Delivery</resource>\n
+    <title>standard_shipping|UPS</title>\n
+    <reference>standard_shipping|UPS</reference>\n
+    <quantity>1.00</quantity>\n
+    <price>9.880000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Discount</resource>\n
+    <title>Discount test2</title>\n
+    <reference>Discount test2</reference>\n
+    <quantity>-1.00</quantity>\n
+    <price>103.640000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getSaleOrderParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Sale Order List</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

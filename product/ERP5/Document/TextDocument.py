@@ -38,14 +38,11 @@ from Products.ERP5Type.WebDAVSupport import TextContent
 import re
 from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
 import cStringIO
+from string import Template
 
 # Mixin Import
 from Products.ERP5.mixin.cached_convertable import CachedConvertableMixin
 from Products.ERP5.mixin.base_convertable import BaseConvertableFileMixin
-try:
-  from string import Template
-except ImportError:
-  from Products.ERP5Type.patches.string import Template
 from Products.ERP5Type.Utils import guessEncodingFromText
 
 from lxml import html as etree_html
@@ -86,12 +83,13 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
       method_id = self.getTextContentSubstitutionMappingMethodId()
       if method_id:
         try:
-          mapping = guarded_getattr(self, method_id)(**kw)
+          method = guarded_getattr(self, method_id)
         except AttributeError:
           LOG('TextDocument', WARNING, 'could not get the substitution'
               ' mapping method %s from %r, so the content will not be'
               ' substituted.' % (method_id, self.getRelativeUrl()))
           return text
+        mapping = method(**kw)
 
         is_str = isinstance(text, str)
         if is_str:
@@ -332,17 +330,17 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
         message = 'Conversion to base format succeeds'
         if re_match is not None:
           charset = re_match.group('charset')
-          if charset.lower() != 'utf-8':
-            try:
-              # Use encoding in html document
-              text_content = text_content.decode(charset).encode('utf-8')
-            except (UnicodeDecodeError, LookupError):
-              # Encoding read from document is wrong
-              text_content, message = guessCharsetAndConvert(self,
-                                                    text_content, content_type)
-            else:
-              message = 'Conversion to base format with charset %r succeeds'\
-                                                                      % charset
+          try:
+            # Use encoding in html document
+            text_content = text_content.decode(charset).encode('utf-8')
+          except (UnicodeDecodeError, LookupError):
+            # Encoding read from document is wrong
+            text_content, message = guessCharsetAndConvert(self,
+                                                  text_content, content_type)
+          else:
+            message = 'Conversion to base format with charset %r succeeds'\
+                                                                    % charset
+            if charset.lower() != 'utf-8':
               charset = 'utf-8' # Override charset if convertion succeeds
               # change charset value in html_document as well
               def subCharset(matchobj):

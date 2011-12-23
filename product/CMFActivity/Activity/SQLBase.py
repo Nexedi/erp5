@@ -42,6 +42,7 @@ def sort_message_key(message):
   # same sort key as in SQL{Dict,Queue}_readMessageList
   return message.line.priority, message.line.date, message.uid
 
+_DequeueMessageException = Exception()
 
 class SQLBase:
   """
@@ -288,15 +289,17 @@ class SQLBase:
         self._log(TRACE, '(no message was reserved)')
       return [], 0, None, {}
 
+  def _abort(self):
+    try:
+      transaction.abort()
+    except:
+      # Unfortunately, database adapters may raise an exception against abort.
+      self._log(PANIC,
+          'abort failed, thus some objects may be modified accidentally')
+      raise
+
   # Queue semantic
   def dequeueMessage(self, activity_tool, processing_node):
-    def makeMessageListAvailable(uid_list, uid_to_duplicate_uid_list_dict):
-      final_uid_list = []
-      for uid in uid_list:
-        final_uid_list.append(uid)
-        final_uid_list.extend(uid_to_duplicate_uid_list_dict.get(uid, []))
-      self.makeMessageListAvailable(activity_tool=activity_tool,
-                                    uid_list=final_uid_list)
     message_list, group_method_id, uid_to_duplicate_uid_list_dict = \
       self.getProcessableMessageList(activity_tool, processing_node)
     if message_list:
@@ -327,60 +330,36 @@ class SQLBase:
       # Try to invoke
       try:
         method(*args)
-      except:
-        self._log(WARNING,
-          'Exception raised when invoking messages (uid, path, method_id) %r'
-          % [(m.uid, m.object_path, m.method_id) for m in message_list])
-        try:
-          transaction.abort()
-        except:
-          # Unfortunately, database adapters may raise an exception against
-          # abort.
-          self._log(PANIC,
-              'abort failed, thus some objects may be modified accidentally')
-          raise
-        # XXX Is it still useful to free messages now that this node is able
-        #     to reselect them ?
-        to_free_uid_list = [x.uid for x in message_list]
-        try:
-          makeMessageListAvailable(to_free_uid_list,
-                                   uid_to_duplicate_uid_list_dict)
-        except:
-          self._log(ERROR, 'Failed to free messages: %r' % to_free_uid_list)
-        else:
-          self._log(TRACE, 'Freed messages %r' % to_free_uid_list)
-      # Abort if something failed.
-      if [m for m in message_list if m.getExecutionState() == MESSAGE_NOT_EXECUTED]:
-        endTransaction = transaction.abort
-      else:
-        endTransaction = transaction.commit
-      try:
-        endTransaction()
-      except:
-        self._log(WARNING,
-          'Failed to end transaction for messages (uid, path, method_id) %r'
-          % [(m.uid, m.object_path, m.method_id) for m in message_list])
-        if endTransaction == transaction.abort:
-          self._log(PANIC, 'Failed to abort executed messages.'
-            ' Some objects may be modified accidentally.')
-        else:
-          try:
-            transaction.abort()
-          except:
-            self._log(PANIC, 'Failed to abort executed messages which also'
-              ' failed to commit. Some objects may be modified accidentally.')
-            raise
-        exc_info = sys.exc_info()
+        # Abort if at least 1 message failed. On next tic, only those that
+        # succeeded will be selected because their at_date won't have been
+        # increased.
         for m in message_list:
-          m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
-        try:
-          makeMessageListAvailable([x.uid for x in message_list],
-                                   uid_to_duplicate_uid_list_dict)
-        except:
-          self._log(ERROR, 'Failed to free remaining messages: %r'
-                           % (message_list, ))
-        else:
-          self._log(TRACE, 'Freed messages %r' % (message_list, ))
+          if m.getExecutionState() == MESSAGE_NOT_EXECUTED:
+            raise _DequeueMessageException
+        transaction.commit()
+      except:
+        exc_info = sys.exc_info()
+        if exc_info[1] is not _DequeueMessageException:
+          self._log(WARNING,
+            'Exception raised when invoking messages (uid, path, method_id) %r'
+            % [(m.uid, m.object_path, m.method_id) for m in message_list])
+          for m in message_list:
+            m.setExecutionState(MESSAGE_NOT_EXECUTED, exc_info, log=False)
+        self._abort()
+        exc_info = message_list[0].exc_info
+        if exc_info:
+          try:
+            # Register it again.
+            tv['activity_runtime_environment'] = activity_runtime_environment
+            cancel = message.on_error_callback(*exc_info)
+            del exc_info, message.exc_info
+            transaction.commit()
+            if cancel:
+              message.setExecutionState(MESSAGE_EXECUTED)
+          except:
+            self._log(WARNING, 'Exception raised when processing error callbacks')
+            message.setExecutionState(MESSAGE_NOT_EXECUTED)
+            self._abort()
       self.finalizeMessageExecution(activity_tool, message_list,
                                     uid_to_duplicate_uid_list_dict)
     transaction.commit()
@@ -421,12 +400,8 @@ class SQLBase:
         # should they be just made available again ?
         if uid_to_duplicate_uid_list_dict is not None:
           make_available_uid_list += uid_to_duplicate_uid_list_dict.get(uid, ())
-        # BACK: Only exceptions can be classes in Python 2.6.
-        # Once we drop support for Python 2.4,
-        # please, remove the "type(m.exc_type) is type(ConflictError)" check
-        # and leave only the "issubclass(m.exc_type, ConflictError)" check.
-        if type(m.exc_type) is type(ConflictError) and \
-           m.conflict_retry and issubclass(m.exc_type, ConflictError):
+        if (m.exc_type and # m.exc_type may be None
+            m.conflict_retry and issubclass(m.exc_type, ConflictError)):
           delay_uid_list.append(uid)
         else:
           max_retry = m.max_retry

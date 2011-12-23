@@ -41,7 +41,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Form import _dtmldir
 from Products.ERP5Form.Selection import Selection, DomainSelection
 from ZPublisher.HTTPRequest import FileUpload
-from hashlib import md5 as md5_new
+from hashlib import md5
 import string, re
 from time import time
 from random import random
@@ -1174,7 +1174,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       # convert each element to a string.
       object_uid_list = [str(x) for x in object_uid_list]
       object_uid_list.sort()
-      new_md5_string = md5_new(str(object_uid_list)).hexdigest()
+      new_md5_string = md5(str(object_uid_list)).hexdigest()
       return md5_string != new_md5_string
 
 
@@ -1414,7 +1414,7 @@ class SelectionTool( BaseTool, SimpleItem ):
       if user_id == 'Anonymous User' and self.getAnonymousStorage() is not None:
         anonymous_uid = self.REQUEST.get('anonymous_uid', None)
         if anonymous_uid is None:
-          anonymous_uid = md5_new('%s.%s' % (time(), random())).hexdigest()
+          anonymous_uid = md5('%s.%s' % (time(), random())).hexdigest()
           self.REQUEST['anonymous_uid'] = anonymous_uid
         user_id = 'Anonymous:%s' % anonymous_uid
       tv['_user_id'] = user_id
@@ -1581,15 +1581,10 @@ class SelectionPersistentMapping(PersistentMapping):
     return 1
 
   def _p_resolveConflict(self, oldState, savedState, newState):
+    # BUG: we should not modify newState
     # update keys that only savedState has
-    oldState = newState
-    # dict returned by PersistentMapping.__getstate__ contains the data
-    # under '_container' key in zope 2.7 and 'data' in zope 2.8
-    if 'data' in oldState:
-      oldState['data'].update(savedState['data'])
-    else:
-      oldState['_container'].update(savedState['_container'])
-    return oldState
+    newState['data'].update(savedState['data'])
+    return newState
 
 
 class TreeListLine:

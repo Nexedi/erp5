@@ -96,14 +96,6 @@ class TestKMMixIn(TestDocumentMixin):
     user = uf.getUserById('ivan').__of__(uf)
     newSecurityManager(None, user)
 
-  def changeSkin(self, skin_name):
-    """
-      Change current Skin
-    """
-    request = self.app.REQUEST
-    self.getPortal().portal_skins.changeSkin(skin_name)
-    request.set('portal_skin', skin_name)
-
 class TestKM(TestKMMixIn):
   """
     Test Knowledge Management  system.

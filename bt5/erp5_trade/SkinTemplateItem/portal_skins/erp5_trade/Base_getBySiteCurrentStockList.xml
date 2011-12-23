@@ -53,6 +53,13 @@
             <value> <string encoding="cdata"><![CDATA[
 
 site = context.portal_categories.site.restrictedTraverse(site)\n
+if group:\n
+  group = context.portal_categories.group.restrictedTraverse(group)\n
+else:\n
+  group = None\n
+\n
+if group is not None:\n
+  kw[\'stock_section_category_uid\'] = group.getUid()\n
 \n
 def mycmp(line_a, line_b):\n
   """\n
@@ -100,7 +107,7 @@ return result_list\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>at_date=None, site=None, positive_stock=None, negative_stock=None, zero_stock=None, **kw</string> </value>
+            <value> <string>at_date=None, site=None, group=None, positive_stock=None, negative_stock=None, zero_stock=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

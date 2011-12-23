@@ -1,0 +1,20 @@
+<property_sheet_list>
+ <portal_type id="Virtuemart Test Organisation">
+  <item>VirtuemartTestOrganisation</item>
+ </portal_type>
+ <portal_type id="Virtuemart Test Person">
+  <item>VirtuemartTestPerson</item>
+ </portal_type>
+ <portal_type id="Virtuemart Test Product">
+  <item>VirtuemartTestProduct</item>
+ </portal_type>
+ <portal_type id="Virtuemart Test Product Variation">
+  <item>VirtuemartTestProductVariation</item>
+ </portal_type>
+ <portal_type id="Virtuemart Test Sale Order">
+  <item>VirtuemartTestSaleOrder</item>
+ </portal_type>
+ <portal_type id="Virtuemart Test Sale Order Item">
+  <item>VirtuemartTestSaleOrderItem</item>
+ </portal_type>
+</property_sheet_list>

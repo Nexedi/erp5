@@ -35,6 +35,9 @@ from DateTime import DateTime
 class TestTaskReporting(ERP5ReportTestCase):
   """Test Task Reporting
   """
+  business_process = \
+      'business_process_module/erp5_default_task_business_process'
+
   def getTitle(self):
     return "Task Reporting"
 
@@ -55,24 +58,6 @@ class TestTaskReporting(ERP5ReportTestCase):
     if simulation_state == 'confirmed':
       task.confirm()
 
-  def createBusinessProcess(self):
-    module = self.portal.business_process_module
-    id = self.__class__.__name__
-    try:
-      business_process = module[id]
-    except KeyError:
-      default = module.erp5_default_business_process
-      business_process = module.newContent(id, default.getPortalType(),
-                                           specialise_value=default)
-      delivery_path, = default.getTradeModelPathValueList(
-          trade_phase='default/delivery')
-      # We don't set any trade_date here, so that start and stop dates
-      # are copied from Tasks to Task Reports.
-      business_process.newContent(portal_type=delivery_path.getPortalType(),
-                                  reference=delivery_path.getReference(),
-                                  trade_phase=delivery_path.getTradePhase())
-    return business_process.getRelativeUrl()
-
   def afterSetUp(self):
     """Setup the fixture.
     """
@@ -82,8 +67,6 @@ class TestTaskReporting(ERP5ReportTestCase):
       rule = self.getRule(reference=rule_id)
       if rule.getValidationState() != 'validated':
         rule.validate()
-
-    self.business_process = self.createBusinessProcess()
 
     # create organisations
     if not self.portal.organisation_module.has_key('Organisation_1'):

@@ -72,13 +72,18 @@ def simple_decorator(decorator):
   See also http://wiki.python.org/moin/PythonDecoratorLibrary
 
   XXX We should use http://pypi.python.org/pypi/decorator/ instead,
-      to make decorators ZPublisher-friendly.
+      to make decorators ZPublisher-friendly (but it is probably to slow).
   """
   def new_decorator(f):
     g = decorator(f)
-    g.__name__ = f.__name__
-    g.__doc__ = f.__doc__
-    g.__dict__.update(f.__dict__)
+    try:
+      g.__name__ = f.__name__
+    except AttributeError:
+      # XXX: Should be "convertToMixedCase(f._transition_id)"
+      g.__name__ = f._m.__name__ # WorkflowMethod
+    else:
+      g.__doc__ = f.__doc__
+      g.__dict__.update(f.__dict__)
     g._original = f # for tab_completion navigation in IPython
     return g
   # Now a few lines needed to make simple_decorator itself
@@ -213,9 +218,7 @@ def _showwarning(message, category, filename, lineno, file=None, line=None):
     LOG("%s:%u %s: %s" % (filename, lineno, category.__name__, message),
         WARNING, '')
   else:
-    # BACK: In Python 2.6 we need to pass along the "line" parameter to
-    # formatwarning(). For now we don't to keep backward compat with Python 2.4
-    file.write(warnings.formatwarning(message, category, filename, lineno))
+    file.write(warnings.formatwarning(message, category, filename, lineno, line))
 warnings.showwarning = _showwarning
 
 def deprecated(message=''):
@@ -538,12 +541,8 @@ def readLocalPropertySheet(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
-  f = open(path)
-  try:
-    text = f.read()
-  finally:
-    f.close()
-  return text
+  with open(path) as f:
+    return f.read()
 
 def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
   if instance_home is None:
@@ -556,11 +555,8 @@ def writeLocalPropertySheet(class_id, text, create=1, instance_home=None):
   if create:
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
-  f = open(path, 'w')
-  try:
+  with open(path, 'w') as f:
     f.write(text)
-  finally:
-    f.close()
   # load the file, so that an error is raised if file is invalid
   module = imp.load_source(class_id, path)
   getattr(module, class_id)
@@ -572,8 +568,7 @@ def importLocalPropertySheet(class_id, path = None):
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "PropertySheet")
   path = os.path.join(path, "%s.py" % class_id)
-  f = open(path)
-  try:
+  with open(path) as f:
     module = imp.load_source(class_id, path, f)
     klass = None
     try:
@@ -584,8 +579,6 @@ def importLocalPropertySheet(class_id, path = None):
     setattr(PropertySheet, class_id, klass)
     # Register base categories
     registerBaseCategories(klass)
-  finally:
-    f.close()
 
 base_category_dict = {}
 def registerBaseCategories(property_sheet):
@@ -610,11 +603,8 @@ def importLocalInterface(module_id, path = None, is_erp5_type=False):
       instance_home = getConfiguration().instancehome
       path = os.path.join(instance_home, "interfaces")
     path = os.path.join(path, "%s.py" % module_id)
-    f = open(path)
-    try:
+    with open(path) as f:
       module = imp.load_source(class_id, path, f)
-    finally:
-      f.close()
     from zope.interface import Interface
     from Products.ERP5Type import interfaces
     InterfaceClass = type(Interface)
@@ -629,12 +619,9 @@ def importLocalConstraint(class_id, path = None):
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "Constraint")
   path = os.path.join(path, "%s.py" % class_id)
-  f = open(path)
-  try:
+  with open(path) as f:
     module = imp.load_source(class_id, path, f)
     setattr(Products.ERP5Type.Constraint, class_id, getattr(module, class_id))
-  finally:
-    f.close()
 
 def importLocalInteractor(class_id, path=None):
   import Products.ERP5Type.Interactor
@@ -642,13 +629,10 @@ def importLocalInteractor(class_id, path=None):
     instance_home = getConfiguration().instancehome
     path = os.path.join(instance_home, "Interactor")
   path = os.path.join(path, "%s.py" % class_id)
-  f = open(path)
-  try:
+  with open(path) as f:
     module = imp.load_source(class_id, path, f)
     setattr(Products.ERP5Type.Interactor, class_id, getattr(module, class_id))
     registerInteractorClass(class_id, getattr(Products.ERP5Type.Interactor, class_id))
-  finally:
-    f.close()
 
 def getLocalExtensionList():
   if not getConfiguration:
@@ -701,12 +685,8 @@ def readLocalExtension(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Extensions")
   path = os.path.join(path, "%s.py" % class_id)
-  f = open(path)
-  try:
-    text = f.read()
-  finally:
-    f.close()
-  return text
+  with open(path) as f:
+    return f.read()
 
 def removeLocalTest(class_id):
   instance_home = getConfiguration().instancehome
@@ -720,23 +700,15 @@ def readLocalTest(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "tests")
   path = os.path.join(path, "%s.py" % class_id)
-  f = open(path)
-  try:
-    text = f.read()
-  finally:
-    f.close()
-  return text
+  with open(path) as f:
+    return f.read()
 
 def readLocalConstraint(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Constraint")
   path = os.path.join(path, "%s.py" % class_id)
-  f = open(path)
-  try:
-    text = f.read()
-  finally:
-    f.close()
-  return text
+  with open(path) as f:
+    return f.read()
 
 def writeLocalExtension(class_id, text, create=1, instance_home=None):
   if instance_home is None:
@@ -749,11 +721,8 @@ def writeLocalExtension(class_id, text, create=1, instance_home=None):
   if create:
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
-  f = open(path, 'w')
-  try:
+  with open(path, 'w') as f:
     f.write(text)
-  finally:
-    f.close()
 
 def writeLocalTest(class_id, text, create=1, instance_home=None):
   if instance_home is None:
@@ -766,11 +735,8 @@ def writeLocalTest(class_id, text, create=1, instance_home=None):
   if create:
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
-  f = open(path, 'w')
-  try:
+  with open(path, 'w') as f:
     f.write(text)
-  finally:
-    f.close()
 
 def writeLocalConstraint(class_id, text, create=1, instance_home=None):
   if instance_home is None:
@@ -783,11 +749,8 @@ def writeLocalConstraint(class_id, text, create=1, instance_home=None):
   if create:
     if os.path.exists(path):
       raise IOError, 'the file %s is already present' % path
-  f = open(path, 'w')
-  try:
+  with open(path, 'w') as f:
     f.write(text)
-  finally:
-    f.close()
   # load the file, so that an error is raised if file is invalid
   module = imp.load_source(class_id, path)
   getattr(module, class_id)
@@ -831,12 +794,8 @@ def readLocalDocument(class_id):
   instance_home = getConfiguration().instancehome
   path = os.path.join(instance_home, "Document")
   path = os.path.join(path, "%s.py" % class_id)
-  f = open(path)
-  try:
-    text = f.read()
-  finally:
-    f.close()
-  return text
+  with open(path) as f:
+    return f.read()
 
 def writeLocalDocument(class_id, text, create=1, instance_home=None):
   if instance_home is None:
@@ -851,11 +810,8 @@ def writeLocalDocument(class_id, text, create=1, instance_home=None):
       raise IOError, 'the file %s is already present' % path
   # check there is no syntax error (that's the most we can do at this time)
   compile(text, path, 'exec')
-  f = open(path, 'w')
-  try:
+  with open(path, 'w') as f:
     f.write(text)
-  finally:
-    f.close()
 
 def setDefaultClassProperties(property_holder):
   """Initialize default properties for ERP5Type Documents.

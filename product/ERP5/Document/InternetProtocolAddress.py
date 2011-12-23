@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Utils import convertToUpperCase
+from Products.ERP5Type.Utils import deprecated
 
 from Products.ERP5.Document.Coordinate import Coordinate
 
@@ -51,40 +52,55 @@ class InternetProtocolAddress(Base, Coordinate):
   property_sheets = ( PropertySheet.Base
                       , PropertySheet.SimpleItem
                       , PropertySheet.CategoryCore
+                      , PropertySheet.Coordinate
                       , PropertySheet.InternetProtocolAddress
                       )
 
+  def _splitCoordinateText(self, coordinate_text):
+    property_id_list = [i['id'] for i in PropertySheet.InternetProtocolAddress._properties]
+    kw_dict = {}
+    for line in coordinate_text.split('\n'):
+      if not ':' in line:
+        continue
+      name, value = line.split(':', 1)
+      if name in property_id_list:
+        kw_dict[name] = value
+    return kw_dict
 
+  security.declareProtected(Permissions.AccessContentsInformation, 'asText')
   def asText(self):
     """
     Return the address as a complete formatted string.
     """
     result = Coordinate.asText(self)
     if result is None:
-      tmp = []
-      for prop in PropertySheet.InternetProtocolAddress._properties:
-        property_id = prop['id']
-        getter_name = 'get%s' % convertToUpperCase(property_id)
-        getter_method = getattr(self, getter_name)
-        value = getter_method() or ''
-        tmp.append('%s:%s' % (property_id, value))
-      result = '\n'.join(tmp)
+      if self.isDetailed():
+        tmp_list = []
+        for prop in PropertySheet.InternetProtocolAddress._properties:
+          property_id = prop['id']
+          getter_name = 'get%s' % convertToUpperCase(property_id)
+          getter_method = getattr(self, getter_name)
+          value = getter_method('')
+          tmp_list.append('%s:%s' % (property_id, value))
+        result = '\n'.join(tmp_list)
+      else:
+        result = '\n'.join(('%s:%s' % (k, v) for k, v in\
+                                    self._splitCoordinateText(self.getCoordinateText())))
     return result
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  @deprecated
   def fromText(self, coordinate_text):
+    """Save given data then continue parsing 
+    (deprecated because computed values are stored)
     """
-    Try to import data from text.
-    """
-    property_id_list = [i['id'] for i in PropertySheet.InternetProtocolAddress._properties]
+    self._setCoordinateText(coordinate_text)
+    kw_dict = self._splitCoordinateText(coordinate_text)
 
-    for line in coordinate_text.split('\n'):
-      if not ':' in line:
-        continue
-      name, value = line.split(':', 1)
-      if name in property_id_list:
-        setter_name = 'set%s' % convertToUpperCase(name)
-        setter_method = getattr(self, setter_name)
-        setter_method(value)
+    for name, value in kw_dict.iteritems():
+      setter_name = 'set%s' % convertToUpperCase(name)
+      setter_method = getattr(self, setter_name)
+      setter_method(value)
 
   def standardTextFormat(self):
     """
@@ -100,3 +116,14 @@ broadcast_address:192.168.0.255
 dns_server_ip_address:192.168.0.1
 gateway_ip_address:192.168.0.1
 network_interface:eth0"""
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  def isDetailed(self):
+    for prop in PropertySheet.InternetProtocolAddress._properties:
+      property_id = prop['id']
+      tester_name = 'has%s' % convertToUpperCase(property_id)
+      tester_method = getattr(self, tester_name)
+      value = tester_method()
+      if value:
+        return True
+    return False

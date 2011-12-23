@@ -71,6 +71,7 @@
                     <value>
                       <list>
                         <string>listbox_child_address_SearchableText</string>
+                        <string>listbox_child_telephone_SearchableText</string>
                       </list>
                     </value>
                 </item>

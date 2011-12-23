@@ -35,13 +35,13 @@ from AccessControl import ModuleSecurityInfo
 from Products.ERP5 import _dtmldir
 
 from mimetypes import guess_type
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
-from email.MIMEBase import MIMEBase
-from email.MIMEAudio import MIMEAudio
-from email.MIMEImage import MIMEImage
-from email.Header import make_header
-from email import Encoders
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.audio import MIMEAudio
+from email.mime.image import MIMEImage
+from email.header import make_header
+from email import encoders
 
 class ConversionError(Exception): pass
 class MimeTypeException(Exception): pass
@@ -134,10 +134,13 @@ def buildEmailMessage(from_url, to_url, msg=None,
     for key, value in additional_headers.items():
       message.add_header(key, value)
 
-  message.add_header('Subject',
-                      make_header([(subject, 'utf-8')]).encode())
-  message.add_header('From', from_url)
-  message.add_header('To', to_url)
+  if subject:
+    message.add_header('Subject',
+                        make_header([(subject, 'utf-8')]).encode())
+  if from_url:
+    message.add_header('From', from_url)
+  if to_url:
+    message.add_header('To', to_url)
 
   for attachment in attachment_list:
     attachment_name = attachment.get('name', '')
@@ -165,7 +168,7 @@ def buildEmailMessage(from_url, to_url, msg=None,
         #  encode non-plaintext attachment in base64      
         part = MIMEBase(major, minor)
         part.set_payload(attachment['content'])
-        Encoders.encode_base64(part)
+        encoders.encode_base64(part)
 
     part.add_header('Content-Disposition', 'attachment',
                     filename=attachment_name)
@@ -353,8 +356,9 @@ class NotificationTool(BaseTool):
       event.setAggregateValueList(attachment_document_list)
       event_list.append(event)
 
-    portal_workflow = getToolByName(self, 'portal_workflow')
     for event in event_list:
+      # XXX: this uses too low level API, instead event_workflow should be used in case 
+      # of persistent ERP5 objects
       event.send(**low_level_kw)
 
     return

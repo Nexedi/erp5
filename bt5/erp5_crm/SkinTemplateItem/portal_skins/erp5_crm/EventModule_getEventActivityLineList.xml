@@ -80,7 +80,7 @@ if request_stop_date:\n
 \n
 #Get direction workfolow state list (simulation states)\n
 for state in portal.Base_getTranslatedWorkflowStateItemList(\n
-                                                       wf_id=\'event_workflow\'):\n
+                                                       wf_id=\'event_simulation_workflow\'):\n
   if state[1] in direction_state_list:\n
     #count number of objects in state with request parameters\n
     obj = Object(uid="new_")\n

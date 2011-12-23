@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+      <global name="Base Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -27,7 +27,7 @@
         </item>
         <item>
             <key> <string>acquire_local_roles</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>content_icon</string> </key>
@@ -79,6 +79,18 @@
             <key> <string>type_class</string> </key>
             <value> <string>IntegrationMapping</string> </value>
         </item>
+        <item>
+            <key> <string>type_interface</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>type_mixin</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
       </dictionary>
     </pickle>
   </record>
@@ -90,7 +102,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <none/> </value>
+            <value> <string>erp5_content</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -107,7 +119,7 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <none/> </value>
+            <value> <string>erp5_content</string> </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

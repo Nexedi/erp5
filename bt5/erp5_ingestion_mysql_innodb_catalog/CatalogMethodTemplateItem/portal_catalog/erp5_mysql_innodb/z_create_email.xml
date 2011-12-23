@@ -31,7 +31,7 @@
   `url_string` varchar(255),\n
   PRIMARY KEY `uid` (`uid`),\n
   KEY `url_string` (`url_string`)\n
-) TYPE = InnoDB;</string> </value>
+) ENGINE=InnoDB;</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

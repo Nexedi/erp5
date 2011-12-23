@@ -13,8 +13,7 @@
 ##############################################################################
 
 """
-Backport fix from https://bugs.launchpad.net/zope2/+bug/143768 for Zope2.8
-Also, close properly the <input /> tag
+Close properly the <input /> tag
 """
 
 import ZTUtils.Zope

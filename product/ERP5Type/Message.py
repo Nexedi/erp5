@@ -29,11 +29,7 @@
 from Products.ERP5Type.Globals import InitializeClass, Persistent
 from AccessControl import ClassSecurityInfo
 from Products.PythonScripts.Utility import allow_class
-try:
-  from Products.PageTemplates.GlobalTranslationService import getGlobalTranslationService
-  # on Zope 2.8
-except ImportError:
-  # on Zope 2.12, though we should try to see if it works on 2.8 as well
+if 1: # BBB
   import zLOG, sys
   zLOG.LOG('Products.ERP5Type.Messages',
       zLOG.INFO,
@@ -86,12 +82,7 @@ except ImportError:
 
 from Products.ERP5Type import Globals
 from cPickle import dumps, loads
-
-try:
-  from string import Template
-except ImportError:
-  from Products.ERP5Type.patches.string import Template
-
+from string import Template
 from base64 import b64encode, b64decode
 
 class Message(Persistent):

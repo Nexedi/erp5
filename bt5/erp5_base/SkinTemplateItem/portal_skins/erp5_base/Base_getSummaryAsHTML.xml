@@ -90,7 +90,8 @@ else:\n
   version = context.getVersion()\n
   language = context.getLanguage()\n
   modification_date = context.modification_date\n
-  inline_popup = context.Document_getPopupInfo(web_site)\n
+  document_web_section_list = web_site.getWebSectionValueList(context)\n
+  inline_popup = context.Document_getPopupInfo(web_site, document_web_section_list)\n
   if isinstance(inline_popup, unicode):\n
     inline_popup = inline_popup.encode(\'utf-8\')\n
   found = context.Base_showFoundText()\n
@@ -104,7 +105,6 @@ else:\n
     owner_title = None\n
   reference = context.getReference\n
   reference_url = web_site.getPermanentURL(context)\n
-  document_web_section_list = web_site.getWebSectionValueList(context)\n
 \n
 local_parameter_dict = {\n
   \'uid\': uid,\n

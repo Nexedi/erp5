@@ -30,21 +30,25 @@ import subprocess
 import time
 import xml_marshaller
 
+MAX_PARTIONS = 10
+
 class SlapOSControler(object):
 
-  def log(self, message):
-    print message
-
-  def __init__(self, config, process_group_pid_set=None, log=None):
-    if log is not None:
-      self.log = log
+  def __init__(self, config, log, process_group_pid_set=None,
+      slapproxy_log=None):
+    self.log = log
     self.config = config
     # By erasing everything, we make sure that we are able to "update"
     # existing profiles. This is quite dirty way to do updates...
     if os.path.exists(config['proxy_database']):
       os.unlink(config['proxy_database'])
+    kwargs = dict(close_fds=True, preexec_fn=os.setsid)
+    if slapproxy_log is not None:
+      slapproxy_log_fp = open(slapproxy_log, 'w')
+      kwargs['stdout'] = slapproxy_log_fp
+      kwargs['stderr'] = slapproxy_log_fp
     proxy = subprocess.Popen([config['slapproxy_binary'],
-      config['slapos_config']], close_fds=True, preexec_fn=os.setsid)
+      config['slapos_config']], **kwargs)
     process_group_pid_set.add(proxy.pid)
     # XXX: dirty, giving some time for proxy to being able to accept
     # connections
@@ -57,28 +61,30 @@ class SlapOSControler(object):
         self.software_profile,
         computer_guid=config['computer_id'])
     computer = slap.registerComputer(config['computer_id'])
-    # create partition and configure computer
-    partition_reference = config['partition_reference']
-    partition_path = os.path.join(config['instance_root'], partition_reference)
-    if not os.path.exists(partition_path):
-      os.mkdir(partition_path)
-    os.chmod(partition_path, 0750)
-    computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
- 'address': config['ipv4_address'],
- 'instance_root': config['instance_root'],
- 'netmask': '255.255.255.255',
- 'partition_list': [{'address_list': [{'addr': config['ipv4_address'],
-                                       'netmask': '255.255.255.255'},
-                                      {'addr': config['ipv6_address'],
-                                       'netmask': 'ffff:ffff:ffff::'},
-                      ],
-                     'path': partition_path,
-                     'reference': partition_reference,
-                     'tap': {'name': partition_reference},
-                     }
-                    ],
- 'reference': config['computer_id'],
- 'software_root': config['software_root']}))
+    for i in range(0, MAX_PARTIONS):
+      # create partition and configure computer
+      # XXX: at the moment all partitions do share same virtual interface address
+      # this is not a problem as usually all services are on different ports
+      partition_reference = '%s-%s' %(config['partition_reference'], i)
+      partition_path = os.path.join(config['instance_root'], partition_reference)
+      if not os.path.exists(partition_path):
+        os.mkdir(partition_path)
+      os.chmod(partition_path, 0750)
+      computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
+                                                    'address': config['ipv4_address'],
+                                                    'instance_root': config['instance_root'],
+                                                    'netmask': '255.255.255.255',
+                                                    'partition_list': [{'address_list': [{'addr': config['ipv4_address'],
+                                                                        'netmask': '255.255.255.255'},
+                                                                       {'addr': config['ipv6_address'],
+                                                                        'netmask': 'ffff:ffff:ffff::'},],
+                                                    'path': partition_path,
+                                                    'reference': partition_reference,
+                                                    'tap': {'name': partition_reference},
+                                                    }
+                                                    ],
+                                    'reference': config['computer_id'],
+                                    'software_root': config['software_root']}))
 
   def runSoftwareRelease(self, config, environment, process_group_pid_set=None,
                          stdout=None, stderr=None):
@@ -110,19 +116,27 @@ class SlapOSControler(object):
                            stdout=None, stderr=None):
     self.log("SlapOSControler.runComputerPartition")
     slap = slapos.slap.slap()
+    # cloudooo-json is required but this is a hack which should be removed
+    config['instance_dict']['cloudooo-json'] = "{}"
     slap.registerOpenOrder().request(self.software_profile,
         partition_reference='testing partition',
         partition_parameter_kw=config['instance_dict'])
     command = [config['slapgrid_partition_binary'],
       config['slapos_config'], '-c', '-v']
-    slapgrid = subprocess.Popen(command,
-      stdout=stdout, stderr=stderr,
-      close_fds=True, preexec_fn=os.setsid)
-    process_group_pid_set.add(slapgrid.pid)
-    slapgrid.wait()
+
+    # try to run for all partitions as one partition may in theory request another one 
+    # this not always is required but curently no way to know how "tree" of partitions
+    # may "expand"
+    for runs in range(0, MAX_PARTIONS):
+      slapgrid = subprocess.Popen(command,
+        stdout=stdout, stderr=stderr,
+        close_fds=True, preexec_fn=os.setsid)
+      process_group_pid_set.add(slapgrid.pid)
+      slapgrid.wait()
+      process_group_pid_set.remove(slapgrid.pid)
+
     stdout.seek(0)
     stderr.seek(0)
-    process_group_pid_set.remove(slapgrid.pid)
     status_dict = {'status_code':slapgrid.returncode,
                     'command': repr(command),
                     'stdout':stdout.read(),

@@ -143,7 +143,7 @@ class CopyContainer:
           activate_kw["after_tag"] = str(uid)
         except TypeError:
           activate_kw = {"after_tag":str(uid),}
-        obj.setDefaultActivateParameters(**activate_kw)
+        obj.setDefaultActivateParameterDict(activate_kw)
       for sub_obj in obj.objectValues():
         self._recursiveSetActivityAfterTag(sub_obj, activate_kw)
 

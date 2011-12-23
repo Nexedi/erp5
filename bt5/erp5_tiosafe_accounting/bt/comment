@@ -1,0 +1,2 @@
+Think to modify "accounting_sql_connection" to have a database connection.
+Modify the Integration Site Properties "table_prefix", "integration_site_name" and add in the "id_generator" field the value "_generatePerDayId".

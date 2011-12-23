@@ -61,8 +61,9 @@ path_and_method_id = (path, (\'immediateReindexObject\',\'recursiveImmediateRein
 activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
 after_tag_list = [expand_tag]\n
 if related_order is not None:\n
-  # XXX is it really required?\n
-  after_tag_list.append(\'%s_expand\' % related_order.getPath())\n
+  related_order_path = related_order.getPath()\n
+  after_tag_list.append(\'%s_expand\' % related_order_path)\n
+  after_tag_list.append(\'%s_updateAppliedRule\' % related_order_path)\n
 \n
 packing_list.activate(after_tag=after_tag_list,\n
                       tag=tag,\n

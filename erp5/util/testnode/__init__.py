@@ -48,9 +48,8 @@ def main(*args):
     parsed_argument = parser.parse_args(list(args))
   else:
     parsed_argument = parser.parse_args()
-  logger = None
+  logger = logging.getLogger('erp5testnode')
   if parsed_argument.console or parsed_argument.logfile:
-    logger = logging.getLogger('erp5testnode')
     logger.setLevel(logging.INFO)
     if parsed_argument.console:
       logger.addHandler(logging.StreamHandler())
@@ -58,8 +57,9 @@ def main(*args):
     if parsed_argument.logfile:
       logger.addHandler(logging.FileHandler(filename=parsed_argument.logfile))
       logger.info('Activated logfile %r output' % parsed_argument.logfile)
-  if logger is not None:
-    CONFIG['logger'] = logger.info
+  else:
+    logger.addHandler(logging.NullHandler())
+  CONFIG['logger'] = logger.info
   config = ConfigParser.SafeConfigParser()
   # do not change case of option keys
   config.optionxform = str
@@ -105,8 +105,14 @@ def main(*args):
   for section in config.sections():
     if section.startswith('vcs_repository'):
       vcs_repository_list.append(dict(config.items(section)))
-  CONFIG['vcs_repository_list'] = vcs_repository_list
 
+  CONFIG['bt5_path'] = None
+  if 'bt5_path' in config.options("testnode"):
+    bt5_path = config.get("testnode", 'bt5_path')
+    if bt5_path.lower() != "none":
+      CONFIG['bt5_path'] = bt5_path
+
+  CONFIG['vcs_repository_list'] = vcs_repository_list
   CONFIG['test_suite_title'] = geto('test_suite_title')
   CONFIG['test_node_title'] = geto('test_node_title')
   CONFIG['test_suite'] = geto('test_suite')
@@ -127,5 +133,4 @@ def main(*args):
   if 'instance_dict' in config.sections():
     instance_dict = dict(config.items('instance_dict'))
   CONFIG['instance_dict'] = instance_dict
-
   testnode.run(CONFIG)

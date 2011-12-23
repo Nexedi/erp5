@@ -1,0 +1,5 @@
+<property_sheet_list>
+ <portal_type id="Production Order Line">
+  <item>ProductionOrderLine</item>
+ </portal_type>
+</property_sheet_list>

@@ -31,10 +31,13 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.Utils import deprecated
 from Products.ERP5.Document.Coordinate import Coordinate
 from Products.ERP5.mixin.url import UrlMixin, no_crawl_protocol_list,\
                             no_host_protocol_list, default_protocol_dict
 from zLOG import LOG
+
+_marker = object()
 
 class Url(Coordinate, Base, UrlMixin):
   """
@@ -53,6 +56,7 @@ class Url(Coordinate, Base, UrlMixin):
   # Default Properties
   property_sheets = (   PropertySheet.Base
                       , PropertySheet.SimpleItem
+                      , PropertySheet.Coordinate
                       , PropertySheet.Url
                       , PropertySheet.SortIndex
                       )
@@ -67,13 +71,17 @@ class Url(Coordinate, Base, UrlMixin):
     users just enter www.erp5.com or info@erp5.com rather than
     http://www.erp5.com or mailto:info@erp5.com
     """
-    return self.getUrlString()
+    if self.isDetailed():
+      return self.getUrlString('')
+    return self.getCoordinateText('')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'fromText')
+  @deprecated
   def fromText(self, text):
     """
     Sets url_string a.k.a. scheme-specific-part of a URL
     """
+    self._setCoordinateText(text)
     self.setUrlString(text)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -85,7 +93,29 @@ class Url(Coordinate, Base, UrlMixin):
     """
     return ("http://www.erp5.org", "mailto:info@erp5.org")
 
+
+  def getUrlString(self, default=_marker):
+    """Fallback on coordinate_text
+    """
+    if not self.hasUrlString():
+      if default is _marker:
+        return self.getCoordinateText()
+      else:
+        return self.getCoordinateText(default)
+    else:
+      if default is _marker:
+        return self._baseGetUrlString()
+      else:
+        return self._baseGetUrlString(default)
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'isDetailed')
+  def isDetailed(self):
+    """
+    """
+    return self.hasUrlString()
+
   security.declareProtected(Permissions.UseMailhostServices, 'send')
+  @deprecated
   def send(self, from_url=None, to_url=None, msg=None,
            subject=None, attachment_list=None, extra_headers=None):
     """

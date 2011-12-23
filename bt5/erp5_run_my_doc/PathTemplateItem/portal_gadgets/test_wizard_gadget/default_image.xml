@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Embedded File" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>content_md5</string> </key>
+            <value> <string>d41d8cd98f00b204e9800998ecf8427e</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>height</string> </key>
+            <value> <int>-1</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>default_image</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Embedded File</string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>width</string> </key>
+            <value> <int>-1</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

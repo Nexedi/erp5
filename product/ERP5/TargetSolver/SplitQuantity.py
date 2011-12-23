@@ -71,7 +71,7 @@ class SplitQuantity(CopyToTarget):
     new_movement.recordProperty('stop_date')
     new_movement.edit(start_date=self.start_date,
                       stop_date=self.stop_date)
-    simulation_movement.setDefaultActivateParameters(**self.activate_kw)
+    simulation_movement.setDefaultActivateParameterDict(self.activate_kw)
     simulation_movement.edit (
       quantity = (simulation_movement.getQuantity() - self.quantity)
                  * simulation_movement.getDeliveryRatio()

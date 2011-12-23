@@ -3,6 +3,7 @@ from zLOG import ERROR
 from HTMLParser import HTMLParser, HTMLParseError
 import re
 from cgi import escape
+import codecs
 
 from Products.PortalTransforms.interfaces import ITransform
 from zope.interface import implements
@@ -224,7 +225,14 @@ class StrippingParser(HTMLParser):
                      self.default_encoding and self.default_encoding not in v:
                         match = charset_parser.search(v)
                         if match is not None:
-                            self.original_charset = match.group('charset')
+                            charset = match.group('charset')
+                            try:
+                                codecs.lookup(charset)
+                            except LookupError:
+                                # If a codec is not known by python, it is better
+                                # to prevent it's usage
+                                charset = None
+                            self.original_charset = charset
                         v = charset_parser.sub(
                             CharsetReplacer(self.default_encoding), v)
                     self.result.append(' %s="%s"' % (k, escape(v, True)))

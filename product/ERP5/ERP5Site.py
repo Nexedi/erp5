@@ -187,7 +187,6 @@ class ReferCheckerBeforeTraverseHook:
             'request : "%s"' % http_url)
         response.unauthorized()
 
-import ZODB
 
 class _site(threading.local):
   """Class for getting and setting the site in the thread global namespace
@@ -198,15 +197,13 @@ class _site(threading.local):
     self = threading.local.__new__(cls)
     return self.__get, self.__set
 
-  def __get(self, REQUEST=None,
-            # XXX Compatibility code (ZODB >= 3.9 has no __version__ anymore)
-            __opened='_opened'[getattr(ZODB, '__version__', '3.9') >= '3.9':]):
+  def __get(self, REQUEST=None):
     """Returns the currently processed site, optionally wrapped in a request
     """
     while True:
       app, site_id = self.site[-1]
       app = app()
-      if getattr(app._p_jar, __opened):
+      if app._p_jar.opened:
         if REQUEST is None:
           return getattr(app, site_id)
         return getattr(app.__of__(RequestContainer(REQUEST=REQUEST)), site_id)
@@ -346,8 +343,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self
 
   def manage_beforeDelete(self, item, container):
-    # On Zope 2.8, skin is setup during Acquisition (in the .__of__() method).
-    # On Zope 2.12, skin is setup during __before_publishing_traverse__, which
+    # skin is setup during __before_publishing_traverse__, which
     # doesn't happen when the object is being deleted from the management
     # interface, but we need it to be set for portal_activities when we're
     # being deleted. 
@@ -1864,17 +1860,11 @@ class ERP5Generator(PortalGenerator):
 
     # Remove unused default actions
     def removeActionsFromTool(tool, remove_list):
-      try:
-        from Products.CMFCore.interfaces import IActionProvider
-        if not IActionProvider.providedBy(tool):
-          # On CMF 2.x, some tools (portal_membership)
-          # are no longer action providers
-          return
-      except ImportError:
-        # BACK: Currently ERP5 tests don't load ZCML which is needed by the
-        # above import on CMF 1.5. This "try" should be removed when ERP5 tests
-        # start loading ZCML. 
-        pass
+      from Products.CMFCore.interfaces import IActionProvider
+      if not IActionProvider.providedBy(tool):
+        # On CMF 2.x, some tools (portal_membership)
+        # are no longer action providers
+        return
       action_id_list = [i.id for i in tool.listActions()]
       remove_index_list = []
       for i in remove_list:
@@ -1911,26 +1901,14 @@ class ERP5Generator(PortalGenerator):
     """Semi-manually create DirectoryViews since CMFDefault 2.X no longer
     registers the "skins" directory, only its subdirectories, making it
     unusable with Products.CMFCore.DirectoryView.addDirectoryViews."""
-    from Products.CMFCore.DirectoryView import createDirectoryView
-    try:
-      from Products.CMFCore.DirectoryView import _generateKey
-      def generateKey(package, subdir):
-        return _generateKey(package.__name__, subdir)
-    except ImportError:
-      # Means we're still on CMF 1.x, were they generate the DirectoryView
-      # key using minimalpath
-      # ( see Products.CMFCore.DirectoryView.addDirectoryViews() )
-      from Products.CMFCore.DirectoryView import minimalpath
-      def generateKey(package, subdir):
-        package_path = os.path.dirname(package.__file__)
-        return minimalpath(os.path.join(package_path, subdir))
+    from Products.CMFCore.DirectoryView import createDirectoryView, _generateKey
     import Products.CMFDefault
 
     ps = p.portal_skins
     # get the layer directories actually present
     for cmfdefault_skin_layer in self.CMFDEFAULT_FOLDER_LIST:
-      reg_key = generateKey(Products.CMFDefault,
-                            'skins/' + cmfdefault_skin_layer)
+      reg_key = _generateKey(Products.CMFDefault.__name__,
+                             'skins/' + cmfdefault_skin_layer)
       createDirectoryView(ps, reg_key)
 
   def setupDefaultSkins(self, p):

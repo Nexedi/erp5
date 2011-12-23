@@ -95,11 +95,13 @@
   <td>//input[@name="field_my_reference"]</td>\n
   <td>RL 01</td>\n
 </tr>\n
+<!--\n
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_my_product_line"]</td>\n
   <td>Equipment/Construction</td>\n
 </tr>\n
+-->\n
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_my_base_contribution_list"]</td>\n
@@ -225,7 +227,7 @@
 <tr>\n
   <td>verifyText</td>\n
   <td>//div[@id="breadcrumb"]/a[3]</td>\n
-  <td>RL 01</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'product_howto_product_title\']"></td>\n
 </tr>\n
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>\n

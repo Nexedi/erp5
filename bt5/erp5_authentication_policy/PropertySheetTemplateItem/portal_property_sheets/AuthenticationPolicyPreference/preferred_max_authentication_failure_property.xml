@@ -16,7 +16,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>The number of authentication failures an user is allowed to make before being blocked into the system.</string> </value>
+            <value> <string>The number of authentication failures an user is allowed to make before being blocked by the system.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

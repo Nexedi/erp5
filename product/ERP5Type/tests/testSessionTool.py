@@ -37,11 +37,6 @@ from string import letters as LETTERS
 from random import choice
 import time
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
-
 primitives_kw = dict(attr_1 = ['list_item'], \
                      attr_2 = ('tuple1','tuple2',), \
                      attr_3 = 1, \
@@ -91,7 +86,7 @@ class TestSessionTool(ERP5TypeTestCase):
     cache_plugin.setIntIndex(0)
     if portal_type == 'Distributed Ram Cache':
       cache_plugin.edit(specialise='portal_memcached/default_memcached_plugin')
-    get_transaction().commit()    
+    transaction.commit()
     portal_caches.updateCache()
 
   def stepTestSetGet(self, sequence=None,

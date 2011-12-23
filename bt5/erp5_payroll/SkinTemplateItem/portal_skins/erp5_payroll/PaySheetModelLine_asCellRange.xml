@@ -104,6 +104,8 @@ if matrixbox :\n
       cell_range.append(category_cell_range)\n
 \n
     cell_range = filter(lambda x: x != [], cell_range)\n
+  while len(cell_range) < 3:\n
+    cell_range.append([])\n
   return cell_range\n
 else:\n
   list_of_category_list = []\n

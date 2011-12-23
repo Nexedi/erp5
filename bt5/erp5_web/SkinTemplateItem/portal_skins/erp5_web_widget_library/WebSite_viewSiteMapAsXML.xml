@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"\n
+        xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n
+  <tal:block tal:define="sitemap_root python:request.get(\'current_web_site\', here);\n
+                       depth python:here.getLayoutProperty(\'layout_sitemap_depth\', 5)">\n
+    <tal:block metal:define-macro="master"\n
+           tal:define="menu_item_list python:sitemap_root.getSiteMapTree(depth=depth)">\n
+      <tal:block tal:repeat="menu_item menu_item_list">\n
+        <tal:block tal:condition="not:nocall:menu_item/subsection">\n
+          <url>\n
+            <loc tal:content="menu_item/url" />\n
+          </url>\n
+        </tal:block>\n
+        <tal:block tal:condition="nocall:menu_item/subsection">\n
+          <url>\n
+            <loc tal:content="menu_item/url" />\n
+          </url>\n
+          <tal:block metal:define-macro="generateTree">\n
+            <url tal:repeat="item menu_item/subsection">\n
+              <loc tal:content="item/url" />\n
+              <tal:recurse define="menu_item item" tal:condition="nocall:item/subsection">\n
+                <metal:call use-macro="here/WebSection_viewSiteMapAsXML/macros/generateTree" />\n
+              </tal:recurse>\n
+            </url>\n
+          </tal:block>\n
+        </tal:block>\n
+      </tal:block>\n
+    </tal:block>\n
+  </tal:block>\n
+</urlset>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>WebSite_viewSiteMapAsXML</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -105,7 +105,10 @@ class IntegrationSite(Folder):
           if create_mapping_line is False:
             # This is for the case of individual variation for example
             # only the base category has to be mapped
-            return current_object.getDestinationReference() +'/'+ '/'.join(category.split('/')[1:])
+            if missing_mapping or current_object.getDestinationReference() is None:
+              # We do not want the process to go on if base category mappings is missing
+              raise ValueError, "Mapping not defined for %s" % category
+            return current_object.getDestinationReference() +'/'+ category.split('/', 1)[1]
           else:
             # Create default line that has to be mapped by user later
             cat_object = current_object.newContent(id=cat_id.encode('ascii', 'ignore'), source_reference=cat, title=cat)

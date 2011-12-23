@@ -1,0 +1,155 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SyncML Publication" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Access_contents_information_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_View_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Assignee</string>
+                <string>Assignor</string>
+                <string>Auditor</string>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_local_properties</string> </key>
+            <value>
+              <tuple>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>authentification_format</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>authentification_type</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>authentification_format</string> </key>
+            <value> <string>b64</string> </value>
+        </item>
+        <item>
+            <key> <string>authentification_type</string> </key>
+            <value> <string>syncml:auth-basic</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/sale_order_module</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>conduit_module_id</string> </key>
+            <value> <string>Products.ERP5TioSafe.Conduit.ERP5TransactionConduit</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/vnd.syncml+xml</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>Magento_http_SaleOrder_synchronization</string> </value>
+        </item>
+        <item>
+            <key> <string>gid_generator_method_id</string> </key>
+            <value> <string>Synchronization_getERP5ObjectGIDFromRelatedObject</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Magento_http_sale_order_module_pub</string> </value>
+        </item>
+        <item>
+            <key> <string>is_activity_enabled</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>is_synchronized_with_erp5_portal</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>list_method_id</string> </key>
+            <value> <string>SaleOrderModule_getSaleOrderValueList</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>SyncML Publication</string> </value>
+        </item>
+        <item>
+            <key> <string>synchronization_id_generator_method_id</string> </key>
+            <value> <string>generateNewId</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Magento_http_SaleOrder_pub_synchronization</string> </value>
+        </item>
+        <item>
+            <key> <string>url_string</string> </key>
+            <value> <string>https://www.tiolive.com/AGjKXoXm7</string> </value>
+        </item>
+        <item>
+            <key> <string>xml_binding_generator_method_id</string> </key>
+            <value> <string>Transaction_asTioSafeXML</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

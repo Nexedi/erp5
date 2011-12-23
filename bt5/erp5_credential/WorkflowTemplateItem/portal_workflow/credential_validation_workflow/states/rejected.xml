@@ -27,10 +27,7 @@
         <item>
             <key> <string>transitions</string> </key>
             <value>
-              <tuple>
-                <string>close</string>
-                <string>close_action</string>
-              </tuple>
+              <tuple/>
             </value>
         </item>
         <item>

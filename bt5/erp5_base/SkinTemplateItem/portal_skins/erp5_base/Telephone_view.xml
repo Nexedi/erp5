@@ -72,6 +72,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_coordinate_text</string>
                         <string>my_int_index</string>
                         <string>my_translated_id</string>
                       </list>

@@ -29,21 +29,3 @@ def TM__register(self):
         #except: pass
 
 TM._register = TM__register
-
-if getattr(TM, 'setSortKey', None) is None:
-
-    # BACK: We're not yet on Zope 2.12, patch in the sort_key setting method
-    # remove this part when we drop support for earlier versions.
-    def setSortKey(self, sort_key):
-        self._sort_key = sort_key
-
-    def sortKey(self, *ignored):
-        """ The sortKey method is used by the transaction subsystem to have a
-            known commit order for lock acquisition.
-        """
-        return self._sort_key
-
-    TM._sort_key = 1
-    TM.setSortKey = setSortKey
-    TM.sortKey = sortKey
-

@@ -196,7 +196,7 @@ class PaySheetTransaction(Invoice):
       business_process = business_process_list[0]
       movement_list_trade_phase_dic = {}
       for movement in movement_dict['movement_to_add_list']:
-        if movement.getTotalPrice() != 0:
+        if movement.getTotalPrice() not in (0, None):
           # remove movement with 0 total_price
           trade_phase = movement.getTradePhase()
           if not movement_list_trade_phase_dic.has_key(trade_phase):
@@ -205,14 +205,17 @@ class PaySheetTransaction(Invoice):
       for trade_phase in movement_list_trade_phase_dic.keys():
         business_link_list = business_process.getBusinessLinkValueList(trade_phase=\
             trade_phase)
-        # XXX-Aurel
-        # must convert amount into simulation movement
-        # by calling method BusinessProcess.getTradePhaseMovementList
-        # for now delivery builder will fail because it calls setDeliveryValue
-        # which does not exists on amount
+        # convert Amount into Simulation Movement with Business Link
+        movement_list = []
+        for amount in movement_list_trade_phase_dic[trade_phase]:
+          variation_dict = dict(
+            [tuple(x.split('/', 1)) for x in amount.getVariationCategoryList()])
+          movement_list.extend(
+            business_process.getTradePhaseMovementList(
+              self, amount, trade_phase, update_property_dict=variation_dict))
         for business_link in business_link_list:
           builder_list = [portal.restrictedTraverse(url) for url in\
                           business_link.getDeliveryBuilderList()]
           for builder in builder_list:
             builder.build(delivery_relative_url_list=[self.getRelativeUrl(),],
-                      movement_list = movement_list_trade_phase_dic[trade_phase])
+                          movement_list = movement_list)

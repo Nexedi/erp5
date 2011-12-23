@@ -60,12 +60,12 @@
             <key> <string>src</string> </key>
             <value> <string>CREATE TABLE `content_translation` (\n
   `uid` BIGINT UNSIGNED NOT NULL,\n
-  `property_name` VARCHAR(100),\n
-  `content_language` VARCHAR(100),\n
+  `property_name` VARBINARY(100),\n
+  `content_language` VARBINARY(100),\n
   `translated_text` TEXT,\n
   PRIMARY KEY (`uid`, `property_name`, `content_language`),\n
-  FULLTEXT `Translated Text` (`translated_text`)\n
-) TYPE=MyISAM;\n
+  FULLTEXT KEY (`translated_text`)\n
+) ENGINE=groonga;\n
 </string> </value>
         </item>
         <item>

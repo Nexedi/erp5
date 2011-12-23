@@ -244,7 +244,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
                tal:attributes="id python:axis.name + \'_depth\'">\n
             <a tal:repeat="unfold_level python:range(0,4)"\n
                tal:attributes="href python:\'%s?selection_index=&amp;selection_name=%s&amp;ignore_layout:int=0&amp;report_depth:int=%s\' % (url,selection_name,unfold_level)"\n
-               tal:content="structure python:str(unfold_level) + \'&nbsp;\'">\n
+               tal:content="structure python:str(unfold_level) + \'&amp;\'\'nbsp;\'">\n
               0\n
             </a>\n
           </div>\n
@@ -341,8 +341,7 @@ Beware this only generates the HTML code, no CSS generation is done in this scri
       <!--/div-->\n
     </div>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>

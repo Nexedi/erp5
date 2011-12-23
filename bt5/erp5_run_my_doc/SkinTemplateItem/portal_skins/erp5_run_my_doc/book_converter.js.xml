@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>book_converter.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+Copyright (c) 2011 Nexedi SARL and Contributors. All Rights Reserved.\n
+\n
+This program is Free Software; you can redistribute it and/or\n
+modify it under the terms of the GNU General Public License\n
+as published by the Free Software Foundation; either version 2\n
+of the License, or (at your option) any later version.\n
+\n
+This program is distributed in the hope that it will be useful,\n
+but WITHOUT ANY WARRANTY; without even the implied warranty of\n
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n
+GNU General Public License for more details.\n
+\n
+You should have received a copy of the GNU General Public License\n
+along with this program; if not, write to the Free Software\n
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
+*/\n
+\n
+var body;\n
+function convertBook(linkToBook, container){\n
+  $(function() {\n
+    //Getting the html content\n
+    $.get(linkToBook, function(data, textStatus, jqXHR){\n
+      linkToBook = linkToBook.replace(\'getTextContent\',\'\');\n
+      var tocContainer = $(\'<div>\').html(data);\n
+      var sections = tocContainer.children();\n
+      body = $(\'<body>\');\n
+      var firstSection = true, firstChapter = true;\n
+      var n = sections.length;\n
+      var partCounter = 0, matterCounter = 1;\n
+      var partContainer;\n
+      for(var i = 0; i < n; i++){\n
+        var section = sections.eq(i);\n
+        var isPart = section[0].tagName.toUpperCase() == \'UL\';\n
+        //If it\'s a list tag, it\'s a part (containing several chapters)\n
+        if(isPart){\n
+          var chapterTitles = $(\'> li\', section);\n
+          var p = chapterTitles.length;\n
+          for(var j = 0; j < p; j++){\n
+            var newChapter = $(\'<div>\').addClass(\'chapter\').attr(\'id\',\'chapter-h-\' + partCounter + \'-\' + (j+1));\n
+            partContainer.append(newChapter);\n
+            convertChapter($(\'> a\', chapterTitles.eq(j)).attr(\'href\') + \'/getTextContent\', newChapter, false, false);\n
+          }\n
+          body.append(partContainer);\n
+          firstChapter = false;\n
+          matterCounter = 1;\n
+        }\n
+        else{\n
+          var link = $(\'> a\', section);\n
+          //If there is a link, then it\'s a frontmatter (or endmatter) like an introduction else it\'s the title of a part\n
+          if(link.length == 1){\n
+            var newMatter = $(\'<div>\');\n
+            if(firstChapter){\n
+              newMatter.addClass(\'frontmatter\').attr("id","frontmatter-h-" + matterCounter);\n
+              if(firstSection)\n
+                newMatter.attr(\'style\',\'counter-reset: page 1;\');\n
+            }\n
+            else\n
+              newMatter.addClass(\'endmatter\').attr("id","endmatter-h-" + matterCounter);\n
+            body.append(newMatter);\n
+            matterCounter++;\n
+            convertChapter(link.attr(\'href\') + \'/getTextContent\', newMatter, false, false);\n
+          }\n
+          else{\n
+            partCounter++;\n
+            partContainer = $(\'<div>\').addClass(\'part\').attr(\'id\',\'part-h-\' + partCounter).append(section.clone());\n
+          }\n
+        firstSection = false;\n
+        }\n
+      }\n
+      $(\'body\').append(body.children());\n
+      fetchTextInfo(true, data);\n
+    });\n
+  });\n
+}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

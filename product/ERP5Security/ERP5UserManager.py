@@ -17,6 +17,7 @@
 
 from Products.ERP5Type.Globals import InitializeClass
 from AccessControl import ClassSecurityInfo
+from AccessControl.AuthEncoding import pw_validate
 from AccessControl.SecurityManagement import getSecurityManager,\
     setSecurityManager, newSecurityManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
@@ -31,11 +32,6 @@ from ZODB.POSException import ConflictError
 import sys
 from DateTime import DateTime
 from zLOG import LOG, PROBLEM
-
-try :
-  from AccessControl.AuthEncoding import pw_validate
-except ImportError:
-  pw_validate = lambda reference, attempt: reference == attempt
 
 # This user is used to bypass all security checks.
 SUPER_USER = '__erp5security-=__'
@@ -118,12 +114,21 @@ class ERP5UserManager(BasePlugin):
         o We expect the credentials to be those returned by
             ILoginPasswordExtractionPlugin.
         """
+        login = credentials.get('login')
+        ignore_password = False
+        if not login:
+          # fallback to support plugins using external tools to extract login
+          # those are not using login/password pair, they just extract login
+          # from remote system (eg. SSL certificates)
+          login = credentials.get('external_login')
+          ignore_password = True
         # Forbidden the usage of the super user.
-        if credentials.get('login') == SUPER_USER:
+        if login == SUPER_USER:
           return None
 
-        def _authenticateCredentials(login, password, path):
-            if not login or not password:
+        def _authenticateCredentials(login, password, path,
+          ignore_password=False):
+            if not login or not (password or ignore_password):
                 return None
 
             user_list = self.getUserByLogin(login)
@@ -151,7 +156,7 @@ class ERP5UserManager(BasePlugin):
                   continue
                 valid_assignment_list.append(assignment)
 
-              if pw_validate(user.getPassword(), password) and \
+              if (ignore_password or pw_validate(user.getPassword(), password)) and \
                      len(valid_assignment_list) and user \
                      .getValidationState() != 'deleted': #user.getCareerRole() == 'internal':
                 return login, login # use same for user_id and login
@@ -164,9 +169,10 @@ class ERP5UserManager(BasePlugin):
                                                  cache_factory='erp5_content_short')
         try:
           authentication_result = _authenticateCredentials(
-                                    login=credentials.get('login'),
+                                    login=login,
                                     password=credentials.get('password'),
-                                    path=self.getPhysicalPath())
+                                    path=self.getPhysicalPath(),
+                                    ignore_password=ignore_password)
                            
         except _AuthenticationFailure:
           authentication_result = None

@@ -47,10 +47,6 @@ from Products.CMFActivity.Errors import ActivityFlushError
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
-try:
-  from transaction import get as get_transaction
-except ImportError:
-  pass
 import transaction
 
 from OFS.ObjectManager import ObjectManager
@@ -108,6 +104,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
   new_erp5_deferred_sql_connection = 'erp5_sql_deferred_connection2'
   new_catalog_id = 'erp5_mysql_innodb2'
 
+  __cleanups = ()
+
+  def _addCleanup(self, callable):
+    self.__cleanups += (callable,)
+    return callable
+
   def afterSetUp(self):
     uf = self.getPortal().acl_users
     uf._doAddUser(self.username, '', ['Manager'], [])
@@ -132,6 +134,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
       self.portal.manage_delObjects([self.new_erp5_deferred_sql_connection])
     if self.new_catalog_id in self.portal.portal_catalog.objectIds():
       self.portal.portal_catalog.manage_delObjects([self.new_catalog_id])
+    for cleanup in self.__cleanups:
+      cleanup(self)
     transaction.commit()
     self.tic()
 
@@ -431,13 +435,8 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     #if uid_buffer_key in uid_buffer_dict:
     #  del uid_buffer_dict[uid_buffer_key]
     def getUIDBuffer(*args, **kw):
-      uid_lock = catalog.__class__._reserved_uid_lock
-      uid_lock.acquire()
-      try:
-        result = catalog.getUIDBuffer(*args, **kw)
-      finally:
-        uid_lock.release()
-      return result
+      with catalog.__class__._reserved_uid_lock:
+        return catalog.getUIDBuffer(*args, **kw)
 
     getUIDBuffer(force_new_buffer=True)
 
@@ -716,7 +715,6 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     default_parametrs['where_expression'] = ""
     default_parametrs['order_by_expression'] = None
     
-    #import pdb; pdb.set_trace()
     # check that we retrieve our 2 organisations by default.
     kw = default_parametrs.copy()
     kw.update( portal_catalog.buildSQLQuery(
@@ -965,13 +963,12 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     
   def test_26_SortOnUnknownKeys(self, quiet=quiet, run=run_all_test):
     if not run: return
-    if not run: return
     if not quiet:
       message = 'Test Sort On Unknow Keys'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ',0,message)
     self.assertEquals('',
-          self.getCatalogTool().buildSQLQuery(
+          self.getCatalogTool().buildSQLQuery(select_list=('uid', 'path'),
           sort_on=(('ignored', 'ascending'),))['order_by_expression'])
   
   def test_27_SortOnAmbigousKeys(self, quiet=quiet, run=run_all_test):
@@ -1036,6 +1033,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
               sort_on=(('region_title', 'descending'),))['order_by_expression'].endswith('.`title` DESC'),
               'sort_on parameter must be taken into account even if related key '
               'is not a parameter of the current query')
+
 
   def _makeOrganisation(self, **kw):
     """Creates an Organisation in it's default module and reindex it.
@@ -1341,12 +1339,14 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     # catalog those objects
     transaction.commit()
     self.tic()
+    catalog_tool = self.getCatalogTool()
     self.assertEquals([ob],
-        [x.getObject() for x in self.getCatalogTool()(
-                portal_type='Organisation', SearchableText='title')])
-    self.assertEquals(1, self.getCatalogTool().countResults(
-              portal_type='Organisation', SearchableText='title')[0][0])
-    
+        [x.getObject() for x in catalog_tool(portal_type='Organisation',
+                                             SearchableText='title')])
+    self.assertEquals(1,
+                      catalog_tool.countResults(portal_type='Organisation',
+                                                SearchableText='title')[0][0])
+
     # 'different' is found in more than 50% of records
     # MySQL ignores such a word, but Tritonn does not ignore.
     try:
@@ -1702,7 +1702,7 @@ class TestERP5Catalog(ERP5TypeTestCase, LogInterceptor):
     `uid` BIGINT UNSIGNED NOT NULL,
     `dummy_title` varchar(32) NOT NULL default '',
     PRIMARY KEY  (`uid`)
-    ) TYPE=InnoDB;
+    ) ENGINE=InnoDB;
     """
     drop_summy_table_sql = """
     DROP TABLE IF EXISTS `dummy`
@@ -2706,7 +2706,7 @@ CREATE TABLE `%s` (
   `owner_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `version` (`owner_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -2899,7 +2899,7 @@ CREATE TABLE `%s` (
   PRIMARY KEY  (`uid`),
   KEY `assignee_reference` (`assignee_reference`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -3063,7 +3063,7 @@ CREATE TABLE `%s` (
   PRIMARY KEY  (`uid`),
   KEY `assignee_reference` (`assignee_reference`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -3319,7 +3319,7 @@ CREATE TABLE `%s` (
   `viewable_assignee_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -3549,7 +3549,7 @@ CREATE TABLE `%s` (
   `viewable_assignee_reference` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`uid`),
   KEY `viewable_assignee_reference` (`viewable_assignee_reference`)
-) TYPE=InnoDB;
+) ENGINE=InnoDB;
     """ % local_roles_table
     sql_catalog.manage_addProduct['ZSQLMethods'].manage_addZSQLMethod(
           id = 'z_create_%s' % local_roles_table,
@@ -4288,11 +4288,13 @@ VALUES
     self.assertEqual(catalog.countResults(parent_uid=module_uid)[0][0],
       module_len)
 
-    self.assertEquals(catalog.countResults(from_expression={
-      'catalog': '(SELECT sub_catalog.* FROM catalog AS sub_catalog' \
-        ' WHERE sub_catalog.parent_uid=%i)' \
-        ' AS catalog' % (module_uid, ),
-    })[0][0], module_len)
+    from_expression = {
+      'catalog': '(SELECT sub_catalog.* FROM catalog AS sub_catalog'
+                 ' WHERE sub_catalog.parent_uid=%i)'
+                 ' AS catalog' % (module_uid, ),
+    }
+    count = catalog.countResults(from_expression=from_expression)[0][0]
+    self.assertEqual(count, module_len)
 
   def test_getParentUid(self, quiet=quiet):
     from Products.ERP5.Document.Assignment import Assignment
@@ -4336,6 +4338,176 @@ VALUES
     connector = self.getPortal().erp5_sql_connection
     result = connector.manage_test('select 1 as foo;')
     self.assertEquals(1, result[0].foo)
+
+  def _createSomeGroupCategories(self):
+    portal_category = self.getCategoryTool()
+    group_category = portal_category.group
+    group_data_map = dict(nexedi=('Nexedi', 'Nexedi Group'),
+                          tiolive=('TIOLive', 'TioLive Group'),)
+    existing_group_id_list = group_category.objectIds()
+    for group_id, (title, description) in group_data_map.items():
+      if group_id in existing_group_id_list:
+        group = group_category[group_id]
+      else:
+        group = group_category.newContent(id=group_id)
+      group.edit(title=title, description=description)
+
+  def test_SelectDictWithDynamicRelatedKey(self, quiet=quiet, run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Select Dict With Dynamic Related Key'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    self._createSomeGroupCategories()
+
+    # Create some orgs associated with varying association with the
+    # groups created above.
+    module = self.portal.getDefaultModule('Organisation')
+    # org1 has no groups
+    org1 = module.newContent(portal_type='Organisation', title='org1')
+    # org2 has group nexedi
+    org2 = module.newContent(portal_type='Organisation', title='org2')
+    org2.setGroupList(['nexedi'])
+    # org3 has group tiolive
+    org3 = module.newContent(portal_type='Organisation', title='org3')
+    org3.setGroupList(['tiolive'])
+    # org4 has both groups
+    org4 = module.newContent(portal_type='Organisation', title='org4')
+    org4.setGroupList(['nexedi', 'tiolive'])
+    # check associations are correct
+    actual_group_title_map = dict((org.getTitle(), 
+                                   sorted(org.getGroupTitleList()))
+                                  for org in (org1, org2, org3, org4))
+    expected_group_title_map = dict(org1=[],
+                                    org2=['Nexedi'],
+                                    org3=['TIOLive'],
+                                    org4=['Nexedi', 'TIOLive'])
+    self.assertEquals(actual_group_title_map, expected_group_title_map)
+    # Flush message queue
+    transaction.commit()
+    self.tic()
+
+    # we will restrict our search to orgs with these ids to be resilient
+    # to preexisting orgs:
+    org_id_list = sorted(org.getId() for org in (org1, org2, org3, org4))
+    # and we'll sort on title to make the output predictable
+    search_kw = dict(id=org_id_list,
+                     sort_on='title')
+    # Try to get the organisations with the group title Nexedi to make sure
+    # searching works correctly
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(strict_group_title='Nexedi',
+                                             **search_kw)]
+    self.assertEquals(organisation_list, [org2, org4])
+    # Now lets fetch the titles of groups of the above orgs using select_dict.
+    search_kw.update(select_dict=dict(strict_group_title=None))
+    records = module.searchFolder(**search_kw)
+    # by default the catalog only returns items containing the
+    # relationship we asked for (group). Besides, some entries will
+    # appear many times, according to the number of relationships each
+    # catalog entry has in that related key.
+    results = [(rec.title, rec.strict_group_title or '-None-')
+               for rec in records]
+    self.assertEquals(sorted(results), 
+                      [('org2', 'Nexedi'),
+                       ('org3', 'TIOLive'),
+                       ('org4', 'Nexedi'),
+                       ('org4', 'TIOLive')])
+    # But if we demand a left-join on that column, then we'll have all
+    # orgs we created. They'll still be repeated according to their
+    # relationships, though.
+    search_kw.update(left_join_list=('strict_group_title',))
+    records = module.searchFolder(**search_kw)
+    results = [(rec.title, rec.strict_group_title or '-None-')
+               for rec in records]
+    self.assertEquals(sorted(results), 
+                      [('org1', '-None-'),
+                       ('org2', 'Nexedi'),
+                       ('org3', 'TIOLive'),
+                       ('org4', 'Nexedi'),
+                       ('org4', 'TIOLive')])
+    # To get only one of each org, we need to group by one of the
+    # catalog keys.
+
+    # Note that this relies on a non-standard behaviour
+    # of MySQL: If a selected column is not present in the GROUP BY
+    # clause, only the first ocurrence is taken.  Other databases,
+    # like Oracle, assume that selected columns are either GROUPed BY
+    # or are inside an aggregation function (COUNT, SUM, GROUP_CONCAT,
+    # ...), and consider the query to be in error otherwise.
+    search_kw.update(group_by_list=('uid',))
+    organisation_list = [x.getObject() for x in 
+                         module.searchFolder(**search_kw)]
+    self.assertEquals(organisation_list, [org1, org2, org3, org4])
+
+  def test_BackwardCompatibilityWithOldMethods(self, quiet=quiet, 
+                                               run=run_all_test):
+    if not run: return
+    if not quiet:
+      message = 'Dealing with RelatedKey methods missing the proper separator'
+      ZopeTestCase._print('\n%s ' % message)
+      LOG('Testing... ', 0, message)
+
+    module = self.getOrganisationModule()
+    org_a = self._makeOrganisation(title='abc',default_address_city='abc')
+    org_a.setReference(org_a.getId())
+    # sometimes the module itself is not indexed yet...
+    module.reindexObject()
+
+    # Flush message queue
+    transaction.commit()
+    self.tic()
+
+    # make a query to fetch the address of the organisation above by
+    # querying, among other things, the grand_parent
+    query = dict(grand_parent_portal_type="Organisation Module",
+                 parent_reference=org_a.getReference())
+    catalog = self.getCatalogTool()
+    # check the query works normally
+    self.assertEqual([x.getObject() for x in catalog.searchResults(**query)],
+                     [org_a.default_address])
+
+    # even if we do a left_join
+    query_lj = query.copy()
+    query_lj.update(left_join_list=('grand_parent_portal_type',))
+    self.assertEqual([x.getObject() for x in catalog.searchResults(**query_lj)],
+                     [org_a.default_address])
+    
+    # now turn the z_related_grand_parent into an old-style method, without
+    # RELATED_QUERY_SEPARATOR
+    method = catalog.getSQLCatalog().z_related_grand_parent
+    old_src = method.src
+
+    @self._addCleanup
+    def cleanGrandParentMethod(self):
+      method.manage_edit(method.title, method.connection_id,
+                         method.arguments_src, old_src)
+
+    src = old_src.replace('<dtml-var RELATED_QUERY_SEPARATOR>', ' AND ')
+    method.manage_edit(method.title, method.connection_id, method.arguments_src,
+                       src)
+
+    # check that it still works
+    self.assertEqual([x.getObject() for x in catalog.searchResults(**query)],
+                     [org_a.default_address])
+
+    # now try to do a left-join on grand_parent_portal_type which
+    # shouldn't work
+    self.assertRaises(RuntimeError, lambda: catalog.searchResults(**query_lj))
+
+    # Neither should it work if a left-join is attempted in a column
+    # that has proper related-key rendering, but is present in the
+    # same query as a column that hasn't, as the whole query is
+    # converted into implicit inner joins.
+    self.tic()
+    query_lj.update(left_join_list=('strict_group_title',),
+                    select_dict=('strict_group_title',))
+    self.assertRaises(RuntimeError, lambda: catalog.searchResults(**query_lj))
+    # though it should work on queries that don't use the broken related-key
+    del query_lj['grand_parent_portal_type']
+    self.assertEqual([x.getObject() for x in catalog.searchResults(**query_lj)],
+                     [org_a.default_address])
 
 def test_suite():
   suite = unittest.TestSuite()

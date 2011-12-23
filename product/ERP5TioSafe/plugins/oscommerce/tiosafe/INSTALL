@@ -1,0 +1,3 @@
+osCommerce TioSafe Plugin Installation :
+1. Create a directory in $osC_Dir/catalog/admin
+2. Copy all the files to the newly created directory

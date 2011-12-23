@@ -289,11 +289,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         raise WriteError
       portal.person_module.__class__._setLastId = _setLastId
       try:
-        try:
-          o = portal.person_module.newContent(portal_type="Person",
-                                              temp_object=1)
-        except WriteError:
-          self.fail("Container last ID modified")
+        o = portal.person_module.newContent(portal_type="Person", temp_object=1)
+      except WriteError:
+        self.fail("Container last ID modified")
       finally:
         del portal.person_module.__class__._setLastId
 

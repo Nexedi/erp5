@@ -117,6 +117,7 @@ if service is None:\n
   service = portal.service_module.newContent(portal_type=\'Service\',\n
                                              id=howto_dict[\'incoming_event_howto_service_id\'],\n
                                              title=howto_dict[\'incoming_event_howto_service_title\'])\n
+  service.setUseValue(getattr(portal.portal_categories.use, howto_dict[\'incoming_event_howto_service_id\']))\n
   service.validate()\n
 \n
 system_preference_id = \'test_functional_system_preference\'\n
@@ -129,6 +130,7 @@ if isTransitionPossible(system_preference, \'enable\'):\n
   system_preference.enable()\n
 \n
 system_preference.setPreferredEventResourceList([service.getRelativeUrl()])\n
+system_preference.setPreferredEventUseList([howto_dict[\'incoming_event_howto_service_id\']])\n
 \n
 pref = getattr(context.portal_preferences, howto_dict[\'howto_preference_id\'], None)\n
 if pref is None:\n

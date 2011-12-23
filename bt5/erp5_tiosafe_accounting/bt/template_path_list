@@ -1,0 +1,9 @@
+portal_integrations/accounting
+portal_integrations/accounting/account_module
+portal_integrations/accounting/accounting_line
+portal_integrations/accounting/accounting_module
+portal_integrations/accounting/accounting_sql_connection
+portal_integrations/accounting/getAccountList
+portal_integrations/accounting/getAccountingList
+portal_integrations/accounting/getOrganisationList
+portal_integrations/accounting/organisation_module

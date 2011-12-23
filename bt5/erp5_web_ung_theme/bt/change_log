@@ -1,3 +1,9 @@
+2012-12-13 Ivan
+* Move "Web Page" adjustments that affect other ERP5 web themes here.
+
+2011-11-15 tatuya
+* Follow Gadget objects default validation sate changing, now they are public.
+
 2011-10-07 gabriel.oliveira
 * Fix width of navigation tree
 

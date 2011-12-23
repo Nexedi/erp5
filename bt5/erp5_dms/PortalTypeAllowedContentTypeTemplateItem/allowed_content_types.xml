@@ -22,9 +22,7 @@
   <item>Text</item>
  </portal_type>
  <portal_type id="Drawing">
-  <item>Image</item>
   <item>Role Definition</item>
-  <item>Web Page</item>
  </portal_type>
  <portal_type id="External Source Module">
   <item>RSS Feed</item>
@@ -43,19 +41,13 @@
   <item>Role Definition</item>
  </portal_type>
  <portal_type id="Presentation">
-  <item>Image</item>
   <item>Role Definition</item>
-  <item>Web Page</item>
  </portal_type>
  <portal_type id="Spreadsheet">
-  <item>Image</item>
   <item>Role Definition</item>
-  <item>Web Page</item>
  </portal_type>
  <portal_type id="Text">
-  <item>Image</item>
   <item>Role Definition</item>
-  <item>Web Page</item>
  </portal_type>
  <portal_type id="URL Crawler">
   <item>Drawing</item>

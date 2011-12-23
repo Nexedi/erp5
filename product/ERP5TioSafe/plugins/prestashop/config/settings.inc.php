@@ -1,8 +1,8 @@
 <?php
 define('_DB_SERVER_', 'localhost');
 define('_DB_TYPE_', 'MySQL');
-define('_DB_NAME_', 'test');
-define('_DB_USER_', 'test');
+define('_DB_NAME_', 'test_tiosafe');
+define('_DB_USER_', 'root');
 define('_DB_PASSWD_', '');
 define('_DB_PREFIX_', 'ps_');
 define('__PS_BASE_URI__', '/prestashop/');

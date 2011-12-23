@@ -36,28 +36,23 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<head>\n
-  <tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();\n
-                         portal_url   python: site_root.absolute_url();">\n
+<tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();\n
+                       portal_url   python: site_root.absolute_url();">\n
   <script type="text/javascript" tal:content="structure string:\n
-     _editor_url = \'${portal_url}/portal_skins/erp5_xinha_editor\'">\n
+     _editor_url = \'${portal_url}/xinha\'">\n
   </script>\n
-  <script type="text/javascript" tal:attributes="src string:${portal_url}/XinhaCore.js"/>\n
-  <script type="text/javascript" tal:attributes="src string:${portal_url}/LoadEditor.js"/>\n
-  </tal:block>\n
-</head>\n
-<body>\n
+  <script type="text/javascript" tal:attributes="src string:${portal_url}/xinha/XinhaCore.js"></script>\n
+  <script type="text/javascript" tal:attributes="src string:${portal_url}/xinha/LoadEditor.js"></script>\n
   <tal:block tal:define="field_value   python: field_value;\n
                          field_name    python: field_name;\n
                          cols          python: field.get_value(\'width\');\n
                          rows          python: field.get_value(\'height\');">\n
-    <textarea id="my_text_content" tal:content="field_value"\n
+    <textarea id="my_text_content" style="width:100%;" tal:content="field_value"\n
                                    tal:attributes="name field_name;\n
                                                    rows rows;\n
                                                    cols cols;"/>\n
   </tal:block>\n
-</body>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>

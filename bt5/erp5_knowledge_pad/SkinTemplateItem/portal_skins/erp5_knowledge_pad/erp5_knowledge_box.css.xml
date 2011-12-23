@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts02261720.5</string> </value>
+            <value> <string>ts23095087.4</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -455,7 +455,6 @@ div.gadget-rss-reader span.modification-date{\n
 \n
 div.gadget-rss-reader a.document-link {\n
   color:#000;\n
-  font-weight:normal;\n
 }\n
 \n
 div.gadget-rss-reader a.listbox_title {\n
@@ -497,7 +496,7 @@ div.gadget-rss-reader .body {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8262</int> </value>
+            <value> <int>8240</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

@@ -78,10 +78,7 @@ except ImportError:
   def getTimerService(self):
     pass
 
-try:
-  from traceback import format_list, extract_stack
-except ImportError:
-  format_list = extract_stack = None
+from traceback import format_list, extract_stack
 
 # minimal IP:Port regexp
 NODE_RE = re.compile('^\d+\.\d+\.\d+\.\d+:\d+$')
@@ -163,6 +160,11 @@ class Message(BaseMessage):
 
   active_process = None
   active_process_uid = None
+  call_traceback = None
+  exc_info = None
+  is_executed = MESSAGE_NOT_EXECUTED
+  processing = None
+  traceback = None
 
   def __init__(self, obj, active_process, activity_kw, method_id, args, kw):
     if isinstance(obj, str):
@@ -181,18 +183,11 @@ class Message(BaseMessage):
     self.method_id = method_id
     self.args = args
     self.kw = kw
-    self.is_executed = MESSAGE_NOT_EXECUTED
-    self.exc_type = None
-    self.exc_value = None
-    self.traceback = None
     if activity_creation_trace and format_list is not None:
       # Save current traceback, to make it possible to tell where a message
       # was generated.
       # Strip last stack entry, since it will always be the same.
       self.call_traceback = ''.join(format_list(extract_stack()[:-1]))
-    else:
-      self.call_traceback = None
-    self.processing = None
     self.user_name = str(_getAuthenticatedUser(self))
     # Store REQUEST Info
     self.request_info = {}
@@ -260,23 +255,18 @@ class Message(BaseMessage):
       result = ActiveResult(result=result)
     # XXX Allow other method_id in future
     result.edit(object_path=object, method_id=self.method_id)
-    kw = self.activity_kw
-    kw = dict((k, kw[k]) for k in ('priority', 'tag') if k in kw)
-    # Save result in a separate activity to reduce
-    # probability and cost of conflict error.
-    active_process.activate(activity='SQLQueue',
-      group_method_id=None, # dummy group method
-      **kw).activateResult(result)
+    active_process.postResult(result)
 
   def __call__(self, activity_tool):
     try:
       obj = self.getObject(activity_tool)
     except KeyError:
+      exc_info = sys.exc_info()
       LOG('CMFActivity', ERROR,
-          'Message failed in getting an object from the path %r' % \
-                  (self.object_path,),
-          error=sys.exc_info())
-      self.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=activity_tool)
+          'Message failed in getting an object from the path %r'
+          % (self.object_path,), error=exc_info)
+      self.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info,
+                             context=activity_tool)
     else:
       try:
         old_security_manager = getSecurityManager()
@@ -288,13 +278,14 @@ class Message(BaseMessage):
             # XXX: There is no check to see if user is allowed to access
             # that method !
             method = getattr(obj, self.method_id)
-          except:
+          except Exception:
+            exc_info = sys.exc_info()
             LOG('CMFActivity', ERROR,
-                'Message failed in getting a method %r from an object %r' % \
-                       (self.method_id, obj,),
-                error=sys.exc_info())
+                'Message failed in getting a method %r from an object %r'
+                % (self.method_id, obj), error=exc_info)
             method = None
-            self.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=activity_tool)
+            self.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info,
+                                   context=activity_tool)
           else:
             if activity_tool.activity_timing_log:
               result = activity_timing_method(method, self.args, self.kw)
@@ -325,13 +316,8 @@ class Message(BaseMessage):
     portal = activity_tool.getPortalObject()
     user_email = portal.getProperty('email_to_address',
                        portal.getProperty('email_from_address'))
-
     email_from_name = portal.getProperty('email_from_name',
                        portal.getProperty('email_from_address'))
-    call_traceback = ''
-    if self.call_traceback:
-      call_traceback = 'Created at:\n%s' % self.call_traceback
-
     fail_count = self.line.retry + 1
     if self.getExecutionState() == MESSAGE_NOT_EXECUTABLE:
       message = "Not executable activity"
@@ -351,26 +337,18 @@ Document: %s
 Method: %s
 Arguments: %r
 Named Parameters: %r
-%s
-
-Exception: %s %s
-
-%s
-""" % (email_from_name, activity_tool.email_from_address, user_email,
-       message, path, self.method_id,
-       activity_tool.getCurrentNode(), fail_count,
-       self.user_name, path, self.method_id, self.args, self.kw,
-       call_traceback, self.exc_type, self.exc_value, self.traceback)
-
-    if isinstance(mail_text, unicode):
-      # __traceback_info__ can turn the tracebacks into unicode strings, but
-      # MailHost.send (in Zope 2.8) will not be able to parse headers if the
-      # mail_text is passed as a unicode.
-      mail_text = mail_text.encode('utf8')
+""" % (email_from_name, activity_tool.email_from_address, user_email, message,
+       path, self.method_id, activity_tool.getCurrentNode(), fail_count,
+       self.user_name, path, self.method_id, self.args, self.kw)
+    if self.traceback:
+      mail_text += '\nException:\n' + self.traceback
+    if self.call_traceback:
+      mail_text += '\nCreated at:\n' + self.call_traceback
     try:
-      activity_tool.MailHost.send( mail_text )
+      portal.MailHost.send(mail_text)
     except (socket.error, MailHostError), message:
-      LOG('ActivityTool.notifyUser', WARNING, 'Mail containing failure information failed to be sent: %s. Exception was: %s %s\n%s' % (message, self.exc_type, self.exc_value, self.traceback))
+      LOG('ActivityTool.notifyUser', WARNING,
+          'Mail containing failure information failed to be sent: %s' % message)
 
   def reactivate(self, activity_tool, activity=DEFAULT_ACTIVITY):
     # Reactivate the original object.
@@ -414,24 +392,24 @@ Exception: %s %s
     assert is_executed in (MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED, MESSAGE_NOT_EXECUTABLE)
     self.is_executed = is_executed
     if is_executed != MESSAGE_EXECUTED:
-      if exc_info is None:
+      if not exc_info:
         exc_info = sys.exc_info()
-      if exc_info == (None, None, None):
+      if self.on_error_callback is not None:
+        self.exc_info = exc_info
+      self.exc_type = exc_info[0]
+      if exc_info[0] is None:
         # Raise a dummy exception, ignore it, fetch it and use it as if it was the error causing message non-execution. This will help identifyting the cause of this misbehaviour.
         try:
           raise Exception, 'Message execution failed, but there is no exception to explain it. This is a dummy exception so that one can track down why we end up here outside of an exception handling code path.'
-        except:
-          pass
-        exc_info = sys.exc_info()
+        except Exception:
+          exc_info = sys.exc_info()
       if log:
         LOG('ActivityTool', WARNING, 'Could not call method %s on object %s. Activity created at:\n%s' % (self.method_id, self.object_path, self.call_traceback), error=exc_info)
         # push the error in ZODB error_log
         error_log = getattr(context, 'error_log', None)
         if error_log is not None:
           error_log.raising(exc_info)
-      self.exc_type = exc_info[0]
-      self.exc_value = str(exc_info[1])
-      self.traceback = ''.join(ExceptionFormatter.format_exception(*exc_info))
+      self.traceback = ''.join(ExceptionFormatter.format_exception(*exc_info)[1:])
 
   def getExecutionState(self):
     return self.is_executed
@@ -446,8 +424,9 @@ class Method:
     self.__method_id = method_id
 
   def __call__(self, *args, **kw):
-    m = Message(self.__passive_self, self.__active_process, self.__kw, self.__method_id, args, kw)
-    portal_activities = self.__passive_self.getPortalObject().portal_activities
+    passive_self = self.__passive_self
+    m = Message(passive_self, self.__active_process, self.__kw, self.__method_id, args, kw)
+    portal_activities = passive_self.getPortalObject().portal_activities
     if portal_activities.activity_tracking:
       activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
     activity_dict[self.__activity].queueMessage(portal_activities, m)
@@ -891,16 +870,14 @@ class ActivityTool (Folder, UniqueObject):
           LOG('CMFActivity', INFO, "Shutdown: Activities finished.")
 
     def process_timer(self, tick, interval, prev="", next=""):
-        """
-        Call distribute() if we are the Distributing Node and call tic()
-        with our node number.
-        This method is called by TimerService in the interval given
-        in zope.conf. The Default is every 5 seconds.
-        """
-        # Prevent TimerService from starting multiple threads in parallel
-        acquired = timerservice_lock.acquire(0)
-        if not acquired:
-          return
+      """
+      Call distribute() if we are the Distributing Node and call tic()
+      with our node number.
+      This method is called by TimerService in the interval given
+      in zope.conf. The Default is every 5 seconds.
+      """
+      # Prevent TimerService from starting multiple threads in parallel
+      if timerservice_lock.acquire(0):
         try:
           # make sure our skin is set-up. On CMF 1.5 it's setup by acquisition,
           # but on 2.2 it's by traversal, and our site probably wasn't traversed
@@ -910,37 +887,37 @@ class ActivityTool (Folder, UniqueObject):
           self.setupCurrentSkin(self.REQUEST)
           old_sm = getSecurityManager()
           try:
+            # get owner of portal_catalog, so normally we should be able to
+            # have the permission to invoke all activities
+            user = self.portal_catalog.getWrappedOwner()
+            newSecurityManager(self.REQUEST, user)
+
+            currentNode = self.getCurrentNode()
+            self.registerNode(currentNode)
+            processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
+
+            # only distribute when we are the distributingNode
+            if self.getDistributingNode() == currentNode:
+              self.distribute(len(processing_node_list))
+
+            # SkinsTool uses a REQUEST cache to store skin objects, as
+            # with TimerService we have the same REQUEST over multiple
+            # portals, we clear this cache to make sure the cache doesn't
+            # contains skins from another portal.
             try:
-              # get owner of portal_catalog, so normally we should be able to
-              # have the permission to invoke all activities
-              user = self.portal_catalog.getWrappedOwner()
-              newSecurityManager(self.REQUEST, user)
+              self.getPortalObject().portal_skins.changeSkin(None)
+            except AttributeError:
+              pass
 
-              currentNode = self.getCurrentNode()
-              self.registerNode(currentNode)
-              processing_node_list = self.getNodeList(role=ROLE_PROCESSING)
-
-              # only distribute when we are the distributingNode
-              if (self.getDistributingNode() == currentNode):
-                self.distribute(len(processing_node_list))
-
-              # SkinsTool uses a REQUEST cache to store skin objects, as
-              # with TimerService we have the same REQUEST over multiple
-              # portals, we clear this cache to make sure the cache doesn't
-              # contains skins from another portal.
-              try:
-                self.getPortalObject().portal_skins.changeSkin(None)
-              except AttributeError:
-                pass
-
-              # call tic for the current processing_node
-              # the processing_node numbers are the indices of the elements in the node tuple +1
-              # because processing_node starts form 1
-              if currentNode in processing_node_list:
-                self.tic(processing_node_list.index(currentNode)+1)
-            except:
-              # Catch ALL exception to avoid killing timerserver.
-              LOG('ActivityTool', ERROR, 'process_timer received an exception', error=sys.exc_info())
+            # call tic for the current processing_node
+            # the processing_node numbers are the indices of the elements
+            # in the node tuple +1 because processing_node starts form 1
+            if currentNode in processing_node_list:
+              self.tic(processing_node_list.index(currentNode) + 1)
+          except:
+            # Catch ALL exception to avoid killing timerserver.
+            LOG('ActivityTool', ERROR, 'process_timer received an exception',
+                error=sys.exc_info())
           finally:
             setSecurityManager(old_sm)
         finally:
@@ -985,26 +962,26 @@ class ActivityTool (Folder, UniqueObject):
       inner_self = aq_inner(self)
 
       try:
-        #Sort activity list by priority
-        activity_list = sorted(activity_dict.itervalues(),
-                               key=lambda activity: activity.getPriority(self))
-
-        # Wakeup each queue
-        for activity in activity_list:
-          activity.wakeup(inner_self, processing_node)
-
-        # Process messages on each queue in round robin
-        has_awake_activity = 1
-        while has_awake_activity:
-          has_awake_activity = 0
-          for activity in activity_list:
-            acquired = is_running_lock.acquire(0)
-            if acquired:
-              try:
-                activity.tic(inner_self, processing_node) # Transaction processing is the responsability of the activity
-                has_awake_activity = has_awake_activity or activity.isAwake(inner_self, processing_node)
-              finally:
-                is_running_lock.release()
+        # Loop as long as there are activities. Always process the queue with
+        # "highest" priority. If several queues have same highest priority, do
+        # not choose one that has just been processed.
+        # This algorithm is fair enough because we actually use only 2 queues.
+        # Otherwise, a round-robin of highest-priority queues would be required.
+        # XXX: We always finish by iterating over all queues, in case that
+        #      getPriority does not see messages dequeueMessage would process.
+        last = None
+        def sort_key(activity):
+          return activity.getPriority(self), activity is last
+        while is_running_lock.acquire(0):
+          try:
+            for last in sorted(activity_dict.itervalues(), key=sort_key):
+              # Transaction processing is the responsability of the activity
+              if not last.dequeueMessage(inner_self, processing_node):
+                break
+            else:
+              break
+          finally:
+            is_running_lock.release()
       finally:
         # decrease the number of active_threads
         tic_lock.acquire()
@@ -1217,11 +1194,11 @@ class ActivityTool (Folder, UniqueObject):
         try:
           obj = m.getObject(self)
         except KeyError:
+          exc_info = sys.exc_info()
           LOG('CMFActivity', ERROR,
-              'Message failed in getting an object from the path %r' % \
-                  (m.object_path,),
-              error=sys.exc_info())
-          m.setExecutionState(MESSAGE_NOT_EXECUTABLE, context=self)
+              'Message failed in getting an object from the path %r'
+              % (m.object_path,), error=exc_info)
+          m.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info, context=self)
           continue
         try:
           if m.hasExpandMethod():
@@ -1341,7 +1318,7 @@ class ActivityTool (Folder, UniqueObject):
       """
         Clear all activities and recreate tables.
       """
-      folder = self.getPortalObject().portal_skins
+      folder = self.getPortalObject().portal_skins.activity
 
       # Obtain all pending messages.
       message_list_dict = {}

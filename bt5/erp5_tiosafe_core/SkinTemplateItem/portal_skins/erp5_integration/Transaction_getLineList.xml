@@ -53,6 +53,14 @@
             <value> <string>""" Retrieve the movement list of the transaction. """\n
 movement_list = []\n
 \n
+sub = context.restrictedTraverse(context_document)\n
+while sub.getParentValue().getPortalType() !=  "Synchronization Tool":\n
+  sub = sub.getParentValue()\n
+\n
+im = sub.Base_getRelatedObjectList(portal_type=\'Integration Module\')[0].getObject()\n
+prod_module = im.getParentValue().product_module\n
+prod_pub = prod_module.getSourceSectionValue()\n
+\n
 # getter and corresponding property (the order is important)\n
 getter_tuple_list = [\n
     (\'getTitle\', \'title\'),\n
@@ -77,10 +85,7 @@ for movement in context.getMovementList():\n
   # browse the main element of the movement\n
   for getter, key in getter_tuple_list:\n
     if getter == \'fake_getGid\':\n
-      # XXX-Aurel must be replace, integration site passed in argument\n
-      # and must be used to know how to compute GID\n
-      resource = movement.getResourceValue()\n
-      value = " %s" %(resource.getReference(),)\n
+      value = prod_pub.getGidFromObject(object=movement.getResourceValue(), encoded=False)\n
     else:\n
       # XXX-Aurel : maybe there is better way to know if it is a cell\n
       if \'Cell\' in movement.getPortalType() and \\\n
@@ -103,103 +108,31 @@ for movement in context.getMovementList():\n
   if movement.getBaseContributionValue() is not None:\n
     movement_dict[\'VAT\'] = movement.getBaseContribution().split(\'/\')[-1]\n
 \n
-  for category in movement.getVariationCategoryList():\n
-    variation_list.append(category)\n
-\n
-  # build the element which allows to sort\n
+  variation_list = movement.getVariationCategoryList()\n
   variation_list.sort()\n
-  property_list += variation_list\n
   movement_list.append(movement_dict)\n
   # to not interfer with the sort, set to the end the object\n
   movement_dict[\'object\'] = movement\n
+  movement_dict[\'variation_list\'] = variation_list\n
 \n
 \n
 def cmp_resource(a,b):\n
-  return cmp(a[\'resource\'], b[\'resource\'])\n
+  a_str = "%s %s %s" %(a[\'resource\'], a[\'title\'], \' \'.join(a[\'variation_list\']))\n
+  b_str = "%s %s %s" %(b[\'resource\'], b[\'title\'], \' \'.join(b[\'variation_list\']))\n
+  return cmp(a_str, b_str)\n
 \n
 movement_list.sort(cmp=cmp_resource)\n
-\n
 \n
 return movement_list\n
 </string> </value>
         </item>
         <item>
-            <key> <string>_code</string> </key>
-            <value>
-              <none/>
-            </value>
-        </item>
-        <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>errors</string> </key>
-            <value>
-              <tuple/>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_code</string> </key>
-            <value>
-              <object>
-                <klass>
-                  <global name="FuncCode" module="Shared.DC.Scripts.Signature"/>
-                </klass>
-                <tuple/>
-                <state>
-                  <dictionary>
-                    <item>
-                        <key> <string>co_argcount</string> </key>
-                        <value> <int>0</int> </value>
-                    </item>
-                    <item>
-                        <key> <string>co_varnames</string> </key>
-                        <value>
-                          <tuple>
-                            <string>movement_list</string>
-                            <string>getter_tuple_list</string>
-                            <string>_getiter_</string>
-                            <string>_getattr_</string>
-                            <string>context</string>
-                            <string>movement</string>
-                            <string>None</string>
-                            <string>movement_dict</string>
-                            <string>property_list</string>
-                            <string>getter</string>
-                            <string>key</string>
-                            <string>resource</string>
-                            <string>value</string>
-                            <string>getattr</string>
-                            <string>_write_</string>
-                            <string>variation_list</string>
-                            <string>_getitem_</string>
-                            <string>category</string>
-                            <string>_inplacevar_</string>
-                            <string>cmp_resource</string>
-                          </tuple>
-                        </value>
-                    </item>
-                  </dictionary>
-                </state>
-              </object>
-            </value>
-        </item>
-        <item>
-            <key> <string>func_defaults</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>context_document</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>Transaction_getLineList</string> </value>
-        </item>
-        <item>
-            <key> <string>warnings</string> </key>
-            <value>
-              <tuple/>
-            </value>
         </item>
       </dictionary>
     </pickle>

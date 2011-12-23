@@ -1,0 +1,10 @@
+<base_category_list>
+ <portal_type id="Authentication Event">
+  <item>destination</item>
+  <item>source</item>
+ </portal_type>
+ <portal_type id="Password Event">
+  <item>destination</item>
+  <item>source</item>
+ </portal_type>
+</base_category_list>

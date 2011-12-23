@@ -1,3 +1,12 @@
+2011-12-14 arnaud.fontaine
+* Allow to jump from Organisation to its related Sale Supplies, Internal Supplies and Purchase Supplies.
+
+2011-12-13 arnaud.fontaine
+* Allow to jump from Product to its related Transformation using it as Material as well.
+
+2011-11-22 yusei
+* Stop showing detailed DateTime in listbox. This problem started occur due to recent specification change of zope's DateTime.
+
 2011-05-27 arnaud.fontaine
 * Remove meaningless 'Order Quantity Unit' and 'Order Quantity' columns, and use the translated title for the 'Quantity Unit' cells in Transformation Stock view.
 

@@ -301,6 +301,8 @@
                         <string>my_view_mode_movement_quantity</string>
                         <string>my_view_mode_quantity</string>
                         <string>my_view_mode_preferred_internal_use_list</string>
+                        <string>my_view_mode_listbox_read_only_effective_date</string>
+                        <string>my_view_mode_listbox_read_only_expiration_date</string>
                       </list>
                     </value>
                 </item>

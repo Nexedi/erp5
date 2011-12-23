@@ -70,8 +70,7 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
       solved_property_list = portal_type.getTestedPropertyList()
     for simulation_movement in self.getDeliveryValueList():
       if activate_kw is not None:
-        simulation_movement.setDefaultActivateParameters(
-        activate_kw=activate_kw, **activate_kw)
+        simulation_movement.setDefaultActivateParameterDict(activate_kw)
       movement = simulation_movement.getDeliveryValue()
       value_dict = {}
       base_category_set = set(movement.getBaseCategoryList())

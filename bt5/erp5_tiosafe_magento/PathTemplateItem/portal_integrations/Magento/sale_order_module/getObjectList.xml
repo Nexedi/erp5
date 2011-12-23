@@ -1,0 +1,132 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>MagentoBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>MagentoTransaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/Magento/xmlrpc_connector</string>
+                <string>destination/portal_integrations/Magento/sale_order_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>sales_order.list</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/Magento</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string>args = [], kw = {}</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>sales_order.list</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string>[{\'base_currency_code\': \'USD\', \'increment_id\': \'100000003\', \'destination_administration\': \' Momar Ndiaye mamemor@msn.com\', \'order_id\': \'3\', \'destination\': \' Momar Ndiaye mamemor@msn.com\', \'destination_decision\': \' Momar Ndiaye mamemor@msn.com\', \'destination_ownership\': \' Momar Ndiaye mamemor@msn.com\', \'payment_mode\': \'Check\'}]</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Sale Order">\n
+  <reference>100000003</reference>\n
+  <currency>USD</currency>\n
+  <payment_mode>cheque</payment_mode>\n
+  <arrow type="">\n
+    <source> My Magento Shop magentoshop@magento.com</source>\n
+    <destination> Momar Ndiaye mamemor@msn.com</destination>\n
+  </arrow>\n
+  <arrow type="Administration">\n
+    <source> My Magento Shop magentoshop@magento.com</source>\n
+    <destination> Momar Ndiaye mamemor@msn.com</destination>\n
+  </arrow>\n
+  <arrow type="Decision">\n
+    <source> My Magento Shop magentoshop@magento.com</source>\n
+    <destination> Momar Ndiaye mamemor@msn.com</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> My Magento Shop magentoshop@magento.com</source>\n
+    <destination> Momar Ndiaye mamemor@msn.com</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource> unknown-magento-product</resource>\n
+    <title>Discount Amount</title>\n
+    <reference>Discount Amount</reference>\n
+    <quantity>1</quantity>\n
+    <price>0.0000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> unknown-magento-product</resource>\n
+    <title>Shipping Cost</title>\n
+    <reference>Shipping Cost</reference>\n
+    <quantity>1</quantity>\n
+    <price>5.0000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> unknown-magento-product</resource>\n
+    <title>ZenProduct</title>\n
+    <reference>zp01</reference>\n
+    <quantity>0.0</quantity>\n
+    <price>14.0000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> unknown-magento-product</resource>\n
+    <title>ZenProduct Product Discount</title>\n
+    <reference>ZenProduct Product Discount</reference>\n
+    <quantity>1</quantity>\n
+    <price>0.0000</price>\n
+    <VAT>vat_exempted</VAT>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>sale_order_module</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -14,11 +14,6 @@
 
 from Products.CMFCore import Skinnable
 from Products.CMFCore.Skinnable import SKINDATA, SkinnableObjectManager
-try:
-    from Products.CMFCore.Skinnable import superGetAttr
-except ImportError:
-    # Removed on CMFCore 2.x
-    superGetAttr = None
 
 from thread import get_ident
 from zLOG import LOG, WARNING, DEBUG
@@ -35,6 +30,18 @@ from Acquisition import aq_base
   during the same request.
 """
 
+def _initializeCache(skin_tool, skin_folder_id_list):
+    skin_list = {}
+    for skin_folder_id in skin_folder_id_list[::-1]:
+      try:
+        skin_folder = getattr(skin_tool, skin_folder_id)
+      except AttributeError:
+        LOG(__name__, WARNING, 'Skin folder %s is in selection list'
+                               ' but does not exist.' % skin_folder_id)
+      else:
+        skin_list.update(dict.fromkeys(skin_folder.objectIds(), skin_folder_id))
+    return skin_list
+
 def CMFCoreSkinnableSkinnableObjectManager_initializeCache(self):
   '''
     Initialize the cache on portal skins.
@@ -45,22 +52,49 @@ def CMFCoreSkinnableSkinnableObjectManager_initializeCache(self):
   portal_skins = portal_skins.aq_base
   skin_selection_mapping = {}
   for selection_name, skin_folder_id_string in portal_skins._getSelections().iteritems():
-    skin_list = {}
-    skin_folder_id_list = skin_folder_id_string.split(',')
-    skin_folder_id_list.reverse()
-    for skin_folder_id in skin_folder_id_list:
-      skin_folder = getattr(portal_skins, skin_folder_id, None)
-      if skin_folder is not None:
-        for skin_id in skin_folder.objectIds():
-          skin_list[skin_id] = skin_folder_id
-      else:
-        LOG('__getattr__', WARNING, 'Skin folder %s is in selection list '\
-            'but does not exist.' % (skin_folder_id, ))
-    skin_selection_mapping[selection_name] = skin_list
+    skin_selection_mapping[selection_name] = _initializeCache(portal_skins,
+      skin_folder_id_string.split(','))
   portal_skins._v_skin_location_list = skin_selection_mapping
   return skin_selection_mapping
 
 Skinnable.SkinnableObjectManager.initializeCache = CMFCoreSkinnableSkinnableObjectManager_initializeCache
+
+def skinResolve(self, selection, name):
+  try:
+    portal_skins = aq_base(self.portal_skins)
+  except AttributeError:
+    raise AttributeError, name
+  try:
+    skin_selection_mapping = portal_skins._v_skin_location_list
+    reset = False
+  except AttributeError:
+    LOG(__name__, DEBUG, 'Initial skin cache fill.'
+        ' This should not happen often. Current thread id:%X' % get_ident())
+    skin_selection_mapping = self.initializeCache()
+    reset = True
+  while True:
+    try:
+      skin_folder_id = skin_selection_mapping[selection][name]
+    except KeyError:
+      if selection in skin_selection_mapping or \
+         isinstance(selection, basestring):
+        return
+      skin_list = portal_skins._getSelections()[selection[0]].split(',')
+      skin_selection_mapping[selection] = skin_list = _initializeCache(
+        portal_skins, skin_list[1+skin_list.index(selection[1]):])
+      try:
+        skin_folder_id = skin_list[name]
+      except KeyError:
+        return
+      reset = True
+    try:
+      return aq_base(getattr(getattr(portal_skins, skin_folder_id), name))
+    except AttributeError:
+      if reset:
+        return
+      # We cannot find a document referenced in the cache, so reset it.
+      skin_selection_mapping = self.initializeCache()
+      reset = True
 
 def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
   '''
@@ -76,50 +110,12 @@ def CMFCoreSkinnableSkinnableObjectManager___getattr__(self, name):
         return resolve[name]
       except KeyError:
         if name not in ignore:
-          try:
-            portal_skins = aq_base(self.portal_skins)
-          except AttributeError:
-            raise AttributeError, name
-          try:
-            skin_selection_mapping = portal_skins._v_skin_location_list
-          except AttributeError:
-            LOG('Skinnable Monkeypatch __getattr__', DEBUG, 'Initial skin cache fill. This should not happen often. Current thread id:%X' % (get_ident(), ))
-            skin_selection_mapping = self.initializeCache()
-          try:
-            skin_folder_id = skin_selection_mapping[skin_selection_name][name]
-          except KeyError:
-            pass
-          else:
-            object = getattr(getattr(portal_skins, skin_folder_id), name, None)
-            if object is not None:
-              resolve[name] = object.aq_base
-              return resolve[name]
-            else:
-              # We cannot find a document referenced in the cache.
-              # Try to find if there is any other candidate in another
-              # skin folder of lower priority.
-              selection_dict = portal_skins._getSelections()
-              candidate_folder_id_list = selection_dict[skin_selection_name].split(',')
-              previous_skin_folder_id = skin_selection_mapping[skin_selection_name][name]
-              del skin_selection_mapping[skin_selection_name][name]
-              if previous_skin_folder_id in candidate_folder_id_list:
-                previous_skin_index = candidate_folder_id_list.index(previous_skin_folder_id)
-                candidate_folder_id_list = candidate_folder_id_list[previous_skin_index + 1:]
-              for candidate_folder_id in candidate_folder_id_list:
-                candidate_folder = getattr(portal_skins, candidate_folder_id, None)
-                if candidate_folder is not None:
-                  object = getattr(candidate_folder, name, None)
-                  if object is not None:
-                    skin_selection_mapping[skin_selection_name][name] = candidate_folder_id
-                    resolve[name] = object.aq_base
-                    return resolve[name]
-                else:
-                  LOG('__getattr__', WARNING, 'Skin folder %s is in selection list '\
-                      'but does not exist.' % (candidate_folder_id, ))
+          object = skinResolve(self, skin_selection_name, name)
+          if object is not None:
+            resolve[name] = object
+            return object
           ignore[name] = None
-  if superGetAttr is None:
-    raise AttributeError, name
-  return superGetAttr(self, name)
+  raise AttributeError(name)
 
 def CMFCoreSkinnableSkinnableObjectManager_changeSkin(self, skinname, REQUEST=None):
   '''

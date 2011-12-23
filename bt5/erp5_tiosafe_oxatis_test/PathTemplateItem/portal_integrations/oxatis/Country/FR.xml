@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Integration Category Mapping" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_destination_reference</string> </key>
+            <value> <string>region/france</string> </value>
+        </item>
+        <item>
+            <key> <string>default_source_reference</string> </key>
+            <value> <string>FR</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>FR</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Integration Category Mapping</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>FR</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

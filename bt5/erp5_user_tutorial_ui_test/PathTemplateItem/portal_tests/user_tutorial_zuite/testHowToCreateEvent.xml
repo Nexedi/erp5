@@ -98,7 +98,7 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//textarea[@name="field_your_description"]</td>\n
+  <td>//textarea[@name="field_your_text_content"]</td>\n
   <td tal:content="python: here.Zuite_getHowToInfo()[\'create_event_howto_event_description\']"></td>\n
 </tr>\n
 <tr>\n

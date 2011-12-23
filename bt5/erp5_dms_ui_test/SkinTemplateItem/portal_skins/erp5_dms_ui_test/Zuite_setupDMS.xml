@@ -63,9 +63,7 @@ kw = dict(priority = 1,\n
           preferred_document_reference_regular_expression = \'(?P<reference>[a-zA-Z0-9-_.]+-[a-zA-Z0-9-_.]+)(|-(?P<version>[0-9a-zA-Z.]+))(|-(?P<language>[a-z]{2})[^-]*)?\',\n
           preferred_document_file_name_regular_expression = \'(?P<node_reference>[a-zA-Z0-9_-]+)-(?P<local_reference>[a-zA-Z0-9_.]+)-(?P<version>[0-9a-zA-Z.]+)-(?P<language>[a-z]{2})[^-]*?\',\n
           preferred_synchronous_metadata_discovery = True,\n
-          preferred_redirect_to_document = True,\n
-          preferred_ooodoc_server_address = \'localhost\',\n
-          preferred_ooodoc_server_port_number = 8008)\n
+          preferred_redirect_to_document = True)\n
 dms_preference.edit(**kw)\n
 if dms_preference.getPreferenceState()==\'disabled\':\n
   dms_preference.enable()\n

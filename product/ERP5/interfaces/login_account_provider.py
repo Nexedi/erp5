@@ -59,6 +59,13 @@ class ILoginAccountProvider(Interface):
     """
     Is password valid?
     """
+    
+  def analyzePassword(password, **kw):
+    """
+    Analyze password validity.
+    Return status code indicating if password is acceptable and if not status code
+    for reason for not being a valid one (i.e. too short, not complex, etc ...)
+    """    
 
   def isPasswordAlreadyUsed(self, password):
     """

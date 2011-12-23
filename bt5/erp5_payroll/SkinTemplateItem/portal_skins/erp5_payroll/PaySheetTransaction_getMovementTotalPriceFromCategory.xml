@@ -62,12 +62,14 @@ total_price = 0\n
 movement_list = context.getMovementList(portal_type=(\'Pay Sheet Line\', \'Pay Sheet Cell\'))\n
 for movement in movement_list:\n
   # Reference must be checked on line\n
-  if "Cell" in movement.getPortalType():\n
-    line = movement.getParentValue()\n
-  else:\n
-    line = movement\n
-  if line.getReference() in excluded_reference_list:\n
-    continue\n
+  if excluded_reference_list:\n
+    if "Cell" in movement.getPortalType():\n
+      line = movement.getParentValue()\n
+    else:\n
+      line = movement\n
+    if line.getReference() in excluded_reference_list:\n
+      continue\n
+\n
   if base_contribution is not None and movement.isMemberOf(base_contribution) or no_base_contribution:\n
 \n
     # base_contribution is mandatory, but not contribution_share. If contribution_share is\n

@@ -1,0 +1,176 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+portal = context.getPortalObject()\n
+Base_translateString = portal.Base_translateString\n
+\n
+cell_range = []\n
+add_predicate = 1\n
+\n
+\n
+# Get base category list\n
+if option_variation:\n
+  # Get option base category list\n
+  add_predicate = 0\n
+  no_option_base_category_list = context.getVariationRangeBaseCategoryList(\n
+                                                 omit_option_base_category=1)\n
+  base_category_list = context.getVariationRangeBaseCategoryList()\n
+  option_base_category_list = [x for x in base_category_list \\\n
+                               if x not in no_option_base_category_list]\n
+  if not option_base_category_list:\n
+    base_category_list_list = []\n
+  else:\n
+    base_category_list_list = [option_base_category_list]\n
+else:\n
+  # Compatibility with ERP5 Shop\n
+  if base_id == \'reference\':\n
+    add_predicate = 0\n
+  # Get base categories selected by the user\n
+  if base_id in (\'path\', \'reference\'):\n
+    # XXX Compatibility\n
+    selected_base_category_list = context.getVariationBaseCategoryList()\n
+    if not selected_base_category_list:\n
+      # XXX Compatibility...\n
+      if context.getParentValue().getPortalType() in \\\n
+                                  context.getPortalResourceTypeList():\n
+        context.log("SupplyLine_asCellRange", "calling getPVariationBaseCategoryList on parent")\n
+        selected_base_category_list = context.getParentValue().\\\n
+                                        getVariationBaseCategoryList()\n
+  else:\n
+    property_id = \'%s_variation_base_category_list\' % base_id[len(\'path_\'):]\n
+    selected_base_category_list = context.getProperty(property_id)\n
+  base_category_list_list = [[x] for x in selected_base_category_list]\n
+context.log("SupplyLine_asCellRange", "base cat = %s" %(base_category_list_list))\n
+# Generate cell range\n
+for base_category_list in base_category_list_list:\n
+  if matrixbox:\n
+    # XXX matrixbox is right_display (not as listfield) \n
+    # => invert display and value in item\n
+    cell_range.append(map(lambda x: (x[1], x[0]),\n
+                          context.getParentValue().getVariationRangeCategoryItemList(\n
+                                 base_category_list=base_category_list,\n
+                                 omit_individual_variation=0,\n
+                                 display_base_category=display_base_category,\n
+                                 sort_id=\'id\')))\n
+  else:\n
+    cell_range.append([x[1] for x in \n
+              context.getParentValue().getVariationCategoryItemList(\n
+                                     base_category_list=base_category_list,\n
+                                     omit_individual_variation=0,\n
+                                     sort_id=\'id\')])\n
+context.log("SupplyLine_asCellRange", "cell_range = %s" %(cell_range,))\n
+# If no option, don\'t display quantity range\n
+if option_variation:\n
+  if cell_range != []:\n
+    add_predicate = 1\n
+# Do we need to add predicate ?\n
+if add_predicate:\n
+  # Get quantity step\n
+  # XXX Dirty, use the same quantity range for option/no option matrix\n
+  if base_id == \'path\':\n
+    # XXX Compatibility\n
+    price_parameter = \'base_price\'\n
+  else:\n
+    price_parameter = base_id[len(\'path_\'):]\n
+    option_base_id_begin_with = \'optional_\'\n
+    if price_parameter.startswith(option_base_id_begin_with):\n
+      price_parameter = price_parameter[len(option_base_id_begin_with):]\n
+  predicate_list = context.getQuantityPredicateValueList(price_parameter)\n
+\n
+  if matrixbox:\n
+#     pred_ids = [(x.getRelativeUrl(), x.getTitle()) for x in predicate_list]\n
+    # Translate the matrixbox ranges\n
+    pred_ids = []\n
+    for predicate in predicate_list:\n
+      predicate_criterion_list = predicate.getCriterionList()\n
+      predicate_title = \'\'\n
+      for criterion in predicate_criterion_list:\n
+        if criterion.property == \'quantity\':\n
+          min_qty = criterion.min\n
+          max_qty = criterion.max\n
+          if min_qty is None:\n
+            predicate_title = Base_translateString("Quantity < ${max_quantity}",\n
+                                                   mapping={\'max_quantity\': max_qty})\n
+          elif max_qty is None:\n
+            predicate_title = Base_translateString("${min_quantity} <= Quantity",\n
+                                                   mapping={\'min_quantity\': min_qty})\n
+          else:\n
+            predicate_title = Base_translateString("${min_quantity} <= Quantity < ${max_quantity}",\n
+                                                   mapping={\'min_quantity\': min_qty,\n
+                                                            \'max_quantity\': max_qty})\n
+          break\n
+      pred_ids.append((predicate.getRelativeUrl(), predicate_title))\n
+  else:\n
+    pred_ids = [x.getRelativeUrl() for x in predicate_list]\n
+  # Insert predicat list for display in columns\n
+  cell_range.insert(1, pred_ids)\n
+# Remove empty range\n
+cell_range = [x for x in cell_range if x!=[]]\n
+return cell_range\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>base_id=\'path\', matrixbox=0, display_base_category=1, option_variation=0, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>MappedPropertyType_asCellRange</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

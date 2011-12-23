@@ -239,40 +239,45 @@ class Delivery(XMLObject, ImmobilisationDelivery,
                              '_getMovementList')
     def _getMovementList(self, portal_type=None, **kw):
       """
-        Return a list of movements.
-        First, we collect movements by movement type portal types, then
-        we filter the result by specified portal types.
+      Return a list of movements
       """
-      movement_portal_type_list = self.getPortalMovementTypeList()
-      movement_list = []
-      add_movement = movement_list.append
-      extend_movement = movement_list.extend
-      sub_object_list = self.objectValues(\
-          portal_type=movement_portal_type_list, **kw)
-      extend_sub_object = sub_object_list.extend
-      append_sub_object = sub_object_list.append
-      while sub_object_list:
-        sub_object = sub_object_list.pop()
-        content_list = sub_object.objectValues(\
-            portal_type=movement_portal_type_list, **kw)
-        if sub_object.hasCellContent():
-          cell_list = sub_object.getCellValueList()
-          if len(cell_list) != len(content_list):
-            for x in content_list:
-              if x not in cell_list:
-                append_sub_object(x)
+      movement_portal_type_set = set(
+        self.getPortalObject().getPortalMovementTypeList())
+      movement_list = self.objectValues(
+        portal_type=movement_portal_type_set, **kw)
+      if movement_list:
+
+        if isinstance(portal_type, str):
+          portal_type = set((portal_type,))
+        elif isinstance(portal_type, (list, tuple)):
+          portal_type = set(portal_type)
+
+        # Browse lines recursively and collect leafs.
+        stack = [iter(movement_list)]
+        movement_list = []
+        while stack:
+          for sub_object in stack[-1]:
+            content_list = sub_object.objectValues(
+              portal_type=movement_portal_type_set, **kw)
+            if sub_object.hasCellContent():
+              cell_list = sub_object.getCellValueList()
+              if len(cell_list) != len(content_list):
+                content_list = set(content_list).difference(cell_list)
+                if content_list:
+                  stack.append(iter(content_list))
+                  break
+              else:
+                movement_list.extend(x for x in content_list
+                  if portal_type is None or x.getPortalType() in portal_type)
+            elif content_list:
+              stack.append(iter(content_list))
+              break
+            elif portal_type is None or \
+                 sub_object.getPortalType() in portal_type:
+              movement_list.append(sub_object)
           else:
-            extend_movement(content_list)
-        elif content_list:
-          extend_sub_object(content_list)
-        else:
-          add_movement(sub_object)
-      if isinstance(portal_type, (list, tuple)):
-        return [x for x in movement_list \
-                if x.getPortalType() in portal_type]
-      elif portal_type is not None:
-        return [x for x in movement_list \
-                if x.getPortalType() == portal_type]
+            del stack[-1]
+
       return movement_list
     
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -819,18 +824,17 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       exclude_rule_path : do not expand this applied rule (or children
                           applied rule)
       """
-      if excluded_rule_path_list is None:
-        excluded_rule_path_list = []
-      to_expand_list = []
-      for sim_movement in self._getAllRelatedSimulationMovementList():
-        if sim_movement.getRootAppliedRule().getPath() \
-            not in excluded_rule_path_list:
-          parent_value = sim_movement.getParentValue()
-          if parent_value not in to_expand_list:
-            to_expand_list.append(parent_value)
-      for rule in to_expand_list:
-        rule.expand(activate_kw=activate_kw, **kw)
-        rule.recursiveReindexSimulationMovement(activate_kw=activate_kw)
+      excluded_rule_path_list = set(excluded_rule_path_list or ())
+      to_expand = sorted(set(sm.getParentValue()
+        for sm in self._getAllRelatedSimulationMovementList()
+        if sm.getRootAppliedRule().getPath() not in excluded_rule_path_list),
+        key=lambda x: x.getRelativeUrl())
+      prev_ar = None
+      for ar in to_expand:
+        if not ar.aq_inContextOf(prev_ar):
+          ar.expand(activate_kw=activate_kw, **kw)
+          ar.recursiveReindexSimulationMovement(activate_kw=activate_kw)
+          prev_ar = ar
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRootCausalityValueList')
@@ -966,14 +970,11 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       return disconnected_simulation_movement_list
 
     def _getAllRelatedSimulationMovementList(self, **kw):
-      search_method = \
-          self.getPortalObject().portal_catalog.unrestrictedSearchResults
       movement_uid_list = [x.getUid() for x in self.getMovementList()]
-      if len(movement_uid_list) == 0:
-        return []
-      sim_movement_list = search_method(portal_type='Simulation Movement',
-                                        delivery_uid=movement_uid_list, **kw)
-      return sim_movement_list
+      return movement_uid_list and \
+        self.getPortalObject().portal_catalog.unrestrictedSearchResults(
+          portal_type='Simulation Movement',
+          delivery_uid=movement_uid_list, **kw)
 
     def getDivergentTesterAndSimulationMovementList(self):
       """

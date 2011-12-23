@@ -1,5 +1,9 @@
 Integration Module | destination_section
 Integration Module | source_section
+Integration Site | resource
+Integration Site | destination_payment
+Integration Site | source_account
+Integration Site | source_payment
 Synchronization Configurator Item | destination_section
 Synchronization Configurator Item | source_decision
 Synchronization Configurator Item | source_section

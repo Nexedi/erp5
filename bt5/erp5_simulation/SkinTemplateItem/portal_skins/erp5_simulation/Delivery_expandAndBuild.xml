@@ -60,7 +60,9 @@ after_tag = [expand_tag]\n
 # wait for expand activities of related documents.\n
 # XXX ideally, it should be calculated by explanation tree, instead of causalities.\n
 for causality in delivery.getCausalityValueList():\n
-  after_tag.append(\'%s_expand\' % causality.getPath())\n
+  causality_path = causality.getPath()\n
+  after_tag.append(\'%s_expand\' % causality_path)\n
+  after_tag.append(\'%s_updateAppliedRule\' % causality_path)\n
 \n
 priority = 3\n
 activate_kw = { \n
@@ -72,6 +74,7 @@ delivery.activate(\n
     after_tag=after_tag,\n
     tag=tag,\n
     priority=priority,\n
+    serialization_tag=tag,\n
     ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 delivery.activate(after_tag=(tag, expand_tag)).Delivery_buildOnComposedDocument()\n
 </string> </value>

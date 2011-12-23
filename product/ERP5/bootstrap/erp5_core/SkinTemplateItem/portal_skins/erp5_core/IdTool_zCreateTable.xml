@@ -64,7 +64,7 @@ CREATE TABLE `portal_ids` (\n
   `id_group` VARBINARY(255),\n
   `last_id` BIGINT UNSIGNED,\n
   PRIMARY KEY  (`id_group`)\n
-) TYPE=InnoDB\n
+) ENGINE=InnoDB\n
 <dtml-var sql_delimiter>\n
 <dtml-in expr="getPortalObject().portal_ids.getDictLengthIdsItems()">\n
 INSERT INTO `portal_ids` (`id_group`, `last_id`) VALUES (<dtml-sqlvar sequence-key type="string">, <dtml-sqlvar sequence-item type="int">)\n

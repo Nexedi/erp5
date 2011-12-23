@@ -1,0 +1,6 @@
+<property_sheet_list>
+ <portal_type id="Inotify">
+  <item>Inotify</item>
+  <item>SimpleItem</item>
+ </portal_type>
+</property_sheet_list>

@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, FirstName, LastName, Email, CompanyName, Street, PostalCode, City, Country, Fax, Phone, AccountId\n
+    FROM\n
+      User\n
+    WHERE\n
+      <tal:block tal:condition="python: options.get(\'person_id\', None) is not None">Id = \'<tal:block tal:content="options/person_id" />\' AND</tal:block> Email != NULL\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>SalesforceNodeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>destination/portal_integrations/salesforce/person_mapping</string>
+                <string>source/portal_integrations/salesforce/salesforce_connector</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<ns0:query>\n
+  <ns0:queryString>\n
+    SELECT\n
+      Id, Name, FirstName, LastName, Email, CompanyName, Street, PostalCode, City, Country, Fax, Phone, AccountId\n
+    FROM\n
+      User\n
+    WHERE\n
+      <tal:block tal:condition="python: options.get(\'person_id\', None) is not None">Id = \'<tal:block tal:content="options/person_id" />\' AND</tal:block> Email != NULL\n
+  </ns0:queryString>\n
+</ns0:query>
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>getUserList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Person</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getUserList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/salesforce</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value> <string>Impossible to access to the plugin, error code is Internal Server Error - 500</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<ns0:query>  <ns0:querystring>    SELECT      Id, Name, FirstName, LastName, Email, CompanyId, Street, PostalCode, City, Country, Fax, Phone, AccountId    FROM      User    WHERE       Email != NULL  </ns0:querystring></ns0:query>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value> <string>https://na3-api.salesforce.com/services/Soap/u/19.0/00D50000000IjTh</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get User</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

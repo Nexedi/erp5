@@ -54,7 +54,7 @@
   Verify if this instance is a properly configured one.\n
   This script could be used in functional tests\n
 """\n
-plugin_id_list = [\'default_memcached_plugin\',\'persistent_memcached_plugin\' ]\n
+plugin_id_list = [\'default_memcached_plugin\',\'persistent_memcached_plugin\']\n
 portal = context.getPortalObject()\n
 key_prefix = \'upgrade_verification\'\n
 if getattr(portal, "erp5_site_global_id", None) == "test_client_chroot":\n
@@ -73,7 +73,7 @@ def assertNotEquals(value1, value2, label=""):\n
     message_list.append("Memcached: %s Fail (%s == %s)" % (label, value1, value2))\n
 \n
 # Verify if memcached and plugins are present into the instance\n
-portal_memcached = getattr(context.getPortalObject(), "portal_memcached", None)\n
+portal_memcached = getattr(portal, "portal_memcached", None)\n
 if portal_memcached is not None:\n
   plugin_object_id_list = portal_memcached.objectIds()\n
   for plugin_id in plugin_id_list:\n
@@ -83,18 +83,22 @@ else: \n
   message_list.append("Portal Memcached is not present.")\n
 \n
 # Test Plugins\n
-def getMemcachedDict():\n
+def getMemcachedDict(plugin_path):\n
   return portal_memcached.getMemcachedDict(key_prefix=key_prefix, \n
-                   plugin_path=\'portal_memcached/default_memcached_plugin\')\n
+                   plugin_path=plugin_path)\n
 \n
 # If this is not None the value was get from another instance\n
 site_id = getattr(portal, "erp5_site_global_id", None)\n
-if getMemcachedDict().get("upgrade_verification_key", site_id) == "Foo Bar":\n
-  # Solve some possible legacy.\n
-  getMemcachedDict().set("upgrade_verification_key", site_id)\n
-assertEquals(getMemcachedDict().get("upgrade_verification_key", site_id), site_id, "upgrade_verification_key")\n
-getMemcachedDict().set("upgrade_verification_key", site_id)\n
-assertEquals(getMemcachedDict().get("upgrade_verification_key", None), site_id, "upgrade_verification_key")\n
+for plugin_id in plugin_id_list:\n
+  plugin_object = getMemcachedDict(\'portal_memcached/%s\' % plugin_id)\n
+  if plugin_object.get("upgrade_verification_key") in ("Foo Bar", None):\n
+    # Solve some possible legacy.\n
+    plugin_object["upgrade_verification_key"] = site_id\n
+  assertEquals(plugin_object.get("upgrade_verification_key", site_id),\n
+    site_id, "upgrade_verification_key")\n
+  plugin_object.set("upgrade_verification_key", site_id)\n
+  assertEquals(plugin_object.get("upgrade_verification_key", None),\n
+    site_id, "upgrade_verification_key")\n
 \n
 return message_list\n
 </string> </value>

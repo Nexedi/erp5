@@ -48,16 +48,13 @@ _chdir_lock = threading.RLock()
 @simple_decorator
 def chdir_working_copy(func):
   def decorator(self, *args, **kw):
-    _chdir_lock.acquire()
-    try:
+    with _chdir_lock:
       cwd = os.getcwd()
       try:
         os.chdir(self.working_copy)
         return func(self, *args, **kw)
       finally:
         os.chdir(cwd)
-    finally:
-      _chdir_lock.release()
   return decorator
 
 class Subversion(WorkingCopy):

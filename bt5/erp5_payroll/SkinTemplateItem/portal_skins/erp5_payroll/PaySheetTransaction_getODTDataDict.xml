@@ -154,7 +154,7 @@ def getSocialOrganisationValue():\n
       # one Business Process, so the first (which is the nearest from the\n
       # delivery) is took\n
       business_process = business_process_list[0]\n
-      business_path_list = business_process.getPathValueList(trade_phase=\\\n
+      business_path_list = business_process.getTradeModelPathValueList(trade_phase=\\\n
           \'payroll/invoicing/social_security\')\n
       if len(business_path_list) > 1:\n
         raise NotImplementedError, \'For now, it can not support more \'\\\n

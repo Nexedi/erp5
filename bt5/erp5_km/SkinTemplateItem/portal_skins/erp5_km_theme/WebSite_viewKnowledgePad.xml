@@ -63,13 +63,15 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 <tal:block metal:define-macro="master"\n
            tal:define="dummy python:request.set(\'layout_form_id\', \'erp5_km_minimal_front_layout\')">\n
   <tal:block metal:use-macro="here/main_template/macros/master">\n
-    <tal:block metal:fill-slot="main">\n
-      <div class="front_pad">\n
-        <div tal:content="structure python: here.ERP5Site_viewHomeAreaRenderer(mode=\'web_front\', \n
+    <tal:block metal:fill-slot="main"\n
+               tal:define="isAnon python: here.portal_membership.isAnonymousUser()">\n
+      <div tal:attributes="class python: test(isAnon, \'front_pad front_pad_anonymous\', \'front_pad\') ">\n
+        <div tal:define="force_anonymous python:context.getLayoutProperty(\'layout_force_anonymous_gadget\',False)"\n
+             tal:content="structure python: here.ERP5Site_viewHomeAreaRenderer(mode=\'web_front\', \n
                                                                                default_pad_group=\'\',\n
-                                                                               create_default_pad=True, \n
+                                                                               create_default_pad=not force_anonymous, \n
                                                                                make_security_check=True,\n
-                                                                               use_anonymous_knowledge_pad=context.getLayoutProperty(\'layout_force_anonymous_gadget\',False))"\n
+                                                                               use_anonymous_knowledge_pad=force_anonymous)"\n
              class="draggable_wrapper"/>\n
       </div>\n
     </tal:block>\n

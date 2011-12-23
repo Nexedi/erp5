@@ -338,7 +338,7 @@ if memcache is not None:
         to memcached server.
 
         key_prefix
-          Mandatory argument allowing different tool users from sharing the same
+          Mandatory argument allowing different tool users to share the same
           dictionary key namespace.
 
         plugin_path

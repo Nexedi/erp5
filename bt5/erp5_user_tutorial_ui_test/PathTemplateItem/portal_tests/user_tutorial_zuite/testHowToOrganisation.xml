@@ -132,12 +132,12 @@
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//input[@name="field_my_default_email_text"]</td>\n
+  <td>//input[@name="field_my_default_email_coordinate_text"]</td>\n
   <td>info@zcompany.com</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
-  <td>//input[@name="field_my_default_telephone_text"]</td>\n
+  <td>//input[@name="field_default_telephone_my_default_telephone_coordinate_text"]</td>\n
   <td>+55(0)22 2222 2222</td>\n
 </tr>\n
 <tr>\n

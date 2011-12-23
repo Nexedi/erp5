@@ -33,7 +33,7 @@
   `quantity` REAL NOT NULL,\n
   PRIMARY KEY (`resource_uid`, `quantity_unit_uid`),\n
   KEY (`uid`)\n
-) TYPE=InnoDB;\n
+) ENGINE=InnoDB;\n
 </string> </value>
         </item>
         <item>

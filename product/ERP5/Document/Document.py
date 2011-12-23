@@ -70,6 +70,7 @@ VALID_TEXT_FORMAT_LIST = ('text', 'txt', 'html', 'base_html',
                           'stripped-html')
 
 VALID_IMAGE_FORMAT_LIST = ('jpg', 'jpeg', 'png', 'gif', 'pnm', 'ppm', 'tiff')
+VALID_TRANSPARENT_IMAGE_FORMAT_LIST = ('png', 'gif', 'tiff')
 
 DEFAULT_DISPLAY_ID_LIST = ('nano', 'micro', 'thumbnail',
                             'xsmall', 'small', 'medium',
@@ -580,7 +581,8 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalType(),
                 reference=self.getReference(),
-                where_expression=SQLQuery("validation_state NOT IN ('archived', 'cancelled', 'deleted')"))
+                where_expression=SQLQuery("validation_state NOT IN ('archived', 'cancelled', 'deleted')"),
+                sort_on='creation_date')
       if self.getVersion():
         kw['version'] = self.getVersion()
       if self.getLanguage():
@@ -589,8 +591,6 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
       existing_document = None
       # Select the first one which is not self and which
       # shares the same coordinates
-      document_list = list(document_list)
-      document_list.sort(key=lambda x: x.getId())
       for o in document_list:
         if o.getRelativeUrl() != self.getRelativeUrl() and\
            o.getVersion() == self.getVersion() and\

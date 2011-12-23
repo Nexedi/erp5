@@ -1,3 +1,6 @@
+2011-08-16 rafael
+* Remove useless code and do not re-setup conversion server.
+
 2011-04-13 lucas
 * The 'Hello' text is not displayed anymore.
 

@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="Web Service Request" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>\n
+<OrderList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <SetOrderDesc>true</SetOrderDesc>\n
+  <OrderDateStart tal:content="python:options[\'start_date\'].ISO8601()">2010-09-21T09:08:14.5387842+02:00</OrderDateStart>\n
+  <OrderDateEnd tal:content="python:options[\'stop_date\'].ISO8601()">2010-09-21T11:08:14.5387842+02:00</OrderDateEnd>\n
+  <PaymentStatusCode>40</PaymentStatusCode>\n
+  <OrderIDs />\n
+</OrderList>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>brain_builder_script</string> </key>
+            <value> <string>WebServiceRequest_buildBrainList</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_file</string> </key>
+            <value> <string>TioSafeBrain</string> </value>
+        </item>
+        <item>
+            <key> <string>brain_class_name</string> </key>
+            <value> <string>Transaction</string> </value>
+        </item>
+        <item>
+            <key> <string>categories</string> </key>
+            <value>
+              <tuple>
+                <string>source/portal_integrations/oxatis/order_rest_connection_plugin</string>
+                <string>destination/portal_integrations/oxatis/sale_order_mapping</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/xml</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<?xml version="1.0" encoding="utf-8"?>\n
+<OrderList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"  xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+  xmlns:metal="http://xml.zope.org/namespaces/metal">\n
+  <SetOrderDesc>true</SetOrderDesc>\n
+  <OrderDateStart tal:content="python:options[\'start_date\'].ISO8601()">2010-09-21T09:08:14.5387842+02:00</OrderDateStart>\n
+  <OrderDateEnd tal:content="python:options[\'stop_date\'].ISO8601()">2010-09-21T11:08:14.5387842+02:00</OrderDateEnd>\n
+  <PaymentStatusCode>40</PaymentStatusCode>\n
+  <OrderIDs />\n
+</OrderList>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>OrderGetList</string> </value>
+        </item>
+        <item>
+            <key> <string>destination_object_type</string> </key>
+            <value> <string>Sale Order</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>getObjectList</string> </value>
+        </item>
+        <item>
+            <key> <string>integration_site</string> </key>
+            <value> <string>/erp5/portal_integrations/oxatis</string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_error</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_parameter</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+args = [], kw = {\'data\': \'<?xml version="1.0" encoding="utf-8"?><OrderList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"           xmlns:xsd="http://www.w3.org/2001/XMLSchema">  <SetOrderDesc>true</SetOrderDesc>  <OrderDateStart>2010-01-15T00:00:00+01:00</OrderDateStart>  <OrderDateEnd>2010-12-24T00:00:00+01:00</OrderDateEnd>  <PaymentStatusCode>40</PaymentStatusCode>  <OrderIDs/></OrderList>\'}
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_path</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>last_request_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<DataResultService>\n
+  <StatusCode>200</StatusCode>\n
+  <StatusSubCode/>\n
+  <ErrorDetails/>\n
+  <Data>\n
+    <OrderList>\n
+      <OrdersID>\n
+        <OrderID>\n
+          <OxID>666</OxID>\n
+        </OrderID>\n
+      </OrdersID>\n
+    </OrderList>\n
+  </Data>\n
+</DataResultService>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>last_request_tiosafe_xml_result</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<transaction type="Sale Order">\n
+  <start_date>2010/11/02 15:58:39 GMT+0</start_date>\n
+  <stop_date>2010/11/02 15:58:39 GMT+0</stop_date>\n
+  <reference>666</reference>\n
+  <currency>EUR</currency>\n
+  <payment_mode>cheque</payment_mode>\n
+  <arrow type="">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> Nexedi john@nexedi.com</destination>\n
+  </arrow>\n
+  <arrow type="Administration">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> test-john doe john@nexedi.com</destination>\n
+  </arrow>\n
+  <arrow type="Decision">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> test-john doe john@nexedi.com</destination>\n
+  </arrow>\n
+  <arrow type="Ownership">\n
+    <source> TioSafe Default Organisation fake@organisation.com</source>\n
+    <destination> test-john doe john@nexedi.com</destination>\n
+  </arrow>\n
+  <movement>\n
+    <resource> Service Delivery</resource>\n
+    <title>La Poste</title>\n
+    <reference>La Poste</reference>\n
+    <quantity>1.00</quantity>\n
+    <price>10.000000</price>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Service Discount</resource>\n
+    <title>discount on Robe / R001</title>\n
+    <reference>discount on Robe / R001</reference>\n
+    <quantity>-3.00</quantity>\n
+    <price>-16.387960</price>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+  <movement>\n
+    <resource> Unknown</resource>\n
+    <title>Robe</title>\n
+    <reference>R001</reference>\n
+    <quantity>3.00</quantity>\n
+    <price>83.612040</price>\n
+    <VAT>vat_normal_rate</VAT>\n
+  </movement>\n
+</transaction>\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>parser_dict_method</string> </key>
+            <value> <string>IntegrationSite_getSaleOrderParserDict</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>Web Service Request</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>Get Sale Order</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

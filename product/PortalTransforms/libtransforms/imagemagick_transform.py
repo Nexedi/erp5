@@ -26,26 +26,19 @@ class ImageMagickTransforms:
         if depth:
             parameter_list.extend(['-depth', '%s' % depth, '-type', 'Palette'])
         parameter_list.append('%s:-' % self.format)
-        process = subprocess.Popen(parameter_list,
-                                   stdin=subprocess.PIPE,
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE,
-                                   close_fds=True)
-        imgin, imgout, err = process.stdin, process.stdout, process.stderr
+        p = subprocess.Popen(parameter_list,
+                             stdin=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE,
+                             close_fds=True)
+        try:
+            # XXX: The only portable way is to pass what stdin.write can accept,
+            #      which is a string for PIPE.
+            image, err = p.communicate(str(orig))
+        finally:
+            del p
 
-        def writeData(stream, data):
-          if isinstance(data, str):
-            stream.write(data)
-          else:
-            # Use PData structure to prevent
-            # consuming too much memory
-            while data is not None:
-              stream.write(data.data)
-              data = data.next
-
-        writeData(imgin, orig)
-        imgin.close()
-        data.setData(imgout.read())
+        data.setData(image)
         return data
 
 def register():

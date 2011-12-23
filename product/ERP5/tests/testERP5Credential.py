@@ -32,8 +32,8 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.tests.Sequence import SequenceList
 import email, re
-from email.Header import decode_header, make_header
-from email.Utils import parseaddr
+from email.header import decode_header, make_header
+from email.utils import parseaddr
 import transaction
 import cgi
 from urlparse import urlparse
@@ -555,6 +555,31 @@ class TestERP5Credential(ERP5TypeTestCase):
     assignment.open()
     sequence.edit(person_reference=person.getReference())
 
+  def stepCreateSameEmailPersonList(self, sequence=None, sequence_list=None,
+      **kw):
+    """
+      Create a list of person with same email
+    """
+    default_email_text = "bart@duff.com"
+    person_list = []
+    for reference in ['userX', 'bart', 'homer']:
+      portal = self.getPortalObject()
+      # create a person with 'secret' as password
+      self.login()
+      person_module = portal.getDefaultModule('Person')
+      person = person_module.newContent(title=reference,
+                               reference=reference,
+                               password='secret',
+                               default_email_text=default_email_text)
+      # create an assignment
+      assignment = person.newContent(portal_type='Assignment',
+                        function='member')
+      assignment.open()
+      person_list.append(person)
+
+    sequence.edit(person_list=person_list,
+                  default_email_text=default_email_text)
+
   def stepCreateCredentialRecovery(self, sequence=None, sequence_list=None,
       **kw):
     '''
@@ -579,6 +604,30 @@ class TestERP5Credential(ERP5TypeTestCase):
 
     # associate it with barney
     credential_recovery.setDestinationDecisionValue(person)
+    credential_recovery.setReference(person.getReference())
+    sequence.edit(credential_recovery=credential_recovery)
+
+  def stepCreateCredentialRecoveryForUsername(self, sequence=None, sequence_list=None,
+      **kw):
+    '''
+    Create a credential recovery for username case
+    '''
+    portal = self.getPortalObject()
+    default_email_text = sequence.get("default_email_text")
+    query_kw = {"email.url_string" : default_email_text}
+    result = portal.portal_catalog(portal_type="Email", parent_portal_type="Person", **query_kw)
+
+    person_list = [x.getObject().getParentValue() for x in result]
+    self.assertEqual(len(person_list), 3)
+    sequence.edit(person_list=person_list)
+    # create a credential recovery
+    credential_recovery_module = portal.getDefaultModule('Credential Recovery')
+    credential_recovery = credential_recovery_module.newContent(portal_type=\
+        'Credential Recovery')
+
+    # associate it with barney
+    credential_recovery.setDestinationDecisionValueList(person_list)
+    credential_recovery.setDefaultEmailText(default_email_text)
     sequence.edit(credential_recovery=credential_recovery)
 
   def stepRequestCredentialRecoveryWithERP5Site_newCredentialRecovery(self,
@@ -667,11 +716,36 @@ class TestERP5Credential(ERP5TypeTestCase):
     send_to = decoded_message['headers']['to']
     self.assertEqual(barney.getDefaultEmailText(), send_to)
 
-  def stepCheckPasswordChange(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckEmailIsSentForUsername(self, sequence=None, sequence_list=None, **kw):
     '''
+      Check an email containing the usernames list as been sent
+    '''
+    person_list = sequence.get('person_list')
+    email = sequence.get('default_email_text')
+    # after accept, only one email is send containing the reset link
+    previous_message = self.portal.MailHost._previous_message
+    last_message = self.portal.MailHost._last_message
+    if len(previous_message):
+      self.assertNotEqual(previous_message[2], last_message[2])
+    decoded_message = self.decode_email(last_message[2])
+    body_message = decoded_message['body']
+
+    for person in person_list:
+      match_obj = None
+      reference = person.getReference()
+      match_obj = re.search(reference, body_message)
+      # check the reset password link is in the mail
+      self.assertNotEquals(match_obj, None)
+
+    # check the mail is sent to the requester :
+    send_to = decoded_message['headers']['to']
+    self.assertEqual(email, send_to)
+
+  def stepCheckPasswordChange(self, sequence=None, sequence_list=None, **kw):
+    """
       check it's possible to change the user password using the link in the
       email
-    '''
+    """
     # get the url
     last_message = self.portal.MailHost._last_message
     rawstr = r"""PasswordTool_viewResetPassword"""
@@ -695,7 +769,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self._assertUserExists('barney', 'secret')
     self.portal.portal_password.changeUserPassword(user_login="barney",
                                                    password="new_password",
-                                                   password_confirmation="new_password",
+                                                   password_confirm="new_password",
                                                    password_key=key)
     transaction.commit()
     self.tic()
@@ -813,10 +887,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_list.play(self)
 
   def test_03_simpleCredentialUpdate(self):
-    '''
+    """
     Check it's possible to update credential informations using credential
     update
-    '''
+    """
     sequence_list = SequenceList()
     sequence_string = 'SetCredentialAssignmentPropertyList ' \
                       'CreateSimpleSubscriptionRequest '\
@@ -915,6 +989,21 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_09_usernameRecovery(self):
+    '''
+    check that a user that forget his username(s) is able to
+    get an email containing them
+    '''
+    sequence_list = SequenceList()
+    sequence_string = 'CreateSameEmailPersonList Tic '\
+                      'CreateCredentialRecoveryForUsername Tic '\
+                      'SubmitCredentialRecovery Tic '\
+                      'AcceptCredentialRecovery Tic '\
+                      'CheckEmailIsSentForUsername'
+
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
   def testMailMessagePosted(self):
     """ Test if the Mail Message was posted correctly """
     sequence_list = SequenceList()
@@ -949,8 +1038,10 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(['Vifib Test <barney@duff.com>'], mto)
     self.assertNotEquals(re.search("Subject\:.*Welcome", message_text), None)
     self.assertNotEquals(re.search("Hello\ Vifib\ Test\,", message_text), None)
-    self.assertNotEquals(re.search("key\=..%s" % mail_message.getReference(),
-      message_text), None)
+    decoded_message = self.decode_email(last_message[2])
+    body_message = decoded_message['body']
+    self.assertNotEquals(re.search("key=%s" % mail_message.getReference(),
+                                   body_message), None)
 
   def testAssignmentCreationUsingSystemPreferenceProperty(self):
     """

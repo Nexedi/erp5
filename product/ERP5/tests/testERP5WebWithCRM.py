@@ -129,7 +129,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     self.portal.portal_alarms.fetch_incoming_web_message_list.activeSense()
     transaction.commit()
     self.tic()
-    self.assertEquals(event.getSimulationState(), 'acknowledged')
+    self.assertEquals(event.getSimulationState(), 'delivered')
     ticket = event.getFollowUpValue()
     self.assertTrue(ticket is not None)
     self.assertEquals(ticket.getSimulationState(), 'submitted')
@@ -186,7 +186,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
     self.portal.portal_alarms.fetch_incoming_web_message_list.activeSense()
     transaction.commit()
     self.tic()
-    self.assertEquals(event.getSimulationState(), 'acknowledged')
+    self.assertEquals(event.getSimulationState(), 'delivered')
 
 def test_suite():
   suite = unittest.TestSuite()

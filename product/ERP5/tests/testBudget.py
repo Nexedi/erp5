@@ -33,6 +33,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ZSQLCatalog.SQLCatalog import ComplexQuery, Query
 from AccessControl import getSecurityManager
+from Products.ERP5Type.tests.utils import updateCellList
 
 class TestBudget(ERP5TypeTestCase):
   
@@ -60,9 +61,10 @@ class TestBudget(ERP5TypeTestCase):
     We'll use erp5_accounting_ui_test to have some content
     """
     return ('erp5_core_proxy_field_legacy',
-            'erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
+            'erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade', 'erp5_accounting',
             'erp5_invoicing', 'erp5_simplified_invoicing',
-            'erp5_accounting_ui_test', 'erp5_budget')
+            'erp5_accounting_ui_test', 'erp5_budget',
+            'erp5_simulation_test')
 
   # creation and basic functionalities
   def test_simple_create_budget_model(self):
@@ -1831,6 +1833,133 @@ class TestBudget(ERP5TypeTestCase):
         'account_type/asset',)
     self.assertNotEquals(None, budget_cell)
     self.assertEquals(1, budget_cell.getQuantity())
+
+  def updateBudgetCellList(self, budget_line, table_list):
+    updateCellList(self.portal,
+                   budget_line,
+                   'Budget Cell',
+                   'BudgetLine_asCellRange',
+                   table_list)
+
+  def makeTableList(self, base_id, cell_range_kw,
+                    mapped_value_argument_list, table):
+    return [{'base_id':base_id,
+            'cell_range_kw':cell_range_kw,
+            'mapped_value_argument_list':mapped_value_argument_list,
+            'table':table
+            }]
+
+  def makeQuantityTable(self, table):
+    #two_dimension = (
+    #  (        column,         column,),
+    #  (line,   mapped_value,   mapped_value,),
+    #  (line,   mapped_value,   mapped_value,),
+    #  )
+    return self.makeTableList(
+              base_id='cell',
+              cell_range_kw={},
+              mapped_value_argument_list=('quantity',),
+              table=table)
+
+  def testNodeVariationWithMovemetAxisPackingList(self):
+    """
+     Budgets are normally used with accounting transactions, however it can be
+     used with packing lists and other Movement. This is an experimental usage.
+    """
+    self.portal.product_module.newContent(portal_type='Product',
+                                          id='test_product',
+                                          title='Test Product')
+    self.portal.product_module.newContent(portal_type='Product',
+                                          id='demo_product',
+                                          title='Demo Prduct')
+    transaction.commit()
+    budget_model = self.portal.budget_model_module.newContent(
+                            portal_type='Budget Model')
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=1,
+                    budget_variation='budget_cell',
+                    inventory_axis='movement',
+                    variation_base_category='resource',
+                    aggregate_value_list=(
+                      self.portal.product_module.test_product,
+                      self.portal.product_module.demo_product,
+                    ))
+    budget_model.newContent(
+                    portal_type='Node Budget Variation',
+                    int_index=2,
+                    budget_variation='budget_cell',
+                    inventory_axis='mirror_section',
+                    variation_base_category='source_section',
+                    aggregate_value_list=(
+                      self.portal.organisation_module.my_organisation,
+                      self.portal.organisation_module.main_organisation
+                    ))
+    budget = self.portal.budget_module.newContent(
+                    portal_type='Budget',
+                    start_date_range_min=DateTime(2011, 1, 1),
+                    start_date_range_max=DateTime(2011, 12, 31),
+                    specialise_value=budget_model)
+    budget_line = budget.newContent(portal_type='Budget Line')
+    budget_line.edit(
+        variation_category_list=(
+          'resource/product_module/test_product',
+          'resource/product_module/demo_product',
+          'source_section/organisation_module/my_organisation',
+          'source_section/organisation_module/main_organisation', ))
+    self.updateBudgetCellList(
+      budget_line,
+      self.makeQuantityTable(
+        table=[
+           ('source_section/organisation_module/my_organisation',
+            'source_section/organisation_module/main_organisation'),
+           ('resource/product_module/test_product', 12000, 11000),
+           ('resource/product_module/demo_product', 17000, 15000),
+        ])
+    )
+
+    def createPackingList(organisation_id, product_id, quantity, price):
+      spl = self.portal.sale_packing_list_module.newContent(
+              portal_type='Sale Packing List')
+      spl.setSpecialise(
+        'business_process_module/erp5_default_business_process')
+      spl.setStartDate('2011/08/01')
+      spl.setStopDate('2011/08/05')
+      spl.setDestinationSection('organisation_module/client_1')
+      spl.setDestination('organisation_module/client_1')
+      organisation = 'organisation_module/%s' % organisation_id
+      spl.setSourceSection(organisation)
+      spl.setSource(organisation)
+      spll = spl.newContent(portal_type='Sale Packing List Line')
+      spll.setQuantity(quantity)
+      spll.setPrice(price)
+      spll.setResource('product_module/%s' % product_id)
+      transaction.commit()
+      spl.confirm()
+      self.tic()
+      spl.start()
+      self.tic()
+      spl.stop()
+      self.tic()
+      return spl
+
+    createPackingList('my_organisation', 'test_product', 100, 5)
+    createPackingList('main_organisation', 'demo_product', 200, 6)
+    self.tic()
+    # Budget Line only support total price. It is considerable to support
+    # total_quantity.
+    total_price = budget_line.getConsumedBudgetDict().get(
+      ('resource/product_module/test_product',
+       'source_section/organisation_module/my_organisation'),
+      None)
+    self.assertNotEquals(None, total_price)
+    self.assertEquals(500.0, total_price)
+    total_price = budget_line.getEngagedBudgetDict().get(
+      ('resource/product_module/demo_product',
+       'source_section/organisation_module/main_organisation'),
+      None)
+    self.assertNotEquals(None, total_price)
+    self.assertEquals(1200.0, total_price)
 
 
   # Other TODOs:

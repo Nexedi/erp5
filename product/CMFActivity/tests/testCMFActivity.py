@@ -48,10 +48,11 @@ from ZODB.POSException import ConflictError
 from DateTime import DateTime
 import cPickle as pickle
 from Products.CMFActivity.ActivityTool import Message
+import gc
 import random
 import threading
 import sys
-
+import weakref
 import transaction
 
 class CommitFailed(Exception):
@@ -525,7 +526,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.tic()
     self.assertEquals(o.getTitle(), 'b')
 
-    o.setDefaultActivateParameters(tag = 'toto')
+    o.setDefaultActivateParameterDict({'tag': 'toto'})
     def titi(self):
       self.setCorporateName(self.getTitle() + 'd')
     o.__class__.titi = titi
@@ -1585,7 +1586,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       if edit_kw:
         self.getActivityRuntimeEnvironment().edit(**edit_kw)
       if conflict is not None:
-        raise conflict and ConflictError or Exception
+        raise ConflictError if conflict else Exception
     def check(retry_list, **activate_kw):
       fail = retry_list[-1][0] is not None and 1 or 0
       for activity in 'SQLDict', 'SQLQueue':
@@ -3183,16 +3184,16 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       rendez_vous_event.set()
       # When this event is available, it means test has called process_shutdown.
       activity_event.wait()
-    from Products.CMFActivity.Activity.Queue import Queue
-    original_queue_tic = Queue.tic
+    from Products.CMFActivity.Activity.SQLDict import SQLDict
+    original_dequeue = SQLDict.dequeueMessage
     queue_tic_test_dict = {}
-    def Queue_tic(self, activity_tool, processing_node):
-      result = original_queue_tic(self, activity_tool, processing_node)
-      queue_tic_test_dict['isAlive'] = process_shutdown_thread.isAlive()
+    def dequeueMessage(self, activity_tool, processing_node):
       # This is a one-shot method, revert after execution
-      Queue.tic = original_queue_tic
+      SQLDict.dequeueMessage = original_dequeue
+      result = self.dequeueMessage(activity_tool, processing_node)
+      queue_tic_test_dict['isAlive'] = process_shutdown_thread.isAlive()
       return result
-    Queue.tic = Queue_tic
+    SQLDict.dequeueMessage = dequeueMessage
     Organisation.waitingActivity = waitingActivity
     try:
       # Use SQLDict with no group method so that both activities won't be
@@ -3257,7 +3258,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
           pass
     finally:
       delattr(Organisation, 'waitingActivity')
-      Queue.tic = original_queue_tic
+      SQLDict.dequeueMessage = original_dequeue
 
   def test_hasActivity(self):
     active_object = self.portal.organisation_module.newContent(
@@ -3818,6 +3819,52 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     )
     newconn = portal.cmf_activity_sql_connection
     self.assertEquals(newconn.meta_type, 'CMFActivity Database Connection')
+
+  def test_onErrorCallback(self):
+    activity_tool = self.portal.portal_activities
+    obj = activity_tool.newActiveProcess()
+    transaction.commit()
+    self.tic()
+    def _raise(exception): # I wish exceptions are callable raising themselves
+      raise exception
+    def doSomething(self, conflict_error, cancel):
+      self.activity_count += 1
+      error = ConflictError() if conflict_error else Exception()
+      def onError(exc_type, exc_value, traceback):
+        assert exc_value is error
+        env = self.getActivityRuntimeEnvironment()
+        weakref_list.extend(map(weakref.ref, (env, env._message)))
+        self.on_error_count += 1
+        return cancel
+      self.getActivityRuntimeEnvironment().edit(on_error_callback=onError)
+      if not self.on_error_count:
+        if not conflict_error:
+          raise error
+        transaction.get().addBeforeCommitHook(_raise, (error,))
+    obj.__class__.doSomething = doSomething
+    try:
+      for activity in 'SQLDict', 'SQLQueue':
+        for conflict_error in False, True:
+          weakref_list = []
+          obj.activity_count = obj.on_error_count = 0
+          obj.activate(activity=activity).doSomething(conflict_error, True)
+          transaction.commit()
+          self.tic()
+          self.assertEqual(obj.activity_count, 0)
+          self.assertEqual(obj.on_error_count, 1)
+          gc.collect()
+          self.assertEqual([x() for x in weakref_list], [None, None])
+          weakref_list = []
+          obj.activate(activity=activity).doSomething(conflict_error, False)
+          obj.on_error_count = 0
+          transaction.commit()
+          self.tic()
+          self.assertEqual(obj.activity_count, 1)
+          self.assertEqual(obj.on_error_count, 1)
+          gc.collect()
+          self.assertEqual([x() for x in weakref_list], [None, None])
+    finally:
+      del obj.__class__.doSomething
 
 def test_suite():
   suite = unittest.TestSuite()

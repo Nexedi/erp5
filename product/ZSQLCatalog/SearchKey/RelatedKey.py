@@ -37,12 +37,29 @@ from Products.ZSQLCatalog.interfaces.search_key import IRelatedKey
 from zope.interface.verify import verifyClass
 from zope.interface import implements
 from Products.ZSQLCatalog.SQLCatalog import profiler_decorator
+from Products.ZSQLCatalog.TableDefinition import TableAlias, InnerJoin, LeftJoin
+
+from logging import getLogger
+log = getLogger(__name__)
 
 BACKWARD_COMPATIBILITY = True
 
+RELATED_QUERY_SEPARATOR = "\nAND -- related query separator\n"
+
+RELATED_KEY_MISMATCH_MESSAGE = "\
+A rendered related key must contain the same number of querying \
+conditions as the tables it relates, properly separated by \
+RELATED_QUERY_SEPARATOR. \n\
+Offending related key: %r, for column %r, table_alias_list: %r, \
+rendered_related_key: \n%s"
+
+RELATED_KEY_ALIASED_MESSAGE = "\
+Support for explicit joins of aliased related keys is not yet implemented. \
+Offending related key: %r, for column %r, table_alias_list: %r"
+
 class RelatedKey(SearchKey):
   """
-    This SearchKey handles searched on virtual columns of RelatedKey type.
+    This SearchKey handles searches on virtual columns of RelatedKey type.
     It generates joins required by the virtual column to reach the actual
     column to compare, plus a regular query on that column if needed.
   """
@@ -115,13 +132,23 @@ class RelatedKey(SearchKey):
   def registerColumnMap(self, column_map, table_alias_list=None):
     related_column = self.getColumn()
     group = column_map.registerRelatedKey(related_column, self.real_column)
-    # Each table except last one must be registered to their own group, so that
-    # the same table can be used multiple time (and aliased multiple times)
-    # in the same related key. The last one must be register to related key
-    # "main" group (ie, the value of the "group" variable) to be the same as
-    # the ta ble used in join_condition.
+    # Each table except last one must be registered to their own
+    # group, so that the same table can be used multiple times (and
+    # aliased multiple times) in the same related key. The last one
+    # must be registered to the related key "main" group (ie, the
+    # value of the "group" variable) to be the same as the table used
+    # in join_condition.
     if table_alias_list is not None:
       assert len(self.table_list) == len(table_alias_list)
+      # XXX-Leo: remove the rest of this 'if' branch after making sure
+      # that ColumnMap.addRelatedKeyJoin() can handle collapsing
+      # chains of inner-joins that are subsets of one another based on
+      # having the same aliases:
+      msg = RELATED_KEY_ALIASED_MESSAGE % (self.related_key_id,
+                                           self.column,
+                                           table_alias_list,)
+      log.warning(msg + "\n\nForcing implicit join...")
+      column_map.implicit_join = True
     for table_position in xrange(len(self.table_list) - 1):
       table_name = self.table_list[table_position]
       local_group = column_map.registerRelatedKeyColumn(related_column, table_position, group)
@@ -144,6 +171,23 @@ class RelatedKey(SearchKey):
     # RelatedKeys.
     column_map.registerCatalog()
     return group
+
+  def stitchJoinDefinition(self, table_alias_list, join_query_list, column_map):
+    alias, table = table_alias_list[-1]
+    right = column_map.makeTableAliasDefinition(table, alias)
+    if not join_query_list:
+      # nothing to do, just return the table alias
+      assert len(table_alias_list) == 1
+      return right
+    else:
+      # create an InnerJoin of the last element of the alias list with
+      # a chain of InnerJoins of the rest of the list conditioned on
+      # the the last element of the join_query_list
+      left = self.stitchJoinDefinition(table_alias_list[:-1],
+                                       join_query_list[:-1],
+                                       column_map)
+      condition = join_query_list[-1]
+      return InnerJoin(left, right, condition)
 
   @profiler_decorator
   def buildSQLExpression(self, sql_catalog, column_map, only_group_columns, group):
@@ -170,20 +214,26 @@ class RelatedKey(SearchKey):
     table_alias_list = [(getTableAlias(related_table, group=getRelatedKeyGroup(index, group)), related_table)
                         for (index, related_table) in enumerate(related_table_list)]
     # table alias for destination table
-    table_alias_list.append((getTableAlias(destination_table, group=group), destination_table))
+    table_alias_list.append((getTableAlias(destination_table, group=group),
+                             destination_table))
 
     # map aliases to use in ZSQLMethod.
-    table_alias_dict = dict(('table_%s' % (index, ), table_alias[0])
-                            for (index, table_alias) in enumerate(table_alias_list))
+    table_alias_dict = dict(('table_%s' % (index, ), table_alias)
+                            for (index, (table_alias, table_name))
+                            in enumerate(table_alias_list))
 
     assert len(table_alias_list) == len(table_alias_dict)
 
+    query_table=column_map.getCatalogTableAlias()
     rendered_related_key = related_key(
-      query_table=column_map.getCatalogTableAlias(),
+      query_table=query_table,
+      RELATED_QUERY_SEPARATOR=RELATED_QUERY_SEPARATOR,
       src__=1,
       **table_alias_dict)
+    join_condition_list = rendered_related_key.split(RELATED_QUERY_SEPARATOR)
+
     # Important:
-    # Former catalog separated join condition from related query.
+    # Previously the catalog separated join condition from the related query.
     # Example:
     #   ComplexQuery(Query(title="foo"),
     #                Query(subordination_title="bar")
@@ -199,19 +249,53 @@ class RelatedKey(SearchKey):
     # This was done on purpose, because doing otherwise gives very poor
     # performances (on a simple data set, similar query can take *minutes* to
     # execute - as of MySQL 5.x).
-    # Doing the same way as the former catalog is required for backward
-    # compatibility, until a decent alternative is found (like spliting the
-    # "OR" expression into ensemblist operations at query level).
-    # Note that doing this has a side effect on result list, as objects
-    # lacking a relation will never appear in the result.
-    if BACKWARD_COMPATIBILITY:
-      # XXX: Calling a private-ish method on column_map.
-      # This should never happen. It should be removed as soon as an
-      # alternative exists.
-      column_map._addJoinQuery(SQLQuery(rendered_related_key))
-      return None
+    #
+    # Because of this, we never return an SQLExpression here, as it
+    # would mix join definition with column condition in the body of
+    # the WHERE clause. Instead we explicitly define a Join to the
+    # catalog. The ColumnMap defines whether this is an Inner Join or
+    # a Left Outer Join. Notice that if an Inner Join is decided,
+    # objects lacking a relationship will never appear in the result.
+
+    if len(join_condition_list) == len(table_alias_list):
+      # Good! we got a compatible method that splits the join
+      # conditions according to the related tables.
+      #
+      # Add a join on this related key, based on the chain of
+      # inner-joins of the related key tables.
+      query_table_join_condition = join_condition_list.pop()
+      right_side = self.stitchJoinDefinition(table_alias_list,
+                                             join_condition_list,
+                                             column_map)
+      column_map.addRelatedKeyJoin(self.column,
+                                   right_side=right_side,
+                                   condition=query_table_join_condition)
     else:
-      return SQLExpression(self, where_expression=rendered_related_key)
+      # Method did not render the related key condition with the
+      # appropriate separators so we could split it
+
+      # XXX: Can we try to parse rendered_related_key to select which
+      # conditions go with each table? Maybe we could still use
+      # explicit joins this way...
+
+      msg = RELATED_KEY_MISMATCH_MESSAGE % (self.related_key_id,
+                                            self.column,
+                                            table_alias_list,
+                                            rendered_related_key)
+      if BACKWARD_COMPATIBILITY:
+        # BBB: remove this branch of the condition, and the above
+        # constant, when all zsql_methods have been adapted to return
+        # the join queries properly separated by the
+        # RELATED_QUERY_SEPARATOR.
+
+        # The rendered related key doesn't have the separators for each
+        # joined table, so we revert to doing implicit inner joins:
+        log.warning(msg + "\n\nAdding an Implicit Join Condition...")
+        column_map._addJoinQueryForColumn(self.column,
+                                          SQLQuery(rendered_related_key))
+      else:
+        raise RuntimeError(msg)
+    return None
 
 verifyClass(IRelatedKey, RelatedKey)
 
