@@ -112,35 +112,8 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>Configurator Key</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
   <td>ERP5 Configuration</td>\n
   <td></td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>//input[@name="field_my_ac_key"]</td>\n
-  <td>wrong_configuration_key</td>\n
-</tr>\n
-<tr>\n
-  <td>clickAndWait</td>\n
-  <td tal:content="python: \'//button[@value=\\\'business_configuration_module/%s\\\']\' %\n
-                           here.Zuite_getConfigurationTestDict()[\'business_configuration_id\']"></td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>verifyTextPresent</td>\n
-  <td>Incorrect Configuration Key</td>\n
-  <td></td>\n
-</tr>\n
-<tr>\n
-  <td>type</td>\n
-  <td>//input[@name="field_my_ac_key"]</td>\n
-  <td tal:content="python:\n
-        here.Zuite_getConfigurationTestDict()[\'configuration_key\']"></td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n

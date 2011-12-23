@@ -60,7 +60,6 @@
 from DateTime import DateTime\n
 \n
 configuration_dict = {\n
-        \'configuration_key\': \'a\', # XXX: fill as appropriate for test env\n
         \'customer_organisation_title\': \'Nexedi SA\',\n
         \'customer_organisation_email\': \'webproject-report@erp5.org\',\n
         \'customer_organisation_telephone\': \'+123 234 567 891\',\n

@@ -79,8 +79,9 @@ if default_site_preference.getPreferenceState() != \'global\':\n
   default_site_preference.enable()\n
 \n
 # update repository info of Configurator site\n
-portal.portal_templates.updateRepositoryBusinessTemplateList(\n
-  repository_list = configuration_info[\'bt_repository_list\'])\n
+if len(portal.portal_templates.getRepositoryList([])) == 0:\n
+  portal.portal_templates.updateRepositoryBusinessTemplateList(\n
+    repository_list = configuration_info[\'bt_repository_list\'])\n
 \n
 # (Re)Create the Business Configurator\n
 bc_id = configuration_info[\'business_configuration_id\']\n
@@ -91,8 +92,7 @@ if business_configuration is not None:\n
 business_configuration = context.business_configuration_module.newContent(\n
                             portal_type="Business Configuration",\n
                             id=bc_id, \n
-                            title=bc_id,\n
-                            reference=configuration_info[\'configuration_key\'])\n
+                            title=bc_id)\n
 \n
 business_configuration.setResource(workflow_path)\n
 \n
