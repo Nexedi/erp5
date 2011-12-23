@@ -28,7 +28,6 @@
 
 from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
 from Queue import VALID, INVALID_PATH
-from RAMDict import RAMDict
 from Products.CMFActivity.Errors import ActivityFlushError
 import sys
 #from time import time
@@ -45,7 +44,7 @@ READ_MESSAGE_LIMIT = 1000
 
 MAX_MESSAGE_LIST_SIZE = 100
 
-class SQLDict(RAMDict, SQLBase):
+class SQLDict(SQLBase):
   """
     A simple OOBTree based queue. It should be compatible with transactions
     and provide sequentiality. Should not create conflict
@@ -103,20 +102,18 @@ class SQLDict(RAMDict, SQLBase):
     if len(uid_list)>0:
       activity_tool.SQLBase_delMessage(table=self.sql_table, uid=uid_list)
 
-  def finishQueueMessage(self, activity_tool_path, m):
-    # Nothing to do in SQLDict.
-    pass
-
-  def finishDeleteMessage(self, activity_tool_path, m):
-    # Nothing to do in SQLDict.
-    pass
-
-  # Registration management
-  def registerActivityBuffer(self, activity_buffer):
-    pass
-
   def generateMessageUID(self, m):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('tag'), m.activity_kw.get('group_id'))
+
+  def isMessageRegistered(self, activity_buffer, activity_tool, m):
+    return self.generateMessageUID(m) in activity_buffer.getUidSet(self)
+
+  def registerMessage(self, activity_buffer, activity_tool, m):
+    message_list = activity_buffer.getMessageList(self)
+    message_list.append(m)
+    uid_set = activity_buffer.getUidSet(self)
+    uid_set.add(self.generateMessageUID(m))
+    m.is_registered = 1
 
   def unregisterMessage(self, activity_buffer, activity_tool, m):
     m.is_registered = 0 # This prevents from inserting deleted messages into the queue
@@ -157,8 +154,6 @@ class SQLDict(RAMDict, SQLBase):
       # And re-raise
       raise
     return uid_list
-
-  dequeueMessage = SQLBase.dequeueMessage
 
   def hasActivity(self, activity_tool, object, method_id=None, only_valid=None, active_process_uid=None):
     hasMessage = getattr(activity_tool, 'SQLDict_hasMessage', None)
@@ -243,8 +238,6 @@ class SQLDict(RAMDict, SQLBase):
         if len(uid_list)>0:
           activity_tool.SQLBase_delMessage(table=self.sql_table,
                                            uid=[x.uid for x in uid_list])
-
-  getMessageList = SQLBase.getMessageList
 
   def dumpMessageList(self, activity_tool):
     # Dump all messages in the table.
@@ -395,7 +388,7 @@ class SQLDict(RAMDict, SQLBase):
 
   def getPriority(self, activity_tool):
     method = activity_tool.SQLDict_getPriority
-    default =  RAMDict.getPriority(self, activity_tool)
+    default =  SQLBase.getPriority(self, activity_tool)
     return self._getPriority(activity_tool, method, default)
 
 registerActivity(SQLDict)

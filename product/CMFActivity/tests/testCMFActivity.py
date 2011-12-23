@@ -836,24 +836,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     self.DeferredSetTitleActivity('SQLQueue')
 
-  def test_03_DeferredSetTitleRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we can add a complete sales order
-    if not run: return
-    if not quiet:
-      message = '\nTest Deferred Set Title RAMDict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.DeferredSetTitleActivity('RAMDict')
-
-  def test_04_DeferredSetTitleRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we can add a complete sales order
-    if not run: return
-    if not quiet:
-      message = '\nTest Deferred Set Title RAMQueue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.DeferredSetTitleActivity('RAMQueue')
-
   def test_05_InvokeAndCancelSQLDict(self, quiet=0, run=run_all_test):
     # Test if we can add a complete sales order
     if not run: return
@@ -871,24 +853,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.InvokeAndCancelActivity('SQLQueue')
-
-  def test_07_InvokeAndCancelRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we can add a complete sales order
-    if not run: return
-    if not quiet:
-      message = '\nTest Invoke And Cancel RAMDict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.InvokeAndCancelActivity('RAMDict')
-
-  def test_08_InvokeAndCancelRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we can add a complete sales order
-    if not run: return
-    if not quiet:
-      message = '\nTest Invoke And Cancel RAMQueue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.InvokeAndCancelActivity('RAMQueue')
 
   def test_09_CallOnceWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
@@ -908,24 +872,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     self.CallOnceWithActivity('SQLQueue')
 
-  def test_11_CallOnceWithRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nCall Once With RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.CallOnceWithActivity('RAMDict')
-
-  def test_12_CallOnceWithRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nCall Once With RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.CallOnceWithActivity('RAMQueue')
-
   def test_13_TryMessageWithErrorOnSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
     if not run: return
@@ -943,24 +889,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryMessageWithErrorOnActivity('SQLQueue')
-
-  def test_15_TryMessageWithErrorOnRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Message With Error On RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryMessageWithErrorOnActivity('RAMDict')
-
-  def test_16_TryMessageWithErrorOnRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Message With Error On RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryMessageWithErrorOnActivity('RAMQueue')
 
   def test_17_TryFlushActivityWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
@@ -980,24 +908,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     self.TryFlushActivity('SQLQueue')
 
-  def test_19_TryFlushActivityWithRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Flush Activity With RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryFlushActivity('RAMDict')
-
-  def test_20_TryFlushActivityWithRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Flush Activity With RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryFlushActivity('RAMQueue')
-
   def test_21_TryActivateInsideFlushWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
     if not run: return
@@ -1015,24 +925,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryActivateInsideFlush('SQLQueue')
-
-  def test_23_TryActivateInsideFlushWithRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Activate Inside Flush With RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActivateInsideFlush('RAMDict')
-
-  def test_24_TryActivateInsideFlushWithRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Activate Inside Flush With RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActivateInsideFlush('RAMQueue')
 
   def test_25_TryTwoMethodsWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
@@ -1052,24 +944,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     self.TryTwoMethods('SQLQueue')
 
-  def test_27_TryTwoMethodsWithRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Two Methods With RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryTwoMethods('RAMDict')
-
-  def test_28_TryTwoMethodsWithRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Two Methods With RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryTwoMethods('RAMQueue')
-
   def test_29_TryTwoMethodsAndFlushThemWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
     if not run: return
@@ -1088,24 +962,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     self.TryTwoMethodsAndFlushThem('SQLQueue')
 
-  def test_31_TryTwoMethodsAndFlushThemWithRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Two Methods And Flush Them With RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryTwoMethodsAndFlushThem('RAMDict')
-
-  def test_32_TryTwoMethodsAndFlushThemWithRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Two Methods And Flush Them With RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryTwoMethodsAndFlushThem('RAMQueue')
-
   def test_33_TryActivateFlushActivateTicWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
     if not run: return
@@ -1123,24 +979,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryActivateFlushActivateTic('SQLQueue')
-
-  def test_35_TryActivateFlushActivateTicWithRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Activate Flush Activate Tic With RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActivateFlushActivateTic('RAMDict')
-
-  def test_36_TryActivateFlushActivateTicWithRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Activate Flush Activate Tic With RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActivateFlushActivateTic('RAMQueue')
 
   def test_37_TryActivateFlushActivateTicWithMultipleActivities(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
@@ -1170,24 +1008,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     self.TryActivateFlushActivateTic('SQLQueue',commit_sub=1)
 
-  def test_40_TryCommitSubTransactionWithRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Commit Sub Transaction With RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActivateFlushActivateTic('RAMDict',commit_sub=1)
-
-  def test_41_TryCommitSubTransactionWithRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Commit Sub Transaction With RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActivateFlushActivateTic('RAMQueue',commit_sub=1)
-
   def test_42_TryRenameObjectWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
     if not run: return
@@ -1206,24 +1026,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       LOG('Testing... ',0,message)
     self.DeferredSetTitleWithRenamedObject('SQLQueue')
 
-  def test_44_TryRenameObjectWithRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Rename Object With RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.DeferredSetTitleWithRenamedObject('RAMDict')
-
-  def test_45_TryRenameObjectWithRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Rename Object With RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.DeferredSetTitleWithRenamedObject('RAMQueue')
-
   def test_46_TryActiveProcessWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if we call methods only once
     if not run: return
@@ -1241,24 +1043,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
     self.TryActiveProcess('SQLQueue')
-
-  def test_48_TryActiveProcessWithRAMDict(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Active Process With RAM Dict '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActiveProcess('RAMDict')
-
-  def test_49_TryActiveProcessWithRAMQueue(self, quiet=0, run=run_all_test):
-    # Test if we call methods only once
-    if not run: return
-    if not quiet:
-      message = '\nTry Active Process With RAM Queue '
-      ZopeTestCase._print(message)
-      LOG('Testing... ',0,message)
-    self.TryActiveProcess('RAMQueue')
 
   def test_54_TryAfterMethodIdWithSQLDict(self, quiet=0, run=run_all_test):
     # Test if after_method_id can be used

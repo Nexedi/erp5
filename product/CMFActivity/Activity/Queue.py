@@ -45,7 +45,7 @@ INVALID_ORDER  = 2
 MAX_PROCESSING_TIME = 900 # in seconds
 VALIDATION_ERROR_DELAY = 30 # in seconds
 
-class Queue:
+class Queue(object):
   """
     Step 1: use lists
 
@@ -101,10 +101,10 @@ class Queue:
     m.is_deleted = 1
 
   def dequeueMessage(self, activity_tool, processing_node):
-    pass
+    raise NotImplementedError
 
   def distribute(self, activity_tool, node_count):
-    pass
+    raise NotImplementedError
 
   def validate(self, activity_tool, message, check_order_validation=1, **kw):
     """

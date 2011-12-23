@@ -552,7 +552,7 @@ class ActivityTool (Folder, UniqueObject):
 
     def initialize(self):
       global is_initialized
-      from Activity import RAMQueue, RAMDict, SQLQueue, SQLDict
+      from Activity import SQLQueue, SQLDict
       # Initialize each queue
       for activity in activity_dict.itervalues():
         activity.initialize(self)
@@ -965,7 +965,7 @@ class ActivityTool (Folder, UniqueObject):
         # Loop as long as there are activities. Always process the queue with
         # "highest" priority. If several queues have same highest priority, do
         # not choose one that has just been processed.
-        # This algorithm is fair enough because we actually use only 2 queues.
+        # This algorithm is fair enough because we only have 2 queues.
         # Otherwise, a round-robin of highest-priority queues would be required.
         # XXX: We always finish by iterating over all queues, in case that
         #      getPriority does not see messages dequeueMessage would process.
@@ -974,7 +974,7 @@ class ActivityTool (Folder, UniqueObject):
           return activity.getPriority(self), activity is last
         while is_running_lock.acquire(0):
           try:
-            for last in sorted(activity_dict.itervalues(), key=sort_key):
+            for last in sorted(activity_dict.values(), key=sort_key):
               # Transaction processing is the responsability of the activity
               if not last.dequeueMessage(inner_self, processing_node):
                 break

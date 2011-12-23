@@ -27,7 +27,6 @@
 ##############################################################################
 
 from Products.CMFActivity.ActivityTool import registerActivity, MESSAGE_NOT_EXECUTED, MESSAGE_EXECUTED
-from RAMQueue import RAMQueue
 from Queue import VALID, INVALID_PATH
 from Products.CMFActivity.Errors import ActivityFlushError
 from ZODB.POSException import ConflictError
@@ -45,7 +44,7 @@ READ_MESSAGE_LIMIT = 1000
 
 MAX_MESSAGE_LIST_SIZE = 100
 
-class SQLQueue(RAMQueue, SQLBase):
+class SQLQueue(SQLBase):
   """
     A simple OOBTree based queue. It should be compatible with transactions
     and provide sequentiality. Should not create conflict
@@ -94,22 +93,12 @@ class SQLQueue(RAMQueue, SQLBase):
     #LOG("prepareDeleteMessage", 0, str(m.__dict__))
     activity_tool.SQLBase_delMessage(table=self.sql_table, uid=[m.uid])
 
-  def finishQueueMessage(self, activity_tool_path, m):
-    # Nothing to do in SQLQueue.
-    pass
-
-  def finishDeleteMessage(self, activity_tool_path, m):
-    # Nothing to do in SQLQueue.
-    pass
-
   def getDuplicateMessageUidList(self, activity_tool, line, processing_node):
     """
       Reserve unreserved messages matching given line.
       Return their uids.
     """
     return ()
-
-  dequeueMessage = SQLBase.dequeueMessage
 
   def hasActivity(self, activity_tool, object, method_id=None, only_valid=None, active_process_uid=None):
     hasMessage = getattr(activity_tool, 'SQLQueue_hasMessage', None)
@@ -180,8 +169,6 @@ class SQLQueue(RAMQueue, SQLBase):
       if len(result):
         activity_tool.SQLBase_delMessage(table=self.sql_table,
                                          uid=[line.uid for line in result])
-
-  getMessageList = SQLBase.getMessageList
 
   def countMessage(self, activity_tool, tag=None, path=None,
                    method_id=None, message_uid=None, **kw):
@@ -308,7 +295,7 @@ class SQLQueue(RAMQueue, SQLBase):
 
   def getPriority(self, activity_tool):
     method = activity_tool.SQLQueue_getPriority
-    default =  RAMQueue.getPriority(self, activity_tool)
+    default =  SQLBase.getPriority(self, activity_tool)
     return self._getPriority(activity_tool, method, default)
 
 registerActivity(SQLQueue)

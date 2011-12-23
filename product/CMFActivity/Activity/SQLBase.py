@@ -36,7 +36,7 @@ from Products.CMFActivity.ActiveObject import (
   INVOKE_ERROR_STATE, VALIDATE_ERROR_STATE)
 from Products.CMFActivity.ActivityRuntimeEnvironment import (
   ActivityRuntimeEnvironment, getTransactionalVariable)
-from Queue import VALIDATION_ERROR_DELAY
+from Queue import Queue, VALIDATION_ERROR_DELAY
 
 def sort_message_key(message):
   # same sort key as in SQL{Dict,Queue}_readMessageList
@@ -44,7 +44,7 @@ def sort_message_key(message):
 
 _DequeueMessageException = Exception()
 
-class SQLBase:
+class SQLBase(Queue):
   """
     Define a set of common methods for SQL-based storage of activities.
   """
