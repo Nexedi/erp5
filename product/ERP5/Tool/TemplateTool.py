@@ -1394,11 +1394,12 @@ class TemplateTool (BaseTool):
 
           # For actions which suggest that item shall be kept and item is not
           # explicitely forced, keep the default -- do nothing
-          in_force_keep_list = item in force_keep_list or state not in (
+          # XXX: 'force_keep_list' variable is misnamed.
+          should_keep = item not in force_keep_list and state in (
             'Modified but should be kept', 'Removed but should be kept')
           # If item is forced to be untouched, do not touch it
-          if item in keep_original_list or not in_force_keep_list:
-            if in_force_keep_list:
+          if item in keep_original_list or should_keep:
+            if not should_keep:
               log('Item %r is in force_keep_list and keep_original_list,'
                   ' as keep_original_list has precedence item is NOT MODIFIED'
                   % item)
