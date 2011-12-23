@@ -408,9 +408,10 @@ class ConfiguratorTool(BaseTool):
 
   security.declareProtected(Permissions.ModifyPortalContent, 'startInstallation')
   def startInstallation(self, business_configuration, REQUEST):
-    """ Start installation process as an activity which will query generation
-        server and download/install bt5 template files and meanwhile offer
+    """ Start installation process as an activity which will 
+        download/install bt5 template files and meanwhile offer
         user a nice GUI to observe what's happening. """
+
     global installation_status
     # init installation status
     bt5_file_list = len(business_configuration.contentValues(
@@ -420,19 +421,7 @@ class ConfiguratorTool(BaseTool):
     installation_status['activity_list'] = []
     active_process = self.portal_activities.newActiveProcess()
     REQUEST.set('active_process_id', active_process.getId())
-    self.activate(active_process=active_process, tag='initialERP5Setup'
-        ).initialERP5Setup(business_configuration.getRelativeUrl(), request_restore_dict)
+    business_configuration.activate(
+           active_process=active_process, tag='initialERP5Setup'
+        ).build()
     return self.ConfiguratorTool_viewInstallationStatus(REQUEST)
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-      'initialERP5Setup')
-  def initialERP5Setup(self, business_configuration, request_restore_dict={}):
-    """ Get from remote generation server customized bt5 template files
-        and then install them. """
-    # restore some REQUEST variables as this method is executed in an activity
-    # and there's no access to real original REQUEST
-    for key, value in request_restore_dict.items():
-      self.REQUEST.set(key, value)
-
-    bc = self.restrictedTraverse(business_configuration)
-    bc.build()
