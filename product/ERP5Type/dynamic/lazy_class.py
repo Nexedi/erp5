@@ -28,10 +28,16 @@ class ERP5BaseBroken(Broken, ERP5Base):
     d = dict(PersistentBroken.__dict__, **d)
     for x in '__dict__', '__metaclass__', '__weakref__':
       del d[x]
-    def get(*args):
-      return lambda self: self.__dict__['__Broken_state__'].get(*args)
+    def get(x):
+      def get(self):
+        d = self.__dict__
+        try:
+          return d.get('__Broken_state__', d)[x]
+        except KeyError:
+          return getattr(self.__class__, x)
+      return property(get)
     for x in 'id', 'title':
-      d[x] = property(get(x, getattr(ERP5Base, x, None)))
+      d[x] = get(x)
     return type(name, base, d)
 
   def __getattr__(self, name):
