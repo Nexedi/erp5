@@ -44,7 +44,6 @@ from DateTime import DateTime
 
 # global (RAM) cookie storage
 cookiejar = cookielib.CookieJar()
-last_loggedin_user_and_password = None
 referer = None
 installation_status = {'bt5': {'current': 0,
                                'all': 0, },
