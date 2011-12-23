@@ -50,16 +50,57 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># check that customer did not enter in form repeating user names\n
+            <value> <string encoding="cdata"><![CDATA[
+
+# check that customer did not enter in form repeating user names\n
 reference_list = REQUEST.get(\'_original_field_your_reference\', [])\n
 for reference in reference_list:\n
   if reference_list.count(reference) != 1:\n
     # customer entered in form repeating user names\n
     return 0\n
 \n
-# check that user name is not reserved\n
-return context.Base_isPersonReferenceUnique(editor, REQUEST)\n
-</string> </value>
+portal = context.getPortalObject()\n
+reference = kw.get(\'reference\', None)\n
+\n
+if editor is not None:\n
+  # script is used as a form field\'s validator\n
+  reference = editor\n
+\n
+# get Business Configuration\n
+business_configuration = context.restrictedTraverse(REQUEST.get(\'business_configuration_key\'))\n
+\n
+# ... then check already created accounts\n
+if portal.portal_catalog.getResultValue(\n
+      reference=reference, \n
+      portal_type="Person") is not None:\n
+  return 0\n
+\n
+\n
+# first check if a Business Configuration has not already "reserved" it\n
+# through a Person Configuration Item which when build will create a real\n
+# Nexedi ERP5 account.\n
+person_configurator_item_list = [portal.portal_catalog.getResultValue(\n
+                                  reference=reference,\n
+                                  portal_type=\'Person Configurator Item\')]\n
+\n
+if business_configuration is not None:\n
+  # when in Configuratorm mode we the user may have created already Person Configurator Item\n
+  # in this business configuration. Make sure that going to Previous page will not stop\n
+  # validation of username uniqueness \n
+  # XXX: this should be done using a ZSQL Query rather than getting object\n
+  # there should not be a speed penalty of loading objects in RAM as in most cases\n
+  # it\'s either 0 (i.e. not used) or 1 (used)\n
+  person_configurator_item_list = filter(lambda x: x.getObject().getParentValue().getParentValue() == \n
+                                           business_configuration, \\\n
+                                           person_configurator_item_list)\n
+\n
+if len(person_configurator_item_list) > 0:\n
+  return 0\n
+\n
+return 1\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
