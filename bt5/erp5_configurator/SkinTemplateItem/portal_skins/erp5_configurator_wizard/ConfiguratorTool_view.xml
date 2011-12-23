@@ -95,7 +95,6 @@
                       <list>
                         <string>my_header</string>
                         <string>my_user_preferred_language</string>
-                        <string>my_ac_key</string>
                         <string>business_configuration_list</string>
                       </list>
                     </value>

@@ -98,7 +98,6 @@
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_reference</string>
                         <string>my_version</string>
                         <string>my_configuration_state</string>
                         <string>my_translated_simulation_state_title</string>
