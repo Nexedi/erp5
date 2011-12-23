@@ -1,13 +1,24 @@
 Changes
 =======
 
-0.3 (unreleased)
+0.3 (2011-12-23)
 ----------------
 
- * Imported from https://svn.erp5.org/repos/public/erp5/trunk/utils/
+ * erp5.util.webchecker:
 
-   - erp5.util.webchecker:
+   - Imported from https://svn.erp5.org/repos/public/erp5/trunk/utils/
      Utility to check caching policy of websites
+
+ * erp5.util.testnode:
+
+   - improve logging [Sebastien Robin]
+   - fix passing bt5_path [Gabriel Monnerat]
+   - fix profile_path concatenation [Nicolas Delaby]
+   - fix git updating and parsing repository paths [Julien Muchembled]
+
+ * erp5.util.benchmark:
+
+  - new utility, work in progress [Arnaud Fontaine]
 
 0.2 (2011-09-20)
 ----------------
