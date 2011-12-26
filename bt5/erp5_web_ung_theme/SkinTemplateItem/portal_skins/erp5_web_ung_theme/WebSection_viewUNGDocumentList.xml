@@ -60,10 +60,8 @@
             <value>
               <list>
                 <string>navigation navigation-left</string>
-                <string>header header-left</string>
-                <string>navigation navigation-right</string>
-                <string>main main-left</string>
-                <string>main main-right</string>
+                <string>bottom</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -72,46 +70,26 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>header header-left</string> </key>
+                    <key> <string>bottom</string> </key>
                     <value>
                       <list>
-                        <string>your_search_bar</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>main main-left</string> </key>
+                    <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>your_menu_box</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>main main-right</string> </key>
-                    <value>
-                      <list>
-                        <string>your_favorite_box</string>
-                        <string>your_toolbar</string>
-                        <string>your_document_list</string>
+                        <string>listbox_modification_date</string>
+                        <string>listbox_icon</string>
                       </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>navigation navigation-left</string> </key>
                     <value>
-                      <list>
-                        <string>your_navigation_box</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>navigation navigation-right</string> </key>
-                    <value>
-                      <list>
-                        <string>your_language</string>
-                        <string>your_login_box</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -119,7 +97,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>erp5_web_ung_layout</string> </value>
+            <value> <string>WebSection_viewUNGDocumentList</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -127,11 +105,11 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>erp5_web_ung_layout</string> </value>
+            <value> <string>ung_document_list</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
-            <value> <string>template_erp5_web_ung</string> </value>
+            <value> <string>gadget_view</string> </value>
         </item>
         <item>
             <key> <string>row_length</string> </key>
@@ -143,7 +121,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>UNG Default Layout</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>

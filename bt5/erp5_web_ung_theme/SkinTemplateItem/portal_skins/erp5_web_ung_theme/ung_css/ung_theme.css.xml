@@ -34,20 +34,16 @@
 \n
 body {\n
   background: #fff !important;\n
-  width:100%;\n
-  height:100%;\n
   margin: 0;\n
   padding: 0;\n
   font-family: arial,sans-serif;\n
-  display:inline-block;\n
   font-weight:normal;\n
-  overflow-x: hidden;\n
 }\n
 \n
 /* Hidden input */\n
 fieldset#hidden_fieldset,\n
  div#upload_document,\n
- div#edit_document {\t \n
+ div#edit_document {\n
   display: none;\n
 }\n
 \n
@@ -63,17 +59,17 @@ div.navigation {\n
 \n
 div.navigation fieldset.widget {\n
   border: 0px;\n
-  padding-top: 0.6%; \n
+  padding-top: 0.6%;\n
   margin: -0.60%;\n
   width: 96%;\n
 }\n
 \n
-div.navigation-right { \n
+div.navigation-right {\n
   float: right;\n
   margin-top: -16px;\n
 }\n
 \n
-div.header-user { \n
+div.header-user {\n
   text-align: right;\n
   font-size: 13px;\n
   margin-right:1%;\n
@@ -127,13 +123,17 @@ div.main-right div.main-status {\n
   font-style: bold;\n
 }\n
 \n
+div.main-right #page_wrapper {\n
+  margin-top: 0px; !important\n
+}\n
+\n
 div.gadget-column {\n
   margin-left:-4px;\n
 }\n
 \n
 div.gadget-column div.file-selection {\n
   background-color:#fff;\n
-  margin:15px -4px -4px;\n
+  margin:15px -14px -4px -4px;\n
 }\n
 \n
 div.gadget-column div.file-selection div.file-quick-browser,\n
@@ -141,7 +141,6 @@ div.gadget-column div.file-selection div.file-quick-browser,\n
   padding-top: 5px;\n
   padding-bottom: 5px;\n
   border-bottom: 1px solid #DDD;\n
-  width:14.3em;\n
 }\n
 \n
 div.quick-search-item, td.listbox-table-domain-tree-cell a {\n
@@ -160,10 +159,10 @@ div.quick-search-item:hover,\n
 \n
 /* ERP5 Forms*/\n
 \n
-div.field label, \n
- span.headline,  \n
- a.listbox_title,  \n
- div.actions, div.actions, \n
+div.field label,\n
+ span.headline,\n
+ a.listbox_title,\n
+ div.actions, div.actions,\n
  legend.group_title, fieldset.left {\n
   display:none;\n
 }\n
@@ -180,7 +179,7 @@ div.listbox-content table.listbox tbody tr td {\n
   padding:2.2px;\n
 }\n
 \n
-div.listbox-content tr {\n
+div.listbox-content tr, div#change_state_dialog tr {\n
   font-size:13px;\n
   empty-cells:show;\n
   white-space:nowrap;\n
@@ -189,7 +188,7 @@ div.listbox-content tr {\n
 }\n
 \n
 tr.DataA:hover, tr.DataB:hover {\n
-  background-color: #DAE6F6;\n
+  background-color: #DAE6F6 !important;\n
 }\n
 \n
 div.listbox-content a img, div.main-content a img {\n
@@ -254,7 +253,7 @@ div.listbox-content a:hover {\n
 img.sort-button-desc {\n
   background: url("ung_images/icon_desc.gif") no-repeat;\n
   width:10px;\n
-  margin:1px -10px; \n
+  margin:1px -10px;\n
 }\n
 \n
 img.sort-button-asc {\n
@@ -277,7 +276,7 @@ iframe#svgframe {\n
 \n
 div#wrapper_toolbar {\n
   background: #E3E9FF no-repeat;\n
-  height:35px;  \n
+  height:35px;\n
 }\n
 \n
 button.clone {\n
@@ -300,7 +299,7 @@ div#wrapper_header div.field fieldset {\n
   border:0px;\n
 }\n
 \n
-div#wrapper_header div.field a[name="document_title"], \n
+div#wrapper_header div.field a[name="document_title"],\n
  div#wrapper_header div.field a[name="document_state"] {\n
   margin-left:22px;\n
   font-size:15px;\n
@@ -324,8 +323,7 @@ div.header-right {\n
   width: 41.3%;;\n
 }\n
 \n
-div.main-left, div.main-right, div.main {\n
-  height: 45em;\n
+div.main-left, div.main-right {\n
   margin-top: -0.6em;\n
 }\n
 \n
@@ -348,9 +346,10 @@ table.listbox {\n
   background: #eff3fa;\n
 }\n
 \n
-div.main-right fieldset.widget div.field:last-child img {\n
-  display:none;\n
-}\n
+// XXX: this disable image on main listbox (now by gadget)\n
+//div.main-right fieldset.widget div.field:last-child img {\n
+//  display:none;\n
+//}\n
 \n
 div.header-right div.input a {\n
   color:#A7A2A2;\n
@@ -375,7 +374,7 @@ div.main-left {\n
 \n
 div.favorite {\n
   background-color: #BBCCFF;\n
-  height:27px; \n
+  height:27px;\n
   margin-top:-5px;\n
   padding-top:8px;\n
 }\n
@@ -392,7 +391,7 @@ div.toolbar, div.favorite {\n
 \n
 div.toolbar {\n
   background-color: #E3E9FF;\n
-  height:27px; \n
+  height:27px;\n
   padding-bottom:5px;\n
 }\n
 \n
@@ -402,9 +401,11 @@ div.content {\n
   border-top:4px solid #BBCCFF;\n
 }\n
 \n
+/* XXX: This was creating a fixed background colored block of 27em\n
 div.main-right div.content {\n
   height:27em;\n
 }\n
+*/\n
 \n
 div.listbox-body div.main-right tbody {\n
   height:25.35em;\n
@@ -420,7 +421,7 @@ div.header-left {\n
 .sort-button span {\n
  color:#112abb;\n
 }\n
- \n
+\n
 div.navigation-left a {\n
  margin-left:7px;\n
 }\n
@@ -461,7 +462,7 @@ div#select_language {\n
   white-space:nowrap;\n
 }\n
 .menu_create_object img {\n
-  border:0px;  \n
+  border:0px;\n
 }\n
 \n
 .menu_create_object li a#current {\n
@@ -497,7 +498,7 @@ div#select_language li span {\n
   text-decoration:none;\n
 }\n
 \n
-.menu_create_object li a, div#select_language li a {\n
+.menu_create_object li a, div#select_language ul li span {\n
   display:block;\n
   text-decoration:none;\n
 }\n
@@ -511,29 +512,40 @@ div#select_language li span {\n
   display:block;\n
 }\n
 \n
-div#select_language li li {\n
-  background:none repeat scroll 0 0 #FFFFFF;\n
-  border-left: 1px solid #C9D7F1;\n
-  border-right: 1px solid #C9D7F1;\n
-}\n
-\n
-.menu_create_object li li, {\n
-  display:block;\n
-  margin-left:0;\n
-}\n
-\n
-.menu_create_object p {\n
-  clear:left;\n
+div#select_language li {\n
+  width: 40px;\n
+  cursor: pointer;\n
 }\n
 \n
 div#select_language li ul {\n
   width:70px;\n
 }\n
 \n
-.menu_create_object li ul {\n
+div#select_language li li {\n
+  background:none repeat scroll 0 0 #FFFFFF;\n
+  border-left: 1px solid #C9D7F1;\n
+  border-right: 1px solid #C9D7F1;\n
+  border-top: 2px solid transparent;\n
+  width: 100%;\n
+}\n
+\n
+.menu_create_object li li {\n
+  display:block; !important;\n
+  margin-left:0; !important;\n
+  float: none; !important;\n
+  top: 0px;\n
+  margin-top: 5px;\n
+}\n
+\n
+.menu_create_object p {\n
+  clear:left;\n
+}\n
+\n
+.menu_create_object li ul, div#select_language li ul {\n
   border:1px solid #D1D1D1;\n
   background-color: #FFF;\n
 }\n
+\n
 .menu_create_object li ul, div#select_language li ul {\n
   display:none;\n
   height:auto;\n
@@ -687,7 +699,7 @@ div#edit_document fieldset label {\n
   font-size: 12px;\n
 }\n
 \n
-span#ui-dialog-title-edit_document, \n
+span#ui-dialog-title-edit_document,\n
  span#ui-dialog-title-upload_document,\n
  span#ui-dialog-title-gadget-listbox{\n
   font-size:17px;\n
@@ -712,7 +724,7 @@ button#save_document, button#cancel_document {\n
 .ui-dialog .ui-dialog-buttonpane {\n
   background:none repeat scroll 0 0 #C1D9FF;\n
   border-top:0 none;\n
-  width: 5.6em;\n
+//  width: 5.6em;\n
   padding:0 !important;\n
 }\n
 \n
@@ -734,7 +746,7 @@ span.ui-button-text {\n
 \n
 .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {\n
  float:none !important;\n
- width:104px;\n
+// width:104px;\n
  height:21px;\n
  margin-top:-10px;\n
 }\n
@@ -760,13 +772,13 @@ div.listbox-number-of-records{\n
   float: right;\n
   font-size: 12px;\n
   margin-right: 12em;\n
-  margin-top: -18px;\n
+  margin-top: -25px;\n
   min-width: 30%;\n
 }\n
 \n
 div.listbox-navigation button.listbox_last_page,\n
-  div.listbox-navigation button.listbox_next_page, \n
-  div.listbox-navigation button.listbox_previous_page, \n
+  div.listbox-navigation button.listbox_next_page,\n
+  div.listbox-navigation button.listbox_previous_page,\n
   div.listbox-navigation button.listbox_first_page {\n
   height:20px;\n
   border: 0px;\n
@@ -778,7 +790,7 @@ div.listbox-navigation button.listbox_previous_page,\n
   width:12px;\n
 }\n
 \n
-div.listbox-navigation button.listbox_last_page, \n
+div.listbox-navigation button.listbox_last_page,\n
   div.listbox-navigation button.listbox_first_page {\n
   margin: 0px;\n
   width:18px;\n
@@ -800,7 +812,7 @@ div.listbox-navigation button.listbox_previous_page {\n
   background-image: url(\'<dtml-var expr="portal_url()">/ung_images/previous_page.png\');\n
 }\n
 \n
-div.listbox-navigation button.listbox_previous_page, \n
+div.listbox-navigation button.listbox_previous_page,\n
  div.listbox-navigation button.listbox_first_page,\n
  div.listbox-navigation button.listbox_last_page,\n
  div.listbox-navigation button.listbox_next_page {\n
@@ -817,6 +829,8 @@ p#more_properties:hover, p#hide_properties:hover {\n
 a#left_message, a#right_message {\n
   display: none;\n
   color: #FD0A0A;\n
+  float: left;\n
+  margin-right: 10px;\n
 }\n
 \n
 div.listbox-domain-tree-container select {\n
@@ -825,8 +839,6 @@ div.listbox-domain-tree-container select {\n
 \n
 div.listbox-tree {\n
   font-size: 13px;\n
-  width: 98.7%;\n
-  overflow: hidden;\n
   height: 233px;\n
 }\n
 \n
@@ -854,7 +866,7 @@ fieldset#file_box {\n
   margin-top: -4px;\n
 }\n
 input#submit_document {\n
-  background: url("images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
+  background: url("jquery/ui/css/erp5-theme/images/ui-bg_glass_75_dae6f6_1x400.png") repeat-x scroll 50% 50% #DAE6F6;\n
   border: 1px solid #3D6474;\n
   color: #555555;\n
   font-weight: normal;\n
@@ -880,7 +892,7 @@ div#login-box {\n
 }\n
 \n
 div#login-box input {\n
-  vertical-align: middle; \n
+  vertical-align: middle;\n
 }\n
 \n
 div#login-box input.submit {\n
@@ -889,8 +901,8 @@ div#login-box input.submit {\n
 \n
 div#preference_dialog {\n
   display:none;\n
-  width: 308px !important;\n
   font-size: 14px;\n
+  white-space: nowrap;\n
 }\n
 \n
 fieldset.center.editable, fieldset.right.editable {\n
@@ -900,7 +912,7 @@ fieldset.center.editable, fieldset.right.editable {\n
   margin-left: -11px;\n
 }\n
 \n
-fieldset.center.editable div.field label, \n
+fieldset.center.editable div.field label,\n
  fieldset.right.editable div.field label {\n
   display: block;\n
 }\n
@@ -960,6 +972,7 @@ div.block div.content {\n
 \n
 div.portal-column {\n
   width: 100% !important;\n
+  min-height: 0 !important;\n
 }\n
 \n
 div#page_wrapper div.minimize_wrapper div.edit-form fieldset.left,\n
@@ -1002,6 +1015,10 @@ div#add_new_gadget_link {\n
   width: 50% !important;\n
 }\n
 \n
+div#page_wrapper {\n
+  min-height: 0 !important;\n
+}\n
+\n
 div.front_pad div#page_wrapper {\n
   margin: -0.5em 0 0 !important;\n
 }\n
@@ -1012,7 +1029,8 @@ div.front_pad div#page_wrapper {\n
 \n
 form#ung_preference,\n
  form#system_preference,\n
- form#erp5_preference {\n
+ form#erp5_preference,\n
+ form#change_state_form {\n
   margin:0px;\n
   padding: 0px;\n
 }\n
@@ -1103,7 +1121,7 @@ div#advertisement h2 {\n
 }\n
 \n
 div#advertisement b {\n
-  font-size: 12px !important;  \n
+  font-size: 12px !important;\n
 }\n
 \n
 div.footer {\n
@@ -1145,7 +1163,39 @@ span#no-input-file {\n
   border: none;\n
   background: #FFF;\n
   cursor: pointer;\n
-}
+}\n
+\n
+div#change_state_dialog {\n
+  display:none;\n
+  width: inherit !important;\n
+  font-size: 14px;\n
+  padding-left: .3em;\n
+  overflow: auto;\n
+}\n
+\n
+div#change_state_dialog table {\n
+  margin-left: 0;\n
+}\n
+\n
+div#change_state_dialog div.field {\n
+  padding-bottom: 1px;\n
+  padding-top: 1px;\n
+}\n
+\n
+/* Transition Message */\n
+div.portal_status_message {\n
+  float: left;\n
+  padding-left: 100px;\n
+}\n
+\n
+// fix \'_\' after ung-logo image\n
+a.ung_docs {\n
+  text-decoration: none !important;\n
+}\n
+a.ung_docs:link {\n
+  text-decoration: none !important;\n
+}\n
+
 
 ]]></string> </value>
         </item>

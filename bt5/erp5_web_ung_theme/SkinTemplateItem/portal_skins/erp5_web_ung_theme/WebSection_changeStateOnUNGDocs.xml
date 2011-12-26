@@ -50,47 +50,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Redirect connected user to UNG Web Site or to document using the key \n
-"""\n
-portal = context.getPortalObject()\n
+            <value> <string># prevent lose checked itens at listbox after click to print\n
+# Do what Base_updateListboxSelection does, overwriting listbox_uid\n
 \n
-request = context.REQUEST\n
+selection_name = context.REQUEST.get(\'list_selection_name\', None)\n
+listbox_uid = context.REQUEST.get(\'knowledge_pad_module_ung_knowledge_pad_ung_docs_listbox_content_listbox_uid\', None)\n
+uids = context.REQUEST.get(\'uids\', None)\n
+context.portal_selections.updateSelectionCheckedUidList(listbox_uid = listbox_uid,\n
+                                                        uids=uids,\n
+                                                        selection_name=selection_name,\n
+                                                        REQUEST=context.REQUEST)\n
 \n
-if request.form.has_key("key"):\n
-  webpage = context.ERP5Site_userFollowUpWebPage(reference=context.REQUEST.form.get("key"))\n
-  webpage_id = webpage.getId()\n
-  return context.Base_redirect("/web_page_module/%s" % webpage_id,\n
-                              keep_items=dict(editable_mode=1))\n
+gadget_form_id = context.REQUEST.get(\'gadget_form_id\', \'erp5_web_ung_content_layout\')\n
+keep_items=dict(\n
+    form_id=gadget_form_id,\n
+    selection_name=selection_name)\n
 \n
-else:\n
-  portal_type_list = request.form.get("portal_type")\n
-  searchable_text = request.form.get("SearchableText")\n
-  return context.Base_redirect("unfoldDomain", \n
-                               keep_items = dict(unfoldDomain="ung_domain/all_documents.0",\n
-                                                 form_id="erp5_web_ung_layout",\n
-                                                 list_selection_name="ung_document_list_selection",\n
-                                                 SearchableText=searchable_text,\n
-                                                 portal_type=portal_type_list))\n
+return context.ERP5Site_redirect(\'Folder_viewWorkflowActionDialog\', keep_items)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Assignee</string>
-                <string>Assignor</string>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebSection_renderer</string> </value>
+            <value> <string>WebSection_changeStateOnUNGDocs</string> </value>
         </item>
       </dictionary>
     </pickle>

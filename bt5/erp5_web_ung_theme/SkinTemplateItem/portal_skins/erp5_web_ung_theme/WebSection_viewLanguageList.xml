@@ -36,6 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
+<a id="right_message" i18n:translate="" i18n:domain="ui">Not Implemented yet</a>\n
 <tal:block tal:define="current_language python: here.getWebSiteValue().getAvailableLanguage()">\n
 <div id="select_language">\n
   <li>\n

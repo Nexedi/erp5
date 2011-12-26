@@ -40,20 +40,19 @@
                        enctype string:multipart/form-data;\n
                        portal_path python:websection.absolute_url();\n
                        has_editor python: here.absolute_url() != portal_path;">\n
-<a class="ung_docs" tal:attributes="href python: portal_path + \'/unfoldDomain?domain_url=ung_domain/all_documents&\' + \n
+<a class="ung_docs" tal:attributes="href python: portal_path + \'/unfoldDomain?unfoldDomain=ung_domain/all_documents.0&\' + \n
                                                                \'form_id=erp5_web_ung_layout&\' + \n
-                                                               \'list_selection_name=ung_document_list_selection&\' + \n
-                                                               \'domain_depth:int=0&reset:int=1\'">\n
+                                                               \'list_selection_name=ung_document_list_selection\'">\n
  <img src="ung_images/ung-logo.gif">\n
 </a>\n
 <a id=\'loading_message\'>Loading...</a>\n
 <tal:block tal:condition="python: not has_editor">\n
-  <form>\n
-  <input type="text" name="field_your_search_text" class="field" \n
-         onkeyup="submitFormOnEnter(event, this.form, \'WebSection_viewSearchResultList\')"/>\n
-  <input type="submit" value="Search Docs" name="WebSection_viewSearchResultList:method"/>\n
+  <form class="search_box">\n
+    <input type="text" name="field_your_search_text" class="field" />\n
+    <input id=\'search_button\' tal:attributes="value python: here.Base_translateString(\'Search Docs\')"\n
+        type="submit" value="Search Docs"/> \n
   </form> \n
-</tal:block>\n
+</tal:block> \n
  <tal:block tal:condition="python: has_editor">\n
  <a name="document_title" tal:content="here/getTitle"/>\n
  <a name="document_state" tal:content="here/getValidationStateTitle"/>\n

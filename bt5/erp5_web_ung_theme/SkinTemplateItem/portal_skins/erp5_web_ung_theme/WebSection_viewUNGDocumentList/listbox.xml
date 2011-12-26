@@ -12,7 +12,7 @@
               <list>
                 <string>all_columns</string>
                 <string>columns</string>
-                <string>count_method</string>
+                <string>css_class</string>
                 <string>default_params</string>
                 <string>domain_root_list</string>
                 <string>domain_tree</string>
@@ -21,6 +21,7 @@
                 <string>lines</string>
                 <string>list_method</string>
                 <string>portal_types</string>
+                <string>search</string>
                 <string>search_columns</string>
                 <string>select</string>
                 <string>selection_name</string>
@@ -33,7 +34,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_listbox</string> </value>
+            <value> <string>listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -75,10 +76,6 @@
                 </item>
                 <item>
                     <key> <string>columns</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>count_method</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -192,8 +189,8 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>count_method</string> </key>
-                    <value> <string></string> </value>
+                    <key> <string>css_class</string> </key>
+                    <value> <string>hidden_label gadget-documents</string> </value>
                 </item>
                 <item>
                     <key> <string>default_params</string> </key>
@@ -233,11 +230,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_listbox</string> </value>
+                    <value> <string>my_gadget_listbox</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewWebFieldLibrary</string> </value>
+                    <value> <string>Base_viewKnowledgePadFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>lines</string> </key>
@@ -267,6 +264,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>search</string> </key>
+                    <value> <int>0</int> </value>
                 </item>
                 <item>
                     <key> <string>search_columns</string> </key>

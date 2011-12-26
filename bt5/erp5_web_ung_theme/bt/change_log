@@ -4,6 +4,108 @@
 2011-11-15 tatuya
 * Follow Gadget objects default validation sate changing, now they are public.
 
+2011-10-07 gabriel.oliveira
+* Fix width of navigation tree
+
+2011-09-21 gabriel.oliveira
+* Remove unnecessary css styles
+
+2011-09-21 gabriel.oliveira
+* Add missing method to 'change-state' dialog
+
+2011-09-21 gabriel.oliveira
+* Show only new method of 'change-state' dialog
+
+2011-09-21 gabriel.oliveira
+* Dynamize ung listbox height
+
+2011-09-21 gabriel.oliveira
+* Fix image url location
+
+2011-09-21 gabriel.oliveira
+* Verticalize 'menu-create' list options
+* Fix 'select-language' item decoration
+
+2011-09-21 gabriel.oliveira
+* Improve 'select language' list layout
+
+2011-09-21 gabriel.oliveira
+* Fix line color when hovering mouse
+
+2011-09-21 gabriel.oliveira
+* Dynamize UNG width and height layout
+
+2011-09-21 gabriel.oliveira
+* Add method to display dynamic 'loading' information
+
+2011-09-21 gabriel.oliveira
+* Remove 'listbox-title' from header
+
+2011-09-21 gabriel.oliveira
+* Fix listbox-page-navigation location
+
+2011-09-21 gabriel.oliveira
+* Improve documentation and fix typo
+
+2011-09-21 gabriel.oliveira
+* Fix preference dialog layout
+
+2011-09-21 gabriel.oliveira
+* Display document title only when necessary
+
+2011-09-21 gabriel.oliveira
+* Improve performance when not logged in
+
+2011-09-21 gabriel.oliveira
+* Improve "Change State" dialog, both layout and behaviour
+
+2011-09-21 gabriel.oliveira
+* Add separation between current selected language and logged in user
+
+2011-09-21 gabriel.oliveira
+* Move 'Not implemented yet' message to left side
+
+2011-09-21 gabriel.oliveira
+* Make "Refresh" button correctly reset UNG listbox checked items, asynchronously
+
+2011-07-01 gabriel.oliveira
+* Refactor to only load UNG document list when necessary
+
+2011-07-01 gabriel.oliveira
+* Remove old way of overriding preference for text editors
+
+2011-07-01 gabriel.oliveira
+* Fix css class
+
+2011-07-01 gabriel.oliveira
+* Fix unfoldDomain param and refactor search button
+
+2011-07-01 gabriel.oliveira
+* Refactor to self-close html tags
+
+2011-07-01 gabriel.oliveira
+* Fix params for Refresh button
+
+2011-07-01 gabriel.oliveira
+* Add method to return document list and javascript needed for listbox
+
+2011-07-01 gabriel.oliveira
+* Remove old way of paging
+
+2011-07-01 gabriel.oliveira
+* Implement "Change State" button
+
+2011-07-01 gabriel.oliveira
+* Refactor javascript to apply inside new ung structure
+
+2011-07-01 gabriel.oliveira
+* Refactor css to apply inside new ung structure
+
+2011-07-01 gabriel.oliveira
+* Fix unfoldDomain param, and disable reset
+* Fix forgot to commit erp5_web_ung_layout form content
+* Remove old listbox and add new one based on gadget
+
 2011-06-09 gabriel.oliveira
 * Force listbox page navigation to work
 
