@@ -305,7 +305,7 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
                                      price=price,
                                      price_currency=price_currency,
                                      start_date=current_date,
-                                     stop_date=(next_date-1).latestTime(),
+                                     stop_date=next_date,
                                      source=source,
                                      source_section=source_section,
                                      destination=destination,
