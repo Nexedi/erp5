@@ -79,7 +79,7 @@ if default_site_preference.getPreferenceState() != \'global\':\n
   default_site_preference.enable()\n
 \n
 # update repository info of Configurator site\n
-if len(portal.portal_templates.getRepositoryList([])) == 0:\n
+if len(portal.portal_templates.getRepositoryList()) == 0:\n
   portal.portal_templates.updateRepositoryBusinessTemplateList(\n
     repository_list = configuration_info[\'bt_repository_list\'])\n
 \n
