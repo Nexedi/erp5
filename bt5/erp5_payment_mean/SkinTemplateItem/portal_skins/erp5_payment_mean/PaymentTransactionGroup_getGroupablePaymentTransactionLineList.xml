@@ -89,9 +89,9 @@ if start_date_range_max:\n
 if start_date_range_min:\n
   search_kw[\'from_date\'] = start_date_range_min\n
 \n
-if sign == \'out\':\n
+if sign in (\'outgoing\', \'out\'):\n
   search_kw[\'omit_asset_increase\'] = True\n
-elif sign == \'in\':\n
+elif sign in (\'incoming\', \'in\'):\n
   search_kw[\'omit_asset_decrease\'] = True\n
 \n
 movement_history_list = portal.portal_simulation.getMovementHistoryList(**search_kw)\n
