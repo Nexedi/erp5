@@ -53,16 +53,19 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string></string> </value>
+            <value> <string>multipart/form-data</string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left (Page Properties)</string>
-                <string>right (Publication)</string>
+                <string>left (Document Reference)</string>
+                <string>right (Publication Information)</string>
+                <string>left</string>
+                <string>right</string>
                 <string>center</string>
-                <string>bottom (Content)</string>
+                <string>bottom (Preview)</string>
+                <string>hidden</string>
               </list>
             </value>
         </item>
@@ -71,7 +74,7 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>bottom (Content)</string> </key>
+                    <key> <string>bottom (Preview)</string> </key>
                     <value>
                       <list>
                         <string>iframe_content</string>
@@ -88,23 +91,51 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left (Page Properties)</string> </key>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list>
+                        <string>my_contributor_title_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left (Document Reference)</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
                         <string>my_short_title</string>
                         <string>my_reference</string>
-                        <string>my_int_index</string>
                         <string>my_version</string>
                         <string>my_language</string>
+                        <string>my_int_index</string>
                         <string>my_effective_date</string>
+                        <string>my_revision</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right (Publication)</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_subject_list</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right (Publication Information)</string> </key>
+                    <value>
+                      <list>
+                        <string>my_classification</string>
+                        <string>my_group_list</string>
+                        <string>my_site_list</string>
+                        <string>my_function_list</string>
+                        <string>my_follow_up_title_list</string>
                         <string>my_publication_section_list</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
@@ -123,7 +154,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>TestPage_view</string> </value>
+            <value> <string>WebPage_view</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
