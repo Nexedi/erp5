@@ -51,11 +51,13 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-\n
 filename = business_configuration.getUserInterfaceDescriptionFileId()\n
-cachedMethod = CachingMethod(context.ConfigurationTemplate_readOOCalcFile, \'%s_%s\' %(script.getId(),filename))\n
-object_list = cachedMethod(filename)\n
-return object_list\n
+\n
+return CachingMethod(\n
+         context.ConfigurationTemplate_readOOCalcFile, \n
+         \'%s_%s\' % (script.getId(), filename), \n
+         cache_factory="erp5_content_long"\n
+        )(filename)\n
 </string> </value>
         </item>
         <item>

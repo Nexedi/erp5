@@ -56,15 +56,16 @@ if empty_first_element==True:\n
   result = [[\'\', \'\'],]\n
 \n
 filename = "standard_currency_list.ods"\n
-cachedMethod = CachingMethod(context.ConfigurationTemplate_readOOCalcFile, \n
-                             script.getId(),\n
-                             cache_factory="erp5_content_long")\n
-rows= cachedMethod(filename)\n
+rows = CachingMethod(context.ConfigurationTemplate_readOOCalcFile, \n
+                      script.getId(),\n
+                      cache_factory="erp5_content_long")(filename)\n
 \n
 Base_translateString = context.Base_translateString\n
 for row in rows:\n
   currency_title = Base_translateString(row[\'currency\'])\n
-  line = [currency_title, \'%s;%s;%s\' %(row[\'iso_code\'].strip(), row[\'precision\'].strip(), row[\'currency\'].strip())]\n
+  line = [currency_title, \'%s;%s;%s\' % (row[\'iso_code\'].strip(),\n
+                                        row[\'precision\'].strip(),\n
+                                        row[\'currency\'].strip())]\n
   result.append(line)\n
 return result\n
 </string> </value>
