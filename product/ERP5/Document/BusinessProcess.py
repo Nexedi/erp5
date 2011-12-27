@@ -835,7 +835,7 @@ class BusinessProcess(Path, XMLObject):
     return not not self.getPartiallyBuildableBusinessLinkValueList(explanation)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'build')
-  def build(self, explanation=None):
+  def build(self, explanation):
     """
       Build whatever is buildable
     """
