@@ -32,6 +32,7 @@ import sys
 import transaction
 import zope.interface
 from zExceptions import ExceptionFormatter
+from ZODB.POSException import ConflictError
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
