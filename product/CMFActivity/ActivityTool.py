@@ -429,7 +429,8 @@ class Method:
     portal_activities = passive_self.getPortalObject().portal_activities
     if portal_activities.activity_tracking:
       activity_tracking_logger.info('queuing message: activity=%s, object_path=%s, method_id=%s, args=%s, kw=%s, activity_kw=%s, user_name=%s' % (self.__activity, '/'.join(m.object_path), m.method_id, m.args, m.kw, m.activity_kw, m.user_name))
-    activity_dict[self.__activity].queueMessage(portal_activities, m)
+    portal_activities.getActivityBuffer().deferredQueueMessage(
+      portal_activities, activity_dict[self.__activity], m)
 
 allow_class(Method)
 
@@ -1047,14 +1048,6 @@ class ActivityTool (Folder, UniqueObject):
         active_process = self.unrestrictedTraverse(active_process)
       return ActiveWrapper(object, activity, active_process, kw)
 
-    def deferredQueueMessage(self, activity, message):
-      activity_buffer = self.getActivityBuffer()
-      activity_buffer.deferredQueueMessage(self, activity, message)
-
-    def deferredDeleteMessage(self, activity, message):
-      activity_buffer = self.getActivityBuffer()
-      activity_buffer.deferredDeleteMessage(self, activity, message)
-
     def getRegisteredMessageList(self, activity):
       activity_buffer = self.getActivityBuffer(create_if_not_found=False)
       if activity_buffer is not None:
@@ -1079,18 +1072,6 @@ class ActivityTool (Folder, UniqueObject):
         object_path = obj.getPhysicalPath()
       for activity in activity_dict.itervalues():
         activity.flush(aq_inner(self), object_path, invoke=invoke, **kw)
-
-    def start(self, **kw):
-      if not is_initialized:
-        self.initialize()
-      for activity in activity_dict.itervalues():
-        activity.start(aq_inner(self), **kw)
-
-    def stop(self, **kw):
-      if not is_initialized:
-        self.initialize()
-      for activity in activity_dict.itervalues():
-        activity.stop(aq_inner(self), **kw)
 
     def invoke(self, message):
       if self.activity_tracking:

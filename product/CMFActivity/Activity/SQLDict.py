@@ -92,16 +92,6 @@ class SQLDict(SQLBase):
                                               processing_node_list=None,
                                               order_validation_text_list = order_validation_text_list)
 
-  def prepareDeleteMessage(self, activity_tool, m):
-    # Erase all messages in a single transaction
-    path = '/'.join(m.object_path)
-    order_validation_text = self.getOrderValidationText(m)
-    uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = m.method_id,
-                                                 order_validation_text = order_validation_text)
-    uid_list = [x.uid for x in uid_list]
-    if len(uid_list)>0:
-      activity_tool.SQLBase_delMessage(table=self.sql_table, uid=uid_list)
-
   def generateMessageUID(self, m):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('tag'), m.activity_kw.get('group_id'))
 

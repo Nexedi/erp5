@@ -35,13 +35,11 @@ class ActivityBuffer(TM):
 
   def __init__(self):
     self.queued_activity = []
-    self.flushed_activity = []
     self.message_list_dict = {}
     self.uid_set_dict = {}
 
   def _clear(self):
     del self.queued_activity[:]
-    del self.flushed_activity[:]
     self.message_list_dict.clear()
     self.uid_set_dict.clear()
     self.activity_tool = None
@@ -57,7 +55,7 @@ class ActivityBuffer(TM):
       self.activity_tool = activity_tool
       self._activity_tool_path = activity_tool.getPhysicalPath()
       TM._register(self)
-      self._prepare_args = 0, 0
+      self._prepare_args = 0,
     if self._prepare_args:
       transaction.get().addBeforeCommitHook(self._prepare, self._prepare_args)
       self._prepare_args = None
@@ -76,35 +74,18 @@ class ActivityBuffer(TM):
           error=sys.exc_info())
       raise
 
-  def _finish(self):
-    # LOG('ActivityBuffer', 0, '_finish %r' % (self,))
-    try:
-      # Try to push / delete all messages
-      for activity, message in self.flushed_activity:
-        activity.finishDeleteMessage(self._activity_tool_path, message)
-      for activity, message in self.queued_activity:
-        activity.finishQueueMessage(self._activity_tool_path, message)
-    except:
-      LOG('ActivityBuffer', ERROR, "exception during _finish",
-          error=sys.exc_info())
-      raise
-    finally:
-      self._clear()
+  _abort = _finish = _clear
 
-  _abort = _clear
-
-  def _prepare(self, flushed, queued):
+  def _prepare(self, queued):
     try:
       activity_tool = self.activity_tool
-      # Try to push / delete all messages
-      for activity, message in self.flushed_activity[flushed:]:
-        activity.prepareDeleteMessage(activity_tool, message)
+      # Try to push all messages
       activity_dict = {}
       for activity, message in self.queued_activity[queued:]:
         activity_dict.setdefault(activity, []).append(message)
       for activity, message_list in activity_dict.iteritems():
         activity.prepareQueueMessageList(activity_tool, message_list)
-      self._prepare_args = len(self.flushed_activity), len(self.queued_activity)
+      self._prepare_args = len(self.queued_activity),
     except:
       LOG('ActivityBuffer', ERROR, "exception during _prepare",
           error=sys.exc_info())
@@ -119,10 +100,6 @@ class ActivityBuffer(TM):
       # We register queued messages so that we can
       # unregister them
       activity.registerMessage(self, activity_tool, message)
-
-  def deferredDeleteMessage(self, activity_tool, activity, message):
-    self._register(activity_tool)
-    self.flushed_activity.append((activity, message))
 
   def sortKey(self, *ignored):
     """Activities must be finished before databases commit transactions."""

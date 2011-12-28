@@ -88,11 +88,6 @@ class SQLQueue(SQLBase):
                                               processing_node_list=None,
                                               serialization_tag_list=serialization_tag_list)
 
-  def prepareDeleteMessage(self, activity_tool, m):
-    # Erase all messages in a single transaction
-    #LOG("prepareDeleteMessage", 0, str(m.__dict__))
-    activity_tool.SQLBase_delMessage(table=self.sql_table, uid=[m.uid])
-
   def getDuplicateMessageUidList(self, activity_tool, line, processing_node):
     """
       Reserve unreserved messages matching given line.

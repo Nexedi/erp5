@@ -90,9 +90,6 @@ class Queue(object):
     if not self.is_initialized:
       self.is_initialized = 1
 
-  def queueMessage(self, activity_tool, m):    
-    activity_tool.deferredQueueMessage(self, m)  
-
   def deleteMessage(self, activity_tool, m):
     if not getattr(m, 'is_deleted', 0):
       # We try not to delete twice
@@ -209,14 +206,6 @@ class Queue(object):
   def flush(self, activity_tool, object, **kw):    
     pass
 
-  def start(self, active_process=None):
-    # Start queue / activities in queue for given process
-    pass
-
-  def stop(self, active_process=None):
-    # Stop queue / activities in queue for given process
-    pass
-
   def loadMessage(self, s, **kw):
     m = cPickle.load(StringIO(s))
     m.__dict__.update(kw)
@@ -255,19 +244,7 @@ class Queue(object):
   # Transaction Management
   def prepareQueueMessageList(self, activity_tool, message_list):
     # Called to prepare transaction commit for queued messages
-    pass
-
-  def finishQueueMessage(self, activity_tool_path, m):
-    # Called to commit queued messages
-    pass
-
-  def prepareDeleteMessage(self, activity_tool, m):
-    # Called to prepare transaction commit for deleted messages
-    pass
-
-  def finishDeleteMessage(self, activity_tool_path, m):
-    # Called to commit deleted messages
-    pass
+    raise NotImplementedError
 
   # Registration Management
   def registerActivityBuffer(self, activity_buffer):
