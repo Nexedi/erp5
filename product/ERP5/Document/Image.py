@@ -311,14 +311,13 @@ class Image(TextConvertableMixin, File, OFSImage):
 
   def _resize(self, quality, width, height, format, resolution, frame):
     """Resize and resample photo."""
-    parameter_list = ['convert']
-    parameter_list.extend(['-colorspace', 'RGB'])
+    parameter_list = ['convert', '-colorspace', 'RGB',
+                                 '-quality', str(quality),
+                                 '-geometry', '%sx%s' % (width, height)]
     if format not in VALID_TRANSPARENT_IMAGE_FORMAT_LIST:
-      parameter_list.extend(['-alpha', 'off'])
+      parameter_list += '-alpha', 'off'
     if resolution:
-      parameter_list.extend(['-density', '%sx%s' % (resolution, resolution)])
-    parameter_list.extend(['-quality', str(quality)])
-    parameter_list.extend(['-geometry', '%sx%s' % (width, height)])
+      parameter_list += '-density', '%sx%s' % (resolution, resolution)
     if frame is not None:
       parameter_list.append('-[%s]' % frame)
     else:
