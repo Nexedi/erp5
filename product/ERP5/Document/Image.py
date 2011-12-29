@@ -311,8 +311,6 @@ class Image(TextConvertableMixin, File, OFSImage):
 
   def _resize(self, quality, width, height, format, resolution, frame):
     """Resize and resample photo."""
-    newimg = StringIO()
-
     parameter_list = ['convert']
     parameter_list.extend(['-colorspace', 'RGB'])
     if format not in VALID_TRANSPARENT_IMAGE_FORMAT_LIST:
@@ -336,26 +334,15 @@ class Image(TextConvertableMixin, File, OFSImage):
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE,
                                close_fds=True)
-    imgin, imgout, err = process.stdin, process.stdout, process.stderr
-
-    def writeData(stream, data):
-      if isinstance(data, str):
-        stream.write(str(self.getData()))
-      else:
-        # Use PData structure to prevent
-        # consuming too much memory
-        while data is not None:
-          stream.write(data.data)
-          data = data.next
-
-    writeData(imgin, self.getData())
-    imgin.close()
-    newimg.write(imgout.read())
-    imgout.close()
-    if not newimg.tell():
-      raise ConversionError('Image conversion failed (%s).' % err.read())
-    newimg.seek(0)
-    return newimg
+    try:
+        # XXX: The only portable way is to pass what stdin.write can accept,
+        #      which is a string for PIPE.
+        image, err = process.communicate(str(self.getData()))
+    finally:
+        del process
+    if image:
+      return StringIO(image)
+    raise ConversionError('Image conversion failed (%s).' % err)
 
   def _getDisplayData(self, format, quality, resolution, frame, image_size):
     """Return raw photo data for given display."""
