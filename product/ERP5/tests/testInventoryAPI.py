@@ -2336,7 +2336,6 @@ class TestInventoryDocument(InventoryAPITestCase):
       inventory_list = inventory_list.dictionaries()
     else:
       inventory_list = inventory_list[:] # That list is modified in this method
-    self.assertEquals(len(inventory_list), len(criterion_dict_list))
     for criterion_dict in criterion_dict_list:
       success = False
       for inventory_position in xrange(len(inventory_list)):
@@ -2362,6 +2361,8 @@ class TestInventoryDocument(InventoryAPITestCase):
         else:
           raise AssertionError, 'No line in %r match %r' % \
                                 (inventory_list, criterion_dict)
+    # Check all expected lines have been found.
+    self.assertFalse(inventory_list)
 
   def assertInventoryEquals(self, value, inventory_kw):
     """
