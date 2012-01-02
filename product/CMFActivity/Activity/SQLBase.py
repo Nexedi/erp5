@@ -287,7 +287,7 @@ class SQLBase(Queue):
             self._log(TRACE, 'Freed messages %r' % to_free_uid_list)
       else:
         self._log(TRACE, '(no message was reserved)')
-      return [], 0, None, {}
+      return [], None, {}
 
   def _abort(self):
     try:
