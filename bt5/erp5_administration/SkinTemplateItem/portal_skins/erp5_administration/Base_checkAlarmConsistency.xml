@@ -50,37 +50,28 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>query_string = context.getProperty(\'catalog_query_string\', \'\')\n
-# the query sould be something like "validation_state:!=deleted validation_state:!=draft portal_type:Organisation" etc\n
-module_list = context.getProperty(\'module_list\') or []\n
-portal = context.getPortalObject()\n
+            <value> <string>from Products.ERP5Type.Constraint import PropertyTypeValidity\n
+from Products.CMFActivity.ActiveResult import ActiveResult\n
 \n
-brain_list = []\n
-for module in module_list:\n
-  module = portal.restrictedTraverse(module)\n
-  brain_list.extend(module.searchFolder(SearchableText=query_string, limit=None))\n
+constraint_message_list = []\n
+traverse = context.getPortalObject().restrictedTraverse\n
+property_type_validity = PropertyTypeValidity(id=\'type_check\', description=\'Type Validity Check\')\n
 \n
-path_list = []\n
-for brain in brain_list:\n
-  if len(path_list) == 100:\n
-    context.activate(activity=\'SQLQueue\',\n
-                     tag=tag,\n
-                     active_process=active_process).Alarm_checkConsistencyOnObjectList(path_list, fixit)\n
-    path_list = []\n
-  path_list.append(brain.path)\n
+constraint_message_list.extend(context.checkConsistency(fixit=fixit))\n
+constraint_message_list.extend(property_type_validity.checkConsistency(context, fixit=fixit))\n
 \n
-context.activate(activity=\'SQLQueue\',\n
-                 tag=tag,\n
-                 active_process=active_process).Alarm_checkConsistencyOnObjectList(path_list, fixit)\n
+if constraint_message_list:\n
+  traverse(active_process).postResult(ActiveResult(severity=100,\n
+                      constraint_message_list=constraint_message_list))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>tag, active_process, fixit</string> </value>
+            <value> <string>fixit, active_process</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_checkConsistency</string> </value>
+            <value> <string>Base_checkAlarmConsistency</string> </value>
         </item>
       </dictionary>
     </pickle>
