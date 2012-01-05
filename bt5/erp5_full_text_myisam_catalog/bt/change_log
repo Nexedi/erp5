@@ -1,3 +1,6 @@
+2012-01-05 Kazuhiko
+* move create/drop table SQL for content_translation table from erp5_content_translation to erp5_full_text_*_catalog BT.
+
 2011-01-28 Ivan
 * Define MySQL's full_text key implementation
 

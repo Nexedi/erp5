@@ -1,5 +1,7 @@
 erp5_mysql_innodb/SQLCatalog_makeFullTextQuery
+erp5_mysql_innodb/z0_drop_content_translation
 erp5_mysql_innodb/z0_drop_fulltext
 erp5_mysql_innodb/z0_uncatalog_fulltext
 erp5_mysql_innodb/z_catalog_fulltext_list
+erp5_mysql_innodb/z_create_content_translation
 erp5_mysql_innodb/z_create_fulltext
