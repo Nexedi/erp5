@@ -80,6 +80,8 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   """
   stepStartPackingList
   stepTic
+  stepInvoiceBuilderAlarm
+  stepTic
   stepStartRelatedInvoice
   stepTic
   """
@@ -292,6 +294,8 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
       stepStartPackingList
       stepStopPackingList
       stepTic
+      stepInvoiceBuilderAlarm
+      stepTic
       stepChangeQuantityDoubledOnInvoice
       stepTic
       stepCheckDivergedQuantityOnInvoice
@@ -317,6 +321,8 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
       """
       stepStartPackingList
       stepStopPackingList
+      stepTic
+      stepInvoiceBuilderAlarm
       stepTic
       stepChangeQuantityDoubledOnInvoice
       stepTic
@@ -502,6 +508,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
       stepStartPackingList
       stepStartNewPackingList
       stepTic
+      stepInvoiceBuilderAlarm
+      stepTic
       stepCheckTwoInvoices
       stepRemoveDateMovementGroupForAdvancedTransactionBuilder
       stepStartTwoInvoices
@@ -530,6 +538,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     stepStartPackingList
     stepCheckInvoicingRule
     stepTic
+    stepInvoiceBuilderAlarm
+    stepTic
     stepCheckInvoiceBuilding
     stepRebuildAndCheckNothingIsCreated
     stepCheckInvoicesConsistency
@@ -552,6 +562,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
 
@@ -593,6 +605,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
 
@@ -638,6 +652,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
 
@@ -708,6 +724,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
 
@@ -786,6 +804,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
     stepTic
+    stepInvoiceBuilderAlarm
+    stepTic
     stepCheckInvoiceBuilding
     stepStopPackingList
     stepTic
@@ -853,6 +873,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
     stepStopPackingList
@@ -945,6 +967,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
           stepStartPackingList
           stepCheckInvoicingRule
           stepTic
+          stepInvoiceBuilderAlarm
+          stepTic
           stepCheckInvoiceBuilding
           stepRebuildAndCheckNothingIsCreated
           stepCheckInvoicesConsistency
@@ -977,6 +1001,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
       stepStartPackingList
       stepCheckInvoicingRule
       stepTic
+      stepInvoiceBuilderAlarm
+      stepTic
       stepCheckInvoiceBuilding
       stepRebuildAndCheckNothingIsCreated
       stepCheckInvoicesConsistency
@@ -1006,6 +1032,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
       stepStartPackingList
       stepCheckInvoicingRule
       stepTic
+      stepInvoiceBuilderAlarm
+      stepTic
       stepCheckInvoiceBuilding
       stepCheckInvoicesConsistency
       stepCheckPackingListInvoice
@@ -1026,6 +1054,8 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
       stepSetReadyPackingList
       stepTic
       stepStartPackingList
+      stepTic
+      stepInvoiceBuilderAlarm
       stepTic
       stepChangeQuantityDoubledOnInvoice
       stepTic
@@ -1092,6 +1122,8 @@ class TestAdvancedPurchaseInvoice(TestAdvancedInvoice):
   INVOICE_DEFAULT_SEQUENCE = PACKING_LIST_DEFAULT_SEQUENCE + \
   """
   stepReceivePackingList
+  stepTic
+  stepInvoiceBuilderAlarm
   stepTic
   stepStartRelatedInvoice
   stepTic
