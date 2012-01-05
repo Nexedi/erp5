@@ -54,6 +54,12 @@
 from Products.CMFActivity.ActiveResult import ActiveResult\n
 \n
 constraint_message_list = []\n
+\n
+if context.providesIConstraint():\n
+  # it is not possible to checkConsistency of Constraint itself, as method\n
+  # of this name implement consistency checking on object\n
+  return constraint_message_list\n
+\n
 traverse = context.getPortalObject().restrictedTraverse\n
 property_type_validity = PropertyTypeValidity(id=\'type_check\', description=\'Type Validity Check\')\n
 \n
