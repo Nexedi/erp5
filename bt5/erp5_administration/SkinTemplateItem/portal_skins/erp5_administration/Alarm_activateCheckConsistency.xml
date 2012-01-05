@@ -56,9 +56,10 @@ query_string = context.getProperty(\'catalog_query_string\', \'\')\n
 module_list = context.getProperty(\'module_list\') or []\n
 portal = context.getPortalObject()\n
 \n
-kw = {\n
-  \'SearchableText\': query_string\n
-}\n
+kw = {}\n
+\n
+if query_string is not None:\n
+  kw.update(SearchableText=query_string)\n
 \n
 if len(module_list):\n
   kw.update(parent_uid=[portal.restrictedTraverse(module).getUid() for module in module_list])\n
