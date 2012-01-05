@@ -1394,6 +1394,10 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
       transaction.savepoint(optimistic=True)
     # Then check the consistency on all sub objects
     for obj in self.contentValues():
+      if obj.providesIConstraint():
+        # it is not possible to checkConsistency of Constraint itself, as method
+        # of this name implement consistency checking on object
+        continue
       if fixit:
         extra_errors = obj.fixConsistency(filter=filter, **kw)
       else:
