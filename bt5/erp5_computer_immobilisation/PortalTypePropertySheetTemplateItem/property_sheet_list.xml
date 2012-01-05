@@ -2,4 +2,7 @@
  <portal_type id="Computer">
   <item>VariationRange</item>
  </portal_type>
+ <portal_type id="Computer Partition">
+  <item>VariationRange</item>
+ </portal_type>
 </property_sheet_list>
