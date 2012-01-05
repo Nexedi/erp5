@@ -40,8 +40,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">\n
   <head>\n
     <link rel="stylesheet" type="text/css" href="boom.css">\n
-    <script type="text/javascript" src="https://www.tiolive.com/xavierhardy1/portal_skins/erp5_jquery/jquery/core/jquery.js"></script>\n
-    <script type="text/javascript" src="https://www.tiolive.com/xavierhardy1/portal_skins/erp5_jquery/jquery/ui/js/jquery-ui.js"></script>\n
+    <script type="text/javascript" src="jquery/core/jquery.js"></script>\n
+    <script type="text/javascript" src="jquery/ui/js/jquery-ui.js"></script>\n
     <script type="text/javascript" src="book_converter.js"></script>\n
     <script type="text/javascript" src="chapter_converter.js"></script>\n
     <script type="text/javascript">\n
