@@ -2320,7 +2320,6 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
  
 
   def _acceptDivergenceOnInvoice(self, invoice, divergence_list):
-    print invoice, divergence_list
     self._solveDivergence(invoice, 'quantity', 'Accept Solver')
 
   def test_accept_quantity_divergence_on_invoice_with_stopped_packing_list(
@@ -2377,7 +2376,6 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertEquals('solved', packing_list.getCausalityState())
  
   def _adoptDivergenceOnInvoice(self, invoice, divergence_list):
-    print invoice, divergence_list
     self._solveDivergence(invoice, 'quantity', 'Adopt Solver')
 
   def test_adopt_quantity_divergence_on_invoice_line_with_stopped_packing_list(
