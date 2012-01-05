@@ -1204,6 +1204,9 @@ class TestInvoice(TestInvoiceMixin):
     order.confirm()
     transaction.commit()
     self.tic()
+    self.stepPackingListBuilderAlarm()
+    transaction.commit()
+    self.tic()
 
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
@@ -1819,6 +1822,9 @@ class TestInvoice(TestInvoiceMixin):
     order.confirm()
     transaction.commit()
     self.tic()
+    self.stepPackingListBuilderAlarm()
+    transaction.commit()
+    self.tic()
 
     related_packing_list = order.getCausalityRelatedValue(
                                   portal_type=self.packing_list_portal_type)
@@ -2009,6 +2015,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     order.confirm()
     transaction.commit()
     self.tic()
+    self.stepPackingListBuilderAlarm()
+    transaction.commit()
+    self.tic()
 
     related_packing_list = order.getCausalityRelatedValue(
                                   portal_type=self.packing_list_portal_type)
@@ -2096,6 +2105,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                                   resource_value=resource2,)
 
     order.confirm()
+    transaction.commit()
+    self.tic()
+    self.stepPackingListBuilderAlarm()
     transaction.commit()
     self.tic()
 
@@ -2190,6 +2202,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     order.confirm()
     transaction.commit()
     self.tic()
+    self.stepPackingListBuilderAlarm()
+    transaction.commit()
+    self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type=self.packing_list_portal_type)
     self.assertNotEquals(related_packing_list, None)
@@ -2266,6 +2281,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                       self.mass_quantity_unit)
 
     order.confirm()
+    transaction.commit()
+    self.tic()
+    self.stepPackingListBuilderAlarm()
     transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
@@ -2472,6 +2490,8 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
       stepCheckDeliveryBuilding
       stepConfirmOrder
       stepTic
+      stepPackingListBuilderAlarm
+      stepTic
       stepCheckOrderRule
       stepCheckOrderSimulation
       stepCheckDeliveryBuilding
@@ -2504,6 +2524,8 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
       stepCheckDeliveryBuilding
       stepConfirmOrder
       stepTic
+      stepPackingListBuilderAlarm
+      stepTic
       stepCheckOrderRule
       stepCheckOrderSimulation
       stepCheckDeliveryBuilding
@@ -2531,6 +2553,8 @@ class TestSaleInvoiceMixin(TestInvoiceMixin,
       stepTic
       stepCheckDeliveryBuilding
       stepConfirmOrder
+      stepTic
+      stepPackingListBuilderAlarm
       stepTic
       stepCheckOrderRule
       stepCheckOrderSimulation
@@ -3515,6 +3539,8 @@ class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
       stepTic
       stepCheckDeliveryBuilding
       stepConfirmOrder
+      stepTic
+      stepPackingListBuilderAlarm
       stepTic
       stepCheckOrderRule
       stepCheckOrderSimulation

@@ -67,6 +67,8 @@ class TestPackingListMixin(TestOrderMixin):
         Tic
         ConfirmOrder
         Tic
+        PackingListBuilderAlarm
+        Tic
         CheckOrderSimulation
         CheckDeliveryBuilding
         CheckPackingListIsNotDivergent
@@ -82,6 +84,8 @@ class TestPackingListMixin(TestOrderMixin):
         Tic
         ConfirmOrder
         Tic
+        PackingListBuilderAlarm
+        Tic
         """
   default_sequence_with_duplicated_lines = default_order_sequence + """
         CreateNotVariatedResource
@@ -96,6 +100,8 @@ class TestPackingListMixin(TestOrderMixin):
         OrderOrder
         Tic
         ConfirmOrder
+        Tic
+        PackingListBuilderAlarm
         Tic
         CheckOrderSimulation
         CheckDeliveryBuilding
@@ -117,6 +123,8 @@ class TestPackingListMixin(TestOrderMixin):
         Tic
         ConfirmOrder
         Tic
+        PackingListBuilderAlarm
+        Tic
         CheckOrderSimulation
         CheckDeliveryBuilding
         CheckPackingListIsNotDivergent
@@ -133,6 +141,8 @@ class TestPackingListMixin(TestOrderMixin):
         OrderOrder
         Tic
         ConfirmOrder
+        Tic
+        PackingListBuilderAlarm
         Tic
         CheckOrderSimulation
         CheckDeliveryBuilding
@@ -1623,6 +1633,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         Tic
         ConfirmOrder
         Tic
+        PackingListBuilderAlarm
+        Tic
         CheckOrderSimulation
         CheckDeliveryBuilding
         CheckPackingListIsSolved
@@ -1825,6 +1837,8 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         OrderOrder
         Tic
         ConfirmOrder
+        Tic
+        PackingListBuilderAlarm
         Tic
         CheckOrderSimulation
         CheckDeliveryBuilding

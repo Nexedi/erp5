@@ -338,6 +338,8 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
       stepCheckDeliveryBuilding
       stepConfirmOrder
       stepTic
+      stepPackingListBuilderAlarm
+      stepTic
       stepCheckOrderRule
       stepCheckOrderSimulation
       stepCheckDeliveryBuilding

@@ -1216,6 +1216,10 @@ class TestOrderMixin(SubcontentReindexingWrapper):
         self.assertEquals(order.getSimulationState(),
                           simulation_state_list[0])
 
+  def stepPackingListBuilderAlarm(self, sequence=None,
+                                  sequence_list=None, **kw):
+    self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
+
 class TestOrder(TestOrderMixin, ERP5TypeTestCase):
   """
     Test business template erp5_trade
@@ -1818,6 +1822,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepTic \
                       stepConfirmOrder \
                       stepTic \
+                      stepPackingListBuilderAlarm \
+                      stepTic \
                       stepCheckOrderSimulation \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -1862,6 +1868,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepCheckDeliveryBuilding \
                       stepConfirmOrder \
                       stepTic \
+                      stepPackingListBuilderAlarm \
+                      stepTic \
                       stepCheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -1883,6 +1891,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepTic \
                       stepCheckDeliveryBuilding \
                       stepConfirmOrder \
+                      stepTic \
+                      stepPackingListBuilderAlarm \
                       stepTic \
                       stepCheckDeliveryBuilding \
                       '
@@ -1911,6 +1921,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepCheckDeliveryBuilding \
                       stepConfirmOrder \
                       stepTic \
+                      stepPackingListBuilderAlarm \
+                      stepTic \
                       stepCheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -1936,6 +1948,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepCheckDeliveryBuilding \
                       stepConfirmOrder \
                       stepTic \
+                      stepPackingListBuilderAlarm \
+                      stepTic \
                       stepCheckDeliveryBuilding \
                       '
     sequence_list.addSequenceString(sequence_string)
@@ -1959,6 +1973,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepTic \
                       stepCheckDeliveryBuilding \
                       stepConfirmOrder \
+                      stepTic \
+                      stepPackingListBuilderAlarm \
                       stepTic \
                       stepCheckDeliveryBuilding \
                       '
@@ -1996,6 +2012,8 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepOrderOrder \
                       stepCheckDeliveryBuilding \
                       stepConfirmOrder \
+                      stepTic \
+                      stepPackingListBuilderAlarm \
                       stepTic \
                       stepCheckDeliveryBuilding \
                       '
@@ -2653,6 +2671,9 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                               portal_type='Payment Condition')))
 
     order.confirm()
+    transaction.commit()
+    self.tic()
+    self.stepPackingListBuilderAlarm()
     transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(

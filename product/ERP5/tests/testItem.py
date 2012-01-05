@@ -282,6 +282,8 @@ class TestItemMixin(TestSaleInvoiceMixin):
                        stepTic \
                        stepConfirmOrder \
                        stepTic \
+                       stepPackingListBuilderAlarm \
+                       stepTic \
                        stepCheckOrderRule \
                        stepCheckOrderLineAggregate \
                        stepCheckOrderSimulation \
@@ -300,6 +302,8 @@ class TestItemMixin(TestSaleInvoiceMixin):
                        stepOrderOrder \
                        stepTic \
                        stepConfirmOrder \
+                       stepTic \
+                       stepPackingListBuilderAlarm \
                        stepTic \
                        stepCheckOrderSimulation \
                        stepCheckDeliveryBuilding \
@@ -347,6 +351,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                        stepOrderLineSetAggregationList \
                        stepConfirmOrder \
                        stepTic \
+                       stepPackingListBuilderAlarm \
+                       stepTic \
                        stepCheckOrderLineAggregate \
                        stepCheckOrderSimulation \
                        stepCheckSimulationAggregate \
@@ -375,6 +381,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                        stepSetOrderLineDefaultValues \
                        stepOrderLineSetAggregationList \
                        stepConfirmOrder \
+                       stepTic \
+                       stepPackingListBuilderAlarm \
                        stepTic \
                        stepCheckOrderRule \
                        stepCheckOrderLineAggregate \
@@ -848,6 +856,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                        stepOrderOrder \
                        stepTic \
                        stepConfirmOrder \
+                       stepTic \
+                       stepPackingListBuilderAlarm \
                        stepTic \
                        stepCheckOrderSimulation \
                        stepCheckDeliveryBuilding \

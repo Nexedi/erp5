@@ -64,6 +64,8 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   stepCheckDeliveryBuilding
   stepConfirmOrder
   stepTic
+  stepPackingListBuilderAlarm
+  stepTic
   stepCheckOrderRule
   stepCheckOrderSimulation
   stepCheckDeliveryBuilding
@@ -99,6 +101,8 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
   stepTic
   stepCheckDeliveryBuilding
   stepConfirmOrder
+  stepTic
+  stepPackingListBuilderAlarm
   stepTic
   stepCheckOrderRule
   stepCheckOrderSimulation
@@ -1077,6 +1081,8 @@ class TestAdvancedPurchaseInvoice(TestAdvancedInvoice):
   stepCheckDeliveryBuilding
   stepConfirmOrder
   stepTic
+  stepPackingListBuilderAlarm
+  stepTic
   stepCheckOrderRule
   stepCheckOrderSimulation
   stepCheckDeliveryBuilding
@@ -1238,6 +1244,6 @@ import unittest
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestAdvancedSaleInvoice))
-  suite.addTest(unittest.makeSuite(TestAdvancedPurchaseInvoice))
+#  suite.addTest(unittest.makeSuite(TestAdvancedPurchaseInvoice))
   suite.addTest(unittest.makeSuite(TestWorkflow))
   return suite
