@@ -1157,6 +1157,10 @@ class TestInvoiceMixin(TestPackingListMixin):
         id='income', source='account_module/sale',
         destination='account_module/purchase', quantity=1665)
 
+  def stepInvoiceBuilderAlarm(self, sequence=None,
+                                  sequence_list=None, **kw):
+    self.portal.portal_alarms.invoice_builder_alarm.activeSense()
+
 class TestInvoice(TestInvoiceMixin):
   """Test methods for sale and purchase invoice.
   Subclasses must defines portal types to use.
@@ -1834,6 +1838,9 @@ class TestInvoice(TestInvoiceMixin):
     related_packing_list.stop()
     transaction.commit()
     self.tic()
+    self.stepInvoiceBuilderAlarm()
+    transaction.commit()
+    self.tic()
 
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
@@ -1928,6 +1935,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     no_order_packing_list.start()
     no_order_packing_list.stop()
+    transaction.commit()
+    self.tic()
+    self.stepInvoiceBuilderAlarm()
     transaction.commit()
     self.tic()
 
@@ -2025,6 +2035,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     related_packing_list.start()
     related_packing_list.stop()
+    transaction.commit()
+    self.tic()
+    self.stepInvoiceBuilderAlarm()
     transaction.commit()
     self.tic()
 
@@ -2126,6 +2139,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     related_packing_list.stop()
     transaction.commit()
     self.tic()
+    self.stepInvoiceBuilderAlarm()
+    transaction.commit()
+    self.tic()
 
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
@@ -2216,6 +2232,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     related_packing_list.stop()
     transaction.commit()
     self.tic()
+    self.stepInvoiceBuilderAlarm()
+    transaction.commit()
+    self.tic()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
     self.assertNotEquals(related_invoice, None)
@@ -2304,6 +2323,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     related_packing_list.deliver()
     transaction.commit()
     self.tic()
+    self.stepInvoiceBuilderAlarm()
+    transaction.commit()
+    self.tic()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                 portal_type=self.invoice_portal_type)
     self.assertNotEquals(related_invoice, None)
@@ -2320,6 +2342,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
  
 
   def _acceptDivergenceOnInvoice(self, invoice, divergence_list):
+    print invoice, divergence_list
     self._solveDivergence(invoice, 'quantity', 'Accept Solver')
 
   def test_accept_quantity_divergence_on_invoice_with_stopped_packing_list(
@@ -2336,6 +2359,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     packing_list.start()
     packing_list.stop()
     self.assertEquals('stopped', packing_list.getSimulationState())
+    transaction.commit()
+    self.tic()
+    self.stepInvoiceBuilderAlarm()
     transaction.commit()
     self.tic()
 
@@ -2376,6 +2402,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     self.assertEquals('solved', packing_list.getCausalityState())
  
   def _adoptDivergenceOnInvoice(self, invoice, divergence_list):
+    print invoice, divergence_list
     self._solveDivergence(invoice, 'quantity', 'Adopt Solver')
 
   def test_adopt_quantity_divergence_on_invoice_line_with_stopped_packing_list(
@@ -2395,6 +2422,9 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     packing_list.start()
     packing_list.stop()
     self.assertEquals('stopped', packing_list.getSimulationState())
+    transaction.commit()
+    self.tic()
+    self.stepInvoiceBuilderAlarm()
     transaction.commit()
     self.tic()
 
@@ -2606,6 +2636,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         stepStartPackingList
         stepCheckInvoicingRule
         stepTic
+        stepInvoiceBuilderAlarm
+        stepTic
         stepCheckInvoiceBuilding
         stepRebuildAndCheckNothingIsCreated
         stepCheckInvoicesConsistency
@@ -2636,9 +2668,13 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         stepStartPackingList
         stepStartNewPackingList
         stepTic
+        stepInvoiceBuilderAlarm
+        stepTic
         stepCheckTwoInvoices
         stepRemoveDateMovementGroupForTransactionBuilder
         stepStartTwoInvoices
+        stepTic
+        stepInvoiceBuilderAlarm
         stepTic
         stepCheckTwoInvoicesTransactionLines
         stepCheckInvoicesConsistency
@@ -2668,6 +2704,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         stepTic
         stepStartPackingList
         stepCheckInvoicingRule
+        stepTic
+        stepInvoiceBuilderAlarm
         stepTic
         stepCheckInvoiceBuilding
         stepEditInvoice
@@ -2714,6 +2752,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       stepStartPackingList
       stepCheckInvoicingRule
       stepTic
+      stepInvoiceBuilderAlarm
+      stepTic
       stepCheckInvoiceBuilding
       stepRebuildAndCheckNothingIsCreated
       stepCheckInvoicesConsistency
@@ -2737,6 +2777,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       stepTic
       stepStartPackingList
       stepCheckInvoicingRule
+      stepTic
+      stepInvoiceBuilderAlarm
       stepTic
       stepCheckInvoiceBuilding
       stepRebuildAndCheckNothingIsCreated
@@ -2767,6 +2809,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       stepStartPackingList
       stepCheckInvoicingRule
       stepTic
+      stepInvoiceBuilderAlarm
+      stepTic
       stepCheckInvoiceBuilding
       stepRebuildAndCheckNothingIsCreated
       stepCheckInvoicesConsistency
@@ -2788,6 +2832,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
 
@@ -2831,6 +2877,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
     stepTic
+    stepInvoiceBuilderAlarm
+    stepTic
     stepCheckInvoiceBuilding
 
     stepChangeInvoiceStartDate
@@ -2871,6 +2919,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
     stepStopPackingList
@@ -2924,6 +2974,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
 
@@ -2984,6 +3036,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           stepStartPackingList
           stepCheckInvoicingRule
           stepTic
+          stepInvoiceBuilderAlarm
+          stepTic
           stepCheckInvoiceBuilding
           stepRebuildAndCheckNothingIsCreated
           stepCheckInvoicesConsistency
@@ -3025,6 +3079,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
 
@@ -3122,6 +3178,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
     stepTic
+    stepInvoiceBuilderAlarm
+    stepTic
     stepCheckInvoiceBuilding
     stepStopPackingList
     stepTic
@@ -3162,6 +3220,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
     stepStopPackingList
@@ -3213,6 +3273,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
     stepStopPackingList
@@ -3280,6 +3342,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     stepStartPackingList
     stepCheckInvoicingRule
     stepCheckInvoiceTransactionRule
+    stepTic
+    stepInvoiceBuilderAlarm
     stepTic
     stepCheckInvoiceBuilding
     stepStopPackingList
@@ -3368,6 +3432,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           stepStartPackingList
           stepCheckInvoicingRule
           stepTic
+          stepInvoiceBuilderAlarm
+          stepTic
           stepCheckInvoiceBuilding
           stepRebuildAndCheckNothingIsCreated
           stepCheckInvoicesConsistency
@@ -3396,6 +3462,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
           stepStartPackingList
           stepCheckInvoicingRule
           stepTic
+          stepInvoiceBuilderAlarm
+          stepTic
           stepCheckInvoiceBuilding
           stepAddWrongInvoiceLines
           stepTic
@@ -3420,6 +3488,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         stepTic
         stepStartPackingList
         stepCheckInvoicingRule
+        stepTic
+        stepInvoiceBuilderAlarm
         stepTic
         stepCheckInvoiceBuilding
         stepCheckInvoicesConsistency
@@ -3448,6 +3518,9 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     packing_list.setReady()
     packing_list.start()
     self.assertEquals('started', packing_list.getSimulationState())
+    transaction.commit()
+    self.tic()
+    self.stepInvoiceBuilderAlarm()
     transaction.commit()
     self.tic()
 

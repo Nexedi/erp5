@@ -1,5 +1,7 @@
 2012-01-05 Kazuhiko
+* move builders from erp5_simplified_invoicing to erp5_simulation_test BT.
 * move builders from erp5_trade to erp5_simulation_test BT.
+* call builders globally by alarms.
 
 2010-08-10 JPS
 * move solvers to path

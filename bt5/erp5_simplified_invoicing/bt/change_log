@@ -1,3 +1,6 @@
+2012-01-05 Kazuhiko
+* move builders from erp5_simplified_invoicing to erp5_simulation_test BT.
+
 2010-03-02 yo
 * Take auto_planned into account for the views of Sale Invoice Transaction and Purchase Invoice Transaction.
 

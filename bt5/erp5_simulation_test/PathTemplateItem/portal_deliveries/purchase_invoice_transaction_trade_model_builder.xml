@@ -65,25 +65,25 @@
         </item>
         <item>
             <key> <string>delivery_after_generation_script_id</string> </key>
-            <value> <string>InvoiceTransaction_postTransactionLineGeneration</string> </value>
+            <value> <string>Invoice_reindexRelatedSimulation</string> </value>
         </item>
         <item>
             <key> <string>delivery_cell_collect_order</string> </key>
             <value>
               <tuple>
-                <string>ResourceMovementGroup</string>
+                <string>VariantMovementGroup</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>delivery_cell_portal_type</string> </key>
-            <value> <string>Delivery Cell</string> </value>
+            <value> <string>Invoice Cell</string> </value>
         </item>
         <item>
             <key> <string>delivery_cell_separate_order</string> </key>
             <value>
               <tuple>
-                <string>calculateAddQuantity</string>
+                <string>calculateSeparatePrice</string>
               </tuple>
             </value>
         </item>
@@ -91,8 +91,6 @@
             <key> <string>delivery_collect_order</string> </key>
             <value>
               <tuple>
-                <string>DateMovementGroup</string>
-                <string>SectionPathMovementGroup</string>
                 <string>CausalityMovementGroup</string>
               </tuple>
             </value>
@@ -101,15 +99,15 @@
             <key> <string>delivery_line_collect_order</string> </key>
             <value>
               <tuple>
-                <string>QuantitySignMovementGroup</string>
-                <string>PathMovementGroup</string>
                 <string>ResourceMovementGroup</string>
+                <string>BaseVariantMovementGroup</string>
+                <string>BaseApplicationMovementGroup</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>delivery_line_portal_type</string> </key>
-            <value> <string>Sale Invoice Transaction Line</string> </value>
+            <value> <string>Invoice Line</string> </value>
         </item>
         <item>
             <key> <string>delivery_module</string> </key>
@@ -117,7 +115,7 @@
         </item>
         <item>
             <key> <string>delivery_portal_type</string> </key>
-            <value> <string>Sale Invoice Transaction</string> </value>
+            <value> <string>Purchase Invoice Transaction</string> </value>
         </item>
         <item>
             <key> <string>delivery_select_method_id</string> </key>
@@ -125,15 +123,11 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Build Accounting Lines on Sale Invoice Transactions</string> </value>
+            <value> <string>Add Invoice Lines from Trade Model Lines</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>sale_invoice_transaction_builder</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>6</string> </value>
+            <value> <string>purchase_invoice_transaction_trade_model_builder</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -147,11 +141,11 @@
         </item>
         <item>
             <key> <string>simulation_select_method_id</string> </key>
-            <value> <string>SaleInvoiceTransaction_selectInvoiceMovement</string> </value>
+            <value> <string>PurchaseInvoice_selectTradeModelMovementList</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Sale Invoice Transaction Builder</string> </value>
+            <value> <string>Purchase Invoice Transaction Trade Model Line Builder</string> </value>
         </item>
       </dictionary>
     </pickle>
