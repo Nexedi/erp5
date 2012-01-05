@@ -1,0 +1,5 @@
+2012-01-05 Kazuhiko
+* rename from erp5_full_text_groonga_catalog to erp5_full_text_mroonga_catalog.
+
+2011-11-01 kazuhiko
+* initial commit that is quite close to erp5_full_text_myisam_catalog.
