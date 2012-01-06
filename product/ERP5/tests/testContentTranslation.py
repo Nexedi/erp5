@@ -41,7 +41,8 @@ class TestContentTranslation(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
 
-    return ('erp5_base',
+    return ('erp5_full_text_mroonga_catalog',
+            'erp5_base',
             'erp5_content_translation',
             )
 
