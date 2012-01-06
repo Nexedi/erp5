@@ -51,6 +51,8 @@ class TestNestedLineMixin(TestSaleInvoiceMixin):
       stepStartPackingList
       stepCheckInvoicingRule
       stepTic
+      stepInvoiceBuilderAlarm
+      stepTic
       stepGetRelatedInvoiceFromPackingList
     """
   delivery_builder_id = 'sale_invoice_builder'
