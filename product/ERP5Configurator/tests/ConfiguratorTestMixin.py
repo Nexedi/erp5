@@ -617,7 +617,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
         self.failUnlessUserCanPassWorkflowTransition(
                     username, 'cancel_action', event)
 
-      # everybody can submit
+      # everybody can plan
       for username in self.all_username_list:
         self.failUnlessUserCanPassWorkflowTransition(
                     username, 'plan_action', event)
@@ -625,17 +625,17 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
       event.plan()
       self.assertEquals('planned', event.getSimulationState())
 
-      # everybody can request or post a submitted event
+      # everybody can confirm or send a planned event
       for username in self.all_username_list:
         self.failUnlessUserCanPassWorkflowTransition(
-                    username, 'order_action', event)
+                    username, 'confirm_action', event)
         self.failUnlessUserCanPassWorkflowTransition(
                     username, 'start_action', event)
 
       event.start()
       self.assertEquals('started', event.getSimulationState())
 
-      # everybody can deliver a posted event
+      # everybody can deliver a sent event
       for username in self.all_username_list:
         self.failUnlessUserCanPassWorkflowTransition(
                     username, 'deliver_action', event)
