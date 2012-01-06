@@ -2410,8 +2410,8 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(['foo'], self.portal.Localizer.erp5_ui._translated)
 
       # we can change the translation domain on the portal type
-      self.portal.portal_types.Person.changeTranslations(
-                                    dict(dummy='erp5_content'))
+      self.portal.portal_types.Person.setTranslationDomain('dummy',
+          'erp5_content')
       transaction.commit()
 
       self.assertEquals('erp5_content', doc.getDummyTranslationDomain())
@@ -2428,8 +2428,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # if domain is empty, no translation is performed
       doc = self.portal.person_module.newContent(portal_type='Person')
       self.portal.Localizer = DummyLocalizer()
-      self.portal.portal_types.Person.changeTranslations(
-                                    dict(dummy=None))
+      self.portal.portal_types.Person.setTranslationDomain('dummy', None)
       transaction.commit()
 
       doc.setDummy('foo')

@@ -48,9 +48,9 @@ class TestContentTranslation(ERP5TypeTestCase):
   def afterSetUp(self):
     # set up translation domain on Person type information.
     from Products.ERP5Type.Accessor.Translation import TRANSLATION_DOMAIN_CONTENT_TRANSLATION
-    self.portal.portal_types.Person.changeTranslations(
-      dict(first_name=TRANSLATION_DOMAIN_CONTENT_TRANSLATION,
-           last_name=TRANSLATION_DOMAIN_CONTENT_TRANSLATION))
+    setTranslationDomain = self.portal.portal_types.Person.setTranslationDomain
+    setTranslationDomain('first_name', TRANSLATION_DOMAIN_CONTENT_TRANSLATION)
+    setTranslationDomain('last_name', TRANSLATION_DOMAIN_CONTENT_TRANSLATION)
 
   def testCatalogSearch(self):
     """
