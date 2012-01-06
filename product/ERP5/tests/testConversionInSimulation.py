@@ -231,6 +231,10 @@ class TestConversionInSimulation(AccountingTestCase):
     transaction.commit()
     self.tic()
 
+  def stepPackingListBuilderAlarm(self, sequence=None,
+                                  sequence_list=None, **kw):
+    self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
+
   def test_01_simulation_movement_destination_asset_price(self,quiet=0,
           run=run_all_test):
     """
@@ -292,6 +296,9 @@ class TestConversionInSimulation(AccountingTestCase):
                                   price=2)
 
     order.confirm()
+    transaction.commit()
+    self.tic()
+    self.stepPackingListBuilderAlarm()
     transaction.commit()
     self.tic()
 
@@ -388,6 +395,9 @@ class TestConversionInSimulation(AccountingTestCase):
     order.confirm()
     transaction.commit()
     self.tic()
+    self.stepPackingListBuilderAlarm()
+    transaction.commit()
+    self.tic()
 
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
@@ -472,6 +482,9 @@ class TestConversionInSimulation(AccountingTestCase):
                                   quantity=1,
                                   price=2)
     order.confirm()
+    transaction.commit()
+    self.tic()
+    self.stepPackingListBuilderAlarm()
     transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
@@ -564,6 +577,9 @@ class TestConversionInSimulation(AccountingTestCase):
                                   quantity=5,
                                   price=2)
     order.confirm()
+    transaction.commit()
+    self.tic()
+    self.stepPackingListBuilderAlarm()
     transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
@@ -667,6 +683,9 @@ class TestConversionInSimulation(AccountingTestCase):
                                   quantity=5,
                                   price=2)
     order.confirm()
+    transaction.commit()
+    self.tic()
+    self.stepPackingListBuilderAlarm()
     transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
@@ -775,6 +794,9 @@ class TestConversionInSimulation(AccountingTestCase):
     order.confirm()
     transaction.commit()
     self.tic()
+    self.stepPackingListBuilderAlarm()
+    transaction.commit()
+    self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
     self.assertNotEquals(related_packing_list, None)
@@ -851,6 +873,9 @@ class TestConversionInSimulation(AccountingTestCase):
                                   quantity=1.5,
                                   price=2)
     order.confirm()
+    transaction.commit()
+    self.tic()
+    self.stepPackingListBuilderAlarm()
     transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
