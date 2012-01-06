@@ -1184,6 +1184,12 @@ class TestInvoiceMixin(TestPackingListMixin,
         id='income', source='account_module/sale',
         destination='account_module/purchase', quantity=1665)
 
+  def stepInvoiceBuilderAlarm(self, sequence=None,
+                              sequence_list=None, **kw):
+    # global builder alarm does not exist in legacy simulation
+    # business templates.
+    pass
+
 class TestInvoice(TestInvoiceMixin):
   """Test methods for sale and purchase invoice.
   Subclasses must defines portal types to use.
