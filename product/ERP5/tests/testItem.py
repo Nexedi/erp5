@@ -400,6 +400,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
                        stepStartPackingList \
                        stepCheckInvoicingRule \
                        stepTic \
+                       stepInvoiceBuilderAlarm \
+                       stepTic \
                        stepCheckInvoiceBuilding \
                        stepRebuildAndCheckNothingIsCreated \
                        stepCheckInvoicesConsistency \
@@ -824,6 +826,8 @@ class TestItem(TestItemMixin, ERP5TypeTestCase):
           stepTic \
           stepStartPackingList \
           stepCheckInvoicingRule \
+          stepTic \
+          stepInvoiceBuilderAlarm \
           stepTic \
           stepCheckInvoiceBuilding \
           stepRebuildAndCheckNothingIsCreated \
