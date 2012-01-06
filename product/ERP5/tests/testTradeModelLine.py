@@ -344,6 +344,9 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     packing_list.stop()
     transaction.commit()
     self.tic()
+    self.stepInvoiceBuilderAlarm()
+    transaction.commit()
+    self.tic()
 
     invoice, = packing_list.getCausalityRelatedValueList(
       portal_type=self.invoice_portal_type)
@@ -475,6 +478,14 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEquals(str(abs(line_dict['income_expense'])),
         str(rounded_total_price + rounded_discount_price))
 
+  def stepPackingListBuilderAlarm(self, sequence=None,
+                                  sequence_list=None, **kw):
+    self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
+
+  def stepInvoiceBuilderAlarm(self, sequence=None,
+                                  sequence_list=None, **kw):
+    self.portal.portal_alarms.invoice_builder_alarm.activeSense()
+
   ###
   ##  Test cases
   ##
@@ -585,6 +596,9 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       order = order2
 
     order.confirm()
+    transaction.commit()
+    self.tic()
+    self.stepPackingListBuilderAlarm()
     transaction.commit()
     self.tic()
 
@@ -915,6 +929,9 @@ return lambda *args, **kw: 1""")
     order.confirm()
     transaction.commit()
     self.tic()
+    self.stepPackingListBuilderAlarm()
+    transaction.commit()
+    self.tic()
 
     packing_list = order.getCausalityRelatedValue(
                       portal_type=self.packing_list_portal_type)
@@ -924,7 +941,9 @@ return lambda *args, **kw: 1""")
     packing_list.start()
     packing_list.stop()
     packing_list.deliver()
-
+    transaction.commit()
+    self.tic()
+    self.stepInvoiceBuilderAlarm()
     transaction.commit()
     self.tic()
 
