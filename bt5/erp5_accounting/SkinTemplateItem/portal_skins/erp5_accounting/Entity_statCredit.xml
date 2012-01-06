@@ -53,10 +53,13 @@
             <value> <string>"""Total credit of all accounting transactions having this\n
 entity as a mirror section\n
 """\n
+\n
 kw[\'mirror_section_uid\'] = context.getUid()\n
 kw[\'omit_asset_increase\'] = 1\n
 kw[\'node_category_strict_membership\'] = [\'account_type/asset/receivable\',\n
                                          \'account_type/liability/payable\']\n
+kw.update(kw[\'selection\'].getParams())\n
+\n
 # here, or 0 is to prevent displaying "- 0"\n
 return - context.Node_statAccountingBalance(**kw) or 0\n
 </string> </value>

@@ -54,6 +54,7 @@
 
 """Client & vendors accounts.\n
 """\n
+portal = context.portal_url.getPortalObject()\n
 \n
 from Products.ERP5Form.Report import ReportSection\n
 \n
@@ -65,13 +66,14 @@ role_filter_list = request.get(\'mirror_section_category_list\', None)\n
 omit_balanced_accounts = request[\'omit_balanced_accounts\']\n
 from_date = request.get(\'from_date\', None)\n
 gap_root = request.get(\'gap_root\', None)\n
+project = request.get(\'project\', None)\n
 \n
 request.other[\'is_accounting_report\'] = True\n
 \n
 # role_filter_list == None means no filter on the role\n
 if role_filter_list == [\'\'] :\n
   role_filter_list = None\n
-  \n
+ \n
 section_uid = context.Base_getSectionUidListForSectionCategory(\n
                                              request[\'section_category\'],\n
                                              request[\'section_category_strict\'])\n
@@ -89,7 +91,12 @@ if from_date:\n
 else :\n
   params[\'no_from_date\'] = 1\n
 \n
-portal = context.portal_url.getPortalObject()\n
+if project:\n
+  if project == \'None\':\n
+    params[\'project_uid\'] = project\n
+  else:\n
+    params[\'project_uid\'] = portal.restrictedTraverse(project).getUid()\n
+\n
 simulation_tool = portal.portal_simulation\n
 \n
 entity_columns = [\n
@@ -131,16 +138,13 @@ for party in context.Account_zDistinctSectionList(\n
       not o.isMemberOf(section_category):\n
         # don\'t show entities belonging to the group we are reporting\n
     if omit_balanced_accounts and (\n
-            simulation_tool.getInventoryAssetPrice(\n
-                    section_category=section_category,\n
-                    at_date=at_date,\n
-                    simulation_state=simulation_state,\n
+        round(simulation_tool.getInventoryAssetPrice(\n
                     mirror_section_uid=party.uid,\n
                     node_category_strict_membership=(\n
                           \'account_type/asset/receivable\',\n
                           \'account_type/liability/payable\'),\n
-                    # TODO: don\'t compare floats for equality ...\n
-                    ) == 0.):\n
+                    **params\n
+                    ), 3) == 0.):\n
       pass\n
     else:\n
       title = o.getTitle()\n
