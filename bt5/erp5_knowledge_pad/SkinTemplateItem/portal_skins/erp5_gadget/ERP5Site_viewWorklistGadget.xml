@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+      <global name="ERP5Form" module="Products.ERP5Form.Form"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -19,12 +19,7 @@
                     <item>
                         <key> <string>_asgns</string> </key>
                         <value>
-                          <dictionary>
-                            <item>
-                                <key> <string>name_subpath</string> </key>
-                                <value> <string>traverse_subpath</string> </value>
-                            </item>
-                          </dictionary>
+                          <dictionary/>
                         </value>
                     </item>
                   </dictionary>
@@ -33,68 +28,123 @@
             </value>
         </item>
         <item>
-            <key> <string>_text</string> </key>
-            <value> <unicode encoding="cdata"><![CDATA[
-
-<tal:block tal:define="request python: context.REQUEST;\n
-           box_relative_url python: request.get(\'box_relative_url\',\'\');\n
-           box python: context.restrictedTraverse(box_relative_url);\n
-           preferences  box/KnowledgeBox_getDefaultPreferencesDict;\n
-           actions python:getattr(context,\'portal_workflow\').listActionInfos();\n
-           absolute_url  context/absolute_url;\n
-           portal_url context/portal_url;\n
-           box_id python: \'visual_\'+str(box.getId())">\n
-\n
-<div class="worklist_list">\n
-\n
-  <!-- Refresh -->\n
-\n
-  <a class="right" \n
-     tal:attributes="id python:\'title_\'+box.getId();\n
-                     onclick python:context.KnowledgePad_generateAjaxCall(absolute_url+\'/\'+\'ERP5Site_viewWorklistGadget\',box,box_id)"><img alt ="" src="refresh.png"/></a>\n
-\n
-  <!-- Message if Worklists are empty -->\n
-\n
-  <h5 tal:condition="not:actions">For the moment, all your worklists are empty</h5>\n
-\n
-  <!-- List of Worklists -->\n
-\n
-  <ul tal:condition="actions">\n
-    <li tal:repeat="action actions"\n
-        tal:attributes="id python:\'li\'+box_id+\'_\'+str(repeat[\'action\'].index)">\n
-      <tal:block >\n
-        <a tal:attributes="href python: absolute_url+action[\'url\'][len(portal_url):]"\n
-           tal:content="action/title"></a>\n
-        <div tal:attributes="id python:\'div_\'+box.getId()+\'_\'+str(repeat[\'action\'].index)"></div>\n
-      </tal:block>\n
-    </li>\n
-  </ul>\n
-\n
-</div>\n
-</tal:block>\n
-
-
-]]></unicode> </value>
+            <key> <string>_objects</string> </key>
+            <value>
+              <tuple/>
+            </value>
         </item>
         <item>
-            <key> <string>content_type</string> </key>
-            <value> <string>text/html</string> </value>
+            <key> <string>action</string> </key>
+            <value> <string></string> </value>
         </item>
         <item>
-            <key> <string>expand</string> </key>
-            <value> <int>0</int> </value>
+            <key> <string>description</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>edit_order</string> </key>
+            <value>
+              <list/>
+            </value>
+        </item>
+        <item>
+            <key> <string>encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
+        </item>
+        <item>
+            <key> <string>enctype</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>group_list</string> </key>
+            <value>
+              <list>
+                <string>left</string>
+                <string>right</string>
+                <string>center</string>
+                <string>bottom</string>
+                <string>hidden</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>groups</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list>
+                        <string>listbox</string>
+                      </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>center</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>right</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>ERP5Site_viewWorklistGadget</string> </value>
         </item>
         <item>
-            <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <key> <string>method</string> </key>
+            <value> <string>POST</string> </value>
+        </item>
+        <item>
+            <key> <string>name</string> </key>
+            <value> <string>ERP5Site_viewWorklistGadget</string> </value>
+        </item>
+        <item>
+            <key> <string>pt</string> </key>
+            <value> <string>gadget_view</string> </value>
+        </item>
+        <item>
+            <key> <string>row_length</string> </key>
+            <value> <int>4</int> </value>
+        </item>
+        <item>
+            <key> <string>stored_encoding</string> </key>
+            <value> <string>UTF-8</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <unicode></unicode> </value>
+            <value> <string>Worklists</string> </value>
+        </item>
+        <item>
+            <key> <string>unicode_mode</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>update_action</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>update_action_title</string> </key>
+            <value> <string></string> </value>
         </item>
       </dictionary>
     </pickle>
