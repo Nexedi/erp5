@@ -609,10 +609,11 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     Remove remaining attributes from previous btree
     and migration
     """
-    if getattr(self, "_tree", None) is not None:
-      delattr(self, "_tree")    
-    if getattr(self, migration_process_lock, None) is not None:
-      delattr(self, migration_process_lock)
+    for attr in "_tree", "_mt_index", migration_process_lock:
+      try:
+        delattr(self, attr)
+      except AttributeError:
+        pass
 
   def _launchCopyObjectToHBTree(self, tag):
     """
