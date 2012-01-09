@@ -1222,7 +1222,7 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     # business templates.
     alarm = getattr(self.portal.portal_alarms, 'packing_list_builder_alarm', None)
     if alarm is not None:
-      self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
+      alarm.activeSense()
 
 class TestOrder(TestOrderMixin, ERP5TypeTestCase):
   """

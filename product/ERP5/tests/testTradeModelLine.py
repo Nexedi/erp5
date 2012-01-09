@@ -480,11 +480,19 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def stepPackingListBuilderAlarm(self, sequence=None,
                                   sequence_list=None, **kw):
-    self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
+    # global builder alarm does not exist in legacy simulation
+    # business templates.
+    alarm = getattr(self.portal.portal_alarms, 'packing_list_builder_alarm', None)
+    if alarm is not None:
+      alarm.activeSense()
 
   def stepInvoiceBuilderAlarm(self, sequence=None,
                                   sequence_list=None, **kw):
-    self.portal.portal_alarms.invoice_builder_alarm.activeSense()
+    # global builder alarm does not exist in legacy simulation
+    # business templates.
+    alarm = getattr(self.portal.portal_alarms, 'invoice_builder_alarm', None)
+    if alarm is not None:
+      alarm.activeSense()
 
   ###
   ##  Test cases
