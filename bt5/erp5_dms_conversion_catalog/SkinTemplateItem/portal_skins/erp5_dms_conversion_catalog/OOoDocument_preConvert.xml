@@ -53,8 +53,8 @@
             <value> <string>"""\n
   Do actual conversion of Spreadsheet type.\n
 """\n
-context.convert(**{\'format\': \'html\'})\n
-context.Base_preConvert(format, quality, display_list)\n
+context.activate(serialization_tag=\'pre_convert\').convert(**{\'format\': \'html\'})\n
+context.activate(serialization_tag=\'pre_convert\').Base_preConvert(format, quality, display_list)\n
 </string> </value>
         </item>
         <item>
