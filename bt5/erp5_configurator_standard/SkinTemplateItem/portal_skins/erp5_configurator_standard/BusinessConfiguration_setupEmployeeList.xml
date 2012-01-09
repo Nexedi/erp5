@@ -58,7 +58,8 @@ group_id = context.getGlobalConfigurationAttr(\'group_id\')\n
 company_employees_number = context.getGlobalConfigurationAttr(\'company_employees_number\')\n
 \n
 ## get only form keys\n
-form_keys = [i for i in kw.keys() if i.startswith(\'field_your_\') and i!=\'field_your_search_text\']\n
+form_keys = [i for i in kw.keys() if i.startswith(\'field_your_\') \\\n
+                         and i not in [\'field_your_search_text\', \'field_your_business_configuration\']]\n
 \n
 if company_employees_number==1:\n
   # only one employee\n
