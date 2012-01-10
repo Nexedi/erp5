@@ -53,6 +53,8 @@
             <value> <string>"""\n
   Do actual conversion of any Image type.\n
 """\n
+# UI uses \'large\' display\n
+display_list.append(\'large\')\n
 context.Base_preConvert(format, quality, display_list)\n
 </string> </value>
         </item>
