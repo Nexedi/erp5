@@ -1,3 +1,6 @@
+2012-01-12 Rafael
+* Moved Rules, solvers and builders to configurator related business templates.
+
 2012-01-05 Kazuhiko
 * move builders from erp5_simplified_invoicing to erp5_simulation_test BT.
 * move builders from erp5_trade to erp5_simulation_test BT.

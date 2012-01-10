@@ -2,10 +2,34 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Payment Simulation Rule" module="erp5.portal_type"/>
+      <global name="Invoice Transaction Simulation Rule" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
+        <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
         <item>
             <key> <string>_count</string> </key>
             <value>
@@ -40,13 +64,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/payment</string>
+                <string>trade_phase/default/accounting</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>default_payment_rule</string> </value>
+            <value> <string>default_invoice_transaction_rule</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -56,7 +80,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>new_payment_simulation_rule</string> </value>
+            <value> <string>new_invoice_transaction_simulation_rule</string> </value>
         </item>
         <item>
             <key> <string>index</string> </key>
@@ -65,12 +89,8 @@
             </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>20</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Payment Simulation Rule</string> </value>
+            <value> <string>Invoice Transaction Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>same_total_quantity</string> </key>
@@ -80,13 +100,13 @@
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>SimulationMovement_testPaymentSimulationRule</string>
+                <string>SimulationMovement_testInvoiceTransactionSimulationRule</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>New Default Payment Simulation Rule</string> </value>
+            <value> <string>New Default Invoice Transaction Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>

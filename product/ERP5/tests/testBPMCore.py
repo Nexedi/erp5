@@ -43,6 +43,10 @@ class TestBPMMixin(ERP5TypeTestCase):
     return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
             'erp5_accounting', 'erp5_invoicing', 'erp5_simplified_invoicing',
             'erp5_core_proxy_field_legacy',
+            'erp5_configurator_standard_solver',
+            'erp5_configurator_standard_trade_template',
+            'erp5_configurator_standard_accounting_template',
+            'erp5_configurator_standard_invoicing_template',
             'erp5_simulation_test')
 
   business_process_portal_type = 'Business Process'

@@ -25,12 +25,19 @@
 #
 ##############################################################################
 
+
 def Legacy_getBusinessTemplateList(cls):
   getBusinessTemplateList = cls.getBusinessTemplateList
   def Legacy_getBusinessTemplateList(self):
     bt_list = []
+    IGNORE_BUSINESS_TEMPLATE_LIST = ['erp5_simulation_test',
+                    'erp5_configurator_standard_solver',
+                    'erp5_configurator_standard_trade_template',
+                    'erp5_configurator_standard_accounting_template',
+                    'erp5_configurator_standard_invoicing_template']
+
     for bt in getBusinessTemplateList(self):
-      if bt != 'erp5_simulation_test' and bt not in bt_list:
+      if bt not in IGNORE_BUSINESS_TEMPLATE_LIST and bt not in bt_list:
         bt_list.append(bt)
         if bt == 'erp5_simulation':
           bt_list.append(bt +  '_legacy')

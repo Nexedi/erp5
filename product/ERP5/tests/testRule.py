@@ -101,7 +101,9 @@ class TestRuleMixin(TestOrderMixin):
 
   def getBusinessTemplateList(self):
     return TestOrderMixin.getBusinessTemplateList(self) + ('erp5_accounting',
-                'erp5_invoicing',)
+            'erp5_invoicing',
+            'erp5_configurator_standard_accounting_template',
+            'erp5_configurator_standard_invoicing_template')
 
   def createPackingList(self):
     """

@@ -7,6 +7,30 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_Add_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Delete_objects_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>_Modify_portal_content_Permission</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>_count</string> </key>
             <value>
               <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -57,10 +81,6 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>new_invoice_simulation_rule</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>20</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

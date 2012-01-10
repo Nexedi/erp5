@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Delivery Simulation Rule" module="erp5.portal_type"/>
+      <global name="Accounting Transaction Root Simulation Rule" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -40,43 +40,39 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/delivery</string>
+                <string>trade_phase/default/accounting</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>default_delivering_rule</string> </value>
+            <value> <string>default_accounting_transaction_rule</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>WARNING: This is a minimalist rule to make \'expand\' work when there exists a \'AccountingTransaction_getRuleReference\' script.\n
+Many testers are missing and it should be completed like other root simulation rule.\n
+This is not used anymore and is left only as an example.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>new_delivery_simulation_rule</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>20</string> </value>
+            <value> <string>new_accounting_transaction_root_simulation_rule</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Delivery Simulation Rule</string> </value>
+            <value> <string>Accounting Transaction Root Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>SimulationMovement_testDeliverySimulationRule</string>
+                <string>Rule_testFalse</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>New Default Delivery Simulation Rule</string> </value>
+            <value> <string>New Default Accounting Transaction Root Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -129,17 +125,7 @@
         <item>
             <key> <string>data</string> </key>
             <value>
-              <dictionary>
-                <item>
-                    <key> <string>start_date</string> </key>
-                    <value>
-                      <tuple>
-                        <none/>
-                        <none/>
-                      </tuple>
-                    </value>
-                </item>
-              </dictionary>
+              <dictionary/>
             </value>
         </item>
       </dictionary>

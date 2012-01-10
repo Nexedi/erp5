@@ -61,6 +61,10 @@ bt5_installation_list = (\'erp5_dhtml_style\',\n
                          \'erp5_simplified_invoicing\',\n
                          \'erp5_trade_knowledge_pad\',\n
                          \'erp5_crm_knowledge_pad\',\n
+                         \'erp5_configurator_standard_solver\',\n
+                         \'erp5_configurator_standard_trade_template\',\n
+                         \'erp5_configurator_standard_accounting_template\',\n
+                         \'erp5_configurator_standard_invoicing_template\',\n
                          \'erp5_ods_style\',\n
                          \'erp5_odt_style\',\n
                          \'erp5_ooo_import\',\n

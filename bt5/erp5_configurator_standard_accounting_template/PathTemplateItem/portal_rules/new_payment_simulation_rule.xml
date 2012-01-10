@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="Order Root Simulation Rule" module="erp5.portal_type"/>
+      <global name="Payment Simulation Rule" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -40,13 +40,13 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>trade_phase/default/order</string>
+                <string>trade_phase/default/payment</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>default_reference</string> </key>
-            <value> <string>default_order_rule</string> </value>
+            <value> <string>default_payment_rule</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -56,27 +56,33 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>new_order_root_simulation_rule</string> </value>
+            <value> <string>new_payment_simulation_rule</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>19</string> </value>
+            <key> <string>index</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAc=</string> </persistent>
+            </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
-            <value> <string>Order Root Simulation Rule</string> </value>
+            <value> <string>Payment Simulation Rule</string> </value>
+        </item>
+        <item>
+            <key> <string>same_total_quantity</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>test_method_id</string> </key>
             <value>
               <tuple>
-                <string>Rule_testFalse</string>
+                <string>SimulationMovement_testPaymentSimulationRule</string>
               </tuple>
             </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>New Default Order Root Simulation Rule</string> </value>
+            <value> <string>New Default Payment Simulation Rule</string> </value>
         </item>
         <item>
             <key> <string>version</string> </key>
@@ -151,6 +157,49 @@
     </pickle>
     <pickle>
       <none/>
+    </pickle>
+  </record>
+  <record id="7" aka="AAAAAAAAAAc=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary>
+                <item>
+                    <key> <string>movement</string> </key>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAg=</string> </persistent>
+                    </value>
+                </item>
+              </dictionary>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="8" aka="AAAAAAAAAAg=">
+    <pickle>
+      <tuple>
+        <global name="PersistentMapping" module="Persistence.mapping"/>
+        <tuple/>
+      </tuple>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>data</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+      </dictionary>
     </pickle>
   </record>
 </ZopeData>
