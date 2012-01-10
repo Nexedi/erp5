@@ -19,7 +19,7 @@ def getRssDataAsDict(self, url, username=None, password=None):
   
   # set shorter timeouts and revert default at enf of read  
   default_timeout = socket.getdefaulttimeout()
-  socket.setdefaulttimeout(10.0)
+  socket.setdefaulttimeout(60.0)
   d = feedparser.parse(url, handlers=handlers)  
   socket.setdefaulttimeout(default_timeout)    
   
