@@ -53,6 +53,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 from Products.ERP5Type.Document import newTempBase\n
+from Products.ERP5Type.Cache import CachingMethod\n
 \n
 request = context.REQUEST\n
 box_relative_url = kw.get(\'box_relative_url\')\n
@@ -75,7 +76,10 @@ else:\n
 feed_url = str(preferences.get(\'preferred_rss_feed\',\'\'))\n
 username = str(preferences.get(\'preferred_username\',\'\'))\n
 password = str(preferences.get(\'preferred_password\',\'\'))\n
-results = context.Base_getRssDataAsDict(context, url = feed_url, username = username, password = password)\n
+\n
+Base_getRssDataAsDict = CachingMethod(context.Base_getRssDataAsDict, \n
+                                     (feed_url, username, password), cache_factory=\'erp5_ui_short\')\n
+results = Base_getRssDataAsDict(context, url = feed_url, username = username, password = password)\n
 \n
 md5_list = []\n
 message_list = []\n
