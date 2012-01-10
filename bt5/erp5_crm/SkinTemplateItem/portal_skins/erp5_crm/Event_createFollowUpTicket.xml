@@ -53,20 +53,33 @@
             <value> <string># this script allows to create a new follow up ticket for a given event\n
 portal = context.getPortalObject()\n
 event = context\n
-ticket_module = portal.getPortalObject().getDefaultModule(follow_up_ticket_type)\n
 \n
-# Create a new object\n
-new_object = ticket_module.newContent(\n
-     portal_type=follow_up_ticket_type,\n
-     title=follow_up_ticket_title,\n
-     resource=follow_up_ticket_resource,\n
-     destination_decision_list=event.getSourceList()\n
-)\n
+operator_list = event.getDestinationList()\n
+try:\n
+  source_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+except ValueError:\n
+  source_value = None\n
+if source_value is not None:\n
+  source_section_value = source_value.getDefaultCareerSubordinationValue()\n
+  operator_list.append(source_value.getRelativeUrl())\n
+else:\n
+  source_section_value = None\n
 \n
-# Now create the relation between the event object and the new follow up ticket\n
+module = portal.getDefaultModule(ticket_portal_type)\n
+ticket = module.newContent(\n
+            portal_type=ticket_portal_type,\n
+            title=follow_up_ticket_title,\n
+            start_date=event.getStartDate(),\n
+            destination_decision_list=event.getSourceList(),\n
+            destination_section=event.getSourceSection() or event.getSource(),\n
+            source_trade_set=operator_list,\n
+            source_value=source_value,\n
+            source_section_value=source_section_value,\n
+           )\n
+\n
 follow_up_list = event.getFollowUpList()\n
-follow_up_list.append(new_object.getRelativeUrl())\n
-event.setFollowUpValueList(follow_up_list)\n
+follow_up_list.append(ticket.getRelativeUrl())\n
+event.edit(follow_up_list=follow_up_list)\n
 </string> </value>
         </item>
         <item>

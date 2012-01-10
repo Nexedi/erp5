@@ -51,16 +51,17 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>context.Event_createFollowUpTicket(follow_up_ticket_type=follow_up_ticket_type,\n
-                                   follow_up_ticket_title=follow_up_ticket_title,\n
-                                   follow_up_ticket_resource=follow_up_ticket_resource)\n
-\n
+                                   follow_up_ticket_title=follow_up_ticket_title)\n
+if context.getPortalObject().portal_workflow.isTransitionPossible(\n
+    context, \'deliver\'):\n
+  context.deliver()\n
 return context.Base_redirect("", \n
         keep_items={\'portal_status_message\':context.getPortalObject().Base_translateString("Follow Up Ticket Created.")})\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up_ticket_type=None, follow_up_ticket_title=None, follow_up_ticket_resource=None, **kw</string> </value>
+            <value> <string>follow_up_ticket_type=None, follow_up_ticket_title=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
