@@ -82,7 +82,9 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_dialog_updated</string>
+                      </list>
                     </value>
                 </item>
                 <item>

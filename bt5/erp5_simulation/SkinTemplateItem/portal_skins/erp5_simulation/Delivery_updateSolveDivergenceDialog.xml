@@ -66,7 +66,7 @@ for listbox_key in listbox:\n
         line.updateConfiguration(**value.as_dict())\n
     else:\n
       line.setProperty(property, value)\n
-\n
+request.set(\'your_dialog_updated\', \'1\')\n
 return context.Delivery_viewSolveDivergenceDialog(listbox=listbox)\n
 </string> </value>
         </item>
