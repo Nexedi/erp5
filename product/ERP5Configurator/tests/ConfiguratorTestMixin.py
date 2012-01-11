@@ -510,7 +510,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEquals('Previous', response_dict['previous'])
     self.assertEquals('Install', response_dict['next'])
 
-    self.assertCurrentStep('ERP5 installation', response_dict)
+    self.assertCurrentStep('Download', response_dict)
 
   def stepSetupInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Install the Configuration """

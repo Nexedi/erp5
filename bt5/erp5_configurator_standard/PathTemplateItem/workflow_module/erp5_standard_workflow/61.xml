@@ -34,9 +34,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Enter the number of user accounts you want to create. In your company, each person using ERP5 should have his own user account.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -48,7 +46,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Employees number</string> </value>
+            <value> <string>Number of user accounts</string> </value>
         </item>
       </dictionary>
     </pickle>

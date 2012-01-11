@@ -52,9 +52,6 @@
             <key> <string>_body</string> </key>
             <value> <string># Update Business Configuration Properties if not set.\n
 \n
-if context.getUserInterfaceDescriptionFileId() is None:\n
-  context.setUserInterfaceDescriptionFileId("maxma_demo_configuration_ui_description.ods")\n
-\n
 if context.getConfigurationAfterScriptId() is None:\n
   context.setConfigurationAfterScriptId(\'BusinessConfiguration_afterMaxmaDemoConfiguration\')\n
 </string> </value>

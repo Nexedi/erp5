@@ -57,9 +57,7 @@ nter Number of User</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Configure your organisation.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -71,7 +69,7 @@ nter Number of User</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Organisation</string> </value>
+            <value> <string>Your organisation</string> </value>
         </item>
       </dictionary>
     </pickle>

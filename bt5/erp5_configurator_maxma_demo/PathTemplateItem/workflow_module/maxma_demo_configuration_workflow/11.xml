@@ -34,9 +34,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>All information that you need to you use your demo.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

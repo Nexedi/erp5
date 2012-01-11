@@ -109,7 +109,7 @@
   </tr>\n
   <tr>\n
     <td>verifyTextPresent</td>\n
-    <td>ERP5 installation</td>\n
+    <td>Download</td>\n
     <td></td>\n
   </tr>\n
 </tal:block>\n
@@ -158,7 +158,7 @@
   </tr>\n
   <tr>\n
     <td>verifyTextPresent</td>\n
-    <td>ERP5 installation</td>\n
+    <td>Download</td>\n
     <td></td>\n
   </tr>\n
 </tal:block>\n
@@ -518,7 +518,7 @@
 \n
   <tr>\n
     <td>verifyTextPresent</td>\n
-    <td>ERP5 installation</td>\n
+    <td>Download</td>\n
     <td></td>\n
   </tr>\n
   <tr>\n
