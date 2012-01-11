@@ -8,6 +8,8 @@ portal_gadgets/km_document_profile
 portal_gadgets/km_document_profile/**
 portal_gadgets/km_document_relations
 portal_gadgets/km_document_relations/**
+portal_gadgets/km_document_renderer
+portal_gadgets/km_document_renderer/**
 portal_gadgets/km_document_versions
 portal_gadgets/km_document_versions/**
 portal_gadgets/km_latest_documents

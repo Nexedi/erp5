@@ -1,3 +1,6 @@
+2012-01-11 Kazuhiko
+* add km_document_renderer gadget.
+
 2011-12-01 Kazuhiko
 * use acquired description from the parent if empty in the web section.
 
