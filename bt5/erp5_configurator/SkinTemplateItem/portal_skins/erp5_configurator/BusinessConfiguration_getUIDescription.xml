@@ -50,14 +50,32 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Cache import CachingMethod\n
-filename = business_configuration.getUserInterfaceDescriptionFileId()\n
+            <value> <string>"""\n
+  Get all states and descriptions to present at the\n
+  the form.\n
+"""\n
 \n
-return CachingMethod(\n
-         context.ConfigurationTemplate_readOOCalcFile, \n
-         \'%s_%s\' % (script.getId(), filename), \n
-         cache_factory="erp5_content_long"\n
-        )(filename)\n
+result = []\n
+previous_state_list = []\n
+workflow = business_configuration.getResourceValue()\n
+state = workflow.getSourceValue()\n
+\n
+while state not in previous_state_list:\n
+  transition = state.getDestinationValue()\n
+  previous_state_list.append(state)\n
+  if transition is None:\n
+    break\n
+\n
+  state = transition.getDestinationValue()\n
+  if state is None:\n
+    break\n
+\n
+  if transition.getTransitionFormId() not in (None, ""):\n
+     result.append({\'state\' : state.getTitle(), \n
+                    \'description\' : state.getDescription(),\n
+                    \'title\': state.getTitle()})\n
+\n
+return result\n
 </string> </value>
         </item>
         <item>
