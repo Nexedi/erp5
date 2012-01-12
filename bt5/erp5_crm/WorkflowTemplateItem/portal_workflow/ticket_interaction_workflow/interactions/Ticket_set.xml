@@ -27,6 +27,12 @@
         <item>
             <key> <string>after_script_name</string> </key>
             <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
+            <key> <string>before_commit_script_name</string> </key>
+            <value>
               <list>
                 <string>Ticket_updateLocalRole</string>
               </list>
@@ -59,7 +65,7 @@
         </item>
         <item>
             <key> <string>once_per_transaction</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1</int> </value>
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
@@ -72,6 +78,10 @@
             <value>
               <tuple/>
             </value>
+        </item>
+        <item>
+            <key> <string>temporary_document_disallowed</string> </key>
+            <value> <int>0</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
