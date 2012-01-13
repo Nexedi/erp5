@@ -99,12 +99,9 @@ from MySQLdb.converters import conversions
 from MySQLdb.constants import FIELD_TYPE, CR, ER, CLIENT
 from Shared.DC.ZRDB.TM import TM
 from DateTime import DateTime
-from zLOG import LOG, ERROR, INFO
 from ZODB.POSException import ConflictError
 
-import string, sys
-from string import strip, split, find, upper, rfind
-from time import time
+from string import strip, split, upper, rfind
 from thread import get_ident, allocate_lock
 
 hosed_connection = (
