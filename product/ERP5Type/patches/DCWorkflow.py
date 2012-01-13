@@ -455,7 +455,10 @@ def _executeMetaTransition(self, ob, new_state_id):
   kwargs = None
   # Figure out the old and new states.
   old_sdef = self._getWorkflowStateOf(ob)
-  old_state = old_sdef.getId()
+  if old_sdef is None:
+    old_state = self._getWorkflowStateOf(ob, id_only=True)
+  else:
+    old_state = old_sdef.getId()
   if old_state == new_state_id:
     # Object is already in expected state
     return
