@@ -164,6 +164,10 @@ def int_or_long(s):
     try: return int(s)
     except: return long(s)
 
+def ord_or_None(s):
+    if s is not None:
+        return ord(s)
+
 class ThreadedDeferredDB:
     """
         An experimental MySQL DA which implements deferred execution
@@ -176,6 +180,8 @@ class ThreadedDeferredDB:
     conv[FIELD_TYPE.DATETIME] = DateTime_or_None
     conv[FIELD_TYPE.DATE] = DateTime_or_None
     conv[FIELD_TYPE.DECIMAL] = float
+    conv[FIELD_TYPE.BIT] = ord_or_None
+
     del conv[FIELD_TYPE.TIME]
 
     def __init__(self,connection):
