@@ -21,8 +21,7 @@ from Products.DCWorkflow.DCWorkflow import DCWorkflowDefinition, StateChangeInfo
 from Products.DCWorkflow.DCWorkflow import ObjectDeleted, ObjectMoved, aq_parent, aq_inner
 from Products.DCWorkflow import DCWorkflow
 from Products.DCWorkflow.Transitions import TRIGGER_WORKFLOW_METHOD, TransitionDefinition
-from AccessControl import getSecurityManager, ClassSecurityInfo, \
-        ModuleSecurityInfo, Unauthorized
+from AccessControl import getSecurityManager, ModuleSecurityInfo, Unauthorized
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.CMFCore.utils import  _getAuthenticatedUser
@@ -30,15 +29,13 @@ from DocumentTemplate.DT_Util import TemplateDict
 from DateTime import DateTime
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.Utils import convertToMixedCase
-from string import join
 import sys
-from zLOG import LOG
 from Acquisition import aq_base
 from copy import deepcopy
 
 # Patch WorkflowUIMixin to add description on workflows
 from Products.DCWorkflow.WorkflowUIMixin import WorkflowUIMixin as WorkflowUIMixin_class
-from Products.DCWorkflow.Guard import Guard, _checkPermission, createExprContext, StateChangeInfo
+from Products.DCWorkflow.Guard import Guard, _checkPermission
 
 ACTIVITY_GROUPING_COUNT = 100
 
@@ -155,7 +152,7 @@ def DCWorkflowDefinition_listGlobalActions(self, info):
                   catalog = portal.portal_catalog
                   for k in var_match_keys:
                     v = qdef.getVarMatch(k)
-                    if instance(v, Expression):
+                    if isinstance(v, Expression):
                       v_fmt = v(createExprContext(StateChangeInfo(portal,
                                 self, kwargs=info.__dict__.copy())))
                     else:
@@ -240,7 +237,6 @@ def DCWorkflowDefinition_getWorklistVariableMatchDict(self, info,
     return None
   variable_match_dict = {}
   security_manager = getSecurityManager()
-  workflow_tool = portal.portal_workflow
   workflow_id = self.id
   workflow_title = self.title
   for worklist_id, worklist_definition in self.worklists.items():
