@@ -72,8 +72,8 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
         #category = '\n'.join(category_list)
         role_dict = {
                      'title': role.get('Name', 'Default'),
-                     'role_name_list': role.get('Role'),
                      'description': role.get('Description', 'Configured by ERP5 Configurator'),
+                     'role_name_list': [x.strip() for x in role.get('Role', '').split(';')],
                      'role_category_list': category_list,
                      'role_base_category_list': role.get('Base_Category', ''),
                      'role_base_category_script_id': role.get('Base_Category_Script',
