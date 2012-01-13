@@ -53,8 +53,9 @@
             <value> <string>from Products.ERP5Type.Document import newTempDocument\n
 return_list = []\n
 i = 1\n
+portal = context.getPortalObject()\n
 for worklist in context.portal_workflow.listActionInfos():\n
-  o = newTempDocument(context, str(i))\n
+  o = newTempDocument(portal, str(i))\n
   o.edit(\n
     count=worklist[\'count\'],\n
     title=worklist[\'title\'],\n
