@@ -51,7 +51,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
-group_id = context.getGlobalConfigurationAttr(\'group_id\')\n
 \n
 # setup Rules\n
 configuration_save.addConfigurationItem("Rule Configurator Item")\n
