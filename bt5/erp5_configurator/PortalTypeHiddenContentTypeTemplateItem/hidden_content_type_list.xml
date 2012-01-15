@@ -15,4 +15,7 @@
   <item>Email</item>
   <item>Telephone</item>
  </portal_type>
+ <portal_type id="Workflow">
+  <item>Embedded File</item>
+ </portal_type>
 </hidden_content_type_list>

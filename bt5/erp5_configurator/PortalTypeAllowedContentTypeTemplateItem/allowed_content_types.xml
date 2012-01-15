@@ -52,4 +52,7 @@
  <portal_type id="Portal Type Roles Spreadsheet Configurator Item">
   <item>Embedded File</item>
  </portal_type>
+ <portal_type id="Workflow">
+  <item>Embedded File</item>
+ </portal_type>
 </allowed_content_type_list>

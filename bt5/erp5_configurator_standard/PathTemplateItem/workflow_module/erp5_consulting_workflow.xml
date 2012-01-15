@@ -26,6 +26,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>comment</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -50,8 +60,16 @@
             </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
+            <key> <string>comment</string> </key>
             <value> <string>The default Configuration with configurable categories and security.</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_afterConfiguration</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>Used by consultants to provides a flexible configuration of ERP5 for Small and Medium Business.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -26,6 +26,16 @@
                       <value> <string>string</string> </value>
                   </item>
                 </dictionary>
+                <dictionary>
+                  <item>
+                      <key> <string>id</string> </key>
+                      <value> <string>comment</string> </value>
+                  </item>
+                  <item>
+                      <key> <string>type</string> </key>
+                      <value> <string>string</string> </value>
+                  </item>
+                </dictionary>
               </tuple>
             </value>
         </item>
@@ -50,8 +60,16 @@
             </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
+            <key> <string>comment</string> </key>
             <value> <string>The default UNG configuration workflow.</string> </value>
+        </item>
+        <item>
+            <key> <string>configuration_after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_afterUNGConfiguration</string> </value>
+        </item>
+        <item>
+            <key> <string>description</string> </key>
+            <value> <string>The UNG project aims at building a complete alternative to proprietary business model and technologies, starting from enterprise application and ending with Internet search engine.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

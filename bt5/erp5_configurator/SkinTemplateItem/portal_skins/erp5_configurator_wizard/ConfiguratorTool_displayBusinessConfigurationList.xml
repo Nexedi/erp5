@@ -50,10 +50,10 @@
             <tal:block repeat="bc business_configuration_tuple">\n
               <tal:block define="bc_id python: bc.getId();\n
                                  bc_title python: bc.getTitle();\n
-                                 bc_description python: bc.getDescription();\n
+                                 bc_description python: bc.getResourceValue().getDescription();\n
                                  bc_absolute_url python: bc.absolute_url();\n
-                                 bc_default_image python: bc.getDefaultImageValue();\n
-                                 bc_default_image_absolute_url python: bc.getDefaultImageAbsoluteUrl();">\n
+                                 bc_default_image python: bc.getResourceValue().getDefaultImageValue();\n
+                                 bc_default_image_absolute_url python: bc.getResourceValue().getDefaultImageAbsoluteUrl();">\n
                 <td>\n
                   <div tal:attributes="id python: \'business_configuration_%s\' % bc_id;\n
                                        class string:box;">\n

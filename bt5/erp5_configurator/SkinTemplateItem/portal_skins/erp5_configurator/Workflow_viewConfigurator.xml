@@ -74,17 +74,13 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -97,10 +93,7 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_title</string>
-                        <string>my_configuration_state</string>
-                        <string>my_translated_simulation_state_title</string>
-                        <string>my_translated_validation_state_title</string>
+                        <string>my_configuration_after_script_id</string>
                       </list>
                     </value>
                 </item>
@@ -108,9 +101,8 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
-                        <string>my_resource_title</string>
-                        <string>my_specialise_title</string>
-                        <string>my_comment</string>
+                        <string>my_default_image_absolute_url</string>
+                        <string>my_default_image_file</string>
                       </list>
                     </value>
                 </item>
@@ -119,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessConfiguration_view</string> </value>
+            <value> <string>Workflow_viewConfigurator</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -127,7 +119,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BusinessConfiguration_view</string> </value>
+            <value> <string>Workflow_viewConfigurator</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>
@@ -143,7 +135,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Business Configuration</string> </value>
+            <value> <string>Configutator Settings</string> </value>
         </item>
         <item>
             <key> <string>unicode_mode</string> </key>
