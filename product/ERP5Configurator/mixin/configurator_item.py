@@ -36,10 +36,17 @@ class ConfiguratorItemMixin:
   def install(self, document, business_configuration, prefix=''):
     """ Add object to customer customization template. """
     bt5_obj = business_configuration.getSpecialiseValue()
+    if bt5_obj is None:
+      LOG('ConfiguratorItem', INFO, 
+          'Unable to find related business template to %s' % \
+            business_configuration.getRelativeUrl())
+      return
+
     if document.getPortalType() in ['Category', 'Base Category']:
       prefix = "portal_categories/"
     template_path_list = ['%s%s' % (prefix, document.getRelativeUrl()),
                           '%s%s/**' % (prefix, document.getRelativeUrl())]
+
     current_template_path_list = list(bt5_obj.getTemplatePathList())
     current_template_path_list.extend(template_path_list)
     bt5_obj.edit(template_path_list=current_template_path_list)
