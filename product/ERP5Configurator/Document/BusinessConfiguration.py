@@ -392,7 +392,12 @@ class BusinessConfiguration(Item):
     for obj in self.contentValues(filter={'portal_type': ['Configuration Save']}):
       object_ids.append(obj.getId())
     self.manage_delObjects(object_ids)
-    del self.workflow_history
+    if getattr(self, "workflow_history", None) is not None:
+      del self.workflow_history
+    if getattr(self, "_global_configuration_attributes", None) is not None:
+      del self._global_configuration_attributes
+    if getattr(self, "_multi_entry_transitions", None) is not None:
+      del self._multi_entry_transitions
+    self.setSpecialiseValue(None)
     # ERP5 Workflow initialization
     erp5_workflow = self.getResourceValue()
-    erp5_workflow.initializeDocument(self)
