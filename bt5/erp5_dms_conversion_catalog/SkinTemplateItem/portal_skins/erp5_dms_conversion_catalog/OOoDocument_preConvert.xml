@@ -51,10 +51,12 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Do actual conversion of Spreadsheet type.\n
+  Do actual conversion of OOo types.\n
 """\n
-context.activate(serialization_tag=\'pre_convert\').convert(**{\'format\': \'html\'})\n
-context.activate(serialization_tag=\'pre_convert\').Base_preConvert(format, quality, display_list)\n
+if context.hasBaseData():\n
+  # empty documents do not need pre conversion\n
+  context.activate(serialization_tag=\'pre_convert\').convert(**{\'format\': \'html\'})\n
+  context.activate(serialization_tag=\'pre_convert\').Base_preConvert(format, quality, display_list)\n
 </string> </value>
         </item>
         <item>
