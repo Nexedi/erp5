@@ -57,6 +57,12 @@
 portal = context.getPortalObject()\n
 \n
 portal_type = context.getPortalType()\n
+allowed_portal_type_list = portal.getPortalDocumentTypeList() + portal.getPortalEmbeddedDocumentTypeList()\n
+\n
+if portal_type not in allowed_portal_type_list:\n
+  # no need to convert any non DMS types\n
+  return\n
+\n
 format = portal.portal_preferences.getPreferredImageFormat()\n
 quality = portal.portal_preferences.getPreferredImageQuality()\n
 preferred_image_size = portal.portal_preferences.getPreferredImageSize()\n
