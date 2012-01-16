@@ -315,7 +315,9 @@ class Image(TextConvertableMixin, File, OFSImage):
                                  '-quality', str(quality),
                                  '-geometry', '%sx%s' % (width, height)]
     if format not in VALID_TRANSPARENT_IMAGE_FORMAT_LIST:
-      parameter_list += '-alpha', 'off'
+      # ImageMagick way to remove transparent that works with multiple
+      # images. http://www.imagemagick.org/Usage/masking/#remove
+      parameter_list += '-bordercolor', 'white', '-border', '0'
     if resolution:
       parameter_list += '-density', '%sx%s' % (resolution, resolution)
     if frame is not None:
