@@ -162,11 +162,13 @@ class MovementCollectionUpdaterMixin:
     movement_diff = self.getMovementCollectionDiff(context,
                  rounding=rounding, movement_generator=movement_generator)
 
+    modified_movement_list = []
     # Apply Diff
     for movement in movement_diff.getDeletableMovementList():
       movement.getParentValue().deleteContent(movement.getId())
     for movement, kw in movement_diff.getUpdatableMovementList():
       movement.edit(**kw)
+      modified_movement_list.append(movement)
       for property_id in kw:
         movement.clearRecordedProperty(property_id)
     for movement in movement_diff.getNewMovementList():
@@ -174,8 +176,9 @@ class MovementCollectionUpdaterMixin:
       assert movement.isTempObject()
       if '_original' in d:
         # slow but safe way (required for compensated movements)
-        context.newContent(portal_type=self.movement_type,
-          **_getPropertyAndCategoryList(movement))
+        modified_movement_list.append(context.newContent(
+          portal_type=self.movement_type,
+          **_getPropertyAndCategoryList(movement)))
         continue
       # fast way (we had to make sure such optimization
       # does not touch existing persistent data)
@@ -183,3 +186,9 @@ class MovementCollectionUpdaterMixin:
       movement = context.newContent(portal_type=self.movement_type)
       d.update(movement.__dict__)
       movement.__dict__ = d
+      modified_movement_list.append(movement)
+    for movement in modified_movement_list:
+      # for each touched non buildable movement reset causality_list
+      if not movement.isBuildable(movement.getCausalityValue(
+          portal_type='Business Link')):
+        movement.setCausalityList([])
