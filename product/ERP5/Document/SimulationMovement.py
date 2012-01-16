@@ -617,17 +617,20 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isBuildable')
-  def isBuildable(self):
+  def isBuildable(self, business_link):
     """Simulation Movement buildable logic"""
     if self.getDelivery():
       # already delivered
       return False
 
     # might be buildable - business path dependent
-    business_link = self.getCausalityValue(portal_type='Business Link')
     explanation_value = self.getExplanationValue()
     if business_link is None or explanation_value is None:
-      return True
+      # without Business Link and explanation it is impossible to check
+      # precisely if movement is buildable
+      # Note: It breaks compatilibity with old simulation code which did not
+      #       use Business Process at all, here assumption is inverted
+      return False
 
     ## XXX Code below following line has been moved to BusinessPath (cf r37116)
     #return len(business_path.filterBuildableMovementList([self])) == 1
@@ -642,10 +645,10 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     composed_document = self.asComposedDocument()
     predecessor_link_list = composed_document.getBusinessLinkValueList(
             successor=predecessor_state)
+    business_link_list = composed_document.getBusinessLinkValueList()
 
     def isBuiltAndCompleted(simulation, path):
-      return simulation.getCausalityValue() is not None and \
-          simulation.getSimulationState() in path.getCompletedStateList()
+      return simulation.getSimulationState() in path.getCompletedStateList()
 
     ### Step 1:
     ## Explore ancestors in ZODB (cheap)
@@ -655,8 +658,20 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     causality_dict = {}
     current = self.getParentValue().getParentValue()
     while current.getPortalType() == "Simulation Movement":
-      causality_dict[current.getCausality(portal_type='Business Link')] = \
-        current
+      business_link = current.getCausality(portal_type='Business Link')
+      if business_link is None:
+        # no direct business link set on movement, use predicate to find one
+        for candidate_business_link in business_link_list:
+          if candidate_business_link.test(current):
+            if business_link is not None:
+              raise ValueError('Business Link predicate matches too many '
+                'movements.')
+            business_link = candidate_business_link.getRelativeUrl()
+        if not business_link:
+          raise ValueError('Simulation Movement has no Business Link related '
+            'and no Business Link from current Business Process matches')
+
+      causality_dict[business_link] = current
       current = current.getParentValue().getParentValue()
 
     remaining_path_set = set()
