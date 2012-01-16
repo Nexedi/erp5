@@ -524,7 +524,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                                                    default_address_region):
     """ Check if configuration key was created fine """
     # last one: a step for what the client selected
-    organisation_config_save = business_configuration['3']
+    organisation_config_save = business_configuration['4']
     self.assertEquals(2, len(organisation_config_save.contentValues()))
     # first item: configuration of our organisation
     organisation_config_item = organisation_config_save['1']
@@ -548,7 +548,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(category_config_item.getTitle(),
                       'My Organisation')
 
-    self.assertEquals(3, len(business_configuration.contentValues(portal_type="Configuration Save")))
+    self.assertEquals(4, len(business_configuration.contentValues(portal_type="Configuration Save")))
     self.assertEquals(0, len(business_configuration.contentValues(portal_type="Link")))
 
   def stepCheckOrganisationConfiguratorItemFrance(self, sequence=None, sequence_list=None, **kw):
