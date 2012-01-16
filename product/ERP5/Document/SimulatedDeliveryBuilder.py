@@ -98,7 +98,7 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     pass
 
   @UnrestrictedMethod
-  def searchMovementList(self, applied_rule_uid=None, **kw):
+  def searchMovementList(self, applied_rule_uid=None, business_link_list=None, **kw):
     """
       defines how to query all Simulation Movements which meet certain criteria
       (including the above path path definition).
@@ -112,18 +112,27 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     # Search only child movement from this applied rule
     if applied_rule_uid is not None:
       kw['parent_uid'] = applied_rule_uid
+    if business_link_list is None:
+      business_link_list = []
     # XXX Add profile query
     # Add resource query
     if self.getResourcePortalType() not in ('', None):
       kw['resourceType'] = self.getResourcePortalType()
     if self.getSimulationSelectMethodId() in ['', None]:
-      movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
+      prefilter_movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
     else:
       select_method = getattr(self.getPortalObject(), self.getSimulationSelectMethodId())
-      movement_list = select_method(**kw)
+      prefilter_movement_list = select_method(**kw)
     # XXX Use buildSQLQuery will be better
-    movement_list = [x for x in movement_list if \
-                     x.getDeliveryValueList()==[] and x.isBuildable()]
+    movement_list = []
+    for movement in prefilter_movement_list:
+      for business_link in business_link_list:
+        if movement.isBuildable(business_link):
+          if movement.getDeliveryValueList()==[]:
+            movement_list.append(movement)
+        else:
+          # drop causality links
+          movement.setCausalityList([])
     # XXX  Add predicate test
     # XXX FIXME Check that there is no double in the list
     # Because we can't trust simulation_select_method
