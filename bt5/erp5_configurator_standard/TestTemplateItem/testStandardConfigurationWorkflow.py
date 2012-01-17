@@ -108,11 +108,11 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 
   def afterSetUp(self):
     TestLiveConfiguratorWorkflowMixin.afterSetUp(self)
-    categories_file_id = 'consulting_configurator_sample_categories.ods'
+    categories_file_id = 'standard_category.ods'
     self.categories_file_path, self.categories_file_upload = \
                                            self.uploadFile(categories_file_id)
 
-    roles_file_id = 'consulting_configurator_sample_roles_configuration_sheet.ods'
+    roles_file_id = 'standard_portal_type_roles.ods'
     self.roles_file_path, self.roles_file_upload = \
                                            self.uploadFile(roles_file_id)
     # set the company employees number
@@ -245,7 +245,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     """ Check if organisation was created fine """
     business_configuration = sequence.get("business_configuration")
     # last one: a step for what the client selected
-    organisation_config_save = business_configuration['5']
+    organisation_config_save = business_configuration['6']
     self.assertEquals(1, len(organisation_config_save.contentValues()))
     # first item: configuration of our organisation
     organisation_config_item = organisation_config_save['1']
@@ -524,7 +524,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                                                    default_address_region):
     """ Check if configuration key was created fine """
     # last one: a step for what the client selected
-    organisation_config_save = business_configuration['4']
+    organisation_config_save = business_configuration['5']
     self.assertEquals(2, len(organisation_config_save.contentValues()))
     # first item: configuration of our organisation
     organisation_config_item = organisation_config_save['1']
@@ -548,7 +548,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(category_config_item.getTitle(),
                       'My Organisation')
 
-    self.assertEquals(4, len(business_configuration.contentValues(portal_type="Configuration Save")))
+    self.assertEquals(5, len(business_configuration.contentValues(portal_type="Configuration Save")))
     self.assertEquals(0, len(business_configuration.contentValues(portal_type="Link")))
 
   def stepCheckOrganisationConfiguratorItemFrance(self, sequence=None, sequence_list=None, **kw):

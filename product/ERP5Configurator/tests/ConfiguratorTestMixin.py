@@ -58,7 +58,6 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                        'erp5_tax_resource',
                        'erp5_discount_resource',
                        'erp5_invoicing',
-                       'erp5_configurator_standard_categories',
                        'erp5_trade_knowledge_pad',
                        'erp5_crm_knowledge_pad',
                        'erp5_simplified_invoicing',

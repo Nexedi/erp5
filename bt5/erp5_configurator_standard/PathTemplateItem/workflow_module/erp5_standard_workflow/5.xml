@@ -45,7 +45,7 @@
             <key> <string>categories</string> </key>
             <value>
               <tuple>
-                <string>destination/workflow_module/erp5_standard_workflow/6</string>
+                <string>destination/workflow_module/erp5_standard_workflow/3</string>
               </tuple>
             </value>
         </item>
@@ -61,7 +61,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>29</string> </value>
+            <value> <string>5</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
@@ -69,7 +69,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Customer BT</string> </value>
+            <value> <string>Category</string> </value>
         </item>
       </dictionary>
     </pickle>
