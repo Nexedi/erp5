@@ -442,6 +442,10 @@ class RuleMixin(Predicate):
             if not tester.compare(prevision_movement, decision_movement):
               kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
               # XXX-JPS - there is a risk here that quantity is wrongly updated
+          # special cause: causality shall be updatable, coming from prevision
+          if set(prevision_movement.getCausalityList()) != \
+            set(decision_movement.getCausalityList()):
+            kw['causality'] = prevision_movement.getCausalityList()
           if kw:
             movement_collection_diff.addUpdatableMovement(decision_movement, kw)
     # Second, we calculate if the total quantity is the same on both sides
