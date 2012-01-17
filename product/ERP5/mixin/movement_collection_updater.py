@@ -191,4 +191,6 @@ class MovementCollectionUpdaterMixin:
       # for each touched non buildable movement reset causality_list
       if not movement.isBuildable(movement.getCausalityValue(
           portal_type='Business Link')):
-        movement.setCausalityList([])
+        movement.setCausalityList([q.getRelativeUrl() for q in \
+          movement.getCausalityValueList() if q.getPortalType() \
+            not in self.getPortalBusinessLinkTypeList()])
