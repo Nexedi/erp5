@@ -698,9 +698,18 @@ class BusinessProcess(Path, XMLObject):
       movement._edit(force_update=True, **kw)
       business_link = self.getBusinessLinkValueList(trade_phase=trade_phase,
                                                     context=movement)
+      # reset all other Business Process related causality links
+      # it allows to configure category equivalence tester on causality and
+      # will not propagate categories previosions for links, as
+      # Business Process itself has full responsibility for setting those values
+      excluded_portal_type_set = set(self.getPortalTradeModelPathTypeList() \
+        + self.getPortalBusinessLinkTypeList())
+      previous_causality_list = [q.getRelativeUrl() \
+        for q in movement.getCausalityValueList() if q.getPortalType() \
+          not in excluded_portal_type_set]
       movement._setCausalityList([trade_model_path.getRelativeUrl()]
         + [x.getRelativeUrl() for x in business_link]
-        + movement.getCausalityList())
+        + previous_causality_list)
       result.append(movement)
 
     if not explanation.getSpecialiseValue().getSameTotalQuantity():
