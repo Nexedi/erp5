@@ -645,7 +645,6 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     composed_document = self.asComposedDocument()
     predecessor_link_list = composed_document.getBusinessLinkValueList(
             successor=predecessor_state)
-    business_link_list = composed_document.getBusinessLinkValueList()
 
     def isBuiltAndCompleted(simulation, path):
       return simulation.getSimulationState() in path.getCompletedStateList()
@@ -661,15 +660,15 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
       business_link = current.getCausality(portal_type='Business Link')
       if business_link is None:
         # no direct business link set on movement, use predicate to find one
-        for candidate_business_link in business_link_list:
-          if candidate_business_link.test(current):
-            if business_link is not None:
-              raise ValueError('Business Link predicate matches too many '
-                'movements.')
-            business_link = candidate_business_link.getRelativeUrl()
-        if not business_link:
+        business_link_list = composed_document.getBusinessLinkValueList(
+          context=current)
+        if len(business_link) == 0:
+          raise ValueError('Business Link predicate matches too many '
+              'movements.')
+        if len(business_link) > 1:
           raise ValueError('Simulation Movement has no Business Link related '
             'and no Business Link from current Business Process matches')
+        business_link = business_link_list[0].getRelativeUrl()
 
       causality_dict[business_link] = current
       current = current.getParentValue().getParentValue()
