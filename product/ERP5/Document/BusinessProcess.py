@@ -38,8 +38,6 @@ from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
 
 import zope.interface
 
-from zLOG import LOG
-
 _marker = object()
 
 class BusinessProcess(Path, XMLObject):
@@ -240,8 +238,6 @@ class BusinessProcess(Path, XMLObject):
     # and avoid using the low level Predicate API. But the Domain Tool does
     # support the condition above without scripting?
     if context is None:
-      LOG('ERP5.Document.BusinessProcess', 0, 'Context is None %r' %
-                  (business_link_list,))
       return business_link_list
     return [business_link for business_link in business_link_list
                 if business_link.test(context)]
