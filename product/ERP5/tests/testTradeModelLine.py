@@ -434,8 +434,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         if True:
           sm = result_dict.pop(use)
           self.assertEqual(str(sm.getTotalPrice() or 0.0), str(total_price))
-          self.assertEqual(3, len(sm.getCausalityValueList()))
-          self.assertEqual(1, len(sm.getCausalityValueList(
+          self.assertEqual(2, len(sm.getCausalityValueList()))
+          self.assertEqual(0, len(sm.getCausalityValueList(
             portal_type=self.business_link_portal_type)))
           self.assertEqual(1, len(sm.getCausalityValueList(
             portal_type=self.trade_model_path_portal_type)))
