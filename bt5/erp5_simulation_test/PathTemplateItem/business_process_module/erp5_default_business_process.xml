@@ -103,10 +103,6 @@
             <value> <string>erp5_default_business_process</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>14</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Business Process</string> </value>
         </item>
