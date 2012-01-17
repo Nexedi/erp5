@@ -662,10 +662,10 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         # no direct business link set on movement, use predicate to find one
         business_link_list = composed_document.getBusinessLinkValueList(
           context=current)
-        if len(business_link_list) == 0:
+        if len(business_link_list) > 1:
           raise ValueError('Business Link predicate matches too many '
               'movements.')
-        if len(business_link_list) > 1:
+        if len(business_link_list) == 0:
           raise ValueError('Simulation Movement has no Business Link related '
             'and no Business Link from current Business Process matches')
         business_link = business_link_list[0].getRelativeUrl()
