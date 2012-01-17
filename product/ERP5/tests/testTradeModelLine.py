@@ -138,6 +138,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
              successor='trade_state/accounted',
              delivery_builder=['portal_deliveries/purchase_invoice_transaction_trade_model_builder',
                                'portal_deliveries/sale_invoice_transaction_trade_model_builder'],
+             test_tales_expression="python: context.BusinessLink_testDeliveryLink('Trade Model Simulation Rule')",
         ),
         dict(reference='tax',
              trade_phase='default/tax',
@@ -153,6 +154,7 @@ class TestTradeModelLineMixin(TestBPMMixin, UserDict):
              successor='trade_state/accounted',
              delivery_builder=['portal_deliveries/purchase_invoice_transaction_trade_model_builder',
                                'portal_deliveries/sale_invoice_transaction_trade_model_builder'],
+             test_tales_expression="python: context.BusinessLink_testDeliveryLink('Trade Model Simulation Rule')",
         ),
       ]
       for business_link in business_link_list:
