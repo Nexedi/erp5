@@ -66,7 +66,7 @@ if address not in MARKER and port not in MARKER:\n
     # we need a way to do this by introspection\n
     if ((getattr(document, "getData", None) is not None and document.getData() not in MARKER) or \\\n
         (getattr(document, "getBaseData", None) is not None and document.getBaseData() not in MARKER)):\n
-      document.activate(serialize_tag="conversion").Base_callPreConvert()\n
+      document.activate(tag="conversion").Base_callPreConvert()\n
 </string> </value>
         </item>
         <item>
