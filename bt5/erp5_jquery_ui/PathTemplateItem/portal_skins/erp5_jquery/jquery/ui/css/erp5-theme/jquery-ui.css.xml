@@ -31,7 +31,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 /*\n
- * jQuery UI CSS Framework 1.8.16\n
+ * jQuery UI CSS Framework 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -43,14 +43,11 @@
 /* Layout helpers\n
 ----------------------------------*/\n
 .ui-helper-hidden { display: none; }\n
-.ui-helper-hidden-accessible { position: absolute; left: -99999999px; }\n
+.ui-helper-hidden-accessible { position: absolute !important; clip: rect(1px 1px 1px 1px); clip: rect(1px,1px,1px,1px); }\n
 .ui-helper-reset { margin: 0; padding: 0; border: 0; outline: 0; line-height: 1.3; text-decoration: none; font-size: 100%; list-style: none; }\n
-.ui-helper-clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }\n
-.ui-helper-clearfix { display: inline-block; }\n
-/* required comment for clearfix to work in Opera \\*/\n
-* html .ui-helper-clearfix { height:1%; }\n
-.ui-helper-clearfix { display:block; }\n
-/* end clearfix */\n
+.ui-helper-clearfix:before, .ui-helper-clearfix:after { content: ""; display: table; }\n
+.ui-helper-clearfix:after { clear: both; }\n
+.ui-helper-clearfix { zoom: 1; }\n
 .ui-helper-zfix { width: 100%; height: 100%; top: 0; left: 0; position: absolute; opacity: 0; filter:Alpha(Opacity=0); }\n
 \n
 \n
@@ -74,7 +71,7 @@
 \n
 \n
 /*\n
- * jQuery UI CSS Framework 1.8.16\n
+ * jQuery UI CSS Framework 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -82,7 +79,7 @@
  *\n
  * http://docs.jquery.com/UI/Theming/API\n
  *\n
- * To view and modify this theme, visit http://jqueryui.com/themeroller/?ctl=themeroller&ctl=themeroller&ffDefault=Verdana,Arial,sans-serif&fwDefault=normal&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=DAE6F6&bgTextureHeader=03_highlight_soft.png&bgImgOpacityHeader=75&borderColorHeader=3D6474&fcHeader=222222&iconColorHeader=222222&bgColorContent=E3EAFA&bgTextureContent=01_flat.png&bgImgOpacityContent=75&borderColorContent=3D6474&fcContent=222222&iconColorContent=222222&bgColorDefault=DAE6F6&bgTextureDefault=02_glass.png&bgImgOpacityDefault=75&borderColorDefault=3D6474&fcDefault=555555&iconColorDefault=888888&bgColorHover=d0e0f6&bgTextureHover=02_glass.png&bgImgOpacityHover=75&borderColorHover=4589a5&fcHover=212121&iconColorHover=454545&bgColorActive=E3EAFA&bgTextureActive=02_glass.png&bgImgOpacityActive=65&borderColorActive=3D6474&fcActive=212121&iconColorActive=454545&bgColorHighlight=fbf9ee&bgTextureHighlight=02_glass.png&bgImgOpacityHighlight=55&borderColorHighlight=fcefa1&fcHighlight=363636&iconColorHighlight=2e83ff&bgColorError=fef1ec&bgTextureError=02_glass.png&bgImgOpacityError=95&borderColorError=cd0a0a&fcError=cd0a0a&iconColorError=cd0a0a&bgColorOverlay=aaaaaa&bgTextureOverlay=01_flat.png&bgImgOpacityOverlay=0&opacityOverlay=30&bgColorShadow=aaaaaa&bgTextureShadow=01_flat.png&bgImgOpacityShadow=0&opacityShadow=30&thicknessShadow=8px&offsetTopShadow=-8px&offsetLeftShadow=-8px&cornerRadiusShadow=8px\n
+ * To view and modify this theme, visit http://jqueryui.com/themeroller/?ctl=themeroller&ctl=themeroller&ctl=themeroller&ffDefault=Verdana,Arial,sans-serif&fwDefault=normal&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=DAE6F6&bgTextureHeader=03_highlight_soft.png&bgImgOpacityHeader=75&borderColorHeader=3D6474&fcHeader=222222&iconColorHeader=222222&bgColorContent=E3EAFA&bgTextureContent=01_flat.png&bgImgOpacityContent=75&borderColorContent=3D6474&fcContent=222222&iconColorContent=222222&bgColorDefault=DAE6F6&bgTextureDefault=02_glass.png&bgImgOpacityDefault=75&borderColorDefault=3D6474&fcDefault=555555&iconColorDefault=888888&bgColorHover=d0e0f6&bgTextureHover=02_glass.png&bgImgOpacityHover=75&borderColorHover=4589a5&fcHover=212121&iconColorHover=454545&bgColorActive=E3EAFA&bgTextureActive=02_glass.png&bgImgOpacityActive=65&borderColorActive=3D6474&fcActive=212121&iconColorActive=454545&bgColorHighlight=fbf9ee&bgTextureHighlight=02_glass.png&bgImgOpacityHighlight=55&borderColorHighlight=fcefa1&fcHighlight=363636&iconColorHighlight=2e83ff&bgColorError=fef1ec&bgTextureError=02_glass.png&bgImgOpacityError=95&borderColorError=cd0a0a&fcError=cd0a0a&iconColorError=cd0a0a&bgColorOverlay=aaaaaa&bgTextureOverlay=01_flat.png&bgImgOpacityOverlay=0&opacityOverlay=30&bgColorShadow=aaaaaa&bgTextureShadow=01_flat.png&bgImgOpacityShadow=0&opacityShadow=30&thicknessShadow=8px&offsetTopShadow=-8px&offsetLeftShadow=-8px&cornerRadiusShadow=8px\n
  */\n
 \n
 \n
@@ -215,7 +212,17 @@
 .ui-icon-person { background-position: -144px -96px; }\n
 .ui-icon-print { background-position: -160px -96px; }\n
 .ui-icon-trash { background-position: -176px -96px; }\n
-.ui-icon-locked { background-position:}\n
+.ui-icon-locked { background-position: -192px -96px; }\n
+.ui-icon-unlocked { background-position: -208px -96px; }\n
+.ui-icon-bookmark { background-position: -224px -96px; }\n
+.ui-icon-tag { background-position: -240px -96px; }\n
+.ui-icon-home { background-position: 0 -112px; }\n
+.ui-icon-flag { background-position: -16px -112px; }\n
+.ui-icon-calendar { background-position: -32px -112px; }\n
+.ui-icon-cart { background-position: -48px -112px; }\n
+.ui-icon-pencil { background-position: -64px -112px; }\n
+.ui-icon-clock { background-position: -80px -112px; }\n
+.ui-icon-disk { background-position: -96px -112px; }\n
 .ui-icon-calculator { background-position: -112px -112px; }\n
 .ui-icon-zoomin { background-position: -128px -112px; }\n
 .ui-icon-zoomout { background-position: -144px -112px; }\n
@@ -310,7 +317,7 @@
 /* Overlays */\n
 .ui-widget-overlay { background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }\n
 .ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }/*\n
- * jQuery UI Resizable 1.8.16\n
+ * jQuery UI Resizable 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -329,7 +336,7 @@
 .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }\n
 .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }\n
 .ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}/*\n
- * jQuery UI Selectable 1.8.16\n
+ * jQuery UI Selectable 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -337,9 +344,9 @@
  *\n
  * http://docs.jquery.com/UI/Selectable#theming\n
  */\n
-.ui-selectable-helper { position: absolute; z-index: 100; border:1px d}\n
+.ui-selectable-helper { position: absolute; z-index: 100; border:1px dotted black; }\n
 /*\n
- * jQuery UI Accordion 1.8.16\n
+ * jQuery UI Accordion 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -358,7 +365,7 @@
 .ui-accordion .ui-accordion-content { padding: 1em 2.2em; border-top: 0; margin-top: -2px; position: relative; top: 1px; margin-bottom: 2px; overflow: auto; display: none; zoom: 1; }\n
 .ui-accordion .ui-accordion-content-active { display: block; }\n
 /*\n
- * jQuery UI Autocomplete 1.8.16\n
+ * jQuery UI Autocomplete 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -372,7 +379,7 @@
 * html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */\n
 \n
 /*\n
- * jQuery UI Menu 1.8.16\n
+ * jQuery UI Menu 1.8.17\n
  *\n
  * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -411,7 +418,7 @@
 \tmargin: -1px;\n
 }\n
 /*\n
- * jQuery UI Button 1.8.16\n
+ * jQuery UI Button 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -449,7 +456,7 @@ input.ui-button { padding: .4em 1em; }\n
 /* workarounds */\n
 button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra padding in Firefox */\n
 /*\n
- * jQuery UI Dialog 1.8.16\n
+ * jQuery UI Dialog 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -470,7 +477,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-dialog .ui-resizable-se { width: 14px; height: 14px; right: 3px; bottom: 3px; }\n
 .ui-draggable .ui-dialog-titlebar { cursor: move; }\n
 /*\n
- * jQuery UI Slider 1.8.16\n
+ * jQuery UI Slider 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -493,7 +500,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }\n
 .ui-slider-vertical .ui-slider-range-min { bottom: 0; }\n
 .ui-slider-vertical .ui-slider-range-max { top: 0; }/*\n
- * jQuery UI Tabs 1.8.16\n
+ * jQuery UI Tabs 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -507,11 +514,11 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-tabs .ui-tabs-nav li a { float: left; padding: .5em 1em; text-decoration: none; }\n
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected { margin-bottom: 0; padding-bottom: 1px; }\n
 .ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a { cursor: text; }\n
-.ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs--selected a { cursor: pointer; } /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */\n
+.ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a { cursor: pointer; } /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */\n
 .ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: none; }\n
 .ui-tabs .ui-tabs-hide { display: none !important; }\n
 /*\n
- * jQuery UI Datepicker 1.8.16\n
+ * jQuery UI Datepicker 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -519,7 +526,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  *\n
  * http://docs.jquery.com/UI/Datepicker#theming\n
  */\n
-.ui-datepicker { width: 17em; padding: .2em .2em 0; }\n
+.ui-datepicker { width: 17em; padding: .2em .2em 0; display: none; }\n
 .ui-datepicker .ui-datepicker-header { position:relative; padding:.2em 0; }\n
 .ui-datepicker .ui-datepicker-prev, .ui-datepicker .ui-datepicker-next { position:absolute; top: 2px; width: 1.8em; height: 1.8em; }\n
 .ui-datepicker .ui-datepicker-prev-hover, .ui-datepicker .ui-datepicker-next-hover { top: 1px; }\n
@@ -569,7 +576,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 /* IE6 IFRAME FIX (taken from datepicker 1.5.3 */\n
 .ui-datepicker-cover {\n
     display: none; /*sorry for IE5*/\n
-    display/sorry for IE5*/\n
+    display/**/: block; /*sorry for IE5*/\n
     position: absolute; /*must have*/\n
     z-index: -1; /*must have*/\n
     filter: mask(); /*must have*/\n
@@ -578,7 +585,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
     width: 200px; /*must have*/\n
     height: 200px; /*must have*/\n
 }/*\n
- * jQuery UI Progressbar 1.8.16\n
+ * jQuery UI Progressbar 1.8.17\n
  *\n
  * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)\n
  * Dual licensed under the MIT or GPL Version 2 licenses.\n
@@ -586,7 +593,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
  *\n
  * http://docs.jquery.com/UI/Progressbar#theming\n
  */\n
-.ui-progressbar { height:2em; text-align: left; }\n
+.ui-progressbar { height:2em; text-align: left; overflow: hidden; }\n
 .ui-progressbar .ui-progressbar-value {margin: -1px; height:100%; }
 
 ]]></string> </value>
