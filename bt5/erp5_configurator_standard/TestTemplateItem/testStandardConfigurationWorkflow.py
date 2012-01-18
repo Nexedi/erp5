@@ -112,7 +112,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     self.categories_file_path, self.categories_file_upload = \
                                            self.uploadFile(categories_file_id)
 
-    roles_file_id = 'standard_portal_type_roles.ods'
+    roles_file_id = 'standard_portal_types_roles.ods'
     self.roles_file_path, self.roles_file_upload = \
                                            self.uploadFile(roles_file_id)
     # set the company employees number
