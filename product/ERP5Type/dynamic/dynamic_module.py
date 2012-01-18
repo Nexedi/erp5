@@ -122,10 +122,11 @@ def initializeDynamicModules():
                                                 loadTempPortalTypeClass)
 
   # Components
-  erp5.component = ModuleType("erp5.component")
+  from component_class import ComponentModule, generateComponentClassWrapper
+
+  erp5.component = ComponentModule("erp5.component")
   sys.modules["erp5.component"] = erp5.component
 
-  from component_class import generateComponentClassWrapper
   erp5.component.extension = registerDynamicModule(
     'erp5.component.extension',
     generateComponentClassWrapper('erp5.component.extension'))

@@ -26,12 +26,39 @@
 #
 ##############################################################################
 
+from Products.ERP5.ERP5Site import getSite
+from types import ModuleType
+
+class ComponentModule(ModuleType):
+  _resetting = False
+  _last_reset = -1
+
+  def __getattribute__(self, name):
+    """
+    Synchronize between ZEO clients
+
+    XXX-arnau: surely bad from a performance POV and not thread-safe
+    """
+    if name[0] == '_' or self._resetting:
+      return super(ComponentModule, self).__getattribute__(name)
+
+    import erp5.component
+    site = getSite()
+    cookie = site.getCacheCookie('component_classes')
+    if self._last_reset == -1:
+      self._last_reset = site.getCacheCookie('component_classes')
+    elif cookie != self._last_reset:
+      self._resetting = True
+      site.portal_components.reset(is_sync=True)
+      self._resetting = False
+
+    return super(ComponentModule, self).__getattribute__(name)
+
 from types import ModuleType
 from zLOG import LOG, INFO
 
 def generateComponentClassWrapper(namespace):
   def generateComponentClass(component_name):
-    from Products.ERP5.ERP5Site import getSite
     site = getSite()
 
     component_id = '%s.%s' % (namespace, component_name)

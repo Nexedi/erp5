@@ -46,14 +46,19 @@ class ComponentTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  def reset(self):
+  def reset(self, is_sync=False):
     """
     XXX-arnau: global reset
     """
     import erp5.component
 
-    container_type_info = self.getPortalObject().portal_types.getTypeInfo(
-      self.getPortalType())
+    portal = self.getPortalObject()
+
+    if not is_sync:
+      portal.newCacheCookie('component_classes')
+      erp5.component._last_reset = portal.getCacheCookie('component_classes')
+
+    container_type_info = portal.portal_types.getTypeInfo(self.getPortalType())
 
     for content_type in container_type_info.getTypeAllowedContentTypeList():
       module_name = content_type.split(' ')[0].lower()
