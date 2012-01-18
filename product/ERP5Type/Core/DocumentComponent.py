@@ -50,6 +50,7 @@ class DocumentComponent(Base):
                        'CategoryCore',
                        'DublinCore',
                        'Version',
+                       'Reference',
                        'TextDocument')
 
     def loadComponent(self):
