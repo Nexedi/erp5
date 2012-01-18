@@ -35,10 +35,6 @@
             <value> <string>portal_components</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>4</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Components</string> </value>
         </item>
@@ -56,16 +52,7 @@
       <global name="OOBTree" module="BTrees.OOBTree"/>
     </pickle>
     <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>ERP5 Document Component</string>
-              <persistent> <string encoding="base64">AAAAAAAAAAU=</string> </persistent>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
+      <none/>
     </pickle>
   </record>
   <record id="4" aka="AAAAAAAAAAQ=">
@@ -74,23 +61,6 @@
     </pickle>
     <pickle>
       <none/>
-    </pickle>
-  </record>
-  <record id="5" aka="AAAAAAAAAAU=">
-    <pickle>
-      <global name="OIBTree" module="BTrees.OIBTree"/>
-    </pickle>
-    <pickle>
-      <tuple>
-        <tuple>
-          <tuple>
-            <tuple>
-              <string>erp5.interface.test_document</string>
-              <int>1</int>
-            </tuple>
-          </tuple>
-        </tuple>
-      </tuple>
     </pickle>
   </record>
 </ZopeData>

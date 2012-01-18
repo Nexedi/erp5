@@ -92,6 +92,10 @@
   <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
+  <type>Extension Component</type>
+  <workflow>component_interaction_workflow, edit_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Mapped Value</type>
   <workflow>edit_workflow</workflow>
  </chain>

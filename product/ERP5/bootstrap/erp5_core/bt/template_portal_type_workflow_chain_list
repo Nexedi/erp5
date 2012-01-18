@@ -25,6 +25,9 @@ Document | edit_workflow
 Document Component | edit_workflow
 Document Component | validation_workflow
 Dynamic Category Property | dynamic_class_generation_interaction_workflow
+Extension Component | component_interaction_workflow
+Extension Component | edit_workflow
+Extension Component | validation_workflow
 Mapped Value | edit_workflow
 Memcached Plugin | memcached_plugin_interaction_workflow
 Predicate | rule_interaction_workflow
