@@ -433,10 +433,20 @@ class TestTradeModelLine(TestTradeModelLineMixin):
         total_price = expected_result_dict[use].get(line.getId()) or 0.0
         if True:
           sm = result_dict.pop(use)
+          business_link_list = sm.asComposedDocument().getBusinessLinkValueList(context=sm)
+          self.assertEqual(len(business_link_list), 1)
+          is_buildable = sm.isBuildable(business_link_list[0])
           self.assertEqual(str(sm.getTotalPrice() or 0.0), str(total_price))
-          self.assertEqual(2, len(sm.getCausalityValueList()))
-          self.assertEqual(0, len(sm.getCausalityValueList(
-            portal_type=self.business_link_portal_type)))
+          if is_buildable:
+            self.assertEqual(3, len(sm.getCausalityValueList()))
+          else:
+            self.assertEqual(2, len(sm.getCausalityValueList()))
+          if is_buildable:
+            self.assertEqual(1, len(sm.getCausalityValueList(
+              portal_type=self.business_link_portal_type)))
+          else:
+            self.assertEqual(0, len(sm.getCausalityValueList(
+              portal_type=self.business_link_portal_type)))
           self.assertEqual(1, len(sm.getCausalityValueList(
             portal_type=self.trade_model_path_portal_type)))
           self.assertEqual(1, len(sm.getCausalityValueList(
