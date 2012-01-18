@@ -48,7 +48,6 @@ def generateComponentClassWrapper(namespace):
         new_module = ModuleType(component_name,
                                 component.getDescription())
 
-        new_module.__module__ = component_id
         component.load(new_module.__dict__)
         LOG("ERP5Type.dynamic", INFO, "Loaded successfully %s" % component_id)
         return new_module
