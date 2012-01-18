@@ -30,15 +30,16 @@ from AccessControl import ClassSecurityInfo
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, Constraint, interfaces
 from Products.ERP5Type.Base import Base
-
+from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
                            
 class DocumentComponent(Base):
     # CMF Type Definition
     meta_type = 'ERP5 Document Component'
     portal_type = 'Document Component'
+
     isPortalContent = 1
     isRADContent = 1
-    isDelivery = 1
+    isDelivery = ConstantGetter('isDelivery', value=True)
 
     # Declarative security
     security = ClassSecurityInfo()
