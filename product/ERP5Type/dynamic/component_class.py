@@ -26,55 +26,33 @@
 #
 ##############################################################################
 
+from types import ModuleType
 from zLOG import LOG, INFO
-
-class ComponentProxyClass(object):
-  """
-  XXX-arnau: should maybe use Ghost class?
-  """
-  def __init__(self, component, module):
-    self._component = component
-    self._module = module
-
-    self.__isghost__ = False
-
-    # XXX-arnau: metaclass!
-    self.__class__.__name__ = component.getReference()
-    self.__class__.__module__ = component.getId().rsplit('.', 1)[0]
-    description = component.getDescription()
-    if description:
-      self.__doc__ = description
-
-  def restoreGhostState(self):
-    self.__isghost__ = True
-
-  def __getattr__(self, name):
-    if self.__isghost__:
-      self._module = self._component.load()
-      self.__isghost__ = False
-      LOG("ERP5Type.dynamic", INFO, "Reloaded %s" % self._component.getId())
-
-    return getattr(self._module, name)
 
 def generateComponentClassWrapper(namespace):
   def generateComponentClass(component_name):
     from Products.ERP5.ERP5Site import getSite
     site = getSite()
 
-    component_name = '%s.%s' % (namespace, component_name)
+    component_id = '%s.%s' % (namespace, component_name)
     try:
-      component = getattr(site.portal_components, component_name)
+      component = getattr(site.portal_components, component_id)
     except AttributeError:
       LOG("ERP5Type.dynamic", INFO,
-          "Could not find %s, perhaps it has not been migrated yet?" % component_name)
+          "Could not find %s, perhaps it has not been migrated yet?" % \
+            component_id)
 
       raise
     else:
       if component.getValidationState() == 'validated':
-        klass = ComponentProxyClass(component, component.load())
-        LOG("ERP5Type.dynamic", INFO, "Loaded successfully %s" % component_name)
-        return klass
+        new_module = ModuleType(component_name,
+                                component.getDescription())
+
+        new_module.__module__ = component_id
+        component.load(new_module.__dict__)
+        LOG("ERP5Type.dynamic", INFO, "Loaded successfully %s" % component_id)
+        return new_module
       else:
-        raise AttributeError("Component %s not validated" % component_name)
+        raise AttributeError("Component %s not validated" % component_id)
 
   return generateComponentClass

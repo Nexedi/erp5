@@ -28,9 +28,6 @@
 #
 ##############################################################################
 
-import imp
-import os
-
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
@@ -58,36 +55,13 @@ class DocumentComponent(Base):
                        'Reference',
                        'TextDocument')
 
-
-    # XXX-arnau: per-component reset, global for now
-    # def reset(self):
-    #   import erp5
-    #
-    #   try:
-    #     component_namespace_name, module_name = self.getId().split('.')[1:]
-    #     component_namespace = getattr(erp5, component_namespace_name)
-    #   except (ValueError, AttributeError):
-    #     LOG("ERP5Type.Core.DocumentComponent", DEBUG,
-    #         "Invalid namespace %s..." % self.getId())
-    #   else:
-    #     if module_name in component_namespace.__dict__:
-    #       LOG("ERP5Type.Core.DocumentComponent", INFO, "Reset %s..." % self.getId())
-    #       getattr(component_namespace, module_name).restoreGhostState()
-
-    def load(self):
-      # XXX-arnau: There should be a load_source() taking a string rather than
-      # creating a temporary file
-      from App.config import getConfiguration
-      instance_home = getConfiguration().instancehome
-      path = '%s/Component' % instance_home
-      if not os.path.isdir(path):
-        os.mkdir(path)
-
-      component_path = '%s/%s.py' % (path, self.getId())
-      with open(component_path, 'w') as component_file:
-        component_file.write(self.getTextContent())
-
-      try:
-        return imp.load_source(self.getReference(), component_path)
-      finally:
-        os.remove(component_path)
+    def load(self, namespace_dict={}):
+      """
+      Load the source code into the given dict. Using exec() rather than
+      imp.load_source() as the latter would required creating an intermediary
+      file. Also, for traceback readability sake, the destination module
+      __dict__ is given rather than creating an empty dict and returning
+      it. By default namespace_dict is an empty dict to allow checking the
+      source code before validate.
+      """
+      exec self.getTextContent() in namespace_dict
