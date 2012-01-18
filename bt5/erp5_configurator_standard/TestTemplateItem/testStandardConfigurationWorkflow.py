@@ -132,7 +132,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
         field_your_reference=self.person_creator_reference,
         field_your_password='person_creator',
         field_your_password_confirm='person_creator',
-        field_your_function='person/creator',
+        field_your_function='hr/manager',
         field_your_default_email_text='',
         field_your_default_telephone_text='',
       ), dict(
@@ -141,7 +141,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
         field_your_reference=self.person_assignee_reference,
         field_your_password='person_assignee',
         field_your_password_confirm='person_assignee',
-        field_your_function='person/assignee',
+        field_your_function='af/accounting/manager',
         field_your_default_email_text='',
         field_your_default_telephone_text='',
       ), dict(
@@ -150,14 +150,14 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
         field_your_reference=self.person_assignor_reference,
         field_your_password='person_assignor',
         field_your_password_confirm='person_assignor',
-        field_your_function='person/assignor',
+        field_your_function='sales/manager',
         field_your_default_email_text='',
         field_your_default_telephone_text='',
       ),
     ]
 
     # set preference group
-    self.preference_group = 'group/g' 
+    self.preference_group = 'group/my_group' 
 
   def beforeTearDown(self):
     os.remove(self.categories_file_path)
@@ -239,13 +239,13 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
         sequence_list=sequence_list,
         field_your_default_address_city='LILLE',
         field_your_default_address_region='europe/western_europe/france',
-        field_your_group='g')
+        field_your_group='my_group')
 
   def stepCheckOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Check if organisation was created fine """
     business_configuration = sequence.get("business_configuration")
     # last one: a step for what the client selected
-    organisation_config_save = business_configuration['6']
+    organisation_config_save = business_configuration['5']
     self.assertEquals(1, len(organisation_config_save.contentValues()))
     # first item: configuration of our organisation
     organisation_config_item = organisation_config_save['1']
@@ -290,7 +290,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
             person_business_configuration_item.getReference())
     self.assertEquals('person_creator',
             person_business_configuration_item.getPassword())
-    self.assertEquals('person/creator',
+    self.assertEquals('hr/manager',
             person_business_configuration_item.getFunction())
 
     person_business_configuration_item =\
@@ -305,7 +305,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
             person_business_configuration_item.getReference())
     self.assertEquals('person_assignee',
             person_business_configuration_item.getPassword())
-    self.assertEquals('person/assignee',
+    self.assertEquals('af/accounting/manager',
             person_business_configuration_item.getFunction())
 
     person_business_configuration_item =\
@@ -320,7 +320,7 @@ class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
             person_business_configuration_item.getReference())
     self.assertEquals('person_assignor',
             person_business_configuration_item.getPassword())
-    self.assertEquals('person/assignor',
+    self.assertEquals('sales/manager',
             person_business_configuration_item.getFunction())
 
   def test_consulting_workflow(self):
