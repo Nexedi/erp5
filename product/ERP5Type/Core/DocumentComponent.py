@@ -58,6 +58,22 @@ class DocumentComponent(Base):
                        'Reference',
                        'TextDocument')
 
+
+    # XXX-arnau: per-component reset, global for now
+    # def reset(self):
+    #   import erp5
+    #
+    #   try:
+    #     component_namespace_name, module_name = self.getId().split('.')[1:]
+    #     component_namespace = getattr(erp5, component_namespace_name)
+    #   except (ValueError, AttributeError):
+    #     LOG("ERP5Type.Core.DocumentComponent", DEBUG,
+    #         "Invalid namespace %s..." % self.getId())
+    #   else:
+    #     if module_name in component_namespace.__dict__:
+    #       LOG("ERP5Type.Core.DocumentComponent", INFO, "Reset %s..." % self.getId())
+    #       getattr(component_namespace, module_name).restoreGhostState()
+
     def load(self):
       # XXX-arnau: There should be a load_source() taking a string rather than
       # creating a temporary file

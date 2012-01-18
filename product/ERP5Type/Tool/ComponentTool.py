@@ -31,6 +31,8 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 
+from zLOG import LOG, INFO
+
 class ComponentTool(BaseTool):
   """
     This tool provides methods to load the the different types 
@@ -43,3 +45,28 @@ class ComponentTool(BaseTool):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  def reset(self):
+    """
+    XXX-arnau: global reset
+    """
+    import erp5.component
+
+    container_type_info = self.getPortalObject().portal_types.getTypeInfo(
+      self.getPortalType())
+
+    for content_type in container_type_info.getTypeAllowedContentTypeList():
+      module_name = content_type.split(' ')[0].lower()
+
+      try:
+        module = getattr(erp5.component, module_name)
+      # XXX-arnau: not everything is defined yet...
+      except AttributeError:
+        pass
+      else:
+        for name in module.__dict__.keys():
+          if name[0] != '_':
+            LOG("ERP5Type.Tool.ComponentTool", INFO,
+                "Global reset of %s.%s" % (module_name, name))
+
+            delattr(module, name)
