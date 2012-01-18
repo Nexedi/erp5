@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2012 Nexedi SA and Contributors. All Rights Reserved.
+#                    Arnaud Fontaine <arnaud.fontaine@nexedi.com>
+#                    Jean-Paul Smets <jp@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsibility of assessing all potential
@@ -25,6 +27,9 @@
 # Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+
+import imp
+import os
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
@@ -53,15 +58,20 @@ class DocumentComponent(Base):
                        'Reference',
                        'TextDocument')
 
-    def loadComponent(self):
-      """
-      """
-      from Products.ERP5Type.Utils import importLocalDocument
+    def load(self):
+      # XXX-arnau: There should be a load_source() taking a string rather than
+      # creating a temporary file
       from App.config import getConfiguration
       instance_home = getConfiguration().instancehome
-      path = '%s/component/document' % instance_home
-      component_path = '%s/%s.py' % (path, self.getReference()) # using ID would be better... with some extensions in importLocalDocument
-      component_file = open(component_path, 'w')
-      component_file.write(self.getTextContent())
-      component_file.close()
-      importLocalDocument(self.getReference(), path=path)
+      path = '%s/Component' % instance_home
+      if not os.path.isdir(path):
+        os.mkdir(path)
+
+      component_path = '%s/%s.py' % (path, self.getId())
+      with open(component_path, 'w') as component_file:
+        component_file.write(self.getTextContent())
+
+      try:
+        return imp.load_source(self.getReference(), component_path)
+      finally:
+        os.remove(component_path)

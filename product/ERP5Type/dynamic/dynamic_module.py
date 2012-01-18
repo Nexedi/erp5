@@ -87,6 +87,8 @@ def initializeDynamicModules():
       holds accessors holders of Portal Types
     erp5.component:
       holds component modules
+    erp5.component.extension:
+      holds extension classes previously found in bt5 in instancehome/Extensions
   """
   erp5 = ModuleType("erp5")
   sys.modules["erp5"] = erp5
@@ -122,3 +124,8 @@ def initializeDynamicModules():
   # Components
   erp5.component = ModuleType("erp5.component")
   sys.modules["erp5.component"] = erp5.component
+
+  from component_class import generateComponentClassWrapper
+  erp5.component.extension = registerDynamicModule(
+    'erp5.component.extension',
+    generateComponentClassWrapper('erp5.component.extension'))
