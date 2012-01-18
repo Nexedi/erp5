@@ -26,11 +26,13 @@
 ##############################################################################
 
 import zope.interface
+from zLOG import LOG, INFO
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
+
 
 
 class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -63,6 +65,10 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
     self._readSpreadSheet()
     for type_name, role_list in self._spreadsheet_cache.items():
       portal_type = portal.portal_types.getTypeInfo(type_name)
+      if portal_type is None:
+        LOG("CONFIGURATOR", INFO, "Fail to define Roles for %s" % portal_type)
+        continue
+ 
       for role in role_list:
         # rebuild a category from Group / Site & Function
         category_list = []
