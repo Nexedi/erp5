@@ -85,6 +85,8 @@ def initializeDynamicModules():
       holds accessor holders of ZODB Property Sheets
     erp5.accessor_holder.portal_type
       holds accessors holders of Portal Types
+    erp5.component:
+      holds component modules
   """
   erp5 = ModuleType("erp5")
   sys.modules["erp5"] = erp5
@@ -116,3 +118,7 @@ def initializeDynamicModules():
   from portal_type_class import loadTempPortalTypeClass
   erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
                                                 loadTempPortalTypeClass)
+
+  # Components
+  erp5.component = ModuleType("erp5.component")
+  sys.modules["erp5.component"] = erp5.component
