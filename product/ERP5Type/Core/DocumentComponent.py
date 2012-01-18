@@ -27,7 +27,7 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet
+from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
                            
@@ -45,13 +45,12 @@ class DocumentComponent(Base):
     security.declareObjectProtected(Permissions.AccessContentsInformation)
 
     # Declarative properties
-    property_sheets = ( PropertySheet.Base
-                      , PropertySheet.XMLObject
-                      , PropertySheet.CategoryCore
-                      , PropertySheet.DublinCore
-                      , PropertySheet.Version
-                      , PropertySheet.TextDocument
-                      )
+    property_sheets = ('Base',
+                       'XMLObject',
+                       'CategoryCore',
+                       'DublinCore',
+                       'Version',
+                       'TextDocument')
 
     def loadComponent(self):
       """
