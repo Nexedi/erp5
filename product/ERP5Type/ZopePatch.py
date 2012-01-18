@@ -69,6 +69,7 @@ from Products.ERP5Type.patches import ZODBConnection
 from Products.ERP5Type.patches import ZopePageTemplateUtils
 from Products.ERP5Type.patches import OFSHistory
 from Products.ERP5Type.patches import OFSItem
+from Products.ERP5Type.patches import ExternalMethod
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
