@@ -32,6 +32,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
+from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
                            
 class DocumentComponent(Base):
     # CMF Type Definition
@@ -54,6 +55,26 @@ class DocumentComponent(Base):
                        'Version',
                        'Reference',
                        'TextDocument')
+
+    def checkConsistency(self, **kw):
+      """
+      XXX-arnau: should probably in a separate Constraint class
+      """
+      if not self.getTextContent():
+        return [ConsistencyMessage(self,
+                                   object_relative_url=self.getRelativeUrl(),
+                                   message="No source code",
+                                   mapping={})]
+
+      try:
+        self.load()
+      except Exception, e:
+        return [ConsistencyMessage(self,
+                                   object_relative_url=self.getRelativeUrl(),
+                                   message="Source code error: %s" % e,
+                                   mapping={})]
+
+      return []
 
     def load(self, namespace_dict={}):
       """
