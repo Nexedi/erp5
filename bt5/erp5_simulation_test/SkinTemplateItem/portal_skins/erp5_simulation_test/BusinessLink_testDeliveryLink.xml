@@ -50,13 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>rule = context.getParentValue().getSpecialiseValue()\n
+            <value> <string>if context.isTempDocument():\n
+  # no way to check deeper temporary movements\n
+  return True\n
+\n
+rule = context.getParentValue().getSpecialiseValue()\n
 if rule is not None:\n
-  if rule.getPortalType() not in expected_rule_portal_type_list:\n
+  if rule.getPortalType() in expected_rule_portal_type_list:\n
     # for sure does not apply\n
-    return False\n
-# rule is None, so maybe temporary movement, might apply\n
-return True\n
+    return True\n
+\n
+return False\n
 </string> </value>
         </item>
         <item>
