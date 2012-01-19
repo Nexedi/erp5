@@ -146,6 +146,12 @@ class BuilderMixin(XMLObject, Amount, Predicate):
                        root_group_node,
                        delivery_relative_url_list=delivery_relative_url_list,
                        movement_list=movement_list,**kw)
+    # After building reset links to Business Links
+    business_link_portal_type_list = self.getPortalBusinessLinkTypeList()
+    for movement in movement_list:
+      movement.setCausalityList([q.getRelativeUrl() for q in \
+        movement.getCausalityValueList() if q.getPortalType() \
+          not in business_link_portal_type_list])
     # Call a script after building
     self.callAfterBuildingScript(delivery_list, movement_list, **kw)
     return delivery_list

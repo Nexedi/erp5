@@ -130,11 +130,6 @@ class SimulatedDeliveryBuilder(BuilderMixin):
         if movement.isBuildable(business_link):
           if movement.getDeliveryValueList()==[]:
             movement_list.append(movement)
-        else:
-          # drop causality links to Business Paths/States
-          movement.setCausalityList([q.getRelativeUrl() for q in \
-            movement.getCausalityValueList() if q.getPortalType() \
-              not in self.getPortalBusinessLinkTypeList()])
     # XXX  Add predicate test
     # XXX FIXME Check that there is no double in the list
     # Because we can't trust simulation_select_method
