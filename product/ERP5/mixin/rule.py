@@ -423,6 +423,10 @@ class RuleMixin(Predicate):
           for tester in profit_updating_tester_list:
             if not tester.compare(prevision_movement, decision_movement):
               kw.update(tester.getUpdatablePropertyDict(prevision_movement, decision_movement))
+          # special cause: causality shall be updatable, coming from prevision
+          if set(prevision_movement.getCausalityList()) != \
+            set(decision_movement.getCausalityList()):
+            kw['causality'] = prevision_movement.getCausalityList()
           if kw:
             movement_collection_diff.addUpdatableMovement(decision_movement, kw)
       else:
