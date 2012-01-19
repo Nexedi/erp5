@@ -75,10 +75,11 @@ print \'\'\'\n
 ----------------\n
 Security mapping\n
 ----------------\'\'\'\n
-try:\n
-  print context.Base_viewSecurityMappingAsUser(u.getId())\n
-except Unauthorized:\n
-  print "user doesn\'t have permission to security mapping in this context"\n
+if u.getId() is not None:\n
+  try:\n
+    print context.Base_viewSecurityMappingAsUser(u.getId())\n
+  except Unauthorized:\n
+    print "user doesn\'t have permission to security mapping in this context"\n
 \n
 return printed\n
 </string> </value>
