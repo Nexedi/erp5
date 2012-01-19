@@ -66,28 +66,23 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
     site_id = getattr(aq_base(self), 'site_id', None)
 
     if getattr(aq_base(self), 'organisation_id', None) is not None:
-      person.setCareerSubordination('organisation_module/%s' %self.organisation_id)
+      person.setCareerSubordination('organisation_module/%s' % \
+                                     self.organisation_id)
 
     # save
-    person_dict = {'default_email_text': self.getDefaultEmailText(),
+    person.edit(**{'default_email_text': self.getDefaultEmailText(),
                    'default_telephone_text': self.getDefaultTelephoneText(),
                    'first_name': self.getFirstName(),
                    'career_function': self.getFunction(),
                    'last_name': self.getLastName(),
+                   'reference': self.getReference(),
                    'password': self.getPassword(),
-                    } 
-    person.edit(**person_dict)
+                    })
 
-    # explicitly use direct mutator to avoid uniqueness checks in Person.setReference 
-    # which work in main ERP5 site context (uses catalog and cache)
-    # this is a problem when customer's entered reference is the same as 
-    # already exisitng one in main ERP5 site one
-    person._setReference(self.getReference())
-
-    assignment = person.newContent(portal_type="Assignment")
-    assignment.setFunction(self.getFunction())
-    assignment.setGroup(group_id)
-    assignment.setSite(site_id)
+    assignment = person.newContent(portal_type="Assignment",
+                                   function = self.getFunction(),
+                                   group = group_id,
+                                   site = site_id)
 
     # Set dates are required to create valid assigments.
     now = DateTime()
@@ -96,12 +91,9 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
     # Define valid for 10 years.
     assignment.setStopDate(now + (365*10))
 
-    # Validate the Person if possible
-    if self.portal_workflow.isTransitionPossible(person, 'validate'):
-      person.validate(comment="Validated by Configurator")
-
-    if self.portal_workflow.isTransitionPossible(assignment, 'open'):
-      assignment.open(comment="Open by Configuration")
+    # Validate the Person and Assigment
+    person.validate(comment="Validated by Configurator")
+    assignment.open(comment="Open by Configuration")
     
     ## add to customer template
     self.install(person, business_configuration)
