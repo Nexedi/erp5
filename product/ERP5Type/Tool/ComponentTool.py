@@ -46,10 +46,13 @@ class ComponentTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  security.declareProtected(Permissions.ManagePortal, 'reset')
   def reset(self, is_sync=False):
     """
     XXX-arnau: global reset
     """
+    LOG("ERP5Type.Tool.ComponentTool", INFO, "Global reset")
+
     import erp5.component
 
     portal = self.getPortalObject()
