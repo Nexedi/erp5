@@ -82,7 +82,7 @@
         </item>
         <item>
             <key> <string>type_class</string> </key>
-            <value> <string>DocumentComponent</string> </value>
+            <value> <string>ExtensionComponent</string> </value>
         </item>
         <item>
             <key> <string>type_interface</string> </key>

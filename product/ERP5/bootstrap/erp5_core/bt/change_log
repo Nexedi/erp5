@@ -1,3 +1,6 @@
+2012-01-19 arnaud.fontaine
+* Extension Component has now its own class (meaningful for importing from filesystem).
+
 2012-01-18 arnaud.fontaine
 * Complete ComponentTool view.
 * Implement Extension Component.

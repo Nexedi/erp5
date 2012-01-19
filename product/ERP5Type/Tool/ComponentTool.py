@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
 
-from zLOG import LOG, INFO
+from zLOG import LOG, INFO, WARNING
 
 class ComponentTool(BaseTool):
   """
@@ -75,3 +75,40 @@ class ComponentTool(BaseTool):
                 "Global reset of %s.%s" % (module_name, name))
 
             delattr(module, name)
+
+  security.declareProtected(Permissions.ManagePortal,
+                            'createAllComponentFromFilesystem')
+  def createAllComponentFromFilesystem(self, erase_existing=False,
+                                       REQUEST=None):
+    """
+
+    XXX-arnau: only Extensions for now
+    """
+    portal = self.getPortalObject()
+
+    import erp5.portal_type
+    type_tool = portal.portal_types
+    failed_import_dict = {}
+    for content_portal_type in getattr(type_tool,
+                                       self.portal_type).getTypeAllowedContentTypeList():
+      try:
+        failed_import_dict.update(getattr(erp5.portal_type,
+                                          content_portal_type).importAllFromFilesystem(self))
+      except AttributeError:
+        LOG("ERP5Type.Tool.ComponentTool", WARNING, "Could not import %ss" % \
+              content_portal_type)
+
+    if REQUEST:
+      if failed_import_dict:
+        failed_import_formatted_list = []
+        for name, error in failed_import_dict.iteritems():
+          failed_import_formatted_list.append("%s (%s)" % (name, error))
+
+        message = "The following component could not be imported: %s" % \
+            ', '.join(failed_import_formatted_list)
+      else:
+        message = "All components were successfully imported " \
+            "from filesystem to ZODB."
+
+      return self.Base_redirect('view',
+                                keep_items={'portal_status_message': message})
