@@ -62,8 +62,8 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
 
   def _build(self, business_configuration):
     portal = self.getPortalObject()
-    self._readSpreadSheet()
-    for type_name, role_list in self._spreadsheet_cache.items():
+    portal_type_role_dict = self._getPortalTypeRoleDict()
+    for type_name, role_list in portal_type_role_dict.items():
       portal_type = portal.portal_types.getTypeInfo(type_name)
       if portal_type is None:
         LOG("CONFIGURATOR", INFO, "Fail to define Roles for %s" % portal_type)
@@ -90,7 +90,7 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
     ## Update BT5
     bt5_obj = business_configuration.getSpecialiseValue()
     if bt5_obj is not None:
-      bt5_obj.edit(template_portal_type_roles_list=self._spreadsheet_cache.keys())
+      bt5_obj.edit(template_portal_type_roles_list=portal_type_role_dict.keys())
 
   def checkSpreadSheetConsistency(self):
     """Check that the spread sheet is consistent with categories spreadsheet.
@@ -102,32 +102,18 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
     XXX do we want to use constraint framework here ?
     """
 
-  def _readSpreadSheet(self):
-    """Read the spreadsheet and prepare internal category cache.
+  def _getPortalTypeRoleDict(self):
+    """Read the spreadsheet and provide processed dict.
     """
-    aq_self = aq_base(self)
-    if getattr(aq_self, '_spreadsheet_cache', None) is None:
-      role_dict = dict()
-      info_dict = self.ConfigurationTemplate_readOOCalcFile(
+    role_dict = dict()
+    info_dict = self.ConfigurationTemplate_readOOCalcFile(
                       "portal_roles_spreadsheet.ods",
                       data=self.getDefaultConfigurationSpreadsheetData())
-      for sheet_name, table in info_dict.items():
-        for line in table:
-          if 'Portal_Type' in line:
-            ptype_role_list = role_dict.setdefault(line['Portal_Type'], [])
-            ptype_role_list.append(line)
 
-      aq_self._spreadsheet_cache = role_dict
+    for sheet_name, table in info_dict.items():
+      for line in table:
+        if 'Portal_Type' in line:
+          ptype_role_list = role_dict.setdefault(line['Portal_Type'], [])
+          ptype_role_list.append(line)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                           'setDefaultConfigurationSpreadsheetFile')
-  def setDefaultConfigurationSpreadsheetFile(self, *args, **kw):
-    """Reset the spreadsheet cache."""
-    self._setDefaultConfigurationSpreadsheetFile(*args, **kw)
-    self._spreadsheet_cache = None
-    self.reindexObject()
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                           'setConfigurationSpreadsheetFile')
-  setConfigurationSpreadsheetFile = setDefaultConfigurationSpreadsheetFile
-
+    return role_dict
