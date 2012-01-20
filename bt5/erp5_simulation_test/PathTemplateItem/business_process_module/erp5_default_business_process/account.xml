@@ -122,9 +122,19 @@
             <value> <int>3</int> </value>
         </item>
         <item>
+            <key> <string>membership_criterion_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>trade_phase</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>membership_criterion_category</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>trade_phase/default/accounting</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -145,7 +155,7 @@
         </item>
         <item>
             <key> <string>test_tales_expression</string> </key>
-            <value> <string>python: context.BusinessLink_testDeliveryLink(\'Invoice Transaction Simulation Rule\')</string> </value>
+            <value> <string>python: True</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

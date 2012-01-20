@@ -104,9 +104,19 @@
             <value> <int>4</int> </value>
         </item>
         <item>
+            <key> <string>membership_criterion_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>trade_phase</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
             <key> <string>membership_criterion_category</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <string>trade_phase/default/payment</string>
+              </tuple>
             </value>
         </item>
         <item>
@@ -127,7 +137,7 @@
         </item>
         <item>
             <key> <string>test_tales_expression</string> </key>
-            <value> <string>python: context.BusinessLink_testDeliveryLink(\'Payment Simulation Rule\')</string> </value>
+            <value> <string>python: True</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
