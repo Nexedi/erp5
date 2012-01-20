@@ -4,3 +4,4 @@
 - default rules
 - default testers
 - some builders
+- some solvers, that are only meant for "templates" and should not be used in real applications as they are
