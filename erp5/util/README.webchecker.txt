@@ -21,6 +21,17 @@ Vary = Accept-Language, Cookie, Accept-Encoding
        Accept-Language,Cookie
 Expires = True
 
+[header url=.*/sitemap]
+Last-Modified = True
+
+[header content-type=.*/javascript]
+Last-Modified = True
+Cache-Control = max-age=3600
+Expires = True
+
+[no_header content-type=(image/.*|text/css)]
+Vary = None
+
 [erp5_extension_list]
 prohibited_file_name_list = WebSection_viewAsWeb
                             Base_viewHistory

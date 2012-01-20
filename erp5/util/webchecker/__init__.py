@@ -75,7 +75,8 @@ class HTTPCacheCheckerTestSuite(object):
 
   def __init__(self, root_url, working_directory, varnishlog_binary_path,
                wget_binary_path, header_list, email_address, smtp_host,
-               debug_level, file_log_path):
+               debug_level, file_log_path, conditional_header_dict,
+               no_header_dict):
     """
       root_url : website to check
       working_directory : where fetched data will be downloaded
@@ -92,12 +93,16 @@ class HTTPCacheCheckerTestSuite(object):
                                                info=>normal,
                                                warning=> nothing)
       file_log_path: path to log file
+      conditional_header_dict : TODO
+      no_header_dict : TODO
     """
     self.root_url = root_url
     self.working_directory = working_directory
     self.varnishlog_binary_path = varnishlog_binary_path
     self.wget_binary_path = wget_binary_path
     self.header_list = header_list
+    self.conditional_header_dict = conditional_header_dict
+    self.no_header_dict = no_header_dict
     self.email_address = email_address
     self.smtp_host = smtp_host
     level = self.LOG_LEVEL_DICT.get(debug_level, logging.INFO)
@@ -242,6 +247,119 @@ class HTTPCacheCheckerTestSuite(object):
     stdout, stderr = wget_process.communicate()
     return stdout
 
+  def _getHeaderPolicyList(self, url, fetched_data):
+    """
+    create the header checking policy list by the url, and the header
+
+    [header_list]
+    Last-Modified = True
+    Vary = Accept-Language, Cookie, Accept-Encoding
+    Cache-Control = max-age=300
+    max-age=3600
+    [header url=.*/contact_form]
+    Last-Modified = True
+
+    [no-header content-type=(image/.*|.*/javascript)]
+    Vary = False
+
+    [erp5_extension_list]
+    prohibited_folder_name_list = web_page_module
+    document_module
+    prohibited_file_name_list = WebSection_viewAsWeb
+    Base_viewHistory
+    list
+    """
+    def getNoCheckHeaderList(url, fetched_data):
+      """
+        create no check header list
+      """
+      pick_content_type = re.compile('^no_header\s*content-type=(.*)')
+      pick_url = re.compile('^no_header\s*url=(.*)')
+      section_list = self.no_header_dict.keys()
+      no_check_header_list = []
+      for section in section_list:
+        content_type_regex_str_match = pick_content_type.match(section)
+        url_regex_str_match = pick_url.match(section)
+        if content_type_regex_str_match is not None:
+          content_type_regex_str = content_type_regex_str_match.group(1)
+          content_type_regex = \
+            re.compile('Content-Type:\s%s' % content_type_regex_str,
+                       re.MULTILINE | re.IGNORECASE)
+          if content_type_regex.search(fetched_data) is not None:
+            for header, value in self.no_header_dict[section]:
+              no_check_header_list.append(header)
+          continue
+        if url_regex_str_match is not None:
+          url_regex_str = url_regex_str_match.group(1)
+          if re.compile(url_regex_str).match(url) is not None:
+            for header, value in self.no_header_dict[section]:
+              no_check_header_list.append(header)
+      return no_check_header_list
+
+    def getConditionalHeaderDict(url, fetched_data):
+      """ create header policy by the url and header"""
+      conditional_header_dict = {}
+      section_list = self.conditional_header_dict.keys()
+      pick_content_type = re.compile('header\s*content-type=(.*)')
+      pick_url = re.compile('header\s*url=(.*)')
+      for section in section_list:
+        content_type_regex_str_match = pick_content_type.match(section)
+        url_regex_str_match = pick_url.match(section)
+        if content_type_regex_str_match is not None:
+          content_type_regex_str = content_type_regex_str_match.group(1)
+          content_type_regex = \
+            re.compile('Content-Type:\s%s' % content_type_regex_str,
+                       re.MULTILINE | re.IGNORECASE)
+          if content_type_regex.search(fetched_data) is not None:
+            for header, value in self.conditional_header_dict[section]:
+              conditional_header_dict.setdefault(header, []).append(value)
+          continue
+        if url_regex_str_match is not None:
+          url_regex_str = url_regex_str_match.group(1)
+          if re.compile(url_regex_str).match(url) is not None:
+            for header, value in self.conditional_header_dict[section]:
+              conditional_header_dict.setdefault(header, []).append(value)
+      return conditional_header_dict
+
+    validator_dict = {}
+    no_header_list = getNoCheckHeaderList(url, fetched_data)
+    conditional_header_dict = getConditionalHeaderDict(url, fetched_data)
+    conditional_header_list = conditional_header_dict.keys()
+    global_header_list = self.header_list.keys()
+    header_policy_list = []
+    if conditional_header_list:
+      conditional_check_header_set = (set(conditional_header_list)
+                                      - set(no_header_list))
+      for header in conditional_check_header_set:
+        header_policy_list.append((header, conditional_header_dict[header]))
+    else:
+      global_check_header_set = (set(global_header_list)
+                                 - set(no_header_list))
+      for header in global_check_header_set:
+        header_policy_list.append((header, self.header_list[header]))
+    # return items
+    return header_policy_list
+
+  def _validateHeader(self, url, header, reference_value, fetched_data):
+    """validate header with the header policy"""
+    re_compiled = re.compile(self.generic_header_search_regex % header,
+                             re.MULTILINE | re.IGNORECASE)
+    match_object = re_compiled.search(fetched_data)
+    if match_object is None:
+      message = 'header:%r not found' % (header)
+      self.report_dict.setdefault(url, []).append(message)
+    else:
+      read_value = match_object.group(1)
+      if reference_value is True and not read_value:
+        message = 'value of header:%r not found' % (header)
+        self.report_dict.setdefault(url, []).append(message)
+      elif isinstance(reference_value, (tuple,list)):
+        if read_value not in reference_value:
+          message = 'value of header:%r does not match'\
+                    ' (%r not in %r)' %\
+                                    (header, read_value, reference_value)
+          self.report_dict.setdefault(url, []).append(message)
+
   def _parseWgetLogs(self, wget_log_file, discarded_url_list=_MARKER,
                      prohibited_file_name_list=None,
                      prohibited_folder_name_list=None):
@@ -332,24 +450,11 @@ class HTTPCacheCheckerTestSuite(object):
             discarded_url_list.append(url)
           else:
             x_varnish_reference_list.append((x_varnish_reference, True, url))
-        for header, reference_value in self.header_list.iteritems():
-          re_compiled = re.compile(self.generic_header_search_regex % header,
-                                   re.MULTILINE | re.IGNORECASE)
-          match_object = re_compiled.search(fetched_data)
-          if match_object is None:
-            message = 'header:%r not found' % (header)
-            self.report_dict.setdefault(url, []).append(message)
-          else:
-            read_value = match_object.group(1)
-            if reference_value is True and not read_value:
-              message = 'value of header:%r not found' % (header)
-              self.report_dict.setdefault(url, []).append(message)
-            elif isinstance(reference_value, (tuple,list)):
-              if read_value not in reference_value:
-                message = 'value of header:%r does not match'\
-                          ' (%r not in %r)' %\
-                                          (header, read_value, reference_value)
-                self.report_dict.setdefault(url, []).append(message)
+        # parse the web checker configuration file and run the header
+        # validation method
+        for header, reference_value in self._getHeaderPolicyList(
+                                              url, fetched_data):
+          self._validateHeader(url, header, reference_value, fetched_data)
     return x_varnish_reference_list, discarded_url_list[:]
 
   def start(self, prohibited_file_name_list=None,
@@ -428,17 +533,20 @@ def web_checker_utility():
     parser.error('incorrect number of arguments')
   config_path = args[0]
 
-  config = ConfigParser.RawConfigParser(defaults=dict(wget_binary_path='wget',
-                                              file_log_path='web_checker.log'))
+  config = ConfigParser.RawConfigParser()
   config.read(config_path)
   working_directory = config.get('web_checker', 'working_directory')
   url = config.get('web_checker', 'url')
   varnishlog_binary_path = config.get('web_checker', 'varnishlog_binary_path')
-  wget_binary_path = config.get('web_checker', 'wget_binary_path')
+  wget_binary_path = 'wget'
+  if config.has_option('web_checker', 'wget_binary_path'):
+    wget_binary_path = config.get('web_checker', 'wget_binary_path')
   email_address = config.get('web_checker', 'email_address')
   smtp_host = config.get('web_checker', 'smtp_host')
   debug_level = config.get('web_checker', 'debug_level')
-  file_log_path = config.get('web_checker', 'file_log_path')
+  file_log_path = 'web_checker.log'
+  if config.has_option('web_checker', 'file_log_path'):
+    file_log_path = config.get('web_checker', 'file_log_path')
   header_list = {}
   for header, configuration in config.items('header_list'):
     if header in config.defaults().keys():
@@ -450,6 +558,14 @@ def web_checker_utility():
     else:
       value = configuration.splitlines()
     header_list[header] = value
+  conditional_header_dict = {}
+  no_header_dict = {}
+  for section in config.sections():
+    item_list = config.items(section)
+    if re.compile("^header\s.*").match(section) is not None:
+      conditional_header_dict.setdefault(section, []).extend(item_list)
+    if re.compile("^no_header\s.*").match(section) is not None:
+      no_header_dict.setdefault(section, []).extend(item_list)
   if config.has_section('erp5_extension_list'):
     prohibited_file_name_list = config.get('erp5_extension_list',
                                       'prohibited_file_name_list').splitlines()
@@ -465,7 +581,9 @@ def web_checker_utility():
                                        email_address,
                                        smtp_host,
                                        debug_level,
-                                       file_log_path)
+                                       file_log_path,
+                                       conditional_header_dict,
+                                       no_header_dict)
 
   result = instance.start(prohibited_file_name_list=prohibited_file_name_list,
                        prohibited_folder_name_list=prohibited_folder_name_list)
