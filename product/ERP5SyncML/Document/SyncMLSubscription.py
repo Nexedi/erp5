@@ -403,7 +403,6 @@ class SyncMLSubscription(XMLObject):
     for i in xrange(0, object_list_len, MAX_OBJECTS):
       current_id_list = object_id_list[i:i+MAX_OBJECTS]
       self.activate(activity='SQLQueue',
-                    tag=self.getId(),
                     priority=ACTIVITY_PRIORITY).manage_delObjects(current_id_list)
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -449,7 +448,7 @@ class SyncMLSubscription(XMLObject):
                               'conflict_resolved_with_merge',
                               'conflict_resolved_with_client_command_winning'):
         if self.getIsActivityEnabled():
-          signature.activate(tag=self.getId(), activity='SQLQueue',
+          signature.activate(activity='SQLQueue',
                              priority=ACTIVITY_PRIORITY).reset()
         else:
           signature.reset()

@@ -71,14 +71,8 @@ class SyncMLPublication(SyncMLSubscription):
     """
       Reset all subscribers
     """
-    id_list = []
-    for subscriber in self.contentValues(portal_type='SyncML Subscription'):
-      subscriber.resetSignatureList()
-      id_list.append(subscriber.getId())
     self.activate(activity='SQLQueue',
-                  tag=self.getId(),
-                  after_tag=id_list,
-                  priority=ACTIVITY_PRIORITY).manage_delObjects(id_list)
+                  priority=ACTIVITY_PRIORITY).manage_delObjects(ids=list(self.getObjectIds()))
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getConflictList')
