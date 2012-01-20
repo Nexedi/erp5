@@ -95,7 +95,6 @@ if business_template is not None:\n
 \n
 \n
 \n
-\n
 # update security settings for default preference # XXX why ???\n
 default_configurator_preference = getattr(portal_preferences,\n
                                           \'default_configurator_preference\', None)\n
