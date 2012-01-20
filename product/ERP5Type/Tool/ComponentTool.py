@@ -95,8 +95,10 @@ class ComponentTool(BaseTool):
     for content_portal_type in getattr(type_tool,
                                        self.portal_type).getTypeAllowedContentTypeList():
       try:
-        failed_import_dict.update(getattr(erp5.portal_type,
-                                          content_portal_type).importAllFromFilesystem(self))
+        failed_import_dict.update(
+          getattr(erp5.portal_type,
+                  content_portal_type).importAllFromFilesystem(self,
+                                                               erase_existing=erase_existing))
       except AttributeError:
         LOG("ERP5Type.Tool.ComponentTool", WARNING, "Could not import %ss" % \
               content_portal_type)

@@ -47,7 +47,7 @@ class ExtensionComponent(DocumentComponent):
   security.declareProtected(Permissions.ModifyPortalContent,
                             'importAllFromFilesystem')
   @classmethod
-  def importAllFromFilesystem(cls, context):
+  def importAllFromFilesystem(cls, context, erase_existing=False):
     """
     Try to import all Extensions as found in INSTANCEHOME/Extensions and
     returns error as a dict if any
@@ -64,7 +64,7 @@ class ExtensionComponent(DocumentComponent):
     failed_import_dict = {}
     for extension_path in glob.iglob(extension_path_pattern):
       try:
-        cls.importFromFilesystem(context, extension_path)
+        cls.importFromFilesystem(context, extension_path, erase_existing)
       except Exception, e:
         failed_import_dict[extension_path] = str(e)
       else:
@@ -76,11 +76,21 @@ class ExtensionComponent(DocumentComponent):
   security.declareProtected(Permissions.ModifyPortalContent,
                             'importFromFilesystem')
   @classmethod
-  def importFromFilesystem(cls, context, path):
+  def importFromFilesystem(cls, context, path, erase_existing=False):
     """
     Import an Extension from the given path into ZODB after checking that the
     source code is valid
     """
+    class_name = os.path.basename(path).replace('.py', '')
+    id = 'erp5.component.extension.%s' % class_name
+
+    # XXX-arnau: not efficient at all
+    if id in context:
+      if not erase_existing:
+        return
+
+      context.deleteContent(id)
+
     with open(path) as extension_file:
       source_code = extension_file.read()
 
@@ -88,8 +98,7 @@ class ExtensionComponent(DocumentComponent):
     namespace_dict = {}
     exec source_code in namespace_dict
 
-    class_name = os.path.basename(path).replace('.py', '')
-    return context.newContent(id='erp5.component.extension.%s' % class_name,
+    return context.newContent(id=id,
                               # XXX-arnau: useless field?
                               reference=class_name,
                               text_content=source_code,
