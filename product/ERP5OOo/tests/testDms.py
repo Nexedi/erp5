@@ -2021,7 +2021,8 @@ return 1
   
   def test_convertWebPageWithEmbeddedZODBImageToImageOnTraversal(self):
     """
-    Test Web Page using embedded Images into ZODB case (in its HTML body)
+    Test Web Page conversion to image using embedded Images into its HTML body.
+    Test various dumb ways to include an image (relative to instance or external ones).
     """
     display= 'thumbnail'
     convert_kw = {'display':display, 
@@ -2037,35 +2038,38 @@ return 1
     web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
     self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
 
-    # XXX: how to simulate the case when web page contains (through reference) link to document for which based conversion failed?
-    # XXX: how to fix case when web page contains (through reference) link to itself (causes infinite recursion)
-
-    # images from same instance accessed by reference and wrong arguments (dispay NOT display)
+    # images from same instance accessed by reference and wrong conversion arguments (dispay NOT display)
     # code should be more resilient
     upload_file = makeFileUpload('cmyk_sample.jpg')
     image = self.portal.image_module.newContent(portal_type='Image',
                                                reference='Embedded-XXX',
                                                version='001',
                                                language='en')
+    image.setData(upload_file.read())
     image.publish()
     convert_kw['quality'] = 99 # to not get cached
     web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
-    web_page_document.setTextContent('''<b> test </b><img src="Embedded-XXX?format=jpeg&amp;dispay=medium"/>''')
+    web_page_document.setTextContent('''<b> test </b><img src="Embedded-XXX?format=jpeg&amp;dispay=medium&amp;quality=50"/>''')
     self.stepTic()
     web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
     web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
     self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
 
     # external images
-    convert_kw['quality'] = 98 # to not get cached
+    convert_kw['quality'] = 98
     web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
     web_page_document.setTextContent('''<b> test </b><img src="http://www.erp5.com/images/favourite.png"/>
 <img style="width: 26px; height: 26px;" src="http://www.erp5.com//images/save2.png" />
+<img style="width: 26px; height: 26px;" src="http:////www.erp5.com//images/save2.png" />
+<img style="width: 26px; height: 26px;" src="http://www.erp5.com/./images/save2.png" />
 ''')
     self.stepTic()
     web_page_document_url = '%s/%s' %(self.portal.absolute_url(), web_page_document.getRelativeUrl())
     web_page_image_size, web_page_file_size = self.getURLSizeList(web_page_document_url, **convert_kw)
     self.assertTrue(max(preffered_size_for_display) - max(web_page_image_size) <= 1)
+
+    # XXX: how to simulate the case when web page contains (through reference) link to document for which based conversion failed?
+    # XXX: how to fix case when web page contains (through reference) link to itself (causes infinite recursion)
 
 
   def test_convertToImageOnTraversal(self):
