@@ -3478,67 +3478,56 @@ class DocumentTemplateItem(BaseTemplateItem):
     text = file.read()
     self._objects[file_name[:-3]] = text
 
-class PropertySheetTemplateItem(DocumentTemplateItem,
-                                ObjectTemplateItem):
+class FilesystemToZodbTemplateItem(DocumentTemplateItem,
+                                   ObjectTemplateItem):
   """
-  Property Sheets are now stored in ZODB, rather than the filesystem.
-  However, Some Business Template may still have filesystem Property
-  Sheets, which need to be migrated to the ZODB.
-
-  This migration is performed in two steps:
-
-  1/ Specify explicitly in the web user interface that the Property
-     Sheets should be migrated.
-
-  2/ The Property Sheets will all be migrated when installing the
-     Business Template.
-
-  Therefore, this is an all or nothing migration, meaning that only
-  methods of DocumentTemplateItem will be called before the migration
-  has been performed, then ObjectTemplateItem methods afterwards.
+  Abstract class to allow migration from DocumentTemplateItem to
+  ObjectTemplateItem, this is useful for migration from filesystem to ZODB for
+  PropertySheets and Components
   """
-  # If set to False, then the migration of Property Sheets will never
-  # be performed, required until the code of ZODB Property Sheets is
-  # stable and completely documented
+  # If set to False, then the migration from filesystem to ZODB will be
+  # performed, meaningful only until the code is stable
   _perform_migration = True
 
-  # Only meaningful for filesystem Property Sheets
-  local_file_reader_name = staticmethod(readLocalPropertySheet)
-  local_file_writer_name = staticmethod(writeLocalPropertySheet)
-  local_file_importer_name = staticmethod(importLocalPropertySheet)
-  local_file_remover_name = staticmethod(removeLocalPropertySheet)
+  _tool_id = None
 
-  def __init__(self, id_list, tool_id='portal_property_sheets', context=None, **kw):
+  @staticmethod
+  def _getZodbObjectId(id):
+    return id
+
+  def __init__(self, id_list, tool_id=None, context=None, **kw):
+    if tool_id is None:
+      tool_id = self._tool_id
+
     tool = None
     if context is not None and len(id_list):
       # XXX looking up a tool early in the install process might
       # cause issues. If it does, we'll have to consider moving this
       # to build()
-      tool = getattr(context.getPortalObject(), tool_id, None)
+      tool = getattr(context.getPortalObject(), self._tool_id, None)
     if tool is not None:
-      existing_property_sheet_set = set(tool.objectIds())
+      existing_set = set(tool.objectIds())
       for i, id in enumerate(id_list):
-        if id in existing_property_sheet_set:
-          # if the property sheet is on ZODB, use it.
-          id_list[i] = "%s/%s" % (tool_id, id)
+        if id in existing_set:
+          # if the object is on ZODB, use it.
+          id_list[i] = "%s/%s" % (self._tool_id, self._getZodbObjectId(id))
 
     BaseTemplateItem.__init__(self, id_list, **kw)
 
-  @staticmethod
-  def _is_already_migrated(object_key_list):
+  def _is_already_migrated(self, object_key_list):
     """
-    The Property Sheets have already been migrated if any keys within
-    the given object_key_list (either '_objects.keys()' or
-    '_archive.keys()') contains a key starting by 'portal_property_sheets/'
+    Objects have already been migrated if any keys within the given
+    object_key_list (either '_objects.keys()' or '_archive.keys()') contains a
+    key starting by 'tool_id/'
     """
     return len(object_key_list) != 0 and \
-        object_key_list[0].startswith('portal_property_sheets/')
+        object_key_list[0].startswith(self._tool_id + '/')
 
   def _filesystemCompatibilityWrapper(method_name, object_dict_name):
     """
-    Call ObjectTemplateItem method when the Property Sheets have
-    already been migrated, otherwise fallback on DocumentTemplateItem
-    method for backward-compatibility
+    Call ObjectTemplateItem method when the objects have already been
+    migrated, otherwise fallback on DocumentTemplateItem method for
+    backward-compatibility
     """
     def inner(self, *args, **kw):
       if self._is_already_migrated(getattr(self, object_dict_name).keys()):
@@ -3548,7 +3537,7 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
       if method_name == 'preinstall':
         old_result = result.copy()
         for k, v in old_result.iteritems():
-          if not k.startswith('portal_property_sheets/'):
+          if not k.startswith(self._tool_id + '/'):
             result.pop(k)
             # Magical way to have unique path in case of not yet migrated property
             # sheets available on preinstall list
@@ -3581,53 +3570,31 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
     else:
       return DocumentTemplateItem.uninstall(self, *args, **kw)
 
-  @staticmethod
-  def _getFilesystemPropertySheetPath(class_id):
+  def remove(self, context, **kw):
     """
-    From the given class identifier, return the complete path of the
-    filesystem Property Sheet class. Only meaningful when the Business
-    Template has already been installed previously, otherwise the
+    Conversion of magically uniqued paths to real ones
     """
-    from App.config import getConfiguration
-    return os.path.join(getConfiguration().instancehome,
-                        "PropertySheet",
-                        "%s.py" % class_id)
+    remove_object_dict = kw.get('remove_object_dict', {})
+    new_remove_dict = dict()
+    for k,v in remove_object_dict.iteritems():
+      if k.startswith(self.getTemplateTypeName()+'/'):
+        new_remove_dict[self._getPath(k)] = v
+    kw['remove_object_dict'] = new_remove_dict
+    ObjectTemplateItem.remove(self, context, **kw)
 
   @staticmethod
-  def _migrateFilesystemPropertySheet(property_sheet_tool,
-                                      filesystem_property_sheet_path,
-                                      filesystem_property_sheet_file,
-                                      class_id):
-    """
-    Migration of a filesystem Property Sheet involves loading the
-    class from 'instancehome/PropertySheet/<class_id>', then create
-    the ZODB Property Sheets in portal_property_sheets from its
-    filesystem definition
-    """
-    # The first parameter of 'load_source' is the module name where
-    # the class will be stored, thus don't only use the class name as
-    # it may clash with already loaded module, such as
-    # BusinessTemplate.
-    module = imp.load_source(
-      'Migrate%sFilesystemPropertySheet' % class_id,
-      filesystem_property_sheet_path,
-      filesystem_property_sheet_file)
+  def _getFilesystemPath(class_id):
+    raise NotImplementedError
 
-    try:
-      klass = getattr(module, class_id)
-    except AttributeError:
-      raise AttributeError("filesystem Property Sheet '%s' should " \
-                           "contain a class with the same name" % \
-                           class_id)
+  @staticmethod
+  def _migrateFromFilesystem(tool, filesystem_path, filesystem_file, class_id):
+    raise NotImplementedError
 
-    return PropertySheetDocument.importFromFilesystemDefinition(
-        property_sheet_tool, klass)
-
-  def _migrateAllFilesystemPropertySheets(self,
-                                          context,
-                                          migrate_object_dict,
-                                          object_dict,
-                                          update_parameter_dict):
+  def _migrateAllFromFilesystem(self,
+                                context,
+                                migrate_object_dict,
+                                object_dict,
+                                update_parameter_dict):
     """
     Migrate all Property Sheets from 'migrate_object_dict' and, if
     necessary, remove old references in 'object_dict' too (with format
@@ -3635,10 +3602,9 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
     the latter '_archive'), and finally removing the useless Property
     Sheet on the filesystem
     """
-    # Migrate all the filesystem Property Sheets of the Business
-    # Template if any
-    property_sheet_tool = context.getPortalObject().portal_property_sheets
-    property_sheet_id_set = set(property_sheet_tool.objectIds())
+    # Migrate all the filesystem classes of the Business Template if any
+    tool = getattr(context.getPortalObject(), self._tool_id)
+    id_set = set(tool.objectIds())
 
     # careful, that dictionary will change
     class_id_list = migrate_object_dict.keys()
@@ -3646,48 +3612,44 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
       # If the Property Sheet already exists in ZODB, then skip it,
       # otherwise it should not be needed anymore once the deletion
       # code of the filesystem Property Sheets is enabled
-      if class_id in property_sheet_id_set:
+      if class_id in id_set:
         # XXX a Conduit must be able to merge modifications
         # from FS PropertySheets into ZODB PropertySheets
-        warn('Conflict when migrating Property Sheet %s: ' \
-             'already exists in portal_property_sheets and '\
-             'cannot be updated automatically for now. ' % class_id,
+        warn('Conflict when migrating classes %s: already exists in %s and '\
+               'cannot be updated automatically for now.' % (class_id,
+                                                             self._tool_id),
              UserWarning)
         del migrate_object_dict[class_id]
         if class_id in object_dict:
           del object_dict[class_id]
         continue
 
-      filesystem_property_sheet_path = \
-          self._getFilesystemPropertySheetPath(class_id)
+      filesystem_path = self._getFilesystemPath(class_id)
 
       # A filesystem Property Sheet may already exist in the instance
       # home if the Business Template has been previously installed,
       # otherwise it is created
-      if os.path.exists(filesystem_property_sheet_path):
-        filesystem_property_sheet_file = open(filesystem_property_sheet_path)
+      if os.path.exists(filesystem_path):
+        filesystem_file = open(filesystem_path)
       else:
-        filesystem_property_sheet_file = open(filesystem_property_sheet_path,
-                                              'w+')
-
-        filesystem_property_sheet_file.write(migrate_object_dict[class_id])
-        filesystem_property_sheet_file.seek(0)
+        filesystem__file = open(filesystem_path, 'w+')
+        filesystem_file.write(migrate_object_dict[class_id])
+        filesystem_file.seek(0)
 
       try:
-        new_property_sheet = self._migrateFilesystemPropertySheet(
-          property_sheet_tool,
-          filesystem_property_sheet_path,
-          filesystem_property_sheet_file,
-          class_id)
+        migrated_object = self._migrateFromFilesystem(tool,
+                                                      filesystem_path,
+                                                      filesystem_file,
+                                                      class_id).aq_base
 
       finally:
-        filesystem_property_sheet_file.close()
-        os.remove(filesystem_property_sheet_path)
+        filesystem_file.close()
+        os.remove(filesystem_path)
 
       # Update 'migrate_object_dict' with the new path
-      key = 'portal_property_sheets/%s' % class_id
+      key = '%s/%s' % (self._tool_id, migrated_object.getId())
 
-      migrate_object_dict[key] = new_property_sheet.aq_base
+      migrate_object_dict[key] = migrated_object
       del migrate_object_dict[class_id]
 
       # Remove old reference in 'object_dict' as it does not make
@@ -3700,16 +3662,6 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
       # migrated
       update_parameter_dict[key] = 'migrate'
 
-  def remove(self, context, **kw):
-    """Conversion of magically uniqued paths to real ones"""
-    remove_object_dict = kw.get('remove_object_dict', {})
-    new_remove_dict = dict()
-    for k,v in remove_object_dict.iteritems():
-      if k.startswith(self.getTemplateTypeName()+'/'):
-        new_remove_dict[self._getPath(k)] = v
-    kw['remove_object_dict'] = new_remove_dict
-    ObjectTemplateItem.remove(self, context, **kw)
-
   def install(self, context, **kw):
     if not self._perform_migration:
       return DocumentTemplateItem.install(self, context, **kw)
@@ -3721,18 +3673,84 @@ class PropertySheetTemplateItem(DocumentTemplateItem,
 
     if bt_format_version == 0 and \
        not self._is_already_migrated(self._archive.keys()):
-      self._migrateAllFilesystemPropertySheets(context,
-                                               self._archive,
-                                               self._objects,
-                                               kw.get('object_to_update'))
+      self._migrateAllFromFilesystem(context,
+                                     self._archive,
+                                     self._objects,
+                                     kw.get('object_to_update'))
     elif bt_format_version == 1 and \
          not self._is_already_migrated(self._objects.keys()):
-      self._migrateAllFilesystemPropertySheets(context,
-                                               self._objects,
-                                               self._archive,
-                                               kw.get('object_to_update'))
+      self._migrateAllFromFilesystem(context,
+                                     self._objects,
+                                     self._archive,
+                                     kw.get('object_to_update'))
 
     return ObjectTemplateItem.install(self, context, **kw)
+
+class PropertySheetTemplateItem(FilesystemToZodbTemplateItem):
+  """
+  Property Sheets are now stored in ZODB rather than the filesystem.
+  However, some Business Templates may still have filesystem Property
+  Sheets, which need to be migrated to the ZODB.
+
+  This migration is performed in two steps:
+
+  1/ Specify explicitly in the web user interface that the Property
+     Sheets should be migrated.
+
+  2/ The Property Sheets will all be migrated when installing the
+     Business Template.
+
+  Therefore, this is an all or nothing migration, meaning that only
+  methods of DocumentTemplateItem will be called before the migration
+  has been performed, then ObjectTemplateItem methods afterwards.
+  """
+  # Only meaningful for filesystem Property Sheets
+  local_file_reader_name = staticmethod(readLocalPropertySheet)
+  local_file_writer_name = staticmethod(writeLocalPropertySheet)
+  local_file_importer_name = staticmethod(importLocalPropertySheet)
+  local_file_remover_name = staticmethod(removeLocalPropertySheet)
+
+  _tool_id = 'portal_property_sheets'
+
+  @staticmethod
+  def _getFilesystemPath(class_id):
+    """
+    From the given class identifier, return the complete path of the
+    filesystem Property Sheet class. Only meaningful when the Business
+    Template has already been installed previously, otherwise the
+    """
+    from App.config import getConfiguration
+    return os.path.join(getConfiguration().instancehome,
+                        "PropertySheet",
+                        "%s.py" % class_id)
+
+  @staticmethod
+  def _migrateFromFilesystem(tool,
+                             filesystem_path,
+                             filesystem_file,
+                             class_id):
+    """
+    Migration of a filesystem Property Sheet involves loading the
+    class from 'instancehome/PropertySheet/<class_id>', then create
+    the ZODB Property Sheets in portal_property_sheets from its
+    filesystem definition
+    """
+    # The first parameter of 'load_source' is the module name where
+    # the class will be stored, thus don't only use the class name as
+    # it may clash with already loaded module, such as
+    # BusinessTemplate.
+    module = imp.load_source('Migrate%sFilesystemPropertySheet' % class_id,
+                             filesystem_path,
+                             filesystem_file)
+
+    try:
+      klass = getattr(module, class_id)
+    except AttributeError:
+      raise AttributeError("filesystem Property Sheet '%s' should " \
+                           "contain a class with the same name" % \
+                           class_id)
+
+    return PropertySheetDocument.importFromFilesystemDefinition(tool, klass)
 
 class ConstraintTemplateItem(DocumentTemplateItem):
   local_file_reader_name = staticmethod(readLocalConstraint)
@@ -3740,12 +3758,45 @@ class ConstraintTemplateItem(DocumentTemplateItem):
   local_file_importer_name = staticmethod(importLocalConstraint)
   local_file_remover_name = staticmethod(removeLocalConstraint)
 
-class ExtensionTemplateItem(DocumentTemplateItem):
+from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent as \
+    ExtensionComponentDocument
+
+class ExtensionTemplateItem(FilesystemToZodbTemplateItem):
+  """
+  Extensions are now stored in ZODB rather than on the filesystem. However,
+  some Business Templates may still have filesystem Extensions which need to
+  be migrated to the ZODB.
+  """
+  # XXX-arnau: the code is far from being stable
+  _perform_migration = False
+
+  _tool_id = 'portal_components'
+
+  # Only meaningful for filesystem Extensions
   local_file_reader_name = staticmethod(readLocalExtension)
   local_file_writer_name = staticmethod(writeLocalExtension)
   # Extension needs no import
   local_file_importer_name = None
   local_file_remover_name = staticmethod(removeLocalExtension)
+
+  @staticmethod
+  def _getZodbObjectId(id):
+    return 'erp5.component.extension.%s' % id
+
+  @staticmethod
+  def _getFilesystemPath(class_id):
+    from App.config import getConfiguration
+    return os.path.join(getConfiguration().instancehome,
+                        "Extensions",
+                        "%s.py" % class_id)
+
+  @staticmethod
+  def _migrateFromFilesystem(tool,
+                             filesystem_path,
+                             filesystem_file,
+                             class_id):
+    return ExtensionComponentDocument.importFromFilesystem(tool,
+                                                           filesystem_path)
 
 class TestTemplateItem(DocumentTemplateItem):
   local_file_reader_name = staticmethod(readLocalTest)
