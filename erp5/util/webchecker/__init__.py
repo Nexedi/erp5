@@ -93,8 +93,11 @@ class HTTPCacheCheckerTestSuite(object):
                                                info=>normal,
                                                warning=> nothing)
       file_log_path: path to log file
-      conditional_header_dict : TODO
-      no_header_dict : TODO
+      conditional_header_dict : Key  == Section id (like 'header url='.*/login')
+                                value: the configuration lines in this sction
+                                       (config format is same as header_list)
+      no_header_dict : Key == Section id (like 'no_header url=.*/sitemap')
+                       value: = not exsiting headers
     """
     self.root_url = root_url
     self.working_directory = working_directory
