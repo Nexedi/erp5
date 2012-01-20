@@ -36,7 +36,7 @@ from Products.ERP5.Document.Document import Document, ConversionError, _MARKER, 
 from Products.ERP5.Document.File import File
 from Products.ERP5Type.WebDAVSupport import TextContent
 import re
-from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
+from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST, VALID_TEXT_FORMAT_LIST
 import cStringIO
 from string import Template
 
@@ -179,10 +179,12 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
           self.setConversion(result, original_mime_type, **kw)
         else:
           mime_type, result = self.getConversion(**kw)
-        if substitution_method_parameter_dict is None:
-          substitution_method_parameter_dict = {}
-        result = self._substituteTextContent(result, safe_substitute=safe_substitute,
-                                             **substitution_method_parameter_dict)
+        if format in VALID_TEXT_FORMAT_LIST:
+          # only textual content can be sustituted 
+          if substitution_method_parameter_dict is None:
+            substitution_method_parameter_dict = {}
+          result = self._substituteTextContent(result, safe_substitute=safe_substitute,
+                                               **substitution_method_parameter_dict)
         return original_mime_type, result
       else:
         # text_content is not set, return empty string instead of None
