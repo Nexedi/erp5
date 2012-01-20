@@ -2091,7 +2091,9 @@ return 1
     image_document.edit(file=upload_file)
     
     web_page_document = self.portal.web_page_module.newContent(portal_type="Web Page")
-    web_page_document.setTextContent('<b> test </b>')    
+    web_page_document.setTextContent('<b> test </b> $website_url $website_url')
+    # a Web Page can generate dynamic text so test is as well
+    web_page_document.setTextContentSubstitutionMappingMethodId('WebPage_getStandardSubstitutionMappingDict')    
     self.stepTic()
 
     ooo_document_url = '%s/%s' %(self.portal.absolute_url(), ooo_document.getRelativeUrl())
@@ -2704,8 +2706,8 @@ class TestDocumentPerformance(TestDocumentMixin):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
-  suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
-  suite.addTest(unittest.makeSuite(TestDocumentPerformance))
+  #suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
+  #suite.addTest(unittest.makeSuite(TestDocumentPerformance))
   return suite
 
 
