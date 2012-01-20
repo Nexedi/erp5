@@ -77,7 +77,6 @@
   </permission>
   <permission type='tuple'>
    <name>View</name>
-   <role>Anonymous</role>
    <role>Assignee</role>
    <role>Assignor</role>
    <role>Associate</role>
