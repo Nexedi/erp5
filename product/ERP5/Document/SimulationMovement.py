@@ -676,7 +676,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
           raise ValueError('Simulation Movement %s has no Business Link '
             'related and no Business Link from composed document matches'%
               current.getPath())
-      causality_dict[current_business_link_value.getRelativeUrl()] = current
+        current_business_link = current_business_link_value.getRelativeUrl()
+      causality_dict[current_business_link] = current
       current = current.getParentValue().getParentValue()
 
     remaining_path_set = set()
