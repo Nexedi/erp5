@@ -34,10 +34,10 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
                            
-class DocumentComponent(Base):
+class Component(Base):
     # CMF Type Definition
-    meta_type = 'ERP5 Document Component'
-    portal_type = 'Document Component'
+    meta_type = 'ERP5 Component'
+    portal_type = 'Component'
 
     isPortalContent = 1
     isRADContent = 1

@@ -29,13 +29,13 @@
 
 import os.path
 
-from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
+from Products.ERP5Type.Core.Component import Component
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
 from zLOG import LOG, INFO                           
 
-class ExtensionComponent(DocumentComponent):
+class ExtensionComponent(Component):
   # CMF Type Definition
   meta_type = 'ERP5 Extension Component'
   portal_type = 'Extension Component'
