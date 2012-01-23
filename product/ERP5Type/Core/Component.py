@@ -56,7 +56,7 @@ class Component(Base):
                        'Reference',
                        'TextDocument')
 
-    def checkConsistency(self, **kw):
+    def checkConsistency(self, *args, **kw):
       """
       XXX-arnau: should probably in a separate Constraint class
       """

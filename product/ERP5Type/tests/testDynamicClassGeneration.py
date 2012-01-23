@@ -1204,8 +1204,150 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       self.fail("Creating a Category Expression with syntax error raises "\
                 "an error")
 
+class _TestZodbComponent(ERP5TypeTestCase):
+  def getBusinessTemplateList(self):
+    return ('erp5_base',
+            'erp5_core_component')
+
+class TestZodbExtensionComponent(_TestZodbComponent):
+  def _newExtension(self, component_tool, extension_name, text_content):
+    return component_tool.newContent(
+      id='erp5.component.extension.%s' % extension_name,
+      reference=extension_name,
+      text_content=text_content,
+      portal_type='Extension Component')
+
+  def afterSetUp(self):
+    """
+    Create a new Extension component
+    """
+    self._portal = self.getPortal()
+    self._component_tool = self._portal.portal_components
+    self._component_tool.reset()
+
+  def assertHasAttribute(self, obj, attribute, msg=None):
+    """
+    XXX-arnau: copy/paste from TestZodbPropertySheet
+    """
+    self.failIfEqual(None, getattr(obj, attribute, None),
+                     msg or '%s: no attribute %s' % (obj.__name__,
+                                                     attribute))
+
+  def failIfHasAttribute(self, obj, attribute, msg=None):
+    """
+    XXX-arnau: copy/paste from TestZodbPropertySheet
+    """
+    self.assertEquals(None, getattr(obj, attribute, None),
+                      msg or '%s: attribute %s present' % (obj.__name__,
+                                                           attribute))
+
+  def testValidateInvalidate(self):
+    """
+    The new Extension Component should only be in erp5.component.extension
+    when validated, otherwise an AttributeError should be raised
+    """
+    import erp5.component.extension
+
+    test_component = self._newExtension(
+      self._component_tool,
+      'TestValidateInvalidateComponent',
+      'def foobar(*args, **kwargs):\n  return "ValidateInvalidate"')
+
+    test_component.validate()
+    transaction.commit()
+    self.tic()
+
+    self.assertHasAttribute(erp5.component.extension,
+                            'TestValidateInvalidateComponent')
+    test_component.invalidate()
+    transaction.commit()
+    self.tic()
+    self.failIfHasAttribute(erp5.component.extension,
+                            'TestValidateInvalidateComponent')
+
+    test_component.validate()
+    transaction.commit()
+    self.tic()
+    self.assertHasAttribute(erp5.component.extension,
+                            'TestValidateInvalidateComponent')
+
+  def testExternalMethod(self):
+    test_component = self._newExtension(
+      self._component_tool,
+      'TestExternalMethodComponent',
+      'def foobar(*args, **kwargs):\n  return 42')
+
+    test_component.validate()
+    transaction.commit()
+    self.tic()
+
+    import erp5.component.extension
+    self.assertHasAttribute(erp5.component.extension,
+                            'TestExternalMethodComponent')
+
+    # Add an External Method using the Extension Component defined above and
+    # check that it returns 42
+    from Products.ExternalMethod.ExternalMethod import manage_addExternalMethod
+    manage_addExternalMethod(self._portal,
+                             'TestExternalMethod',
+                             'title',
+                             'TestExternalMethodComponent',
+                             'foobar')
+
+    transaction.commit()
+    self.tic()
+
+    external_method = self._portal.TestExternalMethod
+    self.assertEqual(external_method(), 42)
+
+    # Add a Python Script with the External Method defined above and check
+    # that it returns 42
+    from Products.PythonScripts.PythonScript import manage_addPythonScript
+    manage_addPythonScript(self._portal, 'TestPythonScript')
+    self._portal.TestPythonScript.write('return context.TestExternalMethod()')
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(self._portal.TestPythonScript(), 42)
+
+    # Invalidate the Extension Component
+    test_component.invalidate()
+    transaction.commit()
+    self.tic()
+
+    # XXX-arnau: perhaps the error message should be more meaningful
+    try:
+      external_method()
+    except RuntimeError, e:
+      self.assertEquals(e.message,
+                        'external method could not be called because it is None')
+    else:
+      raise AssertionError("TestExternalMethod should not be callable")
+
+  def testSourceCodeWithSyntaxError(self):
+    import erp5.component.extension
+
+    test_component = self._newExtension(
+      self._component_tool,
+      'TestComponentWithSyntaxError',
+      'def foobar(*args, **kwargs):\n  return 42')
+
+    self.assertEqual(test_component.checkConsistency(), [])
+    test_component.validate()
+    transaction.commit()
+    self.tic()
+    self.assertHasAttribute(erp5.component.extension,
+                            'TestComponentWithSyntaxError')
+
+    test_component.setTextContent('def foobar(*args, **kwargs)\n  return 42')
+    transaction.commit()
+    self.tic()
+
+    self.assertNotEqual(test_component.checkConsistency(), [])
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPortalTypeClass))
   suite.addTest(unittest.makeSuite(TestZodbPropertySheet))
+  suite.addTest(unittest.makeSuite(TestZodbExtensionComponent))
   return suite
