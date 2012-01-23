@@ -3779,6 +3779,34 @@ class ExtensionTemplateItem(FilesystemToZodbTemplateItem):
   local_file_importer_name = None
   local_file_remover_name = staticmethod(removeLocalExtension)
 
+  def _importFile(self, file_name, file_obj):
+    if (file_name.endswith('.py') and 
+        file_obj.name.rsplit(os.path.sep, 2)[-2] == 'portal_components'):
+      return
+
+    FilesystemToZodbTemplateItem._importFile(self, file_name, file_obj)
+
+    if file_name.endswith('.xml'):
+      obj = self._objects[file_name[:-4]]
+      with open("%s.py" % file_obj.name[:-4]) as f:
+        obj.text_content = f.read()
+
+  def export(self, context, bta, **kw):
+    path = self.__class__.__name__
+    for key, obj in self._objects.iteritems():
+      obj = obj._getCopy(context)
+
+      f = StringIO(obj.text_content)
+      bta.addObject(f, key, path=path, ext='.py')
+
+      del obj.text_content
+      transaction.commit()
+
+      # export object in xml
+      f = StringIO()
+      XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+      bta.addObject(f, key, path=path)
+
   @staticmethod
   def _getZodbObjectId(id):
     return 'erp5.component.extension.%s' % id
