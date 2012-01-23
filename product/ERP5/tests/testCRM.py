@@ -1494,6 +1494,43 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEquals(new_event.getTitle(), real_title)
     self.assertEquals(new_event.getTextContent(), real_content)
 
+  def test_cloneTicketAndEventList(self):
+    """
+      All events uses after script and interaciton
+      workflow add a test for clone
+    """
+    portal = self.portal
+    event_list = []
+    destination_list = []
+    for i in range (0,100):
+      person = portal.person_module.newContent(
+                 portal_type='Person',
+                 title = 'Person %s' %i)
+      destination_list.append(person)
+    campaing = portal.campaign_module.newContent(
+                 portal_type='Campaign', 
+                 reference = 'Test')
+    for i in range(0,3):
+      event = portal.event_module.newContent(
+                portal_type='Mail Message',
+                title = 'Mail %s' %i, 
+                follow_up = campaing.getRelativeUrl())
+      event.setDestinationList([x.getRelativeUrl() for x in destination_list])
+      event_list.append(event)
+    self.stepTic()
+    
+    # use Ticket_cloneTicketAndEventList
+    campaing.Ticket_cloneTicketAndEventList()
+    self.stepTic()
+    cloned_campaign = [x for x in portal.campaign_module.objectValues() if x!=campaing][0]
+    cloned_event_list = [x for x in portal.event_module.objectValues() if x.getFollowUpValue()==cloned_campaign]
+    self.assertEqual(campaing.getTitle(), cloned_campaign.getTitle())
+    self.assertEqual(campaing.getReference(), cloned_campaign.getReference())
+
+    for i in range(0,3):
+      self.assertSameSet(event_list[i].getDestinationValueList(), cloned_event_list[i].getDestinationValueList())
+
+
   def test_Base_addEvent(self):
     """Check Base_addEvent script with a logged in user.
     """
