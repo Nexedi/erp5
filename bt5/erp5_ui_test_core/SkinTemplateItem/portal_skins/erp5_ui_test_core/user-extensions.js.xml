@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts20417149.43</string> </value>
+            <value> <string>ts27332555.94</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -75,7 +75,8 @@ Selenium.prototype.assertPortalStatusMessage = function(text) {\n
 Selenium.prototype.doType = function(locator, newText) {\n
     if (typeof(netscape) != "undefined") {\n
       // on firefox, we enable privilege to upload file in javascript.\n
-      netscape.security.PrivilegeManager.enablePrivilege("UniversalFileRead");\n
+      // XXX-Cedric : this needs user interaction, thus making it unusable.\n
+      //netscape.security.PrivilegeManager.enablePrivilege("UniversalFileRead");\n
     }\n
     var element = this.page().findElement(locator);\n
     this.page().replaceText(element, newText);\n
@@ -91,10 +92,11 @@ Selenium.prototype.getAbsoluteLocation = function() {\n
 \n
 Selenium.prototype.doPhantomRender = function(filename) {\n
     if (window.page && window.page.render) {\n
-        page.render(filename);\n
+        // XXX-Cedric : this needs user interaction, thus making it unusable.\n
+        // Solution : create Firefox extension enabling universal* rights\n
+        //page.render(filename);\n
     }\n
-};\n
-
+};
 
 ]]></string> </value>
         </item>
@@ -104,7 +106,7 @@ Selenium.prototype.doPhantomRender = function(filename) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2422</int> </value>
+            <value> <int>2653</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
