@@ -126,7 +126,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           kw['path'] = explanation_cache.getSimulationPathPatternList()
         if business_link is not None:
           kw['causality_uid'] = business_link.getUid()
-          business_link_value_list = [business_link]
         elif kw.get('causality_uid') is None:
           business_link_value_list = self.getRelatedBusinessLinkValueList()
           if len(business_link_value_list) > 0:
@@ -135,7 +134,6 @@ class BuilderMixin(XMLObject, Amount, Predicate):
         movement_list = self.searchMovementList(
           delivery_relative_url_list=delivery_relative_url_list,
           applied_rule_uid=applied_rule_uid,
-          business_link_list=business_link_value_list,
           **kw)
         if not movement_list:
           return []

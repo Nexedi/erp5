@@ -437,7 +437,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
           sm = result_dict.pop(use)
           business_link_list = sm.asComposedDocument().getBusinessLinkValueList(context=sm)
           self.assertEqual(len(business_link_list), 1)
-          is_buildable = sm.isBuildable(business_link_list[0])
+          is_buildable = sm.isBuildable()
           self.assertEqual(str(sm.getTotalPrice() or 0.0), str(total_price))
           if is_buildable:
             self.assertEqual(3, len(sm.getCausalityValueList()))

@@ -615,9 +615,19 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     else:
       return getTreeDelivered(self, ignore_first=ignore_first)
 
+  def _getBusinessLinkByPredicate(self):
+    business_link_list = self.asComposedDocument().getBusinessLinkValueList(
+      context=self)
+    if len(business_link_list) > 1:
+      raise ValueError('Simulation Movement %s composed document matched more '
+        'than one Business Link.' % self.getPath())
+    if len(business_link_list) == 0:
+      return None
+    return business_link_list[0]
+
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isBuildable')
-  def isBuildable(self, business_link):
+  def isBuildable(self):
     """Simulation Movement buildable logic"""
     if self.getDelivery():
       # already delivered
@@ -625,25 +635,27 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     # might be buildable - business path dependent
     explanation_value = self.getExplanationValue()
-    if business_link is None or explanation_value is None:
-      # without Business Link and explanation it is impossible to check
-      # precisely if movement is buildable
-      # Note: It breaks compatilibity with old simulation code which did not
-      #       use Business Process at all, here assumption is inverted
-      return False
+    if explanation_value is None:
+      # Without explanation movements are buildable
+      return True
 
     ## XXX Code below following line has been moved to BusinessPath (cf r37116)
     #return len(business_path.filterBuildableMovementList([self])) == 1
 
-    predecessor_state = business_link.getPredecessor()
+    business_link_value = self.getCausalityValue(portal_type='Business Link')
+    if business_link_value is None:
+      business_link_value = self._getBusinessLinkByPredicate()
+    if business_link_value is None:
+      # No directly on indirectly set Business Link -- old simulation movement
+      return True
+    predecessor_state = business_link_value.getPredecessor()
     if predecessor_state is None:
       # first one, can be built
       return True # XXX-JPS wrong cause root is marked
 
     # movement is not built, and corresponding business path
     # has predecessors: check movements related to those predecessors!
-    composed_document = self.asComposedDocument()
-    predecessor_link_list = composed_document.getBusinessLinkValueList(
+    predecessor_link_list = self.asComposedDocument().getBusinessLinkValueList(
             successor=predecessor_state)
 
     def isBuiltAndCompleted(simulation, path):
@@ -657,20 +669,14 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     causality_dict = {}
     current = self.getParentValue().getParentValue()
     while current.getPortalType() == "Simulation Movement":
-      business_link = current.getCausality(portal_type='Business Link')
-      if business_link is None:
-        # no direct business link set on movement, use predicate to find one
-        business_link_list = composed_document.getBusinessLinkValueList(
-          context=current)
-        if len(business_link_list) > 1:
-          raise ValueError('Business Link predicate matches too many '
-              'movements.')
-        if len(business_link_list) == 0:
-          raise ValueError('Simulation Movement has no Business Link related '
-            'and no Business Link from current Business Process matches')
-        business_link = business_link_list[0].getRelativeUrl()
-
-      causality_dict[business_link] = current
+      current_business_link = current.getCausality(portal_type='Business Link')
+      if current_business_link is None:
+        current_business_link_value = current._getBusinessLinkByPredicate()
+        if current_business_link_value is None:
+          raise ValueError('Simulation Movement %s has no Business Link '
+            'related and no Business Link from composed document matches'%
+              current.getPath())
+      causality_dict[current_business_link_value.getRelativeUrl()] = current
       current = current.getParentValue().getParentValue()
 
     remaining_path_set = set()
