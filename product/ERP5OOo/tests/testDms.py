@@ -2571,6 +2571,51 @@ return 1
     self._test_document_publication_workflow('Text',
         'share_alive_action')
 
+  def test_document_publication_workflow_archiveVersion(self):
+    """ Test old versions of a doc are auto archived. """
+    portal = self.portal
+    
+    upload_file = makeFileUpload('TEST-en-002.doc')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True)
+    document_002 = self.portal.Base_contribute(**kw)
+    document_002.publish()
+    self.stepTic()
+
+    document_003 = document_002.Base_createCloneDocument(batch_mode=1) 
+    document_003.setVersion('003')
+    document_003.publish()
+    self.stepTic()
+    self.assertEqual('published', document_003.getValidationState())
+    self.assertEqual('archived', document_002.getValidationState())
+
+    # check if in any case document doesn't archive itself 
+    # (i.e. shared_alive -> published or any other similar chain)
+    document_004 = document_003.Base_createCloneDocument(batch_mode=1)
+    document_004.setVersion('004')
+    document_004.shareAlive()
+    self.stepTic()
+
+    document_004.publish()
+    self.stepTic()
+    self.assertEqual('published', document_004.getValidationState())
+
+    # check case when no language is used
+    document_nolang_005 = document_004.Base_createCloneDocument(batch_mode=1)
+    document_nolang_005.setVersion('TEST-no-lang')
+    document_nolang_005.setVersion('005')
+    document_nolang_005.setLanguage(None)
+    document_nolang_005.publish()
+    self.stepTic()
+    self.assertEqual('published', document_nolang_005.getValidationState())
+
+    document_nolang_006 = document_nolang_005.Base_createCloneDocument(batch_mode=1)
+    document_nolang_006.setVersion('006')
+    document_nolang_006.shareAlive()
+    self.stepTic()
+    
+    self.assertEqual('archived', document_nolang_005.getValidationState())
+    self.assertEqual('shared_alive', document_nolang_006.getValidationState())
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
@@ -2710,8 +2755,8 @@ class TestDocumentPerformance(TestDocumentMixin):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
-  #suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
-  #suite.addTest(unittest.makeSuite(TestDocumentPerformance))
+  suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
+  suite.addTest(unittest.makeSuite(TestDocumentPerformance))
   return suite
 
 

@@ -197,7 +197,7 @@ class BenchmarkResult(object):
       result_list.extend(missing_result_n * [-1])
 
   def exitSuite(self, with_error=False):
-    elapsed_time = int(time.time() - self._current_use_case_elapsed_time)
+    elapsed_time = time.time() - self._current_use_case_elapsed_time
 
     if with_error:
       if self._current_suite_dict['expected'] != -1:
@@ -217,7 +217,7 @@ class BenchmarkResult(object):
                                    self._current_suite_dict['expected'])
 
     self._current_suite_dict['all_use_case_result_list'].append(
-      (self._current_use_case_counter, elapsed_time))
+      (self._current_use_case_counter, int(elapsed_time)))
 
     if self._current_use_case_counter != 0:
       self._current_suite_dict['use_case_stat'].add(

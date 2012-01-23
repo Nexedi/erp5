@@ -2,6 +2,9 @@ from persistent import Persistent
 
 class ConflictFreeLog(Persistent):
   """Scalable conflict-free append-only double-linked list
+
+  Wasted ZODB space due to conflicts is roughly proportional to the number of
+  clients that continuously add items at the same time.
   """
   _prev = _next = None
   _tail_count = 0
@@ -70,9 +73,20 @@ class ConflictFreeLog(Persistent):
         break
 
   def _p_resolveConflict(self, old_state, saved_state, new_state):
-    if old_state.get('_tail_count', 0) == new_state.get('_tail_count', 0):
-      i = len(old_state['_log'])
-    else:
+    # May be called for the head and its predecessor.
+    old_tail_count = old_state.get('_tail_count', 0)
+    d = new_state.get('_tail_count', 0) - old_tail_count
+    if d:
+      if old_tail_count == saved_state.get('_tail_count', 0):
+        # We are the first one to rotate. Really rotate.
+        # Only the head conflicts in this case.
+        return dict(new_state, _log=saved_state['_log'][d:] + new_state['_log'])
+      # Another node rotated before us. Revert our rotation.
+      # Both the head and its predecessor conflict.
       i = 0
+    else:
+      # We didn't rotate. Just add our items to saved head.
+      # Only the head conflicts.
+      i = len(old_state['_log'])
     saved_state['_log'].extend(new_state['_log'][i:])
     return saved_state
