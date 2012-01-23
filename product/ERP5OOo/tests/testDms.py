@@ -2710,8 +2710,8 @@ class TestDocumentPerformance(TestDocumentMixin):
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestDocument))
-  #suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
-  #suite.addTest(unittest.makeSuite(TestDocumentPerformance))
+  suite.addTest(unittest.makeSuite(TestDocumentWithSecurity))
+  suite.addTest(unittest.makeSuite(TestDocumentPerformance))
   return suite
 
 
