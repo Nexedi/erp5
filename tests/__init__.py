@@ -61,6 +61,46 @@ class ERP5(_ERP5):
                           'testERP5eGov', # it is not maintained any more
                           'testAccounting_l10n_fr_m9'):
         continue
+      # Luke's minimalisation
+      if test_case in (
+        'testAlarm', 'testArchive', 'testAudioField', 'testAuthenticationPolicy',
+        'testAutoLogout', 'testBackportUnittest', 'testBug', 'testCMFActivity',
+        'testCMFCategory', 'testCRM', 'testCSSPacker', 'testCache', 'testCachedSkinsTool',
+        'testCalendar', 'testCertificateAuthorityTool', 'testClassTool',
+        'testComputer', 'testConfiguratorTool', 'testConflictResolution',
+        'testConstraint', 'testContentTranslation', 'testContributionRegistryTool',
+        'testCookieCrumbler', 'testCopySupport', 'testCrmReports', 'testDataProtection',
+        'testDateUtils', 'testDeferredConnection', 'testDeferredStyle',
+        'testDiscussionThread', 'testDocumentationHelper', 'testDomainTool',
+        'testDynamicClassGeneration', 'testERP5Catalog', 'testERP5Category',
+        'testERP5Coordinate', 'testERP5Credential', 'testERP5CurrencyExchangeLine',
+        'testERP5Discussion', 'testERP5DocumentSyncML', 'testERP5Interfaces',
+        'testERP5PayzenSecurePayment', 'testERP5RemoteUserManager', 'testERP5Security',
+        'testERP5SocialContracts', 'testERP5Workflow', 'testEditorField',
+        'testExternalAccount', 'testFieldLibraryGuideline', 'testHBTreeFolder2',
+        'testICal', 'testInotifyTool', 'testInteractionWorkflow', 'testIntrospectionTool',
+        'testInvalidationBug', 'testKM', 'testListBox', 'testMaxmaDemoConfigurationWorkflow',
+        'testMemcachedTool', 'testMilestoneReporting', 'testOxatisSynchronization',
+        'testPDFForm', 'testPasswordTool', 'testPlanningBox', 'testPredicate',
+        'testPreferences', 'testPrestashopMixin', 'testProductERP5Synchronization',
+        'testProductPrestashopSynchronization', 'testQueryModule', 'testRSS',
+        'testRoundingTool', 'testRunMyDocConfigurationWorkflow', 'testScribusUtils',
+        'testStandardConfigurationWorkflow', 'testSupply', 'testTimerService',
+        'testTioSafeMixin', 'testTransactionalVariable', 'testTranslation',
+        'testTrashTool', 'testUbercartSynchronisation', 'testUrl', 'testVideoField',
+        'testVirtuemartSynchronization', 'testWorklist', 'testZSQLCatalog'):
+        continue
+      sw = test_case.startswith
+      if sw('testBusinessTemplate'), sw('testDms') or sw('testERP5Banking') \
+        or sw('testERP5SyncML') or sw('testERP5Type') or sw('testERP5Web') or \
+        sw('testFields') or sw('testFolder') or sw('testForm') or sw('testG') \
+        or sw('testIdTool') or sw('testIngestion') or sw('testJ') or \
+        sw('testLegacy') or \ # some legacy might be reenable before merge
+        sw('testNotification') or sw('testOO') or sw('testPerson') \
+        or sw('testProx') or sw('testResource') or sw('testSQL') or sw('testSe') or \
+        sw('testSha') or sw('testTemplate') or sw('testUNG') or sw('testWeb') \
+        or sw('testX'):
+        continue
       test_list.append(test_case)
     return test_list
 
