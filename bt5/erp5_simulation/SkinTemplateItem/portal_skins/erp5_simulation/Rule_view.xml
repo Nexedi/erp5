@@ -102,6 +102,7 @@
                         <string>my_reference</string>
                         <string>my_version</string>
                         <string>my_trade_phase_list</string>
+                        <string>my_same_total_quantity</string>
                       </list>
                     </value>
                 </item>
