@@ -91,7 +91,7 @@ class ERP5(_ERP5):
         'testVirtuemartSynchronization', 'testWorklist', 'testZSQLCatalog'):
         continue
       sw = test_case.startswith
-      if sw('testBusinessTemplate'), sw('testDms') or sw('testERP5Banking') \
+      if sw('testBusinessTemplate') or sw('testDms') or sw('testERP5Banking') \
         or sw('testERP5SyncML') or sw('testERP5Type') or sw('testERP5Web') or \
         sw('testFields') or sw('testFolder') or sw('testForm') or sw('testG') \
         or sw('testIdTool') or sw('testIngestion') or sw('testJ') or \
