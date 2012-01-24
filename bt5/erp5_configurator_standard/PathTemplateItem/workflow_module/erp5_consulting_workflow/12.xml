@@ -89,7 +89,7 @@
         </item>
         <item>
             <key> <string>transition_form_id</string> </key>
-            <value> <string>BusinessConfiguration_viewConsultingConfigureEmployeeListDialog</string> </value>
+            <value> <string>BusinessConfiguration_setupEmployeeListForm</string> </value>
         </item>
       </dictionary>
     </pickle>

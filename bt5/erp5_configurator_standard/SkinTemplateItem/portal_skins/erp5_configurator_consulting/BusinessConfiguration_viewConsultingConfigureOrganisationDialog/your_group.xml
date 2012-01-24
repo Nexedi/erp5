@@ -151,7 +151,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: context.BusinessConfiguration_getConsultingCategoriesSpreadsheetConfiguratorItem().getCategoryTitleItemList(\'group\')</string> </value>
+            <value> <string>python: context.BusinessConfiguration_getCategoriesSpreadsheetConfiguratorItem().getCategoryTitleItemList(\'group\')</string> </value>
         </item>
       </dictionary>
     </pickle>

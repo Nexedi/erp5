@@ -151,7 +151,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.portal_categories[\'configurator_region\'].getCategoryChildTranslatedCompactTitleItemList(filter_node=True, sort_id=\'translated_short_title\', checked_permission=\'View\')</string> </value>
+            <value> <string>python: context.BusinessConfiguration_getCategoriesSpreadsheetConfiguratorItem().getCategoryTitleItemList(\'region\')</string> </value>
         </item>
       </dictionary>
     </pickle>

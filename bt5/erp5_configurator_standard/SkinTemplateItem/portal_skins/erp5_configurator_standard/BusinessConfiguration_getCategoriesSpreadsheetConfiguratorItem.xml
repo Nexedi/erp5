@@ -73,7 +73,7 @@ return categories_spreadsheet_list[0]\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessConfiguration_getConsultingCategoriesSpreadsheetConfiguratorItem</string> </value>
+            <value> <string>BusinessConfiguration_getCategoriesSpreadsheetConfiguratorItem</string> </value>
         </item>
       </dictionary>
     </pickle>

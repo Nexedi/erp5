@@ -76,6 +76,10 @@
                     <key> <string>target</string> </key>
                     <value> <string></string> </value>
                 </item>
+                <item>
+                    <key> <string>title</string> </key>
+                    <value> <string></string> </value>
+                </item>
               </dictionary>
             </value>
         </item>
@@ -123,7 +127,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.portal_categories[\'configurator_function\'].getCategoryChildTranslatedCompactLogicalPathItemList(filter_node=True, checked_permission=\'View\')</string> </value>
+            <value> <string>python: context.BusinessConfiguration_getCategoriesSpreadsheetConfiguratorItem().getCategoryTitleItemList(\'function\')</string> </value>
         </item>
       </dictionary>
     </pickle>
