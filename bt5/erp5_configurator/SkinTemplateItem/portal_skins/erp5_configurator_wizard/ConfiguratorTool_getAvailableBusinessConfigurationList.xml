@@ -59,6 +59,7 @@ bc_list = list(context.business_configuration_module.searchFolder(\n
                               portal_type="Business Configuration",\n
                               simulation_state="draft", \n
                               resource = "%/workflow_module/%"))\n
+bc_list = [bc for bc in bc_list if bc.getResourceValue() is not None]\n
 bc_tuple_list = []\n
 index = 0\n
 while True:\n
