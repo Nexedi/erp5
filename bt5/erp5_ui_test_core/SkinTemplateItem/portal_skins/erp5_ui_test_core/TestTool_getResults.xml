@@ -64,7 +64,7 @@ if not results:\n
 \n
 # Selenium results tests are just named "testTable.1", "testTable.2" and so forth.\n
 # We replace this by the path of the test, this way we can easily see which test has failed.\n
-html = results[0].index_html()\n
+html = results[len(results) - 1].index_html()\n
 for idx, test_case in enumerate(portal_tests.listTestCases()):\n
   html = html.replace(\'>testTable.%s</a>\' % (idx + 1), \'>%s</a>\' % test_case[\'path\'])\n
 \n
