@@ -56,6 +56,14 @@ content_dict[\'title\'] = context.getTitle()\n
 content_dict[\'text_content\'] = context.getTextContent()\n
 content_dict[\'content_type\'] = context.getContentType()\n
 content_dict[\'data\'] = None\n
+# we may have specified (i.e. user input) source and destination\n
+content_dict[\'destination_list\'] = content_dict.get(\'destination_list\', []) + \\\n
+                                     [x.getRelativeUrl() for x in context.getDestinationValueList() \\\n
+                                       if x.getRelativeUrl() not in content_dict.get(\'destination_list\', [])]\n
+content_dict[\'source_list\'] = content_dict.get(\'source_list\', []) + \\\n
+                                     [x.getRelativeUrl() for x in context.getSourceValueList() \\\n
+                                       if x.getRelativeUrl() not in content_dict.get(\'source_list\', [])]\n
+\n
 context.edit(**content_dict)\n
 </string> </value>
         </item>
