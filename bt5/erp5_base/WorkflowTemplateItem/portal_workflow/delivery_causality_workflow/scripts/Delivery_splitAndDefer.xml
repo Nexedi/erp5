@@ -63,7 +63,7 @@ if not len(split_movement_list):\n
 tag = delivery.getPath() + \'_split\'\n
 \n
 # Create Delivery Applied Rule (if required)\n
-delivery.Delivery_updateAppliedRule()\n
+delivery.Delivery_updateAppliedRule(activate_kw={\'tag\':tag})\n
 \n
 for movement in split_movement_list:\n
   delivery.getPortalObject().portal_simulation.solveMovement(\n
