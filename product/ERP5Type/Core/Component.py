@@ -33,56 +33,56 @@ from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
-                           
+
 class Component(Base):
-    # CMF Type Definition
-    meta_type = 'ERP5 Component'
-    portal_type = 'Component'
+  # CMF Type Definition
+  meta_type = 'ERP5 Component'
+  portal_type = 'Component'
 
-    isPortalContent = 1
-    isRADContent = 1
-    isDelivery = ConstantGetter('isDelivery', value=True)
+  isPortalContent = 1
+  isRADContent = 1
+  isDelivery = ConstantGetter('isDelivery', value=True)
 
-    # Declarative security
-    security = ClassSecurityInfo()
-    security.declareObjectProtected(Permissions.AccessContentsInformation)
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-    # Declarative properties
-    property_sheets = ('Base',
-                       'XMLObject',
-                       'CategoryCore',
-                       'DublinCore',
-                       'Version',
-                       'Reference',
-                       'TextDocument')
+  # Declarative properties
+  property_sheets = ('Base',
+                     'XMLObject',
+                     'CategoryCore',
+                     'DublinCore',
+                     'Version',
+                     'Reference',
+                     'TextDocument')
 
-    def checkConsistency(self, *args, **kw):
-      """
-      XXX-arnau: should probably in a separate Constraint class
-      """
-      if not self.getTextContent():
-        return [ConsistencyMessage(self,
-                                   object_relative_url=self.getRelativeUrl(),
-                                   message="No source code",
-                                   mapping={})]
+  def checkConsistency(self, *args, **kw):
+    """
+    XXX-arnau: should probably in a separate Constraint class
+    """
+    if not self.getTextContent():
+      return [ConsistencyMessage(self,
+                                 object_relative_url=self.getRelativeUrl(),
+                                 message="No source code",
+                                 mapping={})]
 
-      try:
-        self.load()
-      except Exception, e:
-        return [ConsistencyMessage(self,
-                                   object_relative_url=self.getRelativeUrl(),
-                                   message="Source code error: %s" % e,
-                                   mapping={})]
+    try:
+      self.load()
+    except Exception, e:
+      return [ConsistencyMessage(self,
+                                 object_relative_url=self.getRelativeUrl(),
+                                 message="Source code error: %s" % e,
+                                 mapping={})]
 
-      return []
+    return []
 
-    def load(self, namespace_dict={}):
-      """
-      Load the source code into the given dict. Using exec() rather than
-      imp.load_source() as the latter would required creating an intermediary
-      file. Also, for traceback readability sake, the destination module
-      __dict__ is given rather than creating an empty dict and returning
-      it. By default namespace_dict is an empty dict to allow checking the
-      source code before validate.
-      """
-      exec self.getTextContent() in namespace_dict
+  def load(self, namespace_dict={}):
+    """
+    Load the source code into the given dict. Using exec() rather than
+    imp.load_source() as the latter would required creating an intermediary
+    file. Also, for traceback readability sake, the destination module
+    __dict__ is given rather than creating an empty dict and returning
+    it. By default namespace_dict is an empty dict to allow checking the
+    source code before validate.
+    """
+    exec self.getTextContent() in namespace_dict
