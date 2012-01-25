@@ -182,16 +182,26 @@ def generatePortalTypeClass(site, portal_type_name):
     raise AttributeError('Document class is not defined on Portal Type %s' \
             % portal_type_name)
 
+  klass = None
   if '.' in type_class:
     type_class_path = type_class
   else:
-    type_class_path = document_class_registry.get(type_class)
-    if type_class_path is None:
+    type_class_path = document_class_registry.get(type_class, None)
+
+    # XXX-arnau: hardcoded but this must be improved anyway when Products will
+    # be in ZODB, for now this should be enough to only care of bt5 Documents
+    if type_class_path is None or type_class_path.startswith('erp5.document'):
+      import erp5.component.document
+      module = getattr(erp5.component.document, type_class, None)
+      klass = module and getattr(module, type_class, None) or None
+    
+    if klass is None and type_class_path is None:
       raise AttributeError('Document class %s has not been registered:'
                            ' cannot import it as base of Portal Type %s'
                            % (type_class, portal_type_name))
 
-  klass = _importClass(type_class_path)
+  if klass is None:
+    klass = _importClass(type_class_path)
 
   global property_sheet_generating_portal_type_set
 
