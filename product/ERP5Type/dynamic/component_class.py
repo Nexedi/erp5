@@ -72,9 +72,7 @@ def generateComponentClassWrapper(namespace):
       raise
     else:
       if component.getValidationState() == 'validated':
-        new_module = ModuleType(component_name,
-                                component.getDescription())
-
+        new_module = ModuleType(component_id, component.getDescription())
         component.load(new_module.__dict__)
         LOG("ERP5Type.dynamic", INFO, "Loaded successfully %s" % component_id)
         return new_module
