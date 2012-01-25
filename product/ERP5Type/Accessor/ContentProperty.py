@@ -27,6 +27,7 @@
 ##############################################################################
 
 
+from Acquisition import aq_base
 from ZPublisher.HTTPRequest import FileUpload
 from Base import func_code, type_definition, ATTRIBUTE_PREFIX, Method
 import Base
