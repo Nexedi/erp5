@@ -524,13 +524,13 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
 
     def assertHasAttribute(self, obj, attribute, msg=None):
       self.failIfEqual(None, getattr(obj, attribute, None),
-                       msg or '%s: no attribute %s' % (obj.__name__,
-                                                       attribute))
+                       msg or "'%r': no attribute '%s'" % (obj,
+                                                           attribute))
 
     def failIfHasAttribute(self, obj, attribute, msg=None):
       self.assertEquals(None, getattr(obj, attribute, None),
-                        msg or '%s: attribute %s present' % (obj.__name__,
-                                                             attribute))
+                        msg or "'%r': attribute '%s' present" % (obj,
+                                                                 attribute))
 
     def assertWorkflowTransitionFails(self, object, workflow_id, transition_id,
         error_message=None, state_variable='simulation_state'):
