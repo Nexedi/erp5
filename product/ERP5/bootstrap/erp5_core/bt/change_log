@@ -1,3 +1,6 @@
+2012-01-24 arnaud.fontaine
+* Use DocumentComponent document class for Document Component Portal Type.
+
 2012-01-23 arnaud.fontaine
 * Rename DocumentComponent to Component.
 

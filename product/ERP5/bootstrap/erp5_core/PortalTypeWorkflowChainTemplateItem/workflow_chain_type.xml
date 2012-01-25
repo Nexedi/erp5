@@ -85,7 +85,7 @@
  </chain>
  <chain>
   <type>Document Component</type>
-  <workflow>edit_workflow, validation_workflow</workflow>
+  <workflow>component_interaction_workflow, edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
   <type>Dynamic Category Property</type>

@@ -31,10 +31,10 @@ from Products.ERP5Type.Core.Component import Component
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
-class ExtensionComponent(Component):
+class DocumentComponent(Component):
   # CMF Type Definition
-  meta_type = 'ERP5 Extension Component'
-  portal_type = 'Extension Component'
+  meta_type = 'ERP5 Document Component'
+  portal_type = 'Component Component'
 
   # Declarative security
   security = ClassSecurityInfo()
@@ -44,8 +44,8 @@ class ExtensionComponent(Component):
   def _getFilesystemPath():
     import os.path
     from App.config import getConfiguration
-    return os.path.join(getConfiguration().instancehome, 'Extensions')
+    return os.path.join(getConfiguration().instancehome, 'Document')
 
   @staticmethod
   def _getDynamicModuleNamespace():
-    return 'erp5.component.extension'
+    return 'erp5.component.document'

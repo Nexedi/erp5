@@ -34,6 +34,8 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
+from zLOG import LOG, INFO                           
+
 class Component(Base):
   # CMF Type Definition
   meta_type = 'ERP5 Component'
@@ -86,3 +88,67 @@ class Component(Base):
     source code before validate.
     """
     exec self.getTextContent() in namespace_dict
+
+  @staticmethod
+  def _getFilesystemPath():
+    raise NotImplementedError
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'importAllFromFilesystem')
+  @classmethod
+  def importAllFromFilesystem(cls, context, erase_existing=False):
+    """
+    Try to import all Components and returns error as a dict if any
+    """
+    import os.path
+    path_pattern = "%s%s*.py" % (cls._getFilesystemPath(), os.path.sep)    
+
+    LOG("ERP5Type.Core.Component", INFO, "Importing from %s" % path_pattern)
+
+    import glob
+    failed_import_dict = {}
+    for path in glob.iglob(path_pattern):
+      try:
+        cls.importFromFilesystem(context, path, erase_existing)
+      except Exception, e:
+        failed_import_dict[path] = str(e)
+      else:
+        LOG("ERP5Type.Core.Component", INFO, "Imported %s" % path)
+
+    return failed_import_dict
+
+  @staticmethod
+  def _getDynamicModuleNamespace():
+    raise NotImplementedError
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'importFromFilesystem')
+  @classmethod
+  def importFromFilesystem(cls, context, path, erase_existing=False):
+    """
+    Import a Component from the given path into ZODB after checking that the
+    source code is valid
+    """
+    import os.path
+    class_name = os.path.basename(path).replace('.py', '')
+    id = '%s.%s' % (cls._getDynamicModuleNamespace(), class_name)
+
+    # XXX-arnau: not efficient at all
+    if id in context:
+      if not erase_existing:
+        return
+
+      context.deleteContent(id)
+
+    with open(path) as f:
+      source_code = f.read()
+
+    # Try to load it first
+    namespace_dict = {}
+    exec source_code in namespace_dict
+
+    return context.newContent(id=id,
+                              # XXX-arnau: useless field?
+                              reference=class_name,
+                              text_content=source_code,
+                              portal_type=cls.portal_type)

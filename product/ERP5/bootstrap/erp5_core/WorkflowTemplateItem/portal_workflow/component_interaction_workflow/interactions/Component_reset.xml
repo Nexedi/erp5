@@ -70,6 +70,7 @@
             <key> <string>portal_type_filter</string> </key>
             <value>
               <list>
+                <string>Document Component</string>
                 <string>Extension Component</string>
               </list>
             </value>

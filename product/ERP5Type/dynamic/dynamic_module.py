@@ -130,3 +130,7 @@ def initializeDynamicModules():
   erp5.component.extension = registerDynamicModule(
     'erp5.component.extension',
     generateComponentClassWrapper('erp5.component.extension'))
+
+  erp5.component.document = registerDynamicModule(
+    'erp5.component.document',
+    generateComponentClassWrapper('erp5.component.document'))

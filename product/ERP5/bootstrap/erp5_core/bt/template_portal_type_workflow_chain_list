@@ -22,6 +22,7 @@ Category | edit_workflow
 Content Existence Constraint | dynamic_class_generation_interaction_workflow
 Distributed Ram Cache | distributed_ram_cache_interaction_workflow
 Document | edit_workflow
+Document Component | component_interaction_workflow
 Document Component | edit_workflow
 Document Component | validation_workflow
 Dynamic Category Property | dynamic_class_generation_interaction_workflow
