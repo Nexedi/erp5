@@ -616,16 +616,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     transaction.commit()
     self.test_module.getId()
 
-  def assertHasAttribute(self, obj, attribute, msg=None):
-    self.failIfEqual(None, getattr(obj, attribute, None),
-                     msg or '%s: no attribute %s' % (obj.__name__,
-                                                     attribute))
-
-  def failIfHasAttribute(self, obj, attribute, msg=None):
-    self.assertEquals(None, getattr(obj, attribute, None),
-                      msg or '%s: attribute %s present' % (obj.__name__,
-                                                           attribute))
-
   def testAssignUnassignZodbPropertySheet(self):
     """
     From an existing portal type, assign ZODB Property Sheets and

@@ -522,6 +522,16 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       self.assertEquals(set(a), set(b), msg)
     assertSameSet = failIfDifferentSet
 
+    def assertHasAttribute(self, obj, attribute, msg=None):
+      self.failIfEqual(None, getattr(obj, attribute, None),
+                       msg or '%s: no attribute %s' % (obj.__name__,
+                                                       attribute))
+
+    def failIfHasAttribute(self, obj, attribute, msg=None):
+      self.assertEquals(None, getattr(obj, attribute, None),
+                        msg or '%s: attribute %s present' % (obj.__name__,
+                                                             attribute))
+
     def assertWorkflowTransitionFails(self, object, workflow_id, transition_id,
         error_message=None, state_variable='simulation_state'):
       """
