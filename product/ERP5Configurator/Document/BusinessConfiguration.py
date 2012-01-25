@@ -134,7 +134,8 @@ class BusinessConfiguration(Item):
     configuration_save = self._getConfSaveForStateFromWorkflowHistory()
     if configuration_save is None:
       ## we haven't saved any configuration save for this state so create new one
-      configuration_save = self.newContent(portal_type='Configuration Save')
+      configuration_save = self.newContent(portal_type='Configuration Save', 
+                                           title=current_state.getTitle())
     else:
       ## we have already created configuration save for this state
       ## so remove from it already existing configuration items
