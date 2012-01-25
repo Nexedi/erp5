@@ -27,6 +27,8 @@
 ##############################################################################
 
 
+from Acquisition import aq_base
+from ZPublisher.HTTPRequest import FileUpload
 from Base import func_code, type_definition, ATTRIBUTE_PREFIX, Method
 import Base
 from Products.ERP5Type.PsycoWrapper import psyco
@@ -203,7 +205,7 @@ class Setter(Base.Setter):
       self._portal_type = portal_type
       self._acquired_property = acquired_property
 
-    def __call__(self, instance, *args, **kw):
+    def __call__(self, instance, value, *args, **kw):
       # We return the first available object in the list
       o = None
       available_id = None
@@ -212,14 +214,25 @@ class Setter(Base.Setter):
         o = instance._getOb(k, None)
         if o is None: available_id = k
         if o is not None and o.portal_type in self._portal_type:
-          o._setProperty(self._acquired_property, *args, **kw)
+          o._setProperty(self._acquired_property, value, *args, **kw)
           modified_object_list = (o, )
       if o is None and available_id is not None:
         from Products.ERP5Type.Utils import assertAttributePortalType
         assertAttributePortalType(instance, available_id, self._portal_type)
+        if self._acquired_property == 'file':
+          if isinstance(value, FileUpload) or \
+                getattr(aq_base(value), 'tell', None) is not None:
+            # When editing through the web interface, we are always provided a
+            # FileUpload, and when no file has been specified, the file is empty.
+            # In the case of empty file, we should not create the sub document.
+            value.seek(0, 2)
+            is_empty_file = not value.tell()
+            value.seek(0)
+            if is_empty_file:
+              return ()
         o = instance.newContent(id=available_id,
                                 portal_type=self._portal_type[0])
-        o._setProperty(self._acquired_property, *args, **kw)
+        o._setProperty(self._acquired_property, value, *args, **kw)
         modified_object_list = (o, )
       return modified_object_list
 
