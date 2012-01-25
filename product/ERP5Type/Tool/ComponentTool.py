@@ -51,7 +51,7 @@ class ComponentTool(BaseTool):
     """
     XXX-arnau: global reset
     """
-    LOG("ERP5Type.Tool.ComponentTool", INFO, "Global reset")
+    LOG("ERP5Type.Tool.ComponentTool", INFO, "Resetting Components")
 
     import erp5.component
 
@@ -61,7 +61,8 @@ class ComponentTool(BaseTool):
       portal.newCacheCookie('component_classes')
       erp5.component._last_reset = portal.getCacheCookie('component_classes')
 
-    container_type_info = portal.portal_types.getTypeInfo(self.getPortalType())
+    type_tool = portal.portal_types
+    container_type_info = type_tool.getTypeInfo(self.getPortalType())
 
     for content_type in container_type_info.getTypeAllowedContentTypeList():
       module_name = content_type.split(' ')[0].lower()
@@ -75,9 +76,11 @@ class ComponentTool(BaseTool):
         for name in module.__dict__.keys():
           if name[0] != '_':
             LOG("ERP5Type.Tool.ComponentTool", INFO,
-                "Global reset of %s.%s" % (module_name, name))
+                "Resetting erp5.component.%s.%s" % (module_name, name))
 
             delattr(module, name)
+
+    type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
 
   security.declareProtected(Permissions.ManagePortal,
                             'createAllComponentFromFilesystem')
