@@ -50,64 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Builds the delivery.\n
-"""\n
-from Products.ERP5Type.Log import log\n
-delivery = sci[\'object\']\n
-delivery_portal_type = delivery.getPortalType()\n
-portal_deliveries = sci.getPortal().portal_deliveries\n
-\n
-builder_by_ptype = {\n
-  \'Sale Invoice\' : \'advanced_sale_invoice_transaction_builder\',\n
-  \'Purchase Invoice\' : \'advanced_purchase_invoice_transaction_builder\',\n
-}\n
-\n
-if builder_by_ptype.has_key(delivery_portal_type) :\n
-  builder = getattr(portal_deliveries, builder_by_ptype[delivery_portal_type], None)\n
-  if builder is None :\n
-    log(\'erp5_advanced_invoicing\',\n
-        \'unable to build : no builder in %s\' % builder_by_ptype[delivery_portal_type])\n
-    return\n
-\n
-  # build accounting lines\n
-  method_id_list = (\'expand\', \'edit\', \'updateAppliedRule\', \'Delivery_updateAppliedRule\',\n
-                    \'immediateReindexObject\', \'recursiveImmediateReindexObject\')\n
-\n
-  explanation_uid_list = [delivery.getUid(), ]\n
-  packing_list = delivery.getCausalityValue(\n
-                             portal_type=(\'Sale Packing List\',\n
-                                          \'Purchase Packing List\'))\n
-  if packing_list is not None:\n
-    explanation_uid_list.append(packing_list.getUid())\n
-    order = packing_list.getCausalityValue(\n
-                             portal_type=(\'Sale Order\',\n
-                                          \'Purchase Order\'))\n
-    if order is not None:\n
-      explanation_uid_list.append(order.getUid())\n
-\n
-\n
-  tag = \'invoice_transaction_build_%s\' % delivery.getRelativeUrl()\n
-  builder.activate(\n
-      activity=\'SQLQueue\',\n
-      after_method_id=method_id_list,\n
-      tag=tag,\n
-      activate_kw=dict(tag=tag)).build(activate_kw=dict(tag=tag),\n
-                                       explanation_uid=explanation_uid_list)\n
-\n
-  # build related payment transactions\n
-  portal_deliveries.payment_transaction_builder.activate(\n
-                              activity=\'SQLQueue\',\n
-                              after_method_id=method_id_list).build(explanation_uid=explanation_uid_list)\n
-\n
-  # set the object in building state.\n
-  delivery.startBuilding()\n
-  delivery.activate(after_tag=tag).updateCausalityState()\n
+            <value> <string>delivery = state_change[\'object\']\n
+delivery.Delivery_expandAndBuild()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sci</string> </value>
+            <value> <string>state_change</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
