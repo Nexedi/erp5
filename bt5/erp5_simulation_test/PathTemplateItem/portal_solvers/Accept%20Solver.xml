@@ -90,7 +90,7 @@
         </item>
         <item>
             <key> <string>configuration_form_id</string> </key>
-            <value> <string>Solver_viewConfigurationFormBox</string> </value>
+            <value> <string>GenericSolver_viewConfigurationFormBox</string> </value>
         </item>
         <item>
             <key> <string>configuration_property_list</string> </key>
