@@ -1337,9 +1337,86 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     else:
       raise AssertionError("TestExternalMethod should not be callable")
 
+from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
+
+class TestZodbDocumentComponent(_TestZodbComponent):
+  def _newComponent(self, reference, text_content):
+    return self._component_tool.newContent(
+      id='%s.%s' % (self._getComponentModuleName(), reference),
+      reference=reference,
+      text_content=text_content,
+      portal_type='Document Component')
+
+  def _getComponentModuleName(self):
+    return DocumentComponent._getDynamicModuleNamespace()
+
+  def testAssignToPortalTypeClass(self):
+    from Products.ERP5.Document.Person import Person as PersonDocument
+
+    self.failIfHasAttribute(self._module, 'TestPortalType')
+
+    # Create a new Document Component inheriting from Person Document which
+    # defines only one additional method (meaningful to make sure that the
+    # class (and not the module) has been added to the class when the
+    # TypeClass is changed)
+    test_component = self._newComponent(
+      'TestPortalType',
+      """
+from Products.ERP5Type.Document.Person import Person
+
+class TestPortalType(Person):
+  def test42(self):
+    return 42
+""")
+
+    test_component.validate()
+    transaction.commit()
+    self.tic()
+
+    # As TestPortalType Document Component has been validated, it should now
+    # be available
+    self.assertHasAttribute(self._module, 'TestPortalType')
+
+    person_type = self._portal.portal_types.Person
+    person_type_class = person_type.getTypeClass()
+    self.assertEquals(person_type_class, 'Person')
+
+    # Create a new Person
+    person_module = self._portal.person_module
+    person = person_module.newContent(id='Foo Bar', portal_type='Person')
+    self.assertTrue(PersonDocument in person.__class__.mro())
+
+    # There is no reason that TestPortalType Document Component has been
+    # assigned to a Person, otherwise there is something really bad going on
+    self.failIfHasAttribute(person, 'test42')
+    self.assertFalse(self._module.TestPortalType in person.__class__.mro())
+
+    # Reset Portal Type classes to ghost to make sure that everything is reset
+    self._component_tool.reset()
+
+    # TestPortalType must be in available type class list
+    self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
+    try:
+      person_type.setTypeClass('TestPortalType')
+      transaction.commit()
+
+      self.assertHasAttribute(person, 'test42')
+      self.assertEquals(person.test42(), 42)
+      
+      # The Portal Type class should not be in ghost state by now as we tried
+      # to access test42() defined in TestPortalType Document Component
+      self.assertHasAttribute(self._module, 'TestPortalType')
+      self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
+      self.assertTrue(PersonDocument in person.__class__.mro())
+
+    finally:
+      person_type.setTypeClass('Person')
+      transaction.commit()
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPortalTypeClass))
   suite.addTest(unittest.makeSuite(TestZodbPropertySheet))
   suite.addTest(unittest.makeSuite(TestZodbExtensionComponent))
+  suite.addTest(unittest.makeSuite(TestZodbDocumentComponent))
   return suite
