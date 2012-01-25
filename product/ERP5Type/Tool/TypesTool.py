@@ -204,7 +204,15 @@ class TypesTool(TypeProvider):
     Return a list of Document types that can be used as Base classes
     """
     from Products.ERP5Type import document_class_registry
-    return sorted(document_class_registry)
+    document_type_set = set(document_class_registry)
+
+    # XXX-arnau: should be cached and reference?
+    component_tool = self.getPortalObject().portal_components
+    for obj in component_tool.searchFolder(portal_type='Document Component',
+                                           validation_state='validated'):
+      document_type_set.add(obj.getReference())
+
+    return sorted(document_type_set)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypeClass')
   def getPortalTypeClass(self, context, temp=False):
