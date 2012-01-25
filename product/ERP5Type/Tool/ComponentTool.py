@@ -99,7 +99,9 @@ class ComponentTool(BaseTool):
           getattr(erp5.portal_type,
                   content_portal_type).importAllFromFilesystem(self,
                                                                erase_existing=erase_existing))
-      except AttributeError:
+      # XXX-arnau: NotImplementedErrror only until everything has been
+      # implemented
+      except (NotImplementedError, AttributeError):
         LOG("ERP5Type.Tool.ComponentTool", WARNING, "Could not import %ss" % \
               content_portal_type)
 
