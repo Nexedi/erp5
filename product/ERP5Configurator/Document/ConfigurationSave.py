@@ -54,8 +54,5 @@ class ConfigurationSave(Path):
   def addConfigurationItem(self, configuration_item_class_name, **kw):
     """ Add new configuration item. """
     ## remove manually specified a configration title
-    if kw.has_key('conf_title'):
-      self.setTitle(kw['conf_title'])
-      kw.pop('conf_title')
     return self.newContent(portal_type=configuration_item_class_name,
                            **kw)
