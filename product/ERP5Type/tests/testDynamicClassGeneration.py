@@ -1225,22 +1225,6 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     self._component_tool = self._portal.portal_components
     self._component_tool.reset()
 
-  def assertHasAttribute(self, obj, attribute, msg=None):
-    """
-    XXX-arnau: copy/paste from TestZodbPropertySheet
-    """
-    self.failIfEqual(None, getattr(obj, attribute, None),
-                     msg or '%s: no attribute %s' % (obj.__name__,
-                                                     attribute))
-
-  def failIfHasAttribute(self, obj, attribute, msg=None):
-    """
-    XXX-arnau: copy/paste from TestZodbPropertySheet
-    """
-    self.assertEquals(None, getattr(obj, attribute, None),
-                      msg or '%s: attribute %s present' % (obj.__name__,
-                                                           attribute))
-
   def testValidateInvalidate(self):
     """
     The new Extension Component should only be in erp5.component.extension
