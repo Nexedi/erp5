@@ -231,7 +231,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
       cls.loadClass()
       return getattr(cls, name)
 
-    raise AttributeError
+    raise AttributeError("'%r' has no attribute '%s'" % (cls, name))
 
   def generatePortalTypeAccessors(cls, site, portal_type_category_list):
     category_tool = getattr(site, 'portal_categories', None)
