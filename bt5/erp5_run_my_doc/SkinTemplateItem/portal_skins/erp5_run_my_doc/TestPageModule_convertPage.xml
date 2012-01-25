@@ -50,16 +50,47 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.TestPageModule_convertPages(uids, \'Test Page\')\n
+            <value> <string># XXX (rafael) I beleave KM has a much better way to do this, \n
+#              clone web page.\n
+\n
+conv_module_id = \'test_page_module\'\n
+\n
+if conv_obj_type == \'Web Page\':\n
+  conv_module_id = \'web_page_module\'\n
+\n
+conv_obj_module = context.getDefaultModule(conv_obj_type)\n
+counter = 0\n
+for uid in uids:\n
+  counter += 1\n
+  obj = context.portal_catalog.getResultValue(uid=uid)\n
+  conv_obj = conv_obj_module.newContent(portal_type = conv_obj_type,\n
+                                        title = obj.getTitle(),\n
+                                        short_title = obj.getShortTitle(),\n
+                                        reference = obj.getReference(),\n
+                                        int_index = obj.getIntIndex(),\n
+                                        version = obj.getVersion(),\n
+                                        language = obj.getLanguage(),\n
+                                        effective_date = obj.getEffectiveDate(),\n
+                                        description = obj.getDescription(),\n
+                                        publication_section_list = obj.getPublicationSectionList(),\n
+                                        text_content = obj.getTextContent(),\n
+                                        format = obj.getFormat(),\n
+                                        contributor_list = obj.getContributorList())\n
+\n
+  conv_obj = conv_obj.manage_pasteObjects(\n
+                         obj.manage_copyObjects(\n
+                            map(lambda x: x.getId(), obj.objectValues())))\n
+\n
+return conv_obj_module.Base_redirect(\'\', dict(portal_status_message=context.Base_translateString(str(counter) + " object(s) converted.")))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>uids, **kw</string> </value>
+            <value> <string>uids, conv_obj_type, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPageModule_convertToTestPages</string> </value>
+            <value> <string>TestPageModule_convertPage</string> </value>
         </item>
       </dictionary>
     </pickle>
