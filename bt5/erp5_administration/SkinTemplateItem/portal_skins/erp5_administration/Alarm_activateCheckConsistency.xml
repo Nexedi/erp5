@@ -50,12 +50,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>active_process = context.newActiveProcess().getRelativeUrl()\n
+            <value> <string encoding="cdata"><![CDATA[
+
+kw = {}\n
+\n
+last_active_process = context.getLastActiveProcess()\n
+\n
+if last_active_process is not None:\n
+  kw[\'indexation_timestamp\'] = \'>= %s\' % last_active_process.getStartDate().ISO()\n
+\n
+active_process = context.newActiveProcess().getRelativeUrl()\n
 query_string = context.getProperty(\'catalog_query_string\', \'\')\n
 # the query sould be something like "validation_state:!=deleted validation_state:!=draft portal_type:Organisation" etc\n
 portal = context.getPortalObject()\n
 \n
-kw = {}\n
 \n
 if query_string is not None:\n
   kw.update(SearchableText=query_string)\n
@@ -63,7 +71,9 @@ if query_string is not None:\n
 kw.update(parent_uid=[portal.restrictedTraverse(module).getUid() for module in context.getProperty(\'module_list\') or []])\n
 \n
 portal.portal_catalog.searchAndActivate(method_id=\'Base_checkAlarmConsistency\', method_kw={\'fixit\': fixit, \'active_process\': active_process}, activate_kw={\'tag\':tag}, **kw)\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
