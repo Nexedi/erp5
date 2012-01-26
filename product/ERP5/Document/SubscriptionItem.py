@@ -39,6 +39,7 @@ from Products.ERP5.mixin.rule import MovementGeneratorMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Base import Base
+from DateTime import DateTime
 
 from zLOG import LOG
 
@@ -291,6 +292,7 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
         price_currency = movement.getPriceCurrency()
 
         specialise = movement.getSpecialise()
+        now = DateTime()
         current_date = start_date
         id_index = 0
         while current_date < stop_date:
@@ -313,9 +315,11 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
                                      specialise=specialise,
                                     )
           result.append(generated_movement)
+          if current_date > now:
+            # generate only one movement in advance from today
+            break
           current_date = next_date
           id_index += 1
-          break
 
     return result
 
