@@ -32,8 +32,6 @@ import re
 import unittest
 import transaction
 from AccessControl import Unauthorized
-from AccessControl.SecurityManagement import newSecurityManager
-from AccessControl.SecurityManagement import getSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -41,9 +39,10 @@ from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
-LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
+LANGUAGE_LIST = ('en', 'fr', 'de', 'bg', )
 HTTP_OK = 200
 MOVED_TEMPORARILY = 302
+
 
 class TestERP5Web(ERP5TypeTestCase):
   """Test for erp5_web business template.
@@ -51,8 +50,8 @@ class TestERP5Web(ERP5TypeTestCase):
   manager_username = 'zope'
   manager_password = 'zope'
   website_id = 'test'
-
   credential = '%s:%s' % (manager_username, manager_password)
+
   def getTitle(self):
     return "ERP5Web"
 
@@ -70,12 +69,14 @@ class TestERP5Web(ERP5TypeTestCase):
     portal = self.getPortal()
 
     uf = portal.acl_users
-    uf._doAddUser(self.manager_username, self.manager_password, ['Manager'], [])
+    uf._doAddUser(self.manager_username,
+                  self.manager_password,
+                  ['Manager'], [])
     self.login(self.manager_username)
 
     self.web_page_module = self.portal.getDefaultModule('Web Page Module')
     self.web_site_module = self.portal.getDefaultModule('Web Site Module')
-    portal.Localizer.manage_changeDefaultLang(language = 'en')
+    portal.Localizer.manage_changeDefaultLang(language='en')
     self.portal_id = self.portal.getId()
 
   def clearModule(self, module):
@@ -93,19 +94,18 @@ class TestERP5Web(ERP5TypeTestCase):
       Setup Web Site
     """
     portal = self.getPortal()
-    request = self.app.REQUEST
 
     # add supported languages for Localizer
     localizer = portal.Localizer
     for language in LANGUAGE_LIST:
-      localizer.manage_addLanguage(language = language)
+      localizer.manage_addLanguage(language=language)
 
     # create website
     if hasattr(self.web_site_module, self.website_id):
       self.web_site_module.manage_delObjects(self.website_id)
-    website = self.getPortal().web_site_module.newContent(portal_type = 'Web Site',
-                                                          id = self.website_id,
-                                                          **kw)
+    website = self.web_site_module.newContent(portal_type='Web Site',
+                                              id=self.website_id,
+                                              **kw)
     website.publish()
     self.stepTic()
     return website
@@ -114,11 +114,10 @@ class TestERP5Web(ERP5TypeTestCase):
     """
       Setup Web Section
     """
-    web_site_module = self.portal.getDefaultModule('Web Site')
-    website = web_site_module[self.website_id]
+    website = self.web_site_module[self.website_id]
     websection = website.newContent(portal_type='Web Section', **kw)
     self.websection = websection
-    kw = dict(criterion_property_list = 'portal_type',
+    kw = dict(criterion_property_list='portal_type',
               membership_criterion_base_category_list='',
               membership_criterion_category_list='')
     websection.edit(**kw)
@@ -136,11 +135,6 @@ class TestERP5Web(ERP5TypeTestCase):
       Setup some Web Pages.
     """
     webpage_list = []
-    portal = self.getPortal()
-    request = self.app.REQUEST
-    web_site_module = self.portal.getDefaultModule('Web Site')
-    website = web_site_module[self.website_id]
-
     # create sample web pages
     for language in language_list:
       if suffix is not None:
@@ -167,9 +161,7 @@ class TestERP5Web(ERP5TypeTestCase):
       Test that a recataloging works for Web Site documents
     """
     self.setupWebSite()
-    portal = self.getPortal()
-    web_site_module = self.portal.getDefaultModule('Web Site')
-    web_site = web_site_module[self.website_id]
+    web_site = self.web_site_module[self.website_id]
 
     self.assertTrue(web_site is not None)
     # Recatalog the Web Site document
@@ -194,7 +186,7 @@ class TestERP5Web(ERP5TypeTestCase):
       if it is wrapped by certian column width.
     """
     # disable portal_transforms cache
-    self.portal.portal_transforms.max_sec_in_cache=-1
+    self.portal.portal_transforms.max_sec_in_cache = -1
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<p>Hé Hé Hé!</p>')
     self.stepTic()
@@ -211,21 +203,22 @@ Hé Hé Hé!""", page.asText().strip())
     self.setupWebSite()
     portal = self.getPortal()
     request = self.app.REQUEST
-    kw = dict(reference = 'web',
-              first_name = 'TestFN',
-              last_name = 'TestLN',
-              default_email_text = 'test@test.com',
-              password = 'abc',
-              password_confirm = 'abc',)
+    kw = dict(reference='web',
+              first_name='TestFN',
+              last_name='TestLN',
+              default_email_text='test@test.com',
+              password='abc',
+              password_confirm='abc',)
     for key, item in kw.items():
-      request.set('field_your_%s' %key, item)
-    website = portal.web_site_module[self.website_id]
+      request.set('field_your_%s' % key, item)
+    website = self.web_site_module[self.website_id]
     website.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
 
     self.stepTic()
 
     # find person object by reference
-    person = website.ERP5Site_getAuthenticatedMemberPersonValue(kw['reference'])
+    person = website.ERP5Site_getAuthenticatedMemberPersonValue(
+                                                           kw['reference'])
     self.assertEquals(person.getReference(), kw['reference'])
     self.assertEquals(person.getFirstName(), kw['first_name'])
     self.assertEquals(person.getLastName(), kw['last_name'])
@@ -234,24 +227,26 @@ Hé Hé Hé!""", page.asText().strip())
 
     # check if user account is 'loggable'
     uf = portal.acl_users
-    user = uf.getUserById( kw['reference'])
-    self.assertEquals(str(user),  kw['reference'])
+    user = uf.getUserById(kw['reference'])
+    self.assertEquals(str(user), kw['reference'])
     self.assertEquals(1, user.has_role(('Member', 'Authenticated',)))
     self.login(kw['reference'])
-    self.assertEquals(kw['reference'], str(self.portal.portal_membership.getAuthenticatedMember()))
+    self.assertEquals(kw['reference'],
+                      str(portal.portal_membership.getAuthenticatedMember()))
 
     # test redirection to person oobject
     path = website.absolute_url_path() + '/WebSite_redirectToUserView'
-    response = self.publish(path, '%s:%s' %(kw['reference'], kw['password']))
+    response = self.publish(path, '%s:%s' % (kw['reference'], kw['password']))
     self.assertTrue(person.getRelativeUrl() in response.getHeader("Location"))
-    
+
     # test redirecting to new Person preference
     path = website.absolute_url_path() + '/WebSite_redirectToUserPreference'
-    response = self.publish(path, '%s:%s' %(kw['reference'], kw['password']))
+    response = self.publish(path, '%s:%s' % (kw['reference'], kw['password']))
     self.assertTrue('portal_preferences' in response.getHeader("Location"))
     # one preference should be created for user
-    self.assertEquals(1, self.portal.portal_catalog.countResults(**{'portal_type': 'Preference',
-                                                                    'owner': kw['reference']})[0][0])
+    self.assertEquals(1,
+        self.portal.portal_catalog.countResults(**{'portal_type': 'Preference',
+                                              'owner': kw['reference']})[0][0])
 
   def test_04_WebPageTranslation(self):
     """
@@ -259,18 +254,17 @@ Hé Hé Hé!""", page.asText().strip())
       current user selected language in browser.
     """
     portal = self.getPortal()
-    request = self.app.REQUEST
     website = self.setupWebSite()
     websection = self.setupWebSection()
     page_reference = 'default-webpage'
-    webpage_list  = self.setupWebSitePages(prefix = page_reference)
+    webpage_list = self.setupWebSitePages(prefix=page_reference)
 
     # set default web page for section
-    found_by_reference = portal.portal_catalog(name = page_reference,
-                                               portal_type = 'Web Page')
-    found =  found_by_reference[0].getObject()
-    websection.edit(categories_list = ['aggregate/%s' %found.getRelativeUrl(),])
-    self.assertEqual([found.getReference(),],
+    found_by_reference = portal.portal_catalog(name=page_reference,
+                                               portal_type='Web Page')
+    found = found_by_reference[0].getObject()
+    websection.edit(categories_list=['aggregate/%s' % found.getRelativeUrl()])
+    self.assertEqual([found.getReference()],
                       websection.getAggregateReferenceList())
     # even though we create many pages we should get only one
     # this is the most recent one since all share the same reference
@@ -283,14 +277,14 @@ Hé Hé Hé!""", page.asText().strip())
       # set default language in Localizer only to check that we get
       # the corresponding web page for language.
       # XXX: Extend API so we can select language from REQUEST
-      portal.Localizer.manage_changeDefaultLang(language = language)
+      portal.Localizer.manage_changeDefaultLang(language=language)
       default_document = websection.getDefaultDocumentValue()
       self.assertEquals(language, default_document.getLanguage())
 
   def test_05_WebPageTextContentSubstitutions(self):
     """
-      Simple Case of showing the proper text content with and without a substitution
-      mapping method.
+      Simple Case of showing the proper text content with and without a
+      substitution mapping method.
       In case of asText, the content should be replaced too
     """
     content = '<a href="${toto}">$titi</a>'
@@ -318,7 +312,8 @@ Hé Hé Hé!""", page.asText().strip())
     klass._getTestSubstitutionMapping = klass.getTestSubstitutionMapping
     document.setTextContentSubstitutionMappingMethodId('_getTestSubstitutionMapping')
 
-    # Even with the same callable object, a restricted method id should not be callable.
+    # Even with the same callable object, a restricted method
+    # id should not be callable.
     self.assertRaises(Unauthorized, document.asStrippedHTML)
 
   def test_06_DefaultDocumentForWebSection(self):
@@ -333,17 +328,17 @@ Hé Hé Hé!""", page.asText().strip())
       Note: due to generic ERP5 Web implementation this test highly depends
       on WebSection_geDefaulttDocumentValueList
     """
-    portal = self.getPortal()
     website = self.setupWebSite()
     websection = self.setupWebSection()
-    publication_section_category_id_list = ['documentation',  'administration']
+    publication_section_category_id_list = ['documentation', 'administration']
 
     # create pages belonging to this publication_section 'documentation'
-    web_page_en = portal.web_page_module.newContent(portal_type = 'Web Page',
-                                                 id='section_home',
-                                                 language = 'en',
-                                                 reference='NXD-DDP',
-                                                 publication_section_list=publication_section_category_id_list[:1])
+    web_page_en = self.web_page_module.newContent(
+             portal_type='Web Page',
+             id='section_home',
+             language='en',
+             reference='NXD-DDP',
+             publication_section_list=publication_section_category_id_list[:1])
     websection.setAggregateValue(web_page_en)
     self.stepTic()
     self.assertEqual(None, websection.getDefaultDocumentValue())
@@ -357,7 +352,8 @@ Hé Hé Hé!""", page.asText().strip())
     from Products.ERP5.Document.Document import Document
     base_list = re.findall(Document.base_parser, str(html_page))
     base_url = base_list[0]
-    self.assertEqual(base_url, "%s/%s/" % (websection.absolute_url(), web_page_en.getReference()))
+    self.assertEqual(base_url, "%s/%s/" % (websection.absolute_url(),
+                                           web_page_en.getReference()))
 
   def test_06b_DefaultDocumentForWebSite(self):
     """
@@ -371,12 +367,11 @@ Hé Hé Hé!""", page.asText().strip())
       Note: due to generic ERP5 Web implementation this test highly depends
       on WebSection_geDefaulttDocumentValueList
     """
-    portal = self.getPortal()
     website = self.setupWebSite()
-    publication_section_category_id_list = ['documentation',  'administration']
+    publication_section_category_id_list = ['documentation', 'administration']
 
     # create pages belonging to this publication_section 'documentation'
-    web_page_en = portal.web_page_module.newContent(portal_type = 'Web Page',
+    web_page_en = self.web_page_module.newContent(portal_type = 'Web Page',
                                                  id='site_home',
                                                  language = 'en',
                                                  reference='NXD-DDP-Site',
@@ -402,7 +397,7 @@ Hé Hé Hé!""", page.asText().strip())
     portal = self.getPortal()
     website = self.setupWebSite()
     websection = self.setupWebSection()
-    publication_section_category_id_list = ['documentation',  'administration']
+    publication_section_category_id_list = ['documentation', 'administration']
 
     #set predicate on web section using 'publication_section'
     websection.edit(membership_criterion_base_category = ['publication_section'],
@@ -417,31 +412,31 @@ Hé Hé Hé!""", page.asText().strip())
       portal.portal_categories.publication_section.newContent(portal_type = 'Category',
                                                               id = category_id)
 
-    property_dict = { '01' : dict(language = 'en' , version = "1" , reference = "A"),
-                      '02' : dict(language = 'en' , version = "2" , reference = "B"),
-                      '03' : dict(language = 'en' , version = "3" , reference = "C"),
-                      '04' : dict(language = 'pt' , version = "1" , reference = "A"),
-                      '05' : dict(language = 'pt' , version = "2" , reference = "C"),
-                      '06' : dict(language = 'pt' , version = "3" , reference = "B"),
-                      '07' : dict(language = 'ja' , version = "1" , reference = "C"),
-                      '08' : dict(language = 'ja' , version = "2" , reference = "A"),
-                      '09' : dict(language = 'ja' , version = "3" , reference = "B"),
-                      '10' : dict(language = 'en' , version = "2" , reference = "D"),
-                      '11' : dict(language = 'ja' , version = "3" , reference = "E"),
-                      '12' : dict(language = 'pt' , version = "3" , reference = "F"),
-                      '13' : dict(language = 'en' , version = "3" , reference = "D"),
-                      '14' : dict(language = 'ja' , version = "2" , reference = "E"),
-                      '15' : dict(language = 'pt' , version = "2" , reference = "F"),
-                      '16' : dict(language = '' , version = "1" , reference = "A"),
+    property_dict = {'01': dict(language='en', version="1", reference="A"),
+                     '02': dict(language='en', version="2", reference="B"),
+                     '03': dict(language='en', version="3", reference="C"),
+                     '04': dict(language='pt', version="1", reference="A"),
+                     '05': dict(language='pt', version="2", reference="C"),
+                     '06': dict(language='pt', version="3", reference="B"),
+                     '07': dict(language='ja', version="1", reference="C"),
+                     '08': dict(language='ja', version="2", reference="A"),
+                     '09': dict(language='ja', version="3", reference="B"),
+                     '10': dict(language='en', version="2", reference="D"),
+                     '11': dict(language='ja', version="3", reference="E"),
+                     '12': dict(language='pt', version="3", reference="F"),
+                     '13': dict(language='en', version="3", reference="D"),
+                     '14': dict(language='ja', version="2", reference="E"),
+                     '15': dict(language='pt', version="2", reference="F"),
+                     '16': dict(language='', version="1", reference="A"),
                     }
     sequence_one = property_dict.keys()
-    sequence_two = ['01', '13', '12', '09', '06', '15' , '04', '11', '02', '05', '03',
-                    '07', '10', '08', '14', '16']
-    sequence_three = ['05', '12', '13', '14',  '06', '09', '10', '07', '03', '01', '02',
-                    '11', '04', '08' , '15', '16']
+    sequence_two = ['01', '13', '12', '09', '06', '15', '04', '11', '02',
+                    '05', '03', '07', '10', '08', '14', '16']
+    sequence_three = ['05', '12', '13', '14', '06', '09', '10', '07',
+                      '03', '01', '02', '11', '04', '08', '15', '16']
 
     sequence_count = 0
-    for sequence in [ sequence_one , sequence_two , sequence_three ]:
+    for sequence in [sequence_one, sequence_two, sequence_three]:
       sequence_count += 1
       message = '\ntest_07_WebSection_getDocumentValueList (Sequence %s)' \
                                                               % (sequence_count)
@@ -449,7 +444,7 @@ Hé Hé Hé!""", page.asText().strip())
 
       web_page_list = []
       for key in sequence:
-        web_page = self.portal.web_page_module.newContent(
+        web_page = self.web_page_module.newContent(
                                   title=key,
                                   portal_type = 'Web Page',
                                   publication_section_list=publication_section_category_id_list[:1])
@@ -472,105 +467,105 @@ Hé Hé Hé!""", page.asText().strip())
 
       # Testing for language parameter
       self.assertEqual(4, len(websection.getDocumentValueList()))
-      self.assertEqual(['en' , 'en', 'en', 'en'],
-                       [ w.getLanguage()  for w in websection.getDocumentValueList()])
+      self.assertEqual(['en', 'en', 'en', 'en'],
+                       [w.getLanguage() for w in websection.getDocumentValueList()])
 
       # Check that receiving an empty string as language parameter (as done
       # when using listbox search) correctly returns user language documents.
       default_document_value_list = websection.getDocumentValueList(language='')
       self.assertEqual(4, len(default_document_value_list))
       self.assertEqual(['en', 'en', 'en', 'en'],
-                       [ w.getLanguage()  for w in default_document_value_list])
+                       [w.getLanguage() for w in default_document_value_list])
 
       pt_document_value_list = websection.getDocumentValueList(language='pt')
       self.assertEqual(4, len(pt_document_value_list))
-      self.assertEqual(['pt' , 'pt', 'pt', 'pt'],
-                           [ w.getObject().getLanguage() for w in pt_document_value_list])
+      self.assertEqual(['pt', 'pt', 'pt', 'pt'],
+                           [w.getObject().getLanguage() for w in pt_document_value_list])
 
       ja_document_value_list = websection.getDocumentValueList(language='ja')
       self.assertEqual(4, len(ja_document_value_list))
-      self.assertEqual(['ja' , 'ja', 'ja', 'ja'],
-                           [ w.getLanguage() for w in ja_document_value_list])
+      self.assertEqual(['ja', 'ja', 'ja', 'ja'],
+                           [w.getLanguage() for w in ja_document_value_list])
 
       bg_document_value_list = websection.getDocumentValueList(language='bg')
       self.assertEqual(1, len(bg_document_value_list))
       self.assertEqual([''],
-                       [ w.getLanguage() for w in bg_document_value_list])
+                       [w.getLanguage() for w in bg_document_value_list])
 
       # Testing for all_versions parameter
       en_document_value_list = websection.getDocumentValueList(all_versions=1)
       self.assertEqual(5, len(en_document_value_list))
-      self.assertEqual(['en' , 'en', 'en', 'en', 'en'],
-                       [ w.getLanguage()  for w in en_document_value_list])
+      self.assertEqual(['en', 'en', 'en', 'en', 'en'],
+                       [w.getLanguage() for w in en_document_value_list])
 
       pt_document_value_list = websection.getDocumentValueList(language='pt',
                                                                all_versions=1)
       self.assertEqual(5, len(pt_document_value_list))
-      self.assertEqual(['pt' , 'pt', 'pt', 'pt', 'pt'],
-                           [ w.getObject().getLanguage() for w in pt_document_value_list])
+      self.assertEqual(['pt', 'pt', 'pt', 'pt', 'pt'],
+                       [w.getObject().getLanguage() for w in pt_document_value_list])
 
       ja_document_value_list = websection.getDocumentValueList(language='ja',
                                                                all_versions=1)
       self.assertEqual(5, len(ja_document_value_list))
-      self.assertEqual(['ja' , 'ja', 'ja', 'ja', 'ja'],
-                           [ w.getLanguage() for w in ja_document_value_list])
+      self.assertEqual(['ja', 'ja', 'ja', 'ja', 'ja'],
+                           [w.getLanguage() for w in ja_document_value_list])
 
       # Tests for all_languages parameter
       en_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1)
       self.assertEqual(6, len(en_document_value_list))
-      self.assertEqual(4, len([ w.getLanguage() for w in en_document_value_list \
+      self.assertEqual(4, len([w.getLanguage() for w in en_document_value_list \
                               if w.getLanguage() == 'en']))
-      self.assertEqual(1, len([ w.getLanguage() for w in en_document_value_list \
+      self.assertEqual(1, len([w.getLanguage() for w in en_document_value_list \
                               if w.getLanguage() == 'pt']))
-      self.assertEqual(['3'], [ w.getVersion() for w in en_document_value_list \
+      self.assertEqual(['3'], [w.getVersion() for w in en_document_value_list \
                               if w.getLanguage() == 'pt'])
-      self.assertEqual(1, len([ w.getLanguage() for w in en_document_value_list \
+      self.assertEqual(1, len([w.getLanguage() for w in en_document_value_list \
                               if w.getLanguage() == 'ja']))
-      self.assertEqual(['3'], [ w.getVersion() for w in en_document_value_list \
+      self.assertEqual(['3'], [w.getVersion() for w in en_document_value_list \
                               if w.getLanguage() == 'ja'])
 
       pt_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
                                                                               language='pt')
       self.assertEqual(6, len(pt_document_value_list))
-      self.assertEqual(4, len([ w.getLanguage() for w in pt_document_value_list \
+      self.assertEqual(4, len([w.getLanguage() for w in pt_document_value_list \
                               if w.getLanguage() == 'pt']))
-      self.assertEqual(1, len([ w.getLanguage() for w in pt_document_value_list \
+      self.assertEqual(1, len([w.getLanguage() for w in pt_document_value_list \
                               if w.getLanguage() == 'en']))
-      self.assertEqual(['3'], [ w.getVersion() for w in pt_document_value_list \
+      self.assertEqual(['3'], [w.getVersion() for w in pt_document_value_list \
                               if w.getLanguage() == 'en'])
-      self.assertEqual(1, len([ w.getLanguage() for w in pt_document_value_list \
+      self.assertEqual(1, len([w.getLanguage() for w in pt_document_value_list \
                               if w.getLanguage() == 'ja']))
-      self.assertEqual(['3'], [ w.getVersion() for w in pt_document_value_list \
+      self.assertEqual(['3'], [w.getVersion() for w in pt_document_value_list \
                               if w.getLanguage() == 'ja'])
 
       ja_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
                                                                               language='ja')
       self.assertEqual(6, len(ja_document_value_list))
-      self.assertEqual(4, len([ w.getLanguage() for w in ja_document_value_list \
+      self.assertEqual(4, len([w.getLanguage() for w in ja_document_value_list \
                               if w.getLanguage() == 'ja']))
-      self.assertEqual(1, len([ w.getLanguage() for w in ja_document_value_list \
+      self.assertEqual(1, len([w.getLanguage() for w in ja_document_value_list \
                               if w.getLanguage() == 'pt']))
-      self.assertEqual(['3'], [ w.getVersion() for w in ja_document_value_list \
+      self.assertEqual(['3'], [w.getVersion() for w in ja_document_value_list \
                               if w.getLanguage() == 'pt'])
-      self.assertEqual(1, len([ w.getLanguage() for w in ja_document_value_list \
+      self.assertEqual(1, len([w.getLanguage() for w in ja_document_value_list \
                               if w.getLanguage() == 'en']))
-      self.assertEqual(['3'], [ w.getVersion() for w in ja_document_value_list \
+      self.assertEqual(['3'], [w.getVersion() for w in ja_document_value_list \
                             if w.getLanguage() == 'en'])
 
       bg_document_value_list = websection.WebSection_getDocumentValueListBase(all_languages=1,
                                                                               language='bg')
       self.assertEqual(6, len(bg_document_value_list))
-      self.assertEqual(0, len([ w.getLanguage() for w in bg_document_value_list \
+      self.assertEqual(0, len([w.getLanguage() for w in bg_document_value_list \
                               if w.getLanguage() == 'bg']))
-      self.assertEqual(3, len([ w.getLanguage() for w in bg_document_value_list \
+      self.assertEqual(3, len([w.getLanguage() for w in bg_document_value_list \
                               if w.getLanguage() == 'en']))
-      self.assertEqual(1, len([ w.getLanguage() for w in bg_document_value_list \
+      self.assertEqual(1, len([w.getLanguage() for w in bg_document_value_list \
                               if w.getLanguage() == 'pt']))
-      self.assertEqual(['3'], [ w.getVersion() for w in bg_document_value_list \
+      self.assertEqual(['3'], [w.getVersion() for w in bg_document_value_list \
                               if w.getLanguage() == 'pt'])
-      self.assertEqual(1, len([ w.getLanguage() for w in bg_document_value_list \
+      self.assertEqual(1, len([w.getLanguage() for w in bg_document_value_list \
                               if w.getLanguage() == 'ja']))
-      self.assertEqual(['3'], [ w.getVersion() for w in bg_document_value_list \
+      self.assertEqual(['3'], [w.getVersion() for w in bg_document_value_list \
                             if w.getLanguage() == 'ja'])
 
       # Tests for all_languages and all_versions
@@ -585,51 +580,51 @@ Hé Hé Hé!""", page.asText().strip())
                                                                               all_versions=1,
                                                                               language='ja')
 
-      for document_value_list in [ en_document_value_list, pt_document_value_list ,
+      for document_value_list in [en_document_value_list, pt_document_value_list,
                                    ja_document_value_list]:
 
         self.assertEqual(16, len(document_value_list))
-        self.assertEqual(5, len([ w.getLanguage() for w in document_value_list \
+        self.assertEqual(5, len([w.getLanguage() for w in document_value_list \
                                 if w.getLanguage() == 'en']))
-        self.assertEqual(5, len([ w.getLanguage() for w in en_document_value_list \
+        self.assertEqual(5, len([w.getLanguage() for w in en_document_value_list \
                                 if w.getLanguage() == 'pt']))
-        self.assertEqual(5, len([ w.getLanguage() for w in en_document_value_list \
+        self.assertEqual(5, len([w.getLanguage() for w in en_document_value_list \
                                 if w.getLanguage() == 'ja']))
 
       # Tests for sort_on parameter
-      self.assertEqual(['A' , 'B', 'C', 'D'],
-                       [ w.getReference()  for w in \
+      self.assertEqual(['A', 'B', 'C', 'D'],
+                       [w.getReference() for w in \
                          websection.getDocumentValueList(sort_on=[('reference', 'ASC')])])
 
-      self.assertEqual(['01' , '02', '03', '13'],
-                       [ w.getTitle()  for w in \
+      self.assertEqual(['01', '02', '03', '13'],
+                       [w.getTitle() for w in \
                          websection.getDocumentValueList(sort_on=[('title', 'ASC')])])
 
-      self.assertEqual(['D' , 'C', 'B', 'A'],
-                       [ w.getReference()  for w in \
+      self.assertEqual(['D', 'C', 'B', 'A'],
+                       [w.getReference() for w in \
                          websection.getDocumentValueList(sort_on=[('reference', 'DESC')])])
 
-      self.assertEqual(['13' , '03', '02', '01'],
-                       [ w.getTitle()  for w in \
+      self.assertEqual(['13', '03', '02', '01'],
+                       [w.getTitle() for w in \
                          websection.getDocumentValueList(sort_on=[('reference', 'DESC')])])
 
-      self.assertEqual(['A' , 'B', 'C', 'D' , 'E' , 'F'],
-                       [ w.getReference()  for w in \
+      self.assertEqual(['A', 'B', 'C', 'D', 'E', 'F'],
+                       [w.getReference() for w in \
                          websection.WebSection_getDocumentValueListBase(all_languages=1,
                                             sort_on=[('reference', 'ASC')])])
 
-      self.assertEqual(['01' , '02', '03', '11' , '12' , '13'],
-                       [ w.getTitle()  for w in \
+      self.assertEqual(['01', '02', '03', '11', '12', '13'],
+                       [w.getTitle() for w in \
                          websection.WebSection_getDocumentValueListBase(all_languages=1,
                                             sort_on=[('title', 'ASC')])])
 
-      self.assertEqual(['F' , 'E', 'D', 'C' , 'B' , 'A'],
-                       [ w.getReference()  for w in \
+      self.assertEqual(['F', 'E', 'D', 'C', 'B', 'A'],
+                       [w.getReference() for w in \
                          websection.WebSection_getDocumentValueListBase(all_languages=1,
                                             sort_on=[('reference', 'DESC')])])
 
-      self.assertEqual(['13' , '12', '11', '03' , '02' , '01'],
-                       [ w.getTitle()  for w in \
+      self.assertEqual(['13', '12', '11', '03', '02', '01'],
+                       [w.getTitle() for w in \
                          websection.WebSection_getDocumentValueListBase(all_languages=1,
                                             sort_on=[('title', 'DESC')])])
 
@@ -756,14 +751,12 @@ Hé Hé Hé!""", page.asText().strip())
     web_page_portal_type = 'Web Page'
 
     # Create web site and web section
-    web_site_module = portal.getDefaultModule(web_site_portal_type)
-    web_site = web_site_module.newContent(portal_type=web_site_portal_type)
+    web_site = self.web_site_module.newContent(portal_type=web_site_portal_type)
     web_section = web_site.newContent(portal_type=web_section_portal_type)
     sub_web_section = web_section.newContent(portal_type=web_section_portal_type)
 
     # Create a document
-    web_page_module = portal.getDefaultModule(web_page_portal_type)
-    web_page = web_page_module.newContent(portal_type=web_page_portal_type)
+    web_page = self.web_page_module.newContent(portal_type=web_page_portal_type)
 
     # Commit transaction
     def _commit():
@@ -933,7 +926,6 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish(path, self.credential)
     self.assertNotEquals(response.getBody().find(new_content), -1)
 
-
   def test_13a_DocumentMovedCache(self):
     """
       What happens to the cache if document is moved
@@ -1040,7 +1032,6 @@ Hé Hé Hé!""", page.asText().strip())
     response = self.publish(path, self.credential)
     self.assertNotEquals(response.getBody().find(new_content), -1)
 
-
   def test_14_AccessWebSiteForWithDifferentUserPreferences(self):
     """Check that Ram Cache Manager do not mix websection
     rendering between users.
@@ -1121,7 +1112,6 @@ Hé Hé Hé!""", page.asText().strip())
     Policy ID - unauthenticated web pages
                 authenticated
     """
-    request = self.portal.REQUEST
     website = self.setupWebSite()
     web_section_portal_type = 'Web Section'
     web_section = website.newContent(portal_type=web_section_portal_type)
@@ -1185,9 +1175,6 @@ Hé Hé Hé!""", page.asText().strip())
     - Access it using another language and edit it
     - Check that web section is correctly indexed
     """
-    portal = self.getPortal()
-    request = self.app.REQUEST
-
     language = 'de'
 
     website = self.setupWebSite()
@@ -1200,7 +1187,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     self.stepTic()
     response = self.publish('/%s/%s/%s/%s/Base_editAndEditAsWeb' % \
-                    (self.portal.getId(), website.getRelativeUrl(), 
+                    (self.portal.getId(), website.getRelativeUrl(),
                      language, websection.getId()),
                      basic='ERP5TypeTestCase:',
                      request_method='POST',
@@ -1213,7 +1200,7 @@ Hé Hé Hé!""", page.asText().strip())
                        'field_my_title': '%s_edited' % websection.getId(),
                      }
                     )
-   
+
     self.assertEquals(MOVED_TEMPORARILY, response.getStatus())
     new_location = response.getHeader('Location')
     new_location = new_location.split('/', 3)[-1]
@@ -1222,7 +1209,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     response = self.publish(new_location, basic='ERP5TypeTestCase:',)
     self.assertEquals(HTTP_OK, response.getStatus())
-    self.assertEquals('text/html; charset=utf-8', 
+    self.assertEquals('text/html; charset=utf-8',
                       response.getHeader('content-type'))
     self.assertTrue("Data updated." in response.getBody())
 
@@ -1230,7 +1217,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     self.assertEquals('%s_edited' % websection.getId(), websection.getTitle())
     self.assertEquals(1, len(self.portal.portal_catalog(
-                                    relative_url=websection.getRelativeUrl(), 
+                                    relative_url=websection.getRelativeUrl(),
                                     title=websection.getTitle())))
 
   @expectedFailure
@@ -1244,9 +1231,6 @@ Hé Hé Hé!""", page.asText().strip())
     - Access it using another language and edit it
     - Check that web site is correctly modified
     """
-    portal = self.getPortal()
-    request = self.app.REQUEST
-
     language = 'de'
 
     website = self.setupWebSite()
@@ -1259,7 +1243,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.stepTic()
 
     response = self.publish('/%s/%s/%s/Base_editAndEditAsWeb' % \
-                    (self.portal.getId(), website.getRelativeUrl(), 
+                    (self.portal.getId(), website.getRelativeUrl(),
                      language),
                      basic='ERP5TypeTestCase:',
                      request_method='POST',
@@ -1272,7 +1256,7 @@ Hé Hé Hé!""", page.asText().strip())
                        'field_my_id': language,
                      }
                     )
-   
+
     self.assertEquals(MOVED_TEMPORARILY, response.getStatus())
     new_location = response.getHeader('Location')
     new_location = new_location.split('/', 3)[-1]
@@ -1281,7 +1265,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     response = self.publish(new_location, basic='ERP5TypeTestCase:',)
     self.assertEquals(HTTP_OK, response.getStatus())
-    self.assertEquals('text/html; charset=utf-8', 
+    self.assertEquals('text/html; charset=utf-8',
                       response.getHeader('content-type'))
     self.assertTrue("Data updated." in response.getBody())
 
@@ -1289,27 +1273,26 @@ Hé Hé Hé!""", page.asText().strip())
 
     self.assertEquals('%s_edited' % website.getId(), website.getTitle())
     self.assertEquals(1, len(self.portal.portal_catalog(
-                                    relative_url=website.getRelativeUrl(), 
+                                    relative_url=website.getRelativeUrl(),
                                     title=website.getTitle())))
 
   def test_19_WebModeAndEditableMode(self):
     """
-    Check if isWebMode & isEditableMode API works. 
+    Check if isWebMode & isEditableMode API works.
     """
-    portal = self.getPortal()
     request = self.app.REQUEST
     website = self.setupWebSite()
-    
+
     # web mode
     self.assertEquals(False, self.portal.person_module.isWebMode())
     self.assertEquals(True, website.isWebMode())
     self.assertEquals(True, getattr(website, 'person_module').isWebMode())
-    
+
     # editable mode
     self.assertEquals(False, self.portal.person_module.isEditableMode())
     self.assertEquals(False, website.isEditableMode())
     self.assertEquals(False, getattr(website, 'person_module').isEditableMode())
-    
+
     request.set('editable_mode', 1)
     self.assertEquals(1, self.portal.person_module.isEditableMode())
     self.assertEquals(1, website.isEditableMode())
@@ -1326,45 +1309,43 @@ Hé Hé Hé!""", page.asText().strip())
     """
       Test Web Site map script.
     """
-    portal = self.getPortal()
     request = self.app.REQUEST
     website = self.setupWebSite()
-    kw = {'depth': 5, 
-          'include_subsection':1}
-          
+    kw = {'depth': 5,
+          'include_subsection': 1}
+
     website.setSiteMapSectionParent(1)
     websection1 = website.newContent(portal_type='Web Section',
-                                     title = 'Section 1',
-                                     site_map_section_parent=1, 
+                                     title='Section 1',
+                                     site_map_section_parent=1,
                                      visible=1)
     websection1_1 = websection1.newContent(portal_type='Web Section',
-                                     title = 'Section 1.1',
-                                     site_map_section_parent=1, 
-                                     visible=1)                                     
+                                     title='Section 1.1',
+                                     site_map_section_parent=1,
+                                     visible=1)
     self.stepTic()
-    site_map =  website.WebSection_getSiteMapTree(depth=5, include_subsection=1)
-    self.assertSameSet([websection1.getTitle()], 
+    site_map = website.WebSection_getSiteMapTree(depth=5, include_subsection=1)
+    self.assertSameSet([websection1.getTitle()],
                        [x['translated_title'] for x in site_map])
-    self.assertSameSet([websection1_1.getTitle()], 
+    self.assertSameSet([websection1_1.getTitle()],
                        [x['translated_title'] for x in site_map[0]['subsection']])
-    self.assertEqual(1, site_map[0]['level'])                        
-    self.assertEqual(2, site_map[0]['subsection'][0]['level'])                       
-                       
+    self.assertEqual(1, site_map[0]['level'])
+    self.assertEqual(2, site_map[0]['subsection'][0]['level'])
+
     # check depth works
-    site_map =  website.WebSection_getSiteMapTree(depth=1, include_subsection=1)
+    site_map = website.WebSection_getSiteMapTree(depth=1, include_subsection=1)
     self.assertEqual(None, site_map[0]['subsection'])
-    self.assertSameSet([websection1.getTitle()], 
+    self.assertSameSet([websection1.getTitle()],
                        [x['translated_title'] for x in site_map])
-                       
-   
+
     # hide subsections
     websection1_1.setSiteMapSectionParent(0)
-    websection1_1.setVisible(0)    
+    websection1_1.setVisible(0)
     self.stepTic()
-    site_map =  website.WebSection_getSiteMapTree(depth=5, include_subsection=1)    
-    self.assertSameSet([websection1.getTitle()], 
+    site_map = website.WebSection_getSiteMapTree(depth=5, include_subsection=1)
+    self.assertSameSet([websection1.getTitle()],
                        [x['translated_title'] for x in site_map])
-    self.assertEqual(None, site_map[0]['subsection'])                       
+    self.assertEqual(None, site_map[0]['subsection'])
 
 
 class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
@@ -1502,8 +1483,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   def test_03_WebSection_getDocumentValueListSecurity(self):
     """ Test WebSection_getDocumentValueList behaviour and security"""
     self.login('admin')
-    web_site_module = self.portal.web_site_module
-    site = web_site_module.newContent(portal_type='Web Site',
+    site = self.web_site_module.newContent(portal_type='Web Site',
                                       id='site')
     site.publish()
 
@@ -1639,8 +1619,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   def test_04_ExpireUserAction(self):
     """ Test the expire user action"""
     self.login('admin')
-    web_site_module = self.portal.web_site_module
-    site = web_site_module.newContent(portal_type='Web Site', id='site')
+    site = self.web_site_module.newContent(portal_type='Web Site', id='site')
 
     # create websections in a site and in anothers web sections
     section_1 = site.newContent(portal_type='Web Section', id='section_1')
@@ -1670,7 +1649,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   def test_05_createWebSite(self):
     """ Test to create or clone web sites with many users """
     self.login('admin')
-    web_site_module = self.portal.web_site_module
+    web_site_module = self.web_site_module
 
     # test for admin
     try:
@@ -1693,8 +1672,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   def test_06_createWebSection(self):
     """ Test to create or clone web sections with many users """
     self.login('admin')
-    web_site_module = self.portal.web_site_module
-    site = web_site_module.newContent(portal_type='Web Site', id='site')
+    site = self.web_site_module.newContent(portal_type='Web Site', id='site')
 
     # test for admin
     try:
@@ -1806,7 +1784,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       pass
     try:
       new_category_3 = publication_section.newContent(
-      portal_type='Category',id='new_category_3')
+      portal_type='Category', id='new_category_3')
       new_category_4 = new_category_3.newContent(portal_type='Category',
           id='new_category_4')
     except Unauthorized:
@@ -1839,7 +1817,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     project.validate()
     self.stepTic()
 
-    website = self.portal.web_site_module.newContent(portal_type='Web Site',
+    website = self.web_site_module.newContent(portal_type='Web Site',
                                                      id='site')
     website.publish()
     website.setMembershipCriterionBaseCategory('follow_up')
@@ -1876,9 +1854,8 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     """
       Test that by default Anonymous User cannot access Web Site Module
     """
-    portal = self.portal
     self.logout()
-    self.assertRaises(Unauthorized, portal.web_site_module.view)
+    self.assertRaises(Unauthorized, self.web_site_module.view)
 
 
 class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
@@ -1910,6 +1887,7 @@ class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
     self.assertEqual('published', self.category.getValidationState())
     self.doActionFor(self.category, 'expire_action')
     self.assertEqual('expired_published', self.category.getValidationState())
+
 
 def test_suite():
   suite = unittest.TestSuite()

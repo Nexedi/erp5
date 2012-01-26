@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.TestPageModule_convertPages(uids, \'Web Page\')\n
+            <value> <string>return context.TestPageModule_convertPage(uids, \'Test Page\')\n
 </string> </value>
         </item>
         <item>
@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPageModule_convertToWebPages</string> </value>
+            <value> <string>TestPageModule_convertToTestPage</string> </value>
         </item>
       </dictionary>
     </pickle>

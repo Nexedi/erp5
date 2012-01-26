@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>TestPageModule_convertToTestPages</string> </value>
+            <value> <string>TestPageModule_convertToTestPage</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
