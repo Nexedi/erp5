@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+      <global name="Base Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Web Page is an HTML document which contains images and files.</string> </value>
+            <value> <string>A Web Page is an HTML document which could contains embedded files.</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>
@@ -131,7 +131,9 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <none/> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -151,7 +153,9 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <none/> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

@@ -10,13 +10,13 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>title</string>
-                <string>lines</string>
                 <string>columns</string>
-                <string>selection_name</string>
-                <string>portal_types</string>
                 <string>editable_columns</string>
+                <string>lines</string>
                 <string>list_action</string>
+                <string>portal_types</string>
+                <string>selection_name</string>
+                <string>title</string>
               </list>
             </value>
         </item>
@@ -146,6 +146,10 @@
                         <tuple>
                           <string>File</string>
                           <string>File</string>
+                        </tuple>
+                        <tuple>
+                          <string>Embedded File</string>
+                          <string>Embedded File</string>
                         </tuple>
                       </list>
                     </value>
