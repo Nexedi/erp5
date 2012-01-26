@@ -49,7 +49,7 @@
                                                   \'jquery/plugin/sheet/jquery.sheet.js\',\n
                                                   \'jquery/plugin/mbmenu/mbMenu.min.js\',\n
                                                   \'jquery/ui/js/jquery-ui.js\',\n
-                                                  \'jquery/plugin/jqcharts/jgcharts.min.js\',\n
+                                                  \'jquery/plugin/jqchart/jgcharts.min.js\',\n
                                                   \'jquery/plugin/colorpicker/jquery.colorPicker.min.js\',\n
                                                   \'jquery/plugin/elastic/jquery.elastic.min.js\',\n
                                                   \'jquery/plugin/sheet/jquery.sheet.erp5.js\',\n
