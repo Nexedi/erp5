@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts80066568.68</string> </value>
+            <value> <string>ts27579659.58</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -324,7 +324,7 @@ svgEditor.addExtension("Connector", function(S) {\n
 \t\n
 \treturn {\n
 \t\tname: "Connector",\n
-\t\tsvgicons: "jquery_plugin/svg-editor/images/conn.svg",\n
+\t\tsvgicons: "jquery/plugin/svg-editor/images/conn.svg",\n
 \t\tbuttons: [{\n
 \t\t\tid: "mode_connect",\n
 \t\t\ttype: "mode",\n

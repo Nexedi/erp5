@@ -57,7 +57,7 @@
 <script type="text/javascript" src="jquery/plugin/jquerybbq/jquery.bbq.min.js"></script>\n
 <script type="text/javascript" src="jquery/plugin/spinbtn/JQuerySpinBtn.min.js"></script>\n
 <script type="text/javascript" src="svgcanvas.min.js"></script>\n
-<script type="text/javascript" src="svg-editor.min.js"></script>\n
+<script type="text/javascript" src="svg-editor.js"></script>\n
 <script type="text/javascript" src="locale/locale.min.js"></script>\n
 \n
 <!-- always minified scripts -->\n

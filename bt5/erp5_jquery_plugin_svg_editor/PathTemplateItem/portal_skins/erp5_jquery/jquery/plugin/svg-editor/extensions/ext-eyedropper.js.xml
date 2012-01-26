@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts80066301.42</string> </value>
+            <value> <string>ts27579717.97</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -82,7 +82,7 @@ svgEditor.addExtension("eyedropper", function(S) {\n
 \t\t\n
 \t\treturn {\n
 \t\t\tname: "eyedropper",\n
-\t\t\tsvgicons: "jquery_plugin/svg-editor/extensions/eyedropper-icon.xml",\n
+\t\t\tsvgicons: "jquery/plugin/svg-editor/extensions/eyedropper-icon.xml",\n
 \t\t\tbuttons: [{\n
 \t\t\t\tid: "tool_eyedropper",\n
 \t\t\t\ttype: "mode",\n

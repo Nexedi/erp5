@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts80066303.91</string> </value>
+            <value> <string>ts27579594.61</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -503,7 +503,7 @@ svgEditor.addExtension("Markers", function(S) {\n
 \n
 \treturn {\n
 \t\tname: "Markers",\n
-\t\tsvgicons: "jquery_plugin/svg-editor/extensions/markers-icons.xml",\n
+\t\tsvgicons: "jquery/plugin/svg-editor/extensions/markers-icons.xml",\n
 \t\tbuttons: buildButtonList(),\n
 \t\tcontext_tools: [\n
 \t\t   {\n
