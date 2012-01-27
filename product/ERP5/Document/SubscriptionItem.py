@@ -315,7 +315,6 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
           result.append(generated_movement)
           current_date = next_date
           id_index += 1
-          break
 
     return result
 
