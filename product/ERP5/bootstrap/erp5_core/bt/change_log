@@ -1,4 +1,7 @@
 2012-01-27 arnaud.fontaine
+* Use Ace editor to edit source code.
+
+2012-01-27 arnaud.fontaine
 * Add component_validation_workflow which supports revalidation.
 
 2012-01-25 arnaud.fontaine
