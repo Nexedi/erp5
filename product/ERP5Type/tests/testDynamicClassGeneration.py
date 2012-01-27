@@ -1255,6 +1255,57 @@ class _TestZodbComponent(ERP5TypeTestCase):
     self.assertHasAttribute(self._module,
                             'TestValidateInvalidateComponent')
 
+  def testRevalidate(self):
+    """
+    Check whether revalidate is performed properly
+    """
+    validated_code = 'def foobar(*args, **kwargs):\n  return "Validated"'
+    component = self._newComponent('TestRevalidateComponent', validated_code)
+
+    component.validate()
+    transaction.commit()
+    self.tic()
+
+    self.assertHasAttribute(self._module, 'TestRevalidateComponent')
+    self.assertEquals(component.getTextContent(), validated_code)
+    self.assertEquals(component.getTextContent(validated_only=True),
+                      validated_code)
+
+    from Products.ERP5Type.Tool.ComponentTool import ComponentTool
+    old_reset_function = ComponentTool.reset
+    def assertResetNotCalled(*args, **kwargs):
+      raise AssertionError("reset should only be called once revalidating")
+
+    def assertResetCalled(self, *args, **kwargs):
+      from Products.ERP5Type.Tool.ComponentTool import ComponentTool
+      ComponentTool._reset_performed = True
+      return old_reset_function(self, *args, **kwargs)
+
+    revalidated_code = 'def foobar(*args, **kwargs):\n  return "Revalidated"'
+
+    try:
+      ComponentTool.reset = assertResetNotCalled
+      component.setTextContent(revalidated_code)
+      transaction.commit()
+      self.tic()
+
+      self.assertEquals(component.getTextContent(), revalidated_code)
+      self.assertEquals(component.getTextContent(validated_only=True),
+                        validated_code)
+
+      ComponentTool.reset = assertResetCalled
+      component.revalidate()
+      transaction.commit()
+      self.tic()
+
+      self.assertTrue(ComponentTool._reset_performed)
+      self.assertEquals(component.getTextContent(), revalidated_code)
+      self.assertEquals(component.getTextContent(validated_only=True),
+                        revalidated_code)
+
+    finally:
+      self._component_tool.reset = old_reset_function
+
   def testSourceCodeWithSyntaxError(self):
     test_component = self._newComponent(
       'TestComponentWithSyntaxError',

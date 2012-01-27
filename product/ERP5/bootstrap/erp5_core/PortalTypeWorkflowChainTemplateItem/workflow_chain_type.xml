@@ -85,7 +85,7 @@
  </chain>
  <chain>
   <type>Document Component</type>
-  <workflow>component_interaction_workflow, edit_workflow, validation_workflow</workflow>
+  <workflow>component_interaction_workflow, component_validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Dynamic Category Property</type>
@@ -93,7 +93,7 @@
  </chain>
  <chain>
   <type>Extension Component</type>
-  <workflow>component_interaction_workflow, edit_workflow, validation_workflow</workflow>
+  <workflow>component_interaction_workflow, component_validation_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Mapped Value</type>

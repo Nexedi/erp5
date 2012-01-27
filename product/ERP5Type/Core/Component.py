@@ -84,7 +84,52 @@ class Component(Base):
 
     return []
 
-  def load(self, namespace_dict={}):
+  def _setTextContent(self, text_content):
+    """
+    When the validation state is already 'validated', set the new value to
+    'text_content_non_validated' property instead of 'text_content' for the
+    following reasons:
+
+    1/ It allows to validate the source code through Component validation
+       workflow rather than after each edition;
+
+    2/ It avoids dirty hacks to call checkConsistency upon edit and deal with
+       error messages, instead use workflow as it makes more sense.
+
+    Then, when the user revalidates the Component through a workflow action,
+    'text_content_non_validated' property is copied back to 'text_content'.
+
+    XXX-arnau: having a separate property would require hackish code when
+    exporting the bt5, perhaps a workflow variable would be better?
+    """
+    if self.getValidationState() == 'validated':
+      return self.setProperty('text_content_non_validated', text_content)
+    
+    return super(Component, self)._setTextContent(text_content)
+
+  def setTextContentAfterRevalidation(self):
+    """
+    Call upon revalidate on an already validated Component to set the source
+    code from text_content_non_validated property
+    """
+    super(Component, self)._setTextContent(self.getTextContent())
+    self.setProperty('text_content_non_validated', None)
+
+  def getTextContent(self, validated_only=False):
+    """
+    Return the source code of the validated source code (if validated_only is
+    True), meaningful when generating the Component, or the non-validated
+    source code (when a Component is modified when it has already been
+    validated), meaningful when editing a Component or checking consistency
+    """
+    if not validated_only:
+      text_content_non_validated = self.getProperty('text_content_non_validated')
+      if text_content_non_validated:
+        return text_content_non_validated
+
+    return super(Component, self).getTextContent()
+
+  def load(self, namespace_dict={}, validated_only=False):
     """
     Load the source code into the given dict. Using exec() rather than
     imp.load_source() as the latter would required creating an intermediary
@@ -93,7 +138,7 @@ class Component(Base):
     it. By default namespace_dict is an empty dict to allow checking the
     source code before validate.
     """
-    exec self.getTextContent() in namespace_dict
+    exec self.getTextContent(validated_only=validated_only) in namespace_dict
 
   @staticmethod
   def _getFilesystemPath():
