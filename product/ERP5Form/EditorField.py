@@ -74,7 +74,8 @@ class EditorWidget(Widget.TextAreaWidget):
                                           ('Bespin Editor', 'bespin'),
                                           ('Xinha Editor', 'xinha'),
                                           ('SVG Editor', 'svg_editor'),
-                                          ('Spreadsheet Editor', 'spreadsheet_editor')])
+                                          ('Spreadsheet Editor', 'spreadsheet_editor'),
+                                          ('Ace Editor', 'ace')])
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
     """
@@ -117,6 +118,13 @@ class EditorWidget(Widget.TextAreaWidget):
       if sheet_editor_support is None:
         return Widget.TextAreaWidget.render(self, field, key, value, REQUEST)
       return sheet_editor_support.pt_render()
+    elif text_editor == 'ace':
+      ace_editor_support = getattr(here, 'ace_editor_support', None)
+      if ace_editor_support is None:
+        return Widget.TextAreaWidth.render(self, field, key, value, REQUEST)
+      return ace_editor_support.pt_render(extra_context={'field': field,
+                                                         'content': value,
+                                                         'id': key})
     else:
       return here.fckeditor_wysiwyg_support.pt_render(
            extra_context= {

@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block tal:define=\'site_root python: here.getWebSiteValue() or here.getPortalObject();\n
+                       portal_url python: site_root.absolute_url();\n
+                       div_id string:${id}_ace;\n
+                       container_div_id string:${div_id}_container;\n
+                       \'>\n
+  <style type="text/css">\n
+  .ace_scroller {\n
+    overflow-x: auto !important;\n
+  }\n
+\n
+  .ace_sb {\n
+    overflow-y: auto !important;\n
+  }\n
+\n
+  .ace_gutter {\n
+    background-color: #97B0D1 !important;\n
+  }\n
+\n
+  .ace_content {\n
+    background-color: white !important;\n
+  }\n
+\n
+  .ace_layer {\n
+    background-color: transparent !important;\n
+  }\n
+\n
+  .field label {\n
+    width: 20% !important;\n
+  }\n
+\n
+  .ace_line {\n
+    color: black !important;\n
+  }\n
+  </style>\n
+\n
+  <style type="text/css" tal:content="structure string:\n
+  #${div_id} * {\n
+    font-family: monospace !important;\n
+  }">\n
+  </style>\n
+\n
+  <textarea tal:attributes="id id; name id" tal:content="content"\n
+            style="display: none;"></textarea>\n
+\n
+  <div tal:attributes="id string:${container_div_id}"\n
+       style="width: 200px; height: 200px;\n
+              border: 1px solid #97B0D1; background-color: white !important;">\n
+    <div style="position: relative !important; width: 100%; height: 100%;"\n
+         tal:content="content"\n
+         tal:attributes="id div_id"></div>\n
+  </div>\n
+\n
+  <script type="text/javascript"\n
+          tal:attributes="src string:${portal_url}/ace/ace.js"></script>\n
+  <script type="text/javascript"\n
+          tal:attributes="src string:${portal_url}/ace/mode-python.js"></script>\n
+  <script type="text/javascript"\n
+          tal:content="structure string:\n
+  window.onload = function() {\n
+    var container = $(\'#${container_div_id}\');\n
+    function set_container_size(event) {\n
+      width = $(window).innerWidth() - container.offset().left - 50;\n
+      if(width < 200)\n
+        width = 200;\n
+      container.width(width);\n
+\n
+      height = $(window).innerHeight() - container.offset().top - 50;\n
+      if(height < 200)\n
+        height = 200;\n
+      container.height(height);\n
+\n
+      if(event != null)\n
+        editor.resize();\n
+    }\n
+\n
+    set_container_size(null);\n
+    window.onresize = set_container_size;\n
+\n
+    var editor = ace.edit(\'${div_id}\');\n
+    editor.resize();\n
+\n
+    var PythonMode = require(\'ace/mode/python\').Mode;\n
+    editor.getSession().setMode(new PythonMode());\n
+\n
+    var textarea = $(\'#${id}\');\n
+    editor.getSession().on(\'change\', function() {\n
+      textarea.val(editor.getSession().getValue());\n
+    });\n
+  };">\n
+  </script>\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>ace_editor_support</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>utf-8</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
