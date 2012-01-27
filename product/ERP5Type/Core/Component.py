@@ -68,12 +68,18 @@ class Component(Base):
                                  message="No source code",
                                  mapping={})]
 
+    message = None
     try:
       self.load()
+    except SyntaxError, e:
+      message = "%s (line: %d, column: %d)" % (e.msg, e.lineno, e.offset)
     except Exception, e:
+      message = str(e)
+
+    if message:
       return [ConsistencyMessage(self,
                                  object_relative_url=self.getRelativeUrl(),
-                                 message="Source code error: %s" % e,
+                                 message="Source Code: %s" % message,
                                  mapping={})]
 
     return []
