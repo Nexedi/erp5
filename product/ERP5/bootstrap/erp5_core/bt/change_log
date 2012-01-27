@@ -1,4 +1,7 @@
 2012-01-27 arnaud.fontaine
+* For Component_view, add version, comments and validation state fields, and move editor field to the bottom to have more room for editing.
+
+2012-01-27 arnaud.fontaine
 * Use Ace editor to edit source code.
 
 2012-01-27 arnaud.fontaine
