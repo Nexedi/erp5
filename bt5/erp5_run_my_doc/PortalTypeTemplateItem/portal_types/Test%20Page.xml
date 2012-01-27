@@ -33,7 +33,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>A Test Page is an HTML document which contains a Selenium Test, images and files.</string> </value>
+            <value> <string>A Test Page is an HTML document which contains a Selenium Test and embedded files (images, files...)</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

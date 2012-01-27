@@ -2,10 +2,6 @@
  <portal_type id="Review Module">
   <item>Review</item>
  </portal_type>
- <portal_type id="Test Page">
-  <item>File</item>
-  <item>Image</item>
- </portal_type>
  <portal_type id="Test Page Module">
   <item>Test Page</item>
  </portal_type>
