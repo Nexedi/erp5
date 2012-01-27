@@ -55,11 +55,13 @@
 mail_message = portal.portal_catalog.getResultValue(portal_type="Mail Message", reference=key)\n
 \n
 credential_request = mail_message.getFollowUpValue()\n
+if credential_request.getValidationState() in (\'submitted\', \'accepted\'):\n
+  message = "Your account is already active."\n
+else:\n
+  credential_request.submit(comment=\'Create by subscription form\')\n
+  mail_message.deliver()\n
+  message = "Your account is being activated. You will receive one e-mail after finish the activation"\n
 \n
-credential_request.submit(comment=\'Create by subscription form\')\n
-\n
-mail_message.deliver()\n
-message = "Your account is being activated. You will receive one e-mail after finish the activation"\n
 return context.Base_redirect("login_form?portal_status_message=%s" % message)\n
 </string> </value>
         </item>
