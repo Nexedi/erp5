@@ -89,7 +89,7 @@ return element_list\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Review_listAnnotations</string> </value>
+            <value> <string>Review_getAnnotationList</string> </value>
         </item>
       </dictionary>
     </pickle>

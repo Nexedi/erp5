@@ -169,7 +169,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>Review_listAnnotations</string> </value>
+            <value> <string>Review_getAnnotationList</string> </value>
         </item>
       </dictionary>
     </pickle>
