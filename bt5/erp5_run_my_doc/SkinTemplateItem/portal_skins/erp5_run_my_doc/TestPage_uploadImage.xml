@@ -56,7 +56,7 @@
 \n
 msg = \'Slide created.\'\n
 def createImage(image_id):\n
-  return context.newContent(portal_type = \'Image\',\n
+  return context.newContent(portal_type = \'Embedded File\',\n
                                 title = image_id,\n
                                 id    = image_id,\n
                                 reference = image_id,\n
@@ -88,7 +88,8 @@ if slide_type in [\'Screenshot\', \'Illustration\']:\n
 \n
 translateString = context.Base_translateString\n
 portal_status_message = translateString(msg)\n
-context.Base_redirect(\'TestPage_viewSlideCreator\', keep_items = dict(portal_status_message=portal_status_message))\n
+context.Base_redirect(\'TestPage_viewSlideCreator\', \n
+                      keep_items = dict(portal_status_message=portal_status_message))\n
 </string> </value>
         </item>
         <item>
