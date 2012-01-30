@@ -57,6 +57,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     for(var i = 0; i < n; i++){\n
       var img = images.eq(i);\n
       var src = img.attr(\'src\').split(\'?format\')[0].split(\'/\');\n
+\n
       var extension = img.attr(\'type\');\n
       if(extension == undefined)\n
         extension = "png";\n
@@ -66,6 +67,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     }\n
     var text = temp.html();\n
     var result = "", tagName = "", c = "", chr = "";\n
+    if (text == null) {\n
+      return false;\n
+      }\n
     var n = text.length;\n
     var tag = false, tagNameParsing = false;\n
     for(var i = 0; i < n; i++){\n
@@ -173,7 +177,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
   }\n
 \n
   function fetchTextInfo(hasToC, txt){\n
-    $.get(\'TestPage_getDetails\', function(details, status, xhr){\n
+    $.get(\'TestPage_getDetail\', function(details, status, xhr){\n
       details = details.split(\'\\n\');\n
       var title = details[0], shortTitle = details[1], description = details[2], authors = parseList(details[3]);\n
       var year = details[4].split(\'/\')[0];\n
