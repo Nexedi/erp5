@@ -198,7 +198,7 @@
       <dictionary>
         <item>
             <key> <string>method_name</string> </key>
-            <value> <string>TestPageModule_listPreviousChapters</string> </value>
+            <value> <string>TestPageModule_getPreviousChapterList</string> </value>
         </item>
       </dictionary>
     </pickle>
