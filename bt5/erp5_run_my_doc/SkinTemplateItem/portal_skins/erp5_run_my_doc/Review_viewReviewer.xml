@@ -36,15 +36,18 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n
-<title>Reviewer</title>\n
-<link rel="stylesheet" type="text/css" href="../../portal_skins/erp5_jquery/jquery/ui/css/erp5-theme/jquery-ui.css">\n
-<link rel="stylesheet" type="text/css" href="reviewer.css">\n
-<script language="javascript" src="reviewer.js"></script>\n
-<p id="locator_label"></p>\n
-<p id="label_ready" class="label_document_not_ready">Not ready. Wait until the document is ready to start commenting.</p>\n
-<iframe id="iframe" style="width:100%;height:500px" src="./getTextContent"></iframe>\n
-<div id=\'review_tooltip\' class=\'desactivated_review_tooltip\'></div>
+<tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();\n
+                       portal_url   python: site_root.absolute_url();">\n
+\n
+  <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/jquery/ui/css/erp5-theme/jquery-ui.css">\n
+  <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/reviewer.css">\n
+  <script language="javascript" tal:attributes="src string:${portal_url}/reviewer.js"></script>\n
+  <p id="locator_label"></p>\n
+  <p id="label_ready" class="label_document_not_ready">Not ready. Wait until the document is ready to start commenting.</p>\n
+    <iframe id="iframe" style="width:100%;height:500px" src="./getTextContent"></iframe>\n
+  <div id=\'review_tooltip\' class=\'desactivated_review_tooltip\'></div>\n
+\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
