@@ -53,8 +53,13 @@
             <value> <string>portal = state_change[\'object\'].getPortalObject()\n
 tag = \'%s_reindex\' % state_change[\'object\'].getRelativeUrl()\n
 activate_kw = {\'tag\': tag} \n
-state_change[\'object\'].reindexObject(activate_kw=activate_kw) \n
-portal.portal_alarms.accept_submitted_credentials.activate(activity=\'SQLDict\', after_tag=tag).activeSense()\n
+state_change[\'object\'].reindexObject(activate_kw=activate_kw)\n
+\n
+# call alarm to speed up account creation process\n
+# only if alarm is enabled\n
+alarm = portal.portal_alarms.accept_submitted_credentials\n
+if alarm.isEnabled():\n
+  alarm.activate(activity=\'SQLDict\', after_tag=tag).activeSense()\n
 </string> </value>
         </item>
         <item>
