@@ -65,7 +65,7 @@
   `translated_text` TEXT,\n
   PRIMARY KEY (`uid`, `property_name`, `content_language`),\n
   FULLTEXT KEY (`translated_text`)\n
-) ENGINE=groonga;\n
+) ENGINE=mroonga;\n
 </string> </value>
         </item>
         <item>

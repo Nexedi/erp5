@@ -1,3 +1,6 @@
+2012-01-30 Kazuhiko
+* engine name is mroonga instead of groonga since mroonga-1.20.
+
 2012-01-05 Kazuhiko
 * move create/drop table SQL for content_translation table from erp5_content_translation to erp5_full_text_*_catalog BT.
 * rename from erp5_full_text_groonga_catalog to erp5_full_text_mroonga_catalog.
