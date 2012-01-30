@@ -198,7 +198,7 @@ table.lined td, table.lined th {\n
 @page :left {\n
   @top-left {\n
     font: 11pt "Gill Sans", serif;\n
-    content: "ERP5 Test creator";\n
+    content: "ERP5 Run My Docs";\n
     vertical-align: bottom;\n
     padding-bottom: 2em;\n
   }\n
