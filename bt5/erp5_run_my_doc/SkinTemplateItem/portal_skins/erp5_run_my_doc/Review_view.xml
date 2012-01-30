@@ -100,7 +100,7 @@
                         <string>my_title</string>
                         <string>my_short_title</string>
                         <string>my_reference</string>
-                        <string>my_document_url</string>
+                        <string>my_url_string</string>
                         <string>my_annotation</string>
                       </list>
                     </value>

@@ -11,8 +11,8 @@
             <value>
               <list>
                 <string>description</string>
-                <string>title</string>
                 <string>display_width</string>
+                <string>title</string>
               </list>
             </value>
         </item>
