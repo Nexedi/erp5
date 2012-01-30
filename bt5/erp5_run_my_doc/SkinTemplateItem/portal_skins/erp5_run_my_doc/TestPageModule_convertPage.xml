@@ -50,13 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># XXX (rafael) I beleave KM has a much better way to do this, \n
-#              clone web page.\n
-\n
-conv_module_id = \'test_page_module\'\n
-\n
-if conv_obj_type == \'Web Page\':\n
-  conv_module_id = \'web_page_module\'\n
+            <value> <string>"""\n
+XXX (rafael) I believe KM has a much better way to do this, \n
+ clone web page, maybe using Base_createCloneDocument from erp5_base\n
+"""\n
 \n
 conv_obj_module = context.getDefaultModule(conv_obj_type)\n
 counter = 0\n
@@ -81,7 +78,8 @@ for uid in uids:\n
                          obj.manage_copyObjects(\n
                             map(lambda x: x.getId(), obj.objectValues())))\n
 \n
-return conv_obj_module.Base_redirect(\'\', dict(portal_status_message=context.Base_translateString(str(counter) + " object(s) converted.")))\n
+return conv_obj_module.Base_redirect(\'\', \n
+        dict(portal_status_message=context.Base_translateString(str(counter) + " object(s) converted.")))\n
 </string> </value>
         </item>
         <item>
