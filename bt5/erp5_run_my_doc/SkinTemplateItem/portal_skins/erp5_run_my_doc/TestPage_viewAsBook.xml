@@ -39,25 +39,28 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n
 <html xmlns="http://www.w3.org/1999/xhtml">\n
   <head>\n
-    <link rel="stylesheet" type="text/css" href="boom.css">\n
-    <script type="text/javascript" src="jquery/core/jquery.js"></script>\n
-    <script type="text/javascript" src="jquery/ui/js/jquery-ui.js"></script>\n
-    <script type="text/javascript" src="book_converter.js"></script>\n
-    <script type="text/javascript" src="chapter_converter.js"></script>\n
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n
+   <tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();\n
+                       portal_url   python: site_root.absolute_url();">\n
+      <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/boom.css">\n
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/jquery/core/jquery.js"></script>\n
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/jquery/ui/js/jquery-ui.js"></script>\n
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/book_converter.js"></script>\n
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/chapter_converter.js"></script>\n
+    </tal:block>\n
     <script type="text/javascript">\n
-      $(document).ready(function(){\n
-        $(\'input[name=clean_button]\', window.top.document).click(function(){\n
-          cleanForPrince();\n
-          return false;\n
-        });\n
-        convertBook(\'getTextContent\', $(\'body\'));\n
-      });\n
-    </script>\n
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n
+       $(document).ready(function(){\n
+         $(\'input[name=clean_button]\', window.top.document).click(function(){\n
+           console.log(window.top.document)\n
+           cleanForPrince();\n
+           return false;\n
+         });\n
+         convertBook(\'getTextContent\', $(\'body\'));\n
+       });\n
+     </script>\n
     <title>View as Book</title>\n
   </head>\n
-  <body>\n
-  </body>\n
+  <body></body>\n
 </html>
 
 ]]></unicode> </value>

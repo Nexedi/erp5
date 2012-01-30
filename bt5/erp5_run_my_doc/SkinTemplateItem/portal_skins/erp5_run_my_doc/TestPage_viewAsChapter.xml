@@ -40,10 +40,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">\n
   <head>\n
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />\n
-    <link rel="stylesheet" type="text/css" href="boom.css">\n
-    <script type="text/javascript" src="jquery/core/jquery.js"></script>\n
-    <script type="text/javascript" src="jquery/ui/js/jquery-ui.js"></script>\n
-    <script type="text/javascript" src="chapter_converter.js"></script>\n
+   <tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();\n
+                       portal_url   python: site_root.absolute_url();">\n
+      <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/boom.css">\n
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/jquery/core/jquery.js"></script>\n
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/jquery/ui/js/jquery-ui.js"></script>\n
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/chapter_converter.js"></script>\n
+    </tal:block>\n
     <script type="text/javascript">\n
       $(document).ready(function(){\n
         $(\'input[name=clean_button]\', window.top.document).click(function(){\n
