@@ -36,32 +36,22 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">\n
-<html xmlns="http://www.w3.org/1999/xhtml">\n
-  <head>\n
-    <link rel="stylesheet" type="text/css" href="../../portal_skins/erp5_jquery/jquery/ui/css/erp5-theme/jquery-ui.css">\n
-    <link rel="stylesheet" type="text/css" href="slideshow_editor.css">\n
-    <script language="javascript" src="slideshow_editor.js"></script>\n
-    <script language="javascript" src="erp5_run_my_docs.js"></script>\n
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n
-    <title>SlideShow Editor</title>\n
-  </head>\n
-  <body> \n
-    <div id="list">\n
-    </div>\n
-    <div id="add_slide">\n
-      <section id="add_slide_button">\n
-        Add Slide\n
-      </section>\n
-    </div>\n
-    <div id="dialog_add_slide" class="slide_dialog">\n
-      \n
-    </div>\n
-    <div id="dialog_edit_slide" class="slide_dialog">\n
-      \n
-    </div>\n
-  </body>\n
-</html>
+<tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();\n
+                       portal_url   python: site_root.absolute_url();">\n
+\n
+  <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/jquery/ui/css/erp5-theme/jquery-ui.css">\n
+  <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/slideshow_editor.css">\n
+  <script language="javascript" tal:attributes="src string:${portal_url}/slideshow_editor.js"></script>\n
+  <script language="javascript" tal:attributes="src string:${portal_url}/erp5_run_my_docs.js"></script>\n
+\n
+  <div id="list"></div>\n
+  <div id="add_slide">\n
+    <section id="add_slide_button"> Add Slide </section>\n
+  </div>\n
+  <div id="dialog_add_slide" class="slide_dialog"></div>\n
+  <div id="dialog_edit_slide" class="slide_dialog"></div>\n
+\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>

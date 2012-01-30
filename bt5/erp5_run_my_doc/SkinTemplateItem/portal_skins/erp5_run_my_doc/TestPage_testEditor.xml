@@ -36,23 +36,25 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />\n
-<title>SlideShow Editor</title>\n
-<link rel="stylesheet" type="text/css" href="../../portal_skins/erp5_jquery/jquery/ui/css/erp5-theme/jquery-ui.css">\n
-<link rel="stylesheet" type="text/css" href="test_editor.css">\n
-<script language="javascript" src="test_editor.js"></script>\n
-<script language="javascript" src="erp5_run_my_docs.js"></script>\n
-<table id="test_table">\n
-  <col class=\'action_column\' />\n
-  <col class=\'action_column\' />\n
-  <col/>\n
-  <col/>\n
-  <col/>\n
-  <thead>\n
-  </thead>\n
-  <tbody id="list">\n
-  </tbody>\n
-</table>
+<tal:block tal:define="site_root    python: here.getWebSiteValue() or here.getPortalObject();\n
+                       portal_url   python: site_root.absolute_url();">\n
+\n
+  <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/jquery/ui/css/erp5-theme/jquery-ui.css">\n
+  <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/test_editor.css">\n
+  <script language="javascript" tal:attributes="src string:${portal_url}/test_editor.js"></script>\n
+  <script language="javascript" tal:attributes="src string:${portal_url}/erp5_run_my_docs.js"></script>\n
+  <table id="test_table">\n
+    <col class=\'action_column\' />\n
+    <col class=\'action_column\' />\n
+    <col/>\n
+    <col/>\n
+    <col/>\n
+    <thead>\n
+    </thead>\n
+    <tbody id="list">\n
+    </tbody>\n
+  </table>\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>
