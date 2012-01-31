@@ -363,6 +363,25 @@ class HTTPCacheCheckerTestSuite(object):
                                     (header, read_value, reference_value)
           self.report_dict.setdefault(url, []).append(message)
 
+  def _isSameUrl(self, url):
+    """
+      Return whether the url is already checked or not.
+
+      Example case):
+      http://example.com/login_form
+      http://example.com/login_form/
+    """
+    if url in (None, ''):
+      return False
+    same_url = None
+    if url.endswith('/'):
+      same_url = url.rstrip('/')
+    else:
+      same_url = '%s/' % url
+    if same_url in self.report_dict:
+      return True
+    return False
+
   def _parseWgetLogs(self, wget_log_file, discarded_url_list=_MARKER,
                      prohibited_file_name_list=None,
                      prohibited_folder_name_list=None):
@@ -385,6 +404,8 @@ class HTTPCacheCheckerTestSuite(object):
         if not first_pass and url in discarded_url_list:
           # URL already checked during first pass
           logging.debug('%r Discarded' % url)
+          discarded = True
+        elif self._isSameUrl(url):
           discarded = True
       if discarded:
         # keep reading wget process without doing anything
