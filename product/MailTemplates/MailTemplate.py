@@ -11,6 +11,7 @@ from AccessControl import getSecurityManager
 from App.class_init import default__class_init__ as InitializeClass
 from App.Common import package_home
 from Products.PageTemplates.ZopePageTemplate import ZopePageTemplate
+from Products.PageTemplates.PageTemplate import PageTemplate
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from BaseMailTemplate import BaseMailTemplate
@@ -92,6 +93,12 @@ class MailTemplate(BaseMailTemplate,ZopePageTemplate):
             return result
         finally:
             security.removeContext(self)
+
+    def pt_render(self, source=False, extra_context={}):
+        # Override to support empty strings
+        result = PageTemplate.pt_render(self, source, extra_context) or u''
+        assert isinstance(result, unicode)
+        return result
 
 InitializeClass(MailTemplate)
 
