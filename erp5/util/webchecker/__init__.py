@@ -315,13 +315,13 @@ class HTTPCacheCheckerTestSuite(object):
                        re.MULTILINE | re.IGNORECASE)
           if content_type_regex.search(fetched_data) is not None:
             for header, value in self.conditional_header_dict[section]:
-              conditional_header_dict.setdefault(header, []).append(value)
+              conditional_header_dict[header] = _formatConfiguration(value)
           continue
         if url_regex_str_match is not None:
           url_regex_str = url_regex_str_match.group(1)
           if re.compile(url_regex_str).match(url) is not None:
             for header, value in self.conditional_header_dict[section]:
-              conditional_header_dict.setdefault(header, []).append(value)
+              conditional_header_dict[header] = _formatConfiguration(value)
       return conditional_header_dict
 
     validator_dict = {}
@@ -545,6 +545,12 @@ class HTTPCacheCheckerTestSuite(object):
 from optparse import OptionParser
 import ConfigParser
 
+def _formatConfiguration(configuration):
+  """ format the configuration"""
+  if configuration in ('True', 'true', 'yes'):
+    return True
+  return configuration.splitlines()
+
 def web_checker_utility():
   usage = "usage: %prog [options] config_path"
   parser = OptionParser(usage=usage)
@@ -577,10 +583,7 @@ def web_checker_utility():
       # defaults are shared for all sections.
       # so discard them from header_list
       continue
-    if configuration in ('True', 'true', 'yes'):
-      value = True
-    else:
-      value = configuration.splitlines()
+    value = _formatConfiguration(configuration)
     header_list[header] = value
   conditional_header_dict = {}
   no_header_dict = {}
