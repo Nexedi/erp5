@@ -104,6 +104,7 @@
                         <string>my_quantity</string>
                         <string>my_trade_phase</string>
                         <string>my_int_index</string>
+                        <string>my_target_delivery</string>
                       </list>
                     </value>
                 </item>
