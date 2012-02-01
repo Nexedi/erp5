@@ -1,7 +1,7 @@
 <workflow_chain>
  <chain>
   <type>Review</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, review_workflow</workflow>
  </chain>
  <chain>
   <type>Test Page</type>
