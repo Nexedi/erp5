@@ -57,26 +57,31 @@ class ComponentModule(ModuleType):
 from types import ModuleType
 from zLOG import LOG, INFO
 
-def generateComponentClassWrapper(namespace):
+def generateComponentClassWrapper(namespace, portal_type):
   def generateComponentClass(component_name):
     site = getSite()
 
+    # XXX-arnau: erp5.component.extension.VERSION.REFERENCE perhaps but there
+    # should be a a way to specify priorities such as portal_skins maybe?
     component_id = '%s.%s' % (namespace, component_name)
     try:
-      component = getattr(site.portal_components, component_id)
-    except AttributeError:
+      # XXX-arnau: Performances?
+      component = site.portal_catalog.unrestrictedSearchResults(
+        parent_uid=site.portal_components.getUid(),
+        reference=component_name,
+        validation_state=('validated', 'modified'),
+        portal_type=portal_type)[0].getObject()
+    except IndexError:
       LOG("ERP5Type.dynamic", INFO,
           "Could not find %s, perhaps it has not been migrated yet?" % \
             component_id)
 
-      raise
+      raise AttributeError("Component %s not found or not validated" % \
+                             component_id)
     else:
-      if component.getValidationState() == 'validated':
-        new_module = ModuleType(component_id, component.getDescription())
-        component.load(new_module.__dict__, validated_only=True)
-        LOG("ERP5Type.dynamic", INFO, "Loaded successfully %s" % component_id)
-        return new_module
-      else:
-        raise AttributeError("Component %s not validated" % component_id)
+      new_module = ModuleType(component_id, component.getDescription())
+      component.load(new_module.__dict__, validated_only=True)
+      LOG("ERP5Type.dynamic", INFO, "Loaded successfully %s" % component_id)
+      return new_module
 
   return generateComponentClass
