@@ -1,3 +1,6 @@
+2012-02-01 arnaud.fontaine
+* Replace comments by description field in Component_view.
+
 2012-01-27 arnaud.fontaine
 * For Component_view, add version, comments and validation state fields, and move editor field to the bottom to have more room for editing.
 
