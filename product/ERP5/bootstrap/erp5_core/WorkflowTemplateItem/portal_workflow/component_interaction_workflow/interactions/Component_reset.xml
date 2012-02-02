@@ -58,7 +58,6 @@
               <list>
                 <string>validate</string>
                 <string>invalidate</string>
-                <string>revalidate</string>
               </list>
             </value>
         </item>

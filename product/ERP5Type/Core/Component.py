@@ -58,11 +58,14 @@ class Component(Base):
                      'Reference',
                      'TextDocument')
 
-  def checkConsistency(self, *args, **kw):
+  def checkConsistency(self, text_content=None, *args, **kw):
     """
     XXX-arnau: should probably in a separate Constraint class
     """
-    if not self.getTextContent():
+    if text_content is None:
+      text_content = self.getTextContent()
+
+    if not text_content:
       return [ConsistencyMessage(self,
                                  object_relative_url=self.getRelativeUrl(),
                                  message="No source code",
@@ -70,7 +73,7 @@ class Component(Base):
 
     message = None
     try:
-      self.load()
+      self.load(text_content=text_content)
     except SyntaxError, e:
       message = "%s (line: %d, column: %d)" % (e.msg, e.lineno, e.offset)
     except Exception, e:
@@ -99,21 +102,36 @@ class Component(Base):
     Then, when the user revalidates the Component through a workflow action,
     'text_content_non_validated' property is copied back to 'text_content'.
 
-    XXX-arnau: having a separate property would require hackish code when
-    exporting the bt5, perhaps a workflow variable would be better?
+    XXX-arnau: the workflow history bit is really ugly and should be moved to
+               an interaction workflow instead
     """
-    if self.getValidationState() == 'validated':
-      return self.setProperty('text_content_non_validated', text_content)
-    
-    return super(Component, self)._setTextContent(text_content)
+    validation_state = self.getValidationState()
+    if validation_state in ('validated', 'modified'):
+      error_message_list = self.checkConsistency(text_content=text_content)
+      if error_message_list:
+        self.modified()
 
-  def setTextContentAfterRevalidation(self):
-    """
-    Call upon revalidate on an already validated Component to set the source
-    code from text_content_non_validated property
-    """
-    super(Component, self)._setTextContent(self.getTextContent())
-    self.setProperty('text_content_non_validated', None)
+        validation_workflow = self.workflow_history['component_validation_workflow']
+
+        last_validation_workflow = validation_workflow[-1]
+        last_validation_workflow['error_message'] = error_message_list[0]
+        last_validation_workflow['text_content'] = text_content
+
+        previous_validation_workflow = validation_workflow[-2]
+        previous_validation_workflow['error_message'] = ''
+        previous_validation_workflow['text_content'] = ''
+      else:
+        super(Component, self)._setTextContent(text_content)
+        self.validate()
+
+        if validation_state == 'modified':
+          # XXX-arnau: copy/paste
+          validation_workflow = self.workflow_history['component_validation_workflow']
+          previous_validation_workflow = validation_workflow[-2]
+          previous_validation_workflow['error_message'] = ''
+          previous_validation_workflow['text_content'] = ''
+    else:
+      return super(Component, self)._setTextContent(text_content)
 
   def getTextContent(self, validated_only=False):
     """
@@ -123,13 +141,29 @@ class Component(Base):
     validated), meaningful when editing a Component or checking consistency
     """
     if not validated_only:
-      text_content_non_validated = self.getProperty('text_content_non_validated')
+      text_content_non_validated = \
+          self.workflow_history['component_validation_workflow'][-1].get('text_content',
+                                                                         None)
+
       if text_content_non_validated:
         return text_content_non_validated
 
     return super(Component, self).getTextContent()
 
-  def load(self, namespace_dict={}, validated_only=False):
+  def _getErrorMessage(self):
+    current_workflow = self.workflow_history['component_validation_workflow'][-1]
+    return current_workflow['error_message']
+
+  def getTranslatedValidationStateTitleWithErrorMessage(self):
+    validation_state_title = self.getTranslatedValidationStateTitle()
+    error_message = self._getErrorMessage()
+    if error_message:
+      return "%s (%s)" % (validation_state_title,
+                          str(error_message.getTranslatedMessage()))
+
+    return validation_state_title
+
+  def load(self, namespace_dict={}, validated_only=False, text_content=None):
     """
     Load the source code into the given dict. Using exec() rather than
     imp.load_source() as the latter would required creating an intermediary
@@ -138,7 +172,10 @@ class Component(Base):
     it. By default namespace_dict is an empty dict to allow checking the
     source code before validate.
     """
-    exec self.getTextContent(validated_only=validated_only) in namespace_dict
+    if text_content is None:
+      text_content = self.getTextContent(validated_only=validated_only)
+
+    exec text_content in namespace_dict
 
   @staticmethod
   def _getFilesystemPath():

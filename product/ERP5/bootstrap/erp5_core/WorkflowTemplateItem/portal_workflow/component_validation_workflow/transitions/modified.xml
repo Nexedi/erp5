@@ -38,11 +38,11 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>revalidate</string> </value>
+            <value> <string>modified</string> </value>
         </item>
         <item>
             <key> <string>new_state_id</string> </key>
-            <value> <string></string> </value>
+            <value> <string>modified</string> </value>
         </item>
         <item>
             <key> <string>script_name</string> </key>

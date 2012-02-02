@@ -1204,6 +1204,18 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       self.fail("Creating a Category Expression with syntax error raises "\
                 "an error")
 
+from Products.ERP5Type.Tool.ComponentTool import ComponentTool
+ComponentTool._original_reset = ComponentTool.reset
+ComponentTool._reset_performed = False
+
+def assertResetNotCalled(*args, **kwargs):
+  raise AssertionError("reset should only be called once revalidating")
+
+def assertResetCalled(self, *args, **kwargs):
+  from Products.ERP5Type.Tool.ComponentTool import ComponentTool
+  ComponentTool._reset_performed = True
+  return ComponentTool._original_reset(self, *args, **kwargs)
+
 import abc
 
 class _TestZodbComponent(ERP5TypeTestCase):
@@ -1255,74 +1267,54 @@ class _TestZodbComponent(ERP5TypeTestCase):
     self.assertHasAttribute(self._module,
                             'TestValidateInvalidateComponent')
 
-  def testRevalidate(self):
-    """
-    Check whether revalidate is performed properly
-    """
-    validated_code = 'def foobar(*args, **kwargs):\n  return "Validated"'
-    component = self._newComponent('TestRevalidateComponent', validated_code)
-
-    component.validate()
-    transaction.commit()
-    self.tic()
-
-    self.assertHasAttribute(self._module, 'TestRevalidateComponent')
-    self.assertEquals(component.getTextContent(), validated_code)
-    self.assertEquals(component.getTextContent(validated_only=True),
-                      validated_code)
-
-    from Products.ERP5Type.Tool.ComponentTool import ComponentTool
-    old_reset_function = ComponentTool.reset
-    def assertResetNotCalled(*args, **kwargs):
-      raise AssertionError("reset should only be called once revalidating")
-
-    def assertResetCalled(self, *args, **kwargs):
-      from Products.ERP5Type.Tool.ComponentTool import ComponentTool
-      ComponentTool._reset_performed = True
-      return old_reset_function(self, *args, **kwargs)
-
-    revalidated_code = 'def foobar(*args, **kwargs):\n  return "Revalidated"'
-
-    try:
-      ComponentTool.reset = assertResetNotCalled
-      component.setTextContent(revalidated_code)
-      transaction.commit()
-      self.tic()
-
-      self.assertEquals(component.getTextContent(), revalidated_code)
-      self.assertEquals(component.getTextContent(validated_only=True),
-                        validated_code)
-
-      ComponentTool.reset = assertResetCalled
-      component.revalidate()
-      transaction.commit()
-      self.tic()
-
-      self.assertTrue(ComponentTool._reset_performed)
-      self.assertEquals(component.getTextContent(), revalidated_code)
-      self.assertEquals(component.getTextContent(validated_only=True),
-                        revalidated_code)
-
-    finally:
-      self._component_tool.reset = old_reset_function
-
   def testSourceCodeWithSyntaxError(self):
-    test_component = self._newComponent(
-      'TestComponentWithSyntaxError',
-      'def foobar(*args, **kwargs):\n  return 42')
+    valid_code = 'def foobar(*args, **kwargs):\n  return 42'
+    ComponentTool.reset = assertResetCalled
+    try:
+      component = self._newComponent('TestComponentWithSyntaxError', valid_code)
+      component.validate()
+      transaction.commit()
+      self.tic()
+    finally:
+      ComponentTool.reset = ComponentTool._original_reset
 
-    self.assertEqual(test_component.checkConsistency(), [])
-    test_component.validate()
-    transaction.commit()
-    self.tic()
-    self.assertHasAttribute(self._module,
-                            'TestComponentWithSyntaxError')
+    self.assertEquals(component.getValidationState(), 'validated')
+    self.assertEquals(component.getTextContent(), valid_code)
+    self.assertEquals(component.getTextContent(validated_only=True), valid_code)
+    self.assertHasAttribute(self._module, 'TestComponentWithSyntaxError')
 
-    test_component.setTextContent('def foobar(*args, **kwargs)\n  return 42')
-    transaction.commit()
-    self.tic()
+    invalid_code = 'def foobar(*args, **kwargs)\n  return 42'
+    ComponentTool.reset = assertResetNotCalled
+    try:
+      component.setTextContent(invalid_code)
+      transaction.commit()
+      self.tic()
+    finally:
+      ComponentTool.reset = ComponentTool._original_reset
 
-    self.assertNotEqual(test_component.checkConsistency(), [])
+    self.assertEquals(component.getValidationState(), 'modified')
+    self.assertNotEqual(component._getErrorMessage(), '')
+    self.assertEquals(component.getTextContent(), invalid_code)
+    self.assertEquals(component.getTextContent(validated_only=True), valid_code)
+    self._component_tool.reset()
+    self.assertHasAttribute(self._module, 'TestComponentWithSyntaxError')
+
+    ComponentTool.reset = assertResetCalled
+    try:
+      component.setTextContent(valid_code)
+      transaction.commit()
+      self.tic()
+
+      self.assertEquals(ComponentTool._reset_performed, True)
+    finally:
+      ComponentTool.reset = ComponentTool._original_reset
+      ComponentTool._reset_performed = False
+
+    self.assertEquals(component.getValidationState(), 'validated')
+    self.assertEquals(component._getErrorMessage(), '')
+    self.assertEquals(component.getTextContent(), valid_code)
+    self.assertEquals(component.getTextContent(validated_only=True), valid_code)    
+    self.assertHasAttribute(self._module, 'TestComponentWithSyntaxError')
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
