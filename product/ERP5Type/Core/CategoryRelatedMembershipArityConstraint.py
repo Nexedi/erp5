@@ -67,12 +67,8 @@ class CategoryRelatedMembershipArityConstraint(CategoryMembershipArityConstraint
     # a string
     assert len(base_category_list) != 0
 
-    base_category = base_category_list[0]
-    sql_kw = {'portal_type': portal_type_list}
-    if base_category.endswith('_relative_url'):
-      sql_kw['%s' % base_category] =  obj.getRelativeUrl()
-    else:
-      sql_kw['%s_uid' % base_category_list[0]] = obj.getUid()
+    sql_kw = {'portal_type': portal_type_list,
+              '%s_uid' % base_category_list[0]: obj.getUid()}
 
     sql_kw.update(self._getExpressionValue(obj, self.getFilterParameter()))
 
