@@ -246,6 +246,10 @@ branch = %(branch)s
             if status_dict['status_code'] != 0:
               retry_software = True
               raise SubprocessError(status_dict)
+          # Give some time so computer partitions may start
+          # as partitions can be of any kind we have and likely will never have
+          # a reliable way to check if they are up or not ...
+          time.sleep(20)
 
           run_test_suite_path_list = glob.glob("%s/*/bin/runTestSuite" %config['instance_root'])
           if not len(run_test_suite_path_list):
@@ -264,7 +268,7 @@ branch = %(branch)s
                                   '--revision', revision,
                                   '--test_suite_title', test_suite_title,
                                   '--node_quantity', config['node_quantity'],
-                                  '--master_url', config['test_suite_master_url']])
+                                  '--master_url', portal_url])
           bt5_path_list = config.get("bt5_path")
           if bt5_path_list not in ('', None,):
             invocation_list.extend(["--bt5_path", bt5_path_list])
