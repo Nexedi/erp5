@@ -266,7 +266,7 @@ branch = %(branch)s
                                   '--node_quantity', config['node_quantity'],
                                   '--master_url', config['test_suite_master_url']])
           bt5_path_list = config.get("bt5_path")
-          if bt5_path_list is not None:
+          if bt5_path_list not in ('', None,):
             invocation_list.extend(["--bt5_path", bt5_path_list])
           # From this point, test runner becomes responsible for updating test
           # result.
