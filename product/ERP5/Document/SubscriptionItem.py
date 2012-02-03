@@ -226,14 +226,15 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
         # Create a new applied order rule (portal_rules.order_rule)
         portal_rules = getToolByName(self, 'portal_rules')
         portal_simulation = getToolByName(self, 'portal_simulation')
+        search_rule_kw = { 'sort_on': 'version', 'sort_order': 'descending' }
         if self.getRuleReference() is None:
-          rule_value_list = portal_rules.searchRuleList(self,
-                  tested_base_category_list=tested_base_category_list)
+          rule_value_list = portal_rules.searchRuleList(self, **search_rule_kw)
+          if len(rule_value_list) > 1:
+            raise SimulationError('Expandable Document %s has more than one'
+                                  ' matching rule.' % self.getRelativeUrl())
         else:
-          rule_value_list = [portal_rules[self.getRuleReference()]]
-        if len(rule_value_list) > 1:
-          raise SimulationError('Expandable Document %s has more than one'
-                                ' matching rule.' % self.getRelativeUrl())
+          rule_value_list = portal_rules.searchRuleList(self,
+            reference=self.getRuleReference(), **search_rule_kw)
         if len(rule_value_list):
           rule_value = rule_value_list[0]
           my_applied_rule = rule_value.constructNewAppliedRule(portal_simulation,
