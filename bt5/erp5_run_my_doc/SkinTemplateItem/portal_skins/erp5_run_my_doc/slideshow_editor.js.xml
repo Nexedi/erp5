@@ -314,11 +314,17 @@ $(document).ready(function(){\n
 \n
     editSlideIframe.load(function() {\n
       function initFrame(){ \n
+        if (slideNumber == null) {\n
+          // slideNumber should be defined before try to edit.\n
+          return false;\n
+        }\n
         var slide = $(\'section:eq(\'+slideNumber+\')\', slideList);\n
         changeImagesURLAttrib($(\'> img:first\', slide), \'timestamp\', new Date().getTime()); //This updates the image displayed\n
         editSlideIframeContents = editSlideIframe.contents();\n
         $(\'input[name="field_your_chapter_title"]\', editSlideIframeContents).val($(\'h1:first\', slide).html().trim());\n
-        $(\'select[name="field_your_slide_type"]\', editSlideIframeContents).val(slide.attr(\'class\').replace(/^\\w/, function($0) { return $0.toUpperCase(); }));\n
+        if (slide.attr(\'class\') != null) {\n
+          $(\'select[name="field_your_slide_type"]\', editSlideIframeContents).val(slide.attr(\'class\').replace(/^\\w/, function($0) { return $0.toUpperCase(); }));\n
+        };\n
         var tmpSlide = slide.clone();\n
         $("h1:first, img:first, details, test", tmpSlide).remove();\n
         $(\'textarea[name="field_your_slide_content"]\', editSlideIframeContents).val(tmpSlide.html().trim());\n
