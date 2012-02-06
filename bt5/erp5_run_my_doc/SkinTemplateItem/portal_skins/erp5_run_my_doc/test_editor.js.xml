@@ -131,8 +131,7 @@ function updateTextContent(){\n
       testBody.append(lineToAdd);\n
     }\n
   }\n
-  testPageHTML.getElementsByTagName(\'body\')[0].innerHTML = indent(testPageHTML.getElementsByTagName(\'body\')[0].cloneNode(true), 2);\n
-  $(textContent).text("<!DOCTYPE html>\\n<" + "html" + ">\\n" + $(testPageHTML).html() + "\\n<" + "/html" + ">");\n
+  $(textContent).text($(indent($(testPageHTML)[0], 2))[0].innerHTML);\n
 }\n
 \n
 //Add an edit button and a remove button to a line\n
@@ -142,21 +141,21 @@ function prependEditButtons(element){\n
 \n
 $(document).ready(function(){\n
   $(function() {\n
-    //Extract slide list\n
+    // Extract slide list\n
     textContent = document.getElementsByName(\'field_my_text_content\')[0];\n
     var tmp = document.createElement(\'tmp\');\n
-    testPageHTML = document.createElement(\'html\');\n
-    testPageHTML.appendChild(document.createElement(\'head\'));\n
-    testPageHTML.appendChild(document.createElement(\'body\'));\n
     $(tmp).html($(textContent).text());\n
-    $(\'body\',testPageHTML).append($(\'section\', tmp));\n
-    $(\'head\',testPageHTML).append($(\'> :not(section)\', tmp));\n
+\n
+    testPageHTML = document.createElement(\'content\');\n
+    $(testPageHTML).append($(\'section\', tmp));\n
+\n
     $(\'#test_table > thead\').append($(\'test thead > tr > th\', testPageHTML).attr(\'colspan\',5).parent());\n
     slideList = $(\'section\', testPageHTML);\n
+\n
     var n = slideList.length;\n
     var body = $(\'#test_table > tbody\');\n
 \n
-    //Prepare chapters, and buttons to add instruction for each chapter\n
+    // Prepare chapters, and buttons to add instruction for each chapter\n
     for(var i = 0; i < n; i++){\n
       var slide = slideList.eq(i);\n
       body.append($(\'<tr>\').append($(\'<th>\').attr(\'colspan\',5).html($(\'h1:first\',slide).html())));\n
