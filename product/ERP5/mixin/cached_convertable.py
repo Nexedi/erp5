@@ -48,10 +48,11 @@ def hashPdataObject(pdata_object):
   to minimize memory footprint.
   """
   md5_hash = md5()
-  next = pdata_object
-  while next is not None:
-    md5_hash.update(next.data)
-    next = next.next
+  while pdata_object is not None:
+    chunk = pdata_object.aq_base
+    md5_hash.update(chunk.data)
+    pdata_object = chunk.next
+    chunk._p_deactivate()
   return md5_hash.hexdigest()
 
 class CachedConvertableMixin:
@@ -130,8 +131,9 @@ class CachedConvertableMixin:
       size = 0
     elif isinstance(data, Pdata):
       cached_value = aq_base(data)
-      conversion_md5 = hashPdataObject(cached_value)
-      size = len(cached_value)
+      size = str(cached_value) # not a size but avoids a 'del' statement
+      conversion_md5 = md5(size).hexdigest()
+      size = len(size)
     elif isinstance(data, OFSImage):
       cached_value = data
       conversion_md5 = md5(str(data.data)).hexdigest()
@@ -244,10 +246,10 @@ class CachedConvertableMixin:
   def updateContentMd5(self):
     """Update md5 checksum from the original file
     """
-    data = self.getData()
-    if data not in (None, ''):
+    data = self._baseGetData()
+    if data:
       if isinstance(data, Pdata):
-        self._setContentMd5(hashPdataObject(aq_base(data)))
+        self._setContentMd5(hashPdataObject(data))
       else:
         self._setContentMd5(md5(data).hexdigest()) # Reindex is useless
     else:

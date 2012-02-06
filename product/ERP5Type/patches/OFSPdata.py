@@ -28,12 +28,9 @@
 ##############################################################################
 
 from OFS.Image import Pdata
-"""
-  This patch add a getLastPdata method to return the last Pdata element
-  of a Pdata
-"""
 
 def getLastPdata(self):
+  """Return the last Pdata chunk"""
   next = self.next
 
   while next is not None:
@@ -42,3 +39,12 @@ def getLastPdata(self):
   return self
 
 Pdata.getLastPdata = getLastPdata
+
+def __nonzero__(self):
+  while not self.data:
+    self = self.next
+    if self is None:
+      return False
+  return True
+
+Pdata.__nonzero__ = __nonzero__
