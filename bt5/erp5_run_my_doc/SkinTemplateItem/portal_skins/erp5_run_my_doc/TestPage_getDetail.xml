@@ -50,10 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return "\\n".join([str(context.getTitle()),\n
+            <value> <string>context.REQUEST.RESPONSE.setHeader("Content-Type", "text/html; charset=utf-8")\n
+return "\\n".join([str(context.getTitle()),\n
                   str(context.getShortTitle()),\n
                   str(context.getDescription()), \n
-                  str(context.getContributorList()),\n
+                  str(",".join(context.getContributorTitleList())),\n
                   str(context.getEffectiveDate())])\n
 </string> </value>
         </item>
