@@ -6565,6 +6565,8 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
+
 class TestDocumentTemplateItem(BusinessTemplateMixin):
   document_title = 'UnitTest'
   document_data = """class UnitTest:
@@ -6659,6 +6661,112 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+  component_module = DocumentComponent._getDynamicModuleNamespace()
+  component_portal_type = DocumentComponent.portal_type
+
+  def getBusinessTemplateList(self):
+    return (super(TestDocumentTemplateItem, self).getBusinessTemplateList() +
+            ('erp5_core_component',))
+
+  def stepCheckZodbDocumentRemoved(self, sequence=None, **kw):
+    component_tool = self.getPortalObject().portal_components
+    component_id = '%s.%s' % (self.component_module, sequence['document_title'])
+    self.failIf(component_id in component_tool.objectIds())
+
+  def stepRemoveZodbDocument(self, sequence=None, **kw):
+    """
+    Remove Property Sheet, but only from ZODB
+    """
+    component_id = '%s.%s' % (self.component_module, sequence['document_title'])
+    self.portal.portal_components.manage_delObjects([component_id])
+
+  def stepCheckDocumentMigration(self, sequence=None, **kw):
+    """
+    Check migration of Document from the Filesystem to ZODB
+    """
+    component_id = '%s.%s' % (self.component_module, sequence['document_title'])
+    component_tool = self.getPortalObject().portal_components
+    self.failUnless(component_id in component_tool.objectIds())
+
+    component = getattr(component_tool, component_id)
+    self.assertEquals(component.getReference(), self.document_title)
+    self.assertEquals(component.getTextContent(), self.document_data)
+    self.assertEquals(component.getPortalType(), self.component_portal_type)
+
+  def stepCheckForkedMigrationExport(self, sequence=None, **kw):
+    component_bt_tool_path = os.path.join(sequence['template_path'],
+                                          self.__class__.__name__.replace('Test', ''),
+                                          'portal_components')
+
+    self.assertTrue(os.path.exists(component_bt_tool_path))
+
+    component_id = '%s.%s' % (self.component_module, sequence['document_title'])
+    base_path = os.path.join(component_bt_tool_path, component_id)
+
+    python_source_code_path = base_path + '.py'
+    self.assertTrue(os.path.exists(python_source_code_path))
+
+    source_code = sequence['document_data']
+    with open(python_source_code_path) as f:
+      self.assertEquals(f.read(), source_code)
+
+    xml_path = base_path + '.xml'
+    self.assertTrue(os.path.exists(xml_path))
+
+    first_line = source_code.split('\n', 1)[0]
+    with open(xml_path) as f:
+      for line in f:
+        self.failIf(first_line in line)
+
+  def test_BusinessTemplateWithDocumentMigration(self):
+    sequence_list = SequenceList()
+    sequence_string = '\
+                       CreateDocument \
+                       CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       AddDocumentToBusinessTemplate \
+                       CheckModifiedBuildingState \
+                       CheckNotInstalledInstallationState \
+                       BuildBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckObjectPropertiesInBusinessTemplate \
+                       SaveBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       RemoveDocument \
+                       RemoveBusinessTemplate \
+                       RemoveAllTrashBins \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckInstalledInstallationState \
+                       CheckBuiltBuildingState \
+                       CheckNoTrashBin \
+                       CheckSkinsLayers \
+                       CheckDocumentMigration \
+                       CheckDocumentRemoved \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckZodbDocumentRemoved \
+                       SaveBusinessTemplate \
+                       CheckForkedMigrationExport \
+                       '
+    sequence_list.addSequenceString(sequence_string)
+
+    # XXX-arnau: Temporary until _perform_migration is set to True by default
+    from Products.ERP5.Document.BusinessTemplate import DocumentTemplateItem
+    DocumentTemplateItem._perform_migration = True
+
+    try:
+      sequence_list.play(self)
+    finally:
+      DocumentTemplateItem._perform_migration = False
 
   def test_BusinessTemplateUpdateWithDocument(self):
     sequence_list = SequenceList()
@@ -6886,109 +6994,6 @@ class TestExtensionTemplateItem(TestDocumentTemplateItem):
 
   component_module = ExtensionComponent._getDynamicModuleNamespace()
   component_portal_type = ExtensionComponent.portal_type
-
-  def getBusinessTemplateList(self):
-    return (super(TestExtensionTemplateItem, self).getBusinessTemplateList() +
-            ('erp5_core_component',))
-
-  def stepCheckZodbDocumentRemoved(self, sequence=None, **kw):
-    component_tool = self.getPortalObject().portal_components
-    component_id = 'erp5.component.extension.' + sequence['document_title']
-    self.failIf(component_id in component_tool.objectIds())
-
-  def stepRemoveZodbDocument(self, sequence=None, **kw):
-    """
-    Remove Property Sheet, but only from ZODB
-    """
-    component_id = '%s.%s' % (self.component_module, sequence['document_title'])
-    self.portal.portal_components.manage_delObjects([component_id])
-
-  def stepCheckDocumentMigration(self, sequence=None, **kw):
-    """
-    Check migration of Document from the Filesystem to ZODB
-    """
-    component_id = '%s.%s' % (self.component_module, sequence['document_title'])
-    component_tool = self.getPortalObject().portal_components
-    self.failUnless(component_id in component_tool.objectIds())
-
-    component = getattr(component_tool, component_id)
-    self.assertEquals(component.getReference(), self.document_title)
-    self.assertEquals(component.getTextContent(), self.document_data)
-    self.assertEquals(component.getPortalType(), self.component_portal_type)
-
-  def stepCheckForkedMigrationExport(self, sequence=None, **kw):
-    component_bt_tool_path = os.path.join(sequence['template_path'],
-                                          'ExtensionTemplateItem',
-                                          'portal_components')
-
-    self.assertTrue(os.path.exists(component_bt_tool_path))
-
-    component_id = '%s.%s' % (self.component_module, sequence['document_title'])
-    base_path = os.path.join(component_bt_tool_path, component_id)
-
-    python_source_code_path = base_path + '.py'
-    self.assertTrue(os.path.exists(python_source_code_path))
-
-    source_code = sequence['document_data']
-    with open(python_source_code_path) as f:
-      self.assertEquals(f.read(), source_code)
-
-    xml_path = base_path + '.xml'
-    self.assertTrue(os.path.exists(xml_path))
-
-    first_line = source_code.split('\n', 1)[0]
-    with open(xml_path) as f:
-      for line in f:
-        self.failIf(first_line in line)
-
-  def test_BusinessTemplateWithDocumentMigration(self):
-    sequence_list = SequenceList()
-    sequence_string = '\
-                       CreateDocument \
-                       CreateNewBusinessTemplate \
-                       UseExportBusinessTemplate \
-                       AddDocumentToBusinessTemplate \
-                       CheckModifiedBuildingState \
-                       CheckNotInstalledInstallationState \
-                       BuildBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckObjectPropertiesInBusinessTemplate \
-                       SaveBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       RemoveDocument \
-                       RemoveBusinessTemplate \
-                       RemoveAllTrashBins \
-                       ImportBusinessTemplate \
-                       UseImportBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       InstallWithoutForceBusinessTemplate \
-                       Tic \
-                       CheckInstalledInstallationState \
-                       CheckBuiltBuildingState \
-                       CheckNoTrashBin \
-                       CheckSkinsLayers \
-                       CheckDocumentMigration \
-                       CheckDocumentRemoved \
-                       UninstallBusinessTemplate \
-                       CheckBuiltBuildingState \
-                       CheckNotInstalledInstallationState \
-                       CheckZodbDocumentRemoved \
-                       SaveBusinessTemplate \
-                       CheckForkedMigrationExport \
-                       '
-    sequence_list.addSequenceString(sequence_string)
-
-    # XXX-arnau: Temporary until _perform_migration is set to True by default
-    from Products.ERP5.Document.BusinessTemplate import ExtensionTemplateItem
-    ExtensionTemplateItem._perform_migration = True
-
-    try:
-      sequence_list.play(self)
-    finally:
-      ExtensionTemplateItem._perform_migration = False
 
 class TestTestTemplateItem(TestDocumentTemplateItem):
   document_title = 'UnitTest'

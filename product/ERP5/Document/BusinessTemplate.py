@@ -3327,7 +3327,9 @@ class ModuleTemplateItem(BaseTemplateItem):
     # Do not remove any module for safety.
     pass
 
-class DocumentTemplateItem(BaseTemplateItem):
+# XXX-arnau: when everything has been migrated to Components, everything in
+#            this class should be moved to DocumentTemplateItem
+class FilesystemDocumentTemplateItem(BaseTemplateItem):
   local_file_reader_name = staticmethod(readLocalDocument)
   local_file_writer_name = staticmethod(writeLocalDocument)
   local_file_importer_name = staticmethod(importLocalDocument)
@@ -3400,7 +3402,7 @@ class DocumentTemplateItem(BaseTemplateItem):
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
     if context.getTemplateFormatVersion() == 1:
-      need_reset = isinstance(self, DocumentTemplateItem)
+      need_reset = isinstance(self, FilesystemDocumentTemplateItem)
       for key in self._objects.keys():
         # to achieve non data migration fresh installation parameters
         # differ from upgrade parameteres, so here the check have to be
@@ -3454,7 +3456,7 @@ class DocumentTemplateItem(BaseTemplateItem):
     else:
       object_keys = self._archive.keys()
     if object_keys:
-      if isinstance(self, DocumentTemplateItem):
+      if isinstance(self, FilesystemDocumentTemplateItem):
         self._resetDynamicModules()
       for key in object_keys:
         self.local_file_remover_name(key)
@@ -3478,10 +3480,10 @@ class DocumentTemplateItem(BaseTemplateItem):
     text = file.read()
     self._objects[file_name[:-3]] = text
 
-class FilesystemToZodbTemplateItem(DocumentTemplateItem,
+class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
                                    ObjectTemplateItem):
   """
-  Abstract class to allow migration from DocumentTemplateItem to
+  Abstract class to allow migration from FilesystemDocumentTemplateItem to
   ObjectTemplateItem, this is useful for migration from filesystem to ZODB for
   PropertySheets and Components
   """
@@ -3526,14 +3528,15 @@ class FilesystemToZodbTemplateItem(DocumentTemplateItem,
   def _filesystemCompatibilityWrapper(method_name, object_dict_name):
     """
     Call ObjectTemplateItem method when the objects have already been
-    migrated, otherwise fallback on DocumentTemplateItem method for
+    migrated, otherwise fallback on FilesystemDocumentTemplateItem method for
     backward-compatibility
     """
     def inner(self, *args, **kw):
       if self._is_already_migrated(getattr(self, object_dict_name).keys()):
         result = getattr(ObjectTemplateItem, method_name)(self, *args, **kw)
       else:
-        result = getattr(DocumentTemplateItem, method_name)(self, *args, **kw)
+        result = getattr(FilesystemDocumentTemplateItem,
+                         method_name)(self, *args, **kw)
 
       return result
     return inner
@@ -3546,7 +3549,8 @@ class FilesystemToZodbTemplateItem(DocumentTemplateItem,
     if file_name.endswith('.xml'):
       return ObjectTemplateItem._importFile(self, file_name, *args, **kw)
     else:
-      return DocumentTemplateItem._importFile(self, file_name, *args, **kw)
+      return FilesystemDocumentTemplateItem._importFile(self, file_name,
+                                                        *args, **kw)
 
   def uninstall(self, *args, **kw):
     # Only for uninstall, the path of objects can be given as a
@@ -3560,7 +3564,7 @@ class FilesystemToZodbTemplateItem(DocumentTemplateItem,
     if self._is_already_migrated(object_keys):
       return ObjectTemplateItem.uninstall(self, *args, **kw)
     else:
-      return DocumentTemplateItem.uninstall(self, *args, **kw)
+      return FilesystemDocumentTemplateItem.uninstall(self, *args, **kw)
 
   def remove(self, context, **kw):
     """
@@ -3656,7 +3660,7 @@ class FilesystemToZodbTemplateItem(DocumentTemplateItem,
 
   def install(self, context, **kw):
     if not self._perform_migration:
-      return DocumentTemplateItem.install(self, context, **kw)
+      return FilesystemDocumentTemplateItem.install(self, context, **kw)
 
     # With format 0 of Business Template, the objects are stored in
     # '_archive' whereas they are stored in '_objects' with format
@@ -3692,9 +3696,9 @@ class PropertySheetTemplateItem(FilesystemToZodbTemplateItem):
   2/ The Property Sheets will all be migrated when installing the
      Business Template.
 
-  Therefore, this is an all or nothing migration, meaning that only
-  methods of DocumentTemplateItem will be called before the migration
-  has been performed, then ObjectTemplateItem methods afterwards.
+  Therefore, this is an all or nothing migration, meaning that only methods of
+  FilesystemDocumentTemplateItem will be called before the migration has been
+  performed, then ObjectTemplateItem methods afterwards.
   """
   # Only meaningful for filesystem Property Sheets
   local_file_reader_name = staticmethod(readLocalPropertySheet)
@@ -3744,16 +3748,16 @@ class PropertySheetTemplateItem(FilesystemToZodbTemplateItem):
 
     return PropertySheetDocument.importFromFilesystemDefinition(tool, klass)
 
-class ConstraintTemplateItem(DocumentTemplateItem):
+class ConstraintTemplateItem(FilesystemDocumentTemplateItem):
   local_file_reader_name = staticmethod(readLocalConstraint)
   local_file_writer_name = staticmethod(writeLocalConstraint)
   local_file_importer_name = staticmethod(importLocalConstraint)
   local_file_remover_name = staticmethod(removeLocalConstraint)
 
-from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent as \
-    ExtensionComponentDocument
+from Products.ERP5Type.Core.DocumentComponent import DocumentComponent as \
+    DocumentComponentDocument
 
-class ExtensionTemplateItem(FilesystemToZodbTemplateItem):
+class DocumentTemplateItem(FilesystemToZodbTemplateItem):
   """
   Extensions are now stored in ZODB rather than on the filesystem. However,
   some Business Templates may still have filesystem Extensions which need to
@@ -3764,12 +3768,16 @@ class ExtensionTemplateItem(FilesystemToZodbTemplateItem):
 
   _tool_id = 'portal_components'
 
-  # Only meaningful for filesystem Extensions
-  local_file_reader_name = staticmethod(readLocalExtension)
-  local_file_writer_name = staticmethod(writeLocalExtension)
-  # Extension needs no import
-  local_file_importer_name = None
-  local_file_remover_name = staticmethod(removeLocalExtension)
+  @staticmethod
+  def _getZodbObjectId(id):
+    return 'erp5.component.document.%s' % id
+
+  @staticmethod
+  def _getFilesystemPath(class_id):
+    from App.config import getConfiguration
+    return os.path.join(getConfiguration().instancehome,
+                        "Document",
+                        "%s.py" % class_id)
 
   def _importFile(self, file_name, file_obj):
     if (file_name.endswith('.py') and 
@@ -3806,6 +3814,30 @@ class ExtensionTemplateItem(FilesystemToZodbTemplateItem):
         bta.addObject(f, key, path=path)
 
   @staticmethod
+  def _migrateFromFilesystem(tool,
+                             filesystem_path,
+                             filesystem_file,
+                             class_id):
+    return DocumentComponentDocument.importFromFilesystem(tool,
+                                                          filesystem_path)
+
+from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent as \
+    ExtensionComponentDocument
+
+class ExtensionTemplateItem(DocumentTemplateItem):
+  """
+  Extensions are now stored in ZODB rather than on the filesystem. However,
+  some Business Templates may still have filesystem Extensions which need to
+  be migrated to the ZODB.
+  """
+  # Only meaningful for filesystem Extensions
+  local_file_reader_name = staticmethod(readLocalExtension)
+  local_file_writer_name = staticmethod(writeLocalExtension)
+  # Extension needs no import
+  local_file_importer_name = None
+  local_file_remover_name = staticmethod(removeLocalExtension)
+
+  @staticmethod
   def _getZodbObjectId(id):
     return 'erp5.component.extension.%s' % id
 
@@ -3824,7 +3856,7 @@ class ExtensionTemplateItem(FilesystemToZodbTemplateItem):
     return ExtensionComponentDocument.importFromFilesystem(tool,
                                                            filesystem_path)
 
-class TestTemplateItem(DocumentTemplateItem):
+class TestTemplateItem(FilesystemDocumentTemplateItem):
   local_file_reader_name = staticmethod(readLocalTest)
   local_file_writer_name = staticmethod(writeLocalTest)
   # Test needs no import
