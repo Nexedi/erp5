@@ -34,7 +34,7 @@ from Products.ERP5Type import Permissions
 class DocumentComponent(Component):
   # CMF Type Definition
   meta_type = 'ERP5 Document Component'
-  portal_type = 'Component Component'
+  portal_type = 'Document Component'
 
   # Declarative security
   security = ClassSecurityInfo()
