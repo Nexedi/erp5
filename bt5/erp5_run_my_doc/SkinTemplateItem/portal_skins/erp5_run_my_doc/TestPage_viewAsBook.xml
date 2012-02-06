@@ -55,7 +55,7 @@
            cleanForPrince();\n
            return false;\n
          });\n
-         convertBook(\'getTextContent\', $(\'body\'));\n
+         convertBook(\'index_html?format=html\', $(\'body\'));\n
        });\n
      </script>\n
     <title>View as Book</title>\n

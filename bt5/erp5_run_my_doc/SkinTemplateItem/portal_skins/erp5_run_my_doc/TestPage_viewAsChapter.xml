@@ -53,7 +53,7 @@
           cleanForPrince();\n
           return false;\n
         });\n
-        convertChapter(\'getTextContent\', $(\'body\'), true, true, 1, 1);\n
+        convertChapter(\'index_html?format=html\', $(\'body\'), true, true, 1, 1);\n
       });\n
     </script>\n
     <title>View as Chapter</title>\n

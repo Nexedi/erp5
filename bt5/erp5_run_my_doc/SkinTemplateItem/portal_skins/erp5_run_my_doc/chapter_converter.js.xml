@@ -52,12 +52,12 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     var temp = $(\'iframe\', parent.document).contents().children().clone();\n
     $(\'script\', temp).remove();\n
     $(\'style, meta:not([name=author])\', temp).remove();\n
+    $(\'head\', temp).prepend($(\'<meta>\').attr(\'http-equiv\',\'content-type\').attr(\'content\', \'text/html; charset=utf-8\'));\n
     var images = $(\'img\', temp);\n
     n = images.length;\n
     for(var i = 0; i < n; i++){\n
       var img = images.eq(i);\n
       var src = img.attr(\'src\').split(\'?format\')[0].split(\'/\');\n
-\n
       var extension = img.attr(\'type\');\n
       if(extension == undefined)\n
         extension = "png";\n
@@ -67,10 +67,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
     }\n
     var text = temp.html();\n
     var result = "", tagName = "", c = "", chr = "";\n
+    var n = text.length;\n
     if (text == null) {\n
       return false;\n
       }\n
-    var n = text.length;\n
     var tag = false, tagNameParsing = false;\n
     for(var i = 0; i < n; i++){\n
       chr = text[i];\n
@@ -186,7 +186,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
         titleObj.text(title);\n
       else\n
         $(\'head\').append($(\'<title>\').text(title));\n
-      $(\'head\').append($(\'<meta>\').attr(\'name\',\'author\').attr(\'content\', authors));\n
+      $(\'head\').prepend($(\'<meta>\').attr(\'name\',\'author\').attr(\'content\', authors));\n
       titleObj = $(\'<h1>\').text(title);\n
       var subtitle = $(\'<h2>\').text(description);\n
       var edition = $(\'<h3>\').text(shortTitle);\n
@@ -210,7 +210,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
       //Getting the html content\n
       $.get(link, function(data, textStatus, jqXHR){\n
         var chapterContainer = $(\'<div>\').addClass(\'chapter\').attr(\'id\', \'chapter-h-\' + partCounter + \'-\' + chapterCounter).html(data);\n
-        link = link.replace("getTextContent","");\n
+        link = link.replace("index_html?format=html","");\n
         var sections = $(\'section\', chapterContainer);\n
         $(\'base,meta,link,title\', chapterContainer).remove();\n
         changeTag($(\'footer\', chapterContainer), \'p\');\n
@@ -224,7 +224,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
             var img = images[j];\n
             var div = $(\'<div>\');\n
             var caption = $(\'<p>\').addClass(\'caption\');\n
-            $(img).attr(\'src\', link + $(img).attr(\'src\'));\n
+            if((/^http/).test($(img).attr(\'src\')) == false) {\n
+             $(img).attr(\'src\', link + $(img).attr(\'src\'));\n
+            }\n
             $(img).before(div);\n
             var imgToAppend = $(img);\n
             var imgWidth = $(img).attr(\'width\');\n
@@ -236,7 +238,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
           var p = otherImages.length;\n
           for(var j = 0; j < p; j++){\n
             var img = otherImages[j];\n
-            $(img).attr(\'src\', link + $(img).attr(\'src\'));\n
+            if((/^http/).test($(img).attr(\'src\')) == false) {\n
+             $(img).attr(\'src\', link + $(img).attr(\'src\'));\n
+            }\n
           }\n
           if(first && i == 0)\n
             element.attr(\'style\',\'counter-reset: page 1;\');\n

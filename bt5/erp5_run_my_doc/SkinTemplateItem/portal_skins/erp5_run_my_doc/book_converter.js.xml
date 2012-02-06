@@ -53,7 +53,7 @@ function convertBook(linkToBook, container){\n
   $(function() {\n
     //Getting the html content\n
     $.get(linkToBook, function(data, textStatus, jqXHR){\n
-      linkToBook = linkToBook.replace(\'getTextContent\',\'\');\n
+      linkToBook = linkToBook.replace(\'index_html?format=html\',\'\');\n
       var tocContainer = $(\'<div>\').html(data);\n
       var sections = tocContainer.children();\n
       body = $(\'<body>\');\n
@@ -71,7 +71,7 @@ function convertBook(linkToBook, container){\n
           for(var j = 0; j < p; j++){\n
             var newChapter = $(\'<div>\').addClass(\'chapter\').attr(\'id\',\'chapter-h-\' + partCounter + \'-\' + (j+1));\n
             partContainer.append(newChapter);\n
-            convertChapter($(\'> a\', chapterTitles.eq(j)).attr(\'href\') + \'/getTextContent\', newChapter, false, false);\n
+            convertChapter($(\'> a\', chapterTitles.eq(j)).attr(\'href\') + \'/index_html?format=html\', newChapter, false, false);\n
           }\n
           body.append(partContainer);\n
           firstChapter = false;\n
@@ -91,7 +91,7 @@ function convertBook(linkToBook, container){\n
               newMatter.addClass(\'endmatter\').attr("id","endmatter-h-" + matterCounter);\n
             body.append(newMatter);\n
             matterCounter++;\n
-            convertChapter(link.attr(\'href\') + \'/getTextContent\', newMatter, false, false);\n
+            convertChapter(link.attr(\'href\') + \'/index_html?format=html\', newMatter, false, false);\n
           }\n
           else{\n
             partCounter++;\n
