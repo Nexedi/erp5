@@ -3792,20 +3792,26 @@ class ExtensionTemplateItem(FilesystemToZodbTemplateItem):
         obj.text_content = f.read()
 
   def export(self, context, bta, **kw):
-    path = self.__class__.__name__
+    path = self.__class__.__name__ + '/'
     for key, obj in self._objects.iteritems():
-      obj = obj._getCopy(context)
+      # Back compatibility with filesystem Extensions
+      if isinstance(obj, str):
+        if not key.startswith(path):
+          key = path + key
+        bta.addObject(obj, name=key, ext='.py')
+      else:
+        obj = obj._getCopy(context)
 
-      f = StringIO(obj.text_content)
-      bta.addObject(f, key, path=path, ext='.py')
+        f = StringIO(obj.text_content)
+        bta.addObject(f, key, path=path, ext='.py')
 
-      del obj.text_content
-      transaction.commit()
+        del obj.text_content
+        transaction.commit()
 
-      # export object in xml
-      f = StringIO()
-      XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
-      bta.addObject(f, key, path=path)
+        # export object in xml
+        f = StringIO()
+        XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+        bta.addObject(f, key, path=path)
 
   @staticmethod
   def _getZodbObjectId(id):
