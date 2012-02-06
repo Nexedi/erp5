@@ -3632,7 +3632,7 @@ class FilesystemToZodbTemplateItem(DocumentTemplateItem,
       if os.path.exists(filesystem_path):
         filesystem_file = open(filesystem_path)
       else:
-        filesystem__file = open(filesystem_path, 'w+')
+        filesystem_file = open(filesystem_path, 'w+')
         filesystem_file.write(migrate_object_dict[class_id])
         filesystem_file.seek(0)
 
