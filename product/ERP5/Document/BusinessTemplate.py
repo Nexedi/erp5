@@ -3534,15 +3534,7 @@ class FilesystemToZodbTemplateItem(DocumentTemplateItem,
         result = getattr(ObjectTemplateItem, method_name)(self, *args, **kw)
       else:
         result = getattr(DocumentTemplateItem, method_name)(self, *args, **kw)
-      if method_name == 'preinstall':
-        old_result = result.copy()
-        for k, v in old_result.iteritems():
-          if not k.startswith(self._tool_id + '/'):
-            result.pop(k)
-            # Magical way to have unique path in case of not yet migrated property
-            # sheets available on preinstall list
-            k = self._getKey(k)
-          result[k] = v
+
       return result
     return inner
 
