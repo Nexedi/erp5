@@ -290,6 +290,9 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
         quantity_unit = movement.getQuantityUnit()
         price = movement.getPrice()
         price_currency = movement.getPriceCurrency()
+        base_application_list = movement.getBaseApplicationList()
+        base_contribution_list = movement.getBaseContributionList()
+        use_list = movement.getUseList()
 
         specialise = movement.getSpecialise()
         current_date = start_date
@@ -312,6 +315,9 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
                                      destination=destination,
                                      destination_section=destination_section,
                                      specialise=specialise,
+                                     base_application_list=base_application_list,
+                                     base_contribution_list=base_contribution_list,
+                                     use_list=use_list
                                     )
           result.append(generated_movement)
           current_date = next_date
