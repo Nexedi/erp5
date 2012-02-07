@@ -69,16 +69,23 @@ else:\n
   listbox = []\n
   int_index = 1\n
 \n
-if slide_type == \'Screenshot\':\n
-  tested = True\n
+image_id = \'\'\n
 \n
 if slide_type in [\'Illustration\',\'Screenshot\']:\n
   test_page_path = session[\'test_page_path\']\n
   test_page = context.restrictedTraverse(test_page_path)\n
+\n
+if slide_type == \'Illustration\':\n
+  if image_url != "":\n
+    image_id = image_url\n
+  else:\n
+    image_id = test_page.TestPage_getNextImageID(chapter_title, slide_type)\n
+    image = test_page.TestPage_uploadImage(image_id, file, batch_mode = True)\n
+\n
+if slide_type == \'Screenshot\':\n
+  tested = True\n
   image_id = test_page.TestPage_getNextImageID(chapter_title, slide_type)\n
   image = test_page.TestPage_uploadImage(image_id, file, batch_mode = True)\n
-else:\n
-  image_id = \'\'\n
 \n
 listbox.append(newTempBase(context.getPortalObject(),\n
                    \'\',\n
@@ -94,14 +101,15 @@ listbox.append(newTempBase(context.getPortalObject(),\n
                  ))\n
 \n
 session[\'listbox\'] = listbox\n
-return context.Base_redirect(\'TestPageModule_viewChapterCreationWizard\', keep_items = dict(portal_status_message=portal_status_message))\n
+return context.Base_redirect(\'TestPageModule_viewChapterCreationWizard\', \n
+                             keep_items = dict(portal_status_message=portal_status_message))\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>chapter_title, slide_type, file, text_content, slide_content, tested, **kw</string> </value>
+            <value> <string>chapter_title, slide_type, image_url, file, text_content, slide_content, tested, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

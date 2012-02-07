@@ -57,9 +57,9 @@
 """\n
 \n
 from Products.ERP5Type.Document import newTempBase\n
-\n
 # Add the last chapter to the listbox\n
-context.TestPageModule_createChapter(chapter_title, slide_type, file, text_content, slide_content, tested, **kw)\n
+context.TestPageModule_createChapter(chapter_title, slide_type, image_url, \n
+                                     file, text_content, slide_content, tested, **kw)\n
 \n
 translateString = context.Base_translateString\n
 portal_status_message = ""\n
@@ -72,17 +72,7 @@ author = session[\'author\']\n
 author_mail = session[\'author_mail\']\n
 \n
 # Headers and first chapter/slide\n
-text_content = """<!DOCTYPE html>\n
-<html>\n
-  <head>\n
-<base href="" />\n
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">\n
-    <link href="http://fonts.googleapis.com/css?family=Oswald" rel="stylesheet">\n
-    <meta charset="utf-8">\n
-    <title>""" + title + """</title>\n
-  </head>\n
-  <body>\n
-<section class="master">\n
+text_content = """<section class="master">\n
   <h1>""" + title + """</h1>\n
   """ + listbox[0].slide_content\n
 \n
@@ -128,20 +118,19 @@ for chapter in listbox[1:]:\n
 \n
   # let\'s add a template test to this chapter\n
   if chapter.tested:\n
-    text_content += """\n
-  <test>\n
-    <table class="test" cellpadding="1" cellspacing="1" border="1" style="display:none;">"""\n
+    text_content +="""\n
+  <test>"""\n
     if first:\n
-      text_content += """\n
-      <thead>\n
-        <tr><th rowspan="1" colspan="3">""" + session[\'title\'] + """</th></tr>\n
-      </thead>"""\n
+      text_content +="""\n
+    <span metal:use-macro="container/ERP5RunMyDocs_initTest/macros/init_test_environment" style="display:none;"> init</span>"""\n
       first = False\n
+\n
+    text_content +="""\n
+    <table class="test" cellpadding="1" cellspacing="1" border="1" style="display:none;">\n
+      <tbody>"""\n
+\n
+\n
     text_content += """\n
-      <tbody>\n
-        <tr>\n
-          <td colspan=3 >&lt;span metal:use-macro="container/ERP5RunMyDocs_initTest/macros/init_test_environment" style="display:none;"&gt;init&lt;/span&gt;</td>\n
-        </tr>\n
         <tr>\n
 \t  <td>selectAndWait</td>\n
 \t  <td>name=select_module</td>\n
@@ -167,20 +156,17 @@ for chapter in listbox[1:]:\n
 </section>\n
 """\n
 \n
-text_content +="""\n
-  </body>\n
-</html>"""\n
-\n
 test_page.setTextContent(text_content)\n
 \n
-return test_page.Base_redirect(\'view\', keep_items = dict(portal_status_message=portal_status_message))\n
+return test_page.Base_redirect(\'view\', \n
+                               keep_items = dict(portal_status_message=portal_status_message))\n
 
 
 ]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>chapter_title, slide_type, file, text_content, slide_content, tested, **kw</string> </value>
+            <value> <string>chapter_title, slide_type, image_url, file, text_content, slide_content, tested, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

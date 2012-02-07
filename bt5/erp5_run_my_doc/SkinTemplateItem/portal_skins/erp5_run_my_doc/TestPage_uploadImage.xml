@@ -54,7 +54,13 @@
   Create an image object and upload the image if necessary\n
 """\n
 \n
+translateString = context.Base_translateString\n
+\n
 msg = \'Slide created.\'\n
+\n
+if edit_mode == 1:\n
+  msg = \'Slide updated.\'\n
+\n
 def createImage(image_id):\n
   return context.newContent(portal_type = \'Embedded File\',\n
                                 title = image_id,\n
@@ -80,16 +86,18 @@ if slide_type in [\'Screenshot\', \'Illustration\']:\n
     msg += \' Image \' + image_id + \' created.\'\n
 \n
   if not(file is None or not file):\n
-    image.edit(file=file, data=file.read(), filename=file.filename)\n
+    image.edit(file=file, \n
+               data=file.read(), \n
+               filename=file.filename)\n
+\n
     msg += \' Image uploaded.\'\n
 \n
   if batch_mode:\n
     return image\n
 \n
-translateString = context.Base_translateString\n
-portal_status_message = translateString(msg)\n
-context.Base_redirect(\'TestPage_viewSlideCreator\', \n
-                      keep_items = dict(portal_status_message=portal_status_message))\n
+form_id = context.REQUEST.get(\'dialog_id\', None)\n
+context.Base_redirect(form_id,\n
+                      keep_items = dict(portal_status_message=translateString(msg)))\n
 </string> </value>
         </item>
         <item>
