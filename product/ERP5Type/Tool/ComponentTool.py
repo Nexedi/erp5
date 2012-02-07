@@ -27,9 +27,12 @@
 #
 ##############################################################################
 
+import transaction
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG, INFO, WARNING
 
@@ -46,7 +49,7 @@ class ComponentTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  security.declareProtected(Permissions.ManagePortal, 'reset')
+  security.declareProtected(Permissions.ModifyPortalContent, 'reset')
   def reset(self, is_sync=False):
     """
     XXX-arnau: global reset
@@ -82,13 +85,27 @@ class ComponentTool(BaseTool):
 
     type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'resetOnceAtTransactionBoundary')
+  def resetOnceAtTransactionBoundary(self):
+    """
+    Schedule a single reset at the end of the transaction, only once.  The
+    idea behind this is that a reset is (very) costly and that we want to do
+    it as little often as possible.  Moreover, doing it twice in a transaction
+    is useless (but still twice as costly).
+    """
+    tv = getTransactionalVariable()
+    key = 'ComponentTool.resetOnceAtTransactionBoundary'
+    if key not in tv:
+      tv[key] = None
+      transaction.get().addBeforeCommitHook(self.reset)
+
   security.declareProtected(Permissions.ManagePortal,
                             'createAllComponentFromFilesystem')
   def createAllComponentFromFilesystem(self, erase_existing=False,
                                        REQUEST=None):
     """
-
-    XXX-arnau: only Extensions for now
+    XXX-arnau: only bt5 Extensions and Documents for now
     """
     portal = self.getPortalObject()
 

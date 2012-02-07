@@ -1,3 +1,6 @@
+2012-02-07 arnaud.fontaine
+* Use resetOnceAtTransactionBoundary when a Component has been modified.
+
 2012-02-02 arnaud.fontaine
 * Perform revalidate automatically rather than requiring a manual action.
 
