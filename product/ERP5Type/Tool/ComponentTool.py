@@ -100,7 +100,7 @@ class ComponentTool(BaseTool):
       tv[key] = None
       transaction.get().addBeforeCommitHook(self.reset)
 
-  security.declareProtected(Permissions.ManagePortal,
+  security.declareProtected(Permissions.ModifyPortalContent,
                             'createAllComponentFromFilesystem')
   def createAllComponentFromFilesystem(self, erase_existing=False,
                                        REQUEST=None):
