@@ -65,7 +65,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPage_slideShowEditor</string> </value>
+            <value> <string>slideshow_editor_support</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

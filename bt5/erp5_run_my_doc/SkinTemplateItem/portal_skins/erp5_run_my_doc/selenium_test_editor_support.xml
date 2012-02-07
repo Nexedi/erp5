@@ -68,7 +68,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPage_testEditor</string> </value>
+            <value> <string>selenium_test_editor_support</string> </value>
         </item>
         <item>
             <key> <string>output_encoding</string> </key>

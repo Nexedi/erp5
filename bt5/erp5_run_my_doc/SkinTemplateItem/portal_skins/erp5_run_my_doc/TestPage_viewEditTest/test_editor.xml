@@ -57,6 +57,10 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>css_class</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
@@ -141,7 +145,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>here/TestPage_testEditor</string> </value>
+            <value> <string>here/selenium_test_editor_support</string> </value>
         </item>
       </dictionary>
     </pickle>
