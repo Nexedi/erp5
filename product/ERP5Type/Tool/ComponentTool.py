@@ -30,12 +30,14 @@
 import transaction
 
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type.Tool.BaseTool import BaseTool
 from Products.ERP5Type import Permissions
+from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ERP5Type.Base import Base
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG, INFO, WARNING
 
+_last_sync = -1
 class ComponentTool(BaseTool):
   """
     This tool provides methods to load the the different types 
@@ -50,38 +52,52 @@ class ComponentTool(BaseTool):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'reset')
-  def reset(self, is_sync=False):
+  def reset(self, force=True):
     """
     XXX-arnau: global reset
     """
+    portal = self.getPortalObject()
+
+    # XXX-arnau: copy/paste from portal_type_class, but is this really
+    # necessary as even for Portal Type classes, synchronizeDynamicModules
+    # seems to always called with force=True?
+    global last_sync
+    if force:
+      # hard invalidation to force sync between nodes
+      portal.newCacheCookie('component_classes')
+      last_sync = portal.getCacheCookie('component_classes')
+    else:
+      cookie = portal.getCacheCookie('component_classes')
+      if cookie == last_sync:
+        type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
+        return
+      last_sync = cookie
+
     LOG("ERP5Type.Tool.ComponentTool", INFO, "Resetting Components")
+
+    type_tool = portal.portal_types
+
+    allowed_content_type_list = type_tool.getTypeInfo(
+      self.getPortalType()).getTypeAllowedContentTypeList()
 
     import erp5.component
 
-    portal = self.getPortalObject()
+    with Base.aq_method_lock:
+      for content_type in allowed_content_type_list:
+        module_name = content_type.split(' ')[0].lower()
 
-    if not is_sync:
-      portal.newCacheCookie('component_classes')
-      erp5.component._last_reset = portal.getCacheCookie('component_classes')
+        try:
+          module = getattr(erp5.component, module_name)
+        # XXX-arnau: not everything is defined yet...
+        except AttributeError:
+          pass
+        else:
+          for name in module.__dict__.keys():
+            if name[0] != '_':
+              LOG("ERP5Type.Tool.ComponentTool", INFO,
+                  "Resetting erp5.component.%s.%s" % (module_name, name))
 
-    type_tool = portal.portal_types
-    container_type_info = type_tool.getTypeInfo(self.getPortalType())
-
-    for content_type in container_type_info.getTypeAllowedContentTypeList():
-      module_name = content_type.split(' ')[0].lower()
-
-      try:
-        module = getattr(erp5.component, module_name)
-      # XXX-arnau: not everything is defined yet...
-      except AttributeError:
-        pass
-      else:
-        for name in module.__dict__.keys():
-          if name[0] != '_':
-            LOG("ERP5Type.Tool.ComponentTool", INFO,
-                "Resetting erp5.component.%s.%s" % (module_name, name))
-
-            delattr(module, name)
+              delattr(module, name)
 
     type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
 
