@@ -545,6 +545,13 @@ fieldset.right .field {\n
   float: left;\n
 }\n
 \n
+fieldset.left .hidden_label,\n
+fieldset.left .hidden_label label,\n
+fieldset.right .hidden_label,\n
+fieldset.right .hidden_label label {\n
+  margin:0 !important;\n
+}\n
+\n
 .bottom_actions {\n
   float:right;\n
   width: auto;\n
