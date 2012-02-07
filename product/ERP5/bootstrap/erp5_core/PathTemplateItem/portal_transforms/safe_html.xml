@@ -235,6 +235,14 @@
                     <value> <string>1</string> </value>
                 </item>
                 <item>
+                    <key> <string>article</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>audio</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
                     <key> <string>b</string> </key>
                     <value> <string>1</string> </value>
                 </item>
@@ -291,6 +299,10 @@
                     <value> <string>1</string> </value>
                 </item>
                 <item>
+                    <key> <string>details</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
                     <key> <string>dfn</string> </key>
                     <value> <string>1</string> </value>
                 </item>
@@ -308,6 +320,10 @@
                 </item>
                 <item>
                     <key> <string>em</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>footer</string> </key>
                     <value> <string>1</string> </value>
                 </item>
                 <item>
@@ -336,6 +352,10 @@
                 </item>
                 <item>
                     <key> <string>head</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>header</string> </key>
                     <value> <string>1</string> </value>
                 </item>
                 <item>
@@ -395,6 +415,10 @@
                     <value> <string>1</string> </value>
                 </item>
                 <item>
+                    <key> <string>section</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
                     <key> <string>small</string> </key>
                     <value> <string>1</string> </value>
                 </item>
@@ -415,6 +439,10 @@
                     <value> <string>1</string> </value>
                 </item>
                 <item>
+                    <key> <string>summary</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
                     <key> <string>sup</string> </key>
                     <value> <string>1</string> </value>
                 </item>
@@ -428,6 +456,10 @@
                 </item>
                 <item>
                     <key> <string>td</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>test</string> </key>
                     <value> <string>1</string> </value>
                 </item>
                 <item>
@@ -464,6 +496,10 @@
                 </item>
                 <item>
                     <key> <string>var</string> </key>
+                    <value> <string>1</string> </value>
+                </item>
+                <item>
+                    <key> <string>video</string> </key>
                     <value> <string>1</string> </value>
                 </item>
               </dictionary>
