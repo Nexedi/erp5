@@ -6,7 +6,6 @@ Test Page Module | convert_to_test_pages
 Test Page Module | convert_to_web_pages
 Test Page Module | fast_input
 Test Page Module | view
-Test Page | edit_slideshow
 Test Page | edit_test
 Test Page | export_book
 Test Page | export_chapter
@@ -20,8 +19,10 @@ Test Page | slideshow
 Test Page | update_report
 Test Page | view
 Test Page | view_editor
+Test Page | view_slideshow_editor
 Test Page | view_test_report
 Test Page | web_view
 Web Page | export_book
 Web Page | export_chapter
 Web Page | slideshow
+Web Page | view_slideshow_editor

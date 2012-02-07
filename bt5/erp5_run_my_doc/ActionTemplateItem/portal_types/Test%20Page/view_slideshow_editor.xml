@@ -38,7 +38,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>edit_slideshow</string> </value>
+            <value> <string>view_slideshow_editor</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
