@@ -125,7 +125,7 @@ function updateTextContent(){\n
   body.append($(\'#list > section\').clone());\n
   changeImagesURLAttrib(images,\'display\',\'xsmall\');\n
   body[0].innerHTML = indent(body[0].cloneNode(true), 2);\n
-  $(textContent).text("<!DOCTYPE html>\\n<" + "html" + ">\\n" + $(testPageHTML).html() + "\\n<" + "/html" + ">");\n
+  $(textContent).text(body[0].innerHTML);\n
 }\n
 \n
 //Change/add a GET attribute in the src url of an image (located after the question mark in the url)\n
@@ -200,11 +200,9 @@ $(document).ready(function(){\n
     textContent = document.getElementsByName(\'field_my_text_content\')[0];\n
     var tmp = document.createElement(\'tmp\');\n
     testPageHTML = document.createElement(\'html\');\n
-    testPageHTML.appendChild(document.createElement(\'head\'));\n
     testPageHTML.appendChild(document.createElement(\'body\'));\n
     $(tmp).html($(textContent).text());\n
     $(\'body\',testPageHTML).append($(\'section\', tmp));\n
-    $(\'head\',testPageHTML).append($(\'> :not(section)\', tmp));\n
     body = $(\'section\', testPageHTML);\n
     changeImagesURLAttrib($(\'> img\', body),\'display\',\'xsmall\');\n
     slideList = $(\'#list\');\n
