@@ -45,8 +45,7 @@
       <link rel="stylesheet" type="text/css" tal:attributes="href string:${portal_url}/boom.css">\n
       <script type="text/javascript" tal:attributes="src string:${portal_url}/jquery/core/jquery.js"></script>\n
       <script type="text/javascript" tal:attributes="src string:${portal_url}/jquery/ui/js/jquery-ui.js"></script>\n
-      <script type="text/javascript" tal:attributes="src string:${portal_url}/book_converter.js"></script>\n
-      <script type="text/javascript" tal:attributes="src string:${portal_url}/chapter_converter.js"></script>\n
+      <script type="text/javascript" tal:attributes="src string:${portal_url}/html5_book.js"></script>\n
     </tal:block>\n
     <script type="text/javascript">\n
        $(document).ready(function(){\n
