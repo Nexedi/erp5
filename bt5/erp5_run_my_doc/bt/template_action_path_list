@@ -8,8 +8,8 @@ Test Page Module | fast_input
 Test Page Module | view
 Test Page | edit_slideshow
 Test Page | edit_test
-Test Page | export
 Test Page | export_book
+Test Page | export_chapter
 Test Page | export_report
 Test Page | launch
 Test Page | list
@@ -22,3 +22,6 @@ Test Page | view
 Test Page | view_editor
 Test Page | view_test_report
 Test Page | web_view
+Web Page | export_book
+Web Page | export_chapter
+Web Page | slideshow

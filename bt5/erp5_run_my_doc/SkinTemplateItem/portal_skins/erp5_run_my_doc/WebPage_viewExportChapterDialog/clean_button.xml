@@ -11,7 +11,6 @@
             <value>
               <list>
                 <string>default</string>
-                <string>enabled</string>
                 <string>name</string>
                 <string>title</string>
               </list>
@@ -56,12 +55,6 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -93,10 +86,6 @@
                     <value> <string>Clean HTML</string> </value>
                 </item>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_input_button_field</string> </value>
                 </item>
@@ -122,19 +111,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>not:here/isExternalDocument</string> </value>
         </item>
       </dictionary>
     </pickle>

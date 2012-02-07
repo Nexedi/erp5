@@ -57,7 +57,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>export_book</string> </value>
+            <value> <string>export_chapter</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -73,11 +73,11 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>21.0</float> </value>
+            <value> <float>20.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Export as Book</string> </value>
+            <value> <string>Export as Chapter</string> </value>
         </item>
         <item>
             <key> <string>visible</string> </key>
@@ -94,7 +94,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string:${object_url}/WebPage_viewExportBookDialog</string> </value>
+            <value> <string>string:${object_url}/WebPage_viewExportChapterDialog</string> </value>
         </item>
       </dictionary>
     </pickle>

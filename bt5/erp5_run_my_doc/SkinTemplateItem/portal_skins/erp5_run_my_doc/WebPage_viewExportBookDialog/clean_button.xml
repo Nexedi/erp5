@@ -10,16 +10,15 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>description</string>
-                <string>enabled</string>
+                <string>default</string>
+                <string>name</string>
                 <string>title</string>
-                <string>whitespace_preserve</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>book_text_content</string> </value>
+            <value> <string>clean_button</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -56,10 +55,8 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <key> <string>default</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -67,6 +64,10 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
+                    <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -89,20 +90,20 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>description</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
+                    <key> <string>default</string> </key>
+                    <value> <string>Clean HTML</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_text_area_field</string> </value>
+                    <value> <string>my_input_button_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>name</string> </key>
+                    <value> <string>clean_button</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -110,7 +111,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>HTML Content</string> </value>
+                    <value> <string>Clean HTML</string> </value>
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
@@ -118,19 +119,6 @@
                 </item>
               </dictionary>
             </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="2" aka="AAAAAAAAAAI=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>not:here/isExternalDocument</string> </value>
         </item>
       </dictionary>
     </pickle>

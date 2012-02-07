@@ -12,7 +12,6 @@
               <list>
                 <string>css_class</string>
                 <string>default</string>
-                <string>enabled</string>
                 <string>title</string>
                 <string>whitespace_preserve</string>
                 <string>width</string>
@@ -68,12 +67,6 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
-                </item>
-                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string></string> </value>
                 </item>
@@ -111,10 +104,6 @@
                 <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>enabled</string> </key>
-                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -156,22 +145,9 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'<iframe width="100%%" height="600" src="%s/TestPage_viewAsBook" name="book_version" style="background-color:#FFFFFF;"></iframe>\' % here.absolute_url()
+python:\'<iframe width="100%%" height="600" src="%s/WebPage_viewAsBook" name="book_version" style="background-color:#FFFFFF;"></iframe>\' % here.absolute_url()
 
 ]]></string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>not:here/isExternalDocument</string> </value>
         </item>
       </dictionary>
     </pickle>
