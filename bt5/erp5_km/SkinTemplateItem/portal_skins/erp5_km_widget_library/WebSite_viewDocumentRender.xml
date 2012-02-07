@@ -64,7 +64,7 @@ if box_relative_url:\n
 preferences = box.KnowledgeBox_getDefaultPreferencesDict()\n
 reference=preferences.get(\'preferred_document_reference\', None)\n
 if reference is not None:\n
-  web_page_list = context.getDocumentValueList(reference=reference, \n
+  web_page_list = context.getDocumentValueList(reference=reference, all_languages=True,\n
                                          portal_type=\'Web Page\')\n
   if len(web_page_list):\n
     return \'<div class="web-page-renderer">%s</div>\' %web_page_list[0].getObject().asStrippedHTML()\n
