@@ -38,8 +38,6 @@ from Products.ERP5.ExplanationCache import _getExplanationCache
 
 import zope.interface
 
-from zLOG import LOG
-
 class BusinessLink(Path, Predicate):
   """
     The BusinessLink class embeds all information related to
@@ -231,10 +229,8 @@ class BusinessLink(Path, Predicate):
                    implicitely defines a simulation subtree and a union 
                    business process.
     """
-    LOG('Entering BusinessLink.isDelivered ',0, repr(explanation))
     for simulation_movement in self._getExplanationRelatedSimulationMovementValueList(
         explanation):
-      LOG('in isDelivered with ',0, repr(simulation_movement))
       if not simulation_movement.getDelivery():
         return False
     return True
@@ -252,5 +248,4 @@ class BusinessLink(Path, Predicate):
     for builder in builder_list: # XXX-JPS Do we really need a builder list ? wouldn't predicate be more useful ?
       # Call build on each builder
       # Provide 2 parameters: self and and explanation_cache
-      LOG('Invoking Builder', 0, repr((builder, self, explanation, kw)))
       builder.build(explanation=explanation, business_link=self, **kw)
