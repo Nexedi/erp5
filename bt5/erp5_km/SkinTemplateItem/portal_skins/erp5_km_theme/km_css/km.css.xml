@@ -465,8 +465,6 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
   background-color:inherit;\n
   color:#FF4400;\n
   display: block;\n
-  padding-left:10px;\n
-  margin-left: 32%;\n
 }\n
 \n
 fieldset.left{\n
@@ -545,10 +543,9 @@ fieldset.right .field {\n
   float: left;\n
 }\n
 \n
-fieldset.left .hidden_label,\n
-fieldset.left .hidden_label label,\n
-fieldset.right .hidden_label,\n
-fieldset.right .hidden_label label {\n
+.content .hidden_label,\n
+.content .hidden_label label,\n
+.content .hidden_label .input {\n
   margin:0 !important;\n
 }\n
 \n
