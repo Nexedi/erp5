@@ -85,7 +85,7 @@ if not (author is None or not author):\n
   <footer>by <a href="mailto:"""+ author_mail +"""">"""+ author +"""</a>.</footer>"""\n
 \n
 text_content +="""\n
-  <details>\n
+  <details open="true">\n
     """+ listbox[0].text_content +"""\n
   </details>\n
 </section>\n
@@ -112,7 +112,7 @@ for chapter in listbox[1:]:\n
 \n
   # details will only appear in the web page version of the tutorial\n
   text_content +="""\n
-  <details>\n
+  <details open="true">\n
     """+ text +"""\n
   </details>"""\n
 \n
