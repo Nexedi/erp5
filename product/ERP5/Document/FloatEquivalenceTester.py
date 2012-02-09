@@ -71,7 +71,7 @@ class FloatEquivalenceTester(Predicate, EquivalenceTesterMixin):
     tested_property = self.getTestedProperty()
     if getattr(decision_movement, 'isPropertyRecorded',
                lambda x:False)(tested_property):
-      decision_value = decision_movement.getRecordedProperty(tested_property)
+      decision_value = decision_movement.getRecordedProperty(tested_property) or 0.0
     else:
       decision_value = self._getTestedPropertyValue(decision_movement,
                                                     tested_property) or 0.0
