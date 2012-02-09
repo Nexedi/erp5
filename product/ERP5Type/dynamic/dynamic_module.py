@@ -12,7 +12,7 @@ class DynamicModule(ModuleType):
   def __init__(self, name, factory, doc=None):
     super(DynamicModule, self).__init__(name, doc=doc)
     self._factory = factory
-    self._lock = threading.Lock()
+    self._lock = threading.RLock()
 
   def __getattr__(self, name):
     if name[:2] == '__':
