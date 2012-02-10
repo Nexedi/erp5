@@ -1240,6 +1240,31 @@ class _TestZodbComponent(ERP5TypeTestCase):
   def _getComponentModuleName(self):
     pass
 
+  def _getComponentFullModuleName(self, module_name):
+    return "%s.%s" % (self._getComponentModuleName(), module_name)    
+
+  def failIfModuleImportable(self, module_name):
+    full_module_name = self._getComponentFullModuleName(module_name)
+
+    try:
+      __import__(full_module_name, fromlist=[self._getComponentModuleName()],
+                 level=0)
+    except ImportError:
+      pass
+    else:
+      raise AssertionError("Component '%s' should have been generated" % \
+                             full_module_name)
+
+  def assertModuleImportable(self, module_name):
+    full_module_name = self._getComponentFullModuleName(module_name)    
+
+    try:
+      __import__(full_module_name, fromlist=[self._getComponentModuleName()],
+                 level=0)
+    except ImportError:
+      raise AssertionError("Component '%s' should not have been generated" % \
+                             full_module_name)
+
   def testValidateInvalidate(self):
     """
     The new Component should only be in erp5.component.XXX when validated,
@@ -1253,19 +1278,16 @@ class _TestZodbComponent(ERP5TypeTestCase):
     transaction.commit()
     self.tic()
 
-    self.assertHasAttribute(self._module,
-                            'TestValidateInvalidateComponent')
+    self.assertModuleImportable('TestValidateInvalidateComponent')
     test_component.invalidate()
     transaction.commit()
     self.tic()
-    self.failIfHasAttribute(self._module,
-                            'TestValidateInvalidateComponent')
+    self.failIfModuleImportable('TestValidateInvalidateComponent')
 
     test_component.validate()
     transaction.commit()
     self.tic()
-    self.assertHasAttribute(self._module,
-                            'TestValidateInvalidateComponent')
+    self.assertModuleImportable('TestValidateInvalidateComponent')
 
   def testSourceCodeWithSyntaxError(self):
     valid_code = 'def foobar(*args, **kwargs):\n  return 42'
@@ -1281,7 +1303,7 @@ class _TestZodbComponent(ERP5TypeTestCase):
     self.assertEquals(component.getValidationState(), 'validated')
     self.assertEquals(component.getTextContent(), valid_code)
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)
-    self.assertHasAttribute(self._module, 'TestComponentWithSyntaxError')
+    self.assertModuleImportable('TestComponentWithSyntaxError')
 
     invalid_code = 'def foobar(*args, **kwargs)\n  return 42'
     ComponentTool.reset = assertResetNotCalled
@@ -1297,7 +1319,7 @@ class _TestZodbComponent(ERP5TypeTestCase):
     self.assertEquals(component.getTextContent(), invalid_code)
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)
     self._component_tool.reset()
-    self.assertHasAttribute(self._module, 'TestComponentWithSyntaxError')
+    self.assertModuleImportable('TestComponentWithSyntaxError')
 
     ComponentTool.reset = assertResetCalled
     try:
@@ -1314,7 +1336,7 @@ class _TestZodbComponent(ERP5TypeTestCase):
     self.assertEquals(component._getErrorMessage(), '')
     self.assertEquals(component.getTextContent(), valid_code)
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)    
-    self.assertHasAttribute(self._module, 'TestComponentWithSyntaxError')
+    self.assertModuleImportable('TestComponentWithSyntaxError')
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
@@ -1338,8 +1360,7 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     transaction.commit()
     self.tic()
 
-    self.assertHasAttribute(self._module,
-                            'TestExternalMethodComponent')
+    self.assertModuleImportable('TestExternalMethodComponent')
 
     # Add an External Method using the Extension Component defined above and
     # check that it returns 42
@@ -1396,7 +1417,7 @@ class TestZodbDocumentComponent(_TestZodbComponent):
   def testAssignToPortalTypeClass(self):
     from Products.ERP5.Document.Person import Person as PersonDocument
 
-    self.failIfHasAttribute(self._module, 'TestPortalType')
+    self.failIfModuleImportable('TestPortalType')
 
     # Create a new Document Component inheriting from Person Document which
     # defines only one additional method (meaningful to make sure that the
@@ -1418,7 +1439,7 @@ class TestPortalType(Person):
 
     # As TestPortalType Document Component has been validated, it should now
     # be available
-    self.assertHasAttribute(self._module, 'TestPortalType')
+    self.assertModuleImportable('TestPortalType')
 
     person_type = self._portal.portal_types.Person
     person_type_class = person_type.getTypeClass()
@@ -1448,7 +1469,7 @@ class TestPortalType(Person):
       
       # The Portal Type class should not be in ghost state by now as we tried
       # to access test42() defined in TestPortalType Document Component
-      self.assertHasAttribute(self._module, 'TestPortalType')
+      self.assertModuleImportable('TestPortalType')
       self.assertTrue(self._module.TestPortalType.TestPortalType in person.__class__.mro())
       self.assertTrue(PersonDocument in person.__class__.mro())
 

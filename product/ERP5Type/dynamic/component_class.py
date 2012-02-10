@@ -27,46 +27,42 @@
 ##############################################################################
 
 import sys
+import threading
 
-from Products.ERP5Type.dynamic.dynamic_module import DynamicModule
 from Products.ERP5.ERP5Site import getSite
 from types import ModuleType
 from zLOG import LOG, INFO
 
-class ComponentDynamicPackage(DynamicModule):
+class ComponentDynamicPackage(ModuleType):
   """
   A top-level component is a package as it contains modules, this is required
   to be able to add import hooks (as described in PEP 302) when a in the
   source code of a Component, another Component is imported.
 
-  A Component can be loaded in two different ways:
+  A Component is loaded when being imported, for example in a Document
+  Component with ``import erp5.component.XXX.YYY'', through the Importer
+  Protocol (PEP 302), by adding an instance of this class to sys.meta_path and
+  through find_module() and load_module() methods. The latter method takes
+  care of loading the code into a new module.
 
-   1/ When erp5.component.extension.XXX is accessed (for example for External
-      Method as per ExternalMethod patch), thus ending up calling __getattr__
-      (DynamicModule) which then load the Component through __call__();
-
-   2/ Upon import, for example in a Document Component with ``import
-      erp5.component.XXX.YYY'', through the Importer Protocol (PEP 302), by
-      adding an instance of this class to sys.meta_path and through
-      find_module() and load_module methods. After that, this is the same as
-      1/.
-
-      This is required because Component classes do not have any physical
-      location on the filesystem, however extra care must be taken for
-      performances because load_module() will be called each time an import is
-      done, therefore the loader should be added to sys.meta_path as late as
-      possible to keep startup time to the minimum.
+  This is required because Component classes do not have any physical location
+  on the filesystem, however extra care must be taken for performances because
+  load_module() will be called each time an import is done, therefore the
+  loader should be added to sys.meta_path as late as possible to keep startup
+  time to the minimum.
   """
   # Necessary otherwise imports will fail because an object is considered a
   # package only if __path__ is defined
   __path__ = []
 
   def __init__(self, namespace, portal_type):
-    super(ComponentDynamicPackage, self).__init__(namespace, self)
+    super(ComponentDynamicPackage, self).__init__(namespace)
 
     self._namespace = namespace
     self._namespace_prefix = namespace + '.'
     self._portal_type = portal_type
+
+    self._lock = threading.RLock()
 
     # Add this module to sys.path for future imports
     sys.modules[namespace] = self
@@ -126,21 +122,11 @@ class ComponentDynamicPackage(DynamicModule):
     if module is not None:
       return module
 
-    # Load the module by trying to access it
-    name = fullname.replace(self._namespace_prefix, '')
-    try:
-      module = getattr(self, name)
-    except AttributeError, e:
-      return None
-
-    module.__loader__ = self
-    return module
-
-  def __call__(self, component_name):
     site = getSite()
 
     # XXX-arnau: erp5.component.extension.VERSION.REFERENCE perhaps but there
     # should be a a way to specify priorities such as portal_skins maybe?
+    component_name = fullname.replace(self._namespace_prefix, '')
     component_id = '%s.%s' % (self._namespace, component_name)
     try:
       # XXX-arnau: Performances (~ 200x slower than direct access to ZODB) and
@@ -155,12 +141,12 @@ class ComponentDynamicPackage(DynamicModule):
       # component = getattr(site.portal_components, component_id)
     except IndexError:
       LOG("ERP5Type.dynamic", INFO,
-          "Could not find %s, perhaps it has not been migrated yet?" % \
-            component_id)
+          "Could not find %s or it has not been validated or it has not been "
+          "migrated yet?" % component_id)
 
-      raise AttributeError("Component %s not found or not validated" % \
-                             component_id)
-    else:
+      return None
+
+    with self._lock:
       new_module = ModuleType(component_id, component.getDescription())
 
       # The module *must* be in sys.modules before executing the code in case
@@ -177,4 +163,8 @@ class ComponentDynamicPackage(DynamicModule):
         raise
 
       new_module.__path__ = []
+      new_module.__loader__ = self
+      new_module.__name__ = component_id
+
+      setattr(self, component_name, new_module)
       return new_module

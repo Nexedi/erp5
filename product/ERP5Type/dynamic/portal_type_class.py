@@ -197,9 +197,14 @@ def generatePortalTypeClass(site, portal_type_name):
     type_class_namespace = document_class_registry.get(type_class, '')
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
-      import erp5.component.document
-      module = getattr(erp5.component.document, type_class, None)
-      klass = module and getattr(module, type_class, None) or None
+      try:
+        klass = getattr(__import__('erp5.component.document.' + type_class,
+                                   fromlist=['erp5.component.document'],
+                                   level=0),
+                        type_class)
+
+      except (ImportError, AttributeError):
+        pass
 
     if klass is None:
       type_class_path = document_class_registry.get(type_class, None)

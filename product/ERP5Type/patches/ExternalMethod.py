@@ -21,11 +21,13 @@ ExternalMethod.getFunction = getFunction
 
 ExternalMethod__call__ = ExternalMethod.__call__
 def __call__(self, *args, **kw):
-  import erp5.component.extension
   try:
-    f = getattr(getattr(erp5.component.extension, self._module),
+    f = getattr(__import__('erp5.component.extension.' + self._module,
+                           fromlist=['erp5.component.extension'],
+                           level=0),
                 self._function)
-  except AttributeError:
+
+  except (ImportError, AttributeError):
     return ExternalMethod__call__(self, *args, **kw)
   else:
     _v_f = getattr(self, '_v_f', None)
