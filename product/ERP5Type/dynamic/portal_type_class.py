@@ -86,7 +86,13 @@ core_portal_type_class_dict = {
   'Types Tool':   {'type_class': 'TypesTool',
                    'generating': False},
   'Solver Tool':  {'type_class': 'SolverTool',
-                   'generating': False}
+                   'generating': False},
+  # Needed to load Components
+  #
+  # XXX-arnau: only for now as the Catalog is being used (parent_uid
+  # especially), but it will later be replaced anyway...
+  'Category Tool': {'type_class': 'CategoryTool',
+                     'generating': False}
   }
 
 def generatePortalTypeClass(site, portal_type_name):
@@ -186,15 +192,18 @@ def generatePortalTypeClass(site, portal_type_name):
   if '.' in type_class:
     type_class_path = type_class
   else:
-    type_class_path = document_class_registry.get(type_class, None)
-
-    # XXX-arnau: hardcoded but this must be improved anyway when Products will
-    # be in ZODB, for now this should be enough to only care of bt5 Documents
-    if type_class_path is None or type_class_path.startswith('erp5.document'):
+    # Skip any document within ERP5Type Product as it is needed for
+    # bootstrapping anyway
+    type_class_namespace = document_class_registry.get(type_class, '')
+    if not (type_class_namespace.startswith('Products.ERP5Type') or
+            portal_type_name in core_portal_type_class_dict):
       import erp5.component.document
       module = getattr(erp5.component.document, type_class, None)
       klass = module and getattr(module, type_class, None) or None
-    
+
+    if klass is None:
+      type_class_path = document_class_registry.get(type_class, None)
+
     if klass is None and type_class_path is None:
       raise AttributeError('Document class %s has not been registered:'
                            ' cannot import it as base of Portal Type %s'

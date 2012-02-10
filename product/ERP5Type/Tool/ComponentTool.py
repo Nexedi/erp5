@@ -30,6 +30,7 @@
 from types import ModuleType
 
 import transaction
+import sys
 
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
@@ -96,9 +97,13 @@ class ComponentTool(BaseTool):
         else:
           for name, klass in module.__dict__.items():
             if name[0] != '_' and isinstance(klass, ModuleType):
-              LOG("ERP5Type.Tool.ComponentTool", INFO,
-                  "Resetting erp5.component.%s.%s" % (module_name, name))
+              full_module_name = "erp5.component.%s.%s" % (module_name, name)
 
+              LOG("ERP5Type.Tool.ComponentTool", INFO,
+                  "Resetting " + full_module_name)
+
+              # The module must be deleted first
+              del sys.modules[full_module_name]
               delattr(module, name)
 
     type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
