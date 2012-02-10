@@ -1252,7 +1252,7 @@ class _TestZodbComponent(ERP5TypeTestCase):
     except ImportError:
       pass
     else:
-      raise AssertionError("Component '%s' should have been generated" % \
+      raise AssertionError("Component '%s' should not have been generated" % \
                              full_module_name)
 
   def assertModuleImportable(self, module_name):
@@ -1262,7 +1262,7 @@ class _TestZodbComponent(ERP5TypeTestCase):
       __import__(full_module_name, fromlist=[self._getComponentModuleName()],
                  level=0)
     except ImportError:
-      raise AssertionError("Component '%s' should not have been generated" % \
+      raise AssertionError("Component '%s' should have been generated" % \
                              full_module_name)
 
   def testValidateInvalidate(self):
@@ -1476,6 +1476,51 @@ class TestPortalType(Person):
     finally:
       person_type.setTypeClass('Person')
       transaction.commit()
+
+  def testDocumentWithImport(self):
+    self.failIfModuleImportable('TestDocumentWithImport')
+    self.failIfModuleImportable('TestDocumentImported')
+
+    # Create a new Document Component inheriting from Person Document which
+    # defines only one additional method (meaningful to make sure that the
+    # class (and not the module) has been added to the class when the
+    # TypeClass is changed)
+    test_imported_component = self._newComponent(
+      'TestDocumentImported',
+      """
+from Products.ERP5Type.Document.Person import Person
+
+class TestDocumentImported(Person):
+  def test42(self):
+    return 42
+""")
+
+    test_component = self._newComponent(
+      'TestDocumentWithImport',
+      """
+from Products.ERP5.Document.Person import Person
+from erp5.component.document.TestDocumentImported import TestDocumentImported
+
+class TestDocumentWithImport(TestDocumentImported):
+  def test42(self):
+    return 4242
+""")
+
+    transaction.commit()
+    self.tic()
+
+    self.failIfModuleImportable('TestDocumentWithImport')
+    self.failIfModuleImportable('TestDocumentImported')
+
+    test_imported_component.validate()
+    test_component.validate()
+    transaction.commit()
+    self.tic()
+
+    # TestPortalWithImport must be imported first to check if
+    # TestPortalImported could be imported without being present before
+    self.assertModuleImportable('TestDocumentWithImport')
+    self.assertModuleImportable('TestDocumentImported')
 
 def test_suite():
   suite = unittest.TestSuite()
