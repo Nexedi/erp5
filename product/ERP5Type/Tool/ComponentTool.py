@@ -27,6 +27,8 @@
 #
 ##############################################################################
 
+from types import ModuleType
+
 import transaction
 
 from AccessControl import ClassSecurityInfo
@@ -92,8 +94,8 @@ class ComponentTool(BaseTool):
         except AttributeError:
           pass
         else:
-          for name in module.__dict__.keys():
-            if name[0] != '_':
+          for name, klass in module.__dict__.items():
+            if name[0] != '_' and isinstance(klass, ModuleType):
               LOG("ERP5Type.Tool.ComponentTool", INFO,
                   "Resetting erp5.component.%s.%s" % (module_name, name))
 
