@@ -89,7 +89,7 @@
     top: 0 !important;\n
     left: 0 !important;\n
     z-index: 4242 !important;\n
-    overflow: auto !important;\n
+    overflow: hidden !important;\n
   }\n
 \n
   input.ace_editor_action_button {\n
@@ -124,7 +124,7 @@
             style="display: none;"></textarea>\n
 \n
   <div tal:attributes="id string:${container_div_id}"\n
-       style="width: 200px; height: 400px;\n
+       style="width: 200px; height: 400px; overflow: hidden !important;\n
               border: 1px solid #97B0D1; background-color: white !important;">\n
     <div style="position: relative !important; width: 100%; height: 100%;"\n
          tal:content="content"\n
@@ -178,6 +178,7 @@
 \n
   function unmaximize(event) {\n
     if(event.keyCode == 27) {\n
+      $(\'body\').css(\'overflow\', \'visible\');\n
       ace_editor_container_div.removeClass(\'maximize\');\n
       ace_editor_container_div.prependTo(ace_editor_container_div_parent_before_maximized);\n
       setContainerDivSize(event);\n
@@ -185,20 +186,21 @@
   }\n
 \n
   function maximize() {\n
+    body_element = $(\'body\');\n
+    body_element.css(\'overflow\', \'hidden\');\n
+\n
     ace_editor_container_div_parent_before_maximized = ace_editor_container_div.parent();\n
 \n
+    ace_editor_container_div.prependTo(body_element);\n
     ace_editor_container_div.addClass(\'maximize\');\n
-    ace_editor_container_div.width($(window).width());\n
-    ace_editor_container_div.height($(window).height());\n
-\n
-    body_element = $(\'body\');\n
+    ace_editor_container_div.width($(window).innerWidth());\n
+    ace_editor_container_div.height($(window).innerHeight());\n
 \n
     body_element.prepend(ace_editor_maximize_mode_message);\n
     ace_editor_maximize_mode_message.css(\'opacity\', 1.0);\n
     ace_editor_maximize_mode_message.animate({opacity: 0.25}, 1500,\n
                                              function() { $(this).remove(); });\n
 \n
-    ace_editor_container_div.prependTo(body_element);\n
     $(document).keyup(unmaximize);\n
     ace_editor.resize();\n
   }\n
