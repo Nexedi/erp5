@@ -58,6 +58,7 @@ class Component(Base):
                      'Reference',
                      'TextDocument')
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
   def checkConsistency(self, text_content=None, *args, **kw):
     """
     XXX-arnau: should probably in a separate Constraint class
@@ -87,6 +88,7 @@ class Component(Base):
 
     return []
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'addToRegistry')
   def addToRegistry(self):
     """
     Add the Component to its appropriate module registry
@@ -100,6 +102,8 @@ class Component(Base):
       'component': self,
       'module_name': "%s.%s" % (namespace_fullname, reference)}
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'deleteFromRegistry')
   def deleteFromRegistry(self):
     """
     Delete the Component from its appropriate module registry
@@ -156,6 +160,8 @@ class Component(Base):
     else:
       return super(Component, self)._setTextContent(text_content)
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTextContent')
   def getTextContent(self, validated_only=False):
     """
     Return the source code of the validated source code (if validated_only is
@@ -177,6 +183,8 @@ class Component(Base):
     current_workflow = self.workflow_history['component_validation_workflow'][-1]
     return current_workflow['error_message']
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getTranslatedValidationStateTitleWithErrorMessage')
   def getTranslatedValidationStateTitleWithErrorMessage(self):
     validation_state_title = self.getTranslatedValidationStateTitle()
     error_message = self._getErrorMessage()
@@ -186,6 +194,7 @@ class Component(Base):
 
     return validation_state_title
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'load')
   def load(self, namespace_dict={}, validated_only=False, text_content=None):
     """
     Load the source code into the given dict. Using exec() rather than
