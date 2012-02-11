@@ -1,3 +1,6 @@
+2012-02-11 arnaud.fontaine
+* Update component module registry upon validate/invalidate.
+
 2012-02-07 arnaud.fontaine
 * Use resetOnceAtTransactionBoundary when a Component has been modified.
 

@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].Base_checkConsistency()\n
+            <value> <string>state_change[\'object\'].addToRegistry()\n
 </string> </value>
         </item>
         <item>
@@ -59,7 +59,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>checkConsistency</string> </value>
+            <value> <string>addToRegistry</string> </value>
         </item>
       </dictionary>
     </pickle>

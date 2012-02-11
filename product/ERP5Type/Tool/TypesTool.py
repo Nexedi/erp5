@@ -206,11 +206,8 @@ class TypesTool(TypeProvider):
     from Products.ERP5Type import document_class_registry
     document_type_set = set(document_class_registry)
 
-    # XXX-arnau: should be cached and reference?
-    component_tool = self.getPortalObject().portal_components
-    for obj in component_tool.searchFolder(portal_type='Document Component',
-                                           validation_state='validated'):
-      document_type_set.add(obj.getReference())
+    import erp5.component.document
+    document_type_set.update(erp5.component.document._registry_dict)
 
     return sorted(document_type_set)
 

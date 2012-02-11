@@ -87,6 +87,29 @@ class Component(Base):
 
     return []
 
+  def addToRegistry(self):
+    """
+    Add the Component to its appropriate module registry
+    """
+    namespace_fullname = self._getDynamicModuleNamespace() 
+    namespace_module = __import__(namespace_fullname, {}, {},
+                                  fromlist=[namespace_fullname])
+
+    reference = self.getReference()
+    namespace_module._registry_dict[reference] = {
+      'component': self,
+      'module_name': "%s.%s" % (namespace_fullname, reference)}
+
+  def deleteFromRegistry(self):
+    """
+    Delete the Component from its appropriate module registry
+    """
+    namespace_fullname = self._getDynamicModuleNamespace() 
+    namespace_module = __import__(namespace_fullname, {}, {},
+                                  fromlist=[namespace_fullname])
+
+    del namespace_module._registry_dict[self.getReference()]
+
   def _setTextContent(self, text_content):
     """
     When the validation state is already 'validated', set the new value to
@@ -236,7 +259,6 @@ class Component(Base):
     exec source_code in namespace_dict
 
     return context.newContent(id=id,
-                              # XXX-arnau: useless field?
                               reference=class_name,
                               text_content=source_code,
                               portal_type=cls.portal_type)

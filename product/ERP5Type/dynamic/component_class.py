@@ -54,6 +54,7 @@ class ComponentDynamicPackage(ModuleType):
   # Necessary otherwise imports will fail because an object is considered a
   # package only if __path__ is defined
   __path__ = []
+  __registry_dict = None
 
   def __init__(self, namespace, portal_type):
     super(ComponentDynamicPackage, self).__init__(namespace)
@@ -69,6 +70,43 @@ class ComponentDynamicPackage(ModuleType):
 
     # Add the import hook
     sys.meta_path.append(self)
+
+  @property
+  def _registry_dict(self):
+    """
+    Create the component registry, this is very similar to
+    Products.ERP5Type.document_class_registry and avoids checking whether a
+    Component exists at each call at the expense to increase startup
+    time. Moreover, it allows to handle reference easily.
+
+    XXX-arnau: handle different versions of a Component, perhaps something
+    like erp5.component.extension.VERSION.REFERENCE perhaps but there should
+    be a a way to specify priorities such as portal_skins maybe?
+    """
+    if self.__registry_dict is None:
+      try:
+        component_tool = getSite().portal_components
+      # XXX-arnau: When installing ERP5 site, erp5_core_components has not
+      # been installed yet, thus this will obviously failed...
+      except AttributeError:
+        return {}
+
+      self.__registry_dict = {}
+      # XXX-arnau: contentValues should not be used as there may be a large
+      # number of objects, but as this is done only once, that should perhaps
+      # not be a problem after all, and using the Catalog is too risky as it
+      # lags behind and depends upon objects being reindexed
+      for component in component_tool.contentValues(portal_type=self._portal_type):
+        # Only consider modified or validated states as state transition will
+        # be handled by component_validation_workflow which will take care of
+        # updating the registry
+        if component.getValidationState() in ('modified', 'validated'):
+          reference = component.getReference()
+          self.__registry_dict[reference] = {
+            'component': component,
+            'module_name': self._namespace_prefix + reference}
+
+    return self.__registry_dict
 
   def find_module(self, fullname, path=None):
     # Ignore any absolute imports which does not start with this package
@@ -86,28 +124,8 @@ class ComponentDynamicPackage(ModuleType):
     # Skip components not available, otherwise Products for example could be
     # wrongly considered as importable and thus the actual filesystem class
     # ignored
-    #
-    # XXX-arnau: This must use reference rather than ID
-    site = getSite()
-    component = getattr(site.portal_components.aq_explicit, fullname, None)
-    if not (component and
-            component.getValidationState() in ('modified', 'validated')):
+    if name not in self._registry_dict:
       return None
-
-    # XXX-arnau: Using the Catalog should be preferred however it is not
-    # really possible for two reasons: 1/ the Catalog lags behind the ZODB
-    # thus immediately after adding/removing a Component, it will fail to load
-    # a Component because of reindexing 2/ this is unsurprisingly really slow
-    # compared to a ZODB access.
-    #
-    # site = getSite()
-    # found = list(site.portal_catalog.unrestrictedSearchResults(
-    #   reference=name,
-    #   portal_type=self._portal_type,
-    #   parent_uid=site.portal_components.getUid(),
-    #   validation_state=('validated', 'modified')))
-    # if not found:
-    #   return None
 
     return self
 
@@ -124,22 +142,11 @@ class ComponentDynamicPackage(ModuleType):
 
     site = getSite()
 
-    # XXX-arnau: erp5.component.extension.VERSION.REFERENCE perhaps but there
-    # should be a a way to specify priorities such as portal_skins maybe?
     component_name = fullname.replace(self._namespace_prefix, '')
     component_id = '%s.%s' % (self._namespace, component_name)
     try:
-      # XXX-arnau: Performances (~ 200x slower than direct access to ZODB) and
-      # also lag behind the ZODB (e.g. reindexing), so this is certainly not a
-      # good solution
-      component = site.portal_catalog.unrestrictedSearchResults(
-        parent_uid=site.portal_components.getUid(),
-        reference=component_name,
-        validation_state=('validated', 'modified'),
-        portal_type=self._portal_type)[0].getObject()
-
-      # component = getattr(site.portal_components, component_id)
-    except IndexError:
+      component = self._registry_dict[component_name]['component']
+    except KeyError:
       LOG("ERP5Type.dynamic", INFO,
           "Could not find %s or it has not been validated or it has not been "
           "migrated yet?" % component_id)
