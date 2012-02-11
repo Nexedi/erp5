@@ -98,7 +98,12 @@
     margin-right: 5px;\n
   }\n
 \n
-  div:-webkit-full-screen {\n
+  div:full-screen {\n
+    width: 100% !important;\n
+    height: 100% !important;\n
+  }\n
+\n
+  div:-webkit-full-screen  {\n
     width: 100% !important;\n
     height: 100% !important;\n
   }\n
