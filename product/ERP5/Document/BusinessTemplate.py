@@ -3780,7 +3780,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
                         "%s.py" % class_id)
 
   def _importFile(self, file_name, file_obj):
-    if (file_name.endswith('.py') and 
+    if (file_name.endswith('.py') and
         file_obj.name.rsplit(os.path.sep, 2)[-2] == 'portal_components'):
       return
 

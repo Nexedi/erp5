@@ -12,4 +12,3 @@ class TestDocument(Base):
     """
     """
     return "zozo"
-

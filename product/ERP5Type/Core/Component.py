@@ -34,7 +34,7 @@ from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
-from zLOG import LOG, INFO                           
+from zLOG import LOG, INFO
 
 class Component(Base):
   # CMF Type Definition
@@ -93,7 +93,7 @@ class Component(Base):
     """
     Add the Component to its appropriate module registry
     """
-    namespace_fullname = self._getDynamicModuleNamespace() 
+    namespace_fullname = self._getDynamicModuleNamespace()
     namespace_module = __import__(namespace_fullname, {}, {},
                                   fromlist=[namespace_fullname])
 
@@ -108,7 +108,7 @@ class Component(Base):
     """
     Delete the Component from its appropriate module registry
     """
-    namespace_fullname = self._getDynamicModuleNamespace() 
+    namespace_fullname = self._getDynamicModuleNamespace()
     namespace_module = __import__(namespace_fullname, {}, {},
                                   fromlist=[namespace_fullname])
 
@@ -221,7 +221,7 @@ class Component(Base):
     Try to import all Components and returns error as a dict if any
     """
     import os.path
-    path_pattern = "%s%s*.py" % (cls._getFilesystemPath(), os.path.sep)    
+    path_pattern = "%s%s*.py" % (cls._getFilesystemPath(), os.path.sep)
 
     LOG("ERP5Type.Core.Component", INFO, "Importing from %s" % path_pattern)
 

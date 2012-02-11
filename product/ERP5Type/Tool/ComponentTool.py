@@ -43,7 +43,7 @@ from zLOG import LOG, INFO, WARNING
 _last_sync = -1
 class ComponentTool(BaseTool):
   """
-    This tool provides methods to load the the different types 
+    This tool provides methods to load the the different types
     of components of the ERP5 framework: Document classes, interfaces,
     mixin classes, fields, accessors, etc.
   """

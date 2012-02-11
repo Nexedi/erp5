@@ -1241,7 +1241,7 @@ class _TestZodbComponent(ERP5TypeTestCase):
     pass
 
   def _getComponentFullModuleName(self, module_name):
-    return "%s.%s" % (self._getComponentModuleName(), module_name)    
+    return "%s.%s" % (self._getComponentModuleName(), module_name)
 
   def failIfModuleImportable(self, module_name):
     full_module_name = self._getComponentFullModuleName(module_name)
@@ -1256,7 +1256,7 @@ class _TestZodbComponent(ERP5TypeTestCase):
                              full_module_name)
 
   def assertModuleImportable(self, module_name):
-    full_module_name = self._getComponentFullModuleName(module_name)    
+    full_module_name = self._getComponentFullModuleName(module_name)
 
     try:
       __import__(full_module_name, fromlist=[self._getComponentModuleName()],
@@ -1335,7 +1335,7 @@ class _TestZodbComponent(ERP5TypeTestCase):
     self.assertEquals(component.getValidationState(), 'validated')
     self.assertEquals(component._getErrorMessage(), '')
     self.assertEquals(component.getTextContent(), valid_code)
-    self.assertEquals(component.getTextContent(validated_only=True), valid_code)    
+    self.assertEquals(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
@@ -1466,7 +1466,7 @@ class TestPortalType(Person):
 
       self.assertHasAttribute(person, 'test42')
       self.assertEquals(person.test42(), 42)
-      
+
       # The Portal Type class should not be in ghost state by now as we tried
       # to access test42() defined in TestPortalType Document Component
       self.assertModuleImportable('TestPortalType')
