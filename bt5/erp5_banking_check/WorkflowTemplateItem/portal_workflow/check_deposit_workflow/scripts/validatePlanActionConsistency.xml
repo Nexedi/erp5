@@ -64,7 +64,7 @@ for check_operation_line in transaction.objectValues(portal_type=\'Check Operati
   bank_account_dict[account_path] = account_value\n
   amount_dict[account_path] = amount_dict.get(account_path, 0) + check_operation_line.getPrice()\n
 for account_path, amount in amount_dict.items():\n
-  error = context.BankAccount_checkBalance(account_path, amount)[\'error_code\']\n
+  error = transaction.BankAccount_checkBalance(account_path, amount)[\'error_code\']\n
   source_bank_account = bank_account_dict[account_path]\n
   if error == 1:\n
     raise ValidationFailed, (Message(domain=\'ui\', message="Bank account $account is not sufficient.",\n
