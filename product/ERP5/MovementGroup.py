@@ -244,7 +244,7 @@ class MovementGroupNode:
       if movement_price == added_movement_price:
         new_movement = self._genericCalculation(movement,
                                                 added_movement=added_movement)
-        new_movement.setPriceMethod('getAveragePrice')
+        new_movement.setPriceMethod('getFirstPrice')
         new_movement.setQuantityMethod("getAddQuantity")
         return new_movement, None
     return movement, added_movement
@@ -395,6 +395,12 @@ class FakeMovement:
       Set the quantity method
     """
     self.__quantity_method = method
+
+  def getFirstPrice(self):
+    """
+    Get price defined on the first movement
+    """
+    return self.getMovementList()[0].getPrice(0)
 
   def getAveragePrice(self):
     """
