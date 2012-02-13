@@ -58,9 +58,9 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   listbox = getattr(form, 'listbox', None)
 
   # guess all column name from catalog schema
-  possible_state_list = [column_name for column_name in
+  possible_state_list = [column_name.split('.')[1] for column_name in
        self.getPortalObject().portal_catalog.getSQLCatalog().getColumnMap() if
-       column_name.endswith('state') and '.' not in column_name]
+       column_name.startswith('catalog.') and column_name.endswith('state')]
 
   # If there are checked uids, only use checked uids.
   selection_uid_list = selection_tool.getSelectionCheckedUidsFor(selection_name)
