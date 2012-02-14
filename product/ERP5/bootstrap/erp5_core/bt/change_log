@@ -1,3 +1,6 @@
+2012-02-14 arnaud.fontaine
+* Add component_interaction_workflow to Component Tool.
+
 2012-02-11 arnaud.fontaine
 * Update component module registry upon validate/invalidate.
 

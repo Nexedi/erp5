@@ -19,6 +19,7 @@ Category Related Membership Arity Constraint | dynamic_class_generation_interact
 Category Related Membership State Constraint | dynamic_class_generation_interaction_workflow
 Category Tool | dynamic_class_generation_interaction_workflow
 Category | edit_workflow
+Component Tool | component_interaction_workflow
 Content Existence Constraint | dynamic_class_generation_interaction_workflow
 Distributed Ram Cache | distributed_ram_cache_interaction_workflow
 Document | edit_workflow
