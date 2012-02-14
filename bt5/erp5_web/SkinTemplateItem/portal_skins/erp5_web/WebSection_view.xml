@@ -100,6 +100,7 @@
                         <string>my_authorization_forced</string>
                         <string>my_site_map_section_parent</string>
                         <string>my_site_map_document_parent</string>
+                        <string>listbox_visible</string>
                       </list>
                     </value>
                 </item>
