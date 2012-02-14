@@ -31,6 +31,7 @@ import time
 import xml_marshaller
 
 MAX_PARTIONS = 10
+MAX_SR_RETRIES = 3
 
 class SlapOSControler(object):
 
@@ -95,11 +96,15 @@ class SlapOSControler(object):
     command = [config['slapgrid_software_binary'], '-v', '-c',
       #'--buildout-parameter',"'-U -N' -o",
       config['slapos_config']]
-    slapgrid = subprocess.Popen(command,
-      stdout=stdout, stderr=stderr,
-      close_fds=True, preexec_fn=os.setsid)
-    process_group_pid_set.add(slapgrid.pid)
-    slapgrid.wait()
+    # a SR may fail for number of reasons (incl. network failures)
+    # so be tolerant and run it a few times before giving up
+    for runs in range(0, MAX_SR_RETRIES):
+      slapgrid = subprocess.Popen(command,
+        stdout=stdout, stderr=stderr,
+        close_fds=True, preexec_fn=os.setsid)
+      process_group_pid_set.add(slapgrid.pid)
+      slapgrid.wait()
+
     stdout.seek(0)
     stderr.seek(0)
     process_group_pid_set.remove(slapgrid.pid)
