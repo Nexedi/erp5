@@ -3763,9 +3763,6 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
   some Business Templates may still have filesystem Extensions which need to
   be migrated to the ZODB.
   """
-  # XXX-arnau: the code is far from being stable
-  _perform_migration = False
-
   _tool_id = 'portal_components'
 
   @staticmethod
