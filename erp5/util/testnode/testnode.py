@@ -34,6 +34,9 @@ import time
 import xmlrpclib
 import glob
 import SlapOSControler
+import logging
+
+DEFAULT_SLEEP_TIMEOUT = 120 # time in seconds to sleep
 
 class SubprocessError(EnvironmentError):
   def __init__(self, status_dict):
@@ -42,7 +45,6 @@ class SubprocessError(EnvironmentError):
     return self.status_dict[name]
   def __str__(self):
     return 'Error %i' % self.status_code
-
 
 from Updater import Updater
 
@@ -58,8 +60,9 @@ def sigterm_handler(signal, frame):
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
-import logging
 def safeRpcCall(function, *args):
+  # XXX: this method will try infinitive calls to backend
+  # this can cause testnode to looked "stalled"
   retry = 64
   while True:
     try:
@@ -188,7 +191,7 @@ branch = %(branch)s
         revision = ','.join(full_revision_list)
         if previous_revision == revision:
           log('Sleeping a bit')
-          time.sleep(120)
+          time.sleep(DEFAULT_SLEEP_TIMEOUT)
           if not(retry_software):
             continue
           log('Retrying install')
@@ -204,7 +207,7 @@ branch = %(branch)s
           portal = xmlrpclib.ServerProxy("%s%s" %
                       (portal_url, 'portal_task_distribution'),
                       allow_none=1)
-          master = portal.portal_task_distribution
+          master = portal
           assert safeRpcCall(master.getProtocolRevision) == 1
           test_result = safeRpcCall(master.createTestResult,
             config['test_suite'], revision, [],
@@ -235,7 +238,7 @@ branch = %(branch)s
           slapos_controler = SlapOSControler.SlapOSControler(config,
             process_group_pid_set=process_group_pid_set, log=log,
             slapproxy_log=slapproxy_log)
-          for method_name in ("runSoftwareRelease", "runComputerPartition"):
+          for method_name in ("runSoftwareRelease", "runComputerPartition",):
             stdout, stderr = getInputOutputFileList(config, method_name)
             slapos_method = getattr(slapos_controler, method_name)
             status_dict = slapos_method(config,
@@ -288,7 +291,7 @@ branch = %(branch)s
         if remote_test_result_needs_cleanup:
           safeRpcCall(master.reportTaskFailure,
             test_result_path, e.status_dict, config['test_node_title'])
-        time.sleep(120)
+        time.sleep(DEFAULT_SLEEP_TIMEOUT)
         continue
 
   finally:
