@@ -554,7 +554,8 @@ class TestERP5Credential(ERP5TypeTestCase):
     assignment = person.newContent(portal_type='Assignment',
                       function='member')
     assignment.open()
-    sequence.edit(person_reference=person.getReference())
+    sequence.edit(person_reference=person.getReference(),
+                  default_email_text=person.getDefaultEmailText())
 
   def stepCreateSameEmailPersonList(self, sequence=None, sequence_list=None,
       **kw):
@@ -635,6 +636,12 @@ class TestERP5Credential(ERP5TypeTestCase):
       sequence=None, sequence_list=None, **kw):
     person_reference = sequence["person_reference"]
     self.portal.ERP5Site_newCredentialRecovery(reference=person_reference)
+
+  def stepRequestCredentialRecoveryWithERP5Site_newCredentialRecoveryByEmail(
+     self, sequence=None, sequence_list=None, **kw):
+    default_email_text = sequence["default_email_text"]
+    self.portal.ERP5Site_newCredentialRecovery(
+                    default_email_text=default_email_text)
 
   def stepLoginAsCurrentPersonReference(self, sequence=None,
       sequence_list=None, **kw):
@@ -861,6 +868,12 @@ class TestERP5Credential(ERP5TypeTestCase):
     person = self.portal.portal_catalog.getResultValue(
       reference=sequence["person_reference"], portal_type="Person")
     self.assertEquals("Barney", person.getFirstName())
+
+  def stepCheckCredentialRecoveryNotEmptyDestinationDecision(self, sequence):
+    credential_recovery = self.portal.portal_catalog.getResultValue(
+       portal_type="Credential Recovery", sort_on=(("creation_date", "DESC"),),
+       validation_state="submitted")
+    self.assertNotEquals(None, credential_recovery.getDestinationDecisionValue())
 
   def test_01_simpleSubscriptionRequest(self):
     '''
@@ -1324,6 +1337,19 @@ class TestERP5Credential(ERP5TypeTestCase):
     result = self.portal.ERP5Site_viewCredentialRequestForm()
     self.assertFalse('Contract' in result)
     self.assertFalse('your_term_confirmation' in result)
+
+  def test_ERP5Site_newCredentialRecovery_using_default_email_text(self):
+    """
+      Check that using the script ERP5Site_newCredentialRecovery and passing
+      the default_email_text, the login is recover correctly
+    """
+    sequence_list = SequenceList()
+    sequence_string = "CreatePerson Tic " \
+      "RequestCredentialRecoveryWithERP5Site_newCredentialRecoveryByEmail Tic " \
+      "CheckCredentialRecoveryNotEmptyDestinationDecision"
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 
 def test_suite():
   suite = unittest.TestSuite()
