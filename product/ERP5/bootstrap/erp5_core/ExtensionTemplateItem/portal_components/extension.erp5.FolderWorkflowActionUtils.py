@@ -28,6 +28,7 @@
 ##############################################################################
 
 from hashlib import md5
+from Products.ERP5Type.Base import Base
 
 # Some workflow does not make sense in the context of mass transition and are
 # not proposed.
@@ -82,6 +83,8 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
 
       for brain in selection_tool.callSelectionFor(selection_name, params=params):
         doc = brain.getObject()
+        if not isinstance(doc, Base):
+          doc = self.getPortalObject().unrestrictedTraverse(brain.path)
         for workflow in wf_tool.getWorkflowsFor(doc):
           if workflow.getId() in skipped_workflow_id_list:
             continue
