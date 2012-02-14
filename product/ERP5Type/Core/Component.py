@@ -28,6 +28,9 @@
 #
 ##############################################################################
 
+# There is absolutely no reason to use relative imports when loading a Component
+from __future__ import absolute_import
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2012 Nexedi SARL and Contributors. All Rights Reserved.
@@ -25,6 +26,9 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #
 ##############################################################################
+
+# There is absolutely no reason to use relative imports when loading a Component
+from __future__ import absolute_import
 
 import sys
 import threading
