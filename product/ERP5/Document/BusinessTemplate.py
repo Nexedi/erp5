@@ -3659,7 +3659,12 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
       update_parameter_dict[key] = 'migrate'
 
   def install(self, context, **kw):
-    if not self._perform_migration:
+    """
+    Install Business Template items and perform migration
+    automatically only if the tool is available
+    """
+    if (not self._perform_migration or
+        getattr(context.getPortalObject(), self._tool_id, None) is None):
       return FilesystemDocumentTemplateItem.install(self, context, **kw)
 
     # With format 0 of Business Template, the objects are stored in
