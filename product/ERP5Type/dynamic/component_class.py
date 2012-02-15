@@ -113,9 +113,10 @@ class ComponentDynamicPackage(ModuleType):
     return self.__registry_dict
 
   def find_module(self, fullname, path=None):
-    # Ignore any absolute imports which does not start with this package
-    # prefix, None there means that "normal" sys.path will be used
-    if not fullname.startswith(self._namespace_prefix):
+    # Ignore imports with a path which are filesystem-only and any
+    # absolute imports which does not start with this package prefix,
+    # None there means that "normal" sys.path will be used
+    if path or not fullname.startswith(self._namespace_prefix):
       return None
 
     # __import__ will first try a relative import, for example
@@ -135,15 +136,10 @@ class ComponentDynamicPackage(ModuleType):
 
   def load_module(self, fullname):
     """
-    Load a module with given fullname (see PEP 302)
+    Load a module with given fullname (see PEP 302) if it's not
+    already in sys.modules. It is assumed that imports are filtered
+    properly in find_module().
     """
-    if not fullname.startswith(self._namespace_prefix):
-      return None
-
-    module = sys.modules.get(fullname, None)
-    if module is not None:
-      return module
-
     site = getSite()
 
     component_name = fullname.replace(self._namespace_prefix, '')
