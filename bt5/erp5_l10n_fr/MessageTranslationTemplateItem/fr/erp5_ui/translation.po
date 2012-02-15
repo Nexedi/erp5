@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: 2009-03-10 11:15+0000\n"
-"PO-Revision-Date: 2009-04-16 14:22+0200\n"
+"PO-Revision-Date: 2012-02-15 10:02+CET\n"
 "Last-Translator:  <>\n"
 "Language-Team: fr <>\n"
 "MIME-Version: 1.0\n"
@@ -2508,6 +2508,9 @@ msgstr "Contenu"
 msgid "Content Layout"
 msgstr "Mise en page du contenu"
 
+msgid "Content Translation Workflow"
+msgstr "Workflow de traduction"
+
 msgid "Content format"
 msgstr "Format du contenu"
 
@@ -2522,9 +2525,6 @@ msgstr "Contenu du document."
 
 msgid "Content of the web page"
 msgstr "Contenu de la page web."
-
-msgid "Content Translation Workflow"
-msgstr "Workflow de traduction"
 
 msgid "Contents"
 msgstr "Contenu"
@@ -4463,7 +4463,7 @@ msgid "Expenses"
 msgstr "Dépenses"
 
 msgid "Expiration Date"
-msgstr "Expire le"
+msgstr "Date d'expiration"
 
 msgid "Expire"
 msgstr "Marquer comme expirée"
@@ -7109,6 +7109,15 @@ msgstr "Règle de paiement"
 
 msgid "Payment Transaction"
 msgstr "Écriture de trésorerie"
+
+msgid "Payment Transaction Group"
+msgstr "Groupe d'écriture de trésorerie"
+
+msgid "Payment Transaction Group Type"
+msgstr "Type de groupe d'écriture de trésorerie"
+
+msgid "Payment Transaction Groups"
+msgstr "Groupes d'écriture de trésorerie"
 
 msgid "Payment Transaction Lines"
 msgstr "Lignes comptables"
