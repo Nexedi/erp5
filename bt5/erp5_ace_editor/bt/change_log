@@ -1,3 +1,6 @@
+2012-02-15 arnaud.fontaine
+* Use uncompressed version of ace editor source code for readability and debugging sake.
+
 2012-02-11 arnaud.fontaine
 * Do not show overflow on maximized mode as scrollbars are handled by Ace itself.
 

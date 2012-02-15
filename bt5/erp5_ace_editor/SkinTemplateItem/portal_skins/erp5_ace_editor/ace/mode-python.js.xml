@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts27557245.52</string> </value>
+            <value> <string>ts29274479.96</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -22,7 +22,522 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-define("ace/mode/python",["require","exports","module","pilot/oop","ace/mode/text","ace/tokenizer","ace/mode/python_highlight_rules","ace/mode/matching_brace_outdent","ace/range"],function(a,b,c){var d=a("pilot/oop"),e=a("ace/mode/text").Mode,f=a("ace/tokenizer").Tokenizer,g=a("ace/mode/python_highlight_rules").PythonHighlightRules,h=a("ace/mode/matching_brace_outdent").MatchingBraceOutdent,i=a("ace/range").Range,j=function(){this.$tokenizer=new f((new g).getRules()),this.$outdent=new h};d.inherits(j,e),function(){this.toggleCommentLines=function(a,b,c,d){var e=!0,f=[],g=/^(\\s*)#/;for(var h=c;h<=d;h++)if(!g.test(b.getLine(h))){e=!1;break}if(e){var j=new i(0,0,0,0);for(var h=c;h<=d;h++){var k=b.getLine(h),l=k.match(g);j.start.row=h,j.end.row=h,j.end.column=l[0].length,b.replace(j,l[1])}}else b.indentRows(c,d,"#")},this.getNextLineIndent=function(a,b,c){var d=this.$getIndent(b),e=this.$tokenizer.getLineTokens(b,a),f=e.tokens,g=e.state;if(f.length&&f[f.length-1].type=="comment")return d;if(a=="start"){var h=b.match(/^.*[\\{\\(\\[\\:]\\s*$/);h&&(d+=c)}return d},this.checkOutdent=function(a,b,c){return this.$outdent.checkOutdent(b,c)},this.autoOutdent=function(a,b,c){this.$outdent.autoOutdent(b,c)}}.call(j.prototype),b.Mode=j}),define("ace/mode/python_highlight_rules",["require","exports","module","pilot/oop","pilot/lang","ace/mode/text_highlight_rules"],function(a,b,c){var d=a("pilot/oop"),e=a("pilot/lang"),f=a("ace/mode/text_highlight_rules").TextHighlightRules,g=function(){var a=e.arrayToMap("and|as|assert|break|class|continue|def|del|elif|else|except|exec|finally|for|from|global|if|import|in|is|lambda|not|or|pass|print|raise|return|try|while|with|yield".split("|")),b=e.arrayToMap("True|False|None|NotImplemented|Ellipsis|__debug__".split("|")),c=e.arrayToMap("abs|divmod|input|open|staticmethod|all|enumerate|int|ord|str|any|eval|isinstance|pow|sum|basestring|execfile|issubclass|print|super|binfile|iter|property|tuple|bool|filter|len|range|type|bytearray|float|list|raw_input|unichr|callable|format|locals|reduce|unicode|chr|frozenset|long|reload|vars|classmethod|getattr|map|repr|xrange|cmp|globals|max|reversed|zip|compile|hasattr|memoryview|round|__import__|complex|hash|min|set|apply|delattr|help|next|setattr|buffer|dict|hex|object|slice|coerce|dir|id|oct|sorted|intern".split("|")),d=e.arrayToMap("".split("|")),f="(?:r|u|ur|R|U|UR|Ur|uR)?",g="(?:(?:[1-9]\\\\d*)|(?:0))",h="(?:0[oO]?[0-7]+)",i="(?:0[xX][\\\\dA-Fa-f]+)",j="(?:0[bB][01]+)",k="(?:"+g+"|"+h+"|"+i+"|"+j+")",l="(?:[eE][+-]?\\\\d+)",m="(?:\\\\.\\\\d+)",n="(?:\\\\d+)",o="(?:(?:"+n+"?"+m+")|(?:"+n+"\\\\.))",p="(?:(?:"+o+"|"+n+")"+l+")",q="(?:"+p+"|"+o+")";this.$rules={start:[{token:"comment",regex:"#.*$"},{token:"string",regex:f+\'"{3}(?:[^\\\\\\\\]|\\\\\\\\.)*?"{3}\'},{token:"string",merge:!0,regex:f+\'"{3}.*$\',next:"qqstring"},{token:"string",regex:f+\'"(?:[^\\\\\\\\]|\\\\\\\\.)*?"\'},{token:"string",regex:f+"\'{3}(?:[^\\\\\\\\]|\\\\\\\\.)*?\'{3}"},{token:"string",merge:!0,regex:f+"\'{3}.*$",next:"qstring"},{token:"string",regex:f+"\'(?:[^\\\\\\\\]|\\\\\\\\.)*?\'"},{token:"constant.numeric",regex:"(?:"+q+"|\\\\d+)[jJ]\\\\b"},{token:"constant.numeric",regex:q},{token:"constant.numeric",regex:k+"[lL]\\\\b"},{token:"constant.numeric",regex:k+"\\\\b"},{token:function(e){return a.hasOwnProperty(e)?"keyword":b.hasOwnProperty(e)?"constant.language":d.hasOwnProperty(e)?"invalid.illegal":c.hasOwnProperty(e)?"support.function":e=="debugger"?"invalid.deprecated":"identifier"},regex:"[a-zA-Z_$][a-zA-Z0-9_$]*\\\\b"},{token:"keyword.operator",regex:"\\\\+|\\\\-|\\\\*|\\\\*\\\\*|\\\\/|\\\\/\\\\/|%|<<|>>|&|\\\\||\\\\^|~|<|>|<=|=>|==|!=|<>|="},{token:"lparen",regex:"[\\\\[\\\\(\\\\{]"},{token:"rparen",regex:"[\\\\]\\\\)\\\\}]"},{token:"text",regex:"\\\\s+"}],qqstring:[{token:"string",regex:\'(?:[^\\\\\\\\]|\\\\\\\\.)*?"{3}\',next:"start"},{token:"string",merge:!0,regex:".+"}],qstring:[{token:"string",regex:"(?:[^\\\\\\\\]|\\\\\\\\.)*?\'{3}",next:"start"},{token:"string",merge:!0,regex:".+"}]}};d.inherits(g,f),b.PythonHighlightRules=g}),define("ace/mode/matching_brace_outdent",["require","exports","module","ace/range"],function(a,b,c){var d=a("ace/range").Range,e=function(){};(function(){this.checkOutdent=function(a,b){return/^\\s+$/.test(a)?/^\\s*\\}/.test(b):!1},this.autoOutdent=function(a,b){var c=a.getLine(b),e=c.match(/^(\\s*\\})/);if(!e)return 0;var f=e[1].length,g=a.findMatchingBracket({row:b,column:f});if(!g||g.row==b)return 0;var h=this.$getIndent(a.getLine(g.row));a.replace(new d(b,0,b,f-1),h)},this.$getIndent=function(a){var b=a.match(/^(\\s+)/);return b?b[1]:""}}).call(e.prototype),b.MatchingBraceOutdent=e})
+/* ***** BEGIN LICENSE BLOCK *****\n
+* Version: MPL 1.1/GPL 2.0/LGPL 2.1\n
+*\n
+* The contents of this file are subject to the Mozilla Public License Version\n
+* 1.1 (the "License"); you may not use this file except in compliance with\n
+* the License. You may obtain a copy of the License at\n
+* http://www.mozilla.org/MPL/\n
+*\n
+* Software distributed under the License is distributed on an "AS IS" basis,\n
+* WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License\n
+* for the specific language governing rights and limitations under the\n
+* License.\n
+*\n
+* The Original Code is Ajax.org Code Editor (ACE).\n
+*\n
+* The Initial Developer of the Original Code is\n
+* Ajax.org B.V.\n
+* Portions created by the Initial Developer are Copyright (C) 2010\n
+* the Initial Developer. All Rights Reserved.\n
+*\n
+* Contributor(s):\n
+*      Fabian Jakobs <fabian AT ajax DOT org>\n
+*      Colin Gourlay <colin DOT j DOT gourlay AT gmail DOT com>\n
+*\n
+* Alternatively, the contents of this file may be used under the terms of\n
+* either the GNU General Public License Version 2 or later (the "GPL"), or\n
+* the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),\n
+* in which case the provisions of the GPL or the LGPL are applicable instead\n
+* of those above. If you wish to allow use of your version of this file only\n
+* under the terms of either the GPL or the LGPL, and not to allow others to\n
+* use your version of this file under the terms of the MPL, indicate your\n
+* decision by deleting the provisions above and replace them with the notice\n
+* and other provisions required by the GPL or the LGPL. If you do not delete\n
+* the provisions above, a recipient may use your version of this file under\n
+* the terms of any one of the MPL, the GPL or the LGPL.\n
+*\n
+* ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/mode/python\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/text\', \'ace/tokenizer\', \'ace/mode/python_highlight_rules\', \'ace/mode/folding/pythonic\', \'ace/range\'], function(require, exports, module) {\n
+"use strict";\n
+\n
+var oop = require("../lib/oop");\n
+var TextMode = require("./text").Mode;\n
+var Tokenizer = require("../tokenizer").Tokenizer;\n
+var PythonHighlightRules = require("./python_highlight_rules").PythonHighlightRules;\n
+var PythonFoldMode = require("./folding/pythonic").FoldMode;\n
+var Range = require("../range").Range;\n
+\n
+var Mode = function() {\n
+    this.$tokenizer = new Tokenizer(new PythonHighlightRules().getRules());\n
+    this.foldingRules = new PythonFoldMode("\\\\:");\n
+};\n
+oop.inherits(Mode, TextMode);\n
+\n
+(function() {\n
+\n
+    this.toggleCommentLines = function(state, doc, startRow, endRow) {\n
+        var outdent = true;\n
+        var re = /^(\\s*)#/;\n
+\n
+        for (var i=startRow; i<= endRow; i++) {\n
+            if (!re.test(doc.getLine(i))) {\n
+                outdent = false;\n
+                break;\n
+            }\n
+        }\n
+\n
+        if (outdent) {\n
+            var deleteRange = new Range(0, 0, 0, 0);\n
+            for (var i=startRow; i<= endRow; i++)\n
+            {\n
+                var line = doc.getLine(i);\n
+                var m = line.match(re);\n
+                deleteRange.start.row = i;\n
+                deleteRange.end.row = i;\n
+                deleteRange.end.column = m[0].length;\n
+                doc.replace(deleteRange, m[1]);\n
+            }\n
+        }\n
+        else {\n
+            doc.indentRows(startRow, endRow, "#");\n
+        }\n
+    };\n
+\n
+    this.getNextLineIndent = function(state, line, tab) {\n
+        var indent = this.$getIndent(line);\n
+\n
+        var tokenizedLine = this.$tokenizer.getLineTokens(line, state);\n
+        var tokens = tokenizedLine.tokens;\n
+\n
+        if (tokens.length && tokens[tokens.length-1].type == "comment") {\n
+            return indent;\n
+        }\n
+\n
+        if (state == "start") {\n
+            var match = line.match(/^.*[\\{\\(\\[\\:]\\s*$/);\n
+            if (match) {\n
+                indent += tab;\n
+            }\n
+        }\n
+\n
+        return indent;\n
+    };\n
+\n
+    var outdents = {\n
+        "pass": 1,\n
+        "return": 1,\n
+        "raise": 1,\n
+        "break": 1,\n
+        "continue": 1\n
+    };\n
+    \n
+    this.checkOutdent = function(state, line, input) {\n
+        if (input !== "\\r\\n" && input !== "\\r" && input !== "\\n")\n
+            return false;\n
+\n
+        var tokens = this.$tokenizer.getLineTokens(line.trim(), state).tokens;\n
+        \n
+        if (!tokens)\n
+            return false;\n
+        \n
+        // ignore trailing comments\n
+        do {\n
+            var last = tokens.pop();\n
+        } while (last && (last.type == "comment" || (last.type == "text" && last.value.match(/^\\s+$/))));\n
+        \n
+        if (!last)\n
+            return false;\n
+        \n
+        return (last.type == "keyword" && outdents[last.value]);\n
+    };\n
+\n
+    this.autoOutdent = function(state, doc, row) {\n
+        // outdenting in python is slightly different because it always applies\n
+        // to the next line and only of a new line is inserted\n
+        \n
+        row += 1;\n
+        var indent = this.$getIndent(doc.getLine(row));\n
+        var tab = doc.getTabString();\n
+        if (indent.slice(-tab.length) == tab)\n
+            doc.remove(new Range(row, indent.length-tab.length, row, indent.length));\n
+    };\n
+\n
+}).call(Mode.prototype);\n
+\n
+exports.Mode = Mode;\n
+});\n
+/* ***** BEGIN LICENSE BLOCK *****\n
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1\n
+ *\n
+ * The contents of this file are subject to the Mozilla Public License Version\n
+ * 1.1 (the "License"); you may not use this file except in compliance with\n
+ * the License. You may obtain a copy of the License at\n
+ * http://www.mozilla.org/MPL/\n
+ *\n
+ * Software distributed under the License is distributed on an "AS IS" basis,\n
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License\n
+ * for the specific language governing rights and limitations under the\n
+ * License.\n
+ *\n
+ * The Original Code is Ajax.org Code Editor (ACE).\n
+ *\n
+ * The Initial Developer of the Original Code is\n
+ * Ajax.org B.V.\n
+ * Portions created by the Initial Developer are Copyright (C) 2010\n
+ * the Initial Developer. All Rights Reserved.\n
+ *\n
+ * Contributor(s):\n
+ *      Fabian Jakobs <fabian AT ajax DOT org>\n
+ *      Colin Gourlay <colin DOT j DOT gourlay AT gmail DOT com>\n
+ *\n
+ * Alternatively, the contents of this file may be used under the terms of\n
+ * either the GNU General Public License Version 2 or later (the "GPL"), or\n
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),\n
+ * in which case the provisions of the GPL or the LGPL are applicable instead\n
+ * of those above. If you wish to allow use of your version of this file only\n
+ * under the terms of either the GPL or the LGPL, and not to allow others to\n
+ * use your version of this file under the terms of the MPL, indicate your\n
+ * decision by deleting the provisions above and replace them with the notice\n
+ * and other provisions required by the GPL or the LGPL. If you do not delete\n
+ * the provisions above, a recipient may use your version of this file under\n
+ * the terms of any one of the MPL, the GPL or the LGPL.\n
+ *\n
+ * ***** END LICENSE BLOCK *****\n
+ *\n
+ * TODO: python delimiters\n
+ */\n
+\n
+define(\'ace/mode/python_highlight_rules\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/lib/lang\', \'ace/mode/text_highlight_rules\'], function(require, exports, module) {\n
+"use strict";\n
+\n
+var oop = require("../lib/oop");\n
+var lang = require("../lib/lang");\n
+var TextHighlightRules = require("./text_highlight_rules").TextHighlightRules;\n
+\n
+var PythonHighlightRules = function() {\n
+\n
+    var keywords = lang.arrayToMap(\n
+        ("and|as|assert|break|class|continue|def|del|elif|else|except|exec|" +\n
+        "finally|for|from|global|if|import|in|is|lambda|not|or|pass|print|" +\n
+        "raise|return|try|while|with|yield").split("|")\n
+    );\n
+\n
+    var builtinConstants = lang.arrayToMap(\n
+        ("True|False|None|NotImplemented|Ellipsis|__debug__").split("|")\n
+    );\n
+\n
+    var builtinFunctions = lang.arrayToMap(\n
+        ("abs|divmod|input|open|staticmethod|all|enumerate|int|ord|str|any|" +\n
+        "eval|isinstance|pow|sum|basestring|execfile|issubclass|print|super|" +\n
+        "binfile|iter|property|tuple|bool|filter|len|range|type|bytearray|" +\n
+        "float|list|raw_input|unichr|callable|format|locals|reduce|unicode|" +\n
+        "chr|frozenset|long|reload|vars|classmethod|getattr|map|repr|xrange|" +\n
+        "cmp|globals|max|reversed|zip|compile|hasattr|memoryview|round|" +\n
+        "__import__|complex|hash|min|set|apply|delattr|help|next|setattr|" +\n
+        "buffer|dict|hex|object|slice|coerce|dir|id|oct|sorted|intern").split("|")\n
+    );\n
+\n
+    var futureReserved = lang.arrayToMap(\n
+        ("").split("|")\n
+    );\n
+\n
+    var strPre = "(?:r|u|ur|R|U|UR|Ur|uR)?";\n
+\n
+    var decimalInteger = "(?:(?:[1-9]\\\\d*)|(?:0))";\n
+    var octInteger = "(?:0[oO]?[0-7]+)";\n
+    var hexInteger = "(?:0[xX][\\\\dA-Fa-f]+)";\n
+    var binInteger = "(?:0[bB][01]+)";\n
+    var integer = "(?:" + decimalInteger + "|" + octInteger + "|" + hexInteger + "|" + binInteger + ")";\n
+\n
+    var exponent = "(?:[eE][+-]?\\\\d+)";\n
+    var fraction = "(?:\\\\.\\\\d+)";\n
+    var intPart = "(?:\\\\d+)";\n
+    var pointFloat = "(?:(?:" + intPart + "?" + fraction + ")|(?:" + intPart + "\\\\.))";\n
+    var exponentFloat = "(?:(?:" + pointFloat + "|" +  intPart + ")" + exponent + ")";\n
+    var floatNumber = "(?:" + exponentFloat + "|" + pointFloat + ")";\n
+\n
+    this.$rules = {\n
+        "start" : [ {\n
+            token : "comment",\n
+            regex : "#.*$"\n
+        }, {\n
+            token : "string",           // """ string\n
+            regex : strPre + \'"{3}(?:[^\\\\\\\\]|\\\\\\\\.)*?"{3}\'\n
+        }, {\n
+            token : "string",           // multi line """ string start\n
+            merge : true,\n
+            regex : strPre + \'"{3}.*$\',\n
+            next : "qqstring"\n
+        }, {\n
+            token : "string",           // " string\n
+            regex : strPre + \'"(?:[^\\\\\\\\]|\\\\\\\\.)*?"\'\n
+        }, {\n
+            token : "string",           // \'\'\' string\n
+            regex : strPre + "\'{3}(?:[^\\\\\\\\]|\\\\\\\\.)*?\'{3}"\n
+        }, {\n
+            token : "string",           // multi line \'\'\' string start\n
+            merge : true,\n
+            regex : strPre + "\'{3}.*$",\n
+            next : "qstring"\n
+        }, {\n
+            token : "string",           // \' string\n
+            regex : strPre + "\'(?:[^\\\\\\\\]|\\\\\\\\.)*?\'"\n
+        }, {\n
+            token : "constant.numeric", // imaginary\n
+            regex : "(?:" + floatNumber + "|\\\\d+)[jJ]\\\\b"\n
+        }, {\n
+            token : "constant.numeric", // float\n
+            regex : floatNumber\n
+        }, {\n
+            token : "constant.numeric", // long integer\n
+            regex : integer + "[lL]\\\\b"\n
+        }, {\n
+            token : "constant.numeric", // integer\n
+            regex : integer + "\\\\b"\n
+        }, {\n
+            token : function(value) {\n
+                if (keywords.hasOwnProperty(value))\n
+                    return "keyword";\n
+                else if (builtinConstants.hasOwnProperty(value))\n
+                    return "constant.language";\n
+                else if (futureReserved.hasOwnProperty(value))\n
+                    return "invalid.illegal";\n
+                else if (builtinFunctions.hasOwnProperty(value))\n
+                    return "support.function";\n
+                else if (value == "debugger")\n
+                    return "invalid.deprecated";\n
+                else\n
+                    return "identifier";\n
+            },\n
+            regex : "[a-zA-Z_$][a-zA-Z0-9_$]*\\\\b"\n
+        }, {\n
+            token : "keyword.operator",\n
+            regex : "\\\\+|\\\\-|\\\\*|\\\\*\\\\*|\\\\/|\\\\/\\\\/|%|<<|>>|&|\\\\||\\\\^|~|<|>|<=|=>|==|!=|<>|="\n
+        }, {\n
+            token : "lparen.paren",\n
+            regex : "[\\\\[\\\\(\\\\{]"\n
+        }, {\n
+            token : "paren.rparen",\n
+            regex : "[\\\\]\\\\)\\\\}]"\n
+        }, {\n
+            token : "text",\n
+            regex : "\\\\s+"\n
+        } ],\n
+        "qqstring" : [ {\n
+            token : "string", // multi line """ string end\n
+            regex : \'(?:[^\\\\\\\\]|\\\\\\\\.)*?"{3}\',\n
+            next : "start"\n
+        }, {\n
+            token : "string",\n
+            merge : true,\n
+            regex : \'.+\'\n
+        } ],\n
+        "qstring" : [ {\n
+            token : "string",  // multi line \'\'\' string end\n
+            regex : "(?:[^\\\\\\\\]|\\\\\\\\.)*?\'{3}",\n
+            next : "start"\n
+        }, {\n
+            token : "string",\n
+            merge : true,\n
+            regex : \'.+\'\n
+        } ]\n
+    };\n
+};\n
+\n
+oop.inherits(PythonHighlightRules, TextHighlightRules);\n
+\n
+exports.PythonHighlightRules = PythonHighlightRules;\n
+});\n
+/* ***** BEGIN LICENSE BLOCK *****\n
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1\n
+ *\n
+ * The contents of this file are subject to the Mozilla Public License Version\n
+ * 1.1 (the "License"); you may not use this file except in compliance with\n
+ * the License. You may obtain a copy of the License at\n
+ * http://www.mozilla.org/MPL/\n
+ *\n
+ * Software distributed under the License is distributed on an "AS IS" basis,\n
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License\n
+ * for the specific language governing rights and limitations under the\n
+ * License.\n
+ *\n
+ * The Original Code is Ajax.org Code Editor (ACE).\n
+ *\n
+ * The Initial Developer of the Original Code is\n
+ * Ajax.org B.V.\n
+ * Portions created by the Initial Developer are Copyright (C) 2010\n
+ * the Initial Developer. All Rights Reserved.\n
+ *\n
+ * Contributor(s):\n
+ *      Fabian Jakobs <fabian AT ajax DOT org>\n
+ *\n
+ * Alternatively, the contents of this file may be used under the terms of\n
+ * either the GNU General Public License Version 2 or later (the "GPL"), or\n
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),\n
+ * in which case the provisions of the GPL or the LGPL are applicable instead\n
+ * of those above. If you wish to allow use of your version of this file only\n
+ * under the terms of either the GPL or the LGPL, and not to allow others to\n
+ * use your version of this file under the terms of the MPL, indicate your\n
+ * decision by deleting the provisions above and replace them with the notice\n
+ * and other provisions required by the GPL or the LGPL. If you do not delete\n
+ * the provisions above, a recipient may use your version of this file under\n
+ * the terms of any one of the MPL, the GPL or the LGPL.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/mode/folding/pythonic\', [\'require\', \'exports\', \'module\' , \'ace/lib/oop\', \'ace/mode/folding/fold_mode\'], function(require, exports, module) {\n
+"use strict";\n
+\n
+var oop = require("../../lib/oop");\n
+var BaseFoldMode = require("./fold_mode").FoldMode;\n
+\n
+var FoldMode = exports.FoldMode = function(markers) {\n
+    this.foldingStartMarker = new RegExp("(?:([\\\\[{])|(" + markers + "))(?:\\\\s*)(?:#.*)?$");\n
+};\n
+oop.inherits(FoldMode, BaseFoldMode);\n
+\n
+(function() {\n
+\n
+    this.getFoldWidgetRange = function(session, foldStyle, row) {\n
+        var line = session.getLine(row);\n
+        var match = line.match(this.foldingStartMarker);\n
+        if (match) {\n
+            if (match[1])\n
+                return this.openingBracketBlock(session, match[1], row, match.index);\n
+            if (match[2])\n
+                return this.indentationBlock(session, row, match.index + match[2].length);\n
+            return this.indentationBlock(session, row);\n
+        }\n
+    }\n
+\n
+}).call(FoldMode.prototype);\n
+\n
+});/* ***** BEGIN LICENSE BLOCK *****\n
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1\n
+ *\n
+ * The contents of this file are subject to the Mozilla Public License Version\n
+ * 1.1 (the "License"); you may not use this file except in compliance with\n
+ * the License. You may obtain a copy of the License at\n
+ * http://www.mozilla.org/MPL/\n
+ *\n
+ * Software distributed under the License is distributed on an "AS IS" basis,\n
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License\n
+ * for the specific language governing rights and limitations under the\n
+ * License.\n
+ *\n
+ * The Original Code is Ajax.org Code Editor (ACE).\n
+ *\n
+ * The Initial Developer of the Original Code is\n
+ * Ajax.org B.V.\n
+ * Portions created by the Initial Developer are Copyright (C) 2010\n
+ * the Initial Developer. All Rights Reserved.\n
+ *\n
+ * Contributor(s):\n
+ *      Fabian Jakobs <fabian AT ajax DOT org>\n
+ *\n
+ * Alternatively, the contents of this file may be used under the terms of\n
+ * either the GNU General Public License Version 2 or later (the "GPL"), or\n
+ * the GNU Lesser General Public License Version 2.1 or later (the "LGPL"),\n
+ * in which case the provisions of the GPL or the LGPL are applicable instead\n
+ * of those above. If you wish to allow use of your version of this file only\n
+ * under the terms of either the GPL or the LGPL, and not to allow others to\n
+ * use your version of this file under the terms of the MPL, indicate your\n
+ * decision by deleting the provisions above and replace them with the notice\n
+ * and other provisions required by the GPL or the LGPL. If you do not delete\n
+ * the provisions above, a recipient may use your version of this file under\n
+ * the terms of any one of the MPL, the GPL or the LGPL.\n
+ *\n
+ * ***** END LICENSE BLOCK ***** */\n
+\n
+define(\'ace/mode/folding/fold_mode\', [\'require\', \'exports\', \'module\' , \'ace/range\'], function(require, exports, module) {\n
+"use strict";\n
+\n
+var Range = require("../../range").Range;\n
+\n
+var FoldMode = exports.FoldMode = function() {};\n
+\n
+(function() {\n
+\n
+    this.foldingStartMarker = null;\n
+    this.foldingStopMarker = null;\n
+\n
+    // must return "" if there\'s no fold, to enable caching\n
+    this.getFoldWidget = function(session, foldStyle, row) {\n
+        var line = session.getLine(row);\n
+        if (this.foldingStartMarker.test(line))\n
+            return "start";\n
+        if (foldStyle == "markbeginend"\n
+                && this.foldingStopMarker\n
+                && this.foldingStopMarker.test(line))\n
+            return "end";\n
+        return "";\n
+    };\n
+    \n
+    this.getFoldWidgetRange = function(session, foldStyle, row) {\n
+        return null;\n
+    };\n
+\n
+    this.indentationBlock = function(session, row, column) {\n
+        var re = /^\\s*/;\n
+        var startRow = row;\n
+        var endRow = row;\n
+        var line = session.getLine(row);\n
+        var startColumn = column || line.length;\n
+        var startLevel = line.match(re)[0].length;\n
+        var maxRow = session.getLength()\n
+        \n
+        while (++row < maxRow) {\n
+            line = session.getLine(row);\n
+            var level = line.match(re)[0].length;\n
+\n
+            if (level == line.length)\n
+                continue;\n
+\n
+            if (level <= startLevel)\n
+                break;\n
+\n
+            endRow = row;\n
+        }\n
+\n
+        if (endRow > startRow) {\n
+            var endColumn = session.getLine(endRow).length;\n
+            return new Range(startRow, startColumn, endRow, endColumn);\n
+        }\n
+    };\n
+\n
+    this.openingBracketBlock = function(session, bracket, row, column) {\n
+        var start = {row: row, column: column + 1};\n
+        var end = session.$findClosingBracket(bracket, start);\n
+        if (!end)\n
+            return;\n
+\n
+        var fw = session.foldWidgets[end.row];\n
+        if (fw == null)\n
+            fw = this.getFoldWidget(session, end.row);\n
+\n
+        if (fw == "start") {\n
+            end.row --;\n
+            end.column = session.getLine(end.row).length;\n
+        }\n
+        return Range.fromPoints(start, end);\n
+    };\n
+\n
+}).call(FoldMode.prototype);\n
+\n
+});\n
+;\n
+            (function() {\n
+                window.require(["ace/ace"], function(a) {\n
+                    if (!window.ace)\n
+                        window.ace = {};\n
+                    for (var key in a) if (a.hasOwnProperty(key))\n
+                        ace[key] = a[key];\n
+                });\n
+            })();\n
+        
 
 ]]></string> </value>
         </item>
@@ -32,7 +547,7 @@ define("ace/mode/python",["require","exports","module","pilot/oop","ace/mode/tex
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>4511</int> </value>
+            <value> <int>19246</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
