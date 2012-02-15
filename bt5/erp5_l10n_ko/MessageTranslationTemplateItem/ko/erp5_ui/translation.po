@@ -1,5 +1,6 @@
 msgid ""
-msgstr "Project-Id-Version: ERP5 Localized Interface\n"
+msgstr ""
+"Project-Id-Version: ERP5 Localized Interface\n"
 "POT-Creation-Date: 2009-08-17 09:08+CET\n"
 "PO-Revision-Date: 2009-08-17 09:08+CET\n"
 "Last-Translator:  <>\n"
@@ -7,7 +8,6 @@ msgstr "Project-Id-Version: ERP5 Localized Interface\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
 
 msgid "${count} documents created successfully."
 msgstr "${count} 문서가 만들어졌습니다"
@@ -120,9 +120,6 @@ msgstr "최신 아이템 10개"
 msgid "A Query about the current ${portal_type} was posted with ID ${query_id}."
 msgstr "$현재의 {portal_type}에 대한 질의는 ID ${query_id}로 등록되었습니다"
 
-msgid "A codification used to identify the category"
-msgstr ""
-
 msgid "A document can be associated to one or multiple entities in the function classification tree."
 msgstr "하나의 문서는 기능 분류 트리에서 여러 개체와 연계될 수 있습니다."
 
@@ -131,123 +128,6 @@ msgstr "하나의 문서는 그룹 분류 트리에서 여러 개체와 연계�
 
 msgid "A document can be associated to one or multiple entities in the site  classification tree."
 msgstr "하나의 문서는 사이트 분류 트리에서 복수의 개체와 연계될 수 있습니다."
-
-msgid "A list of ERP5Types for which we want to add the roles in the template"
-msgstr ""
-
-msgid "A list of Tool ids used by this template"
-msgstr ""
-
-msgid "A list of allowed content types for portal types"
-msgstr ""
-
-msgid "A list of base categories for portal types"
-msgstr ""
-
-msgid "A list of changes done on the document"
-msgstr ""
-
-msgid "A list of copyright holders"
-msgstr ""
-
-msgid "A list of hidden content types for portal types"
-msgstr ""
-
-msgid "A list of ids of actions used by this template"
-msgstr ""
-
-msgid "A list of ids of base categories used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog DateTime keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog full text keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog keyword keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog local role keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog methods used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog multivalue keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog related keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog request keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog result keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog result tables used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog role keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog scriptable keys used by this template"
-msgstr ""
-
-msgid "A list of ids of catalog topic keys used by this template"
-msgstr ""
-
-msgid "A list of ids of constraints used by this template"
-msgstr ""
-
-msgid "A list of ids of documents used by this template"
-msgstr ""
-
-msgid "A list of ids of extensions used by this template"
-msgstr ""
-
-msgid "A list of ids of modules used by this template"
-msgstr ""
-
-msgid "A list of ids of portal types used by this template"
-msgstr ""
-
-msgid "A list of ids of products used by this template"
-msgstr ""
-
-msgid "A list of ids of property sheets used by this template"
-msgstr ""
-
-msgid "A list of ids of roles used by this template"
-msgstr ""
-
-msgid "A list of ids of site properties used by this template"
-msgstr ""
-
-msgid "A list of ids of skins used by this template"
-msgstr ""
-
-msgid "A list of ids of tests used by this template"
-msgstr ""
-
-msgid "A list of local roles used by this template"
-msgstr ""
-
-msgid "A list of maintainers"
-msgstr ""
-
-msgid "A list of message translations used by this template"
-msgstr ""
-
-msgid "A list of object paths used by this template"
-msgstr ""
-
-msgid "A list of property sheet for portal types"
-msgstr ""
-
-msgid "A list of workflow chains of portal types used by this template"
-msgstr ""
 
 msgid "A number of days to be forecasted."
 msgstr "예상 범위에 포함될 기간 (일) "
@@ -408,30 +288,6 @@ msgstr "통지됨"
 msgid "Acknowledged Event"
 msgstr "통지된 이벤트"
 
-msgid "Acknowledged [state in event_workflow]"
-msgstr ""
-
-msgid "Acquisition Append Value"
-msgstr ""
-
-msgid "Acquisition Base Categories"
-msgstr ""
-
-msgid "Acquisition Copy Value"
-msgstr ""
-
-msgid "Acquisition Mask Value"
-msgstr ""
-
-msgid "Acquisition Object IDs"
-msgstr ""
-
-msgid "Acquisition Portal Types"
-msgstr ""
-
-msgid "Acquisition Sync Value"
-msgstr ""
-
 msgid "Action"
 msgstr "액션"
 
@@ -440,9 +296,6 @@ msgstr "액션..."
 
 msgid "Action: (${task_count} total.)"
 msgstr "액션: (${task_count} total.)"
-
-msgid "Actions"
-msgstr ""
 
 msgid "Active"
 msgstr "활성"
@@ -504,9 +357,6 @@ msgstr "새탭 추가"
 msgid "Add tab"
 msgstr "탭 추가"
 
-msgid "Added"
-msgstr ""
-
 msgid "Additional Payments"
 msgstr "추가 지불"
 
@@ -567,9 +417,6 @@ msgstr "전체 문서"
 msgid "All Related Documents"
 msgstr "모든 관련 문서"
 
-msgid "Allowed Content Types"
-msgstr ""
-
 msgid "Also in:"
 msgstr "Also in:"
 
@@ -609,9 +456,6 @@ msgstr "답변됨"
 msgid "Answered Query"
 msgstr "답변된 질의"
 
-msgid "Answered [state in query_workflow]"
-msgstr ""
-
 msgid "Any Documents"
 msgstr "모든 문서"
 
@@ -620,9 +464,6 @@ msgstr "의류 섬유 아이템 빠른 입력"
 
 msgid "Applied Rule"
 msgstr "적용된 규칙"
-
-msgid "Apply Changes to Skins"
-msgstr ""
 
 msgid "Apply Pay Sheet Model"
 msgstr "지불 시트 모델 적용"
@@ -639,17 +480,8 @@ msgstr "거래 조건 적용"
 msgid "Approval Requested"
 msgstr "승인요청 중"
 
-msgid "Approval Requested [state in ticket_workflow]"
-msgstr ""
-
 msgid "Archive"
 msgstr "기록 저장"
-
-msgid "Archived"
-msgstr ""
-
-msgid "Archived [state in document_publication_workflow]"
-msgstr ""
 
 msgid "Archived document"
 msgstr "저장된 문서"
@@ -696,23 +528,11 @@ msgstr "할당된 문서"
 msgid "Assigned Event"
 msgstr "할당된 이벤트"
 
-msgid "Assigned Events"
-msgstr ""
-
 msgid "Assigned Events (%(count)s)"
 msgstr "할당된 이벤트 (%(count)s)"
 
 msgid "Assigned Translations (%(count)s)"
 msgstr "할당된 번역 (%(count)s)"
-
-msgid "Assigned [state in document_ingestion_workflow]"
-msgstr ""
-
-msgid "Assigned [state in document_publication_workflow]"
-msgstr ""
-
-msgid "Assigned [state in event_workflow]"
-msgstr ""
 
 msgid "Assignee"
 msgstr "피할당자"
@@ -755,12 +575,6 @@ msgstr "자동 구성"
 
 msgid "Auto Planned Order"
 msgstr "자동 구성된 주문"
-
-msgid "Auto Planned [state in open_order_workflow]"
-msgstr ""
-
-msgid "Auto Planned [state in order_workflow]"
-msgstr ""
 
 msgid "Automatically disabled when enabling ${preference_title}."
 msgstr "${preference_title}을 활성화하면, 자동적으로 비활성화됨."
@@ -818,9 +632,6 @@ msgstr "베이스"
 
 msgid "Base Application"
 msgstr "베이스 적용"
-
-msgid "Base Categories"
-msgstr ""
 
 msgid "Base Category"
 msgstr "베이스 카테고리"
@@ -924,17 +735,11 @@ msgstr "빌딩"
 msgid "Building State"
 msgstr "빌딩 상태"
 
-msgid "Building [state in delivery_causality_workflow]"
-msgstr ""
-
 msgid "Built"
 msgstr "구성됨"
 
 msgid "Built Business Template"
 msgstr "구성된 비즈니스 템플릿"
-
-msgid "Built [state in business_template_building_workflow]"
-msgstr ""
 
 msgid "Business Field"
 msgstr "비즈니스 필드"
@@ -1013,9 +818,6 @@ msgstr "지불 시트 계산"
 
 msgid "Calculating"
 msgstr "계산 중"
-
-msgid "Calculating [state in delivery_causality_workflow]"
-msgstr ""
 
 msgid "Calculation Order"
 msgstr "계산 순서"
@@ -1131,45 +933,6 @@ msgstr "취소된 티켓"
 msgid "Cancelled Transaction"
 msgstr "취소된 트랜젝션"
 
-msgid "Cancelled [state in accounting_period_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in accounting_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in assignment_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in career_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in document_publication_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in event_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in inventory_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in open_order_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in order_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in packing_list_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in query_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in sale_opportunity_workflow]"
-msgstr ""
-
-msgid "Cancelled [state in ticket_workflow]"
-msgstr ""
-
 msgid "Cancelled."
 msgstr "취소됨"
 
@@ -1200,15 +963,6 @@ msgstr "현금 레지스터"
 msgid "Catalog Methods"
 msgstr "카타로그 메소드"
 
-msgid "Catalog Related Keys"
-msgstr ""
-
-msgid "Catalog Result Keys"
-msgstr ""
-
-msgid "Catalog Result Tables"
-msgstr ""
-
 msgid "Categories"
 msgstr "카테고리"
 
@@ -1232,12 +986,6 @@ msgstr "카테고리 공표 워크플로우"
 
 msgid "Category Tool"
 msgstr "카테고리 도구"
-
-msgid "Category Types"
-msgstr ""
-
-msgid "Category types to group categories for portal methods"
-msgstr ""
 
 msgid "Causality"
 msgstr "인과"
@@ -1265,9 +1013,6 @@ msgstr "셀"
 
 msgid "Change Function"
 msgstr "기능 변경"
-
-msgid "Change Log"
-msgstr ""
 
 msgid "Change Page"
 msgstr "페이지 전환"
@@ -1350,9 +1095,6 @@ msgstr "티켓과 이벤트 클론"
 msgid "Close Account"
 msgstr "계정 마감"
 
-msgid "Close Assignment"
-msgstr ""
-
 msgid "Close Order"
 msgstr "주문 마감"
 
@@ -1376,27 +1118,6 @@ msgstr "마감된 테스크"
 
 msgid "Closed Transaction"
 msgstr "마감된 트랜젝션"
-
-msgid "Closed [state in account_workflow]"
-msgstr ""
-
-msgid "Closed [state in accounting_period_workflow]"
-msgstr ""
-
-msgid "Closed [state in accounting_workflow]"
-msgstr ""
-
-msgid "Closed [state in assignment_workflow]"
-msgstr ""
-
-msgid "Closed [state in career_workflow]"
-msgstr ""
-
-msgid "Closed [state in order_workflow]"
-msgstr ""
-
-msgid "Closed [state in ticket_workflow]"
-msgstr ""
 
 msgid "Closing Date"
 msgstr "마감일"
@@ -1499,15 +1220,6 @@ msgstr "확인된 테스크"
 
 msgid "Confirmed Transaction"
 msgstr "확정된 트랜젝션"
-
-msgid "Confirmed [state in accounting_workflow]"
-msgstr ""
-
-msgid "Confirmed [state in order_workflow]"
-msgstr ""
-
-msgid "Confirmed [state in packing_list_workflow]"
-msgstr ""
 
 msgid "Conflicted Files"
 msgstr "충돌하는 파일들"
@@ -1632,9 +1344,6 @@ msgstr "소스 가격 변환"
 msgid "Convert to OpenDocument"
 msgstr "OpenDocument로 변환"
 
-msgid "Converted"
-msgstr ""
-
 msgid "Converted Credit"
 msgstr "변환된 크레딧"
 
@@ -1650,26 +1359,14 @@ msgstr "변환된 재고 리포트"
 msgid "Converted Quantity"
 msgstr "변환된 수량"
 
-msgid "Converted [state in processing_status_workflow]"
-msgstr ""
-
-msgid "Converting"
-msgstr ""
-
 msgid "Converting Document"
 msgstr "변환된 문서"
-
-msgid "Converting [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Copy"
 msgstr "복사"
 
 msgid "Copy or cut one or more items to paste first."
 msgstr "붙여넣기를 하려면 먼저 복사 또는 잘라내기를 하십시오."
-
-msgid "Copyright"
-msgstr ""
 
 msgid "Corporate Name"
 msgstr "회사명"
@@ -1748,9 +1445,6 @@ msgstr "영어로부터 번역을 위한 용어 만들기"
 
 msgid "Create User"
 msgstr "사용자 만들기"
-
-msgid "Create User Action"
-msgstr ""
 
 msgid "Create Your New Account"
 msgstr "귀하의 새로운 계정 만들기"
@@ -1836,9 +1530,6 @@ msgstr "현재 회기"
 msgid "Current Value"
 msgstr "현재 값"
 
-msgid "Current [state in edit_workflow]"
-msgstr ""
-
 msgid "Current career must exist."
 msgstr "현재 커리어가 존재해야 합니다."
 
@@ -1886,9 +1577,6 @@ msgstr "이 은행계좌가 마감된 날짜"
 
 msgid "Date when the bank account was open."
 msgstr "이 은행계좌가 오픈된 날짜"
-
-msgid "DateTime Keys"
-msgstr ""
 
 msgid "Day / Month / Year"
 msgstr "일 / 월 / 년"
@@ -1995,66 +1683,6 @@ msgstr "프로젝트 삭제"
 msgid "Deleted"
 msgstr "삭제됨"
 
-msgid "Deleted [state in account_workflow]"
-msgstr ""
-
-msgid "Deleted [state in accounting_period_workflow]"
-msgstr ""
-
-msgid "Deleted [state in accounting_workflow]"
-msgstr ""
-
-msgid "Deleted [state in assignment_workflow]"
-msgstr ""
-
-msgid "Deleted [state in business_template_installation_workflow]"
-msgstr ""
-
-msgid "Deleted [state in document_ingestion_workflow]"
-msgstr ""
-
-msgid "Deleted [state in document_publication_workflow]"
-msgstr ""
-
-msgid "Deleted [state in event_workflow]"
-msgstr ""
-
-msgid "Deleted [state in inventory_workflow]"
-msgstr ""
-
-msgid "Deleted [state in knowledge_pad_validation_workflow]"
-msgstr ""
-
-msgid "Deleted [state in notification_message_workflow]"
-msgstr ""
-
-msgid "Deleted [state in open_order_workflow]"
-msgstr ""
-
-msgid "Deleted [state in order_workflow]"
-msgstr ""
-
-msgid "Deleted [state in packing_list_workflow]"
-msgstr ""
-
-msgid "Deleted [state in preference_workflow]"
-msgstr ""
-
-msgid "Deleted [state in query_workflow]"
-msgstr ""
-
-msgid "Deleted [state in rule_validation_workflow]"
-msgstr ""
-
-msgid "Deleted [state in sale_opportunity_workflow]"
-msgstr ""
-
-msgid "Deleted [state in ticket_workflow]"
-msgstr ""
-
-msgid "Deleted [state in validation_workflow]"
-msgstr ""
-
 msgid "Deleted objects: ${object_ids}"
 msgstr "삭제된 개체: ${object_ids}"
 
@@ -2082,18 +1710,6 @@ msgstr "배송된 이벤트"
 msgid "Delivered Packing List"
 msgstr "배송된 포장 리스트"
 
-msgid "Delivered [state in event_workflow]"
-msgstr ""
-
-msgid "Delivered [state in internal_packing_list_workflow]"
-msgstr ""
-
-msgid "Delivered [state in packing_list_workflow]"
-msgstr ""
-
-msgid "Delivery After Generation Script"
-msgstr ""
-
 msgid "Delivery Builder"
 msgstr "배송 빌더"
 
@@ -2102,12 +1718,6 @@ msgstr "배송 인과 할당 무브먼트 그룹"
 
 msgid "Delivery Cell"
 msgstr "배송 셀"
-
-msgid "Delivery Cell Portal Type"
-msgstr ""
-
-msgid "Delivery Cell Separate Order Methods"
-msgstr ""
 
 msgid "Delivery Cell Title"
 msgstr "배송 셀 제목"
@@ -2124,9 +1734,6 @@ msgstr "배송 레벨 차이"
 msgid "Delivery Line"
 msgstr "배송 라인"
 
-msgid "Delivery Line Portal Type"
-msgstr ""
-
 msgid "Delivery Line Title"
 msgstr "배송 제목 라인"
 
@@ -2136,20 +1743,11 @@ msgstr "배송 타입 라인"
 msgid "Delivery Mode"
 msgstr "배송 방식"
 
-msgid "Delivery Module"
-msgstr ""
-
 msgid "Delivery Movement Interaction Workflow"
 msgstr "배송 무브먼트 인터렉션 워크플로우"
 
-msgid "Delivery Portal Type"
-msgstr ""
-
 msgid "Delivery Rule"
 msgstr "배송 규칙"
-
-msgid "Delivery Select Method"
-msgstr ""
 
 msgid "Delivery Title"
 msgstr "배송 제목"
@@ -2199,18 +1797,6 @@ msgstr "상세 리포트"
 msgid "Details"
 msgstr "상세 내용"
 
-msgid "Determines if acquired value should be copied"
-msgstr ""
-
-msgid "Determines if the acquired value should be appended"
-msgstr ""
-
-msgid "Determines if the acquired value should be synced"
-msgstr ""
-
-msgid "Determines if the local value have priority"
-msgstr ""
-
 msgid "Developer Mode"
 msgstr "개발자 모드"
 
@@ -2244,9 +1830,6 @@ msgstr "비활성"
 msgid "Disabled Preference"
 msgstr "비활성화된 설정"
 
-msgid "Disabled [state in preference_workflow]"
-msgstr ""
-
 msgid "Discount"
 msgstr "할인"
 
@@ -2276,9 +1859,6 @@ msgstr "분산된 램 캐시 플럭인"
 
 msgid "Diverged"
 msgstr "달라짐"
-
-msgid "Diverged [state in delivery_causality_workflow]"
-msgstr ""
 
 msgid "Divergence"
 msgstr "다름"
@@ -2312,9 +1892,6 @@ msgstr "문서"
 
 msgid "Document Categories"
 msgstr "문서 카테고리"
-
-msgid "Document Classes"
-msgstr ""
 
 msgid "Document Ingestion Message"
 msgstr "문서 수집 메시지"
@@ -2463,75 +2040,6 @@ msgstr "지원요청 초안"
 msgid "Draft Support Requests (%(count)s)"
 msgstr "지원 요청 초안 (%(count)s)"
 
-msgid "Draft [state in account_workflow]"
-msgstr ""
-
-msgid "Draft [state in accounting_period_workflow]"
-msgstr ""
-
-msgid "Draft [state in accounting_workflow]"
-msgstr ""
-
-msgid "Draft [state in assignment_workflow]"
-msgstr ""
-
-msgid "Draft [state in business_template_building_workflow]"
-msgstr ""
-
-msgid "Draft [state in career_workflow]"
-msgstr ""
-
-msgid "Draft [state in delivery_causality_workflow]"
-msgstr ""
-
-msgid "Draft [state in document_ingestion_workflow]"
-msgstr ""
-
-msgid "Draft [state in document_publication_workflow]"
-msgstr ""
-
-msgid "Draft [state in event_workflow]"
-msgstr ""
-
-msgid "Draft [state in external_document_publication_workflow]"
-msgstr ""
-
-msgid "Draft [state in inventory_workflow]"
-msgstr ""
-
-msgid "Draft [state in notification_message_workflow]"
-msgstr ""
-
-msgid "Draft [state in open_order_workflow]"
-msgstr ""
-
-msgid "Draft [state in order_workflow]"
-msgstr ""
-
-msgid "Draft [state in packing_list_workflow]"
-msgstr ""
-
-msgid "Draft [state in publication_workflow]"
-msgstr ""
-
-msgid "Draft [state in query_workflow]"
-msgstr ""
-
-msgid "Draft [state in rule_validation_workflow]"
-msgstr ""
-
-msgid "Draft [state in sale_opportunity_workflow]"
-msgstr ""
-
-msgid "Draft [state in ticket_workflow]"
-msgstr ""
-
-msgid "Draft [state in user_account_workflow]"
-msgstr ""
-
-msgid "Draft [state in validation_workflow]"
-msgstr ""
-
 msgid "Drafts to Publish (%(count)s)"
 msgstr "공표 초안 (%(count)s)"
 
@@ -2580,12 +2088,6 @@ msgstr "ERP5 익스프레스 신청 이용자 ID"
 msgid "ERP5 Express unique ID"
 msgstr "ERP5 익스프레스 고유 ID "
 
-msgid "ERP5 Worklists"
-msgstr ""
-
-msgid "ERP5Site_viewPersonListGadgetPreferenceDialog"
-msgstr ""
-
 msgid "Economic Class"
 msgstr "이코노믹 클래스"
 
@@ -2607,9 +2109,6 @@ msgstr "포털 타입 편집 ${portal_type}"
 msgid "Edit Workflow"
 msgstr "워크플로우 편집"
 
-msgid "Edit [action in edit_workflow]"
-msgstr ""
-
 msgid "Editable"
 msgstr "편집 가능"
 
@@ -2630,12 +2129,6 @@ msgstr "삽입된"
 
 msgid "Embedded Document"
 msgstr "삽입된 문서"
-
-msgid "Embedded Document [state in document_publication_workflow]"
-msgstr ""
-
-msgid "Embedded [state in category_publication_workflow]"
-msgstr ""
 
 msgid "Employee"
 msgstr "사원"
@@ -2661,26 +2154,14 @@ msgstr "비었음"
 msgid "Empty Document"
 msgstr "빈 문서"
 
-msgid "Empty [state in processing_status_workflow]"
-msgstr ""
-
 msgid "Empty lines deleted."
 msgstr "삭제된 빈 라인"
-
-msgid "Enable Preference"
-msgstr ""
-
-msgid "Enable Preference Action"
-msgstr ""
 
 msgid "Enabled"
 msgstr "활성화됨"
 
 msgid "Enabled Preference"
 msgstr "활성화된 설정"
-
-msgid "Enabled [state in preference_workflow]"
-msgstr ""
 
 msgid "End"
 msgstr "끝"
@@ -2696,9 +2177,6 @@ msgstr "영어"
 
 msgid "Enquired"
 msgstr "질의됨"
-
-msgid "Enquired [state in sale_opportunity_workflow]"
-msgstr ""
 
 msgid "Equals To"
 msgstr "와 동일"
@@ -2823,26 +2301,11 @@ msgstr "소멸된 이벤트"
 msgid "Expired Protected"
 msgstr "Expired Protected"
 
-msgid "Expired Protected [state in category_publication_workflow]"
-msgstr ""
-
 msgid "Expired Published"
 msgstr "Expired Published"
 
-msgid "Expired Published [state in category_publication_workflow]"
-msgstr ""
-
 msgid "Expired Sale Opportunity"
 msgstr "소멸된 판매 기회"
-
-msgid "Expired [state in category_publication_workflow]"
-msgstr ""
-
-msgid "Expired [state in event_workflow]"
-msgstr ""
-
-msgid "Expired [state in sale_opportunity_workflow]"
-msgstr ""
 
 msgid "Explanation"
 msgstr "설명"
@@ -2898,9 +2361,6 @@ msgstr "익스프레스 고유 고객 ID"
 msgid "Express Unique ERP5 ID"
 msgstr "익스프레스 고유 ERP5 ID"
 
-msgid "Extensions"
-msgstr ""
-
 msgid "External Document Publication Workflow"
 msgstr "외부 문서 공표 워크플로우"
 
@@ -2928,9 +2388,6 @@ msgstr "외부 소스"
 msgid "FAX"
 msgstr "FAX"
 
-msgid "Fallback Base Categories"
-msgstr ""
-
 msgid "Fast Input"
 msgstr "빠른 입력"
 
@@ -2939,9 +2396,6 @@ msgstr "Fax"
 
 msgid "Fax Message"
 msgstr "Fax 메시지"
-
-msgid "Fax 메시지"
-msgstr ""
 
 msgid "Field List"
 msgstr "필드 리스트"
@@ -3090,9 +2544,6 @@ msgstr "완전한 이미지"
 msgid "Full Sized Image"
 msgstr "완전한 이미지"
 
-msgid "Full Text Keys"
-msgstr ""
-
 msgid "Function"
 msgstr "기능"
 
@@ -3126,9 +2577,6 @@ msgstr "GAP 번호"
 msgid "GAP Number Search Key"
 msgstr "GAP 숫자 검색 키"
 
-msgid "GAP Root"
-msgstr ""
-
 msgid "Gadget"
 msgstr "가젯"
 
@@ -3137,9 +2585,6 @@ msgstr "가젯 도구"
 
 msgid "Gadget Type"
 msgstr "가젯 타입"
-
-msgid "Gadget View"
-msgstr ""
 
 msgid "Gadgets"
 msgstr "가젯"
@@ -3192,9 +2637,6 @@ msgstr "전역 적용"
 msgid "Globally Enabled Preference"
 msgstr "전체에 적용되는 설정"
 
-msgid "Globally Enabled [state in preference_workflow]"
-msgstr ""
-
 msgid "Glossary"
 msgstr "색인"
 
@@ -3218,9 +2660,6 @@ msgstr "총"
 
 msgid "Gross Weight"
 msgstr "총 중량"
-
-msgid "Gross Weight (kg)"
-msgstr ""
 
 msgid "Group"
 msgstr "그룹"
@@ -3246,9 +2685,6 @@ msgstr "모듈들로부터 포털 타입 추정"
 msgid "Guess Properties of Portal Types"
 msgstr "모듈들로부터 포털 속성 추정"
 
-msgid "HTML"
-msgstr ""
-
 msgid "HTML Representation"
 msgstr "HTML 표명"
 
@@ -3267,17 +2703,8 @@ msgstr "높이 (m)"
 msgid "Help"
 msgstr "도움말"
 
-msgid "Hidden"
-msgstr ""
-
-msgid "Hidden Content Types"
-msgstr ""
-
 msgid "Hidden Document"
 msgstr "숨겨진 문서"
-
-msgid "Hidden [state in document_publication_workflow]"
-msgstr ""
 
 msgid "Hide Document"
 msgstr "문서 숨기기"
@@ -3294,14 +2721,8 @@ msgstr "히스토리"
 msgid "How much this currency is worth in terms of the reference currency."
 msgstr "참조 통화 대비 본 통화의 가치"
 
-msgid "I"
-msgstr ""
-
 msgid "I forgot my password!"
 msgstr "패스워드를 잊었습니다."
-
-msgid "IBAN"
-msgstr ""
 
 msgid "ID"
 msgstr "ID"
@@ -3320,9 +2741,6 @@ msgstr "식별"
 
 msgid "Identity Criterion"
 msgstr "아이덴터티 범주"
-
-msgid "If checked, when installing the business template it will update workflow used by business templates"
-msgstr ""
 
 msgid "If set, payment will occur at the end of the month of the payment term."
 msgstr "설정하면, 결제 조건에 명시된 월말에 결제가 요청됩니다."
@@ -3371,9 +2789,6 @@ msgstr "서명 가져오기"
 
 msgid "Import from Spreadsheet"
 msgstr "스프레드시트에서 가져오기"
-
-msgid "In"
-msgstr ""
 
 msgid "Include english and translated version of all terms."
 msgstr "모든 용어들에 대해 영어 및 기타 언어 번역 버전을 포함"
@@ -3483,9 +2898,6 @@ msgstr "설치된 리비전"
 msgid "Installed Version"
 msgstr "설치된 버전"
 
-msgid "Installed [state in business_template_installation_workflow]"
-msgstr ""
-
 msgid "Instructions"
 msgstr "안내"
 
@@ -3531,15 +2943,6 @@ msgstr "무효화됨"
 msgid "Invalidated Account"
 msgstr "무효화된 계정"
 
-msgid "Invalidated [state in account_workflow]"
-msgstr ""
-
-msgid "Invalidated [state in rule_validation_workflow]"
-msgstr ""
-
-msgid "Invalidated [state in validation_workflow]"
-msgstr ""
-
 msgid "Inventories"
 msgstr "재고"
 
@@ -3584,9 +2987,6 @@ msgstr "재고 워크플로우"
 
 msgid "Invisible"
 msgstr "안 보임"
-
-msgid "Invisible [state in knowledge_pad_validation_workflow]"
-msgstr ""
 
 msgid "Invoice Cell"
 msgstr "인보이스 셀"
@@ -3657,9 +3057,6 @@ msgstr "기장됨"
 msgid "Journalised Transaction"
 msgstr "기장된 트랜젝션"
 
-msgid "Journalised [state in accounting_workflow]"
-msgstr ""
-
 msgid "Jump"
 msgstr "점프"
 
@@ -3672,9 +3069,6 @@ msgstr "점프..."
 msgid "Keyword"
 msgstr "키워드"
 
-msgid "Keyword Keys"
-msgstr ""
-
 msgid "Keywords"
 msgstr "키워드"
 
@@ -3684,14 +3078,8 @@ msgstr "리포트 종류"
 msgid "Knowledge Box"
 msgstr "지식 박스"
 
-msgid "Knowledge Box View"
-msgstr ""
-
 msgid "Knowledge Pad"
 msgstr "지식패드"
-
-msgid "Knowledge Pad Module"
-msgstr ""
 
 msgid "Knowledge Pads"
 msgstr "지식패드"
@@ -3731,9 +3119,6 @@ msgstr "최종 수정일:"
 
 msgid "Last opened period ends on ${last_openned_date}, this period starts on ${this_period_start_date}. Accounting Periods must be consecutive."
 msgstr "최종 회기는 ${last_openned_date}에 마치고, 이 회기는 ${this_period_start_date}에 시작합니다. 회기는 반드시 연속적이어야 합니다."
-
-msgid "Last page: Page ${total_page}"
-msgstr ""
 
 msgid "Latest"
 msgstr "최종"
@@ -3813,12 +3198,6 @@ msgstr "\"티켓으로 이동\"에 관련된 모든 이벤트 리스트"
 msgid "Loading ..."
 msgstr "로딩..."
 
-msgid "Local ID of the object in its enclosing container"
-msgstr ""
-
-msgid "Local Role Keys"
-msgstr ""
-
 msgid "Local Roles"
 msgstr "로컬 역할"
 
@@ -3830,9 +3209,6 @@ msgstr "로그인"
 
 msgid "Log out"
 msgstr "로그아웃"
-
-msgid "Logged In as :"
-msgstr ""
 
 msgid "Logged in as :"
 msgstr "로그인 아이디 :"
@@ -3852,9 +3228,6 @@ msgstr "아이디 및/또는 패스워드가 맞지 않습니다."
 msgid "Logo"
 msgstr "로고"
 
-msgid "Logout"
-msgstr ""
-
 msgid "Long Title"
 msgstr "긴 제목"
 
@@ -3863,9 +3236,6 @@ msgstr "비밀번호 찾기"
 
 msgid "Mail Message"
 msgstr "메일 메시지"
-
-msgid "Maintainers"
-msgstr ""
 
 msgid "Make Offer"
 msgstr "제안하기"
@@ -3954,9 +3324,6 @@ msgstr "배송 묶음"
 msgid "Merged Deliveries"
 msgstr "묶음 배송"
 
-msgid "Message Translations"
-msgstr ""
-
 msgid "Messages"
 msgstr "메시지"
 
@@ -3965,9 +3332,6 @@ msgstr "메타 타입"
 
 msgid "Metadata"
 msgstr "메타데이터"
-
-msgid "Method that defines how to query all Simulation Movements which meet certain criteria"
-msgstr ""
 
 msgid "Metric Type"
 msgstr "메트릭 타입"
@@ -4023,9 +3387,6 @@ msgstr "누락"
 msgid "Missing Container"
 msgstr "분실된 컨테이너"
 
-msgid "Missing [state in packing_list_container_workflow]"
-msgstr ""
-
 msgid "Mobile Telephone"
 msgstr "휴대폰"
 
@@ -4052,9 +3413,6 @@ msgstr "수정됨"
 
 msgid "Modified Business Template"
 msgstr "수정된 비즈니스 템플릿"
-
-msgid "Modified [state in business_template_building_workflow]"
-msgstr ""
 
 msgid "Modified categories"
 msgstr "수정된 카테고리"
@@ -4107,9 +3465,6 @@ msgstr "무브먼트"
 msgid "Multiple (${document_count}) documents ${document_reference} - ${document_language} - ${document_version} already exists."
 msgstr "복수의 (${document_count}) 문서가 ${document_reference} - ${document_language} - ${document_version} 이미 있습니다."
 
-msgid "Multivalue Keys"
-msgstr ""
-
 msgid "My Content List"
 msgstr "내 컨텐트 리스트"
 
@@ -4131,9 +3486,6 @@ msgstr "내 언어"
 msgid "Name"
 msgstr "이름"
 
-msgid "Name of the script which is called on each newly delivery created"
-msgstr ""
-
 msgid "Nano Image Height"
 msgstr "아주 작은 이미지의 높이"
 
@@ -4142,9 +3494,6 @@ msgstr "아주 작은 이미지의 폭"
 
 msgid "Nationality"
 msgstr "국적"
-
-msgid "Nested Line Movement Group"
-msgstr ""
 
 msgid "Net"
 msgstr "순"
@@ -4185,9 +3534,6 @@ msgstr "새 이벤트"
 msgid "New File"
 msgstr "새 파일"
 
-msgid "New Incoming Events"
-msgstr ""
-
 msgid "New Incoming Events (%(count)s)"
 msgstr "새로이 들어오는 이벤트  (%(count)s)"
 
@@ -4196,12 +3542,6 @@ msgstr "새로운 값"
 
 msgid "New Web Page of section ${web_section}."
 msgstr "${web_section} 섹션을 가진 새 웹 페이지"
-
-msgid "New [state in document_ingestion_workflow]"
-msgstr ""
-
-msgid "New [state in event_workflow]"
-msgstr ""
 
 msgid "New default Web Page for section ${web_section}."
 msgstr "${web_section} 섹션을 가진 새 디폴트 웹 페이지"
@@ -4290,9 +3630,6 @@ msgstr "설치되지 않음"
 msgid "Not Installed Business Template"
 msgstr "설치된 비즈니스 템플릿이 없음."
 
-msgid "Not Installed [state in business_template_installation_workflow]"
-msgstr ""
-
 msgid "Not Less Than"
 msgstr "보다 작지 않음"
 
@@ -4344,20 +3681,11 @@ msgstr "보기 모드의 리스트박스에 표시될 라인 수"
 msgid "Number of Related Objects"
 msgstr "관련 개체들의 수"
 
-msgid "ODS Style"
-msgstr ""
-
 msgid "ODT Style"
 msgstr "ODT 스타일"
 
 msgid "ODT Styles"
 msgstr "ODT 스타일"
-
-msgid "ODT 스타일"
-msgstr ""
-
-msgid "OSO"
-msgstr ""
 
 msgid "Object"
 msgstr "개체"
@@ -4392,15 +3720,6 @@ msgstr "오픈된 구매 주문 추적 (%(count)s)"
 msgid "Offered Sale Orders to Follow (%(count)s)"
 msgstr "판매 주문 추적 (%(count)s)"
 
-msgid "Offered [state in open_order_workflow]"
-msgstr ""
-
-msgid "Offered [state in order_workflow]"
-msgstr ""
-
-msgid "Offered [state in sale_opportunity_workflow]"
-msgstr ""
-
 msgid "Offers to Send (%(count)s)"
 msgstr "보낼 제안들 (%(count)s)"
 
@@ -4430,9 +3749,6 @@ msgstr "계정 열기"
 
 msgid "Open Assignment"
 msgstr "할당 오픈"
-
-msgid "Open Assignment Action"
-msgstr ""
 
 msgid "Open Bugs (%(count)s)"
 msgstr "오픈된 버그 (%(count)s)"
@@ -4488,24 +3804,6 @@ msgstr "지원요청 오픈 (%(count)s)"
 msgid "Open Ticket"
 msgstr "티켓 오픈"
 
-msgid "Open [state in account_workflow]"
-msgstr ""
-
-msgid "Open [state in accounting_period_workflow]"
-msgstr ""
-
-msgid "Open [state in assignment_workflow]"
-msgstr ""
-
-msgid "Open [state in career_workflow]"
-msgstr ""
-
-msgid "Open [state in order_workflow]"
-msgstr ""
-
-msgid "Open [state in ticket_workflow]"
-msgstr ""
-
 msgid "Opening Date"
 msgstr "개시 날짜"
 
@@ -4556,12 +3854,6 @@ msgstr "Order Movement Interaction Workflow"
 
 msgid "Order Placed"
 msgstr "제시된 오더"
-
-msgid "Order Placed [state in open_order_workflow]"
-msgstr ""
-
-msgid "Order Placed [state in order_workflow]"
-msgstr ""
 
 msgid "Order Report"
 msgstr "주문 리포트"
@@ -4638,9 +3930,6 @@ msgstr "다른 파티들"
 msgid "Others"
 msgstr "기타"
 
-msgid "Out"
-msgstr ""
-
 msgid "Outgoing"
 msgstr "보내기"
 
@@ -4652,9 +3941,6 @@ msgstr "보낼 이벤트"
 
 msgid "Outgoing Events (%(count)s)"
 msgstr "보내기 이벤트 (%(count)s)"
-
-msgid "Outgoing [state in event_workflow]"
-msgstr ""
 
 msgid "Overdraft Facility"
 msgstr "단기 신용 한도"
@@ -4674,20 +3960,11 @@ msgstr "PDF"
 msgid "PDM"
 msgstr "PDM"
 
-msgid "PO"
-msgstr ""
-
-msgid "PPL"
-msgstr ""
-
 msgid "Packed"
 msgstr "포장됨"
 
 msgid "Packed Container"
 msgstr "포장된 컨테이너"
-
-msgid "Packed [state in packing_list_container_workflow]"
-msgstr ""
 
 msgid "Packing List Line"
 msgstr "포장 리스트 라인"
@@ -4728,9 +4005,6 @@ msgstr "파트너"
 msgid "Password"
 msgstr "패스워드"
 
-msgid "Password Confirm"
-msgstr ""
-
 msgid "Password Confirmation"
 msgstr "패스워드 확인"
 
@@ -4751,9 +4025,6 @@ msgstr "붙이기"
 
 msgid "Path"
 msgstr "경로"
-
-msgid "Paths"
-msgstr ""
 
 msgid "Pay Sheet Cell"
 msgstr "지불 시트 셀"
@@ -4875,12 +4146,6 @@ msgstr "보류된 이벤트 (%(count)s)"
 msgid "Pending Offers (%(count)s)"
 msgstr "보류된 제안들 (%(count)s)"
 
-msgid "Pending [state in document_staging_workflow]"
-msgstr ""
-
-msgid "Pending [state in event_workflow]"
-msgstr ""
-
 msgid "Percentage"
 msgstr "퍼센트"
 
@@ -4956,15 +4221,6 @@ msgstr "계획된 테스크"
 msgid "Planned Transaction"
 msgstr "계획된 트랜젝션"
 
-msgid "Planned [state in accounting_workflow]"
-msgstr ""
-
-msgid "Planned [state in open_order_workflow]"
-msgstr ""
-
-msgid "Planned [state in order_workflow]"
-msgstr ""
-
 msgid "Planning"
 msgstr "계획하기"
 
@@ -5006,9 +4262,6 @@ msgstr "포털 타입"
 
 msgid "Portal Type Property"
 msgstr "포털 타입 속성"
-
-msgid "Portal Type Roles"
-msgstr ""
 
 msgid "Portal Types"
 msgstr "포털 타입"
@@ -5052,32 +4305,14 @@ msgstr "게시된 이벤트 (%(count)s)"
 msgid "Posted Query"
 msgstr "게시된 질의"
 
-msgid "Posted [state in event_workflow]"
-msgstr ""
-
-msgid "Posted [state in query_workflow]"
-msgstr ""
-
 msgid "Posted to General Ledger"
 msgstr "장부에 기재됨"
-
-msgid "Posted to General Ledger [state in accounting_workflow]"
-msgstr ""
 
 msgid "Precision"
 msgstr "표시 숫자"
 
 msgid "Predecessor Tasks"
 msgstr "전임자 테스크"
-
-msgid "Predicate"
-msgstr ""
-
-msgid "Predicate Group"
-msgstr ""
-
-msgid "Predicates"
-msgstr ""
 
 msgid "Preference"
 msgstr "설정"
@@ -5175,14 +4410,8 @@ msgstr "프린트"
 msgid "Priority"
 msgstr "우선 순위"
 
-msgid "Private"
-msgstr ""
-
 msgid "Private Document"
 msgstr "사적인 문서"
-
-msgid "Private [state in document_staging_workflow]"
-msgstr ""
 
 msgid "Privilege"
 msgstr "특권"
@@ -5331,29 +4560,17 @@ msgstr "속성 무브먼트 그룹"
 msgid "Property Name"
 msgstr "속성 이름"
 
-msgid "Property Sheets"
-msgstr ""
-
 msgid "Property Tester"
 msgstr "속성 테스터"
 
-msgid "Property used to Test"
-msgstr ""
-
 msgid "Prospect Contacted"
 msgstr "잠재 고객 접촉"
-
-msgid "Prospect Contacted [state in sale_opportunity_workflow]"
-msgstr ""
 
 msgid "Protect"
 msgstr "보호"
 
 msgid "Protected"
 msgstr "보호됨"
-
-msgid "Protected [state in category_publication_workflow]"
-msgstr ""
 
 msgid "Provision"
 msgstr "규정"
@@ -5363,15 +4580,6 @@ msgstr "퍼블릭"
 
 msgid "Public Document"
 msgstr "공적 문서"
-
-msgid "Public [state in document_staging_workflow]"
-msgstr ""
-
-msgid "Public [state in external_document_publication_workflow]"
-msgstr ""
-
-msgid "Public [state in knowledge_pad_validation_workflow]"
-msgstr ""
 
 msgid "Publication Date"
 msgstr "출판 일자"
@@ -5400,26 +4608,11 @@ msgstr "최신 문서 공표"
 msgid "Published"
 msgstr "공표됨"
 
-msgid "Published Alive"
-msgstr ""
-
 msgid "Published Alive Document"
 msgstr "공표된 최신 문서"
 
-msgid "Published Alive [state in document_publication_workflow]"
-msgstr ""
-
 msgid "Published Document"
 msgstr "공표된 문서"
-
-msgid "Published [state in category_publication_workflow]"
-msgstr ""
-
-msgid "Published [state in document_publication_workflow]"
-msgstr ""
-
-msgid "Published [state in publication_workflow]"
-msgstr ""
 
 msgid "Published:"
 msgstr "공표됨"
@@ -5634,14 +4827,8 @@ msgstr "버그 재할당"
 msgid "Re-install Business Template"
 msgstr "비즈니스 템플릿 재설치"
 
-msgid "Ready"
-msgstr ""
-
 msgid "Ready Packing List"
 msgstr "포장 리스트 준비"
-
-msgid "Ready [state in packing_list_workflow]"
-msgstr ""
 
 msgid "Real Begin Date"
 msgstr "실질 시작 날짜"
@@ -5670,14 +4857,8 @@ msgstr "이벤트 접수"
 msgid "Receive Packing List"
 msgstr "포장 리스트 받기"
 
-msgid "Received"
-msgstr ""
-
 msgid "Received Packing List"
 msgstr "받은 포장 리스트"
-
-msgid "Received [state in packing_list_workflow]"
-msgstr ""
 
 msgid "Recent Changes"
 msgstr "최근 변경"
@@ -5733,12 +4914,6 @@ msgstr "1000 개체 이상 처리는 안됩니다. 선택 내용을 확인하세
 msgid "Region"
 msgstr "거주 국가"
 
-msgid "Register New Skin if Present ?"
-msgstr ""
-
-msgid "Register or not a new skin if business template defines it"
-msgstr ""
-
 msgid "Registered Capital"
 msgstr "등록된 자본"
 
@@ -5765,15 +4940,6 @@ msgstr "거절된 제안"
 
 msgid "Rejected Sale Opportunity"
 msgstr "거절된 판매 기회"
-
-msgid "Rejected [state in open_order_workflow]"
-msgstr ""
-
-msgid "Rejected [state in order_workflow]"
-msgstr ""
-
-msgid "Rejected [state in sale_opportunity_workflow]"
-msgstr ""
 
 msgid "Related"
 msgstr "관련"
@@ -5856,23 +5022,11 @@ msgstr "문서 공개"
 msgid "Release Document Alive"
 msgstr "최신 문서 공개"
 
-msgid "Released"
-msgstr ""
-
-msgid "Released Alive"
-msgstr ""
-
 msgid "Released Alive Document"
 msgstr "공개된 최신 문서"
 
-msgid "Released Alive [state in document_publication_workflow]"
-msgstr ""
-
 msgid "Released Document"
 msgstr "공개된 문서"
-
-msgid "Released [state in document_publication_workflow]"
-msgstr ""
 
 msgid "Released:"
 msgstr "공개:"
@@ -5889,17 +5043,11 @@ msgstr "새 이름"
 msgid "Rename tab"
 msgstr "새이름 탭"
 
-msgid "Reorder Skin Selection ?"
-msgstr ""
-
 msgid "Replaced"
 msgstr "대체됨"
 
 msgid "Replaced Business Template"
 msgstr "대체된 비즈니스 템플릿"
-
-msgid "Replaced [state in business_template_installation_workflow]"
-msgstr ""
 
 msgid "Reply to Event by Email"
 msgstr "이메일로 이벤트에 답변"
@@ -5933,9 +5081,6 @@ msgstr "요청 승인"
 
 msgid "Request Approval of Manager"
 msgstr "매니저의 승인 요청"
-
-msgid "Request Keys"
-msgstr ""
 
 msgid "Request Processing"
 msgstr "작업 요청"
@@ -6036,9 +5181,6 @@ msgstr "응답됨"
 msgid "Responded Event"
 msgstr "응답된 이벤트"
 
-msgid "Responded [state in event_workflow]"
-msgstr ""
-
 msgid "Restart Accounting Period"
 msgstr "회기 재개"
 
@@ -6050,9 +5192,6 @@ msgstr "결과"
 
 msgid "Results"
 msgstr "결과"
-
-msgid "Results <em>${start} - ${stop}</em> of <em>${total}</em>."
-msgstr ""
 
 msgid "Retract Document Publication"
 msgstr "문서 공표 최소"
@@ -6090,9 +5229,6 @@ msgstr "SVN로부터 비즈니스 템플릿 회복 또는 갱신"
 msgid "Revision"
 msgstr "개정"
 
-msgid "Revision Number"
-msgstr ""
-
 msgid "Rights"
 msgstr "권한"
 
@@ -6104,9 +5240,6 @@ msgstr "역할과 지역"
 
 msgid "Role Definition"
 msgstr "역할 정의"
-
-msgid "Role Keys"
-msgstr ""
 
 msgid "Roles"
 msgstr "역할"
@@ -6134,12 +5267,6 @@ msgstr "유닛 테스트 시작"
 
 msgid "Running Balance"
 msgstr "러닝 밸런스"
-
-msgid "SO"
-msgstr ""
-
-msgid "SPL"
-msgstr ""
 
 msgid "SQL Cache"
 msgstr "SQL 캐시"
@@ -6345,9 +5472,6 @@ msgstr "비즈니스 템플릿 저장"
 msgid "Saved in ${path}."
 msgstr "${path}에 저장"
 
-msgid "Scriptable Keys"
-msgstr ""
-
 msgid "Search"
 msgstr "검색"
 
@@ -6365,9 +5489,6 @@ msgstr "검색 팁"
 
 msgid "Search Transactions"
 msgstr "트랜젝션 검색"
-
-msgid "Search mode"
-msgstr ""
 
 msgid "Search results"
 msgstr "결과 검색"
@@ -6450,9 +5571,6 @@ msgstr "보내는 이 또는 공급자"
 msgid "Sent"
 msgstr "보냄"
 
-msgid "Serial Number"
-msgstr ""
-
 msgid "Server Root"
 msgstr "서버 루트"
 
@@ -6513,23 +5631,11 @@ msgstr "문서 공유"
 msgid "Share Document Alive"
 msgstr "최신 문서 공유"
 
-msgid "Shared"
-msgstr ""
-
-msgid "Shared Alive"
-msgstr ""
-
 msgid "Shared Alive Document"
 msgstr "공유된 최신 문서"
 
-msgid "Shared Alive [state in document_publication_workflow]"
-msgstr ""
-
 msgid "Shared Document"
 msgstr "공유된 문서"
-
-msgid "Shared [state in document_publication_workflow]"
-msgstr ""
 
 msgid "Ship Packing List"
 msgstr "포장 리스트 선적"
@@ -6542,9 +5648,6 @@ msgstr "선적됨"
 
 msgid "Shipped Packing List"
 msgstr "선적된 포장 리스트"
-
-msgid "Shipped [state in packing_list_workflow]"
-msgstr ""
 
 msgid "Shipping Date"
 msgstr "선적 날짜"
@@ -6582,9 +5685,6 @@ msgstr "시뮬레이션 무브먼트"
 msgid "Simulation Movement Interaction Workflow"
 msgstr "시뮬레이션 무브먼트 인터액션 워크플로우"
 
-msgid "Simulation Select Method"
-msgstr ""
-
 msgid "Simulation State"
 msgstr "시뮬레이션 상태"
 
@@ -6593,9 +5693,6 @@ msgstr "시뮬레이션 도구"
 
 msgid "Site"
 msgstr "사이트"
-
-msgid "Site Properties"
-msgstr ""
 
 msgid "Site Sections"
 msgstr "사이트 섹션"
@@ -6614,9 +5711,6 @@ msgstr "스킬"
 
 msgid "Skills"
 msgstr "전문분야"
-
-msgid "Skin Folders"
-msgstr ""
 
 msgid "Slice"
 msgstr "슬라이스"
@@ -6639,9 +5733,6 @@ msgstr "주민등록번호"
 msgid "Sold"
 msgstr "판매됨"
 
-msgid "Sold [state in sale_opportunity_workflow]"
-msgstr ""
-
 msgid "Solve Alarm"
 msgstr "알람 해결"
 
@@ -6651,17 +5742,11 @@ msgstr "어긋남 해결"
 msgid "Solved"
 msgstr "해결됨"
 
-msgid "Solved [state in delivery_causality_workflow]"
-msgstr ""
-
 msgid "Solver List"
 msgstr "Solver List"
 
 msgid "Solving"
 msgstr "해결"
-
-msgid "Solving [state in delivery_causality_workflow]"
-msgstr ""
 
 msgid "Some divergences seem already solved. Please retry."
 msgstr "일부 변동 사항은 해결되었습니다. 다시 시도하세요."
@@ -6708,9 +5793,6 @@ msgstr "인덱스 소트"
 msgid "Sort Index will either give a calculation order or a sorting order of a document in a list that contains many documents."
 msgstr "소트 인덱스는 여러 문서를 포함한 목록에서 문서를 배열하는 순서를 결정합니다."
 
-msgid "Sort skin folders by priority"
-msgstr ""
-
 msgid "Source"
 msgstr "소스"
 
@@ -6740,9 +5822,6 @@ msgstr "특정 참조"
 
 msgid "Split Document"
 msgstr "문서 분할"
-
-msgid "Split Document [state in document_publication_workflow]"
-msgstr ""
 
 msgid "Split Movement Group"
 msgstr "무브먼트 그룹 분할"
@@ -6828,18 +5907,6 @@ msgstr "시작된 테스크"
 msgid "Started Ticket"
 msgstr "시작된 티켓"
 
-msgid "Started [state in accounting_period_workflow]"
-msgstr ""
-
-msgid "Started [state in assignment_workflow]"
-msgstr ""
-
-msgid "Started [state in career_workflow]"
-msgstr ""
-
-msgid "Started [state in open_order_workflow]"
-msgstr ""
-
 msgid "Started crawling external source."
 msgstr "시작된 외부 소스 크롤링"
 
@@ -6915,15 +5982,6 @@ msgstr "중지된 테스크"
 msgid "Stopped Ticket"
 msgstr "중지된 티켓"
 
-msgid "Stopped [state in assignment_workflow]"
-msgstr ""
-
-msgid "Stopped [state in career_workflow]"
-msgstr ""
-
-msgid "Stopped [state in open_order_workflow]"
-msgstr ""
-
 msgid "Street Address"
 msgstr "읍/면/동 + 번지"
 
@@ -6980,15 +6038,6 @@ msgstr "제출된 판매 기회"
 
 msgid "Submitted Support Requests (%(count)s)"
 msgstr "제출된 지원 요청 (%(count)s)"
-
-msgid "Submitted [state in document_publication_workflow]"
-msgstr ""
-
-msgid "Submitted [state in notification_message_workflow]"
-msgstr ""
-
-msgid "Submitted [state in sale_opportunity_workflow]"
-msgstr ""
 
 msgid "Subpages"
 msgstr "서브페이지"
@@ -7083,17 +6132,11 @@ msgstr "오픈 주문 보류"
 msgid "Suspend Project"
 msgstr "프로젝트 보류"
 
-msgid "Suspended"
-msgstr ""
-
 msgid "Suspended Order"
 msgstr "주문 보류"
 
 msgid "Suspended Project"
 msgstr "프로젝트 보류"
-
-msgid "Suspended [state in open_order_workflow]"
-msgstr ""
 
 msgid "Symbol"
 msgstr "심볼"
@@ -7106,9 +6149,6 @@ msgstr "탭 1"
 
 msgid "Tab name"
 msgstr "탭 이름"
-
-msgid "Table mode"
-msgstr ""
 
 msgid "Target Product"
 msgstr "타깃 제품"
@@ -7212,9 +6252,6 @@ msgstr "세금 카테고리"
 msgid "Tax Line"
 msgstr "세금 라인"
 
-msgid "Tax Line Delivery Movement Group"
-msgstr ""
-
 msgid "Tax Lines"
 msgstr "세금 라인"
 
@@ -7266,23 +6303,11 @@ msgstr "템플릿이 생성됨."
 msgid "Templates"
 msgstr "템플릿"
 
-msgid "Temporarily Stopped"
-msgstr ""
-
-msgid "Temporarily Stopped [state in accounting_period_workflow]"
-msgstr ""
-
 msgid "Temporary Stop Accounting Period"
 msgstr "회기 잠정 중단"
 
 msgid "Temporary Stopped Accounting Period"
 msgstr "잠정 중단된 회기"
-
-msgid "Temporary closed"
-msgstr ""
-
-msgid "Temporary closed [state in accounting_period_workflow]"
-msgstr ""
 
 msgid "Term (days)"
 msgstr "기간 (일)"
@@ -7329,8 +6354,13 @@ msgstr "본 오퍼레이션의 종료일"
 msgid "The FAX number."
 msgstr "팩스 번호"
 
-msgid "The Financial Section for this account.\n\nUsed in some reports (Profit & Loss, Balance Sheet)  and budget."
-msgstr "이 계정의 재무 섹션.\r\n일부 리포트 (이익과 손실, 밸런스시트) 및 예산에 이용됨."
+msgid ""
+"The Financial Section for this account.\n"
+"\n"
+"Used in some reports (Profit & Loss, Balance Sheet)  and budget."
+msgstr ""
+"이 계정의 재무 섹션.\n"
+"일부 리포트 (이익과 손실, 밸런스시트) 및 예산에 이용됨."
 
 msgid "The ID ${id} is invalid, it's a reserved property name"
 msgstr "ID ${id}가 유효하지 않습니다. 이것은 속성 이름을 거꾸로 한 것입니다."
@@ -7350,12 +6380,6 @@ msgstr "이 조직의 사회보장 식별번호"
 msgid "The Social Security Identification Number of the person."
 msgstr "이 사람의 사회보장 식별번호"
 
-msgid "The URL of a server which provides Witch Tool"
-msgstr ""
-
-msgid "The Version of the Business Template"
-msgstr ""
-
 msgid "The absolute date at which payment is expected to be made."
 msgstr "결제 예정일"
 
@@ -7365,7 +6389,10 @@ msgstr "이 문서의 절대 참조"
 msgid "The absolute total price. This is exclusive with the \"Percentage Of Total\" field."
 msgstr "총 가격"
 
-msgid "The activity code of the organisation.\n\nThis code is specific to the local legislation. For instance, in France this is called \"Code APE\""
+msgid ""
+"The activity code of the organisation.\n"
+"\n"
+"This code is specific to the local legislation. For instance, in France this is called \"Code APE\""
 msgstr "조직의 활동 코드 (국가 별로 상이함)."
 
 msgid "The activity for the assignment."
@@ -7377,14 +6404,8 @@ msgstr "이 사람의 활동 코드"
 msgid "The bank organisation in which this bank account was openned."
 msgstr "이 계좌가 오픈된 은행"
 
-msgid "The base categories to browse"
-msgstr ""
-
 msgid "The beginning date for validity of the currency exchange rate."
 msgstr "본 환율이 적용될 시작 날짜"
-
-msgid "The birth name, or maiden name of the person."
-msgstr ""
 
 msgid "The branch code holding this bank account. This is the middle part of the BBAN."
 msgstr "본 계좌를 개설한 은행의 지점 코드. BBAN의 중간 부분."
@@ -7451,9 +6472,6 @@ msgstr "시스템에 의해 본 서비스가 실질적으로 중단되는 날짜
 
 msgid "The date which the service stops officially, by contract for example."
 msgstr "계약 등에 의해 본 서비스가 공식적으로 중단되는 날짜."
-
-msgid "The default contained object id to look up"
-msgstr ""
 
 msgid "The default currency when creating new transactions."
 msgstr "새 트랜젝션을 만들 때의 기본 통화"
@@ -7557,29 +6575,14 @@ msgstr "이 회사가 보유한 기술."
 msgid "The marital status of the person."
 msgstr "결혼여부"
 
-msgid "The maximal date (inclusive) for transactions"
-msgstr ""
-
-msgid "The middle name of the person."
-msgstr ""
-
-msgid "The minimal date (inclusive) for transactions"
-msgstr ""
-
 msgid "The mobile telephone number."
 msgstr "휴대폰"
-
-msgid "The module which contains deliveries"
-msgstr ""
 
 msgid "The name of a document in ERP5"
 msgstr "문서 이름"
 
 msgid "The name of the Account"
 msgstr "계정 이름"
-
-msgid "The name of the business template, must not change between revision as this is the property used to retrieve old one when upgrading"
-msgstr ""
 
 msgid "The number of children this person have."
 msgstr "자녀"
@@ -7623,8 +6626,14 @@ msgstr "이 조직의 활동"
 msgid "The original filename of the document"
 msgstr "이 문서의 원래 파일 이름"
 
-msgid "The password of the user.\n\nLeaving this password empty will not modify existing password."
-msgstr "이용자 패스워드. \n\n빈칸으로 남겨두면 기존 패스워드가 유지됩니다."
+msgid ""
+"The password of the user.\n"
+"\n"
+"Leaving this password empty will not modify existing password."
+msgstr ""
+"이용자 패스워드. \n"
+"\n"
+"빈칸으로 남겨두면 기존 패스워드가 유지됩니다."
 
 msgid "The percentage of the total price."
 msgstr "총 가격 중 퍼센트"
@@ -7647,9 +6656,6 @@ msgstr "성별"
 msgid "The person's nationality."
 msgstr "국적"
 
-msgid "The portal types to browse"
-msgstr ""
-
 msgid "The postal code"
 msgstr "우편번호"
 
@@ -7662,7 +6668,10 @@ msgstr "선호되는 계정 번호 방식"
 msgid "The preferred date order in which datetime field will be displayed (dd/mm/yyyy, yyyy/mm/dd, ...)"
 msgstr "날짜를 표시하는 순서"
 
-msgid "The prefix for the person's full name.\n\nUsually something like Dr. or Mr."
+msgid ""
+"The prefix for the person's full name.\n"
+"\n"
+"Usually something like Dr. or Mr."
 msgstr "호칭"
 
 msgid "The priority of the preference : in ascending order : user, site, global"
@@ -7698,9 +6707,6 @@ msgstr "조직의 역할"
 msgid "The roles of the person in the organisation."
 msgstr "조직 내 이 사람의 역할"
 
-msgid "The root of a server which provides Witch Tool"
-msgstr ""
-
 msgid "The section Organisation for documents."
 msgstr "문서의 \"조직\" 섹션"
 
@@ -7722,16 +6728,25 @@ msgstr "조직의 지리적 위치"
 msgid "The smallest transferrable amount expressed in the default unit"
 msgstr "기본 단위 속에 나타나는 최소 이체 가능 금액"
 
-msgid "The street address.\n\nThis usually contains the street name, building number and apartment number (if any)."
+msgid ""
+"The street address.\n"
+"\n"
+"This usually contains the street name, building number and apartment number (if any)."
 msgstr "도로명을 포함한 번지"
 
 msgid "The style used to display categories in drop-down lists."
 msgstr "드롭다운 리스트에서 카테고리를 표시하는 스타일"
 
-msgid "The suffix for the person full name.\n\nCan be something like 'Jr.'"
+msgid ""
+"The suffix for the person full name.\n"
+"\n"
+"Can be something like 'Jr.'"
 msgstr "이름에 포함된 접미사"
 
-msgid "The symbol used to represent the currency.\n\nIt is for example $, ¥, €, £..."
+msgid ""
+"The symbol used to represent the currency.\n"
+"\n"
+"It is for example $, ¥, €, £..."
 msgstr "통화를 나타내는 심볼"
 
 msgid "The telephone number."
@@ -7770,8 +6785,13 @@ msgstr "이 무브먼트의 소스 프로젝트의 제목"
 msgid "The title of the source section of this movement"
 msgstr "이 무브먼트의 소스 섹션의 제목"
 
-msgid "The type of the account.\n\nThis category defines how the account will behave. For instance Payable or Receivable accounts will need to be used with a third party."
-msgstr "계정 타입.\r\n이 카테고리는 이 계정의 양식을 정의함. 가령, '받을 계정'이나 '지급할 계정\"은 서드파티와 연동되어 사용됨."
+msgid ""
+"The type of the account.\n"
+"\n"
+"This category defines how the account will behave. For instance Payable or Receivable accounts will need to be used with a third party."
+msgstr ""
+"계정 타입.\n"
+"이 카테고리는 이 계정의 양식을 정의함. 가령, '받을 계정'이나 '지급할 계정\"은 서드파티와 연동되어 사용됨."
 
 msgid "The username this person will use to log in the system. The system will check that there isn't another user with the same username."
 msgstr "아이디 중복 확인"
@@ -7911,12 +6931,6 @@ msgstr "종료 날짜"
 msgid "To reset your password, please enter your login below. An email will be sent to your address with a link to enter your new password."
 msgstr "패스워드를 변경하려면 로그인하세요. 새로운 패스워드를 설정할 링크가 귀하의 이메일 주소로 전송됩니다."
 
-msgid "Tools"
-msgstr ""
-
-msgid "Topic Keys"
-msgstr ""
-
 msgid "Total"
 msgstr "총"
 
@@ -8004,20 +7018,11 @@ msgstr "Transformation Transformed Resource"
 msgid "Transformations"
 msgstr "변형"
 
-msgid "Translated"
-msgstr ""
-
 msgid "Translated Document"
 msgstr "번역된 문서"
 
-msgid "Translated [state in document_publication_workflow]"
-msgstr ""
-
 msgid "Translation Requested"
 msgstr "번역 요청"
-
-msgid "Translation Requested [state in document_publication_workflow]"
-msgstr ""
 
 msgid "Translations to Assign (%(count)s)"
 msgstr "할당할 번역 (%(count)s)"
@@ -8055,15 +7060,6 @@ msgstr "타입"
 msgid "Type of rendering"
 msgstr "렌더링 타입"
 
-msgid "Type of the cell for a delivery"
-msgstr ""
-
-msgid "Type of the delivery"
-msgstr ""
-
-msgid "Type of the line for a delivery"
-msgstr ""
-
 msgid "URL"
 msgstr "URL"
 
@@ -8091,9 +7087,6 @@ msgstr "단위"
 msgid "Unit Price"
 msgstr "단가"
 
-msgid "Unit Test Classes"
-msgstr ""
-
 msgid "Unknown"
 msgstr "미확인"
 
@@ -8114,9 +7107,6 @@ msgstr "갱신"
 
 msgid "Update Assignment"
 msgstr "갱신 할당"
-
-msgid "Update Business Template Workflows"
-msgstr ""
 
 msgid "Update Business Template from SVN"
 msgstr "SVN로부터 비즈니스 템플릿 갱신"
@@ -8139,12 +7129,6 @@ msgstr "컨테이너로부터 수량 갱신"
 msgid "Update Repository Information"
 msgstr "저장소 정보 갱신"
 
-msgid "Update Tools"
-msgstr ""
-
-msgid "Update Translation ?"
-msgstr ""
-
 msgid "Update Variations"
 msgstr "제품사양 갱신"
 
@@ -8154,9 +7138,6 @@ msgstr "워크플로우 갱신"
 msgid "Update Workflows by English Glossary"
 msgstr "영어 용어집에 맞춰 워크플로우 갱신"
 
-msgid "Update and Reindex Catalog ?"
-msgstr ""
-
 msgid "Updated"
 msgstr "갱신됨"
 
@@ -8165,9 +7146,6 @@ msgstr "갱신된 할당"
 
 msgid "Updated Business Templates"
 msgstr "갱신된 비즈니스 템플릿"
-
-msgid "Updated [state in assignment_workflow]"
-msgstr ""
 
 msgid "Upgrade Business Templates from Repositories"
 msgstr "저장소로부터 비즈니스 템플릿 갱신"
@@ -8196,14 +7174,8 @@ msgstr "이 프로젝트의 로고 업로드"
 msgid "Upload the photo for this person."
 msgstr "이 사람의 사진 업로드"
 
-msgid "Uploaded"
-msgstr ""
-
 msgid "Uploaded Document"
 msgstr "업로드된 문서"
-
-msgid "Uploaded [state in processing_status_workflow]"
-msgstr ""
 
 msgid "Usage"
 msgstr "용도"
@@ -8276,21 +7248,6 @@ msgstr "확정된 재고"
 
 msgid "Validated Message"
 msgstr "확정된 메시지"
-
-msgid "Validated [state in account_workflow]"
-msgstr ""
-
-msgid "Validated [state in inventory_workflow]"
-msgstr ""
-
-msgid "Validated [state in notification_message_workflow]"
-msgstr ""
-
-msgid "Validated [state in rule_validation_workflow]"
-msgstr ""
-
-msgid "Validated [state in validation_workflow]"
-msgstr ""
 
 msgid "Validation State"
 msgstr "확정 상태"
@@ -8379,9 +7336,6 @@ msgstr "보기 스타일"
 msgid "Visible"
 msgstr "보임"
 
-msgid "Visible [state in knowledge_pad_validation_workflow]"
-msgstr ""
-
 msgid "Visit"
 msgstr "방문"
 
@@ -8469,9 +7423,6 @@ msgstr "노동자"
 msgid "Workflow"
 msgstr "워크플로우"
 
-msgid "Workflow Chains"
-msgstr ""
-
 msgid "Workflow History"
 msgstr "워크플로우 히스토리"
 
@@ -8489,9 +7440,6 @@ msgstr "워크플로우"
 
 msgid "Workflows updated."
 msgstr "워크플로우 갱신됨."
-
-msgid "Worklist"
-msgstr ""
 
 msgid "Works"
 msgstr "노동"
@@ -8544,9 +7492,6 @@ msgstr "귀하는 본 관련 문서를 열람할 권한이 없습니다."
 msgid "You can login with another user name or ${go_back}."
 msgstr "다른 사용자 이름 또는 ${go_back} 으로 로그인하십시오."
 
-msgid "You did not enter a valid date and time."
-msgstr ""
-
 msgid "You did not enter an email address."
 msgstr "이메일 주소를 입력하세요."
 
@@ -8583,18 +7528,6 @@ msgstr "귀하의 계정이 만들어졌습니다."
 msgid "Your tab is empty."
 msgstr "탭이 비었습니다."
 
-msgid "Zope Products"
-msgstr ""
-
-msgid "Zope Roles"
-msgstr ""
-
-msgid "a list of template names provided by this template"
-msgstr ""
-
-msgid "a list of template names required by this template"
-msgstr ""
-
 msgid "acknowledged"
 msgstr "통보되었음."
 
@@ -8604,20 +7537,11 @@ msgstr "추가 기간 (일)"
 msgid "an int which can be used to sort objects in a list"
 msgstr "리스트 내의 개체를 추출하는데 이용될 정수 값"
 
-msgid "another base category to get if everything else fails"
-msgstr ""
-
 msgid "answered"
 msgstr "답변됨"
 
-msgid "archived"
-msgstr ""
-
 msgid "assigned"
 msgstr "할당됨"
-
-msgid "auto_planned"
-msgstr ""
 
 msgid "avg"
 msgstr "평균"
@@ -8643,17 +7567,8 @@ msgstr "취소됨"
 msgid "closed"
 msgstr "마감됨"
 
-msgid "confirmed"
-msgstr ""
-
 msgid "contacted"
 msgstr "계약됨"
-
-msgid "converted"
-msgstr ""
-
-msgid "converting"
-msgstr ""
 
 msgid "count"
 msgstr "카운트"
@@ -8661,35 +7576,20 @@ msgstr "카운트"
 msgid "current"
 msgstr "현재"
 
-msgid "defines how to select existing Delivery which may eventually be updated with selected simulation movements"
-msgstr ""
-
-msgid "defines what to do with cell which share the same                       properties after being collecting."
-msgstr ""
-
 msgid "deleted"
 msgstr "삭제됨"
 
 msgid "delivered"
 msgstr "배송됨"
 
-msgid "description"
-msgstr ""
-
 msgid "disabled"
 msgstr "비활성"
-
-msgid "diverged"
-msgstr ""
 
 msgid "draft"
 msgstr "초안"
 
 msgid "embedded"
 msgstr "삽입됨"
-
-msgid "empty"
-msgstr ""
 
 msgid "enabled"
 msgstr "활성"
@@ -8700,32 +7600,14 @@ msgstr "질의됨"
 msgid "expired"
 msgstr "말소됨"
 
-msgid "expired_protected"
-msgstr ""
-
-msgid "expired_published"
-msgstr ""
-
 msgid "global"
 msgstr "글로벌"
-
-msgid "global weight of the container"
-msgstr ""
-
-msgid "global_enable"
-msgstr ""
 
 msgid "go back"
 msgstr "돌아가기"
 
-msgid "hidden"
-msgstr ""
-
 msgid "iCalendar Export"
 msgstr "iCalendar 익스포트"
-
-msgid "if checked, if will install all the missing tools in the site when installing the business template"
-msgstr ""
 
 msgid "index use to sort document"
 msgstr "문서 추출을 위한 인덱스"
@@ -8736,9 +7618,6 @@ msgstr "설치됨"
 msgid "invalidated"
 msgstr "확정 취소"
 
-msgid "invisible"
-msgstr ""
-
 msgid "matrixbox"
 msgstr "매트릭스 박스"
 
@@ -8747,12 +7626,6 @@ msgstr "최대"
 
 msgid "min"
 msgstr "최소"
-
-msgid "miss"
-msgstr ""
-
-msgid "missing"
-msgstr ""
 
 msgid "modified"
 msgstr "수정됨"
@@ -8781,14 +7654,8 @@ msgstr "또는"
 msgid "ordered"
 msgstr "주문됨"
 
-msgid "packed"
-msgstr ""
-
 msgid "payment term in a number of days"
 msgstr "결제 기간 (일)"
-
-msgid "pending"
-msgstr ""
 
 msgid "planned"
 msgstr "계획됨"
@@ -8796,56 +7663,23 @@ msgstr "계획됨"
 msgid "posted"
 msgstr "기재됨"
 
-msgid "private"
-msgstr ""
-
 msgid "protected"
 msgstr "보호됨"
-
-msgid "public"
-msgstr ""
 
 msgid "published"
 msgstr "출판됨"
 
-msgid "published_alive"
-msgstr ""
-
 msgid "reStructuredText"
 msgstr "재구성된 텍스트"
-
-msgid "ready"
-msgstr ""
 
 msgid "rejected"
 msgstr "거절됨"
 
-msgid "released"
-msgstr ""
-
-msgid "released_alive"
-msgstr ""
-
 msgid "replaced"
 msgstr "대체됨"
 
-msgid "requested"
-msgstr ""
-
 msgid "responded"
 msgstr "응답됨"
-
-msgid "script used to do localized calculs"
-msgstr ""
-
-msgid "serial number of the container"
-msgstr ""
-
-msgid "shared"
-msgstr ""
-
-msgid "shared_alive"
-msgstr ""
 
 msgid "slice not defined"
 msgstr "슬라이스가 정의되지 않음."
@@ -8859,17 +7693,11 @@ msgstr "해결됨"
 msgid "solving"
 msgstr "해결"
 
-msgid "split"
-msgstr ""
-
 msgid "start_building"
 msgstr "빌딩_시작"
 
 msgid "started"
 msgstr "시작됨"
-
-msgid "stopped"
-msgstr ""
 
 msgid "submitted"
 msgstr "제출됨"
@@ -8877,413 +7705,14 @@ msgstr "제출됨"
 msgid "sum"
 msgstr "합계"
 
-msgid "suspended"
-msgstr ""
-
 msgid "the accountant transaction reference of the sale"
 msgstr "판매의 회계사 거래 참조"
-
-msgid "the number of revision used by the business template. This number increases each time we commit a modification"
-msgstr ""
-
-msgid "title"
-msgstr ""
 
 msgid "titles of the documents which are in causality relation with delivery"
 msgstr "배송과 인과관계가 있는 문서의 제목"
 
-msgid "translated"
-msgstr ""
-
 msgid "updated"
 msgstr "갱신됨"
 
-msgid "uploaded"
-msgstr ""
-
 msgid "validated"
 msgstr "확정됨"
-
-msgid "visible"
-msgstr ""
-
-msgid "간이 장부"
-msgstr ""
-
-msgid "검색"
-msgstr ""
-
-msgid "결제"
-msgstr ""
-
-msgid "결제 트랜젝션"
-msgstr ""
-
-msgid "계정"
-msgstr ""
-
-msgid "계정 문서"
-msgstr ""
-
-msgid "고객 검색 키"
-msgstr ""
-
-msgid "공급자 검색 키"
-msgstr ""
-
-msgid "구매"
-msgstr ""
-
-msgid "구매 오더"
-msgstr ""
-
-msgid "구매 인보이스"
-msgstr ""
-
-msgid "구매 인보이스 트랜젝션"
-msgstr ""
-
-msgid "구매 조건"
-msgstr ""
-
-msgid "구매 조달"
-msgstr ""
-
-msgid "구매 주문"
-msgstr ""
-
-msgid "구매 포장 리스트"
-msgstr ""
-
-msgid "구매인보이스 트랜젝션"
-msgstr ""
-
-msgid "그리기"
-msgstr ""
-
-msgid "기본 필드 검색 키"
-msgstr ""
-
-msgid "날짜 용도"
-msgstr ""
-
-msgid "내부 포장 리스트"
-msgstr ""
-
-msgid "노트"
-msgstr ""
-
-msgid "도면"
-msgstr ""
-
-msgid "들어오거나 나가는 이벤트"
-msgstr ""
-
-msgid "라인 리포트"
-msgstr ""
-
-msgid "레터"
-msgstr ""
-
-msgid "로그인 검색 키"
-msgstr ""
-
-msgid "만든 날짜 용도"
-msgstr ""
-
-msgid "메일 메시지"
-msgstr ""
-
-msgid "문서"
-msgstr ""
-
-msgid "문서 검색"
-msgstr ""
-
-msgid "미팅"
-msgstr ""
-
-msgid "미팅 상세 리포트"
-msgstr ""
-
-msgid "미팅 상태"
-msgstr ""
-
-msgid "반송된 판매 포장 리스트"
-msgstr ""
-
-msgid "받는 이 검색 키"
-msgstr ""
-
-msgid "받는 이 또는 수혜자 검색 키"
-msgstr ""
-
-msgid "방문"
-msgstr ""
-
-msgid "방문하기"
-msgstr ""
-
-msgid "밸런스 시트"
-msgstr ""
-
-msgid "변형"
-msgstr ""
-
-msgid "보내는 또는 부르는 이 검색 키"
-msgstr ""
-
-msgid "보내는 또는 주는 이 검색 키"
-msgstr ""
-
-msgid "부품"
-msgstr ""
-
-msgid "사람"
-msgstr ""
-
-msgid "상세한 검색"
-msgstr ""
-
-msgid "생일 용도"
-msgstr ""
-
-msgid "서드파티"
-msgstr ""
-
-msgid "서비스"
-msgstr ""
-
-msgid "선택한 저널"
-msgstr ""
-
-msgid "설명 검색 키"
-msgstr ""
-
-msgid "세금"
-msgstr ""
-
-msgid "손익"
-msgstr ""
-
-msgid "수정 날짜 용도"
-msgstr ""
-
-msgid "스톡 리포트"
-msgstr ""
-
-msgid "스프레드시트"
-msgstr ""
-
-msgid "스프레드시트로 보내기"
-msgstr ""
-
-msgid "스프레드시트에서 가져오기"
-msgstr ""
-
-msgid "오더 리포트"
-msgstr ""
-
-msgid "오픈오피스 칼크에서 사람들 가져오기"
-msgstr ""
-
-msgid "우편"
-msgstr ""
-
-msgid "워크플로우 리포트"
-msgstr ""
-
-msgid "웨어하우스 검색 키"
-msgstr ""
-
-msgid "웹 메시지"
-msgstr ""
-
-msgid "웹 페이지"
-msgstr ""
-
-msgid "이메일"
-msgstr ""
-
-msgid "이미지"
-msgstr ""
-
-msgid "이벤트"
-msgstr ""
-
-msgid "이벤트 상세 리포트"
-msgstr ""
-
-msgid "이벤트 액티비티"
-msgstr ""
-
-msgid "이벤트 원천 검색 키"
-msgstr ""
-
-msgid "이벤트 타입 검색 키"
-msgstr ""
-
-msgid "이익과 손실"
-msgstr ""
-
-msgid "인보이스 리포트"
-msgstr ""
-
-msgid "일반적 이름 검색 키"
-msgstr ""
-
-msgid "장부"
-msgstr ""
-
-msgid "재고"
-msgstr ""
-
-msgid "재고 날짜 용도"
-msgstr ""
-
-msgid "재고 워크플로우"
-msgstr ""
-
-msgid "저널"
-msgstr ""
-
-msgid "전화"
-msgstr ""
-
-msgid "전화 걸기"
-msgstr ""
-
-msgid "제목 검색 키"
-msgstr ""
-
-msgid "제품"
-msgstr ""
-
-msgid "조직"
-msgstr ""
-
-msgid "조직 검색 키"
-msgstr ""
-
-msgid "주문 리포트"
-msgstr ""
-
-msgid "지원 요청"
-msgstr ""
-
-msgid "지원 요청 상세 리포트"
-msgstr ""
-
-msgid "지원 요청 상태"
-msgstr ""
-
-msgid "참조 검색 키"
-msgstr ""
-
-msgid "캠페인"
-msgstr ""
-
-msgid "캠페인 상세 리포트"
-msgstr ""
-
-msgid "캠페인 상황"
-msgstr ""
-
-msgid "컨텐트 공헌"
-msgstr ""
-
-msgid "컨텐트 업로드"
-msgstr ""
-
-msgid "컴포넌트"
-msgstr ""
-
-msgid "타입"
-msgstr ""
-
-msgid "텍스트"
-msgstr ""
-
-msgid "통화"
-msgstr ""
-
-msgid "트랜젝션 검색"
-msgstr ""
-
-msgid "특별 거래 조건 검색 키"
-msgstr ""
-
-msgid "티켓 따라가기 검색 키"
-msgstr ""
-
-msgid "파일"
-msgstr ""
-
-msgid "판매"
-msgstr ""
-
-msgid "판매 공급"
-msgstr ""
-
-msgid "판매 공급 조건"
-msgstr ""
-
-msgid "판매 공급 조건 검색 키"
-msgstr ""
-
-msgid "판매 기회"
-msgstr ""
-
-msgid "판매 기회 상세 보고서"
-msgstr ""
-
-msgid "판매 기회 상태"
-msgstr ""
-
-msgid "판매 오더"
-msgstr ""
-
-msgid "판매 오더 오픈하기"
-msgstr ""
-
-msgid "판매 인보이스"
-msgstr ""
-
-msgid "판매 인보이스 트랜젝션"
-msgstr ""
-
-msgid "판매 조건"
-msgstr ""
-
-msgid "판매 주문"
-msgstr ""
-
-msgid "판매 주문 오픈"
-msgstr ""
-
-msgid "판매 포장 리스트"
-msgstr ""
-
-msgid "판매인보이스 트랜젝션"
-msgstr ""
-
-msgid "프리젠테이션"
-msgstr ""
-
-msgid "프린트"
-msgstr ""
-
-msgid "할인"
-msgstr ""
-
-msgid "확정 워크플로우"
-msgstr ""
-
-msgid "회계"
-msgstr ""
-
-msgid "회계 문서"
-msgstr ""
-
-msgid "회계 트랜젝션"
-msgstr ""
