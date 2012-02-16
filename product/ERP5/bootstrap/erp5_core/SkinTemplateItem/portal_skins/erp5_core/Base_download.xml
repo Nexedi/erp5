@@ -55,14 +55,8 @@ response = request.RESPONSE\n
 \n
 from zExceptions import Unauthorized\n
 \n
-format = None\n
-# Always force download of document even if format is supported\n
-# by browser\n
-filename = context.getStandardFilename(format)\n
-response.setHeader(\'Content-disposition\', \'attachment; filename="%s"\' % filename)\n
-\n
 try:\n
-  return context.index_html(request, response, format)\n
+  return context.index_html(request, response, format=None, inline=inline)\n
 except Unauthorized:\n
   msg = context.Base_translateString("You do not have enough permission for converting this document.")\n
   return context.Base_redirect(keep_items=dict(portal_status_message=msg))\n
@@ -70,7 +64,7 @@ except Unauthorized:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>inline=False</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
