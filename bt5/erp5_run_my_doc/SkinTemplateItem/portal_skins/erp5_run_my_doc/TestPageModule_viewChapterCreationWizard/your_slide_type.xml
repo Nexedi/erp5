@@ -113,6 +113,10 @@
                           <string>Code</string>
                           <string>Code</string>
                         </tuple>
+                        <tuple>
+                          <string>Master</string>
+                          <string>Master</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
