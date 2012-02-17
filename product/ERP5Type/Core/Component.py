@@ -270,7 +270,14 @@ class Component(Base):
     namespace_dict = {}
     exec source_code in namespace_dict
 
-    return context.newContent(id=id,
-                              reference=class_name,
-                              text_content=source_code,
-                              portal_type=cls.portal_type)
+    new_component = context.newContent(id=id,
+                                       reference=class_name,
+                                       text_content=source_code,
+                                       portal_type=cls.portal_type)
+
+    new_component.validate()
+
+    # XXX-arnau: is it really safe?
+    os.remove(path)
+
+    return new_component

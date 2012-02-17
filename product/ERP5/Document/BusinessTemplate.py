@@ -3767,6 +3767,13 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
   Extensions are now stored in ZODB rather than on the filesystem. However,
   some Business Templates may still have filesystem Extensions which need to
   be migrated to the ZODB.
+
+  The migration is performed in two steps:
+
+  1/ Copy the Business Template to be migrated;
+
+  2/ Run the migration script which will update properly the Document IDs in
+     the Business Template.
   """
   _tool_id = 'portal_components'
 
@@ -3815,13 +3822,41 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
         XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
         bta.addObject(f, key, path=path)
 
-  @staticmethod
-  def _migrateFromFilesystem(tool,
-                             filesystem_path,
-                             filesystem_file,
-                             class_id):
-    return DocumentComponentDocument.importFromFilesystem(tool,
-                                                          filesystem_path)
+  def getTemplateIdList(self):
+    return self.getTemplateDocumentIdList()
+
+  def build(self, context, **kw):
+    if not self._archive:
+      return
+
+    if not self._is_already_migrated(self._archive.keys()):
+      document_id_list = self.getTemplateIdList()
+
+      try:
+        context.getPortalObject().unrestrictedTraverse(
+          'portal_components/' + document_id_list[0])
+      except (IndexError, KeyError):
+        return FilesystemDocumentTemplateItem.build(self, context, **kw)
+      else:
+        self._archive.clear()
+        for name in document_id_list:
+          self._archive['portal_components/' + name] = None
+
+    return ObjectTemplateItem.build(self, context, **kw)
+
+  def install(self, context, **kw):
+    """
+    In contrary to ZODB Property Sheets, Components are not migrated
+    automatically as the version must be set manually. This should not be an
+    issue as there are not so many Documents in bt5...
+    """
+    object_list = list((context.getTemplateFormatVersion() == 1 and
+                        self._objects or self._archive))
+
+    if self._is_already_migrated(object_list):
+      return ObjectTemplateItem.install(self, context, **kw)
+    else:
+      return FilesystemDocumentTemplateItem.install(self, context, **kw)
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent as \
     ExtensionComponentDocument
@@ -3843,20 +3878,8 @@ class ExtensionTemplateItem(DocumentTemplateItem):
   def _getZodbObjectId(id):
     return 'erp5.component.extension.%s' % id
 
-  @staticmethod
-  def _getFilesystemPath(class_id):
-    from App.config import getConfiguration
-    return os.path.join(getConfiguration().instancehome,
-                        "Extensions",
-                        "%s.py" % class_id)
-
-  @staticmethod
-  def _migrateFromFilesystem(tool,
-                             filesystem_path,
-                             filesystem_file,
-                             class_id):
-    return ExtensionComponentDocument.importFromFilesystem(tool,
-                                                           filesystem_path)
+  def getTemplateIdList(self):
+    return self.getTemplateExtensionIdList()
 
 class TestTemplateItem(FilesystemDocumentTemplateItem):
   local_file_reader_name = staticmethod(readLocalTest)
