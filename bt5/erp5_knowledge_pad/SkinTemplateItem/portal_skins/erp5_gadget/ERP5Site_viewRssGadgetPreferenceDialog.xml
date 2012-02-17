@@ -98,6 +98,7 @@
                         <string>my_preferred_rss_feed</string>
                         <string>my_preferred_username</string>
                         <string>my_preferred_password</string>
+                        <string>my_preferred_show_feed_summary</string>
                       </list>
                     </value>
                 </item>
