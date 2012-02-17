@@ -54,6 +54,22 @@ class ComponentTool(BaseTool):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
+  def _resetModule(self, module):
+    for name, klass in module.__dict__.items():
+      if not (name[0] != '_' and isinstance(klass, ModuleType)):
+        continue
+
+      full_module_name = "%s.%s" % (module.__name__, name)
+
+      LOG("ERP5Type.Tool.ComponentTool", INFO, "Resetting " + full_module_name)
+
+      if name.endswith('_version'):
+        self._resetModule(getattr(module, name))
+
+      # The module must be deleted first
+      del sys.modules[full_module_name]
+      delattr(module, name)
+
   security.declareProtected(Permissions.ModifyPortalContent, 'reset')
   def reset(self, force=True):
     """
@@ -95,16 +111,7 @@ class ComponentTool(BaseTool):
         except AttributeError:
           pass
         else:
-          for name, klass in module.__dict__.items():
-            if name[0] != '_' and isinstance(klass, ModuleType):
-              full_module_name = "erp5.component.%s.%s" % (module_name, name)
-
-              LOG("ERP5Type.Tool.ComponentTool", INFO,
-                  "Resetting " + full_module_name)
-
-              # The module must be deleted first
-              del sys.modules[full_module_name]
-              delattr(module, name)
+          self._resetModule(module)
 
     type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
 

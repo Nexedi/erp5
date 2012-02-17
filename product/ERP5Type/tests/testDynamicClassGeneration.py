@@ -1209,7 +1209,7 @@ ComponentTool._original_reset = ComponentTool.reset
 ComponentTool._reset_performed = False
 
 def assertResetNotCalled(*args, **kwargs):
-  raise AssertionError("reset should only be called once revalidating")
+  raise AssertionError("reset should not have been performed")
 
 def assertResetCalled(self, *args, **kwargs):
   from Products.ERP5Type.Tool.ComponentTool import ComponentTool
@@ -1233,7 +1233,7 @@ class _TestZodbComponent(ERP5TypeTestCase):
     self._component_tool.reset()
 
   @abc.abstractmethod
-  def _newComponent(self, reference, text_content):
+  def _newComponent(self, reference, text_content, version='erp5'):
     pass
 
   @abc.abstractmethod
@@ -1338,12 +1338,114 @@ class _TestZodbComponent(ERP5TypeTestCase):
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')
 
+  def testImportVersionedComponentOnly(self):
+    component = self._newComponent(
+      'TestImportedVersionedComponentOnly',
+      """def foo(*args, **kwargs):
+  return "TestImportedVersionedComponentOnly"
+""")
+
+    component.validate()
+    transaction.commit()
+    self.tic()
+
+    top_module_name = self._getComponentModuleName()
+
+    component_import = self._newComponent(
+      'TestImportVersionedComponentOnly',
+      """from %s.erp5_version.TestImportedVersionedComponentOnly import foo
+
+def bar(*args, **kwargs):
+  return foo(*args, **kwargs)
+""" % top_module_name)
+
+    component_import.validate()
+    transaction.commit()
+    self.tic()
+
+    self.assertModuleImportable('TestImportVersionedComponentOnly')
+    self.assertModuleImportable('erp5_version.TestImportedVersionedComponentOnly')
+
+    top_module = __import__(top_module_name, level=0,
+                            fromlist=[top_module_name])
+
+    self.assertHasAttribute(
+      top_module.erp5_version.TestImportedVersionedComponentOnly, 'foo')
+
+    self.assertEquals(
+      top_module.erp5_version.TestImportedVersionedComponentOnly.foo(),
+      'TestImportedVersionedComponentOnly')
+
+    self.failIfHasAttribute(top_module, 'TestImportedVersionedComponentOnly')
+
+  def testVersionPriority(self):
+    component_erp5_version = self._newComponent(
+      'TestVersionPriority',
+      """def function_foo(*args, **kwargs):
+  return "TestERP5VersionPriority"
+""")
+
+    component_erp5_version.validate()
+    transaction.commit()
+    self.tic()
+
+    component_foo_version = self._newComponent(
+      'TestVersionPriority',
+      """def function_foo(*args, **kwargs):
+  return "TestFooVersionPriority"
+""",
+      'foo')
+
+    component_foo_version.validate()
+    transaction.commit()
+    self.tic()
+
+    self.assertModuleImportable('TestVersionPriority')
+    self.assertModuleImportable('erp5_version.TestVersionPriority')
+    self.failIfModuleImportable('foo_version.TestVersionPriority')
+
+    top_module_name = self._getComponentModuleName()
+    top_module = __import__(top_module_name, level=0,
+                            fromlist=[top_module_name])
+
+    self.assertHasAttribute(top_module.TestVersionPriority, 'function_foo')
+    self.assertEquals(top_module.TestVersionPriority.function_foo(),
+                      "TestERP5VersionPriority")
+
+    from Products.ERP5.ERP5Site import getSite
+    site = getSite()
+    ComponentTool.reset = assertResetCalled
+    priority_tuple = site.getVersionPriority()
+    try:
+      site.setVersionPriority(('foo',) + priority_tuple)
+      transaction.commit()
+      self.tic()
+
+      self.assertEquals(ComponentTool._reset_performed, True)
+
+      self.assertModuleImportable('TestVersionPriority')
+      self.assertModuleImportable('erp5_version.TestVersionPriority')
+      self.assertModuleImportable('foo_version.TestVersionPriority')
+
+      self.assertHasAttribute(top_module.TestVersionPriority, 'function_foo')
+      self.assertEquals(top_module.TestVersionPriority.function_foo(),
+                        "TestFooVersionPriority")
+
+    finally:
+      ComponentTool.reset = ComponentTool._original_reset
+      site.setVersionPriority(priority_tuple)
+      transaction.commit()
+      self.tic()
+
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 
 class TestZodbExtensionComponent(_TestZodbComponent):
-  def _newComponent(self, reference, text_content):
+  def _newComponent(self, reference, text_content, version='erp5'):
     return self._component_tool.newContent(
-      id='%s.%s' % (self._getComponentModuleName(), reference),
+      id='%s.%s.%s' % (self._getComponentModuleName(),
+                       version + '_version',
+                       reference),
+      version=version,
       reference=reference,
       text_content=text_content,
       portal_type='Extension Component')
@@ -1404,10 +1506,12 @@ class TestZodbExtensionComponent(_TestZodbComponent):
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
 class TestZodbDocumentComponent(_TestZodbComponent):
-  def _newComponent(self, reference, text_content):
+  def _newComponent(self, reference, text_content, version='erp5'):
     return self._component_tool.newContent(
-      id='%s.%s' % (self._getComponentModuleName(), reference),
+      id='%s.%s.%s' % (self._getComponentModuleName(),
+                       version + '_version', reference),
       reference=reference,
+      version=version,
       text_content=text_content,
       portal_type='Document Component')
 

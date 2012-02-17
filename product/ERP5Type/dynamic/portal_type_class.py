@@ -42,16 +42,15 @@ from Products.ERP5Type.TransactionalVariable import TransactionalResource
 
 from zLOG import LOG, ERROR, INFO, WARNING, PANIC
 
-def _importClass(classpath, is_zodb_document=False):
+def _importClass(classpath):
   try:
     module_path, class_name = classpath.rsplit('.', 1)
     module = __import__(module_path, {}, {}, (module_path,))
     klass = getattr(module, class_name)
 
-    if not is_zodb_document:
-      # XXX is this required? (here?)
-      setDefaultClassProperties(klass)
-      InitializeClass(klass)
+    # XXX is this required? (here?)
+    setDefaultClassProperties(klass)
+    InitializeClass(klass)
 
     return klass
   except StandardError:
@@ -183,7 +182,6 @@ def generatePortalTypeClass(site, portal_type_name):
     raise AttributeError('Document class is not defined on Portal Type %s' \
             % portal_type_name)
 
-  is_zodb_document = False
   klass = None
   if '.' in type_class:
     type_class_path = type_class
@@ -195,32 +193,23 @@ def generatePortalTypeClass(site, portal_type_name):
     type_class_namespace = document_class_registry.get(type_class, '')
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
-      import erp5.component.document
-      module_info_dict = erp5.component.document._registry_dict.get(type_class,
-                                                                    None)
-      if module_info_dict:
-        type_class_path = "%s.%s" % (module_info_dict['module_name'], type_class)
-        is_zodb_document = True
+      try:
+        klass = getattr(__import__('erp5.component.document.%s' % type_class,
+                                   fromlist=['erp5.component.document'],
+                                   level=0),
+                        type_class)
+      except (ImportError, AttributeError):
+        pass
 
-    if type_class_path is None:
+    if klass is None:
       type_class_path = document_class_registry.get(type_class, None)
       if type_class_path is None:
         raise AttributeError('Document class %s has not been registered:'
                              ' cannot import it as base of Portal Type %s'
                              % (type_class, portal_type_name))
 
-  try:
-    klass = _importClass(type_class_path, is_zodb_document)
-  except ImportError:
-    # A Document Component should always have a class matching its reference,
-    # so this should never happen...
-    if is_zodb_document:
-      type_class_path = document_class_registry.get(type_class, None)
-      if type_class_path is not None:
-        klass = _importClass(type_class_path)
-
-    if klass is None:
-      raise
+  if klass is None:
+    klass = _importClass(type_class_path)
 
   global property_sheet_generating_portal_type_set
 

@@ -101,9 +101,8 @@ class Component(Base):
                                   fromlist=[namespace_fullname])
 
     reference = self.getReference()
-    namespace_module._registry_dict[reference] = {
-      'component': self,
-      'module_name': "%s.%s" % (namespace_fullname, reference)}
+    namespace_module._registry_dict.setdefault(
+      reference, {})[self.getVersion()] = self
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'deleteFromRegistry')

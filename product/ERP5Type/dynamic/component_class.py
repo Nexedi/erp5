@@ -37,6 +37,12 @@ from Products.ERP5.ERP5Site import getSite
 from types import ModuleType
 from zLOG import LOG, INFO
 
+class ComponentVersionPackage(ModuleType):
+  """
+  Component Version package (erp5.component.XXX.VERSION)
+  """
+  __path__ = []
+
 class ComponentDynamicPackage(ModuleType):
   """
   A top-level component is a package as it contains modules, this is required
@@ -106,9 +112,8 @@ class ComponentDynamicPackage(ModuleType):
         # updating the registry
         if component.getValidationState() in ('modified', 'validated'):
           reference = component.getReference()
-          self.__registry_dict[reference] = {
-            'component': component,
-            'module_name': self._namespace_prefix + reference}
+          self.__registry_dict.setdefault(
+            reference, {})[component.getVersion()] = component
 
     return self.__registry_dict
 
@@ -119,20 +124,44 @@ class ComponentDynamicPackage(ModuleType):
     if path or not fullname.startswith(self._namespace_prefix):
       return None
 
+    site = getSite()
+
     # __import__ will first try a relative import, for example
     # erp5.component.XXX.YYY.ZZZ where erp5.component.XXX.YYY is the current
     # Component where an import is done
     name = fullname.replace(self._namespace_prefix, '')
     if '.' in name:
-      return None
+      try:
+        version, name = name.split('.')
+        version = version.replace('_version', '')
+      except ValueError:
+        return None
+
+      try:
+        self._registry_dict[name][version]
+      except KeyError:
+        return None
 
     # Skip components not available, otherwise Products for example could be
     # wrongly considered as importable and thus the actual filesystem class
     # ignored
-    if name not in self._registry_dict:
+    elif (name not in self._registry_dict and
+          name.replace('_version', '') not in site.getVersionPriority()):
       return None
 
     return self
+
+  def _getVersionPackage(self, version):
+    version += '_version'
+    version_package = getattr(self, version, None)
+    if version_package is None:
+      version_package_name = '%s.%s' % (self._namespace, version)
+
+      version_package = ComponentVersionPackage(version_package_name)
+      sys.modules[version_package_name] = version_package
+      setattr(self, version, version_package)
+
+    return version_package
 
   def load_module(self, fullname):
     """
@@ -141,17 +170,60 @@ class ComponentDynamicPackage(ModuleType):
     properly in find_module().
     """
     site = getSite()
-
     component_name = fullname.replace(self._namespace_prefix, '')
-    component_id = '%s.%s' % (self._namespace, component_name)
-    try:
-      component = self._registry_dict[component_name]['component']
-    except KeyError:
-      LOG("ERP5Type.dynamic", INFO,
-          "Could not find %s or it has not been validated or it has not been "
-          "migrated yet?" % component_id)
+    if component_name.endswith('_version'):
+      version = component_name.replace('_version', '')
+      return (version in site.getVersionPriority() and
+              self._getVersionPackage(version) or None)
 
-      return None
+    component_id_alias = None
+    version_package_name = component_name.replace('_version', '')
+    if '.' in component_name:
+      try:
+        version, component_name = component_name.split('.')
+        version = version.replace('_version', '')
+      except ValueError:
+        return None
+
+      try:
+        component = self._registry_dict[component_name][version]
+      except KeyError:
+        LOG("ERP5Type.dynamic", INFO,
+            "Could not find version %s of Component %s" % (version,
+                                                           component_name))
+        return None
+
+    else:
+      try:
+        component_version_dict = self._registry_dict[component_name]
+      except KeyError:
+        LOG("ERP5Type.dynamic", INFO,
+          "Could not find Component " + component_name)
+
+        return None
+
+      for version in site.getVersionPriority():
+        component = component_version_dict.get(version, None)
+        if component is not None:
+          break
+
+      if component is None:
+        return None
+
+      try:
+        module = getattr(getattr(self, version + '_version'), component_name)
+      except AttributeError:
+        pass
+      else:
+        with self._lock:
+          setattr(self._getVersionPackage(version), component_name, module)
+
+        return module
+
+      component_id_alias = '%s.%s' % (self._namespace, component_name)
+
+    component_id = '%s.%s_version.%s' % (self._namespace, version,
+                                         component_name)
 
     with self._lock:
       new_module = ModuleType(component_id, component.getDescription())
@@ -159,19 +231,27 @@ class ComponentDynamicPackage(ModuleType):
       # The module *must* be in sys.modules before executing the code in case
       # the module code imports (directly or indirectly) itself (see PEP 302)
       sys.modules[component_id] = new_module
+      if component_id_alias:
+        sys.modules[component_id_alias] = new_module
 
       # This must be set for imports at least (see PEP 302)
       new_module.__file__ = "<%s>" % component_name
 
       try:
         component.load(new_module.__dict__, validated_only=True)
-      except Exception, e:
+      except:
         del sys.modules[component_id]
+        if component_id_alias:
+          del sys.modules[component_id_alias]
+
         raise
 
       new_module.__path__ = []
       new_module.__loader__ = self
       new_module.__name__ = component_id
 
-      setattr(self, component_name, new_module)
+      setattr(self._getVersionPackage(version), component_name, new_module)
+      if component_id_alias:
+        setattr(self, component_name, new_module)
+
       return new_module
