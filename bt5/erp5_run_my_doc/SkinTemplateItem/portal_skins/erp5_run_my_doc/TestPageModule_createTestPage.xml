@@ -51,22 +51,27 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Creates a Test Page (with no text) and generates the first chapter/slide\n
+  Creates a Test|Web Page (with no text) and generates the first chapter/slide\n
 """\n
+\n
+portal_type = \'Test Page\'\n
+\n
+if context.getPortalType() == "Web Page Module":\n
+  # This should be much more clever\n
+  portal_type = \'Web Page\'\n
 \n
 from Products.ERP5Type.Document import newTempBase\n
 translateString = context.Base_translateString\n
-portal_status_message = translateString("Test Page created. You can now add your first chapter.")\n
+portal_status_message = translateString("%s created. You can now add your first chapter." % portal_type)\n
 \n
-test_page = context.newContent(portal_type = \'Test Page\',\n
-                               title       = title,\n
-                               reference   = \'\'.join(c for c in (\'.\'.join(title.split(\' \'))) if c.isalnum() or c == \'.\'))\n
+page = context.newContent(portal_type=portal_type,\n
+                          title = title)\n
 \n
 session = context.ERP5RunMyDocs_acquireSession()\n
 session[\'title\'] = title\n
 session[\'author\'] = author\n
 session[\'author_mail\'] = author_mail\n
-session[\'test_page_path\'] = test_page.getPath()\n
+session[\'test_page_path\'] = page.getPath()\n
 session[\'listbox\'] = [newTempBase(context.getPortalObject(), \'\',\n
                    title = title,\n
                    uid = \'0\',\n

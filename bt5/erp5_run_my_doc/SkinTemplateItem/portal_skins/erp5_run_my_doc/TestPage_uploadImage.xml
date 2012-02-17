@@ -56,41 +56,38 @@
 \n
 translateString = context.Base_translateString\n
 \n
-msg = \'Slide created.\'\n
+if image_caption in ["", None]:\n
+  image_caption = chapter_title\n
 \n
-if edit_mode == 1:\n
-  msg = \'Slide updated.\'\n
+if edit_mode:\n
+  msg = translateString(\'Slide updated.\')\n
+else:\n
+  msg = translateString(\'Slide created.\')\n
 \n
 def createImage(image_id):\n
   return context.newContent(portal_type = \'Embedded File\',\n
-                                title = image_id,\n
-                                id    = image_id,\n
-                                reference = image_id,\n
-                                short_title = image_id)\n
+                                title=image_caption,\n
+                                id=image_id)\n
 \n
-if slide_type in [\'Screenshot\', \'Illustration\']:\n
-  if edit_mode:\n
-    if image_id is None or not image_id:\n
-      image = createImage(context.TestPage_getNextImageID(chapter_title, slide_type))\n
-    else:\n
+if slide_type in [\'Screenshot\', \'Illustration\'] and upload_image:\n
+  if not(file is None or not file):\n
+    if edit_mode:\n
       try:\n
         image = context.restrictedTraverse(context.getPath() + \'/\' + image_id)\n
       except:\n
-        if not batch_mode:\n
-          image_id = context.TestPage_getNextImageID(chapter_title, slide_type)\n
         image = createImage(image_id)\n
-  else:\n
-    if not batch_mode:\n
-      image_id = context.TestPage_getNextImageID(chapter_title, slide_type)\n
-    image = createImage(image_id)\n
-    msg += \' Image \' + image_id + \' created.\'\n
+        msg += \' Image %s created.\' % image_id\n
+    else:\n
+      image = createImage(image_id)\n
+      msg += \' Image %s created.\' % image_id\n
 \n
-  if not(file is None or not file):\n
-    image.edit(file=file, \n
-               data=file.read(), \n
-               filename=file.filename)\n
 \n
-    msg += \' Image uploaded.\'\n
+  image.edit(file=file)\n
+\n
+  msg += \' Image content uploaded to %s.\' % image.getRelativeUrl()\n
+\n
+  if image_caption not in ["", None]:\n
+    image.setTitle(image_caption)\n
 \n
   if batch_mode:\n
     return image\n
@@ -102,7 +99,7 @@ context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>image_id, file, edit_mode = 0, slide_type = \'Illustration\', chapter_title = \'\', batch_mode = False, **kw</string> </value>
+            <value> <string>image_id, file, edit_mode = 0, slide_type = \'Illustration\', chapter_title = \'\', batch_mode = False, image_caption = None, upload_image = 1, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -61,6 +61,9 @@ from Products.ERP5Type.Document import newTempBase\n
 translateString = context.Base_translateString\n
 portal_status_message = ""\n
 \n
+if image_caption in [None, ""]:\n
+  image_caption = chapter_title\n
+\n
 session = context.ERP5RunMyDocs_acquireSession()\n
 if session.has_key(\'listbox\') and len(session[\'listbox\']) > 0:\n
   listbox = session[\'listbox\']\n
@@ -75,17 +78,12 @@ if slide_type in [\'Illustration\',\'Screenshot\']:\n
   test_page_path = session[\'test_page_path\']\n
   test_page = context.restrictedTraverse(test_page_path)\n
 \n
-if slide_type == \'Illustration\':\n
+if slide_type in [\'Illustration\', \'Screenshot\']:\n
   if image_url != "":\n
     image_id = image_url\n
   else:\n
     image_id = test_page.TestPage_getNextImageID(chapter_title, slide_type)\n
-    image = test_page.TestPage_uploadImage(image_id, file, batch_mode = True)\n
-\n
-if slide_type == \'Screenshot\':\n
-  tested = True\n
-  image_id = test_page.TestPage_getNextImageID(chapter_title, slide_type)\n
-  image = test_page.TestPage_uploadImage(image_id, file, batch_mode = True)\n
+    image = test_page.TestPage_uploadImage(image_id, file, batch_mode=True, image_caption=image_caption)\n
 \n
 listbox.append(newTempBase(context.getPortalObject(),\n
                    \'\',\n
@@ -93,6 +91,7 @@ listbox.append(newTempBase(context.getPortalObject(),\n
                    uid = str(int_index),\n
                    int_index = int_index,\n
                    image_id = image_id,\n
+                   image_title = image_caption,\n
                    slide_type = slide_type,\n
                    text_content = text_content,\n
                    slide_content = slide_content,\n
@@ -109,7 +108,7 @@ return context.Base_redirect(\'TestPageModule_viewChapterCreationWizard\', \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>chapter_title, slide_type, image_url, file, text_content, slide_content, tested, **kw</string> </value>
+            <value> <string>chapter_title, slide_type, image_url, image_caption, file, text_content, slide_content, tested=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

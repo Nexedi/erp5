@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>display_width</string>
+                <string>extra</string>
                 <string>required</string>
               </list>
             </value>
@@ -85,6 +86,10 @@
                     <value> <int>40</int> </value>
                 </item>
                 <item>
+                    <key> <string>extra</string> </key>
+                    <value> <string>required="required"</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
                     <value> <string>my_title</string> </value>
                 </item>
@@ -94,7 +99,7 @@
                 </item>
                 <item>
                     <key> <string>required</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>

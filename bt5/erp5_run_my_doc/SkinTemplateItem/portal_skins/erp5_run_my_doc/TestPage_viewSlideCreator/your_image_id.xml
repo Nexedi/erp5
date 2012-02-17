@@ -84,11 +84,11 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_title</string> </value>
+                    <value> <string>my_view_mode_title</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Base_viewTestPageFieldLibrary</string> </value>
+                    <value> <string>Base_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>required</string> </key>
@@ -100,7 +100,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Image ID</string> </value>
+                    <value> <string>Embedded Image ID</string> </value>
                 </item>
               </dictionary>
             </value>

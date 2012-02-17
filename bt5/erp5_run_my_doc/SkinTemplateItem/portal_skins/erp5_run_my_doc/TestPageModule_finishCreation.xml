@@ -58,7 +58,7 @@
 \n
 from Products.ERP5Type.Document import newTempBase\n
 # Add the last chapter to the listbox\n
-context.TestPageModule_createChapter(chapter_title, slide_type, image_url, \n
+context.TestPageModule_createChapter(chapter_title, slide_type, image_url, image_caption,\n
                                      file, text_content, slide_content, tested, **kw)\n
 \n
 translateString = context.Base_translateString\n
@@ -105,7 +105,7 @@ for chapter in listbox[1:]:\n
   <h1>"""+ title +"""</h1>"""\n
   if not(image_id is None or not image_id):\n
     text_content +=\'\'\'\n
-  <img type="image/svg+xml" alt="" src="\'\'\'+ image_id + \'\'\'?format=" width="90%"/>\'\'\'\n
+  <img type="image/svg+xml" title="\'\'\' + chapter.image_title + \'\'\'" alt="\'\'\' + chapter.image_title + \'\'\'" src="\'\'\'+ image_id + \'\'\'?format=" width="90%"/>\'\'\'\n
   if not(slide_content is None or not slide_content):\n
     text_content += """\n
   """+ slide_content\n
@@ -166,7 +166,7 @@ return test_page.Base_redirect(\'view\', \n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>chapter_title, slide_type, image_url, file, text_content, slide_content, tested, **kw</string> </value>
+            <value> <string>chapter_title, slide_type, image_url, image_caption, file, text_content, slide_content, tested=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

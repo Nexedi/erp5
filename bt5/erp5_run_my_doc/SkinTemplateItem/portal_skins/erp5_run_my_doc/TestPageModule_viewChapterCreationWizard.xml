@@ -87,6 +87,8 @@
                         <string>your_title</string>
                         <string>your_chapter_title</string>
                         <string>your_slide_type</string>
+                        <string>your_image_explanation</string>
+                        <string>your_image_caption</string>
                         <string>your_image_url</string>
                         <string>your_file</string>
                         <string>your_slide_content</string>

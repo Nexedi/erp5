@@ -57,7 +57,7 @@
 """\n
 \n
 path = context.getPath()\n
-image_id = title + "_" + slide_type\n
+image_id = title.lower() + "_" + slide_type.lower()\n
 \n
 # We replace all the whitespaces by dots\n
 image_id = \'\'.join(c for c in (\'_\'.join(image_id.split(\' \'))) if c.isalnum() or c == \'_\')\n
