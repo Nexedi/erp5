@@ -49,6 +49,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.\n
 */\n
 var textContent, testPageHTML, body;\n
 \n
+function isUrl(s) {\n
+  var regexp = /(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-\\/]))?/\n
+  return regexp.test(s);\n
+}\n
+\n
 function cleanForPrince(){\n
   var temp = $(\'iframe\', parent.document).contents().children().clone();\n
   $(\'script\', temp).remove();\n
@@ -227,7 +232,7 @@ function convertChapter(link, container, first, isChapter, chapterCounter, partC
           var img = images[j];\n
           var div = $(\'<div>\');\n
           var caption = $(\'<p>\').addClass(\'caption\');\n
-          if((/^http/).test($(img).attr(\'src\')) == false) {\n
+          if(isUrl($(img).attr(\'src\')) == false) {\n
            $(img).attr(\'src\', link + $(img).attr(\'src\'));\n
           }\n
           $(img).before(div);\n
