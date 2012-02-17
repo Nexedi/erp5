@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts23095087.4</string> </value>
+            <value> <string>ts29466233.61</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -406,6 +406,11 @@ div.block div.worklist_list ul li a:hover{\n
 /* Some gadgets share same Document_getSummaryAsHTML or RssFeed_getSummaryAsHTML */\n
 div.document-gadget-quick-preview div.teaser{\n
   cursor: pointer;\n
+  margin-bottom: 3px;\n
+}\n
+\n
+div.document-gadget-quick-preview div.teaser img{\n
+  vertical-align:top;\n
 }\n
 \n
 div.document-gadget-quick-preview span.document-title,\n
@@ -496,7 +501,7 @@ div.gadget-rss-reader .body {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>8240</int> </value>
+            <value> <int>8337</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

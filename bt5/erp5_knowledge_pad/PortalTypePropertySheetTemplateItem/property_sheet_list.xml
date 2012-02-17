@@ -6,4 +6,7 @@
   <item>DefaultImage</item>
   <item>Gadget</item>
  </portal_type>
+ <portal_type id="Knowledge Box">
+  <item>Gadget</item>
+ </portal_type>
 </property_sheet_list>

@@ -65,7 +65,7 @@
                     dummy python: request.form.update(dict(box_relative_url=box_relative_url));\n
                     edit_form_id gadget/getEditFormId;\n
                     view_form_id gadget/getViewFormId;\n
-                    render_type gadget/getRenderType;\n
+                    render_type python: test(box.getRenderType() is not None, box.getRenderType(), gadget.getRenderType());\n
                     is_asynchronous_gadget python: render_type == \'asynchronous\';\n
                     is_gadget_visible python: gadget is not None and gadget_state!=\'invisible\';">\n
 \n

@@ -54,11 +54,16 @@
   <div class="document-gadget-quick-preview">\n
 \n
     <div class="teaser"\n
+         tal:define="is_external_rss_image_available python: image not in ((), None, [])"\n
          tal:attributes="class python: test(is_read, \'teaser read\', \'teaser unread\');\n
                          onclick string:if(this.className!=\'teaser read\'){this.className=\'teaser read\';;$.get(\'Base_setRssItemReadInSelection\', {\'selection_name\':\'${selection_name}\',\'item\':\'${md5}\'})};;$(\'#${dom_id}\').toggle();">\n
       <img class="thumbnail-image"\n
-           tal:condition="python: image not in ((), None, [])"\n
+           tal:condition="is_external_rss_image_available"\n
            tal:attributes="src python: image[0]" alt="Thumbnail"/>\n
+\n
+      <img tal:condition="not: is_external_rss_image_available"\n
+           src="web_page.png"/>\n
+\n
       <span class="document-title"\n
             tal:content="title"/> - \n
       <span class="modification-date"\n
