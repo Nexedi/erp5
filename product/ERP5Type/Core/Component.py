@@ -64,7 +64,7 @@ class Component(Base):
   security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
   def checkConsistency(self, text_content=None, *args, **kw):
     """
-    XXX-arnau: should probably in a separate Constraint class
+    XXX-arnau: should probably be in a separate Constraint class?
     """
     if text_content is None:
       text_content = self.getTextContent()
@@ -79,15 +79,22 @@ class Component(Base):
     try:
       self.load(text_content=text_content)
     except SyntaxError, e:
-      message = "%s (line: %d, column: %d)" % (e.msg, e.lineno, e.offset)
+      mapping = dict(error_message=str(e),
+                     line_number=e.lineno,
+                     column_number=e.offset)
+
+      message = "Syntax error in source code: ${error_message} " \
+          "(line: ${line_number}, column: ${column_number})"
+
     except Exception, e:
-      message = str(e)
+      mapping = dict(message=str(e))
+      message = "Source code: ${error_message}"
 
     if message:
       return [ConsistencyMessage(self,
                                  object_relative_url=self.getRelativeUrl(),
-                                 message="Source Code: %s" % message,
-                                 mapping={})]
+                                 message=message,
+                                 mapping=mapping)]
 
     return []
 
