@@ -7063,7 +7063,8 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
 
     document_object = self.importFromFilesystem(
       component_tool,
-      os.path.join(sequence['document_path']))
+      sequence['document_title'],
+      'erp5')
 
     sequence.edit(document_id=document_object.getId())
 

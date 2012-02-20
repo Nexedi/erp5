@@ -215,30 +215,6 @@ class Component(Base):
   def _getFilesystemPath():
     raise NotImplementedError
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'importAllFromFilesystem')
-  @classmethod
-  def importAllFromFilesystem(cls, context, erase_existing=False):
-    """
-    Try to import all Components and returns error as a dict if any
-    """
-    import os.path
-    path_pattern = "%s%s*.py" % (cls._getFilesystemPath(), os.path.sep)
-
-    LOG("ERP5Type.Core.Component", INFO, "Importing from %s" % path_pattern)
-
-    import glob
-    failed_import_dict = {}
-    for path in glob.iglob(path_pattern):
-      try:
-        cls.importFromFilesystem(context, path, erase_existing)
-      except Exception, e:
-        failed_import_dict[path] = str(e)
-      else:
-        LOG("ERP5Type.Core.Component", INFO, "Imported %s" % path)
-
-    return failed_import_dict
-
   @staticmethod
   def _getDynamicModuleNamespace():
     raise NotImplementedError
@@ -246,22 +222,25 @@ class Component(Base):
   security.declareProtected(Permissions.ModifyPortalContent,
                             'importFromFilesystem')
   @classmethod
-  def importFromFilesystem(cls, context, path, erase_existing=False):
+  def importFromFilesystem(cls, context, reference, version,
+                           erase_existing=False):
     """
     Import a Component from the given path into ZODB after checking that the
     source code is valid
     """
-    import os.path
-    class_name = os.path.basename(path).replace('.py', '')
-    id = '%s.%s' % (cls._getDynamicModuleNamespace(), class_name)
+    object_id = '%s.%s.%s' % (cls._getDynamicModuleNamespace(), version,
+                              reference)
 
-    # XXX-arnau: not efficient at all
-    if id in context:
+    obj = context._getOb(object_id, None)
+    if obj is not None:
       if not erase_existing:
-        return
+        obj.validate()
+        return obj
 
-      context.deleteContent(id)
+      context.deleteContent(object_id)
 
+    import os.path
+    path = os.path.join(cls._getFilesystemPath(), reference + '.py')
     with open(path) as f:
       source_code = f.read()
 
@@ -269,8 +248,9 @@ class Component(Base):
     namespace_dict = {}
     exec source_code in namespace_dict
 
-    new_component = context.newContent(id=id,
-                                       reference=class_name,
+    new_component = context.newContent(id=object_id,
+                                       reference=reference,
+                                       version=version,
                                        text_content=source_code,
                                        portal_type=cls.portal_type)
 

@@ -5741,6 +5741,61 @@ Business Template is a set of definitions, such as skins, portal types and categ
       setattr(self, 'template_portal_type_base_category', ())
       return
 
+    security.declareProtected(Permissions.ModifyPortalContent,
+                              'migrateAllComponentFromFilesystem')
+    def migrateAllComponentFromFilesystem(self,
+                                          version_priority,
+                                          erase_existing=False,
+                                          **kw):
+      component_tool = self.getPortalObject().portal_components
+      failed_import_dict = {}
+
+      # XXX-arnau: dirty because of copy/paste but will be refactor
+      # later with Products anyway...
+      from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
+      document_id_list = self.getTemplateDocumentIdList()
+      for i, reference in enumerate(document_id_list):
+        try:
+          obj = DocumentComponent.importFromFilesystem(component_tool,
+                                                       reference,
+                                                       version_priority,
+                                                       erase_existing)
+        except Exception, e:
+          failed_import_dict[reference] = str(e)
+        else:
+          document_id_list[i] = obj.getId()
+
+      self.setTemplateDocumentIdList(document_id_list)
+
+      from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
+      extension_id_list = self.getTemplateExtensionIdList()
+      for i, reference in enumerate(extension_id_list):
+        try:
+          obj = ExtensionComponent.importFromFilesystem(component_tool,
+                                                        reference,
+                                                        version_priority,
+                                                        erase_existing)
+        except Exception, e:
+          failed_import_dict[reference] = str(e)
+        else:
+          extension_id_list[i] = obj.getId()
+
+      self.setTemplateExtensionIdList(extension_id_list)
+
+      if failed_import_dict:
+        failed_import_formatted_list = []
+        for name, error in failed_import_dict.iteritems():
+          failed_import_formatted_list.append("%s (%s)" % (name, error))
+
+        message = "The following component could not be imported: %s" % \
+            ', '.join(failed_import_formatted_list)
+      else:
+        message = "All components were successfully imported " \
+            "from filesystem to ZODB."
+
+      return self.Base_redirect('view',
+                                keep_items={'portal_status_message': message})
+
 # Block acquisition on all _item_name_list properties by setting
 # a default class value to None
 for key in BusinessTemplate._item_name_list:

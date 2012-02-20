@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2011 Nexedi SA and Contributors. All Rights Reserved.
-#                     Jean-Paul Smets <jp@nexedi.com>
+# Copyright (c) 2011-2012 Nexedi SA and Contributors. All Rights Reserved.
+#                         Jean-Paul Smets <jp@nexedi.com>
+#                         Arnaud Fontaine <arnaud.fontaine@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -43,9 +44,9 @@ from zLOG import LOG, INFO, WARNING
 _last_sync = -1
 class ComponentTool(BaseTool):
   """
-    This tool provides methods to load the the different types
-    of components of the ERP5 framework: Document classes, interfaces,
-    mixin classes, fields, accessors, etc.
+  This tool provides methods to load the the different types of
+  components of the ERP5 framework: Document classes, interfaces,
+  mixin classes, fields, accessors, etc.
   """
   id = "portal_components"
   meta_type = "ERP5 Component Tool"
@@ -129,43 +130,3 @@ class ComponentTool(BaseTool):
     if key not in tv:
       tv[key] = None
       transaction.get().addBeforeCommitHook(self.reset)
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'createAllComponentFromFilesystem')
-  def createAllComponentFromFilesystem(self, erase_existing=False,
-                                       REQUEST=None):
-    """
-    XXX-arnau: only bt5 Extensions and Documents for now
-    """
-    portal = self.getPortalObject()
-
-    import erp5.portal_type
-    type_tool = portal.portal_types
-    failed_import_dict = {}
-    for content_portal_type in getattr(type_tool,
-                                       self.portal_type).getTypeAllowedContentTypeList():
-      try:
-        failed_import_dict.update(
-          getattr(erp5.portal_type,
-                  content_portal_type).importAllFromFilesystem(self,
-                                                               erase_existing=erase_existing))
-      # XXX-arnau: NotImplementedErrror only until everything has been
-      # implemented
-      except (NotImplementedError, AttributeError):
-        LOG("ERP5Type.Tool.ComponentTool", WARNING, "Could not import %ss" % \
-              content_portal_type)
-
-    if REQUEST:
-      if failed_import_dict:
-        failed_import_formatted_list = []
-        for name, error in failed_import_dict.iteritems():
-          failed_import_formatted_list.append("%s (%s)" % (name, error))
-
-        message = "The following component could not be imported: %s" % \
-            ', '.join(failed_import_formatted_list)
-      else:
-        message = "All components were successfully imported " \
-            "from filesystem to ZODB."
-
-      return self.Base_redirect('view',
-                                keep_items={'portal_status_message': message})
