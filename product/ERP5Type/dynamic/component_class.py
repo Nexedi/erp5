@@ -64,7 +64,7 @@ class ComponentDynamicPackage(ModuleType):
   # Necessary otherwise imports will fail because an object is considered a
   # package only if __path__ is defined
   __path__ = []
-  __registry_dict = None
+  __registry_dict = {}
 
   def __init__(self, namespace, portal_type):
     super(ComponentDynamicPackage, self).__init__(namespace)
@@ -93,7 +93,7 @@ class ComponentDynamicPackage(ModuleType):
     like erp5.component.extension.VERSION.REFERENCE perhaps but there should
     be a a way to specify priorities such as portal_skins maybe?
     """
-    if self.__registry_dict is None:
+    if not self.__registry_dict:
       try:
         component_tool = getSite().portal_components
       # XXX-arnau: When installing ERP5 site, erp5_core_components has not
@@ -116,6 +116,9 @@ class ComponentDynamicPackage(ModuleType):
             reference, {})[component.getVersion()] = component
 
     return self.__registry_dict
+
+  def _resetRegistry(self):
+    self.__registry_dict.clear()
 
   def find_module(self, fullname, path=None):
     # Ignore imports with a path which are filesystem-only and any

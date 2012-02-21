@@ -98,31 +98,6 @@ class Component(Base):
 
     return []
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'addToRegistry')
-  def addToRegistry(self):
-    """
-    Add the Component to its appropriate module registry
-    """
-    namespace_fullname = self._getDynamicModuleNamespace()
-    namespace_module = __import__(namespace_fullname, {}, {},
-                                  fromlist=[namespace_fullname])
-
-    reference = self.getReference()
-    namespace_module._registry_dict.setdefault(
-      reference, {})[self.getVersion()] = self
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'deleteFromRegistry')
-  def deleteFromRegistry(self):
-    """
-    Delete the Component from its appropriate module registry
-    """
-    namespace_fullname = self._getDynamicModuleNamespace()
-    namespace_module = __import__(namespace_fullname, {}, {},
-                                  fromlist=[namespace_fullname])
-
-    del namespace_module._registry_dict[self.getReference()]
-
   def _setTextContent(self, text_content):
     """
     When the validation state is already 'validated', set the new value to

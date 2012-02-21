@@ -112,6 +112,7 @@ class ComponentTool(BaseTool):
         except AttributeError:
           pass
         else:
+          module._resetRegistry()
           self._resetModule(module)
 
     type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()

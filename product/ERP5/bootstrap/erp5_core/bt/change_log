@@ -1,3 +1,6 @@
+2012-02-21 arnaud.fontaine
+* Do not update automatically the component module registry for reliability's sake.
+
 2012-02-20 arnaud.fontaine
 * Add Business Template action to import Document and Extensions automatically after giving the version.
 
