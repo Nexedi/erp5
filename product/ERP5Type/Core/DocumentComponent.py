@@ -27,11 +27,11 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Core.Component import Component
+from Products.ERP5Type.mixin.component import ComponentMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
-class DocumentComponent(Component):
+class DocumentComponent(ComponentMixin):
   # CMF Type Definition
   meta_type = 'ERP5 Document Component'
   portal_type = 'Document Component'

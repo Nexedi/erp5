@@ -39,11 +39,7 @@ from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
 from zLOG import LOG, INFO
 
-class Component(Base):
-  # CMF Type Definition
-  meta_type = 'ERP5 Component'
-  portal_type = 'Component'
-
+class ComponentMixin(Base):
   isPortalContent = 1
   isRADContent = 1
   isDelivery = ConstantGetter('isDelivery', value=True)
@@ -132,7 +128,7 @@ class Component(Base):
         previous_validation_workflow['error_message'] = ''
         previous_validation_workflow['text_content'] = ''
       else:
-        super(Component, self)._setTextContent(text_content)
+        super(ComponentMixin, self)._setTextContent(text_content)
         self.validate()
 
         if validation_state == 'modified':
@@ -142,7 +138,7 @@ class Component(Base):
           previous_validation_workflow['error_message'] = ''
           previous_validation_workflow['text_content'] = ''
     else:
-      return super(Component, self)._setTextContent(text_content)
+      return super(ComponentMixin, self)._setTextContent(text_content)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTextContent')
@@ -161,7 +157,7 @@ class Component(Base):
       if text_content_non_validated:
         return text_content_non_validated
 
-    return super(Component, self).getTextContent()
+    return super(ComponentMixin, self).getTextContent()
 
   def _getErrorMessage(self):
     current_workflow = self.workflow_history['component_validation_workflow'][-1]
