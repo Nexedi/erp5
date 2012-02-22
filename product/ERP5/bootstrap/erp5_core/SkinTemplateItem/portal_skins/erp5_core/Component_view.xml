@@ -106,7 +106,8 @@
                     <value>
                       <list>
                         <string>my_description</string>
-                        <string>my_translated_validation_state_title_with_error_message</string>
+                        <string>my_translated_validation_state_title</string>
+                        <string>my_error_message_list</string>
                       </list>
                     </value>
                 </item>

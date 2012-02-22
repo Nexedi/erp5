@@ -111,9 +111,9 @@ class ComponentDynamicPackage(ModuleType):
         # be handled by component_validation_workflow which will take care of
         # updating the registry
         if component.getValidationState() in ('modified', 'validated'):
-          reference = component.getReference()
-          self.__registry_dict.setdefault(
-            reference, {})[component.getVersion()] = component
+          reference = component.getReference(validated_only=True)
+          version = component.getVersion(validated_only=True)
+          self.__registry_dict.setdefault(reference, {})[version] = component
 
     return self.__registry_dict
 

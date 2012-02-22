@@ -32,6 +32,7 @@
 from __future__ import absolute_import
 
 from AccessControl import ClassSecurityInfo
+from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
@@ -39,7 +40,7 @@ from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
 from zLOG import LOG, INFO
 
-class ComponentMixin(Base):
+class ComponentMixin(PropertyRecordableMixin, Base):
   isPortalContent = 1
   isRADContent = 1
   isDelivery = ConstantGetter('isDelivery', value=True)
@@ -58,121 +59,166 @@ class ComponentMixin(Base):
                      'TextDocument')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
-  def checkConsistency(self, text_content=None, *args, **kw):
+  def checkConsistency(self, *args, **kw):
     """
     XXX-arnau: should probably be in a separate Constraint class?
     """
-    if text_content is None:
-      text_content = self.getTextContent()
+    error_list = []
+    object_relative_url = self.getRelativeUrl()
 
+    reference = self.getReference()
+    if not reference:
+      error_list.append(
+        ConsistencyMessage(self,
+                           object_relative_url,
+                           message="Reference must be set",
+                           mapping={}))
+
+    elif (reference.endswith('_version') or
+          reference[0] == '_' or
+          reference in ('find_module', 'load_module')):
+      error_list.append(
+        ConsistencyMessage(self,
+                           object_relative_url,
+                           message="Reference cannot end with '_version' or "\
+                             "start with '_' or be equal to find_module or "\
+                             "load_module",
+                           mapping={}))
+
+    version = self.getVersion()
+    if not version:
+      error_list.append(ConsistencyMessage(self,
+                                           object_relative_url,
+                                           message="Version must be set",
+                                           mapping={}))
+    elif version[0] == '_':
+      error_list.append(ConsistencyMessage(self,
+                                           object_relative_url,
+                                           message="Version cannot start with '_'",
+                                           mapping={}))
+
+    text_content = self.getTextContent()
     if not text_content:
-      return [ConsistencyMessage(self,
-                                 object_relative_url=self.getRelativeUrl(),
-                                 message="No source code",
-                                 mapping={})]
-
-    message = None
-    try:
-      self.load(text_content=text_content)
-    except SyntaxError, e:
-      mapping = dict(error_message=str(e),
-                     line_number=e.lineno,
-                     column_number=e.offset)
-
-      message = "Syntax error in source code: ${error_message} " \
-          "(line: ${line_number}, column: ${column_number})"
-
-    except Exception, e:
-      mapping = dict(message=str(e))
-      message = "Source code: ${error_message}"
-
-    if message:
-      return [ConsistencyMessage(self,
-                                 object_relative_url=self.getRelativeUrl(),
-                                 message=message,
-                                 mapping=mapping)]
-
-    return []
-
-  def _setTextContent(self, text_content):
-    """
-    When the validation state is already 'validated', set the new value to
-    'text_content_non_validated' property instead of 'text_content' for the
-    following reasons:
-
-    1/ It allows to validate the source code through Component validation
-       workflow rather than after each edition;
-
-    2/ It avoids dirty hacks to call checkConsistency upon edit and deal with
-       error messages, instead use workflow as it makes more sense.
-
-    Then, when the user revalidates the Component through a workflow action,
-    'text_content_non_validated' property is copied back to 'text_content'.
-
-    XXX-arnau: the workflow history bit is really ugly and should be moved to
-               an interaction workflow instead
-    """
-    validation_state = self.getValidationState()
-    if validation_state in ('validated', 'modified'):
-      error_message_list = self.checkConsistency(text_content=text_content)
-      if error_message_list:
-        self.modified()
-
-        validation_workflow = self.workflow_history['component_validation_workflow']
-
-        last_validation_workflow = validation_workflow[-1]
-        last_validation_workflow['error_message'] = error_message_list[0]
-        last_validation_workflow['text_content'] = text_content
-
-        previous_validation_workflow = validation_workflow[-2]
-        previous_validation_workflow['error_message'] = ''
-        previous_validation_workflow['text_content'] = ''
-      else:
-        super(ComponentMixin, self)._setTextContent(text_content)
-        self.validate()
-
-        if validation_state == 'modified':
-          # XXX-arnau: copy/paste
-          validation_workflow = self.workflow_history['component_validation_workflow']
-          previous_validation_workflow = validation_workflow[-2]
-          previous_validation_workflow['error_message'] = ''
-          previous_validation_workflow['text_content'] = ''
+      error_list.append(
+          ConsistencyMessage(self,
+                             object_relative_url=object_relative_url,
+                             message="No source code",
+                             mapping={}))
     else:
-      return super(ComponentMixin, self)._setTextContent(text_content)
+      message = None
+      try:
+        self.load(text_content=text_content)
+      except SyntaxError, e:
+        mapping = dict(error_message=str(e),
+                       line_number=e.lineno,
+                       column_number=e.offset)
+
+        message = "Syntax error in source code: ${error_message} " \
+            "(line: ${line_number}, column: ${column_number})"
+
+      except Exception, e:
+        mapping = dict(error_message=str(e))
+        message = "Source code: ${error_message}"
+
+      if message:
+        error_list.append(
+          ConsistencyMessage(self,
+                             object_relative_url=self.getRelativeUrl(),
+                             message=message,
+                             mapping=mapping))
+
+    return error_list
+
+  def _recordPropertyDecorator(accessor_name, property_name):
+    def inner(self, property_value):
+      """
+      Everytime either 'reference', 'version' or 'text_content' are
+      modified when a Component is in modified or validated state, the
+      Component is set to modified state by component interaction
+      workflow, then in this method, the current property value is
+      recorded in order to handle any error returned when checking
+      consistency before the new value is set. At the end, through
+      component interaction workflow, the Component is validated only
+      if checkConsistency returns no error
+
+      The recorded property will be used upon loading the Component
+      whereas the new value set is displayed in Component view.
+      """
+      if self.getValidationState() in ('modified', 'validated'):
+        self.recordProperty(property_name)
+
+      return getattr(super(ComponentMixin, self), accessor_name)(property_value)
+
+    return inner
+
+  security.declareProtected(Permissions.ModifyPortalContent, '_setReference')
+  _setReference = _recordPropertyDecorator('_setReference', 'reference')
+
+  security.declareProtected(Permissions.ModifyPortalContent, '_setVersion')
+  _setVersion = _recordPropertyDecorator('_setVersion', 'version')
+
+  security.declareProtected(Permissions.ModifyPortalContent, '_setTextContent')
+  _setTextContent = _recordPropertyDecorator('_setTextContent', 'text_content')
+
+  def checkConsistencyAndValidate(self):
+    """
+    When a Component is in validated or modified validation state and
+    it is modified, modified state is set then this checks whether the
+    Component can be validated again if checkConsistency returns no
+    error
+    """
+    error_list = self.checkConsistency()
+    if error_list:
+      workflow = self.workflow_history['component_validation_workflow'][-1]
+      workflow['error_list'] = error_list
+    else:
+      self.clearRecordedProperty('reference')
+      self.clearRecordedProperty('version')
+      self.clearRecordedProperty('text_content')
+      self.validate()
+
+  def _getRecordedPropertyDecorator(accessor_name, property_name):
+    def inner(self, validated_only=False):
+      """
+      When validated_only is True, then returns the property recorded if the
+      Component has been modified but there was an error upon consistency
+      checking
+      """
+      if validated_only:
+        try:
+          return self.getRecordedProperty(property_name)
+        # AttributeError when this property has never been recorded before
+        # (_recorded_property_dict) and KeyError if the property has been
+        # recorded before but is not anymore
+        except (AttributeError, KeyError):
+          pass
+
+      return getattr(super(ComponentMixin, self), accessor_name)()
+
+    return inner
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getReference')
+  getReference = _getRecordedPropertyDecorator('getReference', 'reference')
+
+  security.declareProtected(Permissions.AccessContentsInformation, 'getVersion')
+  getVersion = _getRecordedPropertyDecorator('getVersion', 'version')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getTextContent')
-  def getTextContent(self, validated_only=False):
-    """
-    Return the source code of the validated source code (if validated_only is
-    True), meaningful when generating the Component, or the non-validated
-    source code (when a Component is modified when it has already been
-    validated), meaningful when editing a Component or checking consistency
-    """
-    if not validated_only:
-      text_content_non_validated = \
-          self.workflow_history['component_validation_workflow'][-1].get('text_content',
-                                                                         None)
-
-      if text_content_non_validated:
-        return text_content_non_validated
-
-    return super(ComponentMixin, self).getTextContent()
-
-  def _getErrorMessage(self):
-    current_workflow = self.workflow_history['component_validation_workflow'][-1]
-    return current_workflow['error_message']
+  getTextContent = _getRecordedPropertyDecorator('getTextContent',
+                                                 'text_content')
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTranslatedValidationStateTitleWithErrorMessage')
-  def getTranslatedValidationStateTitleWithErrorMessage(self):
-    validation_state_title = self.getTranslatedValidationStateTitle()
-    error_message = self._getErrorMessage()
-    if error_message:
-      return "%s (%s)" % (validation_state_title,
-                          str(error_message.getTranslatedMessage()))
-
-    return validation_state_title
+                            'getErrorMessageList')
+  def getErrorMessageList(self):
+    """
+    Return the checkConsistency errors which may have occurred when
+    the Component has been modified after being validated once
+    """
+    current_workflow = self.workflow_history['component_validation_workflow'][-1]
+    return [str(error.getTranslatedMessage())
+            for error in current_workflow['error_list']]
 
   security.declareProtected(Permissions.ModifyPortalContent, 'load')
   def load(self, namespace_dict={}, validated_only=False, text_content=None):

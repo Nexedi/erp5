@@ -1,3 +1,7 @@
+2012-02-22 arnaud.fontaine
+* Split up state and error message into two separate fields.
+* Always set the Component state to modified upon modification, then check the consistency.
+
 2012-02-21 arnaud.fontaine
 * Do not update automatically the component module registry for reliability's sake.
 
