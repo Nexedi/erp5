@@ -222,16 +222,18 @@ class ComponentMixin(Base):
     with open(path) as f:
       source_code = f.read()
 
-    # Try to load it first
-    namespace_dict = {}
-    exec source_code in namespace_dict
-
+    # Checking that the source code is syntactically correct is not
+    # needed when importing from filesystem, moreover errors may occur
+    # if in the same transaction a Component is created and another
+    # one depending upon the former...
     new_component = context.newContent(id=object_id,
                                        reference=reference,
                                        version=version,
                                        text_content=source_code,
                                        portal_type=cls.portal_type)
 
+    # Validate the Component once it is imported so it can be used
+    # straightaway as there should be no error
     new_component.validate()
 
     # XXX-arnau: is it really safe?
