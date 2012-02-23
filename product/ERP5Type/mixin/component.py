@@ -264,6 +264,38 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   def _getDynamicModuleNamespace():
     raise NotImplementedError
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
+  def PUT(self, REQUEST, RESPONSE):
+    """
+    Handle HTTP PUT requests for FTP/Webdav upload, which is object
+    dependent. For now only set the text content...
+    """
+    self.dav__init(REQUEST, RESPONSE)
+    self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+
+    text_content = REQUEST.get('BODY', None)
+    if text_content is None:
+      RESPONSE.setStatus(304)
+    else:
+      self.setTextContent(text_content)
+      RESPONSE.setStatus(204)
+
+    return RESPONSE
+
+  security.declareProtected(Permissions.ModifyPortalContent, 'manage_FTPput')
+  manage_FTPput = PUT
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'manage_FTPget')
+  def manage_FTPget(self):
+    """
+    Get source for FTP/Webdav. The default implementation of GET for Webdav,
+    available in webdav.Resource, calls manage_FTPget
+
+    XXX-arnau: encoding?
+    """
+    return self.getTextContent()
+
   security.declareProtected(Permissions.ModifyPortalContent,
                             'importFromFilesystem')
   @classmethod
