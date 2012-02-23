@@ -101,7 +101,6 @@ class ComponentDynamicPackage(ModuleType):
       except AttributeError:
         return {}
 
-      self.__registry_dict = {}
       # XXX-arnau: contentValues should not be used as there may be a large
       # number of objects, but as this is done only once, that should perhaps
       # not be a problem after all, and using the Catalog is too risky as it
