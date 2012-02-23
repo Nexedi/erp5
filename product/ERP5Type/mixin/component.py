@@ -143,6 +143,17 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                      'Reference',
                      'TextDocument')
 
+  _message_reference_not_set = "Reference must be set"
+  _message_invalid_reference = "Reference cannot end with '_version' or "\
+      "start with '_' or be equal to find_module or load_module"
+
+  _message_version_not_set = "Version must be set"
+  _message_invalid_version = "Version cannot start with '_'"
+  _message_text_content_not_set = "No source code"
+  _message_invalid_text_content = "Source code: ${error_message}"
+  _message_text_content_syntax_error = "Syntax error in source code: "\
+      "${error_message} (line: ${line_number}, column: ${column_number})"
+
   security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
   def checkConsistency(self, *args, **kw):
     """
@@ -156,7 +167,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
       error_list.append(
         ConsistencyMessage(self,
                            object_relative_url,
-                           message="Reference must be set",
+                           message=self._message_reference_not_set,
                            mapping={}))
 
     elif (reference.endswith('_version') or
@@ -165,21 +176,19 @@ class ComponentMixin(PropertyRecordableMixin, Base):
       error_list.append(
         ConsistencyMessage(self,
                            object_relative_url,
-                           message="Reference cannot end with '_version' or "\
-                             "start with '_' or be equal to find_module or "\
-                             "load_module",
+                           message=self._message_invalid_reference,
                            mapping={}))
 
     version = self.getVersion()
     if not version:
       error_list.append(ConsistencyMessage(self,
                                            object_relative_url,
-                                           message="Version must be set",
+                                           message=self._message_version_not_set,
                                            mapping={}))
     elif version[0] == '_':
       error_list.append(ConsistencyMessage(self,
                                            object_relative_url,
-                                           message="Version cannot start with '_'",
+                                           message=self._message_invalid_version,
                                            mapping={}))
 
     text_content = self.getTextContent()
@@ -187,7 +196,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
       error_list.append(
           ConsistencyMessage(self,
                              object_relative_url=object_relative_url,
-                             message="No source code",
+                             message=self._message_text_content_not_set,
                              mapping={}))
     else:
       message = None
@@ -198,12 +207,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                        line_number=e.lineno,
                        column_number=e.offset)
 
-        message = "Syntax error in source code: ${error_message} " \
-            "(line: ${line_number}, column: ${column_number})"
+        message = self._message_text_content_syntax_error
 
       except Exception, e:
         mapping = dict(error_message=str(e))
-        message = "Source code: ${error_message}"
+        message = self._message_invalid_text_content
 
       if message:
         error_list.append(
@@ -240,7 +248,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     current_workflow = self.workflow_history['component_validation_workflow'][-1]
     return [str(error.getTranslatedMessage())
-            for error in current_workflow['error_list']]
+            for error in current_workflow.get('error_list', [])]
 
   security.declareProtected(Permissions.ModifyPortalContent, 'load')
   def load(self, namespace_dict={}, validated_only=False, text_content=None):
