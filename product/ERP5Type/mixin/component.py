@@ -71,7 +71,8 @@ class RecordablePropertyMetaClass(ExtensionClass):
         The recorded property will be used upon loading the Component whereas
         the new value set is displayed in Component view.
         """
-        if self.getValidationState() in ('modified', 'validated'):
+        if (self.getValidationState() == 'modified' and
+            not self.isPropertyRecorded(property_name)):
           self.recordProperty(property_name)
 
         return getattr(super(ComponentMixin, self), accessor_name)(property_value)
