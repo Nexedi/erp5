@@ -40,7 +40,91 @@ from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
 from zLOG import LOG, INFO
 
+_recorded_property_name_tuple = (
+  'reference',
+  'version',
+  'text_content')
+
+from ExtensionClass import ExtensionClass
+from Products.ERP5Type.Utils import convertToUpperCase
+
+class RecordablePropertyMetaClass(ExtensionClass):
+  """
+  Meta-class for extension classes with registered setters and getters wrapped
+  to respectively record and get property through PropertyRecordableMixin
+  """
+  def __new__(metacls, name, bases, dictionary):
+    def setterWrapper(accessor_name, property_name):
+      dictionary['security'].declareProtected(Permissions.ModifyPortalContent,
+                                              accessor_name)
+
+      def setter(self, property_value):
+        """
+        Everytime either 'reference', 'version' or 'text_content' are modified
+        when a Component is in modified or validated state, the Component is
+        set to modified state by component interaction workflow, then in this
+        method, the current property value is recorded in order to handle any
+        error returned when checking consistency before the new value is
+        set. At the end, through component interaction workflow, the Component
+        is validated only if checkConsistency returns no error
+
+        The recorded property will be used upon loading the Component whereas
+        the new value set is displayed in Component view.
+        """
+        if self.getValidationState() in ('modified', 'validated'):
+          self.recordProperty(property_name)
+
+        return getattr(super(ComponentMixin, self), accessor_name)(property_value)
+
+      setter.__name__ = accessor_name
+      return setter
+
+    def getterWrapper(accessor_name, property_name):
+      dictionary['security'].declareProtected(Permissions.AccessContentsInformation,
+                                              accessor_name)
+
+      def getter(self, validated_only=False):
+        """
+        When validated_only is True, then returns the property recorded if
+        the Component has been modified but there was an error upon
+        consistency checking
+        """
+        if validated_only:
+          try:
+            return self.getRecordedProperty(property_name)
+          # AttributeError when this property has never been recorded before
+          # (_recorded_property_dict) and KeyError if the property has been
+          # recorded before but is not anymore
+          except (AttributeError, KeyError):
+            pass
+
+        return getattr(super(ComponentMixin, self), accessor_name)()
+
+      getter.__name__ = accessor_name
+      return getter
+
+    for property_name in _recorded_property_name_tuple:
+      setter_name = '_set' + convertToUpperCase(property_name)
+      dictionary[setter_name] = setterWrapper(setter_name, property_name)
+
+      getter_name = 'get' + convertToUpperCase(property_name)
+      dictionary[getter_name] = getterWrapper(getter_name, property_name)
+
+    # docstring required for publishing any object
+    dictionary['__doc__'] = metacls.__doc__
+
+    # ExtensionClass required to avoid metaclasses conflicts when
+    # ghosting/unghosting Portal Types
+    new_class = ExtensionClass.__new__(ExtensionClass,
+                                       name,
+                                       bases,
+                                       dictionary)
+
+    return new_class
+
 class ComponentMixin(PropertyRecordableMixin, Base):
+  __metaclass__ = RecordablePropertyMetaClass
+
   isPortalContent = 1
   isRADContent = 1
   isDelivery = ConstantGetter('isDelivery', value=True)
@@ -129,37 +213,6 @@ class ComponentMixin(PropertyRecordableMixin, Base):
 
     return error_list
 
-  def _recordPropertyDecorator(accessor_name, property_name):
-    def inner(self, property_value):
-      """
-      Everytime either 'reference', 'version' or 'text_content' are
-      modified when a Component is in modified or validated state, the
-      Component is set to modified state by component interaction
-      workflow, then in this method, the current property value is
-      recorded in order to handle any error returned when checking
-      consistency before the new value is set. At the end, through
-      component interaction workflow, the Component is validated only
-      if checkConsistency returns no error
-
-      The recorded property will be used upon loading the Component
-      whereas the new value set is displayed in Component view.
-      """
-      if self.getValidationState() in ('modified', 'validated'):
-        self.recordProperty(property_name)
-
-      return getattr(super(ComponentMixin, self), accessor_name)(property_value)
-
-    return inner
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_setReference')
-  _setReference = _recordPropertyDecorator('_setReference', 'reference')
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_setVersion')
-  _setVersion = _recordPropertyDecorator('_setVersion', 'version')
-
-  security.declareProtected(Permissions.ModifyPortalContent, '_setTextContent')
-  _setTextContent = _recordPropertyDecorator('_setTextContent', 'text_content')
-
   def checkConsistencyAndValidate(self):
     """
     When a Component is in validated or modified validation state and
@@ -172,42 +225,10 @@ class ComponentMixin(PropertyRecordableMixin, Base):
       workflow = self.workflow_history['component_validation_workflow'][-1]
       workflow['error_list'] = error_list
     else:
-      self.clearRecordedProperty('reference')
-      self.clearRecordedProperty('version')
-      self.clearRecordedProperty('text_content')
+      for property_name in _recorded_property_name_tuple:
+        self.clearRecordedProperty(property_name)
+
       self.validate()
-
-  def _getRecordedPropertyDecorator(accessor_name, property_name):
-    def inner(self, validated_only=False):
-      """
-      When validated_only is True, then returns the property recorded if the
-      Component has been modified but there was an error upon consistency
-      checking
-      """
-      if validated_only:
-        try:
-          return self.getRecordedProperty(property_name)
-        # AttributeError when this property has never been recorded before
-        # (_recorded_property_dict) and KeyError if the property has been
-        # recorded before but is not anymore
-        except (AttributeError, KeyError):
-          pass
-
-      return getattr(super(ComponentMixin, self), accessor_name)()
-
-    return inner
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getReference')
-  getReference = _getRecordedPropertyDecorator('getReference', 'reference')
-
-  security.declareProtected(Permissions.AccessContentsInformation, 'getVersion')
-  getVersion = _getRecordedPropertyDecorator('getVersion', 'version')
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getTextContent')
-  getTextContent = _getRecordedPropertyDecorator('getTextContent',
-                                                 'text_content')
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getErrorMessageList')
