@@ -1218,6 +1218,8 @@ def assertResetCalled(self, *args, **kwargs):
 
 import abc
 
+from Products.ERP5Type.mixin.component import ComponentMixin
+
 class _TestZodbComponent(ERP5TypeTestCase):
   __metaclass__ = abc.ABCMeta
 
@@ -1289,7 +1291,148 @@ class _TestZodbComponent(ERP5TypeTestCase):
     self.tic()
     self.assertModuleImportable('TestValidateInvalidateComponent')
 
-  def testSourceCodeWithSyntaxError(self):
+  def testReferenceWithReservedKeywords(self):
+    """
+    Check whether checkConsistency has been properly implemented for checking
+    Component Reference field, e.g. no reserved keywords can be used
+    """
+    valid_reference = 'TestReferenceWithReservedKeywords'
+    ComponentTool.reset = assertResetCalled
+    try:
+      component = self._newComponent(valid_reference,
+                                     'def foobar(*args, **kwargs):\n  return 42')
+
+      component.validate()
+      transaction.commit()
+      self.tic()
+
+      self.assertEquals(ComponentTool._reset_performed, True)
+    finally:
+      ComponentTool.reset = ComponentTool._original_reset
+      ComponentTool._reset_performed = False
+
+    self.assertEquals(component.getValidationState(), 'validated')
+    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.getReference(), valid_reference)
+    self.assertEquals(component.getReference(validated_only=True), valid_reference)
+    self.assertModuleImportable(valid_reference)
+
+    invalid_reference_dict = {
+      None: ComponentMixin._message_reference_not_set,
+      'ReferenceReservedKeywords_version': ComponentMixin._message_invalid_reference,
+      '_ReferenceReservedKeywords': ComponentMixin._message_invalid_reference,
+      'find_module': ComponentMixin._message_invalid_reference,
+      'load_module': ComponentMixin._message_invalid_reference}
+
+    for invalid_reference, error_message in invalid_reference_dict.iteritems():
+      ComponentTool.reset = assertResetNotCalled
+      try:
+        component.setReference(invalid_reference)
+        transaction.commit()
+        self.tic()
+      finally:
+        ComponentTool.reset = ComponentTool._original_reset
+
+      self.assertEquals(component.getValidationState(), 'modified')
+      error_list = component.getErrorMessageList()
+      self.assertNotEquals(error_list, [])
+      self.assertEquals(len(error_list), 1)
+      self.assertEquals(error_message, error_list[0])
+      self.assertEquals(component.getReference(), invalid_reference)
+      self.assertEquals(component.getReference(validated_only=True), valid_reference)
+      self._component_tool.reset()
+      self.assertModuleImportable(valid_reference)
+
+    ComponentTool.reset = assertResetCalled
+    try:
+      component.setReference(valid_reference)
+      transaction.commit()
+      self.tic()
+
+      self.assertEquals(ComponentTool._reset_performed, True)
+    finally:
+      ComponentTool.reset = ComponentTool._original_reset
+      ComponentTool._reset_performed = False
+
+    self.assertEquals(component.getValidationState(), 'validated')
+    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.getReference(), valid_reference)
+    self.assertEquals(component.getReference(validated_only=True), valid_reference)
+    self.assertModuleImportable(valid_reference)
+
+  def testVersionWithReservedKeywords(self):
+    """
+    Check whether checkConsistency has been properly implemented for checking
+    Component version field, e.g. no reserved keywords can be used
+    """
+    reference = 'TestVersionWithReservedKeywords'
+    valid_version = 'erp5'
+    ComponentTool.reset = assertResetCalled
+    try:
+      component = self._newComponent(reference,
+                                     'def foobar(*args, **kwargs):\n  return 42',
+                                     valid_version)
+
+      component.validate()
+      transaction.commit()
+      self.tic()
+
+      self.assertEquals(ComponentTool._reset_performed, True)
+    finally:
+      ComponentTool.reset = ComponentTool._original_reset
+      ComponentTool._reset_performed = False
+
+    self.assertEquals(component.getValidationState(), 'validated')
+    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.getVersion(), valid_version)
+    self.assertEquals(component.getVersion(validated_only=True), valid_version)
+    self.assertModuleImportable(reference)
+
+    invalid_version_dict = {
+      '': ComponentMixin._message_version_not_set,
+      '_TestVersionWithReservedKeywords': ComponentMixin._message_invalid_version}
+
+    for invalid_version, error_message in invalid_version_dict.iteritems():
+      ComponentTool.reset = assertResetNotCalled
+      try:
+        component.setVersion(invalid_version)
+        transaction.commit()
+        self.tic()
+      finally:
+        ComponentTool.reset = ComponentTool._original_reset
+
+      self.assertEquals(component.getValidationState(), 'modified')
+      error_list = component.getErrorMessageList()
+      self.assertNotEquals(error_list, [])
+      self.assertEquals(len(error_list), 1)
+      self.assertEquals(error_message, error_list[0])
+      self.assertEquals(component.getVersion(), invalid_version)
+      self.assertEquals(component.getVersion(validated_only=True), valid_version)
+      self._component_tool.reset()
+      self.assertModuleImportable(reference)
+
+    ComponentTool.reset = assertResetCalled
+    try:
+      component.setVersion(valid_version)
+      transaction.commit()
+      self.tic()
+
+      self.assertEquals(ComponentTool._reset_performed, True)
+    finally:
+      ComponentTool.reset = ComponentTool._original_reset
+      ComponentTool._reset_performed = False
+
+    self.assertEquals(component.getValidationState(), 'validated')
+    self.assertEquals(component.getErrorMessageList(), [])
+    self.assertEquals(component.getVersion(), valid_version)
+    self.assertEquals(component.getVersion(validated_only=True), valid_version)
+    self.assertModuleImportable(reference)
+
+  def testInvalidSourceCode(self):
+    """
+    Check whether checkConsistency has been properly implemented for checking
+    Component source code field
+    """
     valid_code = 'def foobar(*args, **kwargs):\n  return 42'
     ComponentTool.reset = assertResetCalled
     try:
@@ -1297,29 +1440,41 @@ class _TestZodbComponent(ERP5TypeTestCase):
       component.validate()
       transaction.commit()
       self.tic()
+
+      self.assertEquals(ComponentTool._reset_performed, True)
     finally:
       ComponentTool.reset = ComponentTool._original_reset
+      ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
+    self.assertEquals(component.getErrorMessageList(), [])
     self.assertEquals(component.getTextContent(), valid_code)
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')
 
-    invalid_code = 'def foobar(*args, **kwargs)\n  return 42'
-    ComponentTool.reset = assertResetNotCalled
-    try:
-      component.setTextContent(invalid_code)
-      transaction.commit()
-      self.tic()
-    finally:
-      ComponentTool.reset = ComponentTool._original_reset
+    invalid_code_dict = {
+      None: ComponentMixin._message_text_content_not_set,
+      'def foobar(*args, **kwargs)\n  return 42': 'Syntax error in source code:',
+      'foobar': 'Source code:'}
 
-    self.assertEquals(component.getValidationState(), 'modified')
-    self.assertNotEqual(component._getErrorMessage(), '')
-    self.assertEquals(component.getTextContent(), invalid_code)
-    self.assertEquals(component.getTextContent(validated_only=True), valid_code)
-    self._component_tool.reset()
-    self.assertModuleImportable('TestComponentWithSyntaxError')
+    for invalid_code, error_message in invalid_code_dict.iteritems():
+      ComponentTool.reset = assertResetNotCalled
+      try:
+        component.setTextContent(invalid_code)
+        transaction.commit()
+        self.tic()
+      finally:
+        ComponentTool.reset = ComponentTool._original_reset
+
+      self.assertEquals(component.getValidationState(), 'modified')
+      error_list = component.getErrorMessageList()
+      self.assertNotEqual(error_list, [])
+      self.assertEquals(len(error_list), 1)
+      self.assertTrue(error_list[0].startswith(error_message))
+      self.assertEquals(component.getTextContent(), invalid_code)
+      self.assertEquals(component.getTextContent(validated_only=True), valid_code)
+      self._component_tool.reset()
+      self.assertModuleImportable('TestComponentWithSyntaxError')
 
     ComponentTool.reset = assertResetCalled
     try:
@@ -1333,7 +1488,7 @@ class _TestZodbComponent(ERP5TypeTestCase):
       ComponentTool._reset_performed = False
 
     self.assertEquals(component.getValidationState(), 'validated')
-    self.assertEquals(component._getErrorMessage(), '')
+    self.assertEquals(component.getErrorMessageList(), [])
     self.assertEquals(component.getTextContent(), valid_code)
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')
