@@ -3798,16 +3798,27 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
                         "%s.py" % class_id)
 
   def _importFile(self, file_name, file_obj):
-    if (file_name.endswith('.py') and
-        file_obj.name.rsplit(os.path.sep, 2)[-2] == 'portal_components'):
-      return
+    if file_name.endswith('.py'):
+      # If portal_components/XXX.py, then ignore it as it will be handled when
+      # the .xml file will be processed
+      if file_obj.name.rsplit(os.path.sep, 2)[-2] != 'portal_components':
+        return FilesystemDocumentTemplateItem._importFile(self, file_name,
+                                                          file_obj)
+    else:
+      ObjectTemplateItem._importFile(self, file_name, file_obj)
 
-    FilesystemToZodbTemplateItem._importFile(self, file_name, file_obj)
-
-    if file_name.endswith('.xml'):
-      obj = self._objects[file_name[:-4]]
+      name = file_name[:-4]
+      obj = self._objects[name]
       with open("%s.py" % file_obj.name[:-4]) as f:
         obj.text_content = f.read()
+
+      # When importing a Business Template, there is no way to determine if it
+      # has been already migrated or not in __init__() when it does not
+      # already exist, therefore BaseTemplateItem.__init__() is called which
+      # does not set _archive with portal_components/ like
+      # ObjectTemplateItem.__init__()
+      self._archive[name] = None
+      del self._archive[name.replace('portal_components/', '')]
 
   def export(self, context, bta, **kw):
     path = self.__class__.__name__ + '/'
