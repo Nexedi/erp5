@@ -3835,7 +3835,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
         bta.addObject(f, key, path=path, ext='.py')
 
         del obj.text_content
-        transaction.commit()
+        transaction.savepoint(optimistic=True)
 
         # export object in xml
         f = StringIO()
