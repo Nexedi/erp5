@@ -226,6 +226,8 @@ class ComponentMixin(PropertyRecordableMixin, Base):
 
     return error_list
 
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'checkConsistencyAndValidate')
   def checkConsistencyAndValidate(self):
     """
     When a Component is in validated or modified validation state and
