@@ -448,7 +448,8 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
                             'setVersionPriority' )
   def setVersionPriority(self, value):
     """
-    XXX-arnau: really hackish...
+    XXX-arnau: must be written through an interaction workflow when ERP5Site
+               will become a real ERP5 object...
     """
     self._version_priority = value
 
