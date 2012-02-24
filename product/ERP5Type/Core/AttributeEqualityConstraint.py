@@ -74,7 +74,8 @@ class AttributeEqualityConstraint(PropertyExistenceConstraint):
 
     error = self._checkPropertyConsistency(obj, attribute_name)
     if error:
-      return [error]
+      return [self._generateError(obj, self._getMessage(error),
+        dict(property_id=attribute_name))]
 
     identical = True
 
