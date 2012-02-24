@@ -1,3 +1,6 @@
+2012-02-24 arnaud.fontaine
+* In Component view, display the error field with error CSS class to make it more visible.
+
 2012-02-22 arnaud.fontaine
 * Split up state and error message into two separate fields.
 * Always set the Component state to modified upon modification, then check the consistency.
