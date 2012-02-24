@@ -3764,9 +3764,9 @@ from Products.ERP5Type.Core.DocumentComponent import DocumentComponent as \
 
 class DocumentTemplateItem(FilesystemToZodbTemplateItem):
   """
-  Extensions are now stored in ZODB rather than on the filesystem. However,
-  some Business Templates may still have filesystem Extensions which need to
-  be migrated to the ZODB.
+  Documents are now stored in ZODB rather than on the filesystem. However,
+  some Business Templates may still have filesystem Documents which need to be
+  migrated to the ZODB.
 
   The migration is performed in two steps:
 
@@ -3803,7 +3803,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
   def export(self, context, bta, **kw):
     path = self.__class__.__name__ + '/'
     for key, obj in self._objects.iteritems():
-      # Back compatibility with filesystem Extensions
+      # Back compatibility with filesystem Documents
       if isinstance(obj, str):
         if not key.startswith(path):
           key = path + key
