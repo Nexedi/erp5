@@ -1,4 +1,7 @@
 2012-02-24 arnaud.fontaine
+* In Component view, show the error field in the left.
+
+2012-02-24 arnaud.fontaine
 * In Component view, display the error field with error CSS class to make it more visible.
 
 2012-02-22 arnaud.fontaine
