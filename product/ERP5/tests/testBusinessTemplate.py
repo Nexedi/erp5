@@ -6884,7 +6884,8 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                   document_data=self.document_data)
 
   def stepAddZodbDocumentToBusinessTemplate(self, sequence=None, **kw):
-    sequence['current_bt'].setTemplateDocumentIdList(sequence['document_id'])
+    getattr(sequence['current_bt'], self.set_template_id_method_name)(
+      sequence['document_id'])
 
   def stepRemoveZodbDocument(self, sequence=None, **kw):
     self.getPortalObject().portal_components.deleteContent(
