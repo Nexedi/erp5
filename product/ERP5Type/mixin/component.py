@@ -124,6 +124,10 @@ class RecordablePropertyMetaClass(ExtensionClass):
     return new_class
 
 class ComponentMixin(PropertyRecordableMixin, Base):
+  """
+  XXX-arnau: add tests to ERP5 itself to make sure all securities are defined
+  properly everywhere (see naming convention test)
+  """
   __metaclass__ = RecordablePropertyMetaClass
 
   isPortalContent = 1
