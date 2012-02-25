@@ -1,4 +1,7 @@
 2012-02-25 arnaud.fontaine
+* Merge component_interaction_workflow into dynamic_class_generation_interaction_workflow.
+
+2012-02-25 arnaud.fontaine
 * Remove useless DocumentConstraint Property Sheet for Document Component.
 
 2012-02-24 arnaud.fontaine

@@ -19,16 +19,16 @@ Category Related Membership Arity Constraint | dynamic_class_generation_interact
 Category Related Membership State Constraint | dynamic_class_generation_interaction_workflow
 Category Tool | dynamic_class_generation_interaction_workflow
 Category | edit_workflow
-Component Tool | component_interaction_workflow
+Component Tool | dynamic_class_generation_interaction_workflow
 Content Existence Constraint | dynamic_class_generation_interaction_workflow
 Distributed Ram Cache | distributed_ram_cache_interaction_workflow
-Document Component | component_interaction_workflow
 Document Component | component_validation_workflow
+Document Component | dynamic_class_generation_interaction_workflow
 Document Component | edit_workflow
 Document | edit_workflow
 Dynamic Category Property | dynamic_class_generation_interaction_workflow
-Extension Component | component_interaction_workflow
 Extension Component | component_validation_workflow
+Extension Component | dynamic_class_generation_interaction_workflow
 Extension Component | edit_workflow
 Mapped Value | edit_workflow
 Memcached Plugin | memcached_plugin_interaction_workflow

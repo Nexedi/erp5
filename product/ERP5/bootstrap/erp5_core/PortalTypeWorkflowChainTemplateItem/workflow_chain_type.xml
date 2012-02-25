@@ -73,7 +73,7 @@
  </chain>
  <chain>
   <type>Component Tool</type>
-  <workflow>component_interaction_workflow</workflow>
+  <workflow>dynamic_class_generation_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Content Existence Constraint</type>
@@ -89,7 +89,7 @@
  </chain>
  <chain>
   <type>Document Component</type>
-  <workflow>component_interaction_workflow, component_validation_workflow, edit_workflow</workflow>
+  <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Dynamic Category Property</type>
@@ -97,7 +97,7 @@
  </chain>
  <chain>
   <type>Extension Component</type>
-  <workflow>component_interaction_workflow, component_validation_workflow, edit_workflow</workflow>
+  <workflow>component_validation_workflow, dynamic_class_generation_interaction_workflow, edit_workflow</workflow>
  </chain>
  <chain>
   <type>Mapped Value</type>

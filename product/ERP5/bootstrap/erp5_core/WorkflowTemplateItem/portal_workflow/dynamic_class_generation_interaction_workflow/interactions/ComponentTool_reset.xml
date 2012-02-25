@@ -34,13 +34,13 @@
             <key> <string>before_commit_script_name</string> </key>
             <value>
               <list>
-                <string>reset</string>
+                <string>ComponentTool_reset</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>When a Component is deleted or added in Component Tool, reset all Components</string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>

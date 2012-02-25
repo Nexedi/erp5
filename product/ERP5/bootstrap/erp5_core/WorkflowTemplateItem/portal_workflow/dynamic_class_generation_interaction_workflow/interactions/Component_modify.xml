@@ -34,30 +34,31 @@
             <key> <string>before_commit_script_name</string> </key>
             <value>
               <list>
-                <string>reset</string>
+                <string>Component_validateAfterModified</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string></string> </value>
+            <value> <string>Before the reference, version or source code of a Component is modified, the Component is set to modified state, and at the end if the Consistency checks do not return any error, it is set to validated state. </string> </value>
         </item>
         <item>
             <key> <string>guard</string> </key>
             <value>
-              <none/>
+              <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Component_reset</string> </value>
+            <value> <string>Component_modify</string> </value>
         </item>
         <item>
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>validate</string>
-                <string>invalidate</string>
+                <string>_setTextContent*</string>
+                <string>_setReference*</string>
+                <string>_setVersion*</string>
               </list>
             </value>
         </item>
@@ -77,7 +78,9 @@
         <item>
             <key> <string>script_name</string> </key>
             <value>
-              <tuple/>
+              <list>
+                <string>Component_setModifiedState</string>
+              </list>
             </value>
         </item>
         <item>
@@ -91,6 +94,34 @@
         <item>
             <key> <string>trigger_type</string> </key>
             <value> <int>2</int> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="2" aka="AAAAAAAAAAI=">
+    <pickle>
+      <global name="Guard" module="Products.DCWorkflow.Guard"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>expr</string> </key>
+            <value>
+              <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
+            </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+  <record id="3" aka="AAAAAAAAAAM=">
+    <pickle>
+      <global name="Expression" module="Products.CMFCore.Expression"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>text</string> </key>
+            <value> <string>python: here.getValidationState() in (\'validated\', \'modified\')</string> </value>
         </item>
       </dictionary>
     </pickle>

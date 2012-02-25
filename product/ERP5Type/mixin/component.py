@@ -62,11 +62,12 @@ class RecordablePropertyMetaClass(ExtensionClass):
         """
         Everytime either 'reference', 'version' or 'text_content' are modified
         when a Component is in modified or validated state, the Component is
-        set to modified state by component interaction workflow, then in this
-        method, the current property value is recorded in order to handle any
-        error returned when checking consistency before the new value is
-        set. At the end, through component interaction workflow, the Component
-        is validated only if checkConsistency returns no error
+        set to modified state by dynamic class generation interaction
+        workflow, then in this method, the current property value is recorded
+        in order to handle any error returned when checking consistency before
+        the new value is set. At the end, through dynamic class generation
+        interaction workflow, the Component is validated only if
+        checkConsistency returns no error
 
         The recorded property will be used upon loading the Component whereas
         the new value set is displayed in Component view.
