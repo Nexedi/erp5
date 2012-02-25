@@ -163,7 +163,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     """
     XXX-arnau: should probably be in a separate Constraint class?
     """
-    error_list = []
+    error_list = super(ComponentMixin, self).checkConsistency(*args, **kw)
     object_relative_url = self.getRelativeUrl()
 
     reference = self.getReference()

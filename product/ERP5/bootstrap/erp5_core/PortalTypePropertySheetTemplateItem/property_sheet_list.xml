@@ -1,6 +1,5 @@
 <property_sheet_list>
  <portal_type id="Document Component">
-  <item>DocumentConstraint</item>
   <item>SortIndex</item>
  </portal_type>
  <portal_type id="Trash Bin">
