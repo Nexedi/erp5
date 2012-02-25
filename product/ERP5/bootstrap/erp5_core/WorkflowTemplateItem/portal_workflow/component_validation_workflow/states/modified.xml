@@ -24,7 +24,7 @@
               <tuple>
                 <string>invalidate</string>
                 <string>invalidate_action</string>
-                <string>modified</string>
+                <string>modify</string>
                 <string>validate</string>
               </tuple>
             </value>

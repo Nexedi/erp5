@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].modified()\n
+            <value> <string>state_change[\'object\'].modify()\n
 </string> </value>
         </item>
         <item>
