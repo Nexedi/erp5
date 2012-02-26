@@ -40,11 +40,6 @@ from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 
 from zLOG import LOG, INFO
 
-_recorded_property_name_tuple = (
-  'reference',
-  'version',
-  'text_content')
-
 from ExtensionClass import ExtensionClass
 from Products.ERP5Type.Utils import convertToUpperCase
 
@@ -105,7 +100,7 @@ class RecordablePropertyMetaClass(ExtensionClass):
       getter.__name__ = accessor_name
       return getter
 
-    for property_name in _recorded_property_name_tuple:
+    for property_name in dictionary['_recorded_property_name_tuple']:
       setter_name = '_set' + convertToUpperCase(property_name)
       dictionary[setter_name] = setterWrapper(setter_name, property_name)
 
@@ -147,6 +142,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                      'Version',
                      'Reference',
                      'TextDocument')
+
+  _recorded_property_name_tuple = (
+    'reference',
+    'version',
+    'text_content')
 
   _message_reference_not_set = "Reference must be set"
   _message_invalid_reference = "Reference cannot end with '_version' or "\
@@ -241,7 +241,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
       workflow = self.workflow_history['component_validation_workflow'][-1]
       workflow['error_list'] = error_list
     else:
-      for property_name in _recorded_property_name_tuple:
+      for property_name in self._recorded_property_name_tuple:
         self.clearRecordedProperty(property_name)
 
       self.validate()
