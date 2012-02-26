@@ -1,4 +1,8 @@
 2012-02-25 arnaud.fontaine
+* Add a Python script which performs the redirect rather than doing it in BusinessTemplate class.
+* Rename *MigrateAllComponentFromFilesystem to *MigrateSourceCodeFromFilesystem.
+
+2012-02-25 arnaud.fontaine
 * Rename Component modified transition to modify as per naming conventions.
 
 2012-02-25 arnaud.fontaine

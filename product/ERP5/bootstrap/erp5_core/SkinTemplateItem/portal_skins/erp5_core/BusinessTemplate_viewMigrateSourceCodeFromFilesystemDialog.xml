@@ -35,7 +35,7 @@
         </item>
         <item>
             <key> <string>action</string> </key>
-            <value> <string>migrateAllComponentFromFilesystem</string> </value>
+            <value> <string>BusinessTemplate_migrateSourceCodeFromFilesystem</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -111,7 +111,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessTemplate_viewMigrateAllComponentFromFilesystemDialog</string> </value>
+            <value> <string>BusinessTemplate_viewMigrateSourceCodeFromFilesystemDialog</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
@@ -119,7 +119,7 @@
         </item>
         <item>
             <key> <string>name</string> </key>
-            <value> <string>BusinessTemplate_viewMigrateAllComponentFromFilesystem</string> </value>
+            <value> <string>BusinessTemplate_viewMigrateSourceCodeFromFilesystem</string> </value>
         </item>
         <item>
             <key> <string>pt</string> </key>

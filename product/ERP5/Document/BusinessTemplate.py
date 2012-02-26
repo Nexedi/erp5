@@ -5761,12 +5761,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
       setattr(self, 'template_portal_type_base_category', ())
       return
 
-    security.declareProtected(Permissions.ModifyPortalContent,
-                              'migrateAllComponentFromFilesystem')
-    def migrateAllComponentFromFilesystem(self,
-                                          version_priority,
-                                          erase_existing=False,
-                                          **kw):
+    security.declareProtected(Permissions.ManagePortal,
+                              'migrateSourceCodeFromFilesystem')
+    def migrateSourceCodeFromFilesystem(self,
+                                        version_priority,
+                                        erase_existing=False,
+                                        **kw):
       component_tool = self.getPortalObject().portal_components
       failed_import_dict = {}
 
@@ -5802,19 +5802,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       self.setTemplateExtensionIdList(extension_id_list)
 
-      if failed_import_dict:
-        failed_import_formatted_list = []
-        for name, error in failed_import_dict.iteritems():
-          failed_import_formatted_list.append("%s (%s)" % (name, error))
-
-        message = "The following component could not be imported: %s" % \
-            ', '.join(failed_import_formatted_list)
-      else:
-        message = "All components were successfully imported " \
-            "from filesystem to ZODB."
-
-      return self.Base_redirect('view',
-                                keep_items={'portal_status_message': message})
+      return failed_import_dict
 
 # Block acquisition on all _item_name_list properties by setting
 # a default class value to None
