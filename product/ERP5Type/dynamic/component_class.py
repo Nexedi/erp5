@@ -94,25 +94,32 @@ class ComponentDynamicPackage(ModuleType):
     be a a way to specify priorities such as portal_skins maybe?
     """
     if not self.__registry_dict:
+      portal = getSite()
+
       try:
-        component_tool = getSite().portal_components
+        component_tool = portal.portal_components
       # XXX-arnau: When installing ERP5 site, erp5_core_components has not
       # been installed yet, thus this will obviously failed...
       except AttributeError:
         return {}
 
-      # XXX-arnau: contentValues should not be used as there may be a large
-      # number of objects, but as this is done only once, that should perhaps
-      # not be a problem after all, and using the Catalog is too risky as it
-      # lags behind and depends upon objects being reindexed
+      version_priority_set = set(portal.getVersionPriority())
+
+      # contentValues should not be used for a large number of objects, but
+      # this is only done at startup or upon reset, moreover using the Catalog
+      # is too risky as it lags behind and depends upon objects being
+      # reindexed
       for component in component_tool.contentValues(portal_type=self._portal_type):
         # Only consider modified or validated states as state transition will
         # be handled by component_validation_workflow which will take care of
         # updating the registry
         if component.getValidationState() in ('modified', 'validated'):
-          reference = component.getReference(validated_only=True)
           version = component.getVersion(validated_only=True)
-          self.__registry_dict.setdefault(reference, {})[version] = component
+          # The versions should have always been set on ERP5Site property
+          # beforehand
+          if version in version_priority_set:
+            reference = component.getReference(validated_only=True)
+            self.__registry_dict.setdefault(reference, {})[version] = component
 
     return self.__registry_dict
 
