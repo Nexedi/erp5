@@ -27,30 +27,51 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.mixin.component import ComponentMixin
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
+from zope.interface import Interface
 
-import zope.interface
-from Products.ERP5Type.interfaces.component import IComponent
+class IComponent(Interface):
+  """
+  ZODB Component interface. Component were previously defined on the
+  filesystem and are now defined in portal_components and can be bt5
+  Extensions or Documents, or any interfaces, mixin and Documents from
+  Products. Any Component class must implement this interface
+  """
+  def checkConsistency(obj, *args, **kwargs):
+    """
+    Check the consistency of a ZODB Component when validating from draft state
+    (manual user action) or when modified while already validated beforehand
+    """
 
-class ExtensionComponent(ComponentMixin):
-  # CMF Type Definition
-  meta_type = 'ERP5 Extension Component'
-  portal_type = 'Extension Component'
+  def checkConsistencyAndValidate(obj):
+    """
+    After a previously validated Component is modified, check the consistency,
+    then if no error is returned, validate it
+    """
 
-  zope.interface.implements(IComponent)
+  def getErrorMessageList(obj):
+    """
+    Return errors, if any, which may have arised when the Component has been
+    modified after being validated
+    """
 
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
+  def load(obj, namespace_dict={}, validated_only=False, text_content=None):
+    """
+    Load the source code into the given dict
+    """
 
-  @staticmethod
   def _getFilesystemPath():
-    import os.path
-    from App.config import getConfiguration
-    return os.path.join(getConfiguration().instancehome, 'Extensions')
+    """
+    Return the filesystem Component path for import into ZODB
+    """
 
-  @staticmethod
   def _getDynamicModuleNamespace():
-    return 'erp5.component.extension'
+    """
+    Return the module name where Component module are loaded into
+    """
+
+  def importFromFilesystem(cls, context, reference, version,
+                           erase_existing=False):
+    """
+    Import a Component from the filesystem into ZODB after checking that the
+    source code is valid
+    """

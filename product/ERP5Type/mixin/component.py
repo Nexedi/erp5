@@ -272,14 +272,6 @@ class ComponentMixin(PropertyRecordableMixin, Base):
 
     exec text_content in namespace_dict
 
-  @staticmethod
-  def _getFilesystemPath():
-    raise NotImplementedError
-
-  @staticmethod
-  def _getDynamicModuleNamespace():
-    raise NotImplementedError
-
   security.declareProtected(Permissions.ModifyPortalContent, 'PUT')
   def PUT(self, REQUEST, RESPONSE):
     """
@@ -318,7 +310,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   def importFromFilesystem(cls, context, reference, version,
                            erase_existing=False):
     """
-    Import a Component from the given path into ZODB after checking that the
+    Import a Component from the filesystem into ZODB after checking that the
     source code is valid
     """
     object_id = '%s.%s.%s' % (cls._getDynamicModuleNamespace(), version,

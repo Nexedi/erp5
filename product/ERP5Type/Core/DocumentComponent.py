@@ -31,10 +31,15 @@ from Products.ERP5Type.mixin.component import ComponentMixin
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions
 
+import zope.interface
+from Products.ERP5Type.interfaces.component import IComponent
+
 class DocumentComponent(ComponentMixin):
   # CMF Type Definition
   meta_type = 'ERP5 Document Component'
   portal_type = 'Document Component'
+
+  zope.interface.implements(IComponent)
 
   # Declarative security
   security = ClassSecurityInfo()
