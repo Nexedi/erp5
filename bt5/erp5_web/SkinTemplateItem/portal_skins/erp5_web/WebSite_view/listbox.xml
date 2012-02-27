@@ -12,7 +12,7 @@
               <list>
                 <string>columns</string>
                 <string>editable_columns</string>
-                <string>selection_name</string>
+                <string>portal_types</string>
                 <string>sort</string>
                 <string>title</string>
               </list>
@@ -142,8 +142,23 @@
                     <value> <string>Base_viewWebFieldLibrary</string> </value>
                 </item>
                 <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>site_content_selection</string> </value>
+                    <key> <string>portal_types</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>File</string>
+                          <string>File</string>
+                        </tuple>
+                        <tuple>
+                          <string>Image</string>
+                          <string>Image</string>
+                        </tuple>
+                        <tuple>
+                          <string>Web Section</string>
+                          <string>Web Section</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
