@@ -129,6 +129,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
                           <string>modification_date</string>
                           <string>Modification Date</string>
                         </tuple>
@@ -187,6 +191,14 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>File</string>
+                          <string>File</string>
+                        </tuple>
+                        <tuple>
+                          <string>Image</string>
+                          <string>Image</string>
+                        </tuple>
+                        <tuple>
                           <string>Web Section</string>
                           <string>Web Section</string>
                         </tuple>
@@ -214,7 +226,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Subsections</string> </value>
+                    <value> <string>Contents</string> </value>
                 </item>
               </dictionary>
             </value>
