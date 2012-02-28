@@ -141,8 +141,9 @@
 \n
 .slide_dialog iframe{\n
   border:0px;\n
-  width: 450px;\n
-  height: 420px;\n
+  width: 99%;\n
+  height: 99%;\n
+  min-height: 480px;\n
 }</string> </value>
         </item>
         <item>
