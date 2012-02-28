@@ -284,8 +284,10 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
         stop_date = movement.getStopDate()
         source = movement.getSource()
         source_section = movement.getSourceSection()
+        source_decision = movement.getSourceDecision()
         destination = movement.getDestination()
         destination_section = movement.getDestinationSection()
+        destination_decision = movement.getDestinationDecision()
         quantity = movement.getQuantity()
         quantity_unit = movement.getQuantityUnit()
         price = movement.getPrice()
@@ -312,8 +314,10 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
                                      stop_date=next_date,
                                      source=source,
                                      source_section=source_section,
+                                     source_decision=source_decision,
                                      destination=destination,
                                      destination_section=destination_section,
+                                     destination_decision=destination_decision,
                                      specialise=specialise,
                                      base_application_list=base_application_list,
                                      base_contribution_list=base_contribution_list,
