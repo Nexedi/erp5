@@ -1,4 +1,7 @@
 2012-02-28 arnaud.fontaine
+* Show Component version on ComponentTool view.
+
+2012-02-28 arnaud.fontaine
 * Add Developer Role on portal_components which is the only Role with write permissions on portal_components and subobjects.
 * Modify component_validation_workflow to not set Permissions and let it get it from portal_components instead.
 
