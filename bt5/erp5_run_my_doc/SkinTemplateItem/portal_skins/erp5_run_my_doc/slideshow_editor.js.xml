@@ -358,12 +358,12 @@ $(document).ready(function(){\n
         title: "Add new slide",\n
         autoOpen: false,\n
         draggable: false,\n
-        resizable: false,\n
+        resizable: true,\n
         modal: true,\n
         autoResize: true,\n
         show: "clip",\n
         hide: "clip",\n
-        width: "470px",\n
+        width: "50%",\n
         height: "auto",\n
         position: \'center\'\n
       });\n
@@ -409,7 +409,8 @@ $(document).ready(function(){\n
         var tmpSlide = slide.clone();\n
         $("h1:first, img:first, details, test", tmpSlide).remove();\n
         $(\'textarea[name="field_your_slide_content"]\', editSlideIframeContents).val(tmpSlide.html().trim());\n
-        $(\'textarea[name="field_your_text_content"]\', editSlideIframeContents).val($(\'details\', slide).html().trim());\n
+        if ($(\'details\', slide).length > 0)\n
+          $(\'textarea[name="field_your_text_content"]\', editSlideIframeContents).val($(\'details\', slide).html().trim());\n
         \n
         var hasTest = $(\'test\', slide).length > 0;\n
         if(hasTest){\n
@@ -427,6 +428,10 @@ $(document).ready(function(){\n
           titleContainer.html(newTitle);\n
           var className = $(\'select[name="field_your_slide_type"]\', editSlideIframeContents).val();\n
           slide.attr(\'class\', className.toLowerCase());\n
+          if ($(\'details\', slide).length === 0) {\n
+            var details = document.createElement("details");\n
+            slide.append($(details));\n
+          }\n
           $(\'details\', slide).html($(\'textarea[name="field_your_text_content"]\', editSlideIframeContents).val().trim());\n
           $(\'details\', slide).attr("open", "true")\n
           $("> :not(h1:first, img:first, details, test)", slide).remove();\n
@@ -484,12 +489,12 @@ $(document).ready(function(){\n
         title: "Edit slide",\n
         autoOpen: false,\n
         draggable: false,\n
-        resizable: false,\n
+        resizable: true,\n
         modal: true,\n
         autoResize: true,\n
         show: "clip",\n
         hide: "clip",\n
-        width: "470px",\n
+        width: "50%",\n
         height: "auto",\n
         position: \'center\'\n
       });\n
