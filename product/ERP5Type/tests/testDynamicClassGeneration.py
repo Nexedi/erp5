@@ -1242,9 +1242,7 @@ class _TestZodbComponent(SecurityTestCase):
     elif 'ERP5TypeTestCase' not in product_config['erp5'].developer_list:
       product_config['erp5'].developer_list.append('ERP5TypeTestCase')
 
-
-    self._portal = self.getPortal()
-    self._component_tool = self._portal.portal_components
+    self._component_tool = self.getPortal().portal_components
     self._module = __import__(self._getComponentModuleName(),
                               fromlist=['erp5.component'])
     self._component_tool.reset()
@@ -1680,7 +1678,7 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     # Add an External Method using the Extension Component defined above and
     # check that it returns 42
     from Products.ExternalMethod.ExternalMethod import manage_addExternalMethod
-    manage_addExternalMethod(self._portal,
+    manage_addExternalMethod(self.getPortal(),
                              'TestExternalMethod',
                              'title',
                              'TestExternalMethodComponent',
@@ -1689,18 +1687,18 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     transaction.commit()
     self.tic()
 
-    external_method = self._portal.TestExternalMethod
+    external_method = self.getPortal().TestExternalMethod
     self.assertEqual(external_method(), 42)
 
     # Add a Python Script with the External Method defined above and check
     # that it returns 42
     from Products.PythonScripts.PythonScript import manage_addPythonScript
-    manage_addPythonScript(self._portal, 'TestPythonScript')
-    self._portal.TestPythonScript.write('return context.TestExternalMethod()')
+    manage_addPythonScript(self.getPortal(), 'TestPythonScript')
+    self.getPortal().TestPythonScript.write('return context.TestExternalMethod()')
     transaction.commit()
     self.tic()
 
-    self.assertEqual(self._portal.TestPythonScript(), 42)
+    self.assertEqual(self.getPortal().TestPythonScript(), 42)
 
     # Invalidate the Extension Component
     test_component.invalidate()
@@ -1758,12 +1756,12 @@ class TestPortalType(Person):
     # be available
     self.assertModuleImportable('TestPortalType')
 
-    person_type = self._portal.portal_types.Person
+    person_type = self.getPortal().portal_types.Person
     person_type_class = person_type.getTypeClass()
     self.assertEquals(person_type_class, 'Person')
 
     # Create a new Person
-    person_module = self._portal.person_module
+    person_module = self.getPortal().person_module
     person = person_module.newContent(id='Foo Bar', portal_type='Person')
     self.assertTrue(PersonDocument in person.__class__.mro())
 
