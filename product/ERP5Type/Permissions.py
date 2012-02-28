@@ -146,3 +146,4 @@ AddERP5Content = AddPortalContent # Since we put come CPS content in ERP5 docume
 # Source Code Management - this is the highest possible permission
 ManageExtensions = "Manage extensions"
 
+ResetDynamicClasses = "Reset dynamic classes"

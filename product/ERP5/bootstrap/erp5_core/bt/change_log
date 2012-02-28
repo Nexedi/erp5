@@ -1,3 +1,7 @@
+2012-02-28 arnaud.fontaine
+* Add Developer Role on portal_components which is the only Role with write permissions on portal_components and subobjects.
+* Modify component_validation_workflow to not set Permissions and let it get it from portal_components instead.
+
 2012-02-25 arnaud.fontaine
 * Add a Python script which performs the redirect rather than doing it in BusinessTemplate class.
 * Rename *MigrateAllComponentFromFilesystem to *MigrateSourceCodeFromFilesystem.

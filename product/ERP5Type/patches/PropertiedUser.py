@@ -83,10 +83,14 @@ def getRolesInContext( self, object ):
             continue
 
         break
-    
+
+    # Patched: Developer role should not never be available as local role
+    local.pop('Developer', None)
     return list( self.getRoles() ) + local.keys()
 
-def allowed( self, object, object_roles=None ):
+from App.config import getConfiguration
+
+def allowed(self, object, object_roles=None ):
 
     """ Check whether the user has access to object.
 
@@ -104,6 +108,17 @@ def allowed( self, object, object_roles=None ):
     # Short-circuit the common case of anonymous access.
     if object_roles is None or 'Anonymous' in object_roles:
         return 1
+
+    # Check for Developer Role, see patches.User for rationale
+    # XXX-arnau: copy/paste
+    object_roles = set(object_roles)
+    if 'Developer' in object_roles:
+      object_roles.remove('Developer')
+      product_config = getattr(getConfiguration(), 'product_config', None)
+      if product_config:
+        config = product_config.get('erp5', None)
+        if config and self.getId() in config.developer_list:
+          return 1
 
     # Provide short-cut access if object is protected by 'Authenticated'
     # role and user is not nobody

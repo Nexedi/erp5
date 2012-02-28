@@ -1219,8 +1219,10 @@ def assertResetCalled(self, *args, **kwargs):
 import abc
 
 from Products.ERP5Type.mixin.component import ComponentMixin
+from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
+from App.config import getConfiguration
 
-class _TestZodbComponent(ERP5TypeTestCase):
+class _TestZodbComponent(SecurityTestCase):
   __metaclass__ = abc.ABCMeta
 
   def getBusinessTemplateList(self):
@@ -1228,6 +1230,19 @@ class _TestZodbComponent(ERP5TypeTestCase):
             'erp5_core_component')
 
   def afterSetUp(self):
+    product_config = getattr(getConfiguration(), 'product_config', None)
+    if product_config is None:
+      class DummyDeveloperConfig(object):
+        pass
+
+      dummy_developer_config = DummyDeveloperConfig()
+      dummy_developer_config.developer_list = ['ERP5TypeTestCase']
+      getConfiguration().product_config = {'erp5': dummy_developer_config}
+
+    elif 'ERP5TypeTestCase' not in product_config['erp5'].developer_list:
+      product_config['erp5'].developer_list.append('ERP5TypeTestCase')
+
+
     self._portal = self.getPortal()
     self._component_tool = self._portal.portal_components
     self._module = __import__(self._getComponentModuleName(),
@@ -1591,6 +1606,49 @@ def bar(*args, **kwargs):
       site.setVersionPriority(priority_tuple)
       transaction.commit()
       self.tic()
+
+  def testDeveloperRoleSecurity(self):
+    """
+    XXX-arnau: test with different users and workflows
+    """
+    component = self._newComponent('TestDeveloperRoleSecurity',
+                                   'def foo():\n  print "ok"')
+
+    transaction.commit()
+    self.tic()
+
+    user_id = 'ERP5TypeTestCase'
+
+    self.assertUserCanChangeLocalRoles(user_id, self._component_tool)
+    self.assertUserCanModifyDocument(user_id, self._component_tool)
+    self.assertUserCanDeleteDocument(user_id, self._component_tool)
+    self.assertUserCanChangeLocalRoles(user_id, component)
+    self.assertUserCanDeleteDocument(user_id, component)
+
+    getConfiguration().product_config['erp5'].developer_list = []
+
+    # Component Tool and the Component should be viewable by Manager
+    self.assertUserCanViewDocument(user_id, self._component_tool)
+    self.assertUserCanAccessDocument(user_id, self._component_tool)
+    self.assertUserCanViewDocument(user_id, component)
+    self.assertUserCanAccessDocument(user_id, component)
+
+    # But nothing else should be permitted on Component Tool nor Component
+    self.failIfUserCanAddDocument(user_id, self._component_tool)
+    self.failIfUserCanModifyDocument(user_id, self._component_tool)
+    self.failIfUserCanDeleteDocument(user_id, self._component_tool)
+    self.failIfUserCanModifyDocument(user_id, component)
+    self.failIfUserCanDeleteDocument(user_id, component)
+    self.failIfUserCanChangeLocalRoles(user_id, component)
+
+    getConfiguration().product_config['erp5'].developer_list = [user_id]
+
+    self.assertUserCanChangeLocalRoles(user_id, self._component_tool)
+    self.assertUserCanModifyDocument(user_id, self._component_tool)
+    self.assertUserCanDeleteDocument(user_id, self._component_tool)
+    self.assertUserCanChangeLocalRoles(user_id, component)
+    self.assertUserCanModifyDocument(user_id, component)
+    self.assertUserCanDeleteDocument(user_id, component)
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
 

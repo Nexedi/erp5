@@ -71,7 +71,7 @@ class ComponentTool(BaseTool):
       del sys.modules[full_module_name]
       delattr(module, name)
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'reset')
+  security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
   def reset(self, force=True):
     """
     XXX-arnau: global reset
@@ -117,7 +117,7 @@ class ComponentTool(BaseTool):
 
     type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
 
-  security.declareProtected(Permissions.ModifyPortalContent,
+  security.declareProtected(Permissions.ResetDynamicClasses,
                             'resetOnceAtTransactionBoundary')
   def resetOnceAtTransactionBoundary(self):
     """
