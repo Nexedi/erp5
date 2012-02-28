@@ -1,4 +1,7 @@
 2012-02-28 arnaud.fontaine
+* Use a ListField for version and proxify error messages field in Component view.
+
+2012-02-28 arnaud.fontaine
 * Show Component version on ComponentTool view.
 
 2012-02-28 arnaud.fontaine
