@@ -27,6 +27,8 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5OOo.tests.testDms import makeFileUpload
+from time import time
 
 class TestRunMyDoc(ERP5TypeTestCase):
   """
@@ -87,4 +89,49 @@ class TestRunMyDoc(ERP5TypeTestCase):
     self.assertNotEquals(None, document)
     self.assertEquals(document.getRelativeUrl(),
                       test_page.getRelativeUrl())
+
+  def test_Zuite_uploadScreenShot(self):
+    """
+      Test Screeshot upload script used by Zelenium to 
+      update screenshots of the documents.
+    """
+    image_upload = makeFileUpload('TEST-en-002.png')
+    self.assertNotEquals(None, image_upload)
     
+    # Create a web page, and check if the content is not overwriten
+    web_page_reference = "WEB-PAGE-REFERENCE"
+    web_page = self.portal.web_page_module.newContent(
+                                     reference=web_page_reference, 
+                                     language="en", version="001")
+    web_page.publishAlive()
+    self.stepTic()
+
+    image_reference = "IMAGE-REFERENCE-%s" % str(time())
+    image_page = self.portal.image_module.newContent(
+                                   reference=image_reference, 
+                                   language="en", version="001")
+    image_page.publishAlive()
+    self.stepTic()
+    image_page_2 = self.portal.image_module.newContent(
+                                   reference=image_reference, 
+                                   language="en", version="002")
+    image_page_2.publishAlive()
+    self.stepTic()
+
+    self.portal.REQUEST.form['data_uri'] = image_upload
+    fake_image_reference = "DO-NOT-EXISTANT-IMAGE"
+    self.assertNotEquals(None, 
+                   self.portal.Zuite_uploadScreenshot(image_upload, fake_image_reference))
+
+    self.assertNotEquals(None, 
+                   self.portal.Zuite_uploadScreenshot(image_upload, web_page_reference))
+
+    self.assertEquals(None, 
+                   self.portal.Zuite_uploadScreenshot(image_upload, image_reference))
+
+    self.stepTic()
+    # The right image were updated.
+    image_upload.seek(0)
+    self.assertEquals(image_page_2.getData(), image_upload.read().decode("base64"))
+    self.assertEquals(image_page_2.getFilename(), image_reference + '.png')
+    self.assertEquals(image_page.getData(), '')
