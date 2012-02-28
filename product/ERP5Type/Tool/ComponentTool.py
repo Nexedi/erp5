@@ -84,10 +84,10 @@ class ComponentTool(BaseTool):
     global last_sync
     if force:
       # hard invalidation to force sync between nodes
-      portal.newCacheCookie('component_classes')
-      last_sync = portal.getCacheCookie('component_classes')
+      portal.newCacheCookie('component_packages')
+      last_sync = portal.getCacheCookie('component_packages')
     else:
-      cookie = portal.getCacheCookie('component_classes')
+      cookie = portal.getCacheCookie('component_packages')
       if cookie == last_sync:
         type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
         return

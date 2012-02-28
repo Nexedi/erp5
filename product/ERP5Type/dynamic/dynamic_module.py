@@ -125,7 +125,7 @@ def initializeDynamicModules():
   erp5.component = ModuleType("erp5.component")
   sys.modules["erp5.component"] = erp5.component
 
-  from component_class import ComponentDynamicPackage
+  from component_package import ComponentDynamicPackage
 
   erp5.component.extension = ComponentDynamicPackage('erp5.component.extension',
                                                      'Extension Component')
