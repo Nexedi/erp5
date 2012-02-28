@@ -1,3 +1,6 @@
+2012-02-28 arnaud.fontaine
+* Move fullscreen and maximize button at the top of Ace editor (accessibility).
+
 2012-02-15 arnaud.fontaine
 * Use uncompressed version of ace editor source code for readability and debugging sake.
 

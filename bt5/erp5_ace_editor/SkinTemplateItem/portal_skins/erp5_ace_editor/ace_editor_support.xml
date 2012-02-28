@@ -120,6 +120,9 @@
   }">\n
   </style>\n
 \n
+  <input type="button" value="Maximize" onclick="maximize()"\n
+         class="ace_editor_action_button" />\n
+\n
   <textarea tal:attributes="id id; name id" tal:content="content"\n
             style="display: none;"></textarea>\n
 \n
@@ -180,7 +183,7 @@
     if(event.keyCode == 27) {\n
       $(\'body\').css(\'overflow\', \'visible\');\n
       ace_editor_container_div.removeClass(\'maximize\');\n
-      ace_editor_container_div.prependTo(ace_editor_container_div_parent_before_maximized);\n
+      ace_editor_container_div.appendTo(ace_editor_container_div_parent_before_maximized);\n
       setContainerDivSize(event);\n
     }\n
   }\n
@@ -227,9 +230,6 @@
       $$(\'${fullscreen_button}\').insertAfter($$(\'input.ace_editor_action_button\'));\n
   };">\n
   </script>\n
-\n
-  <input type="button" value="Maximize" onclick="maximize()"\n
-         class="ace_editor_action_button" />\n
 </tal:block>
 
 ]]></unicode> </value>
