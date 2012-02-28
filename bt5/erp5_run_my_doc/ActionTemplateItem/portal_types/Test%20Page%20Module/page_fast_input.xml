@@ -40,7 +40,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>fast_input</string> </value>
+            <value> <string>page_fast_input</string> </value>
         </item>
         <item>
             <key> <string>permissions</string> </key>
@@ -56,7 +56,7 @@
         </item>
         <item>
             <key> <string>priority</string> </key>
-            <value> <float>2.0</float> </value>
+            <value> <float>11.0</float> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
