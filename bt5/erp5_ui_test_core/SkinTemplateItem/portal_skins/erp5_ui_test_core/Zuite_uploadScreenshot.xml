@@ -53,29 +53,31 @@
             <value> <string>"""\n
   Upload a screenshot taken by the test to ERP5\n
 """\n
-global msg\n
-msg = \'\'\n
+from Products.ERP5Type.Log import log\n
+\n
 data_uri = context.REQUEST.form.get(\'data_uri\', \'default\')\n
 \n
-image = context.portal_catalog.getResultValue(reference=image_reference, \n
-                                              portal_type="Image")\n
+image_module = getattr(context, "image_module", None)\n
+if image_module is None:\n
+  return "erp5_dms is not Installed"\n
 \n
-if image is None:\n
-  # Image is an embedded file\n
+image = image_module.getPortalObject().WebSection_getDocumentValue(\n
+                                                   name=image_reference)\n
+\n
+if image is None or image.getPortalType() != "Image":\n
+  # Image is an embedded file or not an image\n
   return "Image: " + str(image_reference) + " not found"\n
 \n
 image.setContentType(\'image/png\')\n
 data_text = data_uri.read()\n
-msg += \'dataUri : \' + data_text + \'\\n\'\n
 data = data_text.decode(\'base64\')\n
-msg += \'data : \' + data + \'\\n\'\n
+\n
 image.edit(data=data, \n
-           base_data=data, \n
+           #base_data=data,\n
            filename=str(image_reference) + \'.png\', \n
            content_type = \'image/png\')\n
 \n
 context.Zuite_updateImage(image)\n
-msg += \'done\'\n
 </string> </value>
         </item>
         <item>
