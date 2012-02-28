@@ -80,18 +80,6 @@
                 <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>hidden</string> </key>
-                    <value>
-                      <list/>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>left</string> </key>
-                    <value>
                       <list>
                         <string>your_chapter_title</string>
                         <string>your_slide_type</string>
@@ -106,6 +94,18 @@
                         <string>your_edit_mode</string>
                         <string>your_upload_image</string>
                       </list>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>hidden</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
+                    <key> <string>left</string> </key>
+                    <value>
+                      <list/>
                     </value>
                 </item>
                 <item>
