@@ -56,38 +56,31 @@
 global msg\n
 msg = \'\'\n
 data_uri = context.REQUEST.form.get(\'data_uri\', \'default\')\n
-def find_reference(reference, obj_list):\n
-  global msg\n
-  result = None\n
-  for obj in obj_list:\n
-    if obj.getReference() == reference:\n
-      result = obj\n
-      msg += reference + \' found\\n\'\n
-      break\n
-  return result\n
 \n
-web_page = find_reference(web_page_reference, context.portal_catalog(portal_type = (\'Web Page\',\'Test Page\')))\n
+image = context.portal_catalog.getResultValue(reference=image_reference, \n
+                                              portal_type="Image")\n
 \n
-if web_page is None or not web_page:\n
-  return "Web page: " + str(web_page_reference) + " not found"\n
-else:\n
-  image = find_reference(image_reference, web_page.objectValues(portal_type = \'Image\'))\n
-  if image is None or not image:\n
-    return "Image: " + str(image_reference) + " not found"\n
+if image is None:\n
+  # Image is an embedded file\n
+  return "Image: " + str(image_reference) + " not found"\n
 \n
 image.setContentType(\'image/png\')\n
 data_text = data_uri.read()\n
 msg += \'dataUri : \' + data_text + \'\\n\'\n
 data = data_text.decode(\'base64\')\n
 msg += \'data : \' + data + \'\\n\'\n
-image.edit(data = data, base_data = data, filename= str(image_reference) + \'.png\', content_type = \'image/png\')\n
+image.edit(data=data, \n
+           base_data=data, \n
+           filename=str(image_reference) + \'.png\', \n
+           content_type = \'image/png\')\n
+\n
 context.Zuite_updateImage(image)\n
 msg += \'done\'\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>data_uri, web_page_reference, image_reference</string> </value>
+            <value> <string>data_uri, image_reference</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
