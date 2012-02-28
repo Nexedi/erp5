@@ -190,6 +190,7 @@ possible_tool_list = [\n
   \'portal_contribution_registry\',\n
   \'portal_contributions\',\n
   \'portal_gadgets\',\n
+  \'portal_integrations\',\n
   \'portal_roundings\',\n
   \'portal_solvers\',\n
 ]\n
