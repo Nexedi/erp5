@@ -109,3 +109,45 @@ def parseTutorial(text):
 def urlread(url):
   import urllib
   return urllib.urlopen(url).read()
+
+
+"""
+  Remove everything but the test in a webpage
+"""
+def extractTest(title, text):
+  import lxml.html
+  from lxml import etree
+  root = lxml.html.fromstring(text)
+  table_list = root.xpath('//test')
+  html = """
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>"""+ title + """</title>
+  </head>
+  <body>
+    <table name="SELENIUM-TEST" cellpadding="1" cellspacing="1" border="1">
+      <thead>
+        <tr class="title">
+          <td colspan="3">"""+ title + """</td>
+        </tr>
+      </thead>
+      <tbody>
+"""
+
+  for table in table_list:
+    table = table[0]
+    if len(table) > 0:
+      for row in table[-1]:
+        if len(row) == 1:
+          # Include Macros as it is defined by the user.
+          html += row[0].text
+        else:
+          html += lxml.html.tostring(row)
+  html +="""
+      </tbody>
+    </table>
+  </body>
+</html>"""
+  return html
