@@ -79,7 +79,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>string: ${object_url}/Zuite_runSeleniumTest</string> </value>
+            <value> <string>string: ${object_url}/TestPage_runSeleniumTest</string> </value>
         </item>
       </dictionary>
     </pickle>
