@@ -1018,7 +1018,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_skin_id_list=template_skin_id_list)
 
 
-  def stepAddRegistredSelectionToBusinessTemplate(self, sequence=None, **kw):
+  def stepAddRegisteredSelectionToBusinessTemplate(self, sequence=None, **kw):
     """
     Add registered selection to business template
     """
@@ -1027,7 +1027,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     bt.edit(template_registered_skin_selection_list = \
         ('%s | Foo' % sequence.get('skin_folder_id'), ))
 
-  def stepEditRegistredSelectionToBusinessTemplate(self, sequence=None, **kw):
+  def stepEditRegisteredSelectionToBusinessTemplate(self, sequence=None, **kw):
     """
     Add registered selection to business template
     """
@@ -2814,7 +2814,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
                   description='bt for unit_test')
     sequence.edit(dependency_bt=template)
 
-  def stepSetSkinFolderRegistredSelections(self, sequence=None, **kw):
+  def stepSetSkinFolderRegisteredSelections(self, sequence=None, **kw):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
@@ -2822,7 +2822,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
           'business_template_registered_skin_selections', ('Foo',),
           type='tokens')
 
-  def stepSetSkinFolderRegistredSelections2(self, sequence=None, **kw):
+  def stepSetSkinFolderRegisteredSelections2(self, sequence=None, **kw):
     ps = self.getSkinsTool()
     skin_id = sequence.get('skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
@@ -2833,7 +2833,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     ps = self.getSkinsTool()
     ps.manage_skinLayers(skinpath=('erp5_core',), skinname='Foo', add_skin=1)
 
-  def stepSetStaticSkinFolderRegistredSelections(self, sequence=None, **kw):
+  def stepSetStaticSkinFolderRegisteredSelections(self, sequence=None, **kw):
     ps = self.getSkinsTool()
     skin_id = sequence.get('static_skin_folder_id')
     skin_folder = ps._getOb(skin_id, None)
@@ -5364,11 +5364,11 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list = SequenceList()
     sequence_string = '\
                        CreateSkinFolder \
-                       SetSkinFolderRegistredSelections \
+                       SetSkinFolderRegisteredSelections \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
-                       AddRegistredSelectionToBusinessTemplate \
+                       AddRegisteredSelectionToBusinessTemplate \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemoveSkinFolder \
@@ -5946,11 +5946,11 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test Business Template Uninstall With Skin Selection"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
-                       SetSkinFolderRegistredSelections \
+                       SetSkinFolderRegisteredSelections \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
-                       AddRegistredSelectionToBusinessTemplate \
+                       AddRegisteredSelectionToBusinessTemplate \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemoveSkinFolder \
@@ -5971,12 +5971,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_string = 'CreateSkinFolder \
                        CreateStaticSkinFolder \
                        CreateSkinSelection \
-                       SetSkinFolderRegistredSelections \
-                       SetStaticSkinFolderRegistredSelections \
+                       SetSkinFolderRegisteredSelections \
+                       SetStaticSkinFolderRegisteredSelections \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
-                       AddRegistredSelectionToBusinessTemplate \
+                       AddRegisteredSelectionToBusinessTemplate \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemoveSkinFolder \
@@ -5995,11 +5995,11 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     """Test Business Template will not register existing Skin"""
     sequence_list = SequenceList()
     sequence_string = 'CreateSkinFolder \
-                       SetSkinFolderRegistredSelections \
+                       SetSkinFolderRegisteredSelections \
                        CreateNewBusinessTemplate \
                        UseExportBusinessTemplate \
                        AddSkinFolderToBusinessTemplate \
-                       AddRegistredSelectionToBusinessTemplate \
+                       AddRegisteredSelectionToBusinessTemplate \
                        BuildBusinessTemplate \
                        SaveBusinessTemplate \
                        RemoveSkinFolder \
@@ -6081,11 +6081,11 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list = SequenceList()
     sequence_list.addSequenceString("""
       CreateSkinFolder
-      SetSkinFolderRegistredSelections
+      SetSkinFolderRegisteredSelections
       CreateNewBusinessTemplate
       UseExportBusinessTemplate
       AddSkinFolderToBusinessTemplate
-      AddRegistredSelectionToBusinessTemplate
+      AddRegisteredSelectionToBusinessTemplate
       BuildBusinessTemplate
       SaveBusinessTemplate
       RemoveSkinFolder
@@ -6118,9 +6118,9 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       CheckModifiedSkinFolderExists
       CheckSkinSelectionAdded
 
-      SetSkinFolderRegistredSelections2
+      SetSkinFolderRegisteredSelections2
       CopyBusinessTemplate
-      EditRegistredSelectionToBusinessTemplate
+      EditRegisteredSelectionToBusinessTemplate
       BuildBusinessTemplate
       InstallCurrentBusinessTemplate
       Tic

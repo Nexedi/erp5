@@ -259,7 +259,7 @@ def createSkinSelection(skin_tool, skin_name):
   #  - they explictly define a list of
   #    "business_template_registered_skin_selections", and we
   #    are not in this list.
-  #  - they are not registred in the default skin selection
+  #  - they are not registered in the default skin selection
   skin_path = ''
   for skin_folder in skin_tool.objectValues():
     if skin_name in skin_folder.getProperty(

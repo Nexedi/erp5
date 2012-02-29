@@ -47,12 +47,12 @@ class PortalTypeClass(Constraint):
     },
   """
 
-  _message_id_list = [ 'message_type_not_registred',
+  _message_id_list = [ 'message_type_not_registered',
                        'message_inconsistent_meta_type',
                        'message_inconsistent_class' ]
   
-  message_type_not_registred = "Type Information ${type_name} not "\
-                               "registred with the TypeTool"
+  message_type_not_registered = "Type Information ${type_name} not "\
+                                "registered with the TypeTool"
   message_inconsistent_meta_type = "Meta type is inconsistant with portal"\
       " type definition. Portal type meta type is ${portal_type_meta_type}"\
       " class meta type is ${class_meta_type}"
@@ -68,7 +68,7 @@ class PortalTypeClass(Constraint):
     type_info = types_tool._getOb(obj.getPortalType(), None)
     if type_info is None :
       error_list.append(self._generateError(obj,
-          self._getMessage('message_type_not_registred'),
+          self._getMessage('message_type_not_registered'),
           mapping=dict(type_name=obj.getPortalType())))
     elif type_info.content_meta_type != obj.meta_type :
       error_list.append(self._generateError(obj,
