@@ -3561,6 +3561,12 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
       return FilesystemDocumentTemplateItem._importFile(self, file_name,
                                                         *args, **kw)
 
+  def afterUninstall(self, already_migrated=False):
+    """
+    Hook called after uninstall
+    """
+    pass
+
   def uninstall(self, *args, **kw):
     # Only for uninstall, the path of objects can be given as a
     # parameter, otherwise it fallbacks on '_archive'
@@ -3570,10 +3576,13 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
     else:
       object_keys = self._archive.keys()
 
-    if self._is_already_migrated(object_keys):
-      return ObjectTemplateItem.uninstall(self, *args, **kw)
+    already_migrated = self._is_already_migrated(object_keys)
+    if already_migrated:
+      ObjectTemplateItem.uninstall(self, *args, **kw)
     else:
-      return FilesystemDocumentTemplateItem.uninstall(self, *args, **kw)
+      FilesystemDocumentTemplateItem.uninstall(self, *args, **kw)
+
+    self.afterUninstall(already_migrated)
 
   def remove(self, context, **kw):
     """
@@ -3874,9 +3883,14 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
                         self._objects or self._archive))
 
     if self._is_already_migrated(object_list):
-      return ObjectTemplateItem.install(self, context, **kw)
+      ObjectTemplateItem.install(self, context, **kw)
+      self.portal_components.reset(force=True, reset_portal_type=True)
     else:
-      return FilesystemDocumentTemplateItem.install(self, context, **kw)
+      FilesystemDocumentTemplateItem.install(self, context, **kw)
+
+  def afterUninstall(self, already_migrated=False):
+    if already_migrated:
+      self.portal_components.reset(force=True, reset_portal_type=True)
 
 from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent as \
     ExtensionComponentDocument
