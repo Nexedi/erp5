@@ -1235,19 +1235,22 @@ class _TestZodbComponent(SecurityTestCase):
     return ('erp5_base',
             'erp5_core_component')
 
-  def afterSetUp(self):
+  def login(self, user_name='ERP5TypeTestCase', quiet=0):
     product_config = getattr(getConfiguration(), 'product_config', None)
     if product_config is None:
       class DummyDeveloperConfig(object):
         pass
 
       dummy_developer_config = DummyDeveloperConfig()
-      dummy_developer_config.developer_list = ['ERP5TypeTestCase']
+      dummy_developer_config.developer_list = [user_name]
       getConfiguration().product_config = {'erp5': dummy_developer_config}
 
-    elif 'ERP5TypeTestCase' not in product_config['erp5'].developer_list:
-      product_config['erp5'].developer_list.append('ERP5TypeTestCase')
+    elif user_name not in product_config['erp5'].developer_list:
+      product_config['erp5'].developer_list.append(user_name)
 
+    return super(_TestZodbComponent, self).login(user_name, quiet)
+
+  def afterSetUp(self):
     self._component_tool = self.getPortal().portal_components
     self._module = __import__(self._getComponentModuleName(),
                               fromlist=['erp5.component'])
