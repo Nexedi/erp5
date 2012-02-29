@@ -239,12 +239,28 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     error_list = self.checkConsistency()
     if error_list:
       workflow = self.workflow_history['component_validation_workflow'][-1]
-      workflow['error_list'] = error_list
+
+      # When checking consistency with validate_action, messages are stored
+      # into error_message workflow attribute as Message instances
+      workflow['error_message'] = [error.getMessage() for error in error_list]
     else:
       for property_name in self._recorded_property_name_tuple:
         self.clearRecordedProperty(property_name)
 
       self.validate()
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getErrorMessageList')
+  def hasErrorMessageList(self):
+    """
+    Check whether there are error messages, useful to display errors in the UI
+    without calling getErrorMessageList() which translates error messages
+    """
+    try:
+      self.workflow_history['component_validation_workflow'][-1]['error_message']
+      return True
+    except KeyError:
+      return False
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getErrorMessageList')
@@ -254,8 +270,8 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     the Component has been modified after being validated once
     """
     current_workflow = self.workflow_history['component_validation_workflow'][-1]
-    return [str(error.getTranslatedMessage())
-            for error in current_workflow.get('error_list', [])]
+    return [error.translate()
+            for error in current_workflow.get('error_message', [])]
 
   security.declareProtected(Permissions.ModifyPortalContent, 'load')
   def load(self, namespace_dict={}, validated_only=False, text_content=None):
