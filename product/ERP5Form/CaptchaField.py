@@ -291,8 +291,6 @@ class CaptchaField(ZMIField):
     
     self.values.update(result)
     
-    self._edit(result)
-    
     # finally notify field of all changed values if necessary
     for key in result:
       method_name = "on_value_%s_changed" % key
@@ -304,21 +302,6 @@ class CaptchaField(ZMIField):
       return self.manage_main(self, REQUEST,
                               manage_tabs_message=message)
                               
-  def _edit(self, result):
-    if result.has_key("captcha_type"):
-      # Now, find out the old fields and wipe them out !
-      new_provider = CaptchaProviderFactory.getProvider(result["captcha_type"])
-      old_propertiesIds = self.__extraPropertyList
-      new_properties = [x.get_real_field() for x in new_provider.getExtraPropertyList()]
-      deleted_properties = [x for x in new_properties if not x.id in old_propertiesIds]
-      for deleted_property in deleted_properties:
-        if deleted_property.values.has_key("default"):
-          result[deleted_property.id] = deleted_property.values["default"]
-        else:
-          result[deleted_property.id] = None
-      self.__extraPropertyList = new_properties
-    ZMIField._edit(self, result)
-  
   security.declareProtected('Access contents information', 'get_value')
   def get_value(self, id, **kw):
     if id in self.getCaptchaCustomPropertyList():
@@ -326,12 +309,9 @@ class CaptchaField(ZMIField):
     return ZMIField.get_value(self, id, **kw)
 
   def getCaptchaCustomPropertyList(self):
-    if hasattr(self, "__extraPropertyList"):
-      return self.__extraPropertyList
     captcha_type = ZMIField.get_value(self, "captcha_type")
     captcha_provider = CaptchaProviderFactory.getProvider(captcha_type)
     extraPropertyList = captcha_provider.getExtraPropertyList()
-    self.__extraPropertyList = [x.id for x in extraPropertyList]
     return extraPropertyList
 
 
@@ -379,11 +359,8 @@ class CaptchaField(ZMIField):
                                    manage_tabs_message=message)
                                      
   def getCaptchaCustomTalesPropertyList(self):
-    if hasattr(self, "__extraTalesPropertyList"):
-      return self.__extraTalesPropertyList
     captcha_type = ZMIField.get_value(self, "captcha_type")
     captcha_provider = CaptchaProviderFactory.getProvider(captcha_type)
     extraPropertyList = captcha_provider.getExtraTalesPropertyList()
-    self.__extraTalesPropertyList = [x.id for x in extraPropertyList]
     return extraPropertyList                                     
   
