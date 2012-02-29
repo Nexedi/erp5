@@ -1,10 +1,14 @@
 Changes
 =======
 
-0.4 (unreleased)
+0.4.1 (2012-02-29)
 ----------------
 
- * No changes yet.
+ * erp5.util.testnode:
+
+  - Improve testnode's reliability when contacting remote master
+  - Try to build software releases multiple times before giving up
+
 
 0.3 (2011-12-23)
 ----------------
