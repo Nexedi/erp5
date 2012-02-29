@@ -61,7 +61,7 @@ zuite = context.getPortalObject().portal_tests.Zuite_addZuite(zuite_id)\n
 \n
 test = zuite.Zuite_addTest(test_id, \n
                            title, \n
-                           context.Zuite_extractTest(text, title))\n
+                           text)\n
 \n
 return zuite.Base_redirect("core/TestRunner.html?auto=true&test=..%2Ftest_suite_html&resultsUrl=..%2FpostResults")\n
 

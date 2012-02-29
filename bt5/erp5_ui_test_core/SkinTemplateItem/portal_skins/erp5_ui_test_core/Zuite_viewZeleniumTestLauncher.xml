@@ -81,6 +81,7 @@
                     <key> <string>center</string> </key>
                     <value>
                       <list>
+                        <string>your_description</string>
                         <string>your_url</string>
                         <string>your_zuite_id</string>
                         <string>your_test_id</string>
