@@ -444,28 +444,29 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     return self.title
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getVersionPriority')
-  def getVersionPriority(self):
+                            'getVersionPriorityList')
+  def getVersionPriorityList(self):
     # Whatever happens, a version must always be returned otherwise it may
     # render the site unusable when all Products will have been migrated
-    if not self._version_priority:
+    if not self._version_priority_list:
       return ('erp5',)
 
-    return self._version_priority
+    return self._version_priority_list
 
   security.declareProtected(Permissions.ModifyPortalContent,
-                            'setVersionPriority' )
-  def setVersionPriority(self, value):
+                            'setVersionPriorityList' )
+  def setVersionPriorityList(self, value):
     """
     XXX-arnau: must be written through an interaction workflow when ERP5Site
                will become a real ERP5 object...
     """
-    self._version_priority = value
+    self._version_priority_list = value
 
     if not getattr(self, '_v_bootstrapping', False):
       self.portal_components.resetOnceAtTransactionBoundary()
 
-  version_priority = property(getVersionPriority, setVersionPriority)
+  version_priority_list = property(getVersionPriorityList,
+                                   setVersionPriorityList)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getUid')
   def getUid(self):
@@ -1695,7 +1696,7 @@ class ERP5Generator(PortalGenerator):
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
 
-    p._setProperty('version_priority', ('erp5',), 'lines')
+    p._setProperty('version_priority_list', ('erp5',), 'lines')
 
     erp5_sql_deferred_connection_string = erp5_sql_connection_string
     p._setProperty('erp5_catalog_storage',

@@ -103,7 +103,7 @@ class ComponentDynamicPackage(ModuleType):
       except AttributeError:
         return {}
 
-      version_priority_set = set(portal.getVersionPriority())
+      version_priority_set = set(portal.getVersionPriorityList())
 
       # contentValues should not be used for a large number of objects, but
       # this is only done at startup or upon reset, moreover using the Catalog
@@ -155,7 +155,7 @@ class ComponentDynamicPackage(ModuleType):
     # wrongly considered as importable and thus the actual filesystem class
     # ignored
     elif (name not in self._registry_dict and
-          name.replace('_version', '') not in site.getVersionPriority()):
+          name.replace('_version', '') not in site.getVersionPriorityList()):
       return None
 
     return self
@@ -182,7 +182,7 @@ class ComponentDynamicPackage(ModuleType):
     component_name = fullname.replace(self._namespace_prefix, '')
     if component_name.endswith('_version'):
       version = component_name.replace('_version', '')
-      return (version in site.getVersionPriority() and
+      return (version in site.getVersionPriorityList() and
               self._getVersionPackage(version) or None)
 
     component_id_alias = None
@@ -211,7 +211,7 @@ class ComponentDynamicPackage(ModuleType):
 
         return None
 
-      for version in site.getVersionPriority():
+      for version in site.getVersionPriorityList():
         component = component_version_dict.get(version, None)
         if component is not None:
           break

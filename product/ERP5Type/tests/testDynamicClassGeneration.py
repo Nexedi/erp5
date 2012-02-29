@@ -1589,9 +1589,9 @@ def bar(*args, **kwargs):
     from Products.ERP5.ERP5Site import getSite
     site = getSite()
     ComponentTool.reset = assertResetCalled
-    priority_tuple = site.getVersionPriority()
+    priority_tuple = site.getVersionPriorityList()
     try:
-      site.setVersionPriority(('foo',) + priority_tuple)
+      site.setVersionPriorityList(('foo',) + priority_tuple)
       transaction.commit()
       self.tic()
 
@@ -1607,7 +1607,7 @@ def bar(*args, **kwargs):
 
     finally:
       ComponentTool.reset = ComponentTool._original_reset
-      site.setVersionPriority(priority_tuple)
+      site.setVersionPriorityList(priority_tuple)
       transaction.commit()
       self.tic()
 
