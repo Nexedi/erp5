@@ -1,4 +1,7 @@
 2012-02-29 arnaud.fontaine
+* Add portal_components to keep path list.
+
+2012-02-29 arnaud.fontaine
 * Add global action to manage ZODB Components.
 
 2012-02-29 arnaud.fontaine
