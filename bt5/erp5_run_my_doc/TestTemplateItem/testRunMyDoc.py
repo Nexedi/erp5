@@ -135,3 +135,95 @@ class TestRunMyDoc(ERP5TypeTestCase):
     self.assertEquals(image_page_2.getData(), image_upload.read().decode("base64"))
     self.assertEquals(image_page_2.getFilename(), image_reference + '.png')
     self.assertEquals(image_page.getData(), '')
+
+  def test_getSeleniumTest(self):
+    """
+      Test the script that extracts Selenium Test from HTML body.
+    """
+    test_page_html = """<section><h1>TITLE</h1><details>DETAILS<details>
+    <test><table class="test" style="display: none;"> <tbody> </tbody></table> </test> 
+    </section> 
+    <section><h1>TITLE</h1><details>DETAILS<details><test>
+      <table class="test" style="display: none;">
+        <tbody> 
+          <tr> 
+            <td colspan="3">&lt;span metal:use-macro=&quot;container/Zuite_viewTestMacroLibrary/macros/init_test_environment&quot; style=&quot;display: none;&quot;&gt;init&lt;/span&gt;</td> 
+          </tr> 
+          <tr> 
+            <td>selectAndWait</td> 
+            <td>name=select_module</td> 
+            <td>label=Test Pages</td> 
+          </tr> 
+          <tr> 
+            <td>verifyTextPresent</td> 
+            <td>Test Pages</td> 
+            <td> <br /> </td> 
+          </tr> 
+          <tr style="opacity: 1;"> 
+            <td>clickAndWait</td> 
+            <td>css=a.fast_input &gt; span.image</td> 
+            <td> <br /> </td> 
+          </tr> </tbody></table> </test> 
+    </section> 
+    <section><h1>TITLE</h1><details>DETAILS<details><test>
+      <table class="test" style="display: none;"> <tbody> 
+          <tr> 
+            <td>verifyTextPresent</td> 
+            <td>Test Pages</td> 
+            <td> <br /> </td> 
+          </tr> </tbody></table> </test> 
+    </section>"""
+
+    expected_test_html = """
+<html xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>TEST</title>
+  </head>
+  <body>
+    <table name="SELENIUM-TEST" cellpadding="1" cellspacing="1" border="1">
+      <thead>
+        <tr class="title">
+          <td colspan="3">TEST</td>
+        </tr>
+      </thead>
+      <tbody>
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr><td>selectAndWait</td> 
+            <td>name=select_module</td> 
+            <td>label=Test Pages</td> 
+          </tr><tr><td>verifyTextPresent</td> 
+            <td>Test Pages</td> 
+            <td> <br></td> 
+          </tr><tr style="opacity: 1;"><td>clickAndWait</td> 
+            <td>css=a.fast_input &gt; span.image</td> 
+            <td> <br></td> 
+          </tr><tr><td>verifyTextPresent</td> 
+            <td>Test Pages</td> 
+            <td> <br></td> 
+          </tr>
+      </tbody>
+    </table>
+  </body>
+</html>"""
+  
+    test_page = self.portal.test_page_module.newContent(title="TEST",
+                                                        reference='TESTPAGEREFERENCE',
+                                                        text_content=test_page_html)
+    self.assertEquals(test_page.TestPage_getSeleniumTest(), expected_test_html)
+
+    self.stepTic()
+    test_page.TestPage_runSeleniumTest()
+
+    zuite = getattr(self.portal.portal_tests, 'TESTPAGEREFERENCE', None)
+    self.assertNotEquals(zuite, None)
+    
+    zptest = getattr(zuite, "TEST", None)
+    self.assertNotEquals(zptest, None)
+
+    self.assertEquals(zptest._text, expected_test_html.strip())
+ 
+   
+    
+
+
