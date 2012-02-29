@@ -339,7 +339,16 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     if 'ERP5Site.__of__' not in tv and type(parent) is Application:
       tv['ERP5Site.__of__'] = None
       setSite(self)
-      synchronizeDynamicModules(self)
+
+      # If Components are reset, then portal type classes should be reset
+      try:
+        reset_portal_type = self.portal_components.reset(force=False,
+                                                         reset_portal_type=False)
+      # This should only happen before erp5_core is installed
+      except AttributeError:
+        reset_portal_type = False
+
+      synchronizeDynamicModules(self, force=reset_portal_type)
     return self
 
   def manage_beforeDelete(self, item, container):

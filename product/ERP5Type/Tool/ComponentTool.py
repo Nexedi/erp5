@@ -41,7 +41,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG, INFO, WARNING
 
-_last_sync = -1
+last_sync = -1
 class ComponentTool(BaseTool):
   """
   This tool provides methods to load the the different types of
@@ -72,7 +72,7 @@ class ComponentTool(BaseTool):
       delattr(module, name)
 
   security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
-  def reset(self, force=True):
+  def reset(self, force=True, reset_portal_type=True):
     """
     XXX-arnau: global reset
     """
@@ -89,8 +89,7 @@ class ComponentTool(BaseTool):
     else:
       cookie = portal.getCacheCookie('component_packages')
       if cookie == last_sync:
-        type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
-        return
+        return False
       last_sync = cookie
 
     LOG("ERP5Type.Tool.ComponentTool", INFO, "Resetting Components")
@@ -115,7 +114,10 @@ class ComponentTool(BaseTool):
           module._resetRegistry()
           self._resetModule(module)
 
-    type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
+    if reset_portal_type:
+      type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()
+
+    return True
 
   security.declareProtected(Permissions.ResetDynamicClasses,
                             'resetOnceAtTransactionBoundary')

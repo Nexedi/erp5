@@ -1209,12 +1209,18 @@ ComponentTool._original_reset = ComponentTool.reset
 ComponentTool._reset_performed = False
 
 def assertResetNotCalled(*args, **kwargs):
-  raise AssertionError("reset should not have been performed")
+  reset_performed = ComponentTool._original_reset(*args, **kwargs)
+  if reset_performed:
+    raise AssertionError("reset should not have been performed")
 
-def assertResetCalled(self, *args, **kwargs):
-  from Products.ERP5Type.Tool.ComponentTool import ComponentTool
-  ComponentTool._reset_performed = True
-  return ComponentTool._original_reset(self, *args, **kwargs)
+  return reset_performed
+
+def assertResetCalled(*args, **kwargs):
+  reset_performed = ComponentTool._original_reset(*args, **kwargs)
+  if reset_performed:
+    ComponentTool._reset_performed = True
+
+  return reset_performed
 
 import abc
 
