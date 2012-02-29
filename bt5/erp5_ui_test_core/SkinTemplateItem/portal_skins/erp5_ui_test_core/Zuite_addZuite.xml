@@ -50,48 +50,26 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>web_page_context = context.getPortalType() in [\'Test Page\', \'Web Page\']\n
+            <value> <string>"""\n
+  Create a zuite or return an existing one after remove his contents.\n
+"""\n
+if zuite_id not in context.objectIds():\n
+  factory = context.portal_tests.manage_addProduct[\'Zelenium\']\n
+  factory.manage_addZuite(id=zuite_id)\n
 \n
-if web_page_context:\n
-  no_web_page = False\n
-  form_id = \'view\'\n
-else:\n
-  no_web_page = not request.has_key(\'web_page\') or request[\'web_page\'] is None or not request[\'web_page\']\n
-  form_id = \'Zuite_viewZeleniumTestLauncher\'\n
+zuite = getattr(context.portal_tests, zuite_id, None)\n
+zuite.manage_delObjects(zuite.objectIds())\n
 \n
-no_reference = not request.has_key(\'web_page_reference\') or request[\'web_page_reference\'] is None or not request[\'web_page_reference\']\n
-no_url = not request.has_key(\'url\') or request[\'url\'] is None or not request[\'url\']\n
-\n
-if no_web_page and no_url and no_reference:\n
-  if validator:\n
-    return 0\n
-  else:\n
-    return dict(result = False, form_id = form_id, portal_status_message=context.Base_translateString("External Url (url), ERP5 Web Page Path (web_page) and ERP5 Web Page Reference (web_page_reference): were omitted, one of them must be set."))\n
-elif not (no_url or no_web_page) or not (no_reference or no_web_page):\n
-  if validator:\n
-    return 0\n
-  elif web_page_context:\n
-    return dict(result=False, \n
-                form_id=form_id, \n
-                portal_status_message=context.Base_translateString("url, web_page and web_page_reference don\'t need to be set in Web Page context."))\n
-  else:\n
-    return dict(result=False, \n
-                form_id=form_id, \n
-                portal_status_message=context.Base_translateString("You have to choose between External Url (url), ERP5 Web Page Path (web_page) and ERP5 Web Page Reference (web_page_reference). Only ONE of them must be set."))\n
-\n
-if validator:\n
-  return 1\n
-else:\n
-  return dict(result = True)\n
+return zuite\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>editor, request, validator = True</string> </value>
+            <value> <string>zuite_id</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Zuite_viewZeleniumTestLauncherValidator</string> </value>
+            <value> <string>Zuite_addZuite</string> </value>
         </item>
       </dictionary>
     </pickle>

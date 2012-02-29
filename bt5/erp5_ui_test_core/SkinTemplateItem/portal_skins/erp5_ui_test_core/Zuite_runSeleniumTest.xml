@@ -50,85 +50,27 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
   Generate a Zuite (if necessary), create/update the test and redirect to the selenium test created/updated\n
   url, web_page or web_page_reference must be set for it to work (or the context should be the Web Page in question)\n
 """\n
 \n
-if context.getPortalType() in [\'Web Page\', \'Test Page\'] :\n
-  web_page = context\n
-  obj_reference = context.getReference()\n
-  if not(obj_reference is None or not obj_reference):\n
-    zuite_id = obj_reference\n
-else:\n
-  if zuite_id is None or not zuite_id:\n
-    zuite_id = \'tutorial_zuite\'\n
-\n
-no_reference = web_page_reference is None or not web_page_reference\n
-no_url = url is None or not url\n
-\n
-validation = context.Zuite_viewZeleniumTestLauncherValidator(editor = None, request = context.REQUEST, validator = False)\n
+validation = context.Zuite_viewZeleniumTestLauncherValidator(editor=None, \n
+                                                             request=context.REQUEST, \n
+                                                             validator = False)\n
 if not validation[\'result\']:\n
-  return context.Base_redirect(validation[\'form_id\'], keep_items = dict(portal_status_message=validation[\'portal_status_message\']))\n
+  return context.Base_redirect(validation[\'form_id\'], \n
+                               keep_items = dict(portal_status_message=validation[\'portal_status_message\']))\n
 \n
-if not no_url:\n
-  text = context.Zuite_urlRead(url)\n
-elif not no_reference:\n
-  web_page = None\n
-  for page in context.portal_catalog(portal_type=\'Web Page Module\')[0].objectValues() + context.portal_catalog(portal_type=\'Test Page Module\')[0].objectValues() :\n
-    if page.getReference() == web_page_reference and page.getValidationState() not in [\'archived\',\'deleted\']:\n
-      web_page = page\n
-      break\n
-  if web_page is None or not web_page:\n
-    raise Exception(\'Web Page with reference <i>\' + web_page_reference + \'</i> not found.\')\n
-  text = web_page.getTextContent()\n
-else:\n
-  if isinstance(web_page, str):\n
-    try:\n
-      web_page = context.restrictedTraverse(web_page)\n
-    except:\n
-      raise Exception(web_page + \' not found with restrictedTraverse.\')\n
-  text = web_page.getTextContent()\n
-\n
-portal_tests = context.getPortalObject().portal_tests\n
-\n
-zuite_path = portal_tests.getPath() + \'/\' + zuite_id\n
-try:\n
-  zuite = context.restrictedTraverse(zuite_path)\n
-except:\n
-  factory = portal_tests.manage_addProduct[\'Zelenium\']\n
-  factory.manage_addZuite(id=zuite_id)\n
-  zuite = context.restrictedTraverse(zuite_path)\n
-\n
-title = web_page.getTitle()\n
-text = context.Zuite_extractTest(text, title)\n
-\n
-\n
-if test_id is None or test_id == \'\':\n
-  test_id = \'\'.join(list(filter(lambda a: a not in ["\'",\'_\', \'-\',\'.\',\' \',\'~\', \':\', \'/\', \'?\', \'#\', \'[\', \']\', \'@\', \'!\', \'$\', \'&\', \'(\', \')\', \'*\',\'+\',\';\',\'=\'], title)))\n
-\n
-zuite.manage_delObjects([x.getId() for x in zuite.objectValues()])\n
-\n
-test_path = zuite_path + \'/\' + test_id\n
-try:\n
-  test = context.restrictedTraverse(test_path)\n
-  context.Zuite_editZPT(test, text)\n
-except:\n
-  factory = zuite.manage_addProduct[\'PageTemplates\']\n
-  factory.manage_addPageTemplate(test_id, title=title, text = text, REQUEST=None)\n
-  test = context.restrictedTraverse(test_path)\n
-\n
-\n
-return zuite.Base_redirect("core/TestRunner.html?auto=true&test=..%2Ftest_suite_html&resultsUrl=..%2FpostResults")\n
-
-
-]]></string> </value>
+return context.Zuite_createAndLaunchSeleniumTest(text=context.Zuite_urlRead(url),\n
+                                                 title="Download From Web", \n
+                                                 zuite_id=zuite_id,\n
+                                                 test_id=test_id)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>url = \'\', web_page = None, web_page_reference = \'\', zuite_id = \'tutorial_zuite\', test_id = \'\'</string> </value>
+            <value> <string>url, zuite_id = \'tutorial_zuite\', test_id = \'\'</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

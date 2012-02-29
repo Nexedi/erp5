@@ -72,8 +72,7 @@ image.setContentType(\'image/png\')\n
 data_text = data_uri.read()\n
 data = data_text.decode(\'base64\')\n
 \n
-image.edit(data=data, \n
-           #base_data=data,\n
+image.edit(data=data,\n
            filename=str(image_reference) + \'.png\', \n
            content_type = \'image/png\')\n
 \n

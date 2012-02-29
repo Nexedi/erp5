@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>description</string>
+                <string>display_width</string>
                 <string>title</string>
               </list>
             </value>
@@ -83,6 +84,10 @@
                 <item>
                     <key> <string>description</string> </key>
                     <value> <string>Type the url of the page containing the Zelenium Test. (for external webpages only)</string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>120</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
