@@ -1,4 +1,7 @@
 2012-02-29 arnaud.fontaine
+* Add global action to manage ZODB Components.
+
+2012-02-29 arnaud.fontaine
 * Do not reset Components on ComponentTool _setObject and _delObject, instead reset in BusinessTemplate to avoid reset being triggered when a new Component is created.
 
 2012-02-28 arnaud.fontaine

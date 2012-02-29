@@ -132,6 +132,7 @@ Types Tool | view
 ZODB Continuous Increasing Id Generator | view
 portal_actions | bt_tool
 portal_actions | category_tool
+portal_actions | component_tool
 portal_actions | create_module
 portal_actions | make_template
 portal_actions | portal_alarms_action
