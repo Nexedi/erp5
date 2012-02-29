@@ -50,29 +50,16 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-"""\n
-reference = context.getReference()\n
-if reference not in [None, \'\']:\n
-  zuite_id = reference\n
-\n
-return context.Zuite_createAndLaunchSeleniumTest(text=context.TestPage_getSeleniumTest(),\n
-                                                 title=context.getTitle(), \n
-                                                 zuite_id=zuite_id,\n
-                                                 test_id=test_id)\n
+            <value> <string>return context.TestPage_extractTest(context.getTitle(), context.getTextContent())\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>zuite_id=\'tutorial_zuite\', test_id=None</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPage_runSeleniumTest</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>TestPage_getSeleniumTest</string> </value>
         </item>
       </dictionary>
     </pickle>
