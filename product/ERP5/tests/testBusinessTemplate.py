@@ -6870,6 +6870,25 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
   component_module = DocumentComponent._getDynamicModuleNamespace()
   component_portal_type = DocumentComponent.portal_type
 
+  def login(self, user_name='ERP5TypeTestCase', quiet=0):
+    """
+    XXX-arnau: Copy/paste from testDynamicClassGeneration
+    """
+    from App.config import getConfiguration
+    product_config = getattr(getConfiguration(), 'product_config', None)
+    if product_config is None:
+      class DummyDeveloperConfig(object):
+        pass
+
+      dummy_developer_config = DummyDeveloperConfig()
+      dummy_developer_config.developer_list = [user_name]
+      getConfiguration().product_config = {'erp5': dummy_developer_config}
+
+    elif user_name not in product_config['erp5'].developer_list:
+      product_config['erp5'].developer_list.append(user_name)
+
+    return super(TestDocumentTemplateItem, self).login(user_name, quiet)
+
   def stepCreateZodbDocument(self, sequence=None, **kw):
     document_id = '%s.erp5.%s' % (self.component_module, self.document_title)
     self.getPortalObject().portal_components.newContent(
