@@ -1357,7 +1357,9 @@ class TestBudget(ERP5TypeTestCase):
 
     self.assertEquals({
       'from_date': None,
-      'simulation_state': ('delivered', 'stopped'),
+      'simulation_state': ('delivered', 'stopped', 'started'),
+      'transit_simulation_state': ('started', ),
+      'omit_transit': False,
       # XXX order is reversed for some reason ...
       'section_category': ['group/demo_group/sub2',
                            'group/demo_group/sub1'],
