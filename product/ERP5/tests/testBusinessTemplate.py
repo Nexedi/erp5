@@ -6890,7 +6890,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     return super(TestDocumentTemplateItem, self).login(user_name, quiet)
 
   def stepCreateZodbDocument(self, sequence=None, **kw):
-    document_id = '%s.erp5.%s' % (self.component_module, self.document_title)
+    document_id = self.component_module + '.erp5.' + self.document_title
     self.getPortalObject().portal_components.newContent(
       id=document_id,
       version='erp5',
@@ -6933,8 +6933,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
 
     self.assertTrue(os.path.exists(component_bt_tool_path))
 
-    component_id = '%s.erp5.%s' % (self.component_module,
-                                   sequence['document_title'])
+    component_id = self.component_module + '.erp5.' + sequence['document_title']
     base_path = os.path.join(component_bt_tool_path, component_id)
 
     python_source_code_path = base_path + '.py'

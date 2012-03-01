@@ -54,7 +54,7 @@ def _importClass(classpath):
 
     return klass
   except StandardError:
-    raise ImportError('Could not import document class %s' % classpath)
+    raise ImportError('Could not import document class ' + classpath)
 
 # Loading Cache Factory portal type would generate the accessor holder
 # for Cache Factory, itself defined with Standard Property thus
@@ -179,8 +179,8 @@ def generatePortalTypeClass(site, portal_type_name):
     interface_list = []
 
   if type_class is None:
-    raise AttributeError('Document class is not defined on Portal Type %s' \
-            % portal_type_name)
+    raise AttributeError('Document class is not defined on Portal Type ' + \
+                           portal_type_name)
 
   klass = None
   if '.' in type_class:
@@ -194,7 +194,7 @@ def generatePortalTypeClass(site, portal_type_name):
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
       try:
-        klass = getattr(__import__('erp5.component.document.%s' % type_class,
+        klass = getattr(__import__('erp5.component.document.' + type_class,
                                    fromlist=['erp5.component.document'],
                                    level=0),
                         type_class)
@@ -277,7 +277,7 @@ def loadTempPortalTypeClass(portal_type_name):
   import erp5.portal_type
   klass = getattr(erp5.portal_type, portal_type_name)
 
-  return type("Temporary %s" % portal_type_name,
+  return type("Temporary " + portal_type_name,
               (TemporaryDocumentMixin, klass), {})
 
 last_sync = -1

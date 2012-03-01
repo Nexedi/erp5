@@ -161,7 +161,7 @@ class ComponentDynamicPackage(ModuleType):
     version += '_version'
     version_package = getattr(self, version, None)
     if version_package is None:
-      version_package_name = '%s.%s' % (self._namespace, version)
+      version_package_name = self._namespace + '.' + version
 
       version_package = ComponentVersionPackage(version_package_name)
       sys.modules[version_package_name] = version_package
@@ -225,7 +225,7 @@ class ComponentDynamicPackage(ModuleType):
 
         return module
 
-      component_id_alias = '%s.%s' % (self._namespace, component_name)
+      component_id_alias = self._namespace + '.' + component_name
 
     component_id = '%s.%s_version.%s' % (self._namespace, version,
                                          component_name)
@@ -240,7 +240,7 @@ class ComponentDynamicPackage(ModuleType):
         sys.modules[component_id_alias] = new_module
 
       # This must be set for imports at least (see PEP 302)
-      new_module.__file__ = "<%s>" % component_name
+      new_module.__file__ = '<' + component_name + '>'
 
       try:
         component.load(new_module.__dict__, validated_only=True)
@@ -282,7 +282,7 @@ class ComponentDynamicPackage(ModuleType):
       elif isinstance(module, ComponentVersionPackage):
         self.reset(sub_package=module)
 
-      module_name = "%s.%s" % (package.__name__, name)
+      module_name = package.__name__ + '.' + name
       LOG("ERP5Type.Tool.ComponentTool", BLATHER, "Resetting " + module_name)
 
       # The module must be deleted first from sys.modules to avoid imports in

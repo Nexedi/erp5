@@ -57,7 +57,7 @@ if failed_import_dict:\n
  for name, error in failed_import_dict.iteritems():\n
   failed_import_formatted_list.append("%s (%s)" % (name, error))\n
 \n
- message = "The following component could not be imported: %s" % \', \'.join(failed_import_formatted_list)\n
+ message = "The following component could not be imported: " + \', \'.join(failed_import_formatted_list)\n
 else:\n
  message = "All components were successfully imported from filesystem to ZODB."\n
 \n

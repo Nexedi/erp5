@@ -3743,7 +3743,7 @@ class PropertySheetTemplateItem(FilesystemToZodbTemplateItem):
     from App.config import getConfiguration
     return os.path.join(getConfiguration().instancehome,
                         "PropertySheet",
-                        "%s.py" % class_id)
+                        class_id + ".py")
 
   @staticmethod
   def _migrateFromFilesystem(tool,
@@ -3799,14 +3799,14 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return 'erp5.component.document.%s' % id
+    return 'erp5.component.document.' + id
 
   @staticmethod
   def _getFilesystemPath(class_id):
     from App.config import getConfiguration
     return os.path.join(getConfiguration().instancehome,
                         "Document",
-                        "%s.py" % class_id)
+                        class_id + ".py")
 
   def _importFile(self, file_name, file_obj):
     if file_name.endswith('.py'):
@@ -3820,7 +3820,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
       name = file_name[:-4]
       obj = self._objects[name]
-      with open("%s.py" % file_obj.name[:-4]) as f:
+      with open(file_obj.name[:-4] + ".py") as f:
         obj.text_content = f.read()
 
       # When importing a Business Template, there is no way to determine if it
@@ -3912,7 +3912,7 @@ class ExtensionTemplateItem(DocumentTemplateItem):
 
   @staticmethod
   def _getZodbObjectId(id):
-    return 'erp5.component.extension.%s' % id
+    return 'erp5.component.extension.' + id
 
   def getTemplateIdList(self):
     return self.getTemplateExtensionIdList()

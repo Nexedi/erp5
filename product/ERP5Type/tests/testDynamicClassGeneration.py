@@ -1265,7 +1265,7 @@ class _TestZodbComponent(SecurityTestCase):
     pass
 
   def _getComponentFullModuleName(self, module_name):
-    return "%s.%s" % (self._getComponentModuleName(), module_name)
+    return self._getComponentModuleName() + '.' + module_name
 
   def failIfModuleImportable(self, module_name):
     full_module_name = self._getComponentFullModuleName(module_name)
