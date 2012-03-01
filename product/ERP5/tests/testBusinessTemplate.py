@@ -41,7 +41,7 @@ from Products.ERP5Type.Globals import PersistentMapping
 from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
 from Products.ERP5VCS.WorkingCopy import getVcsTool
 import shutil
 import os
@@ -7298,6 +7298,27 @@ class TestTestTemplateItem(TestDocumentTemplateItem):
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
+
+# XXX-arnau: Skip until ZODB Tests and Constraints have been implemented (not
+# expectedFailure because following tests would fail after the ZODB Component
+# has been created)
+TestTestTemplateItem.test_BusinessTemplateWithZodbDocument = skip(
+  'Not implemented yet')(TestTestTemplateItem.test_BusinessTemplateWithZodbDocument)
+
+TestTestTemplateItem.test_BusinessTemplateWithZodbDocumentNonExistingBefore = \
+    skip('Not implemented yet')(TestTestTemplateItem.test_BusinessTemplateWithZodbDocumentNonExistingBefore)
+
+TestTestTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated = \
+    skip('Not implemented yet')(TestTestTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated)
+
+TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocument = skip(
+  'Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocument)
+
+TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentNonExistingBefore = \
+    skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentNonExistingBefore)
+
+TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated = \
+    skip('Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated)
 
 def test_suite():
   suite = unittest.TestSuite()
