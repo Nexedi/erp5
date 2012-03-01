@@ -51,15 +51,20 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
+  Launch Test Embedded at the Test Page.\n
 """\n
 reference = context.getReference()\n
 if reference not in [None, \'\']:\n
   zuite_id = reference\n
 \n
-return context.Zuite_createAndLaunchSeleniumTest(text=context.TestPage_getSeleniumTest(),\n
-                                                 title=context.getTitle(), \n
-                                                 zuite_id=zuite_id,\n
-                                                 test_id=test_id)\n
+test_script = getattr(context, \'Zuite_createAndLaunchSeleniumTest\', None)\n
+if test_script is None:\n
+  raise ValueError("Unable to Launch the Test. Please install erp5_test_ui_core business template.")\n
+\n
+return test_script(text=context.TestPage_viewSeleniumTest(),\n
+                   title=context.getTitle(), \n
+                   zuite_id=zuite_id,\n
+                   test_id=test_id)\n
 </string> </value>
         </item>
         <item>
