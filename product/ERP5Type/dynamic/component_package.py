@@ -212,8 +212,7 @@ class ComponentDynamicPackage(ModuleType):
         component = component_version_dict.get(version, None)
         if component is not None:
           break
-
-      if component is None:
+      else:
         return None
 
       try:
