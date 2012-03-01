@@ -267,12 +267,12 @@ class ComponentDynamicPackage(ModuleType):
     recursively. This method must be called within a lock to avoid side
     effects
     """
-    if sub_package is None:
+    if sub_package:
+      package = sub_package
+    else:
       # Clear the Component registry
       self.__registry_dict.clear()
       package = self
-    else:
-      package = sub_package
 
     for name, module in package.__dict__.items():
       if name[0] == '_' or not isinstance(module, ModuleType):
