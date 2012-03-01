@@ -1043,7 +1043,7 @@ def initializeProduct( context,
     import erp5.portal_type
     import erp5.component
   except ImportError:
-    from dynamic.dynamic_module import initializeDynamicModules
+    from .dynamic.dynamic_module import initializeDynamicModules
     initializeDynamicModules()
     import erp5.portal_type
     import erp5.component
