@@ -35,7 +35,7 @@ import threading
 
 from Products.ERP5.ERP5Site import getSite
 from types import ModuleType
-from zLOG import LOG, INFO
+from zLOG import LOG, INFO, BLATHER
 
 class ComponentVersionPackage(ModuleType):
   """
@@ -122,9 +122,6 @@ class ComponentDynamicPackage(ModuleType):
             self.__registry_dict.setdefault(reference, {})[version] = component
 
     return self.__registry_dict
-
-  def _resetRegistry(self):
-    self.__registry_dict.clear()
 
   def find_module(self, fullname, path=None):
     # Ignore imports with a path which are filesystem-only and any
@@ -264,3 +261,32 @@ class ComponentDynamicPackage(ModuleType):
         setattr(self, component_name, new_module)
 
       return new_module
+
+  def reset(self, sub_package=None):
+    """
+    Reset the content of the current package and its version package as well
+    recursively. This method must be called within a lock to avoid side
+    effects
+    """
+    if sub_package is None:
+      # Clear the Component registry
+      self.__registry_dict.clear()
+      package = self
+    else:
+      package = sub_package
+
+    for name, module in package.__dict__.items():
+      if name[0] == '_' or not isinstance(module, ModuleType):
+        continue
+
+      # Reset the content of the version package before resetting it
+      elif isinstance(module, ComponentVersionPackage):
+        self.reset(sub_package=module)
+
+      module_name = "%s.%s" % (package.__name__, name)
+      LOG("ERP5Type.Tool.ComponentTool", BLATHER, "Resetting " + module_name)
+
+      # The module must be deleted first from sys.modules to avoid imports in
+      # the meantime
+      del sys.modules[module_name]
+      delattr(package, name)

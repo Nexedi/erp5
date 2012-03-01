@@ -44,9 +44,9 @@ from zLOG import LOG, INFO, WARNING
 last_sync = -1
 class ComponentTool(BaseTool):
   """
-  This tool provides methods to load the the different types of
-  components of the ERP5 framework: Document classes, interfaces,
-  mixin classes, fields, accessors, etc.
+  This tool provides methods to load the the different types of components of
+  the ERP5 framework: Document classes, interfaces, mixin classes, fields,
+  accessors, etc.
   """
   id = "portal_components"
   meta_type = "ERP5 Component Tool"
@@ -54,22 +54,6 @@ class ComponentTool(BaseTool):
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  def _resetModule(self, module):
-    for name, klass in module.__dict__.items():
-      if not (name[0] != '_' and isinstance(klass, ModuleType)):
-        continue
-
-      full_module_name = "%s.%s" % (module.__name__, name)
-
-      LOG("ERP5Type.Tool.ComponentTool", INFO, "Resetting " + full_module_name)
-
-      if name.endswith('_version'):
-        self._resetModule(getattr(module, name))
-
-      # The module must be deleted first
-      del sys.modules[full_module_name]
-      delattr(module, name)
 
   security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
   def reset(self, force=True, reset_portal_type=True):
@@ -103,16 +87,15 @@ class ComponentTool(BaseTool):
 
     with Base.aq_method_lock:
       for content_type in allowed_content_type_list:
-        module_name = content_type.split(' ')[0].lower()
+        package_name = content_type.split(' ')[0].lower()
 
         try:
-          module = getattr(erp5.component, module_name)
+          package = getattr(erp5.component, package_name)
         # XXX-arnau: not everything is defined yet...
         except AttributeError:
           pass
         else:
-          module._resetRegistry()
-          self._resetModule(module)
+          package.reset()
 
     if reset_portal_type:
       type_tool.resetDynamicDocumentsOnceAtTransactionBoundary()

@@ -348,7 +348,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       except AttributeError:
         reset_portal_type = False
 
-      synchronizeDynamicModules(self, force=reset_portal_type)
+      synchronizeDynamicModules(self, force=True)
     return self
 
   def manage_beforeDelete(self, item, container):

@@ -150,7 +150,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
 
   _message_reference_not_set = "Reference must be set"
   _message_invalid_reference = "Reference cannot end with '_version' or "\
-      "start with '_' or be equal to find_module or load_module"
+      "start with '_' or be equal to find_module, load_module or reset"
 
   _message_version_not_set = "Version must be set"
   _message_invalid_version = "Version cannot start with '_'"
@@ -177,7 +177,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
 
     elif (reference.endswith('_version') or
           reference[0] == '_' or
-          reference in ('find_module', 'load_module')):
+          reference in ('find_module', 'load_module', 'reset')):
       error_list.append(
         ConsistencyMessage(self,
                            object_relative_url,
