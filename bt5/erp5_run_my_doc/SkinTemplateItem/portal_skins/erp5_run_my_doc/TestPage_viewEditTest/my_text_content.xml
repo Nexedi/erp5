@@ -14,6 +14,7 @@
                 <string>description</string>
                 <string>editable</string>
                 <string>height</string>
+                <string>text_editor</string>
                 <string>title</string>
                 <string>unicode</string>
               </list>
@@ -119,6 +120,10 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
+                </item>
+                <item>
+                    <key> <string>text_editor</string> </key>
+                    <value> <string>text_area</string> </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>
