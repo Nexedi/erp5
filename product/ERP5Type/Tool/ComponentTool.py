@@ -56,7 +56,7 @@ class ComponentTool(BaseTool):
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
   security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
-  def reset(self, force=True, reset_portal_type=True):
+  def reset(self, force=False, reset_portal_type=False):
     """
     XXX-arnau: global reset
     """
@@ -115,4 +115,5 @@ class ComponentTool(BaseTool):
     key = 'ComponentTool.resetOnceAtTransactionBoundary'
     if key not in tv:
       tv[key] = None
-      transaction.get().addBeforeCommitHook(self.reset)
+      transaction.get().addBeforeCommitHook(self.reset,
+                                            args=(True, True))

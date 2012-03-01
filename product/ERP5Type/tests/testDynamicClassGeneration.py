@@ -1254,7 +1254,7 @@ class _TestZodbComponent(SecurityTestCase):
     self._component_tool = self.getPortal().portal_components
     self._module = __import__(self._getComponentModuleName(),
                               fromlist=['erp5.component'])
-    self._component_tool.reset()
+    self._component_tool.reset(force=True, reset_portal_type=True)
 
   @abc.abstractmethod
   def _newComponent(self, reference, text_content, version='erp5'):
@@ -1362,7 +1362,7 @@ class _TestZodbComponent(SecurityTestCase):
       self.assertEquals(error_message, error_list[0])
       self.assertEquals(component.getReference(), invalid_reference)
       self.assertEquals(component.getReference(validated_only=True), valid_reference)
-      self._component_tool.reset()
+      self._component_tool.reset(force=True, reset_portal_type=True)
       self.assertModuleImportable(valid_reference)
 
     ComponentTool.reset = assertResetCalled
@@ -1430,7 +1430,7 @@ class _TestZodbComponent(SecurityTestCase):
       self.assertEquals(error_message, error_list[0])
       self.assertEquals(component.getVersion(), invalid_version)
       self.assertEquals(component.getVersion(validated_only=True), valid_version)
-      self._component_tool.reset()
+      self._component_tool.reset(force=True, reset_portal_type=True)
       self.assertModuleImportable(reference)
 
     ComponentTool.reset = assertResetCalled
@@ -1495,7 +1495,7 @@ class _TestZodbComponent(SecurityTestCase):
       self.assertTrue(error_list[0].startswith(error_message))
       self.assertEquals(component.getTextContent(), invalid_code)
       self.assertEquals(component.getTextContent(validated_only=True), valid_code)
-      self._component_tool.reset()
+      self._component_tool.reset(force=True, reset_portal_type=True)
       self.assertModuleImportable('TestComponentWithSyntaxError')
 
     ComponentTool.reset = assertResetCalled
@@ -1780,7 +1780,7 @@ class TestPortalType(Person):
     self.assertFalse(self._module.TestPortalType in person.__class__.mro())
 
     # Reset Portal Type classes to ghost to make sure that everything is reset
-    self._component_tool.reset()
+    self._component_tool.reset(force=True, reset_portal_type=True)
 
     # TestPortalType must be in available type class list
     self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
