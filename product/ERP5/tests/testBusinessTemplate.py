@@ -7165,6 +7165,11 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckZodbDocumentExists \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
+                       \
+                       UninstallBusinessTemplate \
+                       CheckBuiltBuildingState \
+                       CheckNotInstalledInstallationState \
+                       CheckZodbDocumentRemoved \
                        '
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
