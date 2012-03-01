@@ -70,7 +70,7 @@ if query_string is not None:\n
 \n
 kw.update(parent_uid=[portal.restrictedTraverse(module).getUid() for module in context.getProperty(\'module_list\') or []])\n
 \n
-portal.portal_catalog.searchAndActivate(method_id=\'Base_checkAlarmConsistency\', method_kw={\'fixit\': fixit, \'active_process\': active_process}, activate_kw={\'tag\':tag}, **kw)\n
+portal.portal_catalog.searchAndActivate(method_id=\'Base_checkAlarmConsistency\', method_kw={\'fixit\': fixit, \'active_process\': active_process}, activate_kw={\'tag\':tag, \'priority\': 8}, **kw)\n
 
 
 ]]></string> </value>
