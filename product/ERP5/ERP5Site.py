@@ -446,12 +446,12 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVersionPriorityList')
   def getVersionPriorityList(self):
+    """
+    Return the Component version priorities defined on the site
+    """
     # Whatever happens, a version must always be returned otherwise it may
     # render the site unusable when all Products will have been migrated
-    if not self._version_priority_list:
-      return ('erp5',)
-
-    return self._version_priority_list
+    return self._version_priority_list or ('erp5',)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setVersionPriorityList' )
