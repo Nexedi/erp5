@@ -112,12 +112,7 @@ class RecordablePropertyMetaClass(ExtensionClass):
 
     # ExtensionClass required to avoid metaclasses conflicts when
     # ghosting/unghosting Portal Types
-    new_class = ExtensionClass.__new__(ExtensionClass,
-                                       name,
-                                       bases,
-                                       dictionary)
-
-    return new_class
+    return ExtensionClass.__new__(ExtensionClass, name, bases, dictionary)
 
 class ComponentMixin(PropertyRecordableMixin, Base):
   """
