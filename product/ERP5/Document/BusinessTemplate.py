@@ -3829,7 +3829,7 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
       # does not set _archive with portal_components/ like
       # ObjectTemplateItem.__init__()
       self._archive[name] = None
-      del self._archive[name.replace('portal_components/', '')]
+      del self._archive[name[len('portal_components/'):]]
 
   def export(self, context, bta, **kw):
     path = self.__class__.__name__ + '/'

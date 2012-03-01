@@ -72,7 +72,7 @@ class ComponentDynamicPackage(ModuleType):
     self._namespace = namespace
     self._namespace_prefix = namespace + '.'
     self._portal_type = portal_type
-
+    self.__version_suffix_len = len('_version')
     self._lock = threading.RLock()
 
     # Add this module to sys.path for future imports
@@ -135,11 +135,11 @@ class ComponentDynamicPackage(ModuleType):
     # __import__ will first try a relative import, for example
     # erp5.component.XXX.YYY.ZZZ where erp5.component.XXX.YYY is the current
     # Component where an import is done
-    name = fullname.replace(self._namespace_prefix, '')
+    name = fullname[len(self._namespace_prefix):]
     if '.' in name:
       try:
         version, name = name.split('.')
-        version = version.replace('_version', '')
+        version = version[:-self.__version_suffix_len]
       except ValueError:
         return None
 
@@ -152,7 +152,7 @@ class ComponentDynamicPackage(ModuleType):
     # wrongly considered as importable and thus the actual filesystem class
     # ignored
     elif (name not in self._registry_dict and
-          name.replace('_version', '') not in site.getVersionPriorityList()):
+          name[:-self.__version_suffix_len] not in site.getVersionPriorityList()):
       return None
 
     return self
@@ -176,18 +176,18 @@ class ComponentDynamicPackage(ModuleType):
     properly in find_module().
     """
     site = getSite()
-    component_name = fullname.replace(self._namespace_prefix, '')
+    component_name = fullname[len(self._namespace_prefix):]
     if component_name.endswith('_version'):
-      version = component_name.replace('_version', '')
+      version = component_name[:-self.__version_suffix_len]
       return (version in site.getVersionPriorityList() and
               self._getVersionPackage(version) or None)
 
     component_id_alias = None
-    version_package_name = component_name.replace('_version', '')
+    version_package_name = component_name[:-self.__version_suffix_len]
     if '.' in component_name:
       try:
         version, component_name = component_name.split('.')
-        version = version.replace('_version', '')
+        version = version[:-self.__version_suffix_len]
       except ValueError:
         return None
 
