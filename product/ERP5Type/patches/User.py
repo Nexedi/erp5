@@ -29,7 +29,7 @@ def allowed(self, object, object_roles=None):
       object_roles.remove('Developer')
       product_config = getattr(getConfiguration(), 'product_config', None)
       if product_config:
-        config = product_config.get('erp5', None)
+        config = product_config.get('erp5')
         if config and self.getId() in config.developer_list:
           return 1
 
@@ -50,7 +50,7 @@ def getRoles(self):
   if role_tuple:
     product_config = getattr(getConfiguration(), 'product_config', None)
     if product_config:
-      config = product_config.get('erp5', None)
+      config = product_config.get('erp5')
       if config:
         role_set = set(role_tuple)
         user_id = self.getId()

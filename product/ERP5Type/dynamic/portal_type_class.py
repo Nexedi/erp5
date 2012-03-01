@@ -202,7 +202,7 @@ def generatePortalTypeClass(site, portal_type_name):
         pass
 
     if klass is None:
-      type_class_path = document_class_registry.get(type_class, None)
+      type_class_path = document_class_registry.get(type_class)
       if type_class_path is None:
         raise AttributeError('Document class %s has not been registered:'
                              ' cannot import it as base of Portal Type %s'

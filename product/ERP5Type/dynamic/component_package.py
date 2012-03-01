@@ -209,7 +209,7 @@ class ComponentDynamicPackage(ModuleType):
         return None
 
       for version in site.getVersionPriorityList():
-        component = component_version_dict.get(version, None)
+        component = component_version_dict.get(version)
         if component is not None:
           break
       else:

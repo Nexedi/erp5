@@ -292,7 +292,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     self.dav__init(REQUEST, RESPONSE)
     self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
 
-    text_content = REQUEST.get('BODY', None)
+    text_content = REQUEST.get('BODY')
     if text_content is None:
       RESPONSE.setStatus(304)
     else:
