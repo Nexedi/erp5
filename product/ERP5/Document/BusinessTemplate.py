@@ -3881,8 +3881,8 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
     automatically as the version must be set manually. This should not be an
     issue as there are not so many Documents in bt5...
     """
-    object_list = list((context.getTemplateFormatVersion() == 1 and
-                        self._objects or self._archive))
+    object_list = list(self._objects if context.getTemplateFormatVersion() == 1
+                                     else self._archive)
 
     if self._is_already_migrated(object_list):
       ObjectTemplateItem.install(self, context, **kw)
