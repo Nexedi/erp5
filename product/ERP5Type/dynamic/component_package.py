@@ -105,11 +105,11 @@ class ComponentDynamicPackage(ModuleType):
 
       version_priority_set = set(portal.getVersionPriorityList())
 
-      # contentValues should not be used for a large number of objects, but
+      # objectValues should not be used for a large number of objects, but
       # this is only done at startup or upon reset, moreover using the Catalog
       # is too risky as it lags behind and depends upon objects being
       # reindexed
-      for component in component_tool.contentValues(portal_type=self._portal_type):
+      for component in component_tool.objectValues(portal_type=self._portal_type):
         # Only consider modified or validated states as state transition will
         # be handled by component_validation_workflow which will take care of
         # updating the registry
