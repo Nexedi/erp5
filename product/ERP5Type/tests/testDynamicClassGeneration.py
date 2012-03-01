@@ -1276,8 +1276,8 @@ class _TestZodbComponent(SecurityTestCase):
     except ImportError:
       pass
     else:
-      raise AssertionError("Component '%s' should not have been generated" % \
-                             full_module_name)
+      self.fail("Component '%s' should not have been generated" % \
+                  full_module_name)
 
   def assertModuleImportable(self, module_name):
     full_module_name = self._getComponentFullModuleName(module_name)
@@ -1286,8 +1286,8 @@ class _TestZodbComponent(SecurityTestCase):
       __import__(full_module_name, fromlist=[self._getComponentModuleName()],
                  level=0)
     except ImportError:
-      raise AssertionError("Component '%s' should have been generated" % \
-                             full_module_name)
+      self.fail("Component '%s' should have been generated" % \
+                  full_module_name)
 
   def testValidateInvalidate(self):
     """
@@ -1721,7 +1721,7 @@ class TestZodbExtensionComponent(_TestZodbComponent):
       self.assertEquals(e.message,
                         'external method could not be called because it is None')
     else:
-      raise AssertionError("TestExternalMethod should not be callable")
+      self.fail("TestExternalMethod should not be callable")
 
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
