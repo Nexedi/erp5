@@ -54,23 +54,19 @@
   Generate a Zuite (if necessary), create/update the test and redirect to the selenium test created/updated\n
   url, web_page or web_page_reference must be set for it to work (or the context should be the Web Page in question)\n
 """\n
+test_list = []\n
+count = 0\n
+for url in url_list:\n
+ count += 1\n
+ test_list.append((context.Zuite_urlRead(url), \'url%s\' % count),)\n
 \n
-validation = context.Zuite_viewZeleniumTestLauncherValidator(editor=None, \n
-                                                             request=context.REQUEST, \n
-                                                             validator = False)\n
-if not validation[\'result\']:\n
-  return context.Base_redirect(validation[\'form_id\'], \n
-                               keep_items = dict(portal_status_message=validation[\'portal_status_message\']))\n
-\n
-return context.Zuite_createAndLaunchSeleniumTest(text=context.Zuite_urlRead(url),\n
-                                                 title="Download From Web", \n
-                                                 zuite_id=zuite_id,\n
-                                                 test_id=test_id)\n
+return context.Zuite_createAndLaunchSeleniumTest(test_list=test_list,\n
+                                                 zuite_id=zuite_id)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>url, zuite_id = \'tutorial_zuite\', test_id = \'\'</string> </value>
+            <value> <string>url_list, zuite_id=\'tutorial_zuite\'</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>

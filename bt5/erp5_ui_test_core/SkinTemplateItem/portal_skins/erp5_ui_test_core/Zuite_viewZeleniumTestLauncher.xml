@@ -82,9 +82,8 @@
                     <value>
                       <list>
                         <string>your_description</string>
-                        <string>your_url</string>
+                        <string>your_url_list</string>
                         <string>your_zuite_id</string>
-                        <string>your_test_id</string>
                       </list>
                     </value>
                 </item>

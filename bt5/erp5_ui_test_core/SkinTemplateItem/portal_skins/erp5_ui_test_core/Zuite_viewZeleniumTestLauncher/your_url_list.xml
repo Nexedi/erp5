@@ -11,13 +11,23 @@
             <value>
               <list>
                 <string>description</string>
+                <string>height</string>
                 <string>title</string>
+                <string>width</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>delegated_message_list</string> </key>
+            <value>
+              <list>
+                <string>external_validator_failed</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_test_id</string> </value>
+            <value> <string>your_url_list</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -25,7 +35,7 @@
               <dictionary>
                 <item>
                     <key> <string>external_validator_failed</string> </key>
-                    <value> <string>The input failed the external validator.</string> </value>
+                    <value> <string>Input at least one and only ONE of those three fields.</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -74,15 +84,23 @@
               <dictionary>
                 <item>
                     <key> <string>description</string> </key>
-                    <value> <string>Enter the id of the generated test (this will overwrite any test with the same id)</string> </value>
+                    <value> <string>Type the url of the page containing the Zelenium Test. (for external webpages only)</string> </value>
+                </item>
+                <item>
+                    <key> <string>display_width</string> </key>
+                    <value> <int>120</int> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_lines_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>height</string> </key>
+                    <value> <int>10</int> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -90,7 +108,11 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Test ID</string> </value>
+                    <value> <string>External Urls</string> </value>
+                </item>
+                <item>
+                    <key> <string>width</string> </key>
+                    <value> <int>90</int> </value>
                 </item>
               </dictionary>
             </value>
