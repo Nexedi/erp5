@@ -73,7 +73,8 @@ class ComponentDynamicPackage(ModuleType):
     self._namespace_prefix = namespace + '.'
     self._portal_type = portal_type
     self.__version_suffix_len = len('_version')
-    self._lock = threading.RLock()
+    self._load_module_lock = threading.RLock()
+    self._registry_generate_lock = threading.RLock()
 
     # Add this module to sys.path for future imports
     sys.modules[namespace] = self
@@ -109,17 +110,18 @@ class ComponentDynamicPackage(ModuleType):
       # this is only done at startup or upon reset, moreover using the Catalog
       # is too risky as it lags behind and depends upon objects being
       # reindexed
-      for component in component_tool.objectValues(portal_type=self._portal_type):
-        # Only consider modified or validated states as state transition will
-        # be handled by component_validation_workflow which will take care of
-        # updating the registry
-        if component.getValidationState() in ('modified', 'validated'):
-          version = component.getVersion(validated_only=True)
-          # The versions should have always been set on ERP5Site property
-          # beforehand
-          if version in version_priority_set:
-            reference = component.getReference(validated_only=True)
-            self.__registry_dict.setdefault(reference, {})[version] = component
+      with self._registry_generate_lock:
+        for component in component_tool.objectValues(portal_type=self._portal_type):
+          # Only consider modified or validated states as state transition will
+          # be handled by component_validation_workflow which will take care of
+          # updating the registry
+          if component.getValidationState() in ('modified', 'validated'):
+            version = component.getVersion(validated_only=True)
+            # The versions should have always been set on ERP5Site property
+            # beforehand
+            if version in version_priority_set:
+              reference = component.getReference(validated_only=True)
+              self.__registry_dict.setdefault(reference, {})[version] = component
 
     return self.__registry_dict
 
@@ -218,7 +220,7 @@ class ComponentDynamicPackage(ModuleType):
       except AttributeError:
         pass
       else:
-        with self._lock:
+        with self._load_module_lock:
           setattr(self._getVersionPackage(version), component_name, module)
 
         return module
@@ -228,7 +230,7 @@ class ComponentDynamicPackage(ModuleType):
     component_id = '%s.%s_version.%s' % (self._namespace, version,
                                          component_name)
 
-    with self._lock:
+    with self._load_module_lock:
       new_module = ModuleType(component_id, component.getDescription())
 
       # The module *must* be in sys.modules before executing the code in case
