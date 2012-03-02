@@ -3781,9 +3781,6 @@ class ConstraintTemplateItem(FilesystemDocumentTemplateItem):
   local_file_importer_name = staticmethod(importLocalConstraint)
   local_file_remover_name = staticmethod(removeLocalConstraint)
 
-from Products.ERP5Type.Core.DocumentComponent import DocumentComponent as \
-    DocumentComponentDocument
-
 class DocumentTemplateItem(FilesystemToZodbTemplateItem):
   """
   Documents are now stored in ZODB rather than on the filesystem. However,
@@ -3895,9 +3892,6 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
   def afterUninstall(self, already_migrated=False):
     if already_migrated:
       self.portal_components.reset(force=True, reset_portal_type=True)
-
-from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent as \
-    ExtensionComponentDocument
 
 class ExtensionTemplateItem(DocumentTemplateItem):
   """
