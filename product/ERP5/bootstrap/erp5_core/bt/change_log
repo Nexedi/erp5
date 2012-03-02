@@ -1,4 +1,7 @@
 2012-03-02 arnaud.fontaine
+* Do not acquire local roles for Document Component Portal Type.
+
+2012-03-02 arnaud.fontaine
 * Likewise Document Component, add SortIndex Property Sheets to Extension Component Portal Type.
 
 2012-02-29 arnaud.fontaine
