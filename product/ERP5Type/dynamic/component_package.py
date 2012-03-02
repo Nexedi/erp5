@@ -64,7 +64,6 @@ class ComponentDynamicPackage(ModuleType):
   # Necessary otherwise imports will fail because an object is considered a
   # package only if __path__ is defined
   __path__ = []
-  __registry_dict = {}
 
   def __init__(self, namespace, portal_type):
     super(ComponentDynamicPackage, self).__init__(namespace)
@@ -75,6 +74,7 @@ class ComponentDynamicPackage(ModuleType):
     self.__version_suffix_len = len('_version')
     self._load_module_lock = threading.RLock()
     self._registry_generate_lock = threading.RLock()
+    self.__registry_dict = {}
 
     # Add this module to sys.path for future imports
     sys.modules[namespace] = self
