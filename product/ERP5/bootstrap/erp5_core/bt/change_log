@@ -1,3 +1,6 @@
+2012-03-02 arnaud.fontaine
+* Likewise Document Component, add SortIndex Property Sheets to Extension Component Portal Type.
+
 2012-02-29 arnaud.fontaine
 * Display error messages in Component_view which may have been raised when validating a Component in draft state.
 
