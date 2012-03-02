@@ -188,32 +188,30 @@ class ComponentDynamicPackage(ModuleType):
       try:
         version, component_name = component_name.split('.')
         version = version[:-self.__version_suffix_len]
-      except ValueError:
-        return None
+      except ValueError, error:
+        raise ImportError("%s: should be %s.VERSION.COMPONENT_REFERENCE (%s)" % \
+                            (fullname, self._namespace, error))
 
       try:
         component = self._registry_dict[component_name][version]
       except KeyError:
-        LOG("ERP5Type.dynamic", INFO,
-            "Could not find version %s of Component %s" % (version,
-                                                           component_name))
-        return None
+        raise ImportError("%s: version %s of Component %s could not be found" % \
+                            (fullname, version, component_name))
 
     else:
       try:
         component_version_dict = self._registry_dict[component_name]
       except KeyError:
-        LOG("ERP5Type.dynamic", INFO,
-          "Could not find Component " + component_name)
-
-        return None
+        raise ImportError("%s: Component %s could not be found" % (fullname,
+                                                                   component_name))
 
       for version in site.getVersionPriorityList():
         component = component_version_dict.get(version)
         if component is not None:
           break
       else:
-        return None
+        raise ImportError("%s: no version of Component %s in Site priority" % \
+                            (fullname, component_name))
 
       try:
         module = getattr(getattr(self, version + '_version'), component_name)
@@ -244,12 +242,14 @@ class ComponentDynamicPackage(ModuleType):
 
       try:
         component.load(new_module.__dict__, validated_only=True)
-      except:
+      except Exception, error:
         del sys.modules[component_id]
         if component_id_alias:
           del sys.modules[component_id_alias]
 
-        raise
+        raise ImportError("%s: cannot load Component %s (%s)" % (fullname,
+                                                                 component_name,
+                                                                 error))
 
       new_module.__path__ = []
       new_module.__loader__ = self
