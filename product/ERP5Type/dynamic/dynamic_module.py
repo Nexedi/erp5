@@ -132,3 +132,6 @@ def initializeDynamicModules():
 
   erp5.component.document = ComponentDynamicPackage('erp5.component.document',
                                                     'Document Component')
+
+  erp5.component.test = ComponentDynamicPackage('erp5.component.test',
+                                                'Test Component')

@@ -6928,7 +6928,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     other one is the metadata (ending with '.xml')
     """
     component_bt_tool_path = os.path.join(sequence['template_path'],
-                                          self.__class__.__name__.replace('Test', ''),
+                                          self.__class__.__name__[len('Test'):],
                                           'portal_components')
 
     self.assertTrue(os.path.exists(component_bt_tool_path))
@@ -7203,6 +7203,8 @@ class TestExtensionTemplateItem(TestDocumentTemplateItem):
   importFromFilesystem = ExtensionComponent.importFromFilesystem
   set_template_id_method_name = 'setTemplateExtensionId'
 
+from Products.ERP5Type.Core.TestComponent import TestComponent
+
 class TestTestTemplateItem(TestDocumentTemplateItem):
   document_title = 'UnitTest'
   document_data = """class UnitTest:
@@ -7215,6 +7217,12 @@ class TestTestTemplateItem(TestDocumentTemplateItem):
     pass"""
   document_base_path = os.path.join(getConfiguration().instancehome, 'tests')
   template_property = 'template_test_id_list'
+
+  # Specific to ZODB Extension Component
+  component_module = TestComponent._getDynamicModuleNamespace()
+  component_portal_type = TestComponent.portal_type
+  importFromFilesystem = TestComponent.importFromFilesystem
+  set_template_id_method_name = 'setTemplateTestId'
 
   def stepAddTestToBusinessTemplate(self, sequence=None, **kw):
     bt = sequence['current_bt']
@@ -7298,18 +7306,9 @@ class TestTestTemplateItem(TestDocumentTemplateItem):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-# XXX-arnau: Skip until ZODB Tests and Constraints have been implemented (not
+# XXX-arnau: Skip until ZODB Constraints have been implemented (not
 # expectedFailure because following tests would fail after the ZODB Component
 # has been created)
-TestTestTemplateItem.test_BusinessTemplateWithZodbDocument = skip(
-  'Not implemented yet')(TestTestTemplateItem.test_BusinessTemplateWithZodbDocument)
-
-TestTestTemplateItem.test_BusinessTemplateWithZodbDocumentNonExistingBefore = \
-    skip('Not implemented yet')(TestTestTemplateItem.test_BusinessTemplateWithZodbDocumentNonExistingBefore)
-
-TestTestTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated = \
-    skip('Not implemented yet')(TestTestTemplateItem.test_BusinessTemplateWithZodbDocumentMigrated)
-
 TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocument = skip(
   'Not implemented yet')(TestConstraintTemplateItem.test_BusinessTemplateWithZodbDocument)
 

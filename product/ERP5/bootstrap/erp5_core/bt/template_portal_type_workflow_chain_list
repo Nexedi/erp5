@@ -41,3 +41,6 @@ Standard Property | dynamic_class_generation_interaction_workflow
 String Attribute Match Constraint | dynamic_class_generation_interaction_workflow
 System Preference | preference_workflow
 TALES Constraint | dynamic_class_generation_interaction_workflow
+Test Component | component_validation_workflow
+Test Component | dynamic_class_generation_interaction_workflow
+Test Component | edit_workflow

@@ -3913,13 +3913,19 @@ class ExtensionTemplateItem(DocumentTemplateItem):
   def getTemplateIdList(self):
     return self.getTemplateExtensionIdList()
 
-class TestTemplateItem(FilesystemDocumentTemplateItem):
+class TestTemplateItem(DocumentTemplateItem):
   local_file_reader_name = staticmethod(readLocalTest)
   local_file_writer_name = staticmethod(writeLocalTest)
   # Test needs no import
   local_file_importer_name = None
   local_file_remover_name = staticmethod(removeLocalTest)
 
+  @staticmethod
+  def _getZodbObjectId(id):
+    return 'erp5.component.test.' + id
+
+  def getTemplateIdList(self):
+    return self.getTemplateTestIdList()
 
 class ProductTemplateItem(BaseTemplateItem):
   # XXX Not implemented yet
@@ -5813,6 +5819,21 @@ Business Template is a set of definitions, such as skins, portal types and categ
           extension_id_list[i] = obj.getId()
 
       self.setTemplateExtensionIdList(extension_id_list)
+
+      from Products.ERP5Type.Core.TestComponent import TestComponent
+      test_id_list = self.getTemplateTestIdList()
+      for i, reference in enumerate(test_id_list):
+        try:
+          obj = TestComponent.importFromFilesystem(component_tool,
+                                                   reference,
+                                                   version_priority,
+                                                   erase_existing)
+        except Exception, e:
+          failed_import_dict[reference] = str(e)
+        else:
+          test_id_list[i] = obj.getId()
+
+      self.setTemplateTestIdList(test_id_list)
 
       return failed_import_dict
 
