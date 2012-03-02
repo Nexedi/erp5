@@ -3657,10 +3657,12 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
                                                       filesystem_path,
                                                       filesystem_file,
                                                       class_id).aq_base
-
       finally:
         filesystem_file.close()
-        os.remove(filesystem_path)
+
+      # Delete the file only if there was no error encountered during
+      # migration
+      os.remove(filesystem_path)
 
       # Update 'migrate_object_dict' with the new path
       key = '%s/%s' % (self._tool_id, migrated_object.getId())
