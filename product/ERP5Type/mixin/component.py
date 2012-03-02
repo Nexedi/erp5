@@ -251,11 +251,8 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     Check whether there are error messages, useful to display errors in the UI
     without calling getErrorMessageList() which translates error messages
     """
-    try:
-      self.workflow_history['component_validation_workflow'][-1]['error_message']
-      return True
-    except KeyError:
-      return False
+    workflow = self.workflow_history['component_validation_workflow'][-1]
+    return bool(workflow['error_message'])
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getErrorMessageList')
