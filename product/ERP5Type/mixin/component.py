@@ -201,7 +201,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     else:
       message = None
       try:
-        self.load(text_content=text_content)
+        self.load({}, text_content=text_content)
       except SyntaxError, e:
         mapping = dict(error_message=str(e),
                        line_number=e.lineno,
@@ -266,14 +266,18 @@ class ComponentMixin(PropertyRecordableMixin, Base):
             for error in current_workflow.get('error_message', [])]
 
   security.declareProtected(Permissions.ModifyPortalContent, 'load')
-  def load(self, namespace_dict={}, validated_only=False, text_content=None):
+  def load(self, namespace_dict, validated_only=False, text_content=None):
     """
     Load the source code into the given dict. Using exec() rather than
     imp.load_source() as the latter would required creating an intermediary
     file. Also, for traceback readability sake, the destination module
-    __dict__ is given rather than creating an empty dict and returning
-    it. By default namespace_dict is an empty dict to allow checking the
-    source code before validate.
+    __dict__ is given rather than creating an empty dict and returning it.
+
+    Initially, namespace_dict default parameter value was an empty dict to
+    allow checking the source code before validate, but this introduces a bug
+    when namespace_dict was not given because the first call would exec
+    directly into function namespace_dict default parameter, thus the second
+    call would have namespace_dict default value to the previous call.
     """
     if text_content is None:
       text_content = self.getTextContent(validated_only=validated_only)

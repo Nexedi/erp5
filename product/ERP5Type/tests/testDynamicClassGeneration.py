@@ -1474,12 +1474,14 @@ class _TestZodbComponent(SecurityTestCase):
     self.assertEquals(component.getTextContent(validated_only=True), valid_code)
     self.assertModuleImportable('TestComponentWithSyntaxError')
 
-    invalid_code_dict = {
-      None: ComponentMixin._message_text_content_not_set,
-      'def foobar(*args, **kwargs)\n  return 42': 'Syntax error in source code:',
-      'foobar': 'Source code:'}
+    # Make sure that foobar NameError is at the end to make sure that after
+    # defining foobar function, the symbol is not available anymore
+    invalid_code_dict = (
+      (None, ComponentMixin._message_text_content_not_set),
+      ('def foobar(*args, **kwargs)\n  return 42', 'Syntax error in source code:'),
+      ('foobar', 'Source code:'))
 
-    for invalid_code, error_message in invalid_code_dict.iteritems():
+    for invalid_code, error_message in invalid_code_dict:
       ComponentTool.reset = assertResetNotCalled
       try:
         component.setTextContent(invalid_code)
