@@ -1,3 +1,6 @@
+2012-03-03 arnaud.fontaine
+* Remove defined groups on ZODB Component portal types as it should not be considered as a Document for DMS for example.
+
 2012-03-02 arnaud.fontaine
 * Implement Test Component.
 
