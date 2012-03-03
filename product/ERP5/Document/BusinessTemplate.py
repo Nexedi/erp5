@@ -3812,9 +3812,8 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
       # If portal_components/XXX.py, then ignore it as it will be handled when
       # the .xml file will be processed
       if file_obj.name.rsplit(os.path.sep, 2)[-2] != 'portal_components':
-        return FilesystemDocumentTemplateItem._importFile(self, file_name,
-                                                          file_obj)
-    else:
+        FilesystemDocumentTemplateItem._importFile(self, file_name, file_obj)
+    elif file_name.endswith('.xml'):
       ObjectTemplateItem._importFile(self, file_name, file_obj)
 
       name = file_name[:-4]
@@ -3829,6 +3828,8 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
       # ObjectTemplateItem.__init__()
       self._archive[name] = None
       del self._archive[name[len('portal_components/'):]]
+    else:
+      LOG('Business Template', 0, 'Skipping file "%s"' % file_name)
 
   def export(self, context, bta, **kw):
     path = self.__class__.__name__ + '/'
