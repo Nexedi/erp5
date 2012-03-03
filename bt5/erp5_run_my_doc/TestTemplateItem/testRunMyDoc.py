@@ -43,15 +43,15 @@ class TestRunMyDoc(ERP5TypeTestCase):
     Tuple of Business Templates we need to install
     """
     # Include all list here.
-    return ['erp5_base'
-            'erp5_jquery'
-            'erp5_jquery_ui'
-            'erp5_knowledge_pad'
-            'erp5_web'
-            'erp5_dms'
-            'erp5_slideshow_style'
+    return ('erp5_base',
+            'erp5_jquery',
+            'erp5_jquery_ui',
+            'erp5_knowledge_pad',
+            'erp5_web',
+            'erp5_dms',
+            'erp5_slideshow_style',
             'erp5_ui_test_core',
-            'erp5_run_my_doc']
+            'erp5_run_my_doc')
 
   def afterSetUp(self):
     """
