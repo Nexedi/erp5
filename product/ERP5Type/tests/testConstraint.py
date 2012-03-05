@@ -1178,6 +1178,27 @@ class TestConstraint(PropertySheetTestCase):
                    expression='error: " ')
     self.assertRaises(CompilerError, constraint.checkConsistency, obj)
 
+  def test_PropertyTypeValidityFixLocalPropertiesIgnoresNoLocal(self):
+    """Tests PropertyTypeValidity can repairs local property when this property
+    is added on the class later, and this property is already in the good type.
+    """
+    constraint = self._createGenericConstraint(
+                   klass_name='PropertyTypeValidity',
+                   id='type_validity_constraint', )
+    obj = self._makeOne()
+    self._addProperty(obj.getPortalType(), "FixLocalPropertiesString",
+                      portal_type="Standard Property",
+                      property_id="local_property",
+                      elementary_type="string")
+    obj.edit(local_property='1')
+    self.assertFalse('_local_properties' in obj.__dict__)
+    self.assertEquals([], constraint.checkConsistency(obj))
+    self.assertEqual([], constraint.fixConsistency(obj))
+    self.assertFalse('_local_properties' in obj.__dict__)
+    self.assertEquals('1', obj.getLocalProperty())
+    obj.edit(local_property='something else')
+    self.assertEquals('something else', obj.getLocalProperty())
+
   def test_PropertyTypeValidityFixLocalPropertiesString(self):
     """Tests PropertyTypeValidity can repairs local property when this property
     is added on the class later, and this property is already in the good type.

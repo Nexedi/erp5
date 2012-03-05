@@ -81,6 +81,7 @@ class PropertyTypeValidity(Constraint):
     error_list = []
     # For each attribute name, we check type
     for prop in obj.propertyMap():
+      property_was_local = False
       property_id = prop['id']
       if prop.get('multivalued', 0):
         property_type = 'lines'
@@ -95,6 +96,7 @@ class PropertyTypeValidity(Constraint):
          len([x for x in obj._propertyMap() if x['id'] == property_id]) > 1:
         obj._local_properties = tuple([x for x in obj._local_properties
                                        if x['id'] != property_id])
+        property_was_local = True
 
       if property_type in self._permissive_type_list:
         continue
@@ -135,7 +137,7 @@ class PropertyTypeValidity(Constraint):
 
         error_list.append(self._generateError(obj,
               self._getMessage(error_message), mapping))
-      elif fixit:
+      elif fixit and property_was_local:
         oldvalue = getattr(obj, property_id, value)
         if oldvalue != value:
           error_list.append(self._generateError(obj,
