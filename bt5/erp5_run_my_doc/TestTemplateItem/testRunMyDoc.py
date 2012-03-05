@@ -136,7 +136,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
     self.assertEquals(image_page_2.getFilename(), image_reference + '.png')
     self.assertEquals(image_page.getData(), '')
 
-  def test_getSeleniumTest(self):
+  def test_viewSeleniumTest(self):
     """
       Test the script that extracts Selenium Test from HTML body.
     """
@@ -174,9 +174,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
           </tr> </tbody></table> </test> 
     </section>"""
 
-    expected_test_html = """
-<html xmlns:tal="http://xml.zope.org/namespaces/tal"
-      xmlns:metal="http://xml.zope.org/namespaces/metal">
+    expected_test_html = u"""<html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>TEST</title>
@@ -189,7 +187,22 @@ class TestRunMyDoc(ERP5TypeTestCase):
         </tr>
       </thead>
       <tbody>
-<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr><td>selectAndWait</td> 
+        
+        
+          &lt;span metal:use-macro=&quot;container/Zuite_CommonTemplate/macros/init&quot; style=&quot;display: none;&quot;&gt;init&lt;/span&gt;
+        
+        <tr>
+          <td>store</td>
+          <!-- ERP5TypeTestCase is the default for any UnitTest -->
+          <td>%s</td>
+          <td>base_user</td>
+         </tr>
+        <tr>
+          <td>store</td>
+            <td>%s</td>
+            <td>base_password</td>
+         </tr>
+        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr><td>selectAndWait</td> 
             <td>name=select_module</td> 
             <td>label=Test Pages</td> 
           </tr><tr><td>verifyTextPresent</td> 
@@ -210,7 +223,8 @@ class TestRunMyDoc(ERP5TypeTestCase):
     test_page = self.portal.test_page_module.newContent(title="TEST",
                                                         reference='TESTPAGEREFERENCE',
                                                         text_content=test_page_html)
-    self.assertEquals(test_page.TestPage_getSeleniumTest(), expected_test_html)
+    self.assertEquals(test_page.TestPage_viewSeleniumTest(), expected_test_html % 
+                                 ("ERP5TypeTestCase", ""))
 
     self.stepTic()
     test_page.TestPage_runSeleniumTest()
@@ -221,9 +235,75 @@ class TestRunMyDoc(ERP5TypeTestCase):
     zptest = getattr(zuite, "TEST", None)
     self.assertNotEquals(zptest, None)
 
-    self.assertEquals(zptest._text, expected_test_html.strip())
- 
-   
-    
+    expected_html = expected_test_html % ("ERP5TypeTestCase", "")
+
+    self.assertEquals(zptest._text, expected_html.strip())
+
+    expected_test_html = """<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>TEST</title>
+  </head>
+  <body>
+    <table name="SELENIUM-TEST" cellpadding="1" cellspacing="1" border="1">
+      <thead>
+        <tr class="title">
+          <td colspan="3">TEST</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>store</td>
+          <td>%s</td>
+          <td>base_url</td>
+        </tr>
+        
+        <tr>
+          <td>store</td>
+          <!-- ERP5TypeTestCase is the default for any UnitTest -->
+          <td>%s</td>
+          <td>base_user</td>
+         </tr>
+        <tr>
+          <td>store</td>
+            <td>%s</td>
+            <td>base_password</td>
+         </tr>
+        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr><td>selectAndWait</td> 
+            <td>name=select_module</td> 
+            <td>label=Test Pages</td> 
+          </tr><tr><td>verifyTextPresent</td> 
+            <td>Test Pages</td> 
+            <td> <br></td> 
+          </tr><tr style="opacity: 1;"><td>clickAndWait</td> 
+            <td>css=a.fast_input &gt; span.image</td> 
+            <td> <br></td> 
+          </tr><tr><td>verifyTextPresent</td> 
+            <td>Test Pages</td> 
+            <td> <br></td> 
+          </tr>
+      </tbody>
+    </table>
+  </body>
+</html>"""
 
 
+    # Mimic usage of TestPage_viewSeleniumTest?url=...
+    self.portal.REQUEST['url'] = "http://toto.com"
+    self.portal.REQUEST['user'] = "toto"
+    self.portal.REQUEST['password'] = "toto"
+
+    self.assertEquals(test_page.TestPage_viewSeleniumTest(REQUEST=self.portal.REQUEST),
+                      expected_test_html % ("http://toto.com", "toto", "toto"))
+    self.stepTic()
+    test_page.TestPage_runSeleniumTest()
+
+    zuite = getattr(self.portal.portal_tests, 'TESTPAGEREFERENCE', None)
+    self.assertNotEquals(zuite, None)
+
+    zptest = getattr(zuite, "TEST", None)
+    self.assertNotEquals(zptest, None)
+
+    expected_html = expected_test_html % ("http://toto.com", "toto", "toto")
+
+    self.assertEquals(zptest._text, expected_html.strip())

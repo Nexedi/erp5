@@ -50,6 +50,25 @@
         </tr>\n
       </thead>\n
       <tbody>\n
+        <tr tal:condition="python: request.get(\'url\', None) is not None">\n
+          <td>store</td>\n
+          <td tal:content="python:request.get(\'url\', None)">http://example.com/erp5</td>\n
+          <td>base_url</td>\n
+        </tr>\n
+        <tal:block tal:condition="python: request.get(\'url\', None) is None">\n
+          &lt;span metal:use-macro=&quot;container/Zuite_CommonTemplate/macros/init&quot; style=&quot;display: none;&quot;&gt;init&lt;/span&gt;\n
+        </tal:block>\n
+        <tr>\n
+          <td>store</td>\n
+          <!-- ERP5TypeTestCase is the default for any UnitTest -->\n
+          <td tal:content="python:request.get(\'user\', \'ERP5TypeTestCase\')">User</td>\n
+          <td>base_user</td>\n
+         </tr>\n
+        <tr>\n
+          <td>store</td>\n
+            <td tal:content="python:request.get(\'password\', \'\')">Password</td>\n
+            <td>base_password</td>\n
+         </tr>\n
         <tal:block tal:replace="structure python:context.TestPage_extractTest(context.getTextContent())" />\n
       </tbody>\n
     </table>\n
