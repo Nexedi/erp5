@@ -1254,6 +1254,7 @@ class TestConstraint(PropertySheetTestCase):
                    id='type_validity_constraint', )
     obj = self._makeOne()
     obj.edit(default_organisation_title='foo')
+    self.assertEqual(1, len(obj._local_properties))
     self.assertEquals([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
     self._addProperty(obj.getPortalType(), "FixLocalPropertiesContent",
@@ -1271,8 +1272,8 @@ class TestConstraint(PropertySheetTestCase):
     ti._setTypeAllowedContentTypeList(allowed_types + ['Organisation'])
     transaction.commit()
     try:
-      self.assertEqual(['Property local_property was migrated from local properties.'],
-        [str(q.getMessage()) for q in constraint.fixConsistency(obj)])
+      constraint.fixConsistency(obj)
+      self.assertEqual(0, len(obj._local_properties))
       self.assertEquals('foo', obj.getDefaultOrganisationTitle())
       self.assertEquals('foo', obj.default_organisation.getTitle())
     finally:
@@ -1290,15 +1291,16 @@ class TestConstraint(PropertySheetTestCase):
                    id='type_validity_constraint', )
     obj = self._makeOne()
     obj.edit(testing_category=obj.getRelativeUrl())
+    self.assertEqual(1, len(obj._local_properties))
     self.assertEquals([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
     self._addProperty(obj.getPortalType(), "FixForCategories",
                       portal_type="Category Property",
                       property_id="testing_category")
     # fix consistency
-    self.assertEqual(['Property local_property was migrated from local properties.'],
-      [str(q.getMessage()) for q in constraint.fixConsistency(obj)])
+    constraint.fixConsistency(obj)
     # now we can use testing_category as any category accessor
+    self.assertEqual(0, len(obj._local_properties))
     self.assertEquals(obj, obj.getTestingCategoryValue())
 
   def stepCreateContentExistence(self, sequence=None, sequence_list=None, **kw):
