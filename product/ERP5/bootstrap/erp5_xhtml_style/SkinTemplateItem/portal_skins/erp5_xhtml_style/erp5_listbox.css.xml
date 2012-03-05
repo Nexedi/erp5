@@ -637,7 +637,7 @@ div.listbox-page-navigation button.listbox_last_page span.image {\n
 }\n
 \n
 div.listbox-page-navigation-slider{\n
-  width:100%;\n
+  min-width: 200px;\n
   margin:auto;\n
   padding-right: 0.5em;\n
   float:right;\n
