@@ -1215,7 +1215,8 @@ class TestConstraint(PropertySheetTestCase):
                       portal_type="Standard Property",
                       property_id="local_property",
                       elementary_type="string")
-    constraint.fixConsistency(obj)
+    self.assertEqual(['Property local_property was migrated from local properties.'],
+      [str(q.getMessage()) for q in constraint.fixConsistency(obj)])
     self.assertEquals((), obj._local_properties)
     self.assertEquals('1', obj.getLocalProperty())
     obj.edit(local_property='something else')
@@ -1237,7 +1238,8 @@ class TestConstraint(PropertySheetTestCase):
                       portal_type="Standard Property",
                       property_id="local_property",
                       elementary_type="float")
-    constraint.fixConsistency(obj)
+    self.assertEqual(['Property local_property was migrated from local properties.'],
+      [str(q.getMessage()) for q in constraint.fixConsistency(obj)])
     self.assertEquals((), obj._local_properties)
     self.assertEquals(1.234, obj.getLocalProperty())
     obj.edit(local_property=3)
@@ -1269,7 +1271,8 @@ class TestConstraint(PropertySheetTestCase):
     ti._setTypeAllowedContentTypeList(allowed_types + ['Organisation'])
     transaction.commit()
     try:
-      constraint.fixConsistency(obj)
+      self.assertEqual(['Property local_property was migrated from local properties.'],
+        [str(q.getMessage()) for q in constraint.fixConsistency(obj)])
       self.assertEquals('foo', obj.getDefaultOrganisationTitle())
       self.assertEquals('foo', obj.default_organisation.getTitle())
     finally:
@@ -1293,7 +1296,8 @@ class TestConstraint(PropertySheetTestCase):
                       portal_type="Category Property",
                       property_id="testing_category")
     # fix consistency
-    constraint.fixConsistency(obj)
+    self.assertEqual(['Property local_property was migrated from local properties.'],
+      [str(q.getMessage()) for q in constraint.fixConsistency(obj)])
     # now we can use testing_category as any category accessor
     self.assertEquals(obj, obj.getTestingCategoryValue())
 

@@ -73,7 +73,8 @@ class PropertyTypeValidity(Constraint):
     " (Type cast failed with error ${type_cast_error})"
   message_incorrect_type_fixed = "Attribute ${attribute_name}"\
     " should be of type ${expected_type} but is of type ${actual_type} (Fixed)"
-  message_value_modified = "Value of '${key}' was modified from '${old}' to '${new}'."
+  message_local_property_migrated = "Property ${property_id} was migrated from local properties."
+  message_local_property_modified = "Property ${property_id} was modified from ${old_value} to ${new_value}."
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
@@ -96,6 +97,9 @@ class PropertyTypeValidity(Constraint):
          len([x for x in obj._propertyMap() if x['id'] == property_id]) > 1:
         obj._local_properties = tuple([x for x in obj._local_properties
                                        if x['id'] != property_id])
+        error_list.append(self._generateError(obj,
+          self._getMessage('message_local_property_migrated'), dict(
+            property_id=property_id)))
         property_was_local = True
 
       if property_type in self._permissive_type_list:
@@ -141,8 +145,8 @@ class PropertyTypeValidity(Constraint):
         oldvalue = getattr(obj, property_id, value)
         if oldvalue != value:
           error_list.append(self._generateError(obj,
-            self._getMessage('message_value_modified'), dict(
-              key=property_id, old=oldvalue, new=value)))
+            self._getMessage('message_local_property_modified'), dict(
+              property_id=property_id, old_value=oldvalue, new_value=value)))
           obj.setProperty(property_id, value)
 
     return error_list
