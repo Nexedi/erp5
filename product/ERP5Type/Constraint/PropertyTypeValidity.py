@@ -86,8 +86,6 @@ class PropertyTypeValidity(Constraint):
         property_type = 'lines'
       else:
         property_type = prop['type']
-      if property_id == 'password':
-        import ipdb ; ipdb.set_trace()
 
     # if this property was a local property and has been later added in a
     # property sheet, we want to remove it from _local_properties
