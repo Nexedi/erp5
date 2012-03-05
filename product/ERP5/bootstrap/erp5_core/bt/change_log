@@ -1,3 +1,6 @@
+2012-03-05 arnaud.fontaine
+* Allow to run ZODB Test Component tests from Component Tool, likewise Class Tool.
+
 2012-03-03 arnaud.fontaine
 * Remove defined groups on ZODB Component portal types as it should not be considered as a Document for DMS for example.
 

@@ -41,6 +41,8 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from zLOG import LOG, INFO, WARNING
 
+global_stream = None
+
 from DateTime import DateTime
 DEFAULT_TEST_TEMPLATE_COPYRIGHT = "Copyright (c) 2002-%s Nexedi SA and " \
     "Contributors. All Rights Reserved." % DateTime().year()
@@ -193,8 +195,75 @@ class Test(ERP5TypeTestCase):
     Create new content. If this is a Test Component and no text_content has
     been given, then define a default template to help user, likewise
     ClassTool with filesystem live tests
+
+    XXX-arnau: should include more templates like ClassTool
     """
     if kwargs.get('portal_type') == 'Test Component':
       kwargs.setdefault('text_content', self.__test_text_content_template)
 
     return super(ComponentTool, self).newContent(*args, **kwargs)
+
+  # XXX-arnau: copy/paste from ClassTool which portal_components is supposed
+  # to replace at some point
+  security.declarePrivate('_getCommaSeparatedParameterList')
+  def _getCommaSeparatedParameterList(self, parameter_list):
+    # clean parameter_list and split it by commas if necessary
+    if not parameter_list:
+      parameter_list = ()
+    elif isinstance(parameter_list, basestring):
+      parameter_list = tuple(parameter_name.strip()
+                             for parameter_name in parameter_list.split(',')
+                             if parameter_name.strip())
+    return parameter_list
+
+  security.declareProtected(Permissions.ManagePortal, 'runLiveTest')
+  def runLiveTest(self, test_list=None, run_only=None, debug=False,
+                  verbose=False):
+    """
+    Launch live tests
+
+    run_only=STRING      Run only specified test methods delimited with
+                         commas (e.g. testFoo,testBar). This can be regular
+                         expressions.
+    debug=boolean        Invoke debugger on errors / failures.
+    verbose=boolean      Display more informations when running tests
+    """
+    test_list = self._getCommaSeparatedParameterList(test_list)
+    if not test_list:
+      # no test to run
+      return ''
+
+    # Allow having strings for verbose and debug
+    verbose = int(verbose) and True or False
+    debug = int(debug) and True or False
+    run_only = self._getCommaSeparatedParameterList(run_only)
+    verbosity = verbose and 2 or 1
+
+    from StringIO import StringIO
+    global global_stream
+    global_stream = StringIO()
+    from Products.ERP5Type.tests.ERP5TypeLiveTestCase import runLiveTest
+    try:
+      result = runLiveTest(test_list,
+                           run_only=run_only,
+                           debug=debug,
+                           stream=global_stream,
+                           verbosity=verbosity)
+    except ImportError:
+      import traceback
+      traceback.print_exc(file=global_stream)
+    global_stream.seek(0)
+    return global_stream.read()
+
+  security.declareProtected(Permissions.ManagePortal, 'readTestOutput')
+  def readTestOutput(self, position=0):
+    """
+    Return unread part of the test result
+    """
+    result = ''
+    position = int(position)
+    global global_stream
+    if global_stream is not None:
+      global_stream.seek(position)
+      result = global_stream.read()
+    return result

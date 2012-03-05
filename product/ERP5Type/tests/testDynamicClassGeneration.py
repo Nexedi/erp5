@@ -1848,10 +1848,103 @@ class TestDocumentWithImport(TestDocumentImported):
     self.assertModuleImportable('TestDocumentWithImport')
     self.assertModuleImportable('TestDocumentImported')
 
+from Products.ERP5Type.Core.TestComponent import TestComponent
+
+class TestZodbTestComponent(_TestZodbComponent):
+  def _newComponent(self, reference, text_content, version='erp5'):
+    return self._component_tool.newContent(
+      id='%s.%s.%s' % (self._getComponentModuleName(),
+                       version + '_version', reference),
+      reference=reference,
+      version=version,
+      text_content=text_content,
+      portal_type='Test Component')
+
+  def _getComponentModuleName(self):
+    return TestComponent._getDynamicModuleNamespace()
+
+  def testRunLiveTest(self):
+    source_code = '''
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+
+class Test(ERP5TypeTestCase):
+  def getTitle(self):
+    return "SampleTest"
+
+  def getBusinessTemplateList(self):
+    return ('erp5_core',)
+
+  def _setUpDummyMailHost(self):
+    """
+    Dummy mail host has already been set up when running tests
+    """
+    pass
+
+  def _restoreMailHost(self):
+    """
+    Dummy mail host has already been set up when running tests
+    """
+    pass
+
+  def test_01_sampleTest(self):
+    self.assertEqual(0, 0)
+'''
+
+    component = self._newComponent('testRunLiveTest', source_code)
+    component.validate()
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertModuleImportable('testRunLiveTest')
+    self._component_tool.reset(force=True, reset_portal_type=True)
+
+    # ERP5TypeLiveTestCase.runLiveTest patches ERP5TypeTestCase bases, thus it
+    # needs to be restored after calling runLiveTest
+    base_tuple = ERP5TypeTestCase.__bases__
+    try:
+      self._component_tool.runLiveTest('testRunLiveTest')
+    finally:
+      ERP5TypeTestCase.__bases__ = base_tuple
+
+    # assertRegexpMatches is only available from Python >= 2.7
+    import re
+    output = self._component_tool.readTestOutput()
+    self.assertNotEqual(re.search('Ran 1 test.*OK', output, re.DOTALL), None,
+                        "Expected 'Ran 1 test.*OK' in '%s'" % output)
+
+
+    source_code += '''
+  def test_02_sampleTestWithFailure(self):
+    self.assertEqual(0, 1)
+'''
+
+    component.setTextContent(source_code)
+    transaction.commit()
+    self.tic()
+
+    self.assertEqual(component.getValidationState(), 'validated')
+    self.assertModuleImportable('testRunLiveTest')
+    self._component_tool.reset(force=True, reset_portal_type=True)
+
+    base_tuple = ERP5TypeTestCase.__bases__
+    try:
+      self._component_tool.runLiveTest('testRunLiveTest')
+    finally:
+      ERP5TypeTestCase.__bases__ = base_tuple
+
+    # assertRegexpMatches is only available from Python >= 2.7
+    import re
+    output = self._component_tool.readTestOutput()
+    expected_msg_re_str = 'Ran 2 tests.*FAILED \(failures=1\)'
+    self.assertNotEqual(re.search(expected_msg_re_str, output, re.DOTALL), None,
+                        "Expected '%s' in '%s'" % (expected_msg_re_str, output))
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestPortalTypeClass))
   suite.addTest(unittest.makeSuite(TestZodbPropertySheet))
   suite.addTest(unittest.makeSuite(TestZodbExtensionComponent))
   suite.addTest(unittest.makeSuite(TestZodbDocumentComponent))
+  suite.addTest(unittest.makeSuite(TestZodbTestComponent))
   return suite

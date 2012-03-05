@@ -165,11 +165,13 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
             import erp5.component.test
 
             try:
-                module = __import__('erp5.component.test.' + name,
-                                    fromlist=['erp5.component.test'],
-                                    level=0)
+                __import__('erp5.component.test.' + name,
+                           fromlist=['erp5.component.test'],
+                           level=0)
             except ImportError:
                 pass
+            else:
+                module = erp5.component.test
 
         return super(ERP5TypeTestReLoader, self).loadTestsFromName(name,
                                                                    module)
@@ -179,7 +181,7 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
         If the module is not a ZODB Component, then reload it to consider
         modifications on the filesystem
         """
-        if not instance(module, ComponentDynamicPackage):
+        if not isinstance(module, ComponentDynamicPackage):
             reload(module)
         return super(ERP5TypeTestReLoader, self).loadTestsFromModule(module)
 
