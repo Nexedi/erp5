@@ -1272,10 +1272,13 @@ class TestConstraint(PropertySheetTestCase):
     ti._setTypeAllowedContentTypeList(allowed_types + ['Organisation'])
     transaction.commit()
     try:
-      constraint.fixConsistency(obj)
-      self.assertEqual(0, len(obj._local_properties))
+      self.assertEqual(sorted([
+        'Property default_organisation_title was migrated from local properties.',
+        'Property default_organisation_title was modified from foo to None.']),
+        sorted([str(q.getMessage()) for q in constraint.fixConsistency(obj)]))
       self.assertEquals('foo', obj.getDefaultOrganisationTitle())
       self.assertEquals('foo', obj.default_organisation.getTitle())
+      self.assertEqual(0, len(obj._local_properties))
     finally:
       ti._setTypeAllowedContentTypeList(allowed_types)
 
@@ -1298,7 +1301,10 @@ class TestConstraint(PropertySheetTestCase):
                       portal_type="Category Property",
                       property_id="testing_category")
     # fix consistency
-    constraint.fixConsistency(obj)
+    self.assertEqual(sorted([
+      'Property testing_category was migrated from local properties.',
+      'Property testing_category was modified from organisation_module/%s to None.' % obj.getId()]),
+      sorted([str(q.getMessage()) for q in constraint.fixConsistency(obj)]))
     # now we can use testing_category as any category accessor
     self.assertEqual(0, len(obj._local_properties))
     self.assertEquals(obj, obj.getTestingCategoryValue())

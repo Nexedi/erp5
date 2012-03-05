@@ -94,7 +94,7 @@ class PropertyTypeValidity(Constraint):
       if fixit and \
          property_id in [x['id'] for x in
              getattr(obj, '_local_properties', ())] and \
-         len([x for x in obj._propertyMap() if x['id'] == property_id]) > 1:
+         len([x for x in obj._propertyMap() if x['id'] == property_id]) > 0:
         obj._local_properties = tuple([x for x in obj._local_properties
                                        if x['id'] != property_id])
         error_list.append(self._generateError(obj,
@@ -147,6 +147,6 @@ class PropertyTypeValidity(Constraint):
           error_list.append(self._generateError(obj,
             self._getMessage('message_local_property_modified'), dict(
               property_id=property_id, old_value=oldvalue, new_value=value)))
-          obj.setProperty(property_id, value)
+          obj.setProperty(property_id, oldvalue)
 
     return error_list
