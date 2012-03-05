@@ -143,6 +143,6 @@ class PropertyTypeValidity(Constraint):
           error_list.append(self._generateError(obj,
             self._getMessage('message_value_modified'), dict(
               key=property_id, old=oldvalue, new=value)))
-          obj.setProperty(property_id, oldvalue)
+          obj.setProperty(property_id, value)
 
     return error_list
