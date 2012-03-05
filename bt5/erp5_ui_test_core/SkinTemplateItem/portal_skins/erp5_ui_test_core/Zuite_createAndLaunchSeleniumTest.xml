@@ -60,7 +60,7 @@
 zuite = context.getPortalObject().portal_tests.Zuite_addZuite(zuite_id)\n
 \n
 for text, title in test_list:\n
-  zuite.Zuite_addTest(test_id, title, text)\n
+  zuite.Zuite_addTest(None, title, text)\n
 \n
 return zuite.Base_redirect("core/TestRunner.html?auto=true&test=..%2Ftest_suite_html&resultsUrl=..%2FpostResults")\n
 
@@ -69,7 +69,7 @@ return zuite.Base_redirect("core/TestRunner.html?auto=true&test=..%2Ftest_suite_
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>test_list, zuite_id, test_id=None</string> </value>
+            <value> <string>test_list, zuite_id</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
