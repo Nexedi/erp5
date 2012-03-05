@@ -73,7 +73,7 @@ class PropertyTypeValidity(Constraint):
     " (Type cast failed with error ${type_cast_error})"
   message_incorrect_type_fixed = "Attribute ${attribute_name}"\
     " should be of type ${expected_type} but is of type ${actual_type} (Fixed)"
-  
+  message_value_modified = "Value of '${key}' was modified from '${old}' to '${new}'."
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
@@ -86,6 +86,8 @@ class PropertyTypeValidity(Constraint):
         property_type = 'lines'
       else:
         property_type = prop['type']
+      if property_id == 'password':
+        import ipdb ; ipdb.set_trace()
 
     # if this property was a local property and has been later added in a
     # property sheet, we want to remove it from _local_properties
@@ -138,6 +140,9 @@ class PropertyTypeValidity(Constraint):
       elif fixit:
         oldvalue = getattr(obj, property_id, value)
         if oldvalue != value:
+          error_list.append(self._generateError(obj,
+            self._getMessage('message_value_modified'), dict(
+              key=property_id, old=oldvalue, new=value)))
           obj.setProperty(property_id, oldvalue)
 
     return error_list
