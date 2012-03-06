@@ -48,7 +48,7 @@ TEST_RESULT_RE = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
 
 TEST_ERROR_RESULT_RE = re.compile('.*(?:error.gif|title status_failed).*', re.S)
 
-ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=%s/portal_tests/postResults&__ac_name=%s&__ac_password=%s"
+ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s"
 
 tests_framework_home = os.path.dirname(os.path.abspath(__file__))
 # handle 'system global' instance
@@ -257,7 +257,7 @@ class FunctionalTestRunner:
 
   def getStatus(self):
     transaction.commit()
-    return self.portal.portal_tests.TestTool_getResults()
+    return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
   def _getTestURL(self):
     return ZELENIUM_BASE_URL % (self.portal.portal_url(), self.run_only,
