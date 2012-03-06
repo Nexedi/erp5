@@ -471,7 +471,8 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   version_priority_list = property(getVersionPriorityList,
                                    setVersionPriorityList)
 
-  security.declarePrivate('getVersionPriorityNameList')
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVersionPriorityNameList')
   def getVersionPriorityNameList(self):
     # XXX-arnau: should be cached?
     return [name.split('|')[0].strip()

@@ -123,7 +123,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: [(v, v) for v in here.getPortalObject().getVersionPriorityNameList()]</string> </value>
+            <value> <string>python: [(v, v) for v in set(here.getPortalObject().getVersionPriorityNameList() + [v.split(\'|\')[0].strip() for v in here.getTemplateRegisteredVersionPrioritySelectionList()])]</string> </value>
         </item>
       </dictionary>
     </pickle>
