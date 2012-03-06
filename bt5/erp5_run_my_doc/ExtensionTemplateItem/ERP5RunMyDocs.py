@@ -128,4 +128,36 @@ def extractTest(text):
           testcode += row[0].text
         else:
           testcode += lxml.html.tostring(row)
-  return testcode 
+  return testcode
+
+"""
+  HTML5 Presentation validador
+""" 
+def validateHTML5Document(text):
+  import lxml.html
+  from lxml import etree
+  root = lxml.html.fromstring(text)
+  section_list = root.xpath('//section')
+  count = 0
+  error_list = []
+  for section in section_list:
+    count += 1
+    if section.xpath("h1") == []:
+      error_list.append("Section %s had no h1." % count)
+
+    if section.get("class") in ["screenshot", "illustration"]:
+      if section.xpath("img") == []:
+         error_list.append("Section %s has class %s but do not have an image." % (count, section.get("class")))
+      else:
+         if section.xpath("img")[0].get("title") == None:
+           error_list.append("At section %s, img has no title" % count)
+
+         if section.xpath("img")[0].get("alt") == None:
+           error_list.append("At section %s, img has no alt" % count)
+
+    if section.xpath("details") == []:
+      error_list.append("Section %s has no details." % (count))
+
+  return error_list
+    
+    

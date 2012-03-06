@@ -18,6 +18,7 @@ Test Page | related
 Test Page | send_email
 Test Page | slideshow
 Test Page | update_report
+Test Page | verify_content
 Test Page | view
 Test Page | view_editor
 Test Page | view_slideshow_editor
@@ -27,4 +28,5 @@ Web Page Module | page_fast_input
 Web Page | export_book
 Web Page | export_chapter
 Web Page | slideshow
+Web Page | verify_content
 Web Page | view_slideshow_editor
