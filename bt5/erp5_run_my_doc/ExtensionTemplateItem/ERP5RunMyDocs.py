@@ -140,6 +140,7 @@ def validateHTML5Document(text):
   section_list = root.xpath('//section')
   count = 0
   error_list = []
+  # XXX Lack of translation support here.
   for section in section_list:
     count += 1
     if section.xpath("h1") == []:
@@ -147,16 +148,16 @@ def validateHTML5Document(text):
 
     if section.get("class") in ["screenshot", "illustration"]:
       if section.xpath("img") == []:
-         error_list.append("Section %s has class %s but do not have an image." % (count, section.get("class")))
+         error_list.append("Section %s has class %s but it doesn't have any image." % (count, section.get("class")))
       else:
          if section.xpath("img")[0].get("title") == None:
-           error_list.append("At section %s, img has no title" % count)
+           error_list.append("At section %s, img has no title attribute." % count)
 
          if section.xpath("img")[0].get("alt") == None:
-           error_list.append("At section %s, img has no alt" % count)
+           error_list.append("At section %s, img has no alt attribute." % count)
 
     if section.xpath("details") == []:
-      error_list.append("Section %s has no details." % (count))
+      error_list.append("Section %s has no details tag." % (count))
 
   return error_list
     
