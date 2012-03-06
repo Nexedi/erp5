@@ -61,15 +61,13 @@ test_script = getattr(context, \'Zuite_createAndLaunchSeleniumTest\', None)\n
 if test_script is None:\n
   raise ValueError("Unable to Launch the Test. Please install erp5_test_ui_core business template.")\n
 \n
-return test_script(text=context.TestPage_viewSeleniumTest(),\n
-                   title=context.getTitle(), \n
-                   zuite_id=zuite_id,\n
-                   test_id=test_id)\n
+return test_script(test_list=((context.TestPage_viewSeleniumTest(),context.getTitle()),), \n
+                   zuite_id=zuite_id)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>zuite_id=\'tutorial_zuite\', test_id=None</string> </value>
+            <value> <string>zuite_id=\'tutorial_zuite\', url=None, user="", password=""</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
