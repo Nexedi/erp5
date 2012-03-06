@@ -1763,6 +1763,116 @@ class RegisteredSkinSelectionTemplateItem(BaseTemplateItem):
       skin_selection_dict[skin_folder_id] = selection_list
     self._objects = skin_selection_dict
 
+class RegisteredVersionPrioritySelectionTemplateItem(BaseTemplateItem):
+  def _fillObjectDictFromArchive(self):
+    for version_priority in self._archive:
+      try:
+        version, priority = version_priority.split('|')
+        priority = float(priority)
+      except ValueError:
+        version = version_priority
+        priority = 0.
+
+      self._objects[version.strip()] = priority
+
+  def build(self, context, **kw):
+    self._fillObjectDictFromArchive()
+
+  def install(self, context, trashbin, **kw):
+    if not self._objects:
+      return
+
+    portal = context.getPortalObject()
+    registered_tuple_list = []
+    for value in portal.getVersionPriorityList():
+      try:
+        version, priority = value.split('|')
+        priority = float(priority)
+      except ValueError:
+        version = value
+        priority = 0.
+
+      registered_tuple_list.append((version.strip(), priority))
+
+    update_dict = kw.get('object_to_update')
+    force = kw.get('force')
+    registered_name_list = set(portal.getVersionPriorityNameList())
+    for new_version, new_priority in self._objects.iteritems():
+      action = update_dict.get(new_version)
+      if (not action or action == 'nothing') and not force:
+        continue
+
+      # Merge version and priority defined on this bt and already registered
+      # version and priority
+      inserted = False
+      index = 0
+      for (version, priority) in registered_tuple_list:
+        if new_version == version:
+          if new_priority == priority:
+            inserted = True
+            break
+          else:
+            del registered_tuple_list[index]
+            continue
+        elif not inserted:
+          if new_priority > priority:
+            registered_tuple_list.insert(index, (new_version, new_priority))
+            inserted = True
+          elif new_priority == priority and new_version >= version:
+            registered_tuple_list.insert(index, (new_version, new_priority))
+            inserted = True
+
+        index += 1
+
+      if not inserted:
+        registered_tuple_list.append((new_version, new_priority))
+
+    portal.setVersionPriorityList(('%s | %s' % (version, priority)
+                                   for version, priority in registered_tuple_list))
+
+  def preinstall(self, context, installed_item, **kw):
+    if context.getTemplateFormatVersion() != 1:
+      return {}
+
+    modified_object_list = {}
+    class_name_prefix = self.__class__.__name__[:-12]
+    for path, new_object in self._objects.iteritems():
+      old_object = installed_item._objects.get(path)
+      if old_object is not None:
+        # Compare object to see it there is any change
+        if new_object != old_object:
+          modified_object_list.update({path : ['Modified', class_name_prefix]})
+      else:
+        modified_object_list.update({path : ['New', class_name_prefix]})
+
+    # Get removed objects
+    for path in installed_item._objects:
+      if path not in self._objects:
+        modified_object_list.update({path : ['Removed', class_name_prefix]})
+
+    return modified_object_list
+
+  def importFile(self, bta, **kw):
+    super(RegisteredVersionPrioritySelectionTemplateItem,
+          self).importFile(bta, **kw)
+
+    self._objects.clear()
+    self._fillObjectDictFromArchive()
+
+  def uninstall(self, context, **kw):
+    object_path = kw.get('object_path')
+    object_list = object_path and (object_path,) or self._objects
+
+    portal = context.getPortalObject()
+    registered_list = list(portal.getVersionPriorityList())
+    index = 0
+    for version in portal.getVersionPriorityNameList():
+      if version in object_list:
+        del registered_list[index]
+      else:
+        index += 1
+
+    portal.setVersionPriorityList(registered_list)
 
 class WorkflowTemplateItem(ObjectTemplateItem):
 
@@ -4565,6 +4675,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     #       path and use it with SQLMethods in a skin.
     #    ( and more )
     _item_name_list = [
+      '_registered_version_priority_selection_item',
       '_product_item',
       '_document_item',
       '_property_sheet_item',
@@ -4674,6 +4785,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._registered_skin_selection_item = \
           RegisteredSkinSelectionTemplateItem(
               self.getTemplateRegisteredSkinSelectionList())
+      self._registered_version_priority_selection_item = \
+          RegisteredVersionPrioritySelectionTemplateItem(
+              self.getTemplateRegisteredVersionPrioritySelectionList())
       self._category_item = \
           CategoryTemplateItem(self.getTemplateBaseCategoryList())
       self._catalog_method_item = \
@@ -5223,6 +5337,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       ordered list
       """
       return self._getOrderedList('template_registered_skin_selection')
+
+    def getTemplateRegisteredVersionPrioritySelectionList(self):
+      """
+      We have to set this method because we want an
+      ordered list
+      """
+      return self._getOrderedList('template_registered_version_priority_selection')
 
     def getTemplateModuleIdList(self):
       """

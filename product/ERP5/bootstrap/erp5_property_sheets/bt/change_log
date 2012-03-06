@@ -1,3 +1,6 @@
+2012-03-06 arnaud.fontaine
+* Add template_registered_version_priority_selection property to BusinessTemplate to define version and their priorities for ZODB Component only for now.
+
 2011-12-15 yusei
 * Fix ProductionOrderLine.resource_category_existence. Any resource type document is ok to be used as resource on production order line.
 

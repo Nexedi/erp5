@@ -6565,6 +6565,99 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def stepSetVersionPriorityRegisteredSelection(self, sequence=None, **kw):
+    bt = sequence.get('current_bt')
+    self.failIf(bt is None)
+
+    version_priority_list = ('abc| 1.0',
+                             'def |99.0',
+                             'erp4')
+
+    bt.edit(template_registered_version_priority_selection_list=version_priority_list)
+
+    sequence.edit(expected_version_priority_list=('def | 99.0',
+                                                  'abc | 1.0',
+                                                  'erp5 | 0.0',
+                                                  'erp4 | 0.0'),
+                  current_bt_version_priority_list=tuple(sorted(version_priority_list)))
+
+  def stepUpdateVersionPriorityRegisteredSelection(self, sequence=None, **kw):
+    bt = sequence.get('current_bt')
+    self.failIf(bt is None)
+
+    version_priority_list = ('erp4',
+                             'abc | 1.0',
+                             'foo | 2.0',
+                             'bar | 100.0')
+
+    bt.edit(template_registered_version_priority_selection_list=version_priority_list)
+
+    sequence.edit(expected_version_priority_list=('bar | 100.0',
+                                                  'foo | 2.0',
+                                                  'abc | 1.0',
+                                                  'erp5 | 0.0',
+                                                  'erp4 | 0.0'),
+                  current_bt_version_priority_list=tuple(sorted(version_priority_list)))
+
+  def stepCheckVersionPriorityRegisteredSelection(self, sequence=None, **kw):
+    bt = sequence.get('current_bt')
+    self.assertEqual(tuple(bt.getTemplateRegisteredVersionPrioritySelectionList()),
+                     sequence['current_bt_version_priority_list'])
+
+  def stepRemoveVersionPriorityRegisteredSelectionBeforeImport(self,
+                                                               sequence=None,
+                                                               **kw):
+    bt = sequence.get('current_bt')
+    bt.edit(template_registered_version_priority_selection_list=())
+
+  def stepCheckVersionPrioritySetOnSite(self, sequence=None, **kw):
+    bt = sequence.get('current_bt')
+    self.assertEqual(self.getPortalObject().getVersionPriorityList(),
+                     sequence['expected_version_priority_list'])
+
+  def stepCheckVersionPriorityRemovedFromSite(self, sequence=None, **kw):
+    bt = sequence.get('current_bt')
+    self.assertEqual(self.getPortalObject().getVersionPriorityList(),
+                     ('erp5 | 0.0',))
+
+  def stepRemoveVersionPriorityRegisteredSelection(self, sequence=None, **kw):
+    bt = sequence.get('current_bt')
+    bt.edit(template_registered_version_priority_selection=())
+    sequence.edit(expected_version_priority_list=('erp5 | 0.0'),
+                  current_bt_version_priority_list=())
+
+  def test_BusinessTemplateWithVersionPrioritySelection(self):
+    sequence_list = SequenceList()
+    sequence_string = 'CreateNewBusinessTemplate \
+                       UseExportBusinessTemplate \
+                       SetVersionPriorityRegisteredSelection \
+                       BuildBusinessTemplate \
+                       SaveBusinessTemplate \
+                       RemoveVersionPriorityRegisteredSelectionBeforeImport \
+                       ImportBusinessTemplate \
+                       UseImportBusinessTemplate \
+                       CheckVersionPriorityRegisteredSelection \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckVersionPrioritySetOnSite \
+                       UninstallBusinessTemplate \
+                       Tic \
+                       CheckVersionPriorityRemovedFromSite \
+                       \
+                       UpdateVersionPriorityRegisteredSelection \
+                       BuildBusinessTemplate \
+                       CheckVersionPriorityRegisteredSelection \
+                       InstallWithoutForceBusinessTemplate \
+                       Tic \
+                       CheckVersionPrioritySetOnSite \
+                       UninstallBusinessTemplate \
+                       Tic \
+                       CheckVersionPriorityRemovedFromSite \
+                       '
+
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
 from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
 
 class TestDocumentTemplateItem(BusinessTemplateMixin):

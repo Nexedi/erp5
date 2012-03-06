@@ -1596,7 +1596,7 @@ def bar(*args, **kwargs):
     ComponentTool.reset = assertResetCalled
     priority_tuple = site.getVersionPriorityList()
     try:
-      site.setVersionPriorityList(('foo',) + priority_tuple)
+      site.setVersionPriorityList(('foo | 99.0',) + priority_tuple)
       transaction.commit()
       self.tic()
 

@@ -87,6 +87,7 @@
                       <list>
                         <string>my_template_module_id_list</string>
                         <string>my_template_base_category_list</string>
+                        <string>my_template_registered_version_priority_selection_list</string>
                       </list>
                     </value>
                 </item>
