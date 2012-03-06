@@ -46,6 +46,8 @@ class TestRunMyDoc(ERP5TypeTestCase):
             'erp5_jquery',
             'erp5_jquery_ui',
             'erp5_knowledge_pad',
+            'erp5_ingestion_mysql_innodb_catalog',
+            'erp5_ingestion',
             'erp5_web',
             'erp5_dms',
             'erp5_slideshow_style',
