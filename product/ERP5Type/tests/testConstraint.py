@@ -83,7 +83,7 @@ class TestConstraint(PropertySheetTestCase):
     group = self.category_tool.group
     if 'testGroup1' not in group.contentIds():
       for category_id in category_list:
-        o = group.newContent(portal_type='Category',
+        group.newContent(portal_type='Category',
                              id=category_id)
 
   def stepDeleteObjectModuleContent(self, sequence=None,
@@ -180,7 +180,7 @@ class TestConstraint(PropertySheetTestCase):
     object = sequence.get('object')
     # Do not call edit, as we want to explicitely modify the property
     # (and edit modify only if value is different)
-    method = object.setTitle('')
+    object.setTitle('')
 
   def stepSetObjectIntTitle(self, sequence=None,
                             sequence_list=None, **kw):
@@ -188,7 +188,6 @@ class TestConstraint(PropertySheetTestCase):
       Set a different title value
     """
     object = sequence.get('object')
-    object_title = self.object_title
     object.edit(title=12345)
 
   def stepSetObjectBadTypedProperty(self, sequence=None,
@@ -1285,7 +1284,7 @@ class TestConstraint(PropertySheetTestCase):
     """Tests PropertyTypeValidity can repairs categories when this property
     is added on the class later.
     """
-    bc = self.getPortal().portal_categories.newContent(
+    self.getPortal().portal_categories.newContent(
                               portal_type='Base Category',
                               id='testing_category')
     constraint = self._createGenericConstraint(
@@ -1424,8 +1423,8 @@ class TestConstraint(PropertySheetTestCase):
     # constraint are registred in property sheets
     obj = self._makeOne()
     obj.setTitle('b')
-    property_sheet = self._addProperty(
-                        obj.getPortalType(), 
+    self._addProperty(
+                        obj.getPortalType(),
                         "TestRegisterWithPropertySheet",
                         commit=True,
                         property_id="title_constraint",
@@ -1447,7 +1446,7 @@ class TestConstraint(PropertySheetTestCase):
     # messages can be overriden in property sheet
     obj = self._makeOne()
     obj.setTitle('b')
-    property_sheet = self._addProperty(
+    self._addProperty(
                         obj.getPortalType(),
                         "TestOverrideMessage",
                         commit=True,
