@@ -10,6 +10,7 @@ Test Page | edit_test
 Test Page | export_book
 Test Page | export_chapter
 Test Page | export_report
+Test Page | export_selenium_test
 Test Page | launch
 Test Page | list
 Test Page | local_permission
