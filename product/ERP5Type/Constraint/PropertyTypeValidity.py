@@ -1,15 +1,15 @@
 ##############################################################################
 #
-# Copyright (c) 2002, 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2002-2012 Nexedi SA and Contributors. All Rights Reserved.
 #                    Sebastien Robin <seb@nexedi.com>
 #                    Jean-Paul Smets <jp@nexedi.com>
 #                    Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -55,7 +55,7 @@ class PropertyTypeValidity(Constraint):
     'multiple selection': (list, tuple),
     'date':               (DateTime, ),
   }
-  
+
   # Properties of type eg. "object" can hold anything
   _permissive_type_list = ('object', 'data')
 
@@ -143,6 +143,5 @@ class PropertyTypeValidity(Constraint):
           error_list.append(self._generateError(obj,
             self._getMessage('message_local_property_migrated'), dict(
               property_id=property_id)))
-
 
     return error_list
