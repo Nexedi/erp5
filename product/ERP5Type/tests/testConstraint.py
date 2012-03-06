@@ -126,7 +126,7 @@ class TestConstraint(PropertySheetTestCase):
 #     group1 = object.portal_categories.restrictedTraverse('group/testGroup1')
 #     object.edit(group_value=group1)
     object.edit(group='testGroup1')
-    self.assertNotEquals(
+    self.assertNotEqual(
           object.getGroup(portal_type=()),
           None )
 
@@ -138,7 +138,7 @@ class TestConstraint(PropertySheetTestCase):
     object = sequence.get('object')
     object.setGroup(object.getRelativeUrl(),
                     portal_type='Organisation')
-    self.assertNotEquals(
+    self.assertNotEqual(
           object.getGroup(portal_type='Organisation'),
           None )
 
@@ -285,7 +285,7 @@ class TestConstraint(PropertySheetTestCase):
                     "error_list : %s" % error_list)
     # call getTranslatedMessage, to make sure messages have a valid mapping.
     for error in error_list:
-      self.assertNotEquals('',
+      self.assertNotEqual('',
                            error.getTranslatedMessage())
 
 
@@ -965,10 +965,10 @@ class TestConstraint(PropertySheetTestCase):
                    klass_name='CategoryMembershipArity',
                    min_arity=1)
     message_list = constraint.checkConsistency(obj)
-    self.assertEquals(1, len(message_list))
-    self.assertNotEquals('', message_list[0].getTranslatedMessage())
+    self.assertEqual(1, len(message_list))
+    self.assertNotEqual('', message_list[0].getTranslatedMessage())
     obj.setGroup('testGroup1')
-    self.assertEquals(0, len(constraint.checkConsistency(obj)))
+    self.assertEqual(0, len(constraint.checkConsistency(obj)))
 
   def test_CategoryAcquiredMembershipArityNoMax(self):
     obj = self._makeOne()
@@ -979,10 +979,10 @@ class TestConstraint(PropertySheetTestCase):
                    klass_name='CategoryAcquiredMembershipArity',
                    min_arity=1)
     message_list = constraint.checkConsistency(obj)
-    self.assertEquals(1, len(message_list))
-    self.assertNotEquals('', message_list[0].getTranslatedMessage())
+    self.assertEqual(1, len(message_list))
+    self.assertNotEqual('', message_list[0].getTranslatedMessage())
     obj.setGroup('testGroup1')
-    self.assertEquals(0, len(constraint.checkConsistency(obj)))
+    self.assertEqual(0, len(constraint.checkConsistency(obj)))
 
   def stepCreateCategoryRelatedMembershipArity0(self, sequence=None,
                                                 sequence_list=None, **kw):
@@ -1109,19 +1109,19 @@ class TestConstraint(PropertySheetTestCase):
                    klass_name='CategoryRelatedMembershipArity',
                    min_arity=1)
     message_list = constraint.checkConsistency(obj)
-    self.assertEquals(1, len(message_list))
-    self.assertNotEquals('', message_list[0].getTranslatedMessage())
+    self.assertEqual(1, len(message_list))
+    self.assertNotEqual('', message_list[0].getTranslatedMessage())
     related_obj.setGroupValue(obj)
     transaction.commit()
     self.tic()
-    self.assertEquals(0, len(constraint.checkConsistency(obj)))
+    self.assertEqual(0, len(constraint.checkConsistency(obj)))
 
   def test_BooleanPropertiesPropertyTypeValidity(self):
     """Tests PropertyTypeValidity can handle boolean values.
     """
     obj = self._makeOne()
     obj.manage_addProperty('dummy_boolean_property', True, type='boolean')
-    self.assertEquals([], obj.checkConsistency())
+    self.assertEqual([], obj.checkConsistency())
 
   def test_BooleanPropertiesPropertyTypeValidityFix(self):
     """Tests PropertyTypeValidity can fix boolean values.
@@ -1132,7 +1132,7 @@ class TestConstraint(PropertySheetTestCase):
     obj.setProperty(prop_name, 2)
     obj.fixConsistency()
     # should be fixed now
-    self.assertEquals([], obj.checkConsistency())
+    self.assertEqual([], obj.checkConsistency())
     self.failUnless(obj.getPropertyType(prop_name))
 
   def test_TALESConstraint(self):
@@ -1143,11 +1143,11 @@ class TestConstraint(PropertySheetTestCase):
                    id='tales_constraint',
                    expression='python: object.getTitle() != "foo"')
     obj = self._makeOne()
-    self.assertEquals([], constraint.checkConsistency(obj))
+    self.assertEqual([], constraint.checkConsistency(obj))
     obj.setTitle('foo')
     message_list = constraint.checkConsistency(obj)
-    self.assertEquals(1, len(message_list))
-    self.assertNotEquals('', message_list[0].getTranslatedMessage())
+    self.assertEqual(1, len(message_list))
+    self.assertNotEqual('', message_list[0].getTranslatedMessage())
 
   def test_TALESConstraintInvalidExpression(self):
     """Tests TALESConstraint with an invalid expression
@@ -1159,8 +1159,8 @@ class TestConstraint(PropertySheetTestCase):
     obj = self._makeOne()
     # an error during expression evaluation simply makes a consistency error
     message_list = constraint.checkConsistency(obj)
-    self.assertEquals(1, len(message_list))
-    self.assertNotEquals('', message_list[0].getTranslatedMessage())
+    self.assertEqual(1, len(message_list))
+    self.assertNotEqual('', message_list[0].getTranslatedMessage())
 
     # an error during expression compilation is reraised to the programmer
     constraint = self._createGenericConstraint(
@@ -1191,12 +1191,12 @@ class TestConstraint(PropertySheetTestCase):
                       elementary_type="string")
     obj.edit(local_property='1')
     self.assertFalse('_local_properties' in obj.__dict__)
-    self.assertEquals([], constraint.checkConsistency(obj))
+    self.assertEqual([], constraint.checkConsistency(obj))
     self.assertEqual([], constraint.fixConsistency(obj))
     self.assertFalse('_local_properties' in obj.__dict__)
-    self.assertEquals('1', obj.getLocalProperty())
+    self.assertEqual('1', obj.getLocalProperty())
     obj.edit(local_property='something else')
-    self.assertEquals('something else', obj.getLocalProperty())
+    self.assertEqual('something else', obj.getLocalProperty())
 
   def test_PropertyTypeValidityFixLocalPropertiesString(self):
     """Tests PropertyTypeValidity can repairs local property when this property
@@ -1207,8 +1207,8 @@ class TestConstraint(PropertySheetTestCase):
                    id='type_validity_constraint', )
     obj = self._makeOne()
     obj.edit(local_property='1')
-    self.assertEquals(1, len(obj._local_properties))
-    self.assertEquals([], constraint.checkConsistency(obj))
+    self.assertEqual(1, len(obj._local_properties))
+    self.assertEqual([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
     self._addProperty(obj.getPortalType(), "FixLocalPropertiesString",
                       portal_type="Standard Property",
@@ -1216,10 +1216,10 @@ class TestConstraint(PropertySheetTestCase):
                       elementary_type="string")
     self.assertEqual(['Property local_property was migrated from local properties.'],
       [str(q.getMessage()) for q in constraint.fixConsistency(obj)])
-    self.assertEquals((), obj._local_properties)
-    self.assertEquals('1', obj.getLocalProperty())
+    self.assertEqual((), obj._local_properties)
+    self.assertEqual('1', obj.getLocalProperty())
     obj.edit(local_property='something else')
-    self.assertEquals('something else', obj.getLocalProperty())
+    self.assertEqual('something else', obj.getLocalProperty())
 
   def test_PropertyTypeValidityFixLocalPropertiesFloat(self):
     """Tests PropertyTypeValidity can repairs local property when this property
@@ -1230,8 +1230,8 @@ class TestConstraint(PropertySheetTestCase):
                    id='type_validity_constraint', )
     obj = self._makeOne()
     obj.edit(local_property=1.234)
-    self.assertEquals(1, len(obj._local_properties))
-    #self.assertEquals([], constraint.checkConsistency(obj))
+    self.assertEqual(1, len(obj._local_properties))
+    #self.assertEqual([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
     self._addProperty(obj.getPortalType(), "FixLocalPropertiesFloat",
                       portal_type="Standard Property",
@@ -1239,10 +1239,10 @@ class TestConstraint(PropertySheetTestCase):
                       elementary_type="float")
     self.assertEqual(['Property local_property was migrated from local properties.'],
       [str(q.getMessage()) for q in constraint.fixConsistency(obj)])
-    self.assertEquals((), obj._local_properties)
-    self.assertEquals(1.234, obj.getLocalProperty())
+    self.assertEqual((), obj._local_properties)
+    self.assertEqual(1.234, obj.getLocalProperty())
     obj.edit(local_property=3)
-    self.assertEquals(3., obj.getLocalProperty())
+    self.assertEqual(3., obj.getLocalProperty())
 
   def test_PropertyTypeValidityFixLocalPropertiesContent(self):
     """Tests PropertyTypeValidity can repairs local property of type content
@@ -1254,7 +1254,7 @@ class TestConstraint(PropertySheetTestCase):
     obj = self._makeOne()
     obj.edit(default_organisation_title='foo')
     self.assertEqual(1, len(obj._local_properties))
-    self.assertEquals([], constraint.checkConsistency(obj))
+    self.assertEqual([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
     self._addProperty(obj.getPortalType(), "FixLocalPropertiesContent",
                       portal_type="Acquired Property",
@@ -1274,8 +1274,8 @@ class TestConstraint(PropertySheetTestCase):
       self.assertEqual(sorted([
         'Property default_organisation_title was migrated from local properties.']),
         sorted([str(q.getMessage()) for q in constraint.fixConsistency(obj)]))
-      self.assertEquals('foo', obj.getDefaultOrganisationTitle())
-      self.assertEquals('foo', obj.default_organisation.getTitle())
+      self.assertEqual('foo', obj.getDefaultOrganisationTitle())
+      self.assertEqual('foo', obj.default_organisation.getTitle())
       self.assertEqual(0, len(obj._local_properties))
     finally:
       ti._setTypeAllowedContentTypeList(allowed_types)
@@ -1293,7 +1293,7 @@ class TestConstraint(PropertySheetTestCase):
     obj = self._makeOne()
     obj.edit(testing_category=obj.getRelativeUrl())
     self.assertEqual(1, len(obj._local_properties))
-    self.assertEquals([], constraint.checkConsistency(obj))
+    self.assertEqual([], constraint.checkConsistency(obj))
     # now add a 'local_property' property defined on a property sheet
     self._addProperty(obj.getPortalType(), "FixForCategories",
                       portal_type="Category Property",
@@ -1304,7 +1304,7 @@ class TestConstraint(PropertySheetTestCase):
       sorted([str(q.getMessage()) for q in constraint.fixConsistency(obj)]))
     # now we can use testing_category as any category accessor
     self.assertEqual(0, len(obj._local_properties))
-    self.assertEquals(obj, obj.getTestingCategoryValue())
+    self.assertEqual(obj, obj.getTestingCategoryValue())
 
   def stepCreateContentExistence(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1434,13 +1434,13 @@ class TestConstraint(PropertySheetTestCase):
     )
 
     consistency_message_list = obj.checkConsistency()
-    self.assertEquals(1, len(consistency_message_list))
+    self.assertEqual(1, len(consistency_message_list))
     message = consistency_message_list[0]
     from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
     self.assertTrue(isinstance(message, ConsistencyMessage))
-    self.assertEquals(message.class_name, 'Attribute Equality Constraint')
+    self.assertEqual(message.class_name, 'Attribute Equality Constraint')
     obj.setTitle('a')
-    self.assertEquals(obj.checkConsistency(), [])
+    self.assertEqual(obj.checkConsistency(), [])
 
   def test_OverrideMessage(self):
     # messages can be overriden in property sheet
@@ -1458,9 +1458,9 @@ class TestConstraint(PropertySheetTestCase):
 
     )
     consistency_message_list = obj.checkConsistency()
-    self.assertEquals(1, len(consistency_message_list))
+    self.assertEqual(1, len(consistency_message_list))
     message = consistency_message_list[0]
-    self.assertEquals('Attribute title does not match',
+    self.assertEqual('Attribute title does not match',
                   str(message.getTranslatedMessage()))
 
   def test_PropertyTypeValidityWithUnauthorizedCategory(self):
@@ -1478,7 +1478,7 @@ class TestConstraint(PropertySheetTestCase):
     self._addProperty('Assignment', "UnauthorizedCategory",
                       portal_type="Property Type Validity Constraint",
                       property_id="type_check")
-    self.assertEquals([], person.checkConsistency())
+    self.assertEqual([], person.checkConsistency())
     group3 = self.category_tool.restrictedTraverse(
       'group/testGroup3', self.category_tool.group.newContent(
       portal_type='Category',
@@ -1491,15 +1491,15 @@ class TestConstraint(PropertySheetTestCase):
     # Manager can access testGroup3, so full information is included in
     # the error message.
     error_list = person.checkConsistency()
-    self.assertEquals(1, len(error_list))
-    self.assertEquals("Attribute source_title should be of type string but is of type <type 'int'>",
+    self.assertEqual(1, len(error_list))
+    self.assertEqual("Attribute source_title should be of type string but is of type <type 'int'>",
                       str(error_list[0].getMessage()))
     self.stepLoginAsAssignee()
     # Assignee cannot access testGroup3, so full information is not
     # included in the error message.
     error_list = person.checkConsistency()
-    self.assertEquals(1, len(error_list))
-    self.assertNotEquals("Attribute source_title should be of type string but is of type <type 'int'>",
+    self.assertEqual(1, len(error_list))
+    self.assertNotEqual("Attribute source_title should be of type string but is of type <type 'int'>",
                          str(error_list[0].getMessage()))
 
   def test_PropertyTypeValidityForMultivaluedProperty(self):
@@ -1517,7 +1517,7 @@ class TestConstraint(PropertySheetTestCase):
                       elementary_type="float",
                       multivalued=1)
     obj.edit(multi_valuated_property=[1.0, 2.0, 3.0, ])
-    self.assertEquals([], constraint.checkConsistency(obj))
+    self.assertEqual([], constraint.checkConsistency(obj))
 
   def stepValidateObject(self, sequence=None, sequence_list=None, **kw):
     """
