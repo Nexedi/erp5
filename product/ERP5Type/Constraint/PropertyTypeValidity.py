@@ -62,7 +62,8 @@ class PropertyTypeValidity(Constraint):
   _message_id_list = [ 'message_unknown_type',
                        'message_incorrect_type',
                        'message_incorrect_type_fix_failed',
-                       'message_incorrect_type_fixed']
+                       'message_incorrect_type_fixed',
+                       'message_local_property_migrated']
 
   message_unknown_type = "Attribute ${attribute_name} is defined with"\
                          " an unknown type ${type_name}"
@@ -74,7 +75,6 @@ class PropertyTypeValidity(Constraint):
   message_incorrect_type_fixed = "Attribute ${attribute_name}"\
     " should be of type ${expected_type} but is of type ${actual_type} (Fixed)"
   message_local_property_migrated = "Property ${property_id} was migrated from local properties."
-  message_local_property_modified = "Property ${property_id} was modified from ${old_value} to ${new_value}."
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
