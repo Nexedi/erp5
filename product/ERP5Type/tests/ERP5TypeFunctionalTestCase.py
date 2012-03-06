@@ -268,7 +268,7 @@ class FunctionalTestRunner:
                  % (self.portal.portal_url(), remote_code_url, self.user, self.password)
 
     return ZELENIUM_BASE_URL % (self.portal.portal_url(), self.run_only,
-                      self.portal.portal_url(), self.user, self.password)
+                       self.user, self.password)
 
   def test(self, debug=0):
     xvfb = Xvfb(self.instance_home)
