@@ -58,7 +58,7 @@ test_list = []\n
 count = 0\n
 for url in url_list:\n
  count += 1\n
- test_list.append((context.Zuite_urlRead(url), \'url%s\' % count),)\n
+ test_list.append((context.Zuite_urlRead(url, safe_return=1), \'%s %s\' % (count, url)),)\n
 \n
 return context.Zuite_createAndLaunchSeleniumTest(test_list=test_list,\n
                                                  zuite_id=zuite_id)\n

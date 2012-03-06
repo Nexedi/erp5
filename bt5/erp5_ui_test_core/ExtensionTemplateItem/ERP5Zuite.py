@@ -1,9 +1,19 @@
 def UpdateImage(image):
   image._update_image_info()
 
-def urlread(url):
+def urlread(url, safe_return=0):
   import urllib
-  return urllib.urlopen(url).read()
+  try:
+    return urllib.urlopen(url).read()
+  except IOError, e:
+    if safe_return:
+      # Return an Selenium test code that will obviously fail. This 
+      # prevent zelenium test run get Stalled.
+      return """<html><body><table><tr><td>assertTextPresent</td>
+                <td>An error occurred when dowload %s : %s </td>
+                <td></td><tr></body></html>""" % (url , e)
+    raise IOError(e)
+ 
 
 def editZPT(zpt, text):
   zpt.pt_edit(text, 'text/html')
