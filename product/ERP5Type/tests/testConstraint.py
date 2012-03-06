@@ -548,7 +548,7 @@ class TestConstraint(PropertySheetTestCase):
               SetObjectIntLocalProperty \
               CreatePropertyTypeValidity \
               CallFixConsistency \
-              CheckIfConstraintSucceeded \
+              CheckIfConstraintFailed \
               CallCheckConsistency \
               CheckIfConstraintSucceeded \
               '
@@ -1273,8 +1273,7 @@ class TestConstraint(PropertySheetTestCase):
     transaction.commit()
     try:
       self.assertEqual(sorted([
-        'Property default_organisation_title was migrated from local properties.',
-        'Property default_organisation_title was modified from foo to None.']),
+        'Property default_organisation_title was migrated from local properties.']),
         sorted([str(q.getMessage()) for q in constraint.fixConsistency(obj)]))
       self.assertEquals('foo', obj.getDefaultOrganisationTitle())
       self.assertEquals('foo', obj.default_organisation.getTitle())
@@ -1302,8 +1301,7 @@ class TestConstraint(PropertySheetTestCase):
                       property_id="testing_category")
     # fix consistency
     self.assertEqual(sorted([
-      'Property testing_category was migrated from local properties.',
-      'Property testing_category was modified from organisation_module/%s to None.' % obj.getId()]),
+      'Property testing_category was migrated from local properties.']),
       sorted([str(q.getMessage()) for q in constraint.fixConsistency(obj)]))
     # now we can use testing_category as any category accessor
     self.assertEqual(0, len(obj._local_properties))
