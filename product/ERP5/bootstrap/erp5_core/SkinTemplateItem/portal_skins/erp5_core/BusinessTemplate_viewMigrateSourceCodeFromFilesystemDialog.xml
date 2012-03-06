@@ -88,14 +88,15 @@
                 <item>
                     <key> <string>hidden</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox_version_item_list</string>
+                      </list>
                     </value>
                 </item>
                 <item>
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>my_version_priority</string>
                         <string>my_erase_existing</string>
                       </list>
                     </value>

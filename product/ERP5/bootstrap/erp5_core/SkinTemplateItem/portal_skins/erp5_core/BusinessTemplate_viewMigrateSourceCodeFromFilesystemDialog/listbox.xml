@@ -409,6 +409,10 @@
                           <string>destination_portal_type</string>
                           <string>Destination Portal Type</string>
                         </tuple>
+                        <tuple>
+                          <string>version_item_list</string>
+                          <string>Version</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -457,7 +461,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>version_item_list</string>
+                          <string>Version</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -550,7 +559,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>business_template_migrate_all_component_from_filesystem_view_component_list_selection</string> </value>
+                    <value> <string>business_template_migrate_source_code_from_filesystem_view_component_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

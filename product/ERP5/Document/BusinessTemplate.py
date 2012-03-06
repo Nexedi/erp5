@@ -5904,58 +5904,44 @@ Business Template is a set of definitions, such as skins, portal types and categ
     security.declareProtected(Permissions.ManagePortal,
                               'migrateSourceCodeFromFilesystem')
     def migrateSourceCodeFromFilesystem(self,
-                                        version_priority,
+                                        component_portal_type_dict,
                                         erase_existing=False,
                                         **kw):
+      if not component_portal_type_dict:
+        return {}
+
       component_tool = self.getPortalObject().portal_components
       failed_import_dict = {}
-
-      # XXX-arnau: dirty because of copy/paste but will be refactor
-      # later with Products anyway...
-      from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
-      document_id_list = self.getTemplateDocumentIdList()
-      for i, reference in enumerate(document_id_list):
-        try:
-          obj = DocumentComponent.importFromFilesystem(component_tool,
+      def migrate(component_dict, component_class, template_id_list_method):
+        migrated_id_list = []
+        for reference, version in component_dict.iteritems():
+          try:
+            obj = component_class.importFromFilesystem(component_tool,
                                                        reference,
-                                                       version_priority,
+                                                       version,
                                                        erase_existing)
-        except Exception, e:
-          failed_import_dict[reference] = str(e)
-        else:
-          document_id_list[i] = obj.getId()
+          except Exception, e:
+            failed_import_dict[reference] = str(e)
+          else:
+            migrated_id_list.append(obj.getId())
 
-      self.setTemplateDocumentIdList(document_id_list)
+        if migrated_id_list:
+          template_id_list_method(migrated_id_list)
 
-      from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
-      extension_id_list = self.getTemplateExtensionIdList()
-      for i, reference in enumerate(extension_id_list):
-        try:
-          obj = ExtensionComponent.importFromFilesystem(component_tool,
-                                                        reference,
-                                                        version_priority,
-                                                        erase_existing)
-        except Exception, e:
-          failed_import_dict[reference] = str(e)
-        else:
-          extension_id_list[i] = obj.getId()
+      component_dict = component_portal_type_dict.get('Document Component')
+      if component_dict:
+        from Products.ERP5Type.Core.DocumentComponent import DocumentComponent
+        migrate(component_dict, DocumentComponent, self.setTemplateDocumentIdList)
 
-      self.setTemplateExtensionIdList(extension_id_list)
+      component_dict = component_portal_type_dict.get('Extension Component')
+      if component_dict:
+        from Products.ERP5Type.Core.ExtensionComponent import ExtensionComponent
+        migrate(component_dict, ExtensionComponent, self.setTemplateExtensionIdList)
 
-      from Products.ERP5Type.Core.TestComponent import TestComponent
-      test_id_list = self.getTemplateTestIdList()
-      for i, reference in enumerate(test_id_list):
-        try:
-          obj = TestComponent.importFromFilesystem(component_tool,
-                                                   reference,
-                                                   version_priority,
-                                                   erase_existing)
-        except Exception, e:
-          failed_import_dict[reference] = str(e)
-        else:
-          test_id_list[i] = obj.getId()
-
-      self.setTemplateTestIdList(test_id_list)
+      component_dict = component_portal_type_dict.get('Test Component')
+      if component_dict:
+        from Products.ERP5Type.Core.TestComponent import TestComponent
+        migrate(component_dict, TestComponent, self.setTemplateTestIdList)
 
       return failed_import_dict
 

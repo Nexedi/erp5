@@ -1,4 +1,7 @@
 2012-03-06 arnaud.fontaine
+* Allow to specify version per Components in migration view.
+
+2012-03-06 arnaud.fontaine
 * Show Component versions defined on the BusinessTemplate in ZODB Migration view.
 
 2012-03-06 arnaud.fontaine
