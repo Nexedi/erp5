@@ -82,25 +82,11 @@ class PropertyTypeValidity(Constraint):
     error_list = []
     # For each attribute name, we check type
     for prop in obj.propertyMap():
-      property_was_local = False
       property_id = prop['id']
       if prop.get('multivalued', 0):
         property_type = 'lines'
       else:
         property_type = prop['type']
-
-    # if this property was a local property and has been later added in a
-    # property sheet, we want to remove it from _local_properties
-      if fixit and \
-         property_id in [x['id'] for x in
-             getattr(obj, '_local_properties', ())] and \
-         len([x for x in obj._propertyMap() if x['id'] == property_id]) > 1:
-        obj._local_properties = tuple([x for x in obj._local_properties
-                                       if x['id'] != property_id])
-        error_list.append(self._generateError(obj,
-          self._getMessage('message_local_property_migrated'), dict(
-            property_id=property_id)))
-        property_was_local = True
 
       if property_type in self._permissive_type_list:
         continue
@@ -140,13 +126,23 @@ class PropertyTypeValidity(Constraint):
               error_message = 'message_incorrect_type_fixed'
 
         error_list.append(self._generateError(obj,
-              self._getMessage(error_message), mapping))
-      elif fixit and property_was_local:
+            self._getMessage(error_message), mapping))
+      elif fixit and property_id in \
+        [x['id'] for x in getattr(obj, '_local_properties', ())]:
+        # if this property was a local property and has been later added in a
+        # property sheet, we want to remove it from _local_properties
+        # but as property key in local_properties does not have to match
+        # property sheet key name, just all properties will be tried to be migrated
+        obj._local_properties = tuple([x for x in obj._local_properties
+                                       if x['id'] != property_id])
         oldvalue = getattr(obj, property_id, value)
         if oldvalue != value:
-          error_list.append(self._generateError(obj,
-            self._getMessage('message_local_property_modified'), dict(
-              property_id=property_id, old_value=oldvalue, new_value=value)))
           obj.setProperty(property_id, oldvalue)
+        if property_id not in \
+            [x['id'] for x in getattr(obj, '_local_properties', ())]:
+          error_list.append(self._generateError(obj,
+            self._getMessage('message_local_property_migrated'), dict(
+              property_id=property_id)))
+
 
     return error_list
