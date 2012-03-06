@@ -238,6 +238,8 @@ page.open(address, function (status) {
 
 class FunctionalTestRunner:
 
+  remote_code_url_list = None
+
   # There is no test that can take more them 24 hours
   timeout = 2.0 * 60 * 60
 
@@ -260,6 +262,11 @@ class FunctionalTestRunner:
     return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
   def _getTestURL(self):
+    if self.remote_code_url_list is not None:
+      remote_code_url = "&".join(["url_list:list=%s" % url for url in self.remote_code_url_list])
+      return '%s/portal_tests/Zuite_runSeleniumTest?%s&__ac_name=%s&__ac_password=%s' \
+                 % (self.portal.portal_url(), remote_code_url, self.user, self.password)
+
     return ZELENIUM_BASE_URL % (self.portal.portal_url(), self.run_only,
                       self.portal.portal_url(), self.user, self.password)
 
@@ -308,6 +315,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   run_only = ""
   foreground = 0
   use_phanthom = False
+  remote_code_url_list = None
 
   def getTitle(self):
     return "Zelenium"
@@ -337,6 +345,9 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.portal._p_jar.sync()
     self.runner = FunctionalTestRunner(self.serverhost, self.serverport,
                                 self.portal, self.run_only, self.use_phanthom)
+
+    if self.remote_code_url_list is not None:
+      self.runner.remote_code_url_list = self.remote_code_url_list
 
     self.runner.test(debug=self.foreground)
     detail, success, failure, error_title_list = self.runner.processResult()
