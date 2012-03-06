@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2005 Nexedi SARL and Contributors. All Rights Reserved.
+# Copyright (c) 2005-2012 Nexedi SA and Contributors. All Rights Reserved.
 #          Romain Courteaud <romain@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
+# programmers who take the whole responsibility of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
 # End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
+# guarantees and support are strongly advised to contract a Free Software
 # Service Company
 #
 # This program is Free Software; you can redistribute it and/or
@@ -1432,8 +1432,8 @@ class TestConstraint(PropertySheetTestCase):
                         portal_type='Attribute Equality Constraint',
                         constraint_attribute_name = 'title',
                         constraint_attribute_value = 'string:a',
-    )  
-  
+    )
+
     consistency_message_list = obj.checkConsistency()
     self.assertEquals(1, len(consistency_message_list))
     message = consistency_message_list[0]
@@ -1448,7 +1448,7 @@ class TestConstraint(PropertySheetTestCase):
     obj = self._makeOne()
     obj.setTitle('b')
     property_sheet = self._addProperty(
-                        obj.getPortalType(), 
+                        obj.getPortalType(),
                         "TestOverrideMessage",
                         commit=True,
                         property_id="title_constraint",
@@ -1457,7 +1457,7 @@ class TestConstraint(PropertySheetTestCase):
                         constraint_attribute_value = 'string:a',
                         message_invalid_attribute_value='Attribute ${attribute_name} does not match',
 
-    )   
+    )
     consistency_message_list = obj.checkConsistency()
     self.assertEquals(1, len(consistency_message_list))
     message = consistency_message_list[0]
