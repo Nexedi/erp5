@@ -42,7 +42,6 @@ class TestRunMyDoc(ERP5TypeTestCase):
     """
     Tuple of Business Templates we need to install
     """
-    # Include all list here.
     return ('erp5_base',
             'erp5_jquery',
             'erp5_jquery_ui',
