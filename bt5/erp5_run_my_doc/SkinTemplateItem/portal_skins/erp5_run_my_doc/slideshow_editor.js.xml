@@ -332,7 +332,10 @@ $(document).ready(function(){\n
               $(section).append(test);\n
             } \n
             slideList.append($(section));\n
-            var i = parseInt($(\'#list > .edit_slide_button\').filter(\':last\').attr(\'id\').split(\'_\')[2]) + 1;\n
+            var i = 0;\n
+            if ($(\'#list > .edit_slide_button\').length > 0) {\n
+              var i = parseInt($(\'#list > .edit_slide_button\').filter(\':last\').attr(\'id\').split(\'_\')[2]) + 1;\n
+            }\n
             appendSlideButtons(section, i);\n
             $(\'#remove_slide_\' + i).click(function() {removeClick(this);});\n
             $(\'#edit_slide_\' + i).click(function() {editClick(this);});\n
