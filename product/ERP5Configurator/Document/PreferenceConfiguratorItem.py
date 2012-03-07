@@ -87,15 +87,11 @@ class PreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def _build(self, business_configuration):
     portal = self.getPortalObject()
-    organisation_id = business_configuration.\
-                                 getGlobalConfigurationAttr('organisation_id')
-    organisation_path = 'organisation_module/%s' % organisation_id
-
     preference = portal.portal_preferences._getOb(self.object_id, None)
     if preference is None:
       preference = portal.portal_preferences.newContent(
-                              portal_type='Preference',
-                              id=self.object_id,
+                              portal_type = 'Preference',
+                              id = self.object_id,
                               title = self.title,
                               description = self.description,
                               priority = 1)
@@ -114,8 +110,10 @@ class PreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       preference.enable()
 
     organisation_id = business_configuration.\
+                                 getGlobalConfigurationAttr('organisation_id')
+    organisation_path = 'organisation_module/%s' % organisation_id
     preference_dict['preferred_accounting_transaction_source_section'] = \
-                                                             organisation_path
+                                                          organisation_path
     preference_dict['preferred_section'] = organisation_path
     preference.edit(**preference_dict)
     bt5_obj = business_configuration.getSpecialiseValue()
