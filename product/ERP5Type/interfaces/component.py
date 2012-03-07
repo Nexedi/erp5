@@ -54,7 +54,7 @@ class IComponent(Interface):
     modified after being validated
     """
 
-  def load(obj, namespace_dict={}, validated_only=False, text_content=None):
+  def load(obj, namespace_dict, validated_only=False, text_content=None):
     """
     Load the source code into the given dict
     """
