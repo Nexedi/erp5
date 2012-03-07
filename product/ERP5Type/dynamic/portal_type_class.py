@@ -86,7 +86,7 @@ core_portal_type_class_dict = {
   'Types Tool':   {'type_class': 'TypesTool',
                    'generating': False},
   'Solver Tool':  {'type_class': 'SolverTool',
-                   'generating': False},
+                   'generating': False}
   }
 
 def generatePortalTypeClass(site, portal_type_name):
