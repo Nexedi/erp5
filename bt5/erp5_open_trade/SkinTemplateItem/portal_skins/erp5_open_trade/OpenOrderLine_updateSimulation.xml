@@ -50,46 +50,24 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-kw = {}\n
-if params is None:\n
-  params = {}\n
-\n
-last_active_process = context.getLastActiveProcess()\n
-\n
-if last_active_process is not None and params.get(\'full\', False):\n
-  # fetch only objects modified since last alarm run\n
-  kw[\'indexation_timestamp\'] = \'>= %s\' % last_active_process.getStartDate().ISO()\n
-\n
-# register active process in order to have "windows" of last indexed objects\n
-context.newActiveProcess().getRelativeUrl()\n
-\n
-portal = context.getPortalObject()\n
-\n
-kw[\'portal_type\'] = portal.getPortalOpenOrderTypeList()\n
-\n
-portal.portal_catalog.searchAndActivate(\n
-  method_id=\'OpenOrder_updateSimulation\',\n
-  method_kw={\'tag\': tag},\n
-  packet_size=1, # As OpenOrder_updateSimulation can generate big transaction separate the calls\n
-  activate_kw={\'tag\':tag, \'priority\': 8},\n
-  **kw # XXX: In one query put parents of last modified lines\n
-  )\n
-\n
-# make alarm run once at time\n
-context.activate(after_tag=tag).getId()\n
-
-
-]]></string> </value>
+            <value> <string>activate_kw={\'tag\': tag}\n
+for path in [context] + context.getCellValueList():\n
+  for item in path.getAggregateValueList():\n
+    if item.providesIExpandableItem():\n
+      applied_rule = item.getCausalityRelatedValue(portal_type=\'Applied Rule\')\n
+      if applied_rule is not None:\n
+        applied_rule.expand(activate_kw=activate_kw)\n
+      else:\n
+        item.expand(activate_kw=activate_kw)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>tag, fixit, params</string> </value>
+            <value> <string>tag=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_updateOpenOrderSimulation</string> </value>
+            <value> <string>OpenOrderLine_updateSimulation</string> </value>
         </item>
       </dictionary>
     </pickle>

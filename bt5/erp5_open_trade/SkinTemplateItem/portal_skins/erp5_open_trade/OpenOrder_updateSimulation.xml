@@ -50,33 +50,17 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>subscription_item_dict = dict()\n
-\n
-for open_order_line in context.contentValues():\n
-  for path in [open_order_line] + open_order_line.getCellValueList():\n
-    for item in path.getAggregateValueList():\n
-       if item.providesIExpandableItem(): # XXX hack to make it fails\n
-         subscription_item_dict[item] = 1\n
-\n
-# XXX tag / after tag !\n
-for item in subscription_item_dict:\n
-  activate_kw = dict(tag=\'%s_expand\' % item.getPath())\n
-  applied_rule = item.getCausalityRelatedValue(portal_type=\'Applied Rule\')\n
-  if applied_rule is not None:\n
-    if activity:\n
-      applied_rule.activate(activate_kw=activate_kw).expand(activate_kw=activate_kw)\n
-    else:\n
-      applied_rule.expand(activate_kw=activate_kw)\n
-  else:\n
-    if activity:\n
-      item.activate(activate_kw=activate_kw).expand(activate_kw=activate_kw)\n
-    else:\n
-      item.expand(activate_kw=activate_kw)\n
+            <value> <string>context.getPortalObject().portal_catalog.searchAndActivate(\n
+  parent_uid=context.getUid(),\n
+  method_id=\'OpenOrderLine_updateSimulation\',\n
+  method_kw={\'tag\': tag},\n
+  activate_kw={\'tag\':tag}\n
+)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>activity=True</string> </value>
+            <value> <string>tag=None</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
