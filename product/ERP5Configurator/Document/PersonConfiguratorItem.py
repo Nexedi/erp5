@@ -95,6 +95,13 @@ class PersonConfiguratorItem(XMLObject, ConfiguratorItemMixin):
     # XXX Is it required to set stop date?
     # Define valid for 10 years.
     assignment.setStopDate(now + (365*10))
+
+    # Validate the Person if possible
+    if self.portal_workflow.isTransitionPossible(person, 'validate'):
+      person.validate(comment="Validated by Configurator")
+
+    if self.portal_workflow.isTransitionPossible(assignment, 'open'):
+      assignment.open(comment="Open by Configuration")
     
     ## add to customer template
     self.install(person, business_configuration)

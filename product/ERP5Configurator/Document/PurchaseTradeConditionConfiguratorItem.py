@@ -82,4 +82,6 @@ class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     purchase_trade_condition.setDestinationSection("organisation_module/%s" % organisation_id)
     purchase_trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
 
+    purchase_trade_condition.validate(comment="Validated by Configurator")
+
     self.install(purchase_trade_condition, business_configuration)

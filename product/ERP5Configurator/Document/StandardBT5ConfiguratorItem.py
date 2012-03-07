@@ -66,9 +66,28 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
         template_tool.installBusinessTemplateListFromRepository([bt5_id],
                                    update_catalog=self.getUpdateCatalog(0))
 
-        LOG("StandardBT5ConfiguratorItem", INFO,
-          "Install %s for %s" % (bt5_id, self.getRelativeUrl()))
-        return
+    if bt5_id in template_tool.getInstalledBusinessTemplateTitleList():
+      LOG("StandardBT5ConfiguratorItem", INFO,
+        "Business Template already Installed: %s for %s" % (bt5_id, self.getRelativeUrl()))
+      return
+
+    def _getRepositoryBusinessTemplateTitleList():
+      return [bt.getTitle() for bt in \
+              template_tool.getRepositoryBusinessTemplateList()]
+    repository_bt_title_list = CachingMethod(
+                         _getRepositoryBusinessTemplateTitleList,
+                         id='StandardBT5_getRepositoryBusinessTemplateTitleList',
+                         cache_factory='erp5_content_long')()
+
+    if bt5_id in repository_bt_title_list:
+      template_tool.installBusinessTemplateListFromRepository([bt5_id],
+                                 update_catalog=self.getUpdateCatalog(0), 
+                                 install_dependency=self.getInstallDependency(1),
+                                 activate=True)
+
+      LOG("StandardBT5ConfiguratorItem", INFO,
+        "Install %s for %s" % (bt5_id, self.getRelativeUrl()))
+      return
 
     raise ValueError("The business template %s was not found on available \
                          sources." % bt5_id)

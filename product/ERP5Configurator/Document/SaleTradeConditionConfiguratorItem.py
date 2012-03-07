@@ -82,4 +82,6 @@ class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     sale_trade_condition.setSourceSection("organisation_module/%s" % organisation_id)
     sale_trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
 
+    sale_trade_condition.validate(comment="Validated by Configurator")
+
     self.install(sale_trade_condition, business_configuration)

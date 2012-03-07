@@ -61,7 +61,8 @@ class ServiceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       document = getattr(portal.service_module, service_id, None)
       if document is None:
         document = portal.service_module.newContent(portal_type='Service',
-                                   id=service_id,
-                                   title=service_title)
+                                   id=service_id, title=service_title)
+        document.validate("Validated by Configurator")
+
       ## add to customer template
       self.install(document, business_configuration)

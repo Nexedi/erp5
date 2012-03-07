@@ -110,6 +110,10 @@ class PreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       if preference_value is not marker:
         preference_dict[preference_name] = preference_value
 
+    if self.portal_workflow.isTransitionPossible(preference, 'enable'):
+      preference.enable()
+
+    organisation_id = business_configuration.\
     preference_dict['preferred_accounting_transaction_source_section'] = \
                                                              organisation_path
     preference_dict['preferred_section'] = organisation_path

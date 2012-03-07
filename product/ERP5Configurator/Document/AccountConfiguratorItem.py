@@ -75,5 +75,8 @@ class AccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                 description=self.getDescription(),
                 **extra_kw)
 
+    if self.portal_workflow.isTransitionPossible(account, 'validate'):
+      account.validate(comment="Validated by Configurator")
+
     ## add to customer template
     self.install(account, business_configuration)
