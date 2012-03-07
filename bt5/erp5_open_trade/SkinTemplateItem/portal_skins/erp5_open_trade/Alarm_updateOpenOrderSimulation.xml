@@ -50,45 +50,43 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>subscription_item_dict = dict()\n
+            <value> <string encoding="cdata"><![CDATA[
+
+kw = {}\n
 \n
-for open_order_line in context.contentValues():\n
-  for path in [open_order_line] + open_order_line.getCellValueList():\n
-    for item in path.getAggregateValueList():\n
-       if item.providesIExpandableItem(): # XXX hack to make it fails\n
-         subscription_item_dict[item] = 1\n
+last_active_process = context.getLastActiveProcess()\n
 \n
-# XXX tag / after tag !\n
-for item in subscription_item_dict:\n
-  activate_kw = dict(tag=\'%s_expand\' % item.getPath())\n
-  applied_rule = item.getCausalityRelatedValue(portal_type=\'Applied Rule\')\n
-  if applied_rule is not None:\n
-    if activity:\n
-      applied_rule.activate(activate_kw=activate_kw).expand(activate_kw=activate_kw)\n
-    else:\n
-      applied_rule.expand(activate_kw=activate_kw)\n
-  else:\n
-    if activity:\n
-      item.activate(activate_kw=activate_kw).expand(activate_kw=activate_kw)\n
-    else:\n
-      item.expand(activate_kw=activate_kw)\n
-</string> </value>
+if last_active_process is not None and params.get(\'full\', False):\n
+  # fetch only objects modified since last alarm run\n
+  kw[\'indexation_timestamp\'] = \'>= %s\' % last_active_process.getStartDate().ISO()\n
+\n
+# register active process in order to have "windows" of last indexed objects\n
+context.newActiveProcess().getRelativeUrl()\n
+\n
+portal = context.getPortalObject()\n
+\n
+kw[\'portal_type\'] = portal.getPortalOpenOrderTypeList()\n
+\n
+portal.portal_catalog.searchAndActivate(\n
+  method_id=\'OpenOrder_updateSimulation\', # XXX: OpenOrder_updateSimulation can generate big transaction...\n
+  method_kw={\'activity\': False},\n
+  activate_kw={\'tag\':tag},\n
+  **kw # XXX: In one query put parents of last modified lines\n
+  )\n
+\n
+# make alarm run once at time\n
+context.activate(after_tag=tag).getId()\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>activity=True</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
+            <value> <string>tag, fixit, params</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>OpenOrder_updateSimulation</string> </value>
+            <value> <string>Alarm_updateOpenOrderSimulation</string> </value>
         </item>
       </dictionary>
     </pickle>
