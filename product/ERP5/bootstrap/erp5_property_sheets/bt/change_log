@@ -1,3 +1,6 @@
+2012-03-07 arnaud.fontaine
+* Add property to define preferred source code editor to Preference Property Sheets.
+
 2012-03-06 arnaud.fontaine
 * Add template_registered_version_priority_selection property to BusinessTemplate to define version and their priorities for ZODB Component only for now.
 
