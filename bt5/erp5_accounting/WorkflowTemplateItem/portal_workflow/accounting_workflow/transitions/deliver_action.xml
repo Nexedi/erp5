@@ -86,7 +86,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: here.getProperty(\'causality_state\', \'default\') != \'building\' and not here.isDivergent()</string> </value>
+            <value> <string>python: here.getProperty(\'causality_state\', \'default\') == \'solved\'</string> </value>
         </item>
       </dictionary>
     </pickle>
