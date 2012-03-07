@@ -353,8 +353,9 @@ class BusinessConfiguration(Item):
       actions and Configurator requets
     """
     kw = dict(tag="start_configuration_%s" % self.getId(), 
-              after_method_id=["recursiveImmediateReindexObject",
-                               'immediateReindexObject'])
+              after_method_id=["updateBusinessTemplateFromUrl",
+                               "recursiveImmediateReindexObject",
+                               "immediateReindexObject"])
     start = time.time()
     LOG("CONFIGURATOR", INFO, 
         'Build process started for %s' % self.getRelativeUrl())

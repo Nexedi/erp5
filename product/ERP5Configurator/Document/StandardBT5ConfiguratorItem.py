@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
+from Products.ERP5Type.Cache import CachingMethod
 from zLOG import LOG, INFO
 
 class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -61,10 +62,6 @@ class StandardBT5ConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   def _build(self, business_configuration):
     template_tool = self.getPortalObject().portal_templates
     bt5_id = self.getBt5Id().split('.')[0]
-    for bt5 in template_tool.getRepositoryBusinessTemplateList():
-      if bt5_id == bt5.getTitle():
-        template_tool.installBusinessTemplateListFromRepository([bt5_id],
-                                   update_catalog=self.getUpdateCatalog(0))
 
     if bt5_id in template_tool.getInstalledBusinessTemplateTitleList():
       LOG("StandardBT5ConfiguratorItem", INFO,
