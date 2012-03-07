@@ -53,6 +53,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 kw = {}\n
+if params is None:\n
+  params = {}\n
 \n
 last_active_process = context.getLastActiveProcess()\n
 \n
