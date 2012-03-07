@@ -53,6 +53,8 @@
             <value> <string encoding="cdata"><![CDATA[
 
 kw = {}\n
+if params is None:\n
+  params = {}\n
 \n
 last_active_process = context.getLastActiveProcess()\n
 \n
@@ -68,9 +70,10 @@ portal = context.getPortalObject()\n
 kw[\'portal_type\'] = portal.getPortalOpenOrderTypeList()\n
 \n
 portal.portal_catalog.searchAndActivate(\n
-  method_id=\'OpenOrder_updateSimulation\', # XXX: OpenOrder_updateSimulation can generate big transaction...\n
+  method_id=\'OpenOrder_updateSimulation\',\n
   method_kw={\'activity\': False},\n
-  activate_kw={\'tag\':tag},\n
+  packet_size=1, # As OpenOrder_updateSimulation can generate big transaction separate the calls\n
+  activate_kw={\'tag\':tag, \'priority\': 8},\n
   **kw # XXX: In one query put parents of last modified lines\n
   )\n
 \n
