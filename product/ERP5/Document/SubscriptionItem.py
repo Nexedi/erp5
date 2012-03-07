@@ -270,15 +270,14 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
     result = []
     catalog_tool = getToolByName(self, 'portal_catalog')
 
-    # Try to find the source open order
-    open_order_movement_list = self.getAggregateRelatedValueList(
-                portal_type="Open Sale Order Line") # XXX-JPS Hard Coded
-    if not open_order_movement_list:
-      return result
-
     # Now generate movements for each valid open order
-    for movement in open_order_movement_list: # YXU-Why we have a list here?
-      if movement.getParentValue().getValidationState() in ('open', 'validated'): # XXX-JPS hard coding
+    for movement in catalog_tool(portal_type="Open Sale Order Line",
+        default_aggregate_uid=self.getUid(),
+        validation_state=('open', 'validated', 'archived'), # XXX-JPS hard coding
+        sort_on=(('effective_date', 'descending'),),
+        limit=1 # Note Luke: Support the newest Open Order which defines
+                # something for current subscription item
+        ): # YXU-Why we have a list here?
         resource = movement.getResource()
         start_date = movement.getStartDate()
         stop_date = movement.getStopDate()
