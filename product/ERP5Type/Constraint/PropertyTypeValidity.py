@@ -31,7 +31,7 @@
 from Constraint import Constraint
 from DateTime import DateTime
 
-boolean_types = (int, bool)
+boolean_type_list = (int, bool)
 
 class PropertyTypeValidity(Constraint):
   """
@@ -45,7 +45,7 @@ class PropertyTypeValidity(Constraint):
     'string':             (str, ),
     'text':               (str, ),
     'int':                (int, ),
-    'boolean':            boolean_types,
+    'boolean':            boolean_type_list,
     'float':              (float, ),
     'long':               (long, ),
     'tales':              (str, ),
