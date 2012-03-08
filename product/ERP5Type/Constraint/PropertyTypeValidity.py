@@ -59,11 +59,15 @@ class PropertyTypeValidity(Constraint):
   # Properties of type eg. "object" can hold anything
   _permissive_type_list = ('object', 'data')
 
+  # Properties which shall be never set on object.
+  _wrong_property_id_list = ('creation_date', 'modification_date')
+
   _message_id_list = [ 'message_unknown_type',
                        'message_incorrect_type',
                        'message_incorrect_type_fix_failed',
                        'message_incorrect_type_fixed',
-                       'message_local_property_migrated']
+                       'message_local_property_migrated',
+                       'message_wrong_property_dropped']
 
   message_unknown_type = "Attribute ${attribute_name} is defined with"\
                          " an unknown type ${type_name}"
@@ -75,6 +79,7 @@ class PropertyTypeValidity(Constraint):
   message_incorrect_type_fixed = "Attribute ${attribute_name}"\
     " should be of type ${expected_type} but is of type ${actual_type} (Fixed)"
   message_local_property_migrated = "Property ${property_id} was migrated from local properties."
+  message_wrong_property_dropped = "Wrong property ${property_id} dropped from object dict."
 
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
@@ -127,21 +132,30 @@ class PropertyTypeValidity(Constraint):
 
         error_list.append(self._generateError(obj,
             self._getMessage(error_message), mapping))
-      elif fixit and property_id in \
-        [x['id'] for x in getattr(obj, '_local_properties', ())]:
-        # if this property was a local property and has been later added in a
-        # property sheet, we want to remove it from _local_properties
-        # but as property key in local_properties does not have to match
-        # property sheet key name, just all properties will be tried to be migrated
-        obj._local_properties = tuple([x for x in obj._local_properties
-                                       if x['id'] != property_id])
-        oldvalue = getattr(obj, property_id, value)
-        if oldvalue != value:
-          obj.setProperty(property_id, oldvalue)
-        if property_id not in \
-            [x['id'] for x in getattr(obj, '_local_properties', ())]:
-          error_list.append(self._generateError(obj,
-            self._getMessage('message_local_property_migrated'), dict(
-              property_id=property_id)))
+      elif fixit:
+        if property_id in \
+          [x['id'] for x in getattr(obj, '_local_properties', ())]:
+          # if this property was a local property and has been later added in a
+          # property sheet, we want to remove it from _local_properties
+          # but as property key in local_properties does not have to match
+          # property sheet key name, just all properties will be tried to be migrated
+          obj._local_properties = tuple([x for x in obj._local_properties
+                                         if x['id'] != property_id])
+          oldvalue = getattr(obj, property_id, value)
+          if oldvalue != value and \
+            property_id not in self._wrong_property_id_list:
+            # drop totally low level properties
+            obj.setProperty(property_id, oldvalue)
+          if property_id not in \
+              [x['id'] for x in getattr(obj, '_local_properties', ())]:
+            error_list.append(self._generateError(obj,
+              self._getMessage('message_local_property_migrated'), dict(
+                property_id=property_id)))
+        if property_id in self._wrong_property_id_list:
+          # drop totally low level properties
+          if obj.__dict__.pop(property_id, None) is not None:
+            error_list.append(self._generateError(obj,
+              self._getMessage('message_wrong_property_dropped'), dict(
+                property_id=property_id)))
 
     return error_list
