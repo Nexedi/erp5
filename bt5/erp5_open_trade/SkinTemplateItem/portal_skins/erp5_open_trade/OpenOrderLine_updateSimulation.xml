@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>activate_kw={\'tag\': tag}\n
+            <value> <string>activate_kw={}\n
+if tag is not None:\n
+  activate_kw={\'tag\': tag}\n
 for path in [context] + context.getCellValueList():\n
   for item in path.getAggregateValueList():\n
     if item.providesIExpandableItem():\n
@@ -58,7 +60,7 @@ for path in [context] + context.getCellValueList():\n
       if applied_rule is not None:\n
         applied_rule.expand(activate_kw=activate_kw)\n
       else:\n
-        item.expand(activate_kw=activate_kw)\n
+        item.Delivery_updateAppliedRule(activate_kw=activate_kw)\n
 </string> </value>
         </item>
         <item>
