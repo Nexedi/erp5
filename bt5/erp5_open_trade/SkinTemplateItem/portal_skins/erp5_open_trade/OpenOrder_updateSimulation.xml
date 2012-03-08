@@ -50,25 +50,20 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>context.getPortalObject().portal_catalog.searchAndActivate(\n
+            <value> <string>activate_kw = {}\n
+if tag is not None:\n
+  activate_kw[\'tag\'] = tag\n
+context.getPortalObject().portal_catalog.searchAndActivate(\n
   parent_uid=context.getUid(),\n
   method_id=\'OpenOrderLine_updateSimulation\',\n
   method_kw={\'tag\': tag},\n
-  activate_kw={\'tag\':tag}\n
+  activate_kw=activate_kw\n
 )\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>tag=None</string> </value>
-        </item>
-        <item>
-            <key> <string>_proxy_roles</string> </key>
-            <value>
-              <tuple>
-                <string>Manager</string>
-              </tuple>
-            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
