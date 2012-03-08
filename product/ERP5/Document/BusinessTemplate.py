@@ -5343,7 +5343,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
       We have to set this method because we want an
       ordered list
       """
-      return self._getOrderedList('template_registered_version_priority_selection')
+      try:
+        return self._getOrderedList('template_registered_version_priority_selection')
+      # This property may not be defined if erp5_property_sheets has not been
+      # upgraded yet
+      except AttributeError:
+        return ()
 
     def getTemplateModuleIdList(self):
       """
