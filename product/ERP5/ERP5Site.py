@@ -465,6 +465,12 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
     self._version_priority_list = value
 
+    # Reset cached value of getVersionPriorityNameList() if present
+    try:
+      del self._v_version_priority_name_list
+    except AttributeError:
+      pass
+
     if not getattr(self, '_v_bootstrapping', False):
       self.portal_components.resetOnceAtTransactionBoundary()
 
@@ -474,9 +480,15 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getVersionPriorityNameList')
   def getVersionPriorityNameList(self):
-    # XXX-arnau: should be cached?
-    return [name.split('|')[0].strip()
-            for name in self.getVersionPriorityList()]
+    """
+    Get only the version names ordered by priority and cache it as it is used
+    very often in Component import hooks
+    """
+    if getattr(self, '_v_version_priority_name_list', None) is None:
+      self._v_version_priority_name_list = \
+          [name.split('|')[0].strip() for name in self.getVersionPriorityList()]
+
+    return self._v_version_priority_name_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getUid')
   def getUid(self):
