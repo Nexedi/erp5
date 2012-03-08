@@ -57,8 +57,7 @@ if params is None:\n
   params = {}\n
 \n
 last_active_process = context.getLastActiveProcess()\n
-\n
-if last_active_process is not None and params.get(\'full\', False):\n
+if not params.get(\'full\', False) and last_active_process is not None:\n
   # fetch only objects modified since last alarm run\n
   kw[\'indexation_timestamp\'] = \'>= %s\' % last_active_process.getStartDate().ISO()\n
 \n
@@ -73,7 +72,7 @@ portal.portal_catalog.searchAndActivate(\n
   method_id=\'OpenOrder_updateSimulation\',\n
   method_kw={\'tag\': tag},\n
   packet_size=1, # As OpenOrder_updateSimulation can generate big transaction separate the calls\n
-  activate_kw={\'tag\':tag, \'priority\': 8},\n
+  activate_kw={\'tag\':tag},\n
   **kw # XXX: In one query put parents of last modified lines\n
   )\n
 \n
