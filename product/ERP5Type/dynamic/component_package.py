@@ -125,6 +125,19 @@ class ComponentDynamicPackage(ModuleType):
 
     return self.__registry_dict
 
+  def get_source(self, fullname):
+    """
+    Get the source code of the given module name from the ID defined on the
+    dynamic module (setting getTextContent() on the module directly may not
+    work properly upon reset and there is no need for performance there as it
+    is only used for traceback or pdb anyway)
+    """
+    module = __import__(fullname, fromlist=[fullname.rsplit('.', 1)[0]],
+                        level=0)
+
+    return getattr(getSite().portal_components,
+                   module.__file__[1:-1]).getTextContent(validated_only=True)
+
   def find_module(self, fullname, path=None):
     # Ignore imports with a path which are filesystem-only and any
     # absolute imports which does not start with this package prefix,
@@ -240,7 +253,7 @@ class ComponentDynamicPackage(ModuleType):
         sys.modules[component_id_alias] = new_module
 
       # This must be set for imports at least (see PEP 302)
-      new_module.__file__ = '<' + component_name + '>'
+      new_module.__file__ = '<' + component.getId() + '>'
 
       try:
         component.load(new_module.__dict__, validated_only=True)
@@ -290,4 +303,14 @@ class ComponentDynamicPackage(ModuleType):
       # The module must be deleted first from sys.modules to avoid imports in
       # the meantime
       del sys.modules[module_name]
+
+      # Delete linecache data
+      import linecache
+      try:
+        del linecache.cache[getattr(package, name).__file__]
+      # __file__ may not be defined
+      except (AttributeError, KeyError):
+        pass
+
+      # And finally remove the module
       delattr(package, name)

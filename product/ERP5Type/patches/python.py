@@ -99,3 +99,56 @@ if 1:
 # Required by PortalTransforms.transforms.rest
 from docutils import utils
 utils.relative_path = lambda source, target: os.path.abspath(target)
+
+# Patch of linecache module (used in traceback and pdb module) to display ZODB
+# Components source code properly without requiring to create a temporary file
+# on the filesystem
+import linecache
+
+linecache_getlines = linecache.getlines
+def getlines(filename, module_globals=None):
+  """
+  The filename is always '<string>' for any code executed by exec(). ZODB
+  Component modules always set __file__ attribute to <erp5.component...>.
+
+  The original getlines() will be called which look into the cache and if not
+  available, call updatecache.
+  """
+  if filename == '<string>' and module_globals and '__file__' in module_globals:
+    filename = module_globals['__file__']
+
+  return linecache_getlines(filename, module_globals)
+
+linecache.getlines = getlines
+
+linecache_updatecache = linecache.updatecache
+def updatecache(filename, module_globals=None):
+  """
+  Original updatecache requires a filename which doesn't match <.*>, which is
+  strange considering that it then looks whether the module has been loaded
+  through PEP 302 Loader, but it is perhaps to be more generic. Anyhow, <> is
+  really needed to differenciate files on the filesystem to the ones only in
+  memory...
+  """
+  if (filename[0] == '<' and filename[-1] == '>' and module_globals and
+      '__loader__' in module_globals):
+    name = module_globals.get('__name__')
+    loader = module_globals['__loader__']
+    get_source = getattr(loader, 'get_source', None)
+    if name and get_source:
+      try:
+        data = get_source(name)
+      except (ImportError, AttributeError):
+        pass
+      else:
+        if data is None:
+          return []
+
+        data_len = len(data)
+        data = [line + '\n' for line in data.splitlines()]
+        linecache.cache[filename] = (data_len, None, data, filename)
+        return data    
+
+  return linecache_updatecache(filename, module_globals)
+
+linecache.updatecache = updatecache
