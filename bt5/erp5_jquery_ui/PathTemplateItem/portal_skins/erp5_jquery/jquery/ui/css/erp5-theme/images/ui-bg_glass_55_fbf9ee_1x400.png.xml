@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts88758160.09</string> </value>
+            <value> <string>ts31202712.72</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -38,7 +38,7 @@ TkSuQmCC</string> </value>
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <long>120</long> </value>
+            <value> <int>120</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
