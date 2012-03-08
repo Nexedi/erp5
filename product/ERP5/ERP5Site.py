@@ -455,15 +455,23 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setVersionPriorityList' )
-  def setVersionPriorityList(self, value):
+  def setVersionPriorityList(self, version_priority_tuple):
     """
     XXX-arnau: must be written through an interaction workflow when ERP5Site
                will become a real ERP5 object...
     """
-    if not isinstance(value, tuple):
-      value = tuple(value)
+    if not isinstance(version_priority_tuple, tuple):
+      version_priority_tuple = tuple(version_priority_tuple)
 
-    self._version_priority_list = value
+    # erp5 version must always be present, thus add it at the end if it's not
+    # already there
+    for version_priority in version_priority_tuple:
+      if version_priority.split('|')[0].strip() == 'erp5':
+        break
+    else:
+      version_priority_tuple = version_priority_tuple + ('erp5 | 0.0',)
+
+    self._version_priority_list = version_priority_tuple
 
     # Reset cached value of getVersionPriorityNameList() if present
     try:
