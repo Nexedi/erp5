@@ -56,9 +56,9 @@ kw = {}\n
 if params is None:\n
   params = {}\n
 \n
-last_active_process = context.getLastActiveProcess()\n
-\n
-if last_active_process is not None and params.get(\'full\', False):\n
+if not params.get(\'full\', False):\n
+  raise ValueError(params)\n
+  last_active_process = context.getLastActiveProcess()\n
   # fetch only objects modified since last alarm run\n
   kw[\'indexation_timestamp\'] = \'>= %s\' % last_active_process.getStartDate().ISO()\n
 \n
