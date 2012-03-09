@@ -71,7 +71,8 @@ bt5_update_catalog = (\'erp5_ingestion_mysql_innodb_catalog\', )\n
 for name in bt5_installation_list:\n
   configuration_save.addConfigurationItem("Standard BT5 Configurator Item",\n
                                           title=name, bt5_id=name,\n
-                                          update_catalog=(name in bt5_update_catalog)\n
+                                          update_catalog=(name in bt5_update_catalog),\n
+                                          install_dependency=True,\n
                                           )\n
 </string> </value>
         </item>
