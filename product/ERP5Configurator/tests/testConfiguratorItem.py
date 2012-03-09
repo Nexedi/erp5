@@ -27,6 +27,7 @@
 
 
 from AccessControl import Unauthorized
+from zLOG import LOG, INFO
 import uuid
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
@@ -43,7 +44,11 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
             'erp5_full_text_myisam_catalog',
             'erp5_base',
             'erp5_workflow',
-            'erp5_configurator')
+            'erp5_configurator',
+            'erp5_simulation',
+            'erp5_pdm',
+            'erp5_trade',
+            'erp5_configurator_standard_trade_template')
 
   def createConfigurationSave(self):
     """ Create a Business Configuration and a Configuration Save 
@@ -338,14 +343,173 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       self.assertEquals(my_test.getCodification(), "TEST")
       self.assertEquals(my_test.getIntIndex(), 3)
 
+  def testRuleConfiguratorItem(self):
+    """ Test Rules Configurator Item """
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+    category_tool = self.portal.portal_categories
+    rule_tool = self.portal.portal_rules
 
+    if getattr(category_tool.trade_phase, "testing", None) is None:
+      category_tool.trade_phase.newContent(id="testing")
 
+    if getattr(category_tool.trade_phase.testing, "order", None) is None:
+      category_tool.trade_phase.testing.newContent(id="order")
 
+    item = configuration_save.addConfigurationItem(
+      "Rule Configurator Item",
+      reference = "testing_configurator_rule",
+      id = "rule_do_not_exist")
 
+    self.stepTic()
+    self.assertRaises(ValueError, item._build, bc)
 
+    rule_reference = "testing_configurator_rule_%s" % self.newUniqueUID()
+    item = configuration_save.addConfigurationItem(
+      "Rule Configurator Item",
+      reference = rule_reference,
+      id = "new_delivery_simulation_rule",
+      trade_phase_list = ['testing/order'])
 
+    self.stepTic()
+    item._build(bc)
+    self.stepTic()
 
+    template_id = item.getId()
+    rule_list = rule_tool.searchFolder(
+          portal_type=self.portal.getPortalRuleTypeList(),
+          validation_state="validated", reference=rule_reference)
 
+    self.assertEquals(len(rule_list), 1)
+    self.assertEquals(['testing/order'], rule_list[0].getTradePhaseList())
 
+  def testBusinessProcessConfiguratorItem(self):
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+    category_tool = self.portal.portal_categories
 
+    test_folder_path = '/'.join(test_folder.__file__.split('/')[:-1])
+
+    f = open("%s/test_data/test_standard_business_process.ods" \
+               % test_folder_path, "r")
+    try:
+      data = f.read()
+    finally:
+      f.close()
+
+    reference = "testing_business_process_%s" % self.newUniqueUID()
+    item = configuration_save.addConfigurationItem(
+      "Business Process Configurator Item",
+      configuration_spreadsheet_data = data,
+      reference = reference)
+
+    self.stepTic()
+    item._build(bc)
+    self.stepTic()
+
+    business_process = self.portal.portal_catalog.getResultValue(
+          portal_type="Business Process",
+          reference=reference)
+
+    self.assertNotEquals(business_process, None)
+
+    order_path = getattr(business_process, "order_path", None)
+    self.assertNotEquals(order_path, None)
+    self.assertEquals(order_path.getEfficiency(), 1.0)
+    self.assertEquals(order_path.getTradePhase(), 'trade/order')
+    self.assertEquals(order_path.getTradeDate(), 'trade_phase/trade/order')
+    self.assertEquals(order_path.getTestMethodId(), None)
+
+    delivery_path = getattr(business_process, "delivery_path", None)
+    self.assertNotEquals(delivery_path, None)
+    self.assertEquals(delivery_path.getEfficiency(), 1.0)
+    self.assertEquals(delivery_path.getTradePhase(), 'trade/delivery')
+    self.assertEquals(delivery_path.getTradeDate(), 'trade_phase/trade/order')
+    self.assertEquals(delivery_path.getTestMethodId(), None)
+
+    invoicing_path = getattr(business_process, "invoicing_path", None)
+    self.assertNotEquals(invoicing_path, None)
+    self.assertEquals(invoicing_path.getEfficiency(), 1.0)
+    self.assertEquals(invoicing_path.getTradePhase(), 'trade/invoicing')
+    self.assertEquals(invoicing_path.getTradeDate(), 'trade_phase/trade/delivery')
+    self.assertEquals(invoicing_path.getTestMethodId(), None)
+
+    accounting_credit_path = getattr(business_process, "accounting_credit_path", None)
+    self.assertNotEquals(accounting_credit_path, None)
+    self.assertEquals(accounting_credit_path.getEfficiency(), -1.0)
+    self.assertEquals(accounting_credit_path.getTradePhase(), 'trade/accounting')
+    self.assertEquals(accounting_credit_path.getTradeDate(), 'trade_phase/trade/invoicing')
+    self.assertEquals(accounting_credit_path.getTestMethodId(), "isAccountingMovementType")
+
+    accounting_debit_path = getattr(business_process, "accounting_debit_path", None)
+    self.assertNotEquals(accounting_debit_path, None)
+    self.assertEquals(accounting_debit_path.getEfficiency(), 1.0)
+    self.assertEquals(accounting_debit_path.getTradePhase(), 'trade/accounting')
+    self.assertEquals(accounting_debit_path.getTradeDate(), 'trade_phase/trade/invoicing')
+    self.assertEquals(accounting_debit_path.getTestMethodId(), "isAccountingMovementType")
+
+    order_link = getattr(business_process, "order_link", None)
+    self.assertNotEquals(order_link, None)
+    #self.assertTrue(order_link.getDeliverable())
+    self.assertEquals(order_link.getSuccessor(), "trade_state/trade/ordered")
+    self.assertEquals(order_link.getPredecessor(),None)
+    self.assertEquals(order_link.getCompletedStateList(),["confirmed"])
+    self.assertEquals(order_link.getFrozenState(), None)
+    self.assertEquals(order_link.getDeliveryBuilder(), None)
+    self.assertEquals(order_link.getTradePhase(),'trade/order')
+
+    deliver_link = getattr(business_process, "deliver_link", None)
+    self.assertNotEquals(deliver_link, None)
+    #self.assertTrue(deliver_link.getDeliverable())
+    self.assertEquals(deliver_link.getSuccessor(),"trade_state/trade/delivered")
+    self.assertEquals(deliver_link.getPredecessor(),"trade_state/trade/ordered")
+    self.assertEquals(deliver_link.getCompletedStateList(),['delivered','started','stopped'])
+    self.assertEquals(deliver_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEquals(deliver_link.getTradePhase(),'trade/delivery')
+
+    self.assertEquals(deliver_link.getDeliveryBuilderList(),
+           ["portal_deliveries/sale_packing_list_builder",
+            "portal_deliveries/internal_packing_list_builder",
+            "portal_deliveries/purchase_packing_list_builder"])
+
+    invoice_link = getattr(business_process, "invoice_link", None)
+    self.assertNotEquals(invoice_link, None)
+    #self.assertFalse(invoice_link.getDeliverable())
+    self.assertEquals(invoice_link.getSuccessor(),"trade_state/trade/invoiced")
+    self.assertEquals(invoice_link.getPredecessor(),"trade_state/trade/delivered")
+    self.assertEquals(invoice_link.getCompletedStateList(),
+                        ['confirmed','delivered','started','stopped'])
+    self.assertEquals(invoice_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEquals(invoice_link.getTradePhase(),'trade/invoicing')
+
+    self.assertEquals(invoice_link.getDeliveryBuilderList(),
+           ["portal_deliveries/purchase_invoice_builder",
+            "portal_deliveries/purchase_invoice_transaction_trade_model_builder",
+            "portal_deliveries/sale_invoice_builder",
+            "portal_deliveries/sale_invoice_transaction_trade_model_builder"])
+
+    account_link = getattr(business_process, "account_link", None)
+    self.assertNotEquals(account_link, None)
+    #self.assertFalse(account_link.getDeliverable())
+    self.assertEquals(account_link.getSuccessor(),"trade_state/trade/accounted")
+    self.assertEquals(account_link.getPredecessor(),"trade_state/trade/invoiced")
+    self.assertEquals(account_link.getCompletedStateList(),['delivered','started','stopped'])
+    self.assertEquals(account_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEquals(account_link.getTradePhase(), 'trade/accounting')
+
+    self.assertSameSet(account_link.getDeliveryBuilderList(),
+           ["portal_deliveries/purchase_invoice_transaction_builder",
+            "portal_deliveries/sale_invoice_transaction_builder"])
+
+    pay_link = getattr(business_process, "pay_link", None)
+    self.assertNotEquals(pay_link, None)
+    #self.assertFalse(pay_link.getDeliverable())
+    self.assertEquals(pay_link.getTradePhase(), 'trade/payment')
+    self.assertEquals(pay_link.getSuccessor(), None)
+    self.assertEquals(pay_link.getPredecessor(),"trade_state/trade/accounted")
+    self.assertEquals(pay_link.getCompletedState(), None)
+    self.assertEquals(pay_link.getFrozenState(), None)
+
+    self.assertEquals(pay_link.getDeliveryBuilderList(),
+           ["portal_deliveries/payment_transaction_builder"])
 

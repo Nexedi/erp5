@@ -93,18 +93,7 @@ if business_template is not None:\n
       gadget.visible()\n
       gadget.public()\n
 \n
-  for rule in context.portal_rules.searchFolder(id=[ "new_order_root_simulation_rule", \n
-                                                     "new_delivery_root_simulation_rule",\n
-                                                     "new_trade_model_simulation_rule",\n
-                                                     "new_accounting_transaction_root_simulation_rule",\n
-                                                     "new_invoice_transaction_simulation_rule",\n
-                                                     "new_payment_simulation_rule",\n
-                                                     "new_invoice_root_simulation_rule",\n
-                                                     "new_delivery_root_simulation_rule",\n
-                                                     "new_invoice_simulation_rule"]):\n
 \n
-    if isTransitionPossible(rule, \'validate\'):\n
-      rule.validate(comment="Validated by Configurator")\n
 \n
 \n
 # update security settings for default preference # XXX why ???\n

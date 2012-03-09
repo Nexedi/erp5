@@ -52,32 +52,29 @@
             <key> <string>_body</string> </key>
             <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
 \n
-context.BusinessConfiguration_setupSimulation(configuration_save_url, **kw)\n
+configuration_save.addConfigurationItem("Business Process Configurator Item",\n
+                         title="Default Trade Business Process" ,\n
+                         configuration_spreadsheet_data = getattr(context, "standard_business_process.ods").data,\n
+                         reference="default_erp5_business_process")\n
 \n
-# Catalog Keyword Search Keys are for now hardcoded.\n
-configuration_save.addConfigurationItem("Catalog Keyword Key Configurator Item",\n
-    key_list=(\'description\', \'title\', \'catalog.description\', \'catalog.title\'))\n
+# setup Sale Trade Condition\n
+configuration_save.addConfigurationItem("Sale Trade Condition Configurator Item",\n
+                                         title="General Sale Trade Condition",\n
+                                         reference="STC-General")\n
 \n
-# This could be a customer decision option\n
-# configuration_save.addConfigurationItem("Site Property Configurator Item",\n
-#     site_property_list=[[[\'email_from_address\', \'email@example.com\', \'string\'],]])\n
+# setup Purchase Trade Condition\n
+configuration_save.addConfigurationItem("Purchase Trade Condition Configurator Item",\n
+                                         title="General Purchase Trade Condition",\n
+                                         reference="PTC-General")\n
 \n
-# Customize portal type information.\n
-# Include Constraints to some Simulation Objects\n
-# XXX (rafael) Why not Purchase Packing List?\n
-for portal_type in [\'Purchase Order\', \'Sale Order\',\'Sale Packing List\']:\n
-  configuration_save.addConfigurationItem("Portal Type Configurator Item",\n
-                                        target_portal_type=portal_type,\n
-                                        add_propertysheet_list=(\'TradeOrder\',))\n
+rule_simulation_list = context.ConfigurationTemplate_readOOCalcFile("standard_simulation_rule.ods", \n
+                          data=getattr(context,\'standard_simulation_rule.ods\').data)\n
 \n
-for portal_type in [\'Purchase Order Line\', \'Sale Order Line\',\'Sale Packing List Line\']:\n
-  configuration_save.addConfigurationItem("Portal Type Configurator Item",\n
-                                        target_portal_type=portal_type,\n
-                                        add_propertysheet_list=(\'TradeOrderLine\',))\n
-\n
-configuration_save.addConfigurationItem("Portal Type Configurator Item",\n
-                                        target_portal_type=\'Inventory\',\n
-                                        add_propertysheet_list=(\'InventoryConstraint\',))\n
+for rule_dict in rule_simulation_list:\n
+  configuration_save.addConfigurationItem("Rule Configurator Item",\n
+                                          id = rule_dict[\'rule_template_id\'],\n
+                                          reference = rule_dict[\'reference\'],\n
+                                          trade_phase = rule_dict[\'trade_phase\'])\n
 </string> </value>
         </item>
         <item>
@@ -86,7 +83,7 @@ configuration_save.addConfigurationItem("Portal Type Configurator Item",\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BusinessConfiguration_displayDownload</string> </value>
+            <value> <string>BusinessConfiguration_setupSimulation</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

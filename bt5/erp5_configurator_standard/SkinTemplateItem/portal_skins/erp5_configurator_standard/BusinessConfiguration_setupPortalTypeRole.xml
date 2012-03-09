@@ -51,7 +51,6 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>configuration_save = context.restrictedTraverse(configuration_save_url)\n
-group_id = context.getGlobalConfigurationAttr(\'group_id\')\n
 \n
 context.setGlobalConfigurationAttr(\n
    portal_type_roles_spreadsheet_configuration_save_relative_url=configuration_save.getRelativeUrl())\n
