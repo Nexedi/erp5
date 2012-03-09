@@ -60,7 +60,7 @@ class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   def _build(self, business_configuration):
     portal = self.getPortalObject()
     business_process_id = \
-       business_configuration.getGlobalConfigurationAttr('business_process_id')
+      business_configuration.getGlobalConfigurationAttr('business_process_id')
 
     organisation_id = \
       business_configuration.getGlobalConfigurationAttr('organisation_id')
@@ -68,20 +68,20 @@ class PurchaseTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     currency_id = \
       business_configuration.getGlobalConfigurationAttr('currency_id')
 
-    purchase_trade_condition = portal.purchase_trade_condition_module.newContent(
+    trade_condition = portal.purchase_trade_condition_module.newContent(
                                            portal_type="Purchase Trade Condition",
                                            reference=self.getReference(),
                                            title=self.getTitle(),
                                            effective_date=DateTime() - 1,
                                            expiration_date=DateTime() + 10 * 365)
 
-    purchase_trade_condition.setSpecialise("business_process_module/%s" %\
+    trade_condition.setSpecialise("business_process_module/%s" %\
                       business_process_id)
 
-    purchase_trade_condition.setDestination("organisation_module/%s" % organisation_id)
-    purchase_trade_condition.setDestinationSection("organisation_module/%s" % organisation_id)
-    purchase_trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
+    trade_condition.setDestination("organisation_module/%s" % organisation_id)
+    trade_condition.setDestinationSection("organisation_module/%s" % organisation_id)
+    trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
 
-    purchase_trade_condition.validate(comment="Validated by Configurator")
+    trade_condition.validate(comment="Validated by Configurator")
 
-    self.install(purchase_trade_condition, business_configuration)
+    self.install(trade_condition, business_configuration)
