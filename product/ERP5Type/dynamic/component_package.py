@@ -34,6 +34,7 @@ import sys
 import threading
 
 from Products.ERP5.ERP5Site import getSite
+from Products.ERP5Type.Base import Base
 from types import ModuleType
 from zLOG import LOG, INFO, BLATHER
 
@@ -72,8 +73,6 @@ class ComponentDynamicPackage(ModuleType):
     self._namespace_prefix = namespace + '.'
     self._portal_type = portal_type
     self.__version_suffix_len = len('_version')
-    self._load_module_lock = threading.RLock()
-    self._registry_generate_lock = threading.RLock()
     self.__registry_dict = {}
 
     # Add this module to sys.path for future imports
@@ -110,7 +109,7 @@ class ComponentDynamicPackage(ModuleType):
       # this is only done at startup or upon reset, moreover using the Catalog
       # is too risky as it lags behind and depends upon objects being
       # reindexed
-      with self._registry_generate_lock:
+      with Base.aq_method_lock:
         for component in component_tool.objectValues(portal_type=self._portal_type):
           # Only consider modified or validated states as state transition will
           # be handled by component_validation_workflow which will take care of
@@ -184,7 +183,7 @@ class ComponentDynamicPackage(ModuleType):
 
     return version_package
 
-  def load_module(self, fullname):
+  def __load_module(self, fullname):
     """
     Load a module with given fullname (see PEP 302) if it's not
     already in sys.modules. It is assumed that imports are filtered
@@ -233,47 +232,51 @@ class ComponentDynamicPackage(ModuleType):
       except AttributeError:
         pass
       else:
-        with self._load_module_lock:
-          setattr(self._getVersionPackage(version), name, module)
-
+        setattr(self._getVersionPackage(version), name, module)
         return module
 
       module_fullname_alias = self._namespace + '.' + name
 
     module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
+    module = ModuleType(module_fullname, component.getDescription())
 
-    with self._load_module_lock:
-      module = ModuleType(module_fullname, component.getDescription())
+    # The module *must* be in sys.modules before executing the code in case
+    # the module code imports (directly or indirectly) itself (see PEP 302)
+    sys.modules[module_fullname] = module
+    if module_fullname_alias:
+      sys.modules[module_fullname_alias] = module
 
-      # The module *must* be in sys.modules before executing the code in case
-      # the module code imports (directly or indirectly) itself (see PEP 302)
-      sys.modules[module_fullname] = module
+    # This must be set for imports at least (see PEP 302)
+    module.__file__ = '<' + component.getId() + '>'
+
+    try:
+      component.load(module.__dict__, validated_only=True)
+    except Exception, error:
+      del sys.modules[module_fullname]
       if module_fullname_alias:
-        sys.modules[module_fullname_alias] = module
+        del sys.modules[module_fullname_alias]
 
-      # This must be set for imports at least (see PEP 302)
-      module.__file__ = '<' + component.getId() + '>'
+      raise ImportError("%s: cannot load Component %s (%s)" % (fullname,
+                                                               name,
+                                                               error))
 
-      try:
-        component.load(module.__dict__, validated_only=True)
-      except Exception, error:
-        del sys.modules[module_fullname]
-        if module_fullname_alias:
-          del sys.modules[module_fullname_alias]
+    module.__path__ = []
+    module.__loader__ = self
+    module.__name__ = module_fullname
 
-        raise ImportError("%s: cannot load Component %s (%s)" % (fullname,
-                                                                 name,
-                                                                 error))
+    setattr(self._getVersionPackage(version), name, module)
+    if module_fullname_alias:
+      setattr(self, name, module)
 
-      module.__path__ = []
-      module.__loader__ = self
-      module.__name__ = module_fullname
+    return module
 
-      setattr(self._getVersionPackage(version), name, module)
-      if module_fullname_alias:
-        setattr(self, name, module)
-
-      return module
+  def load_module(self, fullname):
+    """
+    Make sure that loading module is thread-safe using aq_method_lock to make
+    sure that modules do not disappear because of an ongoing reset
+    """
+    with Base.aq_method_lock:
+      return self.__load_module(fullname)
 
   def reset(self, sub_package=None):
     """
