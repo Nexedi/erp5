@@ -41,7 +41,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   """
   # The list of standard business templates that the configurator should force
   # to install
-  standard_bt5_list = ('erp5_simulation',
+  expected_bt5_list = ('erp5_simulation',
                        'erp5_dhtml_style',
                        'erp5_jquery',
                        'erp5_jquery_ui',
@@ -64,6 +64,21 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                        'erp5_ods_style',
                        'erp5_odt_style',
                        'erp5_ooo_import')
+
+  standard_bt5_list = ('erp5_dhtml_style',
+                         'erp5_jquery_ui',
+                         'erp5_xhtml_jquery_style',
+                         'erp5_ingestion_mysql_innodb_catalog',
+                         'erp5_dms',
+                         'erp5_crm',
+                         'erp5_simplified_invoicing',
+                         'erp5_trade_knowledge_pad',
+                         'erp5_crm_knowledge_pad',
+                         'erp5_tax_resource',
+                         'erp5_discount_resource',
+                         'erp5_ods_style',
+                         'erp5_odt_style',
+                         'erp5_ooo_import')
 
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
@@ -155,9 +170,6 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     business_configuration = sequence.get("business_configuration")
     # second one: install some standard business templates
     standard_bt5_config_save = business_configuration['1']
-    self.assertEquals(len(self.standard_bt5_list),
-          len(standard_bt5_config_save.contentValues(
-                  portal_type='Standard BT5 Configurator Item')))
     self.assertEquals(
       set(self.standard_bt5_list),
       set([x.bt5_id for x in standard_bt5_config_save.contentValues()]))
@@ -528,7 +540,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
     # check if bt5 are installed.
     bt5_title_list = self.portal.portal_templates.getInstalledBusinessTemplateTitleList()
-    expected_list = self.standard_bt5_list + bt5_tuple
+    expected_list = self.expected_bt5_list + bt5_tuple
     self.assertEquals([i for i in expected_list if i not in bt5_title_list], [])
     
     self.assertFalse(bc_id in bt5_title_list)
