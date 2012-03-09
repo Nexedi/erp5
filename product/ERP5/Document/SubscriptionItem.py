@@ -281,6 +281,9 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
         resource = movement.getResource()
         start_date = movement.getStartDate()
         stop_date = movement.getStopDate()
+        if start_date is None or stop_date is None or start_date>stop_date:
+          # infinity nor time back machine does not exist
+          continue
         source = movement.getSource()
         source_section = movement.getSourceSection()
         source_decision = movement.getSourceDecision()
