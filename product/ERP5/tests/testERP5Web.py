@@ -1369,6 +1369,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     user_folder._doAddUser(name, 'password', role_list, [])
 
   def afterSetUp(self):
+    self.web_site_module = self.portal.web_site_module
     self.portal.Localizer = DummyLocalizer()
     self.createUser('admin', ['Manager'])
     self.createUser('erp5user', ['Auditor', 'Author'])
