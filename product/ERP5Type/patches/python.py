@@ -109,12 +109,14 @@ linecache_getlines = linecache.getlines
 def getlines(filename, module_globals=None):
   """
   The filename is always '<string>' for any code executed by exec(). ZODB
-  Component modules always set __file__ attribute to <erp5.component...>.
+  Component modules always set __file__ attribute to <erp5.component...> and
+  'Script (Python)' for Zope Python Scripts.
 
   The original getlines() will be called which look into the cache and if not
   available, call updatecache.
   """
-  if filename == '<string>' and module_globals and '__file__' in module_globals:
+  if ((filename == '<string>' or filename == 'Script (Python)')
+      and module_globals and '__file__' in module_globals):
     filename = module_globals['__file__']
 
   return linecache_getlines(filename, module_globals)
@@ -129,25 +131,38 @@ def updatecache(filename, module_globals=None):
   through PEP 302 Loader, but it is perhaps to be more generic. Anyhow, <> is
   really needed to differenciate files on the filesystem to the ones only in
   memory...
-  """
-  if (filename[0] == '<' and filename[-1] == '>' and module_globals and
-      '__loader__' in module_globals):
-    name = module_globals.get('__name__')
-    loader = module_globals['__loader__']
-    get_source = getattr(loader, 'get_source', None)
-    if name and get_source:
-      try:
-        data = get_source(name)
-      except (ImportError, AttributeError):
-        pass
-      else:
-        if data is None:
-          return []
 
-        data_len = len(data)
-        data = [line + '\n' for line in data.splitlines()]
-        linecache.cache[filename] = (data_len, None, data, filename)
-        return data    
+  Also, get source code of Zope Python Script and store it in the linecache
+  cache as well (using __file__ module attribute equals to: 'Script
+  (Python):ABSOLUTE_URL'). See PythonScript.py patch as well to remove cache
+  entry when a PythonScript is modified.
+  """
+  if filename and module_globals:
+    data = None
+
+    # Get source code of ZODB Components (following PEP 302)
+    if filename[0] == '<' and filename[-1] == '>' and '__loader__' in module_globals:
+      name = module_globals.get('__name__')
+      loader = module_globals['__loader__']
+      get_source = getattr(loader, 'get_source', None)
+      if name and get_source:
+        try:
+          data = get_source(name)
+        except (ImportError, AttributeError):
+          pass
+        else:
+          if data is None:
+            return []
+
+    # Get source code of Zope Python Script
+    elif filename.startswith('Script (Python)') and 'script' in module_globals:
+      data = module_globals['script'].body()
+
+    if data is not None:
+      data_len = len(data)
+      data = [line + '\n' for line in data.splitlines()]
+      linecache.cache[filename] = (data_len, None, data, filename)
+      return data
 
   return linecache_updatecache(filename, module_globals)
 

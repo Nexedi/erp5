@@ -14,6 +14,21 @@ from Products.PythonScripts.PythonScript import PythonScript
 from OFS.misc_ import p_
 from App.ImageFile import ImageFile
 
+PythonScript_write = PythonScript.write
+def write(self, text):
+  """
+  Change the Python Script and purge linecache cache entry (meaningful for any
+  module relying on linecache, such as traceback and pdb)
+  """
+  PythonScript_write(self, text)
+
+  import linecache
+  try:
+    del linecache.cache[self.get_filepath()]
+  except KeyError:
+    pass
+
+PythonScript.write = write
 
 def haveProxyRole(self):
   """if a script has proxy role, return True"""
