@@ -232,7 +232,7 @@ class ComponentDynamicPackage(ModuleType):
       except AttributeError:
         pass
       else:
-        setattr(self._getVersionPackage(version), name, module)
+        setattr(self, name, module)
         return module
 
       module_fullname_alias = self._namespace + '.' + name
