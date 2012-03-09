@@ -191,34 +191,34 @@ class ComponentDynamicPackage(ModuleType):
     properly in find_module().
     """
     site = getSite()
-    component_name = fullname[len(self._namespace_prefix):]
-    if component_name.endswith('_version'):
-      version = component_name[:-self.__version_suffix_len]
+    name = fullname[len(self._namespace_prefix):]
+    if name.endswith('_version'):
+      version = name[:-self.__version_suffix_len]
       return (version in site.getVersionPriorityNameList() and
               self._getVersionPackage(version) or None)
 
-    component_id_alias = None
-    version_package_name = component_name[:-self.__version_suffix_len]
-    if '.' in component_name:
+    module_fullname_alias = None
+    version_package_name = name[:-self.__version_suffix_len]
+    if '.' in name:
       try:
-        version, component_name = component_name.split('.')
+        version, name = name.split('.')
         version = version[:-self.__version_suffix_len]
       except ValueError, error:
         raise ImportError("%s: should be %s.VERSION.COMPONENT_REFERENCE (%s)" % \
                             (fullname, self._namespace, error))
 
       try:
-        component = self._registry_dict[component_name][version]
+        component = self._registry_dict[name][version]
       except KeyError:
         raise ImportError("%s: version %s of Component %s could not be found" % \
-                            (fullname, version, component_name))
+                            (fullname, version, name))
 
     else:
       try:
-        component_version_dict = self._registry_dict[component_name]
+        component_version_dict = self._registry_dict[name]
       except KeyError:
         raise ImportError("%s: Component %s could not be found" % (fullname,
-                                                                   component_name))
+                                                                   name))
 
       for version in site.getVersionPriorityNameList():
         component = component_version_dict.get(version)
@@ -226,55 +226,54 @@ class ComponentDynamicPackage(ModuleType):
           break
       else:
         raise ImportError("%s: no version of Component %s in Site priority" % \
-                            (fullname, component_name))
+                            (fullname, name))
 
       try:
-        module = getattr(getattr(self, version + '_version'), component_name)
+        module = getattr(getattr(self, version + '_version'), name)
       except AttributeError:
         pass
       else:
         with self._load_module_lock:
-          setattr(self._getVersionPackage(version), component_name, module)
+          setattr(self._getVersionPackage(version), name, module)
 
         return module
 
-      component_id_alias = self._namespace + '.' + component_name
+      module_fullname_alias = self._namespace + '.' + name
 
-    component_id = '%s.%s_version.%s' % (self._namespace, version,
-                                         component_name)
+    module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
 
     with self._load_module_lock:
-      new_module = ModuleType(component_id, component.getDescription())
+      module = ModuleType(module_fullname, component.getDescription())
 
       # The module *must* be in sys.modules before executing the code in case
       # the module code imports (directly or indirectly) itself (see PEP 302)
-      sys.modules[component_id] = new_module
-      if component_id_alias:
-        sys.modules[component_id_alias] = new_module
+      sys.modules[module_fullname] = module
+      if module_fullname_alias:
+        sys.modules[module_fullname_alias] = module
 
       # This must be set for imports at least (see PEP 302)
-      new_module.__file__ = '<' + component.getId() + '>'
+      module.__file__ = '<' + component.getId() + '>'
 
       try:
-        component.load(new_module.__dict__, validated_only=True)
+        component.load(module.__dict__, validated_only=True)
       except Exception, error:
-        del sys.modules[component_id]
-        if component_id_alias:
-          del sys.modules[component_id_alias]
+        del sys.modules[module_fullname]
+        if module_fullname_alias:
+          del sys.modules[module_fullname_alias]
 
         raise ImportError("%s: cannot load Component %s (%s)" % (fullname,
-                                                                 component_name,
+                                                                 name,
                                                                  error))
 
-      new_module.__path__ = []
-      new_module.__loader__ = self
-      new_module.__name__ = component_id
+      module.__path__ = []
+      module.__loader__ = self
+      module.__name__ = module_fullname
 
-      setattr(self._getVersionPackage(version), component_name, new_module)
-      if component_id_alias:
-        setattr(self, component_name, new_module)
+      setattr(self._getVersionPackage(version), name, module)
+      if module_fullname_alias:
+        setattr(self, name, module)
 
-      return new_module
+      return module
 
   def reset(self, sub_package=None):
     """
