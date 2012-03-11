@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+
+<!--
+Copyright 2004 ThoughtWorks, Inc
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Assert tests</title>
+    <script language="JavaScript" type="text/javascript" src="../../jsunit/app/jsUnitCore.js"></script>
+    <script language="JavaScript" type="text/javascript" src="../jsmock/mock.js"></script>
+    <script language="JavaScript" type="text/javascript" src="../dummy-logging.js"></script>
+
+    <script language="JavaScript" type="text/javascript" src="../../core/scripts/htmlutils.js"></script>
+    <script language="JavaScript" type="text/javascript">
+
+        function setUp() {
+            element1 = document.getElementById("id1");
+            window.setTimeout = function (func, time) {
+                func.call();
+            }
+        }
+
+        function testFlashEffectShouldHighlightElementBackgroundColorThenChangeItBack() {
+            var previousColor = "#000000";
+            var highlightColor = "yellow";
+            var colorsChanged = [];
+            elementGetStyle = function(element, styleAttribut) {
+                return previousColor;
+            }
+            elementSetStyle = function(element, style) {
+                colorsChanged.push(style["background-color"]);
+            };
+
+            highlight(element1);
+
+            assertObjectEquals([highlightColor, previousColor], colorsChanged);
+        }
+
+        function testgetKeyCodeFromKeySequenceShouldReturnCorrectAsciiCodeOfInputKeySequence() {
+            assertObjectEquals(119, getKeyCodeFromKeySequence("w"));
+            assertObjectEquals(119, getKeyCodeFromKeySequence("\\119"));
+            assertObjectEquals(92, getKeyCodeFromKeySequence("\\"));
+            assertObjectEquals(92, getKeyCodeFromKeySequence("\\92"));
+            assertObjectEquals(55, getKeyCodeFromKeySequence("7"));
+            assertObjectEquals(55, getKeyCodeFromKeySequence("\\55"));
+        }
+
+        function testgetKeyCodeFromKeySequenceShouldBackwardCompatibleFor2Or3DigitAsciiCodes() {
+            assertObjectEquals(119, getKeyCodeFromKeySequence("119"));
+            assertObjectEquals(92, getKeyCodeFromKeySequence("92"));
+            assertObjectEquals(55, getKeyCodeFromKeySequence("55"));
+        }
+
+        function testgetKeyCodeFromKeySequenceShouldFailOnIncorrectInput() {
+            checkKeySequence("");
+            checkKeySequence("\\a");
+            checkKeySequence("\\1234");
+            checkKeySequence("ab");
+        }
+        
+        function testAbsolutify() {
+            assertEquals("http://x/blah", absolutify("http://x/blah", "http://y"));
+            
+            assertEquals("http://y/blah", absolutify("blah", "http://y"));
+            
+            assertEquals("http://y/blah", absolutify("blah", "http://y/foo"));
+            assertEquals("http://y/foo/blah", absolutify("blah", "http://y/foo/"));
+            
+            assertEquals("http://y/foo/blah", absolutify("blah", "http://y/foo/?bar=1"));
+            assertEquals("http://y/foo/blah", absolutify("blah", "http://y/foo/?bar=1#baz=2"));
+            assertEquals("http://y/foo/blah", absolutify("blah", "http://y/foo/#baz=2"));
+            
+            // windows file urls
+            assertEquals("file:///c:/foo/blah", absolutify("blah", "c:\\foo\\"));
+            assertEquals("file:///c:/blah", absolutify("blah", "c:\\foo"));
+            assertEquals("file:///blah", absolutify("/blah", "c:\\foo\\bar"));
+            
+        }
+        
+        
+        function testParseAndReassembleUrl() {
+            var tests = [
+                "http://www.google.com"
+                ,"file://localhost/c:/blah"
+                ,"file:///c:/blah"
+                ,"http://www.google.com/"
+                ,"http://www.google.com/foo"
+                ,"http://www.google.com/foo?blah=blah/blah"
+                ,"http://www.google.com/foo?blah=blah/blah#barbar"
+                ,"http://www.google.com/foo#bur?blah"
+                ,"http://foo:bar@www.google.com"
+                ,"http://foo@www.google.com"
+                ,"http://foo:ba%20r@www.google.com"
+            ];
+            for (var i = 0; i < tests.length; i++) {
+                assertEquals(tests[i], reassembleLocation(parseUrl(tests[i])));
+            }
+        }
+        
+        function checkKeySequence(input) {
+            try {
+                getKeyCodeFromKeySequence(input);
+                fail("exception expected");
+            } catch (e) {
+                assertTrue(e.isSeleniumError);
+                assertEquals("invalid keySequence", e.message);
+            }
+        }
+    </script>
+</head>
+
+<body>
+
+<a id="id1" href="#id1">this is the first element</a>
+</body>
+</html>
