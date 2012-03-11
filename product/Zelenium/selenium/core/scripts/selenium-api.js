@@ -3205,9 +3205,7 @@ Selenium.prototype.doCaptureEntirePageScreenshotAndUpload = function(references,
     }*/
     
     // do or do not ... there is no try
-    var reference_list = references.split('/');
-    var webPageReference = reference_list[0];
-    var imageReference = reference_list[1];
+    var imageReference = references;
     var filename = imageReference + '.png'
     netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
     netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
@@ -3460,7 +3458,7 @@ Selenium.prototype.doCaptureEntirePageScreenshotAndUpload = function(references,
     LOG.debug('saved to file: ' + nsFile.path);
 
     // Uploading image (using DataURL)
-    var url = parseUrl(window.top.location.href) + '/Zuite_uploadScreenshot?web_page_reference=' + webPageReference + '&amp;image_reference=' + imageReference;
+    var url = parseUrl(window.top.location.href) + '/Zuite_uploadScreenshot?image_reference=' + imageReference;
     LOG.debug('Trying to upload: ' + url);
 
     
