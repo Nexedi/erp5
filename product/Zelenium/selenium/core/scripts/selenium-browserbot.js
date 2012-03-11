@@ -1750,6 +1750,79 @@ BrowserBot.prototype.selectOption = function(element, optionToSelect) {
 };
 
 /*
+* Remove an HTML element, used to hide the list of options displayed by the function showOptions
+*/
+BrowserBot.prototype.hideOptions = function(element) {
+    element.parentNode.removeChild(element);
+
+};
+
+/*
+* Select the specified option and show the list of options. (in order to see them in screenshots).
+* Do not use twice in a row, use hideOptions first.
+*/
+BrowserBot.prototype.showOptions = function(element, option) {
+    var elementName = element.id;
+    if(elementName == ''){
+        elementName = element.name;
+    }
+    if(elementName == ''){
+        elementName = element.className;
+    }
+
+    var bgColor = getCssAttr(element, 'background-color');
+    var JQW = new JQueryWrapper(element);
+    var jQueryElement = JQW.jQuery(element);
+    var children = element.children;
+    var n = children.length
+    var maxNbItems = 20;
+    var startId;
+    if(n < maxNbItems){
+        startId = 0;
+    }
+    else{
+        // Let's first determine where is the element we are interested in. (in order not to display everything but only maxNbItems elements)
+        var i = 0;
+        while(i < n && children[i].innerHTML != option.innerHTML){
+            i++;
+        }
+        startId = Math.max(0, i - maxNbItems/2);
+    }
+
+    var dropDownStyle = getDropDownColors(element);
+
+    // We don't want to mess with the css sheets
+    var afterHTML = '<ul id="' + elementName + '_TEMPORARY_OPTION_DISPLAY" style="position:absolute; z-index:300; margin:-3px -3px -3px 0px; width:' + (element.offsetWidth - 3) + 'px; padding:0 0px 1px 0px; list-style:none; border-left:2px solid #b2b2b2; border-top:2px solid #b2b2b2; border-bottom:1px solid #000000; border-right:1px solid #000000;';
+    afterHTML += 'background-color:' + bgColor + ';">\n';
+    //  background-color:#edeceb;">\n';
+    for(var i = startId; i < Math.min(startId + maxNbItems, n); i++){
+        var child = children[i];
+        var text = child.innerHTML;
+        var disabled = child.disabled;
+        var selected = text == option.innerHTML;
+        var text_color;
+        afterHTML += '<li style="';
+        if(!selected && !disabled){
+            afterHTML += dropDownStyle[1];
+            text_color = dropDownStyle[0];
+        }
+        else if(disabled){
+            afterHTML += dropDownStyle[5];
+            text_color = dropDownStyle[4];
+        }
+        else{
+            afterHTML += dropDownStyle[3];
+            text_color = dropDownStyle[2];
+        }
+        afterHTML += ' padding:0 2px 0 3px;">\n<a href="#" style="' + text_color + '">';
+        afterHTML += text;
+        afterHTML += '</a>\n</li>\n';
+    }
+    afterHTML += '</ul>';   
+    jQueryElement.after(afterHTML);
+};
+
+/*
 * Select the specified option and trigger the relevant events of the element.
 */
 BrowserBot.prototype.addSelection = function(element, option) {

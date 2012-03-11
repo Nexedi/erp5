@@ -882,7 +882,126 @@ Selenium.prototype.doSelect = function(selectLocator, optionLocator) {
     this.browserbot.selectOption(element, option);
 };
 
+Selenium.prototype.doHideOptions = function(selectLocator) {
+    /**
+   * Simulate an ERP5 drop-down menu with a select option using an option locator.
+   *
+   * <p>
+   * Option locators provide different ways of specifying options of an HTML
+   * Select element (e.g. for selecting a specific option, or for asserting
+   * that the selected option satisfies a specification). There are several
+   * forms of Select Option Locator.
+   * </p>
+   * <ul>
+   * <li><strong>label</strong>=<em>labelPattern</em>:
+   * matches options based on their labels, i.e. the visible text. (This
+   * is the default.)
+   * <ul class="first last simple">
+   * <li>label=regexp:^[Oo]ther</li>
+   * </ul>
+   * </li>
+   * <li><strong>value</strong>=<em>valuePattern</em>:
+   * matches options based on their values.
+   * <ul class="first last simple">
+   * <li>value=other</li>
+   * </ul>
+   *
+   *
+   * </li>
+   * <li><strong>id</strong>=<em>id</em>:
+   *
+   * matches options based on their ids.
+   * <ul class="first last simple">
+   * <li>id=option1</li>
+   * </ul>
+   * </li>
+   * <li><strong>index</strong>=<em>index</em>:
+   * matches an option based on its index (offset from zero).
+   * <ul class="first last simple">
+   *
+   * <li>index=2</li>
+   * </ul>
+   * </li>
+   * </ul>
+   * <p>
+   * If no option locator prefix is provided, the default behaviour is to match on <strong>label</strong>.
+   * </p>
+   *
+   *
+   * @param selectLocator an <a href="#locators">element locator</a> identifying a drop-down menu
+   * @param optionLocator an option locator (a label by default)
+   */
+    var element = this.browserbot.findElement(selectLocator);
+    
+    var elementName = element.id;
+    if(elementName == ''){
+        elementName = element.name;
+    }
+    if(elementName == ''){
+        elementName = element.className;
+    }
 
+    element = this.browserbot.findElement('//ul[@id="' + elementName + '_TEMPORARY_OPTION_DISPLAY' + '"]');
+    this.browserbot.hideOptions(element);
+};
+
+Selenium.prototype.doShowOptions = function(selectLocator, optionLocator) {
+    /**
+   * Simulate an ERP5 drop-down menu with a select option using an option locator.
+   *
+   * <p>
+   * Option locators provide different ways of specifying options of an HTML
+   * Select element (e.g. for selecting a specific option, or for asserting
+   * that the selected option satisfies a specification). There are several
+   * forms of Select Option Locator.
+   * </p>
+   * <ul>
+   * <li><strong>label</strong>=<em>labelPattern</em>:
+   * matches options based on their labels, i.e. the visible text. (This
+   * is the default.)
+   * <ul class="first last simple">
+   * <li>label=regexp:^[Oo]ther</li>
+   * </ul>
+   * </li>
+   * <li><strong>value</strong>=<em>valuePattern</em>:
+   * matches options based on their values.
+   * <ul class="first last simple">
+   * <li>value=other</li>
+   * </ul>
+   *
+   *
+   * </li>
+   * <li><strong>id</strong>=<em>id</em>:
+   *
+   * matches options based on their ids.
+   * <ul class="first last simple">
+   * <li>id=option1</li>
+   * </ul>
+   * </li>
+   * <li><strong>index</strong>=<em>index</em>:
+   * matches an option based on its index (offset from zero).
+   * <ul class="first last simple">
+   *
+   * <li>index=2</li>
+   * </ul>
+   * </li>
+   * </ul>
+   * <p>
+   * If no option locator prefix is provided, the default behaviour is to match on <strong>label</strong>.
+   * </p>
+   *
+   *
+   * @param selectLocator an <a href="#locators">element locator</a> identifying a drop-down menu
+   * @param optionLocator an option locator (a label by default)
+   */
+    var element = this.browserbot.findElement(selectLocator);
+    if (!("options" in element)) {
+        throw new SeleniumError("Specified element is not a Select (has no options)");
+    }
+    var locator = this.optionLocatorFactory.fromLocatorString(optionLocator);
+    var option = locator.findOption(element);
+    this.browserbot.showOptions(element, option);
+};
 
 Selenium.prototype.doAddSelection = function(locator, optionLocator) {
     /**
