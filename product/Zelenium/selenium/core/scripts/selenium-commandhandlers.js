@@ -306,12 +306,14 @@ ActionHandler.prototype.execute = function(seleniumApi, command) {
         // todo: this conditional logic is ugly
         seleniumApi.ensureNoUnhandledPopups();
     }
-    var terminationCondition = this.actionBlock(command.target, command.value);
-    // If the handler didn't return a wait flag, check to see if the
-    // handler was registered with the wait flag.
-    if (terminationCondition == undefined && this.wait) {
-        terminationCondition = seleniumApi.makePageLoadCondition();
-    }
+    
+    var handlerCondition = this.actionBlock(command.target, command.value);
+    
+    // page load waiting takes precedence over any wait condition returned by
+    // the action handler.
+    var terminationCondition = (this.wait)
+        ? seleniumApi.makePageLoadCondition() : handlerCondition;
+    
     return new ActionResult(terminationCondition);
 };
 
@@ -330,7 +332,14 @@ AccessorHandler.prototype.execute = function(seleniumApi, command) {
 };
 
 function AccessorResult(result) {
+  if (result.terminationCondition) {
+    var self = this;
+    this.terminationCondition = function() {
+      return result.terminationCondition.call(self);
+    };
+  } else {
     this.result = result;
+  }
 }
 
 /**
@@ -362,14 +371,15 @@ AssertHandler.prototype.execute = function(seleniumApi, command) {
 function AssertResult() {
     this.passed = true;
 }
+
 AssertResult.prototype.setFailed = function(message) {
     this.passed = null;
     this.failed = true;
     this.failureMessage = message;
-}
+};
 
 function SeleniumCommand(command, target, value, isBreakpoint) {
-    this.command = command;
+    this.command = command.trim();
     this.target = target;
     this.value = value;
     this.isBreakpoint = isBreakpoint;
