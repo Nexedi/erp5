@@ -741,6 +741,7 @@ Selenium.prototype.doType = function(locator, value) {
    * @param locator an <a href="#locators">element locator</a>
    * @param value the value to type
    */
+  netscape.security.PrivilegeManager.enablePrivilege("UniversalFileRead");
    if (this.browserbot.controlKeyDown || this.browserbot.altKeyDown || this.browserbot.metaKeyDown) {
         throw new SeleniumError("type not supported immediately after call to controlKeyDown() or altKeyDown() or metaKeyDown()");
     }
@@ -2920,8 +2921,9 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
      * http://www.screengrab.org and http://snapsie.sourceforge.net/ for
      * details.
      *
-     * @param filename  the path to the file to persist the screenshot as. No
-     *                  filename extension will be appended by default.
+     * @param filename  the path to the file in the temp folder to persist the
+     *                  screenshot as. No filename extension will be appended
+     *                  by default.
      *                  Directories will not be created if they do not exist,  
      *                  and an exception will be thrown, possibly by native
      *                  code.
@@ -2938,16 +2940,19 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
      *                     (possibly obscuring black text).</dd>
      *                  </dl>
      */
-    if (! browserVersion.isChrome &&
+    /*if (! browserVersion.isChrome &&
         ! (browserVersion.isIE && ! browserVersion.isHTA)) {
         throw new SeleniumError('captureEntirePageScreenshot is only '
             + 'implemented for Firefox ("firefox" or "chrome", NOT '
             + '"firefoxproxy") and IE non-HTA ("iexploreproxy", NOT "iexplore" '
             + 'or "iehta"). The current browser isn\'t one of them!');
-    }
+    }*/
     
     // do or do not ... there is no try
-    
+    if(filename.split('.')[-1] != 'png')
+      filename = filename + '.png'
+    netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     if (browserVersion.isIE) {
         // targeting snapsIE >= 0.2
         function getFailureMessage(exceptionMessage) {
@@ -3119,8 +3124,7 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
     var format = 'png';
     var canvas = grabber.prepareCanvas(box.width, box.height);
     var context = grabber.prepareContext(canvas, box);
-    context.drawWindow(window, box.x, box.y, box.width, box.height,
-        'rgb(0, 0, 0)');
+    context.drawWindow(window, box.x, box.y, box.width, box.height,'rgb(0, 0, 0)');
     context.restore();
     var dataUrl = canvas.toDataURL("image/" + format);
     LOG.debug('grabbed to canvas');
@@ -3128,10 +3132,14 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
     doc.style.background = originalBackground;
     
     // save to file
-    var nsFile = Components.classes["@mozilla.org/file/local;1"]
-        .createInstance(Components.interfaces.nsILocalFile);
+    var nsFile = Components.classes["@mozilla.org/file/directory_service;1"].  
+           getService(Components.interfaces.nsIProperties).  
+           get("TmpD", Components.interfaces.nsIFile);  
+    nsFile.append(filename);  
+     
     try {
-        nsFile.initWithPath(filename);
+        nsFile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
+        //nsFile.initWithPath(filename);
     }
     catch (e) {
         if (/NS_ERROR_FILE_UNRECOGNIZED_PATH/.test(e.message)) {
@@ -3142,7 +3150,8 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
             else {
                 filename = filename.replace(/\\/g, '/');
             }
-            nsFile.initWithPath(filename);
+            nsfile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
+            //nsFile.initWithPath(filename);
         }
         else {
             throw e;
@@ -3150,10 +3159,315 @@ Selenium.prototype.doCaptureEntirePageScreenshot = function(filename, kwargs) {
     }
     var binaryInputStream = SGNsUtils.dataUrlToBinaryInputStream(dataUrl);
     var fileOutputStream = SGNsUtils.newFileOutputStream(nsFile);
+
     SGNsUtils.writeBinaryInputStreamToFileOutputStream(binaryInputStream,
         fileOutputStream);
     fileOutputStream.close();
-    LOG.debug('saved to file');
+    LOG.debug('saved to file: ' + nsFile.path);
+};
+
+Selenium.prototype.doCaptureEntirePageScreenshotAndUpload = function(references, kwargs) {
+    /**
+     * Saves the entire contents of the current window canvas to a PNG file.
+     * Contrast this with the captureScreenshot command, which captures the
+     * contents of the OS viewport (i.e. whatever is currently being displayed
+     * on the monitor), and is implemented in the RC only. Currently this only
+     * works in Firefox when running in chrome mode, and in IE non-HTA using
+     * the EXPERIMENTAL "Snapsie" utility. The Firefox implementation is mostly
+     * borrowed from the Screengrab! Firefox extension. Please see
+     * http://www.screengrab.org and http://snapsie.sourceforge.net/ for
+     * details.
+     *
+     * @param reference the path to the file to persist the screenshot. No
+     *                  filename extension will be appended by default.
+     *                  Directories will not be created if they do not exist,  
+     *                  and an exception will be thrown, possibly by native
+     *                  code.
+     * @param kwargs    a kwargs string that modifies the way the screenshot
+     *                  is captured. Example: "background=#CCFFDD" .
+     *                  Currently valid options:
+     *                  <dl>
+     *                   <dt>background</dt>
+     *                     <dd>the background CSS for the HTML document. This
+     *                     may be useful to set for capturing screenshots of
+     *                     less-than-ideal layouts, for example where absolute
+     *                     positioning causes the calculation of the canvas
+     *                     dimension to fail and a black background is exposed
+     *                     (possibly obscuring black text).</dd>
+     *                  </dl>
+     */
+    /*if (! browserVersion.isChrome &&
+        ! (browserVersion.isIE && ! browserVersion.isHTA)) {
+        throw new SeleniumError('captureEntirePageScreenshot is only '
+            + 'implemented for Firefox ("firefox" or "chrome", NOT '
+            + '"firefoxproxy") and IE non-HTA ("iexploreproxy", NOT "iexplore" '
+            + 'or "iehta"). The current browser isn\'t one of them!');
+    }*/
+    
+    // do or do not ... there is no try
+    var reference_list = references.split('/');
+    var webPageReference = reference_list[0];
+    var imageReference = reference_list[1];
+    var filename = imageReference + '.png'
+    netscape.security.PrivilegeManager.enablePrivilege("UniversalBrowserRead");
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+    if (browserVersion.isIE) {
+        // targeting snapsIE >= 0.2
+        function getFailureMessage(exceptionMessage) {
+            var msg = 'Snapsie failed: ';
+            if (exceptionMessage) {
+                if (exceptionMessage ==
+                    "Automation server can't create object") {
+                    msg += 'Is it installed? Does it have permission to run '
+                        + 'as an add-on? See http://snapsie.sourceforge.net/';
+                }
+                else {
+                    msg += exceptionMessage;
+                }
+            }
+            else {
+                msg += 'Undocumented error';
+            }
+            return msg;
+        }
+    
+        if (typeof(runOptions) != 'undefined' &&
+            runOptions.isMultiWindowMode() == false) {
+            // framed mode
+            try {
+                new Snapsie().saveSnapshot(filename, 'selenium_myiframe');
+            }
+            catch (e) {
+                throw new SeleniumError(getFailureMessage(e.message));
+            }
+        }
+        else {
+            // multi-window mode
+            if (!this.snapsieSrc) {
+                // XXX - cache snapsie, and capture the screenshot as a
+                // callback. Definitely a hack, because we may be late taking
+                // the first screenshot, but saves us from polluting other code
+                // for now. I wish there were an easier way to get at the
+                // contents of a referenced script!
+                var snapsieUrl = (this.browserbot.buttonWindow.location.href)
+                    .replace(/(Test|Remote)Runner\.html/, 'lib/snapsie.js');
+                var self = this;
+                new Ajax.Request(snapsieUrl, {
+                    method: 'get'
+                    , onSuccess: function(transport) {
+                        self.snapsieSrc = transport.responseText;
+                        self.doCaptureEntirePageScreenshotAndUpload(references, kwargs);
+                    }
+                });
+                return;
+            }
+
+            // it's going into a string, so escape the backslashes
+            filename = filename.replace(/\\/g, '\\\\');
+            
+            // this is sort of hackish. We insert a script into the document,
+            // and remove it before anyone notices.
+            var doc = selenium.browserbot.getDocument();
+            var script = doc.createElement('script'); 
+            var scriptContent = this.snapsieSrc 
+                + 'try {'
+                + '    new Snapsie().saveSnapshot("' + filename + '");'
+                + '}'
+                + 'catch (e) {'
+                + '    document.getElementById("takeScreenshot").failure ='
+                + '        e.message;'
+                + '}';
+            script.id = 'takeScreenshot';
+            script.language = 'javascript';
+            script.text = scriptContent;
+            doc.body.appendChild(script);
+            script.parentNode.removeChild(script);
+            if (script.failure) {
+                throw new SeleniumError(getFailureMessage(script.failure));
+            }
+        }
+        return;
+    }
+    
+    function fileUpload(url, fileData, fileName) {
+        var fileSize = fileData.length,
+        boundary = "---------------------------73793505419963331401738523176",
+        xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4) {
+            LOG.debug('AJAX POST Request : Sending ' + fileName + ' to ' + url + '\nresponseText: ' + xhr.responseText);
+         }
+        };
+        xhr.open("POST", url, true);
+        
+        // simulate a file MIME POST request.
+        xhr.setRequestHeader("Content-Type", "multipart/form-data; charset=utf-8; boundary="+boundary);
+        xhr.setRequestHeader("Content-Length", fileSize);
+    
+        var body = "--" + boundary + "\r\n";
+        body += 'Content-Disposition: form-data; name=data_uri; filename=' + fileName + '\r\n';
+        body += "Content-Type: image/png\r\n\r\n";
+        body += fileData + "\r\n";
+        body += "--" + boundary + "--";
+    
+        xhr.send(unescape( encodeURIComponent( body ) ));
+        return true
+    }
+    function parseUrl(url){
+        split_url = url.split('/')
+        n = split_url.length
+        i = 0
+        while(i<n && split_url[i] != "portal_tests"){ 
+            i++;
+        }
+        return split_url.splice(0,i+1).join('/')
+    } 
+
+    var grabber = {
+        prepareCanvas: function(width, height) {
+            var styleWidth = width + 'px';
+            var styleHeight = height + 'px';
+            
+            var grabCanvas = document.getElementById('screenshot_canvas');
+            if (!grabCanvas) {
+                // create the canvas
+                var ns = 'http://www.w3.org/1999/xhtml';
+                grabCanvas = document.createElementNS(ns, 'html:canvas');
+                grabCanvas.id = 'screenshot_canvas';
+                grabCanvas.style.display = 'none';
+                document.documentElement.appendChild(grabCanvas);
+            }
+            
+            grabCanvas.width = width;
+            grabCanvas.style.width = styleWidth;
+            grabCanvas.style.maxWidth = styleWidth;
+            grabCanvas.height = height;
+            grabCanvas.style.height = styleHeight;
+            grabCanvas.style.maxHeight = styleHeight;
+        
+            return grabCanvas;
+        },
+        
+        prepareContext: function(canvas, box) {
+            var context = canvas.getContext('2d');
+            context.clearRect(box.x, box.y, box.width, box.height);
+            context.save();
+            return context;
+        }
+    };
+    
+    var SGNsUtils = {
+        dataUrlToBinaryInputStream: function(dataUrl) {
+            var nsIoService = Components.classes["@mozilla.org/network/io-service;1"]
+                .getService(Components.interfaces.nsIIOService);
+            var channel = nsIoService
+                .newChannelFromURI(nsIoService.newURI(dataUrl, null, null));
+            var binaryInputStream = Components.classes["@mozilla.org/binaryinputstream;1"]
+                .createInstance(Components.interfaces.nsIBinaryInputStream);
+            
+            binaryInputStream.setInputStream(channel.open());
+            return binaryInputStream;
+        },
+        
+        newFileOutputStream: function(nsFile) {
+            var writeFlag = 0x02; // write only
+            var createFlag = 0x08; // create
+            var truncateFlag = 0x20; // truncate
+            var fileOutputStream = Components.classes["@mozilla.org/network/file-output-stream;1"]
+                .createInstance(Components.interfaces.nsIFileOutputStream);
+                
+            // Apparently octal permissions are deprecated, but the suggested alternative is broken in Firefox (and not backwards-compatible from FF 4.0): https://bugzilla.mozilla.org/show_bug.cgi?id=433295
+            fileOutputStream.init(nsFile,
+                                  writeFlag | createFlag | truncateFlag,
+                                  0664,
+                                  null);
+            return fileOutputStream;
+        },
+        
+        writeBinaryInputStreamToFileOutputStream:
+        function(binaryInputStream, fileOutputStream) {
+            var numBytes = binaryInputStream.available();
+            var bytes = binaryInputStream.readBytes(numBytes);
+            fileOutputStream.write(bytes, numBytes);
+        }
+    };
+    
+    // compute dimensions
+    var window = this.browserbot.getCurrentWindow();
+    var doc = window.document.documentElement;
+    var box = {
+        x: 0,
+        y: 0,
+        width: doc.scrollWidth,
+        height: doc.scrollHeight
+    };
+    LOG.debug('computed dimensions');
+    
+    var originalBackground = doc.style.background;
+    
+    if (kwargs) {
+        var args = parse_kwargs(kwargs);
+        if (args.background) {
+            doc.style.background = args.background;
+        }
+    }
+    
+    // grab
+    var format = 'png';
+    var canvas = grabber.prepareCanvas(box.width, box.height);
+    var context = grabber.prepareContext(canvas, box);
+    context.drawWindow(window, box.x, box.y, box.width, box.height,'rgb(0, 0, 0)');
+    context.restore();
+    var dataUrl = canvas.toDataURL("image/" + format);
+    LOG.debug('grabbed to canvas');
+    
+    doc.style.background = originalBackground;
+    
+    // save to file
+    //var nsFile = Components.classes["@mozilla.org/file/local;1"]
+    //    .createInstance(Components.interfaces.nsILocalFile);
+    var nsFile = Components.classes["@mozilla.org/file/directory_service;1"].  
+           getService(Components.interfaces.nsIProperties).  
+           get("TmpD", Components.interfaces.nsIFile);  
+    nsFile.append(filename);  
+     
+    try {
+        nsFile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
+        //nsFile.initWithPath(filename);
+    }
+    catch (e) {
+        if (/NS_ERROR_FILE_UNRECOGNIZED_PATH/.test(e.message)) {
+            // try using the opposite file separator
+            if (filename.indexOf('/') != -1) {
+                filename = filename.replace(/\//g, '\\');
+            }
+            else {
+                filename = filename.replace(/\\/g, '/');
+            }
+            nsfile.createUnique(Components.interfaces.nsIFile.NORMAL_FILE_TYPE, 0666);
+            //nsFile.initWithPath(filename);
+        }
+        else {
+            throw e;
+        }
+    }
+    var binaryInputStream = SGNsUtils.dataUrlToBinaryInputStream(dataUrl);
+    var fileOutputStream = SGNsUtils.newFileOutputStream(nsFile);
+
+    SGNsUtils.writeBinaryInputStreamToFileOutputStream(binaryInputStream,
+        fileOutputStream);
+    fileOutputStream.close();
+    LOG.debug('saved to file: ' + nsFile.path);
+
+    // Uploading image (using DataURL)
+    var url = parseUrl(window.top.location.href) + '/Zuite_uploadScreenshot?web_page_reference=' + webPageReference + '&amp;image_reference=' + imageReference;
+    LOG.debug('Trying to upload: ' + url);
+
+    
+    var data_uri = dataUrl.split(',')[1];
+    LOG.debug('complete upload url: ' + url);
+    LOG.debug('file uploaded: ' + fileUpload(url, data_uri, filename));
+    
 };
 
 Selenium.prototype.doRollup = function(rollupName, kwargs) {
