@@ -1,0 +1,54 @@
+<h1 tal:replace="structure context/manage_page_header">PAGE HEADER</h1>
+<h1 tal:replace="structure context/manage_tabs">TABS</h1>
+
+<p class="form-help">
+Export the Selenium test case as a ZIP file, or create a snapshot.
+</p>
+
+<form action="." method="post"
+      tal:attributes="action context/absolute_url" >
+
+<table cellspacing="0" cellpadding="2" border="0">
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    ZIP File Name
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="text" name="archive_name" size="40" value=""
+           tal:attributes="value context/getZipFileName;" />
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    <div class="form-label">
+    Include Selenium support?
+    </div>
+    </td>
+    <td align="left" valign="top">
+    <input type="hidden" name="include_selenium:int:default" value="0" />
+    <input type="checkbox" name="include_selenium:boolean" checked="checked" />
+    </td>
+  </tr>
+
+  <tr>
+    <td align="left" valign="top">
+    </td>
+    <td align="left" valign="top">
+    <div class="form-element">
+    <input class="form-element" type="submit"
+           name="manage_getZipFile:method" value=" Download " /> 
+    <input class="form-element" type="submit"
+           name="manage_createSnapshot:method" value=" Create Snapshot " /> 
+    </div>
+    </td>
+  </tr>
+
+</table>
+
+</form>
+
+<h1 tal:replace="structure context/manage_page_footer">PAGE FOOTER</h1>
