@@ -49,30 +49,37 @@ objectExtend(HtmlTestRunner.prototype, {
         if (logLevel) {
             LOG.setLogLevelThreshold(logLevel);
         }
+
+        var self = this;
         if (selenium == null) {
-            var appWindow = this._getApplicationWindow();
+            var appWindow = self._getApplicationWindow();
             try { appWindow.location; }
             catch (e) { 
                 // when reloading, we may be pointing at an old window (Perm Denied)
                 setTimeout(fnBind(function() {
-                    this.loadSuiteFrame();
+                    self.loadSuiteFrame();
                 }, this), 50);
                 return;
             }
-            selenium = Selenium.createForWindow(appWindow);
-            this._registerCommandHandlers();
+
+            // TODO(simon): This gets things working on Firefox 4, but's not an ideal solution
+            window.setTimeout(function() {
+              selenium = Selenium.createForWindow(appWindow);
+              self._registerCommandHandlers();
+              self.loadSuiteFrame();
+            }, 250);
+            return;
         }
-        this.controlPanel.setHighlightOption();
-        var testSuiteName = this.controlPanel.getTestSuiteName();
-        var self = this;
+        self.controlPanel.setHighlightOption();
+        var testSuiteName = self.controlPanel.getTestSuiteName();
         if (testSuiteName) {
             suiteFrame.load(testSuiteName, function() {setTimeout(fnBind(self._onloadTestSuite, self), 50)} );
             selenium.browserbot.baseUrl = absolutify(testSuiteName, window.location.href);
         }
         // DGF or should we use the old default?
         // selenium.browserbot.baseUrl = window.location.href;
-        if (this.controlPanel.getBaseUrl()) {
-            selenium.browserbot.baseUrl = this.controlPanel.getBaseUrl();
+        if (self.controlPanel.getBaseUrl()) {
+            selenium.browserbot.baseUrl = self.controlPanel.getBaseUrl();
         }
     },
 
@@ -91,6 +98,7 @@ objectExtend(HtmlTestRunner.prototype, {
     },
 
     _onloadTestSuite:function () {
+        suiteFrame = new HtmlTestSuiteFrame(getSuiteFrame());
         if (! this.getTestSuite().isAvailable()) {
             return;
         }
@@ -102,7 +110,11 @@ objectExtend(HtmlTestRunner.prototype, {
             this._getApplicationWindow().src = this.controlPanel.getAutoUrl();
         } else {
             var testCaseLoaded = fnBind(function(){this.testCaseLoaded=true;},this);
-            this.getTestSuite().getSuiteRows()[0].loadTestCase(testCaseLoaded);
+            var testNumber = 0;
+            if (this.controlPanel.getTestNumber() != null){
+                var testNumber = this.controlPanel.getTestNumber() - 1; 
+            }
+            this.getTestSuite().getSuiteRows()[testNumber].loadTestCase(testCaseLoaded);
         }
     },
 
@@ -139,6 +151,8 @@ objectExtend(HtmlTestRunner.prototype, {
         //todo: move testFailed and storedVars to TestCase
         this.testFailed = false;
         storedVars = new Object();
+        storedVars.nbsp = String.fromCharCode(160);
+        storedVars.space = ' ';
         this.currentTest = new HtmlRunnerTestLoop(testFrame.getCurrentTestCase(), this.metrics, this.commandFactory);
         currentTest = this.currentTest;
         this.currentTest.start();
@@ -162,6 +176,10 @@ objectExtend(SeleniumFrame.prototype, {
         addLoadListener(this.frame, fnBind(this._handleLoad, this));
     },
 
+    getWindow : function() {
+        return this.frame.contentWindow;
+    },
+
     getDocument : function() {
         return this.frame.contentWindow.document;
     },
@@ -171,7 +189,6 @@ objectExtend(SeleniumFrame.prototype, {
         this._onLoad();
         if (this.loadCallback) {
             this.loadCallback();
-            this.loadCallback = null;
         }
     },
 
@@ -254,7 +271,7 @@ objectExtend(HtmlTestFrame.prototype, SeleniumFrame.prototype);
 objectExtend(HtmlTestFrame.prototype, {
 
     _onLoad: function() {
-        this.currentTestCase = new HtmlTestCase(this.getDocument(), htmlTestRunner.getTestSuite().getCurrentRow());
+        this.currentTestCase = new HtmlTestCase(this.getWindow(), htmlTestRunner.getTestSuite().getCurrentRow());
     },
 
     getCurrentTestCase: function() {
@@ -386,6 +403,10 @@ objectExtend(HtmlTestRunnerControlPanel.prototype, {
         return this._getQueryParameter("test");
     },
 
+    getTestNumber: function() {
+        return this._getQueryParameter("testNumber");
+    },
+
     getSingleTestName: function() {
         return this._getQueryParameter("singletest");
     },
@@ -419,7 +440,7 @@ var AbstractResultAwareRow = classCreate();
 objectExtend(AbstractResultAwareRow.prototype, {
 
     initialize: function(trElement) {
-        this.trElement = trElement;
+        this.trElement = core.firefox.unwrap(trElement);
     },
 
     setStatus: function(status) {
@@ -529,7 +550,7 @@ objectExtend(HtmlTestSuiteRow.prototype, {
         this.trElement = trElement;
         this.testFrame = testFrame;
         this.htmlTestSuite = htmlTestSuite;
-        this.link = trElement.getElementsByTagName("a")[0];
+        this.link = core.firefox.unwrap(trElement.getElementsByTagName("a")[0]);
         this.link.onclick = fnBindAsEventListener(this._onClick, this);
     },
 
@@ -586,7 +607,9 @@ objectExtend(HtmlTestSuite.prototype, {
     initialize: function(suiteDocument) {
         this.suiteDocument = suiteDocument;
         this.suiteRows = this._collectSuiteRows();
-        this.titleRow = new TitleRow(this.getTestTable().rows[0]);
+        var testTable = this.getTestTable();
+        if (!testTable) return;
+        this.titleRow = new TitleRow(testTable.rows[0]);
         this.reset();
     },
 
@@ -617,6 +640,7 @@ objectExtend(HtmlTestSuite.prototype, {
         var result = [];
         var tables = sel$A(this.suiteDocument.getElementsByTagName("table"));
         var testTable = tables[0];
+        if (!testTable) return;
         for (rowNum = 1; rowNum < testTable.rows.length; rowNum++) {
             var rowElement = testTable.rows[rowNum];
             result.push(new HtmlTestSuiteRow(rowElement, testFrame, this));
@@ -664,7 +688,7 @@ objectExtend(HtmlTestSuite.prototype, {
 
     _onTestSuiteComplete: function() {
         this.markDone();
-        new TestResult(this.failed, this.getTestTable()).post();
+        new SeleniumTestResult(this.failed, this.getTestTable()).post();
     },
 
     updateSuiteWithResultOfPreviousTest: function() {
@@ -688,8 +712,8 @@ objectExtend(HtmlTestSuite.prototype, {
 
 });
 
-var TestResult = classCreate();
-objectExtend(TestResult.prototype, {
+var SeleniumTestResult = classCreate();
+objectExtend(SeleniumTestResult.prototype, {
 
 // Post the results to a servlet, CGI-script, etc.  The URL of the
 // results-handler defaults to "/postResults", but an alternative location
@@ -863,14 +887,22 @@ objectExtend(TestResult.prototype, {
 var HtmlTestCase = classCreate();
 objectExtend(HtmlTestCase.prototype, {
 
-    initialize: function(testDocument, htmlTestSuiteRow) {
-        if (testDocument == null) {
-            throw "testDocument should not be null";
+    initialize: function(testWindow, htmlTestSuiteRow) {
+        if (testWindow == null) {
+            throw "testWindow should not be null";
         }
         if (htmlTestSuiteRow == null) {
             throw "htmlTestSuiteRow should not be null";
         }
-        this.testDocument = testDocument;
+        this.testWindow = testWindow;
+        this.testDocument = testWindow.document;
+        this.pathname = "'unknown'";
+        try {
+            if (this.testWindow.location) {
+                this.pathname = this.testWindow.location.pathname;
+            }
+        } catch (e) {}
+            
         this.htmlTestSuiteRow = htmlTestSuiteRow;
         this.headerRow = new TitleRow(this.testDocument.getElementsByTagName("tr")[0]);
         this.commandRows = this._collectCommandRows();
@@ -1071,10 +1103,7 @@ objectExtend(HtmlRunnerTestLoop.prototype, {
         this.metrics = metrics;
 
         this.htmlTestCase = htmlTestCase;
-        LOG.info("Starting test " + htmlTestCase.testDocument.location.pathname);
-
-        se = selenium;
-        global.se = selenium;
+        LOG.info("Starting test " + htmlTestCase.pathname);
 
         this.currentRow = null;
         this.currentRowIndex = 0;
@@ -1086,17 +1115,6 @@ objectExtend(HtmlRunnerTestLoop.prototype, {
         this.expectedFailureType = null;
 
         this.htmlTestCase.reset();
-
-        this.sejsElement = this.htmlTestCase.testDocument.getElementById('sejs');
-        if (this.sejsElement) {
-            var fname = 'Selenium JavaScript';
-            parse_result = parse(this.sejsElement.innerHTML, fname, 0);
-
-            var x2 = new ExecutionContext(GLOBAL_CODE);
-            ExecutionContext.current = x2;
-
-            execute(parse_result, x2)
-        }
     },
 
     _advanceToNextRow: function() {
@@ -1282,6 +1300,24 @@ Selenium.prototype.doEcho = function(message) {
      */
     currentTest.currentRow.setMessage(message);
 }
+
+/*
+ * doSetSpeed and getSpeed are already defined in selenium-api.js,
+ * so we're defining these functions in a tricky way so that doc.js doesn't
+ * try to read API doc from the function definitions here.
+ */
+Selenium.prototype._doSetSpeed = function(value) {
+    var milliseconds = parseInt(value);
+    if (milliseconds < 0) milliseconds = 0;
+    htmlTestRunner.controlPanel.speedController.setValue(milliseconds);
+    htmlTestRunner.controlPanel.setRunInterval(milliseconds);
+}
+Selenium.prototype.doSetSpeed = Selenium.prototype._doSetSpeed;
+
+Selenium.prototype._getSpeed = function() {
+    return htmlTestRunner.controlPanel.runInterval;
+}
+Selenium.prototype.getSpeed = Selenium.prototype._getSpeed;
 
 Selenium.prototype.assertSelected = function(selectLocator, optionLocator) {
     /**
