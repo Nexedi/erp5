@@ -102,6 +102,8 @@ import zope.interface
 from ZODB.POSException import ConflictError
 from zLOG import LOG, INFO, ERROR, WARNING
 
+from DateTime import DateTime
+
 _MARKER = []
 
 global registered_workflow_method_set
@@ -3163,22 +3165,21 @@ class Base( CopyContainer,
     portal_workflow = getToolByName(self.getPortalObject(), 'portal_workflow')
     wf = portal_workflow.getWorkflowById('edit_workflow')
     wf_list = list(portal_workflow.getWorkflowsFor(self))
+    getStatusOf = portal_workflow.getStatusOf
     if wf is not None:
       wf_list = [wf] + wf_list
     max_date = None
     for wf in wf_list:
-      try:
-        history = wf.getInfoFor(self, 'history', None)
-      except KeyError:
-        history = None
-      # as WorkflowHistoryList.__len__ implementation has to walk whole
-      # workflow check that there is something in history in simpler way
-      if isinstance(history, list) and history:
-        date = history[-1].get('time', None)
-        # Then get the last line of edit_workflow
+      status = getStatusOf(wf.id, self)
+      if status is not None and status.has_key('time'):
+        date = status['time']
         if date > max_date:
           max_date = date
-    return max_date
+    # Return a copy of history time, to prevent modification
+    if max_date is None:
+      return max_date
+    else:
+      return DateTime(max_date)
 
   # Layout management
   security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')
