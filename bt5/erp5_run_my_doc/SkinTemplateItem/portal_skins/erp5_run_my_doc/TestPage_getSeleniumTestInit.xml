@@ -50,32 +50,47 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
-  Launch Test Embedded at the Test Page.\n
-"""\n
-reference = context.getReference()\n
-if reference not in [None, \'\']:\n
-  zuite_id = reference\n
+            <value> <string encoding="cdata"><![CDATA[
+
+request = context.REQUEST\n
 \n
-test_script = getattr(context, \'Zuite_createAndLaunchSeleniumTest\', None)\n
-if test_script is None:\n
-  raise ValueError("Unable to Launch the Test. Please install erp5_ui_test_core business template.")\n
+url = request.get(\'url\', None)\n
+if url is not None:\n
+  html_init = """<tr>\n
+          <td>store</td>\n
+          <td>%s</td>\n
+          <td>base_url</td>\n
+        </tr>\n
+""" % url\n
+else:\n
+  html_init = """<span metal:use-macro="container/Zuite_CommonTemplate/macros/init" style="display: none;">init</span>"""\n
 \n
-return test_script(test_list=((context.TestPage_viewSeleniumTest(),context.getTitle()),), \n
-                   zuite_id=zuite_id)\n
-</string> </value>
+html_init += """        <tr>\n
+          <td>store</td>\n
+          <!-- ERP5TypeTestCase is the default for any UnitTest -->\n
+          <td>%s</td>\n
+          <td>base_user</td>\n
+         </tr>\n
+""" % request.get(\'user\', "ERP5TypeTestCase")\n
+\n
+html_init += """        <tr>\n
+          <td>store</td>\n
+          <td>%s</td>\n
+          <td>base_password</td>\n
+         </tr>""" % request.get(\'password\', "")\n
+\n
+return html_init\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>zuite_id=\'tutorial_zuite\', url=None, user="", password=""</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>TestPage_runSeleniumTest</string> </value>
-        </item>
-        <item>
-            <key> <string>title</string> </key>
-            <value> <string></string> </value>
+            <value> <string>TestPage_getSeleniumTestInit</string> </value>
         </item>
       </dictionary>
     </pickle>
