@@ -50,37 +50,45 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-accounting_module = portal.accounting_module\n
+            <value> <string>\'\'\'\n
+  return the quantity composed by all quantity of paysheet line wich category of\n
+  category_list parameter is in variation_category_list of the PaySheet line \n
+  and wich has a base_contribution in the base_contribution_list\n
+\'\'\'\n
+if excluded_reference_list is None:\n
+  excluded_reference_list = []\n
 \n
-from_date=DateTime(context.getStartDate().year(), 1, 1)\n
-to_date=context.getStartDate()\n
+total_quantity = 0\n
+movement_list = context.getMovementList(portal_type=(\'Pay Sheet Line\', \'Pay Sheet Cell\'))\n
+for movement in movement_list:\n
+  # Reference must be checked on line\n
+  if excluded_reference_list:\n
+    if "Cell" in movement.getPortalType():\n
+      line = movement.getParentValue()\n
+    else:\n
+      line = movement\n
+    if line.getReference() in excluded_reference_list:\n
+      continue\n
 \n
-search_params = \\\n
-  { \n
-   \'portal_type\'         : \'Pay Sheet Transaction\',\n
-   \'delivery.start_date\' : {\'range\': "minmax", \'query\': (from_date, to_date)},\n
-   \'delivery.source_section_uid\' : context.getSourceSectionUid(),\n
-   \'simulation_state\'    : [\'confirmed\', \'stopped\', \'delivered\'],\n
-  }\n
+  if base_contribution is not None and movement.isMemberOf(base_contribution) or no_base_contribution:\n
 \n
-paysheet_list = accounting_module.searchFolder( **search_params)\n
+    # base_contribution is mandatory, but not contribution_share. If contribution_share is\n
+    # given, search with it, if not, care only about base_contribution\n
+    if contribution_share is not None and movement.isMemberOf(contribution_share):\n
+      total_quantity += movement.getQuantity()\n
+    elif include_empty_contribution and (contribution_share is None or len(movement.getContributionShareList()) == 0):\n
+      total_quantity += movement.getQuantity()\n
 \n
-nb_heures_supp = 0\n
-for paysheet in paysheet_list:\n
-  nb_heures_supp += paysheet.PaySheetTransaction_getMovementQuantityFromCategory(\n
-    \'base_contribution/base_amount/payroll/report/overtime\')\n
-\n
-return nb_heures_supp\n
+return total_quantity\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>base_contribution=None, contribution_share=None, no_base_contribution=False, include_empty_contribution=True, excluded_reference_list=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>PaySheetTransaction_getYearToDateOvertimeHours</string> </value>
+            <value> <string>PaySheetTransaction_getMovementQuantityFromCategory</string> </value>
         </item>
       </dictionary>
     </pickle>

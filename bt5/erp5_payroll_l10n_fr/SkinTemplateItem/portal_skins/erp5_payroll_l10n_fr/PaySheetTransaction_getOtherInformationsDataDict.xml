@@ -113,6 +113,7 @@ def getPriceCurrencyId(currency):\n
   return s\n
 \n
 getMovementTotalPriceFromCategory = paysheet.PaySheetTransaction_getMovementTotalPriceFromCategory\n
+getMovementQuantityFromCategory = paysheet.PaySheetTransaction_getMovementQuantityFromCategory\n
 \n
 salaire_net_imposable = getMovementTotalPriceFromCategory(\\\n
     base_contribution=\'base_contribution/base_amount/payroll/base/income_tax\',\n
@@ -193,11 +194,11 @@ worked_hour_count = paysheet.getWorkTimeAnnotationLineQuantity(0)\n
 year_to_date_worked_hour_count = worked_hour_count + \\\n
     paysheet.PaySheetTransaction_getYearToDateWorkTimeSalary() or 0\n
 \n
-over_time_small_rate = paysheet.getAnnotationLineFromReference(reference=\'overtime_small_rate\')\n
-over_time_big_rate = paysheet.getAnnotationLineFromReference(reference=\'overtime_big_rate\')\n
-bonus_worked_hour_count = over_time_small_rate is not None and \\\n
-    over_time_big_rate is not None and \\\n
-    over_time_small_rate.getQuantity() + over_time_big_rate.getQuantity() or 0\n
+#over_time_small_rate = paysheet.getAnnotationLineFromReference(reference=\'overtime_small_rate\')\n
+#over_time_big_rate = paysheet.getAnnotationLineFromReference(reference=\'overtime_big_rate\')\n
+bonus_worked_hour_count = getMovementQuantityFromCategory(\\\n
+    base_contribution=\'base_contribution/base_amount/payroll/report/overtime\')\n
+\n
 year_to_date_bonus_worked_hour_count = bonus_worked_hour_count + \\\n
     paysheet.PaySheetTransaction_getYearToDateOvertimeHours() or 0\n
 \n
