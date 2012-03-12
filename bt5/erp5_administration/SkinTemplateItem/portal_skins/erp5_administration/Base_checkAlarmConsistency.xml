@@ -63,8 +63,12 @@ if context.providesIConstraint():\n
 traverse = context.getPortalObject().restrictedTraverse\n
 property_type_validity = PropertyTypeValidity(id=\'type_check\', description=\'Type Validity Check\')\n
 \n
-constraint_message_list.extend(context.checkConsistency(fixit=fixit))\n
-constraint_message_list.extend(property_type_validity.checkConsistency(context, fixit=fixit))\n
+if fixit:\n
+  constraint_message_list.extend(context.fixConsistency())\n
+  constraint_message_list.extend(property_type_validity.fixConsistency(context))\n
+else:\n
+  constraint_message_list.extend(context.checkConsistency(fixit=fixit))\n
+  constraint_message_list.extend(property_type_validity.checkConsistency(context, fixit=fixit))\n
 \n
 if constraint_message_list:\n
   traverse(active_process).postResult(ActiveResult(severity=100,\n
