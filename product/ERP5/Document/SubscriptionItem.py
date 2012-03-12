@@ -39,6 +39,7 @@ from Products.ERP5.mixin.rule import MovementGeneratorMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Base import Base
+from Products.ERP5Type.DateUtils import getNumberOfDayInMonth
 
 from zLOG import LOG
 
@@ -281,7 +282,7 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
         resource = movement.getResource()
         start_date = movement.getStartDate()
         stop_date = movement.getStopDate()
-        if start_date is None or stop_date is None or start_date>stop_date:
+        if start_date is None or stop_date is None or start_date>=stop_date:
           # infinity nor time back machine does not exist
           continue
         source = movement.getSource()
@@ -302,7 +303,9 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
         current_date = start_date
         id_index = 0
         while current_date < stop_date:
-          next_date = self.getNextPeriodicalDate(current_date)
+          # XXX-Luke: Periodicty usage was dropped as real month additions shall
+          # be supported, when periodicity floors result to given period precision
+          next_date = current_date + getNumberOfDayInMonth(current_date)
           if next_date > stop_date:
             next_date = stop_date
           generated_movement = newTempMovement(self, 'subscription_%s' % id_index)
