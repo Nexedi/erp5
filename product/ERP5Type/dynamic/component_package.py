@@ -86,29 +86,25 @@ class ComponentDynamicPackage(ModuleType):
     """
     Create the component registry, this is very similar to
     Products.ERP5Type.document_class_registry and avoids checking whether a
-    Component exists at each call at the expense to increase startup
-    time. Moreover, it allows to handle reference easily.
-
-    XXX-arnau: handle different versions of a Component, perhaps something
-    like erp5.component.extension.VERSION.REFERENCE perhaps but there should
-    be a a way to specify priorities such as portal_skins maybe?
+    Component exists at each call at the expense of being slower when being
+    re-generated after a reset. Moreover, it allows to handle reference
+    easily.
     """
     if not self.__registry_dict:
       portal = getSite()
 
       try:
         component_tool = portal.portal_components
-      # XXX-arnau: When installing ERP5 site, erp5_core_components has not
-      # been installed yet, thus this will obviously failed...
+      # When installing ERP5 site, erp5_core_components has not been installed
+      # yet, thus this will obviously failed...
       except AttributeError:
         return {}
 
       version_priority_set = set(portal.getVersionPriorityNameList())
 
       # objectValues should not be used for a large number of objects, but
-      # this is only done at startup or upon reset, moreover using the Catalog
-      # is too risky as it lags behind and depends upon objects being
-      # reindexed
+      # this is only done upon reset, moreover using the Catalog is too risky
+      # as it lags behind and depends upon objects being reindexed
       with Base.aq_method_lock:
         for component in component_tool.objectValues(portal_type=self._portal_type):
           # Only consider modified or validated states as state transition will
@@ -138,6 +134,16 @@ class ComponentDynamicPackage(ModuleType):
                    module.__file__[1:-1]).getTextContent(validated_only=True)
 
   def find_module(self, fullname, path=None):
+    """
+    PEP-302 Finder which determines which packages and modules will be handled
+    by this class. It must be done carefully to avoid handling packages and
+    modules the Loader (load_module()) will not be handled later as the latter
+    would raise ImportError...
+
+    As per PEP-302, returns None if this Finder cannot handle the given name,
+    perhaps because the Finder of another Component Package could do it or
+    because this is a filesystem module...
+    """
     # Ignore imports with a path which are filesystem-only and any
     # absolute imports which does not start with this package prefix,
     # None there means that "normal" sys.path will be used
@@ -162,7 +168,7 @@ class ComponentDynamicPackage(ModuleType):
       except KeyError:
         return None
 
-    # Skip components not available, otherwise Products for example could be
+    # Skip unavailable components, otherwise Products for example could be
     # wrongly considered as importable and thus the actual filesystem class
     # ignored
     elif (name not in self._registry_dict and
@@ -172,6 +178,13 @@ class ComponentDynamicPackage(ModuleType):
     return self
 
   def _getVersionPackage(self, version):
+    """
+    Get the version package (NAMESPACE.VERSION_version) for the given version
+    and create it if it does not already exist
+    """
+    # Version are appended with '_version' to distinguish them from top-level
+    # Component modules (Component checkConsistency() forbids Component name
+    # ending with _version)
     version += '_version'
     version_package = getattr(self, version, None)
     if version_package is None:
@@ -185,12 +198,24 @@ class ComponentDynamicPackage(ModuleType):
 
   def __load_module(self, fullname):
     """
-    Load a module with given fullname (see PEP 302) if it's not
-    already in sys.modules. It is assumed that imports are filtered
-    properly in find_module().
+    Load a module with given fullname (see PEP 302) if it's not already in
+    sys.modules. It is assumed that imports are filtered properly in
+    find_module().
+
+    Also, when the top-level Component module is requested
+    (erp5.component.XXX.COMPONENT_NAME), the Component with the highest
+    version priority will be loaded into the Version package
+    (erp5.component.XXX.VERSION_version.COMPONENT_NAME. Therefore, the
+    top-level Component module will just be an alias of the versioned one.
+
+    As per PEP-302, raise an ImportError if the Loader could not load the
+    module for any reason...
     """
     site = getSite()
     name = fullname[len(self._namespace_prefix):]
+
+    # if only Version package (erp5.component.XXX.VERSION_version) is
+    # requested to be loaded, then create it if necessary
     if name.endswith('_version'):
       version = name[:-self.__version_suffix_len]
       return (version in site.getVersionPriorityNameList() and
@@ -198,6 +223,8 @@ class ComponentDynamicPackage(ModuleType):
 
     module_fullname_alias = None
     version_package_name = name[:-self.__version_suffix_len]
+
+    # If a specific version of the Component has been requested
     if '.' in name:
       try:
         version, name = name.split('.')
@@ -212,6 +239,7 @@ class ComponentDynamicPackage(ModuleType):
         raise ImportError("%s: version %s of Component %s could not be found" % \
                             (fullname, version, name))
 
+    # Otherwise, find the Component with the highest version priority
     else:
       try:
         component_version_dict = self._registry_dict[name]
@@ -219,6 +247,7 @@ class ComponentDynamicPackage(ModuleType):
         raise ImportError("%s: Component %s could not be found" % (fullname,
                                                                    name))
 
+      # Version priority name list is ordered in descending order
       for version in site.getVersionPriorityNameList():
         component = component_version_dict.get(version)
         if component is not None:
@@ -227,6 +256,8 @@ class ComponentDynamicPackage(ModuleType):
         raise ImportError("%s: no version of Component %s in Site priority" % \
                             (fullname, name))
 
+      # Check whether this module has already been loaded before for a
+      # specific version, if so, just add it to the upper level
       try:
         module = getattr(getattr(self, version + '_version'), name)
       except AttributeError:
@@ -264,6 +295,8 @@ class ComponentDynamicPackage(ModuleType):
     module.__loader__ = self
     module.__name__ = module_fullname
 
+    # Add the newly created module to the Version package and add it as an
+    # alias to the top-level package as well
     setattr(self._getVersionPackage(version), name, module)
     if module_fullname_alias:
       setattr(self, name, module)
@@ -287,7 +320,7 @@ class ComponentDynamicPackage(ModuleType):
     if sub_package:
       package = sub_package
     else:
-      # Clear the Component registry
+      # Clear the Component registry only once
       self.__registry_dict.clear()
       package = self
 
@@ -306,7 +339,8 @@ class ComponentDynamicPackage(ModuleType):
       # the meantime
       del sys.modules[module_name]
 
-      # Delete linecache data
+      # Delete linecache data to get updated source code (__file__ attribute
+      # (<ComponentID>) is used as linecache key)
       import linecache
       try:
         del linecache.cache[getattr(package, name).__file__]
@@ -314,5 +348,4 @@ class ComponentDynamicPackage(ModuleType):
       except (AttributeError, KeyError):
         pass
 
-      # And finally remove the module
       delattr(package, name)

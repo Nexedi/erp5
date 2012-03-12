@@ -35,13 +35,16 @@ import zope.interface
 from Products.ERP5Type.interfaces.component import IComponent
 
 class DocumentComponent(ComponentMixin):
-  # CMF Type Definition
+  """
+  ZODB Component for Documents in bt5 only for now (which used to be installed
+  in INSTANCE_HOME/Document) but this will also be used later on for Documents
+  in Products
+  """
   meta_type = 'ERP5 Document Component'
   portal_type = 'Document Component'
 
   zope.interface.implements(IComponent)
 
-  # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 

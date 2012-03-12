@@ -3437,8 +3437,8 @@ class ModuleTemplateItem(BaseTemplateItem):
     # Do not remove any module for safety.
     pass
 
-# XXX-arnau: when everything has been migrated to Components, everything in
-#            this class should be moved to DocumentTemplateItem
+# XXX-arnau: when everything has been migrated to Components, this class
+# should be renamed to DocumentTemplateItem
 class FilesystemDocumentTemplateItem(BaseTemplateItem):
   local_file_reader_name = staticmethod(readLocalDocument)
   local_file_writer_name = staticmethod(writeLocalDocument)
@@ -3667,6 +3667,10 @@ class FilesystemToZodbTemplateItem(FilesystemDocumentTemplateItem,
   preinstall = _filesystemCompatibilityWrapper('preinstall', '_objects')
 
   def _importFile(self, file_name, *args, **kw):
+    """
+    Import file by calling the appropriate base class according to the file
+    name extensions
+    """
     if file_name.endswith('.xml'):
       return ObjectTemplateItem._importFile(self, file_name, *args, **kw)
     else:
@@ -3899,10 +3903,18 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
   The migration is performed in two steps:
 
-  1/ Copy the Business Template to be migrated;
+    1/ Copy the Business Template to be migrated;
 
-  2/ Run the migration script which will update properly the Document IDs in
-     the Business Template.
+    2/ Run the migration script which will update properly the Document IDs in
+       the Business Template.
+
+  Upon import or export, two files will be created:
+
+    - XML file: contains metadata
+    - Python file: contains the source code itself
+
+  This allows to keep Git history and having readable source code instead of
+  being crippled into an XML file
   """
   _tool_id = 'portal_components'
 
@@ -3918,6 +3930,12 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
                         class_id + ".py")
 
   def _importFile(self, file_name, file_obj):
+    """
+    Upon import, only consider XML file for ZODB Components (as the Python
+    source file will be read and set to text_content property on the new
+    object when the XML will be processed) and for backward compatibility,
+    handle non-migrated Document as well
+    """
     if file_name.endswith('.py'):
       # If portal_components/XXX.py, then ignore it as it will be handled when
       # the .xml file will be processed
@@ -3942,6 +3960,10 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
       LOG('Business Template', 0, 'Skipping file "%s"' % file_name)
 
   def export(self, context, bta, **kw):
+    """
+    Export a Document as two files for ZODB Components, one for metadata
+    (.xml) and the other for the Python source code (.py)
+    """
     path = self.__class__.__name__ + '/'
     for key, obj in self._objects.iteritems():
       # Back compatibility with filesystem Documents
@@ -3964,6 +3986,10 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
         bta.addObject(f, key, path=path)
 
   def getTemplateIdList(self):
+    """
+    Getter for Document property on the Business Template, must be overriden
+    in children classes (e.g. ExtensionDocumentTemplateItem for example)
+    """
     return self.getTemplateDocumentIdList()
 
   def build(self, context, **kw):
@@ -4025,6 +4051,11 @@ class ExtensionTemplateItem(DocumentTemplateItem):
     return self.getTemplateExtensionIdList()
 
 class TestTemplateItem(DocumentTemplateItem):
+  """
+  Live Tests are now stored in ZODB rather than on the filesystem. However,
+  some Business Templates may still have filesystem Live Tests which need to
+  be migrated to the ZODB.
+  """
   local_file_reader_name = staticmethod(readLocalTest)
   local_file_writer_name = staticmethod(writeLocalTest)
   # Test needs no import
@@ -5912,6 +5943,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
                                         component_portal_type_dict,
                                         erase_existing=False,
                                         **kw):
+      """
+      Migrate the given components from filesystem to ZODB by calling the
+      appropriate importFromFilesystem according to the destination Portal
+      Type and then update the Business Template property with migrated IDs
+      """
       if not component_portal_type_dict:
         return {}
 

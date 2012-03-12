@@ -64,33 +64,45 @@ class ComponentTool(BaseTool):
   security.declareProtected(Permissions.ResetDynamicClasses, 'reset')
   def reset(self, force=False, reset_portal_type=False):
     """
-    XXX-arnau: global reset
+    Reset all ZODB Component packages. A cache cookie is used to check whether
+    the reset is necessary when force is not specified. This allows to make
+    sure that all ZEO clients get reset (checked in __of__ on ERP5Site) when
+    one given ZEO client gets reset when Component(s) are modified or
+    invalidated.
+
+    Also, as resetting ZODB Components Package usually implies to reset Portal
+    Type as Classes (because the former are used as bases), perform the reset
+    by default.
+
+    XXX-arnau: for now, this is a global reset but it might be improved in the
+    future if required...
     """
     portal = self.getPortalObject()
 
-    # XXX-arnau: copy/paste from portal_type_class, but is this really
-    # necessary as even for Portal Type classes, synchronizeDynamicModules
-    # seems to always called with force=True?
     global last_sync
     if force:
-      # hard invalidation to force sync between nodes
+      # Hard invalidation to force sync between nodes
       portal.newCacheCookie('component_packages')
       last_sync = portal.getCacheCookie('component_packages')
     else:
       cookie = portal.getCacheCookie('component_packages')
       if cookie == last_sync:
         return False
+
       last_sync = cookie
 
     LOG("ERP5Type.Tool.ComponentTool", INFO, "Resetting Components")
 
     type_tool = portal.portal_types
 
+    # One Component Package per allowed Portal Types on Component Tool
     allowed_content_type_list = type_tool.getTypeInfo(
       self.getPortalType()).getTypeAllowedContentTypeList()
 
     import erp5.component
 
+    # Make sure that it is not possible to load Components or load Portal Type
+    # class when Components are reset through aq_method_lock
     with Base.aq_method_lock:
       for content_type in allowed_content_type_list:
         package_name = content_type.split(' ')[0].lower()
@@ -112,10 +124,10 @@ class ComponentTool(BaseTool):
                             'resetOnceAtTransactionBoundary')
   def resetOnceAtTransactionBoundary(self):
     """
-    Schedule a single reset at the end of the transaction, only once.  The
-    idea behind this is that a reset is (very) costly and that we want to do
-    it as little often as possible.  Moreover, doing it twice in a transaction
-    is useless (but still twice as costly).
+    Schedule a single reset at the end of the transaction. The idea behind
+    this is that a reset is (very) costly and that we want to do it as little
+    often as possible.  Moreover, doing it twice in a transaction is useless
+    (but still twice as costly).
     """
     tv = getTransactionalVariable()
     key = 'ComponentTool.resetOnceAtTransactionBoundary'

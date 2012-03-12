@@ -35,13 +35,15 @@ import zope.interface
 from Products.ERP5Type.interfaces.component import IComponent
 
 class ExtensionComponent(ComponentMixin):
-  # CMF Type Definition
+  """
+  ZODB Component for Extensions previously defined in the bt5 and installed in
+  INSTANCE_HOME/Extensions
+  """
   meta_type = 'ERP5 Extension Component'
   portal_type = 'Extension Component'
 
   zope.interface.implements(IComponent)
 
-  # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 

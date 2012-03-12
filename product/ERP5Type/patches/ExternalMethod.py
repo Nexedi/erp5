@@ -1,7 +1,24 @@
+##############################################################################
+#
+# Copyright (c) 2002 Zope Foundation and Contributors.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE
+#
+##############################################################################
+
 from Products.ExternalMethod.ExternalMethod import ExternalMethod
 
 from App.Extensions import FuncCode, getObject
 def getFunction(self, reload=False, f=None):
+  """
+  Patch to get ZODB Component Extension function if available, otherwise
+  fallback on filesystem Extension
+  """
   if f is None:
     import erp5.component.extension
     try:
@@ -21,6 +38,11 @@ ExternalMethod.getFunction = getFunction
 
 ExternalMethod__call__ = ExternalMethod.__call__
 def __call__(self, *args, **kw):
+  """
+  Patch to call ZODB Component Extension, by trying first to import ZODB
+  Component Extension if available, otherwise fallback on filesystem
+  Extension
+  """
   try:
     f = getattr(__import__('erp5.component.extension.' + self._module,
                            fromlist=['erp5.component.extension'],

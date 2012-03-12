@@ -35,13 +35,16 @@ import zope.interface
 from Products.ERP5Type.interfaces.component import IComponent
 
 class TestComponent(ComponentMixin):
-  # CMF Type Definition
+  """
+  ZODB Component for Live Tests only (previously defined in the bt5 and
+  installed in INSTANCE_HOME/tests) as other kind of Tests should be
+  deprecated at some point
+  """
   meta_type = 'ERP5 Test Component'
   portal_type = 'Test Component'
 
   zope.interface.implements(IComponent)
 
-  # Declarative security
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
