@@ -3171,7 +3171,9 @@ class Base( CopyContainer,
         history = wf.getInfoFor(self, 'history', None)
       except KeyError:
         history = None
-      if history is not None and len(history):
+      # as WorkflowHistoryList.__len__ implementation has to walk whole
+      # workflow check that there is something in history in simpler way
+      if isinstance(history, list) and history:
         date = history[-1].get('time', None)
         # Then get the last line of edit_workflow
         if date > max_date:
