@@ -331,7 +331,10 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     obj = context._getOb(object_id, None)
     if obj is not None:
       if not erase_existing:
-        obj.validate()
+        # Validate the object if it has not been validated yet
+        if obj.getValidationState() not in ('modified', 'validated'):
+          obj.validate()
+
         return obj
 
       context.deleteContent(object_id)
