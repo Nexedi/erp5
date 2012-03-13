@@ -109,8 +109,8 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
       if function and not (mvt.getSourceFunction() or \'\').startswith(function):\n
         continue\n
       specific_reference = transaction.getSourceReference()\n
-      mirror_section_title = transaction.getDestinationSectionTitle()\n
-      section_title = transaction.getSourceSectionTitle()\n
+      mirror_section_title = mvt.getDestinationSectionTitle()\n
+      section_title = mvt.getSourceSectionTitle()\n
     else:\n
       if payment_uid and mvt.getDestinationPaymentUid() != payment_uid:\n
         continue\n
@@ -119,8 +119,8 @@ for brain in portal.Base_zGetNotGroupedMovementList(\n
       if function and not (mvt.getDestinationFunction() or \'\').startswith(function):\n
         continue\n
       specific_reference = transaction.getDestinationReference()\n
-      mirror_section_title = transaction.getSourceSectionTitle()\n
-      section_title = transaction.getDestinationSectionTitle()\n
+      mirror_section_title = mvt.getSourceSectionTitle()\n
+      section_title = mvt.getDestinationSectionTitle()\n
     \n
 \n
     debit = max(brain.total_quantity, 0)\n
