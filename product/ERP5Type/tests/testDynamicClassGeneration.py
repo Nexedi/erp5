@@ -1254,8 +1254,7 @@ class _TestZodbComponent(SecurityTestCase):
   __metaclass__ = abc.ABCMeta
 
   def getBusinessTemplateList(self):
-    return ('erp5_base',
-            'erp5_core_component')
+    return ('erp5_base',)
 
   def login(self, user_name='ERP5TypeTestCase', quiet=0):
     """
