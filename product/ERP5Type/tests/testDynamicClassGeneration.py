@@ -1619,14 +1619,19 @@ class _TestZodbComponent(SecurityTestCase):
       """from %s.erp5_version.TestImportedVersionedComponentOnly import foo
 
 def bar(*args, **kwargs):
-  return foo(*args, **kwargs)
+  return 'Bar' + foo(*args, **kwargs)
 """ % top_module_name)
 
     component_import.validate()
     transaction.commit()
     self.tic()
 
+    # Versioned package and its alias must be available
     self.assertModuleImportable('TestImportVersionedComponentOnly')
+    self.assertModuleImportable('erp5_version.TestImportVersionedComponentOnly')
+
+    # Versioned Component of imported Component must be importable and check
+    # later that the module has not been added to the top-level package
     self.assertModuleImportable('erp5_version.TestImportedVersionedComponentOnly')
 
     top_module = __import__(top_module_name, level=0,
@@ -1643,6 +1648,13 @@ def bar(*args, **kwargs):
     # The alias module on the top-level package must not have been created as
     # only the versioned Component has been used
     self.failIfHasAttribute(top_module, 'TestImportedVersionedComponentOnly')
+
+    # As well as functions defined on unversioned Component
+    self.assertHasAttribute(top_module.TestImportVersionedComponentOnly, 'bar')
+
+    self.assertEquals(
+      top_module.TestImportVersionedComponentOnly.bar(),
+      'BarTestImportedVersionedComponentOnly')
 
   def testVersionPriority(self):
     """
