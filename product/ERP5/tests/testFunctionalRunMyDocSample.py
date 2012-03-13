@@ -41,7 +41,7 @@ class TestZeleniumRunMyDocSample(ERP5TypeFunctionalTestCase):
     but the usage of Test Page is not mandatory, any valid Selenium Test in HTML 
     can be used.
   """
-  foreground = 1
+  foreground = 0
   run_only = "tutorial_zuite"
   remote_code_url_list = [
      "https://www.tiolive.com/nexedi/test_page_module/14/TestPage_viewSeleniumTest",
