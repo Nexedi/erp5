@@ -1392,6 +1392,8 @@ class _TestZodbComponent(SecurityTestCase):
       # Besides of clashing with protected attributes/methods, it does not
       # make sense to have reference starting with '_'
       '_ReferenceReservedKeywords': ComponentMixin._message_invalid_reference,
+      # Clash with reset()
+      'reset': ComponentMixin._message_invalid_reference,
       # PEP-302 required functions defined on top-level Component Package
       'find_module': ComponentMixin._message_invalid_reference,
       'load_module': ComponentMixin._message_invalid_reference}
