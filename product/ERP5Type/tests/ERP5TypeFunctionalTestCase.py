@@ -81,6 +81,18 @@ class Xvfb:
                          shell=True,
                          close_fds=True)
 
+    # try to check if X screen is available
+    time.sleep(5)
+    check_process = Popen('xdpyinfo -display %s >/dev/null 2>&1 && echo "Used" || echo "Free"' %display,
+                         stdout=PIPE,
+                         stderr=PIPE,
+                         shell=True,
+                         close_fds=True)
+    result = check_process.communicate()[0]
+    if result == 'Free':
+      # Xvfb did not start properly so stop here
+      raise NotImplementedError, "Can not start Xvfb, stop test execution" 	
+
   def run(self):
     for display_try in self.display_list:
       lock_filepath = '/tmp/.X%s-lock' % display_try.replace(":", "")
