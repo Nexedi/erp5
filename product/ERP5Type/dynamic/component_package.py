@@ -339,13 +339,4 @@ class ComponentDynamicPackage(ModuleType):
       # the meantime
       del sys.modules[module_name]
 
-      # Delete linecache data to get updated source code (__file__ attribute
-      # (<ComponentID>) is used as linecache key)
-      import linecache
-      try:
-        del linecache.cache[getattr(package, name).__file__]
-      # __file__ may not be defined
-      except (AttributeError, KeyError):
-        pass
-
       delattr(package, name)
