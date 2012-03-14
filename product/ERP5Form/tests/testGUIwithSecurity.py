@@ -88,6 +88,11 @@ class TestGUISecurity(ERP5TypeTestCase):
   def stepCreateTestFoo(self, sequence = None, sequence_list = None, **kw):
     foo_module = self.getPortal().foo_module
     foo_module.newContent(portal_type='Foo', id='foo', foo_category='a')
+    # allow Member to view foo_module in a hard coded way as it is not required to setup complex
+    # security for this test (by default only 5A roles + Manager can view default modules)
+    args = (('Manager', 'Member', 'Assignor', 'Assignee', 'Auditor', 'Associate' ), 0)
+    foo_module.manage_permission('Access contents information', *args)
+    foo_module.manage_permission('View', *args)
     transaction.commit()
 
   def stepAccessFoo(self, sequence = None, sequence_list = None, **kw):
