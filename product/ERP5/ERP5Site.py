@@ -44,6 +44,7 @@ from zLOG import LOG, INFO, WARNING, ERROR
 from string import join
 import os
 import warnings
+from App.config import getConfiguration
 MARKER = []
 
 
@@ -570,6 +571,38 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
     # Fall back to the default.
     return getattr(ERP5Defaults, id, None)
+
+  security.declareProtected(Permissions.ManagePortal, 'getPromiseParameter')
+  def getPromiseParameter(self, section, option):
+    """
+    Read external promise parameters.
+    
+    The parameters should be provided by an external configuration file.
+    Location of this configuration file is defined in the zope configuration
+    file in a product_config named as the path of the ERP5 site.
+    Example if the site id is erp5: 
+      <product-config /erp5>                                                              
+        promise_path /tmp/promise.cfg
+      </product-config> 
+
+    The promise configuration is a simple ConfigParser readable file (a list of
+    section containing a list of string parameters.
+
+    getPromiseParameter returns None if the parameter isn't found.
+    """
+    config = getConfiguration()
+    if getattr(config, 'product_config', None) is not None:
+      parameter_dict = config.product_config.get(self.getPath())
+      if 'promise_path' in parameter_dict:
+        promise_path = parameter_dict['promise_path']
+        import ConfigParser
+        configuration = ConfigParser.ConfigParser()
+        configuration.read(promise_path)
+        try:
+          return configuration.get(section, option)
+        except (ConfigParser.NoOptionError, ConfigParser.NoSectionError):
+          pass
+    return None
 
   def _getPortalGroupedTypeList(self, group, enable_sort=True):
     """
