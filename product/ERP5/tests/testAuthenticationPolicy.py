@@ -319,10 +319,13 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     for password in ['a','b','c','d', 'e', 'f']:
       person.setPassword(password)
       self.stepTic()
+    self._clearCache()
+    self.stepTic()
  
     self.assertTrue(person.isPasswordValid('12345678-new'))
     self.assertTrue(person.isPasswordValid('a'))
     self.assertTrue(person.isPasswordValid('b'))
+    self.assertTrue(person.isPasswordValid('c'))
     # only last 3 (including current one are invalid)
     self.assertSameSet([-4], person.analyzePassword('d'))
     self.assertSameSet([-4], person.analyzePassword('e'))     
