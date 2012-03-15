@@ -4,7 +4,7 @@ import unittest
 from Products.Formulator.Form import ZMIForm
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.Formulator.FormToXML import formToXML
-
+from DateTime import DateTime
 from Products.Formulator.Errors import ValidationError, FormValidationError
 from Testing import ZopeTestCase
 ZopeTestCase.installProduct('Formulator')
@@ -388,7 +388,7 @@ class SerializeTestCase(unittest.TestCase):
         request['field_float_field'] = '2.71828'
         request['subfield_field_date_field_month'] = '11'
         request['subfield_field_date_field_day'] = '11'
-        request['subfield_field_date_field_year'] = '2011'
+        request['subfield_field_date_field_year'] = str(DateTime().year())
         request['subfield_field_date_field_hour'] = '09'
         request['subfield_field_date_field_minute'] = '59'
         request['field_list_field'] = 'bar'
