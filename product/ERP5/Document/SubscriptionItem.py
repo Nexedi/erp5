@@ -303,8 +303,6 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
         id_index = 0
         while current_date < stop_date:
           next_date = self.getNextPeriodicalDate(current_date)
-          if next_date > stop_date:
-            next_date = stop_date
           generated_movement = newTempMovement(self, 'subscription_%s' % id_index)
           generated_movement._edit(  aggregate_value=self,
                                      resource=resource,
