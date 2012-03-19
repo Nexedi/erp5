@@ -230,7 +230,7 @@ class SimulationTool(BaseTool):
       elif input_simulation_state is not None:
         input_quantity_query = ComplexQuery(
                         ComplexQuery(
-                            Query(**{'%s.quantity' % table: '>0'}),
+                            Query(**{'%s.quantity' % table: '>=0'}),
                             Query(**{'%s.is_cancellation' % table: 0}),
                             operator='AND'),
                         ComplexQuery(
@@ -251,7 +251,7 @@ class SimulationTool(BaseTool):
                             Query(**{'%s.is_cancellation' % table: 0}),
                             operator='AND'),
                         ComplexQuery(
-                            Query(**{'%s.quantity' % table: '>0'}),
+                            Query(**{'%s.quantity' % table: '>=0'}),
                             Query(**{'%s.is_cancellation' % table: 1}),
                             operator='AND'),
                         operator='OR')
@@ -389,7 +389,7 @@ class SimulationTool(BaseTool):
                             Query(**{'%s.is_cancellation' % query_table: 0}),
                             operator='AND'),
                         ComplexQuery(
-                            Query(**{'%s.quantity' % query_table: '>0'}),
+                            Query(**{'%s.quantity' % query_table: '>=0'}),
                             Query(**{'%s.is_cancellation' % query_table: 1}),
                             operator='AND'),
                         operator='OR')
@@ -398,7 +398,7 @@ class SimulationTool(BaseTool):
         if omit_output:
           quantity_query = ComplexQuery(
                         ComplexQuery(
-                            Query(**{'%s.quantity' % query_table: '>0'}),
+                            Query(**{'%s.quantity' % query_table: '>=0'}),
                             Query(**{'%s.is_cancellation' % query_table: 0}),
                             operator='AND'),
                         ComplexQuery(
@@ -420,7 +420,7 @@ class SimulationTool(BaseTool):
                             Query(**{'%s.is_cancellation' % query_table: 0}),
                             operator='AND'),
                         ComplexQuery(
-                            Query(**{'%s.total_price' % query_table: '>0'}),
+                            Query(**{'%s.total_price' % query_table: '>=0'}),
                             Query(**{'%s.is_cancellation' % query_table: 1}),
                             operator='AND'),
                         operator='OR')
@@ -434,7 +434,7 @@ class SimulationTool(BaseTool):
         if omit_asset_decrease:
           asset_price_query = ComplexQuery(
                         ComplexQuery(
-                            Query(**{'%s.total_price' % query_table: '>0'}),
+                            Query(**{'%s.total_price' % query_table: '>=0'}),
                             Query(**{'%s.is_cancellation' % query_table: 0}),
                             operator='AND'),
                         ComplexQuery(

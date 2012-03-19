@@ -756,6 +756,19 @@ class TestInventory(InventoryAPITestCase):
                             payment_uid=self.other_payment_node.getUid(),
                             omit_input=1)
 
+  def test_OmitInputOmitOutputWithZeroQuantity(self):
+    self._makeMovement(quantity=0, destination_total_asset_price=1)
+    getInventoryAssetPrice = self.portal.portal_simulation.getInventoryAssetPrice
+    self.assertEquals(0, getInventoryAssetPrice(node_uid=self.node.getUid(),
+                                                omit_input=1))
+    self.assertEquals(1, getInventoryAssetPrice(node_uid=self.node.getUid(),
+                                                omit_output=1))
+
+  def test_OmitAssetIncreaseDecreaseWithZeroPrice(self):
+    self._makeMovement(quantity=1, destination_total_asset_price=0)
+    self.assertInventoryEquals(0, node_uid=self.node.getUid(), omit_input=1)
+    self.assertInventoryEquals(1, node_uid=self.node.getUid(), omit_output=1)
+
   def test_TimeZone(self):
     """
     Check that getInventory support DateTime parameter with 
