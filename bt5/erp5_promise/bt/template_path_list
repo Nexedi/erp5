@@ -1,0 +1,6 @@
+portal_alarms/promise_conversion_server
+portal_alarms/promise_install_bt5
+portal_alarms/promise_kumofs_server
+portal_alarms/promise_mailhost_configuration
+portal_alarms/promise_memcached_server
+portal_alarms/promise_template_tool_configuration
