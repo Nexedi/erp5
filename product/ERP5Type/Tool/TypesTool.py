@@ -201,7 +201,8 @@ class TypesTool(TypeProvider):
   security.declareProtected(Permissions.AccessContentsInformation, 'getDocumentTypeList')
   def getDocumentTypeList(self):
     """
-    Return a list of Document types that can be used as Base classes
+    Return a list of Document types (including filesystem and ZODB Component
+    Documents) that can be used as Base classes
     """
     from Products.ERP5Type import document_class_registry
     document_type_set = set(document_class_registry)

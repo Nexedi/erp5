@@ -48,6 +48,11 @@ class IComponent(Interface):
     then if no error is returned, validate it
     """
 
+  def hasErrorMessageList(obj):
+    """
+    Check whether there are error messages
+    """
+
   def getErrorMessageList(obj):
     """
     Return errors, if any, which may have arised when the Component has been

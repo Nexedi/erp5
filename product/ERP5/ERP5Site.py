@@ -447,16 +447,19 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
                             'getVersionPriorityList')
   def getVersionPriorityList(self):
     """
-    Return the Component version priorities defined on the site
+    Return the Component version priorities defined on the site in descending
+    order. Whatever happens, a version must always be returned otherwise it
+    may render the site unusable when all Products will have been migrated
     """
-    # Whatever happens, a version must always be returned otherwise it may
-    # render the site unusable when all Products will have been migrated
     return self._version_priority_list or ('erp5 | 0.0',)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setVersionPriorityList' )
   def setVersionPriorityList(self, version_priority_tuple):
     """
+    Set Version Priority List and make sure that erp5 version is always
+    defined whatever the given value is
+
     XXX-arnau: must be written through an interaction workflow when ERP5Site
                will become a real ERP5 object...
     """
@@ -479,6 +482,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     except AttributeError:
       pass
 
+    # Make sure that reset is not performed when creating a new site
     if not getattr(self, '_v_bootstrapping', False):
       self.portal_components.resetOnceAtTransactionBoundary()
 

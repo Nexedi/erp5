@@ -94,7 +94,7 @@ def getRolesInContext(self, object):
       continue
     break
 
-  # Patched: Developer role should not never be available as local role
+  # Patched: Developer role should never be available as local role
   local.pop('Developer', None)
   roles=list(roles) + local.keys()
   return roles

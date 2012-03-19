@@ -1,0 +1,138 @@
+<html>
+<head>
+<title tal:content="context/completed/ISO"
+>Test result: YYYY-MM-DDTHH:MM:SS</title>
+</head>
+<body>
+
+<h1> Test Result: <tal:x replace="context/completed/ISO" /></h1>
+
+<h2> Test Summary </h2>
+
+<table border="1" cellpadding="2">
+
+ <tr>
+  <th align="left">Status</th>
+  <td>
+    <span style="color: green"
+          tal:condition="context/passed">PASSED</span>
+    <span style="color: red"
+          tal:condition="not: context/passed">FAILED</span>
+  </td>
+ </tr>
+
+ <tr>
+  <th align="left">Elapsed time (sec)</th>
+  <td align="right"
+      tal:content="context/time_secs">20</td>
+ </tr>
+
+ <tr>
+  <th align="left">Tests passed</th>
+  <td align="right" style="color: green"
+      tal:content="context/tests_passed">20</td>
+ </tr>
+
+ <tr>
+  <th align="left">Tests failed</th>
+  <td align="right" style="color: red"
+      tal:content="context/tests_failed">20</td>
+ </tr>
+
+ <tr>
+  <th align="left">Commands passed</th>
+  <td align="right" style="color: green"
+      tal:content="context/commands_passed">20</td>
+ </tr>
+
+ <tr>
+  <th align="left">Commands failed</th>
+  <td align="right" style="color: red"
+      tal:content="context/commands_failed">20</td>
+ </tr>
+
+ <tr>
+  <th align="left">Commands with errors</th>
+  <td align="right" style="color: orange"
+      tal:content="context/commands_with_errors">20</td>
+ </tr>
+
+</table>
+
+
+<div tal:define="raw_case_ids python: [x for x in context.objectIds(['File'])
+                                         if x.startswith('testTable')];
+                 tokenized python: [x.split('.') for x in raw_case_ids];
+                 normalized python: [(x[0], int(x[1])) for x in tokenized];
+                 ignored normalized/sort;
+                 case_ids python: [('%s.%d' % x) for x in normalized];
+                 test_cases python: [context.restrictedTraverse(case_id)
+                                        for case_id in case_ids];
+                ">
+ <h2> Test Cases </h2>
+
+ <div style="padding-top: 10px;"
+      tal:repeat="test_case test_cases">
+
+  <p>
+     <img src="check.gif" height="32" width="32"
+          tal:condition="test_case/passed"
+          tal:attributes="src string:${context/absolute_url}/check.gif;"/>
+     <img src="error.gif" height="32" width="32"
+          tal:condition="not: test_case/passed"
+          tal:attributes="src string:${context/absolute_url}/error.gif;"/>
+     <a href="#"
+        tal:attributes="href test_case/absolute_url"
+        tal:content="test_case/getId">TEST_CASE</a>
+  </p>
+
+  <div tal:replace="structure python: str(test_case)" />
+ </div>
+
+</div>
+
+<h2> Remote Client Data </h2>
+
+<table border="1" cellpadding="2">
+
+ <tr>
+  <th align="left">User agent</th>
+  <td tal:content="context/user_agent">lynx/2.8</td>
+ </tr>
+
+ <tr>
+  <th align="left">Remote address</th>
+  <td tal:content="context/remote_addr">127.0.0.1</td>
+ </tr>
+
+ <tr>
+  <th align="left">HTTP Host</th>
+  <td tal:content="context/http_host">localhost</td>
+ </tr>
+
+</table>
+
+<h2> Software Under Test </h2>
+
+<table border="1" cellpadding="2">
+
+ <tr>
+  <th align="left">Server Software</th>
+  <td tal:content="context/server_software">localhost</td>
+ </tr>
+
+ <tbody tal:repeat="product_line context/product_info">
+  <tr tal:define="tokens product_line/split;
+                  product_name python:tokens[0];
+                  product_version python:tokens[1];
+                 ">
+   <th align="left"
+       tal:content="string:Product: ${product_name}">PRODUCT_NAME</th>
+   <td tal:content="product_version">PRODUCT_VERSION</td>
+  </tr>
+ </tbody>
+
+</table>
+
+</body>
+</html>

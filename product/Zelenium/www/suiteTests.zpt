@@ -1,0 +1,28 @@
+<html>
+<head>
+ <title tal:content="context/title_or_id">Test Suite</title>
+</head>
+
+<body>
+
+ <table cellpadding="1" cellspacing="1" border="1">
+
+ <tbody>
+
+  <tr>
+   <td>
+    <b>Test Suite: <span tal:replace="context/title_or_id">TITLE</span></b>
+   </td>
+  </tr>
+
+  <tr tal:repeat="testcase options/test_cases | context/listTestCases">
+   <td>
+    <a href="#"
+       tal:attributes="href testcase/url"
+       tal:content="testcase/title">TITLE</a>
+   </td>
+  </tr>
+
+ </table>
+</body>
+</html>

@@ -116,6 +116,22 @@ class RecordablePropertyMetaClass(ExtensionClass):
 
 class ComponentMixin(PropertyRecordableMixin, Base):
   """
+  Mixin used for all ZODB Components. Most of the code is generic, thus actual
+  ZODB Components should have almost nothing to defined...
+
+  From a security point of view, only Developer Role defined on Component Tool
+  can manage Components (as exec is used and anything potentially damaging
+  could be done on the filesystem), while only Manager or Developer Roles can
+  reset Component Packages (see ERP5Type.Permissions). All the permissions are
+  defined on Component Tool itself and newly created Components just inherits
+  permissions defined on the former.
+
+  The Developer Role is not a typical Role as only users defined in Zope
+  configuration can be added to this Role (which is displayed in the list of
+  available Roles in ZMI). This is achieved by two monkey patches
+  (ERP5Type.patches.{User,PropertiedUser}) and modifications in
+  ERP5Security.ERP5UserFactory.
+
   XXX-arnau: add tests to ERP5 itself to make sure all securities are defined
   properly everywhere (see naming convention test)
   """
@@ -157,7 +173,15 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   security.declareProtected(Permissions.ModifyPortalContent, 'checkConsistency')
   def checkConsistency(self, *args, **kw):
     """
-    XXX-arnau: should probably be in a separate Constraint class?
+    Check the consistency of the Component upon validate or when being
+    modified after being validated.
+
+    Some keywords are forbidden for reference and version. As Version package
+    always ends with '_version', reference is checked more carefully to avoid
+    clashing with existing method names (such as the ones required for PEP
+    302).
+
+    XXX-arnau: separate Constraint class?
     """
     error_list = super(ComponentMixin, self).checkConsistency(*args, **kw)
     object_relative_url = self.getRelativeUrl()
@@ -201,6 +225,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     else:
       message = None
       try:
+        # Check for any error in the source code by trying to load it
         self.load({}, text_content=text_content)
       except SyntaxError, e:
         mapping = dict(error_message=str(e),
@@ -226,10 +251,11 @@ class ComponentMixin(PropertyRecordableMixin, Base):
                             'checkConsistencyAndValidate')
   def checkConsistencyAndValidate(self):
     """
-    When a Component is in validated or modified validation state and
-    it is modified, modified state is set then this checks whether the
-    Component can be validated again if checkConsistency returns no
-    error
+    When a Component is in validated or modified validation state and it is
+    modified, modified state is set then this checks whether the Component can
+    be validated again if checkConsistency returns no error. Otherwise, it
+    stays in modified state and previously validated values are used for
+    reference, version and text_content
     """
     error_list = self.checkConsistency()
     if error_list:
@@ -249,7 +275,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   def hasErrorMessageList(self):
     """
     Check whether there are error messages, useful to display errors in the UI
-    without calling getErrorMessageList() which translates error messages
+    without calling getErrorMessageList() as it translates error messages
     """
     workflow = self.workflow_history['component_validation_workflow'][-1]
     return bool(workflow['error_message'])
@@ -274,10 +300,8 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     __dict__ is given rather than creating an empty dict and returning it.
 
     Initially, namespace_dict default parameter value was an empty dict to
-    allow checking the source code before validate, but this introduces a bug
-    when namespace_dict was not given because the first call would exec
-    directly into function namespace_dict default parameter, thus the second
-    call would have namespace_dict default value to the previous call.
+    allow checking the source code before validate, but this is completely
+    wrong as the object reference is kept accross each call
     """
     if text_content is None:
       text_content = self.getTextContent(validated_only=validated_only)
@@ -312,7 +336,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     Get source for FTP/Webdav. The default implementation of GET for Webdav,
     available in webdav.Resource, calls manage_FTPget
 
-    XXX-arnau: encoding?
+    XXX-arnau: encoding issue?
     """
     return self.getTextContent()
 
@@ -322,8 +346,9 @@ class ComponentMixin(PropertyRecordableMixin, Base):
   def importFromFilesystem(cls, context, reference, version,
                            erase_existing=False):
     """
-    Import a Component from the filesystem into ZODB after checking that the
-    source code is valid
+    Import a Component from the filesystem into ZODB and validate it so it can
+    be loaded straightaway provided validate() does not raise any error of
+    course
     """
     object_id = '%s.%s.%s' % (cls._getDynamicModuleNamespace(), version,
                               reference)
@@ -331,7 +356,10 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     obj = context._getOb(object_id, None)
     if obj is not None:
       if not erase_existing:
-        obj.validate()
+        # Validate the object if it has not been validated yet
+        if obj.getValidationState() not in ('modified', 'validated'):
+          obj.validate()
+
         return obj
 
       context.deleteContent(object_id)
@@ -355,7 +383,7 @@ class ComponentMixin(PropertyRecordableMixin, Base):
     # straightaway as there should be no error
     new_component.validate()
 
-    # XXX-arnau: is it really safe?
+    # Remove now useless Component on filesystem
     os.remove(path)
 
     return new_component

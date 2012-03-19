@@ -66,7 +66,7 @@ configuration_dict = {\n
         \'customer_organisation_street_address\': \'270 bd Clémenceau, 59700 Marcq-en-Baroeul\',\n
         \'customer_organisation_city\': \'Lille\',\n
         \'customer_organisation_zip_code\': \'59700\',\n
-        \'customer_organisation_region\': \'France\',\n
+        \'customer_organisation_region\': \'Europe/Western Europe/France\',\n
         \'customer_organisation_region_category\': \'europe/western_europe/france\',\n
         \'customer_company_employees_number\': 1, # employees\n
         \'customer_user1_first_name\': \'Ivan\',\n
@@ -74,7 +74,7 @@ configuration_dict = {\n
         \'customer_user1_reference\': \'PERSON_USER_REFERENCE\',\n
         \'customer_user1_used_reference\' : \'PERSON_RESERVED_REFERENCE\',\n
         \'customer_user1_password\' : \'secret\',\n
-        \'customer_user1_function\': \'Company/Manager\',\n
+        \'customer_user1_function\': \'Company/Company Manager\',\n
         \'customer_user1_email\': \'webproject-report@erp5.org\',\n
         \'customer_organisation_currency\' : \'Euro\',\n
         \'customer_datetime_format\': \'Day / Month / Year\',\n
