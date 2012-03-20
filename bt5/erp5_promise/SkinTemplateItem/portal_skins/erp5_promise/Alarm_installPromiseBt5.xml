@@ -53,8 +53,15 @@
             <value> <string>portal = context.getPortalObject()\n
 bt5 = portal.getPromiseParameter(\'portal_templates\', \'expected_bt5\')\n
 \n
+if bt5 is None:\n
+  return\n
+\n
+bt5_list = [x[1] for x in portal.portal_templates.resolveBusinessTemplateListDependency(bt5.split(\'\\n\'), newest_only=True)]\n
+bt5_list.extend([x.getTitle() for x in portal.portal_templates.getUpdatedRepositoryBusinessTemplateList()])\n
+bt5_list = list(set(bt5_list))\n
+\n
 portal.portal_templates.installBusinessTemplateListFromRepository(\n
-          bt5.split(\'\\n\'), activate=True, install_dependency=True)\n
+          bt5_list, activate=True, install_dependency=True)\n
 </string> </value>
         </item>
         <item>
