@@ -2163,6 +2163,7 @@ class ERP5Generator(PortalGenerator):
     if not update:
       self.setupWorkflow(p)
       self.setupERP5Core(p,**kw)
+      self.setupERP5Promise(p,**kw)
 
     # Make sure the cache is initialized
     p.portal_caches.updateCache()
@@ -2187,3 +2188,16 @@ class ERP5Generator(PortalGenerator):
         url = getBootstrapBusinessTemplateUrl(bt)
         bt = template_tool.download(url)
         bt.install(**kw)
+
+  def setupERP5Promise(self,p,**kw):
+    """
+    Install the ERP5 promise configurator
+    """
+    template_tool = p.portal_templates
+    # Configure the bt5 repository
+    repository = p.getPromiseParameter('portal_templates', 'repository')
+    if repository is not None:
+      template_tool.updateRepositoryBusinessTemplateList(repository.split('\n'))
+      template_tool.installBusinessTemplateListFromRepository(
+          ['erp5_promise'], activate=True, install_dependency=True)
+      p.portal_alarms.subscribe()
