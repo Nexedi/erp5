@@ -60,7 +60,9 @@ if bt5 is None:\n
 \n
 active_result = ActiveResult()\n
 \n
-bt5_list = portal.portal_templates.resolveBusinessTemplateListDependency(bt5.split(\'\\n\'), newest_only=True)\n
+bt5_list = [x[1] for x in portal.portal_templates.resolveBusinessTemplateListDependency("vifib_erp5".split(\'\\n\'), newest_only=True)]\n
+bt5_list.extend([x.getTitle() for x in portal.portal_templates.getUpdatedRepositoryBusinessTemplateList()])\n
+bt5_list = list(set(bt5_list))\n
 \n
 # XXX Can not import BusinessTemplateUnknownError\n
 # except BusinessTemplateUnknownError, error:\n
@@ -75,7 +77,7 @@ if severity == 0:\n
   detail = ""\n
 else:\n
   summary = "Upgrade needed"\n
-  detail = "Needed to install %s" % \', \'.join([x[1] for x in bt5_list])\n
+  detail = "Needed to install %s" % \', \'.join(bt5_list)\n
 active_result.edit(\n
   summary=summary, \n
   severity=severity,\n
