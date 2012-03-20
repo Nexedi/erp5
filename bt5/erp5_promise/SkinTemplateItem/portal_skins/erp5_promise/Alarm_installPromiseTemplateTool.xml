@@ -53,7 +53,7 @@
             <value> <string>portal = context.getPortalObject()\n
 \n
 repository = portal.getPromiseParameter(\'portal_templates\', \'repository\')\n
-portal.portal_templates.template_tool.updateRepositoryBusinessTemplateList(repository.split(\'\\n\'))\n
+portal.portal_templates.updateRepositoryBusinessTemplateList(repository.split(\'\\n\'))\n
 </string> </value>
         </item>
         <item>
