@@ -72,7 +72,7 @@ portal.portal_catalog.searchAndActivate(\n
   method_id=\'OpenOrder_updateSimulation\',\n
   method_kw={\'tag\': tag},\n
   packet_size=1, # As OpenOrder_updateSimulation can generate big transaction separate the calls\n
-  activate_kw={\'tag\':tag, \'priority\': 8},\n
+  activate_kw={\'tag\':tag},\n
   **kw # XXX: In one query put parents of last modified lines\n
   )\n
 \n
