@@ -72,14 +72,17 @@ active_result = ActiveResult()\n
 if repository_list != promise_repository_list:\n
   severity = 1\n
   summary = "Template tool not configured as expected"\n
+  detail = \'\\n\'.join(promise_repository_list)\n
 else:\n
   severity = 0\n
   summary = "Nothing to do."\n
+  detail = ""\n
 \n
 active_result.edit(\n
   summary=summary, \n
-  severity=severity, \n
-  detail=\'\\n\'.join(promise_repository_list))\n
+  severity=severity,\n
+  detail=detail)\n
+\n
 \n
 context.newActiveProcess().postResult(active_result)\n
 </string> </value>

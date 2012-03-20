@@ -58,7 +58,9 @@ promise_url = portal.getPromiseParameter(\'external_service\', \'kumofs_url\')\n
 if promise_url is None:\n
   return\n
 \n
-plugin = portal.portal_memcached.persistent_memcached_plugin\n
+plugin = portal.portal_memcached.restrictedTraverse("persistent_memcached_plugin", None)\n
+if plugin is None:\n
+  return\n
 \n
 url = "memcached://%s/" % plugin.getUrlString()\n
 \n

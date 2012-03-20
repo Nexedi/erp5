@@ -72,12 +72,14 @@ bt5_list = portal.portal_templates.resolveBusinessTemplateListDependency(bt5.spl
 severity = len(bt5_list)\n
 if severity == 0:\n
   summary = "Nothing to do."\n
+  detail = "Needed to install %s" % \', \'.join([x[1] for x in bt5_list])\n
 else:\n
   summary = "Upgrade needed"\n
+  detail = ""\n
 active_result.edit(\n
   summary=summary, \n
-  severity=severity, \n
-  detail="Needed to install %s" % \', \'.join([x[1] for x in bt5_list]))\n
+  severity=severity,\n
+  detail=detail)\n
 \n
 context.newActiveProcess().postResult(active_result)\n
 </string> </value>

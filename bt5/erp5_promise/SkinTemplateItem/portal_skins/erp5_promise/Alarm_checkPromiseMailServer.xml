@@ -77,14 +77,16 @@ active_result = ActiveResult()\n
 if promise_url != url:\n
   severity = 1\n
   summary = "SMTP Server not configured as expected"\n
+  detail = "Expect %s\\nGot %s" % (promise_url, url)\n
 else:\n
   severity = 0\n
   summary = "Nothing to do."\n
+  detail = ""\n
 \n
 active_result.edit(\n
   summary=summary, \n
   severity=severity, \n
-  detail="Expect %s\\nGot %s" % (promise_url, url))\n
+  detail=detail)\n
 \n
 context.newActiveProcess().postResult(active_result)\n
 </string> </value>
