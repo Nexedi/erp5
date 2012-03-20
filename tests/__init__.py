@@ -52,7 +52,7 @@ class ERP5(_ERP5):
       test_case = test_path.split(os.sep)[-1][:-3] # remove .py
       product = test_path.split(os.sep)[-3]
       # don't test 3rd party products
-      if product in ('PortalTransforms', 'MailTemplates'):
+      if product in ('PortalTransforms', 'MailTemplates', 'Zelenium'):
         continue
       # skip some tests
       if test_case.startswith('testLive') or test_case.startswith('testVifib') \
