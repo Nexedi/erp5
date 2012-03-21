@@ -37,6 +37,26 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
 class TestZeleniumStandaloneUserTutorial(ERP5TypeFunctionalTestCase):
 
   run_only = "user_tutorial_zuite"
+  remote_code_url_list = [
+     "http://www.erp5.com/user-Howto.Create.Person-TESTONLY/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.Organisations-TESTONLY/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Link.Persons.and.Organisations-TESTONLY/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.Campaigns-TESTONLY/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.Outgoing.Events-TESTONLY/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Post.Outgoing.Events-TESTONLY/TestPage_viewSeleniumTest",
+     # Chapter 17 is missing here
+     "http://www.erp5.com/user-Howto.Process.Incoming.Events-TESTONLY/TestPage_viewSeleniumTest",
+     # Products test bellow
+     "http://www.erp5.com/user-Howto.Create.and.Manage.Products-TESTONLY/TestPage_viewSeleniumTest",
+     # The test bellow should be splited because it handle several tutorials at
+     # once which is what it is wanted.
+     "http://www.erp5.com/user-Howto.Create.Sale.Orders-TESTONLY/TestPage_viewSeleniumTest",
+     # Additional Tests not yet related to any previous tutorial
+     "http://www.erp5.com/user-HowTo.Use.FullText.Search-TESTONLY/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-HowTo.Change.Language-TESTONLY/TestPage_viewSeleniumTest"
+  ]
+
+
 
   def getBusinessTemplateList(self):
     """

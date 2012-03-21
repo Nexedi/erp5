@@ -28,13 +28,16 @@
 
 import unittest
 from Products.ERP5Configurator.tests.testFunctionalConfigurator import \
-        TestZeleniumConfiguratorStandard
+         TestZeleniumConfiguratorStandard
 
 class TestZeleniumConfiguratorConsulting(TestZeleniumConfiguratorStandard):
-  run_only = "configurator_consulting_standard_zuite"
+   run_only = "configurator_consulting_standard_zuite"
+   remote_code_url_list = [
+     "http://www.erp5.com/user-Howto.Configure.ERP5.for.SMB.With.Consultant.Configurator/TestPage_viewSeleniumTest"
+] + TestZeleniumConfiguratorStandard.base_remote_code_url
+
 
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestZeleniumConfiguratorConsulting))
   return suite
-
