@@ -73,7 +73,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     """Title of the test."""
     return 'Inventory API'
 
-  def getPortalName(self):
+  def getPortalNameDisable(self):
     """ID of the portal. """
     forced_portal_id = os.environ.get('erp5_tests_portal_id')
     if forced_portal_id:
