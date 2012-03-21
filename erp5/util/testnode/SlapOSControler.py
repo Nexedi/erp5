@@ -29,6 +29,7 @@ import slapos.slap
 import subprocess
 import time
 import xml_marshaller
+import shutil
 
 MAX_PARTIONS = 10
 MAX_SR_RETRIES = 3
@@ -68,8 +69,11 @@ class SlapOSControler(object):
       # this is not a problem as usually all services are on different ports
       partition_reference = '%s-%s' %(config['partition_reference'], i)
       partition_path = os.path.join(config['instance_root'], partition_reference)
-      if not os.path.exists(partition_path):
-        os.mkdir(partition_path)
+      if os.path.exists(partition_path):
+        # delete old paritions which may exists in order to not get its data (ex. MySQL db content)
+        # from previous testnode's runs
+        shutil.rmtree(partition_path)
+      os.mkdir(partition_path)
       os.chmod(partition_path, 0750)
       computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
                                                     'address': config['ipv4_address'],
