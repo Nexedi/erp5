@@ -60,6 +60,7 @@ class ERP5(_ERP5):
          or test_case in ('testPerformance', 'testSimulationPerformance',
                           'testERP5LdapCatalog', # XXX (Ivan), until LDAP server is available this test will alway fail
                           'testERP5eGov', # it is not maintained any more
+                          'testInventoryAPI',
                           'testAccounting_l10n_fr_m9'):
         continue
       test_list.append(test_case)
