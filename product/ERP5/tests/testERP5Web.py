@@ -1484,7 +1484,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   def test_03_WebSection_getDocumentValueListSecurity(self):
     """ Test WebSection_getDocumentValueList behaviour and security"""
     self.login('admin')
-    site = self.web_site_module.newContent(portal_type='Web Site',
+    site = self.portal.web_site_module.newContent(portal_type='Web Site',
                                       id='site')
     site.publish()
 
@@ -1620,7 +1620,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   def test_04_ExpireUserAction(self):
     """ Test the expire user action"""
     self.login('admin')
-    site = self.web_site_module.newContent(portal_type='Web Site', id='site')
+    site = self.portal.web_site_module.newContent(portal_type='Web Site', id='site')
 
     # create websections in a site and in anothers web sections
     section_1 = site.newContent(portal_type='Web Section', id='section_1')
@@ -1650,7 +1650,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   def test_05_createWebSite(self):
     """ Test to create or clone web sites with many users """
     self.login('admin')
-    web_site_module = self.web_site_module
+    web_site_module = self.portal.web_site_module
 
     # test for admin
     try:
@@ -1673,7 +1673,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
   def test_06_createWebSection(self):
     """ Test to create or clone web sections with many users """
     self.login('admin')
-    site = self.web_site_module.newContent(portal_type='Web Site', id='site')
+    site = self.portal.web_site_module.newContent(portal_type='Web Site', id='site')
 
     # test for admin
     try:
@@ -1818,7 +1818,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     project.validate()
     self.stepTic()
 
-    website = self.web_site_module.newContent(portal_type='Web Site',
+    website = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                      id='site')
     website.publish()
     website.setMembershipCriterionBaseCategory('follow_up')
@@ -1856,7 +1856,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
       Test that by default Anonymous User cannot access Web Site Module
     """
     self.logout()
-    self.assertRaises(Unauthorized, self.web_site_module.view)
+    self.assertRaises(Unauthorized, self.portal.web_site_module.view)
 
 
 class TestERP5WebCategoryPublicationWorkflow(ERP5TypeTestCase):
