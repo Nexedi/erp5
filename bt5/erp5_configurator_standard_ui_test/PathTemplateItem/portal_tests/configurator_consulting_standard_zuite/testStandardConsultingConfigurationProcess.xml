@@ -383,7 +383,8 @@
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_your_function"]</td>\n
-  <td>Persons/Creator</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_function\']"></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
