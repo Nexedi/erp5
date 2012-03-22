@@ -661,6 +661,7 @@ def main(argument_list=None):
       sys.exit()
     elif opt == '-D':
       debug = 1
+      os.environ["erp5_debug_mode"] = str(debug)
     elif opt == "--coverage":
       if coverage:
         os.environ['coverage'] = arg

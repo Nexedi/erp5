@@ -361,7 +361,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     if self.remote_code_url_list is not None:
       self.runner.remote_code_url_list = self.remote_code_url_list
 
-    self.runner.test(debug=self.foreground)
+    debug = self.foreground or os.environ.get("erp5_debug_mode")
+    self.runner.test(debug=debug)
     detail, success, failure, error_title_list = self.runner.processResult()
 
     self.logMessage("-" * 79)
