@@ -47,6 +47,21 @@ class TestZeleniumConfiguratorStandard(ERP5TypeFunctionalTestCase):
       clipboard = portal_tests.manage_copyObjects(ids=['user_tutorial_zuite'])
       configurator_zuite.manage_pasteObjects(cb_copy_data=clipboard)
       self.stepTic()
+    
+    public_bt5_repository_list = ['http://www.erp5.org/dists/snapshot/bt5/']
+    template_list = self._getBTPathAndIdList(["erp5_base"])
+    if len(template_list) > 0:
+      bt5_repository_path = "/".join(template_list[0][0].split("/")[:-1])
+      try:
+        self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+               [bt5_repository_path], None)
+      except (RuntimeError, IOError): 
+        # If bt5 repository is not a repository use public one.
+        self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+                                  public_bt5_repository_list)
+    else:
+      self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+                                    public_bt5_repository_list)
 
   def afterSetUp(self):
     self.setupVirtualTestZuite()
@@ -61,8 +76,8 @@ class TestZeleniumConfiguratorStandard(ERP5TypeFunctionalTestCase):
             'erp5_configurator', 'erp5_configurator_standard',
             # Test suite
            'erp5_ui_test_core', 'erp5_configurator_standard_ui_test',
-           'erp5_crm', 'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog', 
-           'erp5_web', 
+           'erp5_ingestion', 'erp5_ingestion_mysql_innodb_catalog', 
+           'erp5_crm', 'erp5_web', 'erp5_simulation', 'erp5_pdm',
            'erp5_dms', 'erp5_trade', 'erp5_accounting',
            'erp5_user_tutorial_ui_test')
 

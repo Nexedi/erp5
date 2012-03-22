@@ -107,8 +107,20 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.restricted_security = 0
     # information to know if a business template is a standard business
     # template or a custom one
-    self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                                    ['http://www.erp5.org/dists/snapshot/bt5/'])
+    public_bt5_repository_list = ['http://www.erp5.org/dists/snapshot/bt5/']
+    template_list = self._getBTPathAndIdList(["erp5_base"])
+    if len(template_list) > 0:
+      bt5_repository_path = "/".join(template_list[0][0].split("/")[:-1])
+      try:
+        self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+               [bt5_repository_path], None)
+      except (RuntimeError, IOError): 
+        # If bt5 repository is not a repository use public one.
+        self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+                                  public_bt5_repository_list)
+    else:
+      self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+                                    public_bt5_repository_list)
 
     # it is required by SecurityTestCase
     self.workflow_tool = self.portal.portal_workflow

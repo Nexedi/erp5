@@ -448,10 +448,10 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   def getVersionPriorityList(self):
     """
     Return the Component version priorities defined on the site in descending
-    order. Whatever happens, a version must always be returned otherwise it
+    order. Whatever happens, erp5 version must always be returned otherwise it
     may render the site unusable when all Products will have been migrated
     """
-    return self._version_priority_list or ('erp5 | 0.0',)
+    return getattr(self, '_version_priority_list', None) or ('erp5 | 0.0',)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'setVersionPriorityList' )
@@ -1730,7 +1730,12 @@ class ERP5Generator(PortalGenerator):
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
 
-    p._setProperty('version_priority_list', ('erp5 | 0.0',), 'lines')
+    # setProperty cannot be used for this property as it is a property object
+    # to _version_priority_list and valid_property_id doesn't accept property
+    # name starting with '_'. The property getter always returns at least erp5
+    # version so it only needs to be added to local properties
+    p._local_properties = getattr(self, '_local_properties', ()) + \
+        ({'id': 'version_priority_list', 'type': 'lines'},)
 
     erp5_sql_deferred_connection_string = erp5_sql_connection_string
     p._setProperty('erp5_catalog_storage',
