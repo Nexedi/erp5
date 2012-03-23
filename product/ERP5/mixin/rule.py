@@ -33,6 +33,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5.MovementCollectionDiff import _getPropertyAndCategoryList
+from pprint import pformat
 
 from zLOG import LOG
 
@@ -366,11 +367,9 @@ class RuleMixin(Predicate):
           movement_collection_diff.addDeletableMovement(decision_movement)
         else:
           # Compensate non deletable
-          from pprint import pformat
           raise NotImplementedError(
-            'Compensation undesired: decision_movement_list = %s\n%s' % (
-              decision_movement_list,
-              pformat([q.__dict__ for q in decision_movement_list])))
+            'Compensation undesired: decision_movement = %s' % (
+              pformat(decision_movement.__dict__), ))
           new_movement = decision_movement.asContext(
                             quantity=-decision_movement.getQuantity())
           new_movement.setDelivery(None)
@@ -416,6 +415,10 @@ class RuleMixin(Predicate):
             not_completed_movement = decision_movement
           # Frozen must be compensated
           if not _compare(profit_tester_list, prevision_movement, decision_movement):
+            raise NotImplementedError(
+              'Compensation undesired: prevision_movement = %s decision_movement = %s' % (
+                pformat(prevision_movement.__dict__),
+                pformat(decision_movement.__dict__) ))
             new_movement = decision_movement.asContext(
                                 quantity=-decision_movement_quantity)
             new_movement.setDelivery(None)
@@ -434,6 +437,10 @@ class RuleMixin(Predicate):
         if decision_movement.isFrozen():
           # Frozen must be compensated
           if not _compare(divergence_tester_list, prevision_movement, decision_movement):
+            raise NotImplementedError(
+              'Compensation undesired: prevision_movement = %s decision_movement = %s' % (
+                pformat(prevision_movement.__dict__),
+                pformat(decision_movement.__dict__) ))
             new_movement = decision_movement.asContext(
                                   quantity=-decision_movement_quantity)
             new_movement.setDelivery(None)
