@@ -64,6 +64,10 @@ class ERP5(_ERP5):
                           'testAccounting_l10n_fr_m9'):
         continue
       test_list.append(test_case)
+    # run testInventoryAPI at end
+    if 'testInventoryAPI' in test_list:
+      test_list.remove('testInventoryAPI')
+      test_list.append('testInventoryAPI')
     return test_list
 
   def run(self, test):
