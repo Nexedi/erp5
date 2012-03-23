@@ -366,6 +366,11 @@ class RuleMixin(Predicate):
           movement_collection_diff.addDeletableMovement(decision_movement)
         else:
           # Compensate non deletable
+          from pprint import pformat
+          raise NotImplementedError(
+            'Compensation undesired: decision_movement_list = %s\n%s' % (
+              decision_movement_list,
+              pformat([q.__dict__ for q in decision_movement_list])))
           new_movement = decision_movement.asContext(
                             quantity=-decision_movement.getQuantity())
           new_movement.setDelivery(None)
