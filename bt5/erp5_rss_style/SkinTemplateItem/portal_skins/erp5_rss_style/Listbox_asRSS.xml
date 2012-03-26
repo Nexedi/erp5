@@ -94,7 +94,7 @@ feed_data = {}\n
 request = context.REQUEST\n
 \n
 # required channel elements for RSS 2.0 specification\n
-required_field_list = (\'title\', \'description\', \'link\',)\n
+required_field_list = (\'title\', \'description\', \'link\')\n
 \n
 # required + optional channel elements\n
 allowed_field_list = (\'title\', \'description\', \'link\', \'author\', \n
@@ -103,6 +103,7 @@ allowed_field_list = (\'title\', \'description\', \'link\', \'author\', \n
 \n
 # figure out which column is which, by using column titles\n
 rss_column_mapping = {}\n
+\n
 for index, column_item in enumerate(label_list):\n
   column_header = column_item[1]\n
   if column_header.lower() in allowed_field_list:\n
@@ -155,6 +156,7 @@ for line in line_list:\n
   items.append(rss_item_string)\n
 \n
 feed_data[\'listItemInfos\'] = tuple(items)\n
+\n
 return feed_data\n
 
 

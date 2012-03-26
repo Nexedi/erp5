@@ -50,24 +50,45 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-user_site_list = context.Baobab_getUserAssignedSiteList()\n
-if len(user_site_list)>0:\n
-  site = context.Baobab_getVaultSite(user_site_list[0])\n
-  site_url = site.getRelativeUrl()\n
-  context.setSite(site_url)\n
-
-
-]]></string> </value>
+            <value> <string>from email.utils import formataddr\n
+portal = context.getPortalObject()\n
+event = portal.restrictedTraverse(event_relative_url)\n
+\n
+subject = event.getTitle()\n
+body = event.getTextContent()\n
+sender = event.getSourceValue()\n
+if sender is not None:\n
+  from_url = formataddr((sender.getTitle(), sender.getDefaultEmailText()))\n
+else:\n
+  from_url = portal.portal_preferences.getPreferredEventSenderEmail()\n
+\n
+to_url = formataddr((context.getTitle(), context.getDefaultEmailText()))\n
+\n
+document_type_list = list(event.getPortalEmbeddedDocumentTypeList()) + list(event.getPortalDocumentTypeList())\n
+embedded_file_list = event.getAggregateValueList(portal_type=document_type_list)\n
+\n
+content_type = event.getContentType()\n
+mail_message = context.Base_createMailMessageAsString(from_url,\n
+  to_url,\n
+  subject,\n
+  body,\n
+  content_type,\n
+  attachment_list=[],\n
+  embedded_file_list=embedded_file_list)\n
+\n
+event.sendMailHostMessage(mail_message)\n
+\n
+if not event.hasData():\n
+  event.setData(mail_message)\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>event_relative_url, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Person_init</string> </value>
+            <value> <string>Entity_sendEmail</string> </value>
         </item>
       </dictionary>
     </pickle>

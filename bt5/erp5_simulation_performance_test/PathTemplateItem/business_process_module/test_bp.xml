@@ -105,10 +105,6 @@
             <value> <string>test_bp</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>9</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Business Process</string> </value>
         </item>
