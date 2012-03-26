@@ -44,8 +44,7 @@
             <key> <string>delivery_cell_separate_order</string> </key>
             <value>
               <tuple>
-                <string>calculateAveragePrice</string>
-                <string>calculateAddQuantity</string>
+                <string>calculateSeparatePrice</string>
               </tuple>
             </value>
         </item>
@@ -74,10 +73,6 @@
         <item>
             <key> <string>id</string> </key>
             <value> <string>test_advanced_sale_invoice_trade_model_builder</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>2</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

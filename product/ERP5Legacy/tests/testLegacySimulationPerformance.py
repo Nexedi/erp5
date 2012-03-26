@@ -121,13 +121,10 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
       """
         Return the list of business templates.
       """
-      return ('erp5_base',
-              'erp5_pdm',
-              'erp5_trade', 
-              'erp5_invoicing',
-              'erp5_accounting',
-              'erp5_advanced_invoicing',
-              'erp5_simulation_performance_test',)
+      return ('erp5_core_proxy_field_legacy', 'erp5_base',
+              'erp5_pdm', 'erp5_simulation', 'erp5_trade',
+              'erp5_accounting', 'erp5_invoicing', 'erp5_advanced_invoicing',
+              'erp5_simulation_test', 'erp5_simulation_performance_test')
 
     def afterSetUp(self):
       """
@@ -793,6 +790,9 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
               number_of_sale_order_lines=5,
               number_of_additional_sale_packing_list_lines=5,
               measurable=True)
+
+from Products.ERP5Legacy.tests import Legacy_getBusinessTemplateList
+Legacy_getBusinessTemplateList(TestSimulationPerformance)
 
 def test_suite():
   suite = unittest.TestSuite()

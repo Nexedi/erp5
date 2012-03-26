@@ -74,10 +74,6 @@
             <value> <string>test_advanced_sale_invoice_builder</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Delivery Builder</string> </value>
         </item>
