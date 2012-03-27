@@ -70,4 +70,5 @@ class RuleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       for content_dict in content_list:
         rule.newContent(**content_dict)
 
+      rule.validate()
       self.install(rule, business_configuration)
