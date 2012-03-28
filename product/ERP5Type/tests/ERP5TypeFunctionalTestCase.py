@@ -252,7 +252,7 @@ class FunctionalTestRunner:
 
   remote_code_url_list = None
 
-  # There is no test that can take more them 24 hours
+  # There is no test that can take more them 2 hours
   timeout = 2.0 * 60 * 60
 
   def __init__(self, host, port, portal, run_only='', use_phanthom=False):
@@ -294,11 +294,19 @@ class FunctionalTestRunner:
       while self.getStatus() is None:
         time.sleep(10)
         if (time.time() - start) > float(self.timeout):
+          self.verboseErrorLog()
           raise TimeoutError("Test took more them %s seconds" % self.timeout)
 
     finally:
       self.browser.quit()
       xvfb.quit()
+
+  def verboseErrorLog(self, size=10):
+    for entry in self.portal.error_log.getLogEntries()[:size]:
+      print "="*20
+      print "ERROR ID : %s" % entry["id"]
+      print "TRACEBACK :"
+      print entry["tb_text"]
 
   def processResult(self):
     file_content = self.getStatus().encode("utf-8", "replace")
