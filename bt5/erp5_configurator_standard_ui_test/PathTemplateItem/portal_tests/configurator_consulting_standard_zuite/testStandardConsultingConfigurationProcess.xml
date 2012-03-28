@@ -198,7 +198,7 @@
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_your_group"]</td>\n
-  <td>My company\'s group</td>\n
+  <td>My company</td>\n
 </tr>\n
 <!-- Next page to check validation works -->\n
 <tr>\n
@@ -261,7 +261,7 @@
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_your_group"]</td>\n
-  <td>My company\'s group</td>\n
+  <td>My company</td>\n
 </tr>\n
 <!-- Go Second page  (User Accounts)-->\n
 <tr>\n
