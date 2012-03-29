@@ -595,6 +595,7 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
     """
     document = self
     if self.getReference():
+      invalid_validation_state_list = ('archived', 'cancelled', 'deleted')
       catalog = self.getPortalObject().portal_catalog
       # Find all document with same (reference, version, language)
       kw = dict(portal_type=self.getPortalType(),
@@ -614,7 +615,12 @@ class Document(DocumentExtensibleTraversableMixin, XMLObject, UrlMixin,
            o.getVersion() == self.getVersion() and\
            o.getLanguage() == self.getLanguage():
           existing_document = o.getObject()
-          break
+          if existing_document.getValidationState() not in \
+            invalid_validation_state_list:
+            break
+      else:
+        existing_document = None
+
       # We found an existing document to update
       if existing_document is not None:
         document = existing_document
