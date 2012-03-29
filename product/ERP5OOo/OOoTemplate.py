@@ -421,11 +421,6 @@ class OOoTemplate(ZopePageTemplate):
         doc_type=picture_type,
       )
 
-      if not (self.content_type.endswith('draw') or
-              self.content_type.endswith('presentation') or
-              self.content_type.endswith('writer') or
-              self.content_type.endswith('text')):
-        replacement = '<text:p text:style-name="Standard">'+replacement+'</text:p>'
       return replacement
 
     xml_doc = etree.XML(text)
