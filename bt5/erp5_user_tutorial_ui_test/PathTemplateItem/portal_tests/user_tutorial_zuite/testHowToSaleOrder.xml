@@ -361,6 +361,8 @@
 </tr>\n
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms"> Invoke simulation alarms </span>\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
 \n
 <tr>\n
   <td>open</td>\n
@@ -438,6 +440,8 @@ Wait for activities</span>\n
 </tr>\n
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities">Wait for activities</span>\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/invoke_simulation_alarms"> Invoke simulation alarms </span>\n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
 \n
 <tr>\n
   <td>open</td>\n

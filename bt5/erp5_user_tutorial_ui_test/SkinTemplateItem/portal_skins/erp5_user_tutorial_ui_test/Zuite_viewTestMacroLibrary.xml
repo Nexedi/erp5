@@ -118,6 +118,20 @@
   </tr> \n
 </tal:block>\n
 \n
+<tal:block metal:define-macro="invoke_simulation_alarms">\n
+  <!-- Wait for activities to finish -->\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Zuite_invokeSimulationAlarmList</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Done.</td>\n
+    <td></td>\n
+  </tr> \n
+</tal:block>\n
+\n
 <tal:block metal:define-macro="login_as_functional_test_user">\n
   <tr>\n
     <td>openAndWait</td>\n
