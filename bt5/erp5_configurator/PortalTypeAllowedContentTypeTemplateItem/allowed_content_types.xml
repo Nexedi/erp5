@@ -18,6 +18,7 @@
  <portal_type id="Configuration Save">
   <item>Account Configurator Item</item>
   <item>Accounting Period Configurator Item</item>
+  <item>Alarm Configurator Item</item>
   <item>Business Process Configurator Item</item>
   <item>Catalog Keyword Key Configurator Item</item>
   <item>Categories Spreadsheet Configurator Item</item>
