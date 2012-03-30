@@ -216,6 +216,37 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     item_brl._build(bc)
     self.stepTic()
 
+  def testSecurityCategoryMappingConfiguratorItem(self):
+    """ Test Security Category Mapping Configurator Item
+        XXX This test and the Security Category Mapping should be improved to
+            allow provide the name of skin folder and the script/categories to
+            be used for the script oucome. For now it does the minimum.
+    """
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+
+    expect_script_outcome = (
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function']),
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['follow_up']),
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function', 'follow_up']),
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['group']),
+           ('ERP5Type_getSecurityCategoryRoot', ['group']),)
+
+
+    item = configuration_save.addConfigurationItem(
+                  "Security Category Mapping Configurator Item")
+
+    self.stepTic()
+    item._build(bc)
+    self.stepTic()
+
+    # XXX Skin folder should be part of configuration and not always custom
+    security_script = getattr(self.portal.portal_skins.custom,
+                              "ERP5Type_getSecurityCategoryMapping", None)
+
+    self.assertNotEquals(None, security_script)
+    self.assertEquals(security_script(), expect_script_outcome)
+
   def testPortalTypeRolesSpreadsheetConfiguratorItem(self):
     """ Test Portal Type Roles Configurator Item """
     configuration_save = self.createConfigurationSave()
