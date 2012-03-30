@@ -75,6 +75,23 @@ for rule_dict in rule_simulation_list:\n
                                           id = rule_dict[\'rule_template_id\'],\n
                                           reference = rule_dict[\'reference\'],\n
                                           trade_phase = rule_dict[\'trade_phase\'])\n
+\n
+# Create alarms to launch builders. \n
+configuration_save.addConfigurationItem("Alarm Configurator Item",\n
+                             title="Invoice Builder Alarm",\n
+                             id="invoice_builder_alarm",\n
+                             periodicity_minute_frequency=5,\n
+                             # A clever solution should be provided for the script\n
+                             # bellow\n
+                             active_sense_method_id="Alarm_buildConfiguratorStandardInvoice")\n
+                             \n
+configuration_save.addConfigurationItem("Alarm Configurator Item",\n
+                             title="Packing List Builder Alarm",\n
+                             id="packing_list_builder_alarm",\n
+                             periodicity_minute_frequency=5,\n
+                             # A clever solution should be provided for the script\n
+                             # bellow\n
+                             active_sense_method_id="Alarm_buildConfiguratorStandardPackingList")\n
 </string> </value>
         </item>
         <item>
