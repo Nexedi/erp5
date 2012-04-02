@@ -11,13 +11,12 @@
             <value>
               <list>
                 <string>default</string>
-                <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_stop_date</string> </value>
+            <value> <string>listbox_delivery_stop_date</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -86,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_read_only_stop_date</string> </value>
+                    <value> <string>my_view_mode_module_listbox_delivery_start_date</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -95,10 +94,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>Expiration Date</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -114,7 +109,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python:here.hasStopDate() and here.getStopDate() or here.getStartDate()+1</string> </value>
+            <value> <string>python:cell.hasStopDate() and cell.getStopDate() or cell.getStartDate()+1</string> </value>
         </item>
       </dictionary>
     </pickle>
