@@ -33,107 +33,107 @@ from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
 
 class RuleTool(BaseTool):
+  """
+  The RulesTool implements portal object
+  transformation policies.
+
+  An object transformation template is defined by
+  a domain and a transformation pattent:
+
+  The domain is defined as:
+
+  - the meta_type it applies to
+
+  - the portal_type it applies to
+
+  - the conditions of application (category membership, value range,
+    security, function, etc.)
+
+  The transformation template is defined as:
+
+  - a tree of portal_types starting on the object itself
+
+  - default values for each node of the tree, incl. the root itself
+
+  When a transformation is triggered, it will check the existence of
+  each node and eventually update values
+
+  Transformations are very similar to XSLT in the XML world.
+
+  Examples of applications:
+
+  - generate accounting movements from a stock movement
+
+  - generate a birthday event from a person
+
+  ERP5 main application : generate submovements from movements
+  according to templates. Allows to parametrize modules
+  such as payroll.
+
+  """
+  id = 'portal_rules'
+  meta_type = 'ERP5 Rule Tool'
+  portal_type = 'Rule Tool'
+  allowed_types = ( 'ERP5 Order Rule', 'ERP5 Transformation Rule',
+                    'ERP5 Zero Stock Rule', 'ERP5 Delivery Rule',
+                    'ERP5 Amortisation Rule')
+
+  # Declarative Security
+  security = ClassSecurityInfo()
+
+  security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
+  manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'searchRuleList')
+  def searchRuleList(self, movement, tested_base_category_list=None, **kw):
     """
-    The RulesTool implements portal object
-    transformation policies.
+    this method searches for rules, as predicates against movement
 
-    An object transformation template is defined by
-    a domain and a transformation pattent:
-
-    The domain is defined as:
-
-    - the meta_type it applies to
-
-    - the portal_type it applies to
-
-    - the conditions of application (category membership, value range,
-      security, function, etc.)
-
-    The transformation template is defined as:
-
-    - a tree of portal_types starting on the object itself
-
-    - default values for each node of the tree, incl. the root itself
-
-    When a transformation is triggered, it will check the existence of
-    each node and eventually update values
-
-    Transformations are very similar to XSLT in the XML world.
-
-    Examples of applications:
-
-    - generate accounting movements from a stock movement
-
-    - generate a birthday event from a person
-
-    ERP5 main application : generate submovements from movements
-    according to templates. Allows to parametrize modules
-    such as payroll.
-
+    - the rule must be in "validated" state
+    - the rule must be of a known portal type
+    - Predicate criterions can be used (like start_date_range_min)
     """
-    id = 'portal_rules'
-    meta_type = 'ERP5 Rule Tool'
-    portal_type = 'Rule Tool'
-    allowed_types = ( 'ERP5 Order Rule', 'ERP5 Transformation Rule',
-                      'ERP5 Zero Stock Rule', 'ERP5 Delivery Rule',
-                      'ERP5 Amortisation Rule')
+    portal = self.getPortalObject()
 
-    # Declarative Security
-    security = ClassSecurityInfo()
+    # XXX: For performance reasons, current implementation does not use
+    #      DomainTool._searchPredicateList anymore, because in most cases, it
+    #      does not filter anything before actualling calling Predicate.test()
+    #      Properties must be added on rules to minimize the number of test
+    #      scripts/expressions, like the portal types of the possible parent
+    #      applied rules, so that filtering can be done via the catalog.
+    #      Then it would be possible to use Domain Tool again.
+    #return portal.domain_tool._searchPredicateList(context=movement,
+    #  tested_base_category_list=tested_base_category_list,
+    #  portal_type=portal.getPortalRuleTypeList(),
+    #  validation_state="validated", **kw) #XXX "validated" is hardcoded
 
-    security.declareProtected( Permissions.ManagePortal, 'manage_overview' )
-    manage_overview = DTMLFile( 'explainRuleTool', _dtmldir )
-
-    security.declareProtected(Permissions.AccessContentsInformation,
-                              'searchRuleList')
-    def searchRuleList(self, movement, tested_base_category_list=None, **kw):
-      """
-      this method searches for rules, as predicates against movement
-
-      - the rule must be in "validated" state
-      - the rule must be of a known portal type
-      - Predicate criterions can be used (like start_date_range_min)
-      """
-      portal = self.getPortalObject()
-
-      # XXX: For performance reasons, current implementation does not use
-      #      DomainTool._searchPredicateList anymore, because in most cases, it
-      #      does not filter anything before actualling calling Predicate.test()
-      #      Properties must be added on rules to minimize the number of test
-      #      scripts/expressions, like the portal types of the possible parent
-      #      applied rules, so that filtering can be done via the catalog.
-      #      Then it would be possible to use Domain Tool again.
-      #return portal.domain_tool._searchPredicateList(context=movement,
-      #  tested_base_category_list=tested_base_category_list,
-      #  portal_type=portal.getPortalRuleTypeList(),
-      #  validation_state="validated", **kw) #XXX "validated" is hardcoded
-
-      # Most rules are only configured through their test_method_id,
-      # so filter out them quickly before calling Predicate.test()
-      rule_list = []
-      for rule in portal.portal_catalog.unrestrictedSearchResults(
-          portal_type=portal.getPortalRuleTypeList(),
-          validation_state="validated", **kw): #XXX "validated" is hardcoded
-        rule = rule.getObject()
-        try:
-          for test_method_id in rule.getTestMethodIdList():
-            if test_method_id == 'Rule_testFalse' or \
-               not getattr(movement, test_method_id)(rule):
-              break
-          else:
-            if rule.test(movement,
-                tested_base_category_list=tested_base_category_list):
-              rule_list.append(rule)
-        except Exception:
-          # Maybe the script is old (= it takes no argument). Or we should not
-          # have called it (= rule would have been excluded before, depending
-          # on other criterions). Or there may be a bug.
-          # We don't know why it failed so let Predicate.test() do the work.
+    # Most rules are only configured through their test_method_id,
+    # so filter out them quickly before calling Predicate.test()
+    rule_list = []
+    for rule in portal.portal_catalog.unrestrictedSearchResults(
+        portal_type=portal.getPortalRuleTypeList(),
+        validation_state="validated", **kw): #XXX "validated" is hardcoded
+      rule = rule.getObject()
+      try:
+        for test_method_id in rule.getTestMethodIdList():
+          if test_method_id == 'Rule_testFalse' or \
+             not getattr(movement, test_method_id)(rule):
+            break
+        else:
           if rule.test(movement,
               tested_base_category_list=tested_base_category_list):
             rule_list.append(rule)
+      except Exception:
+        # Maybe the script is old (= it takes no argument). Or we should not
+        # have called it (= rule would have been excluded before, depending
+        # on other criterions). Or there may be a bug.
+        # We don't know why it failed so let Predicate.test() do the work.
+        if rule.test(movement,
+            tested_base_category_list=tested_base_category_list):
+          rule_list.append(rule)
 
-      return rule_list
+    return rule_list
 
 
 InitializeClass(RuleTool)
