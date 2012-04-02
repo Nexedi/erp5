@@ -123,18 +123,18 @@
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_my_delivery_mode"]</td>\n
-  <td>AIR</td>\n
+  <td>By Air</td>\n
 </tr>\n
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_my_incoterm"]</td>\n
-  <td>CPT</td>\n
+  <td>Carriage Paid To</td>\n
 </tr>\n
 \n
 <tr>\n
   <td>type</td>\n
   <td>//input[@name="field_my_specialise_title"]</td>\n
-  <td>Default Sale Order Trade Condition</td>\n
+  <td>General Sale Trade Condition</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
@@ -159,12 +159,12 @@
 <tr>\n
   <td>type</td>\n
   <td>//input[@name="subfield_field_my_start_date_month"]</td>\n
-  <td>01</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'now\'].strftime(\'%m\')">01</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
   <td>//input[@name="subfield_field_my_start_date_day"]</td>\n
-  <td>01</td>\n
+  <td tal:content="python: here.Zuite_getHowToInfo()[\'now\'].strftime(\'%d\')">01</td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n
@@ -179,7 +179,7 @@
 <tr>\n
   <td>type</td>\n
   <td>//input[@name="subfield_field_my_stop_date_day"]</td>\n
-  <td>01</td>\n
+  <td>31</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
