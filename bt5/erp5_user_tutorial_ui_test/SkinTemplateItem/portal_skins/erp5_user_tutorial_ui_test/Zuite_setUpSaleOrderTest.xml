@@ -73,7 +73,7 @@ if context.portal_templates.getInstalledBusinessTemplate("erp5_simulation_test")
   business_process.account_credit_path.setSourceValue(context.account_module.receivable)\n
   if isTransitionPossible(business_process, \'validate\'):\n
     business_process.validate()\n
-\n
+
 # check if there is already the euro curency on the instance\n
 currency = context.portal_catalog.getResultValue(portal_type=\'Currency\',\n
                                                  title=howto_dict[\'sale_howto_currency_title\'])\n
@@ -81,6 +81,7 @@ if currency is None:\n
   currency = portal.currency_module.newContent(portal_type=\'Currency\',\n
                                                title=howto_dict[\'sale_howto_currency_title\'],\n
                                                reference=howto_dict[\'sale_howto_currency_tag\'],\n
+                                               id=howto_dict[\'sale_howto_currency_tag\'],\n
                                                base_unit_quantity=0.01)\n
 \n
 if isTransitionPossible(currency, \'validate\'):\n
