@@ -582,14 +582,14 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(accounting_credit_path.getEfficiency(), -1.0)
     self.assertEquals(accounting_credit_path.getTradePhase(), 'trade/accounting')
     self.assertEquals(accounting_credit_path.getTradeDate(), 'trade_phase/trade/invoicing')
-    self.assertEquals(accounting_credit_path.getTestMethodId(), "isAccountingMovementType")
+    self.assertEquals(accounting_credit_path.getSource(), "account_module/receivable")
 
     accounting_debit_path = getattr(business_process, "accounting_debit_path", None)
     self.assertNotEquals(accounting_debit_path, None)
     self.assertEquals(accounting_debit_path.getEfficiency(), 1.0)
     self.assertEquals(accounting_debit_path.getTradePhase(), 'trade/accounting')
     self.assertEquals(accounting_debit_path.getTradeDate(), 'trade_phase/trade/invoicing')
-    self.assertEquals(accounting_debit_path.getTestMethodId(), "isAccountingMovementType")
+    self.assertEquals(accounting_debit_path.getSource(), "account_module/sales")
 
     order_link = getattr(business_process, "order_link", None)
     self.assertNotEquals(order_link, None)
