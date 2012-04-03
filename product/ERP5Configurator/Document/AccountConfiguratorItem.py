@@ -57,23 +57,37 @@ class AccountConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def _build(self, business_configuration):
     account_module = self.getPortalObject().account_module
+    account = None
+    account_id = getattr(self, 'account_id', None)
 
     extra_kw = {}
-    account_id = getattr(self, 'account_id', None)
     if account_id:
-      # XXX FIXME This cause conflict when use configuration
-      # more then once.
-      #extra_kw['id'] = account_id 
-      pass
-    account = account_module.newContent(
-                portal_type='Account',
-                title=self.getTitle(),
-                account_type=self.getAccountType(),
-                gap=self.getGap(),
-                financial_section=self.getFinancialSection(),
-                credit_account=self.isCreditAccount(),
-                description=self.getDescription(),
-                **extra_kw)
+      extra_kw['id'] = account_id
+      account = getattr(account_module, account_id, None)
+
+    if account is None:
+      account = account_module.newContent(
+                  portal_type='Account',
+                  title=self.getTitle(),
+                  account_type=self.getAccountType(),
+                  gap=self.getGap(),
+                  financial_section=self.getFinancialSection(),
+                  credit_account=self.isCreditAccount(),
+                  description=self.getDescription(),
+                  **extra_kw)
+    else:
+       # Update existing account
+       if (self.getAccountType() != account.getAccountType()) and \
+           (self.getFinancialSection() != account.getFinancialSection()):
+         raise ValueError("The Configurator is trying to overwritte previous configuration information (%s)" % account.getRelativeUrl())
+
+       account.edit(title=self.getTitle(), description=self.getDescription())
+       gap_list = account.getGapList()
+       # Only include only the additional gap that do not collide.
+       if self.getGap() not in gap_list:
+         gap_list.append(self.getGap())
+         account.setGapList(gap_list)
+       account.setCreditAccount(self.isCreditAccount())
 
     if self.portal_workflow.isTransitionPossible(account, 'validate'):
       account.validate(comment="Validated by Configurator")

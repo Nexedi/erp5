@@ -50,6 +50,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
             'erp5_simulation',
             'erp5_pdm',
             'erp5_trade',
+            'erp5_accounting',
             'erp5_configurator_standard_trade_template')
 
   def createConfigurationSave(self):
@@ -248,6 +249,58 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
 
     self.assertNotEquals(None, security_script)
     self.assertEquals(security_script(), expect_script_outcome)
+
+  def testAccountConfiguratorItem(self):
+    """ Test Account Configurator Item """
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+    account_module = self.portal.account_module
+
+    account_dict = {
+             'account_type': 'asset/receivable',
+             'account_id': 'receivable',
+             'title': 'Customers',
+             'gap': 'ias/ifrs/4/41',
+             'financial_section': 'asset/current_assets/trade_receivables'}
+
+    item = configuration_save.addConfigurationItem(
+                  "Account Configurator Item", **account_dict)
+
+    self.stepTic()
+    item._build(bc)
+    self.stepTic()
+
+    account = getattr(account_module, account_dict['account_id'], None)
+    self.assertNotEquals(account, None)
+    self.assertEquals(account.getTitle(), account_dict['title'])
+    self.assertEquals(account.getGap(), account_dict['gap'])
+    self.assertEquals(account.getFinancialSection(),
+                      account_dict['financial_section'])
+    self.assertEquals(account.getAccountType(),
+                      account_dict['account_type'])
+
+    # Update Account dict and try to create again the same account,
+    # the account should be only updated instead a new account be created.
+    account_dict['title'] = 'Clientes'
+    previous_gap = account_dict['gap']
+    account_dict['gap'] = 'br/pcg/1/1.1/1.1.2'
+
+    item = configuration_save.addConfigurationItem(
+                  "Account Configurator Item", **account_dict)
+
+    self.stepTic()
+    item._build(bc)
+    self.stepTic()
+
+    same_account = getattr(account_module, account_dict['account_id'], None)
+    self.assertEquals(account, same_account)
+    self.assertEquals(account.getTitle(), account_dict['title'])
+    self.assertSameSet(account.getGapList(), [previous_gap,
+                                              account_dict['gap']])
+    self.assertEquals(account.getFinancialSection(),
+                      account_dict['financial_section'])
+    self.assertEquals(account.getAccountType(),
+                      account_dict['account_type'])
 
   def testAlarmConfiguratorItem(self):
     """ Test Alarm Configurator Item """
