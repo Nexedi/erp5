@@ -826,8 +826,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     sale_packing_list = portal.portal_types['Sale Packing List']
     sale_packing_list_line = portal.portal_types['Sale Packing List Line']
     self.assertEquals(True,
-                      'TradeOrder' in sale_packing_list.getTypePropertySheetList())
-    self.assertEquals(True,
                       'TradeOrderLine' in sale_packing_list_line.getTypePropertySheetList())
     self.assertEquals(True,
                       'TradeOrder' in purchase_order.getTypePropertySheetList())
