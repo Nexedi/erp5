@@ -281,9 +281,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     currency_list = self.getBusinessConfigurationObjectList(business_configuration, 'Currency')
     self.assertNotEquals(len(currency_list), 0)
     for currency in currency_list:
-      # XXX FIXME: should the currency be validated by After Configuration Script?
-      # On tiolive it is not validated, is there any reason?
-      # self.assertEquals('validated', currency.getValidationState())
+      self.assertEquals('validated', currency.getValidationState())
       currency.Base_checkConsistency()
 
   def stepCheckAlarmList(self, sequence=None, sequence_list=None, **kw):
