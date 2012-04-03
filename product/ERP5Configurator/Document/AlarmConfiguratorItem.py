@@ -62,15 +62,14 @@ class AlarmConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     portal_alarms = self.getPortalObject().portal_alarms
     property_dict = {
       "active_sense_method_id" : self.getActiveSenseMethodId(),
-      "periodicity_minute_frequency" : self.getPeriodicityMinuteFrequency(),
-      "periodicity_hour" : self.getPeriodicityHour(),
-      "periodicity_minute": self.getPeriodicityMinute(),
+      "periodicity_hour_list" : self.getPeriodicityHourList(),
+      "periodicity_minute_list": self.getPeriodicityMinuteList(),
       "periodicity_minute_frequency": self.getPeriodicityMinuteFrequency(),
-      "periodicity_month": self.getPeriodicityMonth(),
-      "periodicity_month_day": self.getPeriodicityMonthDay(),
+      "periodicity_month_list": self.getPeriodicityMonthList(),
+      "periodicity_month_day_list": self.getPeriodicityMonthDayList(),
       "periodicity_start_date": DateTime() - 1,
       #"periodicity_stop_date": self.getPeriodicityStopDate(),
-      "periodicity_week": self.getPeriodicityWeek(),
+      "periodicity_week_list": self.getPeriodicityWeekList(),
                         }
 
     alarm = getattr(portal_alarms, self.getId(), None)

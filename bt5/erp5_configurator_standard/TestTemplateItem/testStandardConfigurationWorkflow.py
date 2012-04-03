@@ -50,6 +50,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       stepCheckPersonInformationList
       stepCheckValidOrganisationList
       stepCheckValidCurrencyList
+      stepCheckAlarmList
       stepCheckPublicGadgetList
       stepCheckPreferenceList
       stepCheckModulesBusinessApplication
@@ -284,6 +285,20 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       # On tiolive it is not validated, is there any reason?
       # self.assertEquals('validated', currency.getValidationState())
       currency.Base_checkConsistency()
+
+  def stepCheckAlarmList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if after configuration the Alarms objects are enabled.
+    """
+    business_configuration = sequence.get("business_configuration")
+    alarm_list = self.getBusinessConfigurationObjectList(business_configuration, 'Alarm')
+    self.assertEquals(len(alarm_list), 2)
+    for alarm in alarm_list:
+      self.failUnless(alarm.getPeriodicityStartDate() < DateTime())
+      self.assertNotEquals(alarm.getPeriodicityStartDate(), None)
+      self.assertEquals(alarm.getPeriodicityMinuteFrequency(), 5)
+      self.assertEquals(alarm.getEnabled(), True)
+      self.assertNotEquals(alarm.getActiveSenseMethodId(), None)
 
   def stepCheckPublicGadgetList(self, sequence=None, sequence_list=None, **kw):
     """

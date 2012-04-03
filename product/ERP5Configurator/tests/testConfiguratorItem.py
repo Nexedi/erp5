@@ -29,6 +29,8 @@
 from AccessControl import Unauthorized
 from zLOG import LOG, INFO
 import uuid
+from DateTime import DateTime
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
 
@@ -246,6 +248,57 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
 
     self.assertNotEquals(None, security_script)
     self.assertEquals(security_script(), expect_script_outcome)
+
+  def testAlarmConfiguratorItem(self):
+    """ Test Alarm Configurator Item """
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+
+    property_map = {
+      "active_sense_method_id" : "Base_setDummy",
+      "periodicity_hour_list" : [5, 6],
+      "periodicity_minute_list": [30, 31],
+      "periodicity_minute_frequency": 5,
+      "periodicity_month_list": [1, 2],
+      "periodicity_month_day_list": [3, 4],
+      "periodicity_week_list": [6, 7],
+                        }
+
+    item = configuration_save.addConfigurationItem(
+                  "Alarm Configurator Item",
+                  id="my_test_alarm",
+                  title="My Test Alarm",
+                  **property_map)
+
+    createZODBPythonScript(self.getPortal().portal_skins.custom,
+                                    property_map["active_sense_method_id"],
+                                    "", "context.setEnabled(0)")
+    self.stepTic()
+    item._build(bc)
+    self.stepTic()
+
+    alarm = getattr(self.portal.portal_alarms, "my_test_alarm", None)
+    self.assertNotEquals(None, alarm)
+
+    self.assertEquals(alarm.getEnabled(), True)
+    self.assertEquals(alarm.getTitle(), "My Test Alarm")
+    self.assertEquals(alarm.getPeriodicityMinuteFrequency(),
+                      property_map["periodicity_minute_frequency"])
+    self.assertEquals(alarm.getPeriodicityMonthList(),
+                      property_map["periodicity_month_list"])
+    self.assertEquals(alarm.getPeriodicityMonthDayList(),
+                      property_map["periodicity_month_day_list"])
+    self.assertEquals(alarm.getPeriodicityHourList(),
+                      property_map["periodicity_hour_list"])
+    self.assertEquals(alarm.getPeriodicityHourList(),
+                      property_map["periodicity_hour_list"])
+    self.assertEquals(alarm.getActiveSenseMethodId(),
+                      property_map["active_sense_method_id"])
+    self.assertNotEquals(alarm.getPeriodicityStartDate(), None)
+    self.failUnless(alarm.getPeriodicityStartDate() < DateTime())
+    alarm.activeSense()
+    self.stepTic()
+    self.assertEquals(alarm.getEnabled(), 0)
 
   def testPortalTypeRolesSpreadsheetConfiguratorItem(self):
     """ Test Portal Type Roles Configurator Item """
