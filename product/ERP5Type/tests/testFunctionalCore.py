@@ -49,7 +49,7 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_accounting', 'erp5_invoicing',
                 'erp5_simplified_invoicing', 'erp5_project',
                 'erp5_simulation',
-                'erp5_configurator_standard_trade_solver',
+                'erp5_configurator_standard_solver',
                 'erp5_configurator_standard_trade_template',
                 'erp5_configurator_standard_accounting_template',
                 'erp5_configurator_standard_invoicing_template',
