@@ -124,19 +124,9 @@ if invoice.getSimulationState() == \'draft\':\n
   invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
   (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
   tag=confirm_tag).Delivery_confirm()\n
-else:\n
-  # call builder just same as after script of \'confirm\' transition\n
-  invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
-  tag=confirm_tag).Delivery_expandAndBuild()\n
 \n
 # First set the invoice in the building state on the causality workflow\n
 invoice.startBuilding()\n
-\n
-# Then an activity should put the causality state in diverged or solved\n
-invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
-  after_tag=confirm_tag).updateCausalityState()\n
 
 
 ]]></string> </value>
