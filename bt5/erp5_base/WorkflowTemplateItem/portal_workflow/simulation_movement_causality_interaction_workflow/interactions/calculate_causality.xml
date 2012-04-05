@@ -56,7 +56,7 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_set(?!LastId$|Ob$|Object$|Delivery$|DeliveryValue$)</string>
+                <string>_set(?!LastId$|Ob$|Object$|Delivery$|DeliveryValue$|CategoryList$)</string>
               </list>
             </value>
         </item>
@@ -66,6 +66,12 @@
         </item>
         <item>
             <key> <string>portal_type_filter</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>portal_type_group_filter</string> </key>
             <value>
               <none/>
             </value>
