@@ -8,11 +8,11 @@
       <dictionary>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Tickets in this state require processing. They can be filled with events, and will remain open until their treatment is not entirely over.</string> </value>
+            <value> <string>Support requests that is temporarily suspended (waiting for an answer from another department or from the customer) </string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>validated</string> </value>
+            <value> <string>suspended</string> </value>
         </item>
         <item>
             <key> <string>permission_roles</string> </key>
@@ -22,7 +22,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Open</string> </value>
+            <value> <string>Suspended</string> </value>
         </item>
         <item>
             <key> <string>transitions</string> </key>
@@ -30,8 +30,8 @@
               <tuple>
                 <string>invalidate</string>
                 <string>invalidate_action</string>
-                <string>suspend</string>
-                <string>suspend_action</string>
+                <string>validate</string>
+                <string>validate_action</string>
               </tuple>
             </value>
         </item>
@@ -46,18 +46,12 @@
   </record>
   <record id="2" aka="AAAAAAAAAAI=">
     <pickle>
-      <tuple>
-        <tuple>
-          <string>Persistence</string>
-          <string>PersistentMapping</string>
-        </tuple>
-        <none/>
-      </tuple>
+      <global name="PersistentMapping" module="Persistence.mapping"/>
     </pickle>
     <pickle>
       <dictionary>
         <item>
-            <key> <string>_container</string> </key>
+            <key> <string>data</string> </key>
             <value>
               <dictionary>
                 <item>
@@ -66,9 +60,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
@@ -78,7 +70,6 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
@@ -88,9 +79,7 @@
                       <tuple>
                         <string>Assignee</string>
                         <string>Assignor</string>
-                        <string>Associate</string>
                         <string>Auditor</string>
-                        <string>Manager</string>
                       </tuple>
                     </value>
                 </item>
