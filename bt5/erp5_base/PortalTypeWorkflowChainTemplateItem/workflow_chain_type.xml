@@ -88,6 +88,10 @@
   <workflow>validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Simulation Movement</type>
+  <workflow>simulation_movement_causality_interaction_workflow</workflow>
+ </chain>
+ <chain>
   <type>Telephone</type>
   <workflow>edit_workflow</workflow>
  </chain>
