@@ -760,7 +760,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
                               ' rule.' % self.getRelativeUrl())
 
       my_applied_rule_id = None
-      expand_activate_kw = {}
+      expand_activate_kw = kw.get('activate_kw', {})
       if my_applied_rule is not None:
         my_applied_rule_id = my_applied_rule.getId()
         expand_activate_kw['after_path_and_method_id'] = (
