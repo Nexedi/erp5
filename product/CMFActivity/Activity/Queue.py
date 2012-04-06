@@ -143,12 +143,10 @@ class Queue(object):
       return EXCEPTION
     return VALID
 
-  def getDependentMessageList(self, activity_tool, message, **kw):
+  def getDependentMessageList(self, activity_tool, message):
     message_list = []
-    for k, v in kw.iteritems():
-      result = activity_tool.getDependentMessageList(message, k, v)
-      if result:
-        message_list.extend(result)
+    for k, v in message.activity_kw.iteritems():
+      message_list += activity_tool.getDependentMessageList(message, k, v)
     return message_list
 
   def getExecutableMessageList(self, activity_tool, message, message_dict,
@@ -174,7 +172,7 @@ class Queue(object):
 
     cached_result = validation_text_dict.get(message.order_validation_text)
     if cached_result is None:
-      message_list = message.getDependentMessageList(self, activity_tool)
+      message_list = self.getDependentMessageList(activity_tool, message)
       transaction.commit() # Release locks.
       if message_list:
         # The result is not empty, so this message is not executable.
@@ -197,8 +195,6 @@ class Queue(object):
         message_dict[message.uid] = message
     elif cached_result:
       message_dict[message.uid] = message
-    else:
-      pass
 
   def hasActivity(self, activity_tool, object, processing_node=None, active_process=None, **kw):
     return 0
