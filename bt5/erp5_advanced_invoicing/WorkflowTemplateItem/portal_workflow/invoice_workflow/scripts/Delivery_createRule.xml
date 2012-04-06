@@ -50,24 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>invoice = state_change[\'object\']\n
-invoice_path = invoice.getPath()\n
-path_and_method_id = (invoice_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-expand_tag = invoice_path + \'_expand\'\n
-tag = invoice_path + \'_updateAppliedRule\'\n
-\n
-priority = 3\n
-\n
-activate_kw = { \n
-  \'tag\': expand_tag,\n
-  \'priority\': priority,\n
-}\n
-invoice.activate(\n
-    after_path_and_method_id=path_and_method_id,\n
-    after_tag=expand_tag,\n
-    tag=tag,\n
-    priority=priority,\n
-    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
+            <value> <string>state_change[\'object\'].Delivery_updateSimulation()\n
 </string> </value>
         </item>
         <item>
