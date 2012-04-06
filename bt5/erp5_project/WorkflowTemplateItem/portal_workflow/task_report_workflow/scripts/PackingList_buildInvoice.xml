@@ -50,23 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>LOG=lambda msg:context.log("TaskReport_buildInvoice", msg)\n
-\n
-packing_list = sci[\'object\']\n
-delivery_tool = sci.getPortal().portal_deliveries\n
-LOG("Task Report : %s"%packing_list.getPath())\n
-\n
-if hasattr(sci.getPortal(), \'accounting_module\'):\n
-  if hasattr(delivery_tool, \'task_invoice_builder\'):\n
-    delivery_tool.task_invoice_builder.activate(\n
+            <value> <string>portal = sci.getPortal()\n
+if portal.hasObject(\'accounting_module\'):\n
+  portal.portal_deliveries.task_invoice_builder.activate(\n
           after_method_id = [ \'expand\', \n
                               \'recursiveImmediateReindexObject\',\n
                               \'immediateReindexObject\' ],\n
           ).build()\n
-  else :\n
-    packing_list.log("ERP5 Simulation",\n
-                "Unable to build Invoice from Task Report at %s "\\\n
-                ": no task_invoice_builder" % packing_list.getPath())\n
 </string> </value>
         </item>
         <item>
