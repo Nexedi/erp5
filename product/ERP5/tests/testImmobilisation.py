@@ -89,6 +89,9 @@ class TestImmobilisationMixin(ERP5TypeTestCase):
             "erp5_simplified_invoicing",
             "erp5_immobilisation",
             "erp5_computer_immobilisation", # In order to use items
+            'erp5_configurator_standard_trade_template',
+            'erp5_configurator_standard_accounting_template',
+            'erp5_configurator_standard_invoicing_template',
             "erp5_simulation_test",
             )
 

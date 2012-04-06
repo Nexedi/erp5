@@ -2,15 +2,37 @@
 #
 # Copyright (c) 2008 Nexedi SA and Contributors. All Rights Reserved.
 #                    Jerome Perrin <jerome@nexedi.com>
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsability of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# garantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
 
 import zope.interface
+from zLOG import LOG, INFO
 from Acquisition import aq_base
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
+
 
 
 class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
@@ -40,9 +62,13 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
 
   def _build(self, business_configuration):
     portal = self.getPortalObject()
-    self._readSpreadSheet()
-    for type_name, role_list in self._spreadsheet_cache.items():
+    portal_type_role_dict = self._getPortalTypeRoleDict()
+    for type_name, role_list in portal_type_role_dict.items():
       portal_type = portal.portal_types.getTypeInfo(type_name)
+      if portal_type is None:
+        LOG("CONFIGURATOR", INFO, "Fail to define Roles for %s" % portal_type)
+        continue
+ 
       for role in role_list:
         # rebuild a category from Group / Site & Function
         category_list = []
@@ -51,9 +77,9 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
             category_list.append(role[bc])
         #category = '\n'.join(category_list)
         role_dict = {
-                     #'title': 'role',
-                     'description': role.get('Description', ''),
-                     'role_name_list': role.get('Role'),
+                     'title': role.get('Name', 'Default'),
+                     'description': role.get('Description', 'Configured by ERP5 Configurator'),
+                     'role_name_list': [x.strip() for x in role.get('Role', '').split(';')],
                      'role_category_list': category_list,
                      'role_base_category_list': role.get('Base_Category', ''),
                      'role_base_category_script_id': role.get('Base_Category_Script',
@@ -63,7 +89,8 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
 
     ## Update BT5
     bt5_obj = business_configuration.getSpecialiseValue()
-    bt5_obj.edit(template_portal_type_roles_list=self._spreadsheet_cache.keys())
+    if bt5_obj is not None:
+      bt5_obj.edit(template_portal_type_roles_list=portal_type_role_dict.keys())
 
   def checkSpreadSheetConsistency(self):
     """Check that the spread sheet is consistent with categories spreadsheet.
@@ -75,32 +102,18 @@ class PortalTypeRolesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObjec
     XXX do we want to use constraint framework here ?
     """
 
-  def _readSpreadSheet(self):
-    """Read the spreadsheet and prepare internal category cache.
+  def _getPortalTypeRoleDict(self):
+    """Read the spreadsheet and provide processed dict.
     """
-    aq_self = aq_base(self)
-    if getattr(aq_self, '_spreadsheet_cache', None) is None:
-      role_dict = dict()
-      info_dict = self.ConfigurationTemplate_readOOCalcFile(
+    role_dict = dict()
+    info_dict = self.ConfigurationTemplate_readOOCalcFile(
                       "portal_roles_spreadsheet.ods",
                       data=self.getDefaultConfigurationSpreadsheetData())
-      for sheet_name, table in info_dict.items():
-        for line in table:
-          if 'Portal_Type' in line:
-            ptype_role_list = role_dict.setdefault(line['Portal_Type'], [])
-            ptype_role_list.append(line)
 
-      aq_self._spreadsheet_cache = role_dict
+    for sheet_name, table in info_dict.items():
+      for line in table:
+        if 'Portal_Type' in line:
+          ptype_role_list = role_dict.setdefault(line['Portal_Type'], [])
+          ptype_role_list.append(line)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                           'setDefaultConfigurationSpreadsheetFile')
-  def setDefaultConfigurationSpreadsheetFile(self, *args, **kw):
-    """Reset the spreadsheet cache."""
-    self._setDefaultConfigurationSpreadsheetFile(*args, **kw)
-    self._spreadsheet_cache = None
-    self.reindexObject()
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                           'setConfigurationSpreadsheetFile')
-  setConfigurationSpreadsheetFile = setDefaultConfigurationSpreadsheetFile
-
+    return role_dict

@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>Define interactions meaningful for portal type classes, ZODB property sheets and their properties.</string> </value>
+            <value> <string>Define interactions meaningful for Portal Type classes, ZODB Property Sheets and their properties, and ZODB Components.</string> </value>
         </item>
         <item>
             <key> <string>groups</string> </key>

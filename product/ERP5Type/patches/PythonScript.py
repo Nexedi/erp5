@@ -14,7 +14,6 @@ from Products.PythonScripts.PythonScript import PythonScript
 from OFS.misc_ import p_
 from App.ImageFile import ImageFile
 
-
 def haveProxyRole(self):
   """if a script has proxy role, return True"""
   return bool(self._proxy_roles)

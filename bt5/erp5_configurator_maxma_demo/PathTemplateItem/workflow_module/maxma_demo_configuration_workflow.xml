@@ -50,16 +50,16 @@
             </value>
         </item>
         <item>
+            <key> <string>configuration_after_script_id</string> </key>
+            <value> <string>BusinessConfiguration_afterMaxmaDemoConfiguration</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
-            <value> <string>The default Maxma Demo configuration workflow.</string> </value>
+            <value> <string>Maxma Demo is a pré-build configuration which the user can experiment the most common modules provided by ERP5.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
             <value> <string>maxma_demo_configuration_workflow</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>68</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>

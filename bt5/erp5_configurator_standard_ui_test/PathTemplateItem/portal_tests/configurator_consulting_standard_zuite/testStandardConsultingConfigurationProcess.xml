@@ -198,7 +198,7 @@
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_your_group"]</td>\n
-  <td>My company\'s group</td>\n
+  <td>My company</td>\n
 </tr>\n
 <!-- Next page to check validation works -->\n
 <tr>\n
@@ -261,7 +261,7 @@
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_your_group"]</td>\n
-  <td>My company\'s group</td>\n
+  <td>My company</td>\n
 </tr>\n
 <!-- Go Second page  (User Accounts)-->\n
 <tr>\n
@@ -383,7 +383,8 @@
 <tr>\n
   <td>select</td>\n
   <td>//select[@name="field_your_function"]</td>\n
-  <td>Persons/Creator</td>\n
+  <td tal:content="python:\n
+        here.Zuite_getConfigurationTestDict()[\'customer_user1_function\']"></td>\n
 </tr>\n
 <tr>\n
   <td>type</td>\n

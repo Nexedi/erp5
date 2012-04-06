@@ -68,19 +68,8 @@ paysheet_list = accounting_module.searchFolder( **search_params)\n
 \n
 nb_heures_supp = 0\n
 for paysheet in paysheet_list:\n
-  small_heures_supp = 0\n
-  big_heures_supp = 0\n
-  annotation_line = paysheet.getAnnotationLineFromReference(\\\n
-      reference=\'overtime_small_rate\')\n
-  if annotation_line is not None :\n
-    small_heures_supp = annotation_line.getQuantity()\n
-\n
-  annotation_line = paysheet.getAnnotationLineFromReference(\\\n
-      reference=\'overtime_big_rate\')\n
-  if annotation_line is not None :\n
-    big_heures_supp = annotation_line.getQuantity()\n
-\n
-  nb_heures_supp += (small_heures_supp + big_heures_supp)\n
+  nb_heures_supp += paysheet.PaySheetTransaction_getMovementQuantityFromCategory(\n
+    \'base_contribution/base_amount/payroll/report/overtime\')\n
 \n
 return nb_heures_supp\n
 </string> </value>

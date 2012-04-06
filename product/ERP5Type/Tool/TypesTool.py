@@ -201,10 +201,16 @@ class TypesTool(TypeProvider):
   security.declareProtected(Permissions.AccessContentsInformation, 'getDocumentTypeList')
   def getDocumentTypeList(self):
     """
-    Return a list of Document types that can be used as Base classes
+    Return a list of Document types (including filesystem and ZODB Component
+    Documents) that can be used as Base classes
     """
     from Products.ERP5Type import document_class_registry
-    return sorted(document_class_registry)
+    document_type_set = set(document_class_registry)
+
+    import erp5.component.document
+    document_type_set.update(erp5.component.document._registry_dict)
+
+    return sorted(document_type_set)
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getPortalTypeClass')
   def getPortalTypeClass(self, context, temp=False):

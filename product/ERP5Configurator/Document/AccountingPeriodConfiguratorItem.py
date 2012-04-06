@@ -60,11 +60,15 @@ class AccountingPeriodConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     organisation_id = business_configuration.\
                                  getGlobalConfigurationAttr('organisation_id')
     organisation = portal.organisation_module._getOb(organisation_id)
-    organisation.newContent(portal_type='Accounting Period',
+    period = organisation.newContent(
+                            portal_type='Accounting Period',
                             start_date=self.getStartDate(),
                             stop_date=self.getStopDate(),
                             short_title=self.getShortTitle(),
                             title=self.getTitle())
+
+    if self.portal_workflow.isTransitionPossible(period, 'start'):
+      period.start(comment="Started by Configurator")
 
     # no need to 'install' in the business template, because it's contain as
     # subobject of an organisation we already added.

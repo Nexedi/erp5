@@ -70,7 +70,15 @@ if portal.portal_catalog.getResultValue(\n
 # through a Person Configuration Item which when build will create a real\n
 # Nexedi ERP5 account.\n
 \n
-bc_path = " NOT %%/%s/%%" % REQUEST.get(\'business_configuration_key\')\n
+bc_key = REQUEST.get(\'business_configuration_key\', None)\n
+bc_path = None\n
+if bc_key is None:\n
+  configuration_save = portal.restrictedTraverse(REQUEST.get(\'configuration_save_url\'))\n
+  if configuration_save is not None:\n
+    bc_key = configuration_save.getParentValue().getRelativeUrl()\n
+\n
+if bc_key is not None:\n
+  bc_path = "NOT %%/%s/%%" % bc_key\n
 \n
 if portal.portal_catalog.getResultValue(\n
                          reference = reference,\n

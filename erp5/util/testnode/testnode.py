@@ -60,14 +60,17 @@ def sigterm_handler(signal, frame):
 
 signal.signal(signal.SIGTERM, sigterm_handler)
 
-def safeRpcCall(function, *args):
+def safeRpcCall(proxy, function_id, *args):
   # XXX: this method will try infinitive calls to backend
   # this can cause testnode to looked "stalled"
   retry = 64
   while True:
     try:
+      # it safer to pass proxy and function_id so we avoid httplib.ResponseNotReady
+      # by trying reconnect before server keep-alive ends and the socket closes
+      function = getattr(proxy, function_id)
       return function(*args)
-    except (socket.error, xmlrpclib.ProtocolError), e:
+    except (socket.error, xmlrpclib.ProtocolError, xmlrpclib.Fault), e:
       logging.warning(e)
       pprint.pprint(args, file(function._Method__name, 'w'))
       time.sleep(retry)
@@ -197,7 +200,6 @@ branch = %(branch)s
           log('Retrying install')
         retry_software = False
         previous_revision = revision
-
         portal_url = config['test_suite_master_url']
         test_result_path = None
         test_result = (test_result_path, revision)
@@ -207,9 +209,8 @@ branch = %(branch)s
           portal = xmlrpclib.ServerProxy("%s%s" %
                       (portal_url, 'portal_task_distribution'),
                       allow_none=1)
-          master = portal
-          assert safeRpcCall(master.getProtocolRevision) == 1
-          test_result = safeRpcCall(master.createTestResult,
+          assert safeRpcCall(portal, "getProtocolRevision") == 1
+          test_result = safeRpcCall(portal, "createTestResult",
             config['test_suite'], revision, [],
             False, test_suite_title,
             config['test_node_title'], config['project_title'])
@@ -276,10 +277,8 @@ branch = %(branch)s
           if bt5_path_list not in ('', None,):
             invocation_list.extend(["--bt5_path", bt5_path_list])
           # From this point, test runner becomes responsible for updating test
-          # result.
-          # XXX: is it good for all cases (eg: test runner fails too early for
-          # any custom code to pick the failure up and react ?)
-          remote_test_result_needs_cleanup = False
+          # result. We only do cleanup if the test runner itself is not able
+          # to run.
           log("call process : %r", (invocation_list,))
           run_test_suite = subprocess.Popen(invocation_list,
             preexec_fn=os.setsid, cwd=config['test_suite_directory'],
@@ -289,7 +288,7 @@ branch = %(branch)s
           process_group_pid_set.remove(run_test_suite.pid)
       except SubprocessError, e:
         if remote_test_result_needs_cleanup:
-          safeRpcCall(master.reportTaskFailure,
+          safeRpcCall(portal, "reportTaskFailure",
             test_result_path, e.status_dict, config['test_node_title'])
         time.sleep(DEFAULT_SLEEP_TIMEOUT)
         continue

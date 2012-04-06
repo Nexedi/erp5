@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<?xml version=\'1.0\' encoding=\'UTF-8\'?>\n
+<tal:block define="dummy python:request.RESPONSE.setHeader(\'Content-Type\', \'application/xml;; charset=utf-8\')"><?xml version=\'1.0\' encoding=\'UTF-8\'?>\n
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd"\n
         xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n
@@ -66,7 +66,8 @@
       </tal:block>\n
     </tal:block>\n
   </tal:block>\n
-</urlset>
+</urlset>\n
+</tal:block>
 
 ]]></unicode> </value>
         </item>

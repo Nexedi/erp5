@@ -16,9 +16,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Configure your accounting.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

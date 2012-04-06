@@ -188,11 +188,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
         </tr>
       </thead>
       <tbody>
-        
-        
-          &lt;span metal:use-macro=&quot;container/Zuite_CommonTemplate/macros/init&quot; style=&quot;display: none;&quot;&gt;init&lt;/span&gt;
-        
-        <tr>
+        <span metal:use-macro="container/Zuite_CommonTemplate/macros/init" style="display: none;">init</span>        <tr>
           <td>store</td>
           <!-- ERP5TypeTestCase is the default for any UnitTest -->
           <td>%s</td>
@@ -200,8 +196,8 @@ class TestRunMyDoc(ERP5TypeTestCase):
          </tr>
         <tr>
           <td>store</td>
-            <td>%s</td>
-            <td>base_password</td>
+          <td>%s</td>
+          <td>base_password</td>
          </tr>
         <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr><td>selectAndWait</td> 
             <td>name=select_module</td> 
@@ -240,7 +236,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
 
     self.assertEquals(zptest._text, expected_html.strip())
 
-    expected_test_html = """<html>
+    expected_test_html = u"""<html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>TEST</title>
@@ -258,7 +254,6 @@ class TestRunMyDoc(ERP5TypeTestCase):
           <td>%s</td>
           <td>base_url</td>
         </tr>
-        
         <tr>
           <td>store</td>
           <!-- ERP5TypeTestCase is the default for any UnitTest -->
@@ -267,8 +262,8 @@ class TestRunMyDoc(ERP5TypeTestCase):
          </tr>
         <tr>
           <td>store</td>
-            <td>%s</td>
-            <td>base_password</td>
+          <td>%s</td>
+          <td>base_password</td>
          </tr>
         <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr><td>selectAndWait</td> 
             <td>name=select_module</td> 

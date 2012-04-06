@@ -65,9 +65,9 @@ if source_value is not None:\n
 else:\n
   source_section_value = None\n
 \n
-module = portal.getDefaultModule(ticket_portal_type)\n
+module = portal.getDefaultModule(follow_up_ticket_type)\n
 ticket = module.newContent(\n
-            portal_type=ticket_portal_type,\n
+            portal_type=follow_up_ticket_type,\n
             title=follow_up_ticket_title,\n
             start_date=event.getStartDate(),\n
             destination_decision_list=event.getSourceList(),\n

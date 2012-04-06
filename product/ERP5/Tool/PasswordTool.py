@@ -70,9 +70,10 @@ class PasswordTool(BaseTool):
     # BaseTool.__init__(self, id)
 
   security.declareProtected('Manage users', 'getResetPasswordKey')
-  def getResetPasswordKey(self, user_login):
-    # generate expiration date
-    expiration_date = DateTime() + self._expiration_day
+  def getResetPasswordKey(self, user_login, expiration_date=None):
+    if expiration_date is None:
+      # generate expiration date
+      expiration_date = DateTime() + self._expiration_day
 
     # generate a random string
     key = self._generateUUID()
@@ -110,8 +111,9 @@ class PasswordTool(BaseTool):
 
 
   def mailPasswordResetRequest(self, user_login=None, REQUEST=None,
-                              notification_message=None, sender=None,
-                              store_as_event=False):
+                               notification_message=None, sender=None,
+                               store_as_event=False,
+                               expiration_date=None):
     """
     Create a random string and expiration date for request
     Parameters:
@@ -123,6 +125,7 @@ class PasswordTool(BaseTool):
             As default, the default email address will be used
     store_as_event -- whenever CRM is available, store
                         notifications as events
+    expiration_date -- If not set, expiration date is current date + 1 day.
     """
     if REQUEST is None:
       REQUEST = get_request()
@@ -159,7 +162,8 @@ class PasswordTool(BaseTool):
         return REQUEST.RESPONSE.redirect( ret_url )
       return msg
 
-    key = self.getResetPasswordKey(user_login=user_login)
+    key = self.getResetPasswordKey(user_login=user_login,
+                                   expiration_date=expiration_date)
     url = self.getResetPasswordUrl(key=key, site_url=site_url)
 
     # send mail

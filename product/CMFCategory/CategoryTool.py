@@ -699,7 +699,7 @@ class CategoryTool( UniqueObject, Folder, Base ):
       # We must make sure however that multiple links are possible
       default_path_found = {}
       for path in category_list:
-        if path != '':
+        if not path in ('', None):
           if base or len(base_category_list) > 1:
             # Only keep path which are member of base_category_list
             if self.getBaseCategoryId(path) in base_category_list:

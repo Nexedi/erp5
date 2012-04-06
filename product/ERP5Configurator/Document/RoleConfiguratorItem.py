@@ -71,15 +71,16 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
       mod_conf_list = []
       portal_type = oo_module_dict.pop('portal_type')
       for category, role_list_string in oo_module_dict.items():
-        # passed from outside (it has higher priority than configuratiohn file)
+        # passed from outside (it has higher priority than configuration file)
         category = dynamic_values.get(category, category)
         title = category.replace('/', '_')
         role_name_list = [x.strip() for x in role_list_string.split(';')]
-        role_category_list=[category]
+        role_category_list = [category]
         conf_dict =  {'title': title,
-                      'description': 'Configured by Nexedi Configurator',
+                      'description': 'Configured by ERP5 Configurator',
                       'role_name_list': role_name_list,
                       'role_category_list': role_category_list}
+
         mod_conf_list.append(conf_dict)
       portal_type_dict[portal_type] = mod_conf_list
     ## Update fake site
@@ -94,6 +95,7 @@ class RoleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
        else:
          ignore_list.append(portal_type)
          LOG("CONFIGURATOR", INFO, "Fail to define Roles for %s" % portal_type)
+
     ## Update BT5
     bt5_obj = business_configuration.getSpecialiseValue()
     # keep existing roles definition (from previous configuration saves)

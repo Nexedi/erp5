@@ -16,9 +16,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Upload your categories spreadsheet.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -30,7 +28,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Categories</string> </value>
+            <value> <string>Your Categories</string> </value>
         </item>
       </dictionary>
     </pickle>

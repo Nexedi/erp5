@@ -70,6 +70,8 @@ class TradeModelRule(Rule):
 
     context_movement = applied_rule.getParentValue()
     for amount in trade_condition.getAggregatedAmountList(context_movement):
+      if not amount.getQuantity():
+        continue
       # business path specific
       business_path_list = business_process.getPathValueList(
           trade_phase=amount.getTradePhaseList(), context=context_movement)

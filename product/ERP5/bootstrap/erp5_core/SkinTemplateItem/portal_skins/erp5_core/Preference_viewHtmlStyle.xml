@@ -68,6 +68,7 @@
                     <value>
                       <list>
                         <string>my_preferred_text_editor</string>
+                        <string>my_preferred_source_code_editor</string>
                         <string>my_preferred_text_format</string>
                       </list>
                     </value>

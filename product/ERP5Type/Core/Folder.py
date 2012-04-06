@@ -552,7 +552,7 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     return self._folder_handler == HBTREE_HANDLER
 
   security.declareProtected( Permissions.ManagePortal, 'migrateToHBTree' )
-  def migrateToHBTree(self, migration_generate_id_method=None, new_generate_id_method=None, REQUEST=None):
+  def migrateToHBTree(self, migration_generate_id_method=None, new_generate_id_method='_generatePerDayId', REQUEST=None):
     """
     Function to migrate from a BTree folder to HBTree folder.
     It will first call setId on all folder objects to have right id

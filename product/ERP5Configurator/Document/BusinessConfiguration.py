@@ -67,8 +67,6 @@ class BusinessConfiguration(Item):
                     , PropertySheet.Arrow
                     , PropertySheet.BusinessConfiguration
                     , PropertySheet.Comment
-                    , PropertySheet.Version
-                    , PropertySheet.DefaultImage
                     )
 
   security.declareProtected(Permissions.View, 'isInitialConfigurationState')
@@ -136,7 +134,8 @@ class BusinessConfiguration(Item):
     configuration_save = self._getConfSaveForStateFromWorkflowHistory()
     if configuration_save is None:
       ## we haven't saved any configuration save for this state so create new one
-      configuration_save = self.newContent(portal_type='Configuration Save')
+      configuration_save = self.newContent(portal_type='Configuration Save', 
+                                           title=current_state.getTitle())
     else:
       ## we have already created configuration save for this state
       ## so remove from it already existing configuration items
@@ -353,8 +352,9 @@ class BusinessConfiguration(Item):
       actions and Configurator requets
     """
     kw = dict(tag="start_configuration_%s" % self.getId(), 
-              after_method_id=["recursiveImmediateReindexObject",
-                               'immediateReindexObject'])
+              after_method_id=["updateBusinessTemplateFromUrl",
+                               "recursiveImmediateReindexObject",
+                               "immediateReindexObject"])
     start = time.time()
     LOG("CONFIGURATOR", INFO, 
         'Build process started for %s' % self.getRelativeUrl())
@@ -393,7 +393,12 @@ class BusinessConfiguration(Item):
     for obj in self.contentValues(filter={'portal_type': ['Configuration Save']}):
       object_ids.append(obj.getId())
     self.manage_delObjects(object_ids)
-    del self.workflow_history
+    if getattr(self, "workflow_history", None) is not None:
+      del self.workflow_history
+    if getattr(self, "_global_configuration_attributes", None) is not None:
+      del self._global_configuration_attributes
+    if getattr(self, "_multi_entry_transitions", None) is not None:
+      del self._multi_entry_transitions
+    self.setSpecialiseValue(None)
     # ERP5 Workflow initialization
     erp5_workflow = self.getResourceValue()
-    erp5_workflow.initializeDocument(self)

@@ -180,8 +180,9 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEquals(obj3.getId(), '3')
       transaction.commit()
       self.tic()
-      # call migration script
-      self.folder.migrateToHBTree()
+      # call migration script with explicit new_generate_id_method (so migration code
+      # doesn't assign a good default
+      self.folder.migrateToHBTree(new_generate_id_method='_generateNextId')
       transaction.commit()
       self.tic()
       # check we now have a hbtree
@@ -216,8 +217,9 @@ class TestFolderMigration(ERP5TypeTestCase, LogInterceptor):
       self.assertEquals(obj3.getId(), '3')
       transaction.commit()
       self.tic()
-      # call migration script
-      self.folder.migrateToHBTree()
+      # call migration script with explicit new_generate_id_method (so migration code
+      # doesn't assign a good default
+      self.folder.migrateToHBTree(new_generate_id_method='_generateNextId')
       transaction.commit()
       self.tic()
       # check we now have a hbtree

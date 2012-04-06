@@ -270,8 +270,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   def stepUpdateInvoiceTransactionRuleMatrix(self, sequence, **kw) :
     """Creates/updates the matrix of the sale invoice transaction rule """
     invoice_transaction_rule = sequence.get('invoice_transaction_rule')
-    base_id = 'movement'
-    kwd = {'base_id': base_id}
 
     # update the matrix, generates the accounting rule cells
     invoice_transaction_rule.edit()
@@ -280,31 +278,19 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
 
     # check the accounting rule cells inside the matrix
     cell_list = invoice_transaction_rule.contentValues(
-                filter = {'portal_type':self.accounting_rule_cell_portal_type})
-    self.assertEqual(len(cell_list), 4)
-
-    # In the matrix, cells are named on the scheme :
-    # ${base_id} + '_'.join(predicate_dimension ordered by int_index)
-    product_notebook_region_france_cell = getattr(invoice_transaction_rule,
-                                          '%s_0_0'%base_id, None)
-    product_notebook_region_africa_cell = getattr(invoice_transaction_rule,
-                                          '%s_0_1'%base_id, None)
-    product_barebone_region_france_cell = getattr(invoice_transaction_rule,
-                                          '%s_1_0'%base_id, None)
-    product_barebone_region_africa_cell = getattr(invoice_transaction_rule,
-                                          '%s_1_1'%base_id, None)
-
-    self.failUnless(product_notebook_region_france_cell != None)
-    self.failUnless(product_notebook_region_africa_cell != None)
-    self.failUnless(product_barebone_region_france_cell != None)
-    self.failUnless(product_barebone_region_africa_cell != None)
-
-    sequence.edit(
-      product_notebook_region_france_cell = product_notebook_region_france_cell,
-      product_notebook_region_africa_cell = product_notebook_region_africa_cell,
-      product_barebone_region_france_cell = product_barebone_region_france_cell,
-      product_barebone_region_africa_cell = product_barebone_region_africa_cell,
+                portal_type=self.accounting_rule_cell_portal_type)
+    kw = dict(
+      product_notebook_region_france_cell=invoice_transaction_rule.getCell(
+        'product_notebook', 'region_france', base_id='movement'),
+      product_notebook_region_africa_cell=invoice_transaction_rule.getCell(
+        'product_notebook', 'region_africa', base_id='movement'),
+      product_barebone_region_france_cell=invoice_transaction_rule.getCell(
+        'product_barebone', 'region_france', base_id='movement'),
+      product_barebone_region_africa_cell=invoice_transaction_rule.getCell(
+        'product_barebone', 'region_africa', base_id='movement'),
     )
+    self.assertSameSet(cell_list, kw.values())
+    sequence.edit(**kw)
 
   def stepValidateInvoiceTransaction(self, sequence, **kw) :
     """validates the sale invoice transaction rule"""

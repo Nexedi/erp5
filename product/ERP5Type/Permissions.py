@@ -146,3 +146,7 @@ AddERP5Content = AddPortalContent # Since we put come CPS content in ERP5 docume
 # Source Code Management - this is the highest possible permission
 ManageExtensions = "Manage extensions"
 
+# Permission for resetting ZODB Components, this is required to allow a
+# Manager to reset Dynamic Classes but not to modify the source code of
+# Components
+ResetDynamicClasses = "Reset dynamic classes"

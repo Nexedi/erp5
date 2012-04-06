@@ -1,0 +1,15 @@
+<component>
+  <sectiontype name="ERP5Type"
+               implements="zope.product.base">
+    <description>
+      Description
+    </description>
+    <key name="developers"
+         attribute="developer_list"
+         datatype="string-list">
+      <description>
+        Description
+      </description>
+    </key>
+  </sectiontype>
+</component>

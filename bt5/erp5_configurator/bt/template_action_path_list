@@ -26,4 +26,6 @@ Solver Configurator Item | view
 Standard BT5 Configurator Item | view
 System Preference Configurator Item | view
 Workflow Security Configurator Item | view
+Workflow | configurator_settings
+Workflow | launch_configuration
 portal_actions | use_configurator

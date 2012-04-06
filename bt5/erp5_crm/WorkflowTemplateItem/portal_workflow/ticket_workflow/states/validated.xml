@@ -30,6 +30,8 @@
               <tuple>
                 <string>invalidate</string>
                 <string>invalidate_action</string>
+                <string>suspend</string>
+                <string>suspend_action</string>
               </tuple>
             </value>
         </item>

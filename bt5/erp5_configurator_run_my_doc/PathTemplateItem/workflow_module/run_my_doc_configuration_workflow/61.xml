@@ -34,9 +34,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Enter the number of user accounts you want to create.</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -48,7 +46,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Users number</string> </value>
+            <value> <string>Number of user accounts</string> </value>
         </item>
       </dictionary>
     </pickle>

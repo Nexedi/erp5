@@ -1,4 +1,13 @@
 <property_sheet_list>
+ <portal_type id="Document Component">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Extension Component">
+  <item>SortIndex</item>
+ </portal_type>
+ <portal_type id="Test Component">
+  <item>SortIndex</item>
+ </portal_type>
  <portal_type id="Trash Bin">
   <item>Base</item>
   <item>SimpleItem</item>

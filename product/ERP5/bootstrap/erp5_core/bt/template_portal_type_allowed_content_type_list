@@ -11,6 +11,9 @@ Cache Factory | Ram Cache
 Cache Tool | Cache Factory
 Category Tool | Base Category
 Category | Category
+Component Tool | Document Component
+Component Tool | Extension Component
+Component Tool | Test Component
 Contribution Registry Tool | Contribution Predicate
 Domain Tool | Base Domain
 Domain | Domain

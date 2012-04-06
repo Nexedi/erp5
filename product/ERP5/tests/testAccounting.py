@@ -236,7 +236,11 @@ class AccountingTestCase(ERP5TypeTestCase):
     return ('erp5_core_proxy_field_legacy',
             'erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
             'erp5_accounting', 'erp5_project', 'erp5_accounting_ui_test',
-            'erp5_ods_style', 'erp5_simulation_test')
+            'erp5_ods_style',
+            'erp5_configurator_standard_trade_template',
+            'erp5_configurator_standard_accounting_template',
+            'erp5_configurator_standard_invoicing_template',
+            'erp5_simulation_test')
 
 
 class TestAccounts(AccountingTestCase):

@@ -34,9 +34,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Enter the data of each user</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

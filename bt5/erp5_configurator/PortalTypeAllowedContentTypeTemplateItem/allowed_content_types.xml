@@ -8,6 +8,9 @@
  <portal_type id="Business Configuration Module">
   <item>Business Configuration</item>
  </portal_type>
+ <portal_type id="Business Process Configurator Item">
+  <item>Embedded File</item>
+ </portal_type>
  <portal_type id="Categories Spreadsheet Configurator Item">
   <item>Embedded File</item>
   <item>File</item>
@@ -50,6 +53,9 @@
   <item>Telephone</item>
  </portal_type>
  <portal_type id="Portal Type Roles Spreadsheet Configurator Item">
+  <item>Embedded File</item>
+ </portal_type>
+ <portal_type id="Workflow">
   <item>Embedded File</item>
  </portal_type>
 </allowed_content_type_list>

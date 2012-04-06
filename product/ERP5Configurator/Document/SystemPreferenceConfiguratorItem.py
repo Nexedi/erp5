@@ -33,9 +33,7 @@ from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Configurator.mixin.configurator_item import ConfiguratorItemMixin
 
 class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
-  """ 
-    Setup system preference. 
-  """
+  """ Setup System preference. """
 
   meta_type = 'ERP5 System Preference Configurator Item'
   portal_type = 'System Preference Configurator Item'
@@ -96,26 +94,30 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
 
   def _build(self, business_configuration):
     portal = self.getPortalObject()
-    portal_preferences = portal.portal_preferences
-    preference = portal_preferences._getOb(self.object_id, None)
-    activated_preference = portal_preferences.getActiveSystemPreference()
+    preference = portal.portal_preferences._getOb(self.object_id, None)
     if preference is None:
       preference = portal.portal_preferences.newContent(
-                               portal_type = 'System Preference',
-                               id=self.object_id,
-                               title=self.title,
-                               description=self.description,
-                               priority=1)
+                              portal_type = 'System Preference',
+                              id = self.object_id,
+                              title = self.title,
+                              description = self.description,
+                              priority = 1)
 
     # XXX this have to be translated in user language.
     preference_dict = {}
 
+    marker = []
+    activated_preference = portal.portal_preferences.getActiveSystemPreference()
     for preference_name in self._getPreferenceNameList():
       preference_value = getattr(self, preference_name,
-                     preference.getProperty(preference_name))
+                     preference.getProperty(preference_name, marker))
       if preference_value is None and activated_preference is not None:
         preference_value = activated_preference.getProperty(preference_name)
-      preference_dict[preference_name] = preference_value
+      if preference_value is not marker:
+        preference_dict[preference_name] = preference_value
+
+    if self.portal_workflow.isTransitionPossible(preference, 'enable'):
+      preference.enable()
 
     preference.edit(**preference_dict)
     bt5_obj = business_configuration.getSpecialiseValue()

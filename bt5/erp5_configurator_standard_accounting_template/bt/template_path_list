@@ -1,0 +1,6 @@
+portal_rules/new_accounting_transaction_root_simulation_rule
+portal_rules/new_accounting_transaction_root_simulation_rule/**
+portal_rules/new_invoice_root_simulation_rule
+portal_rules/new_invoice_root_simulation_rule/**
+portal_rules/new_payment_simulation_rule
+portal_rules/new_payment_simulation_rule/**

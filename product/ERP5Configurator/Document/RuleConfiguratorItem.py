@@ -1,7 +1,8 @@
 ##############################################################################
 #
-# Copyright (c) 2010 Nexedi SA and Contributors. All Rights Reserved.
+# Copyright (c) 2012 Nexedi SA and Contributors. All Rights Reserved.
 #                    Lucas Carvalho <lucas@nexedi.com>
+#                    Rafael Monnerat <rafael@nexedi.com>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -52,22 +53,24 @@ class RuleConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore )
+                    , PropertySheet.DublinCore
+                    , PropertySheet.Reference )
 
   def _build(self, business_configuration):
     portal = self.getPortalObject()
-    simulation_rule_dict = portal.ERPSite_getConfiguratorSimulationRuleDict()
-    for key, value in simulation_rule_dict.iteritems():
-      reference = value.get('default_reference')
-      result = portal.portal_rules.searchFolder(sort_on='version',
-                                                sort_order='descending',
-                                                reference=reference)
-      if len(result):
-        value['version'] = int(result[0].getVersion(0)) + 1
-      rule = portal.portal_rules.newContent(**value)
+    template_id = self.getId()
 
-      content_list = value.pop('content_list')
-      for content_dict in content_list:
-        rule.newContent(**content_dict)
+    if getattr(portal.portal_rules, template_id, None) is not None:
+      cb_data = portal.portal_rules.manage_copyObjects([template_id])
+      copied, = portal.portal_rules.manage_pasteObjects(cb_data)
+      rule = portal.portal_rules[copied["new_id"]]
+      if self.getReference() is not None:
+        rule.edit(reference=self.getReference())
+      rule.setVersion(str(int(rule.getVersion(0)) + 1))
+      if len(self.getTradePhaseList()) > 0:
+        rule.setTradePhaseList(self.getTradePhaseList())
+      rule.validate()
+    else:
+      raise ValueError("Unable to find rule template with id %s" % template_id)
 
-      self.install(rule, business_configuration)
+    self.install(rule, business_configuration)

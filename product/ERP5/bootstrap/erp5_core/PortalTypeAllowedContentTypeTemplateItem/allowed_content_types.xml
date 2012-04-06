@@ -32,6 +32,11 @@
  <portal_type id="Category Tool">
   <item>Base Category</item>
  </portal_type>
+ <portal_type id="Component Tool">
+  <item>Document Component</item>
+  <item>Extension Component</item>
+  <item>Test Component</item>
+ </portal_type>
  <portal_type id="Contribution Registry Tool">
   <item>Contribution Predicate</item>
  </portal_type>

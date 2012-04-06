@@ -38,583 +38,123 @@ from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
 from AccessControl import Unauthorized
 
-
-class TestConsultingConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
+class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
   """
-    Test Live Consulting Configuration Workflow
+    Mixin for shared methods between Consulting and Standard Configurator
+    Workflow.
   """
+  AFTER_CONFIGURATION_SEQUENCE = '''
+      stepCheckValidAccountList
+      stepCheckAccountReference
+      stepCheckValidPersonList
+      stepCheckPersonInformationList
+      stepCheckValidOrganisationList
+      stepCheckValidCurrencyList
+      stepCheckPublicGadgetList
+      stepCheckPreferenceList
+      stepCheckModulesBusinessApplication
+      stepCheckBaseCategoryList
+      stepCheckOrganisationSite
+      stepCheckAccountingPeriod
+      stepCheckRuleValidation
+      stepCheckBusinessProcess
+      stepCheckSolver
+      stepCheckSaleTradeCondition
+      stepCheckPurchaseTradeCondition
+      stepCheckSaleOrderSimulation
+      '''
 
-  DEFAULT_SEQUENCE_LIST = """
-      stepCreateBusinessConfiguration 
+  SECURITY_CONFIGURATION_SEQUENCE = """
       stepTic
-      stepSetConsultingWorkflow
+      stepViewAddGadget
+      stepViewEventModule
+      stepAddEvent
+      stepSentEventWorkflow
+      stepViewAccountModule
+      stepAddAccountModule
+      stepViewAccount
+      stepCopyPasteAccount
+      stepViewEntityModules
+      stepAddEntityModules
+      stepCopyAndPastePerson
+      stepCopyAndPasteOrganisation
+      stepEntityWorkflow
+      stepViewCreatedPersons
+      stepViewCreatedOrganisations
+      stepViewCreatedAssignemnts
+      stepAddAccoutingPeriod
+      stepValidatedAccountingPeriods
+      stepViewBankAccount
+      stepViewCreditCard
+      stepValidateAndModifyBankAccount
+      stepValidateAndModifyCreditCard
+      stepAddPaymentNodeInPerson
+      stepAddPaymentNodeInOrganisation
+      stepCopyAndPasteBankAccountInPerson
+      stepCopyAndPasteBankAccountInOrganisation
+      stepViewAccountingTransactionModule
+      stepAddAccountingTransactionModule
+      stepCopyAndPasteAccountingTransactions
       stepTic
-      stepConfiguratorNext
+      stepAccountingTransaction
       stepTic
-      stepCheckBT5ConfiguratorItem
-      stepCheckConfigureCategoriesForm
-      stepSetupCategoriesConfiguratorItem
-      stepConfiguratorNext
+      stepSaleInvoiceTransaction
       stepTic
-      stepCheckConfigureRolesForm
-      stepCheckCategoriesConfiguratorItem
-      stepSetupRolesConfiguratorItem
-      stepConfiguratorNext
+      stepPurchaseInvoiceTransaction
       stepTic
-      stepCheckConfigureOrganisationForm
-      stepSetupOrganisationConfiguratorItem
-      stepConfiguratorNext
+      stepPaymentTransaction
       stepTic
-      stepCheckConfigureUserAccountNumberForm
-      stepCheckOrganisationConfiguratorItem
-      stepSetupUserAccounNumberSix
-      stepConfiguratorNext
+      stepBalanceTransaction
       stepTic
-      stepCheckConfigureMultipleUserAccountForm
-      stepSetupMultipleUserAccountSix
-      stepConfiguratorNext
-      stepTic
-      stepCheckConfigureAccountingForm
-      stepCheckMultiplePersonConfigurationItem
-      stepSetupAccountingConfiguration%(country)s
-      stepConfiguratorNext
-      stepTic
-      stepCheckConfigurePreferenceForm
-      stepCheckAccountingConfigurationItemList%(country)s
-      stepSetupPreferenceConfiguration%(country)s
-      stepConfiguratorNext
-      stepTic
-      stepCheckPreferenceConfigurationItemList%(country)s
-      stepCheckConfigureInstallationForm
-      stepSetupInstallConfiguration
-      stepConfiguratorNext
-      stepTic
-      stepCheckInstallConfiguration
-      stepStartConfigurationInstallation
-      stepTic
-      stepCheckInstanceIsConfigured%(country)s
+      stepAccountingTransaction_getCausalityGroupedAccountingTransactionList
+      stepAddAssignments
+      stepAssignmentTI
+      stepEditAssignments
+      stepViewAcessAddPurchaseTradeCondition
+      stepViewAccessAddSaleTradeCondition
+      stepViewAccessAddSaleOrder
+      stepViewAccessAddSalePackingList
+      stepViewAccessPurchaseOrder
+      stepPurchasePackingList
+      stepWebSiteModule
+      stepPortalContributionsTool
+      stepConfiguredPropertySheets
       """
-
-  def uploadFile(self, file_id):
-    file_obj = getattr(self.portal, file_id)
-    file_path = '/tmp/%s' % file_id
-    temp_file = open(file_path, 'w+b')
-    try:
-      temp_file.write(str(file_obj))
-    finally:
-      temp_file.close()
-
-    return (file_path, FileUpload(file_path, file_id))
-
-  def afterSetUp(self):
-    TestLiveConfiguratorWorkflowMixin.afterSetUp(self)
-    categories_file_id = 'consulting_configurator_sample_categories.ods'
-    self.categories_file_path, self.categories_file_upload = \
-                                           self.uploadFile(categories_file_id)
-
-    roles_file_id = 'consulting_configurator_sample_roles_configuration_sheet.ods'
-    self.roles_file_path, self.roles_file_upload = \
-                                           self.uploadFile(roles_file_id)
-    # set the company employees number
-    self.company_employees_number = '3'
-
-    newId = self.portal.portal_ids.generateNewId
-    id_group ='testConfiguratorConsultingWorkflow'
-    self.person_creator_reference = 'person_creator_%s' % newId(id_group)
-    self.person_assignee_reference = 'person_assignee_%s' % newId(id_group)
-    self.person_assignor_reference = 'person_assignor_%s' % newId(id_group)
-
-    # set the user list
-    self.user_list = [
-      dict(
-        field_your_first_name='Person',
-        field_your_last_name='Creator',
-        field_your_reference=self.person_creator_reference,
-        field_your_password='person_creator',
-        field_your_password_confirm='person_creator',
-        field_your_function='person/creator',
-        field_your_default_email_text='',
-        field_your_default_telephone_text='',
-      ), dict(
-        field_your_first_name='Person',
-        field_your_last_name='Assignee',
-        field_your_reference=self.person_assignee_reference,
-        field_your_password='person_assignee',
-        field_your_password_confirm='person_assignee',
-        field_your_function='person/assignee',
-        field_your_default_email_text='',
-        field_your_default_telephone_text='',
-      ), dict(
-        field_your_first_name='Person',
-        field_your_last_name='Assignor',
-        field_your_reference=self.person_assignor_reference,
-        field_your_password='person_assignor',
-        field_your_password_confirm='person_assignor',
-        field_your_function='person/assignor',
-        field_your_default_email_text='',
-        field_your_default_telephone_text='',
-      ),
-    ]
-
-    # set preference group
-    self.preference_group = 'group/g' 
-
-  def beforeTearDown(self):
-    os.remove(self.categories_file_path)
-    os.remove(self.roles_file_path)
-
-  def stepCreateBusinessConfiguration(self,  sequence=None, sequence_list=None, **kw):
-    """ Create one Business Configuration """
-    module = self.portal.business_configuration_module
-    business_configuration = module.newContent(
-                               portal_type="Business Configuration",
-                               title='Test Configurator Consulting Workflow')
-    next_dict = {}
-    sequence.edit(business_configuration=business_configuration, 
-                  next_dict=next_dict)
-
-  def stepSetConsultingWorkflow(self, sequence=None, sequence_list=None, **kw):
-    """ Set Consulting Workflow into Business Configuration """
-    business_configuration = sequence.get("business_configuration")
-    self.setBusinessConfigurationWorkflow(business_configuration,
-                                   "workflow_module/erp5_consulting_workflow")
-
-  def stepCheckConfigureCategoriesForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check if Confire Categories step was showed """
-    response_dict = sequence.get("response_dict")
-    if 'command' in response_dict:
-      self.assertEquals('show', response_dict['command'])
-    self.assertEquals(None, response_dict['previous'])
-    self.assertEquals('Configure Categories', response_dict['next'])
-    self.assertCurrentStep('Your Categories', response_dict)
-
-  def stepSetupCategoriesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
-    """ Load the categories """
-    next_dict = dict(field_your_configuration_spreadsheet=self.categories_file_upload)
-    next_dict.update(**kw)
-    sequence.edit(next_dict=next_dict)
-
-  def stepCheckConfigureRolesForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check if Configure Roles step was showed """
-    response_dict = sequence.get("response_dict")
-    if 'command' in response_dict:
-      self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Configure Roles', response_dict['next'])
-    self.assertEquals('Previous', response_dict['previous'])
-    self.assertCurrentStep('Your roles settings', response_dict)
-
-  def stepCheckCategoriesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
-    """ Checki if categories was created """
-    business_configuration = sequence.get("business_configuration")
-    # this created a categories spreadsheet confiurator item
-    categories_spreadsheet_configuration_save = business_configuration['3']
-    categories_spreadsheet_configuration_item =\
-          categories_spreadsheet_configuration_save['1']
-    self.assertEquals('Categories Spreadsheet Configurator Item',
-          categories_spreadsheet_configuration_item.getPortalType())
-
-    spreadsheet = categories_spreadsheet_configuration_item\
-                    .getConfigurationSpreadsheet()
-    self.assertNotEquals(None, spreadsheet)
-    self.assertEquals('Embedded File', spreadsheet.getPortalType())
-    self.failUnless(spreadsheet.hasData())
-
-  def stepSetupRolesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
-    """ Load the Roles """
-    next_dict = dict(field_your_portal_type_roles_spreadsheet=self.roles_file_upload)
-    next_dict.update(**kw)
-    sequence.edit(next_dict=next_dict)
-
-  def stepCheckConfigureOrganisationForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check if Confire Organisation step was showed """
-    response_dict = sequence.get("response_dict")
-    TestLiveConfiguratorWorkflowMixin.stepCheckConfigureOrganisationForm(
-                         self, sequence, sequence_list, **kw)
-    self.assertEquals('Previous', response_dict['previous'])
-
-  def stepSetupOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
-    """ Create one Organisation with French information """
-    self._stepSetupOrganisationConfiguratorItem(
-        sequence=sequence,
-        sequence_list=sequence_list,
-        field_your_default_address_city='LILLE',
-        field_your_default_address_region='europe/western_europe/france',
-        field_your_group='g')
-
-  def stepCheckOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
-    """ Check if organisation was created fine """
-    business_configuration = sequence.get("business_configuration")
-    # last one: a step for what the client selected
-    organisation_config_save = business_configuration['5']
-    self.assertEquals(1, len(organisation_config_save.contentValues()))
-    # first item: configuration of our organisation
-    organisation_config_item = organisation_config_save['1']
-    self.assertEquals(organisation_config_item.getPortalType(),
-                      'Organisation Configurator Item')
-    # this organisation configurator items contains all properties that the
-    # orgnanisation will have.
-    self.assertEquals(organisation_config_item.getDefaultAddressCity(),
-                      'LILLE')
-    self.assertEquals(organisation_config_item.getDefaultAddressRegion(),
-                      'europe/western_europe/france')
-    self.assertEquals(organisation_config_item.getDefaultEmailText(),
-                      'me@example.com')
-    self.assertEquals('01234567890',
-        organisation_config_item.getDefaultTelephoneTelephoneNumber())
-
-    configuration_save_list = business_configuration.contentValues(
-                                             portal_type="Configuration Save")
-    self.assertEquals(5, len(configuration_save_list))
-
-    link_list = business_configuration.contentValues(portal_type="Link")
-    self.assertEquals(0, len(link_list))
-
-  def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
-    """ 
-      Check if multiple Person Configuration Item of the Business
-      Configuration have been created successfully.
-    """
-    person_business_configuration_save = TestLiveConfiguratorWorkflowMixin.\
-              stepCheckMultiplePersonConfigurationItem(
-                                  self, sequence, sequence_list, **kw)
-
-    person_business_configuration_item =\
-          person_business_configuration_save['1']
-    self.assertEquals('Person Configurator Item',
-            person_business_configuration_item.getPortalType())
-    self.assertEquals('Person',
-            person_business_configuration_item.getFirstName())
-    self.assertEquals('Creator',
-            person_business_configuration_item.getLastName())
-    self.assertEquals(self.person_creator_reference,
-            person_business_configuration_item.getReference())
-    self.assertEquals('person_creator',
-            person_business_configuration_item.getPassword())
-    self.assertEquals('person/creator',
-            person_business_configuration_item.getFunction())
-
-    person_business_configuration_item =\
-          person_business_configuration_save['2']
-    self.assertEquals('Person Configurator Item',
-            person_business_configuration_item.getPortalType())
-    self.assertEquals('Person',
-            person_business_configuration_item.getFirstName())
-    self.assertEquals('Assignee',
-            person_business_configuration_item.getLastName())
-    self.assertEquals(self.person_assignee_reference,
-            person_business_configuration_item.getReference())
-    self.assertEquals('person_assignee',
-            person_business_configuration_item.getPassword())
-    self.assertEquals('person/assignee',
-            person_business_configuration_item.getFunction())
-
-    person_business_configuration_item =\
-          person_business_configuration_save['3']
-    self.assertEquals('Person Configurator Item',
-            person_business_configuration_item.getPortalType())
-    self.assertEquals('Person',
-            person_business_configuration_item.getFirstName())
-    self.assertEquals('Assignor',
-            person_business_configuration_item.getLastName())
-    self.assertEquals(self.person_assignor_reference,
-            person_business_configuration_item.getReference())
-    self.assertEquals('person_assignor',
-            person_business_configuration_item.getPassword())
-    self.assertEquals('person/assignor',
-            person_business_configuration_item.getFunction())
-
-  def test_consulting_workflow(self):
-    """ Test the consulting workflow configuration"""
-    sequence_list = SequenceList()
-    sequence_string = self.DEFAULT_SEQUENCE_LIST % dict(country='France')
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-
-
-class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
-  """
-    Test Live Standard Configuration Workflow.
-  """
-  DEFAULT_SEQUENCE_LIST = """
-      stepCreateBusinessConfiguration 
-      stepTic
-      stepSetStandardWorkflow
-      stepTic
-      stepConfiguratorNext
-      stepTic
-      stepCheckBT5ConfiguratorItem
-      stepCheckConfigureOrganisationForm
-      stepSetupOrganisationConfiguratorItem%(country)s
-      stepConfiguratorNext
-      stepTic
-      stepCheckConfigureUserAccountNumberForm
-      stepCheckOrganisationConfiguratorItem%(country)s
-      stepSetupUserAccounNumberSix
-      stepConfiguratorNext
-      stepTic
-      stepCheckConfigureMultipleUserAccountForm
-      stepSetupMultipleUserAccountSix
-      stepConfiguratorNext
-      stepTic
-      stepCheckConfigureAccountingForm
-      stepCheckMultiplePersonConfigurationItem
-      stepSetupAccountingConfiguration%(country)s
-      stepConfiguratorNext
-      stepTic
-      stepCheckConfigurePreferenceForm
-      stepCheckAccountingConfigurationItemList%(country)s
-      stepSetupPreferenceConfiguration%(country)s
-      stepConfiguratorNext
-      stepTic
-      stepCheckConfigureInstallationForm
-      stepCheckPreferenceConfigurationItemList%(country)s
-      stepSetupInstallConfiguration
-      stepConfiguratorNext
-      stepTic
-      stepCheckInstallConfiguration
-      stepStartConfigurationInstallation
-      stepTic
-      stepCheckInstanceIsConfigured%(country)s
-  """
-
-  def afterSetUp(self):
-    TestLiveConfiguratorWorkflowMixin.afterSetUp(self)
-    newId = self.portal.portal_ids.generateNewId
-    id_group ='testConfiguratorStandardWorkflow'
-
-    self.sales_manager_reference = 'sales_manager_%s' % newId(id_group)
-    self.purchase_manager_reference = 'purchase_manager_%s' % newId(id_group)
-    self.accounting_agent_reference = 'accounting_agent_%s' % newId(id_group)
-    self.accounting_manager_reference = 'accounting_manager_%s' % newId(id_group)
-    self.warehouse_agent_reference = 'warehouse_agent_%s' % newId(id_group)
-    self.simple_user_reference = 'simple_user_%s' % newId(id_group)
-
-    self.accountant_username_list = (self.accounting_agent_reference,
-                                     self.accounting_manager_reference,)
-    self.all_username_list = (self.sales_manager_reference,
-                              self.purchase_manager_reference,
-                              self.accounting_agent_reference,
-                              self.accounting_manager_reference,
-                              self.warehouse_agent_reference,
-                              self.simple_user_reference,)
-    self.sales_and_purchase_username_list = (self.sales_manager_reference,
-                                             self.purchase_manager_reference,)
-    self.warehouse_username_list = (self.warehouse_agent_reference,)
-    self.simple_username_list = (self.simple_user_reference,)
-
-    # set the company employees number
-    self.company_employees_number = '6'
-
-    # create our 6 users:
-    self.user_list = [
-      dict(
-                # A sales manager
-        field_your_first_name='Sales',
-        field_your_last_name='Manager',
-        field_your_reference=self.sales_manager_reference,
-        field_your_password='sales_manager',
-        field_your_password_confirm='sales_manager',
-        field_your_function='sales/manager',
-        field_your_default_email_text='sales_manager@example.com',
-        field_your_default_telephone_text='',
-      ), dict(
-                # A purchase manager
-        field_your_first_name='Purchase',
-        field_your_last_name='Manager',
-        field_your_reference=self.purchase_manager_reference,
-        field_your_password='purchase_manager',
-        field_your_password_confirm='purchase_manager',
-        field_your_function='purchase/manager',
-        field_your_default_email_text='purchase_manager@example.com',
-        field_your_default_telephone_text='',
-      ), dict(
-                # An Accounting agent
-        field_your_first_name='Accounting',
-        field_your_last_name='Agent',
-        field_your_reference=self.accounting_agent_reference,
-        field_your_password='accounting_agent',
-        field_your_password_confirm='accounting_agent',
-        field_your_function='af/accounting/agent',
-        field_your_default_email_text='accounting_agent@example.com',
-        field_your_default_telephone_text='',
-      ), dict(
-                # An Accounting Manager
-        field_your_first_name='Accounting',
-        field_your_last_name='Manager',
-        field_your_reference=self.accounting_manager_reference,
-        field_your_password='accounting_manager',
-        field_your_password_confirm='accounting_manager',
-        field_your_function='af/accounting/manager',
-        field_your_default_email_text='accounting_manager@example.com',
-        field_your_default_telephone_text='',
-      ), dict(
-                # A Warehouse Agent
-        field_your_first_name='Warehouse',
-        field_your_last_name='Agent',
-        field_your_reference=self.warehouse_agent_reference,
-        field_your_password='warehouse_agent',
-        field_your_password_confirm='warehouse_agent',
-        field_your_function='warehouse/agent',
-        field_your_default_email_text='warehouse_agent@example.com',
-        field_your_default_telephone_text='',
-      ), dict(
-          # A Simple user without meaningfull function ( hr / manager)
-        field_your_first_name='Simple',
-        field_your_last_name='User',
-        field_your_reference=self.simple_user_reference,
-        field_your_password='simple_user',
-        field_your_password_confirm='simple_user',
-        field_your_function='hr/manager',
-        field_your_default_email_text='simple_user@example.com',
-        field_your_default_telephone_text='',
-      ),
-    ]
-    # set preference group
-    self.preference_group = 'group/my_group' 
-
-  def stepCreateBusinessConfiguration(self,  sequence=None, sequence_list=None, **kw):
-    """ Create one Business Configuration """
-    module = self.portal.business_configuration_module
-    business_configuration = module.newContent(
-                               portal_type="Business Configuration",
-                               title='Test Configurator Standard Workflow')
-    next_dict = {}
-    sequence.edit(business_configuration=business_configuration, 
-                  next_dict=next_dict)
-
-  def stepSetStandardWorkflow(self, sequence=None, sequence_list=None, **kw):
-    """ Set Standard Workflow into Business Configuration """
-    business_configuration = sequence.get("business_configuration")
-    self.setBusinessConfigurationWorkflow(business_configuration,
-                                    "workflow_module/erp5_standard_workflow")
-
-  def stepSetupOrganisationConfiguratorItemFrance(self, sequence=None, sequence_list=None, **kw):
-    """ Create one Organisation with French information """
-    self._stepSetupOrganisationConfiguratorItem(
-        sequence=sequence,
-        sequence_list=sequence_list,
-        field_your_default_address_city='LILLE',
-        field_your_default_address_region='europe/western_europe/france')
-
-  def stepSetupOrganisationConfiguratorItemBrazil(self, sequence=None, sequence_list=None, **kw):
-    """ Create one Organisation with Brazilian information"""
-    self._stepSetupOrganisationConfiguratorItem(
-        sequence=sequence,
-        sequence_list=sequence_list,
-        field_your_default_address_city='CAMPOS',
-        field_your_default_address_region='americas/south_america/brazil')
-
-  def stepSetupOrganisationConfiguratorItemRussia(self, sequence=None, sequence_list=None, **kw):
-    """ Create one Organisation with Russian information"""
-    self._stepSetupOrganisationConfiguratorItem(
-        sequence=sequence,
-        sequence_list=sequence_list,
-        field_your_default_address_city='MOSCOW',
-        field_your_default_address_region='europe/eastern_europe/russian_federation')
-
-  def stepCheckConfigureOrganisationForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check if Confire Organisation step was showed """
-    response_dict = sequence.get("response_dict")
-    TestLiveConfiguratorWorkflowMixin.stepCheckConfigureOrganisationForm(
-                         self, sequence, sequence_list, **kw)
-    self.assertEquals(None, response_dict['previous'])
-
-  def _stepCheckOrganisationConfiguratorItem(self, business_configuration,
-                                                   default_address_city,
-                                                   default_address_region):
+  def stepSetFranceCase(self, sequence=None, sequence_list=None, **kw):
     """ Check if configuration key was created fine """
-    # last one: a step for what the client selected
-    organisation_config_save = business_configuration['3']
-    self.assertEquals(2, len(organisation_config_save.contentValues()))
-    # first item: configuration of our organisation
-    organisation_config_item = organisation_config_save['1']
-    self.assertEquals(organisation_config_item.getPortalType(),
-                      'Organisation Configurator Item')
-    # this organisation configurator items contains all properties that the
-    # orgnanisation will have.
-    self.assertEquals(organisation_config_item.getDefaultAddressCity(),
-                      default_address_city)
-    self.assertEquals(organisation_config_item.getDefaultAddressRegion(),
-                      default_address_region)
-    self.assertEquals(organisation_config_item.getDefaultEmailText(),
-                      'me@example.com')
-    self.assertEquals('01234567890',
-        organisation_config_item.getDefaultTelephoneTelephoneNumber())
+    sequence.edit(configuration_currency_reference='EUR',
+                  configuration_gap = 'gap/fr/pcg',
+                  configuration_accounting_plan='fr',
+                  configuration_currency_title = 'Euro',
+                  configuration_lang = 'erp5_l10n_fr',
+                  configuration_price_currency = 'EUR;0.01;Euro',
+                  organisation_default_address_city='LILLE',
+                  organisation_default_address_region='europe/western_europe/france')
 
-    # we also create a category for our group
-    category_config_item = organisation_config_save['2']
-    self.assertEquals(category_config_item.getPortalType(),
-                      'Category Configurator Item')
-    self.assertEquals(category_config_item.getTitle(),
-                      'My Organisation')
-
-    self.assertEquals(3, len(business_configuration.contentValues(portal_type="Configuration Save")))
-    self.assertEquals(0, len(business_configuration.contentValues(portal_type="Link")))
-
-  def stepCheckOrganisationConfiguratorItemFrance(self, sequence=None, sequence_list=None, **kw):
+  def stepSetBrazilCase(self, sequence=None, sequence_list=None, **kw):
     """ Check if configuration key was created fine """
-    self._stepCheckOrganisationConfiguratorItem(
-                business_configuration=sequence.get('business_configuration'),
-                default_address_city='LILLE',
-                default_address_region='europe/western_europe/france')
+    sequence.edit(configuration_currency_reference='BRL',
+                  configuration_gap = 'gap/br/pcg',
+                  configuration_accounting_plan='br',
+                  configuration_lang = 'erp5_l10n_pt-BR',
+                  configuration_currency_title = 'Brazilian Real',
+                  configuration_price_currency = 'BRL;0.01;Brazilian Real',
+                  organisation_default_address_city='CAMPOS',
+                  organisation_default_address_region='americas/south_america/brazil')
 
-  def stepCheckOrganisationConfiguratorItemBrazil(self, sequence=None, sequence_list=None, **kw):
+  def stepSetRussiaCase(self, sequence=None, sequence_list=None, **kw):
     """ Check if configuration key was created fine """
-    self._stepCheckOrganisationConfiguratorItem(
-                business_configuration=sequence.get('business_configuration'),
-                default_address_city='CAMPOS',
-                default_address_region='americas/south_america/brazil')
 
-  def stepCheckOrganisationConfiguratorItemRussia(self, sequence=None, sequence_list=None, **kw):
-    """ Check if configuration key was created fine """
-    self._stepCheckOrganisationConfiguratorItem(
-                business_configuration=sequence.get('business_configuration'),
-                default_address_city='MOSCOW',
-                default_address_region='europe/eastern_europe/russian_federation')
+    sequence.edit(configuration_currency_reference='BYR',
+                  configuration_gap = 'gap/ru/ru2000',
+                  configuration_accounting_plan='ru',
+                  configuration_price_currency = 'BYR;0.01;Belarusian Rouble',
+                  configuration_lang = 'erp5_l10n_ru',
+                  configuration_currency_title = 'Belarusian Rouble',
+                  organisation_default_address_city='MOSCOW',
+                  organisation_default_address_region='europe/eastern_europe/russian_federation')
 
-  def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
-    """ 
-      Check if multiple Person Configuration Item of the Business
-      Configuration have been created successfully.
-    """
-    person_business_configuration_save = TestLiveConfiguratorWorkflowMixin.\
-              stepCheckMultiplePersonConfigurationItem(
-                                  self, sequence, sequence_list, **kw)
 
-    person_business_configuration_item =\
-          person_business_configuration_save['1']
-    self.assertEquals('Person Configurator Item',
-            person_business_configuration_item.getPortalType())
-    self.assertEquals('Sales',
-            person_business_configuration_item.getFirstName())
-    self.assertEquals('Manager',
-            person_business_configuration_item.getLastName())
-    self.assertEquals(self.sales_manager_reference,
-            person_business_configuration_item.getReference())
-    self.assertEquals('sales_manager',
-            person_business_configuration_item.getPassword())
-    self.assertEquals('sales/manager',
-            person_business_configuration_item.getFunction())
-
-    # ...
-    person_business_configuration_item =\
-          person_business_configuration_save['3']
-    self.assertEquals('Person Configurator Item',
-            person_business_configuration_item.getPortalType())
-    self.assertEquals('Accounting',
-            person_business_configuration_item.getFirstName())
-    self.assertEquals('Agent',
-            person_business_configuration_item.getLastName())
-    self.assertEquals(self.accounting_agent_reference,
-            person_business_configuration_item.getReference())
-    self.assertEquals('accounting_agent',
-            person_business_configuration_item.getPassword())
-    self.assertEquals('af/accounting/agent',
-            person_business_configuration_item.getFunction())
-
-  ##########################################
-  # testExpressConfigurationInstance
-  #########################################
   def getBusinessConfigurationObjectList(self, business_configuration,
                                                portal_type):
     """
@@ -631,38 +171,6 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
           object_list.append(obj)
     return object_list
 
-  def stepCheckValidAccountList(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check is the Account documents are validated
-    """
-    business_configuration = sequence.get("business_configuration")
-    account_list = self.getBusinessConfigurationObjectList(business_configuration, 'Account')
-    self.assertNotEquals(len(account_list), 0)
-    for account in account_list:
-      self.assertEquals('validated', account.getValidationState())
-      # all accounts have a financial section set correctly
-      self.assertNotEquals(None, account.getFinancialSectionValue())
-      # all accounts have a gap correctly
-      self.assertNotEquals(None, account.getGapValue())
-      account.Base_checkConsistency()
-
-  def stepCheckAccountReference(self, sequence=None, sequence_list=None, **kw):
-    """
-     Accounts are exported with the same ID that the one in the spreadsheet
-    """
-    # XXX FIXME (Lucas): this is not possible yet, because the Account does not have
-    # the id set like that, we probably gonna use reference.
-    return
-    account_id_list = [
-      'capital', 'profit_loss', 'equipments',
-      'inventories', 'bank', 'receivable',
-      'payable', 'refundable_vat', 'coll_vat',
-      'purchase', 'sales']
-    for account_id in account_id_list:
-      account = self.portal.account_module._getOb(account_id)
-      self.assertNotEquals(account, None, 
-                     "%s account is not Found." % account_id)
-
   def stepCheckValidPersonList(self, sequence=None, sequence_list=None, **kw):
     """
       Check if after the configuration the Person objects are validated.
@@ -675,13 +183,44 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       self.assertEquals('validated', person.getValidationState())
       person.Base_checkConsistency()
       assignment_list = person.contentValues(portal_type='Assignment')
-      self.assertNotEquals(len(assignment_list), assignment_list)
+      self.assertNotEquals(len(assignment_list), 0)
       for assignment in assignment_list:
         self.assertEquals('open', assignment.getValidationState())
         self.assertNotEquals(None, assignment.getStartDate())
         self.assertNotEquals(None, assignment.getStopDate())
-        self.assertTrue(assignment.getStopDate() > assignment.getStartDate())
+        self.assertEquals(assignment.getGroup(), "my_group")
         assignment.Base_checkConsistency()
+
+  def stepCheckPersonInformationList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check created person informations.
+    """
+    business_configuration = sequence.get("business_configuration")
+    person_list = self.getBusinessConfigurationObjectList(business_configuration, 'Person')
+    self.assertEquals(len(person_list), len(self.user_list))
+    for person in person_list:
+      user_info = None
+      for user_dict in self.user_list:
+        if user_dict["field_your_reference"] == person.getReference():
+          user_info = user_dict
+          break
+
+      self.assertNotEquals(user_info, None)
+      self.assertEquals(user_info["field_your_first_name"],
+                        person.getFirstName())
+      self.assertEquals(user_info["field_your_last_name"],
+                        person.getLastName())
+      self.assertNotEquals(person.getPassword(), None)
+      self.assertEquals(user_info["field_your_function"],
+                        person.getFunction())
+      self.assertEquals(user_info["field_your_default_email_text"],
+                        person.getDefaultEmailText())
+      self.assertEquals(user_info["field_your_default_telephone_text"],
+                        person.getDefaultTelephoneText())
+
+      assignment_list = person.contentValues(portal_type='Assignment')
+      self.assertEquals(len(assignment_list), 1)
+      self.assertEquals('my_group', assignment_list[0].getGroup())
 
   def stepCheckValidOrganisationList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -693,6 +232,45 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     organisation = organisation_list[0]
     self.assertEquals('validated', organisation.getValidationState())
     organisation.Base_checkConsistency()
+
+  def stepCheckBaseCategoryList(self, sequence=None, sequence_list=None, **kw):
+    """
+       Tests that common base categories are not overwritten by configurator
+       We use role as an example
+    """
+    role = self.portal.portal_categories.role
+    self.assertEquals('Role', role.getTitle())
+    self.assertEquals(['subordination'], role.getAcquisitionBaseCategoryList())
+    self.assertEquals(['default_career'], role.getAcquisitionObjectIdList())
+    # ... this is enough to proove it has not been erased by an empty one
+
+  def stepCheckOrganisationSite(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if organisation is on the main site (for stock browser)
+    """
+    business_configuration = sequence.get('business_configuration')
+    organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
+    self.assertNotEquals(len(organisation_list), 0)
+
+    self.assertEquals(self.portal.portal_categories.site.main,
+                      organisation_list[0].getSiteValue())
+
+
+  def stepSetConfiguratorWorkflow(self, sequence=None, sequence_list=None, **kw):
+    """ Set Consulting Workflow into Business Configuration """
+    business_configuration = sequence.get("business_configuration")
+    self.setBusinessConfigurationWorkflow(business_configuration,
+                                   self.CONFIGURATION_WORKFLOW)
+
+  def stepCreateBusinessConfiguration(self,  sequence=None, sequence_list=None, **kw):
+    """ Create one Business Configuration """
+    module = self.portal.business_configuration_module
+    business_configuration = module.newContent(
+                               portal_type="Business Configuration",
+                               title=self.getTitle())
+    next_dict = {}
+    sequence.edit(business_configuration=business_configuration, 
+                  next_dict=next_dict)
 
   def stepCheckValidCurrencyList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -714,11 +292,11 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     business_configuration = sequence.get("business_configuration")
     gadget_list = self.getBusinessConfigurationObjectList(business_configuration, 'Gadget')
     for gadget in gadget_list:
-      self.assertEquals('public', gadget.getValidationState(), 
-                        "%s is not public but %s" % (gadget.getRelativeUrl(), 
+      self.assertEquals('public', gadget.getValidationState(),
+                        "%s is not public but %s" % (gadget.getRelativeUrl(),
                                                      gadget.getValidationState()))
       gadget.Base_checkConsistency()
- 
+
   def stepCheckPreferenceList(self, sequence=None, sequence_list=None, **kw):
     """
       Assert all the Peference properties.
@@ -730,7 +308,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(len(preference_list), 2)
 
     for preference in preference_list:
-      self.assertEquals(preference_tool[preference].getPreferenceState(), 
+      self.assertEquals(preference_tool[preference].getPreferenceState(),
                         'global')
 
     organisation_list = self.getBusinessConfigurationObjectList(business_configuration,
@@ -747,16 +325,19 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals('pdf', preference_tool.getPreferredReportFormat())
     self.assertEquals(10, preference_tool.getPreferredMoneyQuantityFieldWidth())
 
+    currency_reference = sequence.get('configuration_currency_reference')
+    self.assertEquals('currency_module/%s' % currency_reference,
+                     preference_tool.getPreferredAccountingTransactionCurrency())
+    self.assertEquals(sequence.get('configuration_gap') ,
+                      preference_tool.getPreferredAccountingTransactionGap())
+
+
     # on Business Configuration
     #self.assertEquals('localhost', preference_tool.getPreferredOoodocServerAddress())
     #self.assertEquals(8011, preference_tool.getPreferredOoodocServerPortNumber())
 
     # accounting
-    self.assertEquals('currency_module/EUR',
-                      preference_tool.getPreferredAccountingTransactionCurrency())
-    self.assertEquals('gap/fr/pcg',
-                      preference_tool.getPreferredAccountingTransactionGap())
-    self.assertEquals('group/my_group', 
+    self.assertEquals('group/my_group',
                   preference_tool.getPreferredAccountingTransactionSectionCategory())
     self.assertEquals('organisation_module/%s' % organisation_id,
                       preference_tool.getPreferredAccountingTransactionSourceSection())
@@ -869,27 +450,196 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                        ba.pdm]),
          set(ba.pdm.getBusinessApplicationRelatedValueList()))
 
-  def stepCheckBaseCategoryList(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckValidAccountList(self, sequence=None, sequence_list=None, **kw):
     """
-       Tests that common base categories are not overwritten by configurator
-       We use role as an example
+      Check is the Account documents are validated
     """
-    role = self.portal.portal_categories.role
-    self.assertEquals('Role', role.getTitle())
-    self.assertEquals(['subordination'], role.getAcquisitionBaseCategoryList())
-    self.assertEquals(['default_career'], role.getAcquisitionObjectIdList())
-    # ... this is enough to proove it has not been erased by an empty one
+    business_configuration = sequence.get("business_configuration")
+    account_list = self.getBusinessConfigurationObjectList(business_configuration, 'Account')
+    self.assertNotEquals(len(account_list), 0)
+    for account in account_list:
+      self.assertEquals('validated', account.getValidationState())
+      # all accounts have a financial section set correctly
+      self.assertNotEquals(None, account.getFinancialSectionValue())
+      # all accounts have a gap correctly
+      self.assertNotEquals(None, account.getGapValue())
+      account.Base_checkConsistency()
 
-  def stepCheckOrganisationSite(self, sequence=None, sequence_list=None, **kw):
+  def stepCheckAccountReference(self, sequence=None, sequence_list=None, **kw):
     """
-      Check if organisation is on the main site (for stock browser)
+     Accounts are exported with the same ID that the one in the spreadsheet
+    """
+    # XXX FIXME (Lucas): this is not possible yet, because the Account does not have
+    # the id set like that, we probably gonna use reference.
+    return
+    account_id_list = [
+      'capital', 'profit_loss', 'equipments',
+      'inventories', 'bank', 'receivable',
+      'payable', 'refundable_vat', 'coll_vat',
+      'purchase', 'sales']
+    for account_id in account_id_list:
+      account = self.portal.account_module._getOb(account_id)
+      self.assertNotEquals(account, None,
+                     "%s account is not Found." % account_id)
+
+  def stepCheckSolver(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if Solver objects have been created.
+    """
+    # XXX FIXME Make sure we verify if the default set of solvers
+    # are present on the portal.
+    return
+
+  def stepCheckRuleValidation(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if rule are cloned and validated.
     """
     business_configuration = sequence.get('business_configuration')
-    organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
-    self.assertNotEquals(len(organisation_list), 0)
+    for rule_template_id in [
+                          "new_order_root_simulation_rule",
+                          "new_delivery_simulation_rule",
+                          "new_trade_model_simulation_rule",
+                          "new_accounting_transaction_root_simulation_rule",
+                          "new_invoice_transaction_simulation_rule",
+                          "new_payment_simulation_rule",
+                          "new_invoice_root_simulation_rule",
+                          "new_delivery_root_simulation_rule",
+                          "new_invoice_simulation_rule"]:
 
-    self.assertEquals(self.portal.portal_categories.site.main,
-                      organisation_list[0].getSiteValue())
+      rule_template = getattr(self.portal.portal_rules, rule_template_id, None)
+      self.assertNotEquals(rule_template, None)
+      rule_list = self.portal.portal_rules.searchFolder(
+                        reference=rule_template.getReference(),
+                        title=rule_template.getTitle(),
+                        validation_stade="validated")
+
+      self.assertTrue(len(rule_list) > 0)
+      self.assertEquals(int(rule_template.getVersion(0)) + 1,
+                        int(rule_list[-1].getVersion(0)))
+
+      result = self.getBusinessConfigurationObjectList(business_configuration,
+                                                 rule_template.getPortalType())
+      self.assertNotEquals(0, len(result))
+      # one rule with same reference must exist.
+      self.assertTrue(len([i for i in result \
+                   if i.getReference() == rule_template.getReference()]) == 1)
+
+  def stepCheckBusinessProcess(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if there is a Business Process on the site.
+    """
+    business_configuration = sequence.get('business_configuration')
+    business_process_list = \
+              self.getBusinessConfigurationObjectList(business_configuration,
+                                                           'Business Process')
+    self.assertEquals(len(business_process_list), 1)
+
+    business_process = business_process_list[0]
+    self.assertEquals("default_erp5_business_process",
+                      business_process.getReference())
+
+    self.assertEquals("Default Trade Business Process",
+                      business_process.getTitle())
+
+    order_path = getattr(business_process, "order_path", None)
+    self.assertNotEquals(order_path, None)
+    self.assertEquals(order_path.getEfficiency(), 1.0)
+    self.assertEquals(order_path.getTradePhase(), 'trade/order')
+    self.assertEquals(order_path.getTradeDate(), 'trade_phase/trade/order')
+    self.assertEquals(order_path.getTestMethodId(), None)
+
+    delivery_path = getattr(business_process, "delivery_path", None)
+    self.assertNotEquals(delivery_path, None)
+    self.assertEquals(delivery_path.getEfficiency(), 1.0)
+    self.assertEquals(delivery_path.getTradePhase(), 'trade/delivery')
+    self.assertEquals(delivery_path.getTradeDate(), 'trade_phase/trade/order')
+    self.assertEquals(delivery_path.getTestMethodId(), None)
+
+    invoicing_path = getattr(business_process, "invoicing_path", None)
+    self.assertNotEquals(invoicing_path, None)
+    self.assertEquals(invoicing_path.getEfficiency(), 1.0)
+    self.assertEquals(invoicing_path.getTradePhase(), 'trade/invoicing')
+    self.assertEquals(invoicing_path.getTradeDate(), 'trade_phase/trade/delivery')
+    self.assertEquals(invoicing_path.getTestMethodId(), None)
+
+    accounting_credit_path = getattr(business_process, "accounting_credit_path", None)
+    self.assertNotEquals(accounting_credit_path, None)
+    self.assertEquals(accounting_credit_path.getEfficiency(), -1.0)
+    self.assertEquals(accounting_credit_path.getTradePhase(), 'trade/accounting')
+    self.assertEquals(accounting_credit_path.getTradeDate(), 'trade_phase/trade/invoicing')
+    self.assertEquals(accounting_credit_path.getTestMethodId(), "isAccountingMovementType")
+
+    accounting_debit_path = getattr(business_process, "accounting_debit_path", None)
+    self.assertNotEquals(accounting_debit_path, None)
+    self.assertEquals(accounting_debit_path.getEfficiency(), 1.0)
+    self.assertEquals(accounting_debit_path.getTradePhase(), 'trade/accounting')
+    self.assertEquals(accounting_debit_path.getTradeDate(), 'trade_phase/trade/invoicing')
+    self.assertEquals(accounting_debit_path.getTestMethodId(), "isAccountingMovementType")
+
+    order_link = getattr(business_process, "order_link", None)
+    self.assertNotEquals(order_link, None)
+    #self.assertTrue(order_link.getDeliverable())
+    self.assertEquals(order_link.getSuccessor(), "trade_state/trade/ordered")
+    self.assertEquals(order_link.getPredecessor(),None)
+    self.assertEquals(order_link.getCompletedStateList(),["confirmed"])
+    self.assertEquals(order_link.getFrozenState(), None)
+    self.assertEquals(order_link.getDeliveryBuilder(), None)
+    self.assertEquals(order_link.getTradePhase(),'trade/order')
+
+    deliver_link = getattr(business_process, "deliver_link", None)
+    self.assertNotEquals(deliver_link, None)
+    #self.assertTrue(deliver_link.getDeliverable())
+    self.assertEquals(deliver_link.getSuccessor(),"trade_state/trade/delivered")
+    self.assertEquals(deliver_link.getPredecessor(),"trade_state/trade/ordered")
+    self.assertEquals(deliver_link.getCompletedStateList(),['delivered','started','stopped'])
+    self.assertEquals(deliver_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEquals(deliver_link.getTradePhase(),'trade/delivery')
+
+    self.assertEquals(deliver_link.getDeliveryBuilderList(),
+           ["portal_deliveries/sale_packing_list_builder",
+            "portal_deliveries/internal_packing_list_builder",
+            "portal_deliveries/purchase_packing_list_builder"])
+
+    invoice_link = getattr(business_process, "invoice_link", None)
+    self.assertNotEquals(invoice_link, None)
+    #self.assertFalse(invoice_link.getDeliverable())
+    self.assertEquals(invoice_link.getSuccessor(),"trade_state/trade/invoiced")
+    self.assertEquals(invoice_link.getPredecessor(),"trade_state/trade/delivered")
+    self.assertEquals(invoice_link.getCompletedStateList(),
+                        ['confirmed','delivered','started','stopped'])
+    self.assertEquals(invoice_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEquals(invoice_link.getTradePhase(),'trade/invoicing')
+
+    self.assertEquals(invoice_link.getDeliveryBuilderList(),
+           ["portal_deliveries/purchase_invoice_builder",
+            "portal_deliveries/purchase_invoice_transaction_trade_model_builder",
+            "portal_deliveries/sale_invoice_builder",
+            "portal_deliveries/sale_invoice_transaction_trade_model_builder"])
+
+    account_link = getattr(business_process, "account_link", None)
+    self.assertNotEquals(account_link, None)
+    #self.assertFalse(account_link.getDeliverable())
+    self.assertEquals(account_link.getSuccessor(),"trade_state/trade/accounted")
+    self.assertEquals(account_link.getPredecessor(),"trade_state/trade/invoiced")
+    self.assertEquals(account_link.getCompletedStateList(),['delivered','started','stopped'])
+    self.assertEquals(account_link.getFrozenStateList(),['delivered','stopped'])
+    self.assertEquals(account_link.getTradePhase(), 'trade/accounting')
+
+    self.assertSameSet(account_link.getDeliveryBuilderList(),
+           ["portal_deliveries/purchase_invoice_transaction_builder",
+            "portal_deliveries/sale_invoice_transaction_builder"])
+
+    pay_link = getattr(business_process, "pay_link", None)
+    self.assertNotEquals(pay_link, None)
+    #self.assertFalse(pay_link.getDeliverable())
+    self.assertEquals(pay_link.getTradePhase(), 'trade/payment')
+    self.assertEquals(pay_link.getSuccessor(), None)
+    self.assertEquals(pay_link.getPredecessor(),"trade_state/trade/accounted")
+    self.assertEquals(pay_link.getCompletedState(), None)
+    self.assertEquals(pay_link.getFrozenState(), None)
+
+    self.assertEquals(pay_link.getDeliveryBuilderList(),
+           ["portal_deliveries/payment_transaction_builder"])
 
   def stepCheckAccountingPeriod(self, sequence=None, sequence_list=None, **kw):
     """
@@ -899,7 +649,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     business_configuration = sequence.get('business_configuration')
     organisation_list = self.getBusinessConfigurationObjectList(business_configuration, 'Organisation')
     self.assertNotEquals(len(organisation_list), 0)
- 
+
     organisation = organisation_list[0]
     period_list = organisation.contentValues(portal_type='Accounting Period')
     self.assertEquals(1, len(period_list))
@@ -913,98 +663,6 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     for username in self.accountant_username_list:
       self.failUnlessUserCanPassWorkflowTransition(
           username, 'cancel_action', period)
-
-  def stepCheckRuleValidation(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if rule are validated 
-    """
-    business_configuration = sequence.get('business_configuration')
-    rule_dict = self.portal.ERPSite_getConfiguratorSimulationRuleDict()
-    self.assertEquals(9, len(rule_dict))
-    for value in rule_dict.itervalues():
-      portal_type = value.get('portal_type')
-      result = self.getBusinessConfigurationObjectList(business_configuration, portal_type)
-      self.assertNotEquals(0, len(result))
-      for rule in result:
-        self.assertEquals('validated', rule.getValidationState())
-
-  def stepCheckBusinessProcess(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if Business Process object has been created.
-    """
-    business_configuration = sequence.get('business_configuration')
-    business_process_list = \
-               self.getBusinessConfigurationObjectList(business_configuration,
-                                                            'Business Process')
-    self.assertEquals(len(business_process_list), 1)
-    
-    business_process = business_process_list[0]
-    self.assertEquals("General Business Process", business_process.getTitle())
-    self.assertEquals("erp5_default_business_process",
-                                               business_process.getReference())
-
-    object_property_list = \
-                       self.portal.ERPSite_getConfiguratorBusinessProcessList()
-    for property_dict in object_property_list:
-      object_id = property_dict.get("id", None)
-      object = getattr(business_process, object_id, None) 
-      self.assertNotEquals(None, object)
-      for k, v in property_dict.iteritems():
-        self.assertEquals(object.showDict().get(k), v)
-
-
-  def stepCheckSolver(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check if Solver objects have been created.
-    """
-    business_configuration = sequence.get('business_configuration')
-    solver_list = \
-               self.getBusinessConfigurationObjectList(business_configuration,
-                                                                'Solver Type')
-    self.assertEquals(len(solver_list), 10)
-
-    solver_property_dict = \
-          business_configuration.BusinessConfiguration_getSolverPropertyDict()
-    for solver_object in solver_list:
-      solver_object_id = solver_object.getId()
-      solver_object_property_dict = solver_property_dict.get(solver_object_id)
-      solver_object_content_list = \
-                               solver_object_property_dict.pop('content_list')
-      for k, v in solver_object_property_dict.iteritems():
-        # During the creation of the object such properties must be used:
-        # type_factory_method_id_property and type_factory_method_id_property.
-        # But when you've check the object properties after creation, it is
-        # shown a simplier name.
-        if k == 'type_factory_method_id':
-          property_name = 'factory'
-        elif k == 'type_acquire_local_role':
-          property_name = 'acquire_local_roles'
-        elif k == 'type_group_list':
-          property_name = 'group_list'
-        else:
-          property_name = k
-        self.assertEquals(solver_object.showDict().get(property_name), v)
-
-      for property_dict in solver_object_content_list:
-        object = getattr(solver_object, property_dict.get('id'), None)
-        self.assertNotEquals(None, object)
-        for k, v in property_dict.iteritems():
-          if k == 'action_permission':
-            self.assertEquals('View', object.getActionPermission())
-            continue
-          elif k == 'action':
-            self.assertEquals(v, object.getActionText())
-            continue
-          elif k == 'visible':
-            self.assertEquals(v, object.getVisible())
-            continue
-          elif k == 'float_index':
-            self.assertEquals(v, object.getFloatIndex())
-            continue
-          else:
-            property_name = k
-
-          self.assertEquals(object.showDict().get(property_name), v)
 
   def stepCheckSaleTradeCondition(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1026,12 +684,13 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 
     # Check relation with Business Process
     business_process_list = \
-               self.getBusinessConfigurationObjectList(business_configuration,
-                                                            'Business Process')
+              self.getBusinessConfigurationObjectList(business_configuration,
+                                                           'Business Process')
     self.assertEquals(len(business_process_list), 1)
+
     business_process = business_process_list[0]
     self.assertEquals(business_process,
-                                    sale_trade_condition.getSpecialiseValue())
+                      sale_trade_condition.getSpecialiseValue())
 
     # Check relation with Organisation
     organisation_list = \
@@ -1041,7 +700,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 
     self.assertEquals(organisation, sale_trade_condition.getSourceValue())
     self.assertEquals(organisation,
-                                  sale_trade_condition.getSourceSectionValue())
+                      sale_trade_condition.getSourceSectionValue())
 
     # Check relation with Currency
     currency_list = \
@@ -1049,7 +708,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                                                                     'Currency')
     currency = currency_list[0]
     self.assertEquals(currency.getRelativeUrl(),
-                                       sale_trade_condition.getPriceCurrency())
+                      sale_trade_condition.getPriceCurrency())
 
   def stepCheckPurchaseTradeCondition(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1071,12 +730,13 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
 
     # Check relation with Business Process
     business_process_list = \
-               self.getBusinessConfigurationObjectList(business_configuration,
-                                                            'Business Process')
+              self.getBusinessConfigurationObjectList(business_configuration,
+                                                           'Business Process')
     self.assertEquals(len(business_process_list), 1)
+
     business_process = business_process_list[0]
     self.assertEquals(business_process,
-                                    purchase_trade_condition.getSpecialiseValue())
+                      purchase_trade_condition.getSpecialiseValue())
 
     # Check relation with Organisation
     organisation_list = \
@@ -1085,9 +745,9 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     organisation = organisation_list[0]
 
     self.assertEquals(organisation,
-                               purchase_trade_condition.getDestinationValue())
+                      purchase_trade_condition.getDestinationValue())
     self.assertEquals(organisation,
-                        purchase_trade_condition.getDestinationSectionValue())
+                      purchase_trade_condition.getDestinationSectionValue())
 
     # Check relation with Currency
     currency_list = \
@@ -1095,7 +755,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
                                                                     'Currency')
     currency = currency_list[0]
     self.assertEquals(currency.getRelativeUrl(),
-                                       purchase_trade_condition.getPriceCurrency())
+                      purchase_trade_condition.getPriceCurrency())
 
   @expectedFailure
   def stepCheckQuantityConversion(self, sequence=None, sequence_list=None, **kw):
@@ -1178,15 +838,18 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     sale_trade_condition = \
                 self.getBusinessConfigurationObjectList(business_configuration,
                                                      'Sale Trade Condition')[0]
-    business_process = \
-                self.getBusinessConfigurationObjectList(business_configuration,
-                                                         'Business Process')[0]
+    # Check relation with Business Process
+    business_process_list = \
+              self.getBusinessConfigurationObjectList(business_configuration,
+                                                           'Business Process')
+    self.assertEquals(len(business_process_list), 1)
 
+    business_process = business_process_list[0]
     destination_decision = portal.portal_catalog.getResultValue(
                                        portal_type='Person',
                                        reference=self.sales_manager_reference)
     destination_administration = portal.portal_catalog.getResultValue(
-                                     portal_type='Person', 
+                                     portal_type='Person',
                                      reference=self.purchase_manager_reference)
     resource = portal.product_module.newContent(portal_type='Product',
                                 quantity_unit='unit/piece',
@@ -1254,99 +917,536 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(simulation_movement.getDestinationAdministrationValue(),
                                                  destination_administration)
 
-  def test_security_standard_workflow_france(self):
-    """ Test the after configuration script """
+
+class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
+  """
+    Test Live Consulting Configuration Workflow
+  """
+
+  CONFIGURATION_WORKFLOW = 'workflow_module/erp5_consulting_workflow'
+
+  DEFAULT_SEQUENCE_LIST = """
+      stepSet%(country)sCase
+      stepCreateBusinessConfiguration
+      stepTic
+      stepSetConfiguratorWorkflow
+      stepTic
+      stepConfiguratorNext
+      stepTic
+      stepCheckBT5ConfiguratorItem
+      stepCheckConfigureCategoriesForm
+      stepSetupCategoriesConfiguratorItem
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureRolesForm
+      stepCheckCategoriesConfiguratorItem
+      stepSetupRolesConfiguratorItem
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureOrganisationForm
+      stepSetupOrganisationConfiguratorItem
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureUserAccountNumberForm
+      stepCheckOrganisationConfiguratorItem
+      stepSetupUserAccounNumberSix
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureMultipleUserAccountForm
+      stepSetupMultipleUserAccountSix
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureAccountingForm
+      stepCheckMultiplePersonConfigurationItem
+      stepSetupAccountingConfiguration
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigurePreferenceForm
+      stepCheckAccountingConfigurationItemList%(country)s
+      stepSetupPreferenceConfiguration
+      stepConfiguratorNext
+      stepTic
+      stepCheckPreferenceConfigurationItemList
+      stepCheckConfigureInstallationForm
+      stepSetupInstallConfiguration
+      stepConfiguratorNext
+      stepTic
+      stepCheckInstallConfiguration
+      stepStartConfigurationInstallation
+      stepTic
+      stepCheckInstanceIsConfigured%(country)s
+      """
+
+  def uploadFile(self, file_id):
+    file_obj = getattr(self.portal, file_id)
+    file_path = '/tmp/%s' % file_id
+    temp_file = open(file_path, 'w+b')
+    try:
+      temp_file.write(str(file_obj))
+    finally:
+      temp_file.close()
+
+    return (file_path, FileUpload(file_path, file_id))
+
+  def afterSetUp(self):
+    TestLiveConfiguratorWorkflowMixin.afterSetUp(self)
+    categories_file_id = 'standard_category.ods'
+    self.categories_file_path, self.categories_file_upload = \
+                                           self.uploadFile(categories_file_id)
+
+    roles_file_id = 'standard_portal_types_roles.ods'
+    self.roles_file_path, self.roles_file_upload = \
+                                           self.uploadFile(roles_file_id)
+    # set the company employees number
+    self.company_employees_number = '3'
+
+    newId = self.portal.portal_ids.generateNewId
+    id_group ='testConfiguratorConsultingWorkflow'
+    self.person_creator_reference = 'person_creator_%s' % newId(id_group)
+    self.person_assignee_reference = 'person_assignee_%s' % newId(id_group)
+    self.person_assignor_reference = 'person_assignor_%s' % newId(id_group)
+
+
+    self.accountant_username_list = (self.person_creator_reference,
+                                     self.person_assignee_reference,
+                                     self.person_assignor_reference)
+
+    self.sales_manager_reference = self.person_assignee_reference
+    self.purchase_manager_reference = self.person_assignee_reference
+    self.accounting_agent_reference = self.person_assignee_reference
+    self.accounting_manager_reference = self.person_assignee_reference
+    self.warehouse_agent_reference = self.person_assignee_reference
+    self.simple_user_reference = self.person_assignee_reference
+
+    self.sales_and_purchase_username_list = (self.sales_manager_reference,
+                                             self.purchase_manager_reference,)
+    self.warehouse_username_list = (self.warehouse_agent_reference,)
+    self.simple_username_list = (self.simple_user_reference,)
+
+
+    self.all_username_list = self.accountant_username_list
+
+    # set the user list
+    self.user_list = [
+      dict(
+        field_your_first_name='Person',
+        field_your_last_name='Creator',
+        field_your_reference=self.person_creator_reference,
+        field_your_password='person_creator',
+        field_your_password_confirm='person_creator',
+        field_your_function='hr/manager',
+        field_your_default_email_text='person_creator@example.com',
+        field_your_default_telephone_text='',
+      ), dict(
+        field_your_first_name='Person',
+        field_your_last_name='Assignee',
+        field_your_reference=self.person_assignee_reference,
+        field_your_password='person_assignee',
+        field_your_password_confirm='person_assignee',
+        field_your_function='af/accounting/manager',
+        field_your_default_email_text='person_assignee@example.com',
+        field_your_default_telephone_text='',
+      ), dict(
+        field_your_first_name='Person',
+        field_your_last_name='Assignor',
+        field_your_reference=self.person_assignor_reference,
+        field_your_password='person_assignor',
+        field_your_password_confirm='person_assignor',
+        field_your_function='sales/manager',
+        field_your_default_email_text='person_assignor@example.com',
+        field_your_default_telephone_text='',
+      ),
+    ]
+
+    # set preference group
+    self.preference_group = 'group/my_group'
+
+  def beforeTearDown(self):
+    os.remove(self.categories_file_path)
+    os.remove(self.roles_file_path)
+
+  def stepCheckConfigureCategoriesForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check if Confire Categories step was showed """
+    response_dict = sequence.get("response_dict")
+    if 'command' in response_dict:
+      self.assertEquals('show', response_dict['command'])
+    self.assertEquals(None, response_dict['previous'])
+    self.assertEquals('Configure Categories', response_dict['next'])
+    self.assertCurrentStep('Your Categories', response_dict)
+
+  def stepSetupCategoriesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
+    """ Load the categories """
+    next_dict = dict(field_your_configuration_spreadsheet=self.categories_file_upload)
+    next_dict.update(**kw)
+    sequence.edit(next_dict=next_dict)
+
+  def stepCheckConfigureRolesForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check if Configure Roles step was showed """
+    response_dict = sequence.get("response_dict")
+    if 'command' in response_dict:
+      self.assertEquals('show', response_dict['command'])
+    self.assertEquals('Configure Roles', response_dict['next'])
+    self.assertEquals('Previous', response_dict['previous'])
+    self.assertCurrentStep('Your roles settings', response_dict)
+
+  def stepCheckCategoriesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
+    """ Checki if categories was created """
+    business_configuration = sequence.get("business_configuration")
+    # this created a categories spreadsheet confiurator item
+    categories_spreadsheet_configuration_save = business_configuration['3']
+    categories_spreadsheet_configuration_item =\
+          categories_spreadsheet_configuration_save['1']
+    self.assertEquals('Categories Spreadsheet Configurator Item',
+          categories_spreadsheet_configuration_item.getPortalType())
+
+    spreadsheet = categories_spreadsheet_configuration_item\
+                    .getConfigurationSpreadsheet()
+    self.assertNotEquals(None, spreadsheet)
+    self.assertEquals('Embedded File', spreadsheet.getPortalType())
+    self.failUnless(spreadsheet.hasData())
+
+  def stepSetupRolesConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
+    """ Load the Roles """
+    next_dict = dict(field_your_portal_type_roles_spreadsheet=self.roles_file_upload)
+    next_dict.update(**kw)
+    sequence.edit(next_dict=next_dict)
+
+  def stepCheckConfigureOrganisationForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check if Confire Organisation step was showed """
+    response_dict = sequence.get("response_dict")
+    TestLiveConfiguratorWorkflowMixin.stepCheckConfigureOrganisationForm(
+                         self, sequence, sequence_list, **kw)
+    self.assertEquals('Previous', response_dict['previous'])
+
+  def stepSetupOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
+    """ Create one Organisation with French information """
+    TestLiveConfiguratorWorkflowMixin.stepSetupOrganisationConfiguratorItem(
+        self,
+        sequence=sequence,
+        sequence_list=sequence_list,
+        field_your_group='my_group')
+
+  def stepCheckOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
+    """ Check if organisation was created fine """
+    business_configuration = sequence.get("business_configuration")
+    # last one: a step for what the client selected
+    organisation_config_save = business_configuration['5']
+    self.assertEquals(1, len(organisation_config_save.contentValues()))
+    # first item: configuration of our organisation
+    organisation_config_item = organisation_config_save['1']
+    self.assertEquals(organisation_config_item.getPortalType(),
+                      'Organisation Configurator Item')
+    # this organisation configurator items contains all properties that the
+    # orgnanisation will have.
+    self.assertEquals(organisation_config_item.getDefaultAddressCity(),
+                      'LILLE')
+    self.assertEquals(organisation_config_item.getDefaultAddressRegion(),
+                      'europe/western_europe/france')
+    self.assertEquals(organisation_config_item.getDefaultEmailText(),
+                      'me@example.com')
+    self.assertEquals('01234567890',
+        organisation_config_item.getDefaultTelephoneTelephoneNumber())
+
+    configuration_save_list = business_configuration.contentValues(
+                                             portal_type="Configuration Save")
+    self.assertEquals(5, len(configuration_save_list))
+
+    link_list = business_configuration.contentValues(portal_type="Link")
+    self.assertEquals(0, len(link_list))
+
+  def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if multiple Person Configuration Item of the Business
+      Configuration have been created successfully.
+    """
+    person_business_configuration_save = TestLiveConfiguratorWorkflowMixin.\
+              stepCheckMultiplePersonConfigurationItem(
+                                  self, sequence, sequence_list, **kw)
+
+    person_business_configuration_item =\
+          person_business_configuration_save['1']
+    self.assertEquals('Person Configurator Item',
+            person_business_configuration_item.getPortalType())
+    self.assertEquals('Person',
+            person_business_configuration_item.getFirstName())
+    self.assertEquals('Creator',
+            person_business_configuration_item.getLastName())
+    self.assertEquals(self.person_creator_reference,
+            person_business_configuration_item.getReference())
+    self.assertEquals('person_creator',
+            person_business_configuration_item.getPassword())
+    self.assertEquals('hr/manager',
+            person_business_configuration_item.getFunction())
+
+    person_business_configuration_item =\
+          person_business_configuration_save['2']
+    self.assertEquals('Person Configurator Item',
+            person_business_configuration_item.getPortalType())
+    self.assertEquals('Person',
+            person_business_configuration_item.getFirstName())
+    self.assertEquals('Assignee',
+            person_business_configuration_item.getLastName())
+    self.assertEquals(self.person_assignee_reference,
+            person_business_configuration_item.getReference())
+    self.assertEquals('person_assignee',
+            person_business_configuration_item.getPassword())
+    self.assertEquals('af/accounting/manager',
+            person_business_configuration_item.getFunction())
+
+    person_business_configuration_item =\
+          person_business_configuration_save['3']
+    self.assertEquals('Person Configurator Item',
+            person_business_configuration_item.getPortalType())
+    self.assertEquals('Person',
+            person_business_configuration_item.getFirstName())
+    self.assertEquals('Assignor',
+            person_business_configuration_item.getLastName())
+    self.assertEquals(self.person_assignor_reference,
+            person_business_configuration_item.getReference())
+    self.assertEquals('person_assignor',
+            person_business_configuration_item.getPassword())
+    self.assertEquals('sales/manager',
+            person_business_configuration_item.getFunction())
+
+  def test_consulting_workflow(self):
+    """ Test the consulting workflow configuration"""
     sequence_list = SequenceList()
-    sequence_string =  self.DEFAULT_SEQUENCE_LIST % dict(country='France') + \
-      """
-      stepTic
-      stepViewAddGadget
-      stepViewEventModule
-      stepAddEvent
-      stepSentEventWorkflow
-      stepViewAccountModule
-      stepAddAccountModule
-      stepViewAccount
-      stepCopyPasteAccount
-      stepViewEntityModules
-      stepAddEntityModules
-      stepCopyAndPastePerson
-      stepCopyAndPasteOrganisation
-      stepEntityWorkflow
-      stepViewCreatedPersons
-      stepViewCreatedOrganisations
-      stepViewCreatedAssignemnts
-      stepAddAccoutingPeriod
-      stepValidatedAccountingPeriods
-      stepViewBankAccount
-      stepViewCreditCard
-      stepValidateAndModifyBankAccount
-      stepValidateAndModifyCreditCard
-      stepAddPaymentNodeInPerson
-      stepAddPaymentNodeInOrganisation
-      stepCopyAndPasteBankAccountInPerson
-      stepCopyAndPasteBankAccountInOrganisation
-      stepViewAccountingTransactionModule
-      stepAddAccountingTransactionModule
-      stepCopyAndPasteAccountingTransactions
-      stepTic
-      stepAccountingTransaction
-      stepTic
-      stepSaleInvoiceTransaction
-      stepTic
-      stepPurchaseInvoiceTransaction
-      stepTic
-      stepPaymentTransaction
-      stepTic
-      stepBalanceTransaction
-      stepTic
-      stepAccountingTransaction_getCausalityGroupedAccountingTransactionList
-      stepAddAssignments
-      stepAssignmentTI
-      stepEditAssignments
-      stepViewAcessAddPurchaseTradeCondition
-      stepViewAccessAddSaleTradeCondition
-      stepViewAccessAddSaleOrder
-      stepViewAccessAddSalePackingList
-      stepViewAccessPurchaseOrder
-      stepPurchasePackingList
-      stepWebSiteModule
-      stepPortalContributionsTool
-      stepConfiguredPropertySheets
-      """
+    sequence_string = \
+      self.DEFAULT_SEQUENCE_LIST % dict(country='France') + \
+      self.AFTER_CONFIGURATION_SEQUENCE + \
+      self.SECURITY_CONFIGURATION_SEQUENCE
+
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_after_configuration_standard_workflow_france(self):
-    """ Test the after configuration script """
-    sequence_list = SequenceList()
-    sequence_string =  self.DEFAULT_SEQUENCE_LIST % dict(country='France') + \
-      """
-      stepCheckValidAccountList
-      stepCheckAccountReference
-      stepCheckValidPersonList
-      stepCheckValidOrganisationList
-      stepCheckValidCurrencyList
-      stepCheckPublicGadgetList
-      stepCheckPreferenceList
-      stepCheckModulesBusinessApplication
-      stepCheckBaseCategoryList
-      stepCheckOrganisationSite
-      stepCheckAccountingPeriod
-      stepCheckRuleValidation
-      stepCheckBusinessProcess
-      stepCheckSolver
-      stepCheckSaleTradeCondition
-      stepCheckPurchaseTradeCondition
-      stepCheckSaleOrderSimulation
-      """
-    # XXX (lucas): expected failure, it must be fixed in ERP5 core.
-    #sequence_string += """
-    #  stepCheckQuantityConversion
-    #  """
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
+class TestStandardConfiguratorWorkflow(StandardConfigurationMixin):
+  """
+    Test Live Standard Configuration Workflow.
+  """
+  CONFIGURATION_WORKFLOW = 'workflow_module/erp5_standard_workflow'
 
+  DEFAULT_SEQUENCE_LIST = """
+      stepSet%(country)sCase
+      stepCreateBusinessConfiguration
+      stepTic
+      stepSetConfiguratorWorkflow
+      stepTic
+      stepConfiguratorNext
+      stepTic
+      stepCheckBT5ConfiguratorItem
+      stepCheckConfigureOrganisationForm
+      stepSetupOrganisationConfiguratorItem
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureUserAccountNumberForm
+      stepCheckOrganisationConfiguratorItem
+      stepSetupUserAccounNumberSix
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureMultipleUserAccountForm
+      stepSetupMultipleUserAccountSix
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureAccountingForm
+      stepCheckMultiplePersonConfigurationItem
+      stepSetupAccountingConfiguration
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigurePreferenceForm
+      stepCheckAccountingConfigurationItemList%(country)s
+      stepSetupPreferenceConfiguration
+      stepConfiguratorNext
+      stepTic
+      stepCheckConfigureInstallationForm
+      stepCheckPreferenceConfigurationItemList
+      stepSetupInstallConfiguration
+      stepConfiguratorNext
+      stepTic
+      stepCheckInstallConfiguration
+      stepStartConfigurationInstallation
+      stepTic
+      stepCheckInstanceIsConfigured%(country)s
+      """ + \
+      StandardConfigurationMixin.AFTER_CONFIGURATION_SEQUENCE + \
+      StandardConfigurationMixin.SECURITY_CONFIGURATION_SEQUENCE
+
+  def afterSetUp(self):
+    TestLiveConfiguratorWorkflowMixin.afterSetUp(self)
+    newId = self.portal.portal_ids.generateNewId
+    id_group ='testConfiguratorStandardWorkflow'
+
+    self.sales_manager_reference = 'sales_manager_%s' % newId(id_group)
+    self.purchase_manager_reference = 'purchase_manager_%s' % newId(id_group)
+    self.accounting_agent_reference = 'accounting_agent_%s' % newId(id_group)
+    self.accounting_manager_reference = 'accounting_manager_%s' % newId(id_group)
+    self.warehouse_agent_reference = 'warehouse_agent_%s' % newId(id_group)
+    self.simple_user_reference = 'simple_user_%s' % newId(id_group)
+
+    self.accountant_username_list = (self.accounting_agent_reference,
+                                     self.accounting_manager_reference,)
+    self.all_username_list = (self.sales_manager_reference,
+                              self.purchase_manager_reference,
+                              self.accounting_agent_reference,
+                              self.accounting_manager_reference,
+                              self.warehouse_agent_reference,
+                              self.simple_user_reference,)
+    self.sales_and_purchase_username_list = (self.sales_manager_reference,
+                                             self.purchase_manager_reference,)
+    self.warehouse_username_list = (self.warehouse_agent_reference,)
+    self.simple_username_list = (self.simple_user_reference,)
+
+    # set the company employees number
+    self.company_employees_number = '6'
+
+    # create our 6 users:
+    self.user_list = [
+      dict(
+                # A sales manager
+        field_your_first_name='Sales',
+        field_your_last_name='Manager',
+        field_your_reference=self.sales_manager_reference,
+        field_your_password='sales_manager',
+        field_your_password_confirm='sales_manager',
+        field_your_function='sales/manager',
+        field_your_default_email_text='sales_manager@example.com',
+        field_your_default_telephone_text='',
+      ), dict(
+                # A purchase manager
+        field_your_first_name='Purchase',
+        field_your_last_name='Manager',
+        field_your_reference=self.purchase_manager_reference,
+        field_your_password='purchase_manager',
+        field_your_password_confirm='purchase_manager',
+        field_your_function='purchase/manager',
+        field_your_default_email_text='purchase_manager@example.com',
+        field_your_default_telephone_text='',
+      ), dict(
+                # An Accounting agent
+        field_your_first_name='Accounting',
+        field_your_last_name='Agent',
+        field_your_reference=self.accounting_agent_reference,
+        field_your_password='accounting_agent',
+        field_your_password_confirm='accounting_agent',
+        field_your_function='af/accounting/agent',
+        field_your_default_email_text='accounting_agent@example.com',
+        field_your_default_telephone_text='',
+      ), dict(
+                # An Accounting Manager
+        field_your_first_name='Accounting',
+        field_your_last_name='Manager',
+        field_your_reference=self.accounting_manager_reference,
+        field_your_password='accounting_manager',
+        field_your_password_confirm='accounting_manager',
+        field_your_function='af/accounting/manager',
+        field_your_default_email_text='accounting_manager@example.com',
+        field_your_default_telephone_text='',
+      ), dict(
+                # A Warehouse Agent
+        field_your_first_name='Warehouse',
+        field_your_last_name='Agent',
+        field_your_reference=self.warehouse_agent_reference,
+        field_your_password='warehouse_agent',
+        field_your_password_confirm='warehouse_agent',
+        field_your_function='warehouse/agent',
+        field_your_default_email_text='warehouse_agent@example.com',
+        field_your_default_telephone_text='',
+      ), dict(
+          # A Simple user without meaningfull function ( hr / manager)
+        field_your_first_name='Simple',
+        field_your_last_name='User',
+        field_your_reference=self.simple_user_reference,
+        field_your_password='simple_user',
+        field_your_password_confirm='simple_user',
+        field_your_function='hr/manager',
+        field_your_default_email_text='simple_user@example.com',
+        field_your_default_telephone_text='',
+      ),
+    ]
+    # set preference group
+    self.preference_group = 'group/my_group'
+
+  def stepCheckConfigureOrganisationForm(self, sequence=None, sequence_list=None, **kw):
+    """ Check if Confire Organisation step was showed """
+    response_dict = sequence.get("response_dict")
+    TestLiveConfiguratorWorkflowMixin.stepCheckConfigureOrganisationForm(
+                         self, sequence, sequence_list, **kw)
+    self.assertEquals(None, response_dict['previous'])
+
+  def stepCheckOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
+    """ Check if configuration key was created fine """
+    business_configuration = sequence.get('business_configuration')
+    default_address_city = sequence.get('organisation_default_address_city')
+    default_address_region = sequence.get('organisation_default_address_region')
+
+    # last one: a step for what the client selected
+    organisation_config_save = business_configuration['5']
+    self.assertEquals(2, len(organisation_config_save.contentValues()))
+    # first item: configuration of our organisation
+    organisation_config_item = organisation_config_save['1']
+    self.assertEquals(organisation_config_item.getPortalType(),
+                      'Organisation Configurator Item')
+    # this organisation configurator items contains all properties that the
+    # orgnanisation will have.
+    self.assertEquals(organisation_config_item.getDefaultAddressCity(),
+                      default_address_city)
+    self.assertEquals(organisation_config_item.getDefaultAddressRegion(),
+                      default_address_region)
+    self.assertEquals(organisation_config_item.getDefaultEmailText(),
+                      'me@example.com')
+    self.assertEquals('01234567890',
+        organisation_config_item.getDefaultTelephoneTelephoneNumber())
+
+    # we also create a category for our group
+    category_config_item = organisation_config_save['2']
+    self.assertEquals(category_config_item.getPortalType(),
+                      'Category Configurator Item')
+    self.assertEquals(category_config_item.getTitle(),
+                      'My Organisation')
+
+    self.assertEquals(5, len(business_configuration.contentValues(portal_type="Configuration Save")))
+    self.assertEquals(0, len(business_configuration.contentValues(portal_type="Link")))
+
+  def stepCheckMultiplePersonConfigurationItem(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if multiple Person Configuration Item of the Business
+      Configuration have been created successfully.
+    """
+    person_business_configuration_save = TestLiveConfiguratorWorkflowMixin.\
+              stepCheckMultiplePersonConfigurationItem(
+                                  self, sequence, sequence_list, **kw)
+
+    person_business_configuration_item =\
+          person_business_configuration_save['1']
+    self.assertEquals('Person Configurator Item',
+            person_business_configuration_item.getPortalType())
+    self.assertEquals('Sales',
+            person_business_configuration_item.getFirstName())
+    self.assertEquals('Manager',
+            person_business_configuration_item.getLastName())
+    self.assertEquals(self.sales_manager_reference,
+            person_business_configuration_item.getReference())
+    self.assertEquals('sales_manager',
+            person_business_configuration_item.getPassword())
+    self.assertEquals('sales/manager',
+            person_business_configuration_item.getFunction())
+
+    # ...
+    person_business_configuration_item =\
+          person_business_configuration_save['3']
+    self.assertEquals('Person Configurator Item',
+            person_business_configuration_item.getPortalType())
+    self.assertEquals('Accounting',
+            person_business_configuration_item.getFirstName())
+    self.assertEquals('Agent',
+            person_business_configuration_item.getLastName())
+    self.assertEquals(self.accounting_agent_reference,
+            person_business_configuration_item.getReference())
+    self.assertEquals('accounting_agent',
+            person_business_configuration_item.getPassword())
+    self.assertEquals('af/accounting/agent',
+            person_business_configuration_item.getFunction())
+
+  ##########################################
   def test_standard_workflow_france(self):
     """ Test the standard workflow with french configuration"""
     sequence_list = SequenceList()
@@ -1361,23 +1461,31 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
+  def test_standard_workflow_russia(self):
+    """ Test the standard workflow with russian configuration """
+    sequence_list = SequenceList()
+    sequence_string = self.DEFAULT_SEQUENCE_LIST % dict(country='Russia')
+    sequence_list.addSequenceString(sequence_string)
+    sequence_list.play(self)
+
   def test_standard_workflow_brazil_with_previous(self):
     """ This time we must simulate the previous buttom """
     sequence_list = SequenceList()
     sequence_string = """
+      stepSetBrazilCase
       stepCreateBusinessConfiguration
       stepTic
-      stepSetStandardWorkflow
+      stepSetConfiguratorWorkflow
       stepTic
       stepConfiguratorNext
       stepTic
       stepCheckBT5ConfiguratorItem
       stepCheckConfigureOrganisationForm
-      stepSetupOrganisationConfiguratorItemBrazil
+      stepSetupOrganisationConfiguratorItem
       stepConfiguratorNext
       stepTic
       stepCheckConfigureUserAccountNumberForm
-      stepCheckOrganisationConfiguratorItemBrazil
+      stepCheckOrganisationConfiguratorItem
     """
     # check previous to organisation form and go back to
     # User Account Number Form to setup the number of user
@@ -1400,7 +1508,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     sequence_string += """
       stepConfiguratorPrevious
       stepCheckConfigureOrganisationForm
-      stepSetupOrganisationConfiguratorItemBrazil
+      stepSetupOrganisationConfiguratorItem
     """
     # go next to user account number form
     sequence_string += """
@@ -1417,7 +1525,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepTic
       stepCheckMultiplePersonConfigurationItem
       stepCheckConfigureAccountingForm
-      stepSetupAccountingConfigurationBrazil
+      stepSetupAccountingConfiguration
       stepConfiguratorNext
       stepTic
       stepCheckAccountingConfigurationItemListBrazil
@@ -1435,7 +1543,7 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepConfiguratorPrevious
       stepCleanUpRequest
       stepCheckConfigureOrganisationForm
-      stepSetupOrganisationConfiguratorItemBrazil
+      stepSetupOrganisationConfiguratorItem
       stepConfiguratorNext
       stepCheckConfigureUserAccountNumberForm
       stepSetupUserAccounNumberSix
@@ -1444,17 +1552,17 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
       stepSetupMultipleUserAccountSix
       stepConfiguratorNext
       stepCheckConfigureAccountingForm
-      stepSetupAccountingConfigurationBrazil
+      stepSetupAccountingConfiguration
       stepConfiguratorNext
       stepTic
       stepCheckConfigurePreferenceForm
     """
     # check next Configure Installation form
     sequence_string += """
-      stepSetupPreferenceConfigurationBrazil
+      stepSetupPreferenceConfiguration
       stepConfiguratorNext
       stepTic
-      stepCheckPreferenceConfigurationItemListBrazil
+      stepCheckPreferenceConfigurationItemList
       stepCheckConfigureInstallationForm
       stepSetupInstallConfiguration
       stepConfiguratorNext
@@ -1467,13 +1575,6 @@ class TestStandardConfiguratorWorkflow(TestLiveConfiguratorWorkflowMixin):
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  def test_standard_workflow_russia(self):
-    """ Test the standard workflow with russian configuration """
-    sequence_list = SequenceList()
-    sequence_string = self.DEFAULT_SEQUENCE_LIST % dict(country='Russia')
-    sequence_list.addSequenceString(sequence_string)
-    sequence_list.play(self)
-   
 #  def exportConfiguratorBusinessTemplate(self):
 #    """ """
 #    # we save this configuration business template for another test

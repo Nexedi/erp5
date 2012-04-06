@@ -1,3 +1,4 @@
+##############################################################################
 # Copyright (c) 2011 Nexedi SA and Contributors. All Rights Reserved.
 #           Gabriel M. Monnerat <gabriel@tiolive.com>
 #           Xavier Hardy <xavier.hardy@tiolive.com>
@@ -303,34 +304,6 @@ class TestRunMyDocsConfiguratorWorkflowMixin(ERP5TypeTestCase):
     self.assertEquals(preference.getPreferenceState(), "enabled")
     runmydocs_preference = self.portal.portal_preferences.runmydocs_preference
     self.assertEquals(runmydocs_preference.getPreferenceState(), "global")
-  
-  """  def _stepCheckWebSiteRoles(self):
-    # Check permission of Web Site with normal user
-    self.portal.web_page_module.ERP5Site_createNewWebDocument("web_page_template")
-    self.stepTic()
-    result_list = self.portal.web_site_module.runmydocs.WebSection_getWebPageObjectList()
-    self.assertEquals(len(result_list), 1)
-    self.assertEquals(result_list[0].getTitle(), "Web Page")
-    new_object = self.portal.web_page_module.newContent(portal_type="Web Page")
-    new_object.edit(title="New")
-    new_object = self.portal.web_page_module.newContent(portal_type="Web Table")
-    new_object.edit(title="New")
-    new_object = self.portal.web_page_module.newContent(portal_type="Web Illustration")
-    new_object.edit(title="New")
-    self.stepTic()
-    kw = {"portal_type": "Web Page", "title": "New"}
-    result_list = self.portal.web_site_module.runmydocs.WebSection_getWebPageObjectList(**kw)
-    self.assertEquals(len(result_list), 1)
-    self.assertEquals(result_list[0].getPortalType(), "Web Page")
-    kw["portal_type"] = "Web Illustration"
-    result_list = self.portal.web_site_module.runmydocs.WebSection_getWebPageObjectList(**kw)
-    self.assertEquals(len(result_list), 1)
-    self.assertEquals(result_list[0].getPortalType(), "Web Illustration")
-    kw["portal_type"] = "Web Table"
-    result_list = self.portal.web_site_module.runmydocs.WebSection_getWebPageObjectList(**kw)
-    self.assertEquals(len(result_list), 1)
-    self.assertEquals(result_list[0].getPortalType(), "Web Table")
-  """
 
   def _stepCheckKnowledgePadRole(self):
     """ Check if Knowledge Pad is configured correctly """
@@ -417,50 +390,6 @@ class TestRunMyDocsConfiguratorWorkflowFranceLanguage(TestRunMyDocsConfiguratorW
     ]
     self._stepSetupMultipleUserAccountThree(sequence, user_list)
 
-  """  def stepSetupWebSiteConfiguration(self, sequence=None, sequence_list=None, **kw):
-    # Setup Web Site
-    next_dict = dict(your_default_available_language="fr")
-    sequence.edit(next_dict=next_dict)
-
-  def stepCheckRunMyDocsWebSiteAfterInstallation(self, sequence=None, sequence_list=None, **kw):
-    # Check if RunMyDocs Web Site is published and your language
-    runmydocs_web_site = self.portal.web_site_module.runmydocs
-    portal_catalog = self.portal.portal_catalog
-    self.assertEquals(runmydocs_web_site.getValidationState(),
-                      "published")
-    self.assertEquals(runmydocs_web_site.getDefaultAvailableLanguage(),
-                      "fr")
-    person = portal_catalog.getResultValue(portal_type="Person",
-                                           reference="french_creator")
-    self.assertEquals(person.getValidationState(), 'validated')
-    self.assertEquals(person.getFirstName(), 'Person')
-    self.assertEquals(person.getLastName(), 'Creator')
-    assignment = person.contentValues(portal_type="Assignment")[0]
-    self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "runmydocs_user")
-    person = portal_catalog.getResultValue(portal_type="Person",
-                                           reference="french_assignee")
-    self.assertEquals(person.getValidationState(), 'validated')
-    self.assertEquals(person.getFirstName(), 'Person')
-    self.assertEquals(person.getLastName(), 'Assignee')
-    assignment = person.contentValues(portal_type="Assignment")[0]
-    self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "runmydocs_user")
-    person = portal_catalog.getResultValue(portal_type="Person",
-                                           reference="french_assignor")
-    self.assertEquals(person.getValidationState(), 'validated')
-    self.assertEquals(person.getFirstName(), 'Person')
-    self.assertEquals(person.getLastName(), 'Assignor')
-    assignment = person.contentValues(portal_type="Assignment")[0]
-    self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "runmydocs_user")
-
-  def stepCheckWebSiteRoles(self, sequence=None, sequence_list=None, **kw):
-    # Check permission of Web Site with normal user
-    self.login("french_assignor")
-    self._stepCheckWebSiteRoles()
-  """
-
   def stepCheckKnowledgePadRole(self, sequence=None, sequence_list=None, **kw):
     self.login("french_creator")
     self._stepCheckKnowledgePadRole()
@@ -482,11 +411,6 @@ class TestRunMyDocsConfiguratorWorkflowBrazilLanguage(TestRunMyDocsConfiguratorW
     sequence_list.addSequenceString(sequence_string)
     sequence_list.play(self)
 
-  """  def stepSetupWebSiteConfiguration(self, sequence=None, sequence_list=None, **kw):
-    # Setup Web Site
-    next_dict = dict(your_default_available_language="pt-BR")
-    sequence.edit(next_dict=next_dict)
-"""
   def stepSetupMultipleUserAccountThree(self, sequence=None, sequence_list=None, **kw):
     """ Create multiple user account """
     user_list = [
@@ -518,44 +442,6 @@ class TestRunMyDocsConfiguratorWorkflowBrazilLanguage(TestRunMyDocsConfiguratorW
     ]
     self._stepSetupMultipleUserAccountThree(sequence, user_list)
 
-  """  def stepCheckRunMyDocsWebSiteAfterInstallation(self, sequence=None, sequence_list=None, **kw):
-    # Check if RunMyDocs Web Site is published and your language
-    runmydocs_web_site = self.portal.web_site_module.runmydocs
-    portal_catalog = self.portal.portal_catalog
-    self.assertEquals(runmydocs_web_site.getValidationState(),
-                      "published")
-    self.assertEquals(runmydocs_web_site.getDefaultAvailableLanguage(),
-                      "pt-BR")
-    person = portal_catalog.getResultValue(portal_type="Person",
-                                           reference="person_creator")
-    self.assertEquals(person.getValidationState(), 'validated')
-    self.assertEquals(person.getFirstName(), 'Person')
-    self.assertEquals(person.getLastName(), 'Creator')
-    assignment = person.contentValues(portal_type="Assignment")[0]
-    self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "runmydocs_user")
-    person = portal_catalog.getResultValue(portal_type="Person",
-                                           reference="person_assignee")
-    self.assertEquals(person.getValidationState(), 'validated')
-    self.assertEquals(person.getFirstName(), 'Person')
-    self.assertEquals(person.getLastName(), 'Assignee')
-    assignment = person.contentValues(portal_type="Assignment")[0]
-    self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "runmydocs_user")
-    person = portal_catalog.getResultValue(portal_type="Person",
-                                           reference="person_assignor")
-    self.assertEquals(person.getValidationState(), 'validated')
-    self.assertEquals(person.getFirstName(), 'Person')
-    self.assertEquals(person.getLastName(), 'Assignor')
-    assignment = person.contentValues(portal_type="Assignment")[0]
-    self.assertEquals(assignment.getValidationState(), "open")
-    self.assertEquals(assignment.getFunction(), "runmydocs_user")
-
-  def stepCheckWebSiteRoles(self, sequence=None, sequence_list=None, **kw):
-    # Check permission of Web Site with normal user
-    self.login("person_assignor")
-    self._stepCheckWebSiteRoles()
-"""
   def stepCheckKnowledgePadRole(self, sequence=None, sequence_list=None, **kw):
     self.login("person_creator")
     self._stepCheckKnowledgePadRole()

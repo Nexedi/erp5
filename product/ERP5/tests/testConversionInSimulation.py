@@ -172,6 +172,10 @@ class TestConversionInSimulation(AccountingTestCase):
             'erp5_accounting_ui_test',
             'erp5_invoicing',
             'erp5_simplified_invoicing',
+            'erp5_configurator_standard_solver',
+            'erp5_configurator_standard_trade_template',
+            'erp5_configurator_standard_accounting_template',
+            'erp5_configurator_standard_invoicing_template',
             'erp5_simulation_test',
             )
 

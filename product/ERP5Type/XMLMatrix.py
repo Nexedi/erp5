@@ -37,6 +37,8 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 
 from zLOG import LOG
 
+INFINITE_SET = type('', (object,), {'__contains__': lambda *args: True})()
+
 class XMLMatrix(Folder):
     """
         A mix-in class which provides a matrix like
@@ -143,142 +145,64 @@ class XMLMatrix(Folder):
 
     security.declareProtected( Permissions.ModifyPortalContent,
                                '_setCellRange' )
-    def _setCellRange(self, *kw, **kwd):
+    def _setCellRange(self, *args, **kw):
+      """Set a new range for a matrix
+
+      Each value for each axis is assigned an integer id.
+      If the number of axis changes, everything is reset.
+      Otherwise, ids are never changed, so that cells never need to be renamed:
+      this means no sort is garanteed, and there can be holes.
       """
-          Set a new range for a matrix.
-          If needed, it will resize and/or reorder matrix content.
-      """
-      movement = {} # Maps original cell id to its new id for each moved cell.
-      new_index = PersistentMapping()
-
-      base_id = kwd.get('base_id', 'cell')
-      if getattr(aq_base(self), 'index', None) is None:
-        self.index = PersistentMapping()
-
-      # Return if previous range is the same
-      current_range = self.getCellRange(base_id=base_id)
-      if current_range == list(kw): # kw is a tuple
-        return
-
-      # Create the new index for the range given in *kw
-      # *kw practical example:
-      # kw = [ ['color/blue', 'color/red'], ['size/S', 'size/L']]
-      for i, index_ids in enumerate(kw):
-        temp = PersistentMapping()
-        for j, my_id in enumerate(index_ids):
-          temp[my_id] = j
-        new_index[i] = temp
-
-      if self.index.has_key(base_id):
-        # Compute cell movement from their position in previous range to their
-        # position in the new range.
-        for i, i_value in self.index[base_id].iteritems():
-          if new_index.has_key(i):
-            temp = {}
-            for my_id, my_value in i_value.iteritems():
-              temp[my_value] = new_index[i].get(my_id)
-            movement[i] = temp
-
-      # List all valid cell ids for current base_id.
-      object_id_list = []
-      for obj in self.objectValues():
-        object_id = obj.getId()
-        if object_id.find(base_id) == 0:
-          # Check that all '_'-separated fields are of int type.
-          if (object_id) > len(base_id):
-            try:
-              int(object_id[len(base_id)+1:].split('_')[0])
-              test = self._getOb(object_id) # If the object was created
-                                            # during this transaction,
-                                            # then we do not need to
-                                            # work on it
-              object_id_list.append(object_id)
-            except (ValueError, KeyError):
-              pass
-
-      # Prepend 'temp_' to all cells, to avoid id conflicts while renaming.
-      for object_id in object_id_list:
-        new_name = 'temp_' + object_id
-        obj = self._getOb(object_id)
-        self._delObject(object_id)
-        obj.id = new_name
-        self._setObject(new_name, aq_base(obj))
-
-      # Rename all cells to their final name.
-      for object_id in object_id_list:
-        # Retrieve the place of the object, for movement_0_0 it is ['0','0']
-        object_place = object_id[len(base_id)+1:].split('_')
-        to_delete = 1
-        # We must have the same number of dimensions
-        if len(object_place) == len(new_index):
-          # Let us browse each dimension of the previous index
-          for i in range(len(object_place)):
-            # Build each part of the nex id by looking up int. values
-            old_place = int(object_place[i])
-            # We are looking inside the movement dictionnary where
-            # we should move the object, so for example
-            # 'qantity_2_5' is renamed as 'quantity_4_3'
-            if movement.has_key(i):
-              if movement[i].has_key(old_place):
-                # Replace the place of the cell only if there where a change
-                if (movement[i][old_place]) != None:
-                  object_place[i] = str(movement[i][old_place])
-                  to_delete = 0
-                else:
-                  object_place[i] = None
-
-            # XXX In this case, we delete every cell wich are not in the
-            # movement dictionnary, may be this is very bad, so may be
-            # we need to add an extra check here, ie if
-            # if movement[i].has_key(old_place) returns None,
-            # We may want to keep the cell, but only if we are sure
-            # the movement dictionnary will not define a new cell with this id
-
-        new_object_id_list = []
-
-        temp_object_id = 'temp_' + object_id
-        o = self._getOb(temp_object_id)
-        if not to_delete and not (None in object_place):
-          self._delObject(temp_object_id) # In all cases, we have
-                                          # to remove the temp object
-          object_place.insert(0, base_id)
-          new_name = '_'.join(object_place)
-          o.id = new_name
-          new_object_id_list.extend(new_name)
-          self._setObject(new_name, aq_base(o))
-
-          if new_name != object_id:
-            # Theses two lines are very important, if the object is renamed
-            # then we must uncatalog the previous one
-            o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
-            # Force a new uid to be allocated, because unindexObject creates
-            # an activity which will later delete lines from catalog based
-            # on their uid, and it is not garanted that indexation will happen
-            # after this deletion.
-            # It is bad to waste uids, but this data structure offers no
-            # alternative because cell id gives its index in the matrix,
-            # so reordering axes requires the cell id to change.
-            # XXX: It can be improved, but requires most of this file to be
-            # rewritten, and compatibility code must be written as data
-            # structure would most probably change.
-            o.uid = None
-          o.reindexObject() # we reindex in case position has changed
-                            # uid should be consistent
+      base_id = kw.get('base_id', 'cell')
+      # Get (initialize if necessary) index for considered matrix (base_id).
+      try:
+        index = aq_base(self).index
+      except AttributeError:
+        index = self.index = PersistentMapping()
+      to_delete = []
+      try:
+        index = index[base_id]
+        if len(args) != len(index):
+          # The number of axis changes so we'll delete all existing cells and
+          # renumber everything from 1.
+          to_delete = INFINITE_SET,
+          index.clear()
+      except KeyError:
+        index[base_id] = index = PersistentMapping()
+      # For each axis ...
+      for i, axis in enumerate(args):
+        # ... collect old axis keys and allocate ids for new ones.
+        axis = set(axis)
+        last_id = -1
+        try:
+          id_dict = index[i]
+        except KeyError:
+          index[i] = id_dict = PersistentMapping()
         else:
-          # In all cases, we have to remove the temp object
-          #WARNING -> if path is not good, it will not be able to uncatalog !!!
-          #o.immediateReindexObject() # STILL A PROBLEM -> getUidForPath XXX
-
-          if object_id not in new_object_id_list: # do not unindex a new object
-            o.isIndexable = ConstantGetter('isIndexable', value=True)
-            o.unindexObject(path='%s/%s' % (self.getUrl() , object_id))
-            # unindexed already forced
-            o.isIndexable = ConstantGetter('isIndexable', value=False)
-          self._delObject(temp_object_id) # object will be removed
-                                               # from catalog automaticaly
-      # We don't need the old index any more, we
-      # can set the new index
-      self.index[base_id] = new_index
+          delete = set()
+          to_delete.append(delete)
+          for k, v in id_dict.items():
+            try:
+              axis.remove(k)
+              if last_id < v:
+                last_id = v
+            except KeyError:
+              delete.add(v)
+              del id_dict[k]
+          # At this point, last_id contains the greatest id.
+        for k in sorted(axis):
+          last_id += 1
+          id_dict[k] = last_id
+      # Remove old cells if any.
+      if any(to_delete):
+        prefix = base_id + '_'
+        prefix_len = len(prefix)
+        for cell_id in list(self.objectIds()):
+          if cell_id.startswith(prefix):
+            for i, j in enumerate(cell_id[prefix_len:].split('_')):
+              if int(j) in to_delete[i]:
+                self._delObject(cell_id)
+                break
 
     security.declareProtected( Permissions.ModifyPortalContent, 'setCellRange' )
     def setCellRange(self, *kw, **kwd):
@@ -427,17 +351,11 @@ class XMLMatrix(Folder):
       """
           Returns the cell range as a list of index ids
       """
-      if getattr(aq_base(self), 'index', None) is None:
+      try:
+        cell_range = aq_base(self).index[base_id]
+      except (AttributeError, KeyError):
         return []
-      cell_range = self.index.get(base_id, None)
-      if cell_range is None:
-        return None
-
-      result = []
-      for value in cell_range.itervalues():
-        result_items = sorted(value.iteritems(), key=lambda x:x[1])
-        result.append([x[0] for x in result_items])
-      return result
+      return [x.keys() for _, x in sorted(cell_range.iteritems())]
 
     security.declareProtected( Permissions.ModifyPortalContent, 'newCell' )
     def newCell(self, *kw, **kwd):

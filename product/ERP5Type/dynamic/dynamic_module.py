@@ -1,3 +1,32 @@
+##############################################################################
+#
+# Copyright (c) 2010-2012 Nexedi SARL and Contributors. All Rights Reserved.
+#                         Nicolas Dumazet <nicolas.dumazet@nexedi.com>
+#                         Arnaud Fontaine <arnaud.fontaine@nexedi.com>
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsibility of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# guarantees and support are strongly adviced to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+##############################################################################
+
 from types import ModuleType
 import sys
 import threading
@@ -38,3 +67,76 @@ def registerDynamicModule(name, factory):
   d = DynamicModule(name, factory)
   sys.modules[name] = d
   return d
+
+def initializeDynamicModules():
+  """
+  Create erp5 module and its submodules
+    erp5.portal_type
+      holds portal type classes
+    erp5.temp_portal_type
+      holds portal type classes for temp objects
+    erp5.document
+      holds document classes that have no physical import path,
+      for example classes created through ClassTool that are in
+      $INSTANCE_HOME/Document
+    erp5.accessor_holder
+      holds accessor holders common to ZODB Property Sheets and Portal Types
+    erp5.accessor_holder.property_sheet
+      holds accessor holders of ZODB Property Sheets
+    erp5.accessor_holder.portal_type
+      holds accessors holders of Portal Types
+    erp5.component:
+      holds ZODB Component packages
+    erp5.component.document:
+      holds Document modules previously found in bt5 in $INSTANCE_HOME/Document
+    erp5.component.extension:
+      holds Extension modules previously found in bt5 in
+      $INSTANCE_HOME/Extensions
+    erp5.component.test:
+      holds Live Test modules previously found in bt5 in $INSTANCE_HOME/test
+  """
+  erp5 = ModuleType("erp5")
+  sys.modules["erp5"] = erp5
+
+  # Document classes without physical import path
+  erp5.document = ModuleType("erp5.document")
+  sys.modules["erp5.document"] = erp5.document
+
+  # Portal types as classes
+  from accessor_holder import AccessorHolderType, AccessorHolderModuleType
+
+  erp5.accessor_holder = AccessorHolderModuleType("erp5.accessor_holder")
+  sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
+
+  erp5.accessor_holder.property_sheet = \
+      AccessorHolderModuleType("erp5.accessor_holder.property_sheet")
+
+  sys.modules["erp5.accessor_holder.property_sheet"] = \
+      erp5.accessor_holder.property_sheet
+
+  erp5.accessor_holder.portal_type = registerDynamicModule(
+    'erp5.accessor_holder.portal_type',
+    AccessorHolderModuleType)
+
+  from lazy_class import generateLazyPortalTypeClass
+  erp5.portal_type = registerDynamicModule('erp5.portal_type',
+                                           generateLazyPortalTypeClass)
+
+  from portal_type_class import loadTempPortalTypeClass
+  erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
+                                                loadTempPortalTypeClass)
+
+  # ZODB Components
+  erp5.component = ModuleType("erp5.component")
+  sys.modules["erp5.component"] = erp5.component
+
+  from component_package import ComponentDynamicPackage
+
+  erp5.component.extension = ComponentDynamicPackage('erp5.component.extension',
+                                                     'Extension Component')
+
+  erp5.component.document = ComponentDynamicPackage('erp5.component.document',
+                                                    'Document Component')
+
+  erp5.component.test = ComponentDynamicPackage('erp5.component.test',
+                                                'Test Component')

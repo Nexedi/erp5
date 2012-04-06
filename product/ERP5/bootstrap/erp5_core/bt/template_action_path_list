@@ -28,6 +28,7 @@ Business Template | export
 Business Template | get_portal_type_properties
 Business Template | guess_portal_types
 Business Template | jump_trash_bin
+Business Template | migrate_component_from_filesystem
 Business Template | save
 Business Template | unittest_run
 Business Template | view
@@ -57,17 +58,21 @@ Category Tool | view
 Category | view
 Class Tool | run_live_test
 Class Tool | view
+Component Tool | run_live_test
+Component Tool | view
 Conceptual Id Generator | view
 Content Existence Constraint | predicate
 Content Existence Constraint | view
 Contribution Predicate | view
 Contribution Registry Tool | view
 Distributed Ram Cache | view
+Document Component | view
 Document | view
 Domain Generator | view
 Domain Tool | view
 Domain | view
 Dynamic Category Property | view
+Extension Component | view
 Folder | view
 Id Tool | view
 Memcached Plugin | view
@@ -116,6 +121,7 @@ Template Tool | jump_trash_bins
 Template Tool | update
 Template Tool | upgrade_from_repository
 Template Tool | view
+Test Component | view
 Trash Bin | jump_bt5
 Trash Bin | view
 Trash Folder | view
@@ -124,6 +130,7 @@ Types Tool | view
 ZODB Continuous Increasing Id Generator | view
 portal_actions | bt_tool
 portal_actions | category_tool
+portal_actions | component_tool
 portal_actions | create_module
 portal_actions | make_template
 portal_actions | portal_alarms_action

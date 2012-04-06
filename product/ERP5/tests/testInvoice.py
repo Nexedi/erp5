@@ -81,7 +81,9 @@ class TestInvoiceMixin(TestPackingListMixin):
 
   def getBusinessTemplateList(self):
     return super(TestInvoiceMixin, self).getBusinessTemplateList() + (
-      'erp5_accounting', 'erp5_invoicing', 'erp5_simplified_invoicing')
+      'erp5_accounting', 'erp5_invoicing', 'erp5_simplified_invoicing',
+      'erp5_configurator_standard_accounting_template',
+      'erp5_configurator_standard_invoicing_template')
 
   @UnrestrictedMethod
   def createCategories(self):

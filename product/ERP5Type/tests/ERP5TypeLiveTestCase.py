@@ -128,6 +128,7 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
         '''Returns the app object for a test.'''
         return self.getPortal().aq_parent
 
+from Products.ERP5Type.dynamic.component_package import ComponentDynamicPackage
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 
 class ERP5TypeTestReLoader(ERP5TypeTestLoader):
@@ -155,14 +156,41 @@ class ERP5TypeTestReLoader(ERP5TypeTestLoader):
             if self.filter_test_list:
                 ERP5TypeTestLoader.filter_test_list = old_filter_test_list
 
+    def loadTestsFromName(self, name, module=None):
+        """
+        Load the test from the given name from ZODB if it can be imported,
+        otherwise fallback on filesystem
+        """
+        if module is None:
+            import erp5.component.test
+
+            try:
+                __import__('erp5.component.test.' + name,
+                           fromlist=['erp5.component.test'],
+                           level=0)
+            except ImportError:
+                pass
+            else:
+                module = erp5.component.test
+
+        return super(ERP5TypeTestReLoader, self).loadTestsFromName(name,
+                                                                   module)
+
     def loadTestsFromModule(self, module):
-        reload(module)
+        """
+        If the module is not a ZODB Component, then reload it to consider
+        modifications on the filesystem
+        """
+        if not isinstance(module, ComponentDynamicPackage):
+            reload(module)
         return super(ERP5TypeTestReLoader, self).loadTestsFromModule(module)
 
     def loadTestsFromTestCase(self, testCaseClass):
         testModule = sys.modules[testCaseClass.__module__]
-        if not(testCaseClass is ERP5TypeTestCase):
-          # do not reload ERP5TypeTestCase because we patch it
+        # Do not reload ERP5TypeTestCase because we patch it nor ZODB Test
+        # Component as it is reset upon modification anyway
+        if (testCaseClass is not ERP5TypeTestCase and
+            not isinstance(testModule, ComponentDynamicPackage)):
           testModule = reload(testModule)
         testCaseClass = getattr(testModule, testCaseClass.__name__)
         return ERP5TypeTestLoader.loadTestsFromTestCase(self, testCaseClass)

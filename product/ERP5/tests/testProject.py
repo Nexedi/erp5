@@ -52,6 +52,7 @@ class TestProject(ERP5TypeTestCase):
             'erp5_simulation',
             'erp5_trade',
             'erp5_project',
+            'erp5_configurator_standard_trade_template',
             'erp5_simulation_test')
 
   def afterSetUp(self):

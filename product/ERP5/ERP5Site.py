@@ -340,7 +340,16 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     if 'ERP5Site.__of__' not in tv and type(parent) is Application:
       tv['ERP5Site.__of__'] = None
       setSite(self)
-      synchronizeDynamicModules(self)
+
+      try:
+        component_tool = self.portal_components
+      except AttributeError:
+        # This should only happen before erp5_core is installed
+        synchronizeDynamicModules(self)
+      else:
+        # If Components are reset, then portal type classes should be reset
+        synchronizeDynamicModules(self, component_tool.reset())
+
     return self
 
   def manage_beforeDelete(self, item, container):
@@ -434,6 +443,65 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
       Return the title.
     """
     return self.title
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVersionPriorityList')
+  def getVersionPriorityList(self):
+    """
+    Return the Component version priorities defined on the site in descending
+    order. Whatever happens, erp5 version must always be returned otherwise it
+    may render the site unusable when all Products will have been migrated
+    """
+    return getattr(self, '_version_priority_list', None) or ('erp5 | 0.0',)
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'setVersionPriorityList' )
+  def setVersionPriorityList(self, version_priority_tuple):
+    """
+    Set Version Priority List and make sure that erp5 version is always
+    defined whatever the given value is
+
+    XXX-arnau: must be written through an interaction workflow when ERP5Site
+               will become a real ERP5 object...
+    """
+    if not isinstance(version_priority_tuple, tuple):
+      version_priority_tuple = tuple(version_priority_tuple)
+
+    # erp5 version must always be present, thus add it at the end if it's not
+    # already there
+    for version_priority in version_priority_tuple:
+      if version_priority.split('|')[0].strip() == 'erp5':
+        break
+    else:
+      version_priority_tuple = version_priority_tuple + ('erp5 | 0.0',)
+
+    self._version_priority_list = version_priority_tuple
+
+    # Reset cached value of getVersionPriorityNameList() if present
+    try:
+      del self._v_version_priority_name_list
+    except AttributeError:
+      pass
+
+    # Make sure that reset is not performed when creating a new site
+    if not getattr(self, '_v_bootstrapping', False):
+      self.portal_components.resetOnceAtTransactionBoundary()
+
+  version_priority_list = property(getVersionPriorityList,
+                                   setVersionPriorityList)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getVersionPriorityNameList')
+  def getVersionPriorityNameList(self):
+    """
+    Get only the version names ordered by priority and cache it as it is used
+    very often in Component import hooks
+    """
+    if getattr(self, '_v_version_priority_name_list', None) is None:
+      self._v_version_priority_name_list = \
+          [name.split('|')[0].strip() for name in self.getVersionPriorityList()]
+
+    return self._v_version_priority_name_list
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getUid')
   def getUid(self):
@@ -1694,6 +1762,13 @@ class ERP5Generator(PortalGenerator):
     parent._setObject(id, portal)
     # Return the fully wrapped object.
     p = parent.this()._getOb(id)
+
+    # setProperty cannot be used for this property as it is a property object
+    # to _version_priority_list and valid_property_id doesn't accept property
+    # name starting with '_'. The property getter always returns at least erp5
+    # version so it only needs to be added to local properties
+    p._local_properties = getattr(self, '_local_properties', ()) + \
+        ({'id': 'version_priority_list', 'type': 'lines'},)
 
     erp5_sql_deferred_connection_string = erp5_sql_connection_string
     p._setProperty('erp5_catalog_storage',

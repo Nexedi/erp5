@@ -34,9 +34,8 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Define some global preferences for RunMyDoc.\n
+</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
@@ -48,7 +47,7 @@
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>ERP5 preferences</string> </value>
+            <value> <string>RunMyDoc Preferences</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -64,6 +64,10 @@ class TestBudget(ERP5TypeTestCase):
             'erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade', 'erp5_accounting',
             'erp5_invoicing', 'erp5_simplified_invoicing',
             'erp5_accounting_ui_test', 'erp5_budget',
+            'erp5_configurator_standard_solver',
+            'erp5_configurator_standard_trade_template',
+            'erp5_configurator_standard_accounting_template',
+            'erp5_configurator_standard_invoicing_template',
             'erp5_simulation_test')
 
   # creation and basic functionalities

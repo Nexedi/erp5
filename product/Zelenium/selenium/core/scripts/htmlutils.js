@@ -18,6 +18,49 @@
 // This script contains a badly-organised collection of miscellaneous
 // functions that really better homes.
 
+// ERP5
+function getDropDownColors(element){
+    var result = new Array(); //First element: normal state, Second: selected state, Third: disabled state (if it exists)
+    for(var i = 0; i < 6; i++){
+        result[i] = '';
+    }
+
+    var children = element.children;
+    var n = children.length;
+
+    for(var i = 0; i < n; i++){
+        var child = children[i];
+        if(child.selected && result[2] == ''){
+            result[2] = 'color:' + getCssAttr(child, 'color') + '; ';
+            result[3] = 'background-color: ' + getCssAttr(child, 'background-color') + '; ';
+        }
+        else if(child.disabled && result[4] == ''){
+            result[4] = 'color:' + getCssAttr(child, 'color') + '; ';
+            result[5] = 'background-color: ' + getCssAttr(child, 'background-color') + '; ';
+        }
+        else if(!child.disabled && !child.selected && result[0] == ''){
+            result[0] = 'color:' + getCssAttr(child, 'color') + '; ';
+            result[1] = 'background-color: ' + getCssAttr(child, 'background-color') + '; ';
+        }
+        i++;
+    }
+    return result;
+}
+
+function getCssAttr(element, CssAttr){
+	var value = "";
+	if(document.defaultView && document.defaultView.getComputedStyle){
+		value = document.defaultView.getComputedStyle(element, "").getPropertyValue(CssAttr);
+	}
+	else if(element.currentStyle){
+		CssAttr = CssAttr.replace(/\-(\w)/g, function (strMatch, p1){
+			return p1.toUpperCase();
+		});
+		value = element.currentStyle[CssAttr];
+	}
+	return value;
+}
+
 function classCreate() {
     return function() {
       this.initialize.apply(this, arguments);

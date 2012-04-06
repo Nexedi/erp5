@@ -54,10 +54,11 @@
 company_email = kw[\'default_email_text\']\n
 group = kw[\'group\']\n
 \n
-organisation_configurator_item = configuration_save.addConfigurationItem("Organisation Configurator Item", **kw)\n
+organisation_configurator_item = configuration_save.addConfigurationItem(\n
+                                     "Organisation Configurator Item", **kw)\n
 \n
 # store globally preferred group\n
-context.setGlobalConfigurationAttr(group=group)\n
+context.setGlobalConfigurationAttr(group_id=group)\n
 \n
 # store globally company\'s email\n
 context.setGlobalConfigurationAttr(company_email=company_email)\n

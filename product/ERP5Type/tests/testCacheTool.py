@@ -54,6 +54,7 @@ class TestCacheTool(ERP5TypeTestCase):
 
   cache_duration = 10 # second
   python_script_id = "testCachedMethod"
+  nb_iterations = 60000
 
   def getTitle(self):
     return "Cache Tool"
@@ -236,12 +237,11 @@ return result
     print "TESTING:", cf_name
 
     # if the test fails because your machine is too fast, increase this value.
-    nb_iterations = 30000
     result = 'a short value'
     portal.portal_caches.clearCacheFactory(cf_name)
     ## 1st call
     start = time.time()
-    cached =  my_cache(nb_iterations,
+    cached =  my_cache(self.nb_iterations,
                        portal_path=('', portal.getId()),
                        result=result)
     end = time.time()
@@ -252,7 +252,7 @@ return result
 
     ## 2nd call - should be cached now
     start = time.time()
-    cached =  my_cache(nb_iterations,
+    cached =  my_cache(self.nb_iterations,
                        portal_path=('', portal.getId()),
                        result=result)
     end = time.time()
@@ -276,7 +276,7 @@ return result
 
       ## 1st call
       start = time.time()
-      cached =  my_cache(nb_iterations,
+      cached =  my_cache(self.nb_iterations,
                          portal_path=('', portal.getId()),
                          result=result)
       end = time.time()
@@ -290,20 +290,20 @@ return result
     # Test delete method on CachingMethod
     print "\n\tCalculation time (3rd call)", calculation_time
     # fill the cache
-    cached =  my_cache(nb_iterations,
+    cached =  my_cache(self.nb_iterations,
                        portal_path=('', portal.getId()),
                        result=result)
     self.assertEquals(cached, result)
 
     # Purge the Caching Method
-    my_cache.delete(nb_iterations,
+    my_cache.delete(self.nb_iterations,
                     portal_path=('', portal.getId()),
                     result=result)
     transaction.commit()
 
     # Check that result is computed
     start = time.time()
-    cached =  my_cache(nb_iterations,
+    cached =  my_cache(self.nb_iterations,
                        portal_path=('', portal.getId()),
                        result=result)
     end = time.time()
@@ -335,7 +335,6 @@ return result
     print "="*40
     print "TESTING: Concurrent RamCache"
     portal = self.getPortal()
-    nb_iterations = 30000
     result = 'Something short'
 
     py_script_obj = getattr(portal, self.python_script_id)
@@ -348,7 +347,7 @@ return result
                                                  'another_ram_cache_factory',))
     # First call, fill the cache
     start = time.time()
-    cached = ram_cached_method(nb_iterations,
+    cached = ram_cached_method(self.nb_iterations,
                                portal_path=('', portal.getId()),
                                result=result)
     end = time.time()
@@ -359,7 +358,7 @@ return result
 
     ## 2nd call - should be cached now
     start = time.time()
-    cached = ram_cached_method(nb_iterations,
+    cached = ram_cached_method(self.nb_iterations,
                                portal_path=('', portal.getId()),
                                result=result)
     end = time.time()
@@ -373,7 +372,7 @@ return result
     portal.portal_caches.clearCacheFactory('another_ram_cache_factory')
     # Call conversion for ram_cache_factory
     start = time.time()
-    cached = ram_cached_method(nb_iterations,
+    cached = ram_cached_method(self.nb_iterations,
                                portal_path=('', portal.getId()),
                                result=result)
     end = time.time()
@@ -416,7 +415,6 @@ veryExpensiveMethod(value)
 return 'a' * 1024 * 1024 * 25
 """
     py_script_obj.ZPythonScript_edit(py_script_params, py_script_body)
-    nb_iterations = 30000
     result = 'a' * 1024 * 1024 * 25 # 25 MB
     long_parameter = 'a' * 1024
 
@@ -443,7 +441,7 @@ return 'a' * 1024 * 1024 * 25
 
     #First call, fill the cache
     start = time.time()
-    cached = cached_method(nb_iterations,
+    cached = cached_method(self.nb_iterations,
                            long_parameter=long_parameter)
     end = time.time()
     calculation_time = end-start
@@ -456,7 +454,7 @@ return 'a' * 1024 * 1024 * 25
 
     ## 2nd call - should be cached now
     start = time.time()
-    cached = cached_method(nb_iterations,
+    cached = cached_method(self.nb_iterations,
                            long_parameter=long_parameter)
     end = time.time()
     calculation_time = end-start
@@ -472,7 +470,6 @@ return 'a' * 1024 * 1024 * 25
     print "="*40
     print "TESTING: Cache Expiration Time"
     portal = self.getPortal()
-    nb_iterations = 30000
 
     py_script_obj = getattr(portal, self.python_script_id)
 
@@ -486,7 +483,7 @@ return 'a' * 1024 * 1024 * 25
 
       # First call, fill the cache
       start = time.time()
-      cached_method(nb_iterations, portal_path='something')
+      cached_method(self.nb_iterations, portal_path='something')
       transaction.commit()
       end = time.time()
       calculation_time = end-start
@@ -495,7 +492,7 @@ return 'a' * 1024 * 1024 * 25
 
       ## 2nd call - should be cached now
       start = time.time()
-      cached = cached_method(nb_iterations, portal_path='something')
+      cached = cached_method(self.nb_iterations, portal_path='something')
       transaction.commit()
       end = time.time()
       calculation_time = end-start
@@ -510,7 +507,7 @@ return 'a' * 1024 * 1024 * 25
 
       # Call conversion for ram_cache_factory
       start = time.time()
-      cached = cached_method(nb_iterations, portal_path='something')
+      cached = cached_method(self.nb_iterations, portal_path='something')
       transaction.commit()
       end = time.time()
       calculation_time = end-start

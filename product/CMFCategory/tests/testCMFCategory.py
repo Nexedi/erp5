@@ -198,6 +198,23 @@ class TestCMFCategory(ERP5TypeTestCase):
     self.assertEqual(p1.getDefaultRegion(),self.region1)
     self.assertEqual(p1.getRegionList(),self.region_list)
 
+    p1.setRegion(self.region1)
+    self.assertEqual(p1.getRegion(), self.region1)
+    region_list = p1.getRegionList()
+    p1.setRegionList(region_list)
+    self.assertEqual(p1.getRegion(), self.region1)
+    region_list = [p1.getRegion()]
+    p1.setRegionList(region_list)
+    self.assertEqual(p1.getRegion(), self.region1)
+    p1.setRegion(None)
+    self.assertEqual(p1.getRegion(), None)
+    region_list = p1.getRegionList()
+    p1.setRegionList(region_list)
+    self.assertEqual(p1.getRegion(), None)
+    region_list = [p1.getRegion()]
+    p1.setRegionList(region_list)
+    self.assertEqual(p1.getRegion(), None)
+
   def test_03_CategoryValue(self):
     # Test if we can get categories values
     region_value = self.portal.portal_categories.resolveCategory('region/%s' % self.region1)

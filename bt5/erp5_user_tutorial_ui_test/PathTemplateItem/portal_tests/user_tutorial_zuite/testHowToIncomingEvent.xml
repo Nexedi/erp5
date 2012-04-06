@@ -182,11 +182,6 @@
   <td>Support Request</td>\n
 </tr>\n
 <tr>\n
-  <td>select</td>\n
-  <td>//select[@name="field_your_follow_up_ticket_resource"]</td>\n
-  <td tal:content="python: here.Zuite_getHowToInfo()[\'incoming_event_howto_service_title\']"></td>\n
-</tr>\n
-<tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@id="dialog_submit_button"]</td>\n
   <td></td>\n

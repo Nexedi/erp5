@@ -99,3 +99,47 @@ if 1:
 # Required by PortalTransforms.transforms.rest
 from docutils import utils
 utils.relative_path = lambda source, target: os.path.abspath(target)
+
+import linecache
+
+linecache_getlines = linecache.getlines
+def getlines(filename, module_globals=None):
+  """
+  Patch of linecache module (used in traceback and pdb module) to display ZODB
+  Components and Python Script source code properly without requiring to
+  create a temporary file on the filesystem
+
+  The filename is always '<string>' for any code executed by exec() (ZODB
+  Components) and '(FILENAME)?Script \(Python\)' for Zope Python Scripts.
+
+  linecache.cache filled by linecache.updatecache() called by the original
+  linecache.getlines() is bypassed for ZODB Components and Python Script to
+  avoid getting inconsistent source code. Having no cache could be an issue if
+  performances would be required here but as linecache module is only called
+  by traceback and pdb modules not used often, this should not be an issue.
+  """
+  if filename and module_globals:
+    data = None
+
+    # Get source code of ZODB Components (following PEP 302)
+    if filename == '<string>' and '__loader__' in module_globals:
+      name = module_globals.get('__name__')
+      loader = module_globals['__loader__']
+      get_source = getattr(loader, 'get_source', None)
+      if name and get_source:
+        try:
+          data = get_source(name)
+        except (ImportError, AttributeError):
+          pass
+
+    # Get source code of Zope Python Script
+    elif 'Script (Python)' in filename and 'script' in module_globals:
+      data = module_globals['script'].body()
+
+    if data is not None:
+      data = [line + '\n' for line in data.splitlines()]
+      return data
+
+  return linecache_getlines(filename, module_globals)
+
+linecache.getlines = getlines

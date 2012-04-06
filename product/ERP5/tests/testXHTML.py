@@ -639,7 +639,7 @@ if validator_to_use == 'w3c':
       validator = W3Validator(validator_path, show_warnings)
       break
   else:
-    print 'No w3c validator found at', validator_paths
+    print 'No w3c validator found at', validator_path
 
 elif validator_to_use == 'tidy':
   error = False

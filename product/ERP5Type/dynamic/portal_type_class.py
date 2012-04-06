@@ -31,16 +31,13 @@ import sys
 import os
 import inspect
 import transaction
-from types import ModuleType
 
-from Products.ERP5Type.dynamic.dynamic_module import registerDynamicModule
 from Products.ERP5Type.mixin.temporary import TemporaryDocumentMixin
 from Products.ERP5Type.Base import Base, resetRegisteredWorkflowMethod
 from Products.ERP5Type.Globals import InitializeClass
 from Products.ERP5Type.Utils import setDefaultClassProperties
 from Products.ERP5Type import document_class_registry, mixin_class_registry
-from Products.ERP5Type.dynamic.accessor_holder import AccessorHolderModuleType, \
-    createAllAccessorHolderList
+from Products.ERP5Type.dynamic.accessor_holder import createAllAccessorHolderList
 from Products.ERP5Type.TransactionalVariable import TransactionalResource
 
 from zLOG import LOG, ERROR, INFO, WARNING, PANIC
@@ -57,7 +54,7 @@ def _importClass(classpath):
 
     return klass
   except StandardError:
-    raise ImportError('Could not import document class %s' % classpath)
+    raise ImportError('Could not import document class ' + classpath)
 
 # Loading Cache Factory portal type would generate the accessor holder
 # for Cache Factory, itself defined with Standard Property thus
@@ -182,19 +179,37 @@ def generatePortalTypeClass(site, portal_type_name):
     interface_list = []
 
   if type_class is None:
-    raise AttributeError('Document class is not defined on Portal Type %s' \
-            % portal_type_name)
+    raise AttributeError('Document class is not defined on Portal Type ' + \
+                           portal_type_name)
 
+  klass = None
   if '.' in type_class:
     type_class_path = type_class
   else:
-    type_class_path = document_class_registry.get(type_class)
-    if type_class_path is None:
-      raise AttributeError('Document class %s has not been registered:'
-                           ' cannot import it as base of Portal Type %s'
-                           % (type_class, portal_type_name))
+    type_class_path = None
 
-  klass = _importClass(type_class_path)
+    # Skip any document within ERP5Type Product as it is needed for
+    # bootstrapping anyway
+    type_class_namespace = document_class_registry.get(type_class, '')
+    if not (type_class_namespace.startswith('Products.ERP5Type') or
+            portal_type_name in core_portal_type_class_dict):
+      try:
+        klass = getattr(__import__('erp5.component.document.' + type_class,
+                                   fromlist=['erp5.component.document'],
+                                   level=0),
+                        type_class)
+      except (ImportError, AttributeError):
+        pass
+
+    if klass is None:
+      type_class_path = document_class_registry.get(type_class)
+      if type_class_path is None:
+        raise AttributeError('Document class %s has not been registered:'
+                             ' cannot import it as base of Portal Type %s'
+                             % (type_class, portal_type_name))
+
+  if klass is None:
+    klass = _importClass(type_class_path)
 
   global property_sheet_generating_portal_type_set
 
@@ -250,63 +265,20 @@ def generatePortalTypeClass(site, portal_type_name):
           interface_class_list,
           attribute_dict)
 
-from lazy_class import generateLazyPortalTypeClass
-def initializeDynamicModules():
+def loadTempPortalTypeClass(portal_type_name):
   """
-  Create erp5 module and its submodules
-    erp5.portal_type
-      holds portal type classes
-    erp5.temp_portal_type
-      holds portal type classes for temp objects
-    erp5.document
-      holds document classes that have no physical import path,
-      for example classes created through ClassTool that are in
-      $INSTANCE_HOME/Document
-    erp5.accessor_holder
-      holds accessor holders common to ZODB Property Sheets and Portal Types
-    erp5.accessor_holder.property_sheet
-      holds accessor holders of ZODB Property Sheets
-    erp5.accessor_holder.portal_type
-      holds accessors holders of Portal Types
+  Returns a class suitable for a temporary portal type
+
+  This class will in fact be a subclass of erp5.portal_type.xxx, which
+  means that loading an attribute on this temporary portal type loads
+  the lazily-loaded parent class, and that any changes on the parent
+  class will be reflected on the temporary objects.
   """
-  erp5 = ModuleType("erp5")
-  sys.modules["erp5"] = erp5
-  erp5.document = ModuleType("erp5.document")
-  sys.modules["erp5.document"] = erp5.document
-  erp5.accessor_holder = AccessorHolderModuleType("erp5.accessor_holder")
-  sys.modules["erp5.accessor_holder"] = erp5.accessor_holder
+  import erp5.portal_type
+  klass = getattr(erp5.portal_type, portal_type_name)
 
-  erp5.accessor_holder.property_sheet = \
-      AccessorHolderModuleType("erp5.accessor_holder.property_sheet")
-
-  sys.modules["erp5.accessor_holder.property_sheet"] = \
-      erp5.accessor_holder.property_sheet
-
-  erp5.accessor_holder.portal_type = registerDynamicModule(
-    'erp5.accessor_holder.portal_type',
-    AccessorHolderModuleType)
-
-  portal_type_container = registerDynamicModule('erp5.portal_type',
-                                                generateLazyPortalTypeClass)
-
-  erp5.portal_type = portal_type_container
-
-  def loadTempPortalTypeClass(portal_type_name):
-    """
-    Returns a class suitable for a temporary portal type
-
-    This class will in fact be a subclass of erp5.portal_type.xxx, which
-    means that loading an attribute on this temporary portal type loads
-    the lazily-loaded parent class, and that any changes on the parent
-    class will be reflected on the temporary objects.
-    """
-    klass = getattr(portal_type_container, portal_type_name)
-
-    return type("Temporary %s" % portal_type_name,
-                (TemporaryDocumentMixin, klass), {})
-
-  erp5.temp_portal_type = registerDynamicModule('erp5.temp_portal_type',
-                                                loadTempPortalTypeClass)
+  return type("Temporary " + portal_type_name,
+              (TemporaryDocumentMixin, klass), {})
 
 last_sync = -1
 _bootstrapped = set()

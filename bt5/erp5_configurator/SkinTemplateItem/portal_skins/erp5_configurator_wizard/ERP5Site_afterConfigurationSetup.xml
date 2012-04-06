@@ -52,7 +52,7 @@
             <key> <string>_body</string> </key>
             <value> <string>from Products.ERP5Type.Log import log\n
 \n
-after_script_id = context.getConfigurationAfterScriptId()\n
+after_script_id = context.getResourceValue().getConfigurationAfterScriptId()\n
 after_script = getattr(context, after_script_id, None)\n
 if after_script is not None:\n
   return after_script()\n

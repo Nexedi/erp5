@@ -51,79 +51,76 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from email.utils import formataddr\n
+from email import message_from_string\n
 portal = context.getPortalObject()\n
 \n
-if body is None:\n
-  body = context.getTextContent() #XXX This does not support structured text format.\n
-\n
-# Subject\n
-if subject is None:\n
-  subject = context.getTitle()\n
-\n
-# From\n
-if from_url is None:\n
-  sender = context.getSourceValue()\n
-  from_url = formataddr((sender.getTitle(), sender.getDefaultEmailText()))\n
-\n
-# Return-Path\n
-if reply_url is None:\n
-  reply_url = portal.portal_preferences.getPreferredEventSenderEmail()\n
-additional_headers = None\n
-if reply_url:\n
-  additional_headers = {\'Return-Path\':reply_url}\n
-\n
-# To (multiple)\n
+use_activity = False\n
+mail_message = None\n
 to_url_list = []\n
-to_email_list = []\n
+\n
+if not context.isTempDocument() and to_url is None:\n
+  use_activity = True\n
+\n
 if to_url is None:\n
-  for recipient in context.getDestinationValueList():\n
-    email = recipient.getDefaultEmailText()\n
-    if email:\n
-      if email not in to_email_list:\n
+  if use_activity:\n
+    recipient = context.getDestinationValue()\n
+    to_url_list.append(formataddr((recipient.getTitle(), recipient.getDefaultEmailText())))\n
+  else:\n
+    to_email_list = []\n
+    for recipient in context.getDestinationValueList():\n
+      email = recipient.getDefaultEmailText()\n
+      if email:\n
         to_email_list.append(email)\n
-        to_url_list.append(formataddr((recipient.getTitle(), email)))\n
-    else:\n
-      raise ValueError, \'Recipient %s has no defined email\' % recipient\n
-elif same_type(to_url, \'\'):\n
+        to_url_list.append(formataddr((recipient.getTitle(), recipient.getDefaultEmailText())))\n
+      else:\n
+        raise ValueError("One email must be set to %s" % person.getRelativeUrl())\n
+else:\n
   to_url_list.append(to_url)\n
 \n
-# Attachments\n
-if attachment_list is None:\n
-  attachment_list = []\n
-document_type_list = list(context.getPortalEmbeddedDocumentTypeList()) + list(context.getPortalDocumentTypeList())\n
-for attachment in context.getAggregateValueList(portal_type=document_type_list):\n
-  mime_type, content = attachment.getMimeTypeAndContent()\n
-  name = attachment.getFilename()\n
+if download or not use_activity:\n
+  for to_url in to_url_list:\n
+    body = body or context.getTextContent()\n
+    subject = subject or context.getTitle()\n
 \n
-  attachment_list.append({\'mime_type\':mime_type,\n
-                          \'content\':content,\n
-                          \'name\':name})\n
+    # From\n
+    if from_url is None:\n
+      sender = context.getSourceValue()\n
+      from_url = formataddr((sender.getTitle(), sender.getDefaultEmailText()))\n
 \n
-  # Allow to embed image in HTML by setting the relative URL of the image with FCKeditor\n
-  attachment_url = attachment.getRelativeUrl()\n
-  body = body.replace(\'src="%s"\' % attachment_url, \'src="cid:%s"\' % \'\'.join([\'%s\' % ord(i) for i in name]))\n
+    # Return-Path\n
+    if reply_url is None:\n
+      reply_url = portal.portal_preferences.getPreferredEventSenderEmail()\n
+    additional_headers = None\n
+    if reply_url:\n
+      additional_headers = {\'Return-Path\':reply_url}\n
 \n
-# Build message per destination\n
-mail_message = None\n
-if context.getContentType() == \'text/html\':\n
-  mail_template = context.Event_viewHtmlMimeMessage\n
-else:\n
-  mail_template = context.Event_viewMimeMessage\n
+    # Attachments\n
+    if attachment_list is None:\n
+      attachment_list = []\n
+    document_type_list = list(context.getPortalEmbeddedDocumentTypeList()) + list(context.getPortalDocumentTypeList())\n
+    embedded_file_list = context.getAggregateValueList(portal_type=document_type_list)\n
 \n
-for to_url in to_url_list:\n
-  multipart = mail_template.as_message(mfrom=from_url,\n
-                                       mto=to_url,\n
-                                       subject=subject,\n
-                                       body=body,\n
-                                       encoding=\'utf-8\')\n
-  for attachment_dict in attachment_list:\n
-    multipart.add_file(data=attachment_dict[\'content\'],\n
-                       content_type=attachment_dict[\'mime_type\'],\n
-                       filename=attachment_dict[\'name\'])\n
-  mail_message = str(multipart)\n
-  context.activate(activity=\'SQLQueue\').sendMailHostMessage(mail_message)\n
+    content_type = context.getContentType()\n
 \n
-context.setData(mail_message)\n
+    mail_message = context.Base_createMailMessageAsString(from_url, \n
+      to_url,\n
+      subject,\n
+      body,\n
+      content_type,\n
+      attachment_list=attachment_list,\n
+      embedded_file_list=embedded_file_list)\n
+\n
+    context.edit(data=mail_message)\n
+    if not use_activity:\n
+      context.activate(activity=\'SQLQueue\').sendMailHostMessage(mail_message)\n
+\n
+if use_activity:\n
+  uid_list = context.getDestinationUidList()\n
+  method_kw = dict(event_relative_url=context.getRelativeUrl(),\n
+    from_url=from_url)\n
+  portal.portal_catalog.searchAndActivate(method_id="Entity_sendEmail",\n
+     uid=uid_list,\n
+     method_kw=method_kw, **kw)\n
 \n
 # Transit event workflow\n
 if context.getTypeInfo() is not None:\n

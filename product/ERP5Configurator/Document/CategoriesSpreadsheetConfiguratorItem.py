@@ -87,9 +87,11 @@ class CategoriesSpreadsheetConfiguratorItem(ConfiguratorItemMixin, XMLObject):
               id=cat,)
           else:
             path = path[cat]
-
         edit_dict = category_info.copy()
         edit_dict.pop('path')
+        if 'id' in edit_dict.keys():
+          edit_dict.pop('id')
+
         path.edit(**edit_dict)
         ## add to customer template
         self.install(path, business_configuration)

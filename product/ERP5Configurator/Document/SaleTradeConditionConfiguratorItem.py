@@ -60,7 +60,7 @@ class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
   def _build(self, business_configuration):
     portal = self.getPortalObject()
     business_process_id = \
-       business_configuration.getGlobalConfigurationAttr('business_process_id')
+      business_configuration.getGlobalConfigurationAttr('business_process_id')
 
     organisation_id = \
       business_configuration.getGlobalConfigurationAttr('organisation_id')
@@ -68,18 +68,20 @@ class SaleTradeConditionConfiguratorItem(ConfiguratorItemMixin, XMLObject):
     currency_id = \
       business_configuration.getGlobalConfigurationAttr('currency_id')
 
-    sale_trade_condition = portal.sale_trade_condition_module.newContent(
+    trade_condition = portal.sale_trade_condition_module.newContent(
                                            portal_type="Sale Trade Condition",
                                            reference=self.getReference(),
                                            title=self.getTitle(),
                                            effective_date=DateTime() - 1,
                                            expiration_date=DateTime() + 10 * 365)
 
-    sale_trade_condition.setSpecialise("business_process_module/%s" %\
+    trade_condition.setSpecialise("business_process_module/%s" %\
                       business_process_id)
 
-    sale_trade_condition.setSource("organisation_module/%s" % organisation_id)
-    sale_trade_condition.setSourceSection("organisation_module/%s" % organisation_id)
-    sale_trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
+    trade_condition.setSource("organisation_module/%s" % organisation_id)
+    trade_condition.setSourceSection("organisation_module/%s" % organisation_id)
+    trade_condition.setPriceCurrency("currency_module/%s" % currency_id)
 
-    self.install(sale_trade_condition, business_configuration)
+    trade_condition.validate(comment="Validated by Configurator")
+
+    self.install(trade_condition, business_configuration)
