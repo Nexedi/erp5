@@ -256,3 +256,17 @@ class TaskDistributionTool(BaseTool):
         break
     else:
       test_result.fail()
+
+  security.declarePublic('reportTaskStatus')
+  def reportTaskStatus(self, test_result_path, status_dict, node_title):
+    """report status of node
+    """
+    status_dict = self._extractXMLRPCDict(status_dict)
+    LOG("TaskDistributionTool.reportTaskStatus", 0, repr((test_result_path,
+                                                          status_dict)))
+    portal = self.getPortalObject()
+    test_result = portal.restrictedTraverse(test_result_path)
+    node = self._getTestResultNode(test_result, node_title)
+    assert node is not None
+    node.edit(cmdline=status_dict['command'],
+              stdout=status_dict['stdout'], stderr=status_dict['stderr'])
