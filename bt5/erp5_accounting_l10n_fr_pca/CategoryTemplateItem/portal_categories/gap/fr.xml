@@ -319,10 +319,6 @@
             </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
             <key> <string>length_quantity</string> </key>
             <value>
               <none/>

@@ -68,7 +68,9 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <none/> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>
@@ -85,7 +87,9 @@
       <dictionary>
         <item>
             <key> <string>domain_name</string> </key>
-            <value> <none/> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>property_name</string> </key>

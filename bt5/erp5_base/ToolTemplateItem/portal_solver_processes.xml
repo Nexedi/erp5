@@ -37,10 +37,6 @@
             <value> <string>portal_solver_processes</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
-        </item>
-        <item>
             <key> <string>title</string> </key>
             <value> <string>Solver Processes</string> </value>
         </item>

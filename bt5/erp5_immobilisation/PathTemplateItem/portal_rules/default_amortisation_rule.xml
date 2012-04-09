@@ -45,10 +45,6 @@
             <value> <string>default_amortisation_rule</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
             <key> <string>notify_dict</string> </key>
             <value>
               <none/>

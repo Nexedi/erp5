@@ -128,10 +128,6 @@
             <value> <string>default_trade_model_rule</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
             <key> <string>matching_property</string> </key>
             <value>
               <tuple>

@@ -59,10 +59,6 @@
             <value> <string>new_invoice_simulation_rule</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>20</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Invoice Simulation Rule</string> </value>
         </item>

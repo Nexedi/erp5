@@ -232,10 +232,6 @@
             <value> <string>1</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
-        </item>
-        <item>
             <key> <string>multiple_instances_allowed</string> </key>
             <value> <int>1</int> </value>
         </item>
