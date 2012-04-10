@@ -183,6 +183,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
     """
     return ('erp5_base', 'erp5_pdm', 'erp5_dummy_movement', 'erp5_simulation',
             'erp5_trade', 'erp5_apparel', 'erp5_project',
+            'erp5_configurator_standard_trade_template',
             'erp5_simulation_test')
 
   # TODO: move this to a base class {{{

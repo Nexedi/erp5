@@ -100,10 +100,6 @@ You can still safely change Title or (better) translate it using Localizer</stri
             <value> <string>None</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
-        </item>
-        <item>
             <key> <string>membership_criterion_base_category</string> </key>
             <value>
               <tuple/>

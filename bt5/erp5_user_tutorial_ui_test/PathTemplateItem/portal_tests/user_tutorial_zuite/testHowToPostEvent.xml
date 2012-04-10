@@ -146,6 +146,8 @@
 \n
 <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/login_as_manager">Login As Manager</span>\n
 \n
+<span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
+\n
 <tr>\n
   <td>openAndWait</td>\n
   <td>${base_url}/Zuite_tearDownPostEventTest</td>\n

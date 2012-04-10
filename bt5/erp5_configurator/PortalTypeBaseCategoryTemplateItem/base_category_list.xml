@@ -3,4 +3,7 @@
   <item>causality</item>
   <item>current_state</item>
  </portal_type>
+ <portal_type id="Rule Configurator Item">
+  <item>trade_phase</item>
+ </portal_type>
 </base_category_list>

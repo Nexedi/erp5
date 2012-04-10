@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts33622213.73</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>renderjs_test.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string>function setupRenderJSTest(){\n
+  /*\n
+  * Main RenderJS test entry point\n
+  */\n
+  module("Cache");\n
+  test(\'Cache\', function(){\n
+                cache_id = \'my_test\';\n
+                data = {\'gg\':1};\n
+                Cache.set(cache_id, data);\n
+                deepEqual(data, Cache.get(cache_id));\n
+  });\n
+\n
+  module("TabularGadget");\n
+  test(\'addNewTabGadget\', function(){\n
+              TabbularGadget.addNewTabGadget("Person_view", "qunit-fixture", "FormUpdater.update");\n
+              equal($("#qunit-fixture").children(".gadget").length, 1);\n
+  });\n
+\n
+};\n
+\n
+</string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>545</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

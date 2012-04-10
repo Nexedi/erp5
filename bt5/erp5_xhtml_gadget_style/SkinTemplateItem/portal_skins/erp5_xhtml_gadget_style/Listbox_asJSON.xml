@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="PythonScript" module="Products.PythonScripts.PythonScript"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>Script_magic</string> </key>
+            <value> <int>3</int> </value>
+        </item>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_container</string> </key>
+                                <value> <string>container</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_context</string> </key>
+                                <value> <string>context</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_m_self</string> </key>
+                                <value> <string>script</string> </value>
+                            </item>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_body</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+from json import dumps\n
+\n
+REQUEST = context.REQUEST\n
+form = getattr(context, form_id)\n
+listbox = getattr(form, listbox_id)\n
+lines = listbox.get_value("lines")\n
+columns = listbox.get_value("columns")\n
+listbox_renderer = context.getListBoxRenderer(listbox, REQUEST)\n
+\n
+# listbox pagination for jqgrid\n
+# XXX: jqgrid always sends page which makes server side slection be resetted\n
+selection_name = listbox.get_value("selection_name")\n
+page = REQUEST.get("page")\n
+if page is not None:\n
+  page = int(page)\n
+  REQUEST.form[\'page_start\'] = page\n
+  context.portal_selections.setPage(list_selection_name=selection_name, \\\n
+                                    listbox_uid=[],\n
+                                    REQUEST=REQUEST)\n
+  #context.log ("Set page = %s %s" %(page, selection_name))\n
+\n
+row_list= []\n
+line_list = listbox_renderer.query()\n
+for line in line_list:\n
+  value_line = line.getValueList() \n
+  row = {"id":   value_line[0][0],\n
+         "cell": [x[1] for x in value_line]}\n
+  row_list.append(row)\n
+  \n
+# return real listbox data here by using form and context\n
+listbox_max_lines = int(listbox_renderer.getMaxLineNumber())\n
+total_pages = listbox_renderer.total_pages\n
+total_line =  int(listbox_renderer.total_size)\n
+current_page = int(listbox_renderer.current_page) + 1\n
+current_page_max = listbox_max_lines * current_page\n
+current_page_start = (listbox_max_lines * (current_page - 1)) + 1\n
+current_page_stop  = (total_line < current_page_max) and total_line or current_page_max\n
+\n
+\n
+#context.log("%s %s %s %s %s %s" %(listbox_max_lines, total_line, current_page,\n
+#                                  current_page_max, current_page_start, current_page_stop))\n
+\n
+json = {"page": current_page,\n
+        "total": total_pages,\n
+        "records": total_line,\n
+        "rows":row_list}\n
+\n
+return dumps(json)\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>_params</string> </key>
+            <value> <string>form_id, listbox_id="listbox"</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Listbox_asJSON</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

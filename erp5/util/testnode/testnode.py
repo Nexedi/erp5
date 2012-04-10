@@ -277,10 +277,8 @@ branch = %(branch)s
           if bt5_path_list not in ('', None,):
             invocation_list.extend(["--bt5_path", bt5_path_list])
           # From this point, test runner becomes responsible for updating test
-          # result.
-          # XXX: is it good for all cases (eg: test runner fails too early for
-          # any custom code to pick the failure up and react ?)
-          remote_test_result_needs_cleanup = False
+          # result. We only do cleanup if the test runner itself is not able
+          # to run.
           log("call process : %r", (invocation_list,))
           run_test_suite = subprocess.Popen(invocation_list,
             preexec_fn=os.setsid, cwd=config['test_suite_directory'],

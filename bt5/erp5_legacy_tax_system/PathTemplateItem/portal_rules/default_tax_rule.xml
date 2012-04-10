@@ -62,10 +62,6 @@
             <value> <string>default_tax_rule</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Tax Rule</string> </value>
         </item>

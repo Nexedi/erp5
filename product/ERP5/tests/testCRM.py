@@ -42,6 +42,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders, message_from_string
+from DateTime import DateTime
 
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_data', 'crm_emails', name)
@@ -73,7 +74,6 @@ class BaseTestCRM(ERP5TypeTestCase):
     for module_name in clear_module_name_list:
       module = self.portal.unrestrictedTraverse(module_name)
       module.manage_delObjects(list(module.objectIds()))
-
     self.stepTic()
     super(BaseTestCRM, self).beforeTearDown()
 
@@ -82,7 +82,10 @@ class TestCRM(BaseTestCRM):
     return "CRM"
 
   def getBusinessTemplateList(self):
-    return ('erp5_base',
+    return ('erp5_full_text_myisam_catalog',
+            'erp5_core_proxy_field_legacy',
+            'erp5_base',
+            'erp5_ingestion',
             'erp5_crm',)
 
   def test_Event_CreateRelatedEvent(self):
@@ -450,7 +453,9 @@ class TestCRMMailIngestion(BaseTestCRM):
 
   def getBusinessTemplateList(self):
     # Mail Ingestion must work with CRM alone.
-    return ('erp5_base',
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_full_text_myisam_catalog',
+            'erp5_base',
             'erp5_ingestion',
             'erp5_ingestion_mysql_innodb_catalog',
             'erp5_crm',
@@ -846,7 +851,6 @@ class TestCRMMailSend(BaseTestCRM):
   def afterSetUp(self):
     super(TestCRMMailSend, self).afterSetUp()
     portal = self.portal
-
     # create customer organisation and person
     portal.organisation_module.newContent(
             id='customer',
@@ -1189,7 +1193,6 @@ class TestCRMMailSend(BaseTestCRM):
                text_content='This is an advertisement mail.')
 
     mail_text = event.send(download=True)
-
     # Check mail text.
     message = message_from_string(mail_text)
     part = None
@@ -1672,6 +1675,55 @@ class TestCRMMailSend(BaseTestCRM):
         portal_type_object.updateRoleMapping()
       transaction.commit()
       self.tic()
+
+  def test_MailMessage_Event_send_generate_activity_list(self):
+    """
+      Check that after post a Mail Message, the activities are generated
+      correctly
+    """
+    person = self.portal.person_module.newContent(portal_type="Person")
+    person.edit(default_email_text="test@test.com", title="test%s" % person.getId())
+    self.stepTic()
+    mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
+    relative_url_list = [z.getRelativeUrl() for z in self.portal.person_module.searchFolder()]
+    mail_message.setDestinationList(relative_url_list)
+    mail_message.setSource(relative_url_list[0])
+    mail_text_content = "Body Text Content"
+    mail_message.setTextContent(mail_text_content)
+    self.portal.portal_workflow.doActionFor(mail_message, "start_action")
+    self.stepTic()
+    mail_message.Event_send(packet_size=2)
+    import transaction
+    transaction.commit()
+    portal_activities = self.portal.portal_activities
+    message_list = [i for i in portal_activities.getMessageList() \
+                    if i.kw.has_key("event_relative_url")]
+    try:
+      self.assertEquals(2, len(message_list))
+    finally:
+      self.stepTic()
+    last_message = self.portal.MailHost._last_message
+    self.assertTrue(mail_text_content in last_message[-1])
+    message = message_from_string(last_message[-1])
+    last_message_date = DateTime(message.get("Date"))
+    self.assertTrue(last_message_date.isCurrentDay())
+
+  def test_MailMessage_Event_send_simple_case(self):
+    """
+      Check that the script Event_send send one email passing all parameters directly
+      from_url, to_url, reply_url, subject, body, attachment_format, attachment_list
+    """
+    mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
+    self.stepTic()
+    mail_message.Event_send(from_url='FG ER <eee@eee.com>',
+                            to_url='Expert User <expert@in24.test>',
+                            subject="Simple Case",
+                            body="Body Simple Case",
+                            attachment_list=[])
+    self.stepTic()
+    last_message = self.portal.MailHost._last_message[-1]
+    self.assertTrue("Body Simple Case" in last_message)
+
 
 def test_suite():
   suite = unittest.TestSuite()

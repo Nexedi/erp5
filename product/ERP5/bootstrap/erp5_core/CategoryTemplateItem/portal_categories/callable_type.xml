@@ -89,10 +89,6 @@ We will have several callable types, like python scripts, page templates, etc.</
             <value> <string>callable_type</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Base Category</string> </value>
         </item>

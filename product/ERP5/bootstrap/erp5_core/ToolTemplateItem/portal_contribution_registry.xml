@@ -28,10 +28,6 @@
             <key> <string>id</string> </key>
             <value> <string>portal_contribution_registry</string> </value>
         </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>18</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

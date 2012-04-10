@@ -56,6 +56,10 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                        'erp5_knowledge_pad',
                        'erp5_accounting',
                        'erp5_invoicing',
+                       'erp5_configurator_standard_solver',
+                       'erp5_configurator_standard_trade_template',
+                       'erp5_configurator_standard_accounting_template',
+                       'erp5_configurator_standard_invoicing_template',
                        'erp5_trade_knowledge_pad',
                        'erp5_crm_knowledge_pad',
                        'erp5_simplified_invoicing',
@@ -72,6 +76,10 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                          'erp5_simplified_invoicing',
                          'erp5_trade_knowledge_pad',
                          'erp5_crm_knowledge_pad',
+                         'erp5_configurator_standard_solver',
+                         'erp5_configurator_standard_trade_template',
+                         'erp5_configurator_standard_accounting_template',
+                         'erp5_configurator_standard_invoicing_template',
                          'erp5_ods_style',
                          'erp5_odt_style',
                          'erp5_ooo_import')
@@ -198,14 +206,18 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEquals('Configure Organisation', response_dict['next'])
     self.assertCurrentStep('Your organisation', response_dict)
 
-  def _stepSetupOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
+  def stepSetupOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Create one Organisation """
+    default_address_city = sequence.get('organisation_default_address_city')
+    default_address_region = sequence.get('organisation_default_address_region')
     next_dict = dict(
         field_your_title='My Organisation',
         field_your_default_email_text='me@example.com',
         field_your_default_telephone_text='01234567890',
         field_your_default_address_street_address='.',
-        field_your_default_address_zip_code='59000')
+        field_your_default_address_zip_code='59000',
+        field_your_default_address_city=default_address_city,
+        field_your_default_address_region=default_address_region)
     next_dict.update(**kw)
     sequence.edit(next_dict=next_dict)
 
@@ -275,31 +287,18 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     self.assertEquals('Configure accounting', response_dict['next'])
     self.assertCurrentStep('Accounting', response_dict)
 
-  def _stepSetupAccountingConfiguration(self, accounting_plan):
+  def stepSetupAccountingConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Setup up the accounting configuration """
-    return dict(field_your_accounting_plan=accounting_plan,
+    accounting_plan=sequence.get('configuration_accounting_plan')
+    next_dict = dict(field_your_accounting_plan=accounting_plan,
                 subfield_field_your_period_start_date_year='2008',
                 subfield_field_your_period_start_date_month='01',
                 subfield_field_your_period_start_date_day='01',
                 subfield_field_your_period_stop_date_year='2008',
                 subfield_field_your_period_stop_date_month='12',
                 subfield_field_your_period_stop_date_day='31',
-                field_your_period_title='2008',
+                field_your_period_title='2008'
            )
-
-  def stepSetupAccountingConfigurationFrance(self, sequence=None, sequence_list=None, **kw):
-    """ Setup up the French accounting configuration """
-    next_dict = self._stepSetupAccountingConfiguration(accounting_plan='fr')
-    sequence.edit(next_dict=next_dict)
-
-  def stepSetupAccountingConfigurationBrazil(self, sequence=None, sequence_list=None, **kw):
-    """ Setup up the Brazilian accounting configuration """
-    next_dict = self._stepSetupAccountingConfiguration(accounting_plan='br')
-    sequence.edit(next_dict=next_dict)
-
-  def stepSetupAccountingConfigurationRussia(self, sequence=None, sequence_list=None, **kw):
-    """ Setup up the Russian accounting configuration """
-    next_dict = self._stepSetupAccountingConfiguration(accounting_plan='ru')
     sequence.edit(next_dict=next_dict)
 
   def stepCheckConfigurePreferenceForm(self, sequence=None, sequence_list=None, **kw):
@@ -396,38 +395,20 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
                 accounting_transaction_gap='gap/ru/ru2000',
                 gap='ru/ru2000/80')
 
-  def _stepSetupPreferenceConfiguration(self, price_currency, lang):
+  def stepSetupPreferenceConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Setup the preference configuration """
-    return dict(field_your_price_currency=price_currency,
+
+    lang = sequence.get('configuration_lang')
+    price_currency = sequence.get('configuration_price_currency')
+    next_dict = dict(field_your_price_currency=price_currency,
                 field_your_preferred_date_order='dmy',
                 field_your_lang=lang,
                 default_field_your_lang=1,)
 
-  def stepSetupPreferenceConfigurationFrance(self, sequence=None, sequence_list=None, **kw):
-    """ Setup the French preference configuration """
-    next_dict = self._stepSetupPreferenceConfiguration(
-                                               price_currency='EUR;0.01;Euro',
-                                               lang='erp5_l10n_fr',)
-    sequence.edit(next_dict=next_dict)
+    currency_id = sequence.get('configuration_currency_reference')
+    sequence.edit(next_dict=next_dict, currency_id=currency_id)
 
-  def stepSetupPreferenceConfigurationBrazil(self, sequence=None, sequence_list=None, **kw):
-    """ Setup the Brazil preference configuration """
-    next_dict = self._stepSetupPreferenceConfiguration(
-                                      price_currency='BRL;0.01;Brazilian Real',
-                                      lang='erp5_l10n_pt-BR',)
-    sequence.edit(next_dict=next_dict)
-
-  def stepSetupPreferenceConfigurationRussia(self, sequence=None, sequence_list=None, **kw):
-    """ Setup the Russian preference configuration """
-    next_dict = self._stepSetupPreferenceConfiguration(
-                                      price_currency='BYR;0.01;Belarusian Rouble',
-                                      lang='erp5_l10n_ru',)
-    sequence.edit(next_dict=next_dict)
-
-  def _stepCheckPreferenceConfigurationItemList(self, business_configuration,
-                                                      currency_title,
-                                                      currency_reference,
-                                                      bt5_id):
+  def stepCheckPreferenceConfigurationItemList(self, sequence=None, sequence_list=None, **kw):
     """
       Check the creation of:
       - Currency Configurator Item
@@ -435,6 +416,11 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
       - System Preference Configurator Item
       - Standard BT5 Configurator Item
     """
+    currency_title = sequence.get('configuration_currency_title')
+    currency_reference = sequence.get('configuration_currency_reference')
+    bt5_id = sequence.get('configuration_lang')
+    business_configuration = sequence.get("business_configuration")
+
     # this created a currency
     preferences_business_configuration_save = business_configuration.\
                       contentValues(portal_types='Configuration Save')[-1]
@@ -478,48 +464,6 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
             bt5_business_configuration_item.getPortalType())
     self.assertEquals(bt5_id,
             bt5_business_configuration_item.bt5_id)
-
-  def stepCheckPreferenceConfigurationItemListFrance(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check the creation of:
-      - Currency Configurator Item
-      - Service Configurator Item
-      - System Preference Configurator Item
-      - Standard BT5 Configurator Item
-    """
-    self._stepCheckPreferenceConfigurationItemList(
-                business_configuration=sequence.get("business_configuration"),
-                currency_title='Euro',
-                currency_reference='EUR',
-                bt5_id='erp5_l10n_fr')
-
-  def stepCheckPreferenceConfigurationItemListBrazil(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check the creation of:
-      - Currency Configurator Item
-      - Service Configurator Item
-      - System Preference Configurator Item
-      - Standard BT5 Configurator Item
-    """
-    self._stepCheckPreferenceConfigurationItemList(
-                business_configuration=sequence.get("business_configuration"),
-                currency_title='Brazilian Real',
-                currency_reference='BRL',
-                bt5_id='erp5_l10n_pt-BR')
-
-  def stepCheckPreferenceConfigurationItemListRussia(self, sequence=None, sequence_list=None, **kw):
-    """
-      Check the creation of:
-      - Currency Configurator Item
-      - Service Configurator Item
-      - System Preference Configurator Item
-      - Standard BT5 Configurator Item
-    """
-    self._stepCheckPreferenceConfigurationItemList(
-                business_configuration=sequence.get("business_configuration"),
-                currency_title='Belarusian Rouble',
-                currency_reference='BYR',
-                bt5_id='erp5_l10n_ru')
 
   def stepCheckConfigureInstallationForm(self, sequence=None, sequence_list=None, **kw):
     """ Check the installation form """
@@ -865,9 +809,13 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
             organisation.getVisibleAllowedContentTypeList())
 
   def stepValidatedAccountingPeriods(self, sequence=None, sequence_list=None, **kw):
+
+    currency_id = sequence.get("currency_id")
+    currency_value = getattr(self.portal.currency_module, currency_id)
+
     organisation = self.portal.organisation_module.newContent(
                           portal_type='Organisation',
-                          price_currency_value=self.portal.currency_module.EUR,
+                          price_currency_value=currency_value,
                           group='my_group')
     accounting_period = organisation.newContent(
                           portal_type='Accounting Period',

@@ -132,10 +132,6 @@
             <value> <string>advanced_purchase_invoice_transaction_builder</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Delivery Builder</string> </value>
         </item>

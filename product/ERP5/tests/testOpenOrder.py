@@ -47,6 +47,7 @@ class TestOpenOrder(ERP5TypeTestCase):
             'erp5_trade',
             'erp5_open_trade',
             'erp5_open_trade_periodicity_line',
+            'erp5_configurator_standard_trade_template',
             'erp5_simulation_test')
 
   def afterSetUp(self):

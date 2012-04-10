@@ -34,6 +34,7 @@
   <item>OutcomeDescription</item>
  </portal_type>
  <portal_type id="Task">
+  <item>OutcomeDescription</item>
   <item>TaskOrder</item>
  </portal_type>
 </property_sheet_list>

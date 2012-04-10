@@ -53,6 +53,7 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                     , PropertySheet.XMLObject
                     , PropertySheet.CategoryCore
                     , PropertySheet.DublinCore
+                    , PropertySheet.ConfiguratorItem
                     , PropertySheet.Reference
                     )
 
@@ -63,14 +64,99 @@ class BusinessProcessConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                                            reference=self.getReference(),
                                            title=self.getTitle())
 
-
     business_configuration.setGlobalConfigurationAttr(\
                   business_process_id=business_process.getId())
 
-    # Create Business Paths and Business Links
-    business_process_list = portal.ERPSite_getConfiguratorBusinessProcessList()
-    for property_dict in business_process_list:
-        business_process.newContent(**property_dict)
 
+    business_process_dict = self._getBusinessProcessDict()
+    int_index = 0
+    for path_dict in business_process_dict["Trade Model Path"]:
+      int_index += 1
+      path_dict.setdefault("int_index", int_index)
+      title = path_dict.pop('title')
+      trade_phase = path_dict.pop('trade_phase')
+      trade_date = path_dict.pop('trade_date')
+      for key in path_dict:
+        if path_dict[key] is None:
+          path_dict.pop(key)
+      self._addTradeModelPath(business_process=business_process,
+                              title=title,
+                              trade_phase=trade_phase,
+                              trade_date=trade_date,
+                              **path_dict)
+
+    int_index = 0
+    for link_dict in business_process_dict["Business Link"]:
+      int_index += 1
+      link_dict.setdefault("int_index", int_index)
+      title = link_dict.pop('title')
+      trade_phase = link_dict.pop('trade_phase')
+      delivery_builder = link_dict.pop('delivery_builder', None)
+      predecessor = link_dict.pop('predecessor', None)
+      successor = link_dict.pop('successor', None)
+      for key in path_dict:
+        if path_dict[key] is None:
+          path_dict.pop(key)
+
+      self._addBusinessLink(business_process=business_process,
+                            title=title,
+                            trade_phase = trade_phase,
+                            predecessor = predecessor,
+                            successor = successor,
+                            delivery_builder = delivery_builder,
+                            **link_dict)
 
     self.install(business_process, business_configuration)
+
+  def _getBusinessProcessDict(self):
+    """ Read the spreadsheet and return the configuration for
+        Trade Model Paths and Business Links.
+    """
+    return self.ConfigurationTemplate_readOOCalcFile(
+                      "standard_business_process.ods",
+                      data=self.getDefaultConfigurationSpreadsheetData())
+
+
+
+  def _addTradeModelPath(self, business_process, title, trade_phase,
+                                                       trade_date, **kw):
+    """ Add a trade model path to the business process.
+    """
+    reference = "TMP-%s" % "-".join(title.upper().strip().split(" "))
+    path_id = "%s_path" %  "_".join(title.lower().strip().split(" "))
+    trade_model_path = business_process.newContent(
+                                portal_type = "Trade Model Path",
+                                id = path_id,
+                                title = title,
+                                reference = reference, **kw)
+
+    trade_model_path.setTradePhase(trade_phase)
+    if trade_date is not None:
+      trade_model_path.setTradeDate('trade_phase/%s' % trade_date)
+
+  def _addBusinessLink(self, business_process, title, trade_phase, predecessor,
+                             successor, delivery_builder, **kw):
+    link_id = "%s_link" %  "_".join(title.lower().strip().split(" "))
+    business_link = business_process.newContent(
+                                portal_type = "Business Link",
+                                id=link_id,
+                                title = title,**kw)
+
+    completed_state = kw.pop("completed_state", None)
+    if completed_state is not None:
+      business_link.setCompletedStateList(completed_state.split(","))
+
+    frozen_state = kw.pop("frozen_state", None)
+    if frozen_state is not None:
+      business_link.setFrozenStateList(frozen_state.split(","))
+
+    business_link.setTradePhase(trade_phase)
+    if successor is not None:
+      business_link.setSuccessor("trade_state/%s" % successor)
+    if predecessor is not None:
+      business_link.setPredecessor("trade_state/%s" % predecessor)
+
+    if delivery_builder is not None:
+      business_link.setDeliveryBuilderList(
+             ["delivery_builder/portal_deliveries/%s" % \
+                  i for i in delivery_builder.split(",")])

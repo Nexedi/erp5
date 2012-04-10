@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<!-- Content  -->\n
+<div class="master" id="master"\n
+     tal:define="portal           here/portal_url/getPortalObject;\n
+                 portal_path      portal_path | portal/absolute_url;\n
+                 action_context   python: portal.restrictedTraverse(request.get(\'object_path\', \'?\'), here);\n
+                 actions          python: here.Base_filterDuplicateActions(portal.portal_actions.listFilteredActionsFor(action_context));\n
+                 url              action_context/absolute_url;\n
+                 current_form_id python: request.get(\'current_form_id\', \'view\');\n
+                 current_url      python: \'%s/%s\' % (url, current_form_id);\n
+                 current_action   python: portal.ERP5Site_getCurrentAction(current_url, actions);\n
+                 actions actions/object_view | python: [];">\n
+\n
+\n
+  <div id="portal_status_message" style="height:20px; display:none;">\n
+    <p style="color:red; font-weight: bold;"></p>\n
+  </div>\n
+          \n
+  <div class="document">\n
+\n
+    <div class="actions">\n
+      <button onclick="javascript:FormUpdater.save(); return false;"\n
+              title="Save" class="save" type="submit">\n
+        <span class="image"></span>\n
+        <span class="description">Save</span>\n
+      </button>\n
+\n
+      <script type="text/javascript"\n
+        tal:content="python: \'\'\'Form.setCurrentFormId(\'%s\');;\'\'\' %current_form_id">\n
+      </script>\n
+\n
+      <!-- get all tabs from server -->\n
+      <ul class="tabs">\n
+        <tal:block tal:repeat="action actions"> \n
+          <li style="cursor:pointer;"\n
+              tal:define="action_form python: action[\'url\'].split(\'/\')[-1]"\n
+              tal:attributes="id action_form;\n
+                              class python: action == current_action and \'selected\' or \'not_selected\'">\n
+\n
+            <a tal:attributes="onclick python: \'\'\'javascript: TabbularGadget.addNewTabGadget(\'%s\', \'form_gadget\', \'FormUpdater.update\');; TabbularGadget.toggleVisibility($(\'#%s\'));; return false ;;\'\'\' %(action_form, action_form)">\n
+              <span i18n:translate=""\n
+                    i18n:domain="ui"\n
+                    tal:content="action/name">action_name</span>\n
+            </a>\n
+          </li>\n
+        </tal:block>\n
+       </ul>\n
+\n
+    </div>\n
+\n
+    <div class="content editable">\n
+    \n
+      <!--Form render goes here -->\n
+      <div id="form_gadget"\n
+           tal:attributes="gadget string:${current_form_id}/Form_asRenderJSGadget;\n
+                           gadget:data-source string:Form_asJSON?form_id=${current_form_id};\n
+                           gadget:data-handler string:FormUpdater.update;\n
+                           gadget:property string: {&quot;cacheable&quot;: &quot;1&quot;, &quot;cache_id&quot;: &quot;${current_form_id}&quot;}">\n
+      </div>\n
+       \n
+    </div>\n
+  </div>\n
+        \n
+</div>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>gadget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

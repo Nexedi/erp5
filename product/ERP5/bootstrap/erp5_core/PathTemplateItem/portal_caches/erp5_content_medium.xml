@@ -33,10 +33,6 @@
             <value> <string>erp5_content_medium</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Cache Factory</string> </value>
         </item>

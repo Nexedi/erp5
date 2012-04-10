@@ -1,5 +1,5 @@
 Contains:
-- rules, categories and business processes from erp5_simulation
+- categories and business processes from erp5_simulation
 
 Note: Probably not complete.
 TODO: make allowed content types for solver automatic

@@ -344,7 +344,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     packing_list.stop()
     transaction.commit()
     self.tic()
-    self.stepInvoiceBuilderAlarm()
+    self.buildInvoices()
     transaction.commit()
     self.tic()
 
@@ -478,21 +478,15 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEquals(str(abs(line_dict['income_expense'])),
         str(rounded_total_price + rounded_discount_price))
 
-  def stepPackingListBuilderAlarm(self, sequence=None,
-                                  sequence_list=None, **kw):
-    # global builder alarm does not exist in legacy simulation
-    # business templates.
-    alarm = getattr(self.portal.portal_alarms, 'packing_list_builder_alarm', None)
-    if alarm is not None:
-      alarm.activeSense()
+  def buildPackingLists(self):
+    self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
+    transaction.commit()
+    self.tic()
 
-  def stepInvoiceBuilderAlarm(self, sequence=None,
-                                  sequence_list=None, **kw):
-    # global builder alarm does not exist in legacy simulation
-    # business templates.
-    alarm = getattr(self.portal.portal_alarms, 'invoice_builder_alarm', None)
-    if alarm is not None:
-      alarm.activeSense()
+  def buildInvoices(self):
+    self.portal.portal_alarms.invoice_builder_alarm.activeSense()
+    transaction.commit()
+    self.tic()
 
   ###
   ##  Test cases
@@ -606,9 +600,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     order.confirm()
     transaction.commit()
     self.tic()
-    self.stepPackingListBuilderAlarm()
-    transaction.commit()
-    self.tic()
+    self.buildPackingLists()
 
     packing_list, = order.getCausalityRelatedValueList(
       portal_type=self.packing_list_portal_type)
@@ -937,9 +929,7 @@ return lambda *args, **kw: 1""")
     order.confirm()
     transaction.commit()
     self.tic()
-    self.stepPackingListBuilderAlarm()
-    transaction.commit()
-    self.tic()
+    self.buildPackingLists()
 
     packing_list = order.getCausalityRelatedValue(
                       portal_type=self.packing_list_portal_type)
@@ -951,9 +941,7 @@ return lambda *args, **kw: 1""")
     packing_list.deliver()
     transaction.commit()
     self.tic()
-    self.stepInvoiceBuilderAlarm()
-    transaction.commit()
-    self.tic()
+    self.buildInvoices()
 
     invoice = packing_list.getCausalityRelatedValue(
                       portal_type=self.invoice_portal_type)

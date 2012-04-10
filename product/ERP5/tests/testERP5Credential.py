@@ -76,6 +76,12 @@ class TestERP5Credential(ERP5TypeTestCase):
     if 'MailHost' in self.portal.objectIds():
       self.portal.manage_delObjects(['MailHost'])
     self.portal._setObject('MailHost', DummyMailHost('MailHost'))
+    system_preference = self.getPreferenceTool().getActiveSystemPreference()
+    if system_preference is None:
+      system_preference = self.portal.portal_preferences.newContent(
+        portal_type='System Preference')
+      system_preference.enable()
+    system_preference.edit(preferred_event_sender_email=['Sample s@s.com',])
 
   @reindex
   def enableAlarm(self):

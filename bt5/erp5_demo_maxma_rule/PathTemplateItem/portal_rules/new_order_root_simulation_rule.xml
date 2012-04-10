@@ -59,10 +59,6 @@
             <value> <string>new_order_root_simulation_rule</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>19</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Order Root Simulation Rule</string> </value>
         </item>

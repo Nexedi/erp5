@@ -308,9 +308,6 @@ class Message(BaseMessage):
                              check_order_validation=check_order_validation,
                              **self.activity_kw)
 
-  def getDependentMessageList(self, activity, activity_tool):
-    return activity.getDependentMessageList(activity_tool, self, **self.activity_kw)
-
   def notifyUser(self, activity_tool, retry=False):
     """Notify the user that the activity failed."""
     portal = activity_tool.getPortalObject()
@@ -1422,13 +1419,13 @@ class ActivityTool (Folder, UniqueObject):
       if not is_initialized:
         self.initialize()
       message_list = []
-      method_id = "_validate_%s" % validator_id
+      method_id = "_validate_" + validator_id
       for activity in activity_dict.itervalues():
         method = getattr(activity, method_id, None)
         if method is not None:
           result = method(aq_inner(self), message, validation_value)
           if result:
-            message_list.extend([(activity, m) for m in result])
+            message_list += [(activity, m) for m in result]
       return message_list
 
     # Required for tests (time shift)

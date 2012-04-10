@@ -50,42 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>packing_list = state_change[\'object\']\n
-\n
-activate_kw = {}\n
-related_order = packing_list.getCausalityValue()\n
-path = packing_list.getPath()\n
-tag = \'%s_updateAppliedRule\' % path\n
-expand_tag = \'%s_expand\' % path\n
-path_and_method_id = (path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-activate_kw = {\'tag\':expand_tag,\'priority\':3}\n
-after_tag_list = [expand_tag]\n
-if related_order is not None:\n
-  related_order_path = related_order.getPath()\n
-  after_tag_list.append(\'%s_expand\' % related_order_path)\n
-  after_tag_list.append(\'%s_updateAppliedRule\' % related_order_path)\n
-\n
-packing_list.activate(after_tag=after_tag_list,\n
-                      tag=tag,\n
-                      after_path_and_method_id=path_and_method_id,\n
-                      priority=3).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
-\n
-\n
-# Make sure to reindex related simulation movement if we are already\n
-# simulated, call reindexObject, not immediateReindexObject so that\n
-# catalogObjectList will be called with many objects\n
-# XXX is it really required?\n
-packing_list.activate(after_tag=after_tag_list,\n
-                      tag=tag,\n
-                      after_path_and_method_id=path_and_method_id,\n
-                      priority=3).applyToDeliveryRelatedMovement(method_id=\'reindexObject\')\n
-\n
-if packing_list.getCausalityState() == \'draft\':\n
-  packing_list.startBuilding()\n
-# XXX is it really required?\n
-packing_list.activate(\n
-  after_tag = tag,\n
-).updateCausalityState()\n
+            <value> <string>state_change[\'object\'].Delivery_updateSimulation()\n
 </string> </value>
         </item>
         <item>

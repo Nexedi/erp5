@@ -40,9 +40,11 @@ from AccessControl.PermissionRole import rolesForPermissionOn
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.ZopeGuards import guarded_getattr
 from Acquisition import aq_base, aq_inner, aq_acquire, aq_chain
+from DateTime import DateTime
 import OFS.History
 from OFS.SimpleItem import SimpleItem
 from OFS.PropertyManager import PropertyManager
+from persistent.TimeStamp import TimeStamp
 from zExceptions import NotFound, Unauthorized
 
 from ZopePatch import ERP5PropertyManager
@@ -3158,25 +3160,27 @@ class Base( CopyContainer,
 
       NOTE: this method is not generic enough. Suggestion: define a modification_date
       variable on the workflow which is an alias to time.
+
+      XXX: Should we return the ZODB date if it's after the last history entry ?
     """
-    # Check if edit_workflow defined
-    portal_workflow = getToolByName(self.getPortalObject(), 'portal_workflow')
-    wf = portal_workflow.getWorkflowById('edit_workflow')
-    wf_list = list(portal_workflow.getWorkflowsFor(self))
-    if wf is not None:
-      wf_list = [wf] + wf_list
-    max_date = None
-    for wf in wf_list:
-      try:
-        history = wf.getInfoFor(self, 'history', None)
-      except KeyError:
-        history = None
-      if history is not None and len(history):
-        date = history[-1].get('time', None)
-        # Then get the last line of edit_workflow
+    try:
+      history_list = aq_base(self).workflow_history
+    except AttributeError:
+      pass
+    else:
+      max_date = None
+      for history in history_list.itervalues():
+        try:
+          date = history[-1]['time']
+        except (IndexError, KeyError):
+          continue
         if date > max_date:
           max_date = date
-    return max_date
+      if max_date:
+        # Return a copy of history time, to prevent modification
+        return DateTime(max_date)
+    if self._p_serial:
+      return DateTime(TimeStamp(self._p_serial).timeTime())
 
   # Layout management
   security.declareProtected(Permissions.AccessContentsInformation, 'getApplicableLayout')

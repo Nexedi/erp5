@@ -52,6 +52,9 @@ for name in list(TestTradeModelLine.__dict__):
   if '_NewSimulation_' in name:
     delattr(TestTradeModelLine, name)
 
+TestTradeModelLine.buildInvoices = TestTradeModelLine.buildPackingLists = \
+  lambda self: None
+
 def createBusinessProcess(self, *args, **kw):
   business_process = super(TestTradeModelLine, self) \
     .createBusinessProcess(*args, **kw)

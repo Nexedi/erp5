@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode>\074tal:block xmlns:tal="http://xml.zope.org/namespaces/tal"\n
+           xmlns:metal="http://xml.zope.org/namespaces/metal"\n
+           xmlns:i18n="http://xml.zope.org/namespaces/i18n"\076\n
+  \074tal:block metal:define-macro="master"\076\n
+    \074tal:block\n
+              tal:define="object_uid           here/getUid | nothing;\n
+              object_path          here/getPath | nothing;\n
+              form                 nocall: form | nothing;\n
+              form_id              form/id | template/id | nothing;\n
+              portal               here/getPortalObject;\n
+              form_action          python: form and form.action not in (\'\', None) and portal.portal_membership.checkPermission(\'Modify portal content\', here) and form.action or nothing;\n
+              local_parameter_list local_parameter_list | python: {};\n
+              dummy                python: local_parameter_list.update({\'object_uid\': object_uid, \'object_path\': object_path, \'form_id\': form_id});\n
+              title                python: \'%s - %s\' % (portal.Base_translateString(template.title_or_id()), here.getTitle());"\076\n
+\n
+      \074tal:block metal:use-macro="here/main_template/macros/master"\076\n
+        \074tal:block metal:fill-slot="context_bar"\076\n
+          \074tal:block metal:use-macro="here/context_box_render/macros/master" /\076\n
+        \074/tal:block\076\n
+        \074tal:block metal:fill-slot="main"\076\n
+\n
+            \074!-- Experimental gadget form rendering --\076\n
+            \074!-- XXX: move to listbox gadget asap --\076\n
+            \074script src="jquery/ui/js/jquery-ui.js" type="text/javascript"\076\074/script\076\n
+\n
+            \074link rel="stylesheet" type="text/css" media="screen" href="jquery/plugin/jqgrid/ui.jqgrid.css" /\076\n
+            \074link rel="stylesheet" type="text/css" media="screen" href="jquery/ui/css/erp5-theme/jquery-ui.css" /\076\n
+            \074script type="text/javascript" src="jquery/plugin/jqgrid/grid.locale-en.js"\076\074/script\076\n
+            \074script type="text/javascript" src="jquery/plugin/jqgrid/jquery.jqGrid.src.js"\076\074/script\076\n
+            \074!--[if IE]\076\n
+              \074script type="text/javascript" src="jquery/plugin/jstorage/jquery.json-2.3.js"\076\074/script\076\n
+            \074!--\074![endif]--\076\n
+            \074script src="jquery/plugin/jstorage/jstorage.js" type="text/javascript"\076\074/script\076\n
+            \074script src="jquery/plugin/renderjs/renderjs.js"\076\074/script\076\n
+\n
+            \074div id="content"\n
+                gadget="gadgets/content/gadget"\n
+                tal:attributes="gadget string:gadgets/tabular_gadget/gadget?object_path=${object_path}\046current_form_id=${form_id}"\076\074/div\076\n
+\n
+            \074script type="text/javascript" language="javascript"\076\n
+              //\074![CDATA[\n
+              // init all when DOM is ready\n
+              $(document).ready(function() {\n
+                // XXX: start DOM is hard coded to "content" this is not so good for a generic library\n
+                RenderJs.bootstrap($("#content"));\n
+                // XXX: we use timeouts as we do not know if gadget structure is yet ready, how to do that in a generic way?\n
+                window.setTimeout(\' RenderJs.update($("#content"));\', DEFAULT_GADGET_DOM_READY_TIMEOUT);\n
+              });\n
+              //]]\076\n
+            \074/script\076\n
+\n
+        \074/tal:block\076\n
+      \074/tal:block\076\n
+    \074/tal:block\076\n
+  \074/tal:block\076\n
+\074/tal:block\076</unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>view_main_disable</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

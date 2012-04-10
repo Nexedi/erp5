@@ -276,6 +276,8 @@ class FunctionalTestRunner:
   def _getTestURL(self):
     if self.remote_code_url_list is not None:
       remote_code_url = "&".join(["url_list:list=%s" % url for url in self.remote_code_url_list])
+      if self.run_only != "":
+        remote_code_url += "&zuite_id=%s" % self.run_only
       return '%s/portal_tests/Zuite_runSeleniumTest?%s&__ac_name=%s&__ac_password=%s' \
                  % (self.portal.portal_url(), remote_code_url, self.user, self.password)
 
@@ -361,7 +363,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     if self.remote_code_url_list is not None:
       self.runner.remote_code_url_list = self.remote_code_url_list
 
-    self.runner.test(debug=self.foreground)
+    debug = self.foreground or os.environ.get("erp5_debug_mode")
+    self.runner.test(debug=debug)
     detail, success, failure, error_title_list = self.runner.processResult()
 
     self.logMessage("-" * 79)
