@@ -60,7 +60,7 @@ sender = event.getSourceValue()\n
 if sender is not None:\n
   from_url = formataddr((sender.getTitle(), sender.getDefaultEmailText()))\n
 else:\n
-  from_url = portal.portal_preferences.getPreferredEventSenderEmail()\n
+  from_url = kw.get(\'from_url\', portal.portal_preferences.getPreferredEventSenderEmail())\n
 \n
 to_url = formataddr((context.getTitle(), context.getDefaultEmailText()))\n
 \n
