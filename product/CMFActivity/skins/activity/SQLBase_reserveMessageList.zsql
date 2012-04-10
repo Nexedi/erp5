@@ -25,15 +25,24 @@ WHERE
   </dtml-if>
 ORDER BY
 <dtml-comment>
-  Explanation of the order by:
-  - priority must be respected (it is a feature)
-  - when multiple nodes simultaneously try to fetch activities, they should not
-    be given the same set of lines as it would cause all minus one to wait for
-    a write lock (and be ultimately aborted), effectively serializing their
-    action (so breaking paralellism).
-    So we must force MySQL to update lines in a random order.
+  During normal operation, sorting by date (as 2nd criteria) is fairer
+  for users and reduce the probability to do the same work several times
+  (think of an object that is modified several times in a short period of time).
+  However, current implementation is not optimal when reindexing a whole site
+  with several mount points (to different ZEO servers), because modules may not
+  be processed in parallel. If you want to speed up ERP5Site_reindexAll,
+  consider:
+  - ordering by 'priority, RAND()' temporarily;
+  - or better, hack ERP5Site_reindexAll so that all reindex messages have
+    identical/random dates (hint: add optional parameter to Folder_reindexAll
+    and Folder_reindexObjectList in order to forward a date from
+    ERP5Site_reindexAll, e.g. current date would work if MySQL
+    shuffles enough lines with same priority/date).
+  - or even better, use NEO <http://www.neoppod.org/>
+  For higher concurrency than 10 or 20 nodes of activity, it might be required
+  to add a random start point to reduce the risk of MySQL locks.
 </dtml-comment>
-  priority, RAND()
+  priority, date
 LIMIT <dtml-sqlvar count type="int">
 <dtml-var sql_delimiter>
 COMMIT
