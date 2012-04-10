@@ -32,69 +32,29 @@ import sys
 import threading
 
 from testnode import SubprocessError
+from ProcessManager import ProcessManager
 
 SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
 SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
 
-_format_command_search = re.compile("[[\\s $({?*\\`#~';<>&|]").search
-_format_command_escape = lambda s: "'%s'" % r"'\''".join(s.split("'"))
-def format_command(*args, **kw):
-  cmdline = []
-  for k, v in sorted(kw.items()):
-    if _format_command_search(v):
-      v = _format_command_escape(v)
-    cmdline.append('%s=%s' % (k, v))
-  for v in args:
-    if _format_command_search(v):
-      v = _format_command_escape(v)
-    cmdline.append(v)
-  return ' '.join(cmdline)
-
-def subprocess_capture(p, quiet=False):
-  def readerthread(input, output, buffer):
-    while True:
-      data = input.readline()
-      if not data:
-        break
-      output(data)
-      buffer.append(data)
-  if p.stdout:
-    stdout = []
-    output = quiet and (lambda data: None) or sys.stdout.write
-    stdout_thread = threading.Thread(target=readerthread,
-                                     args=(p.stdout, output, stdout))
-    stdout_thread.setDaemon(True)
-    stdout_thread.start()
-  if p.stderr:
-    stderr = []
-    stderr_thread = threading.Thread(target=readerthread,
-                                     args=(p.stderr, sys.stderr.write, stderr))
-    stderr_thread.setDaemon(True)
-    stderr_thread.start()
-  if p.stdout:
-    stdout_thread.join()
-  if p.stderr:
-    stderr_thread.join()
-  p.wait()
-  return (p.stdout and ''.join(stdout),
-          p.stderr and ''.join(stderr))
 
 GIT_TYPE = 'git'
 SVN_TYPE = 'svn'
 
-class Updater(object):
+class Updater(ProcessManager):
 
   _git_cache = {}
   stdin = file(os.devnull)
 
   def __init__(self, repository_path, log, revision=None, git_binary=None,
-      realtime_output=True):
+      realtime_output=True, process_manager=None):
     self.log = log
     self.revision = revision
     self._path_list = []
     self.repository_path = repository_path
     self.git_binary = git_binary
     self.realtime_output = realtime_output
+    self.process_manager = process_manager
 
   def getRepositoryPath(self):
     return self.repository_path
@@ -128,25 +88,10 @@ class Updater(object):
               raise
 
   def spawn(self, *args, **kw):
-    quiet = kw.pop('quiet', False)
-    env = kw and dict(os.environ, **kw) or None
-    command = format_command(*args, **kw)
-    self.log('$ ' + command)
-    sys.stdout.flush()
-    p = subprocess.Popen(args, stdin=self.stdin, stdout=subprocess.PIPE,
-                         stderr=subprocess.PIPE, env=env,
-                         cwd=self.getRepositoryPath())
-    if self.realtime_output:
-      stdout, stderr = subprocess_capture(p, quiet)
-    else:
-      stdout, stderr = p.communicate()
-      self.log(stdout)
-      self.log(stderr)
-    result = dict(status_code=p.returncode, command=command,
-                  stdout=stdout, stderr=stderr)
-    if p.returncode:
-      raise SubprocessError(result)
-    return result
+    return self.process_manager.spawn(*args, 
+                                      log_prefix='git',
+                                      cwd=self.getRepositoryPath(),
+                                      **kw)
 
   def _git(self, *args, **kw):
     return self.spawn(self.git_binary, *args, **kw)['stdout'].strip()

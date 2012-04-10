@@ -30,7 +30,7 @@ import logging
 import os
 import pkg_resources
 
-import testnode
+from testnode import TestNode
 
 CONFIG = {
   'computer_id': 'COMPUTER',
@@ -48,15 +48,21 @@ def main(*args):
     parsed_argument = parser.parse_args(list(args))
   else:
     parsed_argument = parser.parse_args()
+  logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
+  formatter = logging.Formatter(logger_format)
+  logging.basicConfig(level=logging.INFO,
+                     format=logger_format)
   logger = logging.getLogger('erp5testnode')
   if parsed_argument.console or parsed_argument.logfile:
-    logger.setLevel(logging.INFO)
     if parsed_argument.console:
       logger.addHandler(logging.StreamHandler())
       logger.info('Activated console output.')
     if parsed_argument.logfile:
-      logger.addHandler(logging.FileHandler(filename=parsed_argument.logfile))
+      file_handler = logging.FileHandler(filename=parsed_argument.logfile)
+      file_handler.setFormatter(formatter)
+      logger.addHandler(file_handler)
       logger.info('Activated logfile %r output' % parsed_argument.logfile)
+      CONFIG['log_file'] = parsed_argument.logfile
   else:
     logger.addHandler(logging.NullHandler())
   CONFIG['logger'] = logger.info
@@ -118,4 +124,5 @@ def main(*args):
   else:
     instance_dict = {}
   CONFIG['instance_dict'] = instance_dict
-  testnode.run(CONFIG)
+  testnode = TestNode(logger.info, CONFIG)
+  testnode.run()
