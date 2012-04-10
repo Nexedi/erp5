@@ -60,7 +60,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
   manager_password = 'zope'
   website_id = 'test'
 
-
   def getTitle(self):
     return "ERP5WebWithDms"
 
@@ -712,6 +711,11 @@ return True
     response = self.publish(website.absolute_url_path() + '/' +\
                             image_reference + '?format=jpg', credential)
     self.assertEquals(response.getHeader('content-type'), 'image/jpeg')
+
+    # testing Image conversions, svg
+    response = self.publish(website.absolute_url_path() + '/' +\
+                            image_reference + '?format=svg', credential)
+    self.assertEquals(response.getHeader('content-type'), 'image/svg+xml')
 
     # testing Image conversions, resizing
     response = self.publish(website.absolute_url_path() + '/' +\

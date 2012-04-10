@@ -71,6 +71,7 @@ from Products.ERP5Type.patches import OFSHistory
 from Products.ERP5Type.patches import OFSItem
 from Products.ERP5Type.patches import ExternalMethod
 from Products.ERP5Type.patches import User
+from Products.ERP5Type.patches import zopecontenttype
 
 # These symbols are required for backward compatibility
 from Products.ERP5Type.patches.PropertyManager import ERP5PropertyManager
