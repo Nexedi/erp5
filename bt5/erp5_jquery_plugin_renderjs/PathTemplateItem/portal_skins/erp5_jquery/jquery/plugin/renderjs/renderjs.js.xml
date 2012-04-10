@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts33630760.88</string> </value>
+            <value> <string>ts34058349.94</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -255,8 +255,7 @@ var Form = {\n
               dom = $("[name=" + Form.getFieldId(field_id) + "]");\n
               date = field_dict["value"];\n
               date = new Date(date);\n
-              dom.datepicker();\n
-              dom.datepicker({ dateFormat: \'yyyy/mm/dd\' });\n
+              dom.datepicker({ dateFormat: \'dd/mm/yy\' }); // XXX: get format from server!\n
               dom.datepicker(\'setDate\', date);\n
               return dom;\n
   },\n
@@ -536,7 +535,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18539</int> </value>
+            <value> <int>18537</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
