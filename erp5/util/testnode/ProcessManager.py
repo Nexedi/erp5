@@ -39,6 +39,9 @@ class SubprocessError(EnvironmentError):
   def __str__(self):
     return 'Error %i' % self.status_code
 
+class CancellationError(EnvironmentError):
+  pass
+
 _format_command_search = re.compile("[[\\s $({?*\\`#~';<>&|]").search
 _format_command_escape = lambda s: "'%s'" % r"'\''".join(s.split("'"))
 
@@ -94,8 +97,11 @@ class ProcessManager(object):
     self.log = log
     self.process_pid_set = set()
     signal.signal(signal.SIGTERM, self.sigterm_handler)
+    self.under_cancellation = False
 
   def spawn(self, *args, **kw):
+    if self.under_cancellation:
+      raise CancellationError("Test Result was cancelled")
     get_output = kw.pop('get_output', True)
     log_prefix = kw.pop('log_prefix', '')
     new_session = kw.pop('new_session', False)
@@ -118,13 +124,17 @@ class ProcessManager(object):
                                         get_output=get_output)
     result = dict(status_code=p.returncode, command=command,
                   stdout=stdout, stderr=stderr)
-    self.process_pid_set.remove(p.pid)
+    self.process_pid_set.discard(p.pid)
+    if self.under_cancellation:
+      raise CancellationError("Test Result was cancelled")
     if raise_error_if_fail and p.returncode:
       raise SubprocessError(result)
     return result
 
-  def killPreviousRun(self):
+  def killPreviousRun(self, cancellation=False):
     self.log('ProcessManager killPreviousRun, going to kill %r' % (self.process_pid_set,))
+    if cancellation:
+      self.under_cancellation = True
     for pgpid in self.process_pid_set:
       try:
         os.kill(pgpid, signal.SIGTERM)

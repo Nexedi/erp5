@@ -36,7 +36,7 @@ import glob
 import SlapOSControler
 import threading
 
-from ProcessManager import SubprocessError, ProcessManager
+from ProcessManager import SubprocessError, ProcessManager, CancellationError
 from Updater import Updater
 
 DEFAULT_SLEEP_TIMEOUT = 120 # time in seconds to sleep
@@ -65,12 +65,13 @@ def safeRpcCall(log, proxy, function_id, retry, *args):
 
 class RemoteLogger(object):
 
-  def __init__(self, log, log_file, test_node_title):
+  def __init__(self, log, log_file, test_node_title, process_manager):
     self.portal = None
     self.test_result_path = None
     self.test_node_title = test_node_title
     self.log = log
     self.log_file = log_file
+    self.process_manager = process_manager
     self.finish = False
     self.quit = False
 
@@ -117,6 +118,14 @@ class RemoteLogger(object):
       erp5testnode_log.close()
       if end_size == size:
         output += '%s : stucked ??' % datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+      # check if the test result is still alive
+      is_alive = safeRpcCall(self.log, self.portal, "isTaskAlive", False,
+          self.test_result_path)
+      self.log('isTaskAlive result %r' % is_alive)
+      if is_alive is not None  and is_alive == 0:
+        self.log('Test Result cancelled on server side, stop current test')
+        self.process_manager.killPreviousRun(cancellation=True)
+        return
       status_dict = dict(command='erp5testnode', status_code=0,
                          stdout=''.join(output), stderr='')
       safeRpcCall(self.log, self.portal, "reportTaskStatus", retry,
@@ -199,7 +208,7 @@ branch = %(branch)s
     sys.path.append(repository_path)
     test_suite_title = config['test_suite_title'] or config['test_suite']
 
-    retry_software = False
+    retry = False
     retry_software_count = 0
     try:
       while True:
@@ -230,14 +239,15 @@ branch = %(branch)s
             full_revision_list.append('%s=%s' % (repository_id, revision))
           revision = ','.join(full_revision_list)
           if previous_revision == revision:
-            log('Same Revision Sleeping a bit')
-            time.sleep(DEFAULT_SLEEP_TIMEOUT)
+            log('Same Revision')
             same_revision_count += 1
-            if not(retry_software) and same_revision_count <= 2:
+            if not(retry) and same_revision_count <= 2:
+              log('Sleeping a bit since same revision')
+              time.sleep(DEFAULT_SLEEP_TIMEOUT)
               continue
             same_revision_count = 0
             log('Retrying install or checking if previous test was cancelled')
-          retry_software = False
+          retry = False
           previous_revision = revision
           portal_url = config['test_suite_master_url']
           test_result_path = None
@@ -259,7 +269,9 @@ branch = %(branch)s
           if test_result:
             test_result_path, test_revision = test_result
             if config.get('log_file'):
-              remote_logger = RemoteLogger(log, config['log_file'], config['test_node_title'])
+              remote_logger = RemoteLogger(log, config['log_file'],
+                                           config['test_node_title'],
+                                           process_manager)
               remote_logger.portal = portal
               remote_logger.test_result_path = test_result_path
               remote_logger_thread = threading.Thread(target=remote_logger)
@@ -293,7 +305,7 @@ branch = %(branch)s
                 environment=config['environment'],
                 )
               if status_dict['status_code'] != 0:
-                retry_software = True
+                retry = True
                 retry_software_count += 1
                 raise SubprocessError(status_dict)
               else:
@@ -343,6 +355,11 @@ branch = %(branch)s
               test_result_path, e.status_dict, config['test_node_title'])
           log("SubprocessError, going to sleep %s" % DEFAULT_SLEEP_TIMEOUT)
           time.sleep(DEFAULT_SLEEP_TIMEOUT)
+          continue
+        except CancellationError, e:
+          log("CancellationError", exc_info=sys.exc_info())
+          process_manager.under_cancellation = False
+          retry = True
           continue
         except:
           log("erp5testnode exception", exc_info=sys.exc_info())
