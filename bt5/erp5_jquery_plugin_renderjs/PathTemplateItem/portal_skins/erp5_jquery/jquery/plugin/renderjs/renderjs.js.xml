@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts34058349.94</string> </value>
+            <value> <string>ts34146598.45</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -314,6 +314,11 @@ var Form = {\n
                             sortname: \'id\',\n
                             viewrecords: true,\n
                             sortorder: "desc",\n
+                            loadError : function(xhr, textStatus, errorThrown)  {\n
+                                          // XXX: handle better than just alert.\n
+                                          alert("Error occurred during getting data from server.");\n
+                                          },\n
+\n
                             caption: field_dict["title"] });\n
               listbox_table.jqGrid(\'navGrid\', \'#\'+navigation_id, {edit:false,add:false,del:false});\n
               return listbox_table;\n
@@ -535,7 +540,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18537</int> </value>
+            <value> <int>18846</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
