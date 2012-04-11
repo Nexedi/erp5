@@ -270,3 +270,12 @@ class TaskDistributionTool(BaseTool):
     assert node is not None
     node.edit(cmdline=status_dict['command'],
               stdout=status_dict['stdout'], stderr=status_dict['stderr'])
+
+  security.declarePublic('isTaskAlive')
+  def isTaskAlive(self, test_result_path):
+    """check status of a test suite
+    """
+    LOG("TaskDistributionTool.checkTaskStatus", 0, repr(test_result_path))
+    portal = self.getPortalObject()
+    test_result = portal.restrictedTraverse(test_result_path)
+    return test_result.getSimulationState() == "started" and 1 or 0
