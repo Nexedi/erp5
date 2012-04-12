@@ -115,11 +115,11 @@ if download or not use_activity:\n
       context.activate(activity=\'SQLQueue\').sendMailHostMessage(mail_message)\n
 \n
 if use_activity:\n
-  uid_list = context.getDestinationUidList()\n
+  path_list = context.getDestinationList()\n
   method_kw = dict(event_relative_url=context.getRelativeUrl(),\n
     from_url=from_url)\n
   portal.portal_catalog.searchAndActivate(method_id="Entity_sendEmail",\n
-     uid=uid_list,\n
+     path=path_list,\n
      method_kw=method_kw, **kw)\n
 \n
 # Transit event workflow\n
