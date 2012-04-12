@@ -360,6 +360,14 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
       print "TRACEBACK :"
       print entry["tb_text"]
 
+  def _hasActivityFailure(self):
+    """ Return True if the portal has any Activity Failure
+    """
+    for m in self.portal.portal_activities.getMessageList():
+      if m.processing_node < -1:
+        return True
+    return False
+
   def testFunctionalTestRunner(self):
     # first of all, abort to get rid of the mysql participation inn this
     # transaction
@@ -378,6 +386,10 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
       self._verboseErrorLog(20)
       raise TimeoutError(e)
 
+    # In case of failure, verbose the error_log entries in order to collect
+    # appropriated information to debug the system.
+    if self._hasActivityFailure():
+       self._verboseErrorLog(20)
 
     self.logMessage("-" * 79)
     total = success + failure
