@@ -1355,6 +1355,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
     security.declarePublic('searchAndActivate')
     def searchAndActivate(self, *args, **kw):
       """Restricted version of _searchAndActivate"""
+      if 'uid' in kw:
+        raise TypeError("'uid' cannot be used to select documents as it is "
+          "used internally")
       return self._searchAndActivate(restricted=True, *args, **kw)
 
     security.declareProtected(Permissions.ManagePortal, 'upgradeSchema')
