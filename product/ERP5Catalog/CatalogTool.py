@@ -883,6 +883,9 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
       'activate_kw' may specify an active process to collect results.
       """
+      if 'uid' in kw:
+        raise TypeError("'uid' cannot be used to select documents as it is "
+          "used internally")
       catalog_kw = dict(kw)
       packet_size = catalog_kw.pop('packet_size', 30)
       limit = packet_size * catalog_kw.pop('activity_count', 100)
