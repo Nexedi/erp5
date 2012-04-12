@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts34146598.45</string> </value>
+            <value> <string>ts34237877.11</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -300,8 +300,9 @@ var Form = {\n
                          column_title_list.push(title);\n
                          column = {\'name\': index,\n
                                    \'index\': index,\n
-                                   \'width\': 150,\n
-                                   \'align\': \'left\'}\n
+                                   \'width\': 185,\n
+                                   \'align\': \'left\'\n
+                        }\n
                          colModel.push(column);\n
               });\n
 \n
@@ -318,7 +319,7 @@ var Form = {\n
                                           // XXX: handle better than just alert.\n
                                           alert("Error occurred during getting data from server.");\n
                                           },\n
-\n
+                            cmTemplate: {sortable:false}, // XXX: until we get list of sortable columns from server\n
                             caption: field_dict["title"] });\n
               listbox_table.jqGrid(\'navGrid\', \'#\'+navigation_id, {edit:false,add:false,del:false});\n
               return listbox_table;\n
@@ -540,7 +541,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18846</int> </value>
+            <value> <int>18986</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
