@@ -79,7 +79,6 @@ import OFS.Application
 OFS.Application.import_products()
 
 # Std Zope Products
-ZopeTestCase.installProduct('ExtFile', quiet=install_product_quiet)
 ZopeTestCase.installProduct('Photo', quiet=install_product_quiet)
 ZopeTestCase.installProduct('Formulator', quiet=install_product_quiet)
 ZopeTestCase.installProduct('FCKeditor', quiet=install_product_quiet)
