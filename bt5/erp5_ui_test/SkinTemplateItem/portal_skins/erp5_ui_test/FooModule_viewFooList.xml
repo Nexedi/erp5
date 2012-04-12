@@ -73,6 +73,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_delivery_start_date</string>
                       </list>
                     </value>
                 </item>
