@@ -686,7 +686,13 @@ return True
     self.assertEquals(1, len(img_list))
     src = img_list[0].get('src')
 
-  def test_ImageConversionThroughWebSite(self):
+  def test_ImageConversionThroughWebSite_using_file(self):
+    """Check that conversion parameters pass in url
+    are hounoured to display an image in context of a website
+    """
+    self.test_ImageConversionThroughWebSite("File")
+    
+  def test_ImageConversionThroughWebSite(self, image_portal_type="Image"):
     """Check that conversion parameters pass in url
     are hounoured to display an image in context of a website
     """
@@ -707,9 +713,9 @@ return True
 
 
     image_reference = 'NXD-IMAGE'
-    image_module = portal.getDefaultModule(portal_type='Image')
+    module = portal.getDefaultModule(portal_type=image_portal_type)
     upload_file = makeFileUpload('tiolive-ERP5.Freedom.TioLive.Logo-001-en.png')
-    image = image_module.newContent(portal_type='Image',
+    image = module.newContent(portal_type=image_portal_type,
                                     file=upload_file,
                                     reference=image_reference)
     image.publish()
