@@ -75,6 +75,15 @@ install_product_quiet = 1
 # Quiet messages when installing business templates
 install_bt5_quiet = 0
 
+from App.config import getConfiguration
+
+config = getConfiguration()
+instancehome = config.instancehome
+# Make sure we can call manage_debug_threads on a test instance
+if getattr(config, 'product_config', None) is None:
+  config.product_config = {}
+config.product_config['deadlockdebugger'] = {'dump_url':'/manage_debug_threads'}
+
 import OFS.Application
 OFS.Application.import_products()
 
@@ -193,9 +202,6 @@ ZopeTestCase.installProduct('ParsedXML', quiet=install_product_quiet)
 
 # Install everything else which looks like related to ERP5
 from OFS.Application import get_products
-from App.config import getConfiguration
-
-instancehome = getConfiguration().instancehome
 for priority, product_name, index, product_dir in get_products():
   # XXX very heuristic
   if os.path.isdir(os.path.join(product_dir, product_name, 'Document')) \
@@ -1026,10 +1032,6 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
 
             if len(setup_done) == 1: # make sure it is run only once
               self._setUpDummyMailHost()
-              try:
-                from Products import DeadlockDebugger
-              except ImportError:
-                pass
               self.serverhost, self.serverport = self.startZServer(verbose=True)
               self._registerNode(distributing=1, processing=1)
 
