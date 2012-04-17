@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts34237877.11</string> </value>
+            <value> <string>ts34651695.58</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -76,6 +76,16 @@ var LocalStorageCachePlugin = {\n
 \n
 var Cache = {\n
   \n
+  ROOT_CACHE_ID: \'APP_CACHE\',\n
+\n
+  getCacheId: function(cache_id) {\n
+    /* We should have a way to \'purge\' localStorage by setting a ROOT_CACHE_ID in all browser\n
+     * instances\n
+     */\n
+    return Cache.ROOT_CACHE_ID + cache_id; \n
+    \n
+  },\n
+  \n
   hasLocalStorage: function() {\n
       /*\n
        * Feature test if localStorage is supported\n
@@ -91,6 +101,7 @@ var Cache = {\n
   \n
   get: function(cache_id, default_value){\n
     /* Get cache key value */\n
+    cache_id = Cache.getCacheId(cache_id);\n
     if (Cache.hasLocalStorage()){\n
       return LocalStorageCachePlugin.get(cache_id, default_value);}\n
     else{\n
@@ -99,6 +110,7 @@ var Cache = {\n
 \n
   set: function(cache_id, data){\n
     /* Set cache key value */\n
+    cache_id = Cache.getCacheId(cache_id);\n
     if (Cache.hasLocalStorage()){\n
       LocalStorageCachePlugin.set(cache_id, data);}\n
     else{\n
@@ -541,7 +553,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18986</int> </value>
+            <value> <int>19314</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
