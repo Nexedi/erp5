@@ -59,7 +59,7 @@ if promise_repository is None:\n
   return\n
 \n
 if promise_repository:\n
-  promise_repository_list = promise_repository.split(\'\\n\')\n
+  promise_repository_list = promise_repository.split()\n
   promise_repository_list.sort()\n
 else:\n
   promise_repository_list = []\n

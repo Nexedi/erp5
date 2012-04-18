@@ -62,7 +62,7 @@ active_result = ActiveResult()\n
 \n
 portal.portal_templates.updateRepositoryBusinessTemplateList(portal.portal_templates.getRepositoryList())\n
 \n
-bt5_list = [x[1] for x in portal.portal_templates.resolveBusinessTemplateListDependency(bt5.split(\'\\n\'), newest_only=True)]\n
+bt5_list = [x[1] for x in portal.portal_templates.resolveBusinessTemplateListDependency(bt5.split(), newest_only=True)]\n
 bt5_list.extend([x.getTitle() for x in portal.portal_templates.getUpdatedRepositoryBusinessTemplateList()])\n
 bt5_list = list(set(bt5_list))\n
 \n
