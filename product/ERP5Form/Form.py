@@ -811,7 +811,7 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
 
           # Find folders which can be surcharged by this skin folder
           if '_' in folder_id:
-            surcharged_folder_id = 'erp5_%s' % folder_id.split('_')[-1]
+            surcharged_folder_id = 'erp5_%s' % folder_id.split('_', 1)[-1]
             if (surcharged_folder_id != folder_id) and \
               (getattr(portal.portal_skins, surcharged_folder_id, None) \
                                                              is not None):
@@ -832,8 +832,8 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
             for i in obj.objectValues():
                 if (i.meta_type=='ERP5 Form' and
                     i.id.startswith('Base_view') and
-                    i.id.endswith('FieldLibrary') and
-                    '_view' in i.getId()):
+                    i.id.endswith('FieldLibrary') and 
+                    '_view' in i.getId()) or (i.id == self.id):
                     form_id = i.getId()
                     form_path = '%s.%s' % (obj.getId(), form_id)
                     field_list = []
@@ -1113,7 +1113,17 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
 
         for field_id in field_dict.keys():
             target = field_dict[field_id]
-            target_form_id, target_field_id = target.split('.')
+            target_list = target.split('.')
+            if len(target_list) == 2:
+              target_form_id, target_field_id = target_list
+            elif len(target_list) == 3:
+              target_field_id = target_list[2]
+              if target_list[1] == self.id:
+                target_form_id = '/'.join(target_list[:2])
+              else:
+                target_form_id = target_list[1]
+            else:
+              raise NotImplementedError, "Not supported path: %s" % target
 
             # keep current group and position.
             group, position = get_group_and_position(field_id)

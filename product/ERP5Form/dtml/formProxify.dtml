@@ -49,7 +49,7 @@ Keep empty values <input type="checkbox" name="keep_empty_value"> <br/>
           field_id="field_object.getId()"
           field_type="item['field_type']"
           proxy_mark="item['proxy_flag'] and ' (Proxy)' or ''">
-<option value="<dtml-var "'%s.%s' % (form_id, field_id)">">
+<option value="<dtml-var "'%s.%s' % (form_path, field_id)">">
 <dtml-var "'%s%s' % (field_id, proxy_mark)">
 </option>
 </dtml-let>
