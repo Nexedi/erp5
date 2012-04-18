@@ -769,6 +769,54 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
     # FTP/DAV Access
     manage_FTPget = ZMIForm.get_xml
 
+    def PUT(self, REQUEST, RESPONSE):
+        """Handle HTTP PUT requests."""
+        self.dav__init(REQUEST, RESPONSE)
+        self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+        if REQUEST.environ['REQUEST_METHOD'] != 'PUT':
+            raise Forbidden('REQUEST_METHOD should be PUT.')
+        body=REQUEST.get('BODY', '')
+        # Empty the form (XMLToForm is unable to empty things before reopening)
+        for k in self.get_field_ids():
+          try:
+            self._delObject(k)
+          except AttributeError:
+            pass
+        self.groups = {}
+        self.group_list = []
+        # And reimport
+        XMLToForm(body, self)
+        self.ZCacheable_invalidate()
+        RESPONSE.setStatus(204)
+        return RESPONSE
+
+    manage_FTPput = PUT
+
+    security.declarePrivate('getSimilarSkinFolderIdList')
+    def getSimilarSkinFolderIdList(self):
+      """
+      Find other skins id installed in the same time
+      """
+      portal = self.getPortalObject()
+      folder_id = self.aq_parent.id
+      # Find a business template which manages the context skin folder.
+      folder_id_set = {folder_id}
+      for template in portal.portal_templates.getInstalledBusinessTemplateList():
+        template_skin_id_list = template.getTemplateSkinIdList()
+        if folder_id in template_skin_id_list:
+          folder_id_set.update(template_skin_id_list)
+
+          # Find folders which can be surcharged by this skin folder
+          if '_' in folder_id:
+            surcharged_folder_id = 'erp5_%s' % folder_id.split('_', 1)[-1]
+            if (surcharged_folder_id != folder_id) and \
+              (getattr(portal.portal_skins, surcharged_folder_id, None) \
+                                                             is not None):
+              folder_id_set.add(surcharged_folder_id)
+
+          break
+      return list(folder_id_set)
+
     #Methods for Proxify tab.
     security.declareProtected('View management screens', 'getFormFieldList')
     def getFormFieldList(self):
@@ -781,8 +829,8 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
             for i in obj.objectValues():
                 if (i.meta_type=='ERP5 Form' and
                     i.id.startswith('Base_view') and
-                    i.id.endswith('FieldLibrary') and
-                    '_view' in i.getId()):
+                    i.id.endswith('FieldLibrary') and 
+                    '_view' in i.getId()) or (i.id == self.id):
                     form_id = i.getId()
                     form_path = '%s.%s' % (obj.getId(), form_id)
                     field_list = []
@@ -1061,7 +1109,17 @@ class ERP5Form(Base, ZMIForm, ZopePageTemplate):
 
         for field_id in field_dict.keys():
             target = field_dict[field_id]
-            target_form_id, target_field_id = target.split('.')
+            target_list = target.split('.')
+            if len(target_list) == 2:
+              target_form_id, target_field_id = target_list
+            elif len(target_list) == 3:
+              target_field_id = target_list[2]
+              if target_list[1] == self.id:
+                target_form_id = '/'.join(target_list[:2])
+              else:
+                target_form_id = target_list[1]
+            else:
+              raise NotImplementedError("Not supported path: %s" % target)
 
             # keep current group and position.
             group, position = get_group_and_position(field_id)
