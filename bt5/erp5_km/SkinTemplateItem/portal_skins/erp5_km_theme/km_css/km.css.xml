@@ -84,7 +84,6 @@ div {\n
   margin:0;\n
   padding:0;\n
   float:none;\n
-  width:100%;\n
   position:relative;\n
 }\n
 \n
@@ -934,7 +933,7 @@ fieldset.right h4 {\n
   padding:5px;\n
 }\n
 \n
-.document > .content ul li {\n
+.content ul li {\n
   background:transparent url(km_img/bg_bullet_square.gif) no-repeat scroll 0 0.5em;\n
   margin:0 0 0.3em 2px;\n
   padding:0 0 0 12px;\n
