@@ -2197,7 +2197,7 @@ class ERP5Generator(PortalGenerator):
     # Configure the bt5 repository
     repository = p.getPromiseParameter('portal_templates', 'repository')
     if repository is not None:
-      template_tool.updateRepositoryBusinessTemplateList(repository.split('\n'))
+      template_tool.updateRepositoryBusinessTemplateList(repository.split())
       template_tool.installBusinessTemplateListFromRepository(
           ['erp5_promise'], activate=True, install_dependency=True)
       p.portal_alarms.subscribe()
