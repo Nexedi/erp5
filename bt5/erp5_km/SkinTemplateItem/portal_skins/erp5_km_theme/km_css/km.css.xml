@@ -170,7 +170,11 @@ fieldset.hidden_fieldset { \n
   padding-bottom:35px;\n
   padding-top: 5px;\n
 }\n
-\n
+#master,\n
+.document,\n
+.content{\n
+  width:100%;\n
+}\n
 #wrapper_right{\n
   float: left;\n
   width:22.5%;\n
@@ -566,10 +570,12 @@ fieldset.right{\n
 */\n
 \n
 fieldset.registration {\n
-  width:36%;\n
+  width:auto;\n
   background-color: #FFFFFF;\n
   margin-right: 0.5%;\n
   height: auto;\n
+  margin-bottom:2em;\n
+  padding:10px;\n
 }\n
 \n
 \n
