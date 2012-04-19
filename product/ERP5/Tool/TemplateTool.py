@@ -917,7 +917,7 @@ class TemplateTool (BaseTool):
                   try:
                     bt_dep = self.getLastestBTOnRepos(dependency, version_restriction)
                   except BusinessTemplateUnknownError:
-                    raise BusinessTemplateMissingDependency, 'The following dependency could not be satisfied: %s (%s)\nReason: Business Template could not be found in the repositories'%(dependency, version_restriction or '')
+                    raise BusinessTemplateMissingDependency, 'While analysing %s the following dependency could not be satisfied: %s (%s)\nReason: Business Template could not be found in the repositories'%(bt[1], dependency, version_restriction or '')
                   except BusinessTemplateIsMeta:
                     provider_list = self.getProviderList(dependency)
                     for provider in provider_list:
