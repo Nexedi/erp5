@@ -6,13 +6,41 @@ from Products.ERP5Type.Document import newTempDocument
 import hashlib
 from zLOG import LOG, WARNING
 import datetime
+import os
+import time
 
+present = False
+tz = None
+if 'TZ' in os.environ:
+  present = True
+  tz = os.environ['TZ']
+os.environ['TZ'] = 'UTC'
+time.tzset()
 try:
   import suds
 except ImportError:
   class PayzenSOAP:
     pass
 else:
+  def setUTCTimeZone(fn):
+    def wrapped(*args, **kwargs):
+      present = False
+      tz = None
+      if 'TZ' in os.environ:
+        present = True
+        tz = os.environ['TZ']
+      os.environ['TZ'] = 'UTC'
+      time.tzset()
+      try:
+        return fn(*args, **kwargs)
+      finally:
+        if present:
+          os.environ['TZ'] = tz
+        else:
+          del(os.environ['TZ'])
+        time.tzset()
+    return wrapped
+      
   class PayzenSOAP:
     """SOAP communication
 
@@ -48,6 +76,7 @@ else:
       signature = self._getSignature(data, received_sorted_keys)
       return signature == data.signature
 
+    @setUTCTimeZone
     def soap_getInfo(self, transmissionDate, transactionId):
       """Returns getInfo as dict, booelan, string, string
 
@@ -106,6 +135,7 @@ else:
 
       return [data_kw, signature, last_sent, last_received]
 
+    @setUTCTimeZone
     def soap_duplicate(self, transmissionDate, transactionId, presentationDate,
       newTransactionId, amount, devise, orderId='', orderInfo='', orderInfo2='',
       orderInfo3='', validationMode=0, comment=''):
@@ -166,6 +196,12 @@ else:
         signature = False
 
       return [data_kw, signature, last_sent, last_received]
+finally:
+  if present:
+    os.environ['TZ'] = tz
+  else:
+    del(os.environ['TZ'])
+  time.tzset()
 
 class PayzenService(XMLObject, PayzenSOAP):
   meta_type = 'Payzen Service'
@@ -211,6 +247,7 @@ class PayzenService(XMLObject, PayzenSOAP):
       elif isinstance(v, datetime.datetime):
         # for sure date
         v = v.strftime('%Y%m%d')
+#        import ipdb ; ipdb.set_trace()
       else:
         # anything else cast to string
         v = str(v)
