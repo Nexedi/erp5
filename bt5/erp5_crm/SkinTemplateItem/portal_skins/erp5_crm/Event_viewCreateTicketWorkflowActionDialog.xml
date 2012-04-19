@@ -95,6 +95,11 @@
                       <list>
                         <string>your_follow_up_ticket_title</string>
                         <string>your_follow_up_ticket_type</string>
+                        <string>your_follow_up_campaign_resource</string>
+                        <string>your_follow_up_support_request_resource</string>
+                        <string>your_follow_up_meeting_resource</string>
+                        <string>your_follow_up_sale_opportunity_resource</string>
+                        <string>additionnal_javascript</string>
                       </list>
                     </value>
                 </item>

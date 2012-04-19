@@ -95,6 +95,7 @@
                         <string>your_direction</string>
                         <string>your_source</string>
                         <string>your_destination</string>
+                        <string>your_keep_draft</string>
                       </list>
                     </value>
                 </item>
