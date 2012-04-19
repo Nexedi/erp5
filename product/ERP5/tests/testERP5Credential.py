@@ -81,7 +81,6 @@ class TestERP5Credential(ERP5TypeTestCase):
       system_preference = self.portal.portal_preferences.newContent(
         portal_type='System Preference')
       system_preference.enable()
-    system_preference.edit(preferred_event_sender_email=['Sample s@s.com',])
 
   @reindex
   def enableAlarm(self):
