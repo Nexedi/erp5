@@ -887,7 +887,7 @@ class TemplateTool (BaseTool):
         if repository == bt[0]:
           for property_dict in property_dict_list:
             if property_dict['id'] == bt[1]:
-              dependency_list = property_dict['dependency_list']
+              dependency_list = [q for q in property_dict['dependency_list'] if q]
               for dependency_couple in dependency_list:
                 # dependency_couple is like "erp5_xhtml_style (>= 0.2)"
                 dependency_couple_list = dependency_couple.split(' ', 1)
