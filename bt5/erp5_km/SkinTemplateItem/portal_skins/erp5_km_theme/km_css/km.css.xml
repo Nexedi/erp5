@@ -252,10 +252,13 @@ div#wrapper_headline div.header_title {\n
   height:100%;\n
 }\n
 \n
-#menu ul li.collapse-menu{\n
+#menu ul li.collapse-able{\n
   background: url(km_img/collapse-down-arrow.gif) no-repeat transparent right 10px;\n
   padding-right: 0px;\n
 }\n
+\n
+\n
+\n
 \n
 #menu ul li.non-collapse-menu{\n
   background: none;\n
