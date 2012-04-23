@@ -99,22 +99,31 @@ elif direction == \'incoming\':\n
 else:\n
   raise NotImplementedError, \'The specified direction is not handled: %r\' % (direction,)\n
 \n
-event_kw = {}\n
-event_kw[\'portal_type\'] = portal_type\n
-event_kw[\'title\'] = title\n
-event_kw[\'resource\'] = resource\n
-event_kw[\'source\'] = source_url\n
-event_kw[\'source_section\'] = source_section_url\n
-event_kw[\'destination\'] = destination_url\n
-event_kw[\'destination_section\'] = destination_section_url\n
-event_kw[\'start_date\'] = start_date\n
-event_kw[\'follow_up\'] = follow_up\n
-event_kw[\'text_content\'] = text_content\n
-event_kw[\'content_type\'] = portal.portal_preferences.getPreferredTextEditor() and \'text/html\' or \'text/plain\'\n
-\n
+event_kw = {\n
+  \'portal_type\' : portal_type,\n
+  \'title\' : title,\n
+  \'resource\' : resource,\n
+  \'source\' : source_url,\n
+  \'source_section\' : source_section_url,\n
+  \'destination\' : destination_url,\n
+  \'destination_section\' : destination_section_url,\n
+  \'start_date\' : start_date,\n
+  \'follow_up\' : follow_up,\n
+  \'text_content\' : text_content,\n
+  \'content_type\' : portal.portal_preferences.getPreferredTextEditor() and \'text/html\' or \'text/plain\',\n
+  }\n
 # Create event\n
 module = portal.getDefaultModule(portal_type=portal_type)\n
 event = module.newContent(**event_kw)\n
+if not keep_draft:\n
+  if direction == \'incoming\':\n
+    # Support event_workflow and event_simulation_workflow\n
+    if portal.portal_workflow.isTransitionPossible(event, \'receive\'):\n
+      event.receive()\n
+    if portal.portal_workflow.isTransitionPossible(event, \'stop\'):\n
+      event.stop()\n
+  else:\n
+    event.plan()\n
 \n
 if batch_mode:\n
   return event\n
@@ -126,7 +135,7 @@ event.Base_redirect(keep_items={\'portal_status_message\': message})\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>title, direction, portal_type, resource, text_content=None, batch_mode=False, **kw</string> </value>
+            <value> <string>title, direction, portal_type, resource, text_content=None, batch_mode=False, keep_draft=False, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

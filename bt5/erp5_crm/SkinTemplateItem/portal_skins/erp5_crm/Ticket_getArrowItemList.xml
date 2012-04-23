@@ -54,18 +54,21 @@
 arrow = portal.portal_property_sheets.get("Arrow")\n
 \n
 value_list = [(\'\', \'\'),]\n
+value_list_append = value_list.append\n
 \n
 # add current user\n
 user = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 if user is not None:\n
-  value_list.append((user.getTitle(), user.getRelativeUrl()))\n
+  value_list_append((user.getTitle(), user.getRelativeUrl()))\n
 \n
-for property in arrow.contentValues():\n
-  value = context.getProperty("%s_value" %property.getReference(), None)\n
-  if value is not None and value.getPortalType() in portal.getPortalNodeTypeList():\n
-    value_list.append((value.getTitle(), value.getRelativeUrl()))\n
+for property_value in arrow.contentValues():\n
+  value = context.getProperty("%s_value" %property_value.getReference(), None)\n
+  if value and value.getPortalType() in portal.getPortalNodeTypeList():\n
+    value = (value.getTitle(), value.getRelativeUrl())\n
+    if value not in value_list:\n
+      value_list_append(value)\n
 \n
-\n
+value_list.sort(key=lambda x: x[0])\n
 \n
 return value_list\n
 </string> </value>

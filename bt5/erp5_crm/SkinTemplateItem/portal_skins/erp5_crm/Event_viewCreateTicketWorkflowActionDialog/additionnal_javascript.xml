@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_warning_message</string> </value>
+            <value> <string>additionnal_javascript</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -134,9 +134,7 @@
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -148,9 +146,7 @@
                 </item>
                 <item>
                     <key> <string>enabled</string> </key>
-                    <value>
-                      <persistent> <string encoding="base64">AAAAAAAAAAM=</string> </persistent>
-                    </value>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>external_validator</string> </key>
@@ -190,7 +186,9 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string></string> </value>
+                    <value>
+                      <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
+                    </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -217,11 +215,72 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>invisible</string> </value>
+                    <value> <string>hidden</string> </value>
                 </item>
                 <item>
                     <key> <string>default</string> </key>
-                    <value> <string></string> </value>
+                    <value> <string encoding="cdata"><![CDATA[
+
+<script>\n
+$(function (){\n
+function toggleNatureField() {\n
+if ($("select[name=\'field_your_follow_up_ticket_type\'] option:selected").val() == \'Support Request\') {\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").parent().parent().removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden");\n
+}\n
+else if ($("select[name=\'field_your_follow_up_ticket_type\'] option:selected").val() == \'Campaign\'){\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").parent().parent().removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden");\n
+}\n
+else if ($("select[name=\'field_your_follow_up_ticket_type\'] option:selected").val() == \'Meeting\'){\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").parent().parent().removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden");\n
+}\n
+else if ($("select[name=\'field_your_follow_up_ticket_type\'] option:selected").val() == \'Sale Opportunity\'){\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").parent().parent().removeClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").removeClass("hidden");\n
+}\n
+else {\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_campaign_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_meeting_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_support_request_resource\']").addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").parent().parent().addClass("hidden");\n
+$("select[name=\'field_your_follow_up_sale_opportunity_resource\']").addClass("hidden");\n
+}\n
+}\n
+$("select[name=\'field_your_follow_up_ticket_type\']").change(function(){toggleNatureField()});\n
+toggleNatureField();\n
+});\n
+</script>
+
+]]></string> </value>
                 </item>
                 <item>
                     <key> <string>description</string> </key>
@@ -273,7 +332,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Warning</string> </value>
+                    <value> <string>show</string> </value>
                 </item>
                 <item>
                     <key> <string>unicode</string> </key>
@@ -281,7 +340,7 @@
                 </item>
                 <item>
                     <key> <string>whitespace_preserve</string> </key>
-                    <value> <int>0</int> </value>
+                    <value> <int>1</int> </value>
                 </item>
                 <item>
                     <key> <string>width</string> </key>
@@ -301,20 +360,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>context/Event_viewStartWorkflowActionWarningRenderer</string> </value>
-        </item>
-      </dictionary>
-    </pickle>
-  </record>
-  <record id="3" aka="AAAAAAAAAAM=">
-    <pickle>
-      <global name="TALESMethod" module="Products.Formulator.TALESField"/>
-    </pickle>
-    <pickle>
-      <dictionary>
-        <item>
-            <key> <string>_text</string> </key>
-            <value> <string>python: here.getPortalType() == "Mail Message"</string> </value>
+            <value> <string>string:</string> </value>
         </item>
       </dictionary>
     </pickle>
