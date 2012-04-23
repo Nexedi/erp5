@@ -230,7 +230,7 @@ div#wrapper_headline div.header_title {\n
 }\n
 \n
 #wrapper_path {\n
-  float:left;\n
+/*   float:left; */\n
   width: 100%;\n
 }\n
 \n
