@@ -25,10 +25,9 @@
 #
 ##############################################################################
 
-from Products.CMFCore.WorkflowCore import WorkflowException
-from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
 from base64 import b16encode
-from lxml import etree
+
+from Products.ERP5TioSafe.Conduit.TioSafeBaseConduit import TioSafeBaseConduit
 
 class AccountingERP5IntegrationConduit(TioSafeBaseConduit):
   """
@@ -241,7 +240,7 @@ class AccountingERP5IntegrationConduit(TioSafeBaseConduit):
             subscriber = arrow_dict[tag]['sync']
             # Encode to the output type
             link_gid = subnode.text
-            link_object = subscriber.getObjectFromGid(b16encode(link_gid))
+            link_object = subscriber.getDocumentFromGid(b16encode(link_gid))
           else:
             link_object = None
 

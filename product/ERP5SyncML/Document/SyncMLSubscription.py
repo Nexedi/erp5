@@ -27,61 +27,45 @@
 #
 ##############################################################################
 
+from base64 import b16encode, b16decode
+from warnings import warn
+from logging import getLogger
+from urlparse import urlparse
+from lxml import etree
+from copy import deepcopy
+
 from AccessControl import ClassSecurityInfo
-from Acquisition import aq_base
+from AccessControl.SecurityManagement import newSecurityManager
+from DateTime import DateTime
+
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Utils import deprecated
-from DateTime import DateTime
-from zLOG import LOG, DEBUG, INFO, WARNING
-from base64 import b16encode, b16decode
-from Products.ERP5SyncML.XMLSyncUtils import getConduitByName
+from Products.ERP5SyncML.XMLSyncUtils import getConduitByName, \
+     buildAnchorFromDate
+from Products.ERP5SyncML.SyncMLConstant import MAX_OBJECTS, ACTIVITY_PRIORITY,\
+     NULL_ANCHOR
+from Products.ERP5SyncML.Transport.HTTP import HTTPTransport
+from Products.ERP5SyncML.Transport.File import FileTransport
+from Products.ERP5SyncML.Transport.Mail import MailTransport
+from Products.ERP5SyncML.SyncMLConstant import MAX_LEN, ADD_ACTION, REPLACE_ACTION
+from Products.ERP5SyncML.XMLSyncUtils import cutXML
 
-from Products.ERP5SyncML.SyncMLConstant import MAX_OBJECTS, ACTIVITY_PRIORITY
-from warnings import warn
+transport_scheme_dict = {
+  "http" : HTTPTransport(),
+  "https" : HTTPTransport(),
+  "file" : FileTransport(),
+  "mail" : MailTransport(),
+  }
+
+syncml_logger = getLogger('ERP5SyncML')
+
+MAX_OBJECT_PER_MESSAGE = 300
 
 _MARKER = []
 class SyncMLSubscription(XMLObject):
   """
-    Subscription hold the definition of a master ODB
-    from/to which a selection of objects will be synchronized
-
-    Subscription defined by::
-
-    publication_url -- a URI to a publication
-
-    subscription_url -- URL of ourselves
-
-    destination_path -- the place where objects are stored
-
-    query   -- a query which defines a local set of documents which
-           are going to be synchronized
-
-    xml_mapping -- a PageTemplate to map documents to XML
-
-    gpg_key -- the name of a gpg key to use
-
-    Subscription also holds private data to manage
-    the synchronization. We choose to keep an MD5 value for
-    all documents which belong to the synchronization process::
-
-    signatures -- a dictionnary which contains the signature
-           of documents at the time they were synchronized
-
-    session_id -- it defines the id of the session
-         with the server.
-
-    last_anchor - it defines the id of the last synchronization
-
-    next_anchor - it defines the id of the current synchronization
-
-    Subscription inherit of File because the Signature use method _read_data
-    which have the need of a __r_jar not None.
-    During the initialization of a Signature this __p_jar is None 
-    """
-
-  meta_type = 'ERP5 Subscription'
-  portal_type = 'SyncML Subscription' # may be useful in the future...
+  """
 
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
@@ -99,64 +83,679 @@ class SyncMLSubscription(XMLObject):
                     , PropertySheet.SyncMLSubscription
                     , PropertySheet.SyncMLSubscriptionConstraint )
 
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isOneWayFromServer')
-  def isOneWayFromServer(self):
-    return self.getPortalType() == 'SyncML Subscription' and \
-           self.getSyncmlAlertCode() == 'one_way_from_server'
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'isOneWayFromClient')
-  def isOneWayFromClient(self):
-    return self.getParentValue().getPortalType() == 'SyncML Publication' and \
-           self.getSyncmlAlertCode() == 'one_way_from_client'
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getSynchronizationType')
-  def getSynchronizationType(self, default=_MARKER):
-    """Deprecated alias of getSyncmlAlertCode
+  security.declarePrivate('finishSynchronization')
+  def finishSynchronization(self,):
     """
-    warn('Use getSyncmlAlertCode instead', DeprecationWarning)
-    if default is _MARKER:
-      code = self.getSyncmlAlertCode()
+    Last method call that will make sure to finish the sync process
+    and reset all necessary variable
+    """
+    self.finish()  # Worflow transition
+    syncml_logger.info('--- synchronization ended on the server side ---')
+    if self.getAuthenticationState() == 'logged_in':
+      self.logout()
+    self._edit(authenticated_user=None)
+
+  security.declarePrivate('getAndActivate')
+  def getAndActivate(self, callback, method_kw, activate_kw,
+                     final_activate_kw, **kw):
+    """
+    This methods is called by the asynchronous engine to split activity
+    generation into activities.
+
+    callback : method to call in activity
+    method_kw : callback's parameters
+    activate_kw : activity parameters to pass to activate call
+    final_activate_kw : activity parameters to pass to the last activate call
+    kw : any parameter getAndActivate can required if it calls itself
+
+    Last activate must wait for all other activities to be processed in order
+    to set the Final tag in the message, this is required by SyncML DS
+    specification
+    """
+    # The following implementation is base on CatalogTool.searchAndActivate
+    # It might be possible to move a part of this code into the domain class
+    # so that it can be configurable as not all backend are optimised for
+    # this default implementation
+    search_kw = dict(kw)
+    packet_size = search_kw.pop('packet_size', 30)
+    limit = packet_size * search_kw.pop('activity_count', 100)
+    try:
+      r = self.getDocumentIdList(limit=limit, **search_kw)  # It is assumed that
+                                                            # the result is sorted
+    except TypeError:
+      warn("Script %s does not accept id_list paramater" %
+           (self.getListMethodId(),), DeprecationWarning)
+      r = self.getDocumentList()  # It is assumed that
+                                  # the result is sorted
+    result_count = len(r)
+    generated_other_activity = False
+    if result_count:
+      syncml_logger.info("getAndActivate : got %d result, limit = %d, packet %d" %
+                         (result_count, limit, packet_size))
+      if result_count == limit:
+        # Recursive call to prevent too many activity generation
+        next_kw = dict(activate_kw, priority=1+activate_kw.get('priority', 1))
+        kw["min_id"] = r[-1].getId()
+        syncml_logger.info("--> calling getAndActivate in activity, min = %s" %
+                           (kw["min_id"],))
+
+        self.activate(**next_kw).getAndActivate(
+          callback, method_kw, activate_kw, final_activate_kw, **kw)
+        generated_other_activity = True
+      r = [x.getId() for x in r]
+      message_id_list = self.getNextMessageIdList(id_count=result_count)
+      message_id_list.reverse()  # We pop each id in the following loop
+      activate = self.getPortalObject().portal_synchronizations.activate
+      callback_method = getattr(activate(**activate_kw), callback)
+      if generated_other_activity:
+        for i in xrange(0, result_count, packet_size):
+          syncml_logger.info("getAndActivate : recursive call, generating for %s"
+                             % (r[i:i+packet_size],))
+          callback_method(id_list=r[i:i+packet_size],
+                          message_id=message_id_list.pop(),
+                          activate_kw=activate_kw,
+                          **method_kw)
+      else:
+        i = 0
+        for i in xrange(0, result_count-packet_size, packet_size):
+          syncml_logger.info("getAndActivate : call, generating for %s : %s" %
+                             (r[i:i+packet_size], activate_kw))
+          callback_method(id_list=r[i:i+packet_size],
+                          message_id=message_id_list.pop(),
+                          activate_kw=activate_kw,
+                          **method_kw)
+        # Final activity must be executed after all other
+        callback_method = getattr(activate(**final_activate_kw), callback)
+        syncml_logger.info("getAndActivate : final call for %s : %s" %(r[i+packet_size:], final_activate_kw))
+        callback_method(id_list=r[i+packet_size:],  # XXX Has to be unit tested
+                                                    # with mock object
+                        message_id=message_id_list.pop(),
+                        activate_kw=final_activate_kw,
+                        is_final_message=True,
+                        **method_kw)
     else:
-      code = self.getSyncmlAlertCode(default=default)
-    return code
+      # We got no more result, but we must send a message with a final tag
+      activate = self.getPortalObject().portal_synchronizations.activate
+      callback_method = getattr(activate(**final_activate_kw), callback)
+      syncml_logger.info("getAndActivate : No result : final call")
+      callback_method(id_list=[],
+                      message_id=self.getNextMessageId(),
+                      activate_kw=final_activate_kw,
+                      is_final_message=True,
+                      **method_kw)
 
-  security.declarePrivate('checkCorrectRemoteSessionId')
-  def checkCorrectRemoteSessionId(self, session_id):
-    """
-    We will see if the last session id was the same
-    wich means that the same message was sent again
+    return result_count
 
-    return True if the session id was not seen, False if already seen
+  security.declarePrivate('sendMessage')
+  def sendMessage(self, xml):
     """
-    if self.getLastSessionId() == session_id:
-      return False 
-    self.setLastSessionId(session_id)
-    return True
+    Send the syncml response according to the protocol defined for the target
+    """
+    # First register sent message in case we received same message multiple time
+    # XXX-must be check according to specification
+    # XXX-performance killer in scalable environment
+    # XXX must use memcached instead
+    # self.setLastSentMessage(xml)
+
+    # XXX must review all of this
+    # - source/target must be relative URI (ie
+    # portal_synchronizations/person_pub) so that there is no need to defined
+    # source_reference
+    # -content type must be get from SyncMLMessage directly
+
+    # SyncML can transmit xml or wbxml, transform the xml when required
+    # XXX- This must be manager in syncml message representation
+    to_url = self.getUrlString()
+    scheme = urlparse(to_url)[0]
+
+    if self.getIsSynchronizedWithErp5Portal() and scheme in ("http", "https"):
+      # XXX will be removed soon
+      to_url = self.getUrlString() + '/portal_synchronizations/readResponse'
+
+    # call the transport to send data
+    transport_scheme_dict[scheme].send(to_url=to_url, data=xml,
+                                       sync_id=self.getDestinationReference(),
+                                       content_type=self.getContentType())
+
+
+  def _loginUser(self, user_id=None):
+    """
+    Log in with the user provided or defined on self
+    """
+    if not user_id:
+      user_id = self.getProperty('authenticated_user')
+    if user_id:
+      user_folder = self.getPortalObject().acl_users
+      user = user_folder.getUserById(user_id).__of__(user_folder) # __of__ might got AttributeError
+      if user is None:
+        raise ValueError("User %s cannot be found in user folder, \
+              synchronization cannot work with this kind of user" % (user_id,))
+      else:
+        newSecurityManager(None, user)
+    else:
+      raise ValueError(
+        "Impossible to find a user to log in, subscription = %s"
+        % (self.getRelativeUrl()))
+
+
+  # XXX To be done later
+  def _applyAddCommand(self,):
+    """
+    Apply the add command received, when document already exits, we
+    do a kind of "Replace" command instead
+    """
+    pass
+
+  security.declarePrivate('applySyncCommand')
+  def applySyncCommand(self, action, request_message_id, syncml_response,
+                       simulate=False):
+    """
+    Apply a sync command received
+    Here is the main algorithm :
+    - try to get the signature for the GID ( some mode does not required it)
+    - apply the action
+    - update signature
+    - generate the status command
+    """
+    conduit = self.getConduit()
+    destination = self.getSourceValue()
+    conflict_list = []
+    status_code = 'success'
+    # First retrieve the GID of the object we want to modify
+    gid = action["source"] or action["target"]
+    # Retrieve the signature for the current GID
+    signature = self.getSignatureFromGid(gid)
+    if syncml_response is not None:  # No response to send when no signature to create
+      document = self.getDocumentFromGid(gid)
+      if signature is None:
+        # Create a new signature when needed
+        # XXX what if it does not happen on a Add command ?
+        signature = self.newContent(
+          portal_type='SyncML Signature',
+          id=gid,
+          content_type=conduit.getContentType()
+          )
+        syncml_logger.debug("Created a signature for %s - document : %s"
+                            % (signature.getPath(), document))
+        if document is not None:
+          signature.setReference(document.getPath())
+
+      elif signature.getValidationState() == 'synchronized':
+        # Reset status of signature synchronization
+        signature.drift()
+
+      force = signature.isForce()  # XXX-must check the use of this later
+    else:
+      force = True  # Always erease data in this mode
+      document = None  # For now, do no try to retrieve previous version of document
+      # XXX this has to be managed with a property
+      # XXX Some improvement can also be done to retrieve a list of document at once
+
+    # Get the data
+    if 'xml_data' in action:
+      # Rebuild an Element
+      incoming_data = etree.fromstring(action["xml_data"])
+    else:  # Raw data
+      incoming_data = action['raw_data']
+    # XXX must find a way to check for No data received here
+    if not action['more_data']:
+      # This is the last chunk of a partial xml
+      # or this is just an entire data chunk
+
+      if signature and signature.hasPartialData():
+        # Build data with already stored data
+        signature.appendPartialData(incoming_data)
+        incoming_data = signature.getPartialData()
+        signature.setPartialData(None)
+
+      # Browse possible actions
+      if action["command"] == 'Add':
+        status_code = "item_added"  # Default status code for addition
+        if document is None:
+          # This is the default behaviour when getting an "Add" command
+          # we create new document from the received data
+          syncml_logger.debug("Calling addNode with no previous document found")
+          add_data = conduit.addNode(xml=incoming_data,
+                                     object=destination,
+                                     signature=signature,
+                                     domain=self)
+          conflict_list.extend(add_data['conflict_list'])
+          # Retrieve directly the document from addNode
+          document = add_data['object']
+          if document is None:
+            raise ValueError("Adding a document failed, data = %s"
+                             % (etree.tostring(incoming_data,
+                                               pretty_print=True),))
+        else:
+          # Document was retrieved from the database
+          actual_xml = conduit.getXMLFromObjectWithGid(document, gid,
+                         xml_mapping=\
+                         self.getXmlBindingGeneratorMethodId(force=True),
+                         context_document=self.getPath())
+          # use gid to compare because their ids can be different
+          incoming_data = conduit.replaceIdFromXML(incoming_data, 'gid', gid)
+          # produce xupdate
+          data_diff = conduit.generateDiff(incoming_data, actual_xml)
+
+          if data_diff and len(data_diff):
+            # XXX Here maybe a conflict must be raised as document was never
+            # synchronized and we try to add one which is different
+            syncml_logger.critical("trying to add data, but already existing object exists, diff is\n%s" % (data_diff))
+
+          conflict_list.extend(conduit.updateNode(
+                                      xml=data_diff,
+                                      object=document,
+                                      previous_xml=actual_xml,
+                                      force=force,
+                                      simulate=simulate,
+                                      reset=True,
+                                      signature=signature,
+                                      domain=self))
+
+        xml_document = incoming_data
+        if not isinstance(xml_document, basestring):
+          # XXX using deepcopy to remove parent link - must be done elsewhere
+          xml_document = deepcopy(xml_document)
+          # Remove useless namespace
+          etree.cleanup_namespaces(xml_document)
+          xml_document = etree.tostring(xml_document, encoding='utf-8',
+                                        pretty_print=True)
+
+        if isinstance(xml_document, unicode):
+          xml_document = xml_document.encode('utf-8')
+        # Link the signature to the document
+        if signature:
+          signature.setReference(document.getPath())
+      elif action["command"] == 'Replace':
+        status_code = "success"  # Default status code for addition
+        if document is not None:
+          signature = self.getSignatureFromGid(gid)
+          previous_xml = signature.getData()
+          if previous_xml:
+            # Make xml consistent XXX should be part of the conduit work
+            # XXX this should not happen if we call replaceIdFromXML when
+            # editing signature
+            previous_xml = conduit.replaceIdFromXML(previous_xml, 'gid', gid)
+          conflict_list += conduit.updateNode(xml=incoming_data,
+                                              object=document,
+                                              previous_xml=previous_xml,
+                                              force=force,
+                                              signature=signature,
+                                              simulate=False, #simulate,
+                                              domain=self)
+          if previous_xml:
+            # here compute patched data with given diff
+            xml_document = conduit.applyDiff(previous_xml, incoming_data)
+            xml_document = conduit.replaceIdFromXML(xml_document, 'id',
+                                                    document.getId(),
+                                                    as_string=True)
+          else:
+            raise ValueError("Got a signature with no data for %s" % (gid,))
+        else:
+          # Try to apply an update on a delete document
+          # What to do ?
+          raise ValueError("No document found to apply update")
+
+      elif action['command'] == 'Delete':
+        status_code="success"
+        document = self.getDocumentFromGid(signature.getId())
+        if document is not None:
+          # XXX Can't we get conflict ?
+          conduit.deleteNode(xml=incoming_data,
+                             object=destination,
+                             object_id=document.getId())
+          # Delete signature
+          self._delObject(gid)
+        else:
+          syncml_logger.error("Document with gid is already deleted"
+                             % (gid,))
+      else:
+        raise ValueError("Unknown command %s" %(action['command'],))
+
+      # Now update signature status regarding conflict list
+      if action['command'] != "Delete" and signature:
+        if len(conflict_list):
+          status_code="conflict"
+          signature.changeToConflict()
+          # Register the data received which generated the diff
+          # XXX Why ?
+          if not isinstance(incoming_data, basestring):
+            incoming_data = etree.tostring(incoming_data,
+                                           encoding='utf-8')
+          signature.setPartialData(incoming_data)
+        else:
+          signature.setData(str(xml_document))
+          signature.synchronize()
+        syncml_logger.debug("change state of signature to %s"
+                           % (signature.getValidationState(),))
+
+      if signature:
+        # Generate status about the object synchronized
+        # No need to generate confirmation when no signature are stored
+        syncml_response.addConfirmationMessage(
+          command=action['command'],
+          sync_code=status_code,
+          target_ref=action["target"],
+          source_ref=action["source"],
+          command_ref=action["command_id"],
+          message_ref=request_message_id)
+
+    else:  # We want to retrieve more data
+      syncml_logger.info("we need to retrieve more data for %s" % (signature,))
+      if signature.getValidationState() != 'partial':
+        signature.changeToPartial()
+      signature.appendPartialData(incoming_data)
+      # XXX Must check if size is present into the xml
+      # if not, client might ask it to server with a 411 alert
+      # in this case, do not process received data
+      syncml_response.addConfirmationMessage(
+        command=action['command'],
+        sync_code='chunk_accepted',
+        target_ref=action["target"],
+        source_ref=action["source"],
+        command_ref=action["command_id"],
+        message_ref=request_message_id)
+      # Must add an alert message to ask remaining data to be processed
+      # Alert 222 must be generated
+      # XXX Will be into the Sync tag -> bad
+      syncml_response.addAlertCommand(
+            alert_code='next_message',
+            target=self.getDestinationReference(),
+            source=self.getSourceReference(),
+            last_anchor=self.getLastAnchor(),
+            next_anchor=self.getNextAnchor())
+
+
+  security.declarePrivate('applyActionList')
+  def applyActionList(self, syncml_request, syncml_response, simulate=False):
+    """
+    Browse the list of sync command received, apply them and generate answer
+    """
+    for action in syncml_request.sync_command_list:
+      self.applySyncCommand(
+        action=action,
+        request_message_id=syncml_request.header["message_id"],
+        syncml_response=syncml_response,
+        simulate=simulate)
+
+  def _getDeleteDocumentList(self):
+    """
+    Retrieve the list of deleted documents and generate the sync command
+    """
+    pass
+
+  def _getSyncMLData(self, syncml_response, subscriber_gid_list, id_list=None):
+    """
+    XXX Comment to be fixed
+    if object is not None, this usually means we want to set the
+    actual xupdate on the signature.
+    """
+    if not id_list:
+      syncml_logger.warning("Non optimal call to _getSyncMLData, no id list provided")
+
+    conduit = self.getConduit()
+    finished = True
+
+    if isinstance(conduit, basestring):
+      conduit = getConduitByName(conduit)
+
+    xml_confirmation_list = []
+    confirmation_append = xml_confirmation_list.append
+
+    try:
+      object_list = self.getDocumentList(id_list=id_list)
+    except TypeError:
+      # Old style script
+      warn("Script %s does not accept id_list paramater" %
+           (self.getListMethodId(),), DeprecationWarning)
+      object_list = self.getDocumentList()
+
+    # if self.getProperty('remaining_object_path_list') is None:
+
+    #   # XXX-Aurel : performance killer
+    #   object_list = self.getDocumentList()
+    #   object_path_list = [x.getPath() for x in object_list]
+    #   syncml_logger.info("\tnb objects to check : %r" %(len(object_path_list)))
+    #   self._edit(remaining_object_path_list=object_path_list)
+
+    #   local_gid_list = [self.getGidFromObject(x) for x in object_list]
+
+    #   # Check which documents are removed
+
+    #   # Compare the list of signature to the list of document to synchronized
+    #   # If a document no longer exists but signature exists, the object was
+    #   # deleted and the sync command must be issued
+    #   # XXX As we do not delete data in erp5, this can be improved using the
+    #   # workflow status of documents to issue the delete command (using the
+    #   # conduit for this ?)
+    #   # XXX Still we must find a better way to do this for external resource
+    #   # cases (ie tiosafe)
+    #   # One way to detect deleted object is by the laking of getReference value
+    #   # but this might generate too many request in web service environment
+    #   for object_gid in subscriber_gid_list:
+    #     if object_gid not in local_gid_list:
+    #       # This is an object to remove
+    #       signature = self.getSignatureFromGid(object_gid)
+    #       if signature:  # Signature can have been delete by a sync command
+    #         syncml_response.deleteXMLObject(object_gid=object_gid,
+    #                                         rid=signature.getRid(),)
+
+    loop = 0
+    traverse = self.getPortalObject().restrictedTraverse
+    alert_code = self.getSyncmlAlertCode()
+    sync_all = alert_code in ("refresh_from_client_only", "slow_sync")
+    # XXX Quick & dirty hack to prevent signature creation, this must be defined
+    # on pub/sub instead
+    create_signature = alert_code != "refresh_from_client_only"
+
+    for result in object_list:
+      object_path = result.getPath()
+      # if loop >= max_range:
+      #   # For now, maximum object list is always none, so we will never come here !
+      #   syncml_logger.warning("...Send too many objects, will split message...")
+      #   finished = False
+      #   break
+      # Get the GID
+      document = traverse(object_path)
+      gid = self.getGidFromObject(document)
+      if not gid:
+        raise ValueError("Impossible to compute gid for %s" %(object_path))
+
+      if True: # not loop: # or len(syncml_response) < MAX_LEN:
+        # XXX must find a better way to prevent sending
+        # no object due to a too small limit
+        signature = self.getSignatureFromGid(gid)
+        more_data = False
+        # For the case it was never synchronized, we have to send everything
+        if not signature or sync_all:
+          # First time we send this object or the synchronization more required
+          # to send every data as it was never synchronized before
+          document_data = conduit.getXMLFromObjectWithId(
+            # XXX To be renamed (getDocumentData) independant from format
+            document,
+            xml_mapping=self.getXmlBindingGeneratorMethodId(),
+            context_document=self.getPath())
+
+          if not document_data:
+            continue
+
+          if create_signature:
+            if not signature:
+              signature = self.newContent(portal_type='SyncML Signature',
+                                          id=gid,
+                                          reference=document.getPath(),
+                                          temporary_data=document_data)
+              syncml_logger.debug("Created a signature %s for gid = %s, path %s"
+                                 % (signature.getPath(), gid, document.getPath()))
+            if len(document_data) > MAX_LEN:
+              syncml_logger.info("data too big, sending  multiple message")
+              more_data = True
+              finished = False
+              document_data, rest_string = cutXML(document_data, MAX_LEN)
+              # Store the remaining data to send it later
+              signature.setPartialData(rest_string)
+              signature.setPartialAction(ADD_ACTION)
+              signature.changeToPartial()
+            else:
+              # The data will be copied in 'data' property once we get
+              # confirmation that the document was well synchronized
+              signature.setTemporaryData(document_data)
+
+          # Generate the message
+          syncml_response.addSyncCommand(
+            sync_command=ADD_ACTION,
+            gid=gid,
+            data=document_data,
+            more_data=more_data,
+            media_type=conduit.getContentType())
+
+        elif signature.getValidationState() in ('not_synchronized',
+                                                'synchronized',
+                                                'conflict_resolved_with_merge'):
+          # We don't have synchronized this object yet but it has a signature
+          xml_object = conduit.getXMLFromObjectWithId(document,
+                           xml_mapping=self.getXmlBindingGeneratorMethodId(),
+                           context_document=self.getPath())
+
+          if signature.getValidationState() == 'conflict_resolved_with_merge':
+            # XXX Why putting confirmation message here
+            # Server can get confirmation of sync although it has not yet
+            # send its data modification to the client
+            # This must be checked against specifications
+            syncml_response.addConfirmationMessage(
+              source_ref=signature.getId(),
+              sync_code='conflict_resolved_with_merge',
+              command='Replace')
+
+          set_synchronized = True
+          if not signature.checkMD5(xml_object):
+            # MD5 checksum tell there is a modification of the object
+            set_synchronized = False
+            if conduit.getContentType() != 'text/xml':
+              # If there is no xml, we re-send the whole object
+              # XXX this must be managed by conduit ?
+              data_diff = xml_object
+            else:
+              # Compute the diff
+              new_document = conduit.replaceIdFromXML(xml_object, 'gid', gid)
+              previous_document = conduit.replaceIdFromXML(signature.getData(),
+                                                           'gid', gid)
+              data_diff = conduit.generateDiff(new_document, previous_document)
+
+            if not data_diff:
+              # MD5 Checksum can detect changes like <lang/> != <lang></lang>
+              # but Diff generator will return no diff for it
+              # in this case, no need to send diff
+              signature.synchronize()
+              continue
+
+            # Split data if necessary
+            if  len(data_diff) > MAX_LEN:
+              syncml_logger.debug("data too big, sending multiple messages")
+              more_data = True
+              finished = False
+              data_diff, rest_string = cutXML(data_diff, MAX_LEN)
+              signature.setPartialData(rest_string)
+              signature.setPartialAction(REPLACE_ACTION)
+              if signature.getValidationState() != 'partial':
+                signature.changeToPartial()
+            else:
+              # Store the new representation of the document
+              # It will be copy to "data" property once synchronization
+              # is confirmed
+              signature.setTemporaryData(xml_object)
+
+            # Generate the command
+            syncml_logger.debug("will send Replace command with %s"
+                                % (data_diff,))
+            syncml_response.addSyncCommand(
+              sync_command=REPLACE_ACTION,
+              gid=gid,
+              data=data_diff,
+              more_data=more_data,
+              media_type=conduit.getContentType())
+
+          if set_synchronized and \
+              signature.getValidationState() != 'synchronized':
+            # We should not have this case when we are in CONFLICT_MERGE
+            signature.synchronize()
+        elif signature.getValidationState() == \
+            'conflict_resolved_with_client_command_winning':
+          # We have decided to apply the update
+          # XXX previous_xml will be geXML instead of getTempXML because
+          # some modification was already made and the update
+          # may not apply correctly
+          xml_update = signature.getPartialData()
+          previous_xml_with_gid = conduit.replaceIdFromXML(signature.getData(),
+                                                           'gid', gid,
+                                                           as_string=False)
+          conduit.updateNode(xml=xml_update, object=document,
+                             previous_xml=previous_xml_with_gid, force=True,
+                             gid=gid,
+                             signature=signature,
+                             domain=self)
+          syncml_response.addConfirmationMessage(
+            target_ref=gid,
+            sync_code='conflict_resolved_with_client_command_winning',
+            command='Replace')
+          signature.synchronize()
+        elif signature.getValidationState() == 'partial':
+          # Case of partially sent data
+          xml_string = signature.getPartialData()
+          # XXX Cutting must be managed by conduit
+          # Here it is too specific to XML data
+          if len(xml_string) > MAX_LEN:
+            syncml_logger.info("Remaining data too big, splitting it...")
+            more_data = True
+            finished = False
+            xml_string = signature.getFirstPdataChunk(MAX_LEN)
+          xml_string = etree.CDATA(xml_string.decode('utf-8'))
+
+          syncml_response.addSyncCommand(
+            sync_command=signature.getPartialAction(),
+            gid=gid,
+            data=xml_string,
+            more_data=more_data,
+            media_type=self.getContentType())
+
+        if not more_data:
+          pass
+        #self.removeRemainingObjectPath(object_path)
+        else:
+          syncml_logger.info("Splitting document")
+          break
+      else:
+        # syncml_logger.info("Splitting package %s > %s - remains %s objects"
+        #                    % (loop, MAX_LEN,
+        #                       len(self.getProperty('remaining_object_path_list'))))
+        # if len(self.getProperty('remaining_object_path_list')):
+        #   finished=False
+        syncml_logger.warning("Package is going to be splitted")
+        break
+      loop += 1
+
+    return finished
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getConduit')
+  def getConduit(self):
+    """
+    Return the conduit object defined
+    """
+    conduit_name = self.getConduitModuleId()
+    return getConduitByName(conduit_name)
 
   security.declarePrivate('checkCorrectRemoteMessageId')
   def checkCorrectRemoteMessageId(self, message_id):
     """
-    We will see if the last message id was the same
-    wich means that the same message was sent again
+    Check this is not an already processed message based on its id
+    If it is, the response will be resent as we do not want to reprocess
+    the same data again XXX Maybe it is possible to be stateless ?
 
-    return True if the message id was not seen, False if already seen
+    Use memcache to retrieve the message so that it does not impact scalability
     """
-    if self.getLastMessageId() == message_id:
-      return False
-    self.setLastMessageId(message_id)
-    return True 
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'initLastMessageId')
-  def initLastMessageId(self, last_message_id=0):
-    """
-    set the last message id to 0
-    """
-    self.setLastMessageId(last_message_id)
-
+    # XXX To be done
+    return True
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getXmlBindingGeneratorMethodId')
@@ -164,8 +763,6 @@ class SyncMLSubscription(XMLObject):
     """
       return the xml mapping
     """
-    if self.isOneWayFromServer() and not force:
-      return None
     if default is _MARKER:
       return self._baseGetXmlBindingGeneratorMethodId()
     else:
@@ -175,18 +772,15 @@ class SyncMLSubscription(XMLObject):
                             'getGidFromObject')
   def getGidFromObject(self, object, encoded=True):
     """
-      Returns the object gid 
+      Returns the object gid
     """
-    o_base = aq_base(object)
-    gid = None
     # first try with new method
     gid_generator = self.getGidGeneratorMethodId("")
-    if gid_generator not in ("", None) and getattr(self, gid_generator, None):
+    if gid_generator and getattr(self, gid_generator, None):
       raw_gid = getattr(self, gid_generator)(object)
     else:
       # old way using the conduit
-      conduit_name = self.getConduitModuleId()
-      conduit = getConduitByName(conduit_name)
+      conduit = self.getConduit()
       raw_gid = conduit.getGidFromObject(object)
     if isinstance(raw_gid, unicode):
       raw_gid = raw_gid.encode('ascii', 'ignore')
@@ -197,130 +791,96 @@ class SyncMLSubscription(XMLObject):
     return gid
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getObjectFromGid')
-  def getObjectFromGid(self, gid, use_list_method=True):
+                            'getDocumentFromGid')
+  def getDocumentFromGid(self, gid):
     """
-    This tries to get the object with the given gid
-    This uses the query if it exist and use_list_method is True
+    Return the document for a given GID
+    - First try using the signature which is linked to the document
+    - Otherwise use the list method
     """
     if len(gid)%2 != 0:
-    #something encode in base 16 is always a even number of number
-    #if not, b16decode will failed
+      # something encode in base 16 is always a even number of number
+      # if not, b16decode will failed
       return None
     signature = self.getSignatureFromGid(gid)
     # First look if we do already have the mapping between
     # the id and the gid
-    destination = self.getSourceValue()
-    if signature is not None and signature.getReference():
-      document_path = signature.getReference()
-      document = self.getPortalObject().unrestrictedTraverse(document_path, None)
-      if document is not None:
+    if signature and signature.getReference():
+      document = self.getPortalObject().unrestrictedTraverse(
+        signature.getReference(), None)
+      if document:
         return document
-    #LOG('entering in the slow loop of getObjectFromGid !!!', WARNING,
-        #self.getPath())
-    if use_list_method:
-      object_list = self.getObjectList(gid=b16decode(gid))
-      for document in object_list:
-        document_gid = self.getGidFromObject(document)
-        if document_gid == gid:
-          return document
-    #LOG('getObjectFromGid', DEBUG, 'returning None')
+    object_list = self.getDocumentList(gid=b16decode(gid))
+    for document in object_list:
+      document_gid = self.getGidFromObject(document)
+      if document_gid == gid:
+        return document
     return None
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getDocumentIdList')
+  def getDocumentIdList(self, limit, **search_kw):
+    """
+    Method called to return the id list sorted within the given limits
+    """
+    return self.getDocumentList(id_only=True, limit=limit, **search_kw)
 
   security.declareProtected(Permissions.AccessContentsInformation,
-                            'getObjectFromId')
-  def getObjectFromId(self, id):
-    """
-    return the object corresponding to the id
-    """
-    object_list = self.getObjectList(id=id)
-    o = None
-    for object in object_list:
-      if object.getId() == id:
-        o = object
-        break
-    return o
-
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-                            'getObjectList')
-  def getObjectList(self, **kw):
+                            'getDocumentList')
+  def getDocumentList(self, **kw):
     """
     This returns the list of sub-object corresponding
     to the query
     """
     folder = self.getSourceValue()
     list_method_id = self.getListMethodId()
-    if list_method_id is not None and isinstance(list_method_id, str):
-      result_list = []
+    if list_method_id and isinstance(list_method_id, str):
       query_method = folder.unrestrictedTraverse(list_method_id, None)
-      if query_method is not None:
-        result_list = query_method(context_document=self, **kw)
+      if query_method:
+        try:
+          result_list = query_method(context_document=self, **kw)
+        except TypeError:
+          result_list = query_method(**kw)
       else:
         raise KeyError, 'This Subscriber %s provide no list method:%r'\
           % (self.getPath(), list_method_id)
     else:
       raise KeyError, 'This Subscriber %s provide no list method with id:%r'\
         % (self.getPath(), list_method_id)
-    # XXX Access all objects is very costly
-    return [x for x in result_list
-            if not getattr(x, '_conflict_resolution', False)]
+    return result_list
 
+  security.declareProtected(Permissions.ModifyPortalContent, 'getNewSessionId')
+  def generateNewSessionId(self):
+    """
+    Generate new session using portal ids
+    """
+    id_group = ("session_id", self.getRelativeUrl())
+    return self.getPortalObject().portal_ids.generateNewId(id_group=id_group,
+                                                           default=1)
 
-  security.declarePrivate('generateNewIdWithGenerator')
-  def generateNewIdWithGenerator(self, object=None, gid=None):
+  security.declareProtected(Permissions.ModifyPortalContent, 'getNextMessageId')
+  def getNextMessageId(self):
     """
-    This tries to generate a new Id
+    Generate new message id using portal ids
+    This depends on the session id as there is no way to reset it
     """
-    warn('Only container is allowed to compute new ID', DeprecationWarning)
-    id_generator = self.getSynchronizationIdGeneratorMethodId()
-    if id_generator is not None:
-      o_base = aq_base(object)
-      new_id = None
-      if callable(id_generator):
-        new_id = id_generator(object, gid=gid)
-      elif getattr(o_base, id_generator, None) is not None:
-        generator = getattr(object, id_generator)
-        new_id = generator()
-      else: 
-        # This is probably a python script
-        generator = getattr(object, id_generator)
-        new_id = generator(object=object, gid=gid)
-      #LOG('generateNewIdWithGenerator, new_id: ', DEBUG, new_id)
-      return new_id
-    return None
+    return self.getNextMessageIdList(id_count=1)[0]
+    # id_group = ("message_id", self.getRelativeUrl(), self.getSessionId())
+    # return self.getPortalObject().portal_ids.generateNewId(
+    #   id_group=id_group, id_generator="mysql_non_continuous_increasing",
+    #   default=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'incrementSessionId')
-  def incrementSessionId(self):
+  security.declareProtected(Permissions.ModifyPortalContent, 'getNextMessageIdList')
+  def getNextMessageIdList(self, id_count):
     """
-      increment and return the session id
+    Generate new message id list using portal ids
+    This depends on the session id as there is no way to reset it
     """
-    session_id = self.getSessionId()
-    session_id += 1
-    self._setSessionId(session_id)
-    self.resetMessageId() # for a new session, the message Id must be reset
-    return session_id
+    id_group = ("message_id", self.getRelativeUrl(), self.getSessionId())
+    return self.getPortalObject().portal_ids.generateNewIdList(
+      id_generator="mysql_non_continuous_increasing",
+      id_group=id_group, id_count=id_count, default=1)
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'incrementMessageId')
-  def incrementMessageId(self):
-    """
-      return the message id
-    """
-    message_id = self.getMessageId(0)
-    message_id += 1
-    self._setMessageId(message_id)
-    return message_id
-
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'resetMessageId')
-  def resetMessageId(self):
-    """
-      set the message id to 0
-    """
-    self._setMessageId(0)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'createNewAnchor')
@@ -329,7 +889,7 @@ class SyncMLSubscription(XMLObject):
       set a new anchor
     """
     self.setLastAnchor(self.getNextAnchor())
-    self.setNextAnchor(DateTime())
+    self.setNextAnchor(buildAnchorFromDate(DateTime()))
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'resetAnchorList')
@@ -337,8 +897,8 @@ class SyncMLSubscription(XMLObject):
     """
       reset both last and next anchors
     """
-    self.setLastAnchor(None)
-    self.setNextAnchor(None)
+    self.setLastAnchor(NULL_ANCHOR)
+    self.setNextAnchor(NULL_ANCHOR)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSignatureFromObjectId')
@@ -348,15 +908,14 @@ class SyncMLSubscription(XMLObject):
     ### Use a reverse dictionary will be usefull
     to handle changes of GIDs
     """
-    document = None
     # XXX very slow
     for signature in self.objectValues():
       document = signature.getSourceValue()
       if document is not None:
         if id == document.getId():
-          document = signature
-          break
-    return document
+          return signature
+    else: # XXX-Aurel : maybe none is expected
+      raise KeyError, id
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSignatureFromGid')
@@ -372,7 +931,7 @@ class SyncMLSubscription(XMLObject):
     """
     Returns the list of gids from signature
     """
-    return [id for id in self.getObjectIds()]
+    return list(self.getObjectIds())
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getSignatureList')
@@ -398,7 +957,7 @@ class SyncMLSubscription(XMLObject):
     """
       Reset all signatures in activities
     """
-    object_id_list = [id for id in self.getObjectIds()]
+    object_id_list = list(self.getObjectIds())
     object_list_len = len(object_id_list)
     for i in xrange(0, object_list_len, MAX_OBJECTS):
       current_id_list = object_id_list[i:i+MAX_OBJECTS]
@@ -416,23 +975,23 @@ class SyncMLSubscription(XMLObject):
       conflict_list.extend(signature.getConflictList())
     return conflict_list
 
-  security.declareProtected(Permissions.ModifyPortalContent,
-                            'removeRemainingObjectPath')
-  def removeRemainingObjectPath(self, object_path):
-    """
-    We should now wich objects should still
-    synchronize
-    """
-    remaining_object_list = self.getProperty('remaining_object_path_list')
-    if remaining_object_list is None:
-      # it is important to let remaining_object_path_list to None
-      # it means it has not beeing initialised yet
-      return
-    new_list = []
-    new_list.extend(remaining_object_list)
-    while object_path in new_list:
-      new_list.remove(object_path)
-    self._edit(remaining_object_path_list=new_list)
+  # security.declareProtected(Permissions.ModifyPortalContent,
+  #                           'removeRemainingObjectPath')
+  # def removeRemainingObjectPath(self, object_path):
+  #   """
+  #   We should now wich objects should still
+  #   synchronize
+  #   """
+  #   remaining_object_list = self.getProperty('remaining_object_path_list')
+  #   if remaining_object_list is None:
+  #     # it is important to let remaining_object_path_list to None
+  #     # it means it has not beeing initialised yet
+  #     return
+  #   new_list = list(remaining_object_list)
+  #   # XXX why a while here ?
+  #   while object_path in new_list:
+  #     new_list.remove(object_path)
+  #   self._edit(remaining_object_path_list=new_list)
 
   security.declareProtected(Permissions.ModifyPortalContent,
                             'initialiseSynchronization')
@@ -441,7 +1000,7 @@ class SyncMLSubscription(XMLObject):
     Set the status of every object as not_synchronized
     XXX Improve method to not fetch many objects in unique transaction
     """
-    LOG('Subscription.initialiseSynchronization()', 0, self.getPath())
+    #LOG('Subscription.initialiseSynchronization()', 0, self.getPath())
     for signature in self.contentValues(portal_type='SyncML Signature'):
       # Change the status only if we are not in a conflict mode
       if signature.getValidationState() not in ('conflict',
@@ -452,6 +1011,4 @@ class SyncMLSubscription(XMLObject):
                              priority=ACTIVITY_PRIORITY).reset()
         else:
           signature.reset()
-    self._edit(remaining_object_path_list=None)
-
-
+#    self._edit(remaining_object_path_list=None)

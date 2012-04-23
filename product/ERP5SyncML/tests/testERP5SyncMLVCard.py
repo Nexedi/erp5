@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 # vim: set fileencoding=utf-8
-# 
+#
 # Copyright (c) 2007 Nexedi SARL and Contributors. All Rights Reserved.
 #          Fabien Morin <fabien.morin@gmail.com>
 #
@@ -29,13 +29,8 @@
 ##############################################################################
 
 
-import os, sys
-
-from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5SyncML.Conduit.VCardConduit import VCardConduit
 from testERP5SyncML import TestERP5SyncMLMixin
 import transaction
-from zLOG import LOG
 
 class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
 
@@ -44,12 +39,12 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
       Return the list of business templates.
 
       the business template sync_crm give 3 folders:
-      /person_server 
+      /person_server
       /person_client1 : empty
       /person_client2 : empty
     """
     return ('erp5_base', 'erp5_syncml',)
- 
+
   def getTitle(self):
     return 'testERP5SyncMLVCard'
 
@@ -148,10 +143,10 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
     person_server = self.getPersonServer()
     person1_s = person_server._getOb(self.id1)
     person_client1 = self.getPersonClient1()
-    person1_c = person_client1._getOb('1') #The new person is added with a 
+    person1_c = person_client1._getOb('1') #The new person is added with a
                                            #generate id (the first is 1)
 
-    # try to synchronize    
+    # try to synchronize
     kw = {'first_name':self.first_name3,'last_name':self.last_name3}
     person1_c.edit(**kw)
     #before synchornization, First and Last name souldn't be the same
@@ -170,7 +165,7 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
 
   def test_05_verifyNoDuplicateDataWhenAdding(self):
     """
-    this test permit to verify that if the server already have the person, 
+    this test permit to verify that if the server already have the person,
     he don't add it a second time
     """
     self.test_04_FirstVCardSynchronization()
@@ -179,10 +174,10 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
     person_server = self.getPersonServer()
     person1_s = person_server._getOb(self.id1)
     person_client1 = self.getPersonClient1()
-    person1_c = person_client1._getOb('1') #The new person is added with a 
+    person1_c = person_client1._getOb('1') #The new person is added with a
                                            #generate id (the first is 1)
 
-    # try to synchronize    
+    # try to synchronize
     kw = {'first_name':self.first_name3,'last_name':self.last_name3}
     person1_c.edit(**kw)
     person1_s.edit(**kw) #the same person is added on client AND server
@@ -191,11 +186,11 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
     self.assertEquals(person1_s.getLastName(), self.last_name3)
     self.assertEquals(person1_c.getFirstName(), self.first_name3)
     self.assertEquals(person1_c.getLastName(), self.last_name3)
-    nb_person_serv_before_sync = len(pub.getObjectList())
+    nb_person_serv_before_sync = len(pub.getDocumentList())
     self.synchronize(self.sub_id1)
-    #after synchronization, no new person is created on server because it 
+    #after synchronization, no new person is created on server because it
     #already have this person
-    #person1_s = person_server._getOb('1') #The new person is added on the 
+    #person1_s = person_server._getOb('1') #The new person is added on the
                                       #serverwith a generate id (the first is 1)
 
     #after the synchro, the client and server should be synchronized
@@ -205,10 +200,10 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
     self.assertEquals(person1_c.getFirstName(), self.first_name3)
     self.assertEquals(person1_c.getLastName(), self.last_name3)
 
-    nb_person_serv_after_sync = len(pub.getObjectList())
+    nb_person_serv_after_sync = len(pub.getDocumentList())
     #the number of person on server before and after the synchronization should
     #be the same
-    nb_person_serv_after_sync = len(pub.getObjectList())
+    nb_person_serv_after_sync = len(pub.getDocumentList())
     self.assertEquals(nb_person_serv_after_sync, nb_person_serv_before_sync)
 
 

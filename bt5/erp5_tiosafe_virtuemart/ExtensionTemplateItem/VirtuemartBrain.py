@@ -321,7 +321,7 @@ class Transaction(TransactionBrain):
 
         for erp5_sync in erp5_sync_list:
           try:
-            resource = erp5_sync.getObjectFromGid(b16encode(resource_gid))
+            resource = erp5_sync.getDocumentFromGid(b16encode(resource_gid))
             break
           except (ValueError, AttributeError):
             resource = None

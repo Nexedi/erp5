@@ -33,7 +33,6 @@ from zLOG import LOG
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestOxatisSynchronization(ERP5TypeTestCase):
   """
@@ -129,11 +128,12 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
       LOG("RUNNING SYNCHRO FOR %s" %(im), 300, "")
       transaction.commit()
       self.tic()
-      self.oxatis.IntegrationSite_synchronize(reset=reset, synchronization_list=[im,],
-                                              batch_mode=True)
-
+      sub = self.oxatis.IntegrationSite_synchronize(reset=reset,
+                                                    synchronization_list=[im,],
+                                                    batch_mode=True)
       transaction.commit()
       self.tic()
+      self.assertEqual(sub.getSynchronizationState(), "finished")
       if conflict_dict and conflict_dict.has_key(im):
         nb_pub_conflict, nb_sub_conflict, in_conflict = conflict_dict[im]
         self.checkConflicts(im, nb_pub_conflict, nb_sub_conflict, in_conflict)
@@ -646,8 +646,6 @@ class TestOxatisSynchronization(ERP5TypeTestCase):
         self.assertNotEqual(sale_order.getDestinationDecision(), self.oxatis.getDestination())
         self.assertNotEqual(sale_order.getDestinationAdministration(), self.oxatis.getDestination())
 
-
-  @expectedFailure
   def testFullSync(self):
     self.runPersonSync()
     self.runProductSync()

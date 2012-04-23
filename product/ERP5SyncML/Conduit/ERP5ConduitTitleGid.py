@@ -27,11 +27,10 @@
 #
 ##############################################################################
 
-from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions
 
-from zLOG import LOG
+from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
+
 
 class ERP5ConduitTitleGid(ERP5Conduit):
   """

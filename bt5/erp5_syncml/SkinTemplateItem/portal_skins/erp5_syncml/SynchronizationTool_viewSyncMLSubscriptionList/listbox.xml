@@ -112,16 +112,7 @@
                 <item>
                     <key> <string>portal_types</string> </key>
                     <value>
-                      <list>
-                        <tuple>
-                          <string>SyncML Subscription</string>
-                          <string>SyncML Subscription</string>
-                        </tuple>
-                        <tuple>
-                          <string>SyncML Publication</string>
-                          <string>SyncML Publication</string>
-                        </tuple>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>

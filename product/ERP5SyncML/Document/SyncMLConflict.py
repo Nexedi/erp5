@@ -28,7 +28,6 @@
 ##############################################################################
 
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
@@ -55,70 +54,123 @@ class SyncMLConflict(Base):
                     , PropertySheet.SyncMLConflict )
 
   def _getPortalSynchronizationTool(self):
-    return getToolByName(self.getPortalObject(), 'portal_synchronizations')
+    return self.getPortalObject().portal_synchronizations
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'applyPublisherValue')
   def applyPublisherValue(self):
     """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
+    XXX-AUREL : Comment to be fixed
     """
-    p_sync = self._getPortalSynchronizationTool()
-    p_sync.applyPublisherValue(self)
+    document = self.getOriginValue()
+    subscriber = self.getSubscriber()
+    gid = subscriber.getGidFromObject(document)
+    signature = subscriber.getSignatureFromGid(gid)
+    signature.delConflict(self)
+    if not signature.getConflictList():
+      signature.resolveConflictWithMerge()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'applyPublisherDocument')
   def applyPublisherDocument(self):
     """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
+    XXX-AUREL : Comment to be fixed
     """
-    p_sync = self._getPortalSynchronizationTool()
-    p_sync.applyPublisherDocument(self)
+    subscriber = self.getSubscriber()
+    for c in self._getPortalSynchronizationTool().getConflictList(
+        self.getOriginValue()):
+      if c.getSubscriber() == subscriber:
+        c.applyPublisherValue()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPublisherDocument')
   def getPublisherDocument(self):
     """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
+    XXX-AUREL : Comment to be fixed
     """
-    p_sync = self._getPortalSynchronizationTool()
-    return p_sync.getPublisherDocument(self)
+    return self.getOriginValue()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getPublisherDocumentPath')
   def getPublisherDocumentPath(self):
     """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
+    XXX-AUREL : Comment to be fixed
     """
-    p_sync = self._getPortalSynchronizationTool()
-    return p_sync.getPublisherDocumentPath(self)
+    return self.getOrigin()
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSubscriberDocument')
   def getSubscriberDocument(self):
     """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
+    XXX-AUREL : Comment to be fixed
     """
-    p_sync = self._getPortalSynchronizationTool()
-    return p_sync.getSubscriberDocument(self)
+    return self.unrestrictedTraverse(
+      self.getSubscriberDocumentPath())
 
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'getSubscriberDocumentPath')
   def getSubscriberDocumentPath(self):
     """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
+    XXX-AUREL : Comment to be fixed
     """
-    p_sync = self._getPortalSynchronizationTool()
-    return p_sync.getSubscriberDocumentPath(self)
+    subscriber = self.getSubscriber()
+    publisher_object = self.getOriginValue()
+    conduit = subscriber.getConduit()
+    publisher_xml = conduit.getXMLFromObjectWithId(publisher_object,
+                       xml_mapping=subscriber.getXmlBindingGeneratorMethodId(),
+                       context_document=subscriber.getPath())
+    directory = publisher_object.aq_inner.aq_parent
+    object_id = self._getPortalSynchronizationTool()._getCopyId(publisher_object)
 
+    conduit.addNode(xml=publisher_xml, object=directory, object_id=object_id,
+                    signature=self.getParentValue())
+    subscriber_document = directory._getOb(object_id)
+    for c in self._getPortalSynchronizationTool().getConflictList(
+        self.getOriginValue()):
+      if c.getSubscriber() == subscriber:
+        c.applySubscriberValue(document=subscriber_document)
+    copy_path = subscriber_document.getPhysicalPath()
+    return copy_path
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'applySubscriberDocument')
   def applySubscriberDocument(self):
     """
-      after a conflict resolution, we have decided
-      to keep the local version of this object
+    XXX Comment to be fixed
     """
-    p_sync = self._getPortalSynchronizationTool()
-    p_sync.applySubscriberDocument(self)
+    # XXX-AUREL : when we solve one conflict, it solves all conflicts related
+    # to the same object ? is it the wanted behaviour ?
+    subscriber = self.getSubscriber()
+    for c in self._getPortalSynchronizationTool().getConflictList(
+        self.getOriginValue()):
+      if c.getSubscriber() == subscriber:
+        c.applySubscriberValue()
 
-  def applySubscriberValue(self, object=None):
+  security.declareProtected(Permissions.ModifyPortalContent,
+                            'applySubscriberValue')
+  def applySubscriberValue(self, document=None):
     """
-    get the domain
+    XXX Comment to be fixed
     """
-    p_sync = self._getPortalSynchronizationTool()
-    p_sync.applySubscriberValue(self, object=object)
+    solve_conflict = 1
+    if not document:
+      document = self.getOriginValue()
+    else:
+      # This means an object was given, this is used in order
+      # to see change on a copy, so don't solve conflict
+      solve_conflict = False
+    subscriber = self.getSubscriber()
+    # get the signature:
+    gid = subscriber.getGidFromObject(document)
+    signature = subscriber.getSignatureFromGid(gid)
+    # Import the conduit and get it
+    conduit = subscriber.getConduit()
+    conduit.updateNode(xml=self.getDiffChunk(), object=document,
+                       force=True, signature=signature)
+    if solve_conflict:
+      signature.delConflict(self)
+      if not signature.getConflictList():
+        signature.resolveConflictWithMerge()
 
   def getSubscriber(self):
     """

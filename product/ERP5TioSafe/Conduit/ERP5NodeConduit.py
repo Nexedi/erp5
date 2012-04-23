@@ -149,7 +149,7 @@ class ERP5NodeConduit(TioSafeBaseConduit):
       document.setCareerSubordinationValue(None)
     else:
       for synchronization in synchronization_list:
-        link_object = synchronization.getObjectFromGid(b16encode(organisation_gid))
+        link_object = synchronization.getDocumentFromGid(b16encode(organisation_gid))
         if link_object is not None:
           break
       if link_object is not None:

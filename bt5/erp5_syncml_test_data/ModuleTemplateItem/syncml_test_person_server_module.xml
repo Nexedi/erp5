@@ -1,0 +1,7 @@
+<module>
+ <id>syncml_test_person_server_module</id>
+ <permission_list>
+ </permission_list>
+ <portal_type>Person Module</portal_type>
+ <title>syncml_test_person_server_module</title>
+</module>

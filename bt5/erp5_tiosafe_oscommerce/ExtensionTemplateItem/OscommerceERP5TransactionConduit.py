@@ -234,8 +234,8 @@ class OscommerceERP5TransactionConduit(TioSafeBaseConduit):
         else:
           for synchronization in synchronization_list:
             # encode to the output type
-            if getattr(synchronization, 'getObjectFromGid', None) is not None:
-              link_object = synchronization.getObjectFromGid(b16encode(link_gid))
+            if getattr(synchronization, 'getDocumentFromGid', None) is not None:
+              link_object = synchronization.getDocumentFromGid(b16encode(link_gid))
               #LOG("trying to get %s from %s, got %s" %(link_gid, synchronization.getPath(), link_object), 300, "This is for category type %s" %(category))
               if link_object is not None:
                 break
@@ -285,7 +285,7 @@ class OscommerceERP5TransactionConduit(TioSafeBaseConduit):
         else:
           synchronization_list = self.getSynchronizationObjectListForType(kw.get('domain'), 'Product', 'publication')
           for synchronization in synchronization_list:
-            link_object = synchronization.getObjectFromGid(b16encode(link_gid))
+            link_object = synchronization.getDocumentFromGid(b16encode(link_gid))
             if link_object is not None:
               break
         # in the worse case save the line with the unknown product

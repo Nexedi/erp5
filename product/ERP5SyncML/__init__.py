@@ -42,9 +42,6 @@ from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 document_classes = updateGlobals(this_module, globals(),
                                  permissions_module=Permissions)
 
-import PropertySheet
-import interfaces
-
 def initialize( context ):
   # Import Product Components
   from Tool import SynchronizationTool

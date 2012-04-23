@@ -26,7 +26,6 @@
 ##############################################################################
 
 from lxml import etree
-from zLOG import LOG
 from Products.ERP5SyncML.XMLSyncUtils import getConduitByName
 from difflib import unified_diff
 from Products.ERP5Type.DiffUtils import DiffFile
@@ -43,6 +42,11 @@ def callAddNodeOnConduit(self, conduit_id, uid):
 
 
 def diffXML(xml_plugin="", xml_erp5="", html=True):
+  if isinstance(xml_erp5, unicode):
+    xml_erp5 = xml_erp5.encode('utf-8')
+  if isinstance(xml_plugin, unicode):
+    xml_plugin = xml_plugin.encode('utf-8')
+
   diff_list = list(unified_diff(xml_plugin.split('\n'), xml_erp5.split('\n'), tofile="erp5 xml", fromfile="plugin xml", lineterm=''))
   if len(diff_list) != 0:
     diff_msg = '\n\nTioSafe XML Diff :\n'

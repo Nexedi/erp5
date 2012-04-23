@@ -39,7 +39,7 @@ from email import encoders
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, interfaces
 from Products.ERP5Type.Globals import PersistentMapping
-import pickle
+
 from xml.sax.saxutils import unescape
 import re
 from lxml import etree
@@ -47,10 +47,13 @@ from lxml.etree import Element
 parser = etree.XMLParser(remove_blank_text=True)
 from xml_marshaller.xml_marshaller import load_tree as unmarshaller
 from xupdate_processor import xuproc
-from zLOG import LOG, INFO, DEBUG
 from base64 import standard_b64decode
 from zope.interface import implements
 from copy import deepcopy
+
+import logging
+syncml_logger = logging.getLogger('ERP5SyncML')
+
 
 from Products.ERP5SyncML.SyncMLConstant import XUPDATE_ELEMENT,\
      XUPDATE_INSERT_OR_ADD_LIST, XUPDATE_DEL, XUPDATE_UPDATE, XUPDATE_INSERT_LIST
@@ -141,7 +144,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
 
   security.declareProtected(Permissions.ModifyPortalContent, 'addNode')
   def addNode(self, xml=None, object=None, sub_object=None, reset=None,
-                                       simulate=None, **kw):
+              simulate=None, **kw):
     """
     A node is added
 
@@ -161,8 +164,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     reset_workflow = False
     conflict_list = []
     xml = self.convertToXml(xml)
-    #LOG('ERP5Conduit.addNode', INFO, 'object path:%r' % object.getPath())
-    #LOG('ERP5Conduit.addNode', INFO, '\n%s' % etree.tostring(xml, pretty_print=True))
     if xml is None:
       return {'conflict_list': conflict_list, 'object': sub_object}
     # In the case where this new node is a object to add
@@ -201,7 +202,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.ModifyPortalContent, 'deleteNode')
   def deleteNode(self, xml=None, object=None, object_id=None, **kw):
     """
-    A node is deleted
+    This method manage the deletion of a node as well as the deletion
+    of one property
     """
     #LOG('ERP5Conduit.deleteNode', INFO, 'object path:%s' % object.getPath())
     #LOG('ERP5Conduit deleteNode', INFO, 'object_id:%r' % object_id)
@@ -257,11 +259,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     conflict_list = []
     if xml is None:
-      return {'conflict_list':conflict_list, 'object':object}
+      return []
     xml = self.convertToXml(xml)
-    #LOG('ERP5Conduit.updateNode, force: ', INFO, force)
-    #LOG('ERP5Conduit updateNode', INFO, object.getPath())
-    #LOG('ERP5Conduit updateNode', INFO, '\n%s' % etree.tostring(xml, pretty_print=True))
+    syncml_logger.debug("updateNode with xml %s"
+                       % (etree.tostring(xml, pretty_print=True)))
     if xml.tag == '{%s}modifications' % xml.nsmap.get('xupdate'):
       conflict_list += self.applyXupdate(object=object,
                                          xupdate=xml,
@@ -291,7 +292,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           for subnode in xml:
             if subnode.xpath('name()') == XUPDATE_ELEMENT:
               keyword = subnode.get('name')
-              data_xml = subnode
         else:
           #XXX find something better than hardcoded prefix
           # We can call add node
@@ -320,7 +320,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
                                            xpath_expression,
                                            get_target_parent=get_target_parent)
           data_type = context.getPropertyType(keyword)
-          #LOG('ERP5Conduit.updateNode', INFO, 'data_type:%r for keyword: %s' % (data_type, keyword))
           data = self.convertXmlValue(xml, data_type=data_type)
           args[keyword] = data
           args = self.getFormatedArgs(args=args)
@@ -332,9 +331,6 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           #   - current_data : the data actually on this box
           isConflict = False
           if previous_xml and not force:
-          # if no previous_xml, no conflict
-            #old_data = self.getObjectProperty(keyword, previous_xml,
-                                              #data_type=data_type)
             previous_xml_tree = self.convertToXml(previous_xml)
             old_result = previous_xml_tree.xpath(xpath_expression)
             if old_result:
@@ -343,13 +339,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               raise ValueError('Xpath expression does not apply on previous'\
                                                   ' xml:%r' % xpath_expression)
             current_data = self.getProperty(context, keyword)
-            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict keyword: %s' % keyword)
-            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict data: %s' % str(data))
-            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict old_data: %s' % str(old_data))
-            #LOG('ERP5Conduit.updateNode', INFO, 'Conflict current_data: %s' % str(current_data))
             if (old_data != current_data) and (data != current_data) and\
                                             keyword not in FORCE_CONFLICT_LIST:
-              #LOG('ERP5Conduit.updateNode', INFO, 'Conflict on : %s' % keyword)
               # This is a conflict
               isConflict = True
               xml_string = etree.tostring(xml, encoding='utf-8')
@@ -363,14 +354,23 @@ class ERP5Conduit(XMLSyncUtilsMixin):
               if data_type not in DATA_TYPE_LIST:
                 conflict.edit(local_value=current_data,
                               remote_value=data)
+              syncml_logger.info("Generated a conflict for %s" % (keyword,))
               conflict_list += [conflict]
+          else:
+            syncml_logger.info("UpdateNode : no previous xml founds or force")
           # We will now apply the argument with the method edit
           if args and (not isConflict or force) and (not simulate or reset):
+            syncml_logger.info("calling updateContent : %s" % (args))
             self._updateContent(object=context, **args)
             # It is sometimes required to do something after an edit
             if getattr(context, 'manage_afterEdit', None) is not None:
               context.manage_afterEdit()
+          else:
+            syncml_logger.warning("did not call updateContent on %s" % (context))
+        else:
+          syncml_logger.info("UpdateNode : not editable property %s" % (keyword))
 
+        # Specific cases of update
         if keyword == 'object':
           # This is the case where we have to call addNode
           conflict_list += self.addNode(xml=xml,
@@ -393,6 +393,8 @@ class ERP5Conduit(XMLSyncUtilsMixin):
           conflict_list += self.addNode(xml=xml, object=object,
                                        force=force, simulate=simulate,
                                        reset=reset, **kw)['conflict_list']
+      else:
+        syncml_logger.warning("UpdateNode : not a property %s" % (etree.tostring(xml, pretty_print=True),))
     return conflict_list
 
   security.declareProtected(Permissions.AccessContentsInformation,
@@ -493,7 +495,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   security.declareProtected(Permissions.AccessContentsInformation,
       'isHistoryAdd')
   def isHistoryAdd(self, xml):
-    bad_list = (HISTROY_EXP,)
+    bad_list = (HISTORY_EXP,)
     value = xml.get('select')
     if value is not None:
       for bad_string in bad_list:
@@ -801,11 +803,10 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     xupdate_builded = False
     xpath_expression_update_dict = {}
     for subnode in xupdate:
-      selection_name = ''
       original_xpath_expression = subnode.get('select', '')
-      if not xupdate_builded and\
-                            MARSHALLER_NAMESPACE_URI in subnode.nsmap.values()\
-                                  or 'block_data' in original_xpath_expression:
+      if not xupdate_builded and \
+          MARSHALLER_NAMESPACE_URI in subnode.nsmap.values() \
+          or 'block_data' in original_xpath_expression:
         # It means that the xpath expression is targetting
         # marshalled values or data nodes. We need to rebuild the original xml
         # in its own context in order to retrieve original value
@@ -993,6 +994,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     This is the default editDocument method. This method
     can easily be overwritten.
     """
+    syncml_logger.debug("editing document %s with %s" % (object, kw))
     object._edit(**kw)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'getProperty')
@@ -1069,9 +1071,11 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     """
     # XXX xuproc does not support passing
     # etree objetcs
-    diff = etree.tostring(diff)
+    if not isinstance(diff, basestring):
+      diff = etree.tostring(diff)
     return etree.tostring(xuproc.applyXUpdate(xml_xu_string=diff,
-                                              xml_doc_string=original_data), encoding='utf-8')
+                                              xml_doc_string=original_data),
+                                              encoding='utf-8')
 
 #  def getGidFromXML(self, xml, namespace, gid_from_xml_list):
 #    """

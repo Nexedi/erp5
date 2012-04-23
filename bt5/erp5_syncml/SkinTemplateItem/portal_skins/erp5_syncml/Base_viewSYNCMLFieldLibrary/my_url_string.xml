@@ -85,7 +85,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Publication Url</string> </value>
+                    <value> <string>Target Url</string> </value>
                 </item>
               </dictionary>
             </value>

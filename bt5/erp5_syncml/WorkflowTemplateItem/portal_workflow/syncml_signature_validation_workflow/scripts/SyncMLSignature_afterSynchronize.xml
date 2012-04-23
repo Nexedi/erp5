@@ -63,7 +63,6 @@ signature.edit(force=False,\n
                subscriber_xupdate=None,\n
                publisher_xupdate=None)\n
 \n
-signature.getParentValue().removeRemainingObjectPath(signature.getReference())\n
 context.SyncMLSignature_resetConflictList(state_change)\n
 </string> </value>
         </item>

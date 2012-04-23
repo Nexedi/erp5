@@ -31,26 +31,34 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 class TestERP5SyncMLMixin(ERP5TypeTestCase):
   """
-  Mixin classes that hold methods
+  Mixin class that hold methods
   usefull to manage synchronizations
   """
+  def getSynchronizationTool(self):
+    """
+    Return the tootl
+    """
+    return self.portal.portal_synchronizations
 
   def addSynchronizationUser(self, user_id="syncml", password="syncmlpass"):
     """
     Add a user in acl_users that will be used for synchronization
     """
     acl_users = self.portal.acl_users
-    acl_users._doAddUser(user_id, password, ['Manager'], [])
+    if not acl_users.getUserById(user_id):
+      acl_users._doAddUser(user_id, password, ['Manager'], [])
     return (user_id, password)
 
-  def updateSynchronizationURL(self, url=None):
+  def updateSynchronizationURL(self, url=None, object_list=None):
     """
     Update the url defined on publication & subscription to the one
     used by runUnitTest
     """
     if not url:
       url = self.portal.absolute_url()
-    for sync in self.portal.portal_synchronizations.objectValues():
+    if not object_list:
+      object_list = self.portal.portal_synchronizations.objectValues()
+    for sync in object_list:
       if sync.getPortalType() == "SyncML Subscription":
         sync.edit(url_string=url,
                   subscription_url_string=url,
@@ -58,12 +66,14 @@ class TestERP5SyncMLMixin(ERP5TypeTestCase):
       else:
         sync.edit(url_string=url)
 
-  def updateAuthenticationCredentials(self, user_id, password):
+  def updateAuthenticationCredentials(self, user_id, password, object_list=None):
     """
     Update subscripbtion to use specific authentication credentials
     """
-    for sync in self.portal.portal_synchronizations.objectValues(
-        portal_type="SyncML Subscription"):
+    if not object_list:
+      object_list = self.portal.portal_synchronizations.objectValues(
+        portal_type="SyncML Subscription")
+    for sync in object_list:
       sync.edit(user_id=user_id,
                 password=password)
 

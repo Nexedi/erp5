@@ -51,7 +51,9 @@ class TioSafeBaseConduit(ERP5Conduit):
     XXX name of method is not good, because content is not necessarily XML
     return a xml with id replaced by a new id
     """
-    if isinstance(xml, str) or isinstance(xml, unicode):
+    if isinstance(xml, unicode):
+      xml = xml.encode("utf-8")
+    if isinstance(xml, basestring):
       xml = etree.XML(str(xml), parser=parser)
     else:
       # copy of xml object for modification
@@ -106,7 +108,7 @@ class TioSafeBaseConduit(ERP5Conduit):
       return {'conflict_list': conflict_list, 'object': sub_object}
     # In the case where this new node is a object to add
     xpath_expression = xml.get('select')
-    if xml.xpath('name()') in XUPDATE_INSERT_OR_ADD_LIST and\
+    if xml.xpath('name()') in XUPDATE_INSERT_OR_ADD_LIST and \
            MARSHALLER_NAMESPACE_URI not in xml.nsmap.values():
       # change the context according select expression
       get_target_parent = xml.xpath('name()') in XUPDATE_INSERT_LIST
@@ -133,7 +135,9 @@ class TioSafeBaseConduit(ERP5Conduit):
   def applyXupdate(self, object=None, object_xml=None, xupdate=None, previous_xml=None, **kw):
     """ Parse the xupdate and then it will call the conduit. """
     conflict_list = []
-    if isinstance(xupdate, (str, unicode)):
+    if isinstance(xupdate, unicode):
+      xupdate = xupdate.encode("utf-8")
+    if isinstance(xupdate, basestring):
       xupdate = etree.XML(xupdate, parser=parser)
     if kw.get('conduit', None) is not None:
       for subnode in xupdate:
@@ -151,7 +155,10 @@ class TioSafeBaseConduit(ERP5Conduit):
     Return the integration site based on the link with the pub/sub
     """
     if getattr(self, 'integration_site', None) is None:
-      related_object_list = [x.getObject() for x in sync_object.Base_getRelatedObjectList()]
+      if sync_object.getParentValue().getPortalType() == 'SyncML Publication':
+        related_object_list = [x.getObject() for x in sync_object.getParentValue().Base_getRelatedObjectList()]
+      else:
+        related_object_list = [x.getObject() for x in sync_object.Base_getRelatedObjectList()]
       if len(related_object_list) != 1:
         raise ValueError, "Impossible to find related object to %s : %s" %(sync_object.getPath(), related_object_list)
       integration_site = related_object_list[0].getParentValue()

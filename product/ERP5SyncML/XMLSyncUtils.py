@@ -28,18 +28,28 @@
 ##############################################################################
 
 import smtplib
-from Products.CMFCore.utils import getToolByName
-from ERP5Diff import ERP5Diff
-from zLOG import LOG, INFO
-
+import os
+from base64 import b64encode, b64decode
 from lxml import etree
 from lxml.builder import ElementMaker
+
+from zLOG import LOG, INFO
+from ERP5Diff import ERP5Diff
+from DateTime import DateTime
+
 from SyncMLConstant import SYNCML_NAMESPACE, NSMAP, MAX_LEN
+from Products.ERP5.ERP5Site import getSite
+
 E = ElementMaker(namespace=SYNCML_NAMESPACE, nsmap=NSMAP)
 parser = etree.XMLParser(remove_blank_text=True)
 
-from base64 import b64encode, b64decode
-from imp import load_source
+def buildAnchorFromDate(date):
+  if isinstance(date, DateTime):
+    date = date.HTML4()
+  date = date.replace("-", "")
+  date = date.replace(":", "")
+  return date
+
 
 def encode(format, string_to_encode):
   """
@@ -72,7 +82,7 @@ def decode(format, string_to_decode):
 
 def isDecodeEncodeTheSame(string_encoded, string_decoded, format):
   """
-    return True if the string_encoded is equal to string_decoded encoded 
+    return True if the string_encoded is equal to string_decoded encoded
     in format
   """
   return encode(format, string_decoded) == string_encoded
@@ -82,7 +92,6 @@ def xml2wbxml(xml):
   convert xml string to wbxml using a temporary file
   """
   #LOG('xml2wbxml starting ...', DEBUG, '')
-  import os
   f = open('/tmp/xml2wbxml', 'w')
   f.write(xml)
   f.close()
@@ -97,7 +106,6 @@ def wbxml2xml(wbxml):
   convert wbxml string to xml using a temporary file
   """
   #LOG('wbxml2xml starting ...', DEBUG, '')
-  import os
   f = open('/tmp/wbxml2xml', 'w')
   f.write(wbxml)
   f.close()
@@ -131,59 +139,26 @@ def getConduitByName(conduit_name):
   conduit_instance = getattr(conduit_module, conduit_name)()
   return conduit_instance
 
-def resolveSyncmlStatusCode(context, category_id):
+def resolveSyncmlStatusCode(category_id):
   """Return reference of syncml_status_code category
   """
-  category_tool = getToolByName(context.getPortalObject(), 'portal_categories')
-  return category_tool.getCategoryValue(category_id,
-                                        base_category='syncml_status_code')\
-                                                                .getReference()
+  try:
+    return str(int(category_id))
+  except ValueError:
+    return getSite().portal_categories.getCategoryValue(
+      category_id,
+      base_category='syncml_status_code').getReference()
 
-def resolveSyncmlAlertCode(portal, category_id):
+def resolveSyncmlAlertCode(category_id):
   """Return reference of syncml_alert_code category
   """
-  category_tool = getToolByName(portal, 'portal_categories')
-  return category_tool.getCategoryValue(category_id,
-                                        base_category='syncml_alert_code')\
-                                                                .getReference()
+  try:
+    return str(int(category_id))
+  except ValueError:
+    return getSite().portal_categories.getCategoryValue(
+            category_id,
+            base_category='syncml_alert_code').getReference()
 
-
-def getAlertCodeFromXML(xml):
-  """
-    Return the value of the alert code inside the full syncml message
-  """
-  alert_code = '%s' % xml.xpath('string(/syncml:SyncML/syncml:SyncBody/'\
-                                'syncml:Alert/syncml:Data)',
-                                namespaces=xml.nsmap)
-  return alert_code
-
-def checkAlert(xml):
-  """
-    Check if there's an Alert section in the xml_stream
-  """
-  return bool(xml.xpath('string(/syncml:SyncML/syncml:SyncBody/syncml:Alert)',
-              namespaces=xml.nsmap))
-
-def getMessageIdFromXml(xml):
-  """
-  We will retrieve the message id of the message
-  """
-  return int(xml.xpath('string(/syncml:SyncML/syncml:SyncHdr/syncml:MsgID)',
-                       namespaces=xml.nsmap))
-
-def getSubscriptionUrlFromXML(xml):
-  """return the source URI of the syncml header
-  """
-  return '%s' % xml.xpath('string(//syncml:SyncHdr/syncml:Source/'\
-                          'syncml:LocURI)', namespaces=xml.nsmap)
-
-def checkFinal(xml):
-  """
-    Check if there's an Final section in the xml_stream
-    The end sections (inizialisation, modification) have this tag
-  """
-  return  bool(xml.xpath('/syncml:SyncML/syncml:SyncBody/syncml:Final',
-               namespaces=xml.nsmap))
 
 def setRidWithMap(xml, subscriber):
   """
@@ -198,42 +173,6 @@ def setRidWithMap(xml, subscriber):
     rid = '%s' % map_item.xpath('string(.//syncml:Source/syncml:LocURI)', namespaces=xml.nsmap)
     signature.setRid(rid)
 
-def getSyncBodyStatusList(xml):
-  """
-  return the list of dictionary corredponding to the data of each status bloc
-  the data are : cmd, code and source
-  """
-  status_list = []
-  status_node_list = xml.xpath('//syncml:Status', namespaces=xml.nsmap)
-  for status in status_node_list:
-    tmp_dict = {}
-    tmp_dict['cmd'] = '%s' % status.xpath('string(./syncml:Cmd)',
-                                          namespaces=xml.nsmap)
-    tmp_dict['code'] = '%s' % status.xpath('string(./syncml:Data)',
-                                           namespaces=xml.nsmap)
-    tmp_dict['source'] = '%s' % status.xpath('string(./syncml:SourceRef)',
-                                             namespaces=xml.nsmap)
-    tmp_dict['target'] = '%s' % status.xpath('string(./syncml:TargetRef)',
-                                             namespaces=xml.nsmap)
-    status_list.append(tmp_dict)
-  return status_list 
-
-def getDataText(xml):
-  """
-  return the section data in text form, it's usefull for the VCardConduit
-  """
-  return '%s' % xml.xpath('string(.//syncml:Item/syncml:Data)',
-                          namespaces=xml.nsmap)
-
-def getDataSubNode(xml):
-  """
-    Return the content of syncml stream
-  """
-  object_node_list = xml.xpath('.//syncml:Item/syncml:Data/*[1]',
-                               namespaces=xml.nsmap)
-  if object_node_list:
-    return object_node_list[0]
-  return None
 
 def getXupdateObject(object_xml=None, old_xml=None):
   """
@@ -242,27 +181,20 @@ def getXupdateObject(object_xml=None, old_xml=None):
   erp5diff = ERP5Diff()
   erp5diff.compare(old_xml, object_xml)
   #Upper version of ERP5Diff produce valid XML.
-  xupdate = erp5diff.outputString()
-  #omit xml declaration
-  xupdate = xupdate[xupdate.find('<xupdate:modifications'):]
-  return xupdate
+  if erp5diff._getResultRoot():
+    xupdate = erp5diff.outputString()
+    #omit xml declaration
+    xupdate = xupdate[xupdate.find('<xupdate:modifications'):]
+    return xupdate
 
-#def cutXML(xml_string):
-  #"""
-  #Sliced a xml tree a return two fragment
-  #"""
-  #line_list = xml_string.split('\n')
-  #short_string = '\n'.join(line_list[:MAX_LINES])
-  #rest_string = '\n'.join(line_list[MAX_LINES:])
-  #xml_string = etree.CDATA(short_string.decode('utf-8'))
-  #return xml_string, rest_string
-
-def cutXML(xml_string):
+def cutXML(xml_string, length=None):
   """
   Sliced a xml tree a return two fragment
   """
-  short_string = xml_string[:MAX_LEN]
-  rest_string = xml_string[MAX_LEN:]
+  if length is None:
+    length = MAX_LEN
+  short_string = xml_string[:length]
+  rest_string = xml_string[length:]
   xml_string = etree.CDATA(short_string.decode('utf-8'))
   return xml_string, rest_string
 
@@ -283,73 +215,4 @@ class XMLSyncUtilsMixin(object):
     # if we want to send the email to someone else (debugging)
     #server.sendmail(fromaddr, "seb@localhost", msg)
     server.quit()
-
-  #def getNamespace(self, nsmap):
-    #"""
-      #Set the namespace prefix, check if argument is conform
-      #and return the full namespace updated for syncml
-      #nsmap -- The namespace of the received xml
-    #"""
-    ##search urn compatible in the namespaces of nsmap
-    #urns = filter(lambda v: v.upper() in self.URN_LIST, nsmap.values())
-    #if urns:
-      #namespace = etree.FunctionNamespace(urns[0])
-      #namespace.prefix = 'syncml'
-      #return namespace
-    #else:
-      #raise ValueError, "Sorry, the given namespace is not supported"
-
-  def getStatusTarget(self, xml):
-    """
-      Return the value of the alert code inside the xml_stream
-    """
-    return '%s' % xml.xpath('string(syncml:TargetRef)', namespaces=xml.nsmap)
-
-  def getStatusCode(self, xml):
-    """
-      Return the value of the alert code inside the xml_stream
-    """
-    status_code = '%s' % xml.xpath('string(syncml:Data)', namespaces=xml.nsmap)
-    if status_code:
-      return int(status_code)
-    return None
-
-  def getStatusCommand(self, xml):
-    """
-      Return the value of the command inside the xml_stream
-    """
-    cmd = None
-    if xml.xpath('local-name()') == 'Status':
-      cmd = '%s' % xml.xpath('string(syncml:Cmd)', namespaces=xml.nsmap)
-    return cmd  
-
-  def checkStatus(self, xml):
-    """
-      Check if there's a Status section in the xml_stream
-    """
-    return bool(xml.xpath('string(/syncml:SyncML/syncml:SyncBody/syncml:Status)',
-                namespaces=xml.nsmap))
-
-  def getActionType(self, xml):
-    """
-      Return the type of the object described by the action
-    """
-    return '%s' % xml.xpath('string(.//syncml:Meta/syncml:Type)',
-                            namespaces=xml.nsmap)
-
-class XMLSyncUtils(XMLSyncUtilsMixin):
-
-  def Sync(self, id, msg=None, RESPONSE=None):
-    """
-    This is the main method for synchronization
-    """
-    pass
-
-  def SyncInit(self, domain):
-    """
-    Initialization of a synchronization, this is
-    used for the first message of every synchronization
-    """
-    pass
-
 

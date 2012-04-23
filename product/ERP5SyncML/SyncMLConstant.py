@@ -27,8 +27,6 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.Globals import Persistent
-import re
 
 # Namespaces.
 SYNCML_NAMESPACE = 'SYNCML:SYNCML1.2'
@@ -74,6 +72,7 @@ PUB_CONFLICT_CLIENT_WIN = 8
 #MAX_LINES = 5000
 MAX_OBJECTS = 300
 MAX_LEN = 1<<16
+MAX_DOCUMENT_PER_MESSAGE = 2
 
 XUPDATE_INSERT_LIST = ('xupdate:insert-after', 'xupdate:insert-before')
 XUPDATE_ADD = 'xupdate:append'

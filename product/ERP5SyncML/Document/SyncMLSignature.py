@@ -27,15 +27,15 @@
 #
 ##############################################################################
 
+from hashlib import md5
+
 from AccessControl import ClassSecurityInfo
+
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions
 from Products.ERP5Type import PropertySheet
-
-from zLOG import LOG, DEBUG, INFO
 from Products.ERP5SyncML.Utils import PdataHelper
-from hashlib import md5
 
 _MARKER = []
 
@@ -47,7 +47,7 @@ class SyncMLSignature(XMLObject):
     id -- the ID of the document
     gid -- the global id of the document
     rid -- the uid of the document on the remote database,
-        only needed on the server.
+      only needed on the server.
     xml -- the xml of the object at the time where it was synchronized
   """
   meta_type = 'ERP5 Signature'
@@ -92,7 +92,7 @@ class SyncMLSignature(XMLObject):
     """
     if self.hasData():
       return str(self._baseGetData())
-    if default is _MARKER:
+    elif default is _MARKER:
       return self._baseGetData()
     else:
       return self._baseGetData(default)
@@ -106,8 +106,7 @@ class SyncMLSignature(XMLObject):
       the confirmation of synchronization
     """
     if value:
-      pdata_wrapper = PdataHelper(self.getPortalObject(), value)
-      self._setTemporaryData(pdata_wrapper)
+      self._setTemporaryData(PdataHelper(self.getPortalObject(), value))
     else:
       self._setTemporaryData(None)
 
@@ -119,7 +118,7 @@ class SyncMLSignature(XMLObject):
     """
     if self.hasTemporaryData():
       return str(self._baseGetTemporaryData())
-    if default is _MARKER:
+    elif default is _MARKER:
       return self._baseGetTemporaryData()
     else:
       return self._baseGetTemporaryData(default)
@@ -142,7 +141,7 @@ class SyncMLSignature(XMLObject):
     Set the partial string we will have to
     deliver in the future
     """
-    if value is not None:
+    if value:
       if not isinstance(value, PdataHelper):
         value = PdataHelper(self.getPortalObject(), value)
       self._setPartialData(value)
@@ -158,9 +157,8 @@ class SyncMLSignature(XMLObject):
       be stored with setXML when we will receive
       the confirmation of synchronization
     """
-    if value is not None:
-      pdata_wrapper = PdataHelper(self.getPortalObject(), value)
-      self._setLastData(pdata_wrapper)
+    if value:
+      self._setLastData(PdataHelper(self.getPortalObject(), value))
     else:
       self._setLastData(None)
 
@@ -172,7 +170,7 @@ class SyncMLSignature(XMLObject):
     """
     if self.hasPartialData():
       return str(self._baseGetPartialData())
-    if default is _MARKER:
+    elif default is _MARKER:
       return self._baseGetPartialData()
     else:
       return self._baseGetPartialData(default)
@@ -182,7 +180,7 @@ class SyncMLSignature(XMLObject):
     """
     Append the partial string we will have to deliver in the future
     """
-    if value is not None:
+    if value:
       if not isinstance(value, PdataHelper):
         value = PdataHelper(self.getPortalObject(), value)
       last_data = value.getLastPdata()
@@ -195,7 +193,7 @@ class SyncMLSignature(XMLObject):
       self.setLastDataPartialData(last_data)
 
   #security.declareProtected(Permissions.AccessContentsInformation,
-                            #'getFirstChunkPdata')
+    #'getFirstChunkPdata')
   #def getFirstChunkPdata(self, size_lines):
     #"""
     #"""
@@ -239,9 +237,8 @@ class SyncMLSignature(XMLObject):
       be stored with setXML when we will receive
       the confirmation of synchronization
     """
-    if value is not None:
-      pdata_wrapper = PdataHelper(self.getPortalObject(), value)
-      self._setSubscriberXupdate(pdata_wrapper)
+    if value:
+      self._setSubscriberXupdate(PdataHelper(self.getPortalObject(), value))
     else:
       self._setSubscriberXupdate(None)
 
@@ -253,7 +250,7 @@ class SyncMLSignature(XMLObject):
     """
     if self.hasSubscriberXupdate():
       return str(self._baseGetSubscriberXupdate())
-    if default is _MARKER:
+    elif default is _MARKER:
       return self._baseGetSubscriberXupdate()
     else:
       return self._baseGetSubscriberXupdate(default)
@@ -266,9 +263,8 @@ class SyncMLSignature(XMLObject):
       be stored with setXML when we will receive
       the confirmation of synchronization
     """
-    if value is not None:
-      pdata_wrapper = PdataHelper(self.getPortalObject(), value)
-      self._setPublisherXupdate(pdata_wrapper)
+    if value:
+      self._setPublisherXupdate(PdataHelper(self.getPortalObject(), value))
     else:
       self._setPublisherXupdate(None)
 
@@ -280,7 +276,7 @@ class SyncMLSignature(XMLObject):
     """
     if self.hasPublisherXupdate():
       return str(self._baseGetPublisherXupdate())
-    if default is _MARKER:
+    elif default is _MARKER:
       return self._baseGetPublisherXupdate()
     else:
       return self._baseGetPublisherXupdate(default)
@@ -316,7 +312,7 @@ class SyncMLSignature(XMLObject):
     # if conflict_list is None or conflict_list == []:
     #   self.resetConflictList()
     # else:
-    #   self.conflict_list = conflict_list 
+    #   self.conflict_list = conflict_list
 
   def resetConflictList(self):
     """
@@ -339,4 +335,3 @@ class SyncMLSignature(XMLObject):
     #   self.setConflictList(conflict_list)
     # else:
     #   self.resetConflictList()
-
