@@ -26,6 +26,7 @@
 #
 ##############################################################################
 
+from Acquisition import aq_base
 from Products.ERP5Type.PsycoWrapper import psyco
 from Base import Getter as BaseGetter, Setter as BaseSetter
 from warnings import warn
@@ -120,3 +121,16 @@ class TranslatedTitleGetter(TitleGetter):
       return result.encode('utf8')
 
     psyco.bind(__call__)
+
+def SerializeGetter(id, key):
+  def serialize(self):
+    """Prevent concurrent transaction from changing of state of this object
+    """
+    try:
+      self = aq_base(self).workflow_history
+      self = self[key]
+    except (AttributeError, KeyError):
+      pass
+    self._p_changed = 1
+  serialize.__name__ = id
+  return serialize

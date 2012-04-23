@@ -518,7 +518,9 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
           ('getTranslated%s' % UpperCase(state_var),
                                      WorkflowState.TranslatedGetter),
           ('getTranslated%sTitle' % UpperCase(state_var),
-                                     WorkflowState.TranslatedTitleGetter)):
+                                     WorkflowState.TranslatedTitleGetter),
+          ('serialize%s' % UpperCase(state_var), WorkflowState.SerializeGetter),
+          ):
         if not hasattr(ptype_klass, method_id):
           method = getter(method_id, wf_id)
           # Attach to portal_type
