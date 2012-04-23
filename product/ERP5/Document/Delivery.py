@@ -982,6 +982,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       """
       divergent_tester_list = []
       for simulation_movement in self._getAllRelatedSimulationMovementList():
+        simulation_movement = simulation_movement.getObject()
         rule = simulation_movement.getParentValue().getSpecialiseValue()
         for tester in rule._getDivergenceTesterList(exclude_quantity=False):
           if tester.explain(simulation_movement) not in (None, []):
