@@ -189,7 +189,20 @@ class FolderMixIn(ExtensionClass.Base):
     current_date = str(DateTime().Date()).replace("/", "")
     my_id = self._generateRandomId()
     return "%s-%s" %(current_date, my_id)
-    
+
+  def _generatePerNodeNumberId(self):
+    """
+    Generate an id base on node number that is processing the creation
+    """
+    activity_tool = self.getPortalObject().portal_activities
+    node_list = list(activity_tool.getNodeList())
+    current_node = activity_tool.getCurrentNode()
+    try:
+      node_number = node_list.index(current_node)
+    except ValueError:
+      # Not a processing node
+      node_number = 111
+    return "%03d-%s" %(node_number, self._generateRandomId())
 
   def _generateRandomId(self):
     """
