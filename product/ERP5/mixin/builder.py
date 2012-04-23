@@ -102,7 +102,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   security.declarePublic('build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
                   delivery_relative_url_list=None, movement_list=None,
-                  explanation=None, business_link=None, **kw):
+                  explanation=None, business_link=None, activate_kw=None, **kw):
     """
       Build deliveries from a list of movements
 
@@ -143,7 +143,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     delivery_list = self.buildDeliveryList(
                        root_group_node,
                        delivery_relative_url_list=delivery_relative_url_list,
-                       movement_list=movement_list,**kw)
+                       movement_list=movement_list, activate_kw=activate_kw,
+                       **kw)
     # Call a script after building
     self.callAfterBuildingScript(delivery_list, movement_list, **kw)
     return delivery_list
