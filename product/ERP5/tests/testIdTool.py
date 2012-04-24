@@ -273,7 +273,9 @@ class TestIdTool(ERP5TypeTestCase):
     generator.generateNewId(id_group='foo_bar', default=4)
     self.assertEquals(generator.last_max_id_dict['foo_bar'].value, 4)
     portal.IdTool_zDropTable()
-    sql_connection = self.getSQLConnection()
+    # make sure to use same connector as IdTool_zDropTable to avoid mariadb :
+    # "Waiting for table metadata lock"
+    sql_connection = portal.erp5_sql_transactionless_connection
     query = 'select last_id from portal_ids where id_group="foo_bar"'
     self.assertRaises(ProgrammingError, sql_connection.manage_test, query)
     generator.rebuildSqlTable()

@@ -39,7 +39,7 @@ def safeRpcCall(function, *args):
   while True:
     try:
       return function(*xmlrpc_arg_list)
-    except (socket.error, xmlrpclib.ProtocolError), e:
+    except (socket.error, xmlrpclib.ProtocolError, xmlrpclib.Fault), e:
       print >>sys.stderr, e
       pprint.pprint(args, file(function._Method__name, 'w'))
       time.sleep(retry)

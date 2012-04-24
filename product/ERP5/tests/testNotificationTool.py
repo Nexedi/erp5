@@ -511,7 +511,7 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     person = self.portal.person_module.newContent(
         portal_type="Person",
         default_email_text="userA@example.invalid")
-
+    self.stepTic()
     self.portal.portal_notifications.sendMessage(
                                   store_as_event=True,
                                   recipient=person,

@@ -65,13 +65,7 @@ class SQLDict(SQLBase):
       priority_list = [message.activity_kw.get('priority', 1) for message in registered_message_list]
       dumped_message_list = [self.dumpMessage(message) for message in registered_message_list]
       date_list = [message.activity_kw.get('at_date', None) for message in registered_message_list]
-      group_method_id_list = []
-      for m in registered_message_list:
-        group_method_id = m.activity_kw.get('group_method_id', '')
-        if group_method_id is None:
-          group_method_id = 'portal_activities/dummyGroupMethod/' + m.method_id
-        group_method_id_list.append(group_method_id + '\0' +
-                                    m.activity_kw.get('group_id', ''))
+      group_method_id_list = [m.getGroupId() for m in registered_message_list]
       tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
       serialization_tag_list = [message.activity_kw.get('serialization_tag', '') for message in registered_message_list]
       order_validation_text_list = [self.getOrderValidationText(message) for message in registered_message_list]

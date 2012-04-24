@@ -62,6 +62,7 @@
                     <value>
                       <list>
                         <string>listbox</string>
+                        <string>listbox_modification_date</string>
                       </list>
                     </value>
                 </item>

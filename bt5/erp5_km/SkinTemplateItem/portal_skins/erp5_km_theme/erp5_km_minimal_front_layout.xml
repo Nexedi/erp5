@@ -88,6 +88,7 @@
                     <value>
                       <list>
                         <string>footer_widget</string>
+                        <string>analytics_widget</string>
                       </list>
                     </value>
                 </item>

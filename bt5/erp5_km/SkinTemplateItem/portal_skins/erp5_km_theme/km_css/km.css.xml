@@ -84,7 +84,6 @@ div {\n
   margin:0;\n
   padding:0;\n
   float:none;\n
-  width:100%;\n
   position:relative;\n
 }\n
 \n
@@ -171,7 +170,11 @@ fieldset.hidden_fieldset { \n
   padding-bottom:35px;\n
   padding-top: 5px;\n
 }\n
-\n
+#master,\n
+.document,\n
+.content{\n
+  width:100%;\n
+}\n
 #wrapper_right{\n
   float: left;\n
   width:22.5%;\n
@@ -227,7 +230,7 @@ div#wrapper_headline div.header_title {\n
 }\n
 \n
 #wrapper_path {\n
-  float:left;\n
+/*   float:left; */\n
   width: 100%;\n
 }\n
 \n
@@ -249,10 +252,13 @@ div#wrapper_headline div.header_title {\n
   height:100%;\n
 }\n
 \n
-#menu ul li.collapse-menu{\n
+#menu ul li.collapse-able{\n
   background: url(km_img/collapse-down-arrow.gif) no-repeat transparent right 10px;\n
   padding-right: 0px;\n
 }\n
+\n
+\n
+\n
 \n
 #menu ul li.non-collapse-menu{\n
   background: none;\n
@@ -567,10 +573,12 @@ fieldset.right{\n
 */\n
 \n
 fieldset.registration {\n
-  width:36%;\n
+  width:auto;\n
   background-color: #FFFFFF;\n
   margin-right: 0.5%;\n
   height: auto;\n
+  margin-bottom:2em;\n
+  padding:10px;\n
 }\n
 \n
 \n
@@ -934,7 +942,7 @@ fieldset.right h4 {\n
   padding:5px;\n
 }\n
 \n
-.document > .content ul li {\n
+.content ul li {\n
   background:transparent url(km_img/bg_bullet_square.gif) no-repeat scroll 0 0.5em;\n
   margin:0 0 0.3em 2px;\n
   padding:0 0 0 12px;\n
@@ -1075,7 +1083,7 @@ table tbody tr td {\n
   top:0;\n
   padding-top:30px;\n
   left:0;\n
-  width:205px;\n
+  width:auto;\n
   opacity: <tal:block tal:replace="menu_opacity">0.80</tal:block>;\n
 }\n
 \n

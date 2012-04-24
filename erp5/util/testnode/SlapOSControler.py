@@ -36,10 +36,12 @@ MAX_SR_RETRIES = 3
 
 class SlapOSControler(object):
 
-  def __init__(self, config, log, process_group_pid_set=None,
-      slapproxy_log=None):
+  def __init__(self, config, log,
+      slapproxy_log=None, process_manager=None, reset_software=False):
+    log('SlapOSControler, initialize, reset_software: %r' % reset_software)
     self.log = log
     self.config = config
+    self.process_manager = process_manager
     # By erasing everything, we make sure that we are able to "update"
     # existing profiles. This is quite dirty way to do updates...
     if os.path.exists(config['proxy_database']):
@@ -51,7 +53,7 @@ class SlapOSControler(object):
       kwargs['stderr'] = slapproxy_log_fp
     proxy = subprocess.Popen([config['slapproxy_binary'],
       config['slapos_config']], **kwargs)
-    process_group_pid_set.add(proxy.pid)
+    process_manager.process_pid_set.add(proxy.pid)
     # XXX: dirty, giving some time for proxy to being able to accept
     # connections
     time.sleep(10)
@@ -63,21 +65,33 @@ class SlapOSControler(object):
         self.software_profile,
         computer_guid=config['computer_id'])
     computer = slap.registerComputer(config['computer_id'])
+    # Reset all previously generated software if needed
+    if reset_software:
+      software_root = config['software_root']
+      log('SlapOSControler : GOING TO RESET ALL SOFTWARE')
+      if os.path.exists(software_root):
+        shutil.rmtree(software_root)
+      os.mkdir(software_root)
+      os.chmod(software_root, 0750)
+    instance_root = config['instance_root']
+    if os.path.exists(instance_root):
+      # delete old paritions which may exists in order to not get its data
+      # (ex. MySQL db content) from previous testnode's runs
+      # In order to be able to change partition naming scheme, do this at
+      # instance_root level (such change happened already, causing problems).
+      shutil.rmtree(instance_root)
+    os.mkdir(instance_root)
     for i in range(0, MAX_PARTIONS):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
       # this is not a problem as usually all services are on different ports
       partition_reference = '%s-%s' %(config['partition_reference'], i)
-      partition_path = os.path.join(config['instance_root'], partition_reference)
-      if os.path.exists(partition_path):
-        # delete old paritions which may exists in order to not get its data (ex. MySQL db content)
-        # from previous testnode's runs
-        shutil.rmtree(partition_path)
+      partition_path = os.path.join(instance_root, partition_reference)
       os.mkdir(partition_path)
       os.chmod(partition_path, 0750)
       computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
                                                     'address': config['ipv4_address'],
-                                                    'instance_root': config['instance_root'],
+                                                    'instance_root': instance_root,
                                                     'netmask': '255.255.255.255',
                                                     'partition_list': [{'address_list': [{'addr': config['ipv4_address'],
                                                                         'netmask': '255.255.255.255'},
@@ -91,37 +105,23 @@ class SlapOSControler(object):
                                     'reference': config['computer_id'],
                                     'software_root': config['software_root']}))
 
-  def runSoftwareRelease(self, config, environment, process_group_pid_set=None,
-                         stdout=None, stderr=None):
+  def spawn(self, *args, **kw):
+    return self.process_manager.spawn(*args, **kw)
+
+  def runSoftwareRelease(self, config, environment):
     self.log("SlapOSControler.runSoftwareRelease")
     cpu_count = os.sysconf("SC_NPROCESSORS_ONLN")
     os.putenv('MAKEFLAGS', '-j%s' % cpu_count)
     os.environ['PATH'] = environment['PATH']
-    command = [config['slapgrid_software_binary'], '-v', '-c',
-      #'--buildout-parameter',"'-U -N' -o",
-      config['slapos_config']]
     # a SR may fail for number of reasons (incl. network failures)
     # so be tolerant and run it a few times before giving up
     for runs in range(0, MAX_SR_RETRIES):
-      slapgrid = subprocess.Popen(command,
-        stdout=stdout, stderr=stderr,
-        close_fds=True, preexec_fn=os.setsid)
-      process_group_pid_set.add(slapgrid.pid)
-      slapgrid.wait()
-
-    stdout.seek(0)
-    stderr.seek(0)
-    process_group_pid_set.remove(slapgrid.pid)
-    status_dict = {'status_code':slapgrid.returncode,
-                    'command': repr(command),
-                    'stdout':stdout.read(),
-                    'stderr':stderr.read()}
-    stdout.close()
-    stderr.close()
+      status_dict = self.spawn(config['slapgrid_software_binary'], '-v', '-c',
+                 config['slapos_config'], raise_error_if_fail=False,
+                 log_prefix='slapgrid_sr', get_output=False)
     return status_dict
 
   def runComputerPartition(self, config, environment,
-                           process_group_pid_set=None,
                            stdout=None, stderr=None):
     self.log("SlapOSControler.runComputerPartition")
     slap = slapos.slap.slap()
@@ -130,26 +130,12 @@ class SlapOSControler(object):
     slap.registerOpenOrder().request(self.software_profile,
         partition_reference='testing partition',
         partition_parameter_kw=config['instance_dict'])
-    command = [config['slapgrid_partition_binary'],
-      config['slapos_config'], '-c', '-v']
 
     # try to run for all partitions as one partition may in theory request another one 
     # this not always is required but curently no way to know how "tree" of partitions
     # may "expand"
     for runs in range(0, MAX_PARTIONS):
-      slapgrid = subprocess.Popen(command,
-        stdout=stdout, stderr=stderr,
-        close_fds=True, preexec_fn=os.setsid)
-      process_group_pid_set.add(slapgrid.pid)
-      slapgrid.wait()
-      process_group_pid_set.remove(slapgrid.pid)
-
-    stdout.seek(0)
-    stderr.seek(0)
-    status_dict = {'status_code':slapgrid.returncode,
-                    'command': repr(command),
-                    'stdout':stdout.read(),
-                    'stderr':stderr.read()}
-    stdout.close()
-    stderr.close()
+      status_dict = self.spawn(config['slapgrid_partition_binary'], '-v', '-c',
+                 config['slapos_config'], raise_error_if_fail=False,
+                 log_prefix='slapgrid_cp', get_output=False)
     return status_dict

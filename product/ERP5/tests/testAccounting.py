@@ -1301,12 +1301,14 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(1, q(
       "SELECT count(*) FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
-    self.assertEquals(3.3, q(
+    self.assertAlmostEquals(3.3, q(
       "SELECT total_price FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[0][0])
-    self.assertEquals(3.3, q(
+      "'Balance Transaction Line'")[0][0],
+      accounting_currency_precision)
+    self.assertAlmostEquals(3.3, q(
       "SELECT quantity FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[0][0])
+      "'Balance Transaction Line'")[0][0],
+      accounting_currency_precision)
     self.assertEquals(self.portal.currency_module.euro.getUid(), q(
       "SELECT resource_uid FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
@@ -1438,12 +1440,14 @@ class TestClosingPeriod(AccountingTestCase):
     self.assertEquals(1, q(
       "SELECT count(*) FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])
-    self.assertEquals(3.3, q(
+    self.assertAlmostEquals(3.3, q(
       "SELECT total_price FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[0][0])
-    self.assertEquals(3.3, q(
+      "'Balance Transaction Line'")[0][0],
+      accounting_currency_precision)
+    self.assertAlmostEquals(3.3, q(
       "SELECT quantity FROM stock WHERE portal_type="
-      "'Balance Transaction Line'")[0][0])
+      "'Balance Transaction Line'")[0][0],
+      accounting_currency_precision)
     self.assertEquals(self.portal.currency_module.euro.getUid(), q(
       "SELECT resource_uid FROM stock WHERE portal_type="
       "'Balance Transaction Line'")[0][0])

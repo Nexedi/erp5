@@ -52,7 +52,7 @@ class TestTemplate(ERP5TypeTestCase):
   def createUserAndLogin(self, name=None, additional_role_list=[]):
     """login with Member, Author and specified roles."""
     uf = self.getPortal().acl_users
-    role_list = ['Member', 'Author']
+    role_list = ['Member', 'Author', 'Auditor']
     role_list.extend(additional_role_list)
     uf._doAddUser(name, '', role_list, [])
     user = uf.getUserById(name).__of__(uf)
@@ -66,10 +66,6 @@ class TestTemplate(ERP5TypeTestCase):
     self.tic()
     self.portal.portal_types.Preference._setTypeAllowedContentTypeList(
       ('Foo', 'Knowledge Pad'))
-    self.portal.foo_module.manage_role(role_to_manage='Author',
-                                permissions=[Permissions.AddPortalContent,
-                                             Permissions.CopyOrMove,
-                                             ])
 
   def test_Template(self):
     self.createUserAndLogin(self.id())

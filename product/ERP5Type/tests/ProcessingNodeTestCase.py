@@ -224,6 +224,10 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
         count -= 1
         if count == 0 or (message_count and set([x.processing_node for x in 
               message_list]).issubset(set([-2, -3]))):
+          # We're about to raise RuntimeError, but maybe we've reached
+          # the stop condition, so check just once more:
+          if stop_condition(message_list):
+            break
           error_message = 'tic is looping forever. '
           try:
             self.assertNoPendingMessage()

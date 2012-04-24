@@ -18,6 +18,7 @@ def generateBarcodeImage(self, barcode_type, data):
   elif barcode_type == 'code128':
     from hubarcode.code128 import Code128Encoder 
     encoder = Code128Encoder(data)
+    encoder.text = '' # get barcode image only
     output = encoder.get_imagedata()
   elif barcode_type == 'qrcode':
     import qrcode

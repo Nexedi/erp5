@@ -92,7 +92,7 @@
       <dictionary>
         <item>
             <key> <string>text</string> </key>
-            <value> <string>python: context.getTextContent() is None or not context.getTextContent()</string> </value>
+            <value> <string>python: context.getTextContent() is None or not context.getTextContent() or context.getValidationState() in context.getPortalObject().getPortalDraftOrderStateList()</string> </value>
         </item>
       </dictionary>
     </pickle>

@@ -335,6 +335,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     return "Zelenium"
 
   def afterSetUp(self):
+    super(ERP5TypeFunctionalTestCase, self).afterSetUp()
     # create browser_id_manager
     if not "browser_id_manager" in self.portal.objectIds():
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()

@@ -102,7 +102,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   security.declarePublic('build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
                   delivery_relative_url_list=None, movement_list=None,
-                  explanation=None, business_link=None, **kw):
+                  explanation=None, business_link=None, activate_kw=None, **kw):
     """
       Build deliveries from a list of movements
 
@@ -143,7 +143,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     delivery_list = self.buildDeliveryList(
                        root_group_node,
                        delivery_relative_url_list=delivery_relative_url_list,
-                       movement_list=movement_list,**kw)
+                       movement_list=movement_list, activate_kw=activate_kw,
+                       **kw)
     # Call a script after building
     self.callAfterBuildingScript(delivery_list, movement_list, **kw)
     return delivery_list
@@ -163,7 +164,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     """
     delivery_module_before_building_script_id = \
         self.getDeliveryModuleBeforeBuildingScriptId()
-    if delivery_module_before_building_script_id not in ["", None]:
+    if delivery_module_before_building_script_id:
       delivery_module = getattr(self.getPortalObject(), self.getDeliveryModule())
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
@@ -368,13 +369,10 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       Create a new delivery in case where a builder may not update
       an existing one.
     """
-    new_delivery_id = str(delivery_module.generateNewId())
-    delivery = delivery_module.newContent(
+    return delivery_module.newContent(
       portal_type=self.getDeliveryPortalType(),
-      id=new_delivery_id,
       created_by_builder=1,
       activate_kw=activate_kw)
-    return delivery
 
   def _processDeliveryGroup(self, delivery_module, movement_group_node,
                             collect_order_list, movement_group_node_list=None,
@@ -452,13 +450,10 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       Create a new delivery line in case where a builder may not update
       an existing one.
     """
-    new_delivery_line_id = str(delivery.generateNewId())
-    delivery_line = delivery.newContent(
+    return delivery.newContent(
       portal_type=self.getDeliveryLinePortalType(),
-      id=new_delivery_line_id,
       created_by_builder=1,
       activate_kw=activate_kw)
-    return delivery_line
 
   def _processDeliveryLineGroup(self, delivery, movement_group_node,
                                 collect_order_list, movement_group_node_list=None,
@@ -685,42 +680,33 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       delivery_movement._edit(force_update=1, **property_dict)
 
   @UnrestrictedMethod
-  def callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
+  def callAfterBuildingScript(self, delivery_list, movement_list=(), **kw):
     """
       Call script on each delivery built.
     """
-    if not len(delivery_list):
-      return
-    # Parameter initialization
-    if movement_list is None:
-      movement_list = []
     delivery_after_generation_script_id = \
                               self.getDeliveryAfterGenerationScriptId()
-    related_simulation_movement_path_list = \
-                              [x.getPath() for x in movement_list]
-    if delivery_after_generation_script_id not in ["", None]:
+    if delivery_after_generation_script_id:
+      related_simulation_movement_path_list = \
+                                [x.getPath() for x in movement_list]
       for delivery in delivery_list:
         script = getattr(delivery, delivery_after_generation_script_id)
         # BBB: Only Python Scripts were used in the past, and they might not
         # accept an arbitrary argument. So to keep compatibility,
         # check if it can take the new parameter safely, only when
         # the callable object is a Python Script.
-        safe_to_pass_parameter = True
         meta_type = getattr(script, 'meta_type', None)
         if meta_type == 'Script (Python)':
           # check if the script accepts related_simulation_movement_path_list
-          safe_to_pass_parameter = False
           for param in script.params().split(','):
             param = param.split('=', 1)[0].strip()
             if param == 'related_simulation_movement_path_list' \
                     or param.startswith('**'):
-              safe_to_pass_parameter = True
               break
-
-        if safe_to_pass_parameter:
-          script(related_simulation_movement_path_list=related_simulation_movement_path_list)
-        else:
-          script()
+          else:
+            script()
+            continue
+        script(related_simulation_movement_path_list=related_simulation_movement_path_list)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                            'getMovementGroupList')

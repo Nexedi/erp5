@@ -27,6 +27,7 @@
 #
 ##############################################################################
 
+import transaction
 import unittest
 
 from Testing import ZopeTestCase
@@ -209,7 +210,7 @@ class TestArchive(InventoryAPITestCase):
     portal_catalog.manage_renameObject(id=archive_id,new_id=archive_catalog_id)
 
     # Create an archive
-    archive = portal_archive.newContent(portal_typ="Archive",
+    archive = portal_archive.newContent(portal_type="Archive",
                                         catalog_id=self.archive_catalog_id,
                                         connection_id=self.archive_connection_id,
                                         deferred_connection_id=self.archive_deferred_connection_id,
@@ -221,7 +222,7 @@ class TestArchive(InventoryAPITestCase):
                                         )
     archive.ready()
     # Create an archive for destination catalog
-    dest = portal_archive.newContent(portal_typ="Archive",
+    dest = portal_archive.newContent(portal_type="Archive",
                                      catalog_id=self.new_catalog_id,
                                      connection_id=self.new_connection_id,
                                      deferred_connection_id=self.new_deferred_connection_id,
@@ -230,6 +231,9 @@ class TestArchive(InventoryAPITestCase):
                                      stop_date_range_min=DateTime("2006/07/01"),
                                      )
     dest.ready()
+
+    # make sure to commit to release any lock on tables
+    transaction.commit()
 
     # Do archive
     portal_archive.manage_archive(destination_archive_id=dest.getId(),

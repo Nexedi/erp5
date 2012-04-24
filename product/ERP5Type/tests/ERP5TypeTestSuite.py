@@ -213,7 +213,8 @@ class ERP5TypeTestSuite(TestSuite):
              (instance_number-1) * self.mysql_db_count:
              (instance_number) * self.mysql_db_count]
     if len(mysql_db_list) > 1:
-      kw['extra_sql_connection_string_list'] = ','.join(mysql_db_list[1:])
+      args = ('--extra_sql_connection_string_list=%s' % \
+              ','.join(mysql_db_list[1:]),) + args
     try:
       runUnitTest = os.environ.get('RUN_UNIT_TEST',
                                    'runUnitTest')

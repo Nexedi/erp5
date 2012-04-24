@@ -193,7 +193,7 @@ class IdTool(BaseTool):
       last_generator = self._getLatestGeneratorValue(id_generator)
       new_id_list = last_generator.generateNewIdList(id_group=id_group,
                          id_count=id_count, default=default)
-    except KeyError:
+    except (KeyError, ValueError):
       template_tool = getattr(self, 'portal_templates', None)
       revision = template_tool.getInstalledBusinessTemplateRevision('erp5_core')
       # XXX backward compatiblity

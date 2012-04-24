@@ -2616,6 +2616,19 @@ return 1
     self.assertEqual('archived', document_nolang_005.getValidationState())
     self.assertEqual('shared_alive', document_nolang_006.getValidationState())
 
+  def testFileWithNotDefinedMimeType(self):
+    upload_file = makeFileUpload('TEST-001-en.dummy')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True,
+              portal_type='File')
+    document = self.portal.Base_contribute(**kw)
+    document.setReference('TEST')
+    request = self.app.REQUEST
+    download_file = document.index_html(REQUEST=request, format=None)
+    self.assertEquals(download_file, 'foo\n')
+    document_format = None
+    self.assertEquals('TEST-001-en.dummy', document.getStandardFilename(
+                      document_format))
+
 class TestDocumentWithSecurity(TestDocumentMixin):
 
   username = 'yusei'
