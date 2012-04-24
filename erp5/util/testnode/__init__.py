@@ -90,9 +90,8 @@ def main(*args):
   CONFIG['proxy_database'] = os.path.join(slapos_directory, 'proxy.db')
   CONFIG['slapos_config'] = slapos_config = os.path.join(slapos_directory,
     'slapos.cfg')
-  for d in software_root, instance_root:
-    if not os.path.lexists(d):
-      os.mkdir(d)
+  if not os.path.lexists(software_root):
+    os.mkdir(software_root)
   CONFIG['master_url'] = 'http://%s:%s' % (CONFIG['proxy_host'],
         CONFIG['proxy_port'])
   open(slapos_config, 'w').write(pkg_resources.resource_string(
