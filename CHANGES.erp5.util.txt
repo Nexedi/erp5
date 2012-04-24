@@ -1,6 +1,16 @@
 Changes
 =======
 
+0.4.3 (2012-04-24)
+----------------
+
+ * erp5.util.testnode:
+
+  - Improve detection of the cancellation of a test on the master
+  - better management of SIGTERM signal
+  - cleanup test instances to make sure nothing stay from a previous
+    test run
+
 0.4.2 (2012-04-11)
 ----------------
 
