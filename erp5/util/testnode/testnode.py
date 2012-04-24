@@ -210,12 +210,12 @@ branch = %(branch)s
 
     retry = False
     retry_software_count = 0
+    same_revision_count = 0
     try:
       while True:
         remote_test_result_needs_cleanup = False
         remote_logger = None
         remote_logger_thread = None
-        same_revision_count = 0
         try:
           # kill processes from previous loop if any
           process_manager.killPreviousRun()
