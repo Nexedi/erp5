@@ -340,7 +340,7 @@ branch = %(branch)s
             # result. We only do cleanup if the test runner itself is not able
             # to run.
             process_manager.spawn(*invocation_list,
-              cwd=config['test_suite_directory'], new_session=True,
+              cwd=config['test_suite_directory'],
               log_prefix='runTestSuite', get_output=False)
             if remote_logger:
               remote_logger.quit = True

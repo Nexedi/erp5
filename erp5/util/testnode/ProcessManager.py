@@ -104,7 +104,7 @@ class ProcessManager(object):
       raise CancellationError("Test Result was cancelled")
     get_output = kw.pop('get_output', True)
     log_prefix = kw.pop('log_prefix', '')
-    new_session = kw.pop('new_session', False)
+    new_session = kw.pop('new_session', True)
     subprocess_kw = {}
     cwd = kw.pop('cwd', None)
     if cwd:
