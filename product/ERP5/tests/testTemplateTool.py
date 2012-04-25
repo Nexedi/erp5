@@ -95,7 +95,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEquals(len(bt_list), 1)
     erp5_base = bt_list[0].getObject()
     try:
-      erp5_base.edit(revision=int(erp5_base.getRevision()) - 10)
+      erp5_base.edit(revision=0)
 
       updatable_bt_list = \
         self.templates_tool.getRepositoryBusinessTemplateList(update_only=True)
