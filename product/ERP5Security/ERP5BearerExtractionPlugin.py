@@ -125,12 +125,12 @@ class ERP5BearerExtractionPlugin(BasePlugin):
         token_document = self.portal_catalog.getResultValue(
           portal_type=self.token_portal_type,
           reference=token,
-          query=SimpleQuery(comparison_operator='<=', expiration_date=now),
+          query=SimpleQuery(comparison_operator='>=', expiration_date=now),
           validation_state='validated'
         )
         if token_document is not None:
           if token_document.getReference() == token and \
-            token_document.getExpirationDate() <= now and \
+            token_document.getExpirationDate() >= now and \
             token_document.getValidationState() == 'validated' and \
             token_document.getDestinationReference() is not None:
               creds['external_login'] = \
