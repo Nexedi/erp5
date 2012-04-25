@@ -81,41 +81,53 @@ class ERP5BearerExtractionPlugin(BasePlugin):
   def extractCredentials(self, request):
     """ Extract credentials from the request header. """
     creds = {}
-    authorisation = request._auth
-    if authorisation is not None:
-      if 'Bearer' in authorisation:
+    token = None
+    if request._auth is not None:
+      # 1st - try to fetch from Authorization header
+      if 'Bearer' in request._auth:
         l = authorisation.split()
         if len(l) == 2:
           token = l[1]
-          sm = getSecurityManager()
-          if sm.getUser().getId() != SUPER_USER:
-            newSecurityManager(self, self.getUser(SUPER_USER))
-          try:
-            now = DateTime()
-            token_document = self.portal_catalog.getResultValue(
-              portal_type=self.token_portal_type,
-              reference=token,
-              query=SimpleQuery(comparison_operator='<=', expiration_date=now),
-              validation_state='validated'
-            )
-            if token_document is not None:
-              if token_document.getReference() == token and \
-                token_document.getExpirationDate() <= now and \
-                token_document.getValidationState() == 'validated' and \
-                token_document.getDestinationReference() is not None:
-                  creds['external_login'] = \
-                    token_document.getDestinationReference()
-          finally:
-            setSecurityManager(sm)
-          if 'external_login' in  creds:
-            creds['external_login'] = token
-            creds['remote_host'] = request.get('REMOTE_HOST', '')
-            try:
-              creds['remote_address'] = request.getClientAddr()
-            except AttributeError:
-              creds['remote_address'] = request.get('REMOTE_ADDR', '')
-            return creds
 
+    if token is None:
+      # 2nd - try to fetch from Form-Encoded Body Parameter
+      #   Not implemented as not required and enforced with high
+      #   security considerations
+      pass
+
+    if token is None:
+      # 3rd - try to fetch from URI Query Parameter
+      #   Not implemented as considered as unsecure.
+      pass
+
+    if token is not None:
+      sm = getSecurityManager()
+      if sm.getUser().getId() != SUPER_USER:
+        newSecurityManager(self, self.getUser(SUPER_USER))
+      try:
+        now = DateTime()
+        token_document = self.portal_catalog.getResultValue(
+          portal_type=self.token_portal_type,
+          reference=token,
+          query=SimpleQuery(comparison_operator='<=', expiration_date=now),
+          validation_state='validated'
+        )
+        if token_document is not None:
+          if token_document.getReference() == token and \
+            token_document.getExpirationDate() <= now and \
+            token_document.getValidationState() == 'validated' and \
+            token_document.getDestinationReference() is not None:
+              creds['external_login'] = \
+                token_document.getDestinationReference()
+      finally:
+        setSecurityManager(sm)
+      if 'external_login' in  creds:
+        creds['remote_host'] = request.get('REMOTE_HOST', '')
+        try:
+          creds['remote_address'] = request.getClientAddr()
+        except AttributeError:
+          creds['remote_address'] = request.get('REMOTE_ADDR', '')
+        return creds
 
     # fallback to default way
     return DumbHTTPExtractor().extractCredentials(request)
