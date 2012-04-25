@@ -14,7 +14,6 @@
                 <string>editable_columns</string>
                 <string>enabled</string>
                 <string>portal_types</string>
-                <string>selection_name</string>
                 <string>sort</string>
                 <string>title</string>
                 <string>url_columns</string>
@@ -83,10 +82,6 @@
                 </item>
                 <item>
                     <key> <string>portal_types</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
@@ -200,10 +195,6 @@
                         </tuple>
                       </list>
                     </value>
-                </item>
-                <item>
-                    <key> <string>selection_name</string> </key>
-                    <value> <string>person_contact_list_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>
