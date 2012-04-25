@@ -943,7 +943,6 @@ fieldset.right h4 {\n
 }\n
 \n
 .content ul li {\n
-  background:transparent url(km_img/bg_bullet_square.gif) no-repeat scroll 0 0.5em;\n
   margin:0 0 0.3em 2px;\n
   padding:0 0 0 12px;\n
   list-style-image:none;\n
@@ -1046,7 +1045,7 @@ table tbody tr td {\n
 \n
 /* Collapse down navigation */\n
 #menu ul.nav li{\n
-  z-index:1;\n
+  z-index:100000;\n
 }\n
 \n
 #menu ul.nav li a, #menu ul.nav li a:visited {\n
