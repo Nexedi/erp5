@@ -158,16 +158,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
           filename = self.getFilename()
           if mime_type == 'text/html':
             mime_type = 'text/x-html-safe'
-          if format in VALID_IMAGE_FORMAT_LIST:
-            # Include extra parameter for image conversions
-            temp_image = self.portal_contributions.newContent(
-                                       portal_type='Image',
-                                       file=cStringIO.StringIO(),
-                                       filename=self.getId(),
-                                       temp_object=1)
-            temp_image._setData(text_content)
-            mime, result = temp_image.convert(**kw)
-          else:
+          if src_mimetype != "image/svg+xml":
             result = portal_transforms.convertToData(mime_type, text_content,
                                                    object=self, context=self,
                                                    filename=filename,
@@ -178,6 +169,17 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                     'portal_transforms failed to convert '
                                     'from %r to %s: %r' % 
                                     (src_mimetype, mime_type, self))
+          else:
+            result = text_content
+          if format in VALID_IMAGE_FORMAT_LIST:
+            # Include extra parameter for image conversions
+            temp_image = self.portal_contributions.newContent(
+                                       portal_type='Image',
+                                       file=cStringIO.StringIO(),
+                                       filename=self.getId(),
+                                       temp_object=1)
+            temp_image._setData(result)
+            mime, result = temp_image.convert(**kw)
 
           self.setConversion(result, original_mime_type, **kw)
         else:

@@ -953,11 +953,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG_empty_file("File")
 
-  def test_WebPageConversionFromSVGToPNG_empty_file(self):
-    """ Test Convert one SVG Image with an empty svg
-    """
-    self._testImageConversionFromSVGToPNG_empty_file("Web Page")
-
   def test_ImageConversionFromSVGToPNG_file_url(self):
     """ Test Convert one SVG Image with an image using local path (file)
         at the url of the image tag. ie:
