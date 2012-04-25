@@ -35,7 +35,7 @@ from Products.PluggableAuthService.utils import classImplements
 from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
-
+from Products.PluggableAuthService.permissions import ManageUsers
 from AccessControl.SecurityManagement import getSecurityManager,\
     setSecurityManager, newSecurityManager
 from DateTime import DateTime
@@ -67,6 +67,22 @@ class ERP5BearerExtractionPlugin(BasePlugin):
 
   meta_type = "ERP5 Bearer Extraction Plugin"
   security = ClassSecurityInfo()
+  token_portal_type = ''
+
+  manage_options = (({'label': 'Edit',
+                      'action': 'manage_editERP5BearerExtractionPluginForm',},
+                     )
+                    + BasePlugin.manage_options[:]
+                    )
+
+  _properties = (({'id':'token_portal_type',
+                   'type':'string',
+                   'mode':'w',
+                   'label':'Portal Type with tokens'
+                   },
+                  )
+                 + BasePlugin._properties[:]
+                 )
 
   def __init__(self, id, token_portal_type, title=None):
     #Register value
@@ -85,7 +101,7 @@ class ERP5BearerExtractionPlugin(BasePlugin):
     if request._auth is not None:
       # 1st - try to fetch from Authorization header
       if 'Bearer' in request._auth:
-        l = authorisation.split()
+        l = request._auth.split()
         if len(l) == 2:
           token = l[1]
 
@@ -131,6 +147,33 @@ class ERP5BearerExtractionPlugin(BasePlugin):
 
     # fallback to default way
     return DumbHTTPExtractor().extractCredentials(request)
+
+  manage_editERP5BearerExtractionPluginForm = PageTemplateFile(
+      'www/ERP5Security_editERP5BearerExtractionPlugin',
+      globals(),
+      __name__='manage_editERP5BearerExtractionPluginForm')
+
+  security.declareProtected(ManageUsers, 'manage_editERP5BearerExtractionPlugin')
+  def manage_editERP5BearerExtractionPlugin(self, token_portal_type, RESPONSE=None):
+    """Edit the object"""
+    error_message = ''
+
+    if token_portal_type == '' or token_portal_type is None:
+      error_message += 'Token Portal Type is missing '
+    else:
+      self.token_portal_type = token_portal_type
+
+    #Redirect
+    if RESPONSE is not None:
+      if error_message != '':
+        self.REQUEST.form['manage_tabs_message'] = error_message
+        return self.manage_editERP5BearerExtractionPluginForm(RESPONSE)
+      else:
+        message = "Updated"
+        RESPONSE.redirect('%s/manage_editERP5BearerExtractionPluginForm'
+                          '?manage_tabs_message=%s'
+                          % (self.absolute_url(), message)
+                          )
 
 #List implementation of class
 classImplements( ERP5BearerExtractionPlugin,
