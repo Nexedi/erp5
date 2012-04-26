@@ -48,7 +48,8 @@ from Products.ERP5SyncML.SyncMLConstant import MAX_OBJECTS, ACTIVITY_PRIORITY,\
 from Products.ERP5SyncML.Transport.HTTP import HTTPTransport
 from Products.ERP5SyncML.Transport.File import FileTransport
 from Products.ERP5SyncML.Transport.Mail import MailTransport
-from Products.ERP5SyncML.SyncMLConstant import MAX_LEN, ADD_ACTION, REPLACE_ACTION
+from Products.ERP5SyncML.SyncMLConstant import MAX_LEN, ADD_ACTION, \
+    REPLACE_ACTION
 from Products.ERP5SyncML.XMLSyncUtils import cutXML
 
 transport_scheme_dict = {
@@ -123,8 +124,8 @@ class SyncMLSubscription(XMLObject):
       r = self.getDocumentIdList(limit=limit, **search_kw)  # It is assumed that
                                                             # the result is sorted
     except TypeError:
-      warn("Script %s does not accept id_list paramater" %
-           (self.getListMethodId(),), DeprecationWarning)
+      syncml_logger.warning("Script %s does not accept paramaters limit=%s kw=%s" %
+           (self.getListMethodId(), limit, search_kw,))
       r = self.getDocumentList()  # It is assumed that
                                   # the result is sorted
     result_count = len(r)
@@ -149,7 +150,7 @@ class SyncMLSubscription(XMLObject):
       callback_method = getattr(activate(**activate_kw), callback)
       if generated_other_activity:
         for i in xrange(0, result_count, packet_size):
-          syncml_logger.info("getAndActivate : recursive call, generating for %s"
+          syncml_logger.info("-- getAndActivate : recursive call, generating for %s"
                              % (r[i:i+packet_size],))
           callback_method(id_list=r[i:i+packet_size],
                           message_id=message_id_list.pop(),
@@ -158,7 +159,7 @@ class SyncMLSubscription(XMLObject):
       else:
         i = 0
         for i in xrange(0, result_count-packet_size, packet_size):
-          syncml_logger.info("getAndActivate : call, generating for %s : %s" %
+          syncml_logger.info("-- getAndActivate : call, generating for %s : %s" %
                              (r[i:i+packet_size], activate_kw))
           callback_method(id_list=r[i:i+packet_size],
                           message_id=message_id_list.pop(),
@@ -166,7 +167,7 @@ class SyncMLSubscription(XMLObject):
                           **method_kw)
         # Final activity must be executed after all other
         callback_method = getattr(activate(**final_activate_kw), callback)
-        syncml_logger.info("getAndActivate : final call for %s : %s" %(r[i+packet_size:], final_activate_kw))
+        syncml_logger.info("---- getAndActivate : final call for %s : %s" %(r[i+packet_size:], final_activate_kw))
         callback_method(id_list=r[i+packet_size:],  # XXX Has to be unit tested
                                                     # with mock object
                         message_id=message_id_list.pop(),
@@ -478,11 +479,22 @@ class SyncMLSubscription(XMLObject):
         syncml_response=syncml_response,
         simulate=simulate)
 
-  def _getDeleteDocumentList(self):
+  def _getDeletedData(self, syncml_response):
     """
-    Retrieve the list of deleted documents and generate the sync command
+    Return list of deleted data base on validation state of signature
     """
-    pass
+    return None # XXX Do nothing for now, must introduce a new state to distinguisehd
+                # from not-synchronized object for which we wait for a status answer
+                # Maybe signature can be make "synchronized" without the status
+                # and changed if status not ok
+    deleted_signature_list = self.searchFolder(
+      validation_state="not_synchronized")
+    # Slow method
+#    deleted_signature_list = [x for x in self.contentValues() if x.getValidationState() == "not_synchronized"]
+    syncml_logger.info("Got %d deleted objects list in %s" % (
+        len(deleted_signature_list), self.getPath(),))
+    for signature in deleted_signature_list:
+      syncml_response.addDeleteCommand(gid=signature.getId(),)
 
   def _getSyncMLData(self, syncml_response, subscriber_gid_list, id_list=None):
     """
@@ -492,15 +504,14 @@ class SyncMLSubscription(XMLObject):
     """
     if not id_list:
       syncml_logger.warning("Non optimal call to _getSyncMLData, no id list provided")
+    else:
+      syncml_logger.info("getSyncMLData, id list provided %s" % (id_list,))
 
     conduit = self.getConduit()
     finished = True
 
     if isinstance(conduit, basestring):
       conduit = getConduitByName(conduit)
-
-    xml_confirmation_list = []
-    confirmation_append = xml_confirmation_list.append
 
     try:
       object_list = self.getDocumentList(id_list=id_list)
@@ -510,36 +521,6 @@ class SyncMLSubscription(XMLObject):
            (self.getListMethodId(),), DeprecationWarning)
       object_list = self.getDocumentList()
 
-    # if self.getProperty('remaining_object_path_list') is None:
-
-    #   # XXX-Aurel : performance killer
-    #   object_list = self.getDocumentList()
-    #   object_path_list = [x.getPath() for x in object_list]
-    #   syncml_logger.info("\tnb objects to check : %r" %(len(object_path_list)))
-    #   self._edit(remaining_object_path_list=object_path_list)
-
-    #   local_gid_list = [self.getGidFromObject(x) for x in object_list]
-
-    #   # Check which documents are removed
-
-    #   # Compare the list of signature to the list of document to synchronized
-    #   # If a document no longer exists but signature exists, the object was
-    #   # deleted and the sync command must be issued
-    #   # XXX As we do not delete data in erp5, this can be improved using the
-    #   # workflow status of documents to issue the delete command (using the
-    #   # conduit for this ?)
-    #   # XXX Still we must find a better way to do this for external resource
-    #   # cases (ie tiosafe)
-    #   # One way to detect deleted object is by the laking of getReference value
-    #   # but this might generate too many request in web service environment
-    #   for object_gid in subscriber_gid_list:
-    #     if object_gid not in local_gid_list:
-    #       # This is an object to remove
-    #       signature = self.getSignatureFromGid(object_gid)
-    #       if signature:  # Signature can have been delete by a sync command
-    #         syncml_response.deleteXMLObject(object_gid=object_gid,
-    #                                         rid=signature.getRid(),)
-
     loop = 0
     traverse = self.getPortalObject().restrictedTraverse
     alert_code = self.getSyncmlAlertCode()
@@ -547,6 +528,9 @@ class SyncMLSubscription(XMLObject):
     # XXX Quick & dirty hack to prevent signature creation, this must be defined
     # on pub/sub instead
     create_signature = alert_code != "refresh_from_client_only"
+
+    if not len(object_list):
+      raise ValueError("No object retrieved althoud id_list is provided")
 
     for result in object_list:
       object_path = result.getPath()
