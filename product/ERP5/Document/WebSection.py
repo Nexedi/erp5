@@ -203,6 +203,12 @@ class WebSection(Domain, DocumentExtensibleTraversableMixin):
                 original_container=document.getParentValue(),
                 original_id=document.getId(),
                 editable_absolute_url=document.absolute_url())).__of__(self)
+        else:
+          isAuthorizationForced = getattr(self, 'isAuthorizationForced', None)
+          if isAuthorizationForced is not None and isAuthorizationForced():
+            if self.getPortalObject().portal_membership.isAnonymousUser():
+              # force anonymous to login
+              raise Unauthorized
         # Try to use a custom renderer if any
         custom_render_method_id = self.getCustomRenderMethodId()
         if custom_render_method_id is not None:
