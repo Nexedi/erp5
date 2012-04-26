@@ -3650,6 +3650,23 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       del obj.__class__.doSomething
 
+  def test_duplicateGroupedMessage(self):
+    activity_tool = self.portal.portal_activities
+    obj = activity_tool.newActiveProcess()
+    obj.reindexObject(activate_kw={'tag': 'foo', 'after_tag': 'bar'})
+    transaction.commit()
+    invoked = []
+    def invokeGroup(self, *args):
+      invoked.append(len(args[1]))
+      return ActivityTool_invokeGroup(self, *args)
+    ActivityTool_invokeGroup = activity_tool.__class__.invokeGroup
+    try:
+      activity_tool.__class__.invokeGroup = invokeGroup
+      self.tic()
+    finally:
+      activity_tool.__class__.invokeGroup = ActivityTool_invokeGroup
+    self.assertEqual(invoked, [1])
+
 def test_suite():
   suite = unittest.TestSuite()
   suite.addTest(unittest.makeSuite(TestCMFActivity))

@@ -121,11 +121,9 @@ class SQLDict(SQLBase):
         group_method_id=line.group_method_id,
       )
       uid_list = [x.uid for x in result]
-      if len(uid_list):
+      if uid_list:
         activity_tool.SQLDict_reserveDuplicatedLineList(
-          processing_node=processing_node,
-          uid_list=uid_list
-        )
+          processing_node=processing_node, uid=uid_list)
       else:
         # Release locks
         activity_tool.SQLDict_commit()
