@@ -119,7 +119,6 @@ class SQLDict(SQLBase):
         path=line.path,
         method_id=line.method_id,
         group_method_id=line.group_method_id,
-        order_validation_text=line.order_validation_text
       )
       uid_list = [x.uid for x in result]
       if len(uid_list):

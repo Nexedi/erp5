@@ -249,13 +249,9 @@ class SQLBase(Queue):
               # processing_node.
               # Their dates are lower-than or equal-to now_date.
               # We read each line once so lines have distinct uids.
-              # So what remains to be filtered on are path, method_id and
-              # order_validation_text.
-              try:
-                key = line.path, line.method_id, line.order_validation_text
-              except AttributeError:
-                pass # message_queue does not have 'order_validation_text'
-              else:
+              # So what remains to be filtered on are path and method_id.
+              if self.merge_duplicate:
+                key = line.path, line.method_id
                 original_uid = path_and_method_id_dict.get(key)
                 if original_uid is not None:
                   uid_to_duplicate_uid_list_dict.setdefault(original_uid, []) \
