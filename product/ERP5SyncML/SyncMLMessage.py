@@ -374,21 +374,18 @@ class SyncMLResponse(object):
       self.sync_append = self.sync.append
 
   # XXX-Aurel : must be renamed to buildSyncMLDeletion & moved
-  def deleteXMLObject(self, object_gid=None, rid=None):
+  def addDeleteCommand(self, gid=None):
     """
     Delete an object with the SyncML protocol
     """
     self._initSyncTag()
-    if rid:
-      elem_to_append = E.Target(E.LocURI('%s' % rid))
-    else:
-      elem_to_append = E.Source(E.LocURI('%s' % object_gid))
     xml = (E.Delete(
-      E.CmdID(self._getNextCommandId()),
-      E.Item(
-      elem_to_append
-      )
-      ))
+        E.CmdID(
+          self._getNextCommandId()),
+        E.Item(
+          E.Source(E.LocURI('%s' % gid))
+          )
+        ))
     self.sync_append(xml)
 
   def addConfirmationMessage(self, command, sync_code, target_ref=None,
