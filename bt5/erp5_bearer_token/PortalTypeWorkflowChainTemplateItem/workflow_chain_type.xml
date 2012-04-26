@@ -1,6 +1,6 @@
 <workflow_chain>
  <chain>
   <type>Bearer Token</type>
-  <workflow>edit_workflow</workflow>
+  <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
 </workflow_chain>
