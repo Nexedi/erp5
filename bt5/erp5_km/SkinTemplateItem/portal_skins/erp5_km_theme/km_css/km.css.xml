@@ -1045,7 +1045,7 @@ table tbody tr td {\n
 \n
 /* Collapse down navigation */\n
 #menu ul.nav li{\n
-  z-index:100000;\n
+  z-index:1000;\n
 }\n
 \n
 #menu ul.nav li a, #menu ul.nav li a:visited {\n
@@ -1086,7 +1086,7 @@ table tbody tr td {\n
   opacity: <tal:block tal:replace="menu_opacity">0.80</tal:block>;\n
 }\n
 \n
-#menu ul.nav li:hover ul li a {\n
+#menu ul.nav  li:hover ul li a {\n
   text-align:left;\n
   display:block;\n
   background:#818363;\n
@@ -1102,6 +1102,7 @@ table tbody tr td {\n
 \n
 #menu ul.nav li:hover ul li a:hover { background:#37391e; }\n
 #menu ul.nav li:hover ul li a.workflow_title:hover { background:#818363; }\n
+\n
 \n
 #menu ul.nav li:hover ul li:hover ul {\n
   display:block;\n
