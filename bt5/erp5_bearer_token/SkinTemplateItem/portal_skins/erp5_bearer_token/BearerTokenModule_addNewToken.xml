@@ -50,17 +50,51 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string># in order to be catalogged in versioning table\n
-context.setVersion(1)\n
+            <value> <string>from DateTime import DateTime\n
+if context.getPortalType() != \'Bearer Token Module\':\n
+  raise TypeError(\'Call me on module\')\n
+\n
+person = context.getPortalObject().portal_catalog.getResultValue(portal_type=\'Person\', reference=destination_reference)\n
+\n
+if person is None:\n
+  raise ValueError(\'Cannot find Person with reference %r\' % destination_reference)\n
+\n
+key = person.getBearerTokenKey()\n
+if not key:\n
+  key = context.Person_resetBearerTokenKey()\n
+\n
+token = context.newContent(portal_type=\'Bearer Token\',\n
+  destination_reference=destination_reference,\n
+  expiration_date=DateTime() + (1./24) # 1 hour of validity\n
+)\n
+\n
+hmac = None\n
+for i in range(10):\n
+  fuzzy = context.Base_generateRandomString()\n
+  possible_hmac = token.BearerToken_getHMAC(key, fuzzy)\n
+  if len(context.searchFolder(portal_type=\'Bearer Token\', reference=possible_hmac)) == 0 \\\n
+    and context.getPortalObject().portal_activities.countMessageWithTag(possible_hmac) == 0:\n
+    hmac = possible_hmac\n
+    break\n
+\n
+if hmac is None:\n
+  raise ValueError(\'It was not possible to generate valid hmac\')\n
+\n
+token.edit(\n
+  source_reference=fuzzy,\n
+  reference=hmac\n
+)\n
+token.validate()\n
+token.reindexObject(activate_kw={\'tag\': hmac})\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kwargs</string> </value>
+            <value> <string>destination_reference</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BearerToken_init</string> </value>
+            <value> <string>BearerTokenModule_addNewToken</string> </value>
         </item>
       </dictionary>
     </pickle>
