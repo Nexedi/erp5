@@ -40,6 +40,7 @@ from AccessControl.SecurityManagement import getSecurityManager,\
     setSecurityManager, newSecurityManager
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
+from zLOG import LOG, INFO
 
 #Form for new plugin in ZMI
 manage_addERP5BearerExtractionPluginForm = PageTemplateFile(
@@ -47,10 +48,11 @@ manage_addERP5BearerExtractionPluginForm = PageTemplateFile(
   __name__='manage_addERP5BearerExtractionPluginForm')
 
 def addERP5BearerExtractionPlugin(dispatcher, id, token_portal_type,
-  title=None, REQUEST=None):
+  token_validation_method, title=None, REQUEST=None):
   """ Add a ERP5BearerExtractionPlugin to a Pluggable Auth Service. """
 
-  plugin = ERP5BearerExtractionPlugin(id, token_portal_type, title)
+  plugin = ERP5BearerExtractionPlugin(id, token_portal_type,
+    token_validation_method, title)
   dispatcher._setObject(plugin.getId(), plugin)
 
   if REQUEST is not None:
@@ -68,6 +70,7 @@ class ERP5BearerExtractionPlugin(BasePlugin):
   meta_type = "ERP5 Bearer Extraction Plugin"
   security = ClassSecurityInfo()
   token_portal_type = ''
+  token_validation_method = ''
 
   manage_options = (({'label': 'Edit',
                       'action': 'manage_editERP5BearerExtractionPluginForm',},
@@ -80,15 +83,20 @@ class ERP5BearerExtractionPlugin(BasePlugin):
                    'mode':'w',
                    'label':'Portal Type with tokens'
                    },
-                  )
+                  {'id':'token_validation_method',
+                   'type':'string',
+                   'mode':'w',
+                   'label':'Method to validate found token'
+                   },                  )
                  + BasePlugin._properties[:]
                  )
 
-  def __init__(self, id, token_portal_type, title=None):
+  def __init__(self, id, token_portal_type, token_validation_method, title=None):
     #Register value
     self._setId(id)
     self.title = title
     self.token_portal_type = token_portal_type
+    self.token_validation_method = token_validation_method
 
   ####################################
   #ILoginPasswordHostExtractionPlugin#
@@ -116,25 +124,31 @@ class ERP5BearerExtractionPlugin(BasePlugin):
       #   Not implemented as considered as unsecure.
       pass
 
-    if token is not None:
+    if token is not None and self.token_portal_type \
+        and self.token_validation_method:
       sm = getSecurityManager()
       if sm.getUser().getId() != SUPER_USER:
         newSecurityManager(self, self.getUser(SUPER_USER))
       try:
-        now = DateTime()
         token_document = self.portal_catalog.getResultValue(
           portal_type=self.token_portal_type,
           reference=token,
-          query=SimpleQuery(comparison_operator='>=', expiration_date=now),
+          query=SimpleQuery(
+            comparison_operator='>=', expiration_date=DateTime()
+          ),
           validation_state='validated'
         )
         if token_document is not None:
-          if token_document.getReference() == token and \
-            token_document.getExpirationDate() >= now and \
-            token_document.getValidationState() == 'validated' and \
-            token_document.getDestinationReference() is not None:
-              creds['external_login'] = \
-                token_document.getDestinationReference()
+          result = False
+          try:
+            result = getattr(token_document,
+            self.token_validation_method)()
+          except Exception:
+            LOG('BearerExtractionPlugin', INFO, 'Problem while calling token '
+              'validation method %r on %r:' % (self.token_validation_method,
+              token_document.getPath()), error=True)
+          if result is True:
+            creds['external_login'] = token_document.getDestinationReference()
       finally:
         setSecurityManager(sm)
       if 'external_login' in  creds:
@@ -153,15 +167,19 @@ class ERP5BearerExtractionPlugin(BasePlugin):
       globals(),
       __name__='manage_editERP5BearerExtractionPluginForm')
 
-  security.declareProtected(ManageUsers, 'manage_editERP5BearerExtractionPlugin')
-  def manage_editERP5BearerExtractionPlugin(self, token_portal_type, RESPONSE=None):
+  security.declareProtected(ManageUsers,
+    'manage_editERP5BearerExtractionPlugin')
+  def manage_editERP5BearerExtractionPlugin(self, token_portal_type,
+      token_validation_method, RESPONSE=None):
     """Edit the object"""
     error_message = ''
 
-    if token_portal_type == '' or token_portal_type is None:
+    if token_portal_type == '' or token_portal_type is None or \
+      token_validation_method == '' or token_validation_method is None:
       error_message += 'Token Portal Type is missing '
     else:
       self.token_portal_type = token_portal_type
+      self.token_validation_method = token_validation_method
 
     #Redirect
     if RESPONSE is not None:

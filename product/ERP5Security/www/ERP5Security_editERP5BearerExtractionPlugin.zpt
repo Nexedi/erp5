@@ -7,13 +7,20 @@
 
 <form action="manage_editERP5BearerExtractionPlugin" method="POST">
 
-<table tal:define="token_portal_type request/token_portal_type|context/token_portal_type|string:;">
+<table tal:define="token_portal_type request/token_portal_type|context/token_portal_type|string:; token_validation_method request/token_validation_method|context/token_validation_method|string:;">
 
 <tr>
    <td>Portal Type with tokens</td>
    <td>
      <input type="text" name="token_portal_type" value=""
             tal:attributes="value token_portal_type;" />
+   </td>
+</tr>
+<tr>
+   <td>Method to validate found token</td>
+   <td>
+     <input type="text" name="token_validation_method" value=""
+            tal:attributes="value token_validation_method;" />
    </td>
 </tr>
 <tr>
