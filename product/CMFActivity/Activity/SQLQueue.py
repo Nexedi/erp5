@@ -82,13 +82,6 @@ class SQLQueue(SQLBase):
                                               processing_node_list=None,
                                               serialization_tag_list=serialization_tag_list)
 
-  def getDuplicateMessageUidList(self, activity_tool, line, processing_node):
-    """
-      Reserve unreserved messages matching given line.
-      Return their uids.
-    """
-    return ()
-
   def hasActivity(self, activity_tool, object, method_id=None, only_valid=None, active_process_uid=None):
     hasMessage = getattr(activity_tool, 'SQLQueue_hasMessage', None)
     if hasMessage is not None:

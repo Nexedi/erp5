@@ -168,6 +168,14 @@ class SQLBase(Queue):
       activity_tool.SQLBase_makeMessageListAvailable(table=self.sql_table,
                                                      uid=uid_list)
 
+  def getProcessableMessageLoader(self, activity_tool, processing_node):
+    # do not merge anything
+    def load(line):
+      uid = line.uid
+      m = self.loadMessage(line.message, uid=uid, line=line)
+      return m, uid, ()
+    return load
+
   def getProcessableMessageList(self, activity_tool, processing_node):
     """
       Always true:
@@ -206,24 +214,16 @@ class SQLBase(Queue):
       if line_list:
         self._log(TRACE, 'Reserved messages: %r' % [x.uid for x in line_list])
       return line_list
-    def getDuplicateMessageUidList(line):
-      uid_list = self.getDuplicateMessageUidList(activity_tool=activity_tool,
-        line=line, processing_node=processing_node)
-      if uid_list:
-        self._log(TRACE, 'Reserved duplicate messages: %r' % (uid_list, ))
-      return uid_list
     now_date = self.getNow(activity_tool)
     uid_to_duplicate_uid_list_dict = {}
     try:
       result = getReservedMessageList(1)
       if result:
-        line = result[0]
-        uid = line.uid
-        m = self.loadMessage(line.message, uid=uid, line=line)
+        load = self.getProcessableMessageLoader(activity_tool, processing_node)
+        m, uid, uid_list = load(result[0])
         message_list = [m]
-        uid_to_duplicate_uid_list_dict[uid] = getDuplicateMessageUidList(line)
-        group_method_id = line.group_method_id
-        activity_tool.SQLBase_processMessage(table=self.sql_table, uid=[uid])
+        uid_to_duplicate_uid_list_dict[uid] = uid_list
+        group_method_id = m.line.group_method_id
         if group_method_id != '\0':
           # Count the number of objects to prevent too many objects.
           cost = m.activity_kw.get('group_method_cost', .01)
@@ -235,39 +235,24 @@ class SQLBase(Queue):
           if limit > 1: # <=> cost * count < 1
             cost *= count
             # Retrieve objects which have the same group method.
-            result = getReservedMessageList(limit, group_method_id)
-            if self.merge_duplicate:
-              path_and_method_id_dict = {(line.path, line.method_id): uid}
-            unreserve_uid_list = []
+            result = iter(getReservedMessageList(limit, group_method_id))
             for line in result:
-              if line.uid == uid:
+              if line.uid in uid_to_duplicate_uid_list_dict:
                 continue
-              # All fetched lines have the same group_method_id and
-              # processing_node.
-              # Their dates are lower-than or equal-to now_date.
-              # We read each line once so lines have distinct uids.
-              # So what remains to be filtered on are path and method_id.
-              if self.merge_duplicate:
-                key = line.path, line.method_id
-                original_uid = path_and_method_id_dict.get(key)
-                if original_uid is not None:
-                  uid_to_duplicate_uid_list_dict[original_uid].append(line.uid)
-                  continue
-                path_and_method_id_dict[key] = line.uid
-                uid_to_duplicate_uid_list_dict[line.uid] = \
-                  getDuplicateMessageUidList(line)
-              if cost < 1:
-                m = self.loadMessage(line.message, uid=line.uid, line=line)
-                cost += len(m.getObjectList(activity_tool)) * \
-                        m.activity_kw.get('group_method_cost', .01)
-                message_list.append(m)
-              else:
-                unreserve_uid_list.append(line.uid)
-            activity_tool.SQLBase_processMessage(table=self.sql_table,
-              uid=[m.uid for m in message_list])
-            # Unreserve extra messages as soon as possible.
-            self.makeMessageListAvailable(activity_tool=activity_tool,
-                                          uid_list=unreserve_uid_list)
+              m, uid, uid_list = load(line)
+              if m is None:
+                uid_to_duplicate_uid_list_dict[uid] += uid_list
+                continue
+              uid_to_duplicate_uid_list_dict[uid] = uid_list
+              cost += len(m.getObjectList(activity_tool)) * \
+                      m.activity_kw.get('group_method_cost', .01)
+              message_list.append(m)
+              if cost >= 1:
+                # Unreserve extra messages as soon as possible.
+                self.makeMessageListAvailable(activity_tool=activity_tool,
+                  uid_list=[line.uid for line in result if line.uid != uid])
+        activity_tool.SQLBase_processMessage(table=self.sql_table,
+          uid=uid_to_duplicate_uid_list_dict.keys())
         return message_list, group_method_id, uid_to_duplicate_uid_list_dict
     except:
       self._log(WARNING, 'Exception while reserving messages.')
