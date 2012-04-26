@@ -40,7 +40,8 @@ class SyncMLAsynchronousEngine(EngineMixin):
 
   def processClientSynchronization(self, syncml_request, subscription):
     """ Global method that process the package 3, 4 & 5 of SyncML DS Protocol """
-    syncml_logger.info("xxx Client processing data from server xxx")
+    syncml_logger.info("xxx Client processing data from server (%s) xxx"
+                       % (subscription.getSynchronizationState()))
     syncml_logger.info("\tstatus %s, sync %s, final %s"
                          % (len(syncml_request.status_list),
                             len(syncml_request.sync_command_list),
@@ -82,7 +83,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
         # As we generated all activities to send data at once, process must not
         # go back here, go into processing state thus status will be applied and
         # if no sync command received, the process will just go on
-        subscription.processSyncRequest()
+      subscription.processSyncRequest()
     elif subscription.getSynchronizationState() == "processing_sync_requests":
       # In a second time, clients applied modifications from server
       # This is the package 5 of the protocol
@@ -111,6 +112,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
                                after_tag=tag,).sendMessage(
                                  xml=str(syncml_response))
         # Synchronization process is now finished
+        syncml_logger.info("\tClient finished processing messages from server")
         subscription.finish()
         syncml_response = None # XXX Do not resend the message
     else:
@@ -272,7 +274,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
     Launch the apply sync command in activity
     """
     send_response = subscription.getSyncmlAlertCode() != "refresh_from_client_only"
-    if send_response:
+    if send_response and len(syncml_request.sync_command_list):
       # Generate a list of responses ID here to be scallable
       response_id_list = subscription.getNextMessageIdList(
         id_count=len(syncml_request.sync_command_list))
@@ -287,6 +289,9 @@ class SyncMLAsynchronousEngine(EngineMixin):
       else:
         syncml_response = None
       subscription.applyActionList(syncml_request, syncml_response)
+      if syncml_response:
+        subscription.sendMessage(xml=str(syncml_response))
+
     else:
       # XXX For now always split by one
       activate = subscription.getPortalObject().portal_synchronizations.activate
@@ -295,7 +300,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
         "priority" : ACTIVITY_PRIORITY,
         "tag" : tag,
         "group_method_id" : None,
-        "group_method_cost" : 1./float(split), 
+        "group_method_cost" : 1./float(split),
         }
       for action in syncml_request.sync_command_list:
         syncml_logger.info("---> launch action in activity %s" %(action,))
@@ -306,3 +311,4 @@ class SyncMLAsynchronousEngine(EngineMixin):
           action=action,
           request_message_id=syncml_request.header["message_id"],
           simulate=False)
+        # XXX Response is not send here
