@@ -91,7 +91,7 @@ class Xvfb:
     result = check_process.communicate()[0]
     if result == 'Free':
       # Xvfb did not start properly so stop here
-      raise NotImplementedError, "Can not start Xvfb, stop test execution" 	
+      raise NotImplementedError, "Can not start Xvfb, stop test execution"
 
   def run(self):
     for display_try in self.display_list:
@@ -294,19 +294,11 @@ class FunctionalTestRunner:
       while self.getStatus() is None:
         time.sleep(10)
         if (time.time() - start) > float(self.timeout):
-          self.verboseErrorLog()
           raise TimeoutError("Test took more them %s seconds" % self.timeout)
 
     finally:
       self.browser.quit()
       xvfb.quit()
-
-  def verboseErrorLog(self, size=10):
-    for entry in self.portal.error_log.getLogEntries()[:size]:
-      print "="*20
-      print "ERROR ID : %s" % entry["id"]
-      print "TRACEBACK :"
-      print entry["tb_text"]
 
   def processResult(self):
     file_content = self.getStatus().encode("utf-8", "replace")
@@ -362,6 +354,21 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     # XXX Memcached is missing
     # XXX Persistent cache setup is missing
 
+  def _verboseErrorLog(self, size=10):
+    for entry in self.portal.error_log.getLogEntries()[:size]:
+      print "="*20
+      print "ERROR ID : %s" % entry["id"]
+      print "TRACEBACK :"
+      print entry["tb_text"]
+
+  def _hasActivityFailure(self):
+    """ Return True if the portal has any Activity Failure
+    """
+    for m in self.portal.portal_activities.getMessageList():
+      if m.processing_node < -1:
+        return True
+    return False
+
   def testFunctionalTestRunner(self):
     # first of all, abort to get rid of the mysql participation inn this
     # transaction
@@ -374,7 +381,16 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
 
     debug = self.foreground or os.environ.get("erp5_debug_mode")
     self.runner.test(debug=debug)
-    detail, success, failure, error_title_list = self.runner.processResult()
+    try:
+      detail, success, failure, error_title_list = self.runner.processResult()
+    except TimeoutError, e:
+      self._verboseErrorLog(20)
+      raise TimeoutError(e)
+
+    # In case of failure, verbose the error_log entries in order to collect
+    # appropriated information to debug the system.
+    if self._hasActivityFailure():
+       self._verboseErrorLog(20)
 
     self.logMessage("-" * 79)
     total = success + failure

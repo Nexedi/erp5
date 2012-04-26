@@ -11,6 +11,7 @@
             <value>
               <list>
                 <string>anchor</string>
+                <string>columns</string>
                 <string>lines</string>
                 <string>list_action</string>
                 <string>list_method</string>
@@ -113,6 +114,33 @@
                 <item>
                     <key> <string>anchor</string> </key>
                     <value> <int>0</int> </value>
+                </item>
+                <item>
+                    <key> <string>columns</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>id</string>
+                          <string>ID</string>
+                        </tuple>
+                        <tuple>
+                          <string>title</string>
+                          <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>translated_portal_type</string>
+                          <string>Type</string>
+                        </tuple>
+                        <tuple>
+                          <string>movement.start_date</string>
+                          <string>Start Date</string>
+                        </tuple>
+                        <tuple>
+                          <string>constant_string_field</string>
+                          <string>Constant</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>

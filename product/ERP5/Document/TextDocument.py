@@ -48,6 +48,8 @@ from Products.ERP5Type.Utils import guessEncodingFromText
 from lxml import html as etree_html
 from lxml import etree
 
+from Products.ERP5Type.ImageUtil import transformUrlToDataURI
+
 class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                                             TextContent, File):
     """A TextDocument impletents IDocument, IFile, IBaseConvertable, ICachedconvertable
@@ -156,19 +158,21 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
           filename = self.getFilename()
           if mime_type == 'text/html':
             mime_type = 'text/x-html-safe'
-          result = portal_transforms.convertToData(mime_type, text_content,
+          if src_mimetype != "image/svg+xml":
+            result = portal_transforms.convertToData(mime_type, text_content,
                                                    object=self, context=self,
                                                    filename=filename,
                                                    mimetype=src_mimetype,
                                                    **convert_kw)
-          if result is None:
-            raise ConversionError('TextDocument conversion error. '
-                                  'portal_transforms failed to convert '
-                                  'from %r to %s: %r' % 
-                                  (src_mimetype, mime_type, self))
-
+            if result is None:
+              raise ConversionError('TextDocument conversion error. '
+                                    'portal_transforms failed to convert '
+                                    'from %r to %s: %r' % 
+                                    (src_mimetype, mime_type, self))
+          else:
+            result = text_content
           if format in VALID_IMAGE_FORMAT_LIST:
-            # do resize by temporary image
+            # Include extra parameter for image conversions
             temp_image = self.portal_contributions.newContent(
                                        portal_type='Image',
                                        file=cStringIO.StringIO(),
@@ -176,6 +180,7 @@ class TextDocument(CachedConvertableMixin, BaseConvertableFileMixin,
                                        temp_object=1)
             temp_image._setData(result)
             mime, result = temp_image.convert(**kw)
+
           self.setConversion(result, original_mime_type, **kw)
         else:
           mime_type, result = self.getConversion(**kw)
