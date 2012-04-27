@@ -146,11 +146,15 @@ class SQLBase(Queue):
         If None (or not given) no limit apply.
     """
     select = activity_tool.SQLBase_selectReservedMessageList
-    result = not group_method_id and select(table=self.sql_table, count=limit,
-                                            processing_node=processing_node)
-    if not result:
+    if group_method_id:
+      reserve = limit - 1
+    else:
+      result = select(table=self.sql_table, count=limit,
+                      processing_node=processing_node)
+      reserve = limit - len(result)
+    if reserve:
       activity_tool.SQLBase_reserveMessageList(table=self.sql_table,
-        count=limit, processing_node=processing_node, to_date=date,
+        count=reserve, processing_node=processing_node, to_date=date,
         group_method_id=group_method_id)
       result = select(table=self.sql_table,
                       processing_node=processing_node, count=limit)
