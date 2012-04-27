@@ -34,6 +34,7 @@ import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.utils import createZODBPythonScript, reindex
+from Products.ERP5Type.tests.utils import todo_erp5
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
 
 class TestBPMMixin(ERP5TypeTestCase):
@@ -742,6 +743,14 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEqual(self.invoicing_simulation_movement.isFrozen(), False)
     self.assertEqual(self.split_simulation_movement.isFrozen(), True)
     self.assertEqual(self.split_invoicing_simulation_movement.isFrozen(), False)
+
+  @todo_erp5
+  def test_payBeforeDelivery(self):
+    # TODO: Implement use cases where business states don't follow the order
+    #       of applied rules.
+    #       This was tested in draft implementation of BPM
+    #       (see testBPMEvaluation in older revisions).
+    raise NotImplementedError
 
 def test_suite():
   suite = unittest.TestSuite()

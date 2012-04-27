@@ -1,8 +1,0 @@
-2010-05-24 kazuhiko
-* Improve activity dependencies for Delivery_updateAppliedRule, eg. delivery.activate(tag='(path)_updateAppliedRule', after_tag='(path)_expand').Delivery_updateAppliedRule(activate_kw={'tag':'(path)_expand'})
-
-2009-07-02 luke
-* change purpose of this business template
-
-2009-04-27 luke
-* initial version
