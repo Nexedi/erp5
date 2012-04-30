@@ -429,8 +429,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     portal_sync = self.getSynchronizationTool()
     sub1 = portal_sync[self.sub_id1]
     pub = portal_sync[self.pub_id]
-    pub.setSynchronizationIdGeneratorMethodId('generateNewId')
-    sub1.setSynchronizationIdGeneratorMethodId('generateNewId')
 
   def checkSynchronizationStateIsConflict(self, portal_type='Text'):
     portal_sync = self.getSynchronizationTool()
@@ -660,8 +658,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     gid = self.reference1 +  '-' + self.version1 + '-' + self.language1 # ie the title ''
     gid = b16encode(gid)
     document_c1 = subscription1.getDocumentFromGid(gid)
-    id_c1 = document_c1.getId()
-    self.assertTrue(id_c1 in ('1', '2')) # id given by the default generateNewId
     document_s = publication.getSubscriber(self.subscription_url['two_way']).getDocumentFromGid(gid)
     id_s = document_s.getId()
     self.assertEqual(id_s, self.id1)
@@ -687,8 +683,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     id_s = document_s.getId()
     self.assertEqual(id_s, self.id1)
     document_c1 = subscription1.getDocumentFromGid(gid)
-    id_c1 = document_c1.getId()
-    self.assertTrue(id_c1 in ('1', '2')) # id given by the default generateNewId
     self.assertEqual(document_s.getDescription(), self.description3)
     self.assertXMLViewIsEqual(self.sub_id1, document_s, document_c1)
 

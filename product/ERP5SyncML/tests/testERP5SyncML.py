@@ -477,9 +477,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     sub1.setConduitModuleId('ERP5ConduitTitleGid')
     sub2.setConduitModuleId('ERP5ConduitTitleGid')
     pub.setConduitModuleId('ERP5ConduitTitleGid')
-    pub.setSynchronizationIdGeneratorMethodId('_generateNextId')
-    sub1.setSynchronizationIdGeneratorMethodId('_generateNextId')
-    sub2.setSynchronizationIdGeneratorMethodId('_generateNextId')
 
   def checkSynchronizationStateIsConflict(self):
     portal_sync = self.getSynchronizationTool()
@@ -1100,8 +1097,6 @@ return [context[%r]]
     gid = self.first_name1 +  ' ' + self.last_name1 # ie the title 'Sebastien Robin'
     gid = b16encode(gid)
     person_c1 = subscription1.getDocumentFromGid(gid)
-    id_c1 = person_c1.getId()
-    self.failUnless(id_c1 in ('1','2')) # id given by the default generateNewId
     person_s = publication.getSubscriber(self.subscription_url1).getDocumentFromGid(gid)
     id_s = person_s.getId()
     self.assertEquals(id_s, self.id1)
