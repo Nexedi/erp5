@@ -26,7 +26,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>listbox</string> </value>
+            <value> <string>document_listbox</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>

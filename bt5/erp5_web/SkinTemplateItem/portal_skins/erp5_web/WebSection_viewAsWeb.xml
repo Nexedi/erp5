@@ -63,7 +63,7 @@
                     <value>
                       <list>
                         <string>my_description</string>
-                        <string>listbox</string>
+                        <string>document_listbox</string>
                       </list>
                     </value>
                 </item>
@@ -71,7 +71,7 @@
                     <key> <string>webcontent header bottom</string> </key>
                     <value>
                       <list>
-                        <string>listbox_modification_date</string>
+                        <string>document_listbox_modification_date</string>
                       </list>
                     </value>
                 </item>
