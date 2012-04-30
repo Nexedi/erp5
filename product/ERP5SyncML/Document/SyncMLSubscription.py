@@ -530,7 +530,8 @@ class SyncMLSubscription(XMLObject):
     create_signature = alert_code != "refresh_from_client_only"
 
     if not len(object_list):
-      raise ValueError("No object retrieved althoud id_list is provided")
+      syncml_logger.warning("No object retrieved althoud id_list (%s) is provided" 
+                            % (id_list))
 
     for result in object_list:
       object_path = result.getPath()
