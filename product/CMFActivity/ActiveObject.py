@@ -62,7 +62,7 @@ class ActiveObject(ExtensionClass.Base):
   security = ClassSecurityInfo()
 
   def activate(self, activity=DEFAULT_ACTIVITY, active_process=None,
-               passive_commit=0, activate_kw=None, **kw):
+               activate_kw=None, **kw):
     """Returns an active wrapper for this object.
 
       Reserved Optional parameters:
