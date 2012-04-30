@@ -272,7 +272,7 @@ class EngineMixin(object):
         gid_generator_method_id=publication.getGidGeneratorMethodId(),
         source=publication.getSource(),
         synchronization_id_generator_method_id =
-          publication.getSynchronizationIdGeneratorMethodId(),
+          publication.getSynchronizationIdGeneratorMethodId(), # XXX Deprecated
         is_activity_enabled = publication.getIsActivityEnabled(),
         # Protocol information
         syncml_alert_code="syncml_alert_code/%s" %(alert_dict["code"],),
