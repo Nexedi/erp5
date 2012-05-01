@@ -113,7 +113,8 @@ class PasswordTool(BaseTool):
   def mailPasswordResetRequest(self, user_login=None, REQUEST=None,
                                notification_message=None, sender=None,
                                store_as_event=False,
-                               expiration_date=None):
+                               expiration_date=None,
+                               substitution_method_parameter_dict=None):
     """
     Create a random string and expiration date for request
     Parameters:
@@ -126,6 +127,8 @@ class PasswordTool(BaseTool):
     store_as_event -- whenever CRM is available, store
                         notifications as events
     expiration_date -- If not set, expiration date is current date + 1 day.
+    substitution_method_parameter_dict -- additional substitution dict for
+                                          creating an email.
     """
     if REQUEST is None:
       REQUEST = get_request()
@@ -170,6 +173,8 @@ class PasswordTool(BaseTool):
     message_dict = {'instance_name':self.getPortalObject().getTitle(),
                     'reset_password_link':url,
                     'expiration_date':self.getExpirationDateForKey(key)}
+    if substitution_method_parameter_dict is not None:
+      message_dict.update(substitution_method_parameter_dict)
 
     if notification_message is None:
       subject = translateString("[${instance_name}] Reset of your password",
