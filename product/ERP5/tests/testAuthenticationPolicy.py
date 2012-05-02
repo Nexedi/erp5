@@ -317,6 +317,11 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertRaises(ValueError, person.setPassword, '12345678-new')
     self.assertTrue(person.isPasswordValid('12345678_')) # it's OK with another one not used yet
     for password in ['a','b','c','d', 'e', 'f']:
+      # this sleep is not so beautiful, but mysql datetime columns has a
+      # precision of one second only, and we use creation_date to order
+      # "Password Event" objects. So without this sleep, the test is
+      # failing randomly.
+      time.sleep(1)
       person.setPassword(password)
       self.stepTic()
     self._clearCache()
