@@ -179,17 +179,17 @@
 <tr>\n
   <td>verifyElementPositionTop</td>\n
   <td>id=group_1_activity_1_block_1</td>\n
-  <td>250</td>\n
+  <td>251</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPositionTop</td>\n
   <td>id=group_2_activity_1_block_1</td>\n
-  <td>330</td>\n
+  <td>331</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementPositionTop</td>\n
   <td>id=group_3_activity_1_block_1</td>\n
-  <td>410</td>\n
+  <td>411</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementWidth</td>\n
@@ -225,9 +225,7 @@
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
