@@ -40,7 +40,7 @@ from AccessControl.SecurityManagement import getSecurityManager,\
     setSecurityManager, newSecurityManager
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLCatalog import SimpleQuery
-from zLOG import LOG, INFO
+from zLOG import LOG, ERROR
 
 #Form for new plugin in ZMI
 manage_addERP5BearerExtractionPluginForm = PageTemplateFile(
@@ -144,7 +144,7 @@ class ERP5BearerExtractionPlugin(BasePlugin):
             result = getattr(token_document,
             self.token_validation_method)()
           except Exception:
-            LOG('BearerExtractionPlugin', INFO, 'Problem while calling token '
+            LOG('BearerExtractionPlugin', ERROR, 'Problem while calling token '
               'validation method %r on %r:' % (self.token_validation_method,
               token_document.getPath()), error=True)
           if result is True:
