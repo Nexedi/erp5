@@ -61,8 +61,6 @@ person = context.getPortalObject().portal_catalog.getResultValue(portal_type=\'P
 if person is None:\n
   return False\n
 \n
-script.log(context.BearerToken_getHMAC(person.getBearerTokenKey(), context.getSourceReference()))\n
-script.log(context.getReference())\n
 if context.BearerToken_getHMAC(person.getBearerTokenKey(), context.getSourceReference()) == context.getReference() \\\n
   and context.getExpirationDate() >= DateTime() and context.getValidationState() == \'validated\' \\\n
   and context.getDestinationReference() is not None:\n
