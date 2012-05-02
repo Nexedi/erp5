@@ -51,9 +51,8 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>return context.Base_getHMAC(key,\n
-  """%s\\n%s\\n%s\\n%s\\n%s""" % (\n
+  """%s\\n%s\\n%s\\n%s""" % (\n
     context.REQUEST.getHeader(\'User-Agent\'),\n
-    context.REQUEST.getHeader(\'Host\'),\n
     context.REQUEST.get(\'REMOTE_ADDR\'),\n
     context.getCreationDate().timeTime(),\n
     fuzzy)\n
