@@ -108,7 +108,7 @@ class ERP5BearerExtractionPlugin(BasePlugin):
     token = None
     if request._auth is not None:
       # 1st - try to fetch from Authorization header
-      if 'Bearer' in request._auth:
+      if 'bearer' in request._auth.lower():
         l = request._auth.split()
         if len(l) == 2:
           token = l[1]
