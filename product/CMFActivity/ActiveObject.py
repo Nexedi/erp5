@@ -28,6 +28,7 @@
 
 import ExtensionClass
 import warnings
+from contextlib import contextmanager
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_base
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -154,6 +155,30 @@ class ActiveObject(ExtensionClass.Base):
     path = getActivityRuntimeEnvironment()._message.active_process
     if path:
       return self.unrestrictedTraverse(path)
+
+  # XXX: Use something else than 'id(aq_base(self)))' because it
+  #      would fail if object is ejected from connection cache.
+
+  @contextmanager
+  def defaultActivateParameterDict(self, parameter_dict, placeless=False):
+    # XXX: Should we be more strict about reentrant calls ?
+    #      - should they be forbidden ?
+    #      - or should we merge entries ?
+    if parameter_dict is None:
+      yield
+    else:
+      tv = getTransactionalVariable()
+      key = (_DEFAULT_ACTIVATE_PARAMETER_KEY,) if placeless else \
+            (_DEFAULT_ACTIVATE_PARAMETER_KEY, id(aq_base(self)))
+      old_kw = tv.get(key)
+      tv[key] = parameter_dict.copy()
+      try:
+        yield
+      finally:
+        if old_kw is None:
+          del tv[key]
+        else:
+          tv[key] = old_kw
 
   def setDefaultActivateParameterDict(self, parameter_dict, placeless=False):
     # This method sets the default keyword parameters to activate. This is
