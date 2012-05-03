@@ -1528,29 +1528,12 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     key = ('default_reindex_parameter', )
     tv[key] = kw
 
-  security.declarePublic('setPlacelessDefaultActivateParameters')
-  def setPlacelessDefaultActivateParameters(self, **kw):
-    # This method sets the default keyword parameters to activate. This is useful
-    # when you need to specify special parameters implicitly (e.g. to reindexObject).
-    # Those parameters will affect all activate calls, not just ones on self.
-    tv = getTransactionalVariable()
-    key = ('default_activate_parameter', )
-    tv[key] = kw
-
   security.declarePublic('getPlacelessDefaultReindexParameters')
   def getPlacelessDefaultReindexParameters(self):
     # This method returns default reindex parameters to self.
     # The result can be either a dict object or None.
     tv = getTransactionalVariable()
     key = ('default_reindex_parameter', )
-    return tv.get(key)
-
-  security.declarePublic('getPlacelessDefaultActivateParameters')
-  def getPlacelessDefaultActivateParameters(self):
-    # This method returns default activate parameters to self.
-    # The result can be either a dict object or None.
-    tv = getTransactionalVariable()
-    key = ('default_activate_parameter', )
     return tv.get(key)
 
   security.declareProtected(Permissions.ManagePortal, 'getERP5SiteGlobalId')
