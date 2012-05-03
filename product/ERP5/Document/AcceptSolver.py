@@ -63,15 +63,14 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
     Adopt new property to simulation movements, with keeping the
     original one recorded.
     """
-    configuration_dict = self.getConfigurationPropertyDict()
-    solved_property_list = configuration_dict.get('tested_property_list', None)
+    portal = self.getPortalObject()
+    solved_property_list = self.getConfigurationPropertyDict() \
+                               .get('tested_property_list')
     if solved_property_list is None:
-      portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
-      solved_property_list = portal_type.getTestedPropertyList()
-    if 1:
+      solved_property_list = \
+        portal.portal_types.getTypeInfo(self).getTestedPropertyList()
+    with self.defaultActivateParameterDict(activate_kw, True):
       for simulation_movement in self.getDeliveryValueList():
-        if activate_kw is not None:
-          simulation_movement.setDefaultActivateParameterDict(activate_kw)
         movement = simulation_movement.getDeliveryValue()
         value_dict = {}
         base_category_set = set(movement.getBaseCategoryList())
@@ -89,16 +88,13 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
             new_value = movement.getProperty(solved_property)
           # XXX hard coded
           if solved_property == 'quantity':
-            new_quantity = new_value * simulation_movement.getDeliveryRatio()
-            value_dict.update({'quantity':new_quantity})
-          else:
-            value_dict.update({solved_property:new_value})
+            new_value *= simulation_movement.getDeliveryRatio()
+          value_dict[solved_property] = new_value
         for property_id, value in value_dict.iteritems():
           if not simulation_movement.isPropertyRecorded(property_id):
             simulation_movement.recordProperty(property_id)
           simulation_movement.setMappedProperty(property_id, value)
         simulation_movement.expand(activate_kw=activate_kw)
     # Finish solving
-    if self.getPortalObject().portal_workflow.isTransitionPossible(
-      self, 'succeed'):
+    if portal.portal_workflow.isTransitionPossible(self, 'succeed'):
       self.succeed()

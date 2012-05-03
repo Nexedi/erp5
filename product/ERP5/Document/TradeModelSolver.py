@@ -63,52 +63,44 @@ class TradeModelSolver(AcceptSolver):
     Adopt new values to simulation movements, with keeping the original
     one recorded, and then update Trade Model related lines accordingly.
     """
-    configuration_dict = self.getConfigurationPropertyDict()
-    portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
-    solved_property_list = configuration_dict.get('tested_property_list',
-                                                  portal_type.getTestedPropertyList())
-    delivery_dict = {}
+    portal = self.getPortalObject()
+    solved_property_list = self.getConfigurationPropertyDict() \
+                               .get('tested_property_list')
+    if solved_property_list is None:
+      solved_property_list = \
+        portal.portal_types.getTypeInfo(self).getTestedPropertyList()
+    delivery_dict = {} # {movement: simulation_movement_list}
     for simulation_movement in self.getDeliveryValueList():
       delivery_dict.setdefault(simulation_movement.getDeliveryValue(),
                                []).append(simulation_movement)
 
-    # Here, items of delivery_list should be movements, not deliveries.
-    delivery_set = set()
-    solved_movement_list = delivery_dict.iterkeys()
-    for movement in solved_movement_list:
-      delivery = movement.getRootDeliveryValue()
-      delivery_set.add(delivery)
-    all_movement_list = sum([x.getMovementList() for x in delivery_set], [])
-
     # First, separate movements into invoice lines and trade model
     # related lines.
     # XXX is there any better way than using rule's reference?
-    trade_model_related_movement_list = []
-    for movement in all_movement_list:
-      if movement in solved_movement_list:
-        continue
-      applied_rule = movement.getDeliveryRelatedValue().getParentValue()
-      # hard coded reference name
-      if applied_rule.getSpecialiseReference() == 'default_trade_model_rule':
-        trade_model_related_movement_list.append(movement)
+    trade_model_related_movement_dict = {}
+    for delivery in set(movement.getRootDeliveryValue()
+                        for movement in delivery_dict):
+      for movement in delivery.getMovementList():
+        simulation_movement_list = delivery_dict.get(movement) or \
+          movement.getDeliveryRelatedValueList()
+        applied_rule = simulation_movement_list[0].getParentValue()
+        # hard coded reference name
+        if applied_rule.getSpecialiseReference() == 'default_trade_model_rule':
+          trade_model_related_movement_dict[movement] = simulation_movement_list
 
-    if 1:
+    with self.defaultActivateParameterDict(activate_kw, True):
       # Second, apply changes on invoice lines to simulation movements,
       # then expand.
       for movement, simulation_movement_list in delivery_dict.iteritems():
-        if movement in trade_model_related_movement_list:
+        if movement in trade_model_related_movement_dict:
           continue
         for simulation_movement in simulation_movement_list:
-          if activate_kw is not None:
-            simulation_movement.setDefaultActivateParameterDict(activate_kw)
           value_dict = {}
           for solved_property in solved_property_list:
             new_value = movement.getProperty(solved_property)
             if solved_property == 'quantity':
-              new_quantity = new_value * simulation_movement.getDeliveryRatio()
-              value_dict.update({'quantity':new_quantity})
-            else:
-              value_dict.update({solved_property:new_value})
+              new_value *= simulation_movement.getDeliveryRatio()
+            value_dict[solved_property] = new_value
           for property_id, value in value_dict.iteritems():
             if not simulation_movement.isPropertyRecorded(property_id):
               simulation_movement.recordProperty(property_id)
@@ -117,33 +109,28 @@ class TradeModelSolver(AcceptSolver):
 
       # Third, adopt changes on trade model related lines.
       # XXX non-linear case is not yet supported.
-      for movement in trade_model_related_movement_list:
-        if activate_kw is not None:
-          movement.setDefaultActivateParameterDict(activate_kw)
+      for movement, simulation_movement_list in \
+          trade_model_related_movement_dict.iteritems():
         for solved_property in solved_property_list:
           if solved_property == 'quantity':
-            simulation_movement_list = movement.getDeliveryRelatedValueList()
-            total_quantity = sum(
-              [x.getQuantity() for x in simulation_movement_list])
+            total_quantity = sum(x.getQuantity()
+              for x in simulation_movement_list)
             movement.setQuantity(total_quantity)
             for simulation_movement in simulation_movement_list:
               quantity = simulation_movement.getQuantity()
-              if total_quantity != 0.0:
+              if total_quantity:
                 delivery_ratio = quantity / total_quantity
               else:
                 delivery_ratio = 1.0 / len(simulation_movement_list)
               delivery_error = total_quantity * delivery_ratio - quantity
               simulation_movement.edit(delivery_ratio=delivery_ratio,
-                                       delivery_error=delivery_error,
-                                       activate_kw=activate_kw)
+                                       delivery_error=delivery_error)
           else:
             # XXX TODO we need to support multiple values for categories or
             # list type property.
-            simulation_movement = movement.getDeliveryRelatedValue()
             movement.setProperty(solved_property,
-                                 simulation_movement.getProperty(solved_property))
+              simulation_movement_list[0].getProperty(solved_property))
 
     # Finish solving
-    if self.getPortalObject().portal_workflow.isTransitionPossible(
-      self, 'succeed'):
+    if portal.portal_workflow.isTransitionPossible(self, 'succeed'):
       self.succeed()
