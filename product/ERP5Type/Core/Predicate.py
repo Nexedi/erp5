@@ -40,7 +40,7 @@ from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
 from Products.ERP5Type.Document import newTempBase
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Utils import convertToUpperCase
-from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
+from Products.ERP5Type.Cache import readOnlyTransactionCache
 from Products.ZSQLCatalog.SQLCatalog import SQLQuery
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -150,13 +150,9 @@ class Predicate(XMLObject):
           tested_base_category_list]
 
     # Test category memberships. Enable the read-only transaction cache
-    # temporarily, if not enabled, because this part is strictly read-only,
-    # and context.isMemberOf is very expensive, when the category list has
-    # many items.
-    enabled = getReadOnlyTransactionCache() is not None
-    try:
-      if not enabled:
-        enableReadOnlyTransactionCache()
+    # because this part is strictly read-only, and context.isMemberOf
+    # is very expensive when the category list has many items.
+    with readOnlyTransactionCache():
       for c in membership_criterion_category_list:
         bc = c.split('/', 1)[0]
         if (bc not in tested_base_category) and \
@@ -176,10 +172,6 @@ class Predicate(XMLObject):
           tested_base_category[bc] = tested_base_category[bc] or \
                                      context.isMemberOf(c,
                                          strict_membership=strict_membership)
-    finally:
-      if not enabled:
-        disableReadOnlyTransactionCache()
-
 #        LOG('predicate test', 0,
 #            '%s after single membership to %s' % \
 #            (tested_base_category[bc], c))

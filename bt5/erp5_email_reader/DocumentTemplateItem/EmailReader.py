@@ -32,7 +32,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.ExternalSource import ExternalSource
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyTransactionCache
+from Products.ERP5Type.Cache import getReadOnlyTransactionCache
 
 # IMAP imports
 import imaplib
@@ -442,18 +442,13 @@ class EmailReader(ExternalSource):
       Returns the list of folders of the current server
       XXX Add read only transaction cache
     """
-    enabled = (getReadOnlyTransactionCache(self) is not None)
-    if not enabled:
-      enableReadOnlyTransactionCache(self)
-    cache = getReadOnlyTransactionCache(self)
+    cache = getReadOnlyTransactionCache()
     if cache is not None:
       key = ('getMessageFolderList', self)
       try:
         return cache[key]
       except KeyError:
         pass
-    else:
-      raise "No Conversion Cache" # XXX - Implement this better
 
     server = self._getMailServer()
     if server is None: return ()
@@ -473,18 +468,13 @@ class EmailReader(ExternalSource):
       break things. An interactor is required to clear
       the variable
     """
-    enabled = (getReadOnlyTransactionCache(self) is not None)
-    if not enabled:
-      enableReadOnlyTransactionCache(self)
-    cache = getReadOnlyTransactionCache(self)
+    cache = getReadOnlyTransactionCache()
     if cache is not None:
       key = ('_getMailServer', self)
       try:
         return cache[key]
       except KeyError:
         pass
-    else:
-      raise "No Conversion Cache" # XXX - Implement this better
 
     # No server defined
     if not self.getURLServer(): return None

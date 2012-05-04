@@ -755,18 +755,17 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     return obj
 
   def _isUpdated(self, obj, level):
-    tv = getTransactionalVariable(self)
-    return level in tv['builder_processed_list'].get(obj, [])
+    tv = getTransactionalVariable()
+    return level in tv['builder_processed_list'].get(obj, ())
 
   def _setUpdated(self, obj, level):
-    tv = getTransactionalVariable(self)
-    if tv.get('builder_processed_list', None) is None:
+    tv = getTransactionalVariable()
+    if 'builder_processed_list' not in tv:
       self._resetUpdated()
-    tv['builder_processed_list'][obj] = \
-       tv['builder_processed_list'].get(obj, []) + [level]
+    tv['builder_processed_list'].setdefault(obj, []).append(level)
 
   def _resetUpdated(self):
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     tv['builder_processed_list'] = {}
 
   # for backward compatibilities.
