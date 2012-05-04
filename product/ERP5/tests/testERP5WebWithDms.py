@@ -40,7 +40,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
      _getConversionServerDict
 from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
 from Products.ERP5.Document.Document import ConversionError
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 try:
   from PIL import Image
@@ -908,8 +907,6 @@ return True
     self.assertEquals(image.getContentType(), 'image/svg+xml')
     self.assertRaises(ConversionError, image.convert, "png")
 
-  # "Waiting for rsvg-convert be available for imagemagick"
-  @expectedFailure
   def test_ImageConversionFromSVGToPNG_embeeded_data(self):
     """ Test Convert one SVG Image with an image with the data
         at the url of the image tag.ie:
@@ -917,7 +914,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG("Image")
 
-  @expectedFailure
   def test_FileConversionFromSVGToPNG_embeeded_data(self):
     """ Test Convert one SVG Image with an image with the data
         at the url of the image tag.ie:
@@ -925,7 +921,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG("File")
   
-  @expectedFailure
   def test_WebPageConversionFromSVGToPNG_embeeded_data(self):
     """ Test Convert one SVG Image with an image with the data
         at the url of the image tag.ie:
@@ -958,7 +953,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG_empty_file("File")
 
-  @expectedFailure
   def test_ImageConversionFromSVGToPNG_file_url(self):
     """ Test Convert one SVG Image with an image using local path (file)
         at the url of the image tag. ie:
@@ -969,7 +963,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG_file_url("Image")
 
-  @expectedFailure
   def test_FileConversionFromSVGToPNG_file_url(self):
     """ Test Convert one SVG Image with an image using local path (file)
         at the url of the image tag. ie:
@@ -980,7 +973,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG_file_url("File")
 
-  @expectedFailure
   def test_WebPageConversionFromSVGToPNG_file_url(self):
     """ Test Convert one SVG Image with an image using local path (file)
         at the url of the image tag. ie:
@@ -991,7 +983,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG_file_url("Web Page")
 
-  @expectedFailure
   def test_ImageConversionFromSVGToPNG_http_url(self):
     """ Test Convert one SVG Image with an image with a full
         url at the url of the image tag. ie:
@@ -1000,7 +991,6 @@ return True
     self._testImageConversionFromSVGToPNG(
           "Image", "user-TESTSVG-CASE-FULLURL")
 
-  @expectedFailure
   def test_FileConversionFromSVGToPNG_http_url(self):
     """ Test Convert one SVG Image with an image with a full
         url at the url of the image tag. ie:
@@ -1009,7 +999,6 @@ return True
     self._testImageConversionFromSVGToPNG(
           "File", "user-TESTSVG-CASE-FULLURL")
 
-  @expectedFailure
   def test_WebPageConversionFromSVGToPNG_http_url(self):
     """ Test Convert one SVG Image with an image with a full
         url at the url of the image tag. ie:

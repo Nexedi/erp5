@@ -32,7 +32,6 @@ from Products.ERP5Form.Form import ERP5Form
 from DocumentTemplate import String
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
 from Products.ERP5OOo.tests.utils import Validator
@@ -125,7 +124,6 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       if error_list:
         self.fail(''.join(error_list))
 
-    @expectedFailure
     def test_ooo_chart(self):
       portal = self.getPortal()
       # Does the form exist ?
@@ -229,7 +227,6 @@ class TestOOoChart(ERP5TypeTestCase, ZopeTestCase.Functional):
       # Test Validation Relax NG
       self._validate(body)
 
-    @expectedFailure
     def test_proxy_ooo_chart(self):
       portal = self.getPortal()
       # Does the form exist ?
