@@ -809,19 +809,14 @@ return True
       "Conversion from svg to png create one too small image, " + \
       "so it failed to download the image. (%s >= 100)" % difference_value)
 
-  def _testImageConversionFromSVGToPNG_file_url(self, portal_type="Image"):
-    """ Test Convert one SVG Image with an image using local path (file)
-        at the url of the image tag. ie:
-         <image xlink:href="file:///../../user-XXX-XXX"
-
-        This is not used by ERP5 in production, but this is way that
-        prooves that conversion from SVG to PNG can use external images.
+  def _testImageConversionFromSVGToPNG_url(self, image_url, portal_type="Image"):
+    """ Test Convert one SVG Image with an image url. ie:
+         <image xlink:href="xxx:///../../user-XXX-XXX"
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('user-TESTSVG-CASE-FULLURL-TEMPLATE.svg')
-    svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
-                           "file://" + makeFilePath("user-TESTSVG-BACKGROUND-IMAGE.png"))
+    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
+    svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE", image_url)
 
     # Add image using data instead file this time as it is not the goal of
     # This test assert this topic.
@@ -836,13 +831,42 @@ return True
     self.assertEquals(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
     self.assertEquals(mime, 'image/png')
-    expected_image = makeFileUpload('user-TESTSVG-CASE-FULLURL.png')
+    expected_image = makeFileUpload('user-TESTSVG-CASE-URL.png')
 
     # Compare images and accept some minimal difference,
     difference_value = compare_image(StringIO(converted_data), expected_image)
     self.assertTrue(difference_value < 100,
       "Conversion from svg to png create one too small image, " + \
       "so it failed to download the image. (%s >= 100)" % difference_value)
+
+  def _testImageConversionFromSVGToPNG_file_url(self, portal_type="Image"):
+    """ Test Convert one SVG Image with an image using local path (file)
+        at the url of the image tag. ie:
+         <image xlink:href="file:///../../user-XXX-XXX"
+
+        This is not used by ERP5 in production, but this is way that
+        prooves that conversion from SVG to PNG can use external images.
+    """
+    image_url = "file://" + makeFilePath("user-TESTSVG-BACKGROUND-IMAGE.png")
+    self._testImageConversionFromSVGToPNG_url(image_url, portal_type)
+
+  def _testImageConversionFromSVGToPNG_http_url(self, portal_type="Image"):
+    """ Test Convert one SVG Image with an image with a full
+        url at the url of the image tag. ie:
+         <image xlink:href="http://www.erp5.com/user-XXX-XXX"
+    """
+    portal = self.portal
+    module = portal.getDefaultModule(portal_type=portal_type)
+    upload_file = makeFileUpload('user-TESTSVG-BACKGROUND-IMAGE.png')
+    background_image = module.newContent(portal_type=portal_type,
+                                    file=upload_file,
+                                    reference="NXD-BACKGROUND")
+    background_image.publish()
+    transaction.commit()
+    self.tic()
+
+    image_url = background_image.absolute_url() + "?format="
+    self._testImageConversionFromSVGToPNG_url(image_url, portal_type)
 
   def _testImageConversionFromSVGToPNG_broken_url(self, portal_type="Image"):
     """ Test Convert one broken SVG into PNG. The expected outcome is a
@@ -855,11 +879,11 @@ return True
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('user-TESTSVG-CASE-FULLURL-TEMPLATE.svg')
+    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
     svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
                            "http://soidjsoidjqsoijdqsoidjqsdoijsqd.idjsijds/../user-XXX-XXX")
 
-    upload_file = makeFileUpload('user-TESTSVG-CASE-FULLURL-TEMPLATE.svg')
+    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
     svg2_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
                            "https://www.erp5.com/usXXX-XXX")
 
@@ -988,24 +1012,21 @@ return True
         url at the url of the image tag. ie:
          <image xlink:href="http://www.erp5.com/user-XXX-XXX"
     """
-    self._testImageConversionFromSVGToPNG(
-          "Image", "user-TESTSVG-CASE-FULLURL")
+    self._testImageConversionFromSVGToPNG_http_url("Image")
 
   def test_FileConversionFromSVGToPNG_http_url(self):
     """ Test Convert one SVG Image with an image with a full
         url at the url of the image tag. ie:
          <image xlink:href="http://www.erp5.com/user-XXX-XXX"
     """
-    self._testImageConversionFromSVGToPNG(
-          "File", "user-TESTSVG-CASE-FULLURL")
+    self._testImageConversionFromSVGToPNG_http_url("File")
 
   def test_WebPageConversionFromSVGToPNG_http_url(self):
     """ Test Convert one SVG Image with an image with a full
         url at the url of the image tag. ie:
          <image xlink:href="http://www.erp5.com/user-XXX-XXX"
     """
-    self._testImageConversionFromSVGToPNG(
-          "Web Page", "user-TESTSVG-CASE-FULLURL")
+    self._testImageConversionFromSVGToPNG_http_url("Web Page")
 
 def test_suite():
   suite = unittest.TestSuite()
