@@ -32,6 +32,7 @@ import os
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
@@ -988,7 +989,7 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
 
   def uploadFile(self, file_id):
     file_obj = getattr(self.portal, file_id)
-    file_path = '/tmp/%s' % file_id
+    file_path = tests_home + '/%s' % file_id
     temp_file = open(file_path, 'w+b')
     try:
       temp_file.write(str(file_obj))
