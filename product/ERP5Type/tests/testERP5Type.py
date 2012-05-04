@@ -3093,6 +3093,17 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(None, person.getProperty('foo_property'))
       self.assertEquals(None, person.getProperty('foobar_property'))
 
+    def testgetInstancePropertyAndBaseCategoryList(self):
+      """
+        Check that the method getInstancePropertyAndBaseCategoryList return
+        properties from property sheets correctly
+      """
+      portal_type = self.portal.portal_types.Email
+      result_list = portal_type.getInstancePropertyAndBaseCategoryList()
+      self.assertTrue("description" in result_list,
+          "description not in %s" % result_list)
+
+
 class TestAccessControl(ERP5TypeTestCase):
   # Isolate test in a dedicaced class in order not to break other tests
   # when this one fails.

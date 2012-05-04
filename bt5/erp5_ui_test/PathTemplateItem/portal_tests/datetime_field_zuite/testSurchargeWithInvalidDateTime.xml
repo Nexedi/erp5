@@ -180,16 +180,14 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertPortalStatusMessage</td>\n
+  <td>assertText</td>\n
+  <td>//div[@class="status"]/div[@class="transition_message"]</td>\n
   <td>Data updated.</td>\n
-  <td></td>\n
 </tr>\n
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

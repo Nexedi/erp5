@@ -45,6 +45,7 @@ ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT = 'ERP5Type_asSecurityGroupId'
 from TranslationProviderBase import TranslationProviderBase
 
 from sys import exc_info
+from types import StringType
 from zLOG import LOG, ERROR
 from Products.CMFCore.exceptions import zExceptions_Unauthorized
 
@@ -521,10 +522,20 @@ class ERP5TypeInformation(XMLObject,
       ob = self.constructTempInstance(self, self.getId())
       property_list = list(getattr(ob.__class__, '_properties', []))
       self.updatePropertySheetDefinitionDict({'_properties': property_list})
-      for property_sheet in getClassPropertyList(ob.__class__):
-        property_list += getattr(property_sheet, '_properties', () )
-
       return_set = set()
+      class_property_list = list(getClassPropertyList(ob.__class__))
+      for property_sheet in ob.getTypePropertySheetList():
+        if property_sheet not in class_property_list:
+          class_property_list.append(property_sheet)
+      for property_sheet in iter(class_property_list):
+        property_sheet_tool = self.getPortalObject().portal_property_sheets
+        if type(property_sheet) == StringType:
+          property_sheet_obj = property_sheet_tool[property_sheet]
+          for property in property_sheet_obj.contentValues():
+            return_set.add(property.getTitle())
+        else:
+          property_list += getattr(property_sheet, '_properties', () )
+
       for property in property_list:
         if property['type'] == 'content':
           for suffix in property['acquired_property_id']:
