@@ -62,17 +62,16 @@ portal = context.getPortalObject()\n
 if not portal_type:\n
   portal_type = context.getPortalType()\n
 \n
-preference_id = \'preferred_%s_use\' % \'_\'.join(token.lower() for token in portal_type.split(\' \'))\n
-sql_kw = {\'portal_type\': portal.getPortalResourceTypeList(),\n
-          \'use_uid\': portal.portal_categories.getCategoryUid(portal.portal_preferences.getPreference(preference_id), base_category=\'use\'),\n
-          \'validation_state\': \'validated\',\n
-          \'sort_on\': \'title\'}\n
-\n
 def getResourceItemList(portal_type):\n
+  preference_id = \'preferred_%s_use\' % \'_\'.join(token.lower() for token in portal_type.split(\' \'))\n
+  sql_kw = {\'portal_type\': portal.getPortalResourceTypeList(),\n
+            \'use_uid\': portal.portal_categories.getCategoryUid(portal.portal_preferences.getPreference(preference_id), base_category=\'use\'),\n
+            \'validation_state\': \'validated\',\n
+            \'sort_on\': \'title\'}\n
   return [(\'\', \'\')] + [(result.getTitle(), result.getRelativeUrl()) for result in portal.portal_catalog(**sql_kw)]\n
 \n
 getResourceItemList = CachingMethod(getResourceItemList, \n
-      id=(script.id, context.Localizer.get_selected_language()), \n
+      id=(script.id, portal_type, context.Localizer.get_selected_language()), \n
       cache_factory=\'erp5_ui_long\')\n
 \n
 result_list = getResourceItemList(portal_type)[:]\n
