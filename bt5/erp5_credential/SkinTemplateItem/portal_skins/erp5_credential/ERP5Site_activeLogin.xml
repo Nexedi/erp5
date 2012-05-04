@@ -60,7 +60,7 @@ if credential_request.getValidationState() in (\'submitted\', \'accepted\'):\n
 else:\n
   credential_request.submit(comment=\'Create by subscription form\')\n
   mail_message.deliver()\n
-  message = "Your account is being activated. You will receive one e-mail after finish the activation"\n
+  message = "Your account is being activated. You will receive an e-mail when activation is complete."\n
 \n
 return context.Base_redirect("login_form?portal_status_message=%s" % message)\n
 </string> </value>
