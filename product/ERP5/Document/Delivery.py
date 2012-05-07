@@ -716,15 +716,6 @@ class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
       """Do an immediate local build for this delivery"""
       return self.asComposedDocument().build(explanation=self)
 
-    # deprecated - see ExpandableMixin
-    @UnrestrictedMethod
-    def updateAppliedRule(self, rule_reference=None, rule_id=None, **kw):
-      reference = self.getRuleReference()
-      if (rule_id or rule_reference) != reference:
-        raise RuntimeError("expected %r as rule reference, got %r"
-                           % (reference, rule_reference))
-      self._updateSimulation(create_root=1) # should it be always reexpanded ?
-
     def _createRootAppliedRule(self):
       portal = self.getPortalObject()
       # Only create RAR if we are not in a "too early" or "too late" state.
