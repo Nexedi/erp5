@@ -85,7 +85,7 @@ maximum_depth = 1\n
 assert depth <= maximum_depth\n
 \n
 def activate(**kw):\n
-  return context.activate(activity=\'SQLQueue\', lonely=1, tag=tag, **kw)\n
+  return context.activate(activity=\'SQLQueue\', tag=tag, **kw)\n
 \n
 if depth == maximum_depth and id_list:\n
   # Immediate recursive check\n
