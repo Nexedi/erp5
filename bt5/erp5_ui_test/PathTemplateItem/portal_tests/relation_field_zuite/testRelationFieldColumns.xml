@@ -234,7 +234,7 @@
 \n
 <tr>\n
   <td>click</td>\n
-  <td>//*[@class=\'listbox-data-line-0 DataA\']//input[@type="checkbox"]</td>\n
+  <td>//*[@class=\'listbox-data-line-0 DataA\']/*[@class="listbox-table-select-cell"]/input[@type="checkbox"]</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

@@ -30,6 +30,8 @@ import urllib2
 from lxml import etree
 from Products.ERP5.Document.Document import ConversionError
 
+SVG_DEFAULT_NAMESPACE = "http://www.w3.org/2000/svg"
+
 def getDataURI(url):
   try:
     data = urllib2.urlopen(url)
@@ -45,8 +47,14 @@ def transformUrlToDataURI(content):
   root = etree.fromstring(content)
 
   # Prevent namespace contains "None" included into svg by mistake
+  # and fix svg definition as in some images the namespace is not
+  # well defined by using xmlns="http://www.w3.org/2000/svg" instead
+  # of xmlns:svg="http://www.w3.org/2000/svg".
   namespace_dict = root.nsmap.copy()
-  namespace_dict.pop(None, "discard")
+  discarted = namespace_dict.pop(None, "discard")
+  if discarted == SVG_DEFAULT_NAMESPACE or \
+       "svg" not in namespace_dict:
+     namespace_dict["svg"] = SVG_DEFAULT_NAMESPACE
 
   # Get all images which uses xlink:href
   image_list = root.xpath("//svg:image[@xlink:href]", namespaces=namespace_dict)

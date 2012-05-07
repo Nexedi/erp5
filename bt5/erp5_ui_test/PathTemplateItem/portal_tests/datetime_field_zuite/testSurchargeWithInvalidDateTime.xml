@@ -180,11 +180,35 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertText</td>\n
-  <td>//div[@class="status"]/div[@class="transition_message"]</td>\n
-  <td>Data updated.</td>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_year</td>\n
+  <td></td>\n
 </tr>\n
-\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_month</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_day</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_hour</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyValue</td>\n
+  <td>subfield_field_my_start_date_minute</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>assertTextNotPresent</td>\n
+  <td>You did not enter a valid date and time.</td>\n
+  <td></td>\n
+</tr>\n
 </tbody></table>\n
 </body>\n
 </html>
