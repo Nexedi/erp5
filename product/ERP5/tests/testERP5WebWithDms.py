@@ -49,6 +49,8 @@ except ImportError:
   import Image
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
+IMAGE_COMPARE_TOLERANCE = 800
+
 
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_data', name)
@@ -805,9 +807,10 @@ return True
 
     # Compare images and accept some minimal difference,
     difference_value = compare_image(StringIO(converted_data), expected_image)
-    self.assertTrue(difference_value < 100,
+    self.assertTrue(difference_value < IMAGE_COMPARE_TOLERANCE,
       "Conversion from svg to png create one too small image, " + \
-      "so it failed to download the image. (%s >= 100)" % difference_value)
+      "so it failed to download the image. (%s >= %s)" % (difference_value,
+                                                          IMAGE_COMPARE_TOLERANCE))
 
   def _testImageConversionFromSVGToPNG_url(self, image_url, portal_type="Image"):
     """ Test Convert one SVG Image with an image url. ie:
@@ -835,9 +838,10 @@ return True
 
     # Compare images and accept some minimal difference,
     difference_value = compare_image(StringIO(converted_data), expected_image)
-    self.assertTrue(difference_value < 100,
+    self.assertTrue(difference_value < IMAGE_COMPARE_TOLERANCE,
       "Conversion from svg to png create one too small image, " + \
-      "so it failed to download the image. (%s >= 100)" % difference_value)
+      "so it failed to download the image. (%s >= %s)" % (difference_value,
+                                                           IMAGE_COMPARE_TOLERANCE))
 
   def _testImageConversionFromSVGToPNG_file_url(self, portal_type="Image"):
     """ Test Convert one SVG Image with an image using local path (file)
