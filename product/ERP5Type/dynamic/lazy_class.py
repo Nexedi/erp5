@@ -178,7 +178,7 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
           if content or property['type'] != 'content':
             property_dict.setdefault(property['id'], property)
 
-    return property_dict.values()
+    return property_dict.itervalues()
 
   def resetAcquisition(cls):
     # First, fill the __get__ slot of the class

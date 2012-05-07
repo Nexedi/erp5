@@ -779,13 +779,10 @@ class Base( CopyContainer,
 
   def _propertyMap(self, local_properties=False):
     """ Method overload - properties are now defined on the ptype """
-    klass = self.__class__
     property_list = []
     # Get all the accessor holders for this portal type
     if not local_properties:
-      if hasattr(klass, 'getAccessorHolderPropertyList'):
-        property_list += \
-            self.__class__.getAccessorHolderPropertyList()
+      property_list += self.__class__.getAccessorHolderPropertyList()
 
     property_list += getattr(self, '_local_properties', [])
     return tuple(property_list)
