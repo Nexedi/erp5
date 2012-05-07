@@ -72,7 +72,6 @@ From document pointed to by \'relative_url\':\n
 For the portal, \'relative_url\' must be false and only module objects are\n
 considered if id_list is None.\n
 """\n
-from Products.ERP5Type.Log import log\n
 document = context.getPortalObject()\n
 context = document.portal_activities\n
 if relative_url:\n
@@ -127,7 +126,6 @@ else:\n
       id_list = []\n
       for day_ago in xrange(hbtree_days):\n
         date = (DateTime()-day_ago).strftime(\'%Y%m%d\')\n
-        log(\'date for objectIds\', date)\n
         try:\n
           id_list += document.objectIds(base_id=date)\n
         except (TypeError, IndexError):\n
