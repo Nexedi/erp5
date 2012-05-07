@@ -100,7 +100,7 @@ if depth == maximum_depth and id_list:\n
     recurse(document[id])\n
   if active_process is None:\n
     return error_list\n
-  if len(error_list):\n
+  if error_list:\n
     # Create an activity to update active_process,\n
     #  in order to prevent conflict errors.\n
     activate(active_process=active_process, priority=2) \\\n
@@ -120,12 +120,11 @@ else:\n
           \'portal_simulation\',\n
           \'portal_templates\',\n
           \'portal_trash\',\n
-])\n
+        ])\n
     else:\n
-      from DateTime import DateTime\n
       id_list = []\n
       for day_ago in xrange(hbtree_days):\n
-        date = (DateTime()-day_ago).strftime(\'%Y%m%d\')\n
+        date = (DateTime() - day_ago).strftime(\'%Y%m%d\')\n
         try:\n
           id_list += document.objectIds(base_id=date)\n
         except (TypeError, IndexError):\n
