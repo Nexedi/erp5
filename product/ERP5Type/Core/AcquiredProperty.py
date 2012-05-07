@@ -145,10 +145,6 @@ class AcquiredProperty(StandardProperty):
     """
     @see Products.ERP5Type.Core.StandardProperty._asPropertyMap
     """
-    # A property whose type is 'content' must never be used by Zope
-    if property_dict['elementary_type'] == 'content':
-      return {}
-
     property_map = super(AcquiredProperty, cls)._asPropertyMap(property_dict)
 
     property_map['portal_type'] = property_map.pop('content_portal_type')

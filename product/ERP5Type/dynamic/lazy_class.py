@@ -157,10 +157,15 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     """
     return meta_class.subclass_register.get(cls, [])
 
-  def getAccessorHolderPropertyList(cls):
+  def getAccessorHolderPropertyList(cls, content=False):
     """
     Get unique properties, by its id, as defined in the accessor holders,
     meaningful for _propertyMap for example
+
+    Properties whose type is 'content' should not be visible in ZMI
+    so they are not returned by default. This would also slow down
+    MovementCollectionDiff._getPropertyList (ERP5 product). However,
+    ERP5TypeInformation.getInstancePropertyAndBaseCategoryList needs them.
 
     @see Products.ERP5Type.Base.Base._propertyMap
     """
@@ -170,7 +175,8 @@ class PortalTypeMetaClass(GhostBaseMetaClass, PropertyHolder):
     for klass in cls.mro():
       if klass.__module__.startswith('erp5.accessor_holder'):
         for property in klass._properties:
-          property_dict.setdefault(property['id'], property)
+          if content or property['type'] != 'content':
+            property_dict.setdefault(property['id'], property)
 
     return property_dict.values()
 

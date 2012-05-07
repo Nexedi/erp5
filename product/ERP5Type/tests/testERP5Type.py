@@ -3093,15 +3093,18 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(None, person.getProperty('foo_property'))
       self.assertEquals(None, person.getProperty('foobar_property'))
 
-    def testgetInstancePropertyAndBaseCategoryList(self):
+    def test_getInstancePropertyAndBaseCategoryList(self):
       """
         Check that the method getInstancePropertyAndBaseCategoryList return
         properties from property sheets correctly
       """
-      portal_type = self.portal.portal_types.Email
+      portal_type = self.portal.portal_types.Person
       result_list = portal_type.getInstancePropertyAndBaseCategoryList()
-      self.assertTrue("description" in result_list,
-          "description not in %s" % result_list)
+      # Test a simple property, an acquired one on and a category.
+      for x in "id", "address_city", "function":
+        self.assertTrue(x in result_list, "%s not in %s" % (x, result_list))
+      # Values from which acquired properties are fetched are not returned.
+      self.assertFalse("address" in result_list)
 
 
 class TestAccessControl(ERP5TypeTestCase):
