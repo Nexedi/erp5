@@ -1323,7 +1323,7 @@ class BasicStructure:
                 # split category path because
                 # _getDefaultAcquiredCategoryMembership returns only the
                 # category id instead of the relative url
-                category_id = category_obj.split("/")[-1]
+                category_id = "/".join(category_obj.split("/")[1:])
                 object_list.extend([ s_obj for s_obj in main_object_list \
                   if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_id])
                 sec_layer_object_list.extend([ s_obj for s_obj in secondary_object_list \
