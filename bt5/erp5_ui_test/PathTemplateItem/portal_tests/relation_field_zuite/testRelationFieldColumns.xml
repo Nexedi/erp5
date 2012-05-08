@@ -234,7 +234,7 @@
 <tr>\n
   <td>verifyElementPresent</td>\n
   <td>//*[@class=\'listbox-data-line-0 DataA\']/*[@class="listbox-table-select-cell"]</td>\n
-  <td>Category</td>\n
+  <td></td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
