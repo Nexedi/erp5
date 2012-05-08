@@ -5,8 +5,8 @@ portal_categories/function/marketing
 portal_categories/function/marketing/marketing_manager
 portal_categories/function/sales
 portal_categories/function/sales/manager
-portal_categories/gender/male
 portal_categories/gender/female
+portal_categories/gender/male
 portal_categories/group/my_group
 portal_categories/incoterm/cpt
 portal_categories/nationality/french
@@ -19,5 +19,3 @@ portal_categories/quantity_unit/unit/**
 portal_categories/region/brazil
 portal_categories/role/**
 portal_categories/use/test_functional_incoming_service
-sale_trade_condition_module/1
-sale_trade_condition_module/1/**
