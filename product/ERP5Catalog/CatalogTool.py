@@ -673,7 +673,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         if predicate_property_dict is not None:
           w.predicate_property_dict = predicate_property_dict
         else:
-          w.predicate_property_dict = dict()
+          w.predicate_property_dict = {}
         w.security_uid = security_uid
         (subject_set_uid, optimised_subject_list) = catalog.getSubjectSetUid(document_w)
         w.optimised_subject_list = optimised_subject_list
