@@ -202,7 +202,11 @@
   <td>//*[@id="listbox_data_line_0"]/div[3]//span[1]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
-\n
+<tr>\n
+  <td>verifyNotText</td>\n
+  <td>//*[@class="listbox-number-of-records"]/*[@class="listbox-current-page-total-number"]</td>\n
+  <td>0 records</td>\n
+</tr>\n
 <tr>\n
   <td>type</td>\n
   <td>listbox_title</td>\n
