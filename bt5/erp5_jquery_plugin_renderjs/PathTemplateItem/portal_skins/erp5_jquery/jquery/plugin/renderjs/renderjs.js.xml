@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts34651695.58</string> </value>
+            <value> <string>ts36567155.8</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -428,6 +428,48 @@ var FormUpdater = {\n
 }\n
 \n
 /*\n
+ * Javascript Gadget representation\n
+ */\n
+\n
+function Gadget(id, dom){\n
+  this.id = id;\n
+  this.dom = dom;\n
+};\n
+\n
+/*\n
+ * Generic gadget index placeholder\n
+ */\n
+var GadgetIndex = {\n
+\n
+  gadget_list: [],\n
+\n
+  registerGadget: function(gadget) {\n
+    /* Register gadget */\n
+    this.gadget_list.push(gadget);\n
+  },\n
+\n
+  unregisterGadget: function(gadget) {\n
+    /* Unregister gadget */\n
+    // XXX:\n
+  },\n
+\n
+  getGadgetById: function (gadget_id){\n
+    /*\n
+     * Get gadget javascript representation by its Id\n
+     */\n
+    gadget = undefined;\n
+    $(GadgetIndex.gadget_list).each(\n
+      function (index, value){\n
+        if (value.id==gadget_id){\n
+          gadget = value;\n
+        };\n
+      })\n
+    return gadget;\n
+  }\n
+  \n
+}\n
+\n
+/*\n
  * Generic Gadget library renderer\n
  */\n
 \n
@@ -457,11 +499,17 @@ var RenderJs = {\n
     loadGadgetFromUrl: function(gadget) {\n
               /* Load gadget\'s SPECs from URL */\n
               url = gadget.attr("gadget");\n
-\n
-              // XXX: based on URL and more ? generate gadget uid?\n
+              gadget_id = gadget.attr("id");\n
 \n
               // XXX: How to know how long a form should be cached locally\n
               // i.e. what happens if it changes at server side ?\n
+\n
+              // register gadgdet in javascript namespace\n
+              GadgetIndex.registerGadget(new Gadget(gadget_id, gadget));\n
+              if (url==undefined || url==""){\n
+                // gadget is an inline one so no need to load it from network\n
+                return;\n
+              }\n
               \n
               // handle caching\n
               gadget_property = gadget.attr("gadget:property");\n
@@ -553,7 +601,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19314</int> </value>
+            <value> <int>20277</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
