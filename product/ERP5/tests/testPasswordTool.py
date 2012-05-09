@@ -28,7 +28,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -56,12 +55,11 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.portal.portal_caches.clearAllCache()
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     # clear modules if necessary
     self.portal.person_module.manage_delObjects(list(self.portal.person_module.objectIds()))
     # reset password tool internal structure
     self.portal.portal_password._password_request_dict.clear()
-    transaction.commit()
     self.tic()
 
   def getUserFolder(self):
@@ -344,7 +342,6 @@ class TestPasswordTool(ERP5TypeTestCase):
                                     default_email_text="userB@example.invalid")
     assignment = personB.newContent(portal_type='Assignment')
     assignment.open()
-    transaction.commit()
     self.tic()
 
     self._assertUserExists('userA', 'passwordA')
@@ -354,7 +351,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.portal.portal_password.mailPasswordResetRequest(user_login="userA")
     self.assertEquals(1, len(self.portal.portal_password._password_request_dict))
     key_a = self.portal.portal_password._password_request_dict.keys()[0]
-    transaction.commit()
     self.tic()
 
     self.portal.portal_password.mailPasswordResetRequest(user_login="userB")
@@ -362,7 +358,6 @@ class TestPasswordTool(ERP5TypeTestCase):
         self.portal.portal_password._password_request_dict.keys()
     self.assertEquals(2, len(possible_key_list))
     key_b = [k for k in possible_key_list if k != key_a][0]
-    transaction.commit()
     self.tic()
 
     self._assertUserExists('userA', 'passwordA')
@@ -372,7 +367,6 @@ class TestPasswordTool(ERP5TypeTestCase):
                                                    password="newA",
                                                    password_confirmation="newA",
                                                    password_key=key_a)
-    transaction.commit()
     self.tic()
 
     self._assertUserExists('userA', 'newA')
@@ -382,7 +376,6 @@ class TestPasswordTool(ERP5TypeTestCase):
                                                    password="newB",
                                                    password_confirmation="newB",
                                                    password_key=key_b)
-    transaction.commit()
     self.tic()
 
     self._assertUserExists('userA', 'newA')
@@ -397,7 +390,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
 
-    transaction.commit()
     self.tic()
 
     self._assertUserExists('userZ ', 'passwordZ')
@@ -410,7 +402,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     self.assertEquals(1, len(self.portal.portal_password._password_request_dict))
 
     key_a = self.portal.portal_password._password_request_dict.keys()[0]
-    transaction.commit()
     self.tic()
 
     self._assertUserExists('userZ ', 'passwordZ')
@@ -420,7 +411,6 @@ class TestPasswordTool(ERP5TypeTestCase):
                                                    password="newZ",
                                                    password_confirmation="newZ",
                                                    password_key=key_a)
-    transaction.commit()
     self.tic()
     self._assertUserExists('userZ ', 'passwordZ')
 
@@ -429,7 +419,6 @@ class TestPasswordTool(ERP5TypeTestCase):
                                                    password="newZ2",
                                                    password_confirmation="newZ2",
                                                    password_key=key_a)
-    transaction.commit()
     self.tic()
     self._assertUserExists('userZ ', 'newZ2')
 
@@ -440,7 +429,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
 
-    transaction.commit()
     self.tic()
     self.logout()
     ret = self.portal.portal_password.mailPasswordResetRequest(
@@ -459,7 +447,6 @@ class TestPasswordTool(ERP5TypeTestCase):
     assignment = person.newContent(portal_type='Assignment')
     assignment.open()
 
-    transaction.commit()
     self.tic()
     self._assertUserExists('user', 'password')
     self.logout()

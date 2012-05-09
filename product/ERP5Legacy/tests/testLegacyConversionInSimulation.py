@@ -28,7 +28,6 @@
 
 import unittest
 
-import transaction
 from DateTime import DateTime
 from zLOG import LOG
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -134,7 +133,7 @@ class TestConversionInSimulation(AccountingTestCase):
     self.login()
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     # clear modules if necessary
     currency_list = ('euro', 'yen', 'usd')
     module = self.portal.currency_module
@@ -146,7 +145,6 @@ class TestConversionInSimulation(AccountingTestCase):
         currency.manage_delObjects([x.getId() for x in
                 currency.objectValues(
                   portal_type='Currency Exchange Line')])
-    transaction.commit()
     self.tic()
     super(TestConversionInSimulation, self).beforeTearDown()
 
@@ -192,7 +190,6 @@ class TestConversionInSimulation(AccountingTestCase):
     if invoice_rule.getValidationState() == 'validated':
       invoice_rule.invalidate()
     invoice_rule.deleteContent(list(invoice_rule.objectIds()))
-    transaction.commit()
     self.tic()
     region_predicate = invoice_rule.newContent(portal_type = 'Predicate')
     product_line_predicate = invoice_rule.newContent(portal_type = 'Predicate')
@@ -227,7 +224,6 @@ class TestConversionInSimulation(AccountingTestCase):
           destination_value=account_module[line_destination_id])
 
     invoice_rule.validate()
-    transaction.commit()
     self.tic()
 
   def test_01_simulation_movement_destination_asset_price(self,quiet=0,
@@ -253,7 +249,6 @@ class TestConversionInSimulation(AccountingTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
                                   portal_type='Currency Exchange Line',
@@ -264,7 +259,6 @@ class TestConversionInSimulation(AccountingTestCase):
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
     self.createInvoiceTransactionRule(currency)
-    transaction.commit()
     self.tic()#execute transactio
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -290,7 +284,6 @@ class TestConversionInSimulation(AccountingTestCase):
                                   price=2)
     
     order.confirm()
-    transaction.commit()
     self.tic()
     
     related_applied_rule = order.getCausalityRelatedValue(
@@ -346,7 +339,6 @@ class TestConversionInSimulation(AccountingTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
                               portal_type='Currency Exchange Line',
@@ -357,7 +349,6 @@ class TestConversionInSimulation(AccountingTestCase):
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
     self.createInvoiceTransactionRule(currency)
-    transaction.commit()
     self.tic()#execute transactio
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -383,7 +374,6 @@ class TestConversionInSimulation(AccountingTestCase):
                                   price=2)
     
     order.confirm()
-    transaction.commit()
     self.tic()
     
     related_applied_rule = order.getCausalityRelatedValue(
@@ -432,7 +422,6 @@ class TestConversionInSimulation(AccountingTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
                                   portal_type='Currency Exchange Line',
@@ -443,7 +432,6 @@ class TestConversionInSimulation(AccountingTestCase):
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
     self.createInvoiceTransactionRule(currency)
-    transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -468,14 +456,12 @@ class TestConversionInSimulation(AccountingTestCase):
                                   quantity=1,
                                   price=2)
     order.confirm()
-    transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
     self.assertNotEquals(related_packing_list, None)
     related_packing_list.start()
     related_packing_list.stop()
-    transaction.commit()
     self.tic()
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
@@ -486,7 +472,6 @@ class TestConversionInSimulation(AccountingTestCase):
                             portal_type='Sale Invoice Transaction')
     self.assertNotEquals(related_invoice, None)
     related_invoice.start()
-    transaction.commit()
     self.tic()
     line_list= related_invoice.contentValues(
       portal_type=self.portal.getPortalAccountingMovementTypeList())
@@ -524,7 +509,6 @@ class TestConversionInSimulation(AccountingTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
                               portal_type='Currency Exchange Line',
@@ -535,7 +519,6 @@ class TestConversionInSimulation(AccountingTestCase):
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
     self.createInvoiceTransactionRule(currency)
-    transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -560,7 +543,6 @@ class TestConversionInSimulation(AccountingTestCase):
                                   quantity=5,
                                   price=2)
     order.confirm()
-    transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
@@ -572,16 +554,13 @@ class TestConversionInSimulation(AccountingTestCase):
           round(655.957*related_packing_list_line.getTotalPrice())
    
     related_packing_list_line.edit(quantity=3.0)
-    transaction.commit()
     self.tic()
     self.assertEquals(related_packing_list.getCausalityState(),
                              'diverged')  
     self._solveDivergence(related_packing_list, 'quantity', 'accept')
-    transaction.commit()
     self.tic()
     related_packing_list.start()
     related_packing_list.stop()
-    transaction.commit()
     self.tic()
 
     related_applied_rule = order.getCausalityRelatedValue(
@@ -626,7 +605,6 @@ class TestConversionInSimulation(AccountingTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
                                portal_type='Currency Exchange Line',
@@ -637,7 +615,6 @@ class TestConversionInSimulation(AccountingTestCase):
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
     self.createInvoiceTransactionRule(currency)
-    transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -662,7 +639,6 @@ class TestConversionInSimulation(AccountingTestCase):
                                   quantity=5,
                                   price=2)
     order.confirm()
-    transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Purchase Packing List')
@@ -674,17 +650,14 @@ class TestConversionInSimulation(AccountingTestCase):
           round(655.957*related_packing_list_line.getTotalPrice())
    
     related_packing_list_line.edit(quantity=3.0)
-    transaction.commit()
     self.tic()
     self.assertEquals(related_packing_list.getCausalityState(),
                              'diverged')
     
     self._solveDivergence(related_packing_list, 'quantity','accept')
-    transaction.commit()
     self.tic()
     related_packing_list.start()
     related_packing_list.stop()
-    transaction.commit()
     self.tic()
 
     related_applied_rule = order.getCausalityRelatedValue(
@@ -728,7 +701,6 @@ class TestConversionInSimulation(AccountingTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()#execute transaction
     x_curr_ex_line = currency.newContent(
                                   portal_type='Currency Exchange Line',
@@ -739,7 +711,6 @@ class TestConversionInSimulation(AccountingTestCase):
     x_curr_ex_line.setStopDate(DateTime(2008,10,22))
     x_curr_ex_line.validate()
     self.createInvoiceTransactionRule(currency)
-    transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -766,7 +737,6 @@ class TestConversionInSimulation(AccountingTestCase):
                                   quantity=5,
                                   price=2)
     order.confirm()
-    transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
@@ -777,7 +747,6 @@ class TestConversionInSimulation(AccountingTestCase):
                          order.getIncoterm())
     related_packing_list.start()
     related_packing_list.stop()
-    transaction.commit()
     self.tic()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                              portal_type='Sale Invoice Transaction')
@@ -807,7 +776,6 @@ class TestConversionInSimulation(AccountingTestCase):
                                 portal_type='Currency',
                                 title='euro')
     currency.setBaseUnitQuantity(0.01)
-    transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -841,7 +809,6 @@ class TestConversionInSimulation(AccountingTestCase):
                                   quantity=1.5,
                                   price=2)
     order.confirm()
-    transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')

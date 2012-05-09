@@ -29,7 +29,6 @@
 
 import unittest
 import os
-import transaction
 from StringIO import StringIO
 from lxml import etree
 
@@ -126,7 +125,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -152,7 +150,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                           id = self.website_id,
                                                           **kw)
     website.publish()
-    transaction.commit()
     self.tic()
     return website
 
@@ -173,7 +170,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                             max='',
                             min='')
 
-    transaction.commit()
     self.tic()
     return websection
 
@@ -201,7 +197,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                 language=language,
                                                 **kw)
       webpage.publish()
-      transaction.commit()
       self.tic()
       self.assertEquals(language, webpage.getLanguage())
       self.assertEquals(reference, webpage.getReference())
@@ -245,7 +240,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                             language = 'en')
     en_02.publish()
     en_02.reindexObject()
-    transaction.commit()
     self.tic()
 
     # is old archived?
@@ -280,7 +274,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     document.release()
     website.setAuthorizationForced(0)
     websection.setAuthorizationForced(0)
-    transaction.commit()
     self.tic()
 
     # make sure that _getExtensibleContent will return the same document
@@ -324,7 +317,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     websection.edit(membership_criterion_base_category = ['publication_section'],
                             membership_criterion_category=['publication_section/%s'
                                                                               %publication_section_category_id_list[0]])
-    transaction.commit()
     self.tic()
 
     self.assertEquals(0,  len(websection.getDocumentValueList()))
@@ -333,7 +325,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  language = 'en',
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_en.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(1,  len(websection.getDocumentValueList(language='en')))
     self.assertEquals(web_page_en,  websection.getDocumentValueList(language='en')[0].getObject())
@@ -343,20 +334,17 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  language = 'bg',
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_bg.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(1,  len(websection.getDocumentValueList(language='bg')))
     self.assertEquals(web_page_bg,  websection.getDocumentValueList(language='bg')[0].getObject())
 
     # reject page
     web_page_bg.reject()
-    transaction.commit()
     self.tic()
     self.assertEquals(0,  len(websection.getDocumentValueList(language='bg')))
 
     # publish page and search without a language (by default system should return 'en' docs only)
     web_page_bg.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(1,  len(websection.getDocumentValueList()))
     self.assertEquals(web_page_en,  websection.getDocumentValueList()[0].getObject())
@@ -382,7 +370,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     web_page_en.releaseAlive()
     websection.setAggregateValue(web_page_en)
     websection.setAuthorizationForced(1)
-    transaction.commit()
     self.tic()
 
     # make sure that getDefaultDocumentValue() will return the same document for logged in user
@@ -398,7 +385,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Anonymous User should not get Unauthorized when authorization_forced is not set
     self.login()
     websection.setAuthorizationForced(0)
-    transaction.commit()
     self.tic()
 
     self.logout()
@@ -416,11 +402,11 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                             language = 'en',)
       web_page.publish()
       self.tic()
-      transaction.commit()
+      self.commit()
       web_page_list.append(web_page)
     websection.setAggregateValueList(web_page_list)
     self.tic()
-    transaction.commit()
+    self.commit()
     self.assertEqual(5, len(websection.getDocumentValueList(limit=5)))
 
   def test_05_deadProxyFields(self, quiet=quiet, run=run_all_test):
@@ -456,7 +442,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     document = document_module.newContent(portal_type=document_portal_type,
                                           reference='NXD-Document-TEXT.Cache')
     document.publish()
-    transaction.commit()
     self.tic()
     path = website.absolute_url_path() + '/NXD-Document-TEXT.Cache'
     response = self.publish(path)
@@ -474,7 +459,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     reference = 'P-DMS-Presentation.3.Pages'
     document.edit(reference=reference)
     document.publish()
-    transaction.commit()
     self.tic()
     website_url = website.absolute_url_path()
     # Check we can access to the 3 drawings converted into images.
@@ -531,7 +515,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     file=upload_file,
                                     reference=image_reference)
     image.publish()
-    transaction.commit()
     self.tic()
     credential = 'ERP5TypeTestCase:'
     # testing TextDocument
@@ -624,7 +607,6 @@ return True
                                           portal_type='Presentation',
                                           reference=document_reference,
                                           file=upload_file)
-    transaction.commit()
     self.tic()
     credential_list = ['ERP5TypeTestCase:', 'zope_user:']
 
@@ -652,7 +634,6 @@ return True
     # the web site
     document.publish()
 
-    transaction.commit()
     self.tic()
 
     response = self.publish('%s/%s/asEntireHTML' % (
@@ -676,7 +657,6 @@ return True
     # Now purge cache and let Anonymous user converting the document.
     self.login()
     document.edit() # Reset cache key
-    transaction.commit()
     self.tic()
     response = self.publish('%s/%s/asEntireHTML' % (
                             website.absolute_url_path(), document_reference))
@@ -722,7 +702,6 @@ return True
                                     file=upload_file,
                                     reference=image_reference)
     image.publish()
-    transaction.commit()
     self.tic()
     credential = 'ERP5TypeTestCase:'
 
@@ -798,7 +777,6 @@ return True
                                     file=upload_file,
                                     reference="NXD-DOCUMENT")
     image.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
@@ -829,7 +807,6 @@ return True
                                     content_type="image/svg+xml",
                                     reference="NXD-DOCYMENT")
     image.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
@@ -866,7 +843,6 @@ return True
                                     file=upload_file,
                                     reference="NXD-BACKGROUND")
     background_image.publish()
-    transaction.commit()
     self.tic()
 
     image_url = background_image.absolute_url() + "?format="
@@ -909,7 +885,6 @@ return True
 
     image.publish()
     image2.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(image.getContentType(), 'image/svg+xml')
     self.assertEquals(image2.getContentType(), 'image/svg+xml')
@@ -930,7 +905,6 @@ return True
                                     reference="NXD-DOCYMENT")
 
     image.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(image.getContentType(), 'image/svg+xml')
     self.assertRaises(ConversionError, image.convert, "png")

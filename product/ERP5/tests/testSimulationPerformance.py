@@ -26,7 +26,6 @@
 ##############################################################################
 
 import subprocess
-import transaction
 import unittest
 from test import pystone
 from time import time
@@ -51,7 +50,6 @@ class TestSimulationPerformance(TestTradeModelLineSale):
         endswith = alarm.getId().endswith
         if endswith('_builder_alarm'):
           alarm.activeSense()
-    transaction.commit()
     self.tic()
 
   def perf_00_setupAndFillCache(self):
@@ -67,15 +65,14 @@ class TestSimulationPerformance(TestTradeModelLineSale):
     for order in order_list:
       for line in list(order.getMovementList()):
         self.clone(line)
-    transaction.commit()
     self.tic()
     for order in order_list:
       order.order()
-      transaction.commit()
+      self.commit()
     self.tic()
     for order in order_list:
       order.confirm()
-      transaction.commit()
+      self.commit()
     self.tic()
 
     self.runAlarms()
@@ -85,15 +82,15 @@ class TestSimulationPerformance(TestTradeModelLineSale):
 
     for packing_list in packing_list_list:
       self.packPackingList(packing_list)
-      transaction.commit()
+      self.commit()
     self.tic()
     for packing_list in packing_list_list:
       packing_list.start()
-      transaction.commit()
+      self.commit()
     self.tic()
     for packing_list in packing_list_list:
       packing_list.stop()
-      transaction.commit()
+      self.commit()
     self.tic()
 
     self.runAlarms()
@@ -103,19 +100,19 @@ class TestSimulationPerformance(TestTradeModelLineSale):
 
     for packing_list in packing_list_list:
       packing_list.deliver()
-      transaction.commit()
+      self.commit()
     self.tic()
     for invoice in invoice_list:
       invoice.start()
-      transaction.commit()
+      self.commit()
     self.tic()
     for invoice in invoice_list:
       invoice.stop()
-      transaction.commit()
+      self.commit()
     self.tic()
     for invoice in invoice_list:
       invoice.deliver()
-      transaction.commit()
+      self.commit()
     self.tic()
 
     self.runAlarms()

@@ -32,7 +32,6 @@
 import unittest
 import os, cStringIO, zipfile
 from lxml import etree
-import transaction
 from Testing import ZopeTestCase
 from DateTime import DateTime
 from AccessControl.SecurityManagement import newSecurityManager
@@ -113,7 +112,6 @@ class TestIngestion(ERP5TypeTestCase):
     for module_id in module_id_list:
       module = self.portal[module_id]
       module.manage_delObjects([id for id in module.objectIds()])
-    transaction.commit()
     self.tic()
     activity_tool = self.portal.portal_activities
     activity_status = set(m.processing_node < -1
@@ -140,7 +138,7 @@ class TestIngestion(ERP5TypeTestCase):
     for script_id in script_id_list:
       if script_id in skin_tool.custom.objectIds():
         skin_tool.custom._delObject(script_id)
-    transaction.commit()
+    self.commit()
 
   def setSystemPreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
@@ -520,7 +518,7 @@ class TestIngestion(ERP5TypeTestCase):
     # Revision is 1 after upload (revisions are strings)
     self.assertEquals(document.getRevision(), '2')
     document.reindexObject()
-    transaction.commit()
+    self.commit()
     
   def stepUploadFromViewForm(self, sequence=None, sequence_list=None, **kw):
     """
@@ -532,7 +530,7 @@ class TestIngestion(ERP5TypeTestCase):
     document.edit(file=f)
     self.assertEquals(document.getRevision(), str(int(revision) + 1))
     document.reindexObject()
-    transaction.commit()
+    self.commit()
     
   def stepUploadTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
     """
@@ -541,7 +539,7 @@ class TestIngestion(ERP5TypeTestCase):
     f = makeFileUpload('TEST-en-002.doc')
     document = self.portal.portal_contributions.newContent(file=f)
     sequence.edit(document_path=document.getPath())
-    transaction.commit()
+    self.commit()
 
   def stepReuploadTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
     """
@@ -563,7 +561,7 @@ class TestIngestion(ERP5TypeTestCase):
     self.assertEquals(len(self.portal.document_module.objectIds()),
                       number_of_document)
     document.reindexObject()
-    transaction.commit()
+    self.commit()
 
   def stepUploadAnotherTextFromContributionTool(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1371,7 +1369,7 @@ class TestIngestion(ERP5TypeTestCase):
     f = makeFileUpload('TEST-en-002.doc', 'T&é@{T-en-002.doc')
     document = self.portal.portal_contributions.newContent(file=f)
     sequence.edit(document_path=document.getPath())
-    transaction.commit()
+    self.commit()
 
   def stepDiscoverFromFilenameWithNonASCIIFilename(self,
                                  sequence=None, sequence_list=None, **kw):
@@ -1513,11 +1511,9 @@ return result
                                                           filename='toto.txt',
                                                           data='Hello World!')
     document_to_ingest.publish()
-    transaction.commit()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url)
-    transaction.commit()
     self.tic()
     self.assertEquals(first_doc.getPortalType(), 'Text')
     self.assertEquals(first_doc.getContentType(), 'text/plain')
@@ -1525,7 +1521,6 @@ return result
     self.assertEquals(first_doc.getVersion(), '00001')
     self.assertEquals(first_doc.asURL(), url)
     second_doc = self.portal.portal_contributions.newContent(url=url)
-    transaction.commit()
     self.tic()
     self.assertEquals(second_doc.getPortalType(), 'Text')
     self.assertEquals(second_doc.getContentType(), 'text/plain')
@@ -1538,11 +1533,9 @@ return result
                                                           filename='toto.txt',
                                                           data='Hello World!')
     document_to_ingest2.publish()
-    transaction.commit()
     self.tic()
     url2 = document_to_ingest2.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url2)
-    transaction.commit()
     self.tic()
     self.assertEquals(first_doc.getPortalType(), 'Text')
     self.assertEquals(first_doc.getContentType(), 'text/plain')
@@ -1550,7 +1543,6 @@ return result
     self.assertEquals(first_doc.getVersion(), '00001')
     self.assertEquals(first_doc.asURL(), url2)
     second_doc = self.portal.portal_contributions.newContent(url=url2)
-    transaction.commit()
     self.tic()
     self.assertEquals(second_doc.getPortalType(), 'Text')
     self.assertEquals(second_doc.getContentType(), 'text/plain')
@@ -1597,11 +1589,9 @@ return result
                                                           filename='toto.txt',
                                                           data='Hello World!')
     document_to_ingest.publish()
-    transaction.commit()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url)
-    transaction.commit()
     self.tic()
     self.assertEquals(first_doc.getPortalType(), 'Text')
     self.assertEquals(first_doc.getContentType(), 'text/plain')
@@ -1609,7 +1599,6 @@ return result
     self.assertEquals(first_doc.getVersion(), '001')
     self.assertEquals(first_doc.asURL(), url)
     second_doc = self.portal.portal_contributions.newContent(url=url)
-    transaction.commit()
     self.tic()
     self.assertEquals(second_doc.getPortalType(), 'Text')
     self.assertEquals(second_doc.getContentType(), 'text/plain')
@@ -1622,11 +1611,9 @@ return result
                                                           filename='toto.txt',
                                                           data='Hello World!')
     document_to_ingest2.publish()
-    transaction.commit()
     self.tic()
     url2 = document_to_ingest2.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url2)
-    transaction.commit()
     self.tic()
     self.assertEquals(first_doc.getPortalType(), 'Text')
     self.assertEquals(first_doc.getContentType(), 'text/plain')
@@ -1634,7 +1621,6 @@ return result
     self.assertEquals(first_doc.getVersion(), '001')
     self.assertEquals(first_doc.asURL(), url2)
     second_doc = self.portal.portal_contributions.newContent(url=url2)
-    transaction.commit()
     self.tic()
     self.assertEquals(second_doc.getPortalType(), 'Text')
     self.assertEquals(second_doc.getContentType(), 'text/plain')
@@ -1661,11 +1647,9 @@ context.setReference(reference)
                                                           filename='toto.txt',
                                                           data='Hello World!')
     document_to_ingest.publish()
-    transaction.commit()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url)
-    transaction.commit()
     self.tic()
     self.assertEquals(first_doc.getPortalType(), 'Text')
     self.assertEquals(first_doc.getContentType(), 'text/plain')
@@ -1673,7 +1657,6 @@ context.setReference(reference)
     self.assertEquals(first_doc.getVersion(), '001')
     self.assertEquals(first_doc.asURL(), url)
     second_doc = self.portal.portal_contributions.newContent(url=url)
-    transaction.commit()
     self.tic()
     self.assertEquals(second_doc.getPortalType(), 'Text')
     self.assertEquals(second_doc.getContentType(), 'text/plain')
@@ -1686,14 +1669,12 @@ context.setReference(reference)
                                                           filename='toto.txt',
                                                           data='Hello World!')
     document_to_ingest2.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(document_to_ingest2.getReference(),
                       'I CHOOSED THIS REFERENCE 3')
 
     url2 = document_to_ingest2.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url2)
-    transaction.commit()
     self.tic()
     self.assertEquals(first_doc.getPortalType(), 'Text')
     self.assertEquals(first_doc.getContentType(), 'text/plain')
@@ -1701,7 +1682,6 @@ context.setReference(reference)
     self.assertEquals(first_doc.getVersion(), '001')
     self.assertEquals(first_doc.asURL(), url2)
     second_doc = self.portal.portal_contributions.newContent(url=url2)
-    transaction.commit()
     self.tic()
     self.assertEquals(second_doc.getPortalType(), 'Text')
     self.assertEquals(second_doc.getContentType(), 'text/plain')
@@ -1758,11 +1738,9 @@ return result
                                                           filename='toto.txt',
                                                           data='Hello World!')
     document_to_ingest.publish()
-    transaction.commit()
     self.tic()
     url = document_to_ingest.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url)
-    transaction.commit()
     self.tic()
     self.assertEquals(first_doc.getPortalType(), 'Text')
     self.assertEquals(first_doc.getContentType(), 'text/plain')
@@ -1770,7 +1748,6 @@ return result
     self.assertEquals(first_doc.getVersion(), '00001')
     self.assertEquals(first_doc.asURL(), url)
     second_doc = self.portal.portal_contributions.newContent(url=url)
-    transaction.commit()
     self.tic()
     self.assertEquals(second_doc.getPortalType(), 'Text')
     self.assertEquals(second_doc.getContentType(), 'text/plain')
@@ -1783,14 +1760,12 @@ return result
                                                           filename='toto.txt',
                                                           data='Hello World!')
     document_to_ingest2.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(document_to_ingest2.getReference(),
                       'I CHOOSED THIS REFERENCE 2')
 
     url2 = document_to_ingest2.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url2)
-    transaction.commit()
     self.tic()
     self.assertEquals(first_doc.getPortalType(), 'Text')
     self.assertEquals(first_doc.getContentType(), 'text/plain')
@@ -1798,7 +1773,6 @@ return result
     self.assertEquals(first_doc.getVersion(), '00001')
     self.assertEquals(first_doc.asURL(), url2)
     second_doc = self.portal.portal_contributions.newContent(url=url2)
-    transaction.commit()
     self.tic()
     self.assertEquals(second_doc.getPortalType(), 'Text')
     self.assertEquals(second_doc.getContentType(), 'text/plain')
@@ -1853,12 +1827,10 @@ return result
                                                           filename='toto.txt',
                                                           data='Hello World!')
     document_to_ingest.publish()
-    transaction.commit()
     self.tic()
 
     url = document_to_ingest.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url)
-    transaction.commit()
     self.tic()
     self.assertEquals(first_doc.getPortalType(), 'Text')
     self.assertEquals(first_doc.getContentType(), 'text/plain')
@@ -1866,7 +1838,6 @@ return result
     self.assertEquals(first_doc.getVersion(), '001')
     self.assertEquals(first_doc.asURL(), url)
     second_doc = self.portal.portal_contributions.newContent(url=url)
-    transaction.commit()
     self.tic()
     self.assertEquals(second_doc.getPortalType(), 'Text')
     self.assertEquals(second_doc.getContentType(), 'text/plain')
@@ -1879,14 +1850,12 @@ return result
                                                           filename='toto.txt',
                                                           data='Hello World!')
     document_to_ingest2.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(document_to_ingest2.getReference(),
                       'I CHOOSED THIS REFERENCE 2')
 
     url2 = document_to_ingest2.absolute_url() + '/getData'
     first_doc = self.portal.portal_contributions.newContent(url=url2)
-    transaction.commit()
     self.tic()
     self.assertEquals(first_doc.getPortalType(), 'Text')
     self.assertEquals(first_doc.getContentType(), 'text/plain')
@@ -1894,7 +1863,6 @@ return result
     self.assertEquals(first_doc.getVersion(), '001')
     self.assertEquals(first_doc.asURL(), url2)
     second_doc = self.portal.portal_contributions.newContent(url=url2)
-    transaction.commit()
     self.tic()
     self.assertEquals(second_doc.getPortalType(), 'Text')
     self.assertEquals(second_doc.getContentType(), 'text/plain')
@@ -1913,7 +1881,6 @@ return result
     document = self.portal.portal_contributions.newContent(filename='toto',
                                                   data=data,
                                                   reference='Custom.Reference')
-    transaction.commit()
     self.tic()# Discover metadata will delete first ingested document
     # then reingest new one with appropriate portal_type
     result_list = self.portal.portal_catalog(reference='Custom.Reference')
@@ -1931,14 +1898,11 @@ return result
                                  data='Hello World!',
                                  filename='toto.txt')
     document.publish()
-    transaction.commit()
     self.tic()
     document.edit(title='One title', reference='EFAA')
-    transaction.commit()
     self.tic()
     # Now change it to a Text portal_type
     new_doc = document.migratePortalType('Text')
-    transaction.commit()
     self.tic()
     self.assertEquals(new_doc.getPortalType(), 'Text')
     self.assertEquals(new_doc.getProperty('property_which_doesnot_exists'),
@@ -1952,7 +1916,6 @@ return result
     url = new_doc.absolute_url() + '/getData'
     document = self.portal.portal_contributions.newContent(url=url)
     document.submit()
-    transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Text')
     # Change it to File
@@ -1974,7 +1937,6 @@ return result
                                       content_type='application/vnd.ms-excel',
                                       reference='I.want.a.pdf',
                                       portal_type='PDF')
-    transaction.commit()
     self.tic()# Discover metadata will try change the portal_type
     # but user decision take precedence: PDF must be created
     result_list = self.portal.portal_catalog(reference='I.want.a.pdf')
@@ -1994,7 +1956,6 @@ return result
                                       content_type='application/vnd.ms-excel',
                                       reference='I.want.a.pdf',
                                       portal_type='PDF')
-    transaction.commit()
     self.tic()
     result_list = self.portal.portal_catalog(reference='I.want.a.pdf',
                                              id='this_id')
@@ -2037,7 +1998,6 @@ return result
     # then HTTPDigestAuthHandler can perform HTTP Authentication
     response = urllib2.urlopen(request)
     self.assertEquals(response.getcode(), httplib.OK)
-    transaction.commit()
     self.tic()
     document = self.portal.portal_catalog.getResultValue(portal_type='Spreadsheet',
                                                          reference=reference)

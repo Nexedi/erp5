@@ -28,7 +28,6 @@
 ############################################################################## 
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -727,7 +726,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
       if not('TaskConstraint' in original_property_sheet_list):
         new_property_sheet_list = ['TaskConstraint'] + original_property_sheet_list
         portal_type.edit(type_property_sheet_list=new_property_sheet_list)
-        transaction.commit()
+        self.commit()
       task_module = portal.getDefaultModule(portal_type=self.task_portal_type)
       task = task_module.newContent(portal_type=self.task_portal_type)
       doActionFor = self.portal.portal_workflow.doActionFor

@@ -90,6 +90,7 @@ def patchActivityTool():
       # Sleep between each distribute.
       time.sleep(0.3)
       transaction.commit()
+      transaction.begin()
     else:
       self._orig_tic(processing_node, force)
 
@@ -195,8 +196,17 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
                          % error_log[-1]
       self.fail(error_message)
 
+  def abort(self):
+    transaction.begin()
+    # Consider reaccessing the portal to trigger a call to ERP5Site.__of__
+
+  def commit(self):
+    transaction.commit()
+    self.abort()
+
   def tic(self, verbose=0, stop_condition=lambda message_list: False):
     """Execute pending activities"""
+    transaction.commit()
     # Some tests like testDeferredStyle require that we use self.getPortal()
     # instead of self.portal in order to setup current skin.
     portal_activities = self.getPortal().portal_activities
@@ -239,13 +249,14 @@ class ProcessingNodeTestCase(backportUnittest.TestCase, ZopeTestCase.TestCase):
           portal_activities.timeShift(3 * VALIDATION_ERROR_DELAY)
       if verbose:
         ZopeTestCase._print(' done (%.3fs)\n' % (time.time() - start))
+    self.abort()
 
   def afterSetUp(self):
     """Initialize a node that will only process activities"""
     self.startZServer()
     from Zope2.custom_zodb import cluster
     self._registerNode(distributing=not cluster, processing=1)
-    transaction.commit()
+    self.commit()
 
   def processing_node(self):
     """Main loop for nodes that process activities"""

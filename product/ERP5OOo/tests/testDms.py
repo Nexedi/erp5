@@ -51,7 +51,6 @@ import StringIO
 from cgi import FieldStorage
 
 import ZPublisher.HTTPRequest
-import transaction
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
@@ -109,14 +108,12 @@ class TestDocumentMixin(ERP5TypeTestCase):
     self.portal.document_module.manage_permission('View', ['Anonymous'], 1)
     self.portal.document_module.manage_permission(
                            'Access contents information', ['Anonymous'], 1)
-    transaction.commit()
     self.tic()
 
   def afterSetUp(self):
     TestDocumentMixin.login(self)
     self.setDefaultSitePreference()
     self.setSystemPreference()
-    transaction.commit()
     self.tic()
     self.login()
 
@@ -160,7 +157,7 @@ class TestDocumentMixin(ERP5TypeTestCase):
       Do some stuff after each test:
       - clear document module
     """
-    transaction.abort()
+    self.abort()
     self.clearRestrictedSecurityHelperScript()
     activity_tool = self.portal.portal_activities
     activity_status = set(m.processing_node < -1
@@ -179,16 +176,15 @@ class TestDocumentMixin(ERP5TypeTestCase):
       custom = self.getPortal().portal_skins.custom
       if script_id in custom.objectIds():
         custom.manage_delObjects(ids=[script_id])
-        transaction.commit()
+        self.commit()
 
   def clearDocumentModule(self):
     """
       Remove everything after each run
     """
-    transaction.abort()
+    self.abort()
     doc_module = self.getDocumentModule()
     doc_module.manage_delObjects(list(doc_module.objectIds()))
-    transaction.commit()
     self.tic()
 
 class TestDocument(TestDocumentMixin):
@@ -293,22 +289,18 @@ class TestDocument(TestDocumentMixin):
     filename = 'TEST-en-002.doc'
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
-    transaction.commit()
     self.tic()
     document_url = document.getRelativeUrl()
     def getTestDocument():
       return self.portal.restrictedTraverse(document_url)
     self.assertEqual(getTestDocument().getRevision(), '1')
     getTestDocument().edit(file=file)
-    transaction.commit()
     self.tic()
     self.assertEqual(getTestDocument().getRevision(), '2')
     getTestDocument().edit(title='Hey Joe')
-    transaction.commit()
     self.tic()
     self.assertEqual(getTestDocument().getRevision(), '3')
     another_document = self.portal.portal_contributions.newContent(file=file)
-    transaction.commit()
     self.tic()
     self.assertEqual(getTestDocument().getRevision(), '4')
     self.assertEqual(getTestDocument().getRevisionList(), ['1', '2', '3', '4'])
@@ -331,13 +323,11 @@ class TestDocument(TestDocumentMixin):
     docs[2] = self.createTestDocument(reference='TEST', version='002', language='en')
     docs[3] = self.createTestDocument(reference='TEST', version='004', language='en')
     docs[4] = self.createTestDocument(reference='ANOTHER', version='002', language='en')
-    transaction.commit()
     self.tic()
     self.failIf(docs[1].isVersionUnique())
     self.failIf(docs[2].isVersionUnique())
     self.failUnless(docs[3].isVersionUnique())
     docs[2].setVersion('003')
-    transaction.commit()
     self.tic()
     self.failUnless(docs[1].isVersionUnique())
     self.failUnless(docs[2].isVersionUnique())
@@ -385,7 +375,6 @@ class TestDocument(TestDocumentMixin):
     time.sleep(1)
     docs[5] = self.createTestDocument(reference='TEST', version='003', language='sp')
     time.sleep(1)
-    transaction.commit()
     self.tic()
     doc = docs[2] # can be any
     self.failUnless(doc.getOriginalLanguage() == 'en')
@@ -399,7 +388,6 @@ class TestDocument(TestDocumentMixin):
     self.failUnless(doc.getLatestVersionValue() == docs[5]) # there are two latest - it chooses the one in user language
     docs[6] = document_module.newContent(reference='TEST', version='004', language='pl')
     docs[7] = document_module.newContent(reference='TEST', version='004', language='en')
-    transaction.commit()
     self.tic()
     self.failUnless(doc.getLatestVersionValue() == docs[7]) # there are two latest, neither in user language - it chooses the one in original language
 
@@ -453,7 +441,6 @@ class TestDocument(TestDocumentMixin):
     document7.setSimilarValue([document9])
     document11.setSimilarValue(document7)
 
-    transaction.commit()
     self.tic()
 
     #if user language is 'en'
@@ -479,7 +466,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document6, document7],
                        document13.getSimilarCloudValueList())
 
-    transaction.commit()
+    self.commit()
 
     # if user language is 'fr', test that latest documents are prefferable returned in user_language (if available)
     self.portal.Localizer.changeLanguage('fr')
@@ -495,7 +482,7 @@ class TestDocument(TestDocumentMixin):
     self.assertSameSet([document6, document8],
                        document13.getSimilarCloudValueList())
 
-    transaction.commit()
+    self.commit()
 
     # if user language is "bg"
     self.portal.Localizer.changeLanguage('bg')
@@ -553,7 +540,6 @@ class TestDocument(TestDocumentMixin):
     file = makeFileUpload(filename)
     document8 = self.portal.portal_contributions.newContent(file=file)
 
-    transaction.commit()
     self.tic()
     # the implicit predecessor will find documents by reference.
     # version and language are not used.
@@ -567,7 +553,7 @@ class TestDocument(TestDocumentMixin):
       sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
 
     # clear transactional variable cache
-    transaction.commit()
+    self.commit()
 
     # the implicit successors should be return document with appropriate
     # language.
@@ -580,7 +566,7 @@ class TestDocument(TestDocumentMixin):
       sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
     # clear transactional variable cache
-    transaction.commit()
+    self.commit()
 
     # if user language is 'fr'.
     self.portal.Localizer.changeLanguage('fr')
@@ -589,7 +575,7 @@ class TestDocument(TestDocumentMixin):
       sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
     # clear transactional variable cache
-    transaction.commit()
+    self.commit()
 
     # if user language is 'ja'.
     self.portal.Localizer.changeLanguage('ja')
@@ -657,9 +643,8 @@ class TestDocument(TestDocumentMixin):
                                   portal_type='Spreadsheet')
     doc.edit(file=makeFileUpload('import.file.with.dot.in.filename.ods'))
     doc.publish()
-    transaction.commit()
     self.tic()
-    transaction.commit()
+    self.commit()
 
     uf = self.portal.acl_users
     uf._doAddUser('member_user2', 'secret', ['Member'], [])
@@ -709,7 +694,7 @@ class TestDocument(TestDocumentMixin):
     document = self.portal.portal_contributions.newContent(file=file)
 
     self.assertEquals('converting', document.getExternalProcessingState())
-    transaction.commit()
+    self.commit()
     self.assertEquals('converting', document.getExternalProcessingState())
 
     # Clone a uploaded document
@@ -719,7 +704,7 @@ class TestDocument(TestDocumentMixin):
     new_document = container[paste_result[0]['new_id']]
 
     self.assertEquals('converting', new_document.getExternalProcessingState())
-    transaction.commit()
+    self.commit()
     self.assertEquals('converting', new_document.getExternalProcessingState())
 
     # Change workflow state to converted
@@ -734,7 +719,7 @@ class TestDocument(TestDocumentMixin):
     new_document = container[paste_result[0]['new_id']]
 
     self.assertEquals('converted', new_document.getExternalProcessingState())
-    transaction.commit()
+    self.commit()
     self.assertEquals('converted', new_document.getExternalProcessingState())
     self.tic()
     self.assertEquals('converted', new_document.getExternalProcessingState())
@@ -748,7 +733,6 @@ class TestDocument(TestDocumentMixin):
 
     sub_document = document.newContent(portal_type='Embedded File')
     self.assertEquals('embedded', sub_document.getValidationState())
-    transaction.commit()
     self.tic()
     self.assertEquals('embedded', sub_document.getValidationState())
 
@@ -763,7 +747,6 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals(1, len(new_sub_document_list))
     new_sub_document = new_sub_document_list[0]
     self.assertEquals('embedded', new_sub_document.getValidationState())
-    transaction.commit()
     self.tic()
     self.assertEquals('embedded', new_sub_document.getValidationState())
 
@@ -775,7 +758,6 @@ class TestDocument(TestDocumentMixin):
     file = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file)
 
-    transaction.commit()
     self.tic()
 
     self.assertEquals(0, len(document.contentValues(portal_type='Image')))
@@ -1476,7 +1458,6 @@ class TestDocument(TestDocumentMixin):
                file=upload_file)
     image.publish()
 
-    transaction.commit()
     self.tic()
 
     # convert web_page into odt
@@ -1510,7 +1491,6 @@ class TestDocument(TestDocumentMixin):
     image_reference = 'IMAGE-odp'
     document.edit(file=upload_file, reference=image_reference)
     document.publish()
-    transaction.commit()
     self.tic()
     html_content = '<p><img src="%s?format=png&amp;display=%s&amp;quality=75"/></p>' % \
                                               (image_reference, image_display)
@@ -1615,7 +1595,6 @@ class TestDocument(TestDocumentMixin):
     setattr(file_like, 'filename', 'something.htm')
     web_page.edit(file=file_like)
     # run conversion to base format
-    transaction.commit() 
     self.tic()
 
     # Check that outputted stripped html is safe
@@ -1774,7 +1753,6 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     upload_file = makeFileUpload('Forty-Two.Pages-en-001.pdf')
     document.edit(file=upload_file)
     pages_number = int(document.getContentInformation()['Pages'])
-    transaction.commit()
     self.tic()
 
     preference_tool = getToolByName(self.portal, 'portal_preferences')
@@ -1809,7 +1787,6 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
           assert response.getHeader('content-type') == 'image/png', \
                                              response.getHeader('content-type')
           assert response.getStatus() == httplib.OK
-        transaction.commit()
 
     # assume there is no password
     credential = '%s:' % (getSecurityManager().getUser().getId(),)
@@ -1828,7 +1805,6 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     # Wait until threads finishing
     [tested.join() for tested in tested_list]
 
-    transaction.commit()
     self.tic()
 
     convert_kw = {'format': 'png',
@@ -1884,7 +1860,6 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     upload_file = makeFileUpload('TEST-text-iso8859-1.txt')
     web_page = module.newContent(portal_type=web_page_portal_type,
                                  file=upload_file)
-    transaction.commit()
     self.tic()
     text_content = web_page.getTextContent()
     my_utf_eight_token = 'ùééàçèîà'
@@ -1912,7 +1887,7 @@ return 1
     for script_id in self.conversion_format_permission_script_id_list:
       createZODBPythonScript(self.getPortal().portal_skins.custom,
       script_id, *script_content_list)
-      transaction.commit()
+      self.commit()
 
   def _test_document_conversion_to_base_format_no_original_format_access(self,
       portal_type, filename):
@@ -1921,7 +1896,6 @@ return 1
     document = module.newContent(portal_type=portal_type,
                                  file=upload_file)
 
-    transaction.commit()
     self.tic()
 
     self.createRestrictedSecurityHelperScript()
@@ -1968,7 +1942,7 @@ return 1
     root_user_folder = self.getPortalObject().aq_parent.acl_users
     if not root_user_folder.getUser('zope_user'):
       root_user_folder._doAddUser('zope_user', '', ['Manager',], [])
-      transaction.commit()
+      self.commit()
     # Create document with good content
     document = self.portal.document_module.newContent(portal_type='Presentation')
     upload_file = makeFileUpload('TEST-en-003.odp')

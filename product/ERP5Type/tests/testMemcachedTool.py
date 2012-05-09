@@ -30,7 +30,6 @@
 import unittest
 import os
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.utils import installRealMemcachedTool
@@ -72,7 +71,6 @@ class TestMemcachedTool(ERP5TypeTestCase):
                                 expiration_time=self.expiration_time,
                                 url_string=url_string)
 
-    transaction.commit()
     self.tic()
 
   def afterSetUp(self):
@@ -148,7 +146,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     # First, check that the local cache in memcachedTool works
     tested_dict[tested_key] = tested_value
     self.assertTrue(tested_dict[tested_key] is tested_value)
-    transaction.commit()
+    self.commit()
     # After a commit, check that the value is commited and grabbed from memcached
     # again. Its value must not change, but the instance is not the same anymore.
     self.assertTrue(tested_dict[tested_key] is not tested_value)
@@ -176,7 +174,7 @@ class TestMemcachedTool(ERP5TypeTestCase):
     tested_dict[tested_key] = tested_value
     self.assertTrue(tested_dict[tested_key] == tested_value)
     del tested_dict[tested_key]
-    transaction.commit()
+    self.commit()
     self.assertRaises(KeyError, tested_dict.__getitem__, tested_key)
 
   def test_06_checkNonStringKeyFails(self):
@@ -201,9 +199,9 @@ class TestMemcachedTool(ERP5TypeTestCase):
     key = 'my_key'
     value = 'a'*100
     tested_dict[key] = value
-    transaction.commit()
+    self.commit()
     self.assertEquals(tested_dict.get(key), value)
-    transaction.commit()
+    self.commit()
     # Sleep epliration_time + 1 second to be sure that it is well expired
     time.sleep(self.expiration_time + 1)
     # now value should have expired

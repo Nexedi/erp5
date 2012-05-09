@@ -31,7 +31,6 @@
 import httplib
 import urlparse
 import json
-import transaction
 import random
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from ShaDirMixin import ShaDirMixin
@@ -90,7 +89,6 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       folder = self.portal[module]
       folder.manage_delObjects(list(folder.objectIds()))
     self.portal.portal_caches.clearAllCache()
-    transaction.commit()
     self.tic()
 
   def test_post_information(self):
@@ -98,7 +96,6 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       Check if posting information is working.
     """
     self.postInformation()
-    transaction.commit()
     self.tic()
 
     # Asserting Data Set
@@ -125,7 +122,6 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     """
     self.postInformation()
 
-    transaction.commit()
     self.tic()
 
     result, data = self.getInformation()
@@ -141,11 +137,9 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       Check if posting information is working.
     """
     self.postInformation()
-    transaction.commit()
     self.tic()
 
     self.postInformation()
-    transaction.commit()
     self.tic()
 
     self.assertEqual(1, self.portal.portal_catalog.countResults(
@@ -175,10 +169,9 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       Check if posting information is working.
     """
     self.postInformation()
-    transaction.commit()
+    self.commit()
 
     self.postInformation()
-    transaction.commit()
     self.tic()
 
     self.assertEqual(1, self.portal.portal_catalog.countResults(
@@ -200,7 +193,6 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       check if return the temp document with text content.
     """
     self.postInformation()
-    transaction.commit()
     self.tic()
 
     result, data = self.getInformation()
@@ -221,7 +213,6 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
       This relation is controlled by Data Set object.
     """
     self.postInformation()
-    transaction.commit()
     self.tic()
 
     urlmd5_2 = 'anotherurlmd5' + str(random.random())
@@ -237,7 +228,6 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
                       "User SIGNATURE goes here."]
     data_2 = json.dumps(data_list_2)
     self.postInformation(key_2, data_2)
-    transaction.commit()
     self.tic()
 
     self.assertEquals(2, len(self.portal.data_set_module))
@@ -250,7 +240,6 @@ class TestShaDir(ShaDirMixin, ERP5TypeTestCase):
     self.assertEquals(1, len(json.loads(document2)))
 
     self.postInformation()
-    transaction.commit()
     self.tic()
     self.assertEquals(2, len(self.portal.data_set_module))
     self.assertEquals(3, len(self.portal.document_module))

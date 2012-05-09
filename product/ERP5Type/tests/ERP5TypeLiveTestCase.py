@@ -102,12 +102,12 @@ class ERP5TypeLiveTestCase(ERP5TypeTestCaseMixin):
     def _close(self):
       '''Closes the ZODB connection.'''
       revert = transaction.get().__hash__() != self.initial_transaction_hash
-      transaction.abort()
+      self.abort()
       self._restoreMailHost()
       if revert:
         if self.activity_tool_subscribed:
           self.portal.portal_activities.subscribe()
-          transaction.commit()
+          self.commit()
 
     def _setup(self):
         '''Change some site properties in order to be ready for live test

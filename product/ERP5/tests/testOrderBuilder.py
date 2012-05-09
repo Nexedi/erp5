@@ -29,7 +29,6 @@
 
 import unittest
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -211,7 +210,6 @@ class TestOrderBuilderMixin(TestOrderMixin):
       self.decrease_quantity_matrix.keys(),
     )
 
-    transaction.commit()
     self.tic()
 
     base_id = 'movement'

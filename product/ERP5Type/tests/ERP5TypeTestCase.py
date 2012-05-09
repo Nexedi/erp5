@@ -59,7 +59,6 @@ try:
 except ImportError:
   pass
 
-import transaction
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
@@ -591,7 +590,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       """
       if kw.get('sequence', None) is None:
         # in case of using not in sequence commit transaction
-        transaction.commit()
+        self.commit()
       self.tic()
 
     def getPortalObject(self):
@@ -641,7 +640,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         sm = getSecurityManager()
 
         # Commit the sandbox for good measure
-        transaction.commit()
+        self.commit()
 
         if env is None:
             env = {}
@@ -903,9 +902,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           portal = self.getPortal()
           portal.portal_activities.manageClearActivities()
           portal.portal_catalog.manage_catalogClear()
-          transaction.commit()
+          self.commit()
           portal.ERP5Site_reindexAll()
-          transaction.commit()
           self.tic()
           if not quiet:
             ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
@@ -953,7 +951,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                    object_to_update=install_kw,
                    update_translation=1)
         # Release locks
-        transaction.commit()
+        self.commit()
         if not quiet:
           ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
 
@@ -1027,7 +1025,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
-              transaction.commit()
+              self.commit()
             self.portal = portal = self.getPortal()
 
             if len(setup_done) == 1: # make sure it is run only once
@@ -1065,7 +1063,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               portal.portal_catalog.manage_hotReindexAll()
 
             portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
-            transaction.commit()
+            self.commit()
             self.tic(not quiet)
 
             # Log out
@@ -1076,10 +1074,10 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
               ZopeTestCase._print('Running Unit tests of %s\n' % title)
           except:
-            transaction.abort()
+            self.abort()
             raise
           else:
-            transaction.commit()
+            self.commit()
             del self.portal, self.app
             ZopeTestCase.close(app)
       except:
@@ -1114,10 +1112,10 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         else:
           for m in message_list:
             if m.processing_node < -1:
-              transaction.abort()
+              self.abort()
               count = portal_activities.countMessage()
               portal_activities.manageClearActivities(keep=False)
-              transaction.commit()
+              self.commit()
               ZopeTestCase._print(' (dropped %d left-over activity messages) '
                                   % count)
               break

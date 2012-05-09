@@ -33,7 +33,6 @@
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5.tests.testPayroll import TestPayrollMixin
 from DateTime import DateTime
-import transaction
 
 class TestPayroll_l10n_fr(TestPayrollMixin):
 
@@ -76,8 +75,7 @@ class TestPayroll_l10n_fr(TestPayrollMixin):
       # the script used for calculation only take into account stopped or
       # delivered paysheet
       paysheet.stop()
-    transaction.commit()
-    self.stepTic()
+    self.tic()
 
     # here, check how much is contributed to the slices
     # the slices defined for this tax are :

@@ -29,7 +29,6 @@
 
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-import transaction
 
 class TestLiveUpgrader(ERP5TypeLiveTestCase):
   """
@@ -144,7 +143,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     createZODBPythonScript(self.getPortal().portal_skins.custom,
                                    'ERP5Site_getUpgraderSignature', "item=None",
                                     "return " + str(signature_code))
-    transaction.commit()
+    self.commit()
     self.assertEquals(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
     self.assertEquals(self.portal.ERP5Site_upgradeObjectList(), [])
     test_object = self.portal.portal_categories.newContent(id=self.upgrade_object_test_id,
@@ -169,7 +168,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     createZODBPythonScript(self.getPortal().portal_skins.custom,
                                    'ERP5Site_getUpgraderSignature', "item=None",
                                     "return " + str(signature_code))
-    transaction.commit()
+    self.commit()
     self.assertEquals(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
     # Nothing to upgrade
     self.assertEquals(self.portal.ERP5Site_upgradeObjectClass(), [])
@@ -188,7 +187,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                                  to_class_as_string,
                                  test_script)
 
-    transaction.commit()
+    self.commit()
     self.assertNotEquals(self.portal.ERP5Site_upgradeObjectClass(), [])
     self.assertEquals(self.portal.ERP5Site_upgradeObjectClass(upgrade=1),
                         [(gadget.getRelativeUrl(), 'ERP5 Gadget')])
@@ -206,7 +205,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     createZODBPythonScript(self.getPortal().portal_skins.custom,
                                    'ERP5Site_getUpgraderSignature', "item=None",
                                     "return " + str(signature_code))
-    transaction.commit()
+    self.commit()
     self.assertEquals(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
     self.assertEquals(self.portal.ERP5Site_upgradeGlobalPropertyList(), 
                       ["Upgrade Required for Global Properties."])
@@ -229,7 +228,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     createZODBPythonScript(self.getPortal().portal_skins.custom,
                                    'ERP5Site_getUpgraderSignature', "item=None",
                                     "return " + str(signature_code))
-    transaction.commit()
+    self.commit()
 
     self.assertEquals(self.portal.ERP5Site_upgradeWorkflowChain(), [])
 
@@ -275,7 +274,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     createZODBPythonScript(self.getPortal().portal_skins.custom,
                                    'ERP5Site_getUpgraderSignature', "item=None",
                                     "return " + str(signature_code))
-    transaction.commit()
+    self.commit()
     self.assertEquals(self.portal.ERP5Site_getUpgraderSignature(), signature_code)
     self.assertEquals(self.portal.ERP5Site_upgradePortalTypePropertySheet(),
                       ["Person doesn't has Account associated."])
@@ -294,14 +293,14 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                    'ERP5Site_testRecreateActivityScript', "",
                    "context.manage_addProperty('custom_property_without_meaning', 'I was there', 'string')")
 
-    transaction.commit()
+    self.commit()
     object_to_test.activate().ERP5Site_testRecreateActivityScript()
 
-    transaction.commit()
+    self.commit()
     # Verify if the final activity is created.
     self.assertTrue(object_to_test.hasActivity(method_id="ERP5Site_testRecreateActivityScript"))
     self.portal.portal_activities.activate().ERP5Site_clearActivities()
-    transaction.commit()
+    self.commit()
     self.assertTrue(object_to_test.hasActivity(method_id="ERP5Site_testRecreateActivityScript"))
     self.assertTrue(self.portal.portal_activities.hasActivity(method_id='ERP5Site_clearActivities'))
     self.stepTic()

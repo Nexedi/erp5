@@ -29,7 +29,6 @@
 
 import unittest
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
 from AccessControl import ClassSecurityInfo
@@ -533,7 +532,7 @@ context.setDescription('%s,%s,%s' % (d, args, result))
     self.assertEqual(organisation.getDescription(), 'bad')
     # before-commit interactions should be immune to security changes
     self.logout()
-    transaction.commit()
+    self.commit()
     self.login()
     self.assertEqual(organisation.getDescription(), "toto,('description',),bad")
 
@@ -558,7 +557,7 @@ context.setTitle('Bar')
     organisation.setTitle('Foo')
     organisation.setGroupValue(organisation)
     self.assertEqual(organisation.getTitle(), 'Foo')
-    transaction.commit()
+    self.commit()
     self.assertEqual(organisation.getTitle(), 'Foo')
     self.tic()
     self.assertEqual(organisation.getTitle(), 'Bar')
@@ -672,7 +671,7 @@ context.setTitle('Bar')
     # This can be considered an undesired side-effect, so if this test
     # starts failing in the assertion above for a good reason, just
     # fix the test.
-    transaction.commit()
+    self.commit()
     # committing the transaction allows the interaction workflow to
     # run on the normal object again:
     organisation.setGroupValue(None)

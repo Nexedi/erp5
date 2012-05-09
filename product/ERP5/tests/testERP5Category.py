@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Base import _aq_reset
 from AccessControl.SecurityManagement import newSecurityManager
@@ -90,7 +89,7 @@ class TestERP5Category(ERP5TypeTestCase):
     type_info = self.getTypeTool().Organisation
     type_info._setTypeBaseCategoryList([self.base_cat, self.base_cat2])
 
-    transaction.commit()
+    self.commit()
 
     organisation_module = self.getOrganisationModule()
     if not organisation_module.has_key('1'):
@@ -137,7 +136,7 @@ class TestERP5Category(ERP5TypeTestCase):
     predicate.setCriterion('quantity', identity=None, min=None, max=None)
     self.predicate = predicate
 
-    transaction.commit() # If we don't commit, then we can't rename
+    self.commit()# If we don't commit, then we can't rename
     self.tic()
 
   def beforeTearDown(self):
@@ -166,7 +165,6 @@ class TestERP5Category(ERP5TypeTestCase):
   def commitAndTic(self):
     """Just to save one line.
     """
-    transaction.commit()
     self.tic()
 
   def test_01_RenameCategory(self, quiet=quiet, run=run_all_test):
@@ -321,7 +319,7 @@ class TestERP5Category(ERP5TypeTestCase):
     ttool = self.getTypesTool()
     ttool['Organisation']._setTypeBaseCategoryList(['test_aq_category'])
     ttool['Telephone']._setTypeBaseCategoryList(['test_aq_category'])
-    transaction.commit()
+    self.commit()
 
     doc = self.organisation
     subdoc = doc['1']
@@ -339,7 +337,7 @@ class TestERP5Category(ERP5TypeTestCase):
     self.assertEquals([], ctool.getAcquiredCategoryList(doc))
 
     # XXX this test's beforeTearDown commits transaction
-    transaction.abort()
+    self.abort()
 
 
 def test_suite():

@@ -30,7 +30,6 @@ This test is experimental for new simulation implementation.
 """
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -52,7 +51,6 @@ class TestERP5Simulation(TestPackingListMixin, ERP5TypeTestCase):
     self.portal.portal_rules.new_delivery_simulation_rule.quantity_tester.edit(
       quantity_range_max=None,
       quantity_range_min=None)
-    transaction.commit()
     self.tic()
 
   def _modifyPackingListLineQuantity(self, sequence=None,

@@ -28,7 +28,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5.tests.testTradeModelLine import TestTradeModelLineMixin
 
 
@@ -196,7 +195,7 @@ return getBaseAmountQuantity""")
       ))
     self.appendBaseContributionCategory(order['1'], special_discount)
     self.appendBaseContributionCategory(order['2'], special_discount)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD_LINEAR=dict(total_price=0),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=8100),
@@ -209,7 +208,7 @@ return getBaseAmountQuantity""")
                             quantity=1,
                             price=2400)
     self.appendBaseContributionCategory(line, special_discount)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD_LINEAR=dict(total_price=-1040),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=9460),
@@ -252,7 +251,7 @@ return lambda delivery_amount, base_application, **kw: \\
       ))
     self.appendBaseContributionCategory(order['1'], special_discount)
     self.appendBaseContributionCategory(order['2'], special_discount)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD_FIXED=dict(total_price=0),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=11000),
@@ -265,7 +264,7 @@ return lambda delivery_amount, base_application, **kw: \\
                             quantity=1,
                             price=2400)
     self.appendBaseContributionCategory(line, special_discount)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD_FIXED=dict(total_price=-500),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=12900),
@@ -312,7 +311,7 @@ return getBaseAmountQuantity""")
       ))
     self.appendBaseContributionCategory(order['1'], special_discount)
     self.appendBaseContributionCategory(order['3'], special_discount)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD_LINEAR=dict(total_price=0),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=11000),
@@ -325,7 +324,7 @@ return getBaseAmountQuantity""")
                             quantity=1,
                             price=2400)
     self.appendBaseContributionCategory(line, special_discount)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD_LINEAR=dict(total_price=-1340),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=12060),
@@ -372,7 +371,7 @@ return lambda delivery_amount, base_application, **kw: \\
       dict(id='1', price=3000, quantity=2, resource_value=self.music_album_4),
       ))
     self.appendBaseContributionCategory(order['1'], poster_present_3cd)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=None),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=6000),
@@ -385,7 +384,7 @@ return lambda delivery_amount, base_application, **kw: \\
                             quantity=1,
                             price=3000)
     self.appendBaseContributionCategory(line, poster_present_1dvd)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=None, quantity=1,
                                               resource_value=self.poster),
@@ -399,7 +398,7 @@ return lambda delivery_amount, base_application, **kw: \\
                             quantity=1,
                             price=2400)
     self.appendBaseContributionCategory(line, poster_present_3cd)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD_OR_1DVD_FIXED=dict(total_price=None, quantity=1,
                                               resource_value=self.poster),
@@ -448,7 +447,7 @@ return getBaseAmountQuantity""")
       ))
     self.appendBaseContributionCategory(order['3'], special_discount)
     self.appendBaseContributionCategory(order['4'], special_discount)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD=dict(total_price=0),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=12000),
@@ -457,7 +456,7 @@ return getBaseAmountQuantity""")
 
     # add one more cd, then total is 3. the special discount will be applied.
     order['3'].setQuantity(2)
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       SPECIAL_DISCOUNT_3CD=dict(total_price=-450),
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=16550),
@@ -488,7 +487,7 @@ return lambda *args, **kw: 1""")
       dict(id='1', price=3000, quantity=1, resource_value=self.movie_dvd_1),
       dict(id='2', price=1000, quantity=1, resource_value=self.movie_dvd_2),
       ))
-    transaction.commit()
+    self.commit()
     self.getAggregatedAmountDict(order, partial_check=True,
       TOTAL_PRICE_WITHOUT_VAT=dict(total_price=4500),
       TOTAL_PRICE_WITH_VAT=dict(total_price=4725),

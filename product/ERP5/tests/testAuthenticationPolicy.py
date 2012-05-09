@@ -30,7 +30,6 @@
 
 import unittest
 import time
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.Formulator.Errors import ValidationError
@@ -169,7 +168,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     person.notifyLoginFailure()
     person.notifyLoginFailure()
     
-    transaction.commit()
+    self.commit()
     self.assertTrue(person.isLoginBlocked())
     self.stepTic()
     self.assertTrue(person.isLoginBlocked())

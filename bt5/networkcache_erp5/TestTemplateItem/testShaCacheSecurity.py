@@ -28,7 +28,6 @@
 ##############################################################################
 
 
-import transaction
 from AccessControl import Unauthorized
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from ShaCacheMixin import ShaCacheMixin
@@ -73,7 +72,6 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
                    'document_module',):
       folder = self.portal[module]
       folder.manage_delObjects(list(folder.objectIds()))
-    transaction.commit()
     self.tic()
 
   # Tests

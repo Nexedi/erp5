@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
@@ -878,7 +877,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
-    transaction.commit()
+    self.commit()
     self.assertEquals(1,packing_list.isPacked())
     self.assertEquals('packed',packing_list.getContainerState())
 
@@ -1395,7 +1394,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                             quantity=10,
                             price=3)
     packing_list.confirm()
-    transaction.commit()
     self.tic()
 
     odt = packing_list.PackingList_viewAsODT()
@@ -1464,14 +1462,12 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         resource_value=resource,
         quantity=1)
     packing_list.confirm()
-    transaction.commit()
     self.tic()
     self.assertEqual('confirmed', packing_list.getSimulationState())
     simulation_movement = packing_list_line.getDeliveryRelatedValue(
         portal_type='Simulation Movement')
     self.assertEqual('confirmed', simulation_movement.getSimulationState())
     packing_list.cancel()
-    transaction.commit()
     self.tic()
     self.assertEqual('cancelled', packing_list.getSimulationState())
     self.assertEqual('cancelled', simulation_movement.getSimulationState())
