@@ -368,7 +368,7 @@ class RuleMixin(Predicate):
         else:
           # Compensate non deletable
           raise NotImplementedError(
-            'Compensation undesired: decision_movement = %s' % (
+            'Compensation undesired: decision_movement %s = %s' % (decision_movement.getPath(),
               pformat(decision_movement.__dict__), ))
           new_movement = decision_movement.asContext(
                             quantity=-decision_movement.getQuantity())
@@ -416,8 +416,10 @@ class RuleMixin(Predicate):
           # Frozen must be compensated
           if not _compare(profit_tester_list, prevision_movement, decision_movement):
             raise NotImplementedError(
-              'Compensation undesired: prevision_movement = %s decision_movement = %s' % (
+              'Compensation undesired: prevision_movement %s = %s decision_movement %s = %s' % (
+               prevision_movement.getPath(),
                 pformat(prevision_movement.__dict__),
+                decision_movement.getPath(),
                 pformat(decision_movement.__dict__) ))
             new_movement = decision_movement.asContext(
                                 quantity=-decision_movement_quantity)
@@ -438,8 +440,10 @@ class RuleMixin(Predicate):
           # Frozen must be compensated
           if not _compare(divergence_tester_list, prevision_movement, decision_movement):
             raise NotImplementedError(
-              'Compensation undesired: prevision_movement = %s decision_movement = %s' % (
+              'Compensation undesired: prevision_movement %s = %s decision_movement %s = %s' % (
+                prevision_movement.getPath(),
                 pformat(prevision_movement.__dict__),
+                decision_movement.getPath(),
                 pformat(decision_movement.__dict__) ))
             new_movement = decision_movement.asContext(
                                   quantity=-decision_movement_quantity)
