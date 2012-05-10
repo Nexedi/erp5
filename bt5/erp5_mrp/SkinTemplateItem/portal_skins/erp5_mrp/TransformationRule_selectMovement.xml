@@ -50,38 +50,30 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>def test(movement):\n
-  root_applied_rule = movement.getRootAppliedRule()\n
-  root_rule = root_applied_rule.getSpecialiseValue()\n
+            <value> <string>kw[\'explanation_portal_type\'] = \'Production Order\'\n
+kw[\'parent_specialise_portal_type\'] = \'Transformation Rule\'\n
+\n
+kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
+result = context.ProductionOrder_zSelectMovement(src__=src__, **kw)\n
+if src__:\n
+  result\n
+\n
+movement_list = []\n
+for movement in result:\n
+  movement = movement.getObject()\n
   root_movement = movement.getRootSimulationMovement()\n
-  parent_applied_rule = movement.getParentValue()\n
-  parent_rule = parent_applied_rule.getSpecialiseValue()\n
-  return (\n
-    root_rule.getPortalType() in ("Production Order Rule",\n
-                                  "Production Order Root Simulation Rule") and\\\n
-    parent_rule.getPortalType() == "Transformation Rule" and\\\n
-    root_movement.getSimulationState() == "confirmed"\n
-  )\n
-search_kw = {\n
-  \'explanation_portal_type\': \'Production Order\',\n
-  \'portal_type\': \'Simulation Movement\',\n
-}\n
+  root_rule = root_movement.getParentValue().getSpecialiseValue()\n
+  if root_rule.getPortalType() in ("Production Order Rule",\n
+                                   "Production Order Root Simulation Rule") \\\n
+     and root_movement.getSimulationState() == "confirmed":\n
+    movement_list.append(movement)\n
 \n
-if explanation_uid is not None:\n
-  search_kw[\'explanation_uid\'] = explanation_uid\n
-search_kw.update(context.portal_catalog.buildSQLQuery(**search_kw))\n
-\n
-if src__==0:\n
-  movement_list = [x.getObject() for x in context.ProductionOrder_zSelectMovement(**search_kw)]\n
-  movement_list = [x for x in movement_list if test(x)]\n
-  return movement_list\n
-else:\n
-  return context.ProductionOrder_zSelectMovement(src__=1, **search_kw)\n
+return movement_list\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>explanation_uid=None, src__=0, **kw</string> </value>
+            <value> <string>src__=0, **kw</string> </value>
         </item>
         <item>
             <key> <string>_proxy_roles</string> </key>
