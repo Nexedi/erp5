@@ -207,10 +207,6 @@ class _TextTestResult(unittest._TextTestResult, TestResult):
         unittest._TextTestResult.__init__(self, stream, descriptions, verbosity)
         TestResult.__init__(self)
 
-    def wasSuccessful(self):
-        "Tells whether or not this result was a success"
-        return not (self.failures or self.errors or self.unexpectedSuccesses)
-
     def addSkip(self, test, reason):
         super(_TextTestResult, self).addSkip(test, reason)
         if self.showAll:
