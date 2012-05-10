@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts36653640.49</string> </value>
+            <value> <string>ts36659323.6</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -43,12 +43,12 @@ var NameSpaceStorageCachePlugin = {\n
   \n
   get: function (cache_id, default_value) {\n
     /* Get cache key value */\n
-    return NameSpaceStorageCachePlugin.namespace[cache_id];\n
+    return this.namespace[cache_id];\n
   },\n
 \n
   set: function (cache_id, data) {\n
     /* Set cache key value */\n
-    NameSpaceStorageCachePlugin.namespace[cache_id] = data;\n
+    this.namespace[cache_id] = data;\n
   }\n
 \n
 };\n
@@ -79,7 +79,7 @@ var Cache = {\n
     /* We should have a way to \'purge\' localStorage by setting a ROOT_CACHE_ID in all browser\n
      * instances\n
      */\n
-    return Cache.ROOT_CACHE_ID + cache_id;\n
+    return this.ROOT_CACHE_ID + cache_id;\n
   },\n
   \n
   hasLocalStorage: function() {\n
@@ -100,19 +100,18 @@ var Cache = {\n
   \n
   get: function (cache_id, default_value) {\n
     /* Get cache key value */\n
-    cache_id = Cache.getCacheId(cache_id);\n
-    if (Cache.hasLocalStorage()) {\n
+    cache_id = this.getCacheId(cache_id);\n
+    if (this.hasLocalStorage()) {\n
       return LocalStorageCachePlugin.get(cache_id, default_value);\n
     }\n
-    else {\n
-      return NameSpaceStorageCachePlugin.get(cache_id, default_value);\n
-    }\n
+    //fallback to javscript namespace cache\n
+    return NameSpaceStorageCachePlugin.get(cache_id, default_value);\n
   },\n
 \n
   set: function (cache_id, data) {\n
     /* Set cache key value */\n
-    cache_id = Cache.getCacheId(cache_id);\n
-    if (Cache.hasLocalStorage()){\n
+    cache_id = this.getCacheId(cache_id);\n
+    if (this.hasLocalStorage()){\n
       LocalStorageCachePlugin.set(cache_id, data);}\n
     else{\n
       NameSpaceStorageCachePlugin.set(cache_id, data);}\n
@@ -170,14 +169,13 @@ var Form = {\n
 \n
   getCurrentFormId: function () {\n
                     /* Get current form ID (return hard coded one for now) */\n
-                    return Form.CURRENT_FORM_ID;\n
+                    return this.CURRENT_FORM_ID;\n
   },\n
 \n
   setCurrentFormId: function (form_id) {\n
                     /* Set current form ID (return hard coded one for now) */\n
-                    Form.CURRENT_FORM_ID = form_id;\n
+                    this.CURRENT_FORM_ID = form_id;\n
   },\n
-  \n
   \n
   getFieldId: function(field_id) {\n
               /* Generate local form field id */\n
@@ -208,13 +206,13 @@ var Form = {\n
                     select_dom.append(\'<option value="\' + value[1] + \'">\'  + value[0] + \'</option>\');\n
                   }\n
                 });\n
-              },\n
+  },\n
                \n
   BaseInputField: function (field_id, field_dict) {\n
               /* HTML based input field */\n
               var dom, display_width;\n
-              dom = $("[name=" + Form.getFieldId(field_id) + "]");\n
-              Form.updateField(dom, field_dict);\n
+              dom = $("[name=" + this.getFieldId(field_id) + "]");\n
+              this.updateField(dom, field_dict);\n
               display_width = field_dict.display_width;\n
               if (display_width){\n
                 dom.attr("size", display_width);}\n
@@ -224,8 +222,8 @@ var Form = {\n
   EditorField: function (field_id, field_dict) {\n
               /* HTML based input field */\n
               var dom;\n
-              dom = $("#" + Form.getFieldId(field_id));\n
-              Form.updateField(dom, field_dict);\n
+              dom = $("#" + this.getFieldId(field_id));\n
+              this.updateField(dom, field_dict);\n
               return dom;\n
   },\n
   \n
@@ -233,8 +231,8 @@ var Form = {\n
               /* Select field */\n
               var field_value, select_dom;\n
               field_value = field_dict.value;\n
-              select_dom = $("select[name=" + Form.getFieldId(field_id) + "]");\n
-              Form.addOptionTagList(select_dom, field_dict.items, field_value);\n
+              select_dom = $("select[name=" + this.getFieldId(field_id) + "]");\n
+              this.addOptionTagList(select_dom, field_dict.items, field_value);\n
               return select_dom;              \n
   },\n
   \n
@@ -244,7 +242,7 @@ var Form = {\n
               // XXX: we render only first value but it can be many how to get them ?\n
               field_value = field_dict.value[0];\n
               select_dom = $("select[name=subfield_field_" + field_id + "]");\n
-              Form.addOptionTagList(select_dom, field_dict.items, field_value);\n
+              this.addOptionTagList(select_dom, field_dict.items, field_value);\n
               return select_dom;\n
   },\n
   \n
@@ -252,7 +250,7 @@ var Form = {\n
               /* CheckBoxField field */\n
               var checked, checkbox_dom;\n
               checked = Boolean(field_dict.value);\n
-              checkbox_dom = $("input[name=" + Form.getFieldId(field_id) + "]");\n
+              checkbox_dom = $("input[name=" + this.getFieldId(field_id) + "]");\n
               if (checked) {\n
                   checkbox_dom.attr(\'checked\', true);\n
               }\n
@@ -261,28 +259,28 @@ var Form = {\n
 \n
   TextAreaField: function (field_id, field_dict) {\n
               /* TextArea field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
   \n
   StringField: function (field_id, field_dict) {\n
               /* String field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
   \n
   IntegerField: function (field_id, field_dict) {\n
               /* Int field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
   \n
   PasswordField: function (field_id, field_dict) {\n
               /* PasswordField field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
 \n
   DateTimeField: function (field_id, field_dict) {\n
               /* DateTimeField field */\n
               var date, dom;\n
-              dom = $("[name=" + Form.getFieldId(field_id) + "]");\n
+              dom = $("[name=" + this.getFieldId(field_id) + "]");\n
               date = field_dict.value;\n
               date = new Date(date);\n
               dom.datepicker({ dateFormat: \'dd/mm/yy\' }); // XXX: get format from server!\n
@@ -292,23 +290,23 @@ var Form = {\n
   \n
   EmailField: function (field_id, field_dict) {\n
               /* Email field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
   \n
   FormBox: function (field_id, field_dict) {\n
               /* Email field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
 \n
   RelationStringField: function (field_id, field_dict) {\n
               /* Relation field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
 \n
   ImageField:  function (field_id, field_dict) {\n
               /* Image field */\n
               var dom;\n
-              dom = $("img[name=" + Form.getFieldId(field_id) + "]");\n
+              dom = $("img[name=" + this.getFieldId(field_id) + "]");\n
               // XXX: image field should return details like quality, etc ...\n
               dom.attr("src", field_dict.value + "?quality=75.0&display=thumbnail&format=png");\n
   },\n
@@ -319,7 +317,7 @@ var Form = {\n
               listbox_id = "field_" + field_id;\n
               navigation_id = listbox_id + "_pager";              \n
               listbox_table = $("#"+listbox_id);\n
-              current_form_id = Form.getCurrentFormId();\n
+              current_form_id = this.getCurrentFormId();\n
               \n
               listbox_dict = field_dict.listbox;\n
               listbox_data_url = listbox_dict.listbox_data_url;\n
@@ -456,14 +454,23 @@ var FormUpdater = {\n
   }\n
 };\n
 \n
+\n
 /*\n
  * Javascript Gadget representation\n
  */\n
-\n
 function Gadget(id, dom) {\n
   this.id = id;\n
   this.dom = dom;\n
 }\n
+\n
+Gadget.prototype.getId = function() {\n
+  return this.id;\n
+}\n
+\n
+Gadget.prototype.getDom = function() {\n
+  return this.dom;\n
+}\n
+\n
 \n
 /*\n
  * Generic gadget index placeholder\n
@@ -472,6 +479,13 @@ var GadgetIndex = {\n
 \n
   gadget_list: [],\n
 \n
+  getGadgetList: function(gadget) {\n
+    /*\n
+     * Return list of registered gadgets\n
+     */\n
+    return this.gadget_list;\n
+  },\n
+  \n
   registerGadget: function(gadget) {\n
     /* Register gadget */\n
     this.gadget_list.push(gadget);\n
@@ -488,7 +502,7 @@ var GadgetIndex = {\n
      */\n
     var gadget;\n
     gadget = undefined;\n
-    $(GadgetIndex.gadget_list).each(\n
+    $(this.getGadgetList()).each(\n
       function (index, value) {\n
         if (value.id===gadget_id) {\n
           gadget = value;\n
@@ -503,7 +517,6 @@ var GadgetIndex = {\n
  */\n
 \n
 var RenderJs = {\n
-\n
    \n
     bootstrap: function (root){\n
               /* initial load application gadget */\n
@@ -516,14 +529,15 @@ var RenderJs = {\n
               var gadget_list;\n
               gadget_list = root.find("[gadget]");\n
               // Load chilren\n
-              gadget_list.each(function(i,v){RenderJs.loadGadgetFromUrl($(this));});\n
+              gadget_list.each(function(i,v) {\n
+                RenderJs.loadGadgetFromUrl($(this)); });\n
     },\n
 \n
     updateAndRecurse: function(gadget, data){\n
               /* Update current gadget and recurse down */\n
               gadget.append(data);\n
               // a gadget may contain sub gadgets\n
-              RenderJs.load(gadget);\n
+              this.load(gadget);\n
     },\n
     \n
     loadGadgetFromUrl: function(gadget) {\n
@@ -531,7 +545,7 @@ var RenderJs = {\n
               var url, gadget_id, gadget_property, cacheable, cache_id, app_cache, data;\n
               url = gadget.attr("gadget");\n
               gadget_id = gadget.attr("id");\n
-\n
+              \n
               // XXX: How to know how long a form should be cached locally\n
               // i.e. what happens if it changes at server side ?\n
 \n
@@ -570,7 +584,7 @@ var RenderJs = {\n
                   else{\n
                     // get from cache\n
                     data = app_cache;\n
-                    RenderJs.updateAndRecurse(gadget, data);}\n
+                    this.updateAndRecurse(gadget, data);}\n
                 }\n
               else{\n
                 // not to be cached\n
@@ -587,22 +601,6 @@ var RenderJs = {\n
               root.find("[gadget]").each(function(i,v){RenderJs.updateGadgetData($(this));});\n
     },\n
 \n
-    traverse: function (method_name){\n
-                // not working with ie7\n
-                var method, parent;\n
-                method = undefined;\n
-                parent = window;\n
-                $.each(method_name.split(\'.\'),\n
-                       function(index,value){\n
-                         method = parent[value];\n
-                         //console.log(value + obj);\n
-                         if (method!==undefined){\n
-                           parent=method;}\n
-                         else{\n
-                           return undefined;}});\n
-                return method;\n
-    },\n
-                                      \n
     updateGadgetWithDataHandler: function (result) {\n
                                    var data_handler;\n
                                    data_handler = this.yourCustomData.data_handler;\n
@@ -624,8 +622,7 @@ var RenderJs = {\n
                         success: RenderJs.updateGadgetWithDataHandler});}\n
    }\n
 \n
-};\n
-
+};
 
 ]]></string> </value>
         </item>
@@ -635,7 +632,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>21530</int> </value>
+            <value> <int>21131</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
