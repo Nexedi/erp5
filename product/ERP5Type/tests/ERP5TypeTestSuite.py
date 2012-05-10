@@ -233,11 +233,12 @@ class ERP5TypeTestSuite(TestSuite):
     search = self.STATUS_RE.search(test_log)
     if search:
       groupdict = search.groupdict()
-      status_dict.update(error_count=int(groupdict['errors'] or 0),
-                         failure_count=int(groupdict['failures'] or 0),
-                         skip_count=int(groupdict['skips'] or 0)
-                                   +int(groupdict['expected_failures'] or 0)
-                                   +int(groupdict['unexpected_successes'] or 0))
+      status_dict.update(
+        error_count=int(groupdict['errors'] or 0),
+        failure_count=int(groupdict['failures'] or 0)
+                     +int(groupdict['unexpected_successes'] or 0),
+        skip_count=int(groupdict['skips'] or 0)
+                  +int(groupdict['expected_failures'] or 0))
     return status_dict
 
 class ProjectTestSuite(ERP5TypeTestSuite):
