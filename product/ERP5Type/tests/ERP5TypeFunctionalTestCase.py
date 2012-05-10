@@ -402,7 +402,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
        self._verboseErrorLog(20)
 
     self.logMessage("-" * 79)
-    total = success + failure
+    total = success + failure + expected_failure
     message_args = {"title": self.getTitle(),
                     "total": total,
                     "failure": failure,
