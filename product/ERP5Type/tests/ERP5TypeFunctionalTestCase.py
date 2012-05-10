@@ -47,6 +47,7 @@ TEST_RESULT_RE = re.compile('<div style="padding-top: 10px;">\s*<p>\s*'
                           '<img.*?</div>\s.*?</div>\s*', re.S)
 
 TEST_ERROR_RESULT_RE = re.compile('.*(?:error.gif|title status_failed).*', re.S)
+EXPECTED_FAILURE_RE = re.compile('.*expected failure.*', re.I)
 
 ZELENIUM_BASE_URL = "%s/portal_tests/%s/core/TestRunner.html?test=../test_suite_html&auto=on&resultsUrl=../postResults&__ac_name=%s&__ac_password=%s"
 
@@ -302,14 +303,20 @@ class FunctionalTestRunner:
 
   def processResult(self):
     file_content = self.getStatus().encode("utf-8", "replace")
-    sucess_amount = TEST_PASS_RE.search(file_content).group(1)
-    failure_amount = TEST_FAILURE_RE.search(file_content).group(1)
+    sucess_amount = int(TEST_PASS_RE.search(file_content).group(1))
+    failure_amount = int(TEST_FAILURE_RE.search(file_content).group(1))
     error_title_list = [re.compile('\s+').sub(' ', x).strip()
                     for x in TEST_ERROR_TITLE_RE.findall(file_content)]
 
+    is_expected_failure = lambda x: EXPECTED_FAILURE_RE.match(x)
+    expected_failure_amount = len(filter(is_expected_failure, error_title_list))
+    # Remove expected failures from list
+    error_title_list = filter(lambda x: not is_expected_failure(x), error_title_list)
+    failure_amount -= expected_failure_amount
+
     detail = ''
     for test_result in TEST_RESULT_RE.findall(file_content):
-      if  TEST_ERROR_RESULT_RE.match(test_result):
+      if TEST_ERROR_RESULT_RE.match(test_result):
         detail += test_result
 
     detail = IMAGE_RE.sub('', detail)
@@ -323,7 +330,8 @@ class FunctionalTestRunner:
 </html>''' % detail
 
     # When return fix output for handle unicode issues.
-    return detail, int(sucess_amount), int(failure_amount), error_title_list
+    return detail, sucess_amount, failure_amount, expected_failure_amount, \
+        error_title_list
 
 class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
   run_only = ""
@@ -382,7 +390,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     debug = self.foreground or os.environ.get("erp5_debug_mode")
     self.runner.test(debug=debug)
     try:
-      detail, success, failure, error_title_list = self.runner.processResult()
+      detail, success, failure, \
+          expected_failure, error_title_list = self.runner.processResult()
     except TimeoutError, e:
       self._verboseErrorLog(20)
       raise TimeoutError(e)
@@ -394,8 +403,13 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
 
     self.logMessage("-" * 79)
     total = success + failure
-    self.logMessage("%s Functional Tests %s Tests, %s Failures" % \
-                    (self.getTitle(), total, failure))
+    message_args = {"title": self.getTitle(),
+                    "total": total,
+                    "failure": failure,
+                    "expected": expected_failure}
+    message = "%(title)s Functional Tests %(total)s Tests, %(failure)s " + \
+              "Failures, %(expected)s Expected failures"
+    self.logMessage(message % message_args)
     self.logMessage("-" * 79)
     self.logMessage(detail)
     self.logMessage("-" * 79)
