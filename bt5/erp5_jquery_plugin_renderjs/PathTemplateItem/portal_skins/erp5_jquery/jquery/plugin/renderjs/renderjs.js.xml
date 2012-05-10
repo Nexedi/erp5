@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts36652259.54</string> </value>
+            <value> <string>ts36653640.49</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -196,13 +196,20 @@ var Form = {\n
               }\n
   },\n
 \n
-  addOptionTagList: function (index, value) {\n
-              if(value[1]===field_value){\n
-                select_dom.append(\'<option selected value="\' + value[1] + \'">\'  + value[0] + \'</option>\');}\n
-              else{\n
-                select_dom.append(\'<option value="\' + value[1] + \'">\'  + value[0] + \'</option>\'); }\n
+  addOptionTagList: function (select_dom, item_list, field_value) {\n
+              /*\n
+               * Update select like dom element\n
+               */\n
+              $.each(item_list, function (index, value){\n
+                  if(value[1]===field_value) {\n
+                    select_dom.append(\'<option selected value="\' + value[1] + \'">\'  + value[0] + \'</option>\');\n
+                  }\n
+                  else {\n
+                    select_dom.append(\'<option value="\' + value[1] + \'">\'  + value[0] + \'</option>\');\n
+                  }\n
+                });\n
               },\n
-  \n
+               \n
   BaseInputField: function (field_id, field_dict) {\n
               /* HTML based input field */\n
               var dom, display_width;\n
@@ -216,6 +223,7 @@ var Form = {\n
   \n
   EditorField: function (field_id, field_dict) {\n
               /* HTML based input field */\n
+              var dom;\n
               dom = $("#" + Form.getFieldId(field_id));\n
               Form.updateField(dom, field_dict);\n
               return dom;\n
@@ -223,19 +231,20 @@ var Form = {\n
   \n
   ListField: function (field_id, field_dict) {\n
               /* Select field */\n
-              //var field_value; // uncommenting makes a local variable and affects other parts of code!!!\n
+              var field_value, select_dom;\n
               field_value = field_dict.value;\n
               select_dom = $("select[name=" + Form.getFieldId(field_id) + "]");\n
-              $.each(field_dict.items, Form.addOptionTagList);\n
+              Form.addOptionTagList(select_dom, field_dict.items, field_value);\n
               return select_dom;              \n
   },\n
   \n
   ParallelListField: function (field_id, field_dict) {\n
               /* mutiple select fields */\n
+              var field_value, select_dom;              \n
               // XXX: we render only first value but it can be many how to get them ?\n
               field_value = field_dict.value[0];\n
               select_dom = $("select[name=subfield_field_" + field_id + "]");\n
-              $.each(field_dict.items, Form.addOptionTagList);\n
+              Form.addOptionTagList(select_dom, field_dict.items, field_value);\n
               return select_dom;\n
   },\n
   \n
@@ -272,7 +281,7 @@ var Form = {\n
 \n
   DateTimeField: function (field_id, field_dict) {\n
               /* DateTimeField field */\n
-              var date;\n
+              var date, dom;\n
               dom = $("[name=" + Form.getFieldId(field_id) + "]");\n
               date = field_dict.value;\n
               date = new Date(date);\n
@@ -595,7 +604,7 @@ var RenderJs = {\n
     },\n
                                       \n
     updateGadgetWithDataHandler: function (result) {\n
-                                   //var data_handler;\n
+                                   var data_handler;\n
                                    data_handler = this.yourCustomData.data_handler;\n
                                    if (data_handler!==undefined){\n
                                      eval(data_handler+ "(result)");\n
@@ -626,7 +635,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>21227</int> </value>
+            <value> <int>21530</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
