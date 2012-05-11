@@ -74,7 +74,7 @@ currency = portal.portal_catalog.getResultValue(portal_type=\'Currency\',\n
                                                 local_roles=\'Owner\')\n
 \n
 if currency is not None:\n
-  portal.currency_module.manage_delObjects([currency.getId()])\n
+  portal.currency_module.deleteContent(currency.getId())\n
 \n
 return "Clean Ok"\n
 </string> </value>

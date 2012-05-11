@@ -1,6 +1,29 @@
 Changes
 =======
 
+0.4.3 (2012-04-24)
+----------------
+
+ * erp5.util.testnode:
+
+  - Improve detection of the cancellation of a test on the master
+  - better management of SIGTERM signal
+  - cleanup test instances to make sure nothing stay from a previous
+    test run
+
+0.4.2 (2012-04-11)
+----------------
+
+ * erp5.util.testnode:
+
+  - Improve testnode logs
+  - add a thread to upload ongoing logs to the master regularly
+  - if the software release is not built successfully after a
+    few time, totally erase software. This help unblocking if
+    buildout is unable to update software.
+  - check if the last test result was cancelled in order to
+    allow relaunching test without restarting testnode
+
 0.4.1 (2012-02-29)
 ----------------
 

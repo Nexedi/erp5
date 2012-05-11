@@ -50,6 +50,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       stepCheckPersonInformationList
       stepCheckValidOrganisationList
       stepCheckValidCurrencyList
+      stepCheckAlarmList
       stepCheckPublicGadgetList
       stepCheckPreferenceList
       stepCheckModulesBusinessApplication
@@ -280,10 +281,22 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     currency_list = self.getBusinessConfigurationObjectList(business_configuration, 'Currency')
     self.assertNotEquals(len(currency_list), 0)
     for currency in currency_list:
-      # XXX FIXME: should the currency be validated by After Configuration Script?
-      # On tiolive it is not validated, is there any reason?
-      # self.assertEquals('validated', currency.getValidationState())
+      self.assertEquals('validated', currency.getValidationState())
       currency.Base_checkConsistency()
+
+  def stepCheckAlarmList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if after configuration the Alarms objects are enabled.
+    """
+    business_configuration = sequence.get("business_configuration")
+    alarm_list = self.getBusinessConfigurationObjectList(business_configuration, 'Alarm')
+    self.assertEquals(len(alarm_list), 2)
+    for alarm in alarm_list:
+      self.failUnless(alarm.getPeriodicityStartDate() < DateTime())
+      self.assertNotEquals(alarm.getPeriodicityStartDate(), None)
+      self.assertEquals(alarm.getPeriodicityMinuteFrequency(), 5)
+      self.assertEquals(alarm.getEnabled(), True)
+      self.assertNotEquals(alarm.getActiveSenseMethodId(), None)
 
   def stepCheckPublicGadgetList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -567,14 +580,14 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(accounting_credit_path.getEfficiency(), -1.0)
     self.assertEquals(accounting_credit_path.getTradePhase(), 'trade/accounting')
     self.assertEquals(accounting_credit_path.getTradeDate(), 'trade_phase/trade/invoicing')
-    self.assertEquals(accounting_credit_path.getTestMethodId(), "isAccountingMovementType")
+    self.assertEquals(accounting_credit_path.getSource(), "account_module/receivable")
 
     accounting_debit_path = getattr(business_process, "accounting_debit_path", None)
     self.assertNotEquals(accounting_debit_path, None)
     self.assertEquals(accounting_debit_path.getEfficiency(), 1.0)
     self.assertEquals(accounting_debit_path.getTradePhase(), 'trade/accounting')
     self.assertEquals(accounting_debit_path.getTradeDate(), 'trade_phase/trade/invoicing')
-    self.assertEquals(accounting_debit_path.getTestMethodId(), "isAccountingMovementType")
+    self.assertEquals(accounting_debit_path.getSource(), "account_module/sales")
 
     order_link = getattr(business_process, "order_link", None)
     self.assertNotEquals(order_link, None)
@@ -810,8 +823,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     inventory = portal.portal_types['Inventory']
     sale_packing_list = portal.portal_types['Sale Packing List']
     sale_packing_list_line = portal.portal_types['Sale Packing List Line']
-    self.assertEquals(True,
-                      'TradeOrder' in sale_packing_list.getTypePropertySheetList())
     self.assertEquals(True,
                       'TradeOrderLine' in sale_packing_list_line.getTypePropertySheetList())
     self.assertEquals(True,

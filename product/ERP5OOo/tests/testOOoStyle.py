@@ -106,7 +106,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.fail(''.join(error_list))
   
   def _assertFieldInGroup(self, field_type, form_id, group):
-    for f in self.portal[form_id].get_fields_in_group(group):
+    for f in getattr(self.portal, form_id).get_fields_in_group(group):
       if f.meta_type == 'ProxyField':
         if f.getRecursiveTemplateField().meta_type == field_type:
           break

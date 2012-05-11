@@ -133,13 +133,26 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # it is required by SecurityTestCase
     self.workflow_tool = self.portal.portal_workflow
     self.setDefaultSitePreference()
+    self.setSystemPreference()
     self.portal.portal_activities.unsubscribe()
+
+  def setSystemPreference(self):
+    portal_type = 'System Preference'
+    preference_list = self.portal.portal_preferences.contentValues(
+                                                       portal_type=portal_type)
+    if not preference_list:
+      preference = self.portal.portal_preferences.newContent(
+                                                       portal_type=portal_type)
+    else:
+      preference = preference_list[0]
+    conversion_dict = _getConversionServerDict()
+    preference.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    preference.setPreferredOoodocServerPortNumber(conversion_dict['port'])
+    if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
+      preference.enable()
 
   def setDefaultSitePreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
       default_pref.enable()
     return default_pref
@@ -172,7 +185,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     response_dict = self.portal.portal_configurator._next(
                             business_configuration, next_dict)
     sequence.edit(response_dict=response_dict)
-    
+
   def stepConfiguratorPrevious(self, sequence=None, sequence_list=None, **kw):
     """ Go to the previous form. """
     business_configuration = sequence.get("business_configuration")
@@ -477,8 +490,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
   def stepSetupInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Install the Configuration """
-    next_dict = {}
-    sequence.edit(next_dict=next_dict)
+    sequence.edit(next_dict={})
 
   def stepCheckInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Check the installation of the configuration """

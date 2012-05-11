@@ -82,6 +82,7 @@
                 <string>delivery_builder/portal_deliveries/internal_packing_list_builder</string>
                 <string>delivery_builder/portal_deliveries/purchase_packing_list_builder</string>
                 <string>delivery_builder/portal_deliveries/sale_packing_list_builder</string>
+                <string>delivery_builder/portal_deliveries/task_report_builder</string>
               </tuple>
             </value>
         </item>

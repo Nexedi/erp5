@@ -51,20 +51,20 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>""" This script reindex all the objects created before updating local roles """\n
-module_list = [\'document\',\n
-               \'image\',\n
-               \'knowledge_pad\',\n
-               \'organisation\',\n
-               \'person\',\n
-               \'review\',\n
-               \'test_page\',\n
-               \'web_page\',\n
-               \'web_site\']\n
+module_list = [\'document_module\',\n
+               \'image_module\',\n
+               \'knowledge_pad_module\',\n
+               \'organisation_module\',\n
+               \'person_module\',\n
+               \'review_module\',\n
+               \'test_page_module\',\n
+               \'web_page_module\',\n
+               \'web_site_module\']\n
 \n
 context.portal_types.recursiveImmediateReindexObject()\n
-for module_content_name in module_list:\n
-  module_name = module_content_name + \'_module\'\n
-  module = context.restrictedTraverse(\'erp5/\' + module_name) \n
+portal = context.getPortalObject()\n
+for module_id in module_list:\n
+  module = getattr(portal, module_id)\n
   module.recursiveImmediateReindexObject()\n
   stack = [module]\n
   for obj in stack:\n

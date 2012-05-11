@@ -66,13 +66,7 @@ class SQLQueue(SQLBase):
       method_id_list = [m.method_id for m in registered_message_list]
       priority_list = [m.activity_kw.get('priority', 1) for m in registered_message_list]
       date_list = [m.activity_kw.get('at_date', None) for m in registered_message_list]
-      group_method_id_list = []
-      for m in registered_message_list:
-        group_method_id = m.activity_kw.get('group_method_id', '')
-        if group_method_id is None:
-          group_method_id = 'portal_activities/dummyGroupMethod/' + m.method_id
-        group_method_id_list.append(group_method_id + '\0' +
-                                    m.activity_kw.get('group_id', ''))
+      group_method_id_list = [m.getGroupId() for m in registered_message_list]
       tag_list = [m.activity_kw.get('tag', '') for m in registered_message_list]
       serialization_tag_list = [m.activity_kw.get('serialization_tag', '') for m in registered_message_list]
       dumped_message_list = [self.dumpMessage(m) for m in registered_message_list]
@@ -87,13 +81,6 @@ class SQLQueue(SQLBase):
                                               tag_list=tag_list,
                                               processing_node_list=None,
                                               serialization_tag_list=serialization_tag_list)
-
-  def getDuplicateMessageUidList(self, activity_tool, line, processing_node):
-    """
-      Reserve unreserved messages matching given line.
-      Return their uids.
-    """
-    return ()
 
   def hasActivity(self, activity_tool, object, method_id=None, only_valid=None, active_process_uid=None):
     hasMessage = getattr(activity_tool, 'SQLQueue_hasMessage', None)

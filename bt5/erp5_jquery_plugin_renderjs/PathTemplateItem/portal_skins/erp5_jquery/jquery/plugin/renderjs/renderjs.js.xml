@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts34058349.94</string> </value>
+            <value> <string>ts36659323.6</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -26,6 +26,7 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+var DEFAULT_GADGET_DOM_READY_TIMEOUT;\n
 DEFAULT_GADGET_DOM_READY_TIMEOUT = 1000;\n
 \n
 /*\n
@@ -38,21 +39,19 @@ var NameSpaceStorageCachePlugin = {\n
    * This plugin saves within current page namespace.\n
    */\n
   \n
-  _namespace: {},\n
+  namespace: {},\n
   \n
-  get: function(cache_id, default_value){\n
+  get: function (cache_id, default_value) {\n
     /* Get cache key value */\n
-    //console.log(\'get namespace\');\n
-    return NameSpaceStorageCachePlugin._namespace[cache_id];\n
+    return this.namespace[cache_id];\n
   },\n
 \n
-  set: function(cache_id, data){\n
+  set: function (cache_id, data) {\n
     /* Set cache key value */\n
-    //console.log(\'get namespace\');\n
-    NameSpaceStorageCachePlugin._namespace[cache_id] = data;\n
+    this.namespace[cache_id] = data;\n
   }\n
 \n
-}\n
+};\n
 \n
 \n
 var LocalStorageCachePlugin = {\n
@@ -60,59 +59,72 @@ var LocalStorageCachePlugin = {\n
    * This plugin saves using HTML5 localStorage.\n
    */\n
   \n
-  get: function(cache_id, default_value){\n
+  get: function (cache_id, default_value) {\n
     /* Get cache key value */\n
-    //console.log(\'get local\');\n
     return $.jStorage.get(cache_id, default_value);\n
   },\n
 \n
-  set: function(cache_id, data){\n
+  set: function (cache_id, data) {\n
     /* Set cache key value */\n
-    //console.log(\'set local\');\n
-    $.jStorage.set(cache_id, data)\n
+    $.jStorage.set(cache_id, data);\n
   }\n
 \n
-}\n
+};\n
 \n
 var Cache = {\n
   \n
+  ROOT_CACHE_ID: \'APP_CACHE\',\n
+\n
+  getCacheId: function (cache_id) {\n
+    /* We should have a way to \'purge\' localStorage by setting a ROOT_CACHE_ID in all browser\n
+     * instances\n
+     */\n
+    return this.ROOT_CACHE_ID + cache_id;\n
+  },\n
+  \n
   hasLocalStorage: function() {\n
-      /*\n
-       * Feature test if localStorage is supported\n
-       */\n
-      mod = \'localstorage_test_12345678\';\n
-      try {\n
+    /*\n
+     * Feature test if localStorage is supported\n
+     */\n
+    var mod;\n
+    mod = \'localstorage_test_12345678\';\n
+    try {\n
         localStorage.setItem(mod, mod);\n
         localStorage.removeItem(mod);\n
-        return true;}\n
-      catch(e) {\n
-        return false;}\n
-    },\n
+        return true;\n
+    }\n
+    catch (e) {\n
+        return false;\n
+    }\n
+  },\n
   \n
-  get: function(cache_id, default_value){\n
+  get: function (cache_id, default_value) {\n
     /* Get cache key value */\n
-    if (Cache.hasLocalStorage()){\n
-      return LocalStorageCachePlugin.get(cache_id, default_value);}\n
-    else{\n
-      return NameSpaceStorageCachePlugin.get(cache_id, default_value);}\n
+    cache_id = this.getCacheId(cache_id);\n
+    if (this.hasLocalStorage()) {\n
+      return LocalStorageCachePlugin.get(cache_id, default_value);\n
+    }\n
+    //fallback to javscript namespace cache\n
+    return NameSpaceStorageCachePlugin.get(cache_id, default_value);\n
   },\n
 \n
-  set: function(cache_id, data){\n
+  set: function (cache_id, data) {\n
     /* Set cache key value */\n
-    if (Cache.hasLocalStorage()){\n
+    cache_id = this.getCacheId(cache_id);\n
+    if (this.hasLocalStorage()){\n
       LocalStorageCachePlugin.set(cache_id, data);}\n
     else{\n
       NameSpaceStorageCachePlugin.set(cache_id, data);}\n
   }\n
 \n
-}\n
+};\n
 \n
 /*\n
  * Generic tabular gadget\n
  */\n
 var TabbularGadget = {\n
 \n
-  toggleVisibility: function(visible_dom){\n
+  toggleVisibility: function(visible_dom) {\n
     /*\n
      * Set tab as active visually and mark as not active rest.\n
      */\n
@@ -121,8 +133,9 @@ var TabbularGadget = {\n
     visible_dom.removeClass("not_selected");\n
   },\n
   \n
-  addNewTabGadget: function(form_id, dom_id, gadget_data_handler){\n
+  addNewTabGadget: function(form_id, dom_id, gadget_data_handler) {\n
     // add new gadget and render it\n
+    var html_string;\n
     tab_container=$(\'#\'+dom_id);\n
     tab_container.empty();\n
     // XXX: allow add any gadget,gadget:source items within API\n
@@ -142,7 +155,7 @@ var TabbularGadget = {\n
     window.setTimeout("RenderJs.updateGadgetData(tab_gadget)", DEFAULT_GADGET_DOM_READY_TIMEOUT);\n
   }\n
   \n
-}\n
+};\n
 \n
 /*\n
   Form field renderer\n
@@ -154,182 +167,206 @@ var Form = {\n
 \n
   CURRENT_FORM_ID: "",\n
 \n
-  getCurrentFormId: function (){\n
+  getCurrentFormId: function () {\n
                     /* Get current form ID (return hard coded one for now) */\n
-                    return Form.CURRENT_FORM_ID;\n
+                    return this.CURRENT_FORM_ID;\n
   },\n
 \n
-  setCurrentFormId: function (form_id){\n
+  setCurrentFormId: function (form_id) {\n
                     /* Set current form ID (return hard coded one for now) */\n
-                    Form.CURRENT_FORM_ID = form_id;\n
+                    this.CURRENT_FORM_ID = form_id;\n
   },\n
   \n
-  \n
-  getFieldId: function(field_id){\n
+  getFieldId: function(field_id) {\n
               /* Generate local form field id */\n
               return "field_" + field_id;\n
   },\n
 \n
-  updateField: function (dom, field_dict){\n
+  updateField: function (dom, field_dict) {\n
               /* General purpose field updater */\n
-              editable = Boolean(field_dict[\'editable\']);\n
+              var editable;\n
+              editable = Boolean(field_dict.editable);\n
               if (editable){\n
-                dom.val(field_dict["value"]);}\n
+                dom.val(field_dict.value);}\n
               else{\n
                 // if field is not editable just show its value\n
-                dom.replaceWith(field_dict["value"]);\n
+                dom.replaceWith(field_dict.value);\n
               }\n
   },\n
 \n
-  addOptionTagList: function (index, value){\n
-              if(value[1]==field_value){\n
-                select_dom.append(\'<option selected value="\' + value[1] + \'">\'  + value[0] + \'</option>\');}\n
-              else{\n
-                select_dom.append(\'<option value="\' + value[1] + \'">\'  + value[0] + \'</option>\'); }\n
-              },\n
-  \n
-  BaseInputField: function (field_id, field_dict){\n
+  addOptionTagList: function (select_dom, item_list, field_value) {\n
+              /*\n
+               * Update select like dom element\n
+               */\n
+              $.each(item_list, function (index, value){\n
+                  if(value[1]===field_value) {\n
+                    select_dom.append(\'<option selected value="\' + value[1] + \'">\'  + value[0] + \'</option>\');\n
+                  }\n
+                  else {\n
+                    select_dom.append(\'<option value="\' + value[1] + \'">\'  + value[0] + \'</option>\');\n
+                  }\n
+                });\n
+  },\n
+               \n
+  BaseInputField: function (field_id, field_dict) {\n
               /* HTML based input field */\n
-              dom = $("[name=" + Form.getFieldId(field_id) + "]");\n
-              Form.updateField(dom, field_dict);\n
-              display_width = field_dict["display_width"];\n
+              var dom, display_width;\n
+              dom = $("[name=" + this.getFieldId(field_id) + "]");\n
+              this.updateField(dom, field_dict);\n
+              display_width = field_dict.display_width;\n
               if (display_width){\n
                 dom.attr("size", display_width);}\n
               return dom;\n
   },\n
-  EditorField: function (field_id, field_dict){\n
+  \n
+  EditorField: function (field_id, field_dict) {\n
               /* HTML based input field */\n
-              dom = $("#" + Form.getFieldId(field_id));\n
-              Form.updateField(dom, field_dict);\n
+              var dom;\n
+              dom = $("#" + this.getFieldId(field_id));\n
+              this.updateField(dom, field_dict);\n
               return dom;\n
   },\n
   \n
-  ListField: function (field_id, field_dict){\n
+  ListField: function (field_id, field_dict) {\n
               /* Select field */\n
-              field_value = field_dict["value"]\n
-              select_dom = $("select[name=" + Form.getFieldId(field_id) + "]");\n
-              $.each(field_dict["items"], Form.addOptionTagList);\n
+              var field_value, select_dom;\n
+              field_value = field_dict.value;\n
+              select_dom = $("select[name=" + this.getFieldId(field_id) + "]");\n
+              this.addOptionTagList(select_dom, field_dict.items, field_value);\n
               return select_dom;              \n
   },\n
   \n
-  ParallelListField: function (field_id, field_dict){\n
+  ParallelListField: function (field_id, field_dict) {\n
               /* mutiple select fields */\n
+              var field_value, select_dom;              \n
               // XXX: we render only first value but it can be many how to get them ?\n
-              field_value = field_dict["value"][0]\n
+              field_value = field_dict.value[0];\n
               select_dom = $("select[name=subfield_field_" + field_id + "]");\n
-              $.each(field_dict["items"], Form.addOptionTagList);\n
+              this.addOptionTagList(select_dom, field_dict.items, field_value);\n
               return select_dom;\n
   },\n
   \n
-  CheckBoxField: function (field_id, field_dict){\n
+  CheckBoxField: function (field_id, field_dict) {\n
               /* CheckBoxField field */\n
-              checked = Boolean(field_dict["value"])\n
-              checkbox_dom = $("input[name=" + Form.getFieldId(field_id) + "]");\n
-              if (checked){\n
-                  checkbox_dom.attr(\'checked\', true)}\n
+              var checked, checkbox_dom;\n
+              checked = Boolean(field_dict.value);\n
+              checkbox_dom = $("input[name=" + this.getFieldId(field_id) + "]");\n
+              if (checked) {\n
+                  checkbox_dom.attr(\'checked\', true);\n
+              }\n
               return checkbox_dom;\n
   },\n
 \n
-  TextAreaField: function (field_id, field_dict){\n
+  TextAreaField: function (field_id, field_dict) {\n
               /* TextArea field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
   \n
-  StringField: function (field_id, field_dict){\n
+  StringField: function (field_id, field_dict) {\n
               /* String field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
   \n
-  IntegerField: function (field_id, field_dict){\n
+  IntegerField: function (field_id, field_dict) {\n
               /* Int field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
   \n
-  PasswordField: function (field_id, field_dict){\n
+  PasswordField: function (field_id, field_dict) {\n
               /* PasswordField field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
 \n
-  DateTimeField: function (field_id, field_dict){\n
+  DateTimeField: function (field_id, field_dict) {\n
               /* DateTimeField field */\n
-              dom = $("[name=" + Form.getFieldId(field_id) + "]");\n
-              date = field_dict["value"];\n
+              var date, dom;\n
+              dom = $("[name=" + this.getFieldId(field_id) + "]");\n
+              date = field_dict.value;\n
               date = new Date(date);\n
               dom.datepicker({ dateFormat: \'dd/mm/yy\' }); // XXX: get format from server!\n
               dom.datepicker(\'setDate\', date);\n
               return dom;\n
   },\n
   \n
-  EmailField: function (field_id, field_dict){\n
+  EmailField: function (field_id, field_dict) {\n
               /* Email field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
   \n
-  FormBox: function (field_id, field_dict){\n
+  FormBox: function (field_id, field_dict) {\n
               /* Email field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
 \n
-  RelationStringField: function (field_id, field_dict){\n
+  RelationStringField: function (field_id, field_dict) {\n
               /* Relation field */\n
-              return Form.BaseInputField(field_id, field_dict);\n
+              return this.BaseInputField(field_id, field_dict);\n
   },\n
 \n
-  ImageField:  function (field_id, field_dict){\n
+  ImageField:  function (field_id, field_dict) {\n
               /* Image field */\n
-              dom = $("img[name=" + Form.getFieldId(field_id) + "]");\n
+              var dom;\n
+              dom = $("img[name=" + this.getFieldId(field_id) + "]");\n
               // XXX: image field should return details like quality, etc ...\n
-              dom.attr("src", field_dict["value"]+ "?quality=75.0&display=thumbnail&format=png");\n
+              dom.attr("src", field_dict.value + "?quality=75.0&display=thumbnail&format=png");\n
   },\n
   \n
-  ListBox:  function (field_id, field_dict){\n
+  ListBox:  function (field_id, field_dict) {\n
               /* Listbox field */\n
+              var listbox_id, navigation_id, listbox_table, current_form_id, listbox_dict, listbox_data_url, colModel, column_title_list;\n
               listbox_id = "field_" + field_id;\n
               navigation_id = listbox_id + "_pager";              \n
-              listbox_table = jQuery("#"+listbox_id);\n
-              current_form_id = Form.getCurrentFormId();\n
+              listbox_table = $("#"+listbox_id);\n
+              current_form_id = this.getCurrentFormId();\n
               \n
-              listbox_dict = field_dict[\'listbox\']\n
-              listbox_data_url = listbox_dict["listbox_data_url"]\n
-              colModel = []\n
+              listbox_dict = field_dict.listbox;\n
+              listbox_data_url = listbox_dict.listbox_data_url;\n
+              colModel = [];\n
               column_title_list = [];\n
-              $.each(listbox_dict[\'columns\'],\n
+              $.each(listbox_dict.columns,\n
                        function(i, value){\n
+                         var index, title, column;\n
                          index = value[0];\n
                          title = value[1];\n
                          column_title_list.push(title);\n
                          column = {\'name\': index,\n
                                    \'index\': index,\n
-                                   \'width\': 150,\n
-                                   \'align\': \'left\'}\n
+                                   \'width\': 185,\n
+                                   \'align\': \'left\'};\n
                          colModel.push(column);\n
               });\n
 \n
-              listbox_table.jqGrid( {url:listbox_data_url + \'?form_id=\' + current_form_id + \'&amps;listbox_id=\' + field_id,\n
+              listbox_table.jqGrid({url:listbox_data_url + \'?form_id=\' + current_form_id + \'&amps;listbox_id=\' + field_id,\n
                             datatype: "json",\n
                             colNames:  column_title_list,\n
                             colModel: colModel,\n
-                            rowNum:listbox_dict[\'lines\'],\n
+                            rowNum: listbox_dict.lines,\n
                             pager: \'#\'+navigation_id,\n
                             sortname: \'id\',\n
                             viewrecords: true,\n
                             sortorder: "desc",\n
-                            caption: field_dict["title"] });\n
+                            loadError : function(xhr, textStatus, errorThrown)  {\n
+                                          // XXX: handle better than just alert.\n
+                                          alert("Error occurred during getting data from server.");\n
+                                          },\n
+                            cmTemplate: {sortable:false}, // XXX: until we get list of sortable columns from server\n
+                            caption: field_dict.title});\n
               listbox_table.jqGrid(\'navGrid\', \'#\'+navigation_id, {edit:false,add:false,del:false});\n
               return listbox_table;\n
   }\n
 \n
-}\n
+};\n
 \n
 /* Generic form updater */\n
 var FormUpdater = {\n
                    \n
 \n
-  update: function(data){\n
+  update: function(data) {\n
               /* Update form values */\n
-              $.each(data[\'form_data\'],\n
+              $.each(data.form_data,\n
                      function(field_id, field_dict){\n
-                        type = field_dict["type"];\n
+                        var type, dom;\n
+                        type = field_dict.type;\n
                         dom = undefined;\n
                         if(Form.hasOwnProperty(type)){\n
                           dom = Form[type](field_id, field_dict);\n
@@ -337,12 +374,12 @@ var FormUpdater = {\n
                           \n
                         // add a class that these fields are editable so asJSON\n
                         // can serialize for for sending to server\n
-                        if (dom!=undefined&&dom!=null&&field_dict["editable"]){\n
+                        if (dom!==undefined && dom!==null && field_dict.editable){\n
                           dom.addClass(Form.SERIALIZE_ABLE_CLASS_NAME);\n
                         }\n
                         \n
                         // mark required fields visually\n
-                        if (field_dict["required"]){\n
+                        if (field_dict.required){\n
                           dom.parent().parent().children("label").css("font-weight", "bold");}\n
                          \n
                       });\n
@@ -350,18 +387,23 @@ var FormUpdater = {\n
 \n
   save: function(){\n
               /* save form to server*/\n
-              form_value_dict = {}\n
+              var form_value_dict, converted_value;\n
+              form_value_dict = {};\n
               $("." + Form.SERIALIZE_ABLE_CLASS_NAME).each(function(index){\n
                 // DOM can change values, i.e. alter checkbox (on / off)\n
+                var element,name, value, type; \n
                 element = $(this); \n
                 name = element.attr("name");\n
                 value = element.val();\n
                 type = element.attr("type");\n
-                if (type=="checkbox"){\n
+                if (type==="checkbox") {\n
                   value = element.is(":checked");\n
-                  if(value==true){converted_value=1;}\n
-                  if(value==false){converted_value=0;}\n
-                  //value = {true:1, false:0}[value];\n
+                  if (value===true) {\n
+                    converted_value=1;\n
+                  }\n
+                  if(value===false) {\n
+                    converted_value=0;\n
+                  }\n
                   value = converted_value;  \n
                   }\n
                 // XXX: how to handle file uploads ?\n
@@ -370,17 +412,19 @@ var FormUpdater = {\n
               //console.log(form_value_dict);\n
               \n
               // add form_id as we need to know structure we\'re saving at server side\n
-              form_value_dict["form_id"] = Form.getCurrentFormId();\n
+              form_value_dict.form_id = Form.getCurrentFormId();\n
                 \n
               // validation happens at server side\n
               $.ajax({url:\'Form_save\',\n
                       data: form_value_dict,\n
                       dataType: "json",\n
                       success: function (data) {\n
+                        var field_errors;\n
                         field_errors = data.field_errors;\n
-                        if (field_errors!=undefined){\n
+                        if (field_errors!==undefined){\n
                           //console.log(field_errors);\n
                           $.each(field_errors, function(index, value){\n
+                              var dom, field;\n
                               dom = $("[name=" + Form.getFieldId(index) + "]");\n
                               dom.css("border", "1px solid red"); // XXX: use class / css\n
                               field = dom.parent().parent();\n
@@ -396,6 +440,7 @@ var FormUpdater = {\n
                           // validation OK at server side\n
                           $("span.error").each(function(index) {\n
                             // delete validation messages\n
+                            var element;\n
                             element = $(this);\n
                             element.parent().children("div.input").children("." +Form.SERIALIZE_ABLE_CLASS_NAME).css("border", "none");\n
                             element.remove();\n
@@ -407,14 +452,71 @@ var FormUpdater = {\n
                         }\n
                       }});\n
   }\n
+};\n
+\n
+\n
+/*\n
+ * Javascript Gadget representation\n
+ */\n
+function Gadget(id, dom) {\n
+  this.id = id;\n
+  this.dom = dom;\n
 }\n
+\n
+Gadget.prototype.getId = function() {\n
+  return this.id;\n
+}\n
+\n
+Gadget.prototype.getDom = function() {\n
+  return this.dom;\n
+}\n
+\n
+\n
+/*\n
+ * Generic gadget index placeholder\n
+ */\n
+var GadgetIndex = {\n
+\n
+  gadget_list: [],\n
+\n
+  getGadgetList: function(gadget) {\n
+    /*\n
+     * Return list of registered gadgets\n
+     */\n
+    return this.gadget_list;\n
+  },\n
+  \n
+  registerGadget: function(gadget) {\n
+    /* Register gadget */\n
+    this.gadget_list.push(gadget);\n
+  },\n
+\n
+  unregisterGadget: function(gadget) {\n
+    /* Unregister gadget */\n
+    // XXX:\n
+  },\n
+\n
+  getGadgetById: function (gadget_id){\n
+    /*\n
+     * Get gadget javascript representation by its Id\n
+     */\n
+    var gadget;\n
+    gadget = undefined;\n
+    $(this.getGadgetList()).each(\n
+      function (index, value) {\n
+        if (value.id===gadget_id) {\n
+          gadget = value;\n
+        }});\n
+    return gadget;\n
+  }\n
+  \n
+};\n
 \n
 /*\n
  * Generic Gadget library renderer\n
  */\n
 \n
 var RenderJs = {\n
-\n
    \n
     bootstrap: function (root){\n
               /* initial load application gadget */\n
@@ -424,41 +526,50 @@ var RenderJs = {\n
     \n
     load: function (root) {\n
               /* Load gadget layout by traversing DOM */\n
+              var gadget_list;\n
               gadget_list = root.find("[gadget]");\n
               // Load chilren\n
-              gadget_list.each(function(i,v){RenderJs.loadGadgetFromUrl($(this));});\n
+              gadget_list.each(function(i,v) {\n
+                RenderJs.loadGadgetFromUrl($(this)); });\n
     },\n
 \n
     updateAndRecurse: function(gadget, data){\n
               /* Update current gadget and recurse down */\n
               gadget.append(data);\n
               // a gadget may contain sub gadgets\n
-              RenderJs.load(gadget);\n
+              this.load(gadget);\n
     },\n
     \n
     loadGadgetFromUrl: function(gadget) {\n
               /* Load gadget\'s SPECs from URL */\n
+              var url, gadget_id, gadget_property, cacheable, cache_id, app_cache, data;\n
               url = gadget.attr("gadget");\n
-\n
-              // XXX: based on URL and more ? generate gadget uid?\n
-\n
+              gadget_id = gadget.attr("id");\n
+              \n
               // XXX: How to know how long a form should be cached locally\n
               // i.e. what happens if it changes at server side ?\n
+\n
+              // register gadgdet in javascript namespace\n
+              GadgetIndex.registerGadget(new Gadget(gadget_id, gadget));\n
+              if (url===undefined || url===""){\n
+                // gadget is an inline one so no need to load it from network\n
+                return;\n
+              }\n
               \n
               // handle caching\n
               gadget_property = gadget.attr("gadget:property");\n
 \n
               cacheable = false;\n
-              if (gadget_property!=undefined){\n
-                gadget_property = $.parseJSON(gadget_property)\n
-                cacheable = Boolean(gadget_property.cacheable);}\n
+              if (gadget_property!==undefined) {\n
+                gadget_property = $.parseJSON(gadget_property);\n
+                cacheable = Boolean(gadget_property.cacheable);\n
+              }\n
               //cacheable = false ; // to develop faster\n
-              if (cacheable){\n
+              if (cacheable) {\n
                   // get from cache if possible, use last part from URL as cache_key\n
-                  cache_id = gadget_property.cache_id\n
+                  cache_id = gadget_property.cache_id;\n
                   app_cache = Cache.get(cache_id, undefined);\n
-                                      \n
-                  if(app_cache==undefined){\n
+                  if(app_cache===undefined || app_cache===null){\n
                     // not in cache so we pull from network and cache\n
                     //console.log("not in cache: " + cache_id + "  " + url);\n
                     $.ajax({url:url,\n
@@ -473,7 +584,7 @@ var RenderJs = {\n
                   else{\n
                     // get from cache\n
                     data = app_cache;\n
-                    RenderJs.updateAndRecurse(gadget, data);}\n
+                    this.updateAndRecurse(gadget, data);}\n
                 }\n
               else{\n
                 // not to be cached\n
@@ -490,42 +601,28 @@ var RenderJs = {\n
               root.find("[gadget]").each(function(i,v){RenderJs.updateGadgetData($(this));});\n
     },\n
 \n
-    traverse: function (method_name){\n
-                // not working with ie7\n
-                method = undefined;\n
-                parent = window;\n
-                $.each(method_name.split(\'.\'),\n
-                       function(index,value){\n
-                         method = parent[value];\n
-                         //console.log(value + obj);\n
-                         if (method!=undefined){\n
-                           parent=method;}\n
-                         else{\n
-                           return undefined;}});\n
-                return method;\n
-    },\n
-                                      \n
     updateGadgetWithDataHandler: function (result) {\n
+                                   var data_handler;\n
                                    data_handler = this.yourCustomData.data_handler;\n
-                                   if (data_handler!=undefined){\n
+                                   if (data_handler!==undefined){\n
                                      eval(data_handler+ "(result)");\n
                                    }\n
     },\n
                         \n
     updateGadgetData: function(gadget) {\n
               /* Do real gagdet update here */\n
+              var data_source, data_handler;\n
               data_source = gadget.attr("gadget:data-source");\n
               data_handler = gadget.attr("gadget:data-handler");\n
               // acquire data and pass it to method handler\n
-              if (data_source!=undefined){\n
+              if (data_source!==undefined){\n
                 $.ajax({url:data_source,\n
                         dataType: "json",\n
                         yourCustomData: {"data_handler": data_handler},\n
                         success: RenderJs.updateGadgetWithDataHandler});}\n
    }\n
 \n
-}\n
-
+};
 
 ]]></string> </value>
         </item>
@@ -535,7 +632,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18537</int> </value>
+            <value> <int>21131</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

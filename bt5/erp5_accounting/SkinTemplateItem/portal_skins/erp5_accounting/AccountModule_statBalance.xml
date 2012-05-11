@@ -60,6 +60,8 @@ params[\'omit_asset_decrease\'] = omit_asset_decrease\n
 params[\'omit_simulation\'] = True\n
 \n
 selection_domain = context.portal_selections.getSelectionDomainDictFor(selection_name)\n
+if callable(selection_domain):\n
+  selection_domain = selection_domain()\n
 selection_report = context.portal_selections.getSelectionReportDictFor(selection_name)\n
 if selection_domain:\n
   params[\'selection_domain\'] = selection_domain\n

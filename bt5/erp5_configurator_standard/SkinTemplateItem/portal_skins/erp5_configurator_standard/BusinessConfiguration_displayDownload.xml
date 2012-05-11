@@ -64,8 +64,7 @@ configuration_save.addConfigurationItem("Catalog Keyword Key Configurator Item",
 \n
 # Customize portal type information.\n
 # Include Constraints to some Simulation Objects\n
-# XXX (rafael) Why not Purchase Packing List?\n
-for portal_type in [\'Purchase Order\', \'Sale Order\',\'Sale Packing List\']:\n
+for portal_type in [\'Purchase Order\', \'Sale Order\']:\n
   configuration_save.addConfigurationItem("Portal Type Configurator Item",\n
                                         target_portal_type=portal_type,\n
                                         add_propertysheet_list=(\'TradeOrder\',))\n

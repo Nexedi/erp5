@@ -185,20 +185,13 @@ class TestCacheTool(ERP5TypeTestCase):
   def createCachedMethod(self):
     portal = self.getPortal()
     if getattr(portal, self.python_script_id, None) is not None:
-      return
+      portal.manage_delObjects(ids=[self.python_script_id])
     ## add test cached method
     py_script_params = "value=10000, portal_path=('','erp5'), result=''"
     py_script_body = """
-def veryExpensiveMethod(value):
- ## do something expensive for some time
- ## no 'time.sleep()' available in Zope
- ## so concatenate strings
- s = ""
- for i in range(0, value):
-   s = str(value*value*value) + s
- return value
+portal = context.getPortalObject()
+portal.newCacheCookie('cache_tool_test')
 
-veryExpensiveMethod(value)
 return result
 """
     portal.manage_addProduct['PythonScripts'].manage_addPythonScript(
@@ -230,87 +223,79 @@ return result
                              cache_factory=cf_name)
     self._cacheFactoryInstanceTest(my_cache, cf_name, clear_allowed=False)
 
+
+  def _getCacheCookieValue(self):
+    portal = self.getPortal()
+    return portal.getCacheCookie('cache_tool_test')
+
+  def _callCache(self, my_cache, real_calculation=False, result=""):
+    portal = self.getPortal()
+    before_cookie_value = self._getCacheCookieValue()
+    start = time.time()
+    cached =  my_cache(self.nb_iterations,
+                        portal_path=('', portal.getId()),
+                        result=result)
+    end = time.time()
+    calculation_time = end-start
+    self.assertEquals(cached, result)
+    after_cookie_value = self._getCacheCookieValue()
+    # if there is cache miss, then real calculation is done,
+    # then the cookie is increased with a value 1
+    self.assertEquals(after_cookie_value-before_cookie_value,
+                      int(real_calculation))
+    return calculation_time
+
   def _cacheFactoryInstanceTest(self, my_cache, cf_name, clear_allowed):
     portal = self.getPortal()
     print 
     print "="*40
     print "TESTING:", cf_name
 
-    # if the test fails because your machine is too fast, increase this value.
     result = 'a short value'
-    portal.portal_caches.clearCacheFactory(cf_name)
+    #portal.portal_caches.clearCacheFactory(cf_name)
+
+    def clearCache():
+      my_cache.delete(self.nb_iterations,
+                    portal_path=('', portal.getId()),
+                    result=result)
+      transaction.commit()
+
+    # Make sure we do not have values in cache
+    clearCache()
+
+    # redefine callCache to avoid passing parameters all the time
+    def callCache(real_calculation=True):
+      return self._callCache(my_cache, real_calculation=real_calculation,
+                             result=result)
     ## 1st call
-    start = time.time()
-    cached =  my_cache(self.nb_iterations,
-                       portal_path=('', portal.getId()),
-                       result=result)
-    end = time.time()
-    calculation_time = end-start
+    calculation_time = callCache(real_calculation=True)
     print "\n\tCalculation time (1st call)", calculation_time
-    self.assertEquals(cached, result)
     transaction.commit()
 
     ## 2nd call - should be cached now
-    start = time.time()
-    cached =  my_cache(self.nb_iterations,
-                       portal_path=('', portal.getId()),
-                       result=result)
-    end = time.time()
-    calculation_time = end-start
+    calculation_time = callCache(real_calculation=False)
     print "\n\tCalculation time (2nd call)", calculation_time
-    self.assertEquals(cached, result)
     transaction.commit()
-
-    # check if cache works by getting calculation_time for last cache
-    # operation even remote cache must have access time less than a second.
-    # if it's greater than method wasn't previously cached and was calculated
-    # instead
-    self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
-
-    ## check if equal.
-    self.assertEquals(cached, result)
 
     ## OK so far let's clear cache
     if clear_allowed:
       portal.portal_caches.clearCacheFactory(cf_name)
 
       ## 1st call
-      start = time.time()
-      cached =  my_cache(self.nb_iterations,
-                         portal_path=('', portal.getId()),
-                         result=result)
-      end = time.time()
-      calculation_time = end-start
+      calculation_time = callCache(real_calculation=True)
       print "\n\tCalculation time (after cache clear)", calculation_time
-      ## Cache  cleared shouldn't be previously cached
-      self.assertTrue(1.0 < calculation_time, "1.0 >= %s" % calculation_time)
-      self.assertEquals(cached, result)
-
 
     # Test delete method on CachingMethod
     print "\n\tCalculation time (3rd call)", calculation_time
-    # fill the cache
-    cached =  my_cache(self.nb_iterations,
-                       portal_path=('', portal.getId()),
-                       result=result)
-    self.assertEquals(cached, result)
+    # make sure cache id filled
+    calculation_time = callCache(real_calculation=False)
 
     # Purge the Caching Method
-    my_cache.delete(self.nb_iterations,
-                    portal_path=('', portal.getId()),
-                    result=result)
-    transaction.commit()
+    clearCache()
 
     # Check that result is computed
-    start = time.time()
-    cached =  my_cache(self.nb_iterations,
-                       portal_path=('', portal.getId()),
-                       result=result)
-    end = time.time()
-    calculation_time = end-start
+    calculation_time = callCache(real_calculation=True)
     print "\n\tCalculation time (4th call)", calculation_time
-    self.assertTrue(1.0 < calculation_time, "1.0 >= %s" % calculation_time)
-    self.assertEquals(cached, result)
     transaction.commit()
 
   def test_03_cachePersistentObjects(self):
@@ -477,27 +462,17 @@ return 'a' * 1024 * 1024 * 25
                           'distributed_persistent_cache_factory')
     for cache_factory in cache_factory_list:
       print '\n\t==> %s' % cache_factory
-      cached_method = CachingMethod(py_script_obj,
+      my_cache = CachingMethod(py_script_obj,
                                'py_script_obj',
                                cache_factory=cache_factory)
 
       # First call, fill the cache
-      start = time.time()
-      cached_method(self.nb_iterations, portal_path='something')
-      transaction.commit()
-      end = time.time()
-      calculation_time = end-start
+      calculation_time = self._callCache(my_cache, real_calculation=True)
       print "\n\tCalculation time (1st call)", calculation_time
-      self.assertTrue(calculation_time > 1.0, "%s <= 1.0" % calculation_time)
 
       ## 2nd call - should be cached now
-      start = time.time()
-      cached = cached_method(self.nb_iterations, portal_path='something')
-      transaction.commit()
-      end = time.time()
-      calculation_time = end-start
+      calculation_time = self._callCache(my_cache, real_calculation=False)
       print "\n\tCalculation time (2nd call)", calculation_time
-      self.assertTrue(calculation_time < 1.0, "%s >= 1.0" % calculation_time)
 
       # Wait expiration period then check that value is computed
       # .1 is an additional epsilon delay to work around time precision issues
@@ -506,13 +481,8 @@ return 'a' * 1024 * 1024 * 25
       time.sleep(time_left_to_wait)
 
       # Call conversion for ram_cache_factory
-      start = time.time()
-      cached = cached_method(self.nb_iterations, portal_path='something')
-      transaction.commit()
-      end = time.time()
-      calculation_time = end-start
+      calculation_time = self._callCache(my_cache, real_calculation=True)
       print "\n\tCalculation time (3rd call)", calculation_time
-      self.assertTrue(calculation_time > 1.0, "%s <= 1.0" % calculation_time)
 
   def test_99_CachePluginInterface(self):
     """Test Class against Interface

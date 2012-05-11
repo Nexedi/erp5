@@ -65,6 +65,7 @@ if currency is None:\n
   currency = portal.currency_module.newContent(portal_type=\'Currency\',\n
                                                title=howto_dict[\'post_event_howto_currency_title\'],\n
                                                reference=howto_dict[\'post_event_howto_currency_tag\'],\n
+                                               id=howto_dict[\'post_event_howto_currency_tag\'],\n
                                                base_unit_quantity=0.01)\n
 \n
 if isTransitionPossible(currency, \'validate\'):\n

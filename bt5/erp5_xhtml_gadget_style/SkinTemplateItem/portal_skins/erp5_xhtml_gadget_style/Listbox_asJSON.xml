@@ -94,7 +94,7 @@ current_page_stop  = (total_line < current_page_max) and total_line or current_p
 #context.log("%s %s %s %s %s %s" %(listbox_max_lines, total_line, current_page,\n
 #                                  current_page_max, current_page_start, current_page_stop))\n
 \n
-json = {"page": current_page,\n
+json = {"page": page,\n
         "total": total_pages,\n
         "records": total_line,\n
         "rows":row_list}\n

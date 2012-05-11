@@ -119,9 +119,9 @@ Wait for activities</span>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>storeLocation</td>\n
+  <td>storeEval</td>\n
+  <td>selenium.getLocation().split("?")[0]</td>\n
   <td>document_location</td>\n
-  <td></td>\n
 </tr>\n
 \n
 <span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
@@ -151,8 +151,8 @@ Wait for activities</span>\n
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>assertLocation</td>\n
-  <td>${document_location}</td>\n
+  <td>assertAbsoluteLocation</td>\n
+  <td>regexp:${document_location}</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

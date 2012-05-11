@@ -29,6 +29,8 @@
 from AccessControl import Unauthorized
 from zLOG import LOG, INFO
 import uuid
+from DateTime import DateTime
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
 
@@ -48,6 +50,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
             'erp5_simulation',
             'erp5_pdm',
             'erp5_trade',
+            'erp5_accounting',
             'erp5_configurator_standard_trade_template')
 
   def createConfigurationSave(self):
@@ -215,6 +218,140 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.stepTic()
     item_brl._build(bc)
     self.stepTic()
+
+  def testSecurityCategoryMappingConfiguratorItem(self):
+    """ Test Security Category Mapping Configurator Item
+        XXX This test and the Security Category Mapping should be improved to
+            allow provide the name of skin folder and the script/categories to
+            be used for the script oucome. For now it does the minimum.
+    """
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+
+    expect_script_outcome = (
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function']),
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['follow_up']),
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function', 'follow_up']),
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['group']),
+           ('ERP5Type_getSecurityCategoryRoot', ['group']),)
+
+
+    item = configuration_save.addConfigurationItem(
+                  "Security Category Mapping Configurator Item")
+
+    self.stepTic()
+    item._build(bc)
+    self.stepTic()
+
+    # XXX Skin folder should be part of configuration and not always custom
+    security_script = getattr(self.portal.portal_skins.custom,
+                              "ERP5Type_getSecurityCategoryMapping", None)
+
+    self.assertNotEquals(None, security_script)
+    self.assertEquals(security_script(), expect_script_outcome)
+
+  def testAccountConfiguratorItem(self):
+    """ Test Account Configurator Item """
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+    account_module = self.portal.account_module
+
+    account_dict = {
+             'account_type': 'asset/receivable',
+             'account_id': 'receivable',
+             'title': 'Customers',
+             'gap': 'ias/ifrs/4/41',
+             'financial_section': 'asset/current_assets/trade_receivables'}
+
+    item = configuration_save.addConfigurationItem(
+                  "Account Configurator Item", **account_dict)
+
+    self.stepTic()
+    item._build(bc)
+    self.stepTic()
+
+    account = getattr(account_module, account_dict['account_id'], None)
+    self.assertNotEquals(account, None)
+    self.assertEquals(account.getTitle(), account_dict['title'])
+    self.assertEquals(account.getGap(), account_dict['gap'])
+    self.assertEquals(account.getFinancialSection(),
+                      account_dict['financial_section'])
+    self.assertEquals(account.getAccountType(),
+                      account_dict['account_type'])
+
+    # Update Account dict and try to create again the same account,
+    # the account should be only updated instead a new account be created.
+    account_dict['title'] = 'Clientes'
+    previous_gap = account_dict['gap']
+    account_dict['gap'] = 'br/pcg/1/1.1/1.1.2'
+
+    item = configuration_save.addConfigurationItem(
+                  "Account Configurator Item", **account_dict)
+
+    self.stepTic()
+    item._build(bc)
+    self.stepTic()
+
+    same_account = getattr(account_module, account_dict['account_id'], None)
+    self.assertEquals(account, same_account)
+    self.assertEquals(account.getTitle(), account_dict['title'])
+    self.assertSameSet(account.getGapList(), [previous_gap,
+                                              account_dict['gap']])
+    self.assertEquals(account.getFinancialSection(),
+                      account_dict['financial_section'])
+    self.assertEquals(account.getAccountType(),
+                      account_dict['account_type'])
+
+  def testAlarmConfiguratorItem(self):
+    """ Test Alarm Configurator Item """
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+
+    property_map = {
+      "active_sense_method_id" : "Base_setDummy",
+      "periodicity_hour_list" : [5, 6],
+      "periodicity_minute_list": [30, 31],
+      "periodicity_minute_frequency": 5,
+      "periodicity_month_list": [1, 2],
+      "periodicity_month_day_list": [3, 4],
+      "periodicity_week_list": [6, 7],
+                        }
+
+    item = configuration_save.addConfigurationItem(
+                  "Alarm Configurator Item",
+                  id="my_test_alarm",
+                  title="My Test Alarm",
+                  **property_map)
+
+    createZODBPythonScript(self.getPortal().portal_skins.custom,
+                                    property_map["active_sense_method_id"],
+                                    "", "context.setEnabled(0)")
+    self.stepTic()
+    item._build(bc)
+    self.stepTic()
+
+    alarm = getattr(self.portal.portal_alarms, "my_test_alarm", None)
+    self.assertNotEquals(None, alarm)
+
+    self.assertEquals(alarm.getEnabled(), True)
+    self.assertEquals(alarm.getTitle(), "My Test Alarm")
+    self.assertEquals(alarm.getPeriodicityMinuteFrequency(),
+                      property_map["periodicity_minute_frequency"])
+    self.assertEquals(alarm.getPeriodicityMonthList(),
+                      property_map["periodicity_month_list"])
+    self.assertEquals(alarm.getPeriodicityMonthDayList(),
+                      property_map["periodicity_month_day_list"])
+    self.assertEquals(alarm.getPeriodicityHourList(),
+                      property_map["periodicity_hour_list"])
+    self.assertEquals(alarm.getPeriodicityHourList(),
+                      property_map["periodicity_hour_list"])
+    self.assertEquals(alarm.getActiveSenseMethodId(),
+                      property_map["active_sense_method_id"])
+    self.assertNotEquals(alarm.getPeriodicityStartDate(), None)
+    self.failUnless(alarm.getPeriodicityStartDate() < DateTime())
+    alarm.activeSense()
+    self.stepTic()
+    self.assertEquals(alarm.getEnabled(), 0)
 
   def testPortalTypeRolesSpreadsheetConfiguratorItem(self):
     """ Test Portal Type Roles Configurator Item """

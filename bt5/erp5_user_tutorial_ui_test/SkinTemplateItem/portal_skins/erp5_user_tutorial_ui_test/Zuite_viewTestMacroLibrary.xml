@@ -118,6 +118,20 @@
   </tr> \n
 </tal:block>\n
 \n
+<tal:block metal:define-macro="invoke_simulation_alarms">\n
+  <!-- Wait for activities to finish -->\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Zuite_invokeSimulationAlarmList</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Done.</td>\n
+    <td></td>\n
+  </tr> \n
+</tal:block>\n
+\n
 <tal:block metal:define-macro="login_as_functional_test_user">\n
   <tr>\n
     <td>openAndWait</td>\n
@@ -226,6 +240,30 @@
           here.Zuite_getHowToInfo()[\'person_howto_reference\']"></td>\n
     <td></td>\n
   </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="select_cash_account">\n
+  <span tal:condition="python:\'5 - Bank\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n
+  <tr>\n
+    <td>select</td>\n
+    <td>//select[@name="field_your_node"]</td>\n
+    <td>5 - Bank</td>\n
+  </tr>\n
+  </span>\n
+  <span tal:condition="python:\'51 - Bank\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n
+  <tr>\n
+    <td>select</td>\n
+    <td>//select[@name="field_your_node"]</td>\n
+    <td>51 - Bank</td>\n
+  </tr>\n
+  </span>\n
+  <span tal:condition="python:\'512 - Banques\' in here.Zuite_getCashAccountRelatedFormattedTitleList()">\n
+   <tr>\n
+    <td>select</td>\n
+    <td>//select[@name="field_your_node"]</td>\n
+    <td>512 - Banques</td>\n
+   </tr>\n
+  </span>\n
 </tal:block>
 
 ]]></unicode> </value>

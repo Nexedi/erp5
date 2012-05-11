@@ -486,7 +486,7 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>project_monthly_report_selection</string> </value>
+                    <value> <string>project_monthly_summary_report_selection</string> </value>
                 </item>
                 <item>
                     <key> <string>sort</string> </key>

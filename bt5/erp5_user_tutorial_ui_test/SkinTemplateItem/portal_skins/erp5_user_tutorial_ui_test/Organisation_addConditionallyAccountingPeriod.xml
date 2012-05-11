@@ -68,7 +68,7 @@ if not found_period:\n
     portal_type = \'Accounting Period\',\n
     title = context.Zuite_getHowToInfo()[\'optional_new_accounting_period_title\'],\n
     start_date = used_test_date - 1,\n
-    stop_date = used_test_date + 365\n
+    stop_date = used_test_date + 3650\n
   )\n
   test_accounting_period.start()\n
 

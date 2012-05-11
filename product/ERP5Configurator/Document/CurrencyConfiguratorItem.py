@@ -72,7 +72,7 @@ class CurrencyConfiguratorItem(ConfiguratorItemMixin, XMLObject):
                                           title = title,
                                           reference = reference,
                                           base_unit_quantity = base_unit_quantity)
-
+      currency.validate()
     business_configuration.setGlobalConfigurationAttr(currency_id=currency.getId())
     ## add to customer template
     self.install(currency, business_configuration)

@@ -1,3 +1,6 @@
+2012-04-19 Kazuhiko
+* add TypesTool_viewRoleInformationList that lists all Role Informations.
+
 2011-08-08 yusei
 * Extract messages from constraints in ZODB property sheets for POT.
 

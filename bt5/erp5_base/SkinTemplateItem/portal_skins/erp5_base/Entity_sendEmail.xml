@@ -57,7 +57,10 @@ event = portal.restrictedTraverse(event_relative_url)\n
 subject = event.getTitle()\n
 body = event.getTextContent()\n
 sender = event.getSourceValue()\n
-if sender is not None:\n
+if kw.get("from_url") is not None:\n
+  from_url = kw.get("from_url")\n
+elif event.getSource() is not None:\n
+  sender = event.getSourceValue()\n
   from_url = formataddr((sender.getTitle(), sender.getDefaultEmailText()))\n
 else:\n
   from_url = portal.portal_preferences.getPreferredEventSenderEmail()\n

@@ -14,6 +14,7 @@
 ##############################################################################
 
 import string
+import re
 
 # Import everything right now, not after
 # or new patch will not work
@@ -21,6 +22,7 @@ from Shared.DC.xml.ppml import *
 from Shared.DC.xml import ppml
 
 from marshal import dumps as mdumps
+from zLOG import LOG
 
 # For converting to a more readable expression.
 reprs = {}
@@ -305,14 +307,34 @@ class Object(Sequence):
 
 ppml.Object = Object
 
+blanck_line_expression = re.compile('^ +$')
+
 # For optmization.
 class NoBlanks:
 
+    previous_stack_end = None
+    previous_discarded_data = None
+
     def handle_data(self, data):
         if data.strip():
+            # Horrible conditions to try fixing some weird removal of spaces.
+            # It happened that javascript files with a line like
+            # "  ];\n" was replaced by "];\n", so the indent was lost.
+            # Indeed the parser was calling this handle_data function first
+            # for "  ", then for "];". So original code was dropping the "  ".
+            # Disabling the above if was the initial idea, but it give
+            # other troubles, so such conditions were introduced.
+            if data.startswith(']') \
+                  and self.previous_discarded_data \
+                  and blanck_line_expression.match(self.previous_discarded_data) \
+                  and self._stack[-1] == self.previous_stack_end:
+              data = self.previous_discarded_data + data
             if isinstance(data, unicode):
                 data = data.encode('raw_unicode_escape')
             self.append(data)
+        else:
+          self.previous_stack_end = self._stack[-1]
+          self.previous_discarded_data = data
 
 ppml.NoBlanks = NoBlanks
 

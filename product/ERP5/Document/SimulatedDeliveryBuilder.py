@@ -348,11 +348,8 @@ class SimulatedDeliveryBuilder(BuilderMixin):
     if old_delivery is None:
       # from scratch
       new_delivery_id = str(delivery_module.generateNewId())
-      delivery = delivery_module.newContent(
-        portal_type=self.getDeliveryPortalType(),
-        id=new_delivery_id,
-        created_by_builder=1,
-        activate_kw=activate_kw)
+      delivery = super(SimulatedDeliveryBuilder, self)._createDelivery(
+        delivery_module, movement_list, activate_kw)
     else:
       # from duplicated original delivery
       cp = tryMethodCallWithTemporaryPermission(
@@ -383,10 +380,8 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       old_delivery_line = None
     if old_delivery_line is None:
       # from scratch
-      new_delivery_line_id = str(delivery.generateNewId())
       delivery_line = delivery.newContent(
         portal_type=self.getDeliveryLinePortalType(),
-        id=new_delivery_line_id,
         variation_category_list=[],
         activate_kw=activate_kw)
     else:

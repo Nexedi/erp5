@@ -65,13 +65,7 @@ class SQLDict(SQLBase):
       priority_list = [message.activity_kw.get('priority', 1) for message in registered_message_list]
       dumped_message_list = [self.dumpMessage(message) for message in registered_message_list]
       date_list = [message.activity_kw.get('at_date', None) for message in registered_message_list]
-      group_method_id_list = []
-      for m in registered_message_list:
-        group_method_id = m.activity_kw.get('group_method_id', '')
-        if group_method_id is None:
-          group_method_id = 'portal_activities/dummyGroupMethod/' + m.method_id
-        group_method_id_list.append(group_method_id + '\0' +
-                                    m.activity_kw.get('group_id', ''))
+      group_method_id_list = [m.getGroupId() for m in registered_message_list]
       tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
       serialization_tag_list = [message.activity_kw.get('serialization_tag', '') for message in registered_message_list]
       order_validation_text_list = [self.getOrderValidationText(message) for message in registered_message_list]
@@ -115,35 +109,42 @@ class SQLDict(SQLBase):
     message_list = activity_buffer.getMessageList(self)
     return [m for m in message_list if m.is_registered]
 
-  def getDuplicateMessageUidList(self, activity_tool, line, processing_node):
-    """
-      Reserve unreserved messages matching given line.
-      Return their uids.
-    """
-    try:
-      result = activity_tool.SQLDict_selectDuplicatedLineList(
-        path=line.path,
-        method_id=line.method_id,
-        group_method_id=line.group_method_id,
-        order_validation_text=line.order_validation_text
-      )
-      uid_list = [x.uid for x in result]
-      if len(uid_list):
-        activity_tool.SQLDict_reserveDuplicatedLineList(
-          processing_node=processing_node,
-          uid_list=uid_list
-        )
-      else:
-        # Release locks
-        activity_tool.SQLDict_commit()
-    except:
-      # Log
-      LOG('SQLDict', WARNING, 'getDuplicateMessageUidList got an exception', error=sys.exc_info())
-      # Release lock
-      activity_tool.SQLDict_rollback()
-      # And re-raise
-      raise
-    return uid_list
+  def getProcessableMessageLoader(self, activity_tool, processing_node):
+    path_and_method_id_dict = {}
+    def load(line):
+      # getProcessableMessageList already fetch messages with the same
+      # group_method_id, so what remains to be filtered on are path and
+      # method_id.
+      # XXX: What about tag ?
+      path = line.path
+      method_id = line.method_id
+      key = path, method_id
+      uid = line.uid
+      original_uid = path_and_method_id_dict.get(key)
+      if original_uid is None:
+        m = self.loadMessage(line.message, uid=uid, line=line)
+        try:
+          result = activity_tool.SQLDict_selectDuplicatedLineList(
+            path=path,
+            method_id=method_id,
+            group_method_id=line.group_method_id,
+          )
+          uid_list = [x.uid for x in result]
+          if uid_list:
+            activity_tool.SQLDict_reserveDuplicatedLineList(
+              processing_node=processing_node, uid=uid_list)
+          else:
+            activity_tool.SQLDict_commit() # release locks
+        except:
+          self._log(WARNING, 'getDuplicateMessageUidList got an exception')
+          activity_tool.SQLDict_rollback() # release locks
+          raise
+        if uid_list:
+          self._log(TRACE, 'Reserved duplicate messages: %r' % uid_list)
+        path_and_method_id_dict[key] = uid
+        return m, uid, uid_list
+      return None, original_uid, [uid]
+    return load
 
   def hasActivity(self, activity_tool, object, method_id=None, only_valid=None, active_process_uid=None):
     hasMessage = getattr(activity_tool, 'SQLDict_hasMessage', None)

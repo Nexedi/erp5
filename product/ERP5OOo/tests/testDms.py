@@ -71,6 +71,7 @@ from threading import Thread
 import httplib
 import urllib
 import difflib
+import re
 from AccessControl import Unauthorized
 from Products.ERP5Type import Permissions
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
@@ -1238,14 +1239,18 @@ class TestDocument(TestDocumentMixin):
     # XXX: search limited to a certain date range
     # XXX: search mode
 
+  # &nbsp; and &#160; are equivalent, and "pdftohtml" can generate
+  # either depending on the version of the "poppler" package used.
+  re_html_nbsp = re.compile('&(nbsp|#160);')
+
   def test_PDFTextContent(self):
     upload_file = makeFileUpload('REF-en-001.pdf')
     document = self.portal.portal_contributions.newContent(file=upload_file)
     self.assertEquals('PDF', document.getPortalType())
     self.assertEquals('I use reference to look up TEST\n',
                       document._convertToText())
-    self.assert_('I use reference to look up TEST' in
-                 document._convertToHTML().replace('&nbsp;', ' '))
+    html_data = re.sub(self.re_html_nbsp, ' ', document._convertToHTML())
+    self.assert_('I use reference to look up TEST' in html_data)
     self.assert_('I use reference to look up TEST' in
                  document.SearchableText())
 
@@ -2615,6 +2620,19 @@ return 1
     
     self.assertEqual('archived', document_nolang_005.getValidationState())
     self.assertEqual('shared_alive', document_nolang_006.getValidationState())
+
+  def testFileWithNotDefinedMimeType(self):
+    upload_file = makeFileUpload('TEST-001-en.dummy')
+    kw = dict(file=upload_file, synchronous_metadata_discovery=True,
+              portal_type='File')
+    document = self.portal.Base_contribute(**kw)
+    document.setReference('TEST')
+    request = self.app.REQUEST
+    download_file = document.index_html(REQUEST=request, format=None)
+    self.assertEquals(download_file, 'foo\n')
+    document_format = None
+    self.assertEquals('TEST-001-en.dummy', document.getStandardFilename(
+                      document_format))
 
 class TestDocumentWithSecurity(TestDocumentMixin):
 

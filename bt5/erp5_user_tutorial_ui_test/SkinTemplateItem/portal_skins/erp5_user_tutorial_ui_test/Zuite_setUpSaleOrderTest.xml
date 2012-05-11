@@ -62,23 +62,18 @@ for account in context.account_module.objectValues():\n
   if isTransitionPossible(account, \'validate\'):\n
     account.validate()\n
 \n
-# validate default business process\n
 business_process = context.portal_catalog.getResultValue(portal_type=\'Business Process\',\n
                                                          reference=\'erp5_default_business_process\')\n
-business_process.account_debit_path.setTestTalesExpression(\'python: True\')\n
-business_process.account_credit_path.setTestTalesExpression(\'python: True\')\n
-business_process.account_debit_path.setSourceValue(context.account_module.goods_sales)\n
-business_process.account_credit_path.setSourceValue(context.account_module.receivable)\n
 \n
-if isTransitionPossible(business_process, \'validate\'):\n
-  business_process.validate()\n
-\n
-# add default sale order trade condition\n
-sale_order_trade_condition = context.portal_catalog.getResultValue(portal_type=\'Sale Trade Condition\',\n
-                                                                  reference=\'default-sale-order-trade-condition\')\n
-if isTransitionPossible(sale_order_trade_condition, \'validate\'):\n
-  sale_order_trade_condition.validate()\n
-\n
+# validate default business process\n
+if context.portal_templates.getInstalledBusinessTemplate("erp5_simulation_test") is not None:\n
+  business_process.account_debit_path.setTestTalesExpression(\'python: True\')\n
+  business_process.account_debit_path.setSourceValue(context.account_module.goods_sales)\n
+  business_process.account_credit_path.setTestTalesExpression(\'python: True\')\n
+  business_process.account_credit_path.setSourceValue(context.account_module.receivable)\n
+  if isTransitionPossible(business_process, \'validate\'):\n
+    business_process.validate()\n
+
 # check if there is already the euro curency on the instance\n
 currency = context.portal_catalog.getResultValue(portal_type=\'Currency\',\n
                                                  title=howto_dict[\'sale_howto_currency_title\'])\n
@@ -86,10 +81,27 @@ if currency is None:\n
   currency = portal.currency_module.newContent(portal_type=\'Currency\',\n
                                                title=howto_dict[\'sale_howto_currency_title\'],\n
                                                reference=howto_dict[\'sale_howto_currency_tag\'],\n
+                                               id=howto_dict[\'sale_howto_currency_tag\'],\n
                                                base_unit_quantity=0.01)\n
 \n
 if isTransitionPossible(currency, \'validate\'):\n
   currency.validate()\n
+\n
+\n
+# add default sale order trade condition\n
+sale_order_trade_condition = context.portal_catalog.getResultValue(portal_type=\'Sale Trade Condition\',\n
+                                                                  reference=\'STC-General\')\n
+if sale_order_trade_condition is None:\n
+  sale_order_trade_condition = context.sale_trade_condition_module.newContent(\n
+                                                 portal_type=\'Sale Trade Condition\',\n
+                                                 reference=\'STC-General\',\n
+                                                 title=\'General Sale Trade Condition\',\n
+                                                 price_currency=currency.getRelativeUrl())\n
+  sale_order_trade_condition.setSpecialiseValue(business_process)\n
+\n
+if isTransitionPossible(sale_order_trade_condition, \'validate\'):\n
+  sale_order_trade_condition.validate()\n
+\n
 \n
 product = portal.product_module.newContent(portal_type=\'Product\',\n
                                            title=howto_dict[\'sale_howto_product_title\'])\n

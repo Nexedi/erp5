@@ -69,7 +69,7 @@ for inventory in portal.portal_catalog(portal_type=portal.getPortalInventoryType
                                        sql_catalog_id=sql_catalog_id):\n
   inventory = inventory.getObject()\n
   tag = \'inventory_%i\' % inventory.getUid()\n
-  activate_kw = dict(tag=tag, passive_commit=passive_commit)\n
+  activate_kw = {\'tag\': tag}\n
   if previous_tag is not None:\n
     activate_kw[\'after_tag\'] = previous_tag\n
   previous_tag = tag\n
@@ -82,7 +82,7 @@ if final_activity_tag is not None and previous_tag is not None:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sql_catalog_id=None, passive_commit=1, final_activity_tag=None, **kw</string> </value>
+            <value> <string>sql_catalog_id=None, final_activity_tag=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

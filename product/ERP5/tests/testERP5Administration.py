@@ -84,10 +84,12 @@ class TestERP5Administration(InventoryAPITestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     # this document will be non consistent, for PropertyTypeValidity
     person.title = 3 
+    # tic right now to make sure the person is indexed, indeed the alarm
+    # could use catalog to retrieve objects to check
+    self.stepTic()
     
     alarm.activeSense()
-    transaction.commit()
-    self.tic()
+    self.stepTic()
     
     # some errors were detected
     self.assertTrue(alarm.sense())
