@@ -373,7 +373,6 @@ class TestCRM(BaseTestCRM):
                                         new_support_request.getReference())
 
 
-  @expectedFailure
   def test_Event_getResourceItemList(self):
     """Event_getResourceItemList returns
     category item list with base category in path, just
