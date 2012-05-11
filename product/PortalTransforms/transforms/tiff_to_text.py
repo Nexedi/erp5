@@ -4,6 +4,7 @@ from Products.PortalTransforms.data import datastream
 from Products.PortalTransforms.libtransforms.commandtransform \
     import commandtransform
 import os
+import subprocess
 import tempfile
 from zope.interface import implements
 
@@ -30,11 +31,21 @@ class tiff_to_text(commandtransform):
 
       text = None
       try:
-        command = self.binary
         output_file_path = os.path.join(tmp_dir, 'output')
-        cmd = '%s %s %s' % (
-            self.binary, input_file, output_file_path)
-        os.system(cmd)
+        cmd = self.binary, input_file, output_file_path
+        process = subprocess.Popen(cmd,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.STDOUT,)
+        stdout = process.communicate()[0]
+        err = process.returncode
+        if err:
+          if err < 0:
+            exit_msg = 'killed with signal %s' % -err
+          else:
+            exit_msg = 'exited with status %s' % err
+          raise EnvironmentError('Command %r %s. Command output:\n%s'
+                                 % (cmd, exit_msg, stdout))
+
         output_file = open(output_file_path + '.txt', 'r')
         out = output_file.read()
         output_file.close()
