@@ -241,9 +241,14 @@
   <td></td>\n
 </tr>\n
 <tr>\n
-  <td>verifyText</td>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//*[@class=\'listbox-table-no-result-row\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyNotText</td>\n
   <td>//*[@class="listbox-number-of-records"]/*[@class="listbox-current-page-total-number"]</td>\n
-  <td>88 records</td>\n
+  <td>0 records</td>\n
 </tr>\n
 <tr>\n
   <td>click</td>\n
