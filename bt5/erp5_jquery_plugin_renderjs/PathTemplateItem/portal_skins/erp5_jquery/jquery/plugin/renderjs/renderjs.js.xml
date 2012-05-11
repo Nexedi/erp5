@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts36659323.6</string> </value>
+            <value> <string>ts36733337.13</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -26,13 +26,11 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-var DEFAULT_GADGET_DOM_READY_TIMEOUT;\n
-DEFAULT_GADGET_DOM_READY_TIMEOUT = 1000;\n
-\n
 /*\n
  * Generic cache implementation that can fall back to local namespace storage\n
  * if no "modern" storage like localStorage is available\n
  */\n
+is_ready = false; // dirty flag to be removed (indicates if ready event has been handled)\n
 \n
 var NameSpaceStorageCachePlugin = {\n
   /*\n
@@ -149,10 +147,15 @@ var TabbularGadget = {\n
     Form.setCurrentFormId(form_id);\n
                 \n
     // render new gadget\n
+    is_ready = false;\n
     RenderJs.loadGadgetFromUrl(tab_gadget);\n
-\n
-    // Update it (XXX: how to know gadget loaded the DOM?)\n
-    window.setTimeout("RenderJs.updateGadgetData(tab_gadget)", DEFAULT_GADGET_DOM_READY_TIMEOUT);\n
+    // clear previous events\n
+    GadgetIndex.getRootGadget().getDom().bind("ready", function (){\n
+      if (!is_ready){\n
+        RenderJs.updateGadgetData(tab_gadget);\n
+        is_ready = true;\n
+      }\n
+    });\n
   }\n
   \n
 };\n
@@ -461,15 +464,38 @@ var FormUpdater = {\n
 function Gadget(id, dom) {\n
   this.id = id;\n
   this.dom = dom;\n
+  this.is_ready = false;\n
 }\n
 \n
 Gadget.prototype.getId = function() {\n
   return this.id;\n
-}\n
+};\n
 \n
 Gadget.prototype.getDom = function() {\n
   return this.dom;\n
-}\n
+};\n
+\n
+Gadget.prototype.isReady = function() {\n
+  /*\n
+   * Return True if remote gadget is loaded into DOM.\n
+   */\n
+  return this.is_ready;\n
+};\n
+\n
+Gadget.prototype.setReady = function() {\n
+  /*\n
+   * Return True if remote gadget is loaded into DOM.\n
+   */\n
+  this.is_ready = true;\n
+};\n
+\n
+\n
+Gadget.prototype.getParent = function() {\n
+  /*\n
+   * Get Gadget\'s parent by using DOM\n
+   */\n
+  // XXX:\n
+};\n
 \n
 \n
 /*\n
@@ -508,6 +534,28 @@ var GadgetIndex = {\n
           gadget = value;\n
         }});\n
     return gadget;\n
+  },\n
+\n
+  getRootGadget: function () {\n
+    /*\n
+     * Return root gadget (always first one in list)\n
+     */\n
+    return this.getGadgetList()[0];\n
+  },\n
+  \n
+  isGadgetListLoaded: function () {\n
+    /*\n
+     * Return True if all gadgets were loaded from network or cache\n
+     */\n
+    var result;\n
+    result = true;\n
+    $(this.getGadgetList()).each(\n
+      function (index, value) {\n
+        if (value.isReady()===false) {\n
+          result = false;\n
+        }\n
+      });\n
+    return result;\n
   }\n
   \n
 };\n
@@ -529,8 +577,9 @@ var RenderJs = {\n
               var gadget_list;\n
               gadget_list = root.find("[gadget]");\n
               // Load chilren\n
-              gadget_list.each(function(i,v) {\n
-                RenderJs.loadGadgetFromUrl($(this)); });\n
+              gadget_list.each(function() {\n
+                RenderJs.loadGadgetFromUrl($(this));\n
+              });\n
     },\n
 \n
     updateAndRecurse: function(gadget, data){\n
@@ -549,10 +598,13 @@ var RenderJs = {\n
               // XXX: How to know how long a form should be cached locally\n
               // i.e. what happens if it changes at server side ?\n
 \n
-              // register gadgdet in javascript namespace\n
-              GadgetIndex.registerGadget(new Gadget(gadget_id, gadget));\n
+              // register gadget in javascript namespace\n
+              gadget_js = new Gadget(gadget_id, gadget);\n
+              GadgetIndex.registerGadget(gadget_js);\n
               if (url===undefined || url===""){\n
                 // gadget is an inline one so no need to load it from network\n
+                gadget_js.setReady();\n
+                RenderJs.checkAndTriggerReady(); \n
                 return;\n
               }\n
               \n
@@ -573,27 +625,53 @@ var RenderJs = {\n
                     // not in cache so we pull from network and cache\n
                     //console.log("not in cache: " + cache_id + "  " + url);\n
                     $.ajax({url:url,\n
-                            yourCustomData: {"cache_id": cache_id},\n
+                            yourCustomData: {"gadget_id": gadget_id, "cache_id": cache_id},\n
                             success: function (data) {\n
                                         cache_id = this.yourCustomData.cache_id;\n
+                                        gadget_id = this.yourCustomData.gadget_id;\n
                                         //console.log("set in cache: " + cache_id);\n
                                         Cache.set(cache_id, data);\n
+                                        GadgetIndex.getGadgetById(gadget_id).setReady();\n
                                         RenderJs.updateAndRecurse(gadget, data);\n
+                                        RenderJs.checkAndTriggerReady();                                        \n
                               }});\n
-                    }\n
-                  else{\n
+                  }\n
+                  else {\n
                     // get from cache\n
                     data = app_cache;\n
-                    this.updateAndRecurse(gadget, data);}\n
+                    gadget_js.setReady();\n
+                    this.updateAndRecurse(gadget, data);\n
+                    this.checkAndTriggerReady();                    \n
+                  }\n
                 }\n
-              else{\n
+              else {\n
                 // not to be cached\n
-                //console.log("Not to be cached " + url);\n
+                //console.log("Not to be cached " + url + gadget_id);\n
                 $.ajax({url:url,\n
+                        yourCustomData: {"gadget_id": gadget_id},\n
                         success: function (data) {\n
-                          RenderJs.updateAndRecurse(gadget, data);}});\n
+                          gadget_id = this.yourCustomData.gadget_id;\n
+                          GadgetIndex.getGadgetById(gadget_id).setReady();\n
+                          RenderJs.updateAndRecurse(gadget, data);\n
+                          RenderJs.checkAndTriggerReady();\n
+                        }});\n
                 }\n
-              \n
+    },\n
+\n
+    checkAndTriggerReady: function() {\n
+      /*\n
+       * Trigger "ready" event only if all gadgets were marked as "ready"\n
+       */\n
+      var is_gadget_list_loaded;\n
+      is_gadget_list_loaded = GadgetIndex.isGadgetListLoaded();\n
+      if (is_gadget_list_loaded){\n
+        if (!is_ready) {\n
+          //console.log("trigger");\n
+          GadgetIndex.getRootGadget().getDom().trigger("ready");\n
+        }\n
+        is_ready = true;\n
+      }\n
+      return is_gadget_list_loaded\n
     },\n
 \n
     update: function (root) {\n
@@ -632,7 +710,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>21131</int> </value>
+            <value> <int>23425</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
