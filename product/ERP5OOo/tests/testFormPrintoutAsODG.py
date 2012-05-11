@@ -115,7 +115,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     return style_dict
 
   # see comment at top
-  @expectedFailure
   def test_01_TextField(self):
     """
     mapping a field to textbox
@@ -166,7 +165,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
                      'application/vnd.oasis.opendocument.graphics')
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
                      'inline;filename="Foo_viewAsODGPrintout.odg"')
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
@@ -176,7 +175,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Changed Title!") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 3. False case: change the field name
     test1.setTitle("you cannot find")
@@ -188,7 +187,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertFalse(content_xml.find("you cannot find") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
     # put back
     foo_form.manage_renameObject('xxx_title', 'my_title', REQUEST=request)
 
@@ -211,7 +210,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(content_xml.find("call!") > 0)
     # when just call FormPrintout, it does not change content-type
     self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
@@ -220,7 +219,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 6. Normal case: unicode string
     test1.setTitle(u'Français test2')
@@ -276,7 +275,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     odf_document = foo_printout.index_html(request)
     self.assertTrue(odf_document is not None)
     # validate the generated document
-    #self._validate(odf_document)
+    self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     content = etree.XML(content_xml)
@@ -328,7 +327,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     # 01 - Normal image mapping
     odf_document = foo_printout(request)
     self.assertTrue(odf_document is not None)
-    #self._validate(odf_document)
+    self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Pictures/0.png") > 0)
@@ -362,7 +361,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     content_xml = builder.extract("content.xml")
     # confirming the image was removed
     self.assertFalse(content_xml.find("Pictures/0.png") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
   def test_04_ProxyField(self):
     """
@@ -414,7 +413,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
                      'application/vnd.oasis.opendocument.graphics')
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
                      'inline;filename="Foo_viewProxyFieldAsODGPrintout.odg"')
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
@@ -424,7 +423,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Changed Title!") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 3. False case: change the field name
     test1.setTitle("you cannot find")
@@ -436,7 +435,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertFalse(content_xml.find("you cannot find") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
     # put back
     foo_form.manage_renameObject('xxx_title', 'my_title', REQUEST=request)
 
@@ -458,7 +457,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(content_xml.find("call!") > 0)
     self.assertEqual(request.RESPONSE.getHeader('content-type'),
                      'application/vnd.oasis.opendocument.graphics')
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
@@ -467,7 +466,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 6. Normal case: unicode string
     test1.setTitle(u'Français test2')
@@ -476,7 +475,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français test2") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
 def test_suite():
   suite = unittest.TestSuite()
