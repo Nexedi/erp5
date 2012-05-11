@@ -977,7 +977,6 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertNotEqual(part, None)
     self.assertEqual('<html><body>%s</body></html>' % text_content, part.get_payload(decode=True))
 
-  @expectedFailure
   def test_MailMessageHTMLbis(self):
     # test sending a mail message edited as HTML (the default with FCKEditor),
     # then the mail should have HTML
