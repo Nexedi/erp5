@@ -66,7 +66,7 @@ class TestDeferredConnection(ERP5TypeTestCase):
   """
 
   def getBusinessTemplateList(self):
-    return tuple()
+    return 'erp5_full_text_myisam_catalog',
 
   def getTitle(self):
     return "Deferred Connection"
