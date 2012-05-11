@@ -130,9 +130,9 @@ def Base_asXML(object, root=None):
       for workflow_action in workflow_list[workflow_id]:
         workflow_node = SubElement(object, 'workflow_action',
                                    attrib=dict(id=workflow_id))
-        worfklow_variable_list = workflow_action.keys()
-        worfklow_variable_list.sort()
-        for workflow_variable in worfklow_variable_list:
+        workflow_variable_list = workflow_action.keys()
+        workflow_variable_list.sort()
+        for workflow_variable in workflow_variable_list:
           variable_type = "string" # Somewhat bad, should find a better way
           if workflow_variable.find('time') >= 0:
             variable_type = "date"
