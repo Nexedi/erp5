@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts36997821.03</string> </value>
+            <value> <string>ts37002880.65</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -520,13 +520,20 @@ var GadgetIndex = {\n
   },\n
   \n
   registerGadget: function(gadget) {\n
-    /* Register gadget */\n
+    /*\n
+     * Register gadget\n
+     */\n
     this.gadget_list.push(gadget);\n
   },\n
 \n
   unregisterGadget: function(gadget) {\n
-    /* Unregister gadget */\n
-    // XXX:\n
+    /*\n
+     * Unregister gadget\n
+     */\n
+    index = jQuery.inArray(gadget, this.gadget_list);\n
+    if (index!=-1) {\n
+      this.gadget_list.splice(index, 1);\n
+    }       \n
   },\n
 \n
   getGadgetById: function (gadget_id){\n
@@ -718,7 +725,7 @@ var RenderJs = {\n
       is_gadget_list_loaded = GadgetIndex.isGadgetListLoaded();\n
       if (is_gadget_list_loaded){\n
         if (!is_ready) {\n
-          console.log("trigger");\n
+          //console.log("trigger");\n
           GadgetIndex.getRootGadget().getDom().trigger("ready");\n
         }\n
         is_ready = true;\n
@@ -762,7 +769,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>25230</int> </value>
+            <value> <int>25373</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
