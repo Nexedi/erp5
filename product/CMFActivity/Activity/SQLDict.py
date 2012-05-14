@@ -55,36 +55,38 @@ class SQLDict(SQLBase):
 
   # Transaction commit methods
   def prepareQueueMessageList(self, activity_tool, message_list):
-    message_list = [m for m in message_list if m.is_registered]
-    for i in xrange(0, len(message_list), MAX_MESSAGE_LIST_SIZE):
-      registered_message_list = message_list[i:i + MAX_MESSAGE_LIST_SIZE]
-      #LOG('SQLDict prepareQueueMessageList', 0, 'registered_message_list = %r' % (registered_message_list,))
-      path_list = ['/'.join(message.object_path) for message in registered_message_list]
-      active_process_uid_list = [message.active_process_uid for message in registered_message_list]
-      method_id_list = [message.method_id for message in registered_message_list]
-      priority_list = [message.activity_kw.get('priority', 1) for message in registered_message_list]
-      dumped_message_list = [self.dumpMessage(message) for message in registered_message_list]
-      date_list = [message.activity_kw.get('at_date', None) for message in registered_message_list]
-      group_method_id_list = [m.getGroupId() for m in registered_message_list]
-      tag_list = [message.activity_kw.get('tag', '') for message in registered_message_list]
-      serialization_tag_list = [message.activity_kw.get('serialization_tag', '') for message in registered_message_list]
-      order_validation_text_list = [self.getOrderValidationText(message) for message in registered_message_list]
+    registered_message_list = [m for m in message_list if m.is_registered]
+    for i in xrange(0, len(registered_message_list), MAX_MESSAGE_LIST_SIZE):
+      message_list = registered_message_list[i:i + MAX_MESSAGE_LIST_SIZE]
+      path_list = ['/'.join(m.object_path) for m in message_list]
+      active_process_uid_list = [m.active_process_uid for m in message_list]
+      method_id_list = [m.method_id for m in message_list]
+      priority_list = [m.activity_kw.get('priority', 1) for m in message_list]
+      dumped_message_list = map(self.dumpMessage, message_list)
+      date_list = [m.activity_kw.get('at_date') for m in message_list]
+      group_method_id_list = [m.getGroupId() for m in message_list]
+      tag_list = [m.activity_kw.get('tag', '') for m in message_list]
+      serialization_tag_list = [m.activity_kw.get('serialization_tag', '')
+                                for m in message_list]
+      order_validation_text_list = map(self.getOrderValidationText,
+                                       message_list)
       # The uid_list also is store in the ZODB
-      uid_list = activity_tool.getPortalObject().portal_ids.\
-                                           generateNewIdList(id_generator='uid', id_group='portal_activity',
-                                           id_count=len(registered_message_list))
-      activity_tool.SQLDict_writeMessageList( uid_list = uid_list,
-                                              path_list = path_list,
-                                              active_process_uid_list=active_process_uid_list,
-                                              method_id_list = method_id_list,
-                                              priority_list = priority_list,
-                                              message_list = dumped_message_list,
-                                              date_list = date_list,
-                                              group_method_id_list = group_method_id_list,
-                                              tag_list = tag_list,
-                                              serialization_tag_list = serialization_tag_list,
-                                              processing_node_list=None,
-                                              order_validation_text_list = order_validation_text_list)
+      uid_list = activity_tool.getPortalObject().portal_ids.generateNewIdList(
+        id_generator='uid', id_group='portal_activity',
+        id_count=len(message_list))
+      activity_tool.SQLDict_writeMessageList(
+        uid_list=uid_list,
+        path_list=path_list,
+        active_process_uid_list=active_process_uid_list,
+        method_id_list=method_id_list,
+        priority_list=priority_list,
+        message_list=dumped_message_list,
+        date_list=date_list,
+        group_method_id_list=group_method_id_list,
+        tag_list=tag_list,
+        serialization_tag_list=serialization_tag_list,
+        processing_node_list=None,
+        order_validation_text_list=order_validation_text_list)
 
   def generateMessageUID(self, m):
     return (tuple(m.object_path), m.method_id, m.activity_kw.get('tag'), m.activity_kw.get('group_id'))
