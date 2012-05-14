@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts36733337.13</string> </value>
+            <value> <string>ts36978119.57</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -26,10 +26,17 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+// fallback for IE\n
+if (typeof console === "undefined" || typeof console.log === "undefined") {\n
+  console = {};\n
+  console.log = function() {};\n
+}\n
+\n
 /*\n
  * Generic cache implementation that can fall back to local namespace storage\n
  * if no "modern" storage like localStorage is available\n
  */\n
+var is_ready;\n
 is_ready = false; // dirty flag to be removed (indicates if ready event has been handled)\n
 \n
 var NameSpaceStorageCachePlugin = {\n
@@ -505,7 +512,7 @@ var GadgetIndex = {\n
 \n
   gadget_list: [],\n
 \n
-  getGadgetList: function(gadget) {\n
+  getGadgetList: function() {\n
     /*\n
      * Return list of registered gadgets\n
      */\n
@@ -530,7 +537,7 @@ var GadgetIndex = {\n
     gadget = undefined;\n
     $(this.getGadgetList()).each(\n
       function (index, value) {\n
-        if (value.id===gadget_id) {\n
+        if (value.getId()===gadget_id) {\n
           gadget = value;\n
         }});\n
     return gadget;\n
@@ -556,9 +563,57 @@ var GadgetIndex = {\n
         }\n
       });\n
     return result;\n
-  }\n
+  },\n
   \n
+  getSelf: function (){\n
+    /*\n
+     * Return Gadget\'s Javascript representation\n
+     */\n
+    // XXX:\n
+  }\n
 };\n
+\n
+\n
+/*\n
+ * Basic gadget interaction gadget implementation.\n
+ */\n
+var InteractionGadget = {\n
+\n
+  bind: function (dom){\n
+    /*\n
+     * Bind event between gadgets.\n
+     */\n
+    dom.find("connect").each(function (key, value){\n
+      source = $(value).attr("source").split(".");\n
+      source_gadget_id = source[0];\n
+      source_method_id = source[1];\n
+      source_gadget = GadgetIndex.getGadgetById(source_gadget_id);\n
+\n
+      destination = $(value).attr("destination").split(".");\n
+      destination_gadget_id = destination[0];\n
+      destination_method_id = destination[1];\n
+      destination_gadget = GadgetIndex.getGadgetById(destination_gadget_id);\n
+\n
+      if (source_gadget.hasOwnProperty(source_method_id)){\n
+        // direct javascript use case\n
+        func_body = \'GadgetIndex.getGadgetById("\' + source_gadget_id + \'")["original_\' + source_method_id + \'"]();\';\n
+        func_body = func_body + \'\\nGadgetIndex.getGadgetById("\' + destination_gadget_id + \'")["\' + destination_method_id + \'"]();\';\n
+        func = new Function(func_body);\n
+        source_gadget["original_" + source_method_id] = source_gadget[source_method_id];\n
+        source_gadget[source_method_id] =  func;\n
+      }\n
+      else{\n
+        // this is a custom event attached to HTML gadget representation\n
+        func_body = \'GadgetIndex.getGadgetById("\' + destination_gadget_id + \'")["\' + destination_method_id + \'"]();\';\n
+        func = new Function(func_body);\n
+        source_gadget.dom.bind(source_method_id, func);\n
+      }\n
+      console.log(source_gadget_id, \'.\', source_method_id, \'-->\', destination_gadget_id, \'.\', destination_method_id);\n
+    }\n
+    );\n
+  }\n
+}\n
+\n
 \n
 /*\n
  * Generic Gadget library renderer\n
@@ -591,7 +646,7 @@ var RenderJs = {\n
     \n
     loadGadgetFromUrl: function(gadget) {\n
               /* Load gadget\'s SPECs from URL */\n
-              var url, gadget_id, gadget_property, cacheable, cache_id, app_cache, data;\n
+              var url, gadget_id, gadget_property, cacheable, cache_id, app_cache, data, gadget_js;\n
               url = gadget.attr("gadget");\n
               gadget_id = gadget.attr("id");\n
               \n
@@ -671,7 +726,7 @@ var RenderJs = {\n
         }\n
         is_ready = true;\n
       }\n
-      return is_gadget_list_loaded\n
+      return is_gadget_list_loaded;\n
     },\n
 \n
     update: function (root) {\n
@@ -710,7 +765,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>23425</int> </value>
+            <value> <int>25312</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
