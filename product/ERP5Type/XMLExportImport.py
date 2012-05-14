@@ -39,6 +39,8 @@ from OFS.Image import Pdata
 from zLOG import LOG
 from base64 import standard_b64encode
 
+import sha
+
 MARSHALLER_NAMESPACE_URI = 'http://www.erp5.org/namespaces/marshaller'
 marshaller = Marshaller(namespace_uri=MARSHALLER_NAMESPACE_URI,
                                                             as_tree=True).dumps
@@ -129,7 +131,7 @@ def Base_asXML(object, root=None):
     for workflow_id in workflow_list_keys:
       for workflow_action in workflow_list[workflow_id]:
         workflow_node = SubElement(object, 'workflow_action',
-                                   attrib=dict(id=workflow_id))
+                                   attrib=dict(workflow_id=workflow_id))
         workflow_variable_list = workflow_action.keys()
         workflow_variable_list.sort()
         for workflow_variable in workflow_variable_list:
@@ -145,6 +147,14 @@ def Base_asXML(object, root=None):
           if variable_type != 'None':
             variable_node_text = str(workflow_action[workflow_variable])
             variable_node.text = unicode(variable_node_text, 'utf-8')
+
+            if workflow_variable == 'time':
+              time = variable_node.text
+            elif workflow_variable == 'actor':
+              actor = variable_node.text
+
+        workflow_node.attrib['id'] = sha.new(workflow_id + time +
+                                             str(actor.encode('utf-8'))).hexdigest()
 
   # We should now describe security settings
   for user_role in self.get_local_roles():

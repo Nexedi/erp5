@@ -52,6 +52,8 @@ from base64 import standard_b64decode
 from zope.interface import implements
 from copy import deepcopy
 
+import sha
+
 from Products.ERP5SyncML.SyncMLConstant import XUPDATE_ELEMENT,\
      XUPDATE_INSERT_OR_ADD_LIST, XUPDATE_DEL, XUPDATE_UPDATE, XUPDATE_INSERT_LIST
 # Constant
@@ -83,6 +85,10 @@ BAD_HISTORY_EXP = re.compile("/%s\[@id='.*'\]/" % HISTORY_TAG)
 EXTRACT_ID_FROM_XPATH = re.compile(
                             "(?P<object_block>(?P<property>[^/]+)\[@"\
                             "(?P<id_of_id>id|gid)='(?P<object_id>[^']+)'\])")
+
+WORKFLOW_ACTION_NOT_ADDABLE = 0
+WORKFLOW_ACTION_ADDABLE = 1
+WORKFLOW_ACTION_INSERTABLE = 2
 
 class ERP5Conduit(XMLSyncUtilsMixin):
   """
@@ -214,9 +220,23 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     #LOG('ERP5Conduit xpath_expression', INFO, xpath_expression)
     context_to_delete = self.getContextFromXpath(object, xpath_expression)
     if 'workflow_action' in xpath_expression:
-      # Something like /erp5/object[@gid='313730']/object[@id='170']/workflow_action[@id='edit_workflow'][2]
-      # we can not edit or erase workflow history
-      pass
+      # /erp5/object[@gid='313730']/../workflow_action[@id=SHA(TIME + ACTOR)]
+      wf_action_id = EXTRACT_ID_FROM_XPATH.findall(xpath_expression)[-1][-1]
+      def deleteWorkflowNode():
+        for wf_id, wf_history_tuple in object.workflow_history.iteritems():
+          for wf_history_index, wf_history in enumerate(wf_history_tuple):
+            if sha.new(wf_id + str(wf_history['time']) +
+                       wf_history['actor']).hexdigest() == wf_action_id:
+              object.workflow_history[wf_id] = (
+                object.workflow_history[wf_id][:wf_history_index] +
+                object.workflow_history[wf_id][wf_history_index + 1:])
+
+              return True
+
+        return False
+
+      deleteWorkflowNode()
+
     elif context_to_delete != object:
       self._deleteContent(object=context_to_delete.getParentValue(),
                                            object_id=context_to_delete.getId(),
@@ -890,20 +910,20 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     if wf_id in wf_history:
       action_list = wf_history[wf_id]
     else:
-      return True # addable
-    addable = True
+      return WORKFLOW_ACTION_ADDABLE
+    addable = WORKFLOW_ACTION_ADDABLE
     time = status.get('time')
     for action in action_list:
-      this_one = True
+      this_one = WORKFLOW_ACTION_ADDABLE
       if time <= action.get('time'):
         # action in the past are not append
-        addable = False
+        addable = WORKFLOW_ACTION_INSERTABLE
       for key in action.keys():
         if status[key] != action[key]:
-          this_one = False
+          this_one = WORKFLOW_ACTION_NOT_ADDABLE
           break
       if this_one:
-        addable = False
+        addable = WORKFLOW_ACTION_NOT_ADDABLE
         break
     return addable
 
@@ -927,7 +947,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     conflict_list = []
     # We want to add a workflow action
     wf_tool = getToolByName(object.getPortalObject(), 'portal_workflow')
-    wf_id = xml.get('id')
+    wf_id = xml.get('workflow_id')
     if wf_id is None: # History added by xupdate
       wf_id = self.getHistoryIdFromSelect(xml)
       xml = xml[0]
@@ -937,8 +957,18 @@ class ERP5Conduit(XMLSyncUtilsMixin):
     add_action = self.isWorkflowActionAddable(object=object,
                                               status=status,wf_tool=wf_tool,
                                               wf_id=wf_id,xml=xml)
-    if add_action and not simulate:
-      wf_tool.setStatusOf(wf_id, object, status)
+
+    if not simulate:
+      if add_action == WORKFLOW_ACTION_ADDABLE:
+        wf_tool.setStatusOf(wf_id, object, status)
+      elif add_action == WORKFLOW_ACTION_INSERTABLE:
+        wf_history_list = list(object.workflow_history[wf_id])
+        for wf_history_index, wf_history in enumerate(wf_history_list):
+          if wf_history['time'] > status['time']:
+            wf_history_list.insert(wf_history_index, status)
+            break
+
+        object.workflow_history[wf_id] = tuple(wf_history_list)
 
     return conflict_list
 
