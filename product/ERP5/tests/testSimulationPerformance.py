@@ -33,7 +33,8 @@ pystone.clock = time
 from Products.ERP5Type.tests.runUnitTest import ERP5TypeTestLoader
 from Products.ERP5.tests.testTradeModelLine import TestTradeModelLineSale
 
-ERP5TypeTestLoader._testMethodPrefix = 'perf'
+if ERP5TypeTestLoader._testMethodPrefix == 'test':
+  ERP5TypeTestLoader._testMethodPrefix = 'perf'
 
 class TestSimulationPerformance(TestTradeModelLineSale):
 
