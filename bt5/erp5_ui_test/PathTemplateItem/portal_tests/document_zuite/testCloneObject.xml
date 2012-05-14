@@ -131,6 +131,16 @@ another object of the same type. -->\n
   <td></td>\n
 </tr>\n
 <tr>\n
+  <td>verifyText</td>\n
+  <td>//*[@class="actions"]/ul/*[@class="selected"]</td>\n
+  <td>History</td>\n
+</tr>\n
+<tr>\n
+  <td>verifyTextPresent</td>\n
+  <td>Edit Workflow</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
   <td>clickAndWait</td>\n
   <td>//button[@title=\'Clone\']</td>\n
   <td></td>\n
