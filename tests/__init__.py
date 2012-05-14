@@ -109,7 +109,7 @@ class ERP5UserInterface(_ERP5):
       group_dict = search.groupdict()
       status_dict['failure_count'] = int(group_dict['failures'])
       status_dict['test_count'] = int(group_dict['total'])
-      status_dict['expected_failure'] = int(group_dict['expected_failure'])
+      status_dict['skip_count'] = int(group_dict['expected_failure'])
 
     return status_dict
 
