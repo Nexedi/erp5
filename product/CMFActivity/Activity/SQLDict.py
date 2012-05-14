@@ -62,14 +62,21 @@ class SQLDict(SQLBase):
       active_process_uid_list = [m.active_process_uid for m in message_list]
       method_id_list = [m.method_id for m in message_list]
       priority_list = [m.activity_kw.get('priority', 1) for m in message_list]
-      dumped_message_list = map(self.dumpMessage, message_list)
       date_list = [m.activity_kw.get('at_date') for m in message_list]
       group_method_id_list = [m.getGroupId() for m in message_list]
       tag_list = [m.activity_kw.get('tag', '') for m in message_list]
       serialization_tag_list = [m.activity_kw.get('serialization_tag', '')
                                 for m in message_list]
-      order_validation_text_list = map(self.getOrderValidationText,
-                                       message_list)
+      order_validation_text_list = []
+      processing_node_list = []
+      for m in message_list:
+        m.order_validation_text = x = self.getOrderValidationText(m)
+        # BBB: 'order_validation_text' SQL column is now useless.
+        #      If we remove it, 'message' & 'message_queue'  can have the same
+        #      schema, and much code can be merged into SQLBase.
+        order_validation_text_list.append(x)
+        processing_node_list.append(0 if x == 'none' else -1)
+      dumped_message_list = map(self.dumpMessage, message_list)
       # The uid_list also is store in the ZODB
       uid_list = activity_tool.getPortalObject().portal_ids.generateNewIdList(
         id_generator='uid', id_group='portal_activity',
@@ -85,7 +92,7 @@ class SQLDict(SQLBase):
         group_method_id_list=group_method_id_list,
         tag_list=tag_list,
         serialization_tag_list=serialization_tag_list,
-        processing_node_list=None,
+        processing_node_list=processing_node_list,
         order_validation_text_list=order_validation_text_list)
 
   def generateMessageUID(self, m):
@@ -225,10 +232,10 @@ class SQLDict(SQLBase):
               raise ActivityFlushError, (
                   'Could not validate %s on %s' % (m.method_id , path))
 
-      if len(result):
-        uid_list = activity_tool.SQLDict_readUidList(path = path, method_id = method_id,
-                                                     order_validation_text=None)
-        if len(uid_list)>0:
+      if result:
+        uid_list = activity_tool.SQLDict_readUidList(
+          path=path, method_id=method_id)
+        if uid_list:
           activity_tool.SQLBase_delMessage(table=self.sql_table,
                                            uid=[x.uid for x in uid_list])
 
@@ -260,8 +267,9 @@ class SQLDict(SQLBase):
         validation_text_dict = {'none': 1}
         message_dict = {}
         for line in result:
-          message = self.loadMessage(line.message, uid=line.uid, line=line,
-            order_validation_text=line.order_validation_text)
+          message = self.loadMessage(line.message, uid=line.uid, line=line)
+          if not hasattr(message, 'order_validation_text'): # BBB
+            m.order_validation_text = line.order_validation_text
           self.getExecutableMessageList(activity_tool, message, message_dict,
                                         validation_text_dict, now_date=now_date)
 
@@ -341,8 +349,9 @@ class SQLDict(SQLBase):
                              line=line,
                              uid=line.uid,
                              date=line.date,
-                             processing_node=line.processing_node,
-                             order_validation_text=line.order_validation_text)
+                             processing_node=line.processing_node)
+        if not hasattr(m, 'order_validation_text'): # BBB
+          m.order_validation_text = line.order_validation_text
         message_list.append(m)
       return message_list
     else:

@@ -70,6 +70,10 @@ class SQLQueue(SQLBase):
       tag_list = [m.activity_kw.get('tag', '') for m in message_list]
       serialization_tag_list = [m.activity_kw.get('serialization_tag', '')
                                 for m in message_list]
+      processing_node_list = []
+      for m in message_list:
+        m.order_validation_text = x = self.getOrderValidationText(m)
+        processing_node_list.append(0 if x == 'none' else -1)
       dumped_message_list = map(self.dumpMessage, message_list)
       activity_tool.SQLQueue_writeMessageList(
         uid_list=uid_list,
@@ -81,7 +85,7 @@ class SQLQueue(SQLBase):
         group_method_id_list=group_method_id_list,
         date_list=date_list,
         tag_list=tag_list,
-        processing_node_list=None,
+        processing_node_list=processing_node_list,
         serialization_tag_list=serialization_tag_list)
 
   def hasActivity(self, activity_tool, object, method_id=None, only_valid=None, active_process_uid=None):
@@ -206,7 +210,8 @@ class SQLQueue(SQLBase):
         message_dict = {}
         for line in result:
           message = self.loadMessage(line.message, uid=line.uid, line=line)
-          message.order_validation_text = self.getOrderValidationText(message)
+          if not hasattr(message, 'order_validation_text'): # BBB
+            message.order_validation_text = self.getOrderValidationText(message)
           self.getExecutableMessageList(activity_tool, message, message_dict,
                                         validation_text_dict, now_date=now_date)
         if message_dict:
@@ -263,7 +268,8 @@ class SQLQueue(SQLBase):
                              uid=line.uid,
                              date=line.date,
                              processing_node=line.processing_node)
-        m.order_validation_text = self.getOrderValidationText(m)
+        if not hasattr(m, 'order_validation_text'): # BBB
+          m.order_validation_text = self.getOrderValidationText(m)
         message_list.append(m)
       return message_list
     else:
