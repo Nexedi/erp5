@@ -37,7 +37,6 @@ from Products.ERP5Type.CachePlugins.DummyCache import DummyCache
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.Cache import CachingMethod
 from zLOG import LOG
-import transaction
 
 class TestingCache(DummyCache):
   """A dummy cache that mark cache miss, so that you can later count access
@@ -72,7 +71,7 @@ class TestCacheTool(ERP5TypeTestCase):
     self.createPersistentMemcachedPlugin()
     self.createCacheFactories()
     self.createCachedMethod()
-    transaction.commit()
+    self.commit()
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -258,7 +257,7 @@ return result
       my_cache.delete(self.nb_iterations,
                     portal_path=('', portal.getId()),
                     result=result)
-      transaction.commit()
+      self.commit()
 
     # Make sure we do not have values in cache
     clearCache()
@@ -270,12 +269,12 @@ return result
     ## 1st call
     calculation_time = callCache(real_calculation=True)
     print "\n\tCalculation time (1st call)", calculation_time
-    transaction.commit()
+    self.commit()
 
     ## 2nd call - should be cached now
     calculation_time = callCache(real_calculation=False)
     print "\n\tCalculation time (2nd call)", calculation_time
-    transaction.commit()
+    self.commit()
 
     ## OK so far let's clear cache
     if clear_allowed:
@@ -296,7 +295,7 @@ return result
     # Check that result is computed
     calculation_time = callCache(real_calculation=True)
     print "\n\tCalculation time (4th call)", calculation_time
-    transaction.commit()
+    self.commit()
 
   def test_03_cachePersistentObjects(self):
     # storing persistent objects in cache is not allowed, but this check is
@@ -339,7 +338,7 @@ return result
     calculation_time = end-start
     print "\n\tCalculation time (1st call)", calculation_time
     self.assertEquals(cached, result)
-    transaction.commit()
+    self.commit()
 
     ## 2nd call - should be cached now
     start = time.time()
@@ -351,7 +350,7 @@ return result
     print "\n\tCalculation time (2nd call)", calculation_time
     self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
     self.assertEquals(cached, result)
-    transaction.commit()
+    self.commit()
 
     # Clear only another_ram_cache_factory
     portal.portal_caches.clearCacheFactory('another_ram_cache_factory')
@@ -365,7 +364,7 @@ return result
     print "\n\tCalculation time (3rd call)", calculation_time
     self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
     self.assertEquals(cached, result)
-    transaction.commit()
+    self.commit()
 
   def test_05_CheckLongKeysAndLargeValues(self):
     """Check that persistent distributed Cache Plugin can handle keys
@@ -432,7 +431,7 @@ return 'a' * 1024 * 1024 * 25
     calculation_time = end-start
     print "\n\tCalculation time (1st call)", calculation_time
     self.assertEquals(cached, result)
-    transaction.commit()
+    self.commit()
 
     # Check that Cache plugin create a second connection in pool
     self.assertEquals(2, len(connection_pool.local_dict))
@@ -446,7 +445,7 @@ return 'a' * 1024 * 1024 * 25
     print "\n\tCalculation time (2nd call)", calculation_time
     self.assertTrue(1.0 > calculation_time, "1.0 <= %s" % calculation_time)
     self.assertEquals(cached, result)
-    transaction.commit()
+    self.commit()
 
   def test_06_CheckCacheExpiration(self):
     """Check that expiracy is well handle by Cache Plugins

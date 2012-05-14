@@ -102,13 +102,8 @@ class TransactionalVariable(dict):
 
 transactional_variable_pool = local()
 
-_MARKER = object()
-def getTransactionalVariable(context=_MARKER):
+def getTransactionalVariable():
   """Return a transactional variable."""
-  if context is not _MARKER:
-    warnings.warn("Passing a parameter to getTransactionalVariable() is"
-                  " deprecated and will not be tolerated in the future",
-                  DeprecationWarning)
   try:
     return transactional_variable_pool.instance
   except AttributeError:

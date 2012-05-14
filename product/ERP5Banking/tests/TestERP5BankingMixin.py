@@ -28,7 +28,6 @@
 
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import transaction
 
 def isSameSet(a, b):
   for i in a:
@@ -154,7 +153,6 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
 
     if self.PAS_installed:
       # reindexing is required for the security to work
-      transaction.commit()
       self.tic()
 
 

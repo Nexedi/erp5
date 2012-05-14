@@ -31,7 +31,6 @@
 import base64
 import json
 import os
-import transaction
 import httplib
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeTestCase
@@ -87,7 +86,6 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     try:
       connection.request('PUT', self.path, self.data, self.header_dict)
       result = connection.getresponse()
-      transaction.commit()
       self.tic()
       data = result.read()
     finally:
@@ -149,7 +147,6 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     try:
       connection.request('PUT', self.path, self.data, header_dict)
       result = connection.getresponse()
-      transaction.commit()
       self.tic()
     finally:
       connection.close()
@@ -171,7 +168,6 @@ class TestShaDirExternal(ShaDirMixin, ShaSecurityMixin, ERP5TypeTestCase):
     try:
       connection.request('PUT', self.path, data, self.header_dict)
       result = connection.getresponse()
-      transaction.commit()
       self.tic()
       data = result.read()
     finally:

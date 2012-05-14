@@ -28,7 +28,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
      _getConversionServerDict
@@ -76,7 +75,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -93,7 +91,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                                                           **kw)
     websection = website.newContent(portal_type='Web Section', **kw)
     website.publish()
-    transaction.commit()
     self.tic()
     return websection
 
@@ -110,7 +107,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                'text_content': 'I want ERP5 for my company',
               }
     web_section.WebSection_addWebMessage(**form_kw)
-    transaction.commit()
     self.tic()
 
     self.login()
@@ -127,7 +123,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
 
     # Trig alarm execution
     self.portal.portal_alarms.fetch_incoming_web_message_list.activeSense()
-    transaction.commit()
     self.tic()
     self.assertEquals(event.getSimulationState(), 'delivered')
     ticket = event.getFollowUpValue()
@@ -164,7 +159,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                'text_content': 'I want ERP5 for my company',
               }
     web_section.WebSection_addWebMessage(**form_kw)
-    transaction.commit()
     self.tic()
     self.logout()
 
@@ -184,7 +178,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
 
     # Trig alarm execution
     self.portal.portal_alarms.fetch_incoming_web_message_list.activeSense()
-    transaction.commit()
     self.tic()
     self.assertEquals(event.getSimulationState(), 'delivered')
 

@@ -33,7 +33,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
 import urlnorm # This library is imported to detect lack of
                # urlnorm availibility in python environment
 
-import transaction
 
 # test files' home
 FILENAME_REGULAR_EXPRESSION = "(?P<reference>[A-Z&é@{]{3,7})-(?P<language>[a-z]{2})-(?P<version>[0-9]{3})"
@@ -72,7 +71,6 @@ class TestWebCrawler(ERP5TypeTestCase):
     self.portal = self.getPortal()
     self.setSystemPreference()
     self.bootstrapWebSite()
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -88,7 +86,6 @@ class TestWebCrawler(ERP5TypeTestCase):
       module = portal[module_id]
       module.manage_delObjects(list(module.objectIds()))
     # Unindex deleted documents
-    transaction.commit()
     self.tic()
 
   def setSystemPreference(self):
@@ -247,10 +244,8 @@ class TestWebCrawler(ERP5TypeTestCase):
                                        portal_type=external_source_portal_type,
                                        crawling_depth=5)
     web_crawler.fromURL(web_site.absolute_url())
-    transaction.commit()
     self.tic()
     web_crawler.crawlContent()
-    transaction.commit()
     self.tic()
 
     # 6 = 1 website
@@ -262,7 +257,6 @@ class TestWebCrawler(ERP5TypeTestCase):
                       6)
     date_before = web_crawler.getModificationDate()
     web_crawler.crawlContent()
-    transaction.commit()
     self.tic()
     # Nothing happens, portal_url_registry keep crawling twice
     # the same url
@@ -276,10 +270,8 @@ class TestWebCrawler(ERP5TypeTestCase):
                                        portal_type=external_source_portal_type,
                                        crawling_depth=5)
     new_web_crawler.fromURL(web_site.absolute_url())
-    transaction.commit()
     self.tic()
     new_web_crawler.crawlContent()
-    transaction.commit()
     self.tic()
     # check that portal_url_registry
     # block contribution of existing content
@@ -288,10 +280,8 @@ class TestWebCrawler(ERP5TypeTestCase):
     # set another namespace on preference
     preference = self.portal.portal_preferences[self.system_pref_id]
     preference.setPreferredIngestionNamespace('NEW')
-    transaction.commit()
     self.tic()
     new_web_crawler.crawlContent()
-    transaction.commit()
     self.tic()
     self.assertEquals(len(web_crawler), 6)
 

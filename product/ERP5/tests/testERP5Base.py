@@ -29,7 +29,6 @@
 
 import os
 import unittest
-import transaction
 
 from DateTime import DateTime
 from Products.ERP5Type.Utils import convertToUpperCase
@@ -81,11 +80,10 @@ class TestERP5Base(ERP5TypeTestCase):
     self.createCategories()
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     for module in ( self.portal.person_module,
                     self.portal.organisation_module, ):
       module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   ##################################
@@ -515,7 +513,6 @@ class TestERP5Base(ERP5TypeTestCase):
     self._checkCategoryAccessorList(person, tested_base_category_list)
 
     # skill must be acquired on person 
-    transaction.commit()
     self.tic()
     category_dict_list = self.getCategoryDictList('skill')
     skill_object_list = []
@@ -1037,7 +1034,6 @@ class TestERP5Base(ERP5TypeTestCase):
     active_process = portal_activities.newActiveProcess()
     portal_activities.ERP5Site_checkDataWithScript(method_id=test, tag=test,
                                        active_process=active_process.getPath())
-    transaction.commit()
     self.tic()
     relative_url_list = sum((x.detail.split('\n')
                              for x in active_process.getResultList()), [])
@@ -1070,7 +1066,6 @@ class TestERP5Base(ERP5TypeTestCase):
     person_2 = self.portal.person_module.newContent(portal_type='Person')
     organisation = self.portal.organisation_module.newContent(
                             portal_type='Organisation')
-    transaction.commit()
     self.tic()
 
     # patch the method, we'll abort later
@@ -1087,7 +1082,7 @@ class TestERP5Base(ERP5TypeTestCase):
         [x.getObject() for x in
           self.portal.portal_catalog(translated_validation_state_title='Brouillon',
                                      translated_portal_type='Personne')])
-    transaction.abort()
+    self.abort()
 
   def test_Base_createCloneDocument(self):
     module = self.portal.person_module
@@ -1168,7 +1163,6 @@ class TestERP5Base(ERP5TypeTestCase):
                   reference='user_login',
                   password='pass',
                   password_confirm='pass')
-    transaction.commit()
     self.tic()
 
     # a user is created

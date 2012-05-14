@@ -28,7 +28,6 @@
 
 import unittest
 
-import transaction
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -81,7 +80,7 @@ class TradeConditionTestCase(ERP5TypeTestCase, SubcontentReindexingWrapper):
                             title='Order')
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     for module in (self.portal.tax_module,
                    self.portal.organisation_module,
                    self.portal.currency_module,
@@ -95,7 +94,6 @@ class TradeConditionTestCase(ERP5TypeTestCase, SubcontentReindexingWrapper):
                    self.portal.portal_categories.size,
       ):
       module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def test_subcontent_supply_line_reindexing(self):
@@ -158,7 +156,6 @@ class AccountingBuildTestCase(TradeConditionTestCase):
             title='Resource Tax',
             int_index=2,
             test_method_id='SimulationMovement_isTaxMovement' )
-    transaction.commit()
     self.tic()
     accounting_rule_cell_list = itr.contentValues(
                             portal_type='Accounting Rule Cell')
@@ -189,13 +186,11 @@ class AccountingBuildTestCase(TradeConditionTestCase):
                          destination_value=self.refundable_tax_account,
                          quantity=1)
     itr.validate()
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
     TradeConditionTestCase.beforeTearDown(self)
     self.portal.portal_rules.manage_delObjects('test_invoice_transaction_rule')
-    transaction.commit()
     self.tic()
 
 class TestApplyTradeCondition(TradeConditionTestCase):
@@ -483,7 +478,6 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
                                     base_price=123)
 
     self.order.setSpecialiseValue(self.trade_condition)
-    transaction.commit()
     self.tic()
 
     line = self.order.newContent(portal_type=self.order_line_type,
@@ -509,7 +503,6 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
     self.order.setSpecialiseValue(self.trade_condition)
     self.order.setSourceSectionValue(self.vendor)
     self.order.setDestinationSectionValue(self.vendor)
-    transaction.commit()
     self.tic()
 
     line = self.order.newContent(portal_type=self.order_line_type,
@@ -543,7 +536,6 @@ class TestTradeConditionSupplyLine(TradeConditionTestCase):
 
     self.order.setSourceSectionValue(self.vendor)
     self.order.setDestinationSectionValue(self.client)
-    transaction.commit()
     self.tic()
 
     line = self.order.newContent(portal_type=self.order_line_type,
@@ -575,7 +567,6 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
                             effective_date='2009/01/01',
                             expiration_date='2009/12/31',
                             version='002')
-    transaction.commit()
     self.tic()
     
     self.assertEquals(other_trade_condition,
@@ -598,7 +589,6 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
     self.trade_condition.setReference(self.id())
     self.trade_condition.setEffectiveDate('2009/01/01')
     self.trade_condition.setExpirationDate('2009/12/31')
-    transaction.commit()
     self.tic()
     self.assertEquals(self.trade_condition,
         self.trade_condition.getEffectiveModel(
@@ -610,7 +600,6 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
     self.trade_condition.setReference(self.id())
     self.trade_condition.setEffectiveDate(None)
     self.trade_condition.setExpirationDate(None)
-    transaction.commit()
     self.tic()
     self.assertEquals(self.trade_condition,
         self.trade_condition.getEffectiveModel(
@@ -619,7 +608,6 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
 
     self.trade_condition.setEffectiveDate(None)
     self.trade_condition.setExpirationDate('2009/12/31')
-    transaction.commit()
     self.tic()
     self.assertEquals(self.trade_condition,
         self.trade_condition.getEffectiveModel(
@@ -628,7 +616,6 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
 
     self.trade_condition.setEffectiveDate('2009/01/01')
     self.trade_condition.setExpirationDate(None)
-    transaction.commit()
     self.tic()
     self.assertEquals(self.trade_condition,
         self.trade_condition.getEffectiveModel(

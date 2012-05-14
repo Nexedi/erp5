@@ -37,7 +37,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5SyncML.Conduit.ERP5DocumentConduit import ERP5DocumentConduit
 from zLOG import LOG
 from base64 import b16encode 
-import transaction
 from lxml import etree
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5SyncML import SyncMLConstant
@@ -135,7 +134,6 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     self.addSubscriptions()
     self.portal = self.getPortal()
     self.setSystemPreferences()
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -176,7 +174,6 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
                       user_id='daniele',
                       password='myPassword')
       subscription.validate()
-      transaction.commit()
       self.tic()
 
   def addPublications(self):
@@ -193,7 +190,6 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
                              conduit_module_id=self.pub_conduit,
                              is_activity_enabled=True,)
       publication.validate()
-      transaction.commit()
       self.tic()
 
   def createDocumentModules(self, one_way=False):
@@ -217,14 +213,12 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
       self.portal._delObject(id='document_server')
     if getattr(self.portal, 'document_client1', None) is not None:
       self.portal._delObject(id='document_client1')
-    transaction.commit()
     self.tic()
 
   def clearPublicationsAndSubscriptions(self):
     portal_sync = self.getSynchronizationTool()
     id_list = [object_id for object_id in portal_sync.objectIds()]
     portal_sync.manage_delObjects(id_list)
-    transaction.commit()
     self.tic()
 
   ####################
@@ -261,7 +255,6 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     publication.resetSubscriberList()
     subscription1.resetSignatureList()
     subscription1.resetAnchorList()
-    transaction.commit()
     self.tic()
 
   def documentMultiServer(self):
@@ -273,14 +266,13 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     for id in self.ids[:self.id_max_text]:
       reference = "Test-Text-%s" % (id,)
       self.createDocument(id=id, file_name=self.filename_text, reference=reference)
-    transaction.commit()
+    self.commit()
     nb_document = len(document_server.objectValues())
     self.assertEqual(nb_document, len(self.ids[:self.id_max_text]))
     #binary document
     for id in self.ids[self.id_max_text:]:
       reference = "Test-Odt-%s" % (id, )
       self.createDocument(id=id, file_name=self.filename_odt, reference=reference)
-    transaction.commit()
     self.tic()
     nb_document = len(document_server.objectValues())
     self.assertEqual(nb_document, len(self.ids))
@@ -302,7 +294,6 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     document_text.edit(**kw)
     file = makeFileUpload(self.filename_text)
     document_text.edit(file=file)
-    transaction.commit()
     self.tic()
     document_pdf = document_server.newContent(id=self.id2,
                                               portal_type='PDF')
@@ -311,7 +302,6 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     document_pdf.edit(**kw)
     file = makeFileUpload(self.filename_pdf)
     document_pdf.edit(file=file)
-    transaction.commit()
     self.tic()
     nb_document = len(document_server)
     self.assertEqual(nb_document, 2)
@@ -354,21 +344,17 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     file = open(self.publication_url[len('file:/'):], 'w')
     file.write('')
     file.close()
-    transaction.commit()
     self.tic()
     nb_message = 1
     result = portal_sync.SubSync(subscription.getPath())
     while result['has_response']:
       portal_sync.PubSync(publication.getPath())
       if self.activity_enabled:
-        transaction.commit()
         self.tic()
       result = portal_sync.SubSync(subscription.getPath())
       if self.activity_enabled:
-        transaction.commit()
         self.tic()
       nb_message += 1 + result['has_response']
-    transaction.commit()
     self.tic()
     return nb_message
 
@@ -394,7 +380,6 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
     file = open(self.publication_url[len('file:/'):], 'w')
     file.write('')
     file.close()
-    transaction.commit()
     self.tic()
     nb_message = 1
     result = portal_sync.SubSync(subscription.getPath())
@@ -403,30 +388,23 @@ class TestERP5DocumentSyncMLMixin(TestERP5SyncMLMixin):
       # if we manage well duplicate messages
       portal_sync.PubSync(publication.getPath())
       if self.activity_enabled:
-        transaction.commit()
         self.tic()
       portal_sync.PubSync(publication.getPath())
       if self.activity_enabled:
-        transaction.commit()
         self.tic()
       portal_sync.PubSync(publication.getPath())
       if self.activity_enabled:
-        transaction.commit()
         self.tic()
       result = portal_sync.SubSync(subscription.getPath())
       if self.activity_enabled:
-        transaction.commit()
         self.tic()
       result = portal_sync.SubSync(subscription.getPath())
       if self.activity_enabled:
-        transaction.commit()
         self.tic()
       result = portal_sync.SubSync(subscription.getPath())
       if self.activity_enabled:
-        transaction.commit()
         self.tic()
       nb_message += 1 + result['has_response']
-    transaction.commit()
     self.tic()
     return nb_message
 
@@ -617,7 +595,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     document_c.edit(**kw)
     file = makeFileUpload(self.filename_odt)
     document_c.edit(file=file)
-    transaction.commit()
     self.tic()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
@@ -635,7 +612,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     kw = {'short_title':self.short_title1}
     document_c.edit(**kw)
     # The gid is modify so the synchronization add a object
-    transaction.commit()
     self.tic()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
@@ -656,7 +632,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     document_server.manage_delObjects(self.id1)
     document_client1 = self.getDocumentClient1()
     document_client1.manage_delObjects(self.id2)
-    transaction.commit()
     self.tic()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
@@ -738,7 +713,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     doc_c.edit(**kw)
     file = makeFileUpload(self.filename_text)
     doc_c.edit(file=file)
-    transaction.commit()
     self.tic()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
@@ -793,7 +767,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     self.assertEqual(id_s, self.id1)
     # This will test updating object
     document_s.setDescription(self.description3)
-    transaction.commit()
     self.tic()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
@@ -804,7 +777,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     document_server = self.getDocumentServer()
     document_client1 = self.getDocumentClient1()
     document_server.manage_delObjects(self.id2)
-    transaction.commit()
     self.tic()
     self.synchronize(self.sub_id1)
     self.checkSynchronizationStateIsSynchronized()
@@ -834,7 +806,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     file = makeFileUpload(self.filename_ppt)
     # XXX error with filename_pdf , may be is a PDF?
     document_s.edit(file=file)
-    transaction.commit()
     self.tic()
     document_client1 = self.getDocumentClient1()
     document_c1 = document_client1._getOb(self.id1)
@@ -843,7 +814,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
     file = makeFileUpload(self.filename_odt)
     document_c1.edit(file=file)
 
-    transaction.commit()
     self.tic()
     self.synchronize(self.sub_id1)
     conflict_list = portal_sync.getConflictList()
@@ -966,7 +936,6 @@ class TestERP5DocumentSyncML(TestERP5DocumentSyncMLMixin):
 
     kw = {'short_title' : self.short_title2} 
     document_s.edit(**kw)
-    transaction.commit()
     self.tic()
     self.assertEqual(document_s.getFilename(), self.filename_text)
     self.assertEquals(self.size_filename_text, document_s.get_size())

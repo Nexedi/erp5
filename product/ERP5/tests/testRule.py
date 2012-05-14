@@ -27,7 +27,6 @@
 
 import unittest
 
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -65,7 +64,6 @@ class TestRuleMixin(TestOrderMixin):
     # recreate rules
     self.createRule('default_order_rule', '1')
     self.createRule('default_delivery_rule', '1')
-    transaction.commit()
     self.tic()
     # create packing list if necessary
     pl_module = self.portal.getDefaultModule(self.packing_list_portal_type)
@@ -86,14 +84,12 @@ class TestRuleMixin(TestOrderMixin):
     self.sm = self.ar.newContent(portal_type='Simulation Movement')
     self.sm.setStartDate("2007-07-01") # for the date based rule tests
     # commit
-    transaction.commit()
     self.tic()
 
 
   def beforeTearDown(self):
     self._wipe(self.getSimulationTool())
     self._wipe(self.portal.portal_skins.custom)
-    transaction.commit()
     self.tic()
 
   def getTitle(self):
@@ -119,10 +115,8 @@ class TestRuleMixin(TestOrderMixin):
     pl.newContent(portal_type=self.packing_list_line_portal_type, id='line',
                   quantity=1)
     pl.setStartDate("2007-07-01")
-    transaction.commit()
     self.tic()
     pl.confirm()
-    transaction.commit()
     self.tic()
     return pl
 
@@ -140,7 +134,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
 
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.validate()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -159,7 +152,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('wrong_script')
     delivery_rule.validate()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -178,7 +170,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
     delivery_rule.validate()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -199,7 +190,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.setTestMethodId('good_script')
     delivery_rule.validate()
     delivery_rule.invalidate()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -221,7 +211,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.setStartDateRangeMin('2007-06-01')
     delivery_rule.setStartDateRangeMax('2007-06-04')
     delivery_rule.validate()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -243,7 +232,6 @@ class TestRule(TestRuleMixin, ERP5TypeTestCase) :
     delivery_rule.setStartDateRangeMin('2007-06-01')
     delivery_rule.setStartDateRangeMax('2007-08-01')
     delivery_rule.validate()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(self.getRuleTool().countFolder(
@@ -270,7 +258,6 @@ return context.generatePredicate(
         """)
     # and validate it, which will indirectly reindex the predicate.
     delivery_rule.validate()
-    transaction.commit()
     self.tic()
     # now rules don't match packing lists by default
     self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 0)
@@ -286,7 +273,6 @@ return context.generatePredicate(
 )
       """ % self.pl.getStartDate())
     delivery_rule.reindexObject()
-    transaction.commit()
     self.tic()
     # now they match the packing list, but not the simulation movement
     self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 1)
@@ -294,7 +280,6 @@ return context.generatePredicate(
     # Note that we added a range criterion above, which means that if
     # the packing list no longer falls within the range...
     self.pl.setStartDate(self.pl.getStartDate() - 1)
-    transaction.commit()
     self.tic()
     # ... then the rule no longer matches the packing list:
     self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 0)
@@ -306,7 +291,6 @@ return context.generatePredicate(
 )
       """ % self.pl.getStartDate())
     delivery_rule.reindexObject()
-    transaction.commit()
     self.tic()
     # ... it will match again
     self.assertEqual(len(self.getRuleTool().searchRuleList(self.pl)), 1)
@@ -334,7 +318,6 @@ return context.generatePredicate(
         """)
     # and validate it, which will indirectly reindex the predicate.
     delivery_rule.validate()
-    transaction.commit()
     self.tic()
     # Now since the rule has a trade_phase
     self.assertEqual(delivery_rule.getTradePhase(), 'default/delivery')
@@ -367,7 +350,6 @@ return context.generatePredicate(
     delivery_rule = self.getRule('default_delivery_rule')
     delivery_rule.setTestMethodId('good_script')
     delivery_rule.validate()
-    transaction.commit()
     self.tic()
     # Now since the rule has a trade_phase
     trade_phase_list = delivery_rule.getTradePhaseList()
@@ -411,12 +393,10 @@ return context.generatePredicate(
     delivery_rule_2 = self.createRule('default_delivery_rule', '2',
                                       test_method_id='rule_script')
     delivery_rule_2.validate()
-    transaction.commit()
     self.tic()
 
     # delivery_rule_2 should be applied
     self.pl.updateAppliedRule('default_delivery_rule')
-    transaction.commit()
     self.tic()
     self.assertEquals(self.pl.getCausalityRelatedValue().getSpecialise(),
         delivery_rule_2.getRelativeUrl())
@@ -426,12 +406,10 @@ return context.generatePredicate(
 
     # increase version of delivery_rule_1
     delivery_rule_1.setVersion("testRule.3")
-    transaction.commit()
     self.tic()
 
     # delivery_rule_1 should be applied
     self.pl.updateAppliedRule('default_delivery_rule')
-    transaction.commit()
     self.tic()
     self.assertEquals(self.pl.getCausalityRelatedValue().getSpecialise(),
         delivery_rule_1.getRelativeUrl())
@@ -468,11 +446,9 @@ return context.generatePredicate(
     # clear simulation
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
-    transaction.commit()
     self.tic()
 
     self.pl.updateAppliedRule('default_delivery_rule')
-    transaction.commit()
     self.tic()
 
     # check that only one invoicing rule (higher version) was applied
@@ -491,11 +467,9 @@ return context.generatePredicate(
     self.getSimulationTool().manage_delObjects(
         ids=[self.pl.getCausalityRelatedId()])
     invoicing_rule_1.setVersion('testRule.3')
-    transaction.commit()
     self.tic()
 
     self.pl.updateAppliedRule('default_delivery_rule')
-    transaction.commit()
     self.tic()
 
     # check that only one invoicing rule (higher version) was applied
@@ -537,11 +511,9 @@ return context.generatePredicate(
     # clear simulation
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
-    transaction.commit()
     self.tic()
 
     self.pl.updateAppliedRule('default_delivery_rule')
-    transaction.commit()
     self.tic()
     root_applied_rule = self.pl.getCausalityRelatedValue()
 
@@ -555,7 +527,6 @@ return context.generatePredicate(
     # change rule script so that it matches and test again
     invoicing_rule_1.setTestMethodId('invoice_rule_script')
     root_applied_rule.expand()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -582,10 +553,8 @@ return context.generatePredicate(
                                        reference='default_invoicing_rule_2',
                                        test_method_id='invoice_rule_script')
     invoicing_rule_2.validate()
-    transaction.commit()
     self.tic()
     root_applied_rule.expand()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -635,11 +604,9 @@ return context.generatePredicate(
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
 
-    transaction.commit()
     self.tic()
 
     self.pl.updateAppliedRule('default_delivery_rule')
-    transaction.commit()
     self.tic()
     root_applied_rule = self.pl.getCausalityRelatedValue()
 
@@ -655,11 +622,9 @@ return context.generatePredicate(
 
     # invalidate the rule and test that it is gone
     invoicing_rule_1.invalidate()
-    transaction.commit()
     self.tic()
     self.assertEquals(invoicing_rule_1.getValidationState(), 'invalidated')
     root_applied_rule.expand()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -674,7 +639,6 @@ return context.generatePredicate(
     # removed
     invoicing_rule_1.setTestMethodId('delivery_rule_script')
     root_applied_rule.expand()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -690,11 +654,9 @@ return context.generatePredicate(
     # that the rule is still there
     invoicing_rule_1.setTestMethodId('invoice_rule_script')
     invoicing_rule_1.validate()
-    transaction.commit()
     self.tic()
     self.assertEquals(invoicing_rule_1.getValidationState(), 'validated')
     root_applied_rule.expand()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -714,7 +676,6 @@ return context.generatePredicate(
 
     invoicing_rule_1.setTestMethodId('delivery_rule_script')
     root_applied_rule.expand()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -764,11 +725,9 @@ return context.generatePredicate(
     self.getSimulationTool().manage_delObjects(
         ids=list(self.getSimulationTool().objectIds()))
 
-    transaction.commit()
     self.tic()
 
     self.pl.updateAppliedRule('default_delivery_rule')
-    transaction.commit()
     self.tic()
     root_applied_rule = self.pl.getCausalityRelatedValue()
 
@@ -786,7 +745,6 @@ return context.generatePredicate(
     # replaced by invoicing rule 1
     invoicing_rule_2.setTestMethodId('delivery_rule_script')
     root_applied_rule.expand()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),
@@ -806,7 +764,6 @@ return context.generatePredicate(
     sub_movement = applied_rule.objectValues()[0]
     sub_movement.setDeliveryValue(self.pl.line)
     root_applied_rule.expand()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(root_applied_rule.getRelativeUrl(),

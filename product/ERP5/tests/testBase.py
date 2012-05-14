@@ -31,7 +31,6 @@
 import unittest
 import os
 
-import transaction
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
@@ -193,7 +192,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
       Check if there is a activity in activity queue.
     """
     portal = self.getPortal()
-    transaction.commit()
+    self.commit()
     message_list = portal.portal_activities.getMessageList()
     method_id_list = [x.method_id for x in message_list]
     # XXX FIXME: how many activities should be created normally ?
@@ -949,7 +948,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     dummy_worlflow_id = 'never_existent_workflow'
     addWorkflowByType(pw, 'erp5_workflow', dummy_worlflow_id)
 
-    transaction.commit()
+    self.commit()
 
     cbt = pw._chains_by_type
     props = {}
@@ -960,7 +959,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     pw.manage_changeWorkflows('', props = props)
     pw.manage_delObjects([dummy_worlflow_id])
 
-    transaction.commit()
+    self.commit()
 
     try:
       self.assertRaises(AttributeError, getattr, obj,
@@ -977,7 +976,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
         props['chain_%s' % id] = ','.join(wf_ids)
       pw.manage_changeWorkflows('', props = props)
 
-      transaction.commit()
+      self.commit()
 
   def test_14_UpdateRoleMappingwithNoDefinedRoleAndAcquisitionActivatedOnWorkflow(self, quiet=quiet, run=run_all_test):
     """updateRoleMappingsFor does a logical AND between all workflow defining security,
@@ -1173,7 +1172,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
                         'return context.getDummyTypeBaseMethod()' )
 
 
-    transaction.commit() # Flush transactional cache.
+    self.commit()# Flush transactional cache.
     self.assertEqual(pers.getDummyTypeBaseMethod(), pers.getId())
     # Call once more to check cache.
     self.assertEqual(pers.getDummyTypeBaseMethod(), pers.getId())
@@ -1187,7 +1186,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     self.getPortal().person_module.newContent(portal_type='Person',
                                          title='translate_table_test')
-    transaction.commit()
     self.tic()
     self.assertEquals(1, len(self.getPortal().portal_catalog(
       portal_type='Person', title='translate_table_test')))
@@ -1244,7 +1242,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """
     person = self.portal.person_module.newContent(portal_type='Person')
     person.isIndexable = 0
-    transaction.commit()
     self.tic()
     self.assertFalse(person.isIndexable)
     self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
@@ -1255,7 +1252,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """check if a document is not indexed where we call edit() and set isIndexable=0 after it is already indexed.
     """
     person = self.portal.person_module.newContent(portal_type='Person')
-    transaction.commit()
     self.tic()
     self.assertTrue(person.isIndexable)
     self.assertEquals(1, len(self.portal.portal_catalog(uid=person.getUid())))
@@ -1264,7 +1260,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     # not yet False when edit() is called.
     person.edit()
     person.isIndexable = 0
-    transaction.commit()
     self.tic()
     self.assertFalse(person.isIndexable)
     self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))
@@ -1275,7 +1270,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     """check if a document is not indexed where we set isIndexable=0 and call edit() after it is already indexed.
     """
     person = self.portal.person_module.newContent(portal_type='Person')
-    transaction.commit()
     self.tic()
     self.assertTrue(person.isIndexable)
     self.assertEquals(1, len(self.portal.portal_catalog(uid=person.getUid())))
@@ -1284,7 +1278,6 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     # is already False when edit() is called.
     person.isIndexable = 0
     person.edit()
-    transaction.commit()
     self.tic()
     self.assertFalse(person.isIndexable)
     self.assertEquals(0, len(self.portal.portal_catalog(uid=person.getUid())))

@@ -75,12 +75,12 @@
 \n
             \074script type="text/javascript" language="javascript"\076\n
               //\074![CDATA[\n
-              // init all when DOM is ready\n
+              // init all when all gadgets are ready (loaded)\n
               $(document).ready(function() {\n
-                // XXX: start DOM is hard coded to "content" this is not so good for a generic library\n
                 RenderJs.bootstrap($("#content"));\n
-                // XXX: we use timeouts as we do not know if gadget structure is yet ready, how to do that in a generic way?\n
-                window.setTimeout(\' RenderJs.update($("#content"));\', DEFAULT_GADGET_DOM_READY_TIMEOUT);\n
+                GadgetIndex.getRootGadget().getDom().one("ready", function (){\n
+                  RenderJs.update($("#content"));\n
+                });\n
               });\n
               //]]\076\n
             \074/script\076\n

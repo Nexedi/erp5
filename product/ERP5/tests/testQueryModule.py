@@ -28,7 +28,6 @@
 import unittest
 from AccessControl.SecurityManagement import newSecurityManager
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
 
@@ -48,11 +47,10 @@ class TestQueryModule(ERP5TypeTestCase):
     portal._setObject('MailHost', DummyMailHost('MailHost'))
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     # clear modules if necessary
     for module in (self.portal.person_module, self.portal.query_module,):
       module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def test_post_query_action_visible(self):
@@ -99,7 +97,6 @@ class TestQueryModule(ERP5TypeTestCase):
                     default_email_text='question_user@example.invalid')
     assignment = question_person.newContent(portal_type='Assignment')
     assignment.validate()
-    transaction.commit()
     self.tic()
     uf = self.portal.acl_users
     owner_user = uf.getUser('owner_user').__of__(uf)

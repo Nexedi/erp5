@@ -30,7 +30,6 @@
 # TODO: Some tests from this file can be merged into Formulator
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import transaction
 import unittest
 
 # Initialize ERP5Form Product to load monkey patches
@@ -505,7 +504,6 @@ class TestListField(ERP5TypeTestCase):
     self.field = ListField('test_field')
     self.widget = self.field.widget
     self.createCategories()
-    transaction.commit()
     self.tic()
 
   def createCategories(self):

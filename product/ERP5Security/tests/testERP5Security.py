@@ -31,7 +31,6 @@
 """
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
@@ -58,7 +57,6 @@ class TestUserManagement(ERP5TypeTestCase):
     """Clears person module and invalidate caches when tests are finished."""
     self.getPersonModule().manage_delObjects([x for x in
                              self.getPersonModule().objectIds()])
-    transaction.commit()
     self.tic()
 
   def login(self):
@@ -109,7 +107,6 @@ class TestUserManagement(ERP5TypeTestCase):
                                        stop_date=assignment_stop_date,)
     if open_assignment:
       assignment.open()
-    transaction.commit()
     self.tic()
     return new_person
 
@@ -262,7 +259,7 @@ class TestUserManagement(ERP5TypeTestCase):
     person_module = self.getPersonModule()
     new_person = person_module.newContent(
                      portal_type='Person', reference='new_person')
-    transaction.commit()
+    self.commit()
     self.assertRaises(RuntimeError, person_module.newContent,
                      portal_type='Person', reference='new_person')
 
@@ -306,7 +303,6 @@ class TestUserManagement(ERP5TypeTestCase):
   def test_PreferenceTool_setNewPassword(self):
     # Preference Tool has an action to change password
     pers = self._makePerson(reference='the_user', password='secret',)
-    transaction.commit()
     self.tic()
     self._assertUserExists('the_user', 'secret')
     self.loginAsUser('the_user')
@@ -337,7 +333,6 @@ class TestUserManagement(ERP5TypeTestCase):
     # not indexed yet
     self._assertUserDoesNotExists('the_user', 'secret')
 
-    transaction.commit()
     self.tic()
 
     self._assertUserExists('the_user', 'secret')
@@ -378,7 +373,7 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserExists('the_user', 'secret')
 
     p.delete()
-    transaction.commit()
+    self.commit()
 
     self._assertUserDoesNotExists('the_user', 'secret')
 
@@ -387,7 +382,7 @@ class TestUserManagement(ERP5TypeTestCase):
     self._assertUserExists('the_user', 'secret')
 
     p.getParentValue().deleteContent(p.getId())
-    transaction.commit()
+    self.commit()
 
     self._assertUserDoesNotExists('the_user', 'secret')
 
@@ -397,7 +392,7 @@ class TestUserManagement(ERP5TypeTestCase):
 
     p.validate()
     p.invalidate()
-    transaction.commit()
+    self.commit()
 
     self._assertUserExists('the_user', 'secret')
 
@@ -405,7 +400,6 @@ class TestUserManagement(ERP5TypeTestCase):
     """Make sure that it is possible to remove reference"""
     person = self._makePerson(reference='foo', password='secret',)
     person.setReference(None)
-    transaction.commit()
     self.tic()
     self.assertEqual(None, person.getReference())
 
@@ -509,7 +503,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                                   site='subcat',
                                   function='subcat' )
     assignment.open()
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -526,7 +519,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       if module.getId().endswith('_module'):
         module.manage_delObjects(list(module.objectIds()))
     # commit this
-    transaction.commit()
     self.tic()
 
   def loginAsUser(self, username):
@@ -577,7 +569,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
     self.assertTrue('Assignor' in user.getRolesInContext(obj))
     self.assertFalse('Assignee' in user.getRolesInContext(obj))
-    transaction.abort()
+    self.abort()
 
   def testDynamicLocalRole(self):
     """Test simple case of setting a dynamic role.
@@ -600,7 +592,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F2_G1_S1'))
     self.assertTrue('Assignee' in user.getRolesInContext(obj))
     self.assertFalse('Assignor' in user.getRolesInContext(obj))
-    transaction.abort()
+    self.abort()
 
   def testSeveralFunctionsOnASingleAssignment(self):
     """Test dynamic role generation when an assignment defines several functions
@@ -622,7 +614,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertEqual(['Assignee'], obj.__ac_local_roles__.get('F2_G1_S1'))
     self.assertTrue('Assignee' in user.getRolesInContext(obj))
     self.assertFalse('Assignor' in user.getRolesInContext(obj))
-    transaction.abort()
+    self.abort()
 
   def testAcquireLocalRoles(self):
     """Tests that document does not acquire loal roles from their parents if
@@ -658,21 +650,21 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
 
     # getUserByLogin accept login as a string
     self.portal.portal_caches.clearAllCache()
-    transaction.commit()
+    self.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin(self.username)
     self.assertEquals(1, len(person_list))
     self.assertEquals(self.username, person_list[0].getReference())
 
     # getUserByLogin accept login as a list
     self.portal.portal_caches.clearAllCache()
-    transaction.commit()
+    self.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin([self.username])
     self.assertEquals(1, len(person_list))
     self.assertEquals(self.username, person_list[0].getReference())
 
     # getUserByLogin accept login as a tuple
     self.portal.portal_caches.clearAllCache()
-    transaction.commit()
+    self.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin((self.username,))
     self.assertEquals(1, len(person_list))
     self.assertEquals(self.username, person_list[0].getReference())
@@ -680,7 +672,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     # PreferenceTool pass a user as parameter
     user = getSecurityManager().getUser()
     self.portal.portal_caches.clearAllCache()
-    transaction.commit()
+    self.commit()
     person_list = self.portal.acl_users.erp5_users.getUserByLogin(user)
     self.assertEquals(1, len(person_list))
     self.assertEquals(self.username, person_list[0].getReference())
@@ -700,7 +692,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     assignment = loginable_person.newContent(portal_type='Assignment',
                                              function='another_subcat')
     assignment.open()
-    transaction.commit()
     self.tic()
 
     person_module_type_information = self.getTypesTool()['Person Module']
@@ -710,7 +701,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
       title='An Auditor role for testing',
       role_category='function/another_subcat')
     person_module_type_information.updateRoleMapping()
-    transaction.commit()
     self.tic()
 
     person_module_path = self.getPersonModule().absolute_url(relative=1)
@@ -727,7 +717,6 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.getOrganisationModule().newContent(portal_type='Organisation',
                                             id='my_company',
                                             title='Nexedi')
-    transaction.commit()
     self.tic()
     response = self.publish('/%s/my_company/getTitle' % self.getOrganisationModule().absolute_url(relative=1),
                             basic='guest:guest')
@@ -846,7 +835,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     cloning_owner_id = 'cloning_user' + self.id()
     self._createZodbUser(original_owner_id)
     self._createZodbUser(cloning_owner_id)
-    transaction.commit()
+    self.commit()
     module = self.portal.getDefaultModule(portal_type=parent_type)
     self.login(original_owner_id)
     document = module.newContent(portal_type=parent_type)
@@ -879,7 +868,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     cloning_owner_id = 'cloning_user' + self.id()
     self._createZodbUser(original_owner_id)
     self._createZodbUser(cloning_owner_id)
-    transaction.commit()
+    self.commit()
     module = self.portal.getDefaultModule(portal_type=parent_type)
     self.login(original_owner_id)
     document = module.newContent(portal_type=parent_type)

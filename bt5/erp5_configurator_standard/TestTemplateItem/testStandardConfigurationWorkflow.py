@@ -29,7 +29,6 @@
 
 
 import os
-import transaction
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
@@ -795,7 +794,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     delivery.confirm()
     delivery.start()
     delivery.stop()
-    transaction.commit()
     self.tic()
 
     # inventories of that resource are index in grams

@@ -27,7 +27,6 @@
 
 import unittest
 
-import transaction
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -50,10 +49,9 @@ class TestBudget(ERP5TypeTestCase):
       category.newContent(portal_type='Category', id='2.2')
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     self.portal.accounting_module.manage_delObjects(
        list(self.portal.accounting_module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def getBusinessTemplateList(self):
@@ -416,7 +414,6 @@ class TestBudget(ERP5TypeTestCase):
     atransaction.confirm()
 
     # a confirmed transaction engages budget
-    transaction.commit()
     self.tic()
 
     self.assertEquals(dict(), budget_line.getConsumedBudgetDict())
@@ -433,7 +430,6 @@ class TestBudget(ERP5TypeTestCase):
 
     atransaction.stop()
     # a stopped transaction consumes budget
-    transaction.commit()
     self.tic()
 
     self.assertEquals(
@@ -556,7 +552,6 @@ class TestBudget(ERP5TypeTestCase):
                   source_credit=100)
     atransaction.stop()
 
-    transaction.commit()
     self.tic()
 
     self.assertEquals(
@@ -670,7 +665,6 @@ class TestBudget(ERP5TypeTestCase):
                   source_credit=300)
     atransaction.stop()
     
-    transaction.commit()
     self.tic()
 
     self.assertEquals(
@@ -779,7 +773,6 @@ class TestBudget(ERP5TypeTestCase):
                   source_credit=300)
     atransaction.stop()
     
-    transaction.commit()
     self.tic()
 
     self.assertEquals(
@@ -884,7 +877,6 @@ class TestBudget(ERP5TypeTestCase):
                   source_credit=120)
     atransaction.stop()
     
-    transaction.commit()
     self.tic()
 
     self.assertEquals(
@@ -1018,7 +1010,6 @@ class TestBudget(ERP5TypeTestCase):
                   source_credit=100)
     atransaction.stop()
 
-    transaction.commit()
     self.tic()
 
     self.assertEquals(
@@ -1128,7 +1119,6 @@ class TestBudget(ERP5TypeTestCase):
                   source_credit=100)
     atransaction.stop()
 
-    transaction.commit()
     self.tic()
 
     self.assertEquals(
@@ -1217,7 +1207,6 @@ class TestBudget(ERP5TypeTestCase):
                   source_credit=100)
     atransaction.stop()
 
-    transaction.commit()
     self.tic()
 
     self.assertEquals(
@@ -1304,7 +1293,6 @@ class TestBudget(ERP5TypeTestCase):
                   source_credit=100)
     atransaction.stop()
 
-    transaction.commit()
     self.tic()
 
     self.assertEquals(
@@ -1463,7 +1451,6 @@ class TestBudget(ERP5TypeTestCase):
                   source_debit=100)
     atransaction.stop()
 
-    transaction.commit()
     self.tic()
    
     # Budget_getBudgetConsumptionReportData returns all the data for the report
@@ -1876,7 +1863,7 @@ class TestBudget(ERP5TypeTestCase):
     self.portal.product_module.newContent(portal_type='Product',
                                           id='demo_product',
                                           title='Demo Prduct')
-    transaction.commit()
+    self.commit()
     budget_model = self.portal.budget_model_module.newContent(
                             portal_type='Budget Model')
     budget_model.newContent(
@@ -1938,7 +1925,7 @@ class TestBudget(ERP5TypeTestCase):
       spll.setQuantity(quantity)
       spll.setPrice(price)
       spll.setResource('product_module/%s' % product_id)
-      transaction.commit()
+      self.commit()
       spl.confirm()
       self.tic()
       spl.start()

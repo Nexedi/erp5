@@ -1,5 +1,4 @@
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
-import transaction
 from httplib import OK as HTTP_OK
 
 class TestDiscussionThread(SecurityTestCase):
@@ -109,7 +108,6 @@ class TestDiscussionThread(SecurityTestCase):
     self.assertUserCanViewDocument('forum_user', post)
     self.assertUserCanAccessDocument('forum_user', post)
 
-    transaction.commit()
     self.tic()
 
     thread_posts = thread.objectValues()
@@ -180,7 +178,7 @@ class TestDiscussionThread(SecurityTestCase):
 
     self.assertUserCanPassWorkflowTransition('admin', 'close_action', thread)
     thread.close()
-    transaction.commit()
+    self.commit()
 
     self.assertUserCanViewDocument('admin', thread)
     self.assertUserCanAccessDocument('admin', thread)

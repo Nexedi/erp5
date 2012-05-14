@@ -28,7 +28,6 @@ import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from DateTime import DateTime
-import transaction
 
 
 class TestOpenOrder(ERP5TypeTestCase):
@@ -173,7 +172,6 @@ class TestOpenOrder(ERP5TypeTestCase):
       )
      
     self.portal._run_after_setup = True
-    transaction.commit()
     self.tic()
 
   def _testPeriodicityDateList(self, timezone=None):
@@ -259,14 +257,12 @@ class TestOpenOrder(ERP5TypeTestCase):
 
     open_sale_order.Order_applyTradeCondition(open_sale_order.getSpecialiseValue())
 
-    transaction.commit()
     self.tic()
 
     open_sale_order.setForecastingTermDayCount(5)
     open_sale_order.order()
     open_sale_order.start()
 
-    transaction.commit()
     self.tic()
 
     applied_rule = open_sale_order.getCausalityRelatedValue(portal_type='Applied Rule')
@@ -277,7 +273,6 @@ class TestOpenOrder(ERP5TypeTestCase):
       applied_rule,
       calculation_base_date=DateTime(3000,2,9))
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(applied_rule.objectIds()), 1)
@@ -289,7 +284,6 @@ class TestOpenOrder(ERP5TypeTestCase):
       applied_rule,
       calculation_base_date=DateTime(3000,2,9))
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(applied_rule.objectIds()), 2)
@@ -300,7 +294,6 @@ class TestOpenOrder(ERP5TypeTestCase):
       applied_rule,
       calculation_base_date=DateTime(3000,3,1))
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(applied_rule.objectIds()), 5)
@@ -320,7 +313,6 @@ class TestOpenOrder(ERP5TypeTestCase):
       applied_rule,
       calculation_base_date=DateTime(3000,3,1))
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(applied_rule.objectIds()), 5)
@@ -330,7 +322,6 @@ class TestOpenOrder(ERP5TypeTestCase):
       applied_rule,
       calculation_base_date=DateTime(3000,3,30))
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(applied_rule.objectIds()), 6)
@@ -360,7 +351,6 @@ class TestOpenOrder(ERP5TypeTestCase):
     # Remove other test's side effect.
     self.portal.sale_trade_condition_module.main_trade_condition.setExpirationDate(None)
 
-    transaction.commit()
     self.tic()
 
     open_sale_order.newContent(
@@ -389,13 +379,11 @@ class TestOpenOrder(ERP5TypeTestCase):
 
     open_sale_order.Order_applyTradeCondition(open_sale_order.getSpecialiseValue())
 
-    transaction.commit()
     self.tic()
 
     open_sale_order.order()
     open_sale_order.start()
 
-    transaction.commit()
     self.tic()
 
     applied_rule = open_sale_order.getCausalityRelatedValue(portal_type='Applied Rule')
@@ -403,7 +391,6 @@ class TestOpenOrder(ERP5TypeTestCase):
 
     open_sale_order.autoOrderPeriodically(comment='Test', calculation_base_date=DateTime(3000,2,9))
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(applied_rule.objectIds()), 9)
@@ -412,7 +399,6 @@ class TestOpenOrder(ERP5TypeTestCase):
     # Do the same thing and nothing happens.
     open_sale_order.autoOrderPeriodically(comment='Test', calculation_base_date=DateTime(3000,2,9))
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(applied_rule.objectIds()), 9)
@@ -421,7 +407,6 @@ class TestOpenOrder(ERP5TypeTestCase):
     # Next
     open_sale_order.autoOrderPeriodically(comment='Test', calculation_base_date=DateTime(3000,2,14))
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(applied_rule.objectIds()), 19)

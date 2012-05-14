@@ -30,7 +30,6 @@ import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
-import transaction
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Type.ERP5Type import ERP5TypeInformation
@@ -68,7 +67,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       self.portal.manage_delObjects(ids=[self.folder.getId(),
                                           self.other_folder.getId()])
       clearCache()
-      transaction.commit()
+      self.commit()
 
     def newContent(self):
       """
@@ -181,7 +180,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       test_script = self._createUpgradeObjectClassPythonScript()
       result = self.folder.upgradeObjectClass(test_script, from_class, 
                                               to_class, test_script)
-      transaction.commit()
+      self.commit()
       self.assertEquals(self.folder[obj.getId()].__class__, to_class)
       self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
       self.assertEquals([1], result)
@@ -196,7 +195,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       test_script = self._createUpgradeObjectClassPythonScript()
       result = self.folder.upgradeObjectClass(test_script, from_class,
                                        to_class, test_script, test_only=1)
-      transaction.commit()
+      self.commit()
       self.assertNotEquals(self.folder[obj.getId()].__class__, to_class)
       self.assertEquals(self.folder[obj.getId()].__class__, from_class)
       self.assertEquals([1], result)
@@ -212,7 +211,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       test_script = self._createUpgradeObjectClassPythonScript()
       result = self.folder.upgradeObjectClass(test_script, from_class,
                                               to_class, test_script)
-      transaction.commit()
+      self.commit()
       self.assertEquals(subfolder[obj.getId()].__class__, to_class)
       self.assertNotEquals(subfolder[obj.getId()].__class__, from_class)
       self.assertEquals([1], result)
@@ -228,7 +227,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       test_script = self._createUpgradeObjectClassPythonScript()
       result = self.folder.upgradeObjectClass(test_script, from_class,
                                               to_class, test_script)
-      transaction.commit()
+      self.commit()
       self.assertEquals(self.folder[subobject.getId()].__class__, to_class)
       self.assertNotEquals(self.folder[subobject.getId()].__class__, from_class)
       self.assertEquals(self.folder[subobject.getId()][obj.getId()].__class__, to_class)
@@ -247,7 +246,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       test_script = self._createUpgradeObjectClassPythonScript()
       result = self.folder.upgradeObjectClass(test_script, from_class_as_string,
                                               to_class_as_string, test_script)
-      transaction.commit()
+      self.commit()
       self.assertEquals(self.folder[obj.getId()].__class__, to_class)
       self.assertNotEquals(self.folder[obj.getId()].__class__, from_class)
       self.assertEquals([1], result)
@@ -257,7 +256,7 @@ class TestFolder(ERP5TypeTestCase, LogInterceptor):
       type_list = ['Folder']
       self._setAllowedContentTypesForFolderType(type_list)
       obj = self.folder.newContent(portal_type='Folder')
-      transaction.commit()
+      self.commit()
       response = self.publish('%s/deleteContent?id=%s' % (
               self.folder.absolute_url(relative=True), obj.getId()))
       self.assertTrue(obj.getId() in self.folder.objectIds())

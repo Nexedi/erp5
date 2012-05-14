@@ -34,7 +34,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import _getConversionServerDict
 from Products.ERP5Type.tests.ERP5TypeLiveTestCase import ERP5TypeLiveTestCase
 from zLOG import LOG, INFO, ERROR
 from Products.CMFCore.utils import getToolByName
-import transaction
 import random
 import string
 
@@ -85,7 +84,6 @@ class TestIngestion(ERP5TypeLiveTestCase):
       document_parent = document.getParentValue()
       document_parent._delObject(doucument_id)
     # Unindex deleted documents
-    transaction.commit()
     self.tic()
 
   def setSystemPreference(self):
@@ -121,7 +119,6 @@ class TestIngestion(ERP5TypeLiveTestCase):
     script_id = 'ERP5Site_getTextFileWithFileName'
     filename = 'any_file.txt'
     document = self.contributeFileWithUrl(script_id, filename=filename)
-    transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Text')
     self.assertEquals(document.getFilename(), filename)
@@ -135,7 +132,6 @@ class TestIngestion(ERP5TypeLiveTestCase):
     """
     script_id = 'ERP5Site_getTextFile.txt'
     document = self.contributeFileWithUrl(script_id)
-    transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Text')
     self.assertEquals(document.getFilename(), script_id)
@@ -148,7 +144,6 @@ class TestIngestion(ERP5TypeLiveTestCase):
     """
     script_id = 'ERP5Site_getTextFileWithoutContentType.txt'
     document = self.contributeFileWithUrl(script_id)
-    transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Text')
     self.assertEquals(document.getFilename(), script_id)
@@ -162,7 +157,6 @@ class TestIngestion(ERP5TypeLiveTestCase):
     script_id = 'ERP5Site_getTextFileWithFileNameAndRedirection'
     filename = 'any_file.txt'
     document = self.contributeFileWithUrl(script_id, filename=filename)
-    transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Text')
     self.assertEquals(document.getFilename(), filename)
@@ -176,7 +170,6 @@ class TestIngestion(ERP5TypeLiveTestCase):
     """
     script_id = 'ERP5Site_getTextFileWithoutFileNameButHTMLContentType'
     document = self.contributeFileWithUrl(script_id)
-    transaction.commit()
     self.tic()
     self.assertEquals(document.getPortalType(), 'Web Page')
     self.assertEquals(document.getFilename(), script_id)

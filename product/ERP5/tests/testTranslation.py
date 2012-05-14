@@ -28,7 +28,6 @@
 ##############################################################################
 import unittest
 
-import transaction
 import MethodObject
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -275,7 +274,6 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     item_module = self.getPortal().getDefaultModule(portal_type)
     item = item_module.newContent(portal_type=portal_type, title='Lot A')
 
-    transaction.commit()
     self.tic()
     self.portal.Localizer._default_language = 'fr'
 
@@ -286,7 +284,6 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
                       'Validé')
     # Now run indexation of translations.
     self.portal.ERP5Site_updateTranslationTable()
-    transaction.commit()
     self.tic()
     # Ckeck queries with translated workflow state title generated with
     # getMessageIdWithContext
@@ -336,7 +333,6 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
 
       # Update the translation table
       self.portal.ERP5Site_updateTranslationTable()
-      transaction.commit()
       self.tic()
 
       # Check the catalog result
@@ -351,7 +347,6 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
                                                       workflow_id))
       # Update the translation table
       self.portal.ERP5Site_updateTranslationTable()
-      transaction.commit()
       self.tic()
 
 class LanguageGetter(MethodObject.Method):
@@ -411,7 +406,7 @@ class TestTranslation(ERP5TypeTestCase):
     self.stepTic()
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     # unpatch lang_negotiator and get_selected_message
     from Products.Localizer import MessageCatalog
     MessageCatalog.lang_negotiator = self.old_lang_negotiator

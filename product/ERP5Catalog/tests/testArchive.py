@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import transaction
 import unittest
 
 from Testing import ZopeTestCase
@@ -233,7 +232,7 @@ class TestArchive(InventoryAPITestCase):
     dest.ready()
 
     # make sure to commit to release any lock on tables
-    transaction.commit()
+    self.commit()
 
     # Do archive
     portal_archive.manage_archive(destination_archive_id=dest.getId(),

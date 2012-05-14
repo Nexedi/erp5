@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Products.ERP5Legacy.tests import testLegacySimulationPackingList
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -56,7 +55,6 @@ class TestDivergenceTester(testLegacySimulationPackingList.TestPackingListMixin,
     tester_list = rule.contentValues(
              portal_type=rule.getPortalDivergenceTesterTypeList())
     rule.deleteContent([x.getId() for x in tester_list])
-    transaction.commit()
     self.tic()
 
   def bootstrapSite(self):
@@ -97,7 +95,7 @@ class TestDivergenceTester(testLegacySimulationPackingList.TestPackingListMixin,
     This has to be called only once.
     """
     self.validateRules()
-    transaction.commit()
+    self.commit()
     self.tic(verbose=1)
     self.bootstrapSite()
 

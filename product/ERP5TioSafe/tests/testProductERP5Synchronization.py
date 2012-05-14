@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import transaction
 from Products.ERP5TioSafe.tests.testPrestashopMixin import testPrestashopMixin
 from Products.ERP5Type.tests.backportUnittest import skip
 
@@ -55,7 +54,6 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         self.connection,
         '%s/dump_product_sync_01.sql' % self.ps_dump_path,
     )
-    transaction.commit()
     self.tic()
 
     # Run the sync of products and check product's data after sync
@@ -95,7 +93,6 @@ class TestProductERP5Synchronization(testPrestashopMixin):
     ]
     for mapping in mapping_dict_list:
       self.createMapping(integration_site=self.prestashop, **mapping)
-    transaction.commit()
     self.tic()
 
     # Run the sync of products and check product's data after sync
@@ -154,7 +151,6 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         '%s/dump_product_sync_02.sql' % self.ps_dump_path,
     )
     self.initMapping(self.prestashop)
-    transaction.commit()
     self.tic()
 
     # Run the sync of products and check product's data after sync
@@ -223,7 +219,6 @@ class TestProductERP5Synchronization(testPrestashopMixin):
     ]
     for mapping in mapping_dict_list:
       self.createMapping(integration_site=self.prestashop, **mapping)
-    transaction.commit()
     self.tic()
 
     # Run the sync of products and check product's data after sync
@@ -305,7 +300,6 @@ class TestProductERP5Synchronization(testPrestashopMixin):
     ]
     for mapping in mapping_dict_list:
       self.createMapping(integration_site=self.prestashop, **mapping)
-    transaction.commit()
     self.tic()
 
     # Run the sync of products and check product's data after sync
@@ -446,7 +440,6 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         self.connection,
         '%s/dump_product_sync_04.sql' % self.ps_dump_path,
     )
-    transaction.commit()
     self.tic()
 
     # Run the sync of products
@@ -490,7 +483,6 @@ class TestProductERP5Synchronization(testPrestashopMixin):
         '%s/dump_product_sync_06.sql' % self.ps_dump_path,
     )
     self.initMapping(self.prestashop)
-    transaction.commit()
     self.tic()
 
     # Run the sync of persons and check person's data after sync
@@ -579,7 +571,6 @@ class TestProductERP5Synchronization(testPrestashopMixin):
     ]
     for mapping in mapping_dict_list:
       self.createMapping(integration_site=self.prestashop, **mapping)
-    transaction.commit()
     self.tic()
 
     # Run the sync of persons and check person's data after sync

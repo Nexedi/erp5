@@ -764,7 +764,7 @@ def main(argument_list=None):
                            debug=debug,
                            run_only=run_only,
                            )
-  return result and len(result.failures) + len(result.errors) and 1 or 0
+  return result and not result.wasSuccessful()
 
 if __name__ == '__main__':
   # Force stdout to be totally unbuffered.

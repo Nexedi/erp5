@@ -29,7 +29,6 @@
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.tests.utils import reindex
-import transaction
 from DateTime import DateTime
 
 class TestTaskReporting(ERP5ReportTestCase):
@@ -151,13 +150,12 @@ class TestTaskReporting(ERP5ReportTestCase):
           )
 
     # and all this available to catalog
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
     """Remove all documents.
     """
-    transaction.abort()
+    self.abort()
     portal = self.portal
     portal.task_module.manage_delObjects(
                       list(portal.task_module.objectIds()))
@@ -165,7 +163,6 @@ class TestTaskReporting(ERP5ReportTestCase):
                       list(portal.task_report_module.objectIds()))
     portal.portal_simulation.manage_delObjects(
                       list(portal.portal_simulation.objectIds()))
-    transaction.commit()
     self.tic()
 
   def testProjectMontlyReport(self):

@@ -28,7 +28,6 @@
 
 import unittest
 import os
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -247,7 +246,7 @@ class TestMovement(ERP5TypeTestCase):
 
       self.portal.newContent(id="dummy_delivery_module",
                              portal_type="My Delivery Module")
-      transaction.commit()
+      self.commit()
     self.delivery_module = self.portal.dummy_delivery_module
 
   def getPortalName(self):
@@ -540,7 +539,7 @@ class TestAccountingTransactionLine(TestMovement):
 
       self.portal.newContent(id="accounting_transaction_line_module",
                              portal_type="My Accounting Transaction Line Module")
-      transaction.commit()
+      self.commit()
     self.atl_module = self.portal.accounting_transaction_line_module
 
   def _makeOne(self, **kw):

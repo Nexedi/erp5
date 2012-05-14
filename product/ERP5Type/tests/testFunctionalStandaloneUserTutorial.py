@@ -29,7 +29,6 @@
 
 import os
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase

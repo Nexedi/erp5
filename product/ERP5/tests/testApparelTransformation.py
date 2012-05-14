@@ -32,7 +32,6 @@
 #
 
 
-import transaction
 import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -112,7 +111,6 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
       variations = [variation1, variation2]
 
       # Commit and catalog
-      transaction.commit()
       self.tic()
       
       component.setVariationBaseCategoryList(['variation'])

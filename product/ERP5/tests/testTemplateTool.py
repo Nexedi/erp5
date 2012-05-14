@@ -30,7 +30,6 @@
 import os
 import shutil
 import unittest
-import transaction
 import random
 from App.config import getConfiguration
 from Products.ERP5VCS.WorkingCopy import getVcsTool
@@ -254,10 +253,10 @@ class TestTemplateTool(ERP5TypeTestCase):
     template.edit(title=title,
                   version='1.0',
                   description='bt for unit_test')
-    transaction.commit()
+    self.commit()
 
     template.build()
-    transaction.commit()
+    self.commit()
 
     cfg = getConfiguration()
     template_path = os.path.join(cfg.instancehome, 'tests', '%s' % (title,))
@@ -508,7 +507,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
     bt = template_tool.getInstalledBusinessTemplate(bt5_name)
     self.assertEquals(bt.getTitle(), bt5_name)
-    transaction.commit()
+    self.commit()
     self.checkFolderReindexAllActivityPresense()
     self.stepTic()
 
@@ -519,7 +518,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt = template_tool.getInstalledBusinessTemplate(bt5_name)
     self.assertNotEquals(bt, None)
     self.assertEquals(bt.getTitle(), bt5_name)
-    transaction.commit()
+    self.commit()
     self.checkFolderReindexAllActivityPresense()
     self.stepTic()
 
@@ -530,7 +529,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt = template_tool.getInstalledBusinessTemplate(bt5_name)
     self.assertNotEquals(bt, None)
     self.assertEquals(bt.getTitle(), bt5_name)
-    transaction.commit()
+    self.commit()
     self.checkFolderReindexAllActivityNotPresent()
     self.stepTic()
 

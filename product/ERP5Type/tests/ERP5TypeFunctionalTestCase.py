@@ -28,7 +28,6 @@
 ##############################################################################
 
 import os
-import transaction
 import time
 import signal
 import re
@@ -271,7 +270,7 @@ class FunctionalTestRunner:
       self.browser = Firefox(profile_dir, host, int(port))
 
   def getStatus(self):
-    transaction.commit()
+    self.commit()
     return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
   def _getTestURL(self):
@@ -347,7 +346,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     # create browser_id_manager
     if not "browser_id_manager" in self.portal.objectIds():
       self.portal.manage_addProduct['Sessions'].constructBrowserIdManager()
-    transaction.commit()
+    self.commit()
     self.setSystemPreference()
     self.portal.portal_tests.TestTool_cleanUpTestResults()
     self.stepTic()

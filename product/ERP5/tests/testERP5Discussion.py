@@ -29,7 +29,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
@@ -71,10 +70,9 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.auth = '%s:%s' % (self.manager_username, self.manager_password)
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     for module in (self.portal.discussion_thread_module,):
       module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def stepCreateThread(self):

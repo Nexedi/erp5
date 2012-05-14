@@ -33,7 +33,6 @@ import threading
 import time
 import unittest
 import urllib
-import transaction
 from DateTime import DateTime
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -85,7 +84,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
           cls.tpc_finish = tpc_finish
     try:
       transaction.Transaction._commitResources = _commitResources
-      transaction.commit()
+      self.commit()
     finally:
       transaction.Transaction._commitResources = Transaction_commitResources
     self.tic()
@@ -141,7 +140,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
     try:
       # prevent nodes from processing activities automatically
       activity_tool.manage_removeFromProcessingList(node_list)
-      transaction.commit()
+      self.commit()
       del socket_map[zeo_connection.fileno()]
       try:
         # wake up asyncore loop and wait we really woke up
@@ -165,7 +164,7 @@ class TestInvalidationBug(ERP5TypeTestCase):
     finally:
       unpatch()
       activity_tool.manage_addToProcessingList(node_list)
-      transaction.commit()
+      self.commit()
     ## When the bug is not fixed, we get a -3 failed activity
     self.assertNoPendingMessage()
 
@@ -177,7 +176,6 @@ class TestInvalidationBug(ERP5TypeTestCase):
     module.newContent()
     module.setIdGenerator('_generatePerDayId')
     #module.migrateToHBTree()
-    transaction.commit()
     self.tic()
     print 'OID(%s) = %r' % (module.getRelativeUrl(), module._p_oid)
     print '  OID(_tree) = %r' % module._tree._p_oid
@@ -208,7 +206,6 @@ if (count % 500) < 5:
 """)
     for x in xrange(0,200):
       module.activate(activity='SQLQueue', priority=2).create_script()
-    transaction.commit()
     self.tic()
 
 def test_suite():
