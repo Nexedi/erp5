@@ -15,7 +15,6 @@
                     <value>
                       <list>
                         <string>application/vnd.ms-excel</string>
-                        <string>application/vnd.ms-office</string>
                         <string>application/msexcel</string>
                         <string>application/vnd.oasis.opendocument.spreadsheet</string>
                         <string>application/vnd.oasis.opendocument.spreadsheet-template</string>
