@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts36978119.57</string> </value>
+            <value> <string>ts36997821.03</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -579,11 +579,12 @@ var GadgetIndex = {\n
  */\n
 var InteractionGadget = {\n
 \n
-  bind: function (dom){\n
+  bind: function (gadget_dom){\n
     /*\n
      * Bind event between gadgets.\n
      */\n
-    dom.find("connect").each(function (key, value){\n
+    gadget_id = gadget_dom.attr("id");\n
+    gadget_dom.find("connect").each(function (key, value){\n
       source = $(value).attr("source").split(".");\n
       source_gadget_id = source[0];\n
       source_method_id = source[1];\n
@@ -650,67 +651,63 @@ var RenderJs = {\n
               url = gadget.attr("gadget");\n
               gadget_id = gadget.attr("id");\n
               \n
-              // XXX: How to know how long a form should be cached locally\n
-              // i.e. what happens if it changes at server side ?\n
-\n
               // register gadget in javascript namespace\n
               gadget_js = new Gadget(gadget_id, gadget);\n
               GadgetIndex.registerGadget(gadget_js);\n
-              if (url===undefined || url===""){\n
+              \n
+              if (url!==undefined && url!==""){\n
+                gadget_property = gadget.attr("gadget:property");\n
+                cacheable = false;\n
+                if (gadget_property!==undefined) {\n
+                  gadget_property = $.parseJSON(gadget_property);\n
+                  cacheable = Boolean(gadget_property.cacheable);\n
+                }\n
+                //cacheable = false ; // to develop faster\n
+                if (cacheable) {\n
+                    // get from cache if possible, use last part from URL as cache_key\n
+                    cache_id = gadget_property.cache_id;\n
+                    app_cache = Cache.get(cache_id, undefined);\n
+                    if(app_cache===undefined || app_cache===null){\n
+                      // not in cache so we pull from network and cache\n
+                      //console.log("not in cache: " + cache_id + "  " + url);\n
+                      $.ajax({url:url,\n
+                              yourCustomData: {"gadget_id": gadget_id, "cache_id": cache_id},\n
+                              success: function (data) {\n
+                                          cache_id = this.yourCustomData.cache_id;\n
+                                          gadget_id = this.yourCustomData.gadget_id;\n
+                                          //console.log("set in cache: " + cache_id);\n
+                                          Cache.set(cache_id, data);\n
+                                          GadgetIndex.getGadgetById(gadget_id).setReady();\n
+                                          RenderJs.updateAndRecurse(gadget, data);\n
+                                          RenderJs.checkAndTriggerReady();\n
+                                }});\n
+                    }\n
+                    else {\n
+                      // get from cache\n
+                      data = app_cache;\n
+                      gadget_js.setReady();\n
+                      this.updateAndRecurse(gadget, data);\n
+                      this.checkAndTriggerReady();\n
+                    }\n
+                  }\n
+                else {\n
+                  // not to be cached\n
+                  //console.log("Not to be cached " + url + gadget_id);\n
+                  $.ajax({url:url,\n
+                          yourCustomData: {"gadget_id": gadget_id},\n
+                          success: function (data) {\n
+                            gadget_id = this.yourCustomData.gadget_id;\n
+                            GadgetIndex.getGadgetById(gadget_id).setReady();\n
+                            RenderJs.updateAndRecurse(gadget, data);\n
+                            RenderJs.checkAndTriggerReady();\n
+                          }});\n
+                }\n
+              }\n
+              else {\n
                 // gadget is an inline one so no need to load it from network\n
                 gadget_js.setReady();\n
-                RenderJs.checkAndTriggerReady(); \n
-                return;\n
+                RenderJs.checkAndTriggerReady();\n
               }\n
-              \n
-              // handle caching\n
-              gadget_property = gadget.attr("gadget:property");\n
-\n
-              cacheable = false;\n
-              if (gadget_property!==undefined) {\n
-                gadget_property = $.parseJSON(gadget_property);\n
-                cacheable = Boolean(gadget_property.cacheable);\n
-              }\n
-              //cacheable = false ; // to develop faster\n
-              if (cacheable) {\n
-                  // get from cache if possible, use last part from URL as cache_key\n
-                  cache_id = gadget_property.cache_id;\n
-                  app_cache = Cache.get(cache_id, undefined);\n
-                  if(app_cache===undefined || app_cache===null){\n
-                    // not in cache so we pull from network and cache\n
-                    //console.log("not in cache: " + cache_id + "  " + url);\n
-                    $.ajax({url:url,\n
-                            yourCustomData: {"gadget_id": gadget_id, "cache_id": cache_id},\n
-                            success: function (data) {\n
-                                        cache_id = this.yourCustomData.cache_id;\n
-                                        gadget_id = this.yourCustomData.gadget_id;\n
-                                        //console.log("set in cache: " + cache_id);\n
-                                        Cache.set(cache_id, data);\n
-                                        GadgetIndex.getGadgetById(gadget_id).setReady();\n
-                                        RenderJs.updateAndRecurse(gadget, data);\n
-                                        RenderJs.checkAndTriggerReady();                                        \n
-                              }});\n
-                  }\n
-                  else {\n
-                    // get from cache\n
-                    data = app_cache;\n
-                    gadget_js.setReady();\n
-                    this.updateAndRecurse(gadget, data);\n
-                    this.checkAndTriggerReady();                    \n
-                  }\n
-                }\n
-              else {\n
-                // not to be cached\n
-                //console.log("Not to be cached " + url + gadget_id);\n
-                $.ajax({url:url,\n
-                        yourCustomData: {"gadget_id": gadget_id},\n
-                        success: function (data) {\n
-                          gadget_id = this.yourCustomData.gadget_id;\n
-                          GadgetIndex.getGadgetById(gadget_id).setReady();\n
-                          RenderJs.updateAndRecurse(gadget, data);\n
-                          RenderJs.checkAndTriggerReady();\n
-                        }});\n
-                }\n
     },\n
 \n
     checkAndTriggerReady: function() {\n
@@ -721,7 +718,7 @@ var RenderJs = {\n
       is_gadget_list_loaded = GadgetIndex.isGadgetListLoaded();\n
       if (is_gadget_list_loaded){\n
         if (!is_ready) {\n
-          //console.log("trigger");\n
+          console.log("trigger");\n
           GadgetIndex.getRootGadget().getDom().trigger("ready");\n
         }\n
         is_ready = true;\n
@@ -765,7 +762,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>25312</int> </value>
+            <value> <int>25230</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
