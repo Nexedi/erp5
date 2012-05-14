@@ -27,7 +27,6 @@
 ##############################################################################
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import transaction
 import unittest
 from zLOG import LOG
 from Testing import ZopeTestCase
@@ -106,7 +105,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
       if sync.getValidationState() != "validated":
         sync.validate()
 
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -116,7 +114,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
     for connector in self.virtuemart.contentValues(portal_type="Web Service Connector"):
       # use the test connector
       connector.setTransport("virtuemart")
-    transaction.commit()
     self.tic()
 
 
@@ -130,12 +127,10 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
       node_module_list = ['person_module', 'delivered_person_module',]
     for im in node_module_list:
       LOG("RUNNING SYNCHRO FOR %s" %(im), 300, "")
-      transaction.commit()
       self.tic()
       self.virtuemart.IntegrationSite_synchronize(reset=reset, synchronization_list=[im,],
                                               batch_mode=True)
 
-      transaction.commit()
       self.tic()
       if conflict_dict and conflict_dict.has_key(im):
         nb_pub_conflict, nb_sub_conflict, in_conflict = conflict_dict[im]
@@ -161,12 +156,10 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
 
   def _runAndCheckResourceSynchronization(self, conflict_dict=None, reset=True):
     # run synchronization
-    transaction.commit()
     self.tic()
     self.virtuemart.IntegrationSite_synchronize(reset=reset, synchronization_list=['product_module',],
                                             batch_mode=True)
 
-    transaction.commit()
     self.tic()
     # Check fix point
     for im in ['product_module']:
@@ -216,7 +209,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
         if organisation.getValidationState() != "validated":
           organisation.validate()
     
-    transaction.commit()
     self.tic()
     # Check initial data
     self.assertEqual(len(self.portal.virtuemart_test_module.contentValues(portal_type="Virtuemart Test Organisation")), 3)
@@ -376,7 +368,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
         if person.getValidationState() != "validated":
           person.validate()
           
-    transaction.commit()
     self.tic()
     # Check initial data
     self.assertEqual(len(self.portal.virtuemart_test_module.contentValues(portal_type="Virtuemart Test Person")), 4)
@@ -500,8 +491,7 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
       for person in self.portal.virtuemart_test_module.contentValues(portal_type="Virtuemart Test Person"):
         if person.getTitle() == "Simple person":
           person.edit(city=person_in_orga_update_dict['city'])
-      transaction.commit()
-      self.tic()  
+      self.tic()
       
       #self._runAndCheckNodeSynchronization(reset=False)
       
@@ -559,7 +549,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
       elif product.getValidationState() != 'validated':
         product.validate()
     
-    transaction.commit()
     self.tic()
     
     # Check initial data
@@ -567,7 +556,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
       if product.getValidationState() != "validated":
         product.validate()
     
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(self.portal.virtuemart_test_module.contentValues(portal_type="Virtuemart Test Product",
@@ -637,7 +625,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
       new_product = self.portal.product_module.newContent(portal_type='Product')
       new_product.edit(**erp5_new_product)
       new_product.validate() 
-      transaction.commit()
       self.tic()
       
       # add to sale supply
@@ -671,7 +658,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
         if product.getReference() == "PRDNew":
           if product.getValidationState() == "validated":
             product.invalidate()
-      transaction.commit()
       self.tic()
       
       self.assertEqual(len(self.portal.product_module.contentValues()), 6)      
@@ -690,7 +676,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
           attribut.edit(category='Color/white')
           if attribut.getValidationState() == 'invalidated':
             attribut.validate()
-      transaction.commit()
       self.tic()
       self._runAndCheckResourceSynchronization(reset=False)
       self.assertEqual(len(self.portal.product_module.contentValues()), original_product_module_lenght+5)      
@@ -705,7 +690,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
                         variation_base_category='colour')
           if attribut.getValidationState() != 'validated':
             attribut.validate()
-      transaction.commit()
       self.tic()
       self._runAndCheckResourceSynchronization(reset=False)
       self.assertEqual(len(self.portal.product_module.contentValues()), original_product_module_lenght+5)      
@@ -719,7 +703,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
           for attribute in product.contentValues(portal_type="Product Individual Variation"):
             product.manage_delObjects(ids=[attribute.getId(),])
           
-      transaction.commit()
       self.tic()
       self._runAndCheckResourceSynchronization(reset=False)   
       
@@ -767,7 +750,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
     self.portal.sale_order_module.manage_delObjects(so_ids)
     # Define date on integration site
     self.virtuemart.edit(stop_date="2010/12/01")
-    transaction.commit()
     self.tic()
     # Check initial data
     self.assertEqual(len(self.portal.virtuemart_test_module.contentValues(portal_type="Virtuemart Test Sale Order")), 1)
@@ -785,7 +767,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
     #sale orders
     self.virtuemart.IntegrationSite_synchronize(reset=True, synchronization_list=['sale_order_module',],
                                             batch_mode=True)
-    transaction.commit()
     self.tic()
 
     # Check fix point
@@ -823,13 +804,11 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
 
     # Change date
     self.virtuemart.edit(stop_date="2010/12/31")
-    transaction.commit()
     self.tic()
 
     # run synchronization
     self.virtuemart.IntegrationSite_synchronize(reset=False, synchronization_list=['sale_order_module',],
                                             batch_mode=True)
-    transaction.commit()
     self.tic()
     self.checkConflicts('sale_order_module')
     # Check fix point

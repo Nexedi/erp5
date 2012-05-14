@@ -30,7 +30,6 @@
 
 import os
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -53,11 +52,10 @@ class TestERP5Coordinate(ERP5TypeTestCase):
             'erp5_base',)
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     for module in ( self.portal.person_module,
                     self.portal.organisation_module, ):
       module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def test_data_coordinate_text_property(self):

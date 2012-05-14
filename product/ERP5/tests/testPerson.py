@@ -35,7 +35,6 @@ from AccessControl import Unauthorized
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type import Permissions
 
-import transaction
 
 
 class TestPerson(ERP5TypeTestCase):
@@ -183,7 +182,6 @@ class TestPerson(ERP5TypeTestCase):
     title = "Séb"
     person = person_module.newContent(portal_type='Person', title=title)
     person.setReference('test_seb')
-    transaction.commit()
     self.tic()
     portal = self.getPortal()
     last_id = portal.portal_preferences.getLastId()

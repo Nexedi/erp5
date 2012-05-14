@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import transaction
 from Testing import ZopeTestCase
 from zLOG import LOG
 import random
@@ -127,7 +126,7 @@ class Sequence:
         self._step_list[self._played_index] \
         .play(context, sequence=self, quiet=quiet)
         # commit transaction after each step
-        transaction.commit()
+        context.commit()
         self._played_index += 1
 
   def addStep(self,method_name,required=1,max_replay=1):

@@ -30,7 +30,6 @@
 import unittest
 import os
 
-import transaction
 from Testing import ZopeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -101,11 +100,9 @@ class TestOOoImportMixin(ERP5TypeTestCase):
       portal_categories[function_bc].newContent(id='manager', portal_type='Category', title='Manager')
 
     self.portal.portal_caches.clearCache()
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
-    transaction.commit()
     self.tic()
     for parent in [
         self.portal.currency_module,
@@ -118,7 +115,6 @@ class TestOOoImportMixin(ERP5TypeTestCase):
       parent.deleteContent(list(parent.objectIds()))
     self.portal.portal_preferences.manage_delObjects([self.pref.getId()])
 
-    transaction.commit()
     self.tic()
 
 class TestOOoImport(TestOOoImportMixin):
@@ -655,7 +651,6 @@ class TestOOoImport(TestOOoImportMixin):
     # tests simple use of CategoryTool_importCategoryFile script
     self.portal.portal_categories.CategoryTool_importCategoryFile(
         import_file=makeFileUpload('import_region_category.sxc'))
-    transaction.commit()
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
@@ -673,12 +668,10 @@ class TestOOoImport(TestOOoImportMixin):
     # tests simple use of CategoryTool_importCategoryFile script
     region = self.portal.portal_categories.region
     region.newContent(id='dummy_region')
-    transaction.commit()
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
         import_file=makeFileUpload('import_region_category.sxc'),
         existing_category_list='delete')
-    transaction.commit()
     self.tic()
     self.assertEqual(2, len(region))
     self.assertTrue('europe' in region.objectIds())
@@ -695,12 +688,10 @@ class TestOOoImport(TestOOoImportMixin):
     # tests simple use of CategoryTool_importCategoryFile script
     region = self.portal.portal_categories.region
     region.newContent(id='dummy_region')
-    transaction.commit()
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
         import_file=makeFileUpload('import_region_category.sxc'),
         existing_category_list='expire')
-    transaction.commit()
     self.tic()
     self.assertEqual(3, len(region))
     self.assertTrue('dummy_region' in region.objectIds())
@@ -718,7 +709,6 @@ class TestOOoImport(TestOOoImportMixin):
     # tests that CategoryTool_importCategoryFile supports .xls files
     self.portal.portal_categories.CategoryTool_importCategoryFile(
         import_file=makeFileUpload('import_region_category.xls'))
-    transaction.commit()
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
@@ -735,7 +725,6 @@ class TestOOoImport(TestOOoImportMixin):
     # tests CategoryTool_importCategoryFile with * in the paths columns
     self.portal.portal_categories.CategoryTool_importCategoryFile(
         import_file=makeFileUpload('import_region_category_path_stars.sxc'))
-    transaction.commit()
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
@@ -754,7 +743,6 @@ class TestOOoImport(TestOOoImportMixin):
     self.portal.portal_categories.CategoryTool_importCategoryFile(
             import_file=makeFileUpload(
               'import_region_category_path_stars_non_ascii.sxc'))
-    transaction.commit()
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(2, len(region))
@@ -773,7 +761,6 @@ class TestOOoImport(TestOOoImportMixin):
     # bug)
     self.portal.portal_categories.CategoryTool_importCategoryFile(
         import_file=makeFileUpload('import_region_category_duplicate_ids.sxc'))
-    transaction.commit()
     self.tic()
     region = self.portal.portal_categories.region
     self.assertEqual(1, len(region))
@@ -978,12 +965,10 @@ class TestOOoImportWeb(TestOOoImportMixin):
     region.newContent(id='dummy_region')
     dummy_expired_region = region.newContent(id='dummy_expired_region')
     dummy_expired_region.expire()
-    transaction.commit()
     self.tic()
     self.portal.portal_categories.CategoryTool_importCategoryFile(
         import_file=makeFileUpload('import_region_category.sxc'),
         existing_category_list='expire')
-    transaction.commit()
     self.tic()
     self.assertEqual(4, len(region))
     self.assertTrue('dummy_region' in region.objectIds())

@@ -324,7 +324,7 @@ class ReportSection:
     # which is based on specified selection_name in the listbox.
     form_id = self.getFormId()
     if form_id:
-      listbox = getattr(context[form_id], 'listbox', None)
+      listbox = getattr(getattr(context, form_id), 'listbox', None)
       if listbox is not None:
         selection_name = listbox.get_value('selection_name')
         if render_prefix is not None:
@@ -392,7 +392,7 @@ class ReportSection:
     selection_list = []
     form_id = self.getFormId()
     if form_id:
-      listbox = getattr(context[form_id], 'listbox', None)
+      listbox = getattr(getattr(context, form_id), 'listbox', None)
       if listbox is not None:
         selection_list.append(listbox.get_value('selection_name'))
     selection_list.append(self.selection_name)

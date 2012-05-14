@@ -29,7 +29,6 @@
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
-import transaction
 import unittest
 
 class TestFieldValueCache(ERP5TypeTestCase):

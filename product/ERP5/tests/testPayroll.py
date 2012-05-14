@@ -32,7 +32,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import reindex
 from DateTime import DateTime
-import transaction
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
@@ -135,7 +134,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
   @reindex
   def beforeTearDown(self):
     TestTradeModelLineMixin.beforeTearDown(self)
-    transaction.abort()
+    self.abort()
     for module in (
       self.portal.organisation_module,
       self.portal.person_module,

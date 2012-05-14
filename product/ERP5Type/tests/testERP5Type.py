@@ -78,7 +78,6 @@ class PropertySheetTestCase(ERP5TypeTestCase):
     # wrongly. If the interaction has been called already it does nothing,
     # but in the other hand, if isolates the test "just in case"
     ttool.resetDynamicDocumentsOnceAtTransactionBoundary()
-    transaction.commit()
     self.tic()
     super(PropertySheetTestCase, self).beforeTearDown()
 
@@ -109,7 +108,7 @@ class PropertySheetTestCase(ERP5TypeTestCase):
 
       property = ps.newContent(reference=property_id, **kw)
     if commit:
-      transaction.commit()
+      self.commit()
 
 class TestERP5Type(PropertySheetTestCase, LogInterceptor):
     """Tests ERP5TypeInformation and per portal type generated accessors.
@@ -130,13 +129,13 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # all those tests does strange things with Person type, so we won't
       # filter content types to add inside Person.
       self.getTypesTool().getTypeInfo('Person').filter_content_types = 0
-      transaction.commit()
+      self.commit()
 
       # save workflow chain for Person type
       self.person_chain = self.getWorkflowTool().getChainFor('Person')
 
     def beforeTearDown(self):
-      transaction.abort()
+      self.abort()
       # THIS IS UGLY, WE MUST REMOVE AS SOON AS POSSIBLE, NOT COMPATIBLE
       # WITH LIVE TEST
       for module in [ self.getPersonModule(),
@@ -299,7 +298,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertFalse(portal.person_module._p_changed)
       # the object is not in ZODB
       self.assertEquals(o._p_jar, None)
-      transaction.commit()
+      self.commit()
       self.assertEquals(o._p_jar, None)
 
       # Temp objects always get a dummy ID by default.
@@ -315,9 +314,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Make sure a temp object can't be stored in the ZODB
       portal.person_module._setObject(o.getId(), aq_base(o))
       try:
-        transaction.commit()
+        self.commit()
       except cPickle.PicklingError:
-        transaction.abort()
+        self.abort()
       else:
         self.fail("No exception raised when storing explicitly a temp object"
                   " on a persistent object")
@@ -386,7 +385,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person_relative_url = person_object.getRelativeUrl()
 
       def checkRelationSet(self):
-        transaction.commit()
+        self.commit()
         person_object.reindexObject()
         category_object.reindexObject()
         self.tic()
@@ -404,7 +403,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         self.assertEquals( category_object.getRegionRelatedIdList(
                             portal_type = "Person"), [person_id] )
       def checkRelationUnset(self):
-        transaction.commit()
+        self.commit()
         person_object.reindexObject()
         category_object.reindexObject()
         self.tic()
@@ -439,10 +438,10 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
 
       # Test _setRegion doesn't reindex the object.
       person_object._setRegion(category_id)
-      transaction.commit()
+      self.commit()
       self.assertFalse(person_object.hasActivity())
       person_object.setRegion(None)
-      transaction.commit()
+      self.commit()
       self.assertTrue(person_object.hasActivity())
       self.tic()
 
@@ -638,8 +637,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       beta.reindexObject()
       zeta.reindexObject()
       nofunction.reindexObject()
-      transaction.commit()
-      self.tic() # Make sure categories are reindexed
+      self.tic()# Make sure categories are reindexed
 
       # Create a new person
       module = self.getPersonModule()
@@ -717,8 +715,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Uid setters (list, set, default)
       person = module.newContent(portal_type='Person')
       person.reindexObject()
-      transaction.commit()
-      self.tic() # Make sure person is reindexed
+      self.tic()# Make sure person is reindexed
       person.setFunction('nofunction')  # Fill at least one other category
       person.setDefaultRegionUid(alpha.getUid())
       self.assertEquals(person.getRegion(), 'alpha')
@@ -1081,7 +1078,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertTrue(person.hasDefaultOrganisationTitle())
       self.assertTrue(person.hasOrganisationTitle())
       # make sure this new organisation is indexed
-      transaction.commit()
+      self.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
@@ -1095,7 +1092,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person.setDefaultOrganisationTitle('New title')
       self.assertEquals('New title',
                         default_organisation.getTitle())
-      transaction.commit()
+      self.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
@@ -1111,7 +1108,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                         default_organisation.getTitle())
       self.assertEquals(0, len([m for m in
                         self.portal.portal_activities.getMessageList()]))
-      transaction.commit()
+      self.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
@@ -1142,7 +1139,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                         default_organisation.getReference())
 
       # make sure this new organisation is indexed
-      transaction.commit()
+      self.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
@@ -1156,7 +1153,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person.setDefaultOrganisationReference('New reference')
       self.assertEquals('New reference',
                         default_organisation.getReference())
-      transaction.commit()
+      self.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
@@ -1172,7 +1169,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                         default_organisation.getReference())
       self.assertEquals(0, len([m for m in
                         self.portal.portal_activities.getMessageList()]))
-      transaction.commit()
+      self.commit()
       self.assertEquals(1, len([m for m in
         self.portal.portal_activities.getMessageList()
         if m.method_id == 'immediateReindexObject'
@@ -1237,7 +1234,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       base_category_list = person_ti.getTypeBaseCategoryList()
       if 'destination' not in base_category_list:
         person_ti._setTypeBaseCategoryList(base_category_list + ['destination'])
-        transaction.commit()
+        self.commit()
 
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       other_pers = self.getPersonModule().newContent(id='2', portal_type='Person')
@@ -1271,7 +1268,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       base_category_list = person_ti.getTypeBaseCategoryList()
       if 'destination' not in base_category_list:
         person_ti._setTypeBaseCategoryList(base_category_list + ['destination'])
-        transaction.commit()
+        self.commit()
 
       person = self.getPersonModule().newContent(id='1', portal_type='Person')
       another_person = self.getPersonModule().newContent(
@@ -1364,7 +1361,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                         person_reference)
 
       person.setSubordinationValue(organisation)
-      transaction.commit()
       self.tic()
 
       # mask_value is True, so local value take precedence
@@ -1412,7 +1408,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                         person_reference)
 
       person.setSubordinationValue(organisation)
-      transaction.commit()
       self.tic()
 
       # mask_value is False, acquired value take precedence
@@ -1537,7 +1532,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
               '%r is not a temp object' % (new_copy,))
       self.assertEquals(obj.getId(), new_copy.getId())
       new_copy.edit(gender=gender.getCategoryRelativeUrl())
-      transaction.commit()
       self.tic()
       self.assertEquals(gender.getCategoryRelativeUrl(), new_copy.getGender())
       self.assertEquals(None, obj.getGender())
@@ -1660,7 +1654,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                   portal_type_object.getDefaultViewFor(obj).getId())
 
       # Avoid deletion of actions fo rother tests
-      transaction.abort()
+      self.abort()
 
     def test_22_securityReindex(self):
       """
@@ -1686,7 +1680,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person.manage_permission('View', roles=['Auditor'], acquire=0)
 
       # The user may not view the person object.
-      transaction.commit() ; self.tic()
+      self.commit(); self.tic()
       self.assertTrue('Auditor' not in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
@@ -1701,7 +1695,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # reflect the security change, until the affected objects are
       # reindexed, and Jean-Paul believes that this should not be
       # automatic.
-      transaction.commit() ; self.tic()
+      self.commit(); self.tic()
       self.assertTrue('Auditor' in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
@@ -1712,7 +1706,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Now invoke the reindexing explicitly, so the catalog should be
       # synchronized.
       person_module.recursiveReindexObject()
-      transaction.commit() ; self.tic()
+      self.commit(); self.tic()
       self.assertTrue('Auditor' in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
@@ -1764,7 +1758,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       foo_path = foo.getRelativeUrl()
 
       # Make sure categories are reindexed
-      transaction.commit()
       self.tic()
 
       # Related accessor
@@ -1937,7 +1930,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
                                title='Alpha')
 
       # Make sure categories are reindexed
-      transaction.commit()
       self.tic()
 
       self.assertEquals(beta.getRelativeUrl(), 'region/beta')
@@ -2200,7 +2192,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       gamma_path = gamma.getCategoryRelativeUrl()
 
       # Make sure categories are reindexed
-      transaction.commit()
       self.tic()
 
       beta.manage_permission('View', roles=[], acquire=0)
@@ -2260,7 +2251,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       gamma_path = gamma.getCategoryRelativeUrl()
 
       # Make sure categories are reindexed
-      transaction.commit()
       self.tic()
 
       beta.manage_permission('View', roles=[], acquire=0)
@@ -2337,7 +2327,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # gamma does not exist
 
       # Make sure categories are reindexed
-      transaction.commit()
       self.tic()
 
       # Create a new person, and associate it to beta and gamma.
@@ -2412,7 +2401,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # we can change the translation domain on the portal type
       self.portal.portal_types.Person.setTranslationDomain('dummy',
           'erp5_content')
-      transaction.commit()
+      self.commit()
 
       self.assertEquals('erp5_content', doc.getDummyTranslationDomain())
       self.assertEquals('foo', doc.getTranslatedDummy())
@@ -2429,7 +2418,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       doc = self.portal.person_module.newContent(portal_type='Person')
       self.portal.Localizer = DummyLocalizer()
       self.portal.portal_types.Person.setTranslationDomain('dummy', None)
-      transaction.commit()
+      self.commit()
 
       doc.setDummy('foo')
       self.assertFalse(doc.getDummyTranslationDomain())
@@ -2472,14 +2461,14 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
         ti.edit(type_base_category_list=
           base_category_list + ['destination'])
 
-        transaction.commit()
+        self.commit()
         self.assertTrue(hasattr(doc, 'getDestination'))
       else:
         self.assertTrue(hasattr(doc, 'getDestination'))
         base_category_list.remove('destination')
         ti.edit(type_base_category_list=base_category_list)
 
-        transaction.commit()
+        self.commit()
         self.assertFalse(hasattr(doc, 'getDestination'))
 
     def test_aq_reset_on_workflow_chain_change(self):
@@ -2492,7 +2481,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.getWorkflowTool().setChainForPortalTypes(
         ['Person'], ('delivery_causality_workflow'))
 
-      transaction.commit()
+      self.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
 
     def test_aq_reset_on_workflow_method_change(self):
@@ -2500,7 +2489,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.getWorkflowTool().setChainForPortalTypes(
         ['Person'], ('delivery_causality_workflow'))
 
-      transaction.commit()
+      self.commit()
       self.assertTrue(hasattr(doc, 'diverge'))
 
       wf = self.portal.portal_workflow.delivery_causality_workflow
@@ -2509,12 +2498,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       wf.transitions.dummy_workflow_method.setProperties(
           title='', new_state_id='', trigger_type=TRIGGER_WORKFLOW_METHOD)
 
-      transaction.commit()
+      self.commit()
       self.assertTrue(hasattr(doc, 'dummyWorkflowMethod'))
 
       wf.transitions.deleteTransitions(['dummy_workflow_method'])
 
-      transaction.commit()
+      self.commit()
       self.assertFalse(hasattr(doc, 'dummyWorkflowMethod'))
 
     def test_aq_reset_on_workflow_state_variable_change(self):
@@ -2522,12 +2511,12 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.getWorkflowTool().setChainForPortalTypes(
         ['Person'], ('delivery_causality_workflow'))
 
-      transaction.commit()
+      self.commit()
       self.assertTrue(hasattr(doc, 'getCausalityState'))
       wf = self.portal.portal_workflow.delivery_causality_workflow
       wf.variables.setStateVar('dummy_state')
 
-      transaction.commit()
+      self.commit()
       self.assertTrue(hasattr(doc, 'getDummyState'))
 
     # ... other cases should be added here
@@ -2574,11 +2563,9 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       subdocument_id = 'sub'
       object = folder.newContent(portal_type='Organisation', id=initial_id)
       object.newContent(id=subdocument_id)
-      transaction.commit()
       self.tic()
       folder = self.getOrganisationModule()
       folder.manage_renameObjects([initial_id], [final_id])
-      transaction.commit()
       self.tic()
       folder = self.getOrganisationModule()
       subdocument = folder[final_id][subdocument_id]
@@ -2764,7 +2751,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       container_type_info._setTypeAllowedContentTypeList(
         container_type_info.getTypeAllowedContentTypeList()
         + [object_portal_type])
-      transaction.commit()
+      self.commit()
 
       # by default this is empty, which implictly means "Add portal content",
       # the default permission
@@ -3002,7 +2989,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
               id='Dummy Type',
               type_class='Folder', )
 
-      transaction.commit()
+      self.commit()
 
       # our type is available from types tool
       self.assertNotEquals(None, types_tool.getTypeInfo('Dummy Type'))
@@ -3019,7 +3006,6 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # and use generated accessors on them
       dummy_type.edit(type_property_sheet_list=('Reference', ))
 
-      transaction.commit()
       self.tic()
 
       dummy_instance.setReference('test')
@@ -3093,15 +3079,18 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       self.assertEquals(None, person.getProperty('foo_property'))
       self.assertEquals(None, person.getProperty('foobar_property'))
 
-    def testgetInstancePropertyAndBaseCategoryList(self):
+    def test_getInstancePropertyAndBaseCategoryList(self):
       """
         Check that the method getInstancePropertyAndBaseCategoryList return
         properties from property sheets correctly
       """
-      portal_type = self.portal.portal_types.Email
+      portal_type = self.portal.portal_types.Person
       result_list = portal_type.getInstancePropertyAndBaseCategoryList()
-      self.assertTrue("description" in result_list,
-          "description not in %s" % result_list)
+      # Test a simple property, an acquired one on and a category.
+      for x in "id", "address_city", "function":
+        self.assertTrue(x in result_list, "%s not in %s" % (x, result_list))
+      # Values from which acquired properties are fetched are not returned.
+      self.assertFalse("address" in result_list)
 
 
 class TestAccessControl(ERP5TypeTestCase):

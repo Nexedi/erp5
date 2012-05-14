@@ -26,7 +26,6 @@
 #
 ##############################################################################
 import unittest
-import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFCore.exceptions import AccessControl_Unauthorized
@@ -58,7 +57,6 @@ class TestPDMWithSecurity(ERP5TypeTestCase):
     user_folder._doAddUser('assignor', '', ['Auditor', 'Author', 'Assignor'], [])
     user_folder._doAddUser('assignee', '', ['Auditor', 'Author', 'Assignee'], [])
 
-    transaction.commit()
     self.tic()
 
   def testValidatedProductCanContainMeasure(self):
@@ -69,13 +67,11 @@ class TestPDMWithSecurity(ERP5TypeTestCase):
     product = self.portal.product_module.newContent(portal_type='Product',
                                                     title='Chair')
 
-    transaction.commit()
     self.tic()
 
     # Author try to add a measure to validated product and succeed.
     product.newContent(portal_type='Measure')
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(product.contentValues(portal_type='Measure')), 1)
@@ -83,7 +79,6 @@ class TestPDMWithSecurity(ERP5TypeTestCase):
     self.login('assignor')
     self.portal.portal_workflow.doActionFor(product, 'validate_action')
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(product.getValidationState(), 'validated')
@@ -97,7 +92,6 @@ class TestPDMWithSecurity(ERP5TypeTestCase):
     self.login('assignee')
     product.newContent(portal_type='Measure')
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(product.contentValues(portal_type='Measure')),

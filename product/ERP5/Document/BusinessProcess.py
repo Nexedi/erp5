@@ -617,7 +617,7 @@ class BusinessProcess(Path, XMLObject):
     """
     remaining_trade_phase_list = []
     trade_state = business_link.getSuccessor()
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     # We might need a key which depends on the explanation
     key = 'BusinessProcess_predecessor_successor_%s' % self.getRelativeUrl()
     predecessor_successor_dict = tv.get(key, None)

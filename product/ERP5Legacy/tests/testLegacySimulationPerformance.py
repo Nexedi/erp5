@@ -75,7 +75,6 @@ import gc
 import subprocess
 import hotshot
 
-import transaction
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
@@ -152,13 +151,12 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
 
     def beforeTearDown(self):
       #self.prof.close()
-      transaction.abort()
+      self.abort()
       portal = self.getPortal()
       for module_id in ('sale_order_module', 'sale_packing_list_module',
               'sale_invoice_module', 'portal_simulation'):
         module = portal[module_id]
         module.manage_delObjects(list(module.objectIds()))
-        transaction.commit()
         self.tic()
 
     def _getMinMaxTime(self, target):
@@ -266,7 +264,7 @@ class TestSimulationPerformance(ERP5TypeTestCase, LogInterceptor):
 
     def stepTic(self, sequence=None, sequence_list=None, **kw):
       if sequence is None:
-        transaction.commit()
+        self.commit()
 
       measurable = False
       if sequence is not None:

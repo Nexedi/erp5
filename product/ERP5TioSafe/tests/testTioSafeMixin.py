@@ -30,7 +30,6 @@
 
 import os
 import subprocess
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG, ERROR
@@ -92,7 +91,6 @@ class testTioSafeMixin(ERP5TypeTestCase):
         self.portal.erp5_sql_connection,
         'dump/prestashop/dump_99_drop_tables.sql',
     )
-    transaction.commit()
     self.tic()
 
   def makeFilePath(self, file_path):
@@ -165,7 +163,6 @@ class testTioSafeMixin(ERP5TypeTestCase):
     file = open(subscription.getSubscriptionUrlString()[len('file:/'):], 'w')
     file.write('')
     file.close()
-    transaction.commit()
     self.tic()
     # Number of message exchange during synchronization
     nb_message = 1
@@ -173,11 +170,11 @@ class testTioSafeMixin(ERP5TypeTestCase):
     result = portal_sync.SubSync(subscription.getPath())
     while result['has_response'] == 1:
       portal_sync.PubSync(publication.getPath())
-      transaction.commit()
+      self.commit()
       LOG("COMMIT", 300, "COMMIT")
       self.tic()
       result = portal_sync.SubSync(subscription.getPath())
-      transaction.commit()
+      self.commit()
       LOG("COMMIT", 300, "COMMIT")
       self.tic()
       nb_message += 1 + result['has_response']
@@ -299,7 +296,6 @@ class testTioSafeMixin(ERP5TypeTestCase):
       for mapping in mapping_dict_list:
         self.createMapping(integration_site=integration_site, **mapping)
 
-    transaction.commit()
     self.tic()
 
   def deleteMapping(self, integration_site):

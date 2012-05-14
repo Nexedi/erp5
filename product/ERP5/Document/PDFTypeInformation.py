@@ -728,23 +728,6 @@ class PDFTypeInformation(ERP5TypeInformation):
                       permission_list=['View']),
     ]
 
-  def updatePropertySheetDefinitionDict(self, definition_dict, **kw):
-    """
-    This function add properties of scribus file to the propertySheet
-    """
-    if self.getDefaultScribusFormValue() is None:
-      return
-    if '_properties' in definition_dict:
-      parsed_scribus = self._getParsedScribusFile()
-      for page_content in parsed_scribus.itervalues():
-        for field_name, fields_values in page_content:
-          field_id = field_name
-          field_type = fields_values["data_type"]
-          definition_dict['_properties'].append({'id':field_name[3:],
-                                                 'type':field_type,
-                                                 'mode':'w'})
-    ERP5TypeInformation.updatePropertySheetDefinitionDict(self, definition_dict)
-
   def getTypePropertySheetValueList(self):
     property_sheet_list = super(PDFTypeInformation,
                                 self).getTypePropertySheetValueList()

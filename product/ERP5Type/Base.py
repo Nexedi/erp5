@@ -779,13 +779,10 @@ class Base( CopyContainer,
 
   def _propertyMap(self, local_properties=False):
     """ Method overload - properties are now defined on the ptype """
-    klass = self.__class__
     property_list = []
     # Get all the accessor holders for this portal type
     if not local_properties:
-      if hasattr(klass, 'getAccessorHolderPropertyList'):
-        property_list += \
-            self.__class__.getAccessorHolderPropertyList()
+      property_list += self.__class__.getAccessorHolderPropertyList()
 
     property_list += getattr(self, '_local_properties', [])
     return tuple(property_list)
@@ -2964,16 +2961,14 @@ class Base( CopyContainer,
     try:
       script = type_base_cache[cache_key]
     except KeyError:
-      class_name_list = [portal_type, self.getMetaType()] + \
-        [base_class.__name__ for base_class in self.__class__.mro()
-                             if issubclass(base_class, Base)]
       script_name_end = '_' + method_id
-      for script_name_begin in class_name_list:
-        script_id = script_name_begin.replace(' ','') + script_name_end
-        script = getattr(self, script_id, None)
-        if script is not None:
-          type_base_cache[cache_key] = aq_inner(script)
-          return script
+      for base_class in self.__class__.mro():
+        if issubclass(base_class, Base):
+          script_id = base_class.__name__.replace(' ','') + script_name_end
+          script = getattr(self, script_id, None)
+          if script is not None:
+            type_base_cache[cache_key] = aq_inner(script)
+            return script
       type_base_cache[cache_key] = None
 
     if script is not None:

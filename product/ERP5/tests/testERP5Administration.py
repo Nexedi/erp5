@@ -28,7 +28,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
 
 class TestERP5Administration(InventoryAPITestCase):
@@ -53,7 +52,6 @@ class TestERP5Administration(InventoryAPITestCase):
     alarm = portal.portal_alarms.check_stock
 
     def checkActiveProcess(failed):
-      transaction.commit()
       self.tic()
       self.assertEqual(alarm.getLastActiveProcess().ActiveProcess_sense(),
                        failed)
@@ -68,7 +66,6 @@ class TestERP5Administration(InventoryAPITestCase):
 
     alarm.setAlarmNotificationMode('never')
     mvt = self._makeMovement(quantity=1.23)
-    transaction.commit()
     self.tic()
     alarm.activeSense()
     checkActiveProcess(0)
@@ -107,7 +104,6 @@ class TestERP5Administration(InventoryAPITestCase):
     # this alarm can solve, as long as the constraints can solve, this is the
     # case of PropertyTypeValidity
     alarm.solve()
-    transaction.commit()
     self.tic()
     self.assertEquals('3', person.title)
 

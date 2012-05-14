@@ -29,7 +29,6 @@
 
 import unittest
 import logging
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
@@ -104,7 +103,7 @@ class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor
     if (content_type_registry is not None and
         'any' in content_type_registry.predicate_ids):
       content_type_registry.removePredicate('any')
-      transaction.commit()
+      self.commit()
 
   def beforeTearDown(self):
     """Remove objects created in tests."""
@@ -182,7 +181,7 @@ class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor
     for property_sheet in ('UnitTest',):
       if property_sheet in property_sheet_tool.objectIds():
         property_sheet_tool.manage_delObjects([property_sheet])
-    transaction.commit()
+    self.commit()
     self._ignore_log_errors()
 
   def getBusinessTemplate(self,title):
@@ -6177,7 +6176,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       # create a previously existing instance of the overriden document type
       File = portal.portal_types.getPortalTypeClass('File')
       portal._setObject('another_file', File('another_file'))
-      transaction.commit()
       self.tic()
       # logged errors could keep a reference to a traceback having a reference
       # to 'another_file' object
@@ -6190,14 +6188,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
         bt = template_tool.download(bt_path)
         assert marker_list
         if i:
-          transaction.commit()
           self.tic()
         bt.install(force=1)
         assert not marker_list
         gc.enable()
         for id in object_id_list:
           self.assertEqual(getattr(portal, id).int_index, i)
-        transaction.commit()
         self.tic()
     finally:
       BaseTemplateItem.removeProperties = BaseTemplateItem_removeProperties
@@ -7145,7 +7141,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     copied, = template_tool.manage_pasteObjects(cb_data)
     copied_bt = template_tool._getOb(copied['new_id'])
     getattr(copied_bt, self.set_template_id_method_name)(sequence['document_id'])
-    transaction.commit()
+    self.commit()
     sequence.edit(current_bt=copied_bt)
 
   importFromFilesystem = DocumentComponent.importFromFilesystem

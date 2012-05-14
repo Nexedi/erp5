@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import transaction
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -87,13 +86,13 @@ class TestTransactionalVariable(ERP5TypeTestCase, LogInterceptor):
       # Commit and check.
       tv['toto'] = 'titi'
       self.failUnlessEqual(tv['toto'], 'titi')
-      transaction.commit()
+      self.commit()
       self.failIf('toto' in tv)
 
       # Abort and check.
       tv['toto'] = 'titi'
       self.failUnlessEqual(tv['toto'], 'titi')
-      transaction.abort()
+      self.abort()
       self.failIf('toto' in tv)
 
     def test_03_Durability(self):

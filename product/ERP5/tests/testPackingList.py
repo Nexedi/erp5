@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -945,7 +944,7 @@ class TestPackingListMixin(TestOrderMixin):
     """
     if packing_list is None:
       packing_list = sequence.get('packing_list')
-    transaction.commit()
+    self.commit()
     self.assertEquals(1,packing_list.isPacked())
     self.assertEquals('packed',packing_list.getContainerState())
 
@@ -1497,7 +1496,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                             quantity=10,
                             price=3)
     packing_list.confirm()
-    transaction.commit()
     self.tic()
 
     odt = packing_list.PackingList_viewAsODT()
@@ -1566,14 +1564,12 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
         resource_value=resource,
         quantity=1)
     packing_list.confirm()
-    transaction.commit()
     self.tic()
     self.assertEqual('confirmed', packing_list.getSimulationState())
     simulation_movement = packing_list_line.getDeliveryRelatedValue(
         portal_type='Simulation Movement')
     self.assertEqual('confirmed', simulation_movement.getSimulationState())
     packing_list.cancel()
-    transaction.commit()
     self.tic()
     self.assertEqual('cancelled', packing_list.getSimulationState())
     self.assertEqual('cancelled', simulation_movement.getSimulationState())
@@ -1759,7 +1755,6 @@ class TestPackingList(TestPackingListMixin, ERP5TypeTestCase) :
                             portal_type=self.packing_list_line_portal_type,
                             reference='ddd',
                             int_index=3)
-    transaction.commit()
     self.tic()
     # check it's possible to sort by reference
     reference_result = packing_list.getMovementList(sort_on=
@@ -1865,7 +1860,6 @@ class TestSolvingPackingList(TestPackingListMixin, ERP5TypeTestCase):
     self.portal.portal_types['Solver Process'].setTypeAllowedContentTypeList(
       self.original_allowed_content_types)
     self.portal.portal_solvers.manage_delObjects(self.added_target_solver_list)
-    transaction.commit()
     self.tic()
 
   @UnrestrictedMethod

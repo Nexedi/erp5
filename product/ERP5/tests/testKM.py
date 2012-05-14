@@ -34,7 +34,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.Base import TempBase
 from Products.ERP5OOo.tests.testDms import makeFileUpload,TestDocumentMixin, TestDocument
-import transaction
 
 def _getGadgetInstanceUrlFromKnowledgePad(knowledge_pad,  gadget):
   """ Get Knowledge Box's relative URL specialising a gadget in a Knowledge Pad."""
@@ -1070,7 +1069,6 @@ class TestKMSearch(TestKMMixIn):
     file = makeFileUpload(filename)
     document8 = self.portal.portal_contributions.newContent(file=file)
 
-    transaction.commit()
     self.tic()
     # the implicit predecessor will find documents by reference.
     # version and language are not used.
@@ -1085,7 +1083,7 @@ class TestKMSearch(TestKMMixIn):
     #  sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
 
     # clear transactional variable cache
-    transaction.commit()
+    self.commit()
 
     # the implicit successors should be return document with appropriate
     # language.
@@ -1098,7 +1096,7 @@ class TestKMSearch(TestKMMixIn):
       sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
     # clear transactional variable cache
-    transaction.commit()
+    self.commit()
 
     # if user language is 'fr'.
     self.portal.Localizer.changeLanguage('fr')
@@ -1107,7 +1105,7 @@ class TestKMSearch(TestKMMixIn):
       sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
     # clear transactional variable cache
-    transaction.commit()
+    self.commit()
 
     # if user language is 'ja'.
     self.portal.Localizer.changeLanguage('ja')

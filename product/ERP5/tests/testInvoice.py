@@ -31,7 +31,6 @@
 
 """
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload, DummyMailHost
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
@@ -127,7 +126,7 @@ class TestInvoiceMixin(TestPackingListMixin):
     self.login()
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     super(TestInvoiceMixin, self).beforeTearDown()
     for folder in (self.portal.accounting_module,
                    self.portal.organisation_module,
@@ -137,7 +136,6 @@ class TestInvoiceMixin(TestPackingListMixin):
                    self.portal.purchase_packing_list_module,
                    self.portal.portal_simulation,):
       folder.manage_delObjects([x for x in folder.objectIds() if x not in ('organisation_1','organisation_2','ppl_1','ppl_2')])
-    transaction.commit()
     self.tic()
 
   def login(self):
@@ -1149,7 +1147,6 @@ class TestInvoiceMixin(TestPackingListMixin):
     invoice_line = invoice.newContent(portal_type='Invoice Line')
     transaction_line_1 = invoice.newContent(portal_type='Sale Invoice Transaction Line')
     transaction_line_2 = invoice.newContent(portal_type='Sale Invoice Transaction Line')
-    transaction.commit()
     self.tic()
     invoice_line.edit(resource_value=sequence.get('resource'), quantity=3,
         price=555)
@@ -1208,10 +1205,8 @@ class TestInvoice(TestInvoiceMixin):
                                   price=2)
 
     order.confirm()
-    transaction.commit()
     self.tic()
     self.stepPackingListBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     related_applied_rule = order.getCausalityRelatedValue(
@@ -1276,7 +1271,6 @@ class TestInvoice(TestInvoiceMixin):
                                     portal_type='Project',
                                     title='Other Project')
     order.plan()
-    transaction.commit()
     self.tic()
     self.assertEquals('planned', order.getSimulationState())
 
@@ -1287,21 +1281,18 @@ class TestInvoice(TestInvoiceMixin):
     invoice_movement = invoice_applied_rule.contentValues()[0]
 
     order_line.setSourceValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
                       invoice_movement.getSourceValue())
 
     order_line.setDestinationValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
                       invoice_movement.getDestinationValue())
 
     order_line.setSourceSectionValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
@@ -1312,77 +1303,66 @@ class TestInvoice(TestInvoiceMixin):
     order_line.setSourceSectionValue(order_line.getDestinationSectionValue())
 
     order_line.setDestinationSectionValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
                  invoice_movement.getDestinationSectionValue())
 
     order_line.setSourceAdministrationValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
                  invoice_movement.getSourceAdministrationValue())
 
     order_line.setDestinationAdministrationValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
             invoice_movement.getDestinationAdministrationValue())
 
     order_line.setSourceDecisionValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
                  invoice_movement.getSourceDecisionValue())
 
     order_line.setDestinationDecisionValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
             invoice_movement.getDestinationDecisionValue())
 
     order_line.setSourceProjectValue(other_project)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_project,
                  invoice_movement.getSourceProjectValue())
 
     order_line.setDestinationProjectValue(other_project)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_project,
             invoice_movement.getDestinationProjectValue())
 
     order_line.setSourcePaymentValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
                  invoice_movement.getSourcePaymentValue())
 
     order_line.setDestinationPaymentValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
             invoice_movement.getDestinationPaymentValue())
 
     order_line.setSourceFunctionValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
                  invoice_movement.getSourceFunctionValue())
 
     order_line.setDestinationFunctionValue(other_entity)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(other_entity,
@@ -1390,7 +1370,6 @@ class TestInvoice(TestInvoiceMixin):
 
     self.assertNotEquals(123, order_line.getPrice())
     order_line.setPrice(123)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(123,
@@ -1398,7 +1377,6 @@ class TestInvoice(TestInvoiceMixin):
 
     self.assertNotEquals(456, order_line.getQuantity())
     order_line.setQuantity(456)
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(456,
@@ -1408,7 +1386,6 @@ class TestInvoice(TestInvoiceMixin):
                                         portal_type='Product',
                                         title='Other Resource')
     order_line.setResourceValue(other_resource)
-    transaction.commit()
     self.tic()
     # after changing 'resource', related simulation movement will be
     # replaced with another id, and we need to find the appropriate one
@@ -1420,14 +1397,12 @@ class TestInvoice(TestInvoiceMixin):
             invoice_movement.getResourceValue())
 
     order_line.setStartDate(DateTime(2001, 02, 03))
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(DateTime(2001, 02, 03),
                  invoice_movement.getStartDate())
 
     order_line.setStopDate(DateTime(2002, 03, 04))
-    transaction.commit()
     self.tic()
     invoice_movement = invoice_applied_rule.contentValues()[0]
     self.assertEquals(DateTime(2002, 03, 04),
@@ -1478,7 +1453,6 @@ class TestInvoice(TestInvoiceMixin):
                                       portal_type='Project',
                                       title='Other Project')
     order.plan()
-    transaction.commit()
     self.tic()
     self.assertEquals('planned', order.getSimulationState())
 
@@ -1505,7 +1479,6 @@ class TestInvoice(TestInvoiceMixin):
                                         invoice_transaction_applied_rule)
 
     order_line.setSourceSectionValue(other_entity)
-    transaction.commit()
     self.tic()
     self.assertEquals(other_entity,
                       invoice_transaction_movement.getSourceSectionValue())
@@ -1515,7 +1488,6 @@ class TestInvoice(TestInvoiceMixin):
     order_line.setSourceSectionValue(order_line.getDestinationSectionValue())
 
     order_line.setDestinationSectionValue(other_entity)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1524,7 +1496,6 @@ class TestInvoice(TestInvoiceMixin):
                  invoice_transaction_movement.getDestinationSectionValue())
 
     order_line.setSourceAdministrationValue(other_entity)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1533,7 +1504,6 @@ class TestInvoice(TestInvoiceMixin):
                  invoice_transaction_movement.getSourceAdministrationValue())
 
     order_line.setDestinationAdministrationValue(other_entity)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1542,7 +1512,6 @@ class TestInvoice(TestInvoiceMixin):
             invoice_transaction_movement.getDestinationAdministrationValue())
 
     order_line.setSourceDecisionValue(other_entity)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1551,7 +1520,6 @@ class TestInvoice(TestInvoiceMixin):
                  invoice_transaction_movement.getSourceDecisionValue())
 
     order_line.setDestinationDecisionValue(other_entity)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1560,7 +1528,6 @@ class TestInvoice(TestInvoiceMixin):
             invoice_transaction_movement.getDestinationDecisionValue())
 
     order_line.setSourceProjectValue(other_project)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1569,7 +1536,6 @@ class TestInvoice(TestInvoiceMixin):
                  invoice_transaction_movement.getSourceProjectValue())
 
     order_line.setDestinationProjectValue(other_project)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1578,7 +1544,6 @@ class TestInvoice(TestInvoiceMixin):
             invoice_transaction_movement.getDestinationProjectValue())
 
     order_line.setSourceFunctionValue(other_entity)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1587,7 +1552,6 @@ class TestInvoice(TestInvoiceMixin):
                  invoice_transaction_movement.getSourceFunctionValue())
 
     order_line.setDestinationFunctionValue(other_entity)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1596,7 +1560,6 @@ class TestInvoice(TestInvoiceMixin):
             invoice_transaction_movement.getDestinationFunctionValue())
 
     order_line.setSourcePaymentValue(other_entity)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1605,7 +1568,6 @@ class TestInvoice(TestInvoiceMixin):
                  invoice_transaction_movement.getSourcePaymentValue())
 
     order_line.setDestinationPaymentValue(other_entity)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1615,7 +1577,6 @@ class TestInvoice(TestInvoiceMixin):
 
     order_line.setQuantity(1)
     order_line.setPrice(123)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1625,7 +1586,6 @@ class TestInvoice(TestInvoiceMixin):
 
     order_line.setQuantity(456)
     order_line.setPrice(1)
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1634,7 +1594,6 @@ class TestInvoice(TestInvoiceMixin):
             invoice_transaction_movement.getQuantity())
 
     order_line.setStartDate(DateTime(2001, 02, 03))
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1643,7 +1602,6 @@ class TestInvoice(TestInvoiceMixin):
                  invoice_transaction_movement.getStartDate())
 
     order_line.setStopDate(DateTime(2002, 03, 04))
-    transaction.commit()
     self.tic()
     self.assertEquals(3, len(invoice_transaction_applied_rule))
     invoice_transaction_movement = getIncomeSimulationMovement(
@@ -1675,7 +1633,6 @@ class TestInvoice(TestInvoiceMixin):
                             quantity=10,
                             price=3)
     invoice.confirm()
-    transaction.commit()
     self.tic()
 
     odt = invoice.Invoice_viewAsODT()
@@ -1715,7 +1672,6 @@ class TestInvoice(TestInvoiceMixin):
                             quantity=10,
                             price=3)
     invoice.confirm()
-    transaction.commit()
     self.tic()
 
     odt = invoice.Invoice_viewAsODT()
@@ -1767,7 +1723,6 @@ class TestInvoice(TestInvoiceMixin):
                             quantity=10,
                             price=3)
     invoice.confirm()
-    transaction.commit()
     self.tic()
 
     odt = invoice.Invoice_viewAsODT()
@@ -1826,10 +1781,8 @@ class TestInvoice(TestInvoiceMixin):
                        variation_category_list=['size/Child/32'],
                        mapped_value_property_list=['quantity', 'price'],)
     order.confirm()
-    transaction.commit()
     self.tic()
     self.stepPackingListBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     related_packing_list = order.getCausalityRelatedValue(
@@ -1838,10 +1791,8 @@ class TestInvoice(TestInvoiceMixin):
 
     related_packing_list.start()
     related_packing_list.stop()
-    transaction.commit()
     self.tic()
     self.stepInvoiceBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     related_invoice = related_packing_list.getCausalityRelatedValue(
@@ -1931,16 +1882,13 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                        variation_category_list=['size/Child/32'],
                        mapped_value_property_list=['quantity', 'price'],)
     no_order_packing_list.confirm()
-    transaction.commit()
     self.tic()
     self.assertNotEquals(no_order_packing_list, None)
 
     no_order_packing_list.start()
     no_order_packing_list.stop()
-    transaction.commit()
     self.tic()
     self.stepInvoiceBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     related_invoice = no_order_packing_list.getCausalityRelatedValue(
@@ -2025,10 +1973,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                        variation_category_list=['size/Child/32'],
                        mapped_value_property_list=['quantity', 'price'],)
     order.confirm()
-    transaction.commit()
     self.tic()
     self.stepPackingListBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     related_packing_list = order.getCausalityRelatedValue(
@@ -2037,10 +1983,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     related_packing_list.start()
     related_packing_list.stop()
-    transaction.commit()
     self.tic()
     self.stepInvoiceBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     related_invoice = related_packing_list.getCausalityRelatedValue(
@@ -2120,10 +2064,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                                   resource_value=resource2,)
 
     order.confirm()
-    transaction.commit()
     self.tic()
     self.stepPackingListBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     related_packing_list = order.getCausalityRelatedValue(
@@ -2139,10 +2081,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
 
     related_packing_list.start()
     related_packing_list.stop()
-    transaction.commit()
     self.tic()
     self.stepInvoiceBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     related_invoice = related_packing_list.getCausalityRelatedValue(
@@ -2191,7 +2131,6 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                                 portal_type='Currency',
                                 title='euro')
     currency.setBaseUnitQuantity(0.01)
-    transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -2218,10 +2157,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                                   quantity=5,
                                   price=2)
     order.confirm()
-    transaction.commit()
     self.tic()
     self.stepPackingListBuilderAlarm()
-    transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type=self.packing_list_portal_type)
@@ -2232,10 +2169,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                          order.getIncoterm())
     related_packing_list.start()
     related_packing_list.stop()
-    transaction.commit()
     self.tic()
     self.stepInvoiceBuilderAlarm()
-    transaction.commit()
     self.tic()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                   portal_type=self.invoice_portal_type)
@@ -2262,7 +2197,6 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                                 portal_type='Currency',
                                 title='euro')
     currency.setBaseUnitQuantity(0.01)
-    transaction.commit()
     self.tic()#execute transaction
     client = self.portal.organisation_module.newContent(
                             portal_type='Organisation',
@@ -2302,10 +2236,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
                       self.mass_quantity_unit)
 
     order.confirm()
-    transaction.commit()
     self.tic()
     self.stepPackingListBuilderAlarm()
-    transaction.commit()
     self.tic()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type=self.packing_list_portal_type)
@@ -2323,10 +2255,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     related_packing_list.start()
     related_packing_list.stop()
     related_packing_list.deliver()
-    transaction.commit()
     self.tic()
     self.stepInvoiceBuilderAlarm()
-    transaction.commit()
     self.tic()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                                 portal_type=self.invoice_portal_type)
@@ -2361,10 +2291,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     packing_list.start()
     packing_list.stop()
     self.assertEquals('stopped', packing_list.getSimulationState())
-    transaction.commit()
     self.tic()
     self.stepInvoiceBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     invoice = packing_list.getCausalityRelatedValue(
@@ -2377,7 +2305,6 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     new_quantity = invoice_line.getQuantity() * 2
     invoice_line.setQuantity(new_quantity)
     
-    transaction.commit()
     self.tic()
 
     self.assertTrue(invoice.isDivergent())
@@ -2390,7 +2317,6 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     # accept decision
     self._acceptDivergenceOnInvoice(invoice, divergence_list)
 
-    transaction.commit()
     self.tic()
     self.assertEquals('solved', invoice.getCausalityState())
 
@@ -2424,10 +2350,8 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     packing_list.start()
     packing_list.stop()
     self.assertEquals('stopped', packing_list.getSimulationState())
-    transaction.commit()
     self.tic()
     self.stepInvoiceBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     invoice = packing_list.getCausalityRelatedValue(
@@ -2440,7 +2364,6 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     new_quantity = invoice_line.getQuantity() * 2
     invoice_line.setQuantity(new_quantity)
     
-    transaction.commit()
     self.tic()
 
     self.assertTrue(invoice.isDivergent())
@@ -2453,7 +2376,6 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     # adopt prevision
     self._adoptDivergenceOnInvoice(invoice, divergence_list)
 
-    transaction.commit()
     self.tic()
     self.assertEquals([], invoice.getDivergenceList())
     self.assertEquals('solved', invoice.getCausalityState())
@@ -3520,10 +3442,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     packing_list.setReady()
     packing_list.start()
     self.assertEquals('started', packing_list.getSimulationState())
-    transaction.commit()
     self.tic()
     self.stepInvoiceBuilderAlarm()
-    transaction.commit()
     self.tic()
 
     invoice = packing_list.getCausalityRelatedValue(
@@ -3536,7 +3456,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     new_quantity = invoice_line.getQuantity() * 2
     invoice_line.setQuantity(new_quantity)
     
-    transaction.commit()
     self.tic()
 
     self.assertTrue(invoice.isDivergent())
@@ -3549,7 +3468,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     # accept decision
     self._acceptDivergenceOnInvoice(invoice, divergence_list)
 
-    transaction.commit()
     self.tic()
     self.assertEquals('solved', invoice.getCausalityState())
 
@@ -3576,7 +3494,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
       # if we adopt prevision on this packing list, both invoice and
       # packing list will be solved
       self._adoptDivergenceOnPackingList(packing_list, divergence_list)
-      transaction.commit()
       self.tic()
     self.assertEquals('solved', packing_list.getCausalityState())
     self.assertEquals('solved', invoice.getCausalityState())

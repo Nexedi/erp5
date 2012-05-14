@@ -29,7 +29,6 @@
 
 import unittest
 import os
-import transaction
 from StringIO import StringIO
 from lxml import etree
 
@@ -40,7 +39,6 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase,\
      _getConversionServerDict
 from Products.ERP5Type.tests.utils import FileUpload, createZODBPythonScript
 from Products.ERP5.Document.Document import ConversionError
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 try:
   from PIL import Image
@@ -50,6 +48,8 @@ except ImportError:
   import Image
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
+IMAGE_COMPARE_TOLERANCE = 800
+
 
 def makeFilePath(name):
   return os.path.join(os.path.dirname(__file__), 'test_data', name)
@@ -125,7 +125,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -151,7 +150,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                           id = self.website_id,
                                                           **kw)
     website.publish()
-    transaction.commit()
     self.tic()
     return website
 
@@ -172,7 +170,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                             max='',
                             min='')
 
-    transaction.commit()
     self.tic()
     return websection
 
@@ -200,7 +197,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                 language=language,
                                                 **kw)
       webpage.publish()
-      transaction.commit()
       self.tic()
       self.assertEquals(language, webpage.getLanguage())
       self.assertEquals(reference, webpage.getReference())
@@ -244,7 +240,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                             language = 'en')
     en_02.publish()
     en_02.reindexObject()
-    transaction.commit()
     self.tic()
 
     # is old archived?
@@ -279,7 +274,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     document.release()
     website.setAuthorizationForced(0)
     websection.setAuthorizationForced(0)
-    transaction.commit()
     self.tic()
 
     # make sure that _getExtensibleContent will return the same document
@@ -323,7 +317,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     websection.edit(membership_criterion_base_category = ['publication_section'],
                             membership_criterion_category=['publication_section/%s'
                                                                               %publication_section_category_id_list[0]])
-    transaction.commit()
     self.tic()
 
     self.assertEquals(0,  len(websection.getDocumentValueList()))
@@ -332,7 +325,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  language = 'en',
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_en.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(1,  len(websection.getDocumentValueList(language='en')))
     self.assertEquals(web_page_en,  websection.getDocumentValueList(language='en')[0].getObject())
@@ -342,20 +334,17 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                  language = 'bg',
                                                  publication_section_list=publication_section_category_id_list[:1])
     web_page_bg.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(1,  len(websection.getDocumentValueList(language='bg')))
     self.assertEquals(web_page_bg,  websection.getDocumentValueList(language='bg')[0].getObject())
 
     # reject page
     web_page_bg.reject()
-    transaction.commit()
     self.tic()
     self.assertEquals(0,  len(websection.getDocumentValueList(language='bg')))
 
     # publish page and search without a language (by default system should return 'en' docs only)
     web_page_bg.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(1,  len(websection.getDocumentValueList()))
     self.assertEquals(web_page_en,  websection.getDocumentValueList()[0].getObject())
@@ -381,7 +370,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     web_page_en.releaseAlive()
     websection.setAggregateValue(web_page_en)
     websection.setAuthorizationForced(1)
-    transaction.commit()
     self.tic()
 
     # make sure that getDefaultDocumentValue() will return the same document for logged in user
@@ -397,7 +385,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Anonymous User should not get Unauthorized when authorization_forced is not set
     self.login()
     websection.setAuthorizationForced(0)
-    transaction.commit()
     self.tic()
 
     self.logout()
@@ -415,11 +402,11 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                                             language = 'en',)
       web_page.publish()
       self.tic()
-      transaction.commit()
+      self.commit()
       web_page_list.append(web_page)
     websection.setAggregateValueList(web_page_list)
     self.tic()
-    transaction.commit()
+    self.commit()
     self.assertEqual(5, len(websection.getDocumentValueList(limit=5)))
 
   def test_05_deadProxyFields(self, quiet=quiet, run=run_all_test):
@@ -455,7 +442,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     document = document_module.newContent(portal_type=document_portal_type,
                                           reference='NXD-Document-TEXT.Cache')
     document.publish()
-    transaction.commit()
     self.tic()
     path = website.absolute_url_path() + '/NXD-Document-TEXT.Cache'
     response = self.publish(path)
@@ -473,7 +459,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
     reference = 'P-DMS-Presentation.3.Pages'
     document.edit(reference=reference)
     document.publish()
-    transaction.commit()
     self.tic()
     website_url = website.absolute_url_path()
     # Check we can access to the 3 drawings converted into images.
@@ -530,7 +515,6 @@ class TestERP5WebWithDms(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     file=upload_file,
                                     reference=image_reference)
     image.publish()
-    transaction.commit()
     self.tic()
     credential = 'ERP5TypeTestCase:'
     # testing TextDocument
@@ -623,7 +607,6 @@ return True
                                           portal_type='Presentation',
                                           reference=document_reference,
                                           file=upload_file)
-    transaction.commit()
     self.tic()
     credential_list = ['ERP5TypeTestCase:', 'zope_user:']
 
@@ -651,7 +634,6 @@ return True
     # the web site
     document.publish()
 
-    transaction.commit()
     self.tic()
 
     response = self.publish('%s/%s/asEntireHTML' % (
@@ -675,7 +657,6 @@ return True
     # Now purge cache and let Anonymous user converting the document.
     self.login()
     document.edit() # Reset cache key
-    transaction.commit()
     self.tic()
     response = self.publish('%s/%s/asEntireHTML' % (
                             website.absolute_url_path(), document_reference))
@@ -721,7 +702,6 @@ return True
                                     file=upload_file,
                                     reference=image_reference)
     image.publish()
-    transaction.commit()
     self.tic()
     credential = 'ERP5TypeTestCase:'
 
@@ -797,7 +777,6 @@ return True
                                     file=upload_file,
                                     reference="NXD-DOCUMENT")
     image.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
@@ -806,23 +785,19 @@ return True
 
     # Compare images and accept some minimal difference,
     difference_value = compare_image(StringIO(converted_data), expected_image)
-    self.assertTrue(difference_value < 100,
+    self.assertTrue(difference_value < IMAGE_COMPARE_TOLERANCE,
       "Conversion from svg to png create one too small image, " + \
-      "so it failed to download the image. (%s >= 100)" % difference_value)
+      "so it failed to download the image. (%s >= %s)" % (difference_value,
+                                                          IMAGE_COMPARE_TOLERANCE))
 
-  def _testImageConversionFromSVGToPNG_file_url(self, portal_type="Image"):
-    """ Test Convert one SVG Image with an image using local path (file)
-        at the url of the image tag. ie:
-         <image xlink:href="file:///../../user-XXX-XXX"
-
-        This is not used by ERP5 in production, but this is way that
-        prooves that conversion from SVG to PNG can use external images.
+  def _testImageConversionFromSVGToPNG_url(self, image_url, portal_type="Image"):
+    """ Test Convert one SVG Image with an image url. ie:
+         <image xlink:href="xxx:///../../user-XXX-XXX"
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('user-TESTSVG-CASE-FULLURL-TEMPLATE.svg')
-    svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
-                           "file://" + makeFilePath("user-TESTSVG-BACKGROUND-IMAGE.png"))
+    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
+    svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE", image_url)
 
     # Add image using data instead file this time as it is not the goal of
     # This test assert this topic.
@@ -832,18 +807,46 @@ return True
                                     content_type="image/svg+xml",
                                     reference="NXD-DOCYMENT")
     image.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(image.getContentType(), 'image/svg+xml')
     mime, converted_data = image.convert("png")
     self.assertEquals(mime, 'image/png')
-    expected_image = makeFileUpload('user-TESTSVG-CASE-FULLURL.png')
+    expected_image = makeFileUpload('user-TESTSVG-CASE-URL.png')
 
     # Compare images and accept some minimal difference,
     difference_value = compare_image(StringIO(converted_data), expected_image)
-    self.assertTrue(difference_value < 100,
+    self.assertTrue(difference_value < IMAGE_COMPARE_TOLERANCE,
       "Conversion from svg to png create one too small image, " + \
-      "so it failed to download the image. (%s >= 100)" % difference_value)
+      "so it failed to download the image. (%s >= %s)" % (difference_value,
+                                                           IMAGE_COMPARE_TOLERANCE))
+
+  def _testImageConversionFromSVGToPNG_file_url(self, portal_type="Image"):
+    """ Test Convert one SVG Image with an image using local path (file)
+        at the url of the image tag. ie:
+         <image xlink:href="file:///../../user-XXX-XXX"
+
+        This is not used by ERP5 in production, but this is way that
+        prooves that conversion from SVG to PNG can use external images.
+    """
+    image_url = "file://" + makeFilePath("user-TESTSVG-BACKGROUND-IMAGE.png")
+    self._testImageConversionFromSVGToPNG_url(image_url, portal_type)
+
+  def _testImageConversionFromSVGToPNG_http_url(self, portal_type="Image"):
+    """ Test Convert one SVG Image with an image with a full
+        url at the url of the image tag. ie:
+         <image xlink:href="http://www.erp5.com/user-XXX-XXX"
+    """
+    portal = self.portal
+    module = portal.getDefaultModule(portal_type=portal_type)
+    upload_file = makeFileUpload('user-TESTSVG-BACKGROUND-IMAGE.png')
+    background_image = module.newContent(portal_type=portal_type,
+                                    file=upload_file,
+                                    reference="NXD-BACKGROUND")
+    background_image.publish()
+    self.tic()
+
+    image_url = background_image.absolute_url() + "?format="
+    self._testImageConversionFromSVGToPNG_url(image_url, portal_type)
 
   def _testImageConversionFromSVGToPNG_broken_url(self, portal_type="Image"):
     """ Test Convert one broken SVG into PNG. The expected outcome is a
@@ -856,11 +859,11 @@ return True
     """
     portal = self.portal
     module = portal.getDefaultModule(portal_type=portal_type)
-    upload_file = makeFileUpload('user-TESTSVG-CASE-FULLURL-TEMPLATE.svg')
+    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
     svg_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
                            "http://soidjsoidjqsoijdqsoidjqsdoijsqd.idjsijds/../user-XXX-XXX")
 
-    upload_file = makeFileUpload('user-TESTSVG-CASE-FULLURL-TEMPLATE.svg')
+    upload_file = makeFileUpload('user-TESTSVG-CASE-URL-TEMPLATE.svg')
     svg2_content = upload_file.read().replace("REPLACE_THE_URL_HERE",
                            "https://www.erp5.com/usXXX-XXX")
 
@@ -882,7 +885,6 @@ return True
 
     image.publish()
     image2.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(image.getContentType(), 'image/svg+xml')
     self.assertEquals(image2.getContentType(), 'image/svg+xml')
@@ -903,13 +905,10 @@ return True
                                     reference="NXD-DOCYMENT")
 
     image.publish()
-    transaction.commit()
     self.tic()
     self.assertEquals(image.getContentType(), 'image/svg+xml')
     self.assertRaises(ConversionError, image.convert, "png")
 
-  # "Waiting for rsvg-convert be available for imagemagick"
-  @expectedFailure
   def test_ImageConversionFromSVGToPNG_embeeded_data(self):
     """ Test Convert one SVG Image with an image with the data
         at the url of the image tag.ie:
@@ -917,7 +916,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG("Image")
 
-  @expectedFailure
   def test_FileConversionFromSVGToPNG_embeeded_data(self):
     """ Test Convert one SVG Image with an image with the data
         at the url of the image tag.ie:
@@ -925,7 +923,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG("File")
   
-  @expectedFailure
   def test_WebPageConversionFromSVGToPNG_embeeded_data(self):
     """ Test Convert one SVG Image with an image with the data
         at the url of the image tag.ie:
@@ -958,7 +955,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG_empty_file("File")
 
-  @expectedFailure
   def test_ImageConversionFromSVGToPNG_file_url(self):
     """ Test Convert one SVG Image with an image using local path (file)
         at the url of the image tag. ie:
@@ -969,7 +965,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG_file_url("Image")
 
-  @expectedFailure
   def test_FileConversionFromSVGToPNG_file_url(self):
     """ Test Convert one SVG Image with an image using local path (file)
         at the url of the image tag. ie:
@@ -980,7 +975,6 @@ return True
     """
     self._testImageConversionFromSVGToPNG_file_url("File")
 
-  @expectedFailure
   def test_WebPageConversionFromSVGToPNG_file_url(self):
     """ Test Convert one SVG Image with an image using local path (file)
         at the url of the image tag. ie:
@@ -991,32 +985,26 @@ return True
     """
     self._testImageConversionFromSVGToPNG_file_url("Web Page")
 
-  @expectedFailure
   def test_ImageConversionFromSVGToPNG_http_url(self):
     """ Test Convert one SVG Image with an image with a full
         url at the url of the image tag. ie:
          <image xlink:href="http://www.erp5.com/user-XXX-XXX"
     """
-    self._testImageConversionFromSVGToPNG(
-          "Image", "user-TESTSVG-CASE-FULLURL")
+    self._testImageConversionFromSVGToPNG_http_url("Image")
 
-  @expectedFailure
   def test_FileConversionFromSVGToPNG_http_url(self):
     """ Test Convert one SVG Image with an image with a full
         url at the url of the image tag. ie:
          <image xlink:href="http://www.erp5.com/user-XXX-XXX"
     """
-    self._testImageConversionFromSVGToPNG(
-          "File", "user-TESTSVG-CASE-FULLURL")
+    self._testImageConversionFromSVGToPNG_http_url("File")
 
-  @expectedFailure
   def test_WebPageConversionFromSVGToPNG_http_url(self):
     """ Test Convert one SVG Image with an image with a full
         url at the url of the image tag. ie:
          <image xlink:href="http://www.erp5.com/user-XXX-XXX"
     """
-    self._testImageConversionFromSVGToPNG(
-          "Web Page", "user-TESTSVG-CASE-FULLURL")
+    self._testImageConversionFromSVGToPNG_http_url("Web Page")
 
 def test_suite():
   suite = unittest.TestSuite()

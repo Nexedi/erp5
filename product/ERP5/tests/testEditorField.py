@@ -31,7 +31,6 @@
 
 import unittest
 
-import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -84,7 +83,6 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -107,7 +105,7 @@ class TestEditorField(ERP5TypeTestCase, ZopeTestCase.Functional):
     else:
       self.getDefaultSitePreference().enable()
     # commit transaction, are preferences are in transaction cache
-    transaction.commit()
+    self.commit()
 
     # Make sure preferred editor was set on preference
     self.assertEquals(self.getDefaultSitePreference().getPreferredTextEditor(), preferred_editor)

@@ -29,7 +29,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
@@ -157,7 +156,6 @@ class TestBPMMixin(ERP5TypeTestCase):
             int_index=3,
             membership_criterion_base_category='resource_use',
             membership_criterion_category='resource_use/use/normal')
-    transaction.commit()
     self.tic()
     accounting_rule_cell_list = itr.contentValues(
                             portal_type='Accounting Rule Cell')
@@ -216,7 +214,7 @@ class TestBPMMixin(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     # abort any transaction
-    transaction.abort()
+    self.abort()
     self.stepTic()
 
 class TestBPMImplementation(TestBPMMixin):
@@ -586,12 +584,10 @@ class TestBPMImplementation(TestBPMMixin):
     path = business_process.newContent(
         portal_type=self.business_path_portal_type, predecessor_value=state,
         successor_value=state)
-    transaction.commit()
     self.tic()
 
     pasted_business_process = business_process.Base_createCloneDocument(
         batch_mode=1)
-    transaction.commit()
     self.tic()
 
     pasted_path = pasted_business_process.contentValues(

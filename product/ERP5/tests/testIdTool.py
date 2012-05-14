@@ -29,7 +29,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from _mysql_exceptions import ProgrammingError
@@ -43,7 +42,6 @@ class TestIdTool(ERP5TypeTestCase):
     self.id_tool = self.portal.portal_ids
     self.id_tool.initializeGenerator(all=True)
     self.createGenerators()
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -120,7 +118,6 @@ class TestIdTool(ERP5TypeTestCase):
                     reference='test_sql_non_continuous_increasing',
                     version='002')
     conceptual_sql_generator.setSpecialiseValue(sql_generator_2)
-    transaction.commit()
     self.tic()
     # The last version is cached - reset cache
     self.portal.portal_caches.clearAllCache()

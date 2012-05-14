@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts33622213.73</string> </value>
+            <value> <string>ts37003035.66</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,9 @@
         </item>
         <item>
             <key> <string>data</string> </key>
-            <value> <string>function setupRenderJSTest(){\n
+            <value> <string encoding="cdata"><![CDATA[
+
+function setupRenderJSTest(){\n
   /*\n
   * Main RenderJS test entry point\n
   */\n
@@ -32,15 +34,45 @@
                 deepEqual(data, Cache.get(cache_id));\n
   });\n
 \n
+ \n
   module("TabularGadget");\n
   test(\'addNewTabGadget\', function(){\n
               TabbularGadget.addNewTabGadget("Person_view", "qunit-fixture", "FormUpdater.update");\n
               equal($("#qunit-fixture").children(".gadget").length, 1);\n
+              equal(GadgetIndex.getGadgetList().length, 1);\n
+\n
   });\n
+\n
+  module("GadgetIndex");\n
+  test(\'GadgetIndex\', function(){\n
+               // re-init GadgetIndex\n
+              $.each(GadgetIndex.getGadgetList(), function () {\n
+                GadgetIndex.unregisterGadget(this);\n
+              });\n
+              \n
+              $("#qunit-fixture").append(\'<div gadget="" id="new">XXXXXXXXXXXX</div>\');\n
+              RenderJs.bootstrap($("#qunit-fixture"));\n
+              GadgetIndex.getRootGadget().getDom().one("ready", function (){\n
+                RenderJs.update($("#qunit-fixture"));\n
+              });\n
+              equal(GadgetIndex.getGadgetList().length, 2);\n
+              equal(true, GadgetIndex.isGadgetListLoaded());\n
+              equal($("#qunit-fixture").attr("id"), GadgetIndex.getRootGadget().getDom().attr("id"));\n
+              equal(GadgetIndex.getGadgetById("qunit-fixture"), GadgetIndex.getRootGadget());\n
+\n
+              // unregister gadget\n
+              GadgetIndex.unregisterGadget(GadgetIndex.getGadgetById("qunit-fixture"));\n
+              equal(GadgetIndex.getGadgetList().length, 1);\n
+              equal(GadgetIndex.getGadgetById("new"), GadgetIndex.getRootGadget());\n
+              \n
+\n
+   });\n
 \n
 };\n
 \n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>precondition</string> </key>
@@ -48,7 +80,7 @@
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>545</int> </value>
+            <value> <int>1755</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

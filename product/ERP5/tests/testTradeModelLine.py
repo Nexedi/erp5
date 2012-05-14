@@ -31,7 +31,6 @@
 from UserDict import UserDict
 import random
 import unittest
-import transaction
 
 from Products.ERP5.tests.testBPMCore import TestBPMMixin
 from Products.ERP5Type.Base import Base
@@ -304,13 +303,12 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       return
     packing_list.manage_delObjects(ids=[q.getId()
       for q in packing_list.objectValues(portal_type='Container')])
-    transaction.commit()
+    self.commit()
     container = packing_list.newContent(portal_type='Container')
     for movement in packing_list.getMovementList():
       container.newContent(portal_type='Container Line',
                            resource=movement.getResource(),
                            quantity=movement.getQuantity())
-    transaction.commit()
     self.tic()
     self.assertEqual('packed', packing_list.getContainerState())
 
@@ -338,15 +336,12 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def processPackingListBuildInvoice(self, packing_list, build=None):
     self.packPackingList(packing_list)
-    transaction.commit()
     self.tic()
 
     packing_list.start()
     packing_list.stop()
-    transaction.commit()
     self.tic()
     self.buildInvoices()
-    transaction.commit()
     self.tic()
 
     invoice, = packing_list.getCausalityRelatedValueList(
@@ -354,7 +349,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.assertEqual(5, len(invoice))
 
     packing_list.deliver()
-    transaction.commit()
     self.tic()
 
     self['invoice'] = invoice
@@ -365,7 +359,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     self.checkTradeModelRuleSimulationExpand(packing_list)
 
     invoice.start()
-    transaction.commit()
     self.tic()
 
     self.checkInvoiceAccountingMovements(invoice)
@@ -375,11 +368,11 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   ##
 
   def checkWithoutBPM(self, order):
-    transaction.commit() # clear transactional cache
+    self.commit()# clear transactional cache
     order.getSpecialiseValue()._setSpecialise(None)
     self.assertRaises(ValueError, order.expand,
       applied_rule_id=order.getCausalityRelatedId(portal_type='Applied Rule'))
-    transaction.abort()
+    self.abort()
 
   def checkModelLineOnDelivery(self, delivery):
     for portal_type in (self.business_link_portal_type,
@@ -481,12 +474,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
   def buildPackingLists(self):
     self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
-    transaction.commit()
     self.tic()
 
   def buildInvoices(self):
     self.portal.portal_alarms.invoice_builder_alarm.activeSense()
-    transaction.commit()
     self.tic()
 
   ###
@@ -546,7 +537,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
            'taxed_discounted': (5*6 + discount['taxed_discounted'])
                                * self.default_tax_ratio})
 
-    transaction.commit()
     self.tic()
 
     if not build:
@@ -554,7 +544,7 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       # if lines are not ordered correctly.
       self['trade_model_line/tax'].setIntIndex(0)
       self.assertRaises(ValueError, order.getGeneratedAmountList)
-      transaction.abort()
+      self.abort()
 
       for movement in (order, order['taxed'], order['discounted'],
                        order['taxed_discounted']):
@@ -566,7 +556,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       self.checkAggregatedAmountList(order)
 
       order.plan()
-      transaction.commit()
       self.tic()
 
       self.checkTradeModelRuleSimulationExpand(order)
@@ -579,7 +568,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       order['taxed'].edit(price=2, quantity=5)
       order['discounted'].edit(price=6, quantity=10)
       order['taxed_discounted'].edit(price=10, quantity=15)
-      transaction.commit()
       self.tic()
 
       discount = {None: (6*10 + 10*15) * self.default_discount_ratio,
@@ -599,7 +587,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       order = order2
 
     order.confirm()
-    transaction.commit()
     self.tic()
     self.buildPackingLists()
 
@@ -628,13 +615,11 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
     self.assertEqual([trade_condition], invoice.getSpecialiseValueList())
     invoice.setSpecialiseValue(new_trade_condition)
-    transaction.commit()
     self.tic()
     self.checkCausalityState(invoice, 'diverged')
 
     # revert to reuse invoice
     invoice.setSpecialiseValue(trade_condition)
-    transaction.commit()
     self.tic()
     self.checkCausalityState(invoice, 'solved')
 
@@ -652,12 +637,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       #     See also 'checkInvoiceAccountingMovements' method.
       self.assertTrue(line.getBaseContributionList())
       line._setBaseContributionList(())
-    transaction.commit()
     self.tic()
     self.checkCausalityState(invoice, 'solved')
 
     invoice.start()
-    transaction.commit()
     self.tic()
 
     self.checkCausalityState(invoice, 'solved')
@@ -665,7 +648,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
 
     invoice.stop()
     invoice.deliver()
-    transaction.commit()
     self.tic()
 
   def test_01b_NewSimulation_InvoiceModifyQuantityAndSolveDivergency(self):
@@ -675,12 +657,10 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       if line.getResourceValue().getUse() == 'normal':
         line.setQuantity(line.getQuantity() *
           self.modified_invoice_line_quantity_ratio)
-    transaction.commit()
     self.tic()
     self.checkCausalityState(invoice, 'diverged')
 
     self.acceptDecisionQuantityInvoice(invoice)
-    transaction.commit()
     self.tic()
     self.checkCausalityState(invoice, 'solved')
 
@@ -691,7 +671,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
     for line in packing_list.getMovementList():
         line.setQuantity(line.getQuantity() *
           self.modified_packing_list_line_quantity_ratio)
-    transaction.commit()
     self.tic()
     self.checkCausalityState(packing_list, 'diverged')
 
@@ -712,7 +691,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
       stop_date=packing_list.getStopDate() + 25,
       listbox=listbox)
 
-    transaction.commit()
     self.tic()
     self.checkCausalityState(packing_list, 'solved')
     new_packing_list, = [x for x in order.getCausalityRelatedValueList(
@@ -804,7 +782,6 @@ class TestTradeModelLine(TestTradeModelLineMixin):
                       'taxed': total_tax_price * 0.8,
                       'discounted': discount_price * 0.8})
 
-    transaction.commit()
     self.tic()
 
     self.checkModelLineOnDelivery(order)
@@ -928,7 +905,6 @@ return lambda *args, **kw: 1""")
 
     order.plan()
     order.confirm()
-    transaction.commit()
     self.tic()
     self.buildPackingLists()
 
@@ -940,7 +916,6 @@ return lambda *args, **kw: 1""")
     packing_list.start()
     packing_list.stop()
     packing_list.deliver()
-    transaction.commit()
     self.tic()
     self.buildInvoices()
 
@@ -952,7 +927,6 @@ return lambda *args, **kw: 1""")
     self.assertEquals([], invoice.getDivergenceList())
     
     invoice.start()
-    transaction.commit()
     self.tic()
 
     self.assertEquals([], invoice.getDivergenceList())
@@ -1020,7 +994,6 @@ return lambda *args, **kw: 1""")
 
     invoice.plan()
     invoice.confirm()
-    transaction.commit()
     self.tic()
 
     self.assertEquals(2, len(invoice.getMovementList()))
@@ -1028,7 +1001,6 @@ return lambda *args, **kw: 1""")
     self.assertEquals([], invoice.getDivergenceList())
 
     invoice.start()
-    transaction.commit()
     self.tic()
 
     self.assertEquals([], invoice.getDivergenceList())
@@ -1123,7 +1095,7 @@ return lambda *args, **kw: 1""")
                                          target_delivery=True,
                                          quantity=10, price=-1)
 
-    transaction.commit() # flush transactional cache
+    self.commit()# flush transactional cache
 
     expected_tax = 1000*0.05, 500*0.05, 500*0.2, 800*0.2, 1, 1, -10
     amount_list = order.getGeneratedAmountList()
@@ -1176,7 +1148,6 @@ return lambda *args, **kw: 1""")
                                     resource_value=resource_B,
                                     base_contribution='base_amount/tax')
 
-    transaction.commit()
     self.tic()
     # check the result without rounding
     amount, = order.getAggregatedAmountList(rounding=False)
@@ -1226,7 +1197,6 @@ return lambda *args, **kw: 1""")
     # change quantity
     order_line_1.edit(quantity=3.3333)
 
-    transaction.commit()
     self.tic()
 
     # check the result without rounding
@@ -1249,7 +1219,6 @@ return lambda *args, **kw: 1""")
     rounding_model_for_quantity._setMembershipCriterionBaseCategoryList(['base_contribution'])
     rounding_model_for_quantity.validate()
 
-    transaction.commit()
     self.tic()
 
     amount_list = order.getAggregatedAmountList(rounding=True)
@@ -1272,7 +1241,6 @@ return lambda *args, **kw: 1""")
     # invalidate rounding model for total price
     rounding_model.invalidate()
 
-    transaction.commit()
     self.tic()
 
     # check the result without rounding
@@ -1315,7 +1283,6 @@ return lambda *args, **kw: 1""")
            base_contribution_list=[]),
       ))
 
-    transaction.commit()
     self.tic()
 
     # check the result

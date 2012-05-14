@@ -31,7 +31,6 @@
   Most test-cases are based on the testInvoice.py.
 """
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -177,7 +176,6 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
     invoice_transaction = invoice.getCausalityRelatedValue()
     transaction_line_1 = invoice_transaction.newContent(portal_type=self.invoice_transaction_line_portal_type)
     transaction_line_2 = invoice_transaction.newContent(portal_type=self.invoice_transaction_line_portal_type)
-    transaction.commit()
     self.tic()
     transaction_line_1.edit(id ='receivable', source='account_module/customer',
         destination='account_module/supplier', quantity=-1665)
@@ -392,7 +390,6 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
                             quantity=10,
                             price=3)
     invoice.confirm()
-    transaction.commit()
     self.tic()
 
     odt = invoice.Invoice_viewAsODT()
@@ -426,7 +423,7 @@ class TestAdvancedSaleInvoice(TestAdvancedInvoice):
     self.portal.erp5_sql_transactionless_connection.manage_test(
      "delete from portal_ids where \
        id_group='Accounting_Transaction_Module-Sale_Invoice_Transaction'")
-    transaction.commit()
+    self.commit()
 
   def stepCheckInvoicesAndTransactionsConsistency(self, sequence=None, sequence_list=None,
                                                   **kw):
@@ -1138,7 +1135,7 @@ class TestAdvancedPurchaseInvoice(TestAdvancedInvoice):
     packing_list.start()
     packing_list.stop()
     self.assertEquals('stopped', packing_list.getSimulationState())
-    transaction.commit()
+    self.commit()
 
 
 class TestWorkflow(SecurityTestCase):
@@ -1168,7 +1165,6 @@ class TestWorkflow(SecurityTestCase):
       for role in role_list:
         type_document = sale_invoice_type.newContent(portal_type='Role Information')
         type_document.edit(**role)
-      transaction.commit()
       self.tic()
 
     for role in role_list:
@@ -1181,7 +1177,6 @@ class TestWorkflow(SecurityTestCase):
             node = node.newContent(id=category_id, portal_type='Category')
           else:
             node = node.get(category_id)
-    transaction.commit()
     self.tic()
 
     person_list = [
@@ -1203,7 +1198,6 @@ class TestWorkflow(SecurityTestCase):
           assignment_document = person_document.newContent(portal_type='Assignment')
           assignment_document.edit(function=assignment['function'])
           self.portal.portal_workflow.doActionFor(assignment_document, 'open_action')
-        transaction.commit()
         self.tic()
         setattr(self, person['id'], person_document)
 
