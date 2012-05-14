@@ -248,7 +248,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     preference.edit(preferred_credential_request_automatic_approval=True,
                     preferred_credential_alarm_automatic_call=automatic_call)
     self._enablePreference()
-    self.stepTic()
+    self.tic()
     self.logout()
 
   def stepSetCredentialAssignmentPropertyList(self, sequence={}):
@@ -258,7 +258,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     preference = self._getPreference()
     preference.edit(preferred_subscription_assignment_category_list=category_list)
     self._enablePreference()
-    self.stepTic()
+    self.tic()
     self.logout()
 
   def stepSetOrganisationCredentialUpdateAutomaticApprovalPreferences(self,
@@ -297,11 +297,11 @@ class TestERP5Credential(ERP5TypeTestCase):
         portal_type="Credential Request", reference=reference)
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
                                                  follow_up=credential_request)
-    self.stepTic()
+    self.tic()
     self.logout()
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
     self.login("ERP5TypeTestCase")
-    self.stepTic()
+    self.tic()
     person = portal_catalog.getResultValue(reference=reference,
                                            portal_type="Person")
     assignment_list = person.objectValues(portal_type="Assignment")
@@ -661,7 +661,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         )
     message_str = "You%20didn%27t%20enter%20the%20correct%20answer."
     self.assertTrue(message_str not in result)
-    self.stepTic()
+    self.tic()
     self.login()
     result_list = self.portal.portal_catalog(
         portal_type='Credential Recovery', reference=person_reference)
@@ -805,7 +805,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         default_address_zip_code="28024030",
         **kw)
     self.login("ERP5TypeTestCase")
-    self.stepTic()
+    self.tic()
     return result
 
   def stepCreateCredentialRequestSample(self, sequence=None,
@@ -1084,7 +1084,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence = dict(automatic_call=False)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self.stepSetCredentialAssignmentPropertyList()
-    self.stepTic()
+    self.tic()
     self._createCredentialRequest()
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(
@@ -1094,7 +1094,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.logout()
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
     self.login("ERP5TypeTestCase")
-    self.stepTic()
+    self.tic()
     person = portal_catalog.getResultValue(reference="barney",
         portal_type="Person")
     assignment_list = person.objectValues(portal_type="Assignment")

@@ -197,7 +197,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
                                            resource_value = self.currency_2, 
                                            source_total_asset_price=100.0)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check we have only one cash sorting
     self.assertEqual(len(self.cash_to_currency_purchase_module.objectValues()), 1)
     # get the cash sorting document
@@ -240,7 +240,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
             self.quantity_usd_20,
             variation_list = self.usd_variation_list)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.cash_to_currency_purchase.objectValues()), 1)
     # get the cash exchange line
@@ -299,7 +299,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.outgoing_quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_to_currency_purchase.objectValues()), 2)
     # get the second cash exchange line
@@ -337,7 +337,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
             self.outgoing_quantity_100)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_to_currency_purchase.objectValues()), 3)
     # get the second cash exchange line
@@ -393,7 +393,7 @@ class TestERP5BankingCashToCurrencyPurchase(TestERP5BankingMixin):
     """
     self.workflow_tool.doActionFor(self.cash_to_currency_purchase, 'deliver_action', wf_id='cash_to_currency_purchase_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of cash sorting
     state = self.cash_to_currency_purchase.getSimulationState()
     # check that state is delivered

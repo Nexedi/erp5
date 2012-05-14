@@ -160,7 +160,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.hq_mutilated_banknote.setDestinationTotalAssetPrice(50000.0)
     self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'deposit_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), 'deposited')
 
   def stepCheckInitialInventory(self, sequence=None, sequence_list=None, **kwd):
@@ -193,7 +193,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
                                     deponent="user",
                                     destination_value=self.mutilated_banknote_vault,
                                     site_value=self.paris)
-    self.stepTic()
+    self.tic()
     self.assertTrue(len(self.mutilated_banknote_module.objectValues()) != 0)
     self.assertEqual(self.mutilated_banknote.getPortalType(), 'Mutilated Banknote')
     self.assertEqual(self.mutilated_banknote.getSource(), 'site/testsite/paris/surface/banque_interne/guichet_1')
@@ -231,7 +231,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.addCashLineToDelivery(self.mutilated_banknote, 'incoming_line', 'Incoming Mutilated Banknote Line', self.billet_10000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/mutilated') + self.variation_list,
             self.quantity_10000)
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(self.mutilated_banknote.objectValues()), 1)
     # get the  line
     self.incoming_line = getattr(self.mutilated_banknote, 'incoming_line')
@@ -277,7 +277,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.mutilated_banknote.setSourceTotalAssetPrice(50000.0)
     self.assertEqual(self.mutilated_banknote.getSourceTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.mutilated_banknote.getSimulationState(), "draft")
 
   def stepDraftHQDocument(self, sequence=None, sequence_list=None, **kw):
@@ -288,7 +288,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.hq_mutilated_banknote.setSourceTotalAssetPrice(50000.0)
     self.assertEqual(self.hq_mutilated_banknote.getSourceTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'draft_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "draft")
 
   def stepStopDocument(self, sequence=None, sequence_list=None, **kw):
@@ -296,7 +296,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     Stop mutilated banknote operation
     """
     self.workflow_tool.doActionFor(self.mutilated_banknote, 'stop_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.mutilated_banknote.getSimulationState(), "stopped")
 
   def stepCreateExchangedLine(self, sequence=None, sequence_list=None, **kw):
@@ -306,7 +306,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.addCashLineToDelivery(self.mutilated_banknote, 'exchanged_line', 'Exchanged Mutilated Banknote Line', self.billet_10000,
                                ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/cancelled') + self.variation_list,
                                self.quantity_10000)
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(self.mutilated_banknote.objectValues()), 2)
     # get the line
     self.exchanged_line = getattr(self.mutilated_banknote, 'exchanged_line')
@@ -341,7 +341,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     Plan mutilated banknote operation
     """
     self.workflow_tool.doActionFor(self.mutilated_banknote, 'plan_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.mutilated_banknote.getSimulationState(), "planned")
 
   def stepDelExchangedLine(self, sequence=None, sequence_list=None, **kwd):
@@ -358,7 +358,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.mutilated_banknote.setDestinationTotalAssetPrice(50000.0)
     self.assertEqual(self.mutilated_banknote.getDestinationTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.mutilated_banknote.getSimulationState(), "delivered")
 
   def stepDeliverHQDocument(self, sequence=None, sequence_list=None, **kw):
@@ -369,7 +369,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.hq_mutilated_banknote.setDestinationTotalAssetPrice(50000.0)
     self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'deliver_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "delivered")
 
   def stepCheckFinalInventoryWithNoPayBack(self, sequence=None, sequence_list=None, **kwd):
@@ -439,7 +439,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.mutilated_banknote.setDestinationTotalAssetPrice(50000.0)
     self.assertEqual(self.mutilated_banknote.getDestinationTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.mutilated_banknote, 'finish_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.mutilated_banknote.getSimulationState(), "finished")
 
   def stepTryDeliverWithNoLineDefined(self, sequence=None, sequence_list=None, **kw):
@@ -479,7 +479,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.addCashLineToDelivery(mutilated_banknote, 'outgoing_line', 'Outgoing Mutilated Banknote Line', self.billet_10000,
                                ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
                                self.quantity_10000)
-    self.stepTic()
+    self.tic()
     # get the line
     self.outgoing_line = getattr(mutilated_banknote, 'outgoing_line')
     self.assertEqual(self.outgoing_line.getPortalType(), 'Outgoing Mutilated Banknote Line')
@@ -585,7 +585,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
                                                                            causality_value=getattr(self, 'mutilated_banknote', None),
                                                                            site_value=self.siege)
     self.hq_mutilated_banknote.edit(source_trade='site/testsite/paris')
-    self.stepTic()
+    self.tic()
     self.assertTrue(len(self.mutilated_banknote_module.objectValues()) != 0)
     self.assertEqual(self.hq_mutilated_banknote.getPortalType(), 'Mutilated Banknote')
     self.assertEqual(self.hq_mutilated_banknote.getSource(), owner_assigned_counter)
@@ -613,7 +613,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.addCashLineToDelivery(self.hq_mutilated_banknote, 'hq_incoming_line', 'Incoming Mutilated Banknote Line', self.billet_10000,
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/mutilated') + self.variation_list,
             self.quantity_10000)
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(self.hq_mutilated_banknote.objectValues()), 1)
     # get the  line
     self.hq_incoming_line = getattr(self.hq_mutilated_banknote, 'hq_incoming_line')
@@ -649,7 +649,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     Plan mutilated banknote operation
     """
     self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'stop_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "stopped")
 
   def stepTryPlanHQDocument(self, sequence=None, sequence_list=None, **kw):
@@ -672,7 +672,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.hq_mutilated_banknote.setDestinationTotalAssetPrice(50000.0)
     self.assertEqual(self.hq_mutilated_banknote.getDestinationTotalAssetPrice(), 50000.0)
     self.workflow_tool.doActionFor(self.hq_mutilated_banknote, 'finish_action', wf_id='mutilated_banknote_workflow')
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.hq_mutilated_banknote.getSimulationState(), "finished")
     sequence.edit(headquarter=1)
 
@@ -715,7 +715,7 @@ class TestERP5BankingMutilatedBanknote(TestERP5BankingMixin):
     self.addCashLineToDelivery(self.hq_mutilated_banknote, 'hq_exchanged_line', 'Exchanged Mutilated Banknote Line', self.billet_10000,
                                ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/cancelled') + self.variation_list,
                                self.quantity_10000)
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(self.hq_mutilated_banknote.objectValues()), 2)
     # get the line
     self.hq_exchanged_line = getattr(self.hq_mutilated_banknote, 'hq_exchanged_line')

@@ -1111,7 +1111,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # (skip some states)
     transaction.start()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.all_username_list:
       # everybody can view
@@ -1167,7 +1167,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # in started state, we can modify again, and go back to stopped state
     transaction.restart()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.accountant_username_list:
       self.failUnlessUserCanModifyDocument(username, transaction)
@@ -1251,7 +1251,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # (skip some states)
     transaction.start()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.all_username_list:
       # everybody can view
@@ -1307,7 +1307,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # in started state, we can modify again, and go back to stopped state
     transaction.restart()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.accountant_username_list:
       self.failUnlessUserCanModifyDocument(username, transaction)
@@ -1397,7 +1397,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # (skip some states)
     transaction.start()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.all_username_list:
       # everybody can view
@@ -1453,7 +1453,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # in started state, we can modify again, and go back to stopped state
     transaction.restart()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.accountant_username_list:
       self.failUnlessUserCanModifyDocument(username, transaction)
@@ -1527,7 +1527,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # (skip some states)
     transaction.start()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.all_username_list:
       # everybody can view
@@ -1583,7 +1583,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # in started state, we can modify again, and go back to stopped state
     transaction.restart()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.accountant_username_list:
       self.failUnlessUserCanModifyDocument(username, transaction)
@@ -1652,7 +1652,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
     accounting_transaction_a.setCausalityValueList([accounting_transaction_b,
                                                     accounting_transaction_c])
-    self.stepTic()
+    self.tic()
   
     accounting_transaction_list = accounting_transaction_a.\
           AccountingTransaction_getCausalityGroupedAccountingTransactionList()
@@ -1669,7 +1669,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   
     accounting_transaction_x_related_to_a.delete()
     accounting_transaction_y_related_to_a.cancel()
-    self.stepTic()
+    self.tic()
  
     accounting_transaction_list = accounting_transaction_a.\
           AccountingTransaction_getCausalityGroupedAccountingTransactionList()

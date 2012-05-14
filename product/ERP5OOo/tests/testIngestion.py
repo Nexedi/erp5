@@ -227,7 +227,7 @@ class TestIngestion(ERP5TypeTestCase):
               if hasattr(new_category, method_id):
                 method = getattr(new_category, method_id)
                 method(value.encode('UTF-8'))
-    self.stepTic()
+    self.tic()
 
   def getCategoryList(self, base_category=None):
     """
@@ -265,7 +265,7 @@ class TestIngestion(ERP5TypeTestCase):
       filename = 'TEST-en-002.%s' %format
       f = makeFileUpload(filename)
       document.edit(file=f)
-      self.stepTic()
+      self.tic()
       self.failUnless(document.hasFile())
       if document.isSupportBaseDataConversion():
         # this is how we know if it was ok or not
@@ -285,7 +285,7 @@ class TestIngestion(ERP5TypeTestCase):
     filename = 'TEST-en-002.' + format
     f = makeFileUpload(filename)
     document.edit(file=f)
-    self.stepTic()
+    self.tic()
     # We call clear cache to be sure that the target list is updated
     self.getPortal().portal_caches.clearCache()
     target_list = document.getTargetFormatList()
@@ -326,7 +326,7 @@ class TestIngestion(ERP5TypeTestCase):
       else:
         document = self.portal.portal_contributions.newContent(file=file)
       created_documents.append(document)
-    self.stepTic()
+    self.tic()
     # inspect created objects
     count = 0
     for extension, portal_type in extension_to_type:
@@ -373,7 +373,7 @@ class TestIngestion(ERP5TypeTestCase):
     document.discoverMetadata(filename=document.getFilename(),
                               user_login='john_doe',
                               input_parameter_dict=input_parameter_dict)
-    self.stepTic()
+    self.tic()
 
   def checkMetadataOrder(self, document, expected_metadata):
     """
@@ -411,7 +411,7 @@ class TestIngestion(ERP5TypeTestCase):
                                       first_name='John',
                                       last_name='Doe',
                                       default_email_text='john@doe.com')
-    self.stepTic()
+    self.tic()
 
   def stepCreateTextDocument(self, sequence=None, sequence_list=None, **kw):
     """
@@ -555,7 +555,7 @@ class TestIngestion(ERP5TypeTestCase):
     f.filename = 'TEST-en-002.doc'
 
     self.portal.portal_contributions.newContent(file=f)
-    self.stepTic()
+    self.tic()
     self.assertEquals(document.getRevision(), str(int(revision) + 1))
     self.assert_('This document is modified.' in document.asText())
     self.assertEquals(len(self.portal.document_module.objectIds()),
@@ -570,7 +570,7 @@ class TestIngestion(ERP5TypeTestCase):
     f = makeFileUpload('ANOTHE-en-001.doc')
     document = self.portal.portal_contributions.newContent(id='two', file=f)
     sequence.edit(document_path=document.getPath())
-    self.stepTic()
+    self.tic()
     self.assertTrue('This is a another very interesting document.' in document.asText())
     self.assertEquals(document.getReference(), 'ANOTHE')
     self.assertEquals(document.getVersion(), '001')
@@ -632,7 +632,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     f = makeFileUpload('TEST-en-002.doc')
     document = self.portal.portal_contributions.newContent(file=f)
-    self.stepTic()
+    self.tic()
     # Then make sure content discover works
     property_dict = document.getPropertyDictFromUserLogin()
     self.assertEquals(property_dict['contributor'], 'person_module/john')
@@ -654,7 +654,7 @@ class TestIngestion(ERP5TypeTestCase):
               subject='another subject',
               description='another description')
     document.edit(**kw)
-    self.stepTic()
+    self.tic()
 
   def stepCheckChangedMetadata(self, sequence=None, sequence_list=None, **kw):
     """
@@ -800,7 +800,7 @@ class TestIngestion(ERP5TypeTestCase):
     image = self.portal.restrictedTraverse(sequence.get('document_path'))
     f = makeFileUpload('TEST-en-002.jpg')
     image.edit(file=f)
-    self.stepTic()
+    self.tic()
     mime, data = image.convert(None)
     self.assertEquals(mime, 'image/jpeg')
     mime, small_data = image.convert(None, display='small')
@@ -929,7 +929,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     f = open(makeFilePath('email_from.txt'))
     document = self.receiveEmail(f.read())
-    self.stepTic()
+    self.tic()
 
   def stepReceiveMultipleAttachmentsEmail(self, sequence=None,
                                           sequence_list=None, **kw):
@@ -938,7 +938,7 @@ class TestIngestion(ERP5TypeTestCase):
     """
     f = open(makeFilePath('email_multiple_attachments.eml'))
     document = self.receiveEmail(f.read())
-    self.stepTic()
+    self.tic()
 
   def stepVerifyEmailedMultipleDocumentsInitialContribution(self, sequence=None, sequence_list=None, **kw):
     """
@@ -1427,7 +1427,7 @@ class TestIngestion(ERP5TypeTestCase):
     portal_catalog.manage_catalogClear()
     # Reindex all
     portal.ERP5Site_reindexAll()
-    self.stepTic()
+    self.tic()
     self.assertEquals(1,
         len(portal.portal_catalog(path=contribution_tool.getPath())))
 
@@ -1444,7 +1444,7 @@ class TestIngestion(ERP5TypeTestCase):
     my_filename = 'Something.doc'
     document = contribution_tool.newContent(file=file_object,
                                             filename=my_filename)
-    self.stepTic()
+    self.tic()
     self.assertEquals(document.getFilename(), my_filename)
 
   def test_16_TestMetadataDiscoveryFromUserLogin(self):
@@ -1460,11 +1460,11 @@ class TestIngestion(ERP5TypeTestCase):
 
     user.setSubordinationValue(organisation)
     portal.document_module.manage_setLocalRoles('contributor1', ['Assignor',])
-    self.stepTic()
+    self.tic()
     file_object = makeFileUpload('TEST-en-002.doc')
     document = contribution_tool.newContent(file=file_object)
     document.discoverMetadata(document.getFilename(), 'contributor1') 
-    self.stepTic()
+    self.tic()
     self.assertEquals(document.getFilename(), 'TEST-en-002.doc')
     self.assertEquals('anybody', document.getGroup())
     self.assertEquals('arctic/spitsbergen', document.getSite())

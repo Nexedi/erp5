@@ -184,7 +184,7 @@ class TestERP5BankingMoneyDepositMixin(TestERP5BankingMixin):
                             description='test',
                             source_total_asset_price=20000.0)
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.money_deposit)
     # check source reference

@@ -47,7 +47,7 @@ class TestERP5BankingMonetaryReceptionMixin(TestERP5BankingMixin):
     self.monetary_reception = self.monetary_reception_module.newContent(id='monetary_reception', portal_type='Monetary Reception',
                                                                         source_value=None, destination_value=self.reception_site,
                                                                         resource_value=self.currency_1, start_date=self.current_date)
-    self.stepTic()
+    self.tic()
     # now create container
     global_dict = {}
     global_dict['emission_letter'] = 'p'
@@ -70,11 +70,11 @@ class TestERP5BankingMonetaryReceptionMixin(TestERP5BankingMixin):
     line_2['quantity'] = 100
     line_list.append(line_2)
     self.createCashContainer(self.monetary_reception, 'Cash Container Item', global_dict, line_list)
-    self.stepTic()
+    self.tic()
     self.workflow_tool.doActionFor(self.monetary_reception, 'confirm_action', wf_id='monetary_reception_workflow')
-    self.stepTic()
+    self.tic()
     self.workflow_tool.doActionFor(self.monetary_reception, 'deliver_action', wf_id='monetary_reception_workflow')
-    self.stepTic()
+    self.tic()
     # check that state is delivered, all other check are done in a separate unit test
     self.assertEqual(self.monetary_reception.getSimulationState(), 'delivered')
 
@@ -184,7 +184,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
                                 description='test',
                                 start_date=self.current_date)
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.monetary_issue)
     # check source reference
@@ -240,7 +240,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
 
     self.createCashContainer(self.monetary_issue, 'Monetary Issue Container', global_dict, new_cash_container_list, 'Monetary Issue Line')
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is two line created
     self.assertEqual(len(self.monetary_issue.objectValues()), 3)
 
@@ -396,7 +396,7 @@ class TestERP5BankingMonetaryIssue(TestERP5BankingMonetaryReceptionMixin):
     self.assertEqual(state, 'confirmed')
     self.workflow_tool.doActionFor(self.monetary_issue, 'deliver_action', wf_id='monetary_issue_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of cash sorting
     state = self.monetary_issue.getSimulationState()
     # check that state is delivered

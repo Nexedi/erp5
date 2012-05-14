@@ -63,7 +63,7 @@ class TestAuoLogout(ERP5TypeTestCase):
     # setup short auto-logout period
     portal.portal_preferences.default_site_preference.setPreferredMaxUserInactivityDuration(5)
     portal.portal_preferences.default_site_preference.enable()    
-    self.stepTic()
+    self.tic()
 
   def test_01_AutoLogout(self):
     """
@@ -86,7 +86,7 @@ class TestAuoLogout(ERP5TypeTestCase):
     
     # if we disable auto-logout then cookie will expire at end of session
     portal.portal_preferences.default_site_preference.disable()    
-    self.stepTic()
+    self.tic()
     portal.portal_caches.clearAllCache()
     
     response = self.publish(path)

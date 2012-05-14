@@ -2395,7 +2395,7 @@ self.portal.getDefaultModule(self.packing_list_portal_type).newContent(
     invoice = self.portal.getDefaultModule(self.invoice_portal_type
         ).newContent(portal_type=self.invoice_portal_type,
             created_by_builder=1)
-    self.stepTic()
+    self.tic()
     invoice_line = invoice.newContent(
         portal_type=self.invoice_line_portal_type)
     invoice_cell = invoice_line.newContent(

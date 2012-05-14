@@ -216,14 +216,14 @@ class TestRunMyDocsConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
   def _stepCheckKnowledgePadRole(self):
     """ Check if Knowledge Pad is configured correctly """
     self.portal.ERP5Site_createDefaultKnowledgePadListForUser()
-    self.stepTic()
+    self.tic()
     current_user = self.portal.portal_membership.getAuthenticatedMember().getUserName()
     pad = self.portal.portal_catalog.getResultValue(portal_type="Knowledge Pad", 
                                              owner=current_user)
     gadget_uid = self.portal.portal_gadgets.test_wizard_gadget.getUid()
     self.portal.KnowledgePad_addBoxList(uids=[gadget_uid],
                                         active_pad_relative_url=pad.getRelativeUrl())
-    self.stepTic()
+    self.tic()
     self.assertEquals(len(pad.contentValues()), 1)
     box = pad.contentValues()[0]
     self.assertEquals(box.getValidationState(), 'visible')

@@ -128,7 +128,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation_module = self.getOrganisationModule()
     if not(organisation_module.hasContent(self.company_id)):
       o1 = organisation_module.newContent(id=self.company_id)
-    self.stepTic()
+    self.tic()
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users

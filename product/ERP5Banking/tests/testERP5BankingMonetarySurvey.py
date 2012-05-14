@@ -168,7 +168,7 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin):
                                  description='test',
                                  source_total_asset_price=52400.0)
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.monetary_survey)
     # check source reference
@@ -195,7 +195,7 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/not_defined') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.monetary_survey.objectValues()), 1)
     # get the cash transfer line
@@ -253,7 +253,7 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/not_defined') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.monetary_survey.objectValues()), 2)
     # get the second cash transfer line
@@ -294,7 +294,7 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/not_defined') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # Check number of cash transfer lines (line1 + line2 +invalid_line)
     self.assertEqual(len(self.monetary_survey.objectValues()), 3)
     # Check quantity, same as checkTotal + banknote of 500: 11 for 1992 and 13 for 2003
@@ -313,7 +313,7 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin):
     # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.monetary_survey, 'confirm_action', wf_id='monetary_survey_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of the cash transfer
     state = self.monetary_survey.getSimulationState()
     # check the state is draft
@@ -355,7 +355,7 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.monetary_survey, 'confirm_action', wf_id='monetary_survey_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.monetary_survey.getSimulationState()
     # check state is confirmed
@@ -398,7 +398,7 @@ class TestERP5BankingMonetarySurvey(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.monetary_survey, 'deliver_action', wf_id='monetary_survey_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of cash transfer
     state = self.monetary_survey.getSimulationState()
     # check that state is delivered

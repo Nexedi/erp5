@@ -133,10 +133,10 @@ class TestProject(ERP5TypeTestCase):
               stop_date=DateTime('2009/07/26'),
               )
 
-    self.stepTic()
+    self.tic()
     task.plan()
     
-    self.stepTic()
+    self.tic()
     # Script Used for Task Tab
     task_line_list = project.Project_getSourceProjectRelatedTaskList()
     self.assertEquals(1, len(task_line_list))
@@ -149,7 +149,7 @@ class TestProject(ERP5TypeTestCase):
     self.assertEquals(task_line_list[0], task.default_task_line)
 
     task.confirm()
-    self.stepTic()
+    self.tic()
 
     # Script Used for Task Tab keep only showing tasks.
     task_line_list = project.Project_getSourceProjectRelatedTaskList()

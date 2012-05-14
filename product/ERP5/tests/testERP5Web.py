@@ -105,7 +105,7 @@ class TestERP5Web(ERP5TypeTestCase):
                                               id=self.website_id,
                                               **kw)
     website.publish()
-    self.stepTic()
+    self.tic()
     return website
 
   def setupWebSection(self, **kw):
@@ -124,7 +124,7 @@ class TestERP5Web(ERP5TypeTestCase):
                             max='',
                             min='')
 
-    self.stepTic()
+    self.tic()
     return websection
 
   def setupWebSitePages(self, prefix, suffix=None, version='0.1',
@@ -145,7 +145,7 @@ class TestERP5Web(ERP5TypeTestCase):
                                                 language=language,
                                                 **kw)
       webpage.publish()
-      self.stepTic()
+      self.tic()
       self.assertEquals(language, webpage.getLanguage())
       self.assertEquals(reference, webpage.getReference())
       self.assertEquals(version, webpage.getVersion())
@@ -187,10 +187,10 @@ class TestERP5Web(ERP5TypeTestCase):
     self.portal.portal_transforms.max_sec_in_cache = -1
     page = self.web_page_module.newContent(portal_type='Web Page')
     page.edit(text_content='<p>Hé Hé Hé!</p>')
-    self.stepTic()
+    self.tic()
     self.assertEquals('Hé Hé Hé!', page.asText().strip())
     page.edit(text_content='<p>Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé!</p>')
-    self.stepTic()
+    self.tic()
     self.assertEquals("""Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé
 Hé Hé Hé!""", page.asText().strip())
 
@@ -212,7 +212,7 @@ Hé Hé Hé!""", page.asText().strip())
     website = self.web_site_module[self.website_id]
     website.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
 
-    self.stepTic()
+    self.tic()
 
     # find person object by reference
     person = website.ERP5Site_getAuthenticatedMemberPersonValue(
@@ -338,11 +338,11 @@ Hé Hé Hé!""", page.asText().strip())
              reference='NXD-DDP',
              publication_section_list=publication_section_category_id_list[:1])
     websection.setAggregateValue(web_page_en)
-    self.stepTic()
+    self.tic()
     self.assertEqual(None, websection.getDefaultDocumentValue())
     # publish it
     web_page_en.publish()
-    self.stepTic()
+    self.tic()
     self.assertEqual(web_page_en, websection.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
     # uses the web section rather than the portal
@@ -375,11 +375,11 @@ Hé Hé Hé!""", page.asText().strip())
                                                  reference='NXD-DDP-Site',
                                                  publication_section_list=publication_section_category_id_list[:1])
     website.setAggregateValue(web_page_en)
-    self.stepTic()
+    self.tic()
     self.assertEqual(None, website.getDefaultDocumentValue())
     # publish it
     web_page_en.publish()
-    self.stepTic()
+    self.tic()
     self.assertEqual(web_page_en, website.getDefaultDocumentValue())
     # and make sure that the base meta tag which is generated
     # uses the web site rather than the portal
@@ -448,17 +448,17 @@ Hé Hé Hé!""", page.asText().strip())
                                   publication_section_list=publication_section_category_id_list[:1])
 
         web_page.edit(**property_dict[key])
-        self.stepTic()
+        self.tic()
         web_page_list.append(web_page)
 
-      self.stepTic()
+      self.tic()
       # in draft state, no documents should belong to this Web Section
       self.assertEqual(0, len(websection.getDocumentValueList()))
 
       # when published, all web pages should belong to it
       for web_page in web_page_list:
         web_page.publish()
-      self.stepTic()
+      self.tic()
 
       # Test for limit parameter
       self.assertEqual(2, len(websection.getDocumentValueList(limit=2)))
@@ -641,7 +641,7 @@ Hé Hé Hé!""", page.asText().strip())
       publication_section.newContent(portal_type='Category',
                                      id='my_test_category',
                                      title='Test')
-      self.stepTic()
+      self.tic()
 
     website = self.setupWebSite()
     websection = self.setupWebSection(
@@ -660,7 +660,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     # We need a default document.
     websection.setAggregateValue(web_page_list[0])
-    self.stepTic()
+    self.tic()
 
     # Obtain documens in various ways.
     default_document = websection.getDefaultDocumentValue()
@@ -690,7 +690,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     # First, make sure that we use the default skin selection.
     portal.changeSkin(ps.getDefaultSkin())
-    self.stepTic()
+    self.tic()
 
     # Make some skin stuff.
     if ps._getOb('test_erp5_web', None) is not None:
@@ -715,7 +715,7 @@ Hé Hé Hé!""", page.asText().strip())
             'WebSite_test_13_WebSiteSkinSelection',
             '', 'return "bar"')
 
-    self.stepTic()
+    self.tic()
 
     path = website.absolute_url_path() + '/WebSite_test_13_WebSiteSkinSelection'
     request = portal.REQUEST
@@ -726,7 +726,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     # With the test skin.
     website.setSkinSelectionName('Test ERP5 Web')
-    self.stepTic()
+    self.tic()
 
     request['PARENTS'] = [self.app]
     self.assertEquals(request.traverse(path)(), 'bar')
@@ -759,7 +759,7 @@ Hé Hé Hé!""", page.asText().strip())
     # Commit transaction
     def _commit():
       portal.portal_caches.clearAllCache()
-      self.stepTic()
+      self.tic()
 
     # By default, as now Web Section is visible, nothing should be returned
     _commit()
@@ -821,7 +821,7 @@ Hé Hé Hé!""", page.asText().strip())
                                            reference='foo',
                                            text_content='<b>OK</b>')
     page.publish()
-    self.stepTic()
+    self.tic()
 
     webpage = self.portal.restrictedTraverse(
       'web_site_module/%s/%s' % (website_id, page_ref))
@@ -889,7 +889,7 @@ Hé Hé Hé!""", page.asText().strip())
             reference='NXD-Document.Cache',
             text_content=content)
     document.publish()
-    self.stepTic()
+    self.tic()
     self.assertEquals(document.asText().strip(), 'initial text')
 
     # First make sure conversion already exists on the web site
@@ -911,7 +911,7 @@ Hé Hé Hé!""", page.asText().strip())
     # modified the web_page content
     document.edit(text_content=new_content)
     self.assertEquals(document.asText().strip(), 'modified text')
-    self.stepTic()
+    self.tic()
 
     # check the cache doesn't send again the old content
     # Through the web_site.
@@ -949,7 +949,7 @@ Hé Hé Hé!""", page.asText().strip())
             reference='NXD-Document.Cache',
             text_content=content)
     document.publish()
-    self.stepTic()
+    self.tic()
     self.assertEquals(document.asText().strip(), 'initial text')
 
     # Make sure document cache keeps converted content even if ID changes
@@ -981,7 +981,7 @@ Hé Hé Hé!""", page.asText().strip())
             reference='NXD-Document.Cache',
             text_content=content)
     document.publish()
-    self.stepTic()
+    self.tic()
     self.assertEquals(document.asText().strip(), 'initial text')
 
     # Through the web_site.
@@ -1002,7 +1002,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.assertFalse(document.hasConversion(format='txt'))
     # Make sure cache is regenerated
     self.assertEquals(web_document.asText().strip(), 'modified text')
-    self.stepTic()
+    self.tic()
 
     # First make sure conversion already exists (since it should
     # have been generated previously)
@@ -1049,7 +1049,7 @@ Hé Hé Hé!""", page.asText().strip())
     self.createUserAssignement(user, {})
     user = self.createUser('webeditor')
     self.createUserAssignement(user, {})
-    self.stepTic()
+    self.tic()
     preference_tool = self.getPreferenceTool()
     isTransitionPossible = self.portal.portal_workflow.isTransitionPossible
 
@@ -1081,7 +1081,7 @@ Hé Hé Hé!""", page.asText().strip())
     webeditor_preference.setPreferredHtmlStyleDevelopperMode(False)
     webeditor_preference.setPreferredHtmlStyleTranslatorMode(True)
     self.login()
-    self.stepTic()
+    self.tic()
 
     web_site = self.setupWebSite()
     websection = self.setupWebSection()
@@ -1120,7 +1120,7 @@ Hé Hé Hé!""", page.asText().strip())
             reference='NXD-Document.Cache',
             text_content=content)
     document.publish()
-    self.stepTic()
+    self.tic()
     path = website.absolute_url_path() + '/NXD-Document.Cache'
     # test Different Policy installed by erp5_web
     # unauthenticated web pages
@@ -1183,7 +1183,7 @@ Hé Hé Hé!""", page.asText().strip())
     websection = self.setupWebSection()
     self.assertEquals(websection.getId(), websection.getTitle())
 
-    self.stepTic()
+    self.tic()
     response = self.publish('/%s/%s/%s/%s/Base_editAndEditAsWeb' % \
                     (self.portal.getId(), website.getRelativeUrl(),
                      language, websection.getId()),
@@ -1203,7 +1203,7 @@ Hé Hé Hé!""", page.asText().strip())
     new_location = response.getHeader('Location')
     new_location = new_location.split('/', 3)[-1]
 
-    self.stepTic()
+    self.tic()
 
     response = self.publish(new_location, basic='ERP5TypeTestCase:',)
     self.assertEquals(HTTP_OK, response.getStatus())
@@ -1211,7 +1211,7 @@ Hé Hé Hé!""", page.asText().strip())
                       response.getHeader('content-type'))
     self.assertTrue("Data updated." in response.getBody())
 
-    self.stepTic()
+    self.tic()
 
     self.assertEquals('%s_edited' % websection.getId(), websection.getTitle())
     self.assertEquals(1, len(self.portal.portal_catalog(
@@ -1238,7 +1238,7 @@ Hé Hé Hé!""", page.asText().strip())
 
     self.assertEquals(website.getId(), website.getTitle())
 
-    self.stepTic()
+    self.tic()
 
     response = self.publish('/%s/%s/%s/Base_editAndEditAsWeb' % \
                     (self.portal.getId(), website.getRelativeUrl(),
@@ -1259,7 +1259,7 @@ Hé Hé Hé!""", page.asText().strip())
     new_location = response.getHeader('Location')
     new_location = new_location.split('/', 3)[-1]
 
-    self.stepTic()
+    self.tic()
 
     response = self.publish(new_location, basic='ERP5TypeTestCase:',)
     self.assertEquals(HTTP_OK, response.getStatus())
@@ -1267,7 +1267,7 @@ Hé Hé Hé!""", page.asText().strip())
                       response.getHeader('content-type'))
     self.assertTrue("Data updated." in response.getBody())
 
-    self.stepTic()
+    self.tic()
 
     self.assertEquals('%s_edited' % website.getId(), website.getTitle())
     self.assertEquals(1, len(self.portal.portal_catalog(
@@ -1321,7 +1321,7 @@ Hé Hé Hé!""", page.asText().strip())
                                      title='Section 1.1',
                                      site_map_section_parent=1,
                                      visible=1)
-    self.stepTic()
+    self.tic()
     site_map = website.WebSection_getSiteMapTree(depth=5, include_subsection=1)
     self.assertSameSet([websection1.getTitle()],
                        [x['translated_title'] for x in site_map])
@@ -1339,7 +1339,7 @@ Hé Hé Hé!""", page.asText().strip())
     # hide subsections
     websection1_1.setSiteMapSectionParent(0)
     websection1_1.setVisible(0)
-    self.stepTic()
+    self.tic()
     site_map = website.WebSection_getSiteMapTree(depth=5, include_subsection=1)
     self.assertSameSet([websection1.getTitle()],
                        [x['translated_title'] for x in site_map])
@@ -1795,7 +1795,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     """
     project = self.portal.project_module.newContent(portal_type='Project')
     project.validate()
-    self.stepTic()
+    self.tic()
 
     website = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                      id='site')
@@ -1803,7 +1803,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
     website.setMembershipCriterionBaseCategory('follow_up')
     website.setMembershipCriterionDocumentList(['follow_up/%s' %
                                                   project.getRelativeUrl()])
-    self.stepTic()
+    self.tic()
 
     web_page_module = self.portal.web_page_module
     web_page_follow_up = web_page_module.newContent(portal_type="Web Page",
@@ -1814,7 +1814,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                                       language='en',
                                       text_content='test content')
     web_page_follow_up.publish()
-    self.stepTic()
+    self.tic()
 
     web_page_no_follow_up = web_page_module.newContent(portal_type="Web Page",
                                       id='test_web_page_no_follow_up',
@@ -1823,7 +1823,7 @@ class TestERP5WebWithSimpleSecurity(ERP5TypeTestCase):
                                       language='en',
                                       text_content='test content')
     web_page_no_follow_up.publish()
-    self.stepTic()
+    self.tic()
 
     self.assertEquals(1, len(website.WebSection_getDocumentValueList()))
 

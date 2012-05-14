@@ -172,7 +172,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
                                       description='test',
                                       source_total_asset_price=52400.0)
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.classification_survey)
     # check source reference
@@ -199,7 +199,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/not_defined') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.classification_survey.objectValues()), 1)
     # get the classification surveyg line
@@ -239,7 +239,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/not_defined') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.classification_survey.objectValues()), 2)
     # get the classification surveyg line
@@ -297,7 +297,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.classification_survey.objectValues()), 3)
     # get the second classification surveyg line
@@ -340,7 +340,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/s', 'cash_status/cancelled') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.classification_survey.objectValues()), 4)
     # get the second classification surveyg line
@@ -393,7 +393,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.classification_survey, 'confirm_action', wf_id='classification_survey_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.classification_survey.getSimulationState()
     # check state is confirmed
@@ -442,7 +442,7 @@ class TestERP5BankingClassificationSurvey(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.classification_survey, 'deliver_action', wf_id='classification_survey_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of classification surveyg
     state = self.classification_survey.getSimulationState()
     # check that state is delivered

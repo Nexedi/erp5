@@ -216,7 +216,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
                                 start_date=self.date,
                                 source_total_asset_price=52400.0)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check we have only one vault transfer
     self.assertEqual(len(self.cash_movement_module.objectValues()), 1)
     # get the vault transfer document
@@ -238,7 +238,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.cash_movement.objectValues()), 1)
     # get the vault transfer line
@@ -300,7 +300,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_movement.objectValues()), 2)
     # get the second vault transfer line
@@ -341,7 +341,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # Check number of vault transfer lines (line1 + line2 +invalid_line)
     self.assertEqual(len(self.cash_movement.objectValues()), 3)
     # Check quantity, same as checkTotal + banknote of 500: 11 for 1992 and 13 for 2003
@@ -362,7 +362,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
                   self.cash_movement, 'stop_action', 
                   wf_id='cash_movement_workflow', your_stop_date=self.date)
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of the cash_movement
     state = self.cash_movement.getSimulationState()
     # check the state is draft
@@ -388,7 +388,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.cash_movement, 'confirm_action', wf_id='cash_movement_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of the cash_movement
     state = self.cash_movement.getSimulationState()
     # check the state is draft
@@ -435,7 +435,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     self.workflow_tool.doActionFor(self.cash_movement, 'stop_action',
                   wf_id='cash_movement_workflow', stop_date=self.date)
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.cash_movement.getSimulationState()
     # check state is stopped
@@ -453,7 +453,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.cash_movement, 'confirm_action', wf_id='cash_movement_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.cash_movement.getSimulationState()
     # check state is confirmed
@@ -468,7 +468,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.cash_movement, 'start_action', wf_id='cash_movement_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.cash_movement.getSimulationState()
     # check state is started
@@ -521,7 +521,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.cash_movement, 'deliver_action', wf_id='cash_movement_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of cash_movement
     state = self.cash_movement.getSimulationState()
     # check that state is delivered
@@ -544,7 +544,7 @@ class TestERP5BankingCashMovement(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.cash_movement, 'deliver_action', wf_id='cash_movement_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of cash_movement
     state = self.cash_movement.getSimulationState()
     # check that state is delivered

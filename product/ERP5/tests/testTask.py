@@ -548,7 +548,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.validateRules()
-    self.stepTic()
+    self.tic()
 
   def getTitle(self):
     return "Task"

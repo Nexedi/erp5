@@ -549,7 +549,7 @@ class TestOrderMixin(object):
     """
 
     # order_line needs to be indexed for 'fast' calculation to work as expected
-    self.stepTic()
+    self.tic()
 
     order_line = sequence.get('order_line')
     base_id = 'movement'
@@ -575,7 +575,7 @@ class TestOrderMixin(object):
     """
 
     # order_line needs to be indexed for 'fast' calculation to work as expected
-    self.stepTic()
+    self.tic()
 
     order_line = sequence.get('order_line')
     base_id = 'movement'
@@ -622,7 +622,7 @@ class TestOrderMixin(object):
     self.assertEquals(0, order_line.getTotalPrice(fast=1))
     self.assertEquals(0, order_line.getTotalQuantity(fast=1))
     self.assertNotEquals(total_price, 0)
-    self.stepTic()
+    self.tic()
     self.assertEquals(len(portal_catalog(relative_url=
                                          order_line.getRelativeUrl())),1)
     self.assertEquals(total_price, order_line.getTotalPrice(fast=1))
@@ -637,7 +637,7 @@ class TestOrderMixin(object):
     """
 
     # order needs to be indexed for 'fast' calculation to work as expected
-    self.stepTic()
+    self.tic()
 
     order = sequence.get('order')
     order_line_list = order.objectValues( \
@@ -657,7 +657,7 @@ class TestOrderMixin(object):
     """
 
     # order needs to be indexed for 'fast' calculation to work as expected
-    self.stepTic()
+    self.tic()
 
     order = sequence.get('order')
     order_line_list = order.objectValues( \
@@ -690,7 +690,7 @@ class TestOrderMixin(object):
     self.assertEquals(total_price, order.getTotalPrice(fast=0))
     self.assertNotEquals(total_price, 0)
     self.assertEquals(0, order.getTotalPrice(fast=1))
-    self.stepTic()
+    self.tic()
     self.assertEquals(1, len(portal_catalog(relative_url=order.getRelativeUrl())))
     self.assertEquals(total_price, order.getTotalPrice(fast=1))
     self.assertEquals(total_price, order.getTotalPrice(fast=0))

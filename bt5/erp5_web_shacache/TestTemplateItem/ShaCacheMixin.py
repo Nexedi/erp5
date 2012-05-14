@@ -66,6 +66,6 @@ class ShaCacheMixin(object):
       'Authorization': 'Basic %s' % (base64.encodestring('ERP5TypeTestCase:'))
     }
     self.shacache_url = self.shacache.absolute_url()
-    self.stepTic()
+    self.tic()
     self.data = 'Random Content. %s' % str(random.random())
     self.key = hashlib.sha512(self.data).hexdigest()

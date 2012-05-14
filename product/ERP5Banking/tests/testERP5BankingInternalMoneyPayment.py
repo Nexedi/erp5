@@ -169,7 +169,7 @@ class TestERP5BankingInternalMoneyPayment(TestERP5BankingMixin):
                                     payment_type_value=self.payment_order,
                                     )
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.internal_money_payment)
     # check source reference

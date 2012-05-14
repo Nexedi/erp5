@@ -610,7 +610,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
 
     bc = category_tool.newContent(portal_type = 'Base Category', id = 'testing_category')
     self.createCategory(bc, ['a', ['aa', 'ab'], 'o', 'z', ['za', 'zb', ['zba', 'zbb'], 'zc'] ])
-    self.stepTic()
+    self.tic()
 
     category_org_list = [ ['testing_category/a/aa', 'testing_category/o'], # 0
                           ['testing_category/a/aa', 'testing_category/z'], # 1

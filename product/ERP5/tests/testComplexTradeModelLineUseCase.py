@@ -152,7 +152,7 @@ class TestComplexTradeModelLineUseCase(TestTradeModelLineMixin):
       destination_decision_value=client_1,
       price_currency_value=jpy)
 
-    self.stepTic()
+    self.tic()
 
   def test_usecase1(self):
     """

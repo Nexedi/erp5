@@ -403,7 +403,7 @@ class TestTranslation(ERP5TypeTestCase):
     dispatcher = self.portal.manage_addProduct['PageTemplates']
     dispatcher.manage_addPageTemplate('myzpt')
     self.myzpt = self.portal.myzpt
-    self.stepTic()
+    self.tic()
 
   def beforeTearDown(self):
     self.abort()
@@ -423,7 +423,7 @@ class TestTranslation(ERP5TypeTestCase):
       module.manage_delObjects(list(module.objectIds()))
     self.portal.manage_delObjects(['myzpt'])
 
-    self.stepTic()
+    self.tic()
     super(TestTranslation, self).beforeTearDown()
 
   def test_Localizer_translation(self):
@@ -461,7 +461,7 @@ class TestTranslation(ERP5TypeTestCase):
     organisation = self.portal.organisation_module.newContent(
                             portal_type='Organisation')
 
-    self.stepTic()
+    self.tic()
     self.assertEquals(set([person_1, person_2]),
         set([x.getObject() for x in
           self.portal.portal_catalog(translated_portal_type='Personne')]))

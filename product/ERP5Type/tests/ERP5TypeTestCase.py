@@ -582,15 +582,12 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         ipshell = IPython.Shell.IPShellEmbed(())
       ipshell()
 
-    def stepTic(self, **kw):
+    def stepTic(self, sequence):
       """
       The is used to simulate the zope_tic_loop script
       Each time this method is called, it simulates a call to tic
       which invoke activities in the Activity Tool
       """
-      if kw.get('sequence', None) is None:
-        # in case of using not in sequence commit transaction
-        self.commit()
       self.tic()
 
     def getPortalObject(self):
@@ -812,7 +809,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           uninstalled_list.append(bt_title)
       if uninstalled_list:
         getattr(portal, 'ERP5Site_updateTranslationTable', lambda: None)()
-      self.stepTic()
+      self.tic()
       return uninstalled_list
 
     def setUp(self):

@@ -77,7 +77,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
                               portal_type='Person',
                               id = 'pers_without_image',
                               first_name = 'Test')
-      self.stepTic()
+      self.tic()
 
     self.portal.changeSkin(self.skin)
     self.validator = Validator()

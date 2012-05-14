@@ -245,7 +245,7 @@ class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     """ Check permission of Web Site with normal user """
     self.changeSkin("UNGDoc")
     self.portal.web_page_module.ERP5Site_createNewWebDocument("web_page_template")
-    self.stepTic()
+    self.tic()
     self.changeSkin("UNGDoc")
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList()
     self.assertEquals(len(result_list), 1)
@@ -256,7 +256,7 @@ class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     new_object.edit(title="New")
     new_object = self.portal.web_page_module.newContent(portal_type="Web Illustration")
     new_object.edit(title="New")
-    self.stepTic()
+    self.tic()
     kw = {"portal_type": "Web Page", "title": "New"}
     self.changeSkin("UNGDoc")
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
@@ -278,12 +278,12 @@ class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     pad = self.portal.knowledge_pad_module.newContent(portal_type="Knowledge Pad")
     pad.edit(publication_section_value=self.portal.web_site_module.ung)
     pad.visible()
-    self.stepTic()
+    self.tic()
     gadget = self.portal.portal_gadgets.searchFolder()[0]
     gadget_id = gadget.getId()
     self.changeSkin("UNGDoc")
     self.portal.web_site_module.ung.WebSection_addGadgetList(gadget_id)
-    self.stepTic()
+    self.tic()
     box_list = pad.contentValues()
     self.assertEquals(len(box_list), 1)
     knowledge_box = box_list[0]
@@ -309,7 +309,7 @@ class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
     portal.REQUEST.form.update(event_dict)
     self.changeSkin("UNGDoc")
     portal.event_module.EventModule_createNewEvent()
-    self.stepTic()
+    self.tic()
     event = portal.portal_catalog.getResultValue(portal_type="Note")
     self.assertEquals(event.getDescription(), "testUNG Sample")
     start_date = event.getStartDate()
