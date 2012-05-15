@@ -3624,7 +3624,6 @@ class TestImmobilisation(TestImmobilisationMixin):
     self.assertEquals(5000.0,account.AccountModule_getTotalSourceDebit(brain=account))
     self.assertEquals(0.0,account.AccountModule_getTotalSourceCredit(brain=account))
 
-  @newSimulationExpectedFailure
   def test_19_TestAccountingBuildingAndDivergence(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:
@@ -3718,7 +3717,6 @@ class TestImmobilisation(TestImmobilisationMixin):
                   parameter_dict = parameter_dict,
                   destination_section = self.getOrganisationModule()["A"])
 
-  @newSimulationExpectedFailure
   def test_20_TestAccountingAcceptDecisionSolver(self, quiet=0, run=run_all_test):
     if not run: return
     if not quiet:

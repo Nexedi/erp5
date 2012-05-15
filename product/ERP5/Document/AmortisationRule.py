@@ -33,11 +33,11 @@ from string import capitalize
 from Products.ERP5Type.DateUtils import centis, getClosestDate, addToDate
 from Products.ERP5Type.DateUtils import getDecimalNumberOfYearsBetween
 from Products.ERP5Type import Permissions
-from Products.ERP5Legacy.Document.Rule import Rule
+from Products.ERP5.mixin.rule import RuleMixin
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5.Document.ImmobilisationMovement import NO_CHANGE_METHOD
 
-class AmortisationRule(Rule):
+class AmortisationRule(RuleMixin):
     """
       Amortisation Rule object plans an item amortisation
     """
