@@ -325,16 +325,16 @@ return context.generatePredicate(
     self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 0)
     # unless it gets a trade_phase itself
     self.sm.setTradePhase('default/delivery')
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
     # But if the rule itself has no trade_phase...
     delivery_rule.setTradePhase(None)
-    self.stepTic()
+    self.tic()
     # then it should match the simulation movement with or without
     # trade_phase
     self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
     self.sm.setTradePhase(None)
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(rule_tool.searchRuleList(self.sm)), 1)
 
   def test_072_search_with_extra_catalog_keywords(self):

@@ -160,7 +160,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
       'site/testsite/paris/surface/banque_interne/guichet_1')
     self.assertEqual(cash_to_currency_sale.getDestination(), None)
     self.setDocumentSourceReference(cash_to_currency_sale)
-    self.stepTic()
+    self.tic()
     # Check the default exchange rate
     rate = cash_to_currency_sale.CurrencyExchange_getExchangeRateList(from_currency=cash_to_currency_sale.getResource(),
                                                                       to_currency='currency_module/%s' % (cash_to_currency_sale.Baobab_getPortalReferenceCurrencyID()),
@@ -240,7 +240,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
       else:
         self.fail('Unexpected cell id: %s' % (cell_id, ))
     # execute tic
-    self.stepTic()
+    self.tic()
 
   def stepCheckSubTotal(self, sequence=None, sequence_list=None, **kwd):
     document = self.cash_to_currency_sale
@@ -293,7 +293,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
         self.assertEqual(cell.getQuantity(), 5.0)
       else:
         self.fail('Wrong cell created : %s' % (cell_id, ))
-    self.stepTic()
+    self.tic()
 
   def stepCheckTotal(self, sequence=None, sequence_list=None, **kwd):
     document = self.cash_to_currency_sale
@@ -315,7 +315,7 @@ class TestERP5BankingCashToCurrencySale(TestERP5BankingMixin):
     # check that state is delivered
     self.assertEqual(document.getSimulationState(), 'delivered')
     # execute tic
-    self.stepTic()
+    self.tic()
 
   def stepCheckFinalInventoryGuichet(self, sequence=None,
       sequence_list=None, **kwd):

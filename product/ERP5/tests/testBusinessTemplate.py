@@ -6260,13 +6260,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                              'Dummy Type | source',),
                           template_action_path_list=(
                              'Dummy Type | view',),)
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       # portal type template item are exported in their physical location
       for template_item in ('PortalTypeTemplateItem',
                             'ActionTemplateItem',):
@@ -6284,7 +6284,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     types_tool.type_provider_list = registered_type_provider_list
     # uninstall the type provider (this will also uninstall the contained types)
     self.portal.manage_delObjects(['dummy_type_provider'])
-    self.stepTic()
+    self.tic()
 
     new_bt.install()
     try:
@@ -6344,13 +6344,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                           portal_type='Business Template',
                           title='test_bt',
                           template_tool_id_list=('dummy_type_provider', ),)
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       new_bt = self.portal.portal_templates.download(
                         url='file:/%s' % export_dir)
     finally:
@@ -6360,7 +6360,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     types_tool.type_provider_list = registered_type_provider_list
     # uninstall the type provider (this will also uninstall the contained types)
     self.portal.manage_delObjects(['dummy_type_provider'])
-    self.stepTic()
+    self.tic()
 
     new_bt.install()
 
@@ -6376,13 +6376,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
                           title='test_bt',)
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       new_bt = self.portal.portal_templates.download(
                         url='file:/%s' % export_dir)
     finally:
@@ -6408,13 +6408,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                           title='test_bt',
                           template_action_path_list=(
                              'portal_actions | test_global_action',),)
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       # actions are exported in portal_types/ and then the id of the container
       # tool
       self.assertEquals(['portal_actions'],
@@ -6427,12 +6427,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     # manually uninstall the action
     self.portal.portal_actions.deleteActions(selections=[action_idx])
-    self.stepTic()
+    self.tic()
 
     # install the business template and make sure the action is properly
     # installed
     new_bt.install()
-    self.stepTic()
+    self.tic()
     self.assertNotEquals(None,
         self.portal.portal_actions.getActionInfo('object_view/test_global_action'))
 
@@ -6446,7 +6446,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
             id='exported_path',
             title='Exported',
             portal_type='Folder')
-    self.stepTic()
+    self.tic()
 
     uid = self.portal.exported_path.getUid()
 
@@ -6455,13 +6455,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                           title='test_bt',
                           template_path_list=(
                             'exported_path',))
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       new_bt = self.portal.portal_templates.download(
                         url='file:/%s' % export_dir)
     finally:
@@ -6469,7 +6469,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     # modify the document
     self.portal.exported_path.setTitle('Modified')
-    self.stepTic()
+    self.tic()
 
     # install the business template
     new_bt.install()
@@ -6480,7 +6480,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     # but its uid did not change
     self.assertEquals(uid, self.portal.exported_path.getUid())
     # and it is still in the catalog
-    self.stepTic()
+    self.tic()
     self.assertEquals(self.portal.exported_path,
         self.portal.portal_catalog.getResultValue(uid=uid))
 

@@ -204,7 +204,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
                                   resource_value = self.currency_1, 
                                   source_total_asset_price=52400.0)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check we have only one cash sorting
     self.assertEqual(len(self.cash_exchange_module.objectValues()), 1)
     # get the cash sorting document
@@ -225,7 +225,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.cash_exchange)
     # check source reference
@@ -270,7 +270,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.cash_exchange.objectValues()), 2)
     # get the cash exchange line
@@ -329,7 +329,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.outgoing_quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_exchange.objectValues()), 3)
     # get the second cash exchange line
@@ -367,7 +367,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
             self.outgoing_quantity_100)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_exchange.objectValues()), 4)
     # get the second cash exchange line
@@ -428,7 +428,7 @@ class TestERP5BankingCashExchange(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.cash_exchange, 'deliver_action', wf_id='cash_exchange_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of cash sorting
     state = self.cash_exchange.getSimulationState()
     # check that state is delivered

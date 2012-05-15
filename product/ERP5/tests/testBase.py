@@ -1178,7 +1178,7 @@ class TestBase(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.assertEqual(pers.getDummyTypeBaseMethod(), pers.getId())
 
     pers.activate().Person_getDummyTypeBaseMethodByActivity()
-    self.stepTic()
+    self.tic()
     
   def test_translate_table(self):
     """check if Person portal type that is installed in erp5_base is

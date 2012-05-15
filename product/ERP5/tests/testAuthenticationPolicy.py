@@ -85,7 +85,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                                               preferred_authentication_failure_block_duration = 600,
                                               preferred_authentication_policy_enabled = True)
       preference.enable()
-      self.stepTic()
+      self.tic()
 
   def _clearCache(self):
     for cache_factory in [x for x in self.portal.portal_caches.getCacheFactoryList() if x!="erp5_session_cache"]:
@@ -119,7 +119,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     person.notifyLoginFailure()
     person.notifyLoginFailure()
     person.notifyLoginFailure()
-    self.stepTic()
+    self.tic()
 
     # should be blocked
     self.assertTrue(person.isLoginBlocked())
@@ -127,32 +127,32 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # set check back interval to actualy disable blocking
     preference.setPreferredAuthenticationFailureCheckDuration(0)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     time.sleep(1) # we need to give a moment
     self.assertFalse(person.isLoginBlocked())
     
     # .. and revert it back
     preference.setPreferredAuthenticationFailureCheckDuration(600)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     self.assertTrue(person.isLoginBlocked())
     
     # increase failures attempts
     preference.setPreferredMaxAuthenticationFailure(4)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     self.assertFalse(person.isLoginBlocked())
     
     # .. and revert it back
     preference.setPreferredMaxAuthenticationFailure(3)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     self.assertTrue(person.isLoginBlocked())
     
     # set short block interval so we can test it as well
     preference.setPreferredAuthenticationFailureBlockDuration(3)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     time.sleep(4)
     self.assertFalse(person.isLoginBlocked())
     
@@ -162,7 +162,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredMaxAuthenticationFailure(3)    
     person.Person_unblockLogin()
     self._clearCache()
-    self.stepTic()
+    self.tic()
     
     person.notifyLoginFailure()
     person.notifyLoginFailure()
@@ -170,12 +170,12 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     
     self.commit()
     self.assertTrue(person.isLoginBlocked())
-    self.stepTic()
+    self.tic()
     self.assertTrue(person.isLoginBlocked())
     
     # test unblock account
     person.Person_unblockLogin()
-    self.stepTic()
+    self.tic()
     self.assertFalse(person.isLoginBlocked())    
     
 
@@ -190,16 +190,16 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                                              reference = 'test-02')                                                  
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
-    self.stepTic()                                                      
+    self.tic()
                                                       
     # Check that last (X where X is set in preferences) passwords are saved.
     self.assertEqual([], self._getPasswordEventList(person))    
     preference.setPreferredNumberOfLastPasswordToCheck(10)
-    self.stepTic()
+    self.tic()
     self._clearCache()
     
     person.setPassword('12345678')
-    self.stepTic()
+    self.tic()
     
     # password change date should be saved as well hashed old password value
     old_password = person.getPassword()     
@@ -207,7 +207,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     
     # .. test one more time to check history of password is saved in a list
     person.setPassword('123456789')
-    self.stepTic()
+    self.tic()
     old_password1 = person.getPassword()
     
     # password change date should be saved as well hashed old password value
@@ -215,14 +215,14 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
     # other methods (_setPassword)...
     person._setPassword('123456789-1')
-    self.stepTic()
+    self.tic()
     old_password2 = person.getPassword()
     self.assertSameSet([old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(person)])
 
     # other methods (_forceSetPassword)...
     person._forceSetPassword('123456789-2')
-    self.stepTic()
+    self.tic()
     old_password3 = person.getPassword()
     self.assertSameSet([old_password3, old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(person)]) 
@@ -230,14 +230,14 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
 
     # other methods (setEncodedPassword)...
     person.setEncodedPassword('123456789-3')
-    self.stepTic()
+    self.tic()
     old_password4 = person.getPassword()
     self.assertSameSet([old_password4, old_password3, old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(person)]) 
 
     # other methods (edit)...
     person.edit(password = '123456789-4')
-    self.stepTic()
+    self.tic()
     old_password5 = person.getPassword()
     self.assertSameSet([old_password5, old_password4, old_password3, old_password2, old_password1, old_password], \
                      [x.getPassword() for x in self._getPasswordEventList(person)]) 
@@ -265,7 +265,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                                              last_name = 'Last')                                                    
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
-    self.stepTic()
+    self.tic()
     
     # by default an empty password if nothing set in preferences is OK
     self.assertTrue(person.isPasswordValid(''))
@@ -274,7 +274,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._cleanUpPerson(person)    
     preference.setPreferredMinPasswordLength(8)
     preference.setPreferredNumberOfLastPasswordToCheck(0)    
-    self.stepTic()
+    self.tic()
     self._clearCache()
     
     self.assertEqual([-1], person.analyzePassword(''))
@@ -285,12 +285,12 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self._cleanUpPerson(person)    
     preference.setPreferredMinPasswordLifetimeDuration(24)
     preference.setPreferredNumberOfLastPasswordToCheck(3)
-    self.stepTic()
+    self.tic()
     self._clearCache()
     
     self.assertTrue(person.isPasswordValid('12345678'))
     person.setPassword('12345678')
-    self.stepTic()
+    self.tic()
     
     # if we try to change now we should fail with any password
     self.assertSameSet([-3], person.analyzePassword('87654321'))
@@ -299,7 +299,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertRaises(ValueError, person.setPassword, '87654321')
  
     preference.setPreferredMinPasswordLifetimeDuration(0) # remove restriction
-    self.stepTic()
+    self.tic()
     self._clearCache()
     self.assertTrue(person.isPasswordValid('87654321')) # it's OK to change
     
@@ -307,10 +307,10 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredMinPasswordLength(None) # disable for now
     self._cleanUpPerson(person)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     
     person.setPassword('12345678-new')
-    self.stepTic()
+    self.tic()
     
     self.assertSameSet([-4], person.analyzePassword('12345678-new')) # if we try to change now we should fail with this EXACT password
     self.assertRaises(ValueError, person.setPassword, '12345678-new')
@@ -322,9 +322,9 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
       # failing randomly.
       time.sleep(1)
       person.setPassword(password)
-      self.stepTic()
+      self.tic()
     self._clearCache()
-    self.stepTic()
+    self.tic()
  
     self.assertTrue(person.isPasswordValid('12345678-new'))
     self.assertTrue(person.isPasswordValid('a'))
@@ -338,7 +338,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # if we remove restricted then all password are usable
     preference.setPreferredNumberOfLastPasswordToCheck(None)
     self._clearCache()    
-    self.stepTic()    
+    self.tic()
     
     self.assertTrue(person.isPasswordValid('d'))
     self.assertTrue(person.isPasswordValid('e'))
@@ -347,7 +347,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # if we set only last password to check
     preference.setPreferredNumberOfLastPasswordToCheck(1)
     self._clearCache()    
-    self.stepTic()
+    self.tic()
     self.assertTrue(person.isPasswordValid('c'))
     self.assertTrue(person.isPasswordValid('d'))
     self.assertTrue(person.isPasswordValid('e'))
@@ -358,7 +358,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredNumberOfLastPasswordToCheck(None)
     self._cleanUpPerson(person)    
     self._clearCache() 
-    self.stepTic()
+    self.tic()
     
     four_group_password_list = ['abAB#12', 'ghTK61%', '5Tyui1%','Y22GJ5iu#' ]
     three_group_password_list = ['abAB123 ', 'AB123ab', 'XY123yz', 'dufgQ7xL', 'NAfft8h5', '0LcAiWtT']
@@ -368,7 +368,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # min 4 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(4)
     self._clearCache() 
-    self.stepTic()
+    self.tic()
     for password in four_group_password_list:
       self.assertTrue(person.isPasswordValid(password))
     for password in three_group_password_list+two_group_password_list + one_group_password_list:
@@ -378,7 +378,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredMinRegularExpressionGroupNumber(3)    
     self._clearCache()
     self._cleanUpPerson(person)    
-    self.stepTic()    
+    self.tic()
     for password in four_group_password_list + three_group_password_list:
       self.assertTrue(person.isPasswordValid(password))
     for password in two_group_password_list + one_group_password_list:
@@ -387,7 +387,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # min 2 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(2)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     for password in four_group_password_list + three_group_password_list + two_group_password_list:
       self.assertTrue(person.isPasswordValid(password))
     for password in one_group_password_list:
@@ -396,19 +396,19 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # min 1 out of all groups
     preference.setPreferredMinRegularExpressionGroupNumber(1)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     for password in four_group_password_list + three_group_password_list + two_group_password_list+one_group_password_list:
       self.assertTrue(person.isPasswordValid(password))
 
     # not contain the full name of the user
     preference.setPrefferedForceUsernameCheckInPassword(1)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     self.assertSameSet([-5], person.analyzePassword('abAB#12_%s' %person.getFirstName()))
     self.assertSameSet([-5], person.analyzePassword('abAB#12_%s' %person.getLastName()))
     preference.setPrefferedForceUsernameCheckInPassword(0)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     self.assertTrue(person.isPasswordValid('abAB#12_%s' %person.getFirstName()))
     self.assertTrue(person.isPasswordValid('abAB#12_%s' %person.getLastName()))    
 
@@ -423,7 +423,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredMinPasswordLength(10)
     preference.setPreferredRegularExpressionGroupList(None)
     self._clearCache()    
-    self.stepTic()    
+    self.tic()
     # in this case which is basically used in new account creation only length of password matters
     self.assertSameSet([-1], temp_person.Person_analyzePassword('onlyNine1'))
     self.assertSameSet([], temp_person.Person_analyzePassword('longEnough1'))
@@ -433,7 +433,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredMinPasswordLength(7)    
     preference.setPreferredMinRegularExpressionGroupNumber(3)    
     self._clearCache()
-    self.stepTic()    
+    self.tic()
     for password in four_group_password_list + three_group_password_list:
       self.assertSameSet([], temp_person.Person_analyzePassword(password))
     for password in two_group_password_list + one_group_password_list:
@@ -442,13 +442,13 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # make sure peron's check on username works on temp as well (i.e. not contain the full name of the user)
     preference.setPrefferedForceUsernameCheckInPassword(1)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     self.assertSameSet([-5], temp_person.Person_analyzePassword('abAB#12_%s' %first_name))
     self.assertSameSet([-5], temp_person.Person_analyzePassword('abAB#12_%s' %last_name))
     
     preference.setPrefferedForceUsernameCheckInPassword(0)
     self._clearCache()
-    self.stepTic()
+    self.tic()
     self.assertSameSet([], temp_person.Person_analyzePassword('abAB#12_%s' %first_name))
     self.assertSameSet([], temp_person.Person_analyzePassword('abAB#12_%s' %last_name))    
     
@@ -459,11 +459,11 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference.setPreferredMinRegularExpressionGroupNumber(3)
     preference.setPreferredNumberOfLastPasswordToCheck(1)
     self._clearCache()
-    self.stepTic()    
+    self.tic()
     
     person.setPassword('used_ALREADY_1234')
     self._clearCache()
-    self.stepTic()
+    self.tic()
     
     # emulate Anonymous User
     self.logout()
@@ -492,7 +492,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
                                                       title = 'Authentication',)
                                                       
     preference.setPreferredMaxPasswordLifetimeDuration(24)
-    self.stepTic()
+    self.tic()
     self._clearCache()
     self.assertFalse(person.isPasswordExpired())
     self.assertFalse(request['is_user_account_password_expired'])
@@ -500,21 +500,21 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
    
     # set longer password validity interval
     preference.setPreferredMaxPasswordLifetimeDuration(4*24) # password expire in 4 days
-    self.stepTic()
+    self.tic()
     self._clearCache()
     self.assertFalse(person.isPasswordExpired())
     self.assertFalse(request['is_user_account_password_expired'])
     
     # test early warning password expire notification is detected
     preference.setPreferredPasswordLifetimeExpireWarningDuration(4*24) # password expire notification appear immediately
-    self.stepTic()
+    self.tic()
     self._clearCache()
     self.assertFalse(person.isPasswordExpired())
     self.assertTrue(request['is_user_account_password_expired_expire_date'])
     
     # test early warning password expire notification is detected
     preference.setPreferredPasswordLifetimeExpireWarningDuration(4*24-24) # password expire notification appear 3 days befor time
-    self.stepTic()
+    self.tic()
     self._clearCache()
     self.assertFalse(person.isPasswordExpired())
     self.assertFalse(request['is_user_account_password_expired_expire_date']) 
@@ -530,7 +530,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     preference = portal.portal_catalog.getResultValue(portal_type = 'System Preference',
                                                       title = 'Authentication',)
     person.setPassword('used_ALREADY_1234')
-    self.stepTic()
+    self.tic()
                                             
     path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test', 'used_ALREADY_1234')
     response = self.publish(path)
@@ -553,7 +553,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     self.assertTrue(response.getHeader("Location").endswith("login_form"))
     self.assertTrue(person.isLoginBlocked())
     
-    self.stepTic()
+    self.tic()
     
     # test message that account is blocked
     self.assertTrue(person.isLoginBlocked())
@@ -564,7 +564,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # test expire password message, first unblock it
     person.Person_unblockLogin()
     preference.setPreferredMaxPasswordLifetimeDuration(0)
-    self.stepTic()
+    self.tic()
     self._clearCache()
     response = self.publish(path)    
     self.assertTrue(response.getHeader("Location").endswith("login_form?portal_status_message=Password is expired."))
@@ -573,7 +573,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     # test we're redirected to update password due to soon expire
     preference.setPreferredMaxPasswordLifetimeDuration(24)
     preference.setPreferredPasswordLifetimeExpireWarningDuration(24)    
-    self.stepTic()
+    self.tic()
     self._clearCache()
     response = self.publish(path) 
     
@@ -582,7 +582,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     
     # test proper login
     preference.setPreferredPasswordLifetimeExpireWarningDuration(12)    
-    self.stepTic()
+    self.tic()
     self._clearCache()
     path = portal.absolute_url_path() + '/view?__ac_name=%s&__ac_password=%s'  %('test', 'used_ALREADY_1234')    
     response = self.publish(path) 
@@ -601,14 +601,14 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     person.notifyLoginFailure()
     person.notifyLoginFailure()
     person.notifyLoginFailure()
-    self.stepTic()
+    self.tic()
 
     # should be blocked
     self.assertTrue(person.isLoginBlocked())
     
     # set 0 check interval
     preference.setPreferredAuthenticationFailureCheckDuration(0)
-    self.stepTic()
+    self.tic()
     self._clearCache()
     
     time.sleep(1) # we need to give a moment
@@ -616,7 +616,7 @@ class TestAuthenticationPolicy(ERP5TypeTestCase):
     
     # expire manually old
     portal.system_event_module.SystemEventModule_expireAuthenticationEventList()
-    self.stepTic()
+    self.tic()
     
     self.assertEqual(3, len(portal.portal_catalog(portal_type ="Authentication Event",
                                                  default_destination_uid = person.getUid(),    

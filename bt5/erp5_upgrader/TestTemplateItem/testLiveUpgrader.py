@@ -63,7 +63,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     self.portal.portal_types.Person.setTypePropertySheetList(new_property_sheet_list)
     self.assertFalse("Account" in self.portal.portal_types.Person.getTypePropertySheetList())
 
-    self.stepTic()
+    self.tic()
     ERP5TypeLiveTestCase.beforeTearDown(self)
 
   def test_UpgradeSignatureAPI(self):
@@ -176,7 +176,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     # Create one broken object
     gadget = self.portal.portal_gadgets.newContent(portal_type="Gadget", 
                                                    id=self.upgrade_object_test_id)
-    self.stepTic()
+    self.tic()
 
     createZODBPythonScript(self.getPortal().portal_skins.custom,
                          "test_upgradeObject", 'x', 'return [1]')
@@ -191,7 +191,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     self.assertNotEquals(self.portal.ERP5Site_upgradeObjectClass(), [])
     self.assertEquals(self.portal.ERP5Site_upgradeObjectClass(upgrade=1),
                         [(gadget.getRelativeUrl(), 'ERP5 Gadget')])
-    self.stepTic()
+    self.tic()
     self.assertEquals(self.portal.ERP5Site_upgradeObjectClass(), [])
 
   def test_UpgradeGlobalPropertyList(self):
@@ -213,7 +213,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     self.assertEquals(["Upgrade Executed for Global Properties (erp5_site_global_id)."], 
                       self.portal.ERP5Site_upgradeGlobalPropertyList(upgrade=1))
 
-    self.stepTic()
+    self.tic()
     self.assertEquals(self.portal.ERP5Site_upgradeGlobalPropertyList(), [])
     self.assertEquals(getattr(self.portal, 'erp5_site_global_id', None),
                       self.upgrade_object_test_id)
@@ -244,7 +244,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
 
     self.assertEquals(self.portal.ERP5Site_upgradeWorkflowChain(upgrade=1),
                       ["Upgrade Executed for Workflow Chain."])
-    self.stepTic()
+    self.tic()
     self.assertEquals(self.portal.ERP5Site_upgradeWorkflowChain(),[])
     self.assertEquals(workflow_tool.getWorkflowChainDict()["chain_Person"],
                       original_person_chain)
@@ -280,7 +280,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
                       ["Person doesn't has Account associated."])
     self.assertEquals(self.portal.ERP5Site_upgradePortalTypePropertySheet(upgrade=1),
                       ["Associate PropertySheet Account into Portal Type Person."])
-    self.stepTic()
+    self.tic()
     self.assertEquals(self.portal.ERP5Site_upgradePortalTypePropertySheet(), [])
 
 
@@ -303,7 +303,7 @@ class TestLiveUpgrader(ERP5TypeLiveTestCase):
     self.commit()
     self.assertTrue(object_to_test.hasActivity(method_id="ERP5Site_testRecreateActivityScript"))
     self.assertTrue(self.portal.portal_activities.hasActivity(method_id='ERP5Site_clearActivities'))
-    self.stepTic()
+    self.tic()
     self.assertFalse(object_to_test.hasActivity(method_id="ERP5Site_testRecreateActivityScript"))
     self.assertFalse(self.portal.portal_activities.hasActivity(method_id='ERP5Site_clearActivities'))
     self.assertEquals(object_to_test.getProperty('custom_property_without_meaning'),

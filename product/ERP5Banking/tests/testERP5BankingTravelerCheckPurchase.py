@@ -68,7 +68,7 @@ class TestERP5BankingTravelerCheckPurchase(TestERP5BankingCheckbookUsualCashTran
     # Set some variables :
 
     TestERP5BankingTravelerCheckSaleMixin.afterSetUp(self)
-    self.stepTic()
+    self.tic()
     self.stepCreateTravelerCheckSale()
     self.stepCreateTravelerCheckLineList()
     self.stepDeliverTravelerCheckSale()

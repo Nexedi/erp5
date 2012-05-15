@@ -128,7 +128,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation_module = self.getOrganisationModule()
     if not(organisation_module.hasContent(self.company_id)):
       o1 = organisation_module.newContent(id=self.company_id)
-    self.stepTic()
+    self.tic()
 
   def login(self, quiet=0, run=run_all_test):
     uf = self.getPortal().acl_users
@@ -181,7 +181,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     # Needed so that the message are commited into the queue
     self.commit()
     self.assertEquals(self.title1,organisation.getTitle())
-    portal.portal_activities.distribute()
     portal.portal_activities.tic()
     self.assertEquals(self.title2,organisation.getTitle())
     message_list = portal.portal_activities.getMessageList()
@@ -211,7 +210,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),1)
-    portal.portal_activities.distribute()
     portal.portal_activities.tic()
     self.assertEquals(1,organisation.getFoobar())
     message_list = portal.portal_activities.getMessageList()
@@ -264,7 +262,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation.activate(activity=activity).DeferredSetTitle(self.title2)
     organisation.flushActivity(invoke=1)
     self.commit()
-    portal.portal_activities.distribute()
     portal.portal_activities.tic()
     self.commit()
     message_list = portal.portal_activities.getMessageList()
@@ -347,9 +344,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
     self.commit()
-    portal.portal_activities.distribute()
-    portal.portal_activities.tic()
-    self.commit()
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),0)
     self.assertEquals(organisation.getTitle(),self.title1)
@@ -361,7 +355,7 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     """
     portal = self.getPortal()
     def crashThisActivity(self):
-      self.IWillCrach()
+      self.IWillCrash()
     organisation =  portal.organisation._getOb(self.company_id)
     Organisation.crashThisActivity = crashThisActivity
     organisation.activate(activity=activity).crashThisActivity()
@@ -370,7 +364,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     message_list = portal.portal_activities.getMessageList()
     LOG('Before MessageWithErrorOnActivityFails, message_list',0,[x.__dict__ for x in message_list])
     self.assertEquals(len(message_list),1)
-    portal.portal_activities.distribute()
     portal.portal_activities.tic()
     # XXX HERE WE SHOULD USE TIME SHIFT IN ORDER TO SIMULATE MULTIPLE TICS
     # Test if there is still the message after it crashed
@@ -396,7 +389,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     self.commit()
     self.assertEquals(self.title1,organisation.getTitle())
     self.assertRaises(ActivityPendingError,organisation.edit,id=self.company_id2)
-    portal.portal_activities.distribute()
     portal.portal_activities.tic()
 
   def TryActiveProcess(self, activity):
@@ -411,8 +403,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     organisation.activate(activity=activity,active_process=active_process).getTitle()
     # Needed so that the message are commited into the queue
     self.commit()
-    portal.portal_activities.distribute()
-    portal.portal_activities.tic()
     portal.portal_activities.distribute()
     portal.portal_activities.tic()
     self.assertEquals(self.title1,organisation.getTitle())
@@ -1602,7 +1592,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),5)
-    portal.portal_activities.distribute()
     portal.portal_activities.tic()
     expected = dict(SQLDict=1, SQLQueue=5)[activity]
     self.assertEquals(expected, organisation.getFoobar())
@@ -1615,7 +1604,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),5)
-    portal.portal_activities.distribute()
     portal.portal_activities.tic()
     self.assertEquals(expected * 2, organisation.getFoobar())
 
@@ -1635,7 +1623,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
 
     message_list = portal.portal_activities.getMessageList()
     self.assertEquals(len(message_list),20)
-    portal.portal_activities.distribute()
     portal.portal_activities.tic()
     self.assertEquals(dict(SQLDict=11, SQLQueue=60)[activity],
                       organisation.getFoobar())
@@ -2352,29 +2339,27 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       message = '\nCheck similarities are not deleted before execution of original message (SQLDict)'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
-    self.tic()
     activity_tool = self.getActivityTool()
-    check_result_dict = {}
-    def checkActivityCount(self, other_tag):
-      if len(check_result_dict) == 0:
-        check_result_dict['done'] = activity_tool.countMessage(tag=other_tag)
+    marker = []
+    def doSomething(self, other_tag):
+      marker.append(self.countMessage(tag=other_tag))
+    activity_tool.__class__.doSomething = doSomething
     try:
-      Organisation.checkActivityCount = checkActivityCount
       # Adds two similar but not the same activities.
-      organisation.activate(activity='SQLDict', tag='a').checkActivityCount(other_tag='b')
-      organisation.activate(activity='SQLDict', tag='b').checkActivityCount(other_tag='a')
+      activity_tool.activate(activity='SQLDict', after_tag='foo',
+        tag='a').doSomething(other_tag='b')
+      activity_tool.activate(activity='SQLDict', after_tag='bar',
+        tag='b').doSomething(other_tag='a')
       self.commit()
-      self.assertEqual(len(activity_tool.getMessageList()), 2)
+      activity_tool.tic() # make sure distribution phase was not skipped
       activity_tool.distribute()
       # after distribute, similarities are still there.
       self.assertEqual(len(activity_tool.getMessageList()), 2)
-      self.tic()
+      activity_tool.tic()
       self.assertEqual(len(activity_tool.getMessageList()), 0)
-      self.assertEqual(len(check_result_dict), 1)
-      self.assertEqual(check_result_dict['done'], 1)
+      self.assertEqual(marker, [1])
     finally:
-      delattr(Organisation, 'checkActivityCount')
+      del activity_tool.__class__.doSomething
 
   def test_102_2_CheckSQLDictDeleteDuplicatesBeforeExecution(self, quiet=0, run=run_all_test):
     """
@@ -2386,32 +2371,30 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       message = '\nCheck duplicates are deleted before execution of original message (SQLDict)'
       ZopeTestCase._print(message)
       LOG('Testing... ',0,message)
-    organisation = self.getPortal().organisation_module.newContent(portal_type='Organisation')
-    self.tic()
     activity_tool = self.getActivityTool()
-    check_result_dict = {}
-    def checkActivityCount(self, other_tag):
-      if len(check_result_dict) == 0:
-        check_result_dict['done'] = activity_tool.countMessage(tag=other_tag)
+    marker = []
+    def doSomething(self, other_tag):
+      marker.append(self.countMessage(tag=other_tag))
+    activity_tool.__class__.doSomething = doSomething
     try:
-      Organisation.checkActivityCount = checkActivityCount
       # Adds two same activities.
-      organisation.activate(activity='SQLDict', tag='a', priority=2).checkActivityCount(other_tag='a')
+      activity_tool.activate(activity='SQLDict', after_tag='foo', priority=2,
+        tag='a').doSomething(other_tag='a')
       self.commit()
       uid1, = [x.uid for x in activity_tool.getMessageList()]
-      organisation.activate(activity='SQLDict', tag='a', priority=1).checkActivityCount(other_tag='a')
+      activity_tool.activate(activity='SQLDict', after_tag='bar', priority=1,
+        tag='a').doSomething(other_tag='a')
       self.commit()
       self.assertEqual(len(activity_tool.getMessageList()), 2)
       activity_tool.distribute()
       # After distribute, duplicate is deleted.
       uid2, = [x.uid for x in activity_tool.getMessageList()]
       self.assertNotEqual(uid1, uid2)
-      self.tic()
+      activity_tool.tic()
       self.assertEqual(len(activity_tool.getMessageList()), 0)
-      self.assertEqual(len(check_result_dict), 1)
-      self.assertEqual(check_result_dict['done'], 1)
+      self.assertEqual(marker, [1])
     finally:
-      delattr(Organisation, 'checkActivityCount')
+      del activity_tool.__class__.doSomething
 
   def test_102_3_CheckSQLDictDistributeWithSerializationTagAndGroupMethodId(
       self, quiet=0):
@@ -3187,7 +3170,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       for activity in 'SQLDict', 'SQLQueue':
         activity_tool.activate(activity=activity).doSomething(activity)
         self.commit()
-        activity_tool.distribute()
         # Make first commit in dequeueMessage raise
         registerFailingTransactionManager()
         self.assertRaises(CommitFailed, activity_tool.tic)
@@ -3438,7 +3420,6 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
       activity_tool.__class__.doSomething = doSomething
       activity_tool.activate(activity='SQLQueue').doSomething()
       self.commit()
-      activity_tool.distribute()
       activity_tool.tic()
       message_list = activity_tool.getMessageList()
       self.assertEquals(['doSomething'],[x.method_id for x in message_list])

@@ -39,8 +39,6 @@ from Products.ERP5.ExplanationCache import _getExplanationCache
 from DateTime import DateTime
 from Acquisition import aq_parent, aq_inner
 
-from zLOG import LOG
-
 class CollectError(Exception): pass
 class MatrixError(Exception): pass
 class DuplicatedPropertyDictKeysError(Exception): pass
@@ -169,6 +167,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
   def generateMovementListForStockOptimisation(self, **kw):
+    # XXX: unused
     from Products.ERP5Type.Document import newTempMovement
     movement_list = []
     for attribute, method in [('node_uid', 'getDestinationUid'),
@@ -230,35 +229,29 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           movement_list.append(movement)
     return movement_list
 
-  @UnrestrictedMethod
-  def searchMovementList(self, applied_rule_uid=None, **kw):
+  def _searchMovementList(self, **kw):
     """
       Returns a list of simulation movements (or something similar to
       simulation movements) to construct a new delivery.
-
-      For compatibility, if a simulation select method id is not provided,
-      a list of movements for predicting future supplies is returned.
-      You should define a simulation select method id, then it will be used
-      to calculate the result.
     """
     method_id = self.getSimulationSelectMethodId()
-    if not method_id:
-      # XXX compatibility
-      return self.generateMovementListForStockOptimisation(**kw)
-
-    select_method = getattr(self.getPortalObject(), method_id)
-    movement_list = select_method(**kw)
-
-    # Make sure that movements are not duplicated.
+    if method_id:
+      select_method = getattr(self.getPortalObject(), method_id)
+    else:
+      select_method = self.getPortalObject().portal_catalog
+    movement_list = [] # use list to preserve order
     movement_set = set()
-    for movement in movement_list:
+    for movement in select_method(**kw):
+      movement = movement.getObject()
       if movement in movement_set:
         raise SelectMethodError('%s returned %s twice or more' % \
                 (method_id, movement.getRelativeUrl()))
-      else:
-        movement_set.add(movement)
+      movement_set.add(movement)
+      movement_list.append(movement)
 
     return movement_list
+
+  searchMovementList = UnrestrictedMethod(_searchMovementList)
 
   def collectMovement(self, movement_list):
     """

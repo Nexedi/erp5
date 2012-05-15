@@ -282,7 +282,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
         source_value=source_value, 
         resource_value=self.currency_1,
         destination_value=None, source_total_asset_price=50000.0)
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(self.cash_balance_regulation_module.objectValues()), 1)
     self.cash_balance_regulation = getattr(self.cash_balance_regulation_module, 'cash_balance_regulation_1')
     self.assertEqual(self.cash_balance_regulation.getPortalType(), 'Cash Balance Regulation')
@@ -303,7 +303,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.cash_balance_regulation.objectValues()), 1)
     # get the cash balance regulation line
@@ -344,7 +344,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
 #             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/valid') + self.variation_list,
 #             self.quantity_200)
 #     # execute tic
-#     self.stepTic()
+#     self.tic()
 #     # check there is only one line created
 #     self.assertEqual(len(self.cash_balance_regulation.objectValues()), 2)
 #     # get the cash balance regulation line
@@ -408,7 +408,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
               'cash_status/valid') + self.variation_list,
             self.outgoing_quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_balance_regulation.objectValues()), 2)
     # get the second cash balance regulation line
@@ -446,7 +446,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
 #               'cash_status/valid') + self.variation_list,
 #             self.outgoing_quantity_100)
 #     # execute tic
-#     self.stepTic()
+#     self.tic()
 #     # check the number of lines (line1 + line2)
 #     self.assertEqual(len(self.cash_balance_regulation.objectValues()), 4)
 #     # get the second cash balance regulation line
@@ -493,7 +493,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.cash_balance_regulation, 'confirm_action', wf_id='cash_balance_regulation_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.cash_balance_regulation.getSimulationState()
     # check state is confirmed
@@ -600,7 +600,7 @@ class TestERP5BankingCashBalanceRegulation(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.cash_balance_regulation, 'deliver_action', wf_id='cash_balance_regulation_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of cash sorting
     state = self.cash_balance_regulation.getSimulationState()
     # check that state is delivered

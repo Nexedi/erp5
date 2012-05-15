@@ -298,7 +298,7 @@ class TestPreferences(PropertySheetTestCase):
         id='user_a_1', portal_type='Preference')
     user_a_2 = portal_preferences.newContent(
         id='user_a_2', portal_type='Preference')
-    self.commit(); self.tic()
+    self.tic()
 
     # enable a pref
     portal_workflow.doActionFor(
@@ -312,7 +312,7 @@ class TestPreferences(PropertySheetTestCase):
     user_b_1 = portal_preferences.newContent(
         id='user_b_1', portal_type='Preference')
     user_b_1.setPreferredAccountingTransactionAtDate(DateTime(2002, 02, 02))
-    self.commit(); self.tic()
+    self.tic()
 
     # enable this preference
     portal_workflow.doActionFor(
@@ -335,12 +335,12 @@ class TestPreferences(PropertySheetTestCase):
         id='manager_pref', portal_type='Preference')
     manager_pref.setPreferredAccountingTransactionAtDate(
                                 DateTime(2012, 12, 12))
-    self.commit(); self.tic()
+    self.tic()
     # enable this preference
     portal_workflow.doActionFor(
        manager_pref, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(manager_pref.getPreferenceState(), 'enabled')
-    self.commit(); self.tic()
+    self.tic()
 
     # check users preferences are still enabled
     self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
@@ -374,7 +374,7 @@ class TestPreferences(PropertySheetTestCase):
         # picked first
         priority=Priority.GROUP,
         preferred_accounting_transaction_simulation_state_list=['user_a'])
-    self.commit(); self.tic()
+    self.tic()
 
     # enable a pref
     portal_workflow.doActionFor(
@@ -385,7 +385,7 @@ class TestPreferences(PropertySheetTestCase):
     user_b = portal_preferences.newContent(
         id='user_b', portal_type='Preference',
         preferred_accounting_transaction_simulation_state_list=['user_b'])
-    self.commit(); self.tic()
+    self.tic()
 
     # enable this preference
     portal_workflow.doActionFor(

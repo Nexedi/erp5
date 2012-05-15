@@ -32,6 +32,7 @@ import os
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
@@ -864,9 +865,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                                 quantity_unit='unit/piece',
                                 individual_variation_base_category='variation',
                                 base_contribution='base_amount/taxable')
-    self.stepTic()
+    self.tic()
     resource.validate()
-    self.stepTic()
+    self.tic()
 
     start_date = sale_trade_condition.getEffectiveDate() + 1
     stop_date = sale_trade_condition.getExpirationDate() - 1
@@ -877,31 +878,31 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
        destination_administration=destination_administration.getRelativeUrl(),
        start_date=start_date,
        stop_date=stop_date)
-    self.stepTic()
+    self.tic()
 
     # Set the rest through the trade condition.
     order.SaleOrder_applySaleTradeCondition()
-    self.stepTic()
+    self.tic()
 
     order.newContent(portal_type='Sale Order Line',
                      resource=resource.getRelativeUrl(),
                      quantity=1.0)
-    self.stepTic()
+    self.tic()
 
     # stepPlanSaleOrders
     self.assertEquals(order.getSimulationState(), 'draft')
     order.plan()
-    self.stepTic()
+    self.tic()
     self.assertEquals(order.getSimulationState(), 'planned')
 
     # stepOrderSaleOrders
     order.order()
-    self.stepTic()
+    self.tic()
     self.assertEquals(order.getSimulationState(), 'ordered')
 
     # stepConfirmSaleOrders
     order.confirm()
-    self.stepTic()
+    self.tic()
     self.assertEquals(order.getSimulationState(), 'confirmed')
 
     # stepCheckSaleOrderSimulation
@@ -988,7 +989,7 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
 
   def uploadFile(self, file_id):
     file_obj = getattr(self.portal, file_id)
-    file_path = '/tmp/%s' % file_id
+    file_path = tests_home + '/%s' % file_id
     temp_file = open(file_path, 'w+b')
     try:
       temp_file.write(str(file_obj))

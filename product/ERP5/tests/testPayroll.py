@@ -1538,7 +1538,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
                   stop_date=DateTime(2009, 1, 31),
                   price_currency_value=eur)
     paysheet.PaySheetTransaction_applyModel()
-    self.stepTic()
+    self.tic()
 
     portal_type_list = ['Pay Sheet Model Line',]
 
@@ -1549,7 +1549,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
     paysheet.applyTransformation()
-    self.stepTic()
+    self.tic()
     self.assertEquals(len(paysheet.contentValues(
         portal_type='Pay Sheet Line')), 1)
     # check values on the paysheet
@@ -1579,14 +1579,14 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
           'base_amount/payroll/report/salary/gross'],
         price=0.01,
         quantity=10000.0)
-    self.stepTic()
+    self.tic()
 
     # create a paysheet without date
     paysheet_without_date = self.createPaysheet()
     paysheet_without_date.edit(specialise_value=model_without_date,
                   price_currency_value=eur)
     paysheet_without_date.PaySheetTransaction_applyModel()
-    self.stepTic()
+    self.tic()
 
     portal_type_list = ['Pay Sheet Model Line',]
 
@@ -1595,7 +1595,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
     paysheet_without_date.applyTransformation()
-    self.stepTic()
+    self.tic()
     self.assertEquals(len(paysheet_without_date.contentValues(\
         portal_type='Pay Sheet Line')), 1)
     # check values on the paysheet_without_date
@@ -1610,7 +1610,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
                   stop_date=DateTime(2009, 1, 31),
                   price_currency_value=eur)
     paysheet_with_date.PaySheetTransaction_applyModel()
-    self.stepTic()
+    self.tic()
 
     portal_type_list = ['Pay Sheet Model Line',]
 
@@ -1619,7 +1619,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
     paysheet_with_date.applyTransformation()
-    self.stepTic()
+    self.tic()
     # after calculation, paysheet contains one line, because the model applies.
     self.assertEquals(len(paysheet_with_date.contentValues(\
         portal_type='Pay Sheet Line')), 1)
@@ -1671,7 +1671,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
           'base_amount/payroll/report/salary/gross'],
         quantity=30000,
         price=1)
-    self.stepTic()
+    self.tic()
 
     # create the paysheet
     paysheet = self.portal.accounting_module.newContent(
@@ -1681,13 +1681,13 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
                               stop_date=DateTime(2009, 07, 31),
                               price_currency_value=eur)
     paysheet.PaySheetTransaction_applyModel()
-    self.stepTic()
+    self.tic()
 
     self.assertEquals(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 0)
     # calculate the pay sheet
     paysheet.applyTransformation()
-    self.stepTic()
+    self.tic()
     # XXX-Aurel Why it is one as the model should not apply since date are not in the range ??
     self.assertEquals(len(paysheet.contentValues(\
         portal_type='Pay Sheet Line')), 1)
@@ -1730,7 +1730,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
         expiration_date=DateTime(2009, 12, 31),
         version='001',
         specialise_value=sequence.get('business_process'))
-    self.stepTic()
+    self.tic()
 
     # create the paysheet
     paysheet = self.portal.accounting_module.newContent(
@@ -1740,7 +1740,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
                               stop_date=DateTime(2009, 07, 31),
                               price_currency_value=eur)
     paysheet.PaySheetTransaction_applyModel()
-    self.stepTic()
+    self.tic()
 
     # the effective model should be model_2 because of the effective date and
     # version number
@@ -1898,7 +1898,7 @@ class TestPayrollMixin(TestTradeModelLineMixin, ERP5ReportTestCase):
           'base_amount/payroll/report/salary/gross'],
         quantity=70000)
 
-    self.stepTic()
+    self.tic()
 
     # create the paysheet
     paysheet = self.portal.accounting_module.newContent(
@@ -2543,7 +2543,7 @@ class TestPayroll(TestPayrollMixin):
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
     cell_employer.edit(price=-.42, quantity=2998, contribution_share='employer')
-    self.stepTic()
+    self.tic()
 
     # AccountingTransactionModule_getPaySheetMovementMirrorSectionItemList is
     # used in the report dialog to display possible organisations.
@@ -2744,7 +2744,7 @@ class TestPayroll(TestPayrollMixin):
     cell_employer_b.edit(price=-.32, quantity=3000,
                          salary_range='france/slice_b',
                          contribution_share='employer')
-    self.stepTic()
+    self.tic()
 
     # set request variables and render
     request_form = self.portal.REQUEST
@@ -2944,7 +2944,7 @@ class TestPayroll(TestPayrollMixin):
                                 mapped_value_property_list=('price',
                                                             'quantity'),)
     cell_employer.edit(price=-.40, quantity=3000, contribution_share='employer')
-    self.stepTic()
+    self.tic()
 
     # set request variables and render
     request_form = self.portal.REQUEST
@@ -3210,7 +3210,7 @@ class TestPayroll(TestPayrollMixin):
                                                             'quantity'),)
     cell_employer.edit(price=-.2, quantity=2050, contribution_share='employer')
     ps.plan()
-    self.stepTic()
+    self.tic()
 
     related_applied_rule = ps.getCausalityRelatedValue(
                                 portal_type='Applied Rule')
@@ -3219,7 +3219,7 @@ class TestPayroll(TestPayrollMixin):
     # build accounting lines
     ps.confirm()
     ps.start()
-    self.stepTic()
+    self.tic()
     accounting_line_list = ps.contentValues(
         portal_type='Pay Sheet Transaction Line')
     self.assertEquals(len(accounting_line_list), 4)

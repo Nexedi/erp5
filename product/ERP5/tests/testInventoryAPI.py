@@ -292,7 +292,7 @@ class TestInventory(InventoryAPITestCase):
     sim_mvt.setDeliveryValue(mvt)
     self.failIf(sim_mvt.isAccountable())
     # not accountable movement are not counted by getInventory
-    self.commit(); self.tic() # (after reindexing of course)
+    self.tic() # (after reindexing of course)
     self.assertInventoryEquals(100, section_uid=self.section.getUid())
   
   def test_OmitSimulation(self):

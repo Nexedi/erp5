@@ -56,7 +56,7 @@ class TestSupplyMixin:
   def beforeTearDown(self):
     module = self.portal.getDefaultModule(self.supply_portal_type)
     module.manage_delObjects(list(module.objectIds()))
-    self.stepTic()
+    self.tic()
 
 class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     ERP5TypeTestCase):
@@ -213,7 +213,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
 
     supply = self._makeSupply(start_date_range_min=original_date)
     supply_line = self._makeSupplyLine(supply)
-    self.stepTic()
+    self.tic()
 
     # create Sale Order and check Supply Line settings when 
     # a Resource is set on Sale Order Line
@@ -223,7 +223,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
                                                      start_date = DateTime())
     sale_order_line = sale_order.newContent(portal_type = 'Sale Order Line')
     sale_order_line.setResource(product.getRelativeUrl())
-    self.stepTic()
+    self.tic()
     supply_line_list = self.domain_tool.searchPredicateList(sale_order,
                                       portal_type=self.supply_line_portal_type)
     self.assertSameSet([supply_line], supply_line_list)

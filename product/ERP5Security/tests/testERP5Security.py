@@ -421,7 +421,7 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
 
       getattr(uf, plugin_id).manage_activateInterfaces(
         interfaces=['IExtractionPlugin'])
-      self.stepTic()
+      self.tic()
 
   def testERP5ExternalAuthenticationPlugin(self):
     """
@@ -434,7 +434,7 @@ class TestUserManagementExternalAuthentication(TestUserManagement):
                                                          password='guest')
     assignment = loginable_person.newContent(portal_type='Assignment')
     assignment.open()
-    self.stepTic()
+    self.tic()
 
     base_url = self.portal.absolute_url(relative=1)
 
@@ -742,7 +742,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                    'IAuthenticationPlugin',
                    'ICredentialsUpdatePlugin',
                    'ICredentialsResetPlugin'])
-    self.stepTic()
+    self.tic()
 
     reference = 'UserReferenceTextWhichShouldBeHardToGeneratedInAnyHumanOrComputerLanguage'
     loginable_person = self.getPersonModule().newContent(portal_type='Person',
@@ -760,7 +760,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
         role_name=('Auditor', 'Assignee'),
         role_category='function/another_subcat')
       type_information.updateRoleMapping()
-    self.stepTic()
+    self.tic()
 
     # encrypt & decrypt works
     key = erp5_auth_key_plugin.encrypt(reference)
@@ -795,7 +795,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     web_site = portal.web_site_module.newContent(portal_type='Web Site')
     web_page = portal.web_page_module.newContent(portal_type='Web Page', reference='ref')
     web_page.release()
-    self.stepTic()
+    self.tic()
     base_url = web_site.absolute_url(relative=1)
     response = self.publish(base_url)
     self.assertEqual(response.getStatus(), 302)
@@ -839,10 +839,10 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     module = self.portal.getDefaultModule(portal_type=parent_type)
     self.login(original_owner_id)
     document = module.newContent(portal_type=parent_type)
-    self.stepTic()
+    self.tic()
     self.login(cloning_owner_id)
     cloned_document = document.Base_createCloneDocument(batch_mode=1)
-    self.stepTic()
+    self.tic()
     self.login()
     # real assertions
     # roles on original document
@@ -873,10 +873,10 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.login(original_owner_id)
     document = module.newContent(portal_type=parent_type)
     subdocument = document.newContent(portal_type=acquiring_type)
-    self.stepTic()
+    self.tic()
     self.login(cloning_owner_id)
     cloned_document = document.Base_createCloneDocument(batch_mode=1)
-    self.stepTic()
+    self.tic()
     self.login()
     self.assertEqual(1, len(document.contentValues()))
     self.assertEqual(1, len(cloned_document.contentValues()))

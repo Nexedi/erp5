@@ -141,7 +141,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.cash_inventory_group = self.cash_inventory_module.newContent(id='cash_inventory_group', portal_type='Cash Inventory Group', source_value=None, destination_value=self.paris, start_date = DateTime())
     # execute tic
-    self.stepTic()
+    self.tic()
     # check we have only one cash inventory
     self.assertEqual(len(self.cash_inventory_module.objectValues()), 1)
     # get the cash inventory document
@@ -161,7 +161,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.cash_inventory_group = self.cash_inventory_module.newContent(id='cash_inventory_group_2', portal_type='Cash Inventory Group', source_value=None, destination_value=self.paris, start_date = DateTime())
     # execute tic
-    self.stepTic()
+    self.tic()
     # check we have only one cash inventory
     self.assertEqual(len(self.cash_inventory_module.objectValues()), 2)
     # get the cash inventory document
@@ -181,7 +181,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
     # Cash inventory has caisse_1 for source, caisse_2 for destination, and a price cooreponding to the sum of banknote of 10000 abd coin of 200 ( (2+3) * 1000 + (5+7) * 200 )
     self.cash_inventory = self.cash_inventory_group.newContent(id='cash_inventory', portal_type='Cash Inventory', price_currency='currency_module/EUR')
     # execute tic
-    self.stepTic()
+    self.tic()
     # check we have only one cash inventory
     self.assertEqual(len(self.cash_inventory_group.objectValues()), 1)
     # get the cash inventory document
@@ -203,7 +203,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.cash_inventory.objectValues()), 1)
     # get the cash inventory line
@@ -260,7 +260,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_inventory.objectValues()), 2)
     # get the second cash inventory line
@@ -319,7 +319,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_inventory.objectValues()), 3)
     # get the second cash inventory line

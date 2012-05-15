@@ -350,7 +350,7 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.commit()
     self.setSystemPreference()
     self.portal.portal_tests.TestTool_cleanUpTestResults()
-    self.stepTic()
+    self.tic()
 
   def setSystemPreference(self):
     conversion_dict = _getConversionServerDict()

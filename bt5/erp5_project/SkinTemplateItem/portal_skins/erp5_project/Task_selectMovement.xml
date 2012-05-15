@@ -63,12 +63,7 @@ kw[\'query\'] = ComplexQuery(\n
   operator=\'and\')\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-\n
-if src__==0:\n
-  movement_list = [x.getObject() for x in context.Task_zSelectMovement(**kw)]\n
-  return movement_list\n
-else:\n
-  return context.Order_zSelectMovement(src__=1, **kw)\n
+return context.Order_zSelectMovement(src__=src__, **kw)\n
 </string> </value>
         </item>
         <item>

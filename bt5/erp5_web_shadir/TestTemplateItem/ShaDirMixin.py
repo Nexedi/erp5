@@ -99,4 +99,4 @@ class ShaDirMixin(object):
       title='SHA Dir Server', skin_selection_name='SHADIR')
     self.shadir.publish()
     self.shadir_url = self.shadir.absolute_url()
-    self.stepTic()
+    self.tic()

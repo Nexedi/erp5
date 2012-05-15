@@ -83,10 +83,10 @@ class TestERP5Administration(InventoryAPITestCase):
     person.title = 3 
     # tic right now to make sure the person is indexed, indeed the alarm
     # could use catalog to retrieve objects to check
-    self.stepTic()
+    self.tic()
     
     alarm.activeSense()
-    self.stepTic()
+    self.tic()
     
     # some errors were detected
     self.assertTrue(alarm.sense())

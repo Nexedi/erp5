@@ -124,7 +124,7 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
 
          document = module.newContent(portal_type=portal_type)
          document.publishAlive()
-         self.stepTic()
+         self.tic()
 
          self.logout()
          self.assertTrue(self.portal.portal_membership.isAnonymousUser())
@@ -149,7 +149,7 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
         document.view()
 
         document.publishAlive()
-        self.stepTic()
+        self.tic()
 
         self.assertEquals('Published Alive',
                             document.getValidationStateTitle())
@@ -192,7 +192,7 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
         self.changeUser(self.toto_user)
         document = module.newContent(portal_type=portal_type)
         document.publishAlive()
-        self.stepTic()
+        self.tic()
 
         self.changeUser(self.lucas_user)
         document()

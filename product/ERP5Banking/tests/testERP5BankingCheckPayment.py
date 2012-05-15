@@ -100,7 +100,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
     self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
     self.createCashInventory(source=None, destination=self.bi_counter_vault, currency=self.currency_1,
                              line_list=line_list)
-    self.stepTic()
+    self.tic()
     # create a person and a bank account
     self.person_1 = self.createPerson(id='person_1',
                                       first_name='toto',

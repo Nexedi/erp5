@@ -167,7 +167,7 @@ class TestERP5BankingInternalMoneyDeposit(TestERP5BankingMixin):
                                     description='test',
                                     )
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.internal_money_deposit)
     # check source reference

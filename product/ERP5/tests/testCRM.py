@@ -73,7 +73,7 @@ class BaseTestCRM(ERP5TypeTestCase):
     for module_name in clear_module_name_list:
       module = self.portal.unrestrictedTraverse(module_name)
       module.manage_delObjects(list(module.objectIds()))
-    self.stepTic()
+    self.tic()
     super(BaseTestCRM, self).beforeTearDown()
 
 class TestCRM(BaseTestCRM):
@@ -361,7 +361,7 @@ class TestCRM(BaseTestCRM):
     module = self.portal.support_request_module
     support_request = module.newContent(portal_type=portal_type,
                                         title=title,)
-    self.stepTic()
+    self.tic()
 
     self.assertNotEquals(None, support_request.getReference())
 
@@ -373,7 +373,6 @@ class TestCRM(BaseTestCRM):
                                         new_support_request.getReference())
 
 
-  @expectedFailure
   def test_Event_getResourceItemList(self):
     """Event_getResourceItemList returns
     category item list with base category in path, just
@@ -978,7 +977,6 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertNotEqual(part, None)
     self.assertEqual('<html><body>%s</body></html>' % text_content, part.get_payload(decode=True))
 
-  @expectedFailure
   def test_MailMessageHTMLbis(self):
     # test sending a mail message edited as HTML (the default with FCKEditor),
     # then the mail should have HTML
@@ -1437,7 +1435,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEquals(event.getTitle(), real_title)
     self.assertEquals(event.getTextContent(), real_content)
 
-    self.stepTic()
+    self.tic()
     new_event = event.Base_createCloneDocument(batch_mode=1)
     self.assertFalse(new_event.hasFile(), '%r has a file' % (new_event,))
     self.assertEquals(new_event.getData(), '')
@@ -1467,11 +1465,11 @@ class TestCRMMailSend(BaseTestCRM):
                 follow_up = campaing.getRelativeUrl())
       event.setDestinationList([x.getRelativeUrl() for x in destination_list])
       event_list.append(event)
-    self.stepTic()
+    self.tic()
     
     # use Ticket_cloneTicketAndEventList
     campaing.Ticket_cloneTicketAndEventList()
-    self.stepTic()
+    self.tic()
     cloned_campaign = [x for x in portal.campaign_module.objectValues() if x!=campaing][0]
     cloned_event_list = [x for x in portal.event_module.objectValues() if x.getFollowUpValue()==cloned_campaign]
     self.assertEqual(campaing.getTitle(), cloned_campaign.getTitle())
@@ -1624,7 +1622,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     person = self.portal.person_module.newContent(portal_type="Person")
     person.edit(default_email_text="test@test.com", title="test%s" % person.getId())
-    self.stepTic()
+    self.tic()
     mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
     relative_url_list = [z.getRelativeUrl() for z in self.portal.person_module.searchFolder()]
     mail_message.setDestinationList(relative_url_list)
@@ -1632,7 +1630,7 @@ class TestCRMMailSend(BaseTestCRM):
     mail_text_content = "Body Text Content"
     mail_message.setTextContent(mail_text_content)
     self.portal.portal_workflow.doActionFor(mail_message, "start_action")
-    self.stepTic()
+    self.tic()
     mail_message.Event_send(packet_size=2)
     self.commit()
     portal_activities = self.portal.portal_activities
@@ -1641,7 +1639,7 @@ class TestCRMMailSend(BaseTestCRM):
     try:
       self.assertEquals(2, len(message_list))
     finally:
-      self.stepTic()
+      self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertTrue(mail_text_content in last_message[-1])
     message = message_from_string(last_message[-1])
@@ -1654,13 +1652,13 @@ class TestCRMMailSend(BaseTestCRM):
       from_url, to_url, reply_url, subject, body, attachment_format, attachment_list
     """
     mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
-    self.stepTic()
+    self.tic()
     mail_message.Event_send(from_url='FG ER <eee@eee.com>',
                             to_url='Expert User <expert@in24.test>',
                             subject="Simple Case",
                             body="Body Simple Case",
                             attachment_list=[])
-    self.stepTic()
+    self.tic()
     last_message = self.portal.MailHost._last_message[-1]
     self.assertTrue("Body Simple Case" in last_message)
 
