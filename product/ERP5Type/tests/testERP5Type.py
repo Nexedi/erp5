@@ -1680,7 +1680,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       person.manage_permission('View', roles=['Auditor'], acquire=0)
 
       # The user may not view the person object.
-      self.commit(); self.tic()
+      self.tic()
       self.assertTrue('Auditor' not in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
@@ -1695,7 +1695,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # reflect the security change, until the affected objects are
       # reindexed, and Jean-Paul believes that this should not be
       # automatic.
-      self.commit(); self.tic()
+      self.tic()
       self.assertTrue('Auditor' in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
@@ -1706,7 +1706,7 @@ class TestERP5Type(PropertySheetTestCase, LogInterceptor):
       # Now invoke the reindexing explicitly, so the catalog should be
       # synchronized.
       person_module.recursiveReindexObject()
-      self.commit(); self.tic()
+      self.tic()
       self.assertTrue('Auditor' in user.getRolesInContext(person))
       self.logout()
       newSecurityManager(None, user)
