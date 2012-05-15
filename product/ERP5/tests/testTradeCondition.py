@@ -35,26 +35,17 @@ from Products.ZSQLCatalog.SQLCatalog import Catalog
 from Products.ERP5Type.tests.utils import SubcontentReindexingWrapper
 
 class TradeConditionTestCase(ERP5TypeTestCase, SubcontentReindexingWrapper):
-  """Tests for Trade Conditions and Tax
-  """
+
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_pdm', 'erp5_trade', 'erp5_accounting',
-            'erp5_invoicing', 'erp5_tax_resource', 'erp5_discount_resource',
-            'erp5_legacy_tax_system', 'erp5_simplified_invoicing',)
+    return ('erp5_base', 'erp5_pdm', 'erp5_simulation', 'erp5_trade',
+            'erp5_accounting', 'erp5_invoicing', 'erp5_simplified_invoicing')
 
   size_category_list = ['small', 'big']
   def afterSetUp(self):
-    self.validateRules()
     for category_id in self.size_category_list:
       self.portal.portal_categories.size.newContent(id=category_id,
                                                     title=category_id)
     self.base_amount = self.portal.portal_categories.base_amount
-    self.tax = self.portal.tax_module.newContent(
-                                    portal_type='Tax',
-                                    title='Tax')
-    self.discount = self.portal.discount_module.newContent(
-                                    portal_type='Discount',
-                                    title='Discount')
     self.client = self.portal.organisation_module.newContent(
                                     portal_type='Organisation',
                                     title='Client')
@@ -81,13 +72,9 @@ class TradeConditionTestCase(ERP5TypeTestCase, SubcontentReindexingWrapper):
 
   def beforeTearDown(self):
     self.abort()
-    for module in (self.portal.tax_module,
-                   self.portal.organisation_module,
+    for module in (self.portal.organisation_module,
                    self.portal.currency_module,
                    self.portal.product_module,
-                   self.portal.accounting_module,
-                   self.portal.account_module,
-                   self.portal.portal_simulation,
                    self.trade_condition_module,
                    self.order_module,
                    self.portal.portal_categories.base_amount,
@@ -101,97 +88,6 @@ class TradeConditionTestCase(ERP5TypeTestCase, SubcontentReindexingWrapper):
                             portal_type=self.trade_condition_type)
     supply_line = trade_condition.newContent(portal_type=self.supply_line_type)
     self._testSubContentReindexing(trade_condition, [supply_line])
-
-class AccountingBuildTestCase(TradeConditionTestCase):
-  """Same as TradeConditionTestCase, but with a rule to generate
-  accounting.
-  """
-  def afterSetUp(self):
-    TradeConditionTestCase.afterSetUp(self)
-    self.receivable_account = self.portal.account_module.newContent(
-                                    id='receivable',
-                                    title='Receivable',
-                                    account_type='asset/receivable')
-    self.payable_account = self.portal.account_module.newContent(
-                                    id='payable',
-                                    title='Payable',
-                                    account_type='liability/payable')
-    self.income_account = self.portal.account_module.newContent(
-                                    id='income',
-                                    title='Income',
-                                    account_type='income')
-    self.expense_account = self.portal.account_module.newContent(
-                                    id='expense',
-                                    title='Expense',
-                                    account_type='expense')
-    self.collected_tax_account = self.portal.account_module.newContent(
-                                    id='collected_tax',
-                                    title='Collected Tax',
-                                    account_type='liability/payable/collected_vat')
-    self.refundable_tax_account = self.portal.account_module.newContent(
-                                    id='refundable_tax',
-                                    title='Refundable Tax',
-                                    account_type='asset/receivable/refundable_vat')
-
-    for account in self.portal.account_module.contentValues():
-      self.assertNotEquals(account.getAccountTypeValue(), None)
-      account.validate()
-    
-    itr = self.portal.portal_rules.newContent(
-                        portal_type='Invoice Transaction Simulation Rule',
-                        reference='default_invoice_transaction_rule',
-                        id='test_invoice_transaction_rule',
-                        title='Transaction Rule',
-                        test_method_id='SimulationMovement_testInvoiceTransactionSimulationRule',
-                        version=100)
-    predicate = itr.newContent(portal_type='Predicate',)
-    predicate.edit(
-            string_index='resource_type',
-            title='Resource Product',
-            int_index=1,
-            test_method_id='SimulationMovement_isDeliveryMovement' )
-    predicate = itr.newContent(portal_type='Predicate')
-    predicate.edit(
-            string_index='resource_type',
-            title='Resource Tax',
-            int_index=2,
-            test_method_id='SimulationMovement_isTaxMovement' )
-    self.tic()
-    accounting_rule_cell_list = itr.contentValues(
-                            portal_type='Accounting Rule Cell')
-    self.assertEquals(2, len(accounting_rule_cell_list))
-    product_rule_cell = itr._getOb("movement_0")
-    self.assertEquals(product_rule_cell.getTitle(), 'Resource Product')
-    product_rule_cell.newContent(
-                         portal_type='Accounting Transaction Line',
-                         source_value=self.receivable_account,
-                         destination_value=self.payable_account,
-                         quantity=-1)
-    product_rule_cell.newContent(
-                         portal_type='Accounting Transaction Line',
-                         source_value=self.income_account,
-                         destination_value=self.expense_account,
-                         quantity=1)
-    
-    tax_rule_cell = itr._getOb("movement_1")
-    self.assertEquals(tax_rule_cell.getTitle(), 'Resource Tax')
-    tax_rule_cell.newContent(
-                         portal_type='Accounting Transaction Line',
-                         source_value=self.receivable_account,
-                         destination_value=self.payable_account,
-                         quantity=-1)
-    tax_rule_cell.newContent(
-                         portal_type='Accounting Transaction Line',
-                         source_value=self.collected_tax_account,
-                         destination_value=self.refundable_tax_account,
-                         quantity=1)
-    itr.validate()
-    self.tic()
-
-  def beforeTearDown(self):
-    TradeConditionTestCase.beforeTearDown(self)
-    self.portal.portal_rules.manage_delObjects('test_invoice_transaction_rule')
-    self.tic()
 
 class TestApplyTradeCondition(TradeConditionTestCase):
   """Tests Applying Trade Conditions
@@ -340,113 +236,6 @@ class TestApplyTradeCondition(TradeConditionTestCase):
     self.assertEquals('custom', self.order.getPaymentConditionTradeDate())
     self.assertEquals(DateTime(2002, 02, 02),
                       self.order.getPaymentConditionPaymentDate())
-
-
-  def test_tax_model_line_consistency(self):
-    base_1 = self.base_amount.newContent(
-                          portal_type='Category',
-                          title='Base 1')
-    tax_model_line = self.trade_condition.newContent(
-                  portal_type='Tax Model Line',
-                  base_application_value=base_1,
-                  float_index=1,
-                  efficiency=0.2,
-                  resource_value=self.tax)
-    self.assertEquals([], tax_model_line.checkConsistency())
-    self.assertEquals([], self.trade_condition.checkConsistency())
-  
-  def test_discount_model_line_consistency(self):
-    base_1 = self.base_amount.newContent(
-                          portal_type='Category',
-                          title='Base 1')
-    discount_model_line = self.trade_condition.newContent(
-                  portal_type='Discount Model Line',
-                  base_application_value=base_1,
-                  float_index=1,
-                  efficiency=0.2,
-                  resource_value=self.discount)
-    self.assertEquals([], discount_model_line.checkConsistency())
-    self.assertEquals([], self.trade_condition.checkConsistency())
-
-  def test_view_tax_model_line(self):
-    base_1 = self.base_amount.newContent(
-                          portal_type='Category',
-                          title='Base 1')
-    tax_model_line = self.trade_condition.newContent(
-                  portal_type='Tax Model Line',
-                  base_application_value=base_1,
-                  float_index=1,
-                  efficiency=0.2,
-                  resource_value=self.tax)
-    # TODO: fail if a field has an error
-    tax_model_line.view()
-    self.trade_condition.TradeCondition_viewTax()
-
-  def test_view_discount_model_line(self):
-    base_1 = self.base_amount.newContent(
-                          portal_type='Category',
-                          title='Base 1')
-    discount_model_line = self.trade_condition.newContent(
-                  portal_type='Discount Model Line',
-                  base_application_value=base_1,
-                  float_index=1,
-                  efficiency=0.2,
-                  resource_value=self.discount)
-    # TODO: fail if a field has an error
-    discount_model_line.view()
-    self.trade_condition.TradeCondition_viewDiscount()
-
-  def test_tax_line_consistency(self):
-    base_1 = self.base_amount.newContent(
-                          portal_type='Category',
-                          title='Base 1')
-    tax_line = self.order.newContent(
-                        portal_type='Tax Line',
-                        resource_value=self.tax,
-                        base_application_value=base_1,
-                        quantity=0,
-                        efficiency=5.5)
-    self.assertEquals([], tax_line.checkConsistency())
-
-  def test_view_tax_line(self):
-    base_1 = self.base_amount.newContent(
-                          portal_type='Category',
-                          title='Base 1')
-    tax_line = self.order.newContent(
-                        portal_type='Tax Line',
-                        resource_value=self.tax,
-                        base_application_value=base_1,
-                        quantity=0,
-                        efficiency=5.5)
-    # TODO: fail if a field has an error
-    tax_line.view()
-    self.order.Delivery_viewTax()
-
-  def test_discount_line_consistency(self):
-    base_1 = self.base_amount.newContent(
-                          portal_type='Category',
-                          title='Base 1')
-    discount_line = self.order.newContent(
-                        portal_type='Discount Line',
-                        resource_value=self.discount,
-                        base_application_value=base_1,
-                        quantity=0,
-                        efficiency=5.5)
-    self.assertEquals([], discount_line.checkConsistency())
-
-  def test_view_discount_line(self):
-    base_1 = self.base_amount.newContent(
-                          portal_type='Category',
-                          title='Base 1')
-    discount_line = self.order.newContent(
-                        portal_type='Discount Line',
-                        resource_value=self.discount,
-                        base_application_value=base_1,
-                        quantity=0,
-                        efficiency=5.5)
-    # TODO: fail if a field has an error
-    discount_line.view()
-    self.order.Delivery_viewDiscount()
 
 
 class TestTradeConditionSupplyLine(TradeConditionTestCase):
@@ -622,7 +411,6 @@ class TestEffectiveTradeCondition(TradeConditionTestCase):
                     start_date=DateTime('2009/06/01'),
                     stop_date=DateTime('2009/06/01')))
 
-    
   def test_getEffectiveModel_return_self_when_no_reference(self):
     # when no reference defined, getEffectiveModel returns the trade condition.
     self.trade_condition.setReference(None)
@@ -707,4 +495,3 @@ def test_suite():
   suite.addTest(unittest.makeSuite(TestEffectiveSaleTradeCondition))
   suite.addTest(unittest.makeSuite(TestEffectivePurchaseTradeCondition))
   return suite
-
