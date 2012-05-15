@@ -270,7 +270,6 @@ class FunctionalTestRunner:
       self.browser = Firefox(profile_dir, host, int(port))
 
   def getStatus(self):
-    # XXX - must use commit method from ProcessingNodeTestCase
     transaction.commit()
     return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
