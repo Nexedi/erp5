@@ -33,7 +33,7 @@ import signal
 import re
 from subprocess import Popen, PIPE
 import shutil
-from Products.ERP5Type.tests.ProcessingNodeTestCase import ProcessingNodeTestCase
+import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
                                                _getConversionServerDict
 
@@ -271,7 +271,6 @@ class FunctionalTestRunner:
 
   def getStatus(self):
     # XXX - must use commit method from ProcessingNodeTestCase
-    import transaction
     transaction.commit()
     return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
