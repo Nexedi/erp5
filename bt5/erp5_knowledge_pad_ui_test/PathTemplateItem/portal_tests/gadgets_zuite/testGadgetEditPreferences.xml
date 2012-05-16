@@ -56,15 +56,13 @@
   <td>180000</td>\n
   <td></td>\n
 </tr>\n
-\n
+<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
+Wait for activities</span>\n
 <tr>\n
-  <td>openAndWait</td>\n
+  <td>openAndWait</td>\t\t \n
   <td>${base_url}/view</td>\n
   <td></td>\n
 </tr>\n
-<span metal:use-macro="container/Zuite_CommonTemplate/macros/wait_for_activities">\n
-Wait for activities</span>\n
-\n
 <!-- Add to pad few gadgets -->\n
 <tr>\n
   <td>openAndWait</td>\n
@@ -127,9 +125,9 @@ Wait for activities</span>\n
   <td>Clock XXXXX</td>\n
 </tr>\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@type=\'submit\' and @onclick=&quot;submitSynchronousGadgetPreferenceForm(\'gadget_preference_${clock_box_id}_field\',\'${clock_box_url}\')&quot;]</td>\n
-  <td></td>\n
+  <td>keyPressAndWait</td>\n
+  <td>gadget_preference_${clock_box_id}_field_my_preferred_header_title</td>\n
+  <td>\\13</td>\n
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
@@ -152,9 +150,9 @@ Wait for activities</span>\n
   <td>Calendar YYYYY</td>\n
 </tr>\n
 <tr>\n
-  <td>clickAndWait</td>\n
-  <td>//button[@type=\'submit\' and @onclick=&quot;submitSynchronousGadgetPreferenceForm(\'gadget_preference_${calendar_box_id}_field\',\'${calendar_box_url}\')&quot;]</td>\n
-  <td></td>\n
+  <td>keyPressAndWait</td>\n
+  <td>gadget_preference_${calendar_box_id}_field_my_preferred_header_title</td>\n
+  <td>\\13</td>\n
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
@@ -229,8 +227,7 @@ Wait for activities</span>\n
 \n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>
