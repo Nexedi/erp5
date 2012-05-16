@@ -43,12 +43,8 @@ implements_tuple_list = [
   (('Products.ERP5.Document.TradeModelLine','TradeModelLine'), 'IAmountGenerator'),
   (('Products.ERP5.Document.TradeModelLine','TradeModelLine'), 'IVariated'),
   (('Products.ERP5.Document.TradeModelPath','TradeModelPath'), 'IArrowBase'),
-  (('Products.ERP5Legacy.Document.TradeModelRule','TradeModelRule'), 'IPredicate'),
-  (('Products.ERP5Legacy.Document.TradeModelRule','TradeModelRule'), 'IRule'),
   (('Products.ERP5.Document.Transformation','Transformation'), 'IAmountGenerator'),
   (('Products.ERP5.Document.Transformation','Transformation'), 'IVariated'),
-  (('Products.ERP5Legacy.Document.TransformationRule','TransformationRule'), 'IPredicate'),
-  (('Products.ERP5Legacy.Document.TransformationRule','TransformationRule'), 'IRule'),
   (('Products.ERP5.Document.TransformedResource','TransformedResource'), 'IVariated'),
   #IDocument
   (('Products.ERP5.Document.Document', 'Document'), 'IDocument'),
@@ -88,8 +84,6 @@ for failing_method in [
     'test_Products.ERP5.Document.BusinessLink_BusinessLink_implements_ICategoryAccessProvider',
     'test_Products.ERP5.Document.TradeModelCell_TradeModelCell_implements_IVariated',
     'test_Products.ERP5.Document.TradeModelLine_TradeModelLine_implements_IVariated',
-    'test_Products.ERP5Legacy.Document.TradeModelRule_TradeModelRule_implements_IRule',
-    'test_Products.ERP5Legacy.Document.TransformationRule_TransformationRule_implements_IRule',
     'test_Products.ERP5.Document.Transformation_Transformation_implements_IVariated',
     'test_Products.ERP5.Document.TransformedResource_TransformedResource_implements_IVariated',
   ]:

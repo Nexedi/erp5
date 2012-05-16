@@ -62,7 +62,7 @@ for movement in movement_list:\n
   line = None\n
 \n
   # case of trade model movement\n
-  if ar.getParentValue().getParentValue().getSpecialiseValue().getPortalType() in (\'Trade Model Rule\', \'Trade Model Simulation Rule\'):\n
+  if ar.getParentValue().getParentValue().getSpecialiseValue().getPortalType() == \'Trade Model Simulation Rule\':\n
     line = ar.getParentValue().getParentValue().getParentValue().getDeliveryValue()\n
 \n
   # in case of invoice rule (ie. starting from Invoice)\n

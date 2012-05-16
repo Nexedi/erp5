@@ -74,12 +74,6 @@ invoice = context\n
 \n
 related_packing_list = invoice.getDefaultCausalityValue()\n
 \n
-# copy trade condition:\n
-if not context.getSpecialise() and context.portal_skins.hasObject(\'erp5_simulation_legacy\'):\n
-  related_order = related_packing_list.getDefaultCausalityValue()\n
-  if related_order is not None:\n
-    context.edit(specialise=related_order.getSpecialise())\n
-\n
 # copy title, if not updating a new delivery\n
 if not invoice.hasTitle() and related_packing_list.hasTitle():\n
   invoice.setTitle(related_packing_list.getTitle())\n

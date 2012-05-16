@@ -84,8 +84,6 @@ class TestAccountingRulesMixin:
   applied_rule_portal_type             = "Applied Rule"
   simulation_movement_portal_type      = "Simulation Movement"
   accounting_rule_cell_portal_type     = "Accounting Rule Cell"
-  invoice_transaction_rule_portal_type \
-                    = "Invoice Transaction Rule"
 
   payment_transaction_portal_type      = "Payment Transaction"
   payment_transaction_line_definition_list = (
