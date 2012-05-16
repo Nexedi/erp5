@@ -28,6 +28,7 @@
 
 import unittest
 import urllib
+import transaction
 import ZODB
 from ZODB.DemoStorage import DemoStorage
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase

@@ -33,6 +33,7 @@ import threading
 import time
 import unittest
 import urllib
+import transaction
 from DateTime import DateTime
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
