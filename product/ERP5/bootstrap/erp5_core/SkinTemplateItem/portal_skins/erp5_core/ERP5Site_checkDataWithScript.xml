@@ -132,18 +132,18 @@ else:\n
   result = None\n
   if active_process is None:\n
     result = active_process = context.newActiveProcess().getPath()\n
-  kw = dict(relative_url=relative_url, active_process=active_process,\n
+  kw = dict(active_process=active_process,\n
             tag=tag, full=full, recursive=recursive, packet=packet,\n
             method_id=method_id, method_kw=method_kw)\n
+  active_script = getattr(activate(priority=4), script.id)\n
   if depth < maximum_depth:\n
-    packet = 1\n
     relative_url = relative_url and relative_url + \'/\' or \'\'\n
-  for i in xrange(0, len(id_list), packet):\n
-    if packet == 1:\n
-      kw[\'relative_url\'] = relative_url + id_list[i]\n
-    else:\n
-      kw[\'id_list\'] = tuple(id_list[i:i+packet])\n
-    activate(priority=4).ERP5Site_checkDataWithScript(**kw)\n
+    for id in id_list:\n
+      active_script(relative_url=relative_url + id, **kw)\n
+  else:\n
+    kw[\'relative_url\'] = relative_url\n
+    for i in xrange(0, len(id_list), packet):\n
+      active_script(id_list=tuple(id_list[i:i + packet]), **kw)\n
   # return the active process path if we created one\n
   return result\n
 
