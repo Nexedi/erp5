@@ -61,14 +61,6 @@ for movement in movement_list:\n
   ar = movement.getParentValue()\n
   line = None\n
 \n
-  # case of tax movement  \n
-  if ar.getSpecialiseValue().getPortalType() in (\'Tax Rule\', \'Tax Simulation Rule\'):\n
-    for other_rule in ar.getParentValue().contentValues():\n
-      if other_rule == ar:\n
-        continue\n
-      for sm in other_rule.contentValues():\n
-        line = sm.getDeliveryValue()\n
-\n
   # case of trade model movement\n
   if ar.getParentValue().getParentValue().getSpecialiseValue().getPortalType() in (\'Trade Model Rule\', \'Trade Model Simulation Rule\'):\n
     line = ar.getParentValue().getParentValue().getParentValue().getDeliveryValue()\n

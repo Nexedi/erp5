@@ -71,7 +71,7 @@ for movement_group_class_name in ['MovementGroup', 'BaseVariantMovementGroup',
     'PropertyAssignmentMovementGroup', 'PropertyMovementGroup',
     'QuantitySignMovementGroup', 'RequirementMovementGroup',
     'RootAppliedRuleCausalityMovementGroup', 'SplitMovementGroup',
-    'TaxLineDeliveryMovementGroup', 'TitleMovementGroup',
+    'TitleMovementGroup',
     'VariantMovementGroup', 'VariationPropertyMovementGroup']:
   implements_tuple_list.append((('Products.ERP5Type.Document.%s' % \
       movement_group_class_name, movement_group_class_name),
