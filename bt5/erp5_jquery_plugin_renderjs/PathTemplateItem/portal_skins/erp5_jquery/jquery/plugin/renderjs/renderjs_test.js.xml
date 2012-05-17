@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts37244023.74</string> </value>
+            <value> <string>ts37256303.27</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -37,7 +37,7 @@ function setupRenderJSTest(){\n
  \n
   module("TabularGadget");\n
   test(\'addNewTabGadget\', function(){\n
-              TabbularGadget.addNewTabGadget("qunit-fixture", "Person_view/Form_asRenderJSGadget", "FormUpdater.update", "Form_asJSON?form_id=Person_view");\n
+              TabbularGadget.addNewTabGadget("qunit-fixture", "Person_view/Form_asRenderJSGadget", "ERP5Form.update", "Form_asJSON?form_id=Person_view");\n
               equal($("#qunit-fixture").children(".gadget").length, 1);\n
               equal(GadgetIndex.getGadgetList().length, 1);\n
 \n
@@ -80,7 +80,7 @@ function setupRenderJSTest(){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1812</int> </value>
+            <value> <int>1809</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
