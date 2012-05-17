@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts37255495.21</string> </value>
+            <value> <string>ts37261763.42</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -33,53 +33,15 @@ if (typeof console === "undefined" || typeof console.log === "undefined") {\n
 }\n
 \n
 var is_ready;\n
-is_ready = false; // dirty flag to be removed (indicates if ready event has been handled)\n
+is_ready = false; // XXX: dirty flag to be removed (indicates if ready event has been handled)\n
 \n
 \n
-/*\n
- * This plugin saves within current page namespace.\n
- */\n
-var NameSpaceStorageCachePlugin = function() {\n
-  \n
-  var namespace = {};\n
-  \n
-  return {\n
-          get: function (cache_id, default_value) {\n
-            /* Get cache key value */\n
-            return namespace[cache_id];\n
-          },\n
-\n
-          set: function (cache_id, data) {\n
-            /* Set cache key value */\n
-            namespace[cache_id] = data;\n
-          }\n
-\n
-  }}();\n
-\n
-\n
-/*\n
- * This plugin saves using HTML5 localStorage.\n
- */\n
-var LocalStorageCachePlugin = function() {\n
-  \n
-  return {\n
-          get: function (cache_id, default_value) {\n
-            /* Get cache key value */\n
-            return $.jStorage.get(cache_id, default_value);\n
-          },\n
-\n
-          set: function (cache_id, data) {\n
-            /* Set cache key value */\n
-            $.jStorage.set(cache_id, data);\n
-          }\n
-  }}();\n
-\n
-  \n
+ \n
 /*\n
  * Generic cache implementation that can fall back to local namespace storage\n
  * if no "modern" storage like localStorage is available\n
  */  \n
-var Cache = function() {\n
+var Cache = (function() {\n
   \n
   return {\n
   \n
@@ -112,27 +74,63 @@ var Cache = function() {\n
             /* Get cache key value */\n
             cache_id = this.getCacheId(cache_id);\n
             if (this.hasLocalStorage()) {\n
-              return LocalStorageCachePlugin.get(cache_id, default_value);\n
+              return this.LocalStorageCachePlugin.get(cache_id, default_value);\n
             }\n
             //fallback to javscript namespace cache\n
-            return NameSpaceStorageCachePlugin.get(cache_id, default_value);\n
+            return this.NameSpaceStorageCachePlugin.get(cache_id, default_value);\n
           },\n
 \n
           set: function (cache_id, data) {\n
             /* Set cache key value */\n
             cache_id = this.getCacheId(cache_id);\n
             if (this.hasLocalStorage()){\n
-              LocalStorageCachePlugin.set(cache_id, data);}\n
+              this.LocalStorageCachePlugin.set(cache_id, data);}\n
             else{\n
-              NameSpaceStorageCachePlugin.set(cache_id, data);}\n
-          }\n
+              this.NameSpaceStorageCachePlugin.set(cache_id, data);}\n
+          },\n
 \n
-  }}();\n
+          LocalStorageCachePlugin : (function() {\n
+            /*\n
+            * This plugin saves using HTML5 localStorage.\n
+            */\n
+            return {\n
+                    get: function (cache_id, default_value) {\n
+                      /* Get cache key value */\n
+                      return $.jStorage.get(cache_id, default_value);\n
+                    },\n
+\n
+                    set: function (cache_id, data) {\n
+                      /* Set cache key value */\n
+                      $.jStorage.set(cache_id, data);\n
+                    }\n
+            }}()),\n
+            \n
+            NameSpaceStorageCachePlugin: (function() {\n
+              /*\n
+              * This plugin saves within current page namespace.\n
+              */\n
+\n
+              var namespace = {};\n
+\n
+              return {\n
+                      get: function (cache_id, default_value) {\n
+                        /* Get cache key value */\n
+                        return namespace[cache_id];\n
+                      },\n
+\n
+                      set: function (cache_id, data) {\n
+                        /* Set cache key value */\n
+                        namespace[cache_id] = data;\n
+                      }\n
+\n
+              }}())\n
+\n
+  }}());\n
 \n
 /*\n
  * Generic tabular gadget\n
  */\n
-var TabbularGadget = function () {\n
+var TabbularGadget = (function () {\n
   \n
   return {\n
 \n
@@ -159,7 +157,9 @@ var TabbularGadget = function () {\n
 \n
             tab_container.append(html_string);\n
             tab_gadget = tab_container.find(".gadget");\n
-\n
+            \n
+            // XXX: we should unregister all gadgets (if any we replace now in DOM)\n
+            \n
             // render new gadget\n
             is_ready = false;\n
             RenderJs.loadGadgetFromUrl(tab_gadget);\n
@@ -172,7 +172,7 @@ var TabbularGadget = function () {\n
             });\n
           }\n
   \n
-}}();\n
+}}());\n
 \n
 \n
 \n
@@ -219,7 +219,7 @@ Gadget.prototype.getParent = function() {\n
 /*\n
  * Generic gadget index placeholder\n
  */\n
-var GadgetIndex = function () {\n
+var GadgetIndex = (function () {\n
   \n
   var gadget_list = [];\n
   \n
@@ -243,8 +243,8 @@ var GadgetIndex = function () {\n
             /*\n
             * Unregister gadget\n
             */\n
-            index = jQuery.inArray(gadget, gadget_list);\n
-            if (index!=-1) {\n
+            var index = $.inArray(gadget, gadget_list);\n
+            if (index!==-1) {\n
               gadget_list.splice(index, 1);\n
             }\n
           },\n
@@ -292,13 +292,13 @@ var GadgetIndex = function () {\n
             // XXX:\n
           }\n
   \n
-}}();\n
+}}());\n
 \n
 \n
 /*\n
  * Basic gadget interaction gadget implementation.\n
  */\n
-var InteractionGadget = function () {\n
+var InteractionGadget = (function () {\n
   \n
   return {\n
 \n
@@ -308,6 +308,8 @@ var InteractionGadget = function () {\n
             */\n
             gadget_id = gadget_dom.attr("id");\n
             gadget_dom.find("connect").each(function (key, value){\n
+              var source, source_gadget_id, source_method_id, source_gadget, destination, destination_gadget_id,\n
+                  destination_method_id, destination_gadget, func_body, func;\n
               source = $(value).attr("source").split(".");\n
               source_gadget_id = source[0];\n
               source_method_id = source[1];\n
@@ -336,14 +338,14 @@ var InteractionGadget = function () {\n
             }\n
             );\n
           }\n
-  }}();\n
+  }}());\n
 \n
 \n
 /*\n
  * Generic Gadget library renderer\n
  */\n
 \n
-var RenderJs = function () {\n
+var RenderJs = (function () {\n
   \n
   return  {\n
    \n
@@ -477,7 +479,7 @@ var RenderJs = function () {\n
                               success: RenderJs.updateGadgetWithDataHandler});}\n
         }\n
 \n
-  }}();
+  }}());
 
 ]]></string> </value>
         </item>
@@ -487,7 +489,7 @@ var RenderJs = function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>15221</int> </value>
+            <value> <int>15882</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
