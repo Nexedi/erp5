@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts37256095.54</string> </value>
+            <value> <string>ts37261735.49</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -27,7 +27,7 @@
   Note: This is an ERP5 form implementation for the moment.\n
 */\n
 \n
-var ERP5Form = function () {\n
+var ERP5Form = ( function () {\n
   \n
   var CURRENT_FORM_ID = "";\n
   \n
@@ -182,7 +182,8 @@ var ERP5Form = function () {\n
 \n
           ListBox:  function (field_id, field_dict) {\n
                       /* Listbox field */\n
-                      var listbox_id, navigation_id, listbox_table, current_form_id, listbox_dict, listbox_data_url, colModel, column_title_list;\n
+                      var listbox_id, navigation_id, listbox_table, current_form_id, listbox_dict,\n
+                          listbox_data_url, colModel, column_title_list;\n
                       listbox_id = "field_" + field_id;\n
                       navigation_id = listbox_id + "_pager";\n
                       listbox_table = $("#"+listbox_id);\n
@@ -311,12 +312,12 @@ var ERP5Form = function () {\n
                                   // show a fading portal_status_message\n
                                   $("#portal_status_message").toggle();\n
                                   $("#portal_status_message p").html("Saved");\n
-                                  window.setTimeout( \'$("#portal_status_message").toggle()\', 4000);\n
+                                  window.setTimeout(\'$("#portal_status_message").toggle();\', 4000);\n
                                 }\n
                               }});\n
           }\n
 \n
-  }} ();\n
+  }} ());\n
 
 
 ]]></string> </value>
@@ -327,7 +328,7 @@ var ERP5Form = function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>14114</int> </value>
+            <value> <int>14143</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
