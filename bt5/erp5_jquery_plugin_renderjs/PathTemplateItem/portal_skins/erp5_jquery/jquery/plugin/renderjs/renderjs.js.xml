@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts37002880.65</string> </value>
+            <value> <string>ts37244071.21</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -138,20 +138,20 @@ var TabbularGadget = {\n
     visible_dom.removeClass("not_selected");\n
   },\n
   \n
-  addNewTabGadget: function(form_id, dom_id, gadget_data_handler) {\n
-    // add new gadget and render it\n
+  addNewTabGadget: function(dom_id, gadget, gadget_data_handler, gadget_data_source) {\n
+    /*\n
+     * add new gadget and render it\n
+     */\n
     var html_string;\n
     tab_container=$(\'#\'+dom_id);\n
     tab_container.empty();\n
-    // XXX: allow add any gadget,gadget:source items within API\n
     html_string =[\'<div class="gadget" \',\n
-                  \'gadget="\' + form_id + \'/Form_asRenderJSGadget" \',\n
+                  \'gadget="\' + gadget + \'"\',\n
                   \'gadget:data-handler="\' + gadget_data_handler + \'" \',\n
-                  \'gadget:data-source="Form_asJSON?form_id=\' + form_id + \'"></div>\'].join(\'\\n\');\n
+                  \'gadget:data-source="\' + gadget_data_source +\'"></div>\'].join(\'\\n\');\n
                   \n
     tab_container.append(html_string);\n
     tab_gadget = tab_container.find(".gadget");\n
-    Form.setCurrentFormId(form_id);\n
                 \n
     // render new gadget\n
     is_ready = false;\n
@@ -168,7 +168,8 @@ var TabbularGadget = {\n
 };\n
 \n
 /*\n
-  Form field renderer\n
+  Form field renderer.\n
+  Note: This is an ERP5 form implementation for the moment.\n
 */\n
 var Form = {\n
 \n
@@ -769,7 +770,7 @@ var RenderJs = {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>25373</int> </value>
+            <value> <int>25334</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
