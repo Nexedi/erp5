@@ -68,6 +68,7 @@
             \074!--\074![endif]--\076\n
             \074script src="jquery/plugin/jstorage/jstorage.js" type="text/javascript"\076\074/script\076\n
             \074script src="jquery/plugin/renderjs/renderjs.js"\076\074/script\076\n
+            \074script src="erp5_form.js"\076\074/script\076\n
 \n
             \074div id="content"\n
                 gadget="gadgets/content/gadget"\n

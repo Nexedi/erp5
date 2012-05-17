@@ -1,0 +1,341 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts37251959.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>erp5_form.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+/*\n
+  Form field renderer.\n
+  Note: This is an ERP5 form implementation for the moment.\n
+*/\n
+var Form = {\n
+\n
+  // elements marked with this class can be serizlized to server\n
+  SERIALIZE_ABLE_CLASS_NAME: "serialize-able",\n
+\n
+  CURRENT_FORM_ID: "",\n
+\n
+  getCurrentFormId: function () {\n
+                    /* Get current form ID (return hard coded one for now) */\n
+                    return this.CURRENT_FORM_ID;\n
+  },\n
+\n
+  setCurrentFormId: function (form_id) {\n
+                    /* Set current form ID (return hard coded one for now) */\n
+                    this.CURRENT_FORM_ID = form_id;\n
+  },\n
+  \n
+  getFieldId: function(field_id) {\n
+              /* Generate local form field id */\n
+              return "field_" + field_id;\n
+  },\n
+\n
+  updateField: function (dom, field_dict) {\n
+              /* General purpose field updater */\n
+              var editable;\n
+              editable = Boolean(field_dict.editable);\n
+              if (editable){\n
+                dom.val(field_dict.value);}\n
+              else{\n
+                // if field is not editable just show its value\n
+                dom.replaceWith(field_dict.value);\n
+              }\n
+  },\n
+\n
+  addOptionTagList: function (select_dom, item_list, field_value) {\n
+              /*\n
+               * Update select like dom element\n
+               */\n
+              $.each(item_list, function (index, value){\n
+                  if(value[1]===field_value) {\n
+                    select_dom.append(\'<option selected value="\' + value[1] + \'">\'  + value[0] + \'</option>\');\n
+                  }\n
+                  else {\n
+                    select_dom.append(\'<option value="\' + value[1] + \'">\'  + value[0] + \'</option>\');\n
+                  }\n
+                });\n
+  },\n
+               \n
+  BaseInputField: function (field_id, field_dict) {\n
+              /* HTML based input field */\n
+              var dom, display_width;\n
+              dom = $("[name=" + this.getFieldId(field_id) + "]");\n
+              this.updateField(dom, field_dict);\n
+              display_width = field_dict.display_width;\n
+              if (display_width){\n
+                dom.attr("size", display_width);}\n
+              return dom;\n
+  },\n
+  \n
+  EditorField: function (field_id, field_dict) {\n
+              /* HTML based input field */\n
+              var dom;\n
+              dom = $("#" + this.getFieldId(field_id));\n
+              this.updateField(dom, field_dict);\n
+              return dom;\n
+  },\n
+  \n
+  ListField: function (field_id, field_dict) {\n
+              /* Select field */\n
+              var field_value, select_dom;\n
+              field_value = field_dict.value;\n
+              select_dom = $("select[name=" + this.getFieldId(field_id) + "]");\n
+              this.addOptionTagList(select_dom, field_dict.items, field_value);\n
+              return select_dom;              \n
+  },\n
+  \n
+  ParallelListField: function (field_id, field_dict) {\n
+              /* mutiple select fields */\n
+              var field_value, select_dom;              \n
+              // XXX: we render only first value but it can be many how to get them ?\n
+              field_value = field_dict.value[0];\n
+              select_dom = $("select[name=subfield_field_" + field_id + "]");\n
+              this.addOptionTagList(select_dom, field_dict.items, field_value);\n
+              return select_dom;\n
+  },\n
+  \n
+  CheckBoxField: function (field_id, field_dict) {\n
+              /* CheckBoxField field */\n
+              var checked, checkbox_dom;\n
+              checked = Boolean(field_dict.value);\n
+              checkbox_dom = $("input[name=" + this.getFieldId(field_id) + "]");\n
+              if (checked) {\n
+                  checkbox_dom.attr(\'checked\', true);\n
+              }\n
+              return checkbox_dom;\n
+  },\n
+\n
+  TextAreaField: function (field_id, field_dict) {\n
+              /* TextArea field */\n
+              return this.BaseInputField(field_id, field_dict);\n
+  },\n
+  \n
+  StringField: function (field_id, field_dict) {\n
+              /* String field */\n
+              return this.BaseInputField(field_id, field_dict);\n
+  },\n
+  \n
+  IntegerField: function (field_id, field_dict) {\n
+              /* Int field */\n
+              return this.BaseInputField(field_id, field_dict);\n
+  },\n
+  \n
+  PasswordField: function (field_id, field_dict) {\n
+              /* PasswordField field */\n
+              return this.BaseInputField(field_id, field_dict);\n
+  },\n
+\n
+  DateTimeField: function (field_id, field_dict) {\n
+              /* DateTimeField field */\n
+              var date, dom;\n
+              dom = $("[name=" + this.getFieldId(field_id) + "]");\n
+              date = field_dict.value;\n
+              date = new Date(date);\n
+              dom.datepicker({ dateFormat: \'dd/mm/yy\' }); // XXX: get format from server!\n
+              dom.datepicker(\'setDate\', date);\n
+              return dom;\n
+  },\n
+  \n
+  EmailField: function (field_id, field_dict) {\n
+              /* Email field */\n
+              return this.BaseInputField(field_id, field_dict);\n
+  },\n
+  \n
+  FormBox: function (field_id, field_dict) {\n
+              /* Email field */\n
+              return this.BaseInputField(field_id, field_dict);\n
+  },\n
+\n
+  RelationStringField: function (field_id, field_dict) {\n
+              /* Relation field */\n
+              return this.BaseInputField(field_id, field_dict);\n
+  },\n
+\n
+  ImageField:  function (field_id, field_dict) {\n
+              /* Image field */\n
+              var dom;\n
+              dom = $("img[name=" + this.getFieldId(field_id) + "]");\n
+              // XXX: image field should return details like quality, etc ...\n
+              dom.attr("src", field_dict.value + "?quality=75.0&display=thumbnail&format=png");\n
+  },\n
+  \n
+  ListBox:  function (field_id, field_dict) {\n
+              /* Listbox field */\n
+              var listbox_id, navigation_id, listbox_table, current_form_id, listbox_dict, listbox_data_url, colModel, column_title_list;\n
+              listbox_id = "field_" + field_id;\n
+              navigation_id = listbox_id + "_pager";              \n
+              listbox_table = $("#"+listbox_id);\n
+              current_form_id = this.getCurrentFormId();\n
+              \n
+              listbox_dict = field_dict.listbox;\n
+              listbox_data_url = listbox_dict.listbox_data_url;\n
+              colModel = [];\n
+              column_title_list = [];\n
+              $.each(listbox_dict.columns,\n
+                       function(i, value){\n
+                         var index, title, column;\n
+                         index = value[0];\n
+                         title = value[1];\n
+                         column_title_list.push(title);\n
+                         column = {\'name\': index,\n
+                                   \'index\': index,\n
+                                   \'width\': 185,\n
+                                   \'align\': \'left\'};\n
+                         colModel.push(column);\n
+              });\n
+\n
+              listbox_table.jqGrid({url:listbox_data_url + \'?form_id=\' + current_form_id + \'&amps;listbox_id=\' + field_id,\n
+                            datatype: "json",\n
+                            colNames:  column_title_list,\n
+                            colModel: colModel,\n
+                            rowNum: listbox_dict.lines,\n
+                            pager: \'#\'+navigation_id,\n
+                            sortname: \'id\',\n
+                            viewrecords: true,\n
+                            sortorder: "desc",\n
+                            loadError : function(xhr, textStatus, errorThrown)  {\n
+                                          // XXX: handle better than just alert.\n
+                                          alert("Error occurred during getting data from server.");\n
+                                          },\n
+                            cmTemplate: {sortable:false}, // XXX: until we get list of sortable columns from server\n
+                            caption: field_dict.title});\n
+              listbox_table.jqGrid(\'navGrid\', \'#\'+navigation_id, {edit:false,add:false,del:false});\n
+              return listbox_table;\n
+  }\n
+\n
+};\n
+\n
+/* Generic form updater */\n
+var FormUpdater = {\n
+                   \n
+\n
+  update: function(data) {\n
+              /* Update form values */\n
+              $.each(data.form_data,\n
+                     function(field_id, field_dict){\n
+                        var type, dom;\n
+                        type = field_dict.type;\n
+                        dom = undefined;\n
+                        if(Form.hasOwnProperty(type)){\n
+                          dom = Form[type](field_id, field_dict);\n
+                        }\n
+                          \n
+                        // add a class that these fields are editable so asJSON\n
+                        // can serialize for for sending to server\n
+                        if (dom!==undefined && dom!==null && field_dict.editable){\n
+                          dom.addClass(Form.SERIALIZE_ABLE_CLASS_NAME);\n
+                        }\n
+                        \n
+                        // mark required fields visually\n
+                        if (field_dict.required){\n
+                          dom.parent().parent().children("label").css("font-weight", "bold");}\n
+                         \n
+                      });\n
+  },\n
+\n
+  save: function(){\n
+              /* save form to server*/\n
+              var form_value_dict, converted_value;\n
+              form_value_dict = {};\n
+              $("." + Form.SERIALIZE_ABLE_CLASS_NAME).each(function(index){\n
+                // DOM can change values, i.e. alter checkbox (on / off)\n
+                var element,name, value, type; \n
+                element = $(this); \n
+                name = element.attr("name");\n
+                value = element.val();\n
+                type = element.attr("type");\n
+                if (type==="checkbox") {\n
+                  value = element.is(":checked");\n
+                  if (value===true) {\n
+                    converted_value=1;\n
+                  }\n
+                  if(value===false) {\n
+                    converted_value=0;\n
+                  }\n
+                  value = converted_value;  \n
+                  }\n
+                // XXX: how to handle file uploads ?\n
+                form_value_dict[name] = value;\n
+              });\n
+              //console.log(form_value_dict);\n
+              \n
+              // add form_id as we need to know structure we\'re saving at server side\n
+              form_value_dict.form_id = Form.getCurrentFormId();\n
+                \n
+              // validation happens at server side\n
+              $.ajax({url:\'Form_save\',\n
+                      data: form_value_dict,\n
+                      dataType: "json",\n
+                      success: function (data) {\n
+                        var field_errors;\n
+                        field_errors = data.field_errors;\n
+                        if (field_errors!==undefined){\n
+                          //console.log(field_errors);\n
+                          $.each(field_errors, function(index, value){\n
+                              var dom, field;\n
+                              dom = $("[name=" + Form.getFieldId(index) + "]");\n
+                              dom.css("border", "1px solid red"); // XXX: use class / css\n
+                              field = dom.parent().parent();\n
+                              if (field.children("span.error").length > 0){\n
+                                // just update message\n
+                                field.children("span.error").html(value);}\n
+                              else{\n
+                                // no validation error message exists\n
+                                field.append(\'<span class="error">\' + value + \'</span>\');}\n
+                            }\n
+                          );}\n
+                        else{\n
+                          // validation OK at server side\n
+                          $("span.error").each(function(index) {\n
+                            // delete validation messages\n
+                            var element;\n
+                            element = $(this);\n
+                            element.parent().children("div.input").children("." +Form.SERIALIZE_ABLE_CLASS_NAME).css("border", "none");\n
+                            element.remove();\n
+                          });\n
+                          // show a fading portal_status_message\n
+                          $("#portal_status_message").toggle();\n
+                          $("#portal_status_message p").html("Saved");\n
+                          window.setTimeout( \'$("#portal_status_message").toggle()\', 4000);\n
+                        }\n
+                      }});\n
+  }\n
+};\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>12313</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
