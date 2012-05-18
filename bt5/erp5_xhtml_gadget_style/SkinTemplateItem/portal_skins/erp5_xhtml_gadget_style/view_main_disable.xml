@@ -79,7 +79,7 @@
               // init all when all gadgets are ready (loaded)\n
               $(document).ready(function() {\n
                 RenderJs.bootstrap($("#content"));\n
-                GadgetIndex.getRootGadget().getDom().one("ready", function (){\n
+                RenderJs.GadgetIndex.getRootGadget().getDom().one("ready", function (){\n
                   RenderJs.update($("#content"));\n
                 });\n
               });\n
