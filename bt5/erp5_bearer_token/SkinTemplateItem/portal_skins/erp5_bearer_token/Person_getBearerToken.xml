@@ -50,22 +50,35 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return context.Base_getHMAC(key,\n
-  """%s\\n%s\\n%s\\n%s""" % (\n
-    context.REQUEST.getHeader(\'User-Agent\'),\n
-    context.REQUEST.get(\'REMOTE_ADDR\'),\n
-    context.getCreationDate().timeTime(),\n
-    fuzzy)\n
-  )\n
+            <value> <string>if context.getPortalType() != \'Person\':\n
+  raise TypeError(\'Person object is required\')\n
+from DateTime import DateTime\n
+from Products.ERP5Type.DateUtils import addToDate\n
+\n
+key = context.Base_getBearerTokenKey()\n
+if not key:\n
+  raise ValueError(\'Bearer Key Token is not defined\')\n
+\n
+token = {\n
+  \'expiration_timestamp\': addToDate(DateTime(), to_add={\'hour\': 1}).timeTime(),\n
+  \'reference\': context.getReference(),\n
+  \'user-agent\': context.REQUEST.getHeader(\'User-Agent\'),\n
+  \'remote-addr\': context.REQUEST.get(\'REMOTE_ADDR\')\n
+}\n
+\n
+hmac = context.Base_getHMAC(key, str(token))\n
+\n
+context.Base_setBearerToken(hmac, token)\n
+return hmac\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>key, fuzzy</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BearerToken_getHMAC</string> </value>
+            <value> <string>Person_getBearerToken</string> </value>
         </item>
       </dictionary>
     </pickle>

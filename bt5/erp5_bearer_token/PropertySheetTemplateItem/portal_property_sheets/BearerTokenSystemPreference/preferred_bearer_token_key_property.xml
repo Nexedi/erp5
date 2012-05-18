@@ -22,11 +22,23 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>bearer_token_key_property</string> </value>
+            <value> <string>preferred_bearer_token_key_property</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Standard Property</string> </value>
+        </item>
+        <item>
+            <key> <string>preference</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>read_permission</string> </key>
+            <value> <string>Manage properties</string> </value>
+        </item>
+        <item>
+            <key> <string>write_permission</string> </key>
+            <value> <string>Manage properties</string> </value>
         </item>
       </dictionary>
     </pickle>

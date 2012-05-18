@@ -51,8 +51,9 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>if REQUEST is not None:\n
-  raise ValueError\n
-context.updateLocalRolesOnSecurityGroups()\n
+  # mini security\n
+  return None\n
+return context.getPortalObject().portal_preferences.getPreferredBearerTokenKey()\n
 </string> </value>
         </item>
         <item>
@@ -69,7 +70,7 @@ context.updateLocalRolesOnSecurityGroups()\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>BearerToken_updateLocalRolesOnSecurityGroups</string> </value>
+            <value> <string>Base_getBearerTokenKey</string> </value>
         </item>
       </dictionary>
     </pickle>
