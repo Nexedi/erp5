@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts37256303.27</string> </value>
+            <value> <string>ts37322419.16</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -30,40 +30,40 @@ function setupRenderJSTest(){\n
   test(\'Cache\', function(){\n
                 cache_id = \'my_test\';\n
                 data = {\'gg\':1};\n
-                Cache.set(cache_id, data);\n
-                deepEqual(data, Cache.get(cache_id));\n
+                RenderJs.Cache.set(cache_id, data);\n
+                deepEqual(data, RenderJs.Cache.get(cache_id));\n
   });\n
 \n
  \n
   module("TabularGadget");\n
   test(\'addNewTabGadget\', function(){\n
-              TabbularGadget.addNewTabGadget("qunit-fixture", "Person_view/Form_asRenderJSGadget", "ERP5Form.update", "Form_asJSON?form_id=Person_view");\n
+              RenderJs.TabbularGadget.addNewTabGadget("qunit-fixture", "Person_view/Form_asRenderJSGadget", "ERP5Form.update", "Form_asJSON?form_id=Person_view");\n
               equal($("#qunit-fixture").children(".gadget").length, 1);\n
-              equal(GadgetIndex.getGadgetList().length, 1);\n
+              equal(RenderJs.GadgetIndex.getGadgetList().length, 1);\n
 \n
   });\n
 \n
   module("GadgetIndex");\n
   test(\'GadgetIndex\', function(){\n
                // re-init GadgetIndex\n
-              $.each(GadgetIndex.getGadgetList(), function () {\n
-                GadgetIndex.unregisterGadget(this);\n
+              $.each(RenderJs.GadgetIndex.getGadgetList(), function () {\n
+                RenderJs.GadgetIndex.unregisterGadget(this);\n
               });\n
               \n
               $("#qunit-fixture").append(\'<div gadget="" id="new">XXXXXXXXXXXX</div>\');\n
               RenderJs.bootstrap($("#qunit-fixture"));\n
-              GadgetIndex.getRootGadget().getDom().one("ready", function (){\n
+              RenderJs.GadgetIndex.getRootGadget().getDom().one("ready", function (){\n
                 RenderJs.update($("#qunit-fixture"));\n
               });\n
-              equal(GadgetIndex.getGadgetList().length, 2);\n
-              equal(true, GadgetIndex.isGadgetListLoaded());\n
-              equal($("#qunit-fixture").attr("id"), GadgetIndex.getRootGadget().getDom().attr("id"));\n
-              equal(GadgetIndex.getGadgetById("qunit-fixture"), GadgetIndex.getRootGadget());\n
+              equal(RenderJs.GadgetIndex.getGadgetList().length, 2);\n
+              equal(true, RenderJs.GadgetIndex.isGadgetListLoaded());\n
+              equal($("#qunit-fixture").attr("id"), RenderJs.GadgetIndex.getRootGadget().getDom().attr("id"));\n
+              equal(RenderJs.GadgetIndex.getGadgetById("qunit-fixture"), RenderJs.GadgetIndex.getRootGadget());\n
 \n
               // unregister gadget\n
-              GadgetIndex.unregisterGadget(GadgetIndex.getGadgetById("qunit-fixture"));\n
-              equal(GadgetIndex.getGadgetList().length, 1);\n
-              equal(GadgetIndex.getGadgetById("new"), GadgetIndex.getRootGadget());\n
+              RenderJs.GadgetIndex.unregisterGadget(RenderJs.GadgetIndex.getGadgetById("qunit-fixture"));\n
+              equal(RenderJs.GadgetIndex.getGadgetList().length, 1);\n
+              equal(RenderJs.GadgetIndex.getGadgetById("new"), RenderJs.GadgetIndex.getRootGadget());\n
               \n
 \n
    });\n
@@ -80,7 +80,7 @@ function setupRenderJSTest(){\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>1809</int> </value>
+            <value> <int>1962</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
