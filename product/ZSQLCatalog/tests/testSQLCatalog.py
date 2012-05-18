@@ -37,6 +37,7 @@ from Products.ZSQLCatalog.Query.EntireQuery import EntireQuery
 from Products.ZSQLCatalog.Query.RelatedQuery import RelatedQuery
 from DateTime import DateTime
 from Products.ZSQLCatalog.SQLExpression import MergeConflictError
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class MatchList(list):
   def __repr__(self):
@@ -220,10 +221,14 @@ class TestSQLCatalog(unittest.TestCase):
     self.assertRaises(exception, self._catalog, src__=1, query_table='foo', **kw)
 
   def catalog(self, reference_tree, kw, check_search_text=True,
-      check_select_expression=True):
+      check_select_expression=True, expected_failure=False):
     reference_param_dict = self._catalog._queryResults(query_table='foo', **kw)
     query = self._catalog.buildQuery(kw)
-    self.assertEqual(reference_tree, query)
+    assertEqual = self.assertEqual
+    if expected_failure:
+      assertEqual = expectedFailure(assertEqual)
+
+    assertEqual(reference_tree, query)
     search_text = query.asSearchTextExpression(self._catalog)
     if check_search_text:
       # XXX: sould "keyword" be always used for search text searches ?
@@ -231,7 +236,7 @@ class TestSQLCatalog(unittest.TestCase):
       if not check_select_expression:
         search_text_param_dict.pop('select_expression')
         reference_param_dict.pop('select_expression')
-      self.assertEqual(reference_param_dict, search_text_param_dict,
+      assertEqual(reference_param_dict, search_text_param_dict,
           'Query: %r\nSearchText: %r\nReference: %r\nSecond rendering: %r' % \
                        (query, search_text, reference_param_dict, search_text_param_dict))
 
@@ -291,7 +296,7 @@ class TestSQLCatalog(unittest.TestCase):
                  {'default': {'query': '<a', 'key': 'ExactMatch'}},
                  check_search_text=False)
 
-  def _testDateTimeKey(self, column):
+  def _testDateTimeKey(self, column, timezone):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21')), operator='and'),
                  {column: {'query': '>2008/10/01 12:10:20', 'format': '%y/%m/%d'}})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21 CEST')), operator='and'),
@@ -299,71 +304,82 @@ class TestSQLCatalog(unittest.TestCase):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21 CET')), operator='and'),
                  {column: {'query': '>2008/10/01 12:10:20 CET', 'format': '%y/%m/%d'}})
     self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/10/01 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2008/10/02 UTC'))
+                   ReferenceQuery(operator='>=', date=DateTime('2008/10/01 %s' % timezone)),
+                   ReferenceQuery(operator='<', date=DateTime('2008/10/02 %s' % timezone))
                  , operator='and'), operator='and'),
-                 {column: '2008/10/01 UTC'})
+                 {column: '2008/10/01 %s' % timezone})
+    if timezone == 'GMT+9':
+      # Very temporary expected failure. Expected failure mark must be removed soon.(Yusei)
+      self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='>=', date=DateTime('2008/01/01 %s' % timezone)),
+                     ReferenceQuery(operator='<', date=DateTime('2009/01/01 %s' % timezone))
+                   , operator='and'), operator='and'),
+                   {column: '2008 %s' % timezone},
+                   expected_failure=True)
+    else:
+      self.catalog(ReferenceQuery(ReferenceQuery(
+                     ReferenceQuery(operator='>=', date=DateTime('2008/01/01 %s' % timezone)),
+                     ReferenceQuery(operator='<', date=DateTime('2009/01/01 %s' % timezone))
+                   , operator='and'), operator='and'),
+                   {column: '2008 %s' % timezone})
     self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/01/01 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2009/01/01 UTC'))
+                   ReferenceQuery(operator='>=', date=DateTime('2008/01/01 %s' % timezone)),
+                   ReferenceQuery(operator='<', date=DateTime('2008/02/01 %s' % timezone))
                  , operator='and'), operator='and'),
-                 {column: '2008 UTC'})
+                 {column: '2008/01 %s' % timezone})
     self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/01/01 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2008/02/01 UTC'))
+                   ReferenceQuery(operator='>=', date=DateTime('2008/10/01 %s' % timezone)),
+                   ReferenceQuery(operator='<', date=DateTime('2008/10/02 %s' % timezone))
                  , operator='and'), operator='and'),
-                 {column: '2008/01 UTC'})
+                 {column: {'type': 'date', 'query': '10/01/2008 %s' % timezone, 'format': '%m/%d/%Y'}})
     self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/10/01 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2008/10/02 UTC'))
+                   ReferenceQuery(operator='>=', date=DateTime('2008/10/01 %s' % timezone)),
+                   ReferenceQuery(operator='<', date=DateTime('2008/10/02 %s' % timezone))
                  , operator='and'), operator='and'),
-                 {column: {'type': 'date', 'query': '10/01/2008 UTC', 'format': '%m/%d/%Y'}})
-    self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/10/01 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2008/10/02 UTC'))
-                 , operator='and'), operator='and'),
-                 {column: {'type': 'date', 'query': '01/10/2008 UTC', 'format': '%d/%m/%Y'}})
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', date=[DateTime('2008/01/10 UTC'), DateTime('2008/01/09 UTC')]), operator='and'),
-                 {column: {'query': ['2008/01/10 UTC', '2008/01/09 UTC'], 'operator': 'in'}},
+                 {column: {'type': 'date', 'query': '01/10/2008 %s' % timezone, 'format': '%d/%m/%Y'}})
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='in', date=[DateTime('2008/01/10 %s' % timezone), DateTime('2008/01/09 %s' % timezone)]), operator='and'),
+                 {column: {'query': ['2008/01/10 %s' % timezone, '2008/01/09 %s' % timezone], 'operator': 'in'}},
                  check_search_text=False)
-    self.catalog(ReferenceQuery(ReferenceQuery(operator='>', date=DateTime('2008/01/10 UTC')), operator='and'),
-                 {column: {'query': '2008/01/10 UTC', 'range': 'nlt'}},
+    self.catalog(ReferenceQuery(ReferenceQuery(operator='>', date=DateTime('2008/01/10 %s' % timezone)), operator='and'),
+                 {column: {'query': '2008/01/10 %s' % timezone, 'range': 'nlt'}},
                  check_search_text=False)
     self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/01/01 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2009/01/01 UTC'))
+                   ReferenceQuery(operator='>=', date=DateTime('2008/01/01 %s' % timezone)),
+                   ReferenceQuery(operator='<', date=DateTime('2009/01/01 %s' % timezone))
                  , operator='and'), operator='and'),
-                 {column: '2008 UTC'})
+                 {column: '2008 %s' % timezone})
     self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/02/01 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2008/03/01 UTC'))
+                   ReferenceQuery(operator='>=', date=DateTime('2008/02/01 %s' % timezone)),
+                   ReferenceQuery(operator='<', date=DateTime('2008/03/01 %s' % timezone))
                  , operator='and'), operator='and'),
-                 {column: '2008/02 UTC'})
+                 {column: '2008/02 %s' % timezone})
     self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2008/02/03 UTC'))
+                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 %s' % timezone)),
+                   ReferenceQuery(operator='<', date=DateTime('2008/02/03 %s' % timezone))
                  , operator='and'), operator='and'),
-                 {column: '2008/02/02 UTC'})
+                 {column: '2008/02/02 %s' % timezone})
     self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:00:00 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2008/02/02 11:00:00 UTC'))
+                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:00:00 %s' % timezone)),
+                   ReferenceQuery(operator='<', date=DateTime('2008/02/02 11:00:00 %s' % timezone))
                  , operator='and'), operator='and'),
-                 {column: '2008/02/02 10 UTC'})
+                 {column: '2008/02/02 10 %s' % timezone})
     self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:10:00 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:11:00 UTC'))
+                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:10:00 %s' % timezone)),
+                   ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:11:00 %s' % timezone))
                  , operator='and'), operator='and'),
-                 {column: '2008/02/02 10:10 UTC'})
+                 {column: '2008/02/02 10:10 %s' % timezone})
     self.catalog(ReferenceQuery(ReferenceQuery(
-                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:10:10 UTC')),
-                   ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:10:11 UTC'))
+                   ReferenceQuery(operator='>=', date=DateTime('2008/02/02 10:10:10 %s' % timezone)),
+                   ReferenceQuery(operator='<', date=DateTime('2008/02/02 10:10:11 %s' % timezone))
                  , operator='and'), operator='and'),
-                 {column: '2008/02/02 10:10:10 UTC'})
+                 {column: '2008/02/02 10:10:10 %s' % timezone})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='is', date=None), operator='and'),
                  {column: None}, check_search_text=False)
         
   def test_DateTimeKey(self):
-    self._testDateTimeKey('date')
+    # Try multiple timezones
+    self._testDateTimeKey('date', 'UTC')
+    self._testDateTimeKey('date', 'GMT+9')
     # XXX: It is unknown what these tests should produce when used with a
     # related key: should the join happen or not ?
     self.catalog(
@@ -380,7 +396,9 @@ class TestSQLCatalog(unittest.TestCase):
       {'date': '00:00:00'})
 
   def test_relatedDateTimeKey(self):
-    self._testDateTimeKey('related_date')
+    # Try multiple timezones
+    self._testDateTimeKey('related_date', 'UTC')
+    self._testDateTimeKey('related_date', 'GMT+9')
 
   def _testKeywordKey(self, column):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='like', keyword='%a%'), operator='and'),
