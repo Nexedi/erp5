@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts37323241.04</string> </value>
+            <value> <string>ts37339345.5</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -32,55 +32,15 @@ if (typeof console === "undefined" || typeof console.log === "undefined") {\n
   console.log = function() {};\n
 }\n
 \n
-var is_ready;\n
-is_ready = false; // XXX: dirty flag to be removed (indicates if ready event has been handled)\n
-\n
-\n
-/*\n
- * Javascript Gadget representation\n
- */\n
-function Gadget(id, dom) {\n
-  this.id = id;\n
-  this.dom = dom;\n
-  this.is_ready = false;\n
-}\n
-\n
-Gadget.prototype.getId = function() {\n
-  return this.id;\n
-};\n
-\n
-Gadget.prototype.getDom = function() {\n
-  return this.dom;\n
-};\n
-\n
-Gadget.prototype.isReady = function() {\n
-  /*\n
-   * Return True if remote gadget is loaded into DOM.\n
-   */\n
-  return this.is_ready;\n
-};\n
-\n
-Gadget.prototype.setReady = function() {\n
-  /*\n
-   * Return True if remote gadget is loaded into DOM.\n
-   */\n
-  this.is_ready = true;\n
-};\n
-\n
-\n
-Gadget.prototype.getParent = function() {\n
-  /*\n
-   * Get Gadget\'s parent by using DOM\n
-   */\n
-  // XXX:\n
-};\n
-\n
 \n
 /*\n
  * Generic Gadget library renderer\n
  */\n
 \n
 var RenderJs = (function () {\n
+\n
+  // a variable indicating if current gadget loading is over or not\n
+  var is_ready = false;\n
   \n
   return  {\n
    \n
@@ -114,7 +74,7 @@ var RenderJs = (function () {\n
                     gadget_id = gadget.attr("id");\n
 \n
                     // register gadget in javascript namespace\n
-                    gadget_js = new Gadget(gadget_id, gadget);\n
+                    gadget_js = new RenderJs.Gadget(gadget_id, gadget);\n
                     RenderJs.GadgetIndex.registerGadget(gadget_js);\n
 \n
                     if (url!==undefined && url!==""){\n
@@ -172,6 +132,20 @@ var RenderJs = (function () {\n
                     }\n
           },\n
 \n
+          isReady: function (value) {\n
+            /*\n
+            * Get rendering status\n
+            */\n
+            return is_ready;\n
+          },\n
+          \n
+          setReady: function (value) {\n
+            /*\n
+            * Update rendering status\n
+            */\n
+            is_ready = value;            \n
+          },\n
+          \n
           checkAndTriggerReady: function() {\n
             /*\n
             * Trigger "ready" event only if all gadgets were marked as "ready"\n
@@ -179,11 +153,13 @@ var RenderJs = (function () {\n
             var is_gadget_list_loaded;\n
             is_gadget_list_loaded = RenderJs.GadgetIndex.isGadgetListLoaded();\n
             if (is_gadget_list_loaded){\n
-              if (!is_ready) {\n
-                //console.log("trigger");\n
+              //console.log("to trigger ");\n
+              if (!RenderJs.isReady()) {\n
+                //console.log("trigger ", RenderJs.GadgetIndex.getGadgetList());\n
                 RenderJs.GadgetIndex.getRootGadget().getDom().trigger("ready");\n
+                RenderJs.setReady(true);\n
               }\n
-              is_ready = true;\n
+              //is_ready = true;\n
             }\n
             return is_gadget_list_loaded;\n
           },\n
@@ -304,6 +280,37 @@ var RenderJs = (function () {\n
 \n
           }}()),\n
 \n
+          Gadget: ( function (id, dom) {\n
+                  /*\n
+                  * Javascript Gadget representation\n
+                  */\n
+                  this.id = id;\n
+                  this.dom = dom;\n
+                  this.is_ready = false;\n
+\n
+                  this.getId = function() {\n
+                    return this.id;\n
+                  };\n
+\n
+                  this.getDom = function() {\n
+                    return this.dom;\n
+                  };\n
+\n
+                  this.isReady = function() {\n
+                    /*\n
+                    * Return True if remote gadget is loaded into DOM.\n
+                    */\n
+                    return this.is_ready;\n
+                  };\n
+\n
+                  this.setReady = function() {\n
+                    /*\n
+                    * Return True if remote gadget is loaded into DOM.\n
+                    */\n
+                    this.is_ready = true;\n
+                  };\n
+          }),\n
+                \n
           TabbularGadget : (function () {\n
                   /*\n
                   * Generic tabular gadget\n
@@ -337,7 +344,7 @@ var RenderJs = (function () {\n
                           // XXX: we should unregister all gadgets (if any we replace now in DOM)\n
 \n
                           // render new gadget\n
-                          is_ready = false;\n
+                          RenderJs.setReady(false);\n
                           RenderJs.loadGadgetFromUrl(tab_gadget);\n
                           // clear previous events\n
                           RenderJs.GadgetIndex.getRootGadget().getDom().bind("ready", function (){\n
@@ -482,7 +489,7 @@ var RenderJs = (function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18703</int> </value>
+            <value> <int>19475</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
