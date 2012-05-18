@@ -69,7 +69,8 @@ token = {\n
 hmac = context.Base_getHMAC(key, str(token))\n
 \n
 context.Base_setBearerToken(hmac, token)\n
-return hmac\n
+\n
+return hmac, token[\'expiration_timestamp\']\n
 </string> </value>
         </item>
         <item>
