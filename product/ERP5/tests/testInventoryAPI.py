@@ -503,7 +503,7 @@ class TestInventory(InventoryAPITestCase):
                                )
 
     # In reality this is not an expected failure, I will remove this very soon.(Yusei)
-    self.expectedFailure(assertInventoryEquals)(17,
+    expectedFailure(self.assertInventoryEquals)(17,
                                section_uid=self.section.getUid(),
                                node_uid=self.node.getUid(),
                                resource_category='product_line/level1'
