@@ -167,6 +167,7 @@ class InventoryAPITestCase(ERP5TypeTestCase):
               'group/level1/level2',
               'group/anotherlevel',
               'product_line/level1/level2',
+              'product_line/anotherlevel',
               'use/use1',
               'use/use2',
               'function/function1',
@@ -452,6 +453,67 @@ class TestInventory(InventoryAPITestCase):
     self.tic()
     self.assertInventoryEquals(100,
                 resource_category_strict_membership=['product_line/level1'])
+
+  def test_ResourceCategoryWithFullInventory(self):
+    """Make sure that resource category works when full inventory exists."""
+    self.resource.setProductLine('level1/level2')
+    self.other_resource.setProductLine('anotherlevel')
+
+    full_inventory1 = self.portal.inventory_module.newContent(portal_type='Inventory')
+    full_inventory1.edit(destination_section_value=self.section,
+                         destination_value=self.node,
+                         full_inventory=1,
+                         start_date=DateTime('2012/05/18 00:00:00 GMT+9'))
+    line11 = full_inventory1.newContent(portal_type='Inventory Line')
+    line11.setResourceValue(self.resource)
+    line11.setQuantity(17)
+    line12 = full_inventory1.newContent(portal_type='Inventory Line')
+    line12.setResourceValue(self.other_resource)
+    line12.setQuantity(13)
+    full_inventory1.deliver()
+    self.commit()
+    self.tic()
+
+    self.assertInventoryEquals(17,
+                               resource_uid=self.resource.getUid()
+                               )
+
+    self.assertInventoryEquals(13,
+                               resource_uid=self.other_resource.getUid()
+                               )
+
+    self.assertInventoryEquals(17,
+                               section_uid=self.section.getUid(),
+                               node_uid=self.node.getUid(),
+                               resource_uid=self.resource.getUid()
+                               )
+
+    self.assertInventoryEquals(13,
+                               section_uid=self.section.getUid(),
+                               node_uid=self.node.getUid(),
+                               resource_uid=self.other_resource.getUid()
+                               )
+
+    self.assertInventoryEquals(17,
+                               resource_category='product_line/level1'
+                               )
+
+    self.assertInventoryEquals(13,
+                               resource_category='product_line/anotherlevel'
+                               )
+
+    # In reality this is not an expected failure, I will remove this very soon.(Yusei)
+    self.expectedFailure(assertInventoryEquals)(17,
+                               section_uid=self.section.getUid(),
+                               node_uid=self.node.getUid(),
+                               resource_category='product_line/level1'
+                               )
+
+    self.assertInventoryEquals(13,
+                               section_uid=self.section.getUid(),
+                               node_uid=self.node.getUid(),
+                               resource_category='product_line/anotherlevel'
+                               )
 
   def test_PaymentCategory(self):
     """Tests inventory on payment_category """
