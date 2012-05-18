@@ -33,7 +33,6 @@ from zLOG import LOG
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Testing import ZopeTestCase
 from Products.ERP5.tests.testAccounting import AccountingTestCase
-from Products.ERP5.tests.utils import newSimulationExpectedFailure
 from AccessControl.SecurityManagement import newSecurityManager
 QUIET = False
 run_all_test = True
@@ -232,9 +231,13 @@ class TestConversionInSimulation(AccountingTestCase):
       trade_model_path.setCriterion('portal_type', 'Simulation Movement')
     self.tic()
 
-  def stepPackingListBuilderAlarm(self, sequence=None,
-                                  sequence_list=None, **kw):
+  def buildPackingLists(self):
     self.portal.portal_alarms.packing_list_builder_alarm.activeSense()
+    self.tic()
+
+  def buildInvoices(self):
+    self.portal.portal_alarms.invoice_builder_alarm.activeSense()
+    self.tic()
 
   def test_01_simulation_movement_destination_asset_price(self,quiet=0,
           run=run_all_test):
@@ -296,8 +299,7 @@ class TestConversionInSimulation(AccountingTestCase):
 
     order.confirm()
     self.tic()
-    self.stepPackingListBuilderAlarm()
-    self.tic()
+    self.buildPackingLists()
 
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
@@ -389,8 +391,7 @@ class TestConversionInSimulation(AccountingTestCase):
 
     order.confirm()
     self.tic()
-    self.stepPackingListBuilderAlarm()
-    self.tic()
+    self.buildPackingLists()
 
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
@@ -413,7 +414,6 @@ class TestConversionInSimulation(AccountingTestCase):
         (invoice_transaction_movement.getDestinationTotalAssetPrice(),
         None)
 
-  @newSimulationExpectedFailure
   def test_01_destination_total_asset_price_on_accounting_lines(self,quiet=0,
           run=run_all_test):
     """
@@ -474,14 +474,14 @@ class TestConversionInSimulation(AccountingTestCase):
                                   price=2)
     order.confirm()
     self.tic()
-    self.stepPackingListBuilderAlarm()
-    self.tic()
+    self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
     self.assertNotEquals(related_packing_list, None)
     related_packing_list.start()
     related_packing_list.stop()
     self.tic()
+    self.buildInvoices()
     related_applied_rule = order.getCausalityRelatedValue(
                              portal_type='Applied Rule')
     order_movement = related_applied_rule.contentValues()[0]
@@ -499,7 +499,6 @@ class TestConversionInSimulation(AccountingTestCase):
        self.assertEquals(line.getDestinationTotalAssetPrice(),
               round(655.957*delivery_movement.getTotalPrice()))
 
-  @newSimulationExpectedFailure
   def test_01_diverged_sale_packing_list_destination_total_asset_price(
           self,quiet=0,run=run_all_test):
     """
@@ -563,8 +562,7 @@ class TestConversionInSimulation(AccountingTestCase):
                                   price=2)
     order.confirm()
     self.tic()
-    self.stepPackingListBuilderAlarm()
-    self.tic()
+    self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
     self.assertNotEquals(related_packing_list, None)
@@ -662,8 +660,7 @@ class TestConversionInSimulation(AccountingTestCase):
                                   price=2)
     order.confirm()
     self.tic()
-    self.stepPackingListBuilderAlarm()
-    self.tic()
+    self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Purchase Packing List')
     self.assertNotEquals(related_packing_list, None)
@@ -698,7 +695,6 @@ class TestConversionInSimulation(AccountingTestCase):
         getSourceTotalAssetPrice(),
         old_source_asset_price *(3.0/5.0))
 
-  @newSimulationExpectedFailure
   def test_01_delivery_mode_on_sale_packing_list_and_invoice(
           self,quiet=0,run=run_all_test):
     """
@@ -764,8 +760,7 @@ class TestConversionInSimulation(AccountingTestCase):
                                   price=2)
     order.confirm()
     self.tic()
-    self.stepPackingListBuilderAlarm()
-    self.tic()
+    self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
     self.assertNotEquals(related_packing_list, None)
@@ -776,6 +771,7 @@ class TestConversionInSimulation(AccountingTestCase):
     related_packing_list.start()
     related_packing_list.stop()
     self.tic()
+    self.buildInvoices()
     related_invoice = related_packing_list.getCausalityRelatedValue(
                              portal_type='Sale Invoice Transaction')
     self.assertNotEquals(related_invoice, None)
@@ -784,7 +780,6 @@ class TestConversionInSimulation(AccountingTestCase):
     self.assertEquals(related_invoice.getIncoterm(),
                          order.getIncoterm())
 
-  @newSimulationExpectedFailure
   def test_01_quantity_unit_on_sale_packing_list(
       self,quiet=0,run=run_all_test):
     """
@@ -841,8 +836,7 @@ class TestConversionInSimulation(AccountingTestCase):
                                   price=2)
     order.confirm()
     self.tic()
-    self.stepPackingListBuilderAlarm()
-    self.tic()
+    self.buildPackingLists()
     related_packing_list = order.getCausalityRelatedValue(
                                 portal_type='Sale Packing List')
     self.assertNotEquals(related_packing_list, None)
