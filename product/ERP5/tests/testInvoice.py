@@ -2711,7 +2711,6 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     """)
     sequence_list.play(self, quiet=quiet)
 
-  @newSimulationExpectedFailure
   def test_07_InvoiceAddPackingListLine(self, quiet=quiet):
     """
     Checks that adding a Packing List Line still creates a correct
