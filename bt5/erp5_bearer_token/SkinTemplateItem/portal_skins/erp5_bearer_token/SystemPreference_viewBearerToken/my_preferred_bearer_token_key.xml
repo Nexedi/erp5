@@ -10,13 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>description</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_destination_reference</string> </value>
+            <value> <string>my_preferred_bearer_token_key</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -72,8 +73,12 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>description</string> </key>
+                    <value> <string>Enter string random string.</string> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_view_mode_reference</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -85,7 +90,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Destination Reference</string> </value>
+                    <value> <string>Preferred Bearer Token Key</string> </value>
                 </item>
               </dictionary>
             </value>
