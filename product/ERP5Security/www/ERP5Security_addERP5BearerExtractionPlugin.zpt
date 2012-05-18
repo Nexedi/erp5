@@ -27,22 +27,6 @@
     </td>
   </tr>
   <tr>
-    <td align="left" valign="top">
-    <div class="form-label">
-    Portal Type with tokens
-    </div>
-    </td>
-    <td align="left" valign="top">
-    <input type="text" name="token_portal_type" size="40" />
-    </td>
-  </tr>
-<tr>
-   <td>Method to validate found token</td>
-   <td>
-     <input type="text" name="token_validation_method" value=""/>
-   </td>
-</tr>
-  <tr>
     <td colspan="2"> <input type="submit" value="add plugin"/>
     </td>
   </tr>

@@ -64,12 +64,6 @@ class ERP5BearerExtractionPlugin(BasePlugin):
   meta_type = "ERP5 Bearer Extraction Plugin"
   security = ClassSecurityInfo()
 
-  manage_options = (({'label': 'Edit',
-                      'action': 'manage_editERP5BearerExtractionPluginForm',},
-                     )
-                    + BasePlugin.manage_options[:]
-                    )
-
   def __init__(self, id, title=None):
     #Register value
     self._setId(id)
