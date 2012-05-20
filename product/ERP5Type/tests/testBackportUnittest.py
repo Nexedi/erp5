@@ -133,7 +133,7 @@ class TestBackportUnittest(unittest.TestCase):
     self.assertEquals(len(result.skipped), 0)
 
     # Unexpected success does not FAIL the test
-    self.assert_(result.wasSuccessful())
+    self.assert_(not result.wasSuccessful())
 
 if __name__ == "__main__":
   unittest.main()
