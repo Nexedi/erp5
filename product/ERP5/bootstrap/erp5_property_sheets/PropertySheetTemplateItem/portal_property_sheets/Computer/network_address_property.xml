@@ -99,6 +99,7 @@
                 <string>host_name</string>
                 <string>ip_address</string>
                 <string>netmask</string>
+                <string>network_interface</string>
               </tuple>
             </value>
         </item>
