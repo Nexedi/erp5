@@ -57,8 +57,7 @@ class TestTemplateTool(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.templates_tool = self.portal.portal_templates
-    self.templates_tool.updateRepositoryBusinessTemplateList(\
-                    ["http://www.erp5.org/dists/snapshot/bt5/", ])
+    self.setupAutomaticBusinessTemplateRepository()
     if getattr(self.portal, self.test_tool_id, None) is not None:
       self.portal.manage_delObjects(ids=[self.test_tool_id])
     self.portal.newContent(portal_type='Template Tool',
@@ -584,7 +583,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertEquals(bt, None)
       dependency_list = template_tool.getDependencyList(
-                   (repository, bt5_name + '.bt5'))
+                   (repository, bt5_name))
       self.assertNotEquals(dependency_list, [])
 
     self.tic()
@@ -604,10 +603,14 @@ class TestTemplateTool(ERP5TypeTestCase):
     repository = "http://www.erp5.org/dists/snapshot/bt5/"
     template_tool = self.portal.portal_templates
 
+    # XXX This test requires the usage of the public repository due ".bt5" usage
+    if repository not in template_tool.getRepositoryList():
+       self.portal.portal_templates.updateRepositoryBusinessTemplateList([repository])
+
     bt5list = template_tool.resolveBusinessTemplateListDependency(('erp5_credential',))
     # because erp5_base is already installed, it is not returned
     # by resolveBusinessTemplateListDependency, so append it manualy
-    bt5list.append((repository, 'erp5_base.bt5'))
+    bt5list.append((repository, "erp5_base.bt5"))
 
     # add some entropy by disorder bt5list returned by
     # resolveBusinessTemplateListDependency
