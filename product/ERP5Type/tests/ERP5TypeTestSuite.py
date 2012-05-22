@@ -120,15 +120,17 @@ class TestSuite(object):
     assert test not in self.running
     self.running[test] = instance = self._pool.pop(0)
     def run():
-      self._instance.id = instance
-      if instance not in self._ready:
-        self._ready.add(instance)
-        self.setup()
-      status_dict = self.run(test)
-      if on_stop is not None:
-        on_stop(status_dict)
-      self._pool.append(self.running.pop(test))
-      self.release()
+      try:
+        self._instance.id = instance
+        if instance not in self._ready:
+          self._ready.add(instance)
+          self.setup()
+        status_dict = self.run(test)
+        if on_stop is not None:
+          on_stop(status_dict)
+        self._pool.append(self.running.pop(test))
+      finally:
+        self.release()
     thread = threading.Thread(target=run)
     thread.setDaemon(True)
     thread.start()
