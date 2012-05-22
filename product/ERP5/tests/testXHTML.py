@@ -66,6 +66,7 @@ class TestXHTML(ERP5TypeTestCase):
     return ( # dependency order
       'erp5_core_proxy_field_legacy',
       'erp5_base',
+      'erp5_simulation',
       'erp5_trade',
 
       'erp5_pdf_editor',

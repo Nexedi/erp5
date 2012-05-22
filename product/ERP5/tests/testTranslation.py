@@ -39,6 +39,7 @@ from Products.ERP5Type.tests.backportUnittest import expectedFailure
 # dependency order
 target_business_templates = (
   'erp5_base',
+  'erp5_simulation',
   'erp5_trade',
 
   'erp5_pdf_editor',
