@@ -3,6 +3,23 @@ import argparse, pprint, socket, sys, time, xmlrpclib
 from DummyTaskDistributionTool import DummyTaskDistributionTool
 from ERP5TypeTestSuite import ERP5TypeTestSuite
 
+parser, _ = xmlrpclib.getparser()
+parser_klass = parser.__class__
+__original_feed = parser_klass.feed
+def verbose_feed(self, data):
+  try:
+    return __original_feed(self, data)
+  except Exception:
+    print >>sys.stderr, 'Error parsing data:', repr(data)
+    raise
+try:
+  parser_klass.feed = verbose_feed
+except TypeError:
+  print >>sys.stderr, 'Warning: could not monkey-patch %r.feed to output ' \
+    'parsed data on error, debugging in case of error will be more ' \
+    'difficult' % (parser_klass, )
+del parser, verbose_feed, parser_klass, _
+
 def makeSuite(node_quantity=None, test_suite=None, revision=None,
               db_list=None, **kwargs):
   # BBB tests (plural form) is only checked for backward compatibility
