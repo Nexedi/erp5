@@ -114,7 +114,6 @@ class TestERP5SyncMLMixin(TestMixin):
       module = self.portal.get(module, None)
       if module:
         module.manage_delObjects(ids=list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def getBusinessTemplateList(self):
@@ -574,7 +573,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     portal_sync = self.getSynchronizationTool()
     if getattr(portal_sync, self.pub_id, None) is not None:
       portal_sync._delObject(self.pub_id)
-    transaction.commit()
     self.tic()
     publication = portal_sync.newContent(
                               portal_type='SyncML Publication',
@@ -594,7 +592,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     portal_sync = self.getSynchronizationTool()
     if getattr(portal_sync, self.sub_id1, None) is not None:
       portal_sync._delObject(self.sub_id1)
-    transaction.commit()
     self.tic()
     subscription = portal_sync.newContent(portal_type='SyncML Subscription',
                               id=self.sub_id1,
@@ -617,7 +614,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
     portal_sync = self.getSynchronizationTool()
     if getattr(portal_sync, self.sub_id2, None) is not None:
       portal_sync._delObject(self.sub_id2)
-    transaction.commit()
     self.tic()
     subscription = portal_sync.newContent(portal_type='SyncML Subscription',
                               id=self.sub_id2,
@@ -1579,7 +1575,6 @@ return [context[%r]]
                               user_id='fab',
                               password='myPassword')
 
-    transaction.commit()
     self.tic()
 
 
@@ -1626,7 +1621,6 @@ return [context[%r]]
       client_person.setFirstName(self.first_name2)
       server_person.setDescription(self.last_name2)
 
-    transaction.commit()
     self.tic()
     # Second synchronization
     # Only client modification must have been synchronized
