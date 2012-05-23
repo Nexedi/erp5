@@ -386,15 +386,10 @@ class FolderMixIn(ExtensionClass.Base):
     In order to activate objects that don't inherit ActiveObject,
     only placeless default activate parameters are taken into account.
     """
-    portal = self.getPortalObject()
-    activate_kw = portal.getPlacelessDefaultActivateParameters()
-    if activate_kw:
-      activate_kw = activate_kw.copy()
-    else:
-      activate_kw = {}
+    activate_kw = self.getDefaultActivateParameterDict.im_func(None)
     activate_kw.update(kw.get('activate_kw', ()))
     activate_kw.setdefault('active_process', None)
-    activate = portal.portal_activities.activateObject
+    activate = self.getPortalObject().portal_activities.activateObject
     validate = restricted and getSecurityManager().validate
     cost = activate_kw.setdefault('group_method_cost', .034) # 30 objects
     if cost != 1:

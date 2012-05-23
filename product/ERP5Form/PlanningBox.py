@@ -1320,10 +1320,14 @@ class BasicStructure:
                 sec_layer_object_list.extend([ s_obj for s_obj in secondary_object_list \
                     if s_obj.getParentRelativeUrl() == category_obj])
               else:
+                # split category path because
+                # _getDefaultAcquiredCategoryMembership returns only the
+                # category id instead of the relative url
+                category_id = "/".join(category_obj.split("/")[1:])
                 object_list.extend([ s_obj for s_obj in main_object_list \
-                  if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_obj])
+                  if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_id])
                 sec_layer_object_list.extend([ s_obj for s_obj in secondary_object_list \
-                  if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_obj])
+                  if s_obj._getDefaultAcquiredCategoryMembership(bc) == category_id])
 
         # recovering exeption_uid_list
         exception_uid_list = object_tree_line.getExceptionUidList()

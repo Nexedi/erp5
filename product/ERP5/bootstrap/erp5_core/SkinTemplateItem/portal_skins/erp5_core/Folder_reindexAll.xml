@@ -57,7 +57,6 @@ folder = context\n
 activate_kw = {\n
   \'tag\': object_tag,\n
   \'after_tag\': folder_after_tag,\n
-  \'passive_commit\': passive_commit\n
 }\n
 for key, value in activate_kw.items():\n
   if value is None:\n
@@ -90,7 +89,6 @@ def Folder_reindexObjectList(id_list_list):\n
      folder_tag=bundle_tag,\n
      folder_after_tag=bundle_object_tag,\n
      sql_catalog_id=sql_catalog_id,\n
-     passive_commit=passive_commit,\n
   )\n
 archive_test_script = getattr(context.getPortalObject(), "Archive_test", None)\n
 try:\n
@@ -155,7 +153,6 @@ else:\n
     folder_after_tag=bundle_object_tag,\n
     object_priority=object_priority,\n
     sql_catalog_id=sql_catalog_id,\n
-    passive_commit=passive_commit,\n
     object_tag=bundle_object_tag,\n
     tree_after_tag=tree_after_tag,\n
     tree_tag=tree_tag,\n
@@ -175,7 +172,7 @@ else:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1, start_tree=None, stop_tree=None</string> </value>
+            <value> <string>folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, start_tree=None, stop_tree=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

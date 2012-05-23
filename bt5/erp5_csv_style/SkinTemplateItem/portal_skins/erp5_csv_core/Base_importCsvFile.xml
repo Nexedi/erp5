@@ -105,7 +105,7 @@ for line in iter(import_file.readline, ""):\n
   attribute_value_dict = dict([(csv_property_list[x], csv_data_list[x]) \\\n
                                for x in xrange(len(csv_property_list))])\n
 \n
-  method(priority=4, activity="SQLQueue", passive_commit=1).Base_importCsvLine(attribute_value_dict)\n
+  method(priority=4, activity="SQLQueue").Base_importCsvLine(attribute_value_dict)\n
 redirect_url = \'%s?%s\' % ( context.absolute_url()+\'/\'+\'view\', \'portal_status_message=Importing+CSV+file.\')\n
 request[ \'RESPONSE\' ].redirect( redirect_url )\n
 </string> </value>

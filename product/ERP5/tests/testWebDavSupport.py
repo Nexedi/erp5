@@ -31,7 +31,6 @@
 import re
 import unittest
 import os
-import transaction
 from AccessControl import Unauthorized
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
@@ -81,7 +80,6 @@ class TestWebDavSupport(ERP5TypeTestCase):
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -98,7 +96,6 @@ class TestWebDavSupport(ERP5TypeTestCase):
     """Test a file can be uploaded on a document allowing embedded files
     """
     person = self.portal.person_module.newContent()
-    transaction.commit()
     self.tic()
     file_object = makeFileUpload('images/erp5_logo.png')
     response = self.publish(person.getPath() + '/erp5_logo.png',
@@ -148,7 +145,6 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             basic=self.authentication)
 
     self.assertEqual(response.getStatus(), httplib.CREATED)
-    transaction.commit()
     self.tic()
 
     # check Document fetching
@@ -201,7 +197,6 @@ class TestWebDavSupport(ERP5TypeTestCase):
     self.assertEqual(response.getStatus(), httplib.NO_CONTENT)
     self.assertEquals(web_page_module[filename].getData(), iso_text_content)
     # Convert to base format and run conversion into utf-8
-    transaction.commit()
     self.tic()
     # Content-Type header is replaced if sonversion encoding succeed
     new_text_content = text_content.replace('charset=iso-8859-1', 'charset=utf-8')
@@ -218,7 +213,6 @@ class TestWebDavSupport(ERP5TypeTestCase):
                             stdin=file_object,
                             basic=self.authentication)
     # Convert to base format and run conversion into utf-8
-    transaction.commit()
     self.tic()
 
     document_module = self.getDocumentModule()

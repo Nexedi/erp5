@@ -30,7 +30,6 @@
 """Tests Template functionality"""
 
 import unittest
-import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
@@ -52,7 +51,7 @@ class TestTemplate(ERP5TypeTestCase):
   def createUserAndLogin(self, name=None, additional_role_list=[]):
     """login with Member, Author and specified roles."""
     uf = self.getPortal().acl_users
-    role_list = ['Member', 'Author']
+    role_list = ['Member', 'Author', 'Auditor']
     role_list.extend(additional_role_list)
     uf._doAddUser(name, '', role_list, [])
     user = uf.getUserById(name).__of__(uf)
@@ -62,14 +61,9 @@ class TestTemplate(ERP5TypeTestCase):
     self.login('ERP5TypeTestCase')
     portal_preferences = self.portal.portal_preferences
     portal_preferences.deleteContent(list(portal_preferences.objectIds()))
-    transaction.commit()
     self.tic()
     self.portal.portal_types.Preference._setTypeAllowedContentTypeList(
       ('Foo', 'Knowledge Pad'))
-    self.portal.foo_module.manage_role(role_to_manage='Author',
-                                permissions=[Permissions.AddPortalContent,
-                                             Permissions.CopyOrMove,
-                                             ])
 
   def test_Template(self):
     self.createUserAndLogin(self.id())
@@ -77,19 +71,16 @@ class TestTemplate(ERP5TypeTestCase):
     preference.priority = Priority.USER
     preference.enable()
 
-    transaction.commit()
     self.tic()
 
     document = self.portal.foo_module.newContent(portal_type='Foo')
     document.edit(title='My Foo 1')
     document.newContent(portal_type='Foo Line')
 
-    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(preference.objectIds()), 1)
@@ -100,7 +91,6 @@ class TestTemplate(ERP5TypeTestCase):
 
     self.portal.foo_module.manage_delObjects(ids=[document.getId()])
 
-    transaction.commit()
     self.tic()
 
     template = preference.objectValues()[0]
@@ -111,7 +101,6 @@ class TestTemplate(ERP5TypeTestCase):
     new_document = self.portal.foo_module[new_document_id]
     new_document.makeTemplateInstance()
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(new_document.getTitle(), 'My Foo 1')
@@ -123,19 +112,16 @@ class TestTemplate(ERP5TypeTestCase):
     preference.priority = Priority.USER
     preference.enable()
 
-    transaction.commit()
     self.tic()
 
     document = self.portal.foo_module.newContent(portal_type='Foo')
     document.edit(title='My Foo 1')
     document.newContent(portal_type='Foo Line')
 
-    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(preference.objectIds()), 1)
@@ -146,7 +132,6 @@ class TestTemplate(ERP5TypeTestCase):
 
     self.portal.foo_module.manage_delObjects(ids=[document.getId()])
 
-    transaction.commit()
     self.tic()
 
     template = preference.objectValues()[0]
@@ -157,7 +142,6 @@ class TestTemplate(ERP5TypeTestCase):
     new_document = self.portal.foo_module[new_document_id]
     new_document.makeTemplateInstance()
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(new_document.getTitle(), 'My Foo 1')
@@ -176,15 +160,12 @@ class TestTemplate(ERP5TypeTestCase):
         portal_type='Preference')
     user_preference.setPriority(Priority.USER)
     user_preference.enable()
-    transaction.commit()
     self.tic()
 
     document = self.portal.foo_module.newContent(portal_type='Foo')
-    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
-    transaction.commit()
     self.tic()
 
     # created preference is reused to store template
@@ -202,15 +183,12 @@ class TestTemplate(ERP5TypeTestCase):
     unauthorized_preference.manage_permission('Add portal content', (), acquire=0)
     preference_id_list = list(self.portal.portal_preferences.objectIds())
 
-    transaction.commit()
     self.tic()
 
     document = self.portal.foo_module.newContent(portal_type='Foo')
-    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
-    transaction.commit()
     self.tic()
 
     # this preference was not used
@@ -235,17 +213,14 @@ class TestTemplate(ERP5TypeTestCase):
         portal_type='Preference')
     user_preference.setPriority(Priority.USER)
     user_preference.enable()
-    transaction.commit()
     self.tic()
 
     document = self.portal.foo_module.newContent(portal_type='Foo',
                                                  title='template',
                                                  description='First document')
-    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(user_preference.objectIds()), 1)
@@ -257,7 +232,6 @@ class TestTemplate(ERP5TypeTestCase):
                                     title='template',
                                     description="Another document")
     other_document.Base_makeTemplateFromDocument(form_id=None)
-    transaction.commit()
     self.tic()
     self.assertEqual(len(user_preference.objectIds()), 1)
     self.assertEqual(user_preference.objectValues()[0].getDescription(),
@@ -272,22 +246,18 @@ class TestTemplate(ERP5TypeTestCase):
         portal_type='System Preference')
     system_preference.setPriority(Priority.SITE)
     system_preference.enable()
-    transaction.commit()
     self.tic()
     self.createUserAndLogin(self.id())
     user_preference = self.portal.portal_preferences.newContent(
         portal_type='Preference')
     user_preference.setPriority(Priority.USER)
     user_preference.enable()
-    transaction.commit()
     self.tic()
 
     document = self.portal.foo_module.newContent(portal_type='Foo')
-    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
-    transaction.commit()
     self.tic()
 
     # created preference is reused to store template
@@ -303,11 +273,9 @@ class TestTemplate(ERP5TypeTestCase):
 
     preference_id_list = list(self.portal.portal_preferences.objectIds())
     document = self.portal.foo_module.newContent(portal_type='Foo')
-    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
-    transaction.commit()
     self.tic()
 
     # a new preference is created
@@ -345,16 +313,15 @@ class TestTemplate(ERP5TypeTestCase):
     preference_id_list = list(self.portal.portal_preferences.objectIds())
 
     document1 = self.portal.foo_module.newContent(portal_type='Foo')
-    transaction.commit()
+    self.commit()
     document2 = self.portal.foo_module.newContent(portal_type='Foo')
-    transaction.commit()
     self.tic()
 
     document1.Base_makeTemplateFromDocument(form_id=None)
-    transaction.commit()
+    self.commit()
 
     document2.Base_makeTemplateFromDocument(form_id=None)
-    transaction.commit()
+    self.commit()
 
     self.tic()
 
@@ -379,12 +346,11 @@ class TestTemplate(ERP5TypeTestCase):
     preference.priority = Priority.USER
     preference.enable()
 
-    transaction.commit()
     self.tic()
 
     document.Base_makeTemplateFromDocument(form_id=None)
 
-    transaction.commit()
+    self.commit()
     # making a new template should not create indexing activities,
     # either for the new template or one of its subobjects
     self.assertEqual(self.portal.portal_activities.getMessageList(), [])
@@ -408,7 +374,6 @@ class TestTemplate(ERP5TypeTestCase):
     # and this is still true if you create two templates from the same document
     # #929
     document.Base_makeTemplateFromDocument(form_id=None)
-    transaction.commit()
     self.tic()
 
     self.assertTrue(document.isIndexable)
@@ -420,7 +385,6 @@ class TestTemplate(ERP5TypeTestCase):
     document = self.portal.foo_module.newContent(portal_type='Foo')
     document.edit(title='My Foo 1')
     document.newContent(portal_type='Foo Line')
-    transaction.commit()
     self.tic()
     self._testTemplateNotIndexable(document)
 
@@ -428,7 +392,6 @@ class TestTemplate(ERP5TypeTestCase):
     document = self.portal.knowledge_pad_module.newContent(portal_type='Knowledge Pad')
     document.edit(title='My Knowledge Pad 1')
     document.newContent(portal_type='Knowledge Box')
-    transaction.commit()
     self.tic()
     # Only Manager can Copy and Move at Knowlede Pad Document when it is
     # 'invisible' state.

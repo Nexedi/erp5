@@ -64,6 +64,12 @@ organisation_list = context.Zuite_checkPortalCatalog(portal_type=\'Organisation\
 if organisation_list is not None:\n
   portal.organisation_module.deleteContent(organisation_list[0].getId())\n
 \n
+# remove the organisation of the test if existing\n
+organisation_list = context.Zuite_checkPortalCatalog(portal_type=\'Organisation\', max_count=1,\n
+                                                            title=context.Zuite_getHowToInfo()[\'link_howto_organisation2_title\'])\n
+if organisation_list is not None:\n
+  portal.organisation_module.deleteContent(organisation_list[0].getId())\n
+\n
 return "Clean Ok"\n
 </string> </value>
         </item>

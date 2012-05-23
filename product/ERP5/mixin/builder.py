@@ -39,8 +39,6 @@ from Products.ERP5.ExplanationCache import _getExplanationCache
 from DateTime import DateTime
 from Acquisition import aq_parent, aq_inner
 
-from zLOG import LOG
-
 class CollectError(Exception): pass
 class MatrixError(Exception): pass
 class DuplicatedPropertyDictKeysError(Exception): pass
@@ -102,7 +100,7 @@ class BuilderMixin(XMLObject, Amount, Predicate):
   security.declarePublic('build')
   def build(self, applied_rule_uid=None, movement_relative_url_list=None,
                   delivery_relative_url_list=None, movement_list=None,
-                  explanation=None, business_link=None, **kw):
+                  explanation=None, business_link=None, activate_kw=None, **kw):
     """
       Build deliveries from a list of movements
 
@@ -143,7 +141,8 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     delivery_list = self.buildDeliveryList(
                        root_group_node,
                        delivery_relative_url_list=delivery_relative_url_list,
-                       movement_list=movement_list,**kw)
+                       movement_list=movement_list, activate_kw=activate_kw,
+                       **kw)
     # Call a script after building
     self.callAfterBuildingScript(delivery_list, movement_list, **kw)
     return delivery_list
@@ -163,11 +162,12 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     """
     delivery_module_before_building_script_id = \
         self.getDeliveryModuleBeforeBuildingScriptId()
-    if delivery_module_before_building_script_id not in ["", None]:
+    if delivery_module_before_building_script_id:
       delivery_module = getattr(self.getPortalObject(), self.getDeliveryModule())
       getattr(delivery_module, delivery_module_before_building_script_id)()
 
   def generateMovementListForStockOptimisation(self, **kw):
+    # XXX: unused
     from Products.ERP5Type.Document import newTempMovement
     movement_list = []
     for attribute, method in [('node_uid', 'getDestinationUid'),
@@ -229,35 +229,29 @@ class BuilderMixin(XMLObject, Amount, Predicate):
           movement_list.append(movement)
     return movement_list
 
-  @UnrestrictedMethod
-  def searchMovementList(self, applied_rule_uid=None, **kw):
+  def _searchMovementList(self, **kw):
     """
       Returns a list of simulation movements (or something similar to
       simulation movements) to construct a new delivery.
-
-      For compatibility, if a simulation select method id is not provided,
-      a list of movements for predicting future supplies is returned.
-      You should define a simulation select method id, then it will be used
-      to calculate the result.
     """
     method_id = self.getSimulationSelectMethodId()
-    if not method_id:
-      # XXX compatibility
-      return self.generateMovementListForStockOptimisation(**kw)
-
-    select_method = getattr(self.getPortalObject(), method_id)
-    movement_list = select_method(**kw)
-
-    # Make sure that movements are not duplicated.
+    if method_id:
+      select_method = getattr(self.getPortalObject(), method_id)
+    else:
+      select_method = self.getPortalObject().portal_catalog
+    movement_list = [] # use list to preserve order
     movement_set = set()
-    for movement in movement_list:
+    for movement in select_method(**kw):
+      movement = movement.getObject()
       if movement in movement_set:
         raise SelectMethodError('%s returned %s twice or more' % \
                 (method_id, movement.getRelativeUrl()))
-      else:
-        movement_set.add(movement)
+      movement_set.add(movement)
+      movement_list.append(movement)
 
     return movement_list
+
+  searchMovementList = UnrestrictedMethod(_searchMovementList)
 
   def collectMovement(self, movement_list):
     """
@@ -368,13 +362,10 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       Create a new delivery in case where a builder may not update
       an existing one.
     """
-    new_delivery_id = str(delivery_module.generateNewId())
-    delivery = delivery_module.newContent(
+    return delivery_module.newContent(
       portal_type=self.getDeliveryPortalType(),
-      id=new_delivery_id,
       created_by_builder=1,
       activate_kw=activate_kw)
-    return delivery
 
   def _processDeliveryGroup(self, delivery_module, movement_group_node,
                             collect_order_list, movement_group_node_list=None,
@@ -452,13 +443,10 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       Create a new delivery line in case where a builder may not update
       an existing one.
     """
-    new_delivery_line_id = str(delivery.generateNewId())
-    delivery_line = delivery.newContent(
+    return delivery.newContent(
       portal_type=self.getDeliveryLinePortalType(),
-      id=new_delivery_line_id,
       created_by_builder=1,
       activate_kw=activate_kw)
-    return delivery_line
 
   def _processDeliveryLineGroup(self, delivery, movement_group_node,
                                 collect_order_list, movement_group_node_list=None,
@@ -685,42 +673,33 @@ class BuilderMixin(XMLObject, Amount, Predicate):
       delivery_movement._edit(force_update=1, **property_dict)
 
   @UnrestrictedMethod
-  def callAfterBuildingScript(self, delivery_list, movement_list=None, **kw):
+  def callAfterBuildingScript(self, delivery_list, movement_list=(), **kw):
     """
       Call script on each delivery built.
     """
-    if not len(delivery_list):
-      return
-    # Parameter initialization
-    if movement_list is None:
-      movement_list = []
     delivery_after_generation_script_id = \
                               self.getDeliveryAfterGenerationScriptId()
-    related_simulation_movement_path_list = \
-                              [x.getPath() for x in movement_list]
-    if delivery_after_generation_script_id not in ["", None]:
+    if delivery_after_generation_script_id:
+      related_simulation_movement_path_list = \
+                                [x.getPath() for x in movement_list]
       for delivery in delivery_list:
         script = getattr(delivery, delivery_after_generation_script_id)
         # BBB: Only Python Scripts were used in the past, and they might not
         # accept an arbitrary argument. So to keep compatibility,
         # check if it can take the new parameter safely, only when
         # the callable object is a Python Script.
-        safe_to_pass_parameter = True
         meta_type = getattr(script, 'meta_type', None)
         if meta_type == 'Script (Python)':
           # check if the script accepts related_simulation_movement_path_list
-          safe_to_pass_parameter = False
           for param in script.params().split(','):
             param = param.split('=', 1)[0].strip()
             if param == 'related_simulation_movement_path_list' \
                     or param.startswith('**'):
-              safe_to_pass_parameter = True
               break
-
-        if safe_to_pass_parameter:
-          script(related_simulation_movement_path_list=related_simulation_movement_path_list)
-        else:
-          script()
+          else:
+            script()
+            continue
+        script(related_simulation_movement_path_list=related_simulation_movement_path_list)
 
   security.declareProtected(Permissions.AccessContentsInformation,
                            'getMovementGroupList')
@@ -769,18 +748,17 @@ class BuilderMixin(XMLObject, Amount, Predicate):
     return obj
 
   def _isUpdated(self, obj, level):
-    tv = getTransactionalVariable(self)
-    return level in tv['builder_processed_list'].get(obj, [])
+    tv = getTransactionalVariable()
+    return level in tv['builder_processed_list'].get(obj, ())
 
   def _setUpdated(self, obj, level):
-    tv = getTransactionalVariable(self)
-    if tv.get('builder_processed_list', None) is None:
+    tv = getTransactionalVariable()
+    if 'builder_processed_list' not in tv:
       self._resetUpdated()
-    tv['builder_processed_list'][obj] = \
-       tv['builder_processed_list'].get(obj, []) + [level]
+    tv['builder_processed_list'].setdefault(obj, []).append(level)
 
   def _resetUpdated(self):
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     tv['builder_processed_list'] = {}
 
   # for backward compatibilities.

@@ -118,7 +118,7 @@
 <!-- View mode: title of the form - title of the object -->\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/0/view</td>\n
+  <td>${base_url}/foo_module/0</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -138,7 +138,7 @@
 <!-- List mode: title of the form -->\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/view</td>\n
+  <td>${base_url}/foo_module</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -150,7 +150,7 @@
 <!-- Dialog mode: title of the form -->\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/0/view</td>\n
+  <td>${base_url}/foo_module/0</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -190,7 +190,7 @@
 <!-- portal: title of the portal -->\n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/view</td>\n
+  <td>${base_url}</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -201,7 +201,7 @@
 \n
 <tr>\n
   <td>open</td>\n
-  <td>${base_url}/foo_module/view</td>\n
+  <td>${base_url}/foo_module</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n

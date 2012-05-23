@@ -73,21 +73,25 @@ class SlapOSControler(object):
         shutil.rmtree(software_root)
       os.mkdir(software_root)
       os.chmod(software_root, 0750)
+    instance_root = config['instance_root']
+    if os.path.exists(instance_root):
+      # delete old paritions which may exists in order to not get its data
+      # (ex. MySQL db content) from previous testnode's runs
+      # In order to be able to change partition naming scheme, do this at
+      # instance_root level (such change happened already, causing problems).
+      shutil.rmtree(instance_root)
+    os.mkdir(instance_root)
     for i in range(0, MAX_PARTIONS):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
       # this is not a problem as usually all services are on different ports
       partition_reference = '%s-%s' %(config['partition_reference'], i)
-      partition_path = os.path.join(config['instance_root'], partition_reference)
-      if os.path.exists(partition_path):
-        # delete old paritions which may exists in order to not get its data (ex. MySQL db content)
-        # from previous testnode's runs
-        shutil.rmtree(partition_path)
+      partition_path = os.path.join(instance_root, partition_reference)
       os.mkdir(partition_path)
       os.chmod(partition_path, 0750)
       computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
                                                     'address': config['ipv4_address'],
-                                                    'instance_root': config['instance_root'],
+                                                    'instance_root': instance_root,
                                                     'netmask': '255.255.255.255',
                                                     'partition_list': [{'address_list': [{'addr': config['ipv4_address'],
                                                                         'netmask': '255.255.255.255'},

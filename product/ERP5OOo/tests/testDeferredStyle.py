@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Form.Selection import Selection
 from Testing import ZopeTestCase
@@ -77,7 +76,6 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     if 'MailHost' in self.portal.objectIds():
       self.portal.manage_delObjects(['MailHost'])
     self.portal._setObject('MailHost', DummyMailHost('MailHost'))
-    transaction.commit()
     self.tic()
 
   def loginAsUser(self, username):
@@ -95,7 +93,6 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     response = self.publish(
         '/%s/person_module/pers/Base_viewHistory?deferred_portal_skin=%s'
         % (self.portal.getId(), self.skin), '%s:%s' % (self.username, self.password))
-    transaction.commit()
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -131,7 +128,6 @@ class TestDeferredStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
                                            self.skin,
                                            'X' * 2000),
         '%s:%s' % (self.username, self.password))
-    transaction.commit()
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)

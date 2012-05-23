@@ -68,7 +68,7 @@ BEFORE for possible transitions was:  Enter Number of User</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
-            <value> <string>Your Organisation</string> </value>
+            <value> <string>Your organisation</string> </value>
         </item>
       </dictionary>
     </pickle>

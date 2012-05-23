@@ -51,13 +51,11 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>kw[\'parent_specialise_reference\'] = \'default_payment_rule\'\n
-kw[\'portal_type\'] = \'Simulation Movement\'\n
-kw[\'grand_parent_simulation_state\'] = [\'started\']\n
+kw[\'grand_parent_simulation_state\'] = \'started\'\n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
 kw[\'max_movement_date\'] = DateTime() + 30 # XXX this is an arbitrary value for experimentation\n
                                           # this could be an alarm configuration.\n
-movement_list = [x.getObject() for x in context.PaymentTransaction_zSelectMovement(**kw)]\n
-return movement_list\n
+return context.PaymentTransaction_zSelectMovement(src__=src__, **kw)\n
 </string> </value>
         </item>
         <item>

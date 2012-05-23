@@ -99,7 +99,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
                                                  site_value=self.site,
                                                  start_date = DateTime())
     self.assertNotEqual(inventory_group, None)
-    self.stepTic()
+    self.tic()
 
     self.assertEqual(len(self.inventory_module.objectValues()), 1)
     self.inventory_group = getattr(self.inventory_module, 'inventory_group_1')
@@ -120,7 +120,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
                                                 destination_payment_value=self.bank_account_1,
                                                 )
     self.assertNotEqual(inventory, None)
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(self.inventory_group.objectValues()), 1)
     self.inventory = getattr(self.inventory_group, 'inventory_1')
     self.assertEqual(self.inventory.getPortalType(), 'Bank Account Inventory')
@@ -140,7 +140,7 @@ class TestERP5BankingInventory(TestERP5BankingMixin):
                                                quantity=50000)
     self.assertNotEqual(inventory_line, None)
 
-    self.stepTic()
+    self.tic()
     
     self.assertEqual(len(self.inventory.objectValues()), 1)
     self.inventory_line = getattr(self.inventory, 'line_1')

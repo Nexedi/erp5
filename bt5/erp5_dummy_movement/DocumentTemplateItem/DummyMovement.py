@@ -27,10 +27,11 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-
 from Products.ERP5.Document.Movement import Movement
+
 
 class DummyMovement(Movement):
   """Dummy Movement for testing purposes."""
@@ -57,33 +58,15 @@ class DummyMovement(Movement):
     """Our dummy movement are always accountable."""
     return getattr(self, 'is_accountable', 1)
 
-  def _getPropertyDirectlyOrFromDummyDelivery(self, property, default=None):
-    """Returns property from delivery, in case if in Dummy Delivery, or movement"""
-    if self.getParentValue().getPortalType() == 'Dummy Delivery':
-      return self.getParentValue().getSimulationState()
-    return getattr(self, property, default)
+  # In order to make tests work with dummy movements that are not contained in
+  # dummy deliveries, we must borrow a few methods from DummyDelivery.
 
   def getSimulationState(self):
-    return self._getPropertyDirectlyOrFromDummyDelivery(
-        'simulation_state', 'draft')
-
-  def setSimulationState(self, state):
-    """Directly sets a simulation state if not in Dummy Delivery."""
-    if self.getParentValue().getPortalType() != 'Dummy Delivery':
-      self.simulation_state = state
-    else:
-      raise ValueError
-
-  def getCausalityState(self):
-    return self._getPropertyDirectlyOrFromDummyDelivery(
-        'causality_state', 'draft')
-
-  def setCausalityState(self, state):
-    """Directly sets a causality state."""
-    if self.getParentValue().getPortalType() != 'Dummy Delivery':
-      self.simulation_state = state
-    else:
-      raise ValueError
+    from erp5.document.DummyDelivery import DummyDelivery
+    parent = self.getParentValue()
+    if isinstance(parent, DummyDelivery):
+      self = parent
+    return DummyDelivery.getSimulationState.im_func(self)
 
   def getDeliveryValue(self):
     """
@@ -102,7 +85,6 @@ class DummyMovement(Movement):
       return parent.getDeliveryValue()
     # return self, to have minimum support of getDeliveryValue
     return self
-
 
   def hasCellContent(self):
     return False

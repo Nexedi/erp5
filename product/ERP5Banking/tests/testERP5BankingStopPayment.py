@@ -68,7 +68,7 @@ class TestERP5BankingStopPayment( TestERP5BankingCheckbookDeliveryMixin,
     # Set some variables :
 
     TestERP5BankingCheckbookDeliveryMixin.afterSetUp(self)
-    self.stepTic()
+    self.tic()
     self.createCheckbookDelivery()
     # the stop payment module
     self.stop_payment_module = self.getStopPaymentModule()

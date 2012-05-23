@@ -33,7 +33,6 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Banking.tests.testERP5BankingCheckbookUsualCashTransfer \
      import TestERP5BankingCheckbookUsualCashTransferMixin
 from Products.ERP5Banking.tests.TestERP5BankingMixin import TestERP5BankingMixin
-import transaction
 
 # Needed in order to have a log file inside the current folder
 os.environ['EVENT_LOG_FILE']     = os.path.join(os.getcwd(), 'zLOG.log')
@@ -119,7 +118,6 @@ class TestERP5BankingCheckbookDeliveryMixin(TestERP5BankingMixin):
     # in the source
     self.createCheckbookReception()
     self.checkItemsCreated()
-    transaction.commit()
     self.tic()
     self.createCheckbookVaultTransfer()
 

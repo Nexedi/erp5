@@ -32,7 +32,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl import Unauthorized
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import transaction
 import json
 
 

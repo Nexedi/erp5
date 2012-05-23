@@ -32,7 +32,10 @@ from base64 import b64encode, b64decode, b16encode
 from lxml import etree
 
 from AccessControl.SecurityManagement import newSecurityManager
-import transaction
+from zLOG import LOG
+from base64 import b64encode, b64decode, b16encode, b16decode
+from ERP5Diff import ERP5Diff
+from lxml import etree
 
 from ERP5Diff import ERP5Diff
 from Products.ERP5Type.tests.runUnitTest import tests_home
@@ -183,7 +186,6 @@ class TestERP5SyncMLMixin(TestMixin):
                                first_name=self.first_name1,
                                last_name=self.last_name1,
                                description=self.description1)
-    transaction.commit()
     self.tic()
     nb_person = len(person_client)
     self.assertEquals(nb_person, number_of_object)
@@ -221,13 +223,11 @@ class TestERP5SyncMLMixin(TestMixin):
     # the test rather different of what happens in real life !
     while len(result) > 0:
       result = portal_sync.processServerSynchronization(publication.getPath())
-      transaction.commit()
       self.tic()
       nb_message += 1
       if len(result) == 0:
         break
       result = portal_sync.processClientSynchronization(subscription.getPath())
-      transaction.commit()
       self.tic()
       nb_message += 1
     return nb_message
@@ -252,14 +252,12 @@ class TestERP5SyncMLMixin(TestMixin):
       # if we manage well duplicate messages
       for x in xrange(3):
         result = portal_sync.processServerSynchronization(publication.getPath())
-        transaction.commit()
         self.tic()
       nb_message += 1
       if not len(result):
         break
       for x in xrange(3):
         result = portal_sync.processClientSynchronization(subscription.getPath())
-        transaction.commit()
         self.tic()
       nb_message += 1
 
@@ -389,7 +387,6 @@ class TestERP5SyncMLMixin(TestMixin):
     subscription1 = portal_sync[self.sub_id1]
     publication.resetSubscriberList()
     subscription1.resetSignatureList()
-    transaction.commit()
     self.tic()
 
   def assertXMLViewIsEqual(self, sub_id, object_pub=None, object_sub=None,
@@ -590,7 +587,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
                               conduit_module_id='ERP5Conduit',
                               is_activity_enabled=self.activity_enabled)
     publication.validate()
-    transaction.commit()
     self.tic()
     return publication
 
@@ -615,7 +611,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
                               user_id='fab',
                               password='myPassword')
     subscription.validate()
-    transaction.commit()
     self.tic()
 
   def addSubscription2(self):
@@ -639,7 +634,6 @@ class TestERP5SyncML(TestERP5SyncMLMixin):
                               user_id='fab',
                               password='myPassword')
     subscription.validate()
-    transaction.commit()
     self.tic()
 
   def test_05_GetSynchronizationList(self):
@@ -1398,7 +1392,6 @@ return [context[%r]]
                               user_id='fab',
                               password='myPassword')
 
-    transaction.commit()
     self.tic()
 
   def test_33_OneWayFromServer(self):
@@ -1487,7 +1480,6 @@ return [context[%r]]
                               user_id='fab',
                               password='myPassword')
 
-    transaction.commit()
     self.tic()
 
   def test_OneWayFromClient(self):

@@ -63,14 +63,6 @@ if tree_id_list is not None:\n
     raise ValueError, "both tree and tree_id_list should not be defined"\n
   tree_id = tree_id_list.pop()\n
 \n
-activate_kw = {\n
-  \'passive_commit\': passive_commit\n
-}\n
-for key, value in activate_kw.items():\n
-  if value is None:\n
-    activate_kw.pop(key)\n
-\n
-\n
 # Spawn activities for bundles of content objects.\n
 # Bundle size, in object count\n
 BUNDLE_ITEM_COUNT = 1000\n
@@ -82,13 +74,12 @@ def Folder_reindexObjectList(id_list_list):\n
   """\n
   folder.activate(activity=\'SQLQueue\', priority=object_priority, \n
                   after_tag=object_tag,\n
-                  tag=folder_tag, **activate_kw).Folder_reindexObjectList(\n
+                  tag=folder_tag).Folder_reindexObjectList(\n
      None,\n
      id_list_list=id_list_list,\n
      object_priority=object_priority,\n
      object_tag=object_tag,\n
      sql_catalog_id=sql_catalog_id,\n
-     passive_commit=passive_commit,\n
      folder_tag=folder_tag,\n
      folder_after_tag=folder_after_tag,\n
   )\n
@@ -124,7 +115,6 @@ if tree_id_list is not None:\n
         object_priority=object_priority,\n
         sql_catalog_id=sql_catalog_id,\n
         object_tag=object_tag,\n
-        passive_commit=passive_commit,\n
         tree_after_tag=tree_after_tag,\n
         tree_tag=tree_tag,\n
         )\n
@@ -134,7 +124,7 @@ if tree_id_list is not None:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>tree_id=None, tree_id_list=None, folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1, tree_tag=None, tree_after_tag=None</string> </value>
+            <value> <string>tree_id=None, tree_id_list=None, folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, tree_tag=None, tree_after_tag=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

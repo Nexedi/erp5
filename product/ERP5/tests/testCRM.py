@@ -28,7 +28,6 @@
 
 import unittest
 import os
-import transaction
 
 from Products.CMFCore.WorkflowCore import WorkflowException
 from Products.ERP5Type.tests.utils import FileUpload
@@ -69,12 +68,12 @@ class BaseTestCRM(ERP5TypeTestCase):
     self.portal.MailHost.reset()
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     # clear modules if necessary
     for module_name in clear_module_name_list:
       module = self.portal.unrestrictedTraverse(module_name)
       module.manage_delObjects(list(module.objectIds()))
-    self.stepTic()
+    self.tic()
     super(BaseTestCRM, self).beforeTearDown()
 
 class TestCRM(BaseTestCRM):
@@ -102,7 +101,6 @@ class TestCRM(BaseTestCRM):
 
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
 
-      transaction.commit()
       self.tic()
 
       event.Event_createResponse(response_event_portal_type=ptype,
@@ -111,7 +109,6 @@ class TestCRM(BaseTestCRM):
                                  response_workflow_action='plan',
                                  )
 
-      transaction.commit()
       self.tic()
 
       self.assertEqual(len(event.getCausalityRelatedValueList()), 1)
@@ -146,7 +143,6 @@ class TestCRM(BaseTestCRM):
                              portal_type=ptype,
                              title='Incoming Title',
                              description='New Desc')
-      transaction.commit()
       self.tic()
       new_event = ticket.getFollowUpRelatedValueList()[0]
       self.assertEquals('stopped', new_event.getSimulationState())
@@ -156,7 +152,6 @@ class TestCRM(BaseTestCRM):
                                         portal_type=ptype,
                                         title='Outgoing Title',
                                         description='New Desc')
-      transaction.commit()
       self.tic()
       new_event = [event for event in ticket.getFollowUpRelatedValueList() if\
                    event.getTitle() == 'Outgoing Title'][0]
@@ -183,7 +178,6 @@ class TestCRM(BaseTestCRM):
                           'person_module_selection', [])
     self.portal.portal_selections.setSelectionParamsFor(
                           'person_module_selection', dict(title='Pers1'))
-    transaction.commit()
     self.tic()
     person_module.PersonModule_newEvent(portal_type='Mail Message',
                                         title='The Event Title',
@@ -194,7 +188,6 @@ class TestCRM(BaseTestCRM):
                                         text_content='Event Content',
                                         form_id='PersonModule_viewPersonList')
 
-    transaction.commit()
     self.tic()
 
     related_event = pers1.getDestinationRelatedValue(
@@ -218,7 +211,6 @@ class TestCRM(BaseTestCRM):
     self.portal.portal_selections.setSelectionCheckedUidsFor(
           'person_module_selection',
           [pers1.getUid(), pers2.getUid()])
-    transaction.commit()
     self.tic()
     person_module.PersonModule_newEvent(portal_type='Mail Message',
                                         title='The Event Title',
@@ -229,7 +221,6 @@ class TestCRM(BaseTestCRM):
                                         text_content='Event Content',
                                         form_id='PersonModule_viewPersonList')
 
-    transaction.commit()
     self.tic()
 
     for person in (pers1, pers2):
@@ -311,12 +302,10 @@ class TestCRM(BaseTestCRM):
       ticket_url = ticket.getRelativeUrl()
       event = self.portal.event_module.newContent(portal_type=portal_type,
                                                   follow_up=ticket_url)
-      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
       event.receive()
       portal_workflow.doActionFor(event, 'acknowledge_action', create_event=0)
-      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
 
@@ -327,12 +316,10 @@ class TestCRM(BaseTestCRM):
       ticket_url = ticket.getRelativeUrl()
       event = self.portal.event_module.newContent(portal_type=portal_type,
                                                   follow_up=ticket_url)
-      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
       event.receive()
       portal_workflow.doActionFor(event, 'acknowledge_action', create_event=1)
-      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 1)
       new_event = event.getCausalityRelatedValue()
@@ -349,14 +336,12 @@ class TestCRM(BaseTestCRM):
                                                   title='Event Title',
                                                   text_content='Event Content',
                                                   content_type='text/plain')
-      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 0)
       event.receive()
       portal_workflow.doActionFor(event, 'acknowledge_action',
                                   create_event=1,
                                   quote_original_message=1)
-      transaction.commit()
       self.tic()
       self.assertEqual(len(event.getCausalityRelatedValueList()), 1)
       new_event = event.getCausalityRelatedValue()
@@ -376,7 +361,7 @@ class TestCRM(BaseTestCRM):
     module = self.portal.support_request_module
     support_request = module.newContent(portal_type=portal_type,
                                         title=title,)
-    self.stepTic()
+    self.tic()
 
     self.assertNotEquals(None, support_request.getReference())
 
@@ -388,7 +373,6 @@ class TestCRM(BaseTestCRM):
                                         new_support_request.getReference())
 
 
-  @expectedFailure
   def test_Event_getResourceItemList(self):
     """Event_getResourceItemList returns
     category item list with base category in path, just
@@ -421,7 +405,6 @@ class TestCRM(BaseTestCRM):
                                       for category in resource.contentValues()]
     resource_list.append(person.getRelativeUrl())
     system_preference.setPreferredEventResourceList(resource_list)
-    transaction.commit()
     self.tic()
     # Then create One event and play with it
     portal_type = 'Visit'
@@ -487,7 +470,6 @@ class TestCRMMailIngestion(BaseTestCRM):
             default_email_text='he@erp5.org')
 
     # make sure customers are available to catalog
-    transaction.commit()
     self.tic()
 
   def _readTestData(self, filename):
@@ -567,14 +549,12 @@ class TestCRMMailIngestion(BaseTestCRM):
     # source is found automatically, based on the From: header in the mail
     event = self._ingestMail('simple')
     # metadata discovery is done in an activity
-    transaction.commit()
     self.tic()
     self.assertEquals('person_module/sender', event.getSource())
 
   def test_recipient(self):
     # destination is found automatically, based on the To: header in the mail
     event = self._ingestMail('simple')
-    transaction.commit()
     self.tic()
     destination_list = event.getDestinationList()
     destination_list.sort()
@@ -584,7 +564,6 @@ class TestCRMMailIngestion(BaseTestCRM):
   def test_clone(self):
     # cloning an event must keep title and text-content
     event = self._ingestMail('simple')
-    transaction.commit()
     self.tic()
     self.assertEquals('Simple Mail Test', event.getTitle())
     self.assertEquals('Simple Mail Test', event.getTitleOrId())
@@ -599,7 +578,6 @@ class TestCRMMailIngestion(BaseTestCRM):
                                          'person_module/he']}
     self.assertEquals(event.getPropertyDictFromContent(), content_dict)
     new_event = event.Base_createCloneDocument(batch_mode=1)
-    transaction.commit()
     self.tic()
     self.assertEquals('Simple Mail Test', new_event.getTitle())
     self.assertEquals('Simple Mail Test', new_event.getTitleOrId())
@@ -619,10 +597,8 @@ class TestCRMMailIngestion(BaseTestCRM):
     # But, we don't want it to associate with the first campaign simply
     # because we searched against nothing
     self.portal.campaign_module.newContent(portal_type='Campaign')
-    transaction.commit()
     self.tic()
     event = self._ingestMail('simple')
-    transaction.commit()
     self.tic()
     self.assertEquals(None, event.getFollowUp())
 
@@ -641,7 +617,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     message.replace_header('subject', 'Visit:Company A')
     data = message.as_string()
     self._ingestMail(data=data)
-    transaction.commit()
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
@@ -650,7 +625,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     message.replace_header('subject', 'Fax:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
-    transaction.commit()
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Fax Message')
@@ -659,7 +633,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     message.replace_header('subject', 'TEST:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
-    transaction.commit()
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Mail Message')
@@ -668,7 +641,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     message.replace_header('subject', 'visit:Company A')
     data = message.as_string()
     self._ingestMail(data=data)
-    transaction.commit()
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
@@ -677,7 +649,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     message.replace_header('subject', 'phone:Company B')
     data = message.as_string()
     self._ingestMail(data=data)
-    transaction.commit()
     self.tic()
     document = portal.event_module[portal.event_module.objectIds()[-1]]
     self.assertEqual(document.getPortalType(), 'Phone Call')
@@ -686,7 +657,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     message.replace_header('subject', 'LETTER:Company C')
     data = message.as_string()
     self._ingestMail(data=data)
-    transaction.commit()
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Letter')
@@ -696,7 +666,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     message.set_payload('Visit:%s' % body)
     data = message.as_string()
     self._ingestMail(data=data)
-    transaction.commit()
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Visit')
@@ -706,7 +675,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     message.set_payload('PHONE CALL:%s' % body)
     data = message.as_string()
     self._ingestMail(data=data)
-    transaction.commit()
     self.tic()
     document = getLastCreatedEvent(portal.event_module)
     self.assertEqual(document.getPortalType(), 'Phone Call')
@@ -719,7 +687,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     """
     document = self._ingestMail(filename='forwarded')
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(document.getContentInformation().get('From'), 'Me <me@erp5.org>')
@@ -735,7 +702,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     """
     document = self._ingestMail(filename='forwarded_attached')
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(document.getContentInformation().get('From'), 'Me <me@erp5.org>')
@@ -746,7 +712,6 @@ class TestCRMMailIngestion(BaseTestCRM):
   def test_encoding(self):
     document = self._ingestMail(filename='encoded')
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(document.getContentInformation().get('To'),
@@ -766,7 +731,6 @@ class TestCRMMailIngestion(BaseTestCRM):
     if multipart/mixed return text
     """
     document = self._ingestMail(filename='sample_multipart_mixed_and_alternative')
-    transaction.commit()
     self.tic()
     stripped_html = document.asStrippedHTML()
     self.assertTrue('<form' not in stripped_html)
@@ -784,7 +748,6 @@ class TestCRMMailIngestion(BaseTestCRM):
 
     # now check a message with multipart/mixed
     mixed_document = self._ingestMail(filename='sample_html_attachment')
-    transaction.commit()
     self.tic()
     self.assertEquals(mixed_document.getAttachmentData(1),
                       mixed_document.getTextContent())
@@ -813,7 +776,6 @@ class TestCRMMailIngestion(BaseTestCRM):
                     ''.join(['%s' % ord(i) for i in html_filename]))
     message.attach(part)
     event.setData(message.as_string())
-    transaction.commit()
     self.tic()
     self.assertTrue('html' in event.getTextContent())
     self.assertEquals(len(event.getAttachmentInformationList()), 2)
@@ -883,7 +845,6 @@ class TestCRMMailSend(BaseTestCRM):
       default_pref.enable()
 
     # make sure customers are available to catalog
-    transaction.commit()
     self.tic()
 
   def test_MailFromMailMessageEvent(self):
@@ -897,7 +858,6 @@ class TestCRMMailSend(BaseTestCRM):
     event.setTextContent(text_content)
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    transaction.commit()
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -925,7 +885,6 @@ class TestCRMMailSend(BaseTestCRM):
     event.setTextContent(text_content)
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    transaction.commit()
     self.tic()
     last_message_1, last_message_2 = self.portal.MailHost._message_list[-2:]
     self.assertNotEquals((), last_message_1)
@@ -949,7 +908,6 @@ class TestCRMMailSend(BaseTestCRM):
     event.setTextContent('Mail Content')
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    transaction.commit()
     self.tic()
     # no mail sent
     last_message = self.portal.MailHost._last_message
@@ -967,7 +925,6 @@ class TestCRMMailSend(BaseTestCRM):
       self.portal.portal_workflow.doActionFor(event, 'start_action',
                                               send_mail=1)
 
-      transaction.commit()
       self.tic()
       # this means no message have been set
       self.assertEquals((), self.portal.MailHost._last_message)
@@ -984,7 +941,6 @@ class TestCRMMailSend(BaseTestCRM):
       event.setTextContent('Hello !')
       self.portal.portal_workflow.doActionFor(event, 'start_action')
 
-      transaction.commit()
       self.tic()
       # this means no message have been set
       self.assertEquals((), self.portal.MailHost._last_message)
@@ -1001,7 +957,6 @@ class TestCRMMailSend(BaseTestCRM):
     event.setTextContent(text_content)
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    transaction.commit()
     self.tic()
     # The getTextContent() gets the content from the file data instead the
     # Attribute text_content.
@@ -1022,7 +977,6 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertNotEqual(part, None)
     self.assertEqual('<html><body>%s</body></html>' % text_content, part.get_payload(decode=True))
 
-  @expectedFailure
   def test_MailMessageHTMLbis(self):
     # test sending a mail message edited as HTML (the default with FCKEditor),
     # then the mail should have HTML
@@ -1034,7 +988,6 @@ class TestCRMMailSend(BaseTestCRM):
     event.setTextContent(text_content)
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    transaction.commit()
     self.tic()
     # This test fails because of known issue for outgoing emails.
     # there is conflict between properties from data
@@ -1050,7 +1003,6 @@ class TestCRMMailSend(BaseTestCRM):
     event.setTextContent('Hàhà')
     self.portal.portal_workflow.doActionFor(event, 'start_action',
                                             send_mail=1)
-    transaction.commit()
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)
@@ -1077,7 +1029,6 @@ class TestCRMMailSend(BaseTestCRM):
     file_object = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
 
-    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -1126,7 +1077,6 @@ class TestCRMMailSend(BaseTestCRM):
     file_object = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
 
-    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -1173,7 +1123,6 @@ class TestCRMMailSend(BaseTestCRM):
     filename = 'sample_attachment.zip'
     file_object = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
-    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -1220,7 +1169,6 @@ class TestCRMMailSend(BaseTestCRM):
     file_object = makeFileUpload(filename)
     document = self.portal.portal_contributions.newContent(file=file_object)
 
-    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -1268,7 +1216,6 @@ class TestCRMMailSend(BaseTestCRM):
     document = self.portal.portal_contributions.newContent(
                           data='<html><body>Hello world!</body></html>',
                           filename=filename)
-    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -1367,7 +1314,6 @@ class TestCRMMailSend(BaseTestCRM):
     document_txt = add_document(filename,
                                 self.portal.person_module['me'], 'Embedded File')
 
-    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -1426,7 +1372,6 @@ class TestCRMMailSend(BaseTestCRM):
     document_gif = add_document(filename,
                                 self.portal.person_module['me'], 'Embedded File')
 
-    transaction.commit()
     self.tic()
 
     # Add a ticket
@@ -1490,7 +1435,7 @@ class TestCRMMailSend(BaseTestCRM):
     self.assertEquals(event.getTitle(), real_title)
     self.assertEquals(event.getTextContent(), real_content)
 
-    self.stepTic()
+    self.tic()
     new_event = event.Base_createCloneDocument(batch_mode=1)
     self.assertFalse(new_event.hasFile(), '%r has a file' % (new_event,))
     self.assertEquals(new_event.getData(), '')
@@ -1520,11 +1465,11 @@ class TestCRMMailSend(BaseTestCRM):
                 follow_up = campaing.getRelativeUrl())
       event.setDestinationList([x.getRelativeUrl() for x in destination_list])
       event_list.append(event)
-    self.stepTic()
+    self.tic()
     
     # use Ticket_cloneTicketAndEventList
     campaing.Ticket_cloneTicketAndEventList()
-    self.stepTic()
+    self.tic()
     cloned_campaign = [x for x in portal.campaign_module.objectValues() if x!=campaing][0]
     cloned_event_list = [x for x in portal.event_module.objectValues() if x.getFollowUpValue()==cloned_campaign]
     self.assertEqual(campaing.getTitle(), cloned_campaign.getTitle())
@@ -1557,7 +1502,6 @@ class TestCRMMailSend(BaseTestCRM):
                                     role_category_list='function/crm_agent')
       portal_type_object.updateRoleMapping()
     user = self.createSimpleUser('Agent', 'crm_agent', 'crm_agent')
-    transaction.commit()
     self.tic()
     try:
       # create entites
@@ -1594,7 +1538,6 @@ class TestCRMMailSend(BaseTestCRM):
       person.Base_addEvent(title, direction, portal_type, resource)
 
       # Index Event
-      transaction.commit()
       self.tic()
 
       # check created Event
@@ -1615,7 +1558,6 @@ class TestCRMMailSend(BaseTestCRM):
       another_person.Base_addEvent(title, direction, portal_type, resource)
 
       # Index Event
-      transaction.commit()
       self.tic()
 
       # check created Event
@@ -1636,7 +1578,6 @@ class TestCRMMailSend(BaseTestCRM):
                                          portal_type, resource)
 
       # Index Event
-      transaction.commit()
       self.tic()
 
       # check created Event
@@ -1657,7 +1598,6 @@ class TestCRMMailSend(BaseTestCRM):
       career.Base_addEvent(title, direction, portal_type, resource)
 
       # Index Event
-      transaction.commit()
       self.tic()
 
       # check created Event
@@ -1673,7 +1613,6 @@ class TestCRMMailSend(BaseTestCRM):
         portal_type_object = getattr(self.portal.portal_types, portal_type)
         portal_type_object._delObject('manager_role')
         portal_type_object.updateRoleMapping()
-      transaction.commit()
       self.tic()
 
   def test_MailMessage_Event_send_generate_activity_list(self):
@@ -1683,7 +1622,7 @@ class TestCRMMailSend(BaseTestCRM):
     """
     person = self.portal.person_module.newContent(portal_type="Person")
     person.edit(default_email_text="test@test.com", title="test%s" % person.getId())
-    self.stepTic()
+    self.tic()
     mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
     relative_url_list = [z.getRelativeUrl() for z in self.portal.person_module.searchFolder()]
     mail_message.setDestinationList(relative_url_list)
@@ -1691,17 +1630,16 @@ class TestCRMMailSend(BaseTestCRM):
     mail_text_content = "Body Text Content"
     mail_message.setTextContent(mail_text_content)
     self.portal.portal_workflow.doActionFor(mail_message, "start_action")
-    self.stepTic()
+    self.tic()
     mail_message.Event_send(packet_size=2)
-    import transaction
-    transaction.commit()
+    self.commit()
     portal_activities = self.portal.portal_activities
     message_list = [i for i in portal_activities.getMessageList() \
                     if i.kw.has_key("event_relative_url")]
     try:
       self.assertEquals(2, len(message_list))
     finally:
-      self.stepTic()
+      self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertTrue(mail_text_content in last_message[-1])
     message = message_from_string(last_message[-1])
@@ -1714,13 +1652,13 @@ class TestCRMMailSend(BaseTestCRM):
       from_url, to_url, reply_url, subject, body, attachment_format, attachment_list
     """
     mail_message = self.portal.event_module.newContent(portal_type="Mail Message")
-    self.stepTic()
+    self.tic()
     mail_message.Event_send(from_url='FG ER <eee@eee.com>',
                             to_url='Expert User <expert@in24.test>',
                             subject="Simple Case",
                             body="Body Simple Case",
                             attachment_list=[])
-    self.stepTic()
+    self.tic()
     last_message = self.portal.MailHost._last_message[-1]
     self.assertTrue("Body Simple Case" in last_message)
 

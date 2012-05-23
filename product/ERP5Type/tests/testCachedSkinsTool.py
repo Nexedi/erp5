@@ -148,7 +148,7 @@ class TestCachedSkinsTool(ERP5TypeTestCase):
       self.getSkinsTool().erp5_core._delObject(script_id)
       self.assertRaises(AttributeError, getattr(ob, script_id))
     finally:
-      transaction.abort()
+      self.abort()
 
 if __name__ == '__main__':
   unittest.main()

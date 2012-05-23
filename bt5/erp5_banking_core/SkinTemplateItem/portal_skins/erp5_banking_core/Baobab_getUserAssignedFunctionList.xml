@@ -61,11 +61,11 @@ if user_id is None:\n
 \n
 def getFunctionList(user_id=user_id):\n
 \n
-  valid_assignment_list = context.Baobab_getUserAssignmentList(user_id=user_id)\n
+  valid_assignment = context.Baobab_getUserAssignment(user_id=user_id)\n
 \n
   function_list = []\n
-  for a in valid_assignment_list:\n
-    new_function_list = a.getFunctionList()\n
+  if valid_assignment != None:\n
+    new_function_list = valid_assignment.getFunctionList()\n
     if len(new_function_list)>0:\n
       function_list.extend(new_function_list)\n
   return function_list\n

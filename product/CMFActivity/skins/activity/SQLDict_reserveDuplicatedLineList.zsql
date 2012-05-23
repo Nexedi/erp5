@@ -9,13 +9,13 @@ class_file:
 </dtml-comment>
 <params>
 processing_node
-uid_list
+uid
 </params>
 UPDATE
   message
 SET
   processing_node=<dtml-sqlvar processing_node type="int">
 WHERE
-  uid IN (<dtml-in uid_list><dtml-sqlvar sequence-item type="int"><dtml-if sequence-end><dtml-else>, </dtml-if></dtml-in>)
+  <dtml-sqltest uid type="int" multiple>
 <dtml-var sql_delimiter>
 COMMIT

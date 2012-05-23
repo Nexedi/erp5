@@ -31,7 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Core.Predicate import Predicate
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type import Permissions, PropertySheet
-from Products.ERP5Type.Cache import getReadOnlyTransactionCache, enableReadOnlyTransactionCache, disableReadOnlyTransactionCache
+from Products.ERP5Type.Cache import readOnlyTransactionCache
 
 
 class ContributionPredicate(Predicate, XMLObject):
@@ -94,13 +94,9 @@ class ContributionPredicate(Predicate, XMLObject):
           tested_base_category_list]
 
     # Test category memberships. Enable the read-only transaction cache
-    # temporarily, if not enabled, because this part is strictly read-only,
-    # and context.isMemberOf is very expensive, when the category list has
-    # many items.
-    enabled = getReadOnlyTransactionCache() is not None
-    try:
-      if not enabled:
-        enableReadOnlyTransactionCache()
+    # because this part is strictly read-only, and context.isMemberOf
+    # is very expensive when the category list has many items.
+    with readOnlyTransactionCache():
       for c in membership_criterion_category_list:
         bc = c.split('/', 1)[0]
         if (bc not in tested_base_category) and \
@@ -115,9 +111,6 @@ class ContributionPredicate(Predicate, XMLObject):
         elif (bc in membership_criterion_base_category_list):
           tested_base_category[bc] = tested_base_category[bc] or \
                                      context.isMemberOf(c)
-    finally:
-      if not enabled:
-        disableReadOnlyTransactionCache()
 
     result = result and (0 not in tested_base_category.values())
     # Test method calls

@@ -63,41 +63,38 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
     Adopt new property to simulation movements, with keeping the
     original one recorded.
     """
-    configuration_dict = self.getConfigurationPropertyDict()
-    solved_property_list = configuration_dict.get('tested_property_list', None)
+    portal = self.getPortalObject()
+    solved_property_list = self.getConfigurationPropertyDict() \
+                               .get('tested_property_list')
     if solved_property_list is None:
-      portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
-      solved_property_list = portal_type.getTestedPropertyList()
-    for simulation_movement in self.getDeliveryValueList():
-      if activate_kw is not None:
-        simulation_movement.setDefaultActivateParameterDict(activate_kw)
-      movement = simulation_movement.getDeliveryValue()
-      value_dict = {}
-      base_category_set = set(movement.getBaseCategoryList())
-      for solved_property in solved_property_list:
-        if solved_property in base_category_set:
-          # XXX-Leo: Hack, the accept solver was 'accepting' only the first
-          # value of a category and discarding all others by using only
-          # movement.getProperty().
-          # A proper fix would perhaps be to use .getPropertyList() always
-          # (and use .setPropertyList()), but we need to do property
-          # mapping on simulation and there is no
-          # simulation_movement.setMappedPropertyList().
-          new_value = movement.getPropertyList(solved_property)
-        else:
-          new_value = movement.getProperty(solved_property)
-        # XXX hard coded
-        if solved_property == 'quantity':
-          new_quantity = new_value * simulation_movement.getDeliveryRatio()
-          value_dict.update({'quantity':new_quantity})
-        else:
-          value_dict.update({solved_property:new_value})
-      for property_id, value in value_dict.iteritems():
-        if not simulation_movement.isPropertyRecorded(property_id):
-          simulation_movement.recordProperty(property_id)
-        simulation_movement.setMappedProperty(property_id, value)
-      simulation_movement.expand(activate_kw=activate_kw)
+      solved_property_list = \
+        portal.portal_types.getTypeInfo(self).getTestedPropertyList()
+    with self.defaultActivateParameterDict(activate_kw, True):
+      for simulation_movement in self.getDeliveryValueList():
+        movement = simulation_movement.getDeliveryValue()
+        value_dict = {}
+        base_category_set = set(movement.getBaseCategoryList())
+        for solved_property in solved_property_list:
+          if solved_property in base_category_set:
+            # XXX-Leo: Hack, the accept solver was 'accepting' only the first
+            # value of a category and discarding all others by using only
+            # movement.getProperty().
+            # A proper fix would perhaps be to use .getPropertyList() always
+            # (and use .setPropertyList()), but we need to do property
+            # mapping on simulation and there is no
+            # simulation_movement.setMappedPropertyList().
+            new_value = movement.getPropertyList(solved_property)
+          else:
+            new_value = movement.getProperty(solved_property)
+          # XXX hard coded
+          if solved_property == 'quantity':
+            new_value *= simulation_movement.getDeliveryRatio()
+          value_dict[solved_property] = new_value
+        for property_id, value in value_dict.iteritems():
+          if not simulation_movement.isPropertyRecorded(property_id):
+            simulation_movement.recordProperty(property_id)
+          simulation_movement.setMappedProperty(property_id, value)
+        simulation_movement.expand(activate_kw=activate_kw)
     # Finish solving
-    if self.getPortalObject().portal_workflow.isTransitionPossible(
-      self, 'succeed'):
+    if portal.portal_workflow.isTransitionPossible(self, 'succeed'):
       self.succeed()

@@ -518,7 +518,9 @@ def initializePortalTypeDynamicWorkflowMethods(ptype_klass, portal_workflow):
           ('getTranslated%s' % UpperCase(state_var),
                                      WorkflowState.TranslatedGetter),
           ('getTranslated%sTitle' % UpperCase(state_var),
-                                     WorkflowState.TranslatedTitleGetter)):
+                                     WorkflowState.TranslatedTitleGetter),
+          ('serialize%s' % UpperCase(state_var), WorkflowState.SerializeGetter),
+          ):
         if not hasattr(ptype_klass, method_id):
           method = getter(method_id, wf_id)
           # Attach to portal_type
@@ -777,13 +779,10 @@ class Base( CopyContainer,
 
   def _propertyMap(self, local_properties=False):
     """ Method overload - properties are now defined on the ptype """
-    klass = self.__class__
     property_list = []
     # Get all the accessor holders for this portal type
     if not local_properties:
-      if hasattr(klass, 'getAccessorHolderPropertyList'):
-        property_list += \
-            self.__class__.getAccessorHolderPropertyList()
+      property_list += self.__class__.getAccessorHolderPropertyList()
 
     property_list += getattr(self, '_local_properties', [])
     return tuple(property_list)
@@ -1434,43 +1433,42 @@ class Base( CopyContainer,
         # We only change if the value is different
         # This may be very long...
         if force_update:
-          update = True
           old_value = None
         else:
           try:
             old_value = getProperty(key, evaluate=0)
           except TypeError:
             old_value = getProperty(key)
-          update = old_value != kw[key]
+          if old_value == kw[key]:
+            not_modified_list.append(key)
+            continue
 
-        if update:
-          # We keep in a thread var the previous values
-          # this can be useful for interaction workflow to implement lookups
-          # XXX If iteraction workflow script is triggered by edit and calls
-          # edit itself, this is useless as the dict will be overwritten
-          # If the keep_existing flag is set to 1, we do not update properties which are defined
-          if not keep_existing or not hasProperty(key):
-            if restricted:
-              accessor_name = 'set' + UpperCase(key)
-              if accessor_name in restricted_method_set:
-                # will raise Unauthorized when not allowed
-                guarded_getattr(self, accessor_name)
-            modified_property_dict[key] = old_value
-            if key != 'id':
-              modified_object_list = _setProperty(key, kw[key])
-              # BBB: if the setter does not return anything, assume
-              # that self has been modified.
-              if modified_object_list is None:
-                modified_object_list = (self,)
-              for o in modified_object_list:
-                # XXX using id is not quite nice, but getUID causes a
-                # problem at the bootstrap of an ERP5 site. Therefore,
-                # objects themselves cannot be used as keys.
-                modified_object_dict[id(o)] = o
-            else:
-              self.setId(kw['id'], reindex=reindex_object)
+        # We keep in a thread var the previous values
+        # this can be useful for interaction workflow to implement lookups
+        # XXX If iteraction workflow script is triggered by edit and calls
+        # edit itself, this is useless as the dict will be overwritten
+        # If the keep_existing flag is set to 1, we do not update properties which are defined
+        if keep_existing and hasProperty(key):
+          continue
+        if restricted:
+          accessor_name = 'set' + UpperCase(key)
+          if accessor_name in restricted_method_set:
+            # will raise Unauthorized when not allowed
+            guarded_getattr(self, accessor_name)
+        modified_property_dict[key] = old_value
+        if key != 'id':
+          modified_object_list = _setProperty(key, kw[key])
+          # BBB: if the setter does not return anything, assume
+          # that self has been modified.
+          if modified_object_list is None:
+            modified_object_list = (self,)
+          for o in modified_object_list:
+            # XXX using id is not quite nice, but getUID causes a
+            # problem at the bootstrap of an ERP5 site. Therefore,
+            # objects themselves cannot be used as keys.
+            modified_object_dict[id(o)] = o
         else:
-          not_modified_list.append(key)
+          self.setId(kw['id'], reindex=reindex_object)
       return not_modified_list
 
     unmodified_key_list = setChangedPropertyList(unordered_key_list)
@@ -2963,16 +2961,14 @@ class Base( CopyContainer,
     try:
       script = type_base_cache[cache_key]
     except KeyError:
-      class_name_list = [portal_type, self.getMetaType()] + \
-        [base_class.__name__ for base_class in self.__class__.mro()
-                             if issubclass(base_class, Base)]
       script_name_end = '_' + method_id
-      for script_name_begin in class_name_list:
-        script_id = script_name_begin.replace(' ','') + script_name_end
-        script = getattr(self, script_id, None)
-        if script is not None:
-          type_base_cache[cache_key] = aq_inner(script)
-          return script
+      for base_class in self.__class__.mro():
+        if issubclass(base_class, Base):
+          script_id = base_class.__name__.replace(' ','') + script_name_end
+          script = getattr(self, script_id, None)
+          if script is not None:
+            type_base_cache[cache_key] = aq_inner(script)
+            return script
       type_base_cache[cache_key] = None
 
     if script is not None:

@@ -33,7 +33,6 @@ from Products.ERP5Form.Form import ERP5Form
 
 from xml.dom.minidom import parseString
 
-import transaction
 
 
 def getNodeContent(node):
@@ -79,7 +78,7 @@ class TestRSS(ERP5TypeTestCase):
       self.portal.person_module.manage_delObjects(['two'])
     one = self.portal.person_module.newContent(id="one", title="One", description="Person One")
     two = self.portal.person_module.newContent(id="two", title="Two", description="Person Two")
-    transaction.commit()
+    self.commit()
     one.reindexObject()
     two.reindexObject()
     self.tic()

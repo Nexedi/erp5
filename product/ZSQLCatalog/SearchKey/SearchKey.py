@@ -167,14 +167,12 @@ class SearchKey(object):
   @profiler_decorator
   def _guessComparisonOperator(self, value):
     """
-      From a basestring instance, return a contained operator.
-      Value cannot be altered in the process.
+      From a basestring instance, return an operator.
+      To be overloaded by subclasses, to customise operator retrieval.
 
       value (string)
-      
-      Returns: 2-tuple of strings
-        First element is the operator. None if there was no operator in value.
-        Second element is the value without the operator.
+
+      Returns: operator as a string.
     """
     return self.default_comparison_operator
 

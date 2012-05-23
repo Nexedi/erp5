@@ -310,7 +310,12 @@
                 <item>
                     <key> <string>all_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -377,6 +382,10 @@
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>default_display_style</string> </key>
+                    <value> <string>table</string> </value>
+                </item>
+                <item>
                     <key> <string>default_params</string> </key>
                     <value>
                       <list/>
@@ -409,7 +418,12 @@
                 <item>
                     <key> <string>editable_columns</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string></string>
+                        </tuple>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -429,6 +443,10 @@
                     <value>
                       <list/>
                     </value>
+                </item>
+                <item>
+                    <key> <string>global_search_column</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>height</string> </key>
@@ -476,6 +494,10 @@
                         </tuple>
                       </list>
                     </value>
+                </item>
+                <item>
+                    <key> <string>page_navigation_template</string> </key>
+                    <value> <string>ListBox_viewSliderPageNavigationRenderer</string> </value>
                 </item>
                 <item>
                     <key> <string>page_template</string> </key>
@@ -584,6 +606,10 @@
                           <string>revision</string>
                           <string>Revision</string>
                         </tuple>
+                        <tuple>
+                          <string>modification_date</string>
+                          <string>Modification Date</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>
@@ -596,6 +622,12 @@
                 <item>
                     <key> <string>stat_method</string> </key>
                     <value> <string></string> </value>
+                </item>
+                <item>
+                    <key> <string>style_columns</string> </key>
+                    <value>
+                      <list/>
+                    </value>
                 </item>
                 <item>
                     <key> <string>title</string> </key>

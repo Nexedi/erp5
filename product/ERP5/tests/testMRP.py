@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
@@ -268,7 +267,7 @@ class TestMRPImplementation(TestMRPMixin):
     # don't need another rules, just need TransformationRule for test
     self.invalidateRules()
 
-    self.stepTic()
+    self.tic()
 
     # alter simulations of the order
     # root
@@ -332,7 +331,7 @@ class TestMRPImplementation(TestMRPMixin):
     # don't need another rules, just need TransformationRule for test
     self.invalidateRules()
 
-    self.stepTic()
+    self.tic()
 
     # alter simulations of the order
     # root
@@ -377,7 +376,7 @@ class TestMRPImplementation(TestMRPMixin):
     """
     self.test_TransformationRule_expand_concurrent()
 
-    self.stepTic()
+    self.tic()
 
     applied_rule = self.portal.portal_simulation.objectValues()[0]
 
@@ -444,7 +443,7 @@ class TestMRPImplementation(TestMRPMixin):
     # don't need another rules, just need TransformationSourcingRule for test
     self.invalidateRules()
 
-    self.stepTic()
+    self.tic()
 
     business_process = order.getSpecialiseValue()
 
@@ -480,7 +479,7 @@ class TestMRPImplementation(TestMRPMixin):
                   resource=sourcing_resource,
                   )
 
-    self.stepTic()
+    self.tic()
 
     # test mock
     applied_rule = movement.newContent(potal_type='Applied Rule')

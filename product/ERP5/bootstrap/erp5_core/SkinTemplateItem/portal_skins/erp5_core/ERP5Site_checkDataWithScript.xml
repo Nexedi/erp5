@@ -72,7 +72,6 @@ From document pointed to by \'relative_url\':\n
 For the portal, \'relative_url\' must be false and only module objects are\n
 considered if id_list is None.\n
 """\n
-from Products.ERP5Type.Log import log\n
 document = context.getPortalObject()\n
 context = document.portal_activities\n
 if relative_url:\n
@@ -85,7 +84,7 @@ maximum_depth = 1\n
 assert depth <= maximum_depth\n
 \n
 def activate(**kw):\n
-  return context.activate(activity=\'SQLQueue\', lonely=1, tag=tag, **kw)\n
+  return context.activate(activity=\'SQLQueue\', tag=tag, **kw)\n
 \n
 if depth == maximum_depth and id_list:\n
   # Immediate recursive check\n
@@ -101,7 +100,7 @@ if depth == maximum_depth and id_list:\n
     recurse(document[id])\n
   if active_process is None:\n
     return error_list\n
-  if len(error_list):\n
+  if error_list:\n
     # Create an activity to update active_process,\n
     #  in order to prevent conflict errors.\n
     activate(active_process=active_process, priority=2) \\\n
@@ -109,8 +108,7 @@ if depth == maximum_depth and id_list:\n
 else:\n
   if id_list is None:\n
     if full or not getattr(document, \'isHBTree\', lambda: 0)():\n
-      #Cast in list to avoid accessing ZODB objects for each iteration\n
-      id_list = list(document.objectIds())\n
+      id_list = document.objectIds()\n
       if not depth:\n
         id_list = tuple(x for x in id_list if x.endswith(\'_module\') or x in [\n
           \'portal_alarms\',\n
@@ -121,13 +119,11 @@ else:\n
           \'portal_simulation\',\n
           \'portal_templates\',\n
           \'portal_trash\',\n
-])\n
+        ])\n
     else:\n
-      from DateTime import DateTime\n
       id_list = []\n
       for day_ago in xrange(hbtree_days):\n
-        date = (DateTime()-day_ago).strftime(\'%Y%m%d\')\n
-        log(\'date for objectIds\', date)\n
+        date = (DateTime() - day_ago).strftime(\'%Y%m%d\')\n
         try:\n
           id_list += document.objectIds(base_id=date)\n
         except (TypeError, IndexError):\n
@@ -136,18 +132,18 @@ else:\n
   result = None\n
   if active_process is None:\n
     result = active_process = context.newActiveProcess().getPath()\n
-  kw = dict(relative_url=relative_url, active_process=active_process,\n
+  kw = dict(active_process=active_process,\n
             tag=tag, full=full, recursive=recursive, packet=packet,\n
             method_id=method_id, method_kw=method_kw)\n
+  active_script = getattr(activate(priority=4), script.id)\n
   if depth < maximum_depth:\n
-    packet = 1\n
     relative_url = relative_url and relative_url + \'/\' or \'\'\n
-  for i in xrange(0, len(id_list), packet):\n
-    if packet == 1:\n
-      kw[\'relative_url\'] = relative_url + id_list[i]\n
-    else:\n
-      kw[\'id_list\'] = tuple(id_list[i:i+packet])\n
-    activate(priority=4).ERP5Site_checkDataWithScript(**kw)\n
+    for id in id_list:\n
+      active_script(relative_url=relative_url + id, **kw)\n
+  else:\n
+    kw[\'relative_url\'] = relative_url\n
+    for i in xrange(0, len(id_list), packet):\n
+      active_script(id_list=tuple(id_list[i:i + packet]), **kw)\n
   # return the active process path if we created one\n
   return result\n
 

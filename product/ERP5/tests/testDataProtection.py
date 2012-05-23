@@ -29,7 +29,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5Type.tests.Sequence import Sequence, SequenceList
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
@@ -92,7 +91,6 @@ class TestDataProtection(ERP5TypeTestCase):
     document = portal.restrictedTraverse(sequence.get('document_relative_url'))
     document.Base_addDataProtectionRequest(
                           description='I think the description is compromised')
-    transaction.commit()
     self.tic()
     data_protection = document.getAgentRelatedValueList(
                                                     portal_type=portal_type)[0]

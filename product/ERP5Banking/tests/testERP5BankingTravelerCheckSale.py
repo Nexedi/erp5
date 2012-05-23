@@ -29,7 +29,6 @@
 
 # import requested python module
 import os
-import transaction
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Banking.tests.testERP5BankingCheckbookUsualCashTransfer \
      import TestERP5BankingCheckbookUsualCashTransferMixin
@@ -136,19 +135,15 @@ class TestERP5BankingTravelerCheckSaleMixin(TestERP5BankingMixin):
     # in the source
     self.traveler_check_model = self.createTravelerCheckModel('traveler_check_model')
     self.createCheckbookReceptionWithTravelerCheck()
-    transaction.commit()
     self.tic()
     self.checkItemsCreatedWithTravelerCheck()
-    transaction.commit()
     self.tic()
     self.createCheckbookVaultTransferWithTravelerCheck()
-    transaction.commit()
     self.tic()
     # open counter date and counter
     self.openCounterDate(site=self.paris)
     self.openCounter(site=self.destination_site)
     self.createCheckbookUsualCashTransferWithTravelerCheck()
-    transaction.commit()
     self.tic()
 
   def stepCreateTravelerCheckLineList(self, sequence=None, sequence_list=None, **kwd):

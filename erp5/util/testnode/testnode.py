@@ -43,6 +43,20 @@ DEFAULT_SLEEP_TIMEOUT = 120 # time in seconds to sleep
 
 supervisord_pid_file = None
 
+# XXX: below section is shared with product/ERP5Type/tests/runTestSuite.py .
+# They are supposed to be merged into a common library/tool someday, until
+# then please keep them synchronised.
+# Depending on used xmlrpc backend, different exceptions can be thrown.
+SAFE_RPC_EXCEPTION_LIST = [socket.error, xmlrpclib.ProtocolError, xmlrpclib.Fault]
+parser, _ = xmlrpclib.getparser()
+if xmlrpclib.ExpatParser and isinstance(parser, xmlrpclib.ExpatParser):
+  SAFE_RPC_EXCEPTION_LIST.append(xmlrpclib.expat.ExpatError)
+else:
+  print >>sys.stderr, 'Warning: unhandled xmlrpclib parser %r, some ' \
+    'exceptions might get through safeRpcCall' % (parser, )
+SAFE_RPC_EXCEPTION_LIST = tuple(SAFE_RPC_EXCEPTION_LIST)
+del parser, _
+
 def safeRpcCall(log, proxy, function_id, retry, *args):
   # this method will try infinitive calls to backend
   # this can cause testnode to looked "stalled"
@@ -54,7 +68,7 @@ def safeRpcCall(log, proxy, function_id, retry, *args):
       log('safeRpcCall called with method : %s' % function_id)
       function = getattr(proxy, function_id)
       return function(*args)
-    except (socket.error, xmlrpclib.ProtocolError, xmlrpclib.Fault), e:
+    except SAFE_RPC_EXCEPTION_LIST, e:
       log('Exception in safeRpcCall when trying %s with %r' % (function_id, args),
            exc_info=sys.exc_info())
       if not(retry):
@@ -210,12 +224,12 @@ branch = %(branch)s
 
     retry = False
     retry_software_count = 0
+    same_revision_count = 0
     try:
       while True:
         remote_test_result_needs_cleanup = False
         remote_logger = None
         remote_logger_thread = None
-        same_revision_count = 0
         try:
           # kill processes from previous loop if any
           process_manager.killPreviousRun()
@@ -340,7 +354,7 @@ branch = %(branch)s
             # result. We only do cleanup if the test runner itself is not able
             # to run.
             process_manager.spawn(*invocation_list,
-              cwd=config['test_suite_directory'], new_session=True,
+              cwd=config['test_suite_directory'],
               log_prefix='runTestSuite', get_output=False)
             if remote_logger:
               remote_logger.quit = True

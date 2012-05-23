@@ -32,11 +32,11 @@
 import unittest
 import os
 
-import transaction
 from DateTime import DateTime
 
 from Products.ERP5.tests.testAccounting import AccountingTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
+from Products.ERP5Type.tests.utils import todo_erp5
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
@@ -790,6 +790,19 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                      dict(source_value=account_module.goods_sales,
                           source_credit=300.0)))
 
+  @todo_erp5
+  def test_Resource_zGetInventoryList(self):
+    # TODO: Fix Resource_zGetInventoryList so that we don't need to workaround
+    #       new behaviour of MariaDB.
+    #       Indeed, https://bugs.launchpad.net/maria/+bug/985828 has been marked
+    #       as WONTFIX.
+    q = self.portal.erp5_sql_connection.manage_test
+    q("SET optimizer_switch = 'derived_merge=on'")
+    try:
+      self.testAccountStatement()
+    finally:
+      q("SET optimizer_switch = 'derived_merge=off'")
+
   def testAccountStatement(self):
     # Simple Account Statement for "Receivable" account
     self.createAccountStatementDataSet()
@@ -1082,7 +1095,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=400.0)))
     t4.stop()
     t4.deliver()
-    transaction.commit()
     self.tic()
 
     # set request variables and render                 
@@ -1222,7 +1234,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=400.0)))
     t4.stop()
     t4.deliver()
-    transaction.commit()
     self.tic()
 
 
@@ -3829,7 +3840,6 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                           product_line_value=None,
                           source_credit=700.0),
                      ))
-    transaction.commit()
     self.tic()
     self.login(self.username)
 
@@ -3839,7 +3849,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     preference._edit(
         preferred_accounting_transaction_line_function_base_category=None,
         preferred_accounting_transaction_line_analytic_base_category_list=())
-    transaction.commit()
+    self.commit()
 
   def testJournalAnalyticsShown(self):
     request_form = self.portal.REQUEST.form

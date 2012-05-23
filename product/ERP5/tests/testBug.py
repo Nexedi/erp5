@@ -30,7 +30,6 @@
 
 
 import unittest
-import transaction
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -125,7 +124,6 @@ class TestBug(ERP5TypeTestCase):
                                      start_date='1980-01-01',
                                      stop_date='2099-12-31')
       assignment.open()
-      transaction.commit()
       self.tic()
       portal_type_list = []
       for portal_type in (self.project_portal_type,
@@ -148,7 +146,6 @@ class TestBug(ERP5TypeTestCase):
           role_category='group/dummy')
         ti.updateRoleMapping()
 
-      transaction.commit()
       self.tic()
       portal.portal_caches.clearAllCache()
 
@@ -596,10 +593,8 @@ class TestBug(ERP5TypeTestCase):
     cloned_bug_line = bug_line.Base_createCloneDocument(batch_mode=1)
     self.workflow_tool.doActionFor(bug, 'confirm_action', send_event=1)
     self.assertEquals(bug.getSimulationState(), 'confirmed')
-    transaction.commit()
     self.tic()
     bug.deleteContent(id='2')
-    transaction.commit()
     self.tic()
     self.workflow_tool.doActionFor(bug, 'stop_action', send_event=1)
     self.assertEquals(bug.getSimulationState(), 'stopped')

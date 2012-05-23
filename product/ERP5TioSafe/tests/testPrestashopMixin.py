@@ -29,7 +29,6 @@
 ##############################################################################
 
 import os
-import transaction
 from Products.ERP5TioSafe.tests.testTioSafeMixin import testTioSafeMixin
 
 class testPrestashopMixin(testTioSafeMixin):
@@ -64,7 +63,6 @@ class testPrestashopMixin(testTioSafeMixin):
     self.updateSynchronizationObjects()
     self.organisation = self.prestashop.getSourceAdministrationValue()
     self.prestashop.recursiveReindexObject()
-    transaction.commit()
     self.tic()
 
 

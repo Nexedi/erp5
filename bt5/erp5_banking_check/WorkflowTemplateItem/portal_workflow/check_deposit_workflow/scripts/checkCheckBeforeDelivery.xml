@@ -84,7 +84,7 @@ else:\n
     else:\n
       check_price = check_operation_line.getPrice()\n
     bank_account_dict[account_path] = check_price\n
-    error = context.BankAccount_checkBalance(account_path, check_operation_line.getPrice())\n
+    error = obj.BankAccount_checkBalance(account_path, check_operation_line.getPrice())\n
     \n
     if error[\'error_code\'] == 1:\n
       msg = Message(domain=\'ui\', message="Bank account $account is not sufficient on line $line.",\n

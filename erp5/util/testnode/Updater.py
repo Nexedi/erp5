@@ -32,7 +32,6 @@ import sys
 import threading
 
 from testnode import SubprocessError
-from ProcessManager import ProcessManager
 
 SVN_UP_REV = re.compile(r'^(?:At|Updated to) revision (\d+).$')
 SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
@@ -41,7 +40,7 @@ SVN_CHANGED_REV = re.compile(r'^Last Changed Rev.*:\s*(\d+)', re.MULTILINE)
 GIT_TYPE = 'git'
 SVN_TYPE = 'svn'
 
-class Updater(ProcessManager):
+class Updater(object):
 
   _git_cache = {}
   stdin = file(os.devnull)

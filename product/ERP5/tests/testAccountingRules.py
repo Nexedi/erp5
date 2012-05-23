@@ -43,7 +43,6 @@ way it is used in the invoice related simulation.
 import unittest
 import random
 
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -202,7 +201,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
             'default_invoice_transaction_simulation_rule')
     if invoice_transaction_rule.getValidationState() == 'validated':
       invoice_transaction_rule.invalidate()
-      transaction.commit()
+      self.commit()
 
     # delete anything inside the rule first
     # clear the message queue, so that it does not contains unexistant paths
@@ -210,7 +209,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_transaction_rule.deleteContent(
                 [x for x in invoice_transaction_rule.objectIds()])
     self.assertEquals(len(invoice_transaction_rule.objectValues()), 0)
-    transaction.commit()
+    self.commit()
 
     # and add new content, predicate product_line
     predicate_product_notebook = invoice_transaction_rule.newContent(
@@ -489,7 +488,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
                            'default_payment_simulation_rule')
     if payment_rule.getValidationState() == 'validated':
       payment_rule.invalidate()
-      transaction.commit()
+      self.commit()
 
     # delete anything inside the rule first
     # clear the message queue, so that it does not contains unexistant paths
@@ -497,7 +496,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     payment_rule.deleteContent(
       [x.getId() for x in payment_rule.objectValues(
       portal_type=['Predicate', self.accounting_rule_cell_portal_type])])
-    transaction.commit()
+    self.commit()
 
     # and add a new predicate
     payment_rule.newContent(
@@ -531,7 +530,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
           source=line_source_id,
           destination=line_destination_id)
     payment_rule.validate()
-    transaction.commit()
     self.tic()
 
   def stepCreateEmptyInvoice(self, sequence, **kw) :

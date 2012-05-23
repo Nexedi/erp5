@@ -53,7 +53,7 @@
             <value> <string>reference_currency = context.Baobab_getPortalReferenceCurrencyID()\n
 context.setPriceCurrency(\'currency_module/%s\' %(reference_currency,))\n
 context.setCurrencyExchangeType(\'transfer\')\n
-site = context.Baobab_getUserAssignedRootSiteList()[0]\n
+site = context.Baobab_getUserAssignedRootSite()\n
 context.setSource(site)\n
 </string> </value>
         </item>

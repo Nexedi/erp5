@@ -55,7 +55,7 @@
 user_id = context.portal_membership.getAuthenticatedMember().getUserName()\n
 \n
 def getUserSiteUid(user_id):\n
-  return context.Baobab_getUserAssignedRootSiteList(user_id=user_id, object=1)[0].getSiteUid()\n
+  return context.Baobab_getUserAssignedRootSite(user_id=user_id, object=1).getSiteUid()\n
 \n
 \n
 getUserSiteUid = CachingMethod(getUserSiteUid, id=\'Baobab_getUserUserSiteUid\', cache_factory=\'erp5_ui_medium\')\n

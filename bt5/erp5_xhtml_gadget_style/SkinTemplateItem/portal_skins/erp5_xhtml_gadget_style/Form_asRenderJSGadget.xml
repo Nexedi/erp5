@@ -61,6 +61,7 @@
 \n
                     <!-- XXX: render gadget asynchronously -->\n
                     <div tal:attributes="gadget string:gadgets/form/${field_type}/gadget?field_name=${field_name};\n
+                                         id string:${form_id}_${field_name};\n
                                          gadget:property string: {&quot;cacheable&quot;: &quot;1&quot;, &quot;cache_id&quot;: &quot;${form_id}_${field_name}&quot;}"></div>\n
 \n
                   </div>\n

@@ -206,7 +206,7 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>[\'c\', \'three\']</td>\n
+  <td>[\'c\', \'four\']</td>\n
   <td></td>\n
 </tr>\n
 <tr>\n
@@ -216,7 +216,7 @@
 </tr>\n
 <tr>\n
   <td>verifyTextPresent</td>\n
-  <td>[\'c\', \'four\']</td>\n
+  <td>[\'c\', \'three\']</td>\n
   <td></td>\n
 </tr>\n
 \n
@@ -248,8 +248,7 @@ The field must be in the \'bottom\' group for this to work.\n
 </tbody>\n
 </table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

@@ -59,7 +59,6 @@ try:
 except ImportError:
   pass
 
-import transaction
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
@@ -521,6 +520,36 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
            DeprecationWarning)
       return self.createUserAssignment(user, assignment_kw)
 
+    def setupAutomaticBusinessTemplateRepository(self, accept_public=True):
+     # Try to setup some valid Repository List by reusing ERP5TypeTestCase API.
+     # if accept_public we can accept public repository can be set, otherwise
+     # we let failure happens.
+
+     # Assume that the public official repository is a valid repository     
+     public_bt5_repository_list = ['http://www.erp5.org/dists/snapshot/bt5/']
+     
+     template_list = self._getBTPathAndIdList(["erp5_base"])
+     if len(template_list) > 0:
+       bt5_repository_path = "/".join(template_list[0][0].split("/")[:-1])
+       if accept_public:
+         try:
+           self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+                  [bt5_repository_path], None)
+         except (RuntimeError, IOError), e:
+           # If bt5 repository is not a repository use public one.
+           self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+                                   public_bt5_repository_list)
+       else:
+         self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+                  [bt5_repository_path], None) 
+     elif accept_public:
+       self.portal.portal_templates.updateRepositoryBusinessTemplateList(
+                                     public_bt5_repository_list)
+     else:
+       raise ValueError("ERP5 was unable to determinate a valid local " + \
+                        "repository, please check your environment or " + \
+                        "use accept_public as True")
+
     def failIfDifferentSet(self, a, b, msg=""):
       if not msg:
         msg='%r != %r' % (a, b)
@@ -583,15 +612,12 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         ipshell = IPython.Shell.IPShellEmbed(())
       ipshell()
 
-    def stepTic(self, **kw):
+    def stepTic(self, sequence):
       """
       The is used to simulate the zope_tic_loop script
       Each time this method is called, it simulates a call to tic
       which invoke activities in the Activity Tool
       """
-      if kw.get('sequence', None) is None:
-        # in case of using not in sequence commit transaction
-        transaction.commit()
       self.tic()
 
     def getPortalObject(self):
@@ -641,7 +667,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
         sm = getSecurityManager()
 
         # Commit the sandbox for good measure
-        transaction.commit()
+        self.commit()
 
         if env is None:
             env = {}
@@ -813,7 +839,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           uninstalled_list.append(bt_title)
       if uninstalled_list:
         getattr(portal, 'ERP5Site_updateTranslationTable', lambda: None)()
-      self.stepTic()
+      self.tic()
       return uninstalled_list
 
     def setUp(self):
@@ -903,9 +929,8 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
           portal = self.getPortal()
           portal.portal_activities.manageClearActivities()
           portal.portal_catalog.manage_catalogClear()
-          transaction.commit()
+          self.commit()
           portal.ERP5Site_reindexAll()
-          transaction.commit()
           self.tic()
           if not quiet:
             ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start,))
@@ -953,7 +978,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
                    object_to_update=install_kw,
                    update_translation=1)
         # Release locks
-        transaction.commit()
+        self.commit()
         if not quiet:
           ZopeTestCase._print('done (%.3fs)\n' % (time.time() - start))
 
@@ -1027,7 +1052,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               if not quiet:
                 ZopeTestCase._print('done (%.3fs)\n' % (time.time() - _start))
               # Release locks
-              transaction.commit()
+              self.commit()
             self.portal = portal = self.getPortal()
 
             if len(setup_done) == 1: # make sure it is run only once
@@ -1065,7 +1090,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               portal.portal_catalog.manage_hotReindexAll()
 
             portal.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
-            transaction.commit()
+            self.commit()
             self.tic(not quiet)
 
             # Log out
@@ -1076,10 +1101,10 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               ZopeTestCase._print('done (%.3fs)\n' % (time.time()-_start,))
               ZopeTestCase._print('Running Unit tests of %s\n' % title)
           except:
-            transaction.abort()
+            self.abort()
             raise
           else:
-            transaction.commit()
+            self.commit()
             del self.portal, self.app
             ZopeTestCase.close(app)
       except:
@@ -1114,10 +1139,10 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
         else:
           for m in message_list:
             if m.processing_node < -1:
-              transaction.abort()
+              self.abort()
               count = portal_activities.countMessage()
               portal_activities.manageClearActivities(keep=False)
-              transaction.commit()
+              self.commit()
               ZopeTestCase._print(' (dropped %d left-over activity messages) '
                                   % count)
               break

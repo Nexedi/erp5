@@ -39,6 +39,7 @@ import string
 import pprint
 import re
 import warnings
+from contextlib import contextmanager
 from cStringIO import StringIO
 from xml.dom.minidom import parse
 from xml.sax.saxutils import escape, quoteattr
@@ -79,17 +80,17 @@ try:
 except ImportError:
   psyco = None
 
+@contextmanager
+def noReadOnlyTransactionCache():
+  yield
 try:
-  from Products.ERP5Type.Cache import enableReadOnlyTransactionCache, \
-       disableReadOnlyTransactionCache, caching_instance_method
+  from Products.ERP5Type.Cache import \
+    readOnlyTransactionCache, caching_instance_method
 except ImportError:
   LOG('SQLCatalog', WARNING, 'Count not import caching_instance_method, expect slowness.')
-  def doNothing(context):
-    pass
   def caching_instance_method(*args, **kw):
     return lambda method: method
-  enableReadOnlyTransactionCache = doNothing
-  disableReadOnlyTransactionCache = doNothing
+  readOnlyTransactionCache = noReadOnlyTransactionCache
 
 try:
   from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
@@ -1502,10 +1503,8 @@ class Catalog(Folder,
     econtext = getEngine().getContext()
     argument_cache = {}
 
-    try:
-      if not disable_cache:
-        enableReadOnlyTransactionCache()
-
+    with (noReadOnlyTransactionCache if disable_cache else
+          readOnlyTransactionCache)():
       filter_dict = self.filter_dict
       catalogged_object_list_cache = {}
       for method_name in method_id_list:
@@ -1626,9 +1625,6 @@ class Catalog(Folder,
           LOG('SQLCatalog', WARNING, 'could not catalog objects %s with method %s' % (object_list, method_name),
               error=sys.exc_info())
           raise
-    finally:
-      if not disable_cache:
-        disableReadOnlyTransactionCache()
 
   if psyco is not None:
     psyco.bind(_catalogObjectList)

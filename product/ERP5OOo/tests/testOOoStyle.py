@@ -28,7 +28,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
      _getConversionServerDict
 from Products.ERP5Form.Selection import Selection
@@ -65,7 +64,6 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
     person_module = self.portal.person_module
     if person_module._getOb('pers', None) is None:
       person_module.newContent(id='pers', portal_type='Person')
-      transaction.commit()
       self.tic()
     person_module.pers.setFirstName('Bob')
     person_module.pers.setGender(None)
@@ -79,7 +77,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
                               portal_type='Person',
                               id = 'pers_without_image',
                               first_name = 'Test')
-      self.stepTic()
+      self.tic()
 
     self.portal.changeSkin(self.skin)
     self.validator = Validator()
@@ -106,7 +104,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.fail(''.join(error_list))
   
   def _assertFieldInGroup(self, field_type, form_id, group):
-    for f in self.portal[form_id].get_fields_in_group(group):
+    for f in getattr(self.portal, form_id).get_fields_in_group(group):
       if f.meta_type == 'ProxyField':
         if f.getRecursiveTemplateField().meta_type == field_type:
           break
@@ -234,7 +232,7 @@ class TestOOoStyle(ERP5TypeTestCase, ZopeTestCase.Functional):
                     % self.portal.getId(), self.auth)
     finally:
       self.portal.Base_viewWorkflowHistory.pt = 'form_view'
-      transaction.commit()
+      self.commit()
     self.assertEquals(HTTP_OK, response.getStatus())
     content_type = response.getHeader('content-type')
     self.assertTrue(content_type.startswith(self.content_type), content_type)

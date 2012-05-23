@@ -30,7 +30,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import skip
 from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
@@ -126,7 +125,6 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       test1.newContent("foo_1", portal_type='Foo Line')
     if test1._getOb("foo_2", None) is None:
       test1.newContent("foo_2", portal_type='Foo Line')
-    transaction.commit()
     self.tic()
 
   def test_01_Paragraph(self):
@@ -139,7 +137,6 @@ class TestFormPrintoutAsODT(TestFormPrintoutMixin):
       foo_module.newContent(id='test1', portal_type='Foo')
     test1 =  foo_module.test1
     test1.setTitle('Foo title!')
-    transaction.commit()
     self.tic()
 
     # test target

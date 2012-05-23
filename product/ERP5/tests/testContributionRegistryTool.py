@@ -29,7 +29,6 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import transaction
 
 class TestContributionRegistryTool(ERP5TypeTestCase):
 
@@ -70,7 +69,6 @@ return predicate.getDestinationPortalType()
 """)
     self.portal.manage_addProduct['PythonScripts'].manage_addPythonScript(id='IngestionFile_testEvent')
     self.portal.IngestionFile_testEvent.write(python_script_src)
-    transaction.commit()
     self.tic()
 
   def setUpPredicate(self):
@@ -83,7 +81,6 @@ return predicate.getDestinationPortalType()
         id=predicate_id)
       predicate.setCriterion('content_type', identity=['text/html'])
       predicate.setDestinationPortalType('Web Page')
-      transaction.commit()
       self.tic()
 
     predicate_id = 'webpage_by_extension'
@@ -93,7 +90,6 @@ return predicate.getDestinationPortalType()
         id=predicate_id)
       predicate.setCriterion('extension_from_filename', identity=['html'])
       predicate.setDestinationPortalType('Web Page')
-      transaction.commit()
       self.tic()
 
     predicate_id = 'email_by_extension_and_content_type'
@@ -105,7 +101,6 @@ return predicate.getDestinationPortalType()
       predicate.setCriterion('content_type', identity=['message/rfc822'])
       predicate.setDestinationPortalType('Mail Message')
       predicate.setTestMethodId('IngestionFile_testEvent')
-      transaction.commit()
       self.tic()
 
     predicate_id = 'text_by_extension'
@@ -115,7 +110,6 @@ return predicate.getDestinationPortalType()
         id=predicate_id)
       predicate.setCriterion('extension_from_filename', identity=['odt', 'txt'])
       predicate.setDestinationPortalType('Text')
-      transaction.commit()
       self.tic()
 
     predicate_id = 'image_by_extension'
@@ -125,7 +119,6 @@ return predicate.getDestinationPortalType()
         id=predicate_id)
       predicate.setCriterion('extension_from_filename', identity=['jpg', 'png'])
       predicate.setDestinationPortalType('Image')
-      transaction.commit()
       self.tic()
 
   def testFindPortalTypeName(self, quiet=0, run=run_all_test):

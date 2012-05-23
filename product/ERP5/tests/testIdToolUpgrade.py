@@ -30,7 +30,6 @@
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.Globals import PersistentMapping
 from BTrees.Length import Length
-import transaction
 from zLOG import LOG
 
 class TestIdTool(ERP5TypeTestCase):
@@ -91,9 +90,8 @@ class TestIdTool(ERP5TypeTestCase):
     cp_data = template_tool.manage_copyObjects(ids=(erp5_core_bt.getId(),))
     new_id = template_tool.manage_pasteObjects(cp_data)[0]['new_id']
     new_bt = template_tool[new_id]
-    transaction.commit()
     self.tic()
-    transaction.commit()
+    self.commit()
     new_bt.install(force=1)
     erp5_core_bt.setRevision(1562)
     cp_data = custom_skin_folder.manage_cutObjects(ids=script_id_list)

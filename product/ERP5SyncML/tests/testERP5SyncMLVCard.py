@@ -30,7 +30,7 @@
 
 
 from testERP5SyncML import TestERP5SyncMLMixin
-import transaction
+from zLOG import LOG
 
 class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
 
@@ -61,7 +61,6 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
                              conduit_module_id='SharedVCardConduit',
                              synchronisation_id_generator_method_id='generateNewId')
       pub.validate()
-      transaction.commit()
       self.tic()
 
   def addVCardSubscription1(self):
@@ -81,7 +80,6 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
                              user_id='fab',
                              password='myPassword')
       sub.validate()
-      transaction.commit()
       self.tic()
 
   def addVCardSubscription2(self):
@@ -101,7 +99,6 @@ class TestERP5SyncMLVCard(TestERP5SyncMLMixin):
                              user_id='fab',
                              password='myPassword')
       sub.validate()
-      transaction.commit()
       self.tic()
 
   def test_04_FirstVCardSynchronization(self):

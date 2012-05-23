@@ -28,7 +28,6 @@
 ##############################################################################
 
 
-import transaction
 from AccessControl import Unauthorized
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from ShaDirMixin import ShaDirMixin
@@ -70,7 +69,6 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
                    'document_module',):
       folder = self.portal[module]
       folder.manage_delObjects(list(folder.objectIds()))
-    transaction.commit()
     self.tic()
 
   # Tests
@@ -107,7 +105,7 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
     data_set = self.portal.data_set_module.newContent(portal_type='Data Set',
                                                       reference=self.key)
     data_set.publish()
-    self.stepTic()
+    self.tic()
 
     self.logout()
     self.assertTrue(self.portal.portal_membership.isAnonymousUser())
@@ -124,13 +122,13 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
     data_set = self.portal.data_set_module.newContent(
                            portal_type='Data Set',
                            reference=self.key)
-    self.stepTic()
+    self.tic()
 
     data_set()
     data_set.view()
 
     data_set.publish()
-    self.stepTic()
+    self.tic()
     self.assertEquals('Published', data_set.getValidationStateTitle())
 
     self.assertUserHaveRoleOnDocument(self.lucas_user, 'Auditor', data_set)
@@ -157,7 +155,7 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
                            portal_type='Data Set',
                            reference=self.key)
     data_set.publish()
-    self.stepTic()
+    self.tic()
 
     self.changeUser(self.lucas_user)
     data_set()
@@ -171,13 +169,13 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
     """
     self.changeUser(self.lucas_user)
     document = self.portal.document_module.newContent(portal_type='Text')
-    self.stepTic()
+    self.tic()
 
     document()
     document.view()
 
     document.publishAlive()
-    self.stepTic()
+    self.tic()
 
     self.assertEquals('Published Alive', document.getValidationStateTitle())
     self.assertUserHaveRoleOnDocument(self.lucas_user, 'Auditor', document)
@@ -201,7 +199,7 @@ class TestShaDirSecurity(ShaDirMixin, ShaSecurityMixin, SecurityTestCase):
     self.changeUser(self.toto_user)
     document = self.portal.document_module.newContent(portal_type='Text')
     document.publishAlive()
-    self.stepTic()
+    self.tic()
 
     self.changeUser(self.lucas_user)
     document()

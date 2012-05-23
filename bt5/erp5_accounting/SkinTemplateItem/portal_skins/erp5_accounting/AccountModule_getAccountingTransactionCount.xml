@@ -55,6 +55,8 @@
 if kw.get(\'stat\'):\n
   selection_params = context.portal_selections.getSelectionParamsFor(selection_name)\n
   selection_domain = context.portal_selections.getSelectionDomainDictFor(selection_name)\n
+  if callable(selection_domain):\n
+    selection_domain = selection_domain()\n
   selection_report = context.portal_selections.getSelectionReportDictFor(selection_name)\n
   if selection_domain:\n
     kwd[\'selection_domain\'] = selection_domain\n

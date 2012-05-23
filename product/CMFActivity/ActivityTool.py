@@ -203,6 +203,13 @@ class Message(BaseMessage):
           request.environ['HTTP_ACCEPT_LANGUAGE']
       self.request_info['_script'] = list(request._script)
 
+  def getGroupId(self):
+    get = self.activity_kw.get
+    group_method_id = get('group_method_id', '')
+    if group_method_id is None:
+      group_method_id = 'portal_activities/dummyGroupMethod/' + self.method_id
+    return group_method_id + '\0' + get('group_id', '')
+
   def getObject(self, activity_tool):
     """return the object referenced in this message."""
     return activity_tool.unrestrictedTraverse(self.object_path)

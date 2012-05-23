@@ -27,7 +27,6 @@
 
 import unittest
 
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -67,7 +66,6 @@ class TestICal(ERP5TypeTestCase):
     if hasattr(self.portal.person_module, 'one'):
       self.portal.person_module.manage_delObjects(['one'])
     one = self.portal.person_module.newContent(id="one", title="One", description="Person One")
-    transaction.commit()
     self.tic()
     
   def parseICalFeed(self,  feed_string):
@@ -105,7 +103,6 @@ class TestICal(ERP5TypeTestCase):
     if not run: return    
     module = self.portal.event_module
     event = module.newContent(id='one', title='Event One', portal_type='Phone Call')
-    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -131,7 +128,6 @@ class TestICal(ERP5TypeTestCase):
     event.plan()
     event.setStartDate('2007/08/15 08:30 UTC')
     event.setDescription('Event One description')
-    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -145,7 +141,6 @@ class TestICal(ERP5TypeTestCase):
     # check categorization
     sale_op = self.portal.sale_opportunity_module.newContent(portal_type='Sale Opportunity', title='New Opportunity', reference='NEWSALEOP')
     event.setFollowUp(sale_op.getRelativeUrl())
-    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -155,7 +150,6 @@ class TestICal(ERP5TypeTestCase):
     event.confirm()
     event.start()
     event.setStopDate('2007/08/15 13:30 UTC')
-    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -166,7 +160,6 @@ class TestICal(ERP5TypeTestCase):
     module.manage_delObjects([event.getId()])
     event2 = module.newContent(title='Event Two', portal_type='Phone Call')
     event2.cancel()
-    transaction.commit()
     self.tic()
      
     feed_dict = self.getICalFeed(module)
@@ -183,7 +176,6 @@ class TestICal(ERP5TypeTestCase):
     if not run: return    
     module = self.portal.task_module
     task = module.newContent(id='one', title='Task One', start_date='2007/08/15')
-    transaction.commit()
     self.tic()
    
    # current workflow state - draft
@@ -200,7 +192,6 @@ class TestICal(ERP5TypeTestCase):
                                                                           title='New Project', 
                                                                           reference='NEWPROJ')
     task.setSourceProjectValue(project)
-    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -208,7 +199,6 @@ class TestICal(ERP5TypeTestCase):
     
     # change workflow state - planned
     task.plan()
-    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -217,7 +207,6 @@ class TestICal(ERP5TypeTestCase):
     
     # change workflow state - ordered
     task.order()
-    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)
@@ -226,7 +215,6 @@ class TestICal(ERP5TypeTestCase):
     
     # change workflow state - confirmed
     task.confirm()
-    transaction.commit()
     self.tic()
     
     feed_dict = self.getICalFeed(module)

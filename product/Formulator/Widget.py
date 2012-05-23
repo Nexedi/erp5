@@ -800,8 +800,8 @@ class SingleItemsWidget(ItemsWidget):
     items = field.get_value('items', REQUEST=REQUEST, cell=cell)
     if not items:
       # single item widget should have at least one child in order to produce
-      # valid XHTML; disable it so user can not select it
-      return [self.render_item('', '', '', '', 'disabled="disabled"')]
+      # valid XHTML; keep it enabled otherwise field validator always fails
+      return [self.render_item('', '', '', '', '')]
 
     # check if we want to select first item
     if not value and field.get_value('first_item', REQUEST=REQUEST,

@@ -200,7 +200,7 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin):
                                     description='test',
                                     source_total_asset_price=52400.0)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check we have only one counter rendering
     self.assertEqual(len(self.counter_rendering_module.objectValues()), 1)
     # get the counter rendering document
@@ -223,7 +223,7 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.counter_rendering.objectValues()), 1)
     # get the counter rendering line
@@ -281,7 +281,7 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.counter_rendering.objectValues()), 2)
     # get the second counter rendering line
@@ -322,7 +322,7 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # Check number of counter rendering lines (line1 + line2 +invalid_line)
     self.assertEqual(len(self.counter_rendering.objectValues()), 3)
     # Check quantity, same as checkTotal + banknote of 500: 11 for 1992 and 13 for 2003
@@ -341,7 +341,7 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin):
     # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.counter_rendering, 'confirm_action', wf_id='counter_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of the counter rendering
     state = self.counter_rendering.getSimulationState()
     # check the state is draft
@@ -383,7 +383,7 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.counter_rendering, 'confirm_action', wf_id='counter_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.counter_rendering.getSimulationState()
     # check state is confirmed
@@ -431,7 +431,7 @@ class TestERP5BankingCounterRendering(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.counter_rendering, 'deliver_action', wf_id='counter_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of counter rendering
     state = self.counter_rendering.getSimulationState()
     # check that state is delivered

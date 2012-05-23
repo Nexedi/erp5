@@ -31,6 +31,7 @@ from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Document import Document, VALID_TEXT_FORMAT_LIST
+from Products.ERP5.Document.Document import VALID_IMAGE_FORMAT_LIST
 from Products.ERP5.Document.Document import ConversionError
 from Products.ERP5Type.Base import Base, removeIContentishInterface
 from Products.CMFDefault.File import File as CMFFile
@@ -241,16 +242,27 @@ class File(Document, CMFFile):
     return (mime_type, content)
 
   def _convert(self, format, **kw):
-    """File is not convertable.
-    Only original format and text formats are allowed.
+    """File is only convertable if it is an image. 
+    Only Image conversion, original format and text formats are allowed.
     However this document can migrate to another portal_type which support
-    conversions.
+    others conversions.
     """
     content_type = self.getContentType() or ''
-    if format is None:
+    if (format in VALID_IMAGE_FORMAT_LIST + (None, "")) and \
+          content_type.startswith("image/"):
+      # The file should behave like it is an Image for convert
+      # the content to target format.
+      from Products.ERP5Type.Document import newTempImage
+      return newTempImage(self, self.getId(),
+                 data=self.getData(),
+                 content_type=content_type,
+                 filename=self.getFilename())._convert(format, **kw)
+
+    elif format in (None, ""):
       # No conversion is asked,
       # we can return safely the file content itself
       return content_type, self.getData()
+
     elif format in VALID_TEXT_FORMAT_LIST:
       # This is acceptable to return empty string
       # for a File we can not convert

@@ -78,7 +78,11 @@
   KEY `destination_section_uid` (`destination_section_uid`),\n
   KEY `resource_uid` (`resource_uid`),\n
   KEY `source_reference` (`source_payment_reference`),\n
-  KEY `destination_payment_reference` (`destination_payment_reference`)\n
+  KEY `destination_payment_reference` (`destination_payment_reference`),\n
+  KEY `recoup_date` (`recoup_date`),\n
+  KEY `source_payment_internal_bank_account_number` (`source_payment_internal_bank_account_number`),\n
+  KEY `destination_payment_internal_bank_account_number` (`destination_payment_internal_bank_account_number`),\n
+  KEY `source_total_asset_price` (`source_total_asset_price`)\n
 ) ENGINE=InnoDB\n
 </string> </value>
         </item>
