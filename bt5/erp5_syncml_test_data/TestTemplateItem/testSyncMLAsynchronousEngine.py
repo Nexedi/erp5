@@ -117,19 +117,19 @@ class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):
     """
     self._initSynchronization()
     self._initSyncModule()
-    self.stepTic()
+    self.tic()
     # Init the sync
     self._updateSyncMLPreference(activity_count=3, doc_count=5)  # Process 15 docs
     nb_document=50
     self._fillModule(module=self.client_module, nb_objects=nb_document)
     self._setSyncMode("refresh_from_client_only")
-    self.stepTic()
+    self.tic()
     # Initial check
     self.assertEqual(len(self.client_module), nb_document)
     self.assertEqual(len(self.server_module), 0)
     # Do the sync
     self.sync_tool.processClientSynchronization(self.sub.getRelativeUrl())
-    self.stepTic()
+    self.tic()
     # Check result
     self.assertEqual(self.sub.getSynchronizationState(), "finished")
     self.assertEqual(len(self.client_module), nb_document)
@@ -148,19 +148,19 @@ class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):
     """
     self._initSynchronization()
     self._initSyncModule()
-    self.stepTic()
+    self.tic()
     # Init the sync
     self._updateSyncMLPreference(activity_count=5, doc_count=5)  # Process 25 docs
     nb_document=50
     self._fillModule(module=self.client_module, nb_objects=nb_document)
     self._setSyncMode("refresh_from_client_only")
-    self.stepTic()
+    self.tic()
     # Initial check
     self.assertEqual(len(self.client_module), nb_document)
     self.assertEqual(len(self.server_module), 0)
     # Do the sync
     self.sync_tool.processClientSynchronization(self.sub.getRelativeUrl())
-    self.stepTic()
+    self.tic()
     # Check result
     self.assertEqual(self.sub.getSynchronizationState(), "finished")
     self.assertEqual(len(self.client_module), nb_document)
@@ -184,19 +184,19 @@ class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):
     """
     self._initSynchronization()
     self._initSyncModule()
-    self.stepTic()
+    self.tic()
     # Init the sync
     self._updateSyncMLPreference(activity_count=3, doc_count=5)  # Process 15 docs
     nb_document=12
     self._fillModule(module=self.client_module, nb_objects=nb_document)
     self._setSyncMode("refresh_from_client_only")
-    self.stepTic()
+    self.tic()
     # Initial check
     self.assertEqual(len(self.client_module), nb_document)
     self.assertEqual(len(self.server_module), 0)
     # Do the sync
     self.sync_tool.processClientSynchronization(self.sub.getRelativeUrl())
-    self.stepTic()
+    self.tic()
     # Check result
     self.assertEqual(self.sub.getSynchronizationState(), "finished")
     self.assertEqual(len(self.client_module), nb_document)
@@ -213,11 +213,11 @@ class testSyncMLAsynchronousEngine(TestERP5SyncMLMixin):
     """
     self._initSynchronization()
     self._initSyncModule()
-    self.stepTic()
+    self.tic()
     # Init the sync
     nb_document=500
     self._fillModule(module=self.client_module, nb_objects=nb_document)
-    self.stepTic()
+    self.tic()
     # Check the default getDocumentIdList behaviour
     r = self.sub.getDocumentIdList(limit=None)
     self.assertEqual(len(r), nb_document)
