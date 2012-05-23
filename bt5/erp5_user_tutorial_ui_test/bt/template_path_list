@@ -10,6 +10,7 @@ portal_categories/gender/male
 portal_categories/group/my_group
 portal_categories/incoterm/cpt
 portal_categories/nationality/french
+portal_categories/marital_status/married
 portal_categories/order/normal
 portal_categories/payment_mode/credit_card
 portal_categories/quantity_unit/time
