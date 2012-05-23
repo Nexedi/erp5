@@ -50,7 +50,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].Delivery_updateSimulation()\n
+            <value> <string>delivery = state_change[\'object\']\n
+delivery.Delivery_updateSimulation()\n
+\n
+if delivery.getCausalityState() == \'draft\':\n
+  delivery.startBuilding()\n
+  path = delivery.getPath()\n
+  delivery.activate(\n
+    after_tag = (path + \'_calculate\', path + \'_updateAppliedRule\'),\n
+  ).updateCausalityState()\n
 </string> </value>
         </item>
         <item>
