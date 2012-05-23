@@ -32,12 +32,8 @@ from base64 import b64encode, b64decode, b16encode
 from lxml import etree
 
 from AccessControl.SecurityManagement import newSecurityManager
-from zLOG import LOG
-from base64 import b64encode, b64decode, b16encode, b16decode
 from ERP5Diff import ERP5Diff
-from lxml import etree
 
-from ERP5Diff import ERP5Diff
 from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5SyncML.Conduit.ERP5Conduit import ERP5Conduit
 from Products.ERP5SyncML.XMLSyncUtils import encode, decode,\
