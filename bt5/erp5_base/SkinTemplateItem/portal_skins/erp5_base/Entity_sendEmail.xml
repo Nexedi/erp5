@@ -64,6 +64,7 @@ elif event.getSource() is not None:\n
   from_url = formataddr((sender.getTitle(), sender.getDefaultEmailText()))\n
 else:\n
   from_url = portal.portal_preferences.getPreferredEventSenderEmail()\n
+attachment_list = kw.pop(\'attachment_list\', [])\n
 \n
 to_url = formataddr((context.getTitle(), context.getDefaultEmailText()))\n
 \n
@@ -76,7 +77,7 @@ mail_message = context.Base_createMailMessageAsString(from_url,\n
   subject,\n
   body,\n
   content_type,\n
-  attachment_list=[],\n
+  attachment_list=attachment_list,\n
   embedded_file_list=embedded_file_list)\n
 \n
 event.sendMailHostMessage(mail_message)\n

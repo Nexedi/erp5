@@ -54,6 +54,8 @@
 from email import message_from_string\n
 portal = context.getPortalObject()\n
 \n
+if attachment_list is None:\n
+  attachment_list = []\n
 use_activity = False\n
 mail_message = None\n
 to_url_list = []\n
@@ -95,8 +97,6 @@ if download or not use_activity:\n
       additional_headers = {\'Return-Path\':reply_url}\n
 \n
     # Attachments\n
-    if attachment_list is None:\n
-      attachment_list = []\n
     document_type_list = list(context.getPortalEmbeddedDocumentTypeList()) + list(context.getPortalDocumentTypeList())\n
     embedded_file_list = context.getAggregateValueList(portal_type=document_type_list)\n
 \n
@@ -115,12 +115,18 @@ if download or not use_activity:\n
       context.activate(activity=\'SQLQueue\').sendMailHostMessage(mail_message)\n
 \n
 if use_activity:\n
-  uid_list = context.getDestinationUidList()\n
+  destination_list = context.getDestinationValueList()\n
+  path_list = [x.getPath() for x in destination_list]\n
+  uid_list = [x.getUid() for x in destination_list]\n
   method_kw = dict(event_relative_url=context.getRelativeUrl(),\n
-    from_url=from_url)\n
-  portal.portal_catalog.searchAndActivate(method_id="Entity_sendEmail",\n
-     uid=uid_list,\n
-     method_kw=method_kw, **kw)\n
+    from_url=from_url,\n
+    attachment_list=attachment_list)\n
+  portal.portal_catalog.activate(\n
+    after_path_and_method_id=(path_list, \n
+                              (\'immediateReindexObject\', \'recursiveImmediateReindexObject\'))).searchAndActivate(\n
+    method_id="Entity_sendEmail",\n
+    uid=uid_list,\n
+    method_kw=method_kw, **kw)\n
 \n
 # Transit event workflow\n
 if context.getTypeInfo() is not None:\n
