@@ -1634,6 +1634,8 @@ class TestCRMMailSend(BaseTestCRM):
     mail_message.Event_send(packet_size=2)
     self.commit()
     portal_activities = self.portal.portal_activities
+    portal_activities.manageInvoke(object_path=mail_message.getPath(), method_id='Event_sendByActivity')
+    self.commit()
     message_list = [i for i in portal_activities.getMessageList() \
                     if i.kw.has_key("event_relative_url")]
     try:
