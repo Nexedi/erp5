@@ -1,14 +1,10 @@
 <workflow_chain>
  <chain>
-  <type>Sale Invoice</type>
-  <workflow>-invoice_workflow, test_invoice_workflow</workflow>
- </chain>
- <chain>
   <type>Sale Order</type>
-  <workflow>-order_workflow, test_order_workflow</workflow>
+  <workflow>test_simulation_performance_interaction_workflow</workflow>
  </chain>
  <chain>
   <type>Sale Packing List</type>
-  <workflow>-packing_list_workflow, test_packing_list_workflow</workflow>
+  <workflow>test_simulation_performance_interaction_workflow</workflow>
  </chain>
 </workflow_chain>

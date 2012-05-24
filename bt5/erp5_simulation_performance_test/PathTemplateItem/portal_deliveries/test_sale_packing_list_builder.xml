@@ -25,7 +25,40 @@
             </value>
         </item>
         <item>
+            <key> <string>collect_order</string> </key>
+            <value>
+              <tuple>
+                <string>OrderMovementGroup</string>
+                <string>PathMovementGroup</string>
+                <string>DateMovementGroup</string>
+                <string>ResourceMovementGroup</string>
+                <string>VariantMovementGroup</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>collect_order_list</string> </key>
+            <value>
+              <list>
+                <string>test</string>
+                <string>test2</string>
+              </list>
+            </value>
+        </item>
+        <item>
+            <key> <string>collect_order_list_id</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>comment</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_after_generation_method_id</string> </key>
             <value>
               <none/>
             </value>
@@ -33,6 +66,15 @@
         <item>
             <key> <string>delivery_after_generation_script_id</string> </key>
             <value> <string>SalePackingList_copyOrderProperties</string> </value>
+        </item>
+        <item>
+            <key> <string>delivery_cell_collect_order</string> </key>
+            <value>
+              <tuple>
+                <string>VariantMovementGroup</string>
+                <string>CausalityAssignmentMovementGroup</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>delivery_cell_portal_type</string> </key>
@@ -44,6 +86,31 @@
               <tuple>
                 <string>calculateAveragePrice</string>
                 <string>calculateAddQuantity</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_collect_order</string> </key>
+            <value>
+              <tuple>
+                <string>OrderMovementGroup</string>
+                <string>DateMovementGroup</string>
+                <string>PathMovementGroup</string>
+                <string>SectionPathMovementGroup</string>
+                <string>PriceCurrencyMovementGroup</string>
+                <string>DecisionPathMovementGroup</string>
+                <string>AdministrationPathMovementGroup</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>delivery_line_collect_order</string> </key>
+            <value>
+              <tuple>
+                <string>ResourceMovementGroup</string>
+                <string>BaseVariantMovementGroup</string>
+                <string>AggregateMovementGroup</string>
+                <string>CausalityAssignmentMovementGroup</string>
               </tuple>
             </value>
         </item>
@@ -61,7 +128,7 @@
         </item>
         <item>
             <key> <string>delivery_select_method_id</string> </key>
-            <value> <string>DeliveryBuilder_getSimulationPerformanceTestUpdatableDeliveryList</string> </value>
+            <value> <string>DeliveryBuilder_selectConfirmedDeliveryList</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
@@ -78,8 +145,16 @@
             <value> <string>Delivery Builder</string> </value>
         </item>
         <item>
+            <key> <string>resource_portal_type</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
             <key> <string>simulation_select_method_id</string> </key>
-            <value> <string>ERP5Site_getTestSalePackingListBuilderMovementList</string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>title</string> </key>
