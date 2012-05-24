@@ -50,55 +50,53 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-query_dict = {}\n
-for key in kw.keys():\n
-  if key == "portal_type":\n
-    query_dict["portal_type"] = kw[key]\n
-  else:\n
-    query_dict[key] = dict(query=kw[key], key=\'ExactMatch\')\n
-result_list = context.portal_catalog(**query_dict)\n
-owner_id = context.portal_membership.getAuthenticatedMember().getId()\n
-functional_test_username = context.Zuite_getHowToInfo()[\'functional_test_username\']\n
-functional_another_test_username = context.Zuite_getHowToInfo()[\'functional_another_test_username\']\n
+            <value> <string>"""\n
+ Creates the functional test user, validate and open assignment.\n
+"""\n
+portal = context.getPortalObject()\n
+howto_dict = context.Zuite_getHowToInfo()\n
 \n
-for result in result_list:\n
-  object = result.getObject()\n
-  # check that every property of the research have been well taken in account\n
-  for key in kw.keys():\n
-    method_name = \'get%s\' % (\'\'.join([x.capitalize() for x in key.split(\'_\')]))\n
-    method = getattr(object, method_name)\n
-    if strict_check_mode and method() != kw[key]:\n
-      raise RuntimeError, "One property is not the same that you wanted : you asked \'%s\' and expecting \'%s\' but get \'%s\'" % (key, kw[key], method())\n
-  # check that every object are owner by you\n
-  if strict_check_mode and object.Base_getOwnerId() not in [owner_id, functional_test_username, \'__erp5security-=__\', functional_another_test_username]:\n
-    raise RuntimeError, "You have try to clean an item who haven\'t you as owner : %s is owned by %s and you are %s" % \\\n
-         (object.getTitle(), object.Base_getOwnerId(), owner_id)\n
+functional_test_username = howto_dict[\'functional_another_test_username\']\n
+person = getattr(portal.person_module, functional_test_username, None)\n
+if person is None:\n
+  person = portal.person_module.newContent(portal_type=\'Person\',\n
+                                           id=functional_test_username,\n
+                                           title=functional_test_username)\n
 \n
-if strict_check_mode and max_count is not None:\n
-  if len(result_list) <= max_count:\n
-    if len(result_list) == 0:\n
-      return None\n
-    else:\n
-      return result_list    \n
-  else:\n
-    raise RuntimeError, \'The catalog return more item that you ask.\'\n
+  person.edit(reference=functional_test_username,\n
+              password=howto_dict[\'functional_test_user_password\'],\n
+              default_email_text=howto_dict[\'functional_test_user_email\'])\n
 \n
-if len(result_list) == 0:\n
-  return None\n
-return result_list\n
-
-
-]]></string> </value>
+  person.validate()\n
+\n
+  assignment = person.newContent(portal_type=\'Assignment\',\n
+                                 start_date=\'01/01/2011\',\n
+                                 stop_date=\'01/01/2111\',\n
+                                 function=\'company/manager\')\n
+  assignment.open()\n
+\n
+  # XXX (lucas): These tests must be able to run on an instance without security.\n
+  for role in (\'Assignee\', \'Assignor\', \'Associate\', \'Auditor\', \'Owner\'):\n
+    portal.acl_users.zodb_roles.assignRoleToPrincipal(role, functional_test_username)\n
+\n
+return \'Done.\'\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>max_count=None, strict_check_mode=1, **kw</string> </value>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Zuite_checkPortalCatalog</string> </value>
+            <value> <string>Zuite_createAnotherFunctionalTestUser</string> </value>
         </item>
       </dictionary>
     </pickle>
