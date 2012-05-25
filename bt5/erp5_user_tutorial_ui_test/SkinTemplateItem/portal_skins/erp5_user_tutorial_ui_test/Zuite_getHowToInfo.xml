@@ -85,6 +85,8 @@ return {\'now\': DateTime(),\n
         \'link_howto_organisation2_title\': \'ZUITE-TEST-LINK-ORGANISATION-002\',\n
         \'product_howto_product_title\': \'ZUITE-TEST-PRODUCT-PRODUCT-001\',\n
         \'product_howto_organisation_title\': \'ZUITE-TEST-PRODUCT-ORGANISATION-001\',\n
+        \'product_howto_currency_title\': \'Euro\',\n
+        \'product_howto_currency_tag\': \'EUR\',\n
         \'sale_howto_product_title\': \'ZUITE-TEST-SALEORDER-PRODUCT-001\',\n
         \'sale_howto_organisation_title\': \'ZUITE-TEST-SALEORDER-ORGANISATION-001\',\n
         \'sale_howto_organisation2_title\': \'ZUITE-TEST-SALEORDER-ORGANISATION-002\',\n
