@@ -834,7 +834,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
             # accept only some catalog columns
             if end_key in ('title', 'uid', 'description', 'reference',
                            'relative_url', 'id', 'portal_type',
-                           'simulation_state'):
+                           'simulation_state', 'validation_state'):
               if strict:
                 pattern = '%s%s | category,catalog/%s/z_related_strict_%s%s'
               else:
