@@ -170,17 +170,19 @@ fieldset.hidden_fieldset { \n
   padding-bottom:35px;\n
   padding-top: 5px;\n
 }\n
+\n
 #master,\n
 .document,\n
 .content{\n
-  width:100%;\n
+  min-width:75%;\n
 }\n
+\n
+\n
 #wrapper_right{\n
   float: left;\n
   width:22.5%;\n
-  position:relative;\n
-  margin-left: 19px;\n
-  padding-top: 4px;\n
+  /*margin-left: 19px;*/\n
+  margin-top: 23px;\n
 }\n
 \n
 #km_left {\n
