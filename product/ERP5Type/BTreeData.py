@@ -16,9 +16,6 @@ class BTreeData(Persistent):
 
     def write(self, buf, offset):
         # TODO: auto-aggregation of continuous keys when overwriting
-#         offset = long(offset)
-#         assert not isinstance(offset, long), 'Offset is too big for int ' \
-#             'type: %s' % (offset, )
         tree = self.tree
         buf_len = len(buf)
         try:
@@ -58,9 +55,6 @@ class BTreeData(Persistent):
 
     def read(self, offset, size):
         start_offset = offset
-#         start_offset = offset = int(offset)
-#         assert not isinstance(offset, long), 'Offset is too big for int ' \
-#             'type: %s' % (offset, )
         tree = self.tree
         result = StringIO()
         write = result.write
@@ -93,9 +87,6 @@ class BTreeData(Persistent):
         return result.getvalue()
 
     def truncate(self, offset):
-#         offset = int(offset)
-#         assert not isinstance(offset, long), 'Offset is too big for int ' \
-#             'type: %s' % (offset, )
         tree = self.tree
         try:
             key = tree.maxKey(offset)
