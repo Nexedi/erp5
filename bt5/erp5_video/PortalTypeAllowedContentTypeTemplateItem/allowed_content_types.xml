@@ -1,4 +1,7 @@
 <allowed_content_type_list>
+ <portal_type id="Contribution Tool">
+  <item>Video</item>
+ </portal_type>
  <portal_type id="Video Module">
   <item>Video</item>
  </portal_type>
