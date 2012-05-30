@@ -55,14 +55,14 @@ class BTreeData(Persistent):
     def read(self, offset, size):
         start_offset = offset
         tree = self.tree
-        result = StringIO()
-        write = result.write
         try:
             key = tree.maxKey(offset)
         except ValueError:
             return ''
         else:
             offset -= key
+        result = StringIO()
+        write = result.write
         written = 0
         for key in tree.iterkeys(key):
             padding = min(size, key - start_offset - written)
