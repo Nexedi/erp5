@@ -36,10 +36,9 @@ class BTreeData(Persistent):
                 assert lower_key == offset, (lower_key, offset)
                 key = lower_key
         buf_offset = 0
-        actual_buf_len = len(buf)
         to_apply = {}
         for next_key in tree.iterkeys(key):
-            if buf_offset >= actual_buf_len:
+            if buf_offset >= buf_len:
                 break
             next_buf_offset = buf_offset + (next_key - key)
             to_apply[key] = PersistentString(buf[buf_offset:next_buf_offset])
@@ -63,11 +62,9 @@ class BTreeData(Persistent):
         except ValueError:
             return ''
         else:
-            last_key = key
-            iterator = tree.iterkeys(key)
             offset -= key
         written = 0
-        for key in iterator:
+        for key in tree.iterkeys(key):
             padding = min(size, key - start_offset - written)
             if padding:
                 write('\x00' * padding)
@@ -83,7 +80,6 @@ class BTreeData(Persistent):
             size -= to_write_len
             written += to_write_len
             offset = 0
-            last_key = key
         return result.getvalue()
 
     def truncate(self, offset):
