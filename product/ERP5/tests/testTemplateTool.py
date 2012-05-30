@@ -499,6 +499,11 @@ class TestTemplateTool(ERP5TypeTestCase):
       self.assertNotEquals(bt.getId(), None)
       self.commit()
       self.checkFolderReindexAllActivityNotPresent()
+      # Before launch activities make sure email table is created even
+      # catalog is not created.
+      catalog_tool = self.portal.portal_catalog
+      catalog_tool.erp5_mysql_innodb.z0_drop_email()
+      catalog_tool.erp5_mysql_innodb.z_create_email()
       self.tic()
 
       bt5_name = 'erp5_odt_style'
