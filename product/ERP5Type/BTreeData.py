@@ -1,23 +1,24 @@
 import transaction
 from cStringIO import StringIO
-from BTrees.IOBTree import IOBTree
+from BTrees.LOBTree import LOBTree
+from persistent import Persistent
 
-class PersistentString(persistent.Persistent):
+class PersistentString(Persistent):
     def __init__(self, value):
         self.value = value
 
     def __str__(self):
         return self.value
 
-class BTreeData2(persistent.Persistent):
+class BTreeData(Persistent):
     def __init__(self):
-        self.tree = IOBTree()
+        self.tree = LOBTree()
 
     def write(self, buf, offset):
         # TODO: auto-aggregation of continuous keys when overwriting
-        offset = int(offset)
-        assert not isinstance(offset, long), 'Offset is too big for int ' \
-            'type: %s' % (offset, )
+#         offset = long(offset)
+#         assert not isinstance(offset, long), 'Offset is too big for int ' \
+#             'type: %s' % (offset, )
         tree = self.tree
         buf_len = len(buf)
         try:
@@ -60,9 +61,10 @@ class BTreeData2(persistent.Persistent):
 
     def read(self, offset, size):
         #print 'read', hex(offset), hex(size)
-        start_offset = offset = int(offset)
-        assert not isinstance(offset, long), 'Offset is too big for int ' \
-            'type: %s' % (offset, )
+        start_offset = offset
+#         start_offset = offset = int(offset)
+#         assert not isinstance(offset, long), 'Offset is too big for int ' \
+#             'type: %s' % (offset, )
         tree = self.tree
         result = StringIO()
         write = result.write
@@ -96,9 +98,9 @@ class BTreeData2(persistent.Persistent):
         return result.getvalue()
 
     def truncate(self, offset):
-        offset = int(offset)
-        assert not isinstance(offset, long), 'Offset is too big for int ' \
-            'type: %s' % (offset, )
+#         offset = int(offset)
+#         assert not isinstance(offset, long), 'Offset is too big for int ' \
+#             'type: %s' % (offset, )
         tree = self.tree
         try:
             key = tree.maxKey(offset)
