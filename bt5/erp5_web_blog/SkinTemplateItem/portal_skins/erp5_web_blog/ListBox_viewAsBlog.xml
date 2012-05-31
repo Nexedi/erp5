@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<div class="blog_rss"><a href="./Blog_viewAsRSS"><img src="web_images/rss-image.png" alt="This blog as RSS" /></a></div>\n
+<div class="blog_rss"><a href="./WebSection_viewContentListAsRSS"><img src="web_images/rss-image.png" alt="This blog as RSS" /></a></div>\n
 \n
 <tal:block tal:define="real_context here/getContext; \n
                        base_url_string real_context/absolute_url;\n
