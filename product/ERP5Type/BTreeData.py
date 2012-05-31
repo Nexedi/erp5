@@ -1,4 +1,3 @@
-from cStringIO import StringIO
 from BTrees.LOBTree import LOBTree
 from persistent import Persistent
 
@@ -101,6 +100,21 @@ class BTreeData(Persistent):
 
         Returns string of read data.
         """
+        return ''.join(self.iterate(offset, size))
+
+    def iterate(self, offset=0, size=None):
+        """
+        Return file data in storage-efficient chunks.
+
+        offset (int)
+          Offset of first byte to read.
+        size (int, None)
+          Number of bytes to read.
+          If None, the whole file is read.
+
+        Yields data chunks as they are read from storage (or locally generated,
+        when padding over sparse area).
+        """
         if offset < 0:
             raise negative_offset_error
         tree = self._tree
@@ -113,15 +127,14 @@ class BTreeData(Persistent):
         # - avoid loading last key if its past the end of read request
         # Would simlify the loop, but might duplicate code... And CPU is not
         # expected to be the bottleneck here.
-        result = StringIO()
-        write = result.write
-        written = 0
+        if size is None:
+            size = len(self) - offset
+        next_byte = offset
         for key in tree.iterkeys(key):
-            next_byte = offset + written
             padding = min(size, key - next_byte)
             if padding > 0:
                 write('\x00' * padding)
-                written += padding
+                next_byte += padding
                 size -= padding
                 chunk_offset = 0
             else:
@@ -134,10 +147,9 @@ class BTreeData(Persistent):
             # cache by discarding chunks earlier.
             chunk._p_deactivate()
             to_write_len = len(to_write)
-            write(to_write)
             size -= to_write_len
-            written += to_write_len
-        return result.getvalue()
+            next_byte += to_write_len
+            yield to_write
 
     def truncate(self, offset):
         """
@@ -173,8 +185,10 @@ if __name__ == '__main__':
     def check(tree, length, read_offset, read_length, data, keys=None):
         tree_length = len(tree)
         tree_data = tree.read(read_offset, read_length)
+        tree_iterator_data = ''.join(tree.iterate(read_offset, read_length))
         assert tree_length == length, tree_length
         assert tree_data == data, repr(tree_data)
+        assert tree_iterator_data == data, repr(tree_iterator_data)
         if keys is not None:
             tree_keys = list(tree._tree.keys())
             assert tree_keys == keys, tree_keys
