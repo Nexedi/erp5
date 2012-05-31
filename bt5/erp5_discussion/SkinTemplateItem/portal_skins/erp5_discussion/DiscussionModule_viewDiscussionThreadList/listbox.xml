@@ -84,6 +84,10 @@
                           <string>Title</string>
                         </tuple>
                         <tuple>
+                          <string>reference</string>
+                          <string>Reference</string>
+                        </tuple>
+                        <tuple>
                           <string>translated_validation_state_title</string>
                           <string>State</string>
                         </tuple>

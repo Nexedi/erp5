@@ -245,6 +245,10 @@
                     <value>
                       <list>
                         <tuple>
+                          <string>title</string>
+                          <string>Listbox_getDiscussionThreadPermanentUrl</string>
+                        </tuple>
+                        <tuple>
                           <string>modification_date</string>
                           <string></string>
                         </tuple>
