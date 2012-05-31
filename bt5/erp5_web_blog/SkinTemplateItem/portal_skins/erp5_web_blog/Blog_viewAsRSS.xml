@@ -74,9 +74,7 @@
                 <item>
                     <key> <string>bottom</string> </key>
                     <value>
-                      <list>
-                        <string>listbox</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -94,7 +92,9 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>listbox</string>
+                      </list>
                     </value>
                 </item>
                 <item>
