@@ -1,4 +1,3 @@
-import transaction
 from cStringIO import StringIO
 from BTrees.LOBTree import LOBTree
 from persistent import Persistent
