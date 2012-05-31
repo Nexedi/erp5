@@ -177,11 +177,14 @@ fieldset.hidden_fieldset { \n
   min-width:75%;\n
 }\n
 \n
+#km_left .content{\n
+  min-width:750px;\n
+}\n
 \n
 #wrapper_right{\n
   float: left;\n
   width:22.5%;\n
-  /*margin-left: 19px;*/\n
+  margin-left: 19px;\n
   margin-top: 23px;\n
 }\n
 \n
