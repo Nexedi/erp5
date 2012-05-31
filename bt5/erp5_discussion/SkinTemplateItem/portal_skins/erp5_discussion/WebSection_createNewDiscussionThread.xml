@@ -70,9 +70,14 @@ if site_list in MARKER:\n
 membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
 multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()\n
 \n
-# XXX: what if reference duplicates : add some random part ?\n
 reference = title.replace(\' \', \'-\')\n
+exisiting_document = context.getDocumentValue(reference)\n
+if exisiting_document is not None:\n
+  # if there are other document which reference duplicates just add some random part\n
+  # so we can distinguish)\n
+  reference = \'%s-%s\' %(context.Base_generateRandomString(), reference)\n
 \n
+category_list = []\n
 create_kw = dict(title = title,\n
                  source_value = person,\n
                  reference = reference,\n
@@ -83,12 +88,19 @@ create_kw = dict(title = title,\n
                  classification=classification,\n
                  group_list=group_list,\n
                  site_list=site_list)\n
+\n
 for base_category in multimembership_criterion_base_category_list:\n
-  create_kw[\'%s_list\' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]\n
+  #create_kw[\'%s_list\' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]\n
+  category_list.extend([x for x in membership_criterion_category_list if x.startswith(base_category)])\n
 \n
 discussion_thread = portal.discussion_thread_module.newContent(\n
                       portal_type = "Discussion Thread",\n
                       **create_kw)\n
+# as we create a thread under a "root" predicate web section copy\n
+# all categories from it to create thread, this way thread will be part\n
+# of web section (through getDocumentValue API)\n
+discussion_thread.setCategoryList(category_list)\n
+\n
 discussion_post = discussion_thread.newContent(\n
                       portal_type = "Discussion Post",\n
                       title = title,\n
