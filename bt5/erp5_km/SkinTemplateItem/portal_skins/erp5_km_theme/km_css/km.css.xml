@@ -178,7 +178,7 @@ fieldset.hidden_fieldset { \n
 }\n
 \n
 #km_left .content{\n
-  min-width:750px;\n
+  width:750px;\n
 }\n
 \n
 #wrapper_right{\n
@@ -461,10 +461,6 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 .content .field .input {\n
   width: 100%;\n
   margin-top: 4px;\n
-}\n
-\n
-.content .field label {\n
-  width:30%;\n
   float:left;\n
 }\n
 \n
