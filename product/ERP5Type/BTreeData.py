@@ -37,7 +37,7 @@ class BTreeData(Persistent):
             result = tree.maxKey()
         except ValueError:
             return 0
-        return result + len(tree[result])
+        return result + len(tree[result].value)
 
     def write(self, buf, offset):
         """
@@ -61,7 +61,7 @@ class BTreeData(Persistent):
             # writes.
             if lower_key < offset:
                 chunk = tree[lower_key]
-                value_len = len(chunk)
+                value_len = len(chunk.value)
                 if lower_key + value_len > offset:
                     key = lower_key
                     buf = chunk.value[:offset - key] + buf
@@ -77,7 +77,7 @@ class BTreeData(Persistent):
                 chunk = tree[key]
             except KeyError:
                 tree[key] = chunk = PersistentString('')
-            entry_size = len(chunk)
+            entry_size = len(chunk.value)
             to_write = buf[:to_write_len]
             buf = buf[to_write_len:]
             if to_write_len < entry_size:
@@ -147,7 +147,7 @@ class BTreeData(Persistent):
             tree.clear()
         else:
             chunk = tree[key]
-            chunk_len = len(chunk)
+            chunk_len = len(chunk.value)
             value_len = offset - key
             if chunk_len > value_len:
                 chunk.value = chunk.value[:value_len]
@@ -197,4 +197,7 @@ if __name__ == '__main__':
     data.write('8', 8)
     check(data, 11, 0, 10, '0123XY6\x008\x00', [0, 5, 8, 10])
     check(data, 11, 7, 10, '\x008\x00a')
+
+    data.write('ABCDE', 6)
+    check(data, 11, 0, 11, '0123XYABCDE', [0, 5, 8, 10])
 
