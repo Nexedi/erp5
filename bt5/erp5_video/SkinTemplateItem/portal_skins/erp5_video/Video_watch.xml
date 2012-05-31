@@ -53,17 +53,16 @@
         </item>
         <item>
             <key> <string>enctype</string> </key>
-            <value> <string>multipart/form-data</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>group_list</string> </key>
             <value>
               <list>
-                <string>left (Document Reference)</string>
-                <string>right (Publication Information)</string>
-                <string>center_left</string>
-                <string>center_right</string>
+                <string>left</string>
+                <string>right</string>
                 <string>center</string>
+                <string>bottom</string>
                 <string>hidden</string>
               </list>
             </value>
@@ -73,27 +72,15 @@
             <value>
               <dictionary>
                 <item>
+                    <key> <string>bottom</string> </key>
+                    <value>
+                      <list/>
+                    </value>
+                </item>
+                <item>
                     <key> <string>center</string> </key>
                     <value>
-                      <list>
-                        <string>my_description</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center_left</string> </key>
-                    <value>
-                      <list>
-                        <string>my_contributor_title_list</string>
-                      </list>
-                    </value>
-                </item>
-                <item>
-                    <key> <string>center_right</string> </key>
-                    <value>
-                      <list>
-                        <string>my_subject_list</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
                 <item>
@@ -103,35 +90,18 @@
                     </value>
                 </item>
                 <item>
-                    <key> <string>left (Document Reference)</string> </key>
+                    <key> <string>left</string> </key>
                     <value>
                       <list>
                         <string>my_title</string>
-                        <string>my_short_title</string>
-                        <string>my_reference</string>
-                        <string>my_version</string>
-                        <string>my_language</string>
-                        <string>my_int_index</string>
                         <string>my_file</string>
-                        <string>my_filename</string>
-                        <string>my_translated_portal_type</string>
-                        <string>my_translated_external_processing_state_title</string>
-                        <string>my_revision</string>
                       </list>
                     </value>
                 </item>
                 <item>
-                    <key> <string>right (Publication Information)</string> </key>
+                    <key> <string>right</string> </key>
                     <value>
-                      <list>
-                        <string>my_classification</string>
-                        <string>my_group_list</string>
-                        <string>my_site_list</string>
-                        <string>my_function_list</string>
-                        <string>my_follow_up_title_list</string>
-                        <string>my_publication_section_list</string>
-                        <string>my_translated_validation_state_title</string>
-                      </list>
+                      <list/>
                     </value>
                 </item>
               </dictionary>
@@ -139,7 +109,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Video_view</string> </value>
+            <value> <string>Video_watch</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>
