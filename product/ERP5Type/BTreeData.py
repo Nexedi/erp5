@@ -1,6 +1,9 @@
 from BTrees.LOBTree import LOBTree
 from persistent import Persistent
 
+# Maximum memory to allocate for sparse-induced padding.
+MAX_PADDING_CHUNK = 2 ** 20
+
 class PersistentString(Persistent):
     def __init__(self, value):
         self.value = value
@@ -133,10 +136,13 @@ class BTreeData(Persistent):
         for key in tree.iterkeys(key):
             padding = min(size, key - next_byte)
             if padding > 0:
-                write('\x00' * padding)
                 next_byte += padding
                 size -= padding
                 chunk_offset = 0
+                while padding:
+                    padding_chunk = min(padding, MAX_PADDING_CHUNK)
+                    padding -= padding_chunk
+                    yield '\x00' * padding_chunk
             else:
                 chunk_offset = next_byte - key
             if size == 0:
