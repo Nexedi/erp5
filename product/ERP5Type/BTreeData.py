@@ -9,6 +9,8 @@ class PersistentString(Persistent):
     def __str__(self):
         return self.value
 
+negative_offset_error = ValueError('Negative offset')
+
 class BTreeData(Persistent):
     """
     In-ZODB (non-BLOB) storage of arbitrary binary data.
@@ -49,6 +51,8 @@ class BTreeData(Persistent):
           Offset of first data byte.
         """
         # TODO: auto-aggregation of continuous keys when overwriting
+        if offset < 0:
+            raise negative_offset_error
         tree = self._tree
         key = offset
         try:
@@ -97,6 +101,8 @@ class BTreeData(Persistent):
 
         Returns string of read data.
         """
+        if offset < 0:
+            raise negative_offset_error
         tree = self._tree
         try:
             key = tree.maxKey(offset)
@@ -140,6 +146,8 @@ class BTreeData(Persistent):
         offset (int)
           Offet of the first byte to discard.
         """
+        if offset < 0:
+            raise negative_offset_error
         tree = self._tree
         try:
             key = tree.maxKey(offset)
