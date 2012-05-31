@@ -11,11 +11,11 @@ class PersistentString(Persistent):
 
 class BTreeData(Persistent):
     def __init__(self):
-        self.tree = LOBTree()
+        self._tree = LOBTree()
 
     def write(self, buf, offset):
         # TODO: auto-aggregation of continuous keys when overwriting
-        tree = self.tree
+        tree = self._tree
         buf_len = len(buf)
         try:
             lower_key = tree.maxKey(offset)
@@ -53,7 +53,7 @@ class BTreeData(Persistent):
 
     def read(self, offset, size):
         start_offset = offset
-        tree = self.tree
+        tree = self._tree
         try:
             key = tree.maxKey(offset)
         except ValueError:
@@ -82,7 +82,7 @@ class BTreeData(Persistent):
         return result.getvalue()
 
     def truncate(self, offset):
-        tree = self.tree
+        tree = self._tree
         try:
             key = tree.maxKey(offset)
         except ValueError:
