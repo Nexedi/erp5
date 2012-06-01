@@ -119,7 +119,7 @@
                 </item>
                 <item>
                     <key> <string>css_class</string> </key>
-                    <value> <string>hidden_label</string> </value>
+                    <value> <string>hidden_label full-width</string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
