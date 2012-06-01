@@ -1332,7 +1332,9 @@ button.formbt > span{\n
 .highlight{\n
   background-color: yellow;\n
 }\n
-\n
+.full-width{\n
+  width:100%;\n
+}\n
 </tal:block>
 
 ]]></unicode> </value>
