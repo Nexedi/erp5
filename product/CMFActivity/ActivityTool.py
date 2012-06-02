@@ -44,6 +44,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.User import system as system_user
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent
@@ -51,6 +52,8 @@ from ActivityBuffer import ActivityBuffer
 from ActivityRuntimeEnvironment import BaseMessage
 from zExceptions import ExceptionFormatter
 from BTrees.OIBTree import OIBTree
+from Zope2 import app
+from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
 
 try:
   from Products import iHotfix
@@ -248,6 +251,16 @@ class Message(BaseMessage):
     if user is None:
       uf = activity_tool.getPortalObject().aq_parent.acl_users
       user = uf.getUserById(user_name)
+    if user is None and user_name == system_user.getUserName():
+      # The following logic comes from unrestricted_apply()
+      # implementation in ERP5Type.UnrestrictedMethod.
+      try:
+        # XXX is it better to get roles from the parent (i.e. portal)?
+        uf = user.aq_inner.aq_parent
+      except AttributeError:
+        uf = app().acl_users
+      role_list = uf.valid_roles()
+      user = PrivilegedUser(user_name, None, role_list, ()).__of__(uf)
     if user is not None:
       user = user.__of__(uf)
       newSecurityManager(None, user)

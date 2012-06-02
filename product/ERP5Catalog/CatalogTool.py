@@ -31,6 +31,7 @@ from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.ERP5Type import Permissions
 from AccessControl import ClassSecurityInfo, getSecurityManager
+from AccessControl.User import system as system_user
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
@@ -391,7 +392,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
       user = _getAuthenticatedUser(self)
       user_str = str(user)
-      user_is_superuser = (user_str == SUPER_USER)
+      user_is_superuser = (user == system_user) or (user_str == SUPER_USER)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
       role_column_dict = {}
       local_role_column_dict = {}
@@ -508,6 +509,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         values. The query takes into account the fact that some roles are
         catalogued with columns.
       """
+      user = _getAuthenticatedUser(self)
+      user_str = str(user)
+      user_is_superuser = (user == system_user) or (user_str == SUPER_USER)
+      if user_is_superuser:
+        # We need no security check for super user.
+        return query
       original_query = query
       security_uid_list, role_column_dict, local_role_column_dict = \
           self.getSecurityUidListAndRoleColumnDict(

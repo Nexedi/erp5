@@ -26,6 +26,7 @@ from Products.PluggableAuthService.interfaces.plugins import IGroupsPlugin
 from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type.ERP5Type \
   import ERP5TYPE_SECURITY_GROUP_ID_GENERATION_SCRIPT
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.PluggableAuthService.PropertiedUser import PropertiedUser
 from ZODB.POSException import ConflictError
 
@@ -86,17 +87,13 @@ class ERP5GroupManager(BasePlugin):
     if principal.getId() == SUPER_USER:
       return ()
 
+    @UnrestrictedMethod
     def _getGroupsForPrincipal(user_name, path):
       security_category_dict = {} # key is the base_category_list,
                                   # value is the list of fetched categories
       security_group_list = []
       security_definition_list = ()
 
-      # because we aren't logged in, we have to create our own
-      # SecurityManager to be able to access the Catalog
-      sm = getSecurityManager()
-      if sm.getUser().getId() != SUPER_USER:
-        newSecurityManager(self, self.getUser(SUPER_USER))
       try:
         # To get the complete list of groups, we try to call the
         # ERP5Type_getSecurityCategoryMapping which should return a list
@@ -180,7 +177,7 @@ class ERP5GroupManager(BasePlugin):
                   generator_name,
                   error = sys.exc_info())
       finally:
-        setSecurityManager(sm)
+        pass
       return tuple(security_group_list)
 
     if not NO_CACHE_MODE:
