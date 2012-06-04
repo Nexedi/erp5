@@ -123,6 +123,8 @@ class BigFile(File):
     if range is not None:
       ranges = HTTPRangeSupport.parseRange(range)
 
+      data = self._baseGetData()
+
       if if_range is not None:
         # Only send ranges if the data isn't modified, otherwise send
         # the whole object. Support both ETags and Last-Modified dates!
@@ -139,10 +141,13 @@ class BigFile(File):
           try: mod_since=long(DateTime(date).timeTime())
           except: mod_since=None
           if mod_since is not None:
-            if self._p_mtime:
-              last_mod = long(self._p_mtime)
+            if data is not None:
+              last_mod = long(data._p_mtime)
             else:
-              last_mod = long(0)
+              if self._p_mtime:
+                last_mod = long(self._p_mtime)
+              else:
+                last_mod = long(0)
             if last_mod > mod_since:
               # Modified, so send a normal response. We delete
               # the ranges, which causes us to skip to the 200
@@ -161,8 +166,10 @@ class BigFile(File):
           RESPONSE.setHeader('Content-Range',
               'bytes */%d' % self.getSize())
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
-          RESPONSE.setHeader('Last-Modified',
-              rfc1123_date(self._p_mtime))
+          if data is not None:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(data._p_mtime))
+          else:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime))
           RESPONSE.setHeader('Content-Type', self.content_type)
           RESPONSE.setHeader('Content-Length', self.getSize())
           RESPONSE.setStatus(416)
@@ -175,8 +182,10 @@ class BigFile(File):
           start, end = ranges[0]
           size = end - start
 
-          RESPONSE.setHeader('Last-Modified',
-              rfc1123_date(self._p_mtime))
+          if data is not None:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(data._p_mtime))
+          else:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime))
           RESPONSE.setHeader('Content-Type', self.content_type)
           RESPONSE.setHeader('Content-Length', size)
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
@@ -184,7 +193,6 @@ class BigFile(File):
               'bytes %d-%d/%d' % (start, end - 1, self.getSize()))
           RESPONSE.setStatus(206) # Partial content
 
-          data = self._baseGetData()
           if isinstance(data, str):
             RESPONSE.write(data[start:end])
             return True
@@ -209,6 +217,7 @@ class BigFile(File):
             size = (size + len('%d%d' % (start, end - 1)) +
                 end - start)
 
+          data = self._baseGetData()
 
           # Some clients implement an earlier draft of the spec, they
           # will only accept x-byteranges.
@@ -216,14 +225,14 @@ class BigFile(File):
 
           RESPONSE.setHeader('Content-Length', size)
           RESPONSE.setHeader('Accept-Ranges', 'bytes')
-          RESPONSE.setHeader('Last-Modified',
-              rfc1123_date(self._p_mtime))
+          if data is not None:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(data._p_mtime))
+          else:
+            RESPONSE.setHeader('Last-Modified', rfc1123_date(self._p_mtime))
           RESPONSE.setHeader('Content-Type',
               'multipart/%sbyteranges; boundary=%s' % (
                   draftprefix, boundary))
           RESPONSE.setStatus(206) # Partial content
-
-          data = self._baseGetData()
 
           for start, end in ranges:
             RESPONSE.write('\r\n--%s\r\n' % boundary)
@@ -285,6 +294,8 @@ class BigFile(File):
       RESPONSE.setHeader('Accept-Ranges', 'bytes')
 
 
+    if data is None:
+      return ''
     iterator = data.iterate()
     try:
       while 1:
