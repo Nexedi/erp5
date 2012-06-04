@@ -25,6 +25,7 @@ from webdav.common import rfc1123_date
 from mimetools import choose_boundary
 from Products.CMFCore.utils import getToolByName, _setCacheHeaders,\
     _ViewEmulator
+import re
 
 class BigFile(File):
   """
@@ -73,7 +74,7 @@ class BigFile(File):
     """
     self._setContentMd5(None)
 
-  def _read_data(self, file):
+  def _read_data(self, file, data=None):
 
     n=1 << 20
 
@@ -88,21 +89,26 @@ class BigFile(File):
     read=file.read
 
     seek(0,2)
-    size=end=file.tell()
+    end=file.tell()
 
-    btree = BTreeData()
+    if data is None:
+      btree = BTreeData()
+    else:
+      btree = data
     seek(0)
     pos = file.tell()
+    offset = len(btree)
 
     while pos < end:
       next = pos + n
       if next > end:
         next = end
 
-      btree.write(read(next), pos)
+      btree.write(read(next-pos), offset+pos)
       pos = file.tell()
 
-    return btree, size
+    self.serialize()
+    return btree, len(btree)
 
   def _range_request_handler(self, REQUEST, RESPONSE):
     # HTTP Range header handling: return True if we've served a range
@@ -286,6 +292,74 @@ class BigFile(File):
     except StopIteration:
       pass
     return ''
+
+  security.declareProtected(Permissions.ModifyPortalContent,'PUT')
+  def PUT(self, REQUEST, RESPONSE):
+    """Handle HTTP PUT requests"""
+    self.dav__init(REQUEST, RESPONSE)
+    self.dav__simpleifhandler(REQUEST, RESPONSE, refresh=1)
+
+    type=REQUEST.get_header('content-type', None)
+
+    file=REQUEST['BODYFILE']
+
+    content_range = REQUEST.get_header('Content-Range', None)
+    if content_range is None:
+      btree = None
+    else:
+      current_size = int(self.getSize())
+      query_range = re.compile('bytes \*/\*')
+      append_range = re.compile('bytes (?P<first_byte>[0-9]+)-' \
+                                '(?P<last_byte>[0-9]+)/' \
+                                '(?P<total_content_length>[0-9]+)')
+      if query_range.match(content_range):
+        data = self._baseGetData()
+
+        RESPONSE.setHeader('X-Explanation', 'Resume incomplete')
+        RESPONSE.setHeader('Range', 'bytes 0-%s' % (current_size-1))
+        RESPONSE.setStatus(308)
+        return RESPONSE
+
+      if append_range.match(content_range):
+
+        result_dict = append_range.search(content_range).groupdict()
+        first_byte = int(result_dict['first_byte'])
+        last_byte = int(result_dict['last_byte'])
+        total_content_length = int(result_dict['total_content_length'])
+        content_length= int(REQUEST.get_header('Content-Length', '0'))
+
+        if (first_byte != current_size):
+          RESPONSE.setHeader('X-Explanation', 'Can only append data')
+          RESPONSE.setStatus(400)
+          return RESPONSE
+        elif (last_byte+1 != total_content_length):
+          RESPONSE.setHeader('X-Explanation', 'Total size unexpected')
+          RESPONSE.setStatus(400)
+          return RESPONSE
+        elif (last_byte+1-first_byte != content_length):
+          RESPONSE.setHeader('X-Explanation', 'Content length unexpected')
+          RESPONSE.setStatus(400)
+          return RESPONSE
+
+        else:
+
+          btree = self._baseGetData()
+          if btree is None:
+            btree = BTreeData()
+
+      else:
+        RESPONSE.setHeader('X-Explanation', 'Can not parse range')
+        RESPONSE.setStatus(400) # Partial content
+        return RESPONSE
+
+    data, size = self._read_data(file, data=btree)
+
+    content_type=self._get_content_type(file, data, self.__name__,
+                                        type or self.content_type)
+    self.update_data(data, content_type, size)
+
+    RESPONSE.setStatus(204)
+    return RESPONSE
 
 # CMFFile also brings the IContentishInterface on CMF 2.2, remove it.
 removeIContentishInterface(BigFile)
