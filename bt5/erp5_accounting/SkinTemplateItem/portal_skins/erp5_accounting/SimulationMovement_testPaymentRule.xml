@@ -57,7 +57,8 @@ if parent.getPortalType() != \'Applied Rule\':\n
   return False\n
 \n
 parent_rule = parent.getSpecialiseValue()\n
-if parent_rule.getPortalType() not in (\'Invoice Transaction Rule\',):\n
+if parent_rule.getPortalType() not in (\'Invoice Transaction Simulation Rule\',\n
+                                       \'Invoice Transaction Rule\'):\n
   return False\n
 \n
 receivable_account_type_list = (\'asset/receivable\',)\n
