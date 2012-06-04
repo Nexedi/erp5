@@ -1,5 +1,21 @@
 <workflow_chain>
  <chain>
+  <type>Production Order Model Root Simulation Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Production Order Model Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Production Order Root Simulation Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
+  <type>Production Order Rule</type>
+  <workflow>edit_workflow, rule_validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Transformation Model Rule</type>
   <workflow>edit_workflow, rule_validation_workflow</workflow>
  </chain>
