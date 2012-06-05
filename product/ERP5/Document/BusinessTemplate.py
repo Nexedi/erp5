@@ -1754,9 +1754,6 @@ class RegisteredVersionPrioritySelectionTemplateItem(BaseTemplateItem):
     self._fillObjectDictFromArchive()
 
   def install(self, context, trashbin, **kw):
-    if not self._objects:
-      return
-
     portal = context.getPortalObject()
     registered_tuple_list = []
     for value in portal.getVersionPriorityList():
@@ -4919,9 +4916,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
       if len(object_to_update) or force:
         for item_name in self._item_name_list:
           item = getattr(self, item_name, None)
-          if item is not None:
+          # As of bt5 format version 1, only _objects is being used so do not
+          # call install() on the item if there is no objects to install...
+          if item is not None and item._objects:
             item.install(self, force=force, object_to_update=object_to_update, 
-                               trashbin=trashbin, installed_bt=installed_bt)
+                         trashbin=trashbin, installed_bt=installed_bt)
 
       # update catalog if necessary
       if update_catalog is _MARKER and force and self.isCatalogUpdatable():
