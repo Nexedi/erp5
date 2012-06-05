@@ -234,6 +234,12 @@ class ERP5TypeTestSuite(TestSuite):
     if len(mysql_db_list) > 1:
       args = ('--extra_sql_connection_string_list=%s' % \
               ','.join(mysql_db_list[1:]),) + args
+    firefox_bin = getattr(self, "firefox_bin", None)
+    xvfb_bin = getattr(self, "xvfb_bin", None)
+    if firefox_bin:
+      args = ("--firefox_bin=%s" % firefox_bin,) + args
+    if xvfb_bin:
+      args = ("--xvfb_bin=%s" % xvfb_bin,) + args
     try:
       runUnitTest = os.environ.get('RUN_UNIT_TEST',
                                    'runUnitTest')

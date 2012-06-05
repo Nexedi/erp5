@@ -74,7 +74,9 @@ class Xvfb:
     self.pid = None
 
   def _runCommand(self, display):
-    command = ['Xvfb', '-fbdir' , self.fbdir, display]
+    xvfb_bin = os.environ.get("xvfb_bin", "Xvfb")
+    command = [xvfb_bin, '-fbdir' , self.fbdir, display]
+
     self.process = Popen(" ".join(command),
                          stdout=PIPE,
                          stderr=PIPE,
@@ -185,7 +187,8 @@ class Firefox(Browser):
   def _run(self, url):
     # Prepare to run
     self._createFile('prefs.js', self.getPrefJs())
-    self._runCommand(("firefox", "firefox", "-no-remote",
+    firefox_bin = os.environ.get("firefox_bin", "firefox")
+    self._runCommand((firefox_bin, firefox_bin, "-no-remote",
                      "-profile", self.profile_dir, url))
 
     os.environ['MOZ_NO_REMOTE'] = '0'
