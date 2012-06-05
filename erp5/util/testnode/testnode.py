@@ -226,6 +226,12 @@ branch = %(branch)s
                                     '--test_suite_title', test_suite_title,
                                     '--node_quantity', config['node_quantity'],
                                     '--master_url', portal_url])
+            firefox_bin_list = glob.glob("%s/*/parts/firefox/firefox-slapos" % config["software_root"])
+            if len(firefox_bin_list):
+              invocation_list.extend(["--firefox_bin", firefox_bin_list[0]])
+            xvfb_bin_list = glob.glob("%s/*/parts/xserver/bin/Xvfb" % config["software_root"])
+            if len(xvfb_bin_list):
+              invocation_list.extend(["--xvfb_bin", xvfb_bin_list[0]])
             bt5_path_list = config.get("bt5_path")
             if bt5_path_list not in ('', None,):
               invocation_list.extend(["--bt5_path", bt5_path_list])

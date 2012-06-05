@@ -60,7 +60,9 @@ def main():
   parser.add_argument('--persistent_memcached_server_hostname', default=None)
   parser.add_argument('--persistent_memcached_server_port', default=None)
   parser.add_argument('--bt5_path', default=None)
-  
+  parser.add_argument("--xvfb_bin", default=None)
+  parser.add_argument("--firefox_bin", default=None)
+
   args = parser.parse_args()
   if args.bt5_path is not None:
     sys.path[0:0] = args.bt5_path.split(",")
@@ -71,7 +73,9 @@ def main():
                     node_quantity=args.node_quantity,
                     revision=revision,
                     db_list=args.db_list,
-                    bt5_path=args.bt5_path)
+                    bt5_path=args.bt5_path,
+                    firefox_bin=args.firefox_bin,
+                    xvfb_bin=args.xvfb_bin)
   test_result = master.createTestResult(revision, suite.getTestList(),
     args.test_node_title, suite.allow_restart, test_suite_title,
     args.project_title)
