@@ -30,6 +30,7 @@ import subprocess
 import time
 import xml_marshaller
 import shutil
+import glob
 
 MAX_PARTIONS = 10
 MAX_SR_RETRIES = 3
@@ -61,10 +62,12 @@ class SlapOSControler(object):
     self.slap = slap
     self.slap.initializeConnection(config['master_url'])
     # register software profile
-    self.software_profile = config['custom_profile_path']
-    slap.registerSupply().supply(
-        self.software_profile,
-        computer_guid=config['computer_id'])
+    self.software_path_list = config.get("software_list", [])
+    self.software_path_list.append(config['custom_profile_path'])
+    for path in self.software_path_list:
+      slap.registerSupply().supply(
+          path,
+          computer_guid=config['computer_id'])
     computer = slap.registerComputer(config['computer_id'])
     # Reset all previously generated software if needed
     if reset_software:
@@ -129,8 +132,14 @@ class SlapOSControler(object):
     self.log("SlapOSControler.runComputerPartition")
     # cloudooo-json is required but this is a hack which should be removed
     config['instance_dict']['cloudooo-json'] = "{}"
-    self.slap.registerOpenOrder().request(self.software_profile,
-        partition_reference='testing partition',
+    # report-url, report-project and suite-url are required to seleniumrunner
+    # instance. This is a hack which must be removed.
+    config['instance_dict']['report-url'] = config.get("report-url", "")
+    config['instance_dict']['report-project'] = config.get("report-project", "")
+    config['instance_dict']['suite-url'] = config.get("suite-url", "")
+    for path in self.software_path_list:
+      self.slap.registerOpenOrder().request(path,
+        partition_reference='testing partition %s' % self.software_path_list.index(path),
         partition_parameter_kw=config['instance_dict'])
 
     # try to run for all partitions as one partition may in theory request another one 
