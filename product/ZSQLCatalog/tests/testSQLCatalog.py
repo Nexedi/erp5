@@ -299,11 +299,11 @@ class TestSQLCatalog(ERP5TypeTestCase):
 
   def _testDateTimeKey(self, column, timezone):
     self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21')), operator='and'),
-                 {column: {'query': '>2008/10/01 12:10:20', 'format': '%y/%m/%d'}})
+                 {column: {'query': '>2008/10/01 12:10:20', 'format': '%Y/%m/%d'}})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21 CEST')), operator='and'),
-                 {column: {'query': '>2008/10/01 12:10:20 CEST', 'format': '%y/%m/%d'}})
+                 {column: {'query': '>2008/10/01 12:10:20 CEST', 'format': '%Y/%m/%d'}})
     self.catalog(ReferenceQuery(ReferenceQuery(operator='>=', date=DateTime('2008/10/01 12:10:21 CET')), operator='and'),
-                 {column: {'query': '>2008/10/01 12:10:20 CET', 'format': '%y/%m/%d'}})
+                 {column: {'query': '>2008/10/01 12:10:20 CET', 'format': '%Y/%m/%d'}})
     self.catalog(ReferenceQuery(ReferenceQuery(
                    ReferenceQuery(operator='>=', date=DateTime('2008/10/01 %s' % timezone)),
                    ReferenceQuery(operator='<', date=DateTime('2008/10/02 %s' % timezone))
