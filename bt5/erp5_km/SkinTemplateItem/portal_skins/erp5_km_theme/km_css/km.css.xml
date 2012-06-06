@@ -635,6 +635,11 @@ div.web-toolbar h3{\n
   padding-top: 4px;\n
 }\n
 \n
+div.web-toolbar h3 a{\n
+  color:#FFFFFF;\n
+  font-weight: bold;\n
+}\n
+\n
 #wrapper_footer div.web-toolbar ul{\n
   padding: 0em;\n
   margin: 0em;\n
