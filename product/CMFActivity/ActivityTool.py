@@ -241,7 +241,9 @@ class Message(BaseMessage):
 
   def changeUser(self, user_name, activity_tool):
     """restore the security context for the calling user."""
-    uf = activity_tool.getPortalObject().acl_users
+    portal = activity_tool.getPortalObject()
+    portal_uf = portal.acl_users
+    uf = portal_uf
     user = uf.getUserById(user_name)
     # if the user is not found, try to get it from a parent acl_users
     # XXX this is still far from perfect, because we need to store all
@@ -249,16 +251,13 @@ class Message(BaseMessage):
     # replay the activity with exactly the same security context as if
     # it had been executed without activity.
     if user is None:
-      uf = activity_tool.getPortalObject().aq_parent.acl_users
+      uf = portal.aq_parent.acl_users
       user = uf.getUserById(user_name)
     if user is None and user_name == system_user.getUserName():
-      # The following logic comes from unrestricted_apply()
-      # implementation in ERP5Type.UnrestrictedMethod.
-      try:
-        # XXX is it better to get roles from the parent (i.e. portal)?
-        uf = user.aq_inner.aq_parent
-      except AttributeError:
-        uf = app().acl_users
+      # The following logic partly comes from unrestricted_apply()
+      # implementation in ERP5Type.UnrestrictedMethod but we get roles
+      # from the portal to have more roles.
+      uf = portal_uf
       role_list = uf.valid_roles()
       user = PrivilegedUser(user_name, None, role_list, ()).__of__(uf)
     if user is not None:
