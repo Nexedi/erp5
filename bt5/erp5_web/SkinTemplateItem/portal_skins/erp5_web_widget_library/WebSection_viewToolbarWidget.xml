@@ -171,6 +171,28 @@
     </div>\n
   </li>\n
 \n
+  <!-- object actions -->\n
+  <li class="toolboxSection"\n
+      id="toolbox-object-actions"\n
+      tal:condition="actions/object_jump | nothing">\n
+    <h3 class="menu_title" i18n:translate="" i18n:domain="ui">Jump</h3>\n
+    <div class="menu">\n
+      <ul>\n
+\n
+        <li tal:repeat="link actions/object_jump">\n
+          <a class="menu-link"\n
+             tal:attributes="href python: link[\'url\'];\n
+                             title python: link[\'title\']">\n
+            <span>\n
+              <tal:block tal:replace="python: link[\'title\']"/>\n
+            </span>\n
+          </a>\n
+        </li>\n
+      </ul>\n
+\n
+    </div>\n
+  </li>\n
+\n
   <!-- Document creation panel.\n
   \n
        This part is displayed for any document apart Web Site and Web Section.\n
