@@ -222,9 +222,6 @@ class SearchKey(object):
       default_logical_operator = 'or'
     parsed = False
     if isinstance(search_value, dict):
-      # comparison_operator parameter collides with dict's 'operator' key.
-      # Fail loudly.
-      assert comparison_operator is None
       actual_value = search_value['query']
       if search_value.get('key') not in (None, self.__class__.__name__):
         LOG(self.__class__.__name__, 100,
@@ -234,6 +231,9 @@ class SearchKey(object):
         assert 'operator' not in search_value, search_value
         assert 'range' not in search_value, search_value
       else:
+        # comparison_operator parameter collides with dict's 'operator' key.
+        # Fail loudly.
+        assert comparison_operator is None
         value_operator = search_value.get('operator')
         value_range = search_value.get('range')
         if value_range is not None:
