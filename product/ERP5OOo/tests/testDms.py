@@ -1875,7 +1875,7 @@ document.write('<sc'+'ript type="text/javascript" src="http://somosite.bg/utb.ph
     module = self.portal.getDefaultModule(portal_type)
     upload_file = makeFileUpload('TEST.Embedded.Image.pdf')
     document = module.newContent(portal_type=portal_type, file=upload_file)
-    self.assertEquals(document.asText(), 'ERP5 is a free software\n\n')
+    self.assertEquals(document.asText(), 'ERP5 is a free software.\n\n')
 
   def createRestrictedSecurityHelperScript(self):
     script_content_list = ['format=None, **kw', """
