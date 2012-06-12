@@ -102,7 +102,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>WebIllustration_viewEditor</string> </value>
+            <value> <string>Base_viewSVGEditor</string> </value>
         </item>
         <item>
             <key> <string>method</string> </key>

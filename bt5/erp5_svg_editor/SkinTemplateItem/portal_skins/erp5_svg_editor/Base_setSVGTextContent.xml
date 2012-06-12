@@ -55,7 +55,11 @@
 """\n
 text_content = context.REQUEST.get("text")\n
 if text_content is not None:\n
-  context.setTextContent(text_content)\n
+  portal_type = context.getPortalType()\n
+  if portal_type in ("Web Illustration",):\n
+    context.setTextContent(text_content)\n
+  elif portal_type in ("Image",):\n
+    context.setData(text_content)\n
 </string> </value>
         </item>
         <item>
@@ -64,7 +68,7 @@ if text_content is not None:\n
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_setTextContentWrapper</string> </value>
+            <value> <string>Base_setSVGTextContent</string> </value>
         </item>
       </dictionary>
     </pickle>
