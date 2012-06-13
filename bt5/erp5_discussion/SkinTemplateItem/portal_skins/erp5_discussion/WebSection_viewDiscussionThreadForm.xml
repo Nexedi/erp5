@@ -75,6 +75,7 @@
                     <key> <string>bottom</string> </key>
                     <value>
                       <list>
+                        <string>your_rss_link</string>
                         <string>listbox</string>
                       </list>
                     </value>

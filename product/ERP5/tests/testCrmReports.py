@@ -32,7 +32,6 @@
 """
 import unittest
 
-import transaction
 from DateTime import DateTime
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
@@ -232,14 +231,13 @@ class CrmTestCase(ERP5ReportTestCase):
         doc.validate()
 
     # and all this available to catalog
-    transaction.commit()
     self.tic()
 
 
   def beforeTearDown(self):
     """Remove all documents.
     """
-    transaction.abort()
+    self.abort()
     for module in (self.campaign_module,
                    self.meeting_module,
                    self.sale_opportunity_module,
@@ -249,7 +247,6 @@ class CrmTestCase(ERP5ReportTestCase):
                    self.event_module):
       module.manage_delObjects(list(module.objectIds()))
     self.portal_categories['group'].manage_delObjects((['demo_group',]))
-    transaction.commit()
     self.tic()
 
   def getBusinessTemplateList(self):
@@ -365,7 +362,6 @@ class TestCrmReports(CrmTestCase):
               causality=eventOut1.getRelativeUrl(),
               follow_up=second.getRelativeUrl())              
               
-    transaction.commit()
     self.tic()
     request_form = self.portal.REQUEST.other
     request_form['from_date'] = DateTime(2007, 1, 1)
@@ -512,7 +508,6 @@ class TestCrmReports(CrmTestCase):
               causality=second_event_out1.getRelativeUrl(),
               follow_up=second.getRelativeUrl())              
               
-    transaction.commit()
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
@@ -676,7 +671,6 @@ class TestCrmReports(CrmTestCase):
               causality=eventOut1.getRelativeUrl(),
               follow_up=second.getRelativeUrl())              
               
-    transaction.commit()
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
@@ -822,7 +816,6 @@ class TestCrmReports(CrmTestCase):
               causality=second_event_out1.getRelativeUrl(),
               follow_up=second.getRelativeUrl())              
               
-    transaction.commit()
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
@@ -986,7 +979,6 @@ class TestCrmReports(CrmTestCase):
               causality=second_event_inc1.getRelativeUrl(),
               follow_up=second.getRelativeUrl())              
               
-    transaction.commit()
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
@@ -1132,7 +1124,6 @@ class TestCrmReports(CrmTestCase):
               causality=second_event_inc1.getRelativeUrl(),
               follow_up=second.getRelativeUrl())              
               
-    transaction.commit()
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
@@ -1296,7 +1287,6 @@ class TestCrmReports(CrmTestCase):
               causality=eventOut1.getRelativeUrl(),
               follow_up=second.getRelativeUrl())              
               
-    transaction.commit()
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
@@ -1442,7 +1432,6 @@ class TestCrmReports(CrmTestCase):
               causality=second_event_out1.getRelativeUrl(),
               follow_up=second.getRelativeUrl())              
               
-    transaction.commit()
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
@@ -1701,7 +1690,6 @@ class TestCrmReports(CrmTestCase):
               causality=event6.getRelativeUrl(),
               follow_up=campaign.getRelativeUrl()) 
               
-    transaction.commit()
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other
@@ -2044,7 +2032,6 @@ class TestCrmReports(CrmTestCase):
               causality=event6.getRelativeUrl(),
               follow_up=campaign.getRelativeUrl()) 
               
-    transaction.commit()
     self.tic()
     # set request variables and render
     request_form = self.portal.REQUEST.other

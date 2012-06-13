@@ -27,7 +27,6 @@
 ##############################################################################
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import transaction
 
 
 class TestRoundingTool(ERP5TypeTestCase):
@@ -53,7 +52,6 @@ class TestRoundingTool(ERP5TypeTestCase):
     user_folder = self.portal.acl_users
     user_folder._doAddUser('developer', '', ['Manager'], [])
     user_folder._doAddUser('assignor', '', ['Auditor', 'Author', 'Assignor'], [])
-    transaction.commit()
     self.tic()
 
   def testRoundValueMethod(self):
@@ -90,7 +88,6 @@ class TestRoundingTool(ERP5TypeTestCase):
     sale_order = self.portal.sale_order_module.newContent(portal_type='Sale Order')
     sale_order_line = sale_order.newContent(portal_type='Sale Order Line')
 
-    transaction.commit()
     self.tic()
 
     # check values of empty line
@@ -126,7 +123,6 @@ class TestRoundingTool(ERP5TypeTestCase):
     rounding_model_dummy.validate()
     rounding_model_1.validate()
 
-    transaction.commit()
     self.tic()
 
     # rounding model does not do anything to empty values like None
@@ -141,13 +137,11 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.assertEqual(wrapped_line.getRoundingModelPrecision('quantity'), None)
     self.assertEqual(wrapped_line.getRoundingModelPrecision('total_price'), None)
 
-    transaction.commit()
     self.tic()
 
     # set values
     sale_order_line.edit(price=123.456, quantity=78.91)
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(sale_order_line.getPrice(), 123.456)
@@ -176,7 +170,6 @@ class TestRoundingTool(ERP5TypeTestCase):
                           precision=0.1,
                           rounded_property_id_list=['quantity'])
 
-    transaction.commit()
     self.tic()
 
     self.login('assignor')
@@ -197,7 +190,6 @@ class TestRoundingTool(ERP5TypeTestCase):
     # validate
     rounding_model_2.validate()
 
-    transaction.commit()
     self.tic()
 
     # check if price and quantity are rounded
@@ -223,7 +215,6 @@ class TestRoundingTool(ERP5TypeTestCase):
     self.login('assignor')
     rounding_model_3.validate()
 
-    transaction.commit()
     self.tic()
 
     # check if price and quantity and total price are rounded

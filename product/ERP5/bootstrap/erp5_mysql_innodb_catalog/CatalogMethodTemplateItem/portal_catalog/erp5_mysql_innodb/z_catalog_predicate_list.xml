@@ -59,7 +59,9 @@ predicate_property_dict</string> </value>
 <dtml-let predicate_list="[]">\n
   <dtml-in prefix="loop" expr="_.range(_.len(uid))">\n
     <dtml-if "isPredicate[loop_item]">\n
-      <dtml-call expr="predicate_list.append(loop_item)">\n
+      <dtml-if expr="_.len(predicate_property_dict[loop_item]) > 0">\n
+        <dtml-call expr="predicate_list.append(loop_item)">\n
+      </dtml-if>\n
     </dtml-if>\n
   </dtml-in>\n
   <dtml-if expr="_.len(predicate_list) > 0">\n

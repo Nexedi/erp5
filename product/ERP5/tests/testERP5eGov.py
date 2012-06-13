@@ -29,7 +29,6 @@
 
 
 import unittest
-import transaction
 
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -113,7 +112,7 @@ class TestEgov(ERP5TypeTestCase):
         else:
           path = path[cat]
     self.tic()
-    transaction.commit()
+    self.commit()
     # check categories have been created
     for cat_string in self.getNeededCategoryList() :
       self.assertNotEquals(None,
@@ -148,7 +147,6 @@ class TestEgov(ERP5TypeTestCase):
       if pref.getPreferenceState() == 'disabled':
         pref.enable()
 
-    transaction.commit()
     self.tic()
     #set up the instance
     self.portal.EGov_setUpInstance()
@@ -157,7 +155,7 @@ class TestEgov(ERP5TypeTestCase):
     """
     remove all created objects between two tests, tests are stand-alone
     """
-    transaction.abort()
+    self.abort()
     for module in [ self.getPersonModule(),
                     self.getOrganisationModule(),
                       ]:
@@ -170,7 +168,6 @@ class TestEgov(ERP5TypeTestCase):
       self.portal.portal_types.manage_delObjects([vat_portal_type.getId(), vat_module_portal_type.getId()])
       self.portal.manage_delObjects([vat_module.getId(),]) 
     self.portal.portal_caches.clearAllCache()
-    transaction.commit()
     self.tic()
 
   def changeSkin(self, skin_name):
@@ -256,7 +253,6 @@ class TestEgov(ERP5TypeTestCase):
     procedure.edit(scribus_form_file=scribus_file_data,
             pdf_form_file=pdf_file_data)
     self.tic()
-    transaction.commit()
     self.tic()
 
   def test_01_new_procedure_creation(self):
@@ -329,7 +325,7 @@ class TestEgov(ERP5TypeTestCase):
     vat_declaration.getTypeInfo().setTypeHiddenContentTypeList(type_allowed_content_type_list)
     vat_declaration.newContent(portal_type='PDF', title='Justificatif numero 1')
     self.tic()
-    transaction.commit()
+    self.commit()
     missing_file = vat_declaration.PDFDocument_getRequirementCount()
     self.assertEquals(missing_file, 0)
     self.portal.portal_workflow.doActionFor(vat_declaration, 'submit_draft_action')

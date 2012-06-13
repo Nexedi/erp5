@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 #from AccessControl.SecurityManagement import newSecurityManager
@@ -60,20 +59,19 @@ class TestCopySupport(ERP5TypeTestCase):
                      portal_type='Organisation')
     person = self.person_module.newContent(portal_type='Person',
                career_subordination_value=organisation)
-    transaction.commit()
     self.tic()
     self.assertEqual(0, len(self.portal.portal_activities.getMessageList()))
     self.assertTrue(person.getCareerSubordination().startswith('organisation_module'))
     self.assertTrue(person.getCareerSubordinationValue().aq_base is organisation.aq_base)
     # Try to rename: must work
     self.organisation_module.setId('new_organisation_module')
-    transaction.commit()
+    self.commit()
     self.assertTrue(person.getCareerSubordination().startswith('organisation_module'))
     initial_activity_count = len(self.portal.portal_activities.getMessageList())
     self.assertNotEqual(0, initial_activity_count)
     # Try to rename again with pending activities: must raise
     self.assertRaises(ActivityPendingError, self.organisation_module.setId, 'organisation_module')
-    transaction.commit()
+    self.commit()
     # Activity count must not have changed
     self.assertEqual(initial_activity_count, len(self.portal.portal_activities.getMessageList()))
     self.tic()
@@ -82,7 +80,6 @@ class TestCopySupport(ERP5TypeTestCase):
     self.assertTrue(person.getCareerSubordinationValue().aq_base is organisation.aq_base)
     # Rename back to original name
     self.organisation_module.setId('organisation_module')
-    transaction.commit()
     self.tic()
     # Check that relation is back to what it was
     self.assertTrue(person.getCareerSubordination().startswith('organisation_module'))
@@ -92,12 +89,11 @@ class TestCopySupport(ERP5TypeTestCase):
     # XXX This test passes for bad reasons.
     person = self.portal.person_module.newContent(portal_type='Person',
                                                   address_city='Lille')
-    transaction.commit()
     self.tic()
     person.recursiveReindexObject()
     person.default_address.setId('old_address')
     person.setAddressCity('Paris')
-    transaction.commit()
+    self.commit()
     # Currently, the test passes only because ActivityTool.distribute always
     # iterates on queues in the same order: SQLQueue before SQLDict.
     # If Python returned dictionary values in a different order,
@@ -114,7 +110,6 @@ class TestCopySupport(ERP5TypeTestCase):
     person = self.portal.person_module.newContent(portal_type='Person',
                                                   address_city='Lille',
                                                   email_text='foo@bar.com')
-    transaction.commit()
     self.tic()
     search_catalog = self.portal.portal_catalog.unrestrictedSearchResults
     uid_list = [person.getUid(),
@@ -124,7 +119,7 @@ class TestCopySupport(ERP5TypeTestCase):
     self.assertEqual(len(search_catalog(uid=uid_list)), len(uid_list))
     self.portal.person_module._delObject(person.getId())
     del person
-    transaction.commit()
+    self.commit()
     self.assertEqual(len(search_catalog(uid=uid_list)), len(uid_list))
     activity_tool = self.portal.portal_activities
     self.assertEqual(len(activity_tool.getMessageList()), len(uid_list))

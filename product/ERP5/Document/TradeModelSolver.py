@@ -81,12 +81,19 @@ class TradeModelSolver(AcceptSolver):
     for delivery in set(movement.getRootDeliveryValue()
                         for movement in delivery_dict):
       for movement in delivery.getMovementList():
-        simulation_movement_list = delivery_dict.get(movement) or \
-          movement.getDeliveryRelatedValueList()
-        applied_rule = simulation_movement_list[0].getParentValue()
+        movement_list = delivery_dict.get(movement)
         # hard coded reference name
-        if applied_rule.getSpecialiseReference() == 'default_trade_model_rule':
-          trade_model_related_movement_dict[movement] = simulation_movement_list
+        if movement_list:
+          rule = movement_list[0].getParentValue().getSpecialiseReference()
+          if rule != 'default_trade_model_rule':
+            continue
+          movement_list = movement.getDeliveryRelatedValueList()
+        else:
+          movement_list = movement.getDeliveryRelatedValueList()
+          rule = movement_list[0].getParentValue().getSpecialiseReference()
+          if rule != 'default_trade_model_rule':
+            continue
+        trade_model_related_movement_dict[movement] = movement_list
 
     with self.defaultActivateParameterDict(activate_kw, True):
       # Second, apply changes on invoice lines to simulation movements,

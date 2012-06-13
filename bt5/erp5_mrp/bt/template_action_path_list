@@ -2,12 +2,8 @@ Production Order Cell | view
 Production Order Line | price_view
 Production Order Line | quantity_view
 Production Order Line | view
-Production Order Model Root Simulation Rule | view
-Production Order Model Rule | view
 Production Order Module | production_order_module_planning
 Production Order Module | view
-Production Order Root Simulation Rule | view
-Production Order Rule | view
 Production Order | jump_to_related_production_packing_list
 Production Order | jump_to_related_production_report
 Production Order | order_print

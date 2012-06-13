@@ -120,15 +120,17 @@ class TestSuite(object):
     assert test not in self.running
     self.running[test] = instance = self._pool.pop(0)
     def run():
-      self._instance.id = instance
-      if instance not in self._ready:
-        self._ready.add(instance)
-        self.setup()
-      status_dict = self.run(test)
-      if on_stop is not None:
-        on_stop(status_dict)
-      self._pool.append(self.running.pop(test))
-      self.release()
+      try:
+        self._instance.id = instance
+        if instance not in self._ready:
+          self._ready.add(instance)
+          self.setup()
+        status_dict = self.run(test)
+        if on_stop is not None:
+          on_stop(status_dict)
+        self._pool.append(self.running.pop(test))
+      finally:
+        self.release()
     thread = threading.Thread(target=run)
     thread.setDaemon(True)
     thread.start()
@@ -192,7 +194,8 @@ class ERP5TypeTestSuite(TestSuite):
     """, re.DOTALL | re.VERBOSE)
 
   FTEST_PASS_FAIL_RE = re.compile(
-    '.*Functional Tests (?P<total>\d+) Tests, (?P<failures>\d+) Failures')
+    ".*Functional Tests (?P<total>\d+) Tests, (?P<failures>\d+) " + \
+        "Failures(\,\ (?P<expected_failure>\d+) Expected failures|)")
 
   def setup(self):
     instance_home = self.instance and 'unit_test.%u' % self.instance \
@@ -233,11 +236,12 @@ class ERP5TypeTestSuite(TestSuite):
     search = self.STATUS_RE.search(test_log)
     if search:
       groupdict = search.groupdict()
-      status_dict.update(error_count=int(groupdict['errors'] or 0),
-                         failure_count=int(groupdict['failures'] or 0),
-                         skip_count=int(groupdict['skips'] or 0)
-                                   +int(groupdict['expected_failures'] or 0)
-                                   +int(groupdict['unexpected_successes'] or 0))
+      status_dict.update(
+        error_count=int(groupdict['errors'] or 0),
+        failure_count=int(groupdict['failures'] or 0)
+                     +int(groupdict['unexpected_successes'] or 0),
+        skip_count=int(groupdict['skips'] or 0)
+                  +int(groupdict['expected_failures'] or 0))
     return status_dict
 
 class ProjectTestSuite(ERP5TypeTestSuite):

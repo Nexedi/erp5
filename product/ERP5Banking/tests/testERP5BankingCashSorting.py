@@ -160,7 +160,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
                                description='test',
                                source_total_asset_price=52400.0)
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.cash_sorting)
     # check source reference
@@ -187,7 +187,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.cash_sorting.objectValues()), 1)
     # get the cash sorting line
@@ -227,7 +227,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.cash_sorting.objectValues()), 2)
     # get the cash sorting line
@@ -267,7 +267,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/not_defined', 'cash_status/to_sort') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.cash_sorting.objectValues()), 3)
     # get the cash sorting line
@@ -324,7 +324,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_sorting.objectValues()), 4)
     # get the second cash sorting line
@@ -363,7 +363,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/s', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_sorting.objectValues()), 5)
     # get the second cash sorting line
@@ -402,7 +402,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.cash_sorting.objectValues()), 6)
     # get the second cash sorting line
@@ -450,7 +450,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
     # do the Workflow action
     self.cash_sorting.setSourceTotalAssetPrice('172400.0')
     self.workflow_tool.doActionFor(self.cash_sorting, 'confirm_action', wf_id='cash_sorting_workflow')
-    self.stepTic()
+    self.tic()
     state = self.cash_sorting.getSimulationState()
     self.assertEqual(state, 'confirmed')
 
@@ -482,7 +482,7 @@ class TestERP5BankingCashSorting(TestERP5BankingMixin):
     and check that the deliver of a cash tranfer have achieved
     """
     self.workflow_tool.doActionFor(self.cash_sorting, 'deliver_action', wf_id='cash_sorting_workflow')
-    self.stepTic()
+    self.tic()
     state = self.cash_sorting.getSimulationState()
     self.assertEqual(state, 'delivered')
 

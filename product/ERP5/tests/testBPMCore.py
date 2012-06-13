@@ -29,7 +29,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from DateTime import DateTime
@@ -215,7 +214,7 @@ class TestBPMMixin(ERP5TypeTestCase):
     self.validateRules()
     self.createCategories()
     self.createAndValidateAccounts()
-    self.stepTic()
+    self.tic()
 
 class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
   def _createDelivery(self, **kw):
@@ -235,12 +234,12 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
       self.portal.newContent(portal_type='Folder',
                             id='testing_folder')
     self.folder = self.portal.testing_folder
-    self.stepTic()
+    self.tic()
 
   def beforeTearDown(self):
     super(TestBPMDummyDeliveryMovementMixin, self).beforeTearDown()
     self.portal.deleteContent(id='testing_folder')
-    self.stepTic()
+    self.tic()
 
   completed_state = 'delivered'
   frozen_state = 'confirmed'
@@ -274,7 +273,7 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     self.invoice_link = self.createBusinessLink(business_process,
         predecessor_value = delivered, successor_value = invoiced,
         trade_phase='default/invoicing')
-    self.stepTic()
+    self.tic()
 
   def constructSimulationTreeAndDeliveries(self, simulation_depth=None,
                dummy_split=False):
@@ -344,7 +343,7 @@ class TestBPMDummyDeliveryMovementMixin(TestBPMMixin):
     constructSimulationTree(self.applied_rule)
     if dummy_split:
       constructSimulationTree(self.applied_rule, prefix='split')
-    self.stepTic()
+    self.tic()
 
 class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
   """Business Process implementation tests"""
@@ -363,7 +362,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
         portal_type=self.business_link_portal_type,
         trade_phase=('default/accounting', 'default/delivery'))
 
-    self.stepTic()
+    self.tic()
 
     self.assertSameSet(
       (accounting_business_link, accounting_delivery_business_link),
@@ -543,7 +542,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     self.constructSimulationTreeAndDeliveries(dummy_split=True)
 
     self.order.setSimulationState(self.completed_state)
-    self.stepTic()
+    self.tic()
 
     def checkIsBusinessLinkBuildable(explanation, business_link, value):
       self.assertEquals(self.business_process.isBusinessLinkBuildable(
@@ -566,7 +565,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     # relate not split movement with delivery (deliver it)
     self.delivery_simulation_movement.edit(delivery_value = delivery_line)
 
-    self.stepTic()
+    self.tic()
 
     # delivery_link (for order) is still buildable, as split movement is not
     # delivered yet
@@ -593,7 +592,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
 
     self.assertEqual(self.completed_state, delivery.getSimulationState())
 
-    self.stepTic()
+    self.tic()
 
     # delivery_link (for order) is still buildable, as split movement is not
     # delivered yet
@@ -634,7 +633,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     # relate not split movement with delivery (deliver it)
     self.delivery_simulation_movement.edit(delivery_value = delivery_line)
 
-    self.stepTic()
+    self.tic()
 
     # nothing changes
     self.assertEqual(self.delivery_link.isCompleted(self.order), False)
@@ -657,7 +656,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
 
     self.assertEqual(self.completed_state, delivery.getSimulationState())
 
-    self.stepTic()
+    self.tic()
 
     self.assertEqual(self.delivery_link.isCompleted(self.order), False)
     self.assertEqual(self.delivery_link.isPartiallyCompleted(self.order), True)
@@ -677,7 +676,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     self.split_delivery_simulation_movement.edit(
       delivery_value=another_delivery_line)
     another_delivery.setSimulationState(self.completed_state)
-    self.stepTic()
+    self.tic()
 
     self.assertEqual(self.delivery_link.isCompleted(self.order), True)
     self.assertEqual(self.delivery_link.isPartiallyCompleted(self.order), True)
@@ -694,7 +693,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     self.assertEqual(self.split_simulation_movement.isFrozen(), False)
 
     self.order.setSimulationState(self.completed_state)
-    self.stepTic()
+    self.tic()
     self.assertEqual(self.order_link.isFrozen(self.order), True)
     self.assertEqual(self.delivery_link.isFrozen(self.order), False)
 
@@ -710,7 +709,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
     # relate not split movement with delivery (deliver it)
     self.delivery_simulation_movement.edit(delivery_value = delivery_line)
 
-    self.stepTic()
+    self.tic()
 
     # nothing changes
     self.assertEqual(self.delivery_link.isFrozen(self.order), False)
@@ -732,7 +731,7 @@ class TestBPMImplementation(TestBPMDummyDeliveryMovementMixin):
 
     self.assertEqual(self.frozen_state, delivery.getSimulationState())
 
-    self.stepTic()
+    self.tic()
 
     self.assertEqual(self.delivery_link.isFrozen(self.order), False)
     self.assertEqual(self.invoice_link.isFrozen(self.order), False)

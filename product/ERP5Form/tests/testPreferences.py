@@ -30,7 +30,6 @@
 
 import unittest
 
-import transaction
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from zExceptions import Unauthorized
@@ -58,7 +57,7 @@ class TestPreferences(PropertySheetTestCase):
     self.createPreferences()
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     portal_preferences = self.getPreferenceTool()
     portal_preferences.manage_delObjects(list(portal_preferences.objectIds()))
     super(TestPreferences, self).beforeTearDown()
@@ -79,7 +78,7 @@ class TestPreferences(PropertySheetTestCase):
     site.setPriority(Priority.SITE)
 
     # commit transaction
-    transaction.commit()
+    self.commit()
     self.getPreferenceTool().recursiveReindexObject()
     self.tic()
 
@@ -121,7 +120,7 @@ class TestPreferences(PropertySheetTestCase):
 
     person1.portal_workflow.doActionFor(
        person1, 'enable_action', wf_id='preference_workflow')
-    transaction.commit()
+    self.commit()
     self.assertEquals(person1.getPreferenceState(), 'enabled')
 
     self.assertEqual( person1, self.getPreferenceTool().getActivePreference())
@@ -149,7 +148,7 @@ class TestPreferences(PropertySheetTestCase):
 
     portal_workflow.doActionFor(
        person2, 'enable_action', wf_id='preference_workflow')
-    transaction.commit()
+    self.commit()
     self.assertEqual(person2, self.getPreferenceTool().getActivePreference())
     self.assertEqual(None,
         self.getPreferenceTool().getActiveSystemPreference())
@@ -218,7 +217,7 @@ class TestPreferences(PropertySheetTestCase):
     # disable person -> group is selected
     self.getWorkflowTool().doActionFor(person1,
             'disable_action', wf_id='preference_workflow')
-    transaction.commit()
+    self.commit()
     self.assertEquals(list(pref_tool.getPreference(
       'preferred_accounting_transaction_simulation_state_list')),
       list(group.getPreferredAccountingTransactionSimulationStateList()))
@@ -299,7 +298,7 @@ class TestPreferences(PropertySheetTestCase):
         id='user_a_1', portal_type='Preference')
     user_a_2 = portal_preferences.newContent(
         id='user_a_2', portal_type='Preference')
-    transaction.commit(); self.tic()
+    self.tic()
 
     # enable a pref
     portal_workflow.doActionFor(
@@ -313,7 +312,7 @@ class TestPreferences(PropertySheetTestCase):
     user_b_1 = portal_preferences.newContent(
         id='user_b_1', portal_type='Preference')
     user_b_1.setPreferredAccountingTransactionAtDate(DateTime(2002, 02, 02))
-    transaction.commit(); self.tic()
+    self.tic()
 
     # enable this preference
     portal_workflow.doActionFor(
@@ -336,12 +335,12 @@ class TestPreferences(PropertySheetTestCase):
         id='manager_pref', portal_type='Preference')
     manager_pref.setPreferredAccountingTransactionAtDate(
                                 DateTime(2012, 12, 12))
-    transaction.commit(); self.tic()
+    self.tic()
     # enable this preference
     portal_workflow.doActionFor(
        manager_pref, 'enable_action', wf_id='preference_workflow')
     self.assertEquals(manager_pref.getPreferenceState(), 'enabled')
-    transaction.commit(); self.tic()
+    self.tic()
 
     # check users preferences are still enabled
     self.assertEquals(user_a_1.getPreferenceState(), 'enabled')
@@ -375,7 +374,7 @@ class TestPreferences(PropertySheetTestCase):
         # picked first
         priority=Priority.GROUP,
         preferred_accounting_transaction_simulation_state_list=['user_a'])
-    transaction.commit(); self.tic()
+    self.tic()
 
     # enable a pref
     portal_workflow.doActionFor(
@@ -386,7 +385,7 @@ class TestPreferences(PropertySheetTestCase):
     user_b = portal_preferences.newContent(
         id='user_b', portal_type='Preference',
         preferred_accounting_transaction_simulation_state_list=['user_b'])
-    transaction.commit(); self.tic()
+    self.tic()
 
     # enable this preference
     portal_workflow.doActionFor(
@@ -411,7 +410,6 @@ class TestPreferences(PropertySheetTestCase):
     self.getPortal().portal_workflow.doActionFor(
                   ptool.site, 'enable_action', wf_id='preference_workflow')
     self.assertEquals('global', ptool.site.getPreferenceState())
-    transaction.commit()
     self.tic()
     noSecurityManager()
     self.assertEquals(['this_is_visible_by_anonymous'],
@@ -504,7 +502,6 @@ class TestPreferences(PropertySheetTestCase):
     # enable it and check preference is returned
     self.portal.portal_workflow.doActionFor(system_pref, 'enable_action')
     self.assertEqual(system_pref.getPreferenceState(), 'global')
-    transaction.commit()
     self.tic()
     self.assertEqual('127.0.0.1',
                      preference_tool.getPreferredOoodocServerAddress())
@@ -526,7 +523,6 @@ class TestPreferences(PropertySheetTestCase):
     system_pref.view()
     # check accessors works
     system_pref.setPreferredOoodocServerAddress('1.2.3.4')
-    transaction.commit()
     self.tic()
     self.assertEqual('1.2.3.4',
                      preference_tool.getPreferredOoodocServerAddress())
@@ -543,7 +539,6 @@ class TestPreferences(PropertySheetTestCase):
     user_pref.setPreferredLargeImageHeight(large_image_height)
     self.portal.portal_workflow.doActionFor(user_pref, 'enable_action')
     self.assertEqual(user_pref.getPreferenceState(), 'enabled')
-    transaction.commit()
     self.tic()
     self.assertEqual('1.2.3.4',
                      preference_tool.getPreferredOoodocServerAddress('localhost'))
@@ -573,7 +568,6 @@ class TestPreferences(PropertySheetTestCase):
     preference = portal_preferences.newContent(portal_type='Preference',
                                                dummy=True)
     preference.enable()
-    transaction.commit()
     self.tic()
 
     self.assertTrue(portal_preferences.getDummy())
@@ -596,7 +590,6 @@ class TestPreferences(PropertySheetTestCase):
 
     obj = self.portal.portal_preferences.newContent(portal_type='Preference')
     obj.enable()
-    transaction.commit()
     self.tic()
     
     self.assertTrue(guarded_hasattr(obj, 'setPreferredToto'))
@@ -614,7 +607,6 @@ class TestPreferences(PropertySheetTestCase):
 
     obj.manage_permission(read_permission, ['Manager'], 1)
 
-    transaction.commit()
     self.tic()
 
     preference_tool = self.portal.portal_preferences
@@ -650,7 +642,6 @@ class TestPreferences(PropertySheetTestCase):
                                                dummystring=normal_preference_string,
                                                priority=Priority.SITE)
     preference.enable()
-    transaction.commit()
     self.tic()
 
     self.assertEqual(normal_preference_string,
@@ -659,7 +650,6 @@ class TestPreferences(PropertySheetTestCase):
     system_preference = portal_preferences.newContent(portal_type='System Preference',
                                                dummystring=system_preference_string)
     system_preference.enable()
-    transaction.commit()
     self.tic()
 
     self.assertEqual(system_preference_string,
@@ -685,7 +675,6 @@ class TestPreferences(PropertySheetTestCase):
                                                dummystring=normal_preference_string,
                                                priority=Priority.SITE)
     preference.enable()
-    transaction.commit()
     self.tic()
 
     self.assertEqual(normal_preference_string,
@@ -698,7 +687,6 @@ class TestPreferences(PropertySheetTestCase):
     system_preference = portal_preferences.newContent(portal_type='System Preference',
                                                dummystring=system_preference_string)
     system_preference.enable()
-    transaction.commit()
     self.tic()
 
     self.assertEqual(system_preference_string,

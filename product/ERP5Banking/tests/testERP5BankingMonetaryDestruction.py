@@ -287,7 +287,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
                                       description='test',
                                       source_section_value=self.paris)
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.monetary_destruction)
     # check source reference
@@ -320,7 +320,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
                                       description='test',
                                       source_section_value=self.paris)
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.monetary_destruction)
     # check source reference
@@ -357,7 +357,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
                                         source_total_asset_price=110000.0,
                                         source_section_value=self.madrid)
     # execute tic
-    self.stepTic()
+    self.tic()
     # set source reference
     self.setDocumentSourceReference(self.monetary_destruction)
     # check source reference
@@ -383,7 +383,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/retired') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.monetary_destruction.objectValues()), 1)
     # get the monetary destruction line
@@ -429,7 +429,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/retired') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.monetary_destruction.objectValues()), 1)
     # get the monetary destruction line
@@ -475,7 +475,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/s', 'cash_status/cancelled') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.monetary_destruction.objectValues()), 1)
     # get the monetary destruction line
@@ -520,7 +520,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/retired') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.monetary_destruction.objectValues()), 1)
     # get the second vault transfer line
@@ -572,7 +572,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/retired') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.monetary_destruction.objectValues()), 2)
     # get the second monetary destruction line
@@ -610,7 +610,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/retired') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.monetary_destruction.objectValues()), 2)
     # get the second monetary destruction line
@@ -648,7 +648,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/s', 'cash_status/cancelled') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.monetary_destruction.objectValues()), 2)
     # get the second monetary destruction line
@@ -690,7 +690,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/cancelled') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # Check number of monetary destruction lines (line1 + line2 +invalid_line)
     self.assertEqual(len(self.monetary_destruction.objectValues()), 3)
     # Check quantity, same as checkTotal + coin of 200: 5 for 1992 and 7 for 2003
@@ -709,7 +709,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition 
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.monetary_destruction, 'plan_action',  wf_id='monetary_destruction_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of the monetary destruction
     state = self.monetary_destruction.getSimulationState()
     # check the state is draft
@@ -754,7 +754,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.monetary_destruction, 'plan_action', wf_id='monetary_destruction_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.monetary_destruction.getSimulationState()
     # check state is planned
@@ -846,7 +846,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.monetary_destruction, 'plan_to_deliver_action', wf_id='monetary_destruction_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of monetary destruction
     state = self.monetary_destruction.getSimulationState()
     # check that state is delivered
@@ -902,7 +902,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.monetary_destruction, 'plan_action', wf_id='monetary_destruction_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.monetary_destruction.getSimulationState()
     # check state is planned
@@ -925,7 +925,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.monetary_destruction, 'start_action', wf_id='monetary_destruction_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.monetary_destruction.getSimulationState()
     # check state is started
@@ -940,7 +940,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.monetary_destruction, 'stop_action', wf_id='monetary_destruction_workflow', stop_date=DateTime().Date())
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.monetary_destruction.getSimulationState()
     # check state is stopped
@@ -954,7 +954,7 @@ class TestERP5BankingMonetaryDestruction(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.monetary_destruction, 'stop_to_deliver_action', wf_id='monetary_destruction_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of monetary_destruction
     state = self.monetary_destruction.getSimulationState()
     # check that state is delivered

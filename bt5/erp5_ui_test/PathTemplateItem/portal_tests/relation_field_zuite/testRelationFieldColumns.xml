@@ -132,11 +132,10 @@
   <td>//tr[@class="listbox-label-line"]/th[4]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
-\n
 <tr>\n
   <td>type</td>\n
   <td>listbox_title</td>\n
-  <td>%c%</td>\n
+  <td>%</td>\n
 </tr>\n
 <tr>\n
   <td>clickAndWait</td>\n
@@ -202,7 +201,11 @@
   <td>//*[@id="listbox_data_line_0"]/div[3]//span[1]</td>\n
   <td>Relative URL</td>\n
 </tr>\n
-\n
+<tr>\n
+  <td>verifyNotText</td>\n
+  <td>//*[@class="listbox-number-of-records"]/*[@class="listbox-current-page-total-number"]</td>\n
+  <td>0 records</td>\n
+</tr>\n
 <tr>\n
   <td>type</td>\n
   <td>listbox_title</td>\n
@@ -231,7 +234,21 @@
   <td>Relative URL</td>\n
 </tr>\n
 </tal:block>\n
-\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//*[@class=\'listbox-data-line-0 DataA\']/*[@class="listbox-table-select-cell"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementNotPresent</td>\n
+  <td>//*[@class=\'listbox-table-no-result-row\']</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyNotText</td>\n
+  <td>//*[@class="listbox-number-of-records"]/*[@class="listbox-current-page-total-number"]</td>\n
+  <td>0 records</td>\n
+</tr>\n
 <tr>\n
   <td>click</td>\n
   <td>//*[@class=\'listbox-data-line-0 DataA\']/*[@class="listbox-table-select-cell"]/input[@type="checkbox"]</td>\n

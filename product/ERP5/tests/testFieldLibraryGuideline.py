@@ -28,7 +28,6 @@
 
 import unittest
 import os
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.CMFCore.utils import getToolByName
@@ -68,7 +67,7 @@ class TestFieldLibraryGuideline(ERP5TypeTestCase):
             new_selection.append(skin_id)
         ps.manage_skinLayers(skinpath=tuple(new_selection),
                              skinname=skin_name, add_skin=1)
-    transaction.commit()
+    self.commit()
 
   def stepCreateSkinFolder(self, sequence=None, sequence_list=None, **kw):
     """

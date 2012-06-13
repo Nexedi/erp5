@@ -170,17 +170,22 @@ fieldset.hidden_fieldset { \n
   padding-bottom:35px;\n
   padding-top: 5px;\n
 }\n
+\n
 #master,\n
 .document,\n
 .content{\n
-  width:100%;\n
+  min-width:75%;\n
 }\n
+\n
+#km_left .content{\n
+  width:750px;\n
+}\n
+\n
 #wrapper_right{\n
   float: left;\n
   width:22.5%;\n
-  position:relative;\n
   margin-left: 19px;\n
-  padding-top: 4px;\n
+  margin-top: 23px;\n
 }\n
 \n
 #km_left {\n
@@ -456,10 +461,6 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 .content .field .input {\n
   width: 100%;\n
   margin-top: 4px;\n
-}\n
-\n
-.content .field label {\n
-  width:30%;\n
   float:left;\n
 }\n
 \n
@@ -632,6 +633,11 @@ div.web-toolbar{\n
 div.web-toolbar h3{\n
   color:#FFFFFF;\n
   padding-top: 4px;\n
+}\n
+\n
+div.web-toolbar h3 a{\n
+  color:#FFFFFF;\n
+  font-weight: bold;\n
 }\n
 \n
 #wrapper_footer div.web-toolbar ul{\n
@@ -1331,7 +1337,9 @@ button.formbt > span{\n
 .highlight{\n
   background-color: yellow;\n
 }\n
-\n
+.full-width{\n
+  width:100%;\n
+}\n
 </tal:block>
 
 ]]></unicode> </value>

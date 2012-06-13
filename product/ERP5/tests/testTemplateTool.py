@@ -30,7 +30,6 @@
 import os
 import shutil
 import unittest
-import transaction
 import random
 from App.config import getConfiguration
 from Products.ERP5VCS.WorkingCopy import getVcsTool
@@ -58,8 +57,7 @@ class TestTemplateTool(ERP5TypeTestCase):
 
   def afterSetUp(self):
     self.templates_tool = self.portal.portal_templates
-    self.templates_tool.updateRepositoryBusinessTemplateList(\
-                    ["http://www.erp5.org/dists/snapshot/bt5/", ])
+    self.setupAutomaticBusinessTemplateRepository()
     if getattr(self.portal, self.test_tool_id, None) is not None:
       self.portal.manage_delObjects(ids=[self.test_tool_id])
     self.portal.newContent(portal_type='Template Tool',
@@ -67,7 +65,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.dummy_template_tool = getattr(self.portal, self.test_tool_id)
 
   def beforeTearDown(self):
-    self.stepTic()
+    self.tic()
     mark_replaced_bt_list = ["erp5_odt_style", "erp5_pdm", 'erp5_accounting',
            'erp5_workflow', 'erp5_configurator', 'erp5_configurator_ung',
            'erp5_ingestion_mysql_innodb_catalog', "erp5_configurator_standard",
@@ -77,11 +75,11 @@ class TestTemplateTool(ERP5TypeTestCase):
       if (bt is not None) and bt.getInstallationState() in ['installed',
                                                             'replaced']:
         self.templates_tool.manage_delObjects([bt.getId()])
-    self.stepTic()
+    self.tic()
     bt = self.templates_tool.getInstalledBusinessTemplate("erp5_base")
     if bt.getInstallationState() == "replaced":
       bt.install(force=1)
-    self.stepTic()
+    self.tic()
 
   def checkFolderReindexAllActivityPresense(self):
     message_list = [m for m in self.portal.portal_activities.getMessageList()
@@ -254,10 +252,10 @@ class TestTemplateTool(ERP5TypeTestCase):
     template.edit(title=title,
                   version='1.0',
                   description='bt for unit_test')
-    transaction.commit()
+    self.commit()
 
     template.build()
-    transaction.commit()
+    self.commit()
 
     cfg = getConfiguration()
     template_path = os.path.join(cfg.instancehome, 'tests', '%s' % (title,))
@@ -460,7 +458,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     """ Simple test for portal_templates.installBusinessTemplatesFromRepository
     """
     bt5_name = 'erp5_odt_style'
-    self.stepTic()
+    self.tic()
     bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name, strict=True)
     self.assertEquals(bt, None)
     operation_log = \
@@ -487,58 +485,73 @@ class TestTemplateTool(ERP5TypeTestCase):
   def test_installBusinessTemplatesFromRepository_update_catalog(self):
     """ Test if update catalog is trigger when needed.
     """
-    bt5_name = 'erp5_ingestion_mysql_innodb_catalog'
-    template_tool = self.portal.portal_templates
-    self.stepTic()
-    bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-    self.assertEquals(bt, None)
-    operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
+    try:
+      bt5_name = 'erp5_ingestion_mysql_innodb_catalog'
+      template_tool = self.portal.portal_templates
+      self.tic()
+      bt = template_tool.getInstalledBusinessTemplate(bt5_name)
+      self.assertEquals(bt, None)
+      operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
                             only_newer=False, update_catalog=0)
 
-    self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
-    bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-    self.assertNotEquals(bt.getId(), None)
-    self.checkFolderReindexAllActivityNotPresent()
-    self.stepTic()
+      self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
+      bt = template_tool.getInstalledBusinessTemplate(bt5_name)
+      self.assertNotEquals(bt.getId(), None)
+      self.commit()
+      self.checkFolderReindexAllActivityNotPresent()
+      # Before launch activities make sure email table is created even
+      # catalog is not created.
+      catalog_tool = self.portal.portal_catalog
+      catalog_tool.erp5_mysql_innodb.z0_drop_email()
+      catalog_tool.erp5_mysql_innodb.z_create_email()
+      self.tic()
 
-    bt5_name = 'erp5_odt_style'
-    operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
+      bt5_name = 'erp5_odt_style'
+      operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
                             only_newer=False, update_catalog=1)
 
-    self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
-    bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-    self.assertEquals(bt.getTitle(), bt5_name)
-    transaction.commit()
-    self.checkFolderReindexAllActivityPresense()
-    self.stepTic()
+      self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
+      bt = template_tool.getInstalledBusinessTemplate(bt5_name)
+      self.assertEquals(bt.getTitle(), bt5_name)
+      self.commit()
+      self.checkFolderReindexAllActivityPresense()
+      self.tic()
 
-    bt5_name = 'erp5_full_text_myisam_catalog'
-    operation_log = template_tool.installBusinessTemplateListFromRepository(
-               [bt5_name], only_newer=False)
-    self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
-    bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-    self.assertNotEquals(bt, None)
-    self.assertEquals(bt.getTitle(), bt5_name)
-    transaction.commit()
-    self.checkFolderReindexAllActivityPresense()
-    self.stepTic()
+      bt5_name = 'erp5_full_text_myisam_catalog'
+      operation_log = template_tool.installBusinessTemplateListFromRepository(
+                 [bt5_name], only_newer=False)
+      self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
+      bt = template_tool.getInstalledBusinessTemplate(bt5_name)
+      self.assertNotEquals(bt, None)
+      self.assertEquals(bt.getTitle(), bt5_name)
+      self.commit()
+      self.checkFolderReindexAllActivityPresense()
+      self.tic()
 
-    # Install again should not force catalog to be updated
-    operation_log = template_tool.installBusinessTemplateListFromRepository(
-              [bt5_name], only_newer=False)
-    self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
-    bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-    self.assertNotEquals(bt, None)
-    self.assertEquals(bt.getTitle(), bt5_name)
-    transaction.commit()
-    self.checkFolderReindexAllActivityNotPresent()
-    self.stepTic()
+      # Install again should not force catalog to be updated
+      operation_log = template_tool.installBusinessTemplateListFromRepository(
+                [bt5_name], only_newer=False)
+      self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
+      bt = template_tool.getInstalledBusinessTemplate(bt5_name)
+      self.assertNotEquals(bt, None)
+      self.assertEquals(bt.getTitle(), bt5_name)
+      self.commit()
+      self.checkFolderReindexAllActivityNotPresent()
+      self.tic()
+    finally:
+      # Make sure no broken catalog it will be left behind and propaguated to
+      # the next tests.
+      if len(self.portal.portal_activities.getMessageList())>0:
+        self.portal.portal_activities.manageClearActivities()
+        self.commit()
+        self.portal.ERP5Site_reindexAll(clear_catalog=1)
+      self.tic()
 
   def test_installBusinessTemplatesFromRepository_activate(self):
     """ Test if update catalog is trigger when needed.
     """
     bt5_name_list = ['erp5_odt_style', 'erp5_pdm']
-    self.stepTic()
+    self.tic()
     for bt5_name in bt5_name_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertEquals(bt, None)
@@ -550,7 +563,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertEquals(bt, None)
 
-    self.stepTic()
+    self.tic()
     for bt5_name in bt5_name_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEquals(bt, None)
@@ -562,7 +575,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     bt5_name_list = ['erp5_configurator_ung', 'erp5_configurator_standard']
     template_tool = self.portal.portal_templates
     repository = template_tool.getRepositoryList()[0]
-    self.stepTic()
+    self.tic()
     for bt5_name in bt5_name_list:
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertEquals(bt, None)
@@ -585,10 +598,10 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertEquals(bt, None)
       dependency_list = template_tool.getDependencyList(
-                   (repository, bt5_name + '.bt5'))
+                   (repository, bt5_name))
       self.assertNotEquals(dependency_list, [])
 
-    self.stepTic()
+    self.tic()
     template_tool.installBusinessTemplateListFromRepository(
                             bt5_name_list, install_dependency=True)
     for bt5_name in bt5_name_list:
@@ -605,10 +618,14 @@ class TestTemplateTool(ERP5TypeTestCase):
     repository = "http://www.erp5.org/dists/snapshot/bt5/"
     template_tool = self.portal.portal_templates
 
+    # XXX This test requires the usage of the public repository due ".bt5" usage
+    if repository not in template_tool.getRepositoryList():
+       self.portal.portal_templates.updateRepositoryBusinessTemplateList([repository])
+
     bt5list = template_tool.resolveBusinessTemplateListDependency(('erp5_credential',))
     # because erp5_base is already installed, it is not returned
     # by resolveBusinessTemplateListDependency, so append it manualy
-    bt5list.append((repository, 'erp5_base.bt5'))
+    bt5list.append((repository, "erp5_base.bt5"))
 
     # add some entropy by disorder bt5list returned by
     # resolveBusinessTemplateListDependency

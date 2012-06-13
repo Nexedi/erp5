@@ -57,7 +57,7 @@ class ShaSecurityMixin(object):
       person.edit(first_name=reference,
                   reference=reference,
                   password=password)
-      self.stepTic()
+      self.tic()
 
     create = True
     group=self.group
@@ -69,7 +69,7 @@ class ShaSecurityMixin(object):
       assignment = person.newContent(portal_type='Assignment')
       assignment.edit(group=self.group)
       assignment.open()
-      self.stepTic()
+      self.tic()
 
   def changeUser(self, user_id):
     """

@@ -32,7 +32,6 @@
 import unittest
 import os
 
-import transaction
 from DateTime import DateTime
 
 from Products.ERP5.tests.testAccounting import AccountingTestCase
@@ -1096,7 +1095,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=400.0)))
     t4.stop()
     t4.deliver()
-    transaction.commit()
     self.tic()
 
     # set request variables and render                 
@@ -1236,7 +1234,6 @@ class TestAccountingReports(AccountingTestCase, ERP5ReportTestCase):
                           source_credit=400.0)))
     t4.stop()
     t4.deliver()
-    transaction.commit()
     self.tic()
 
 
@@ -3843,7 +3840,6 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
                           product_line_value=None,
                           source_credit=700.0),
                      ))
-    transaction.commit()
     self.tic()
     self.login(self.username)
 
@@ -3853,7 +3849,7 @@ class TestAccountingReportsWithAnalytic(AccountingTestCase, ERP5ReportTestCase):
     preference._edit(
         preferred_accounting_transaction_line_function_base_category=None,
         preferred_accounting_transaction_line_analytic_base_category_list=())
-    transaction.commit()
+    self.commit()
 
   def testJournalAnalyticsShown(self):
     request_form = self.portal.REQUEST.form

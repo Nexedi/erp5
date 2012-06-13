@@ -54,10 +54,10 @@ class TestERP5PayzenSecurePaymentMixin(ERP5TypeTestCase):
     if not self.portal.hasObject('portal_secure_payments'):
       self.portal.manage_addProduct['ERP5SecurePayment'].manage_addTool(
         'ERP5 Secure Payment Tool', None)
-      self.stepTic()
+      self.tic()
     self.service = self.portal.portal_secure_payments.newContent(
       portal_type='Payzen Service')
-    self.stepTic()
+    self.tic()
 
 def getMessageList(o):
   return [str(q.getMessage()) for q in o.checkConsistency()]
@@ -115,7 +115,7 @@ class TestERP5PayzenSecurePayment(TestERP5PayzenSecurePaymentMixin):
     super(TestERP5PayzenSecurePayment, self).afterSetUp()
     self.service_password = '0123456789012345'
     self.service.edit(service_password=self.service_password)
-    self.stepTic()
+    self.tic()
 
   def test_getSignature_dict_simple(self):
     self.assertEqual(

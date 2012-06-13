@@ -167,14 +167,12 @@ class SearchKey(object):
   @profiler_decorator
   def _guessComparisonOperator(self, value):
     """
-      From a basestring instance, return a contained operator.
-      Value cannot be altered in the process.
+      From a basestring instance, return an operator.
+      To be overloaded by subclasses, to customise operator retrieval.
 
       value (string)
-      
-      Returns: 2-tuple of strings
-        First element is the operator. None if there was no operator in value.
-        Second element is the value without the operator.
+
+      Returns: operator as a string.
     """
     return self.default_comparison_operator
 
@@ -224,9 +222,6 @@ class SearchKey(object):
       default_logical_operator = 'or'
     parsed = False
     if isinstance(search_value, dict):
-      # comparison_operator parameter collides with dict's 'operator' key.
-      # Fail loudly.
-      assert comparison_operator is None
       actual_value = search_value['query']
       if search_value.get('key') not in (None, self.__class__.__name__):
         LOG(self.__class__.__name__, 100,
@@ -236,6 +231,9 @@ class SearchKey(object):
         assert 'operator' not in search_value, search_value
         assert 'range' not in search_value, search_value
       else:
+        # comparison_operator parameter collides with dict's 'operator' key.
+        # Fail loudly.
+        assert comparison_operator is None
         value_operator = search_value.get('operator')
         value_range = search_value.get('range')
         if value_range is not None:

@@ -111,16 +111,16 @@ class TestERP5(ERP5TypeTestCase):
     cookie_name = self._testMethodName
     portal = self.portal
     self.assertEqual(0, portal.getCacheCookie(cookie_name))
-    transaction.commit()
+    self.commit()
     portal.newCacheCookie(cookie_name) # 1
     self.other_node.newCacheCookie(cookie_name) # 1
     self.other_node.newCacheCookie(cookie_name) # 2
-    transaction.commit() # max(1, 2) + 1
+    self.commit()# max(1, 2) + 1
     self.assertEqual(3, portal.getCacheCookie(cookie_name))
 
   def testActiveProcess(self):
     active_process = self.portal.portal_activities.newActiveProcess()
-    transaction.commit()
+    self.commit()
     remote = self.other_node
     for id in active_process.getRelativeUrl().split('/'):
       remote = getattr(remote, id)
@@ -128,9 +128,9 @@ class TestERP5(ERP5TypeTestCase):
       active_process.postResult(x)
     remote.testActiveProcess_postResult(100)
     try:
-      transaction.commit()
+      self.commit()
     except:
-      transaction.abort() # make failure more readable in case of regression
+      self.abort() # make failure more readable in case of regression
       raise
     self.assertEqual(sorted(active_process.getResultList()), range(101))
 

@@ -177,19 +177,19 @@
   <td>552</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyElementPositionTop</td>\n
+  <td>verifyElementPositionRangeTop</td>\n
   <td>id=group_1_activity_1_block_1</td>\n
-  <td>251</td>\n
+  <td>248..251</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyElementPositionTop</td>\n
+  <td>verifyElementPositionRangeTop</td>\n
   <td>id=group_2_activity_1_block_1</td>\n
-  <td>331</td>\n
+  <td>328..331</td>\n
 </tr>\n
 <tr>\n
-  <td>verifyElementPositionTop</td>\n
+  <td>verifyElementPositionRangeTop</td>\n
   <td>id=group_3_activity_1_block_1</td>\n
-  <td>411</td>\n
+  <td>408..411</td>\n
 </tr>\n
 <tr>\n
   <td>verifyElementWidth</td>\n

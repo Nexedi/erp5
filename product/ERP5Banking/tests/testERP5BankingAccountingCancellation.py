@@ -71,7 +71,7 @@ class TestERP5BankingAccountingCancellation(TestERP5BankingMixin):
 
     self.createFunctionGroupSiteCategory(site_list=['paris'])
 
-    self.stepTic()
+    self.tic()
     # create a person and a bank account
     self.person_1 = self.createPerson(id='person_1',
                                       first_name='toto',

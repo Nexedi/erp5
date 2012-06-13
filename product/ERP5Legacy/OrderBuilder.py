@@ -32,14 +32,13 @@ from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.Core.Predicate import Predicate
+from Products.ERP5.mixin.builder import BuilderMixin
 from Products.ERP5.Document.Amount import Amount
 from Products.ERP5.MovementGroup import MovementGroupNode
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from DateTime import DateTime
 from Acquisition import aq_parent, aq_inner, aq_base
-
-from zLOG import LOG
 
 class CollectError(Exception): pass
 class MatrixError(Exception): pass
@@ -226,6 +225,8 @@ class OrderBuilder(XMLObject, Amount, Predicate):
           movement_list.append(movement)
     return movement_list
 
+  _searchMovementList = BuilderMixin._searchMovementList.im_func
+
   @UnrestrictedMethod
   def searchMovementList(self, applied_rule_uid=None, **kw):
     """
@@ -237,24 +238,9 @@ class OrderBuilder(XMLObject, Amount, Predicate):
       You should define a simulation select method id, then it will be used
       to calculate the result.
     """
-    method_id = self.getSimulationSelectMethodId()
-    if not method_id:
-      # XXX compatibility
-      return self.generateMovementListForStockOptimisation(**kw)
-
-    select_method = getattr(self.getPortalObject(), method_id)
-    movement_list = select_method(**kw)
-
-    # Make sure that movements are not duplicated.
-    movement_set = set()
-    for movement in movement_list:
-      if movement in movement_set:
-        raise SelectMethodError('%s returned %s twice or more' % \
-                (method_id, movement.getRelativeUrl()))
-      else:
-        movement_set.add(movement)
-
-    return movement_list
+    if self.getSimulationSelectMethodId():
+      return self._searchMovementList(**kw)
+    return self.generateMovementListForStockOptimisation(**kw) # BBB
 
   def collectMovement(self, movement_list):
     """

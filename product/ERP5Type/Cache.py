@@ -28,6 +28,7 @@
 ##############################################################################
 
 import string
+from contextlib import contextmanager
 from time import time
 from AccessControl import allow_class, ClassSecurityInfo
 from Acquisition import aq_base
@@ -36,7 +37,7 @@ from CachePlugins.BaseCache import CachedMethodError
 from persistent import Persistent
 from zLOG import LOG, WARNING
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.TransactionalVariable import getTransactionalVariable, _MARKER
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.Utils import simple_decorator
 from warnings import warn
 
@@ -291,20 +292,22 @@ allow_class(CachingMethod)
 # TransactionCache is a cache per transaction. The purpose of this cache is
 # to accelerate some heavy read-only operations. Note that this must not be
 # enabled when a transaction may modify ZODB objects.
-def getReadOnlyTransactionCache(context=_MARKER):
+def getReadOnlyTransactionCache():
   """Get the transaction cache.
   """
-  return getTransactionalVariable(context).get('read_only_transaction_cache')
+  return getTransactionalVariable().get('read_only_transaction_cache')
 
-def enableReadOnlyTransactionCache(context=_MARKER):
-  """Enable the transaction cache.
-  """
-  getTransactionalVariable(context)['read_only_transaction_cache'] = {}
-
-def disableReadOnlyTransactionCache(context=_MARKER):
-  """Disable the transaction cache.
-  """
-  getTransactionalVariable(context).pop('read_only_transaction_cache', None)
+@contextmanager
+def readOnlyTransactionCache():
+  tv = getTransactionalVariable()
+  if 'read_only_transaction_cache' in tv:
+    yield
+  else:
+    tv['read_only_transaction_cache'] = {}
+    try:
+      yield
+    finally:
+      del tv['read_only_transaction_cache']
 
 ########################################################
 ## Old global cache functions                         ##

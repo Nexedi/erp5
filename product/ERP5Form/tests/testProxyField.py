@@ -32,7 +32,6 @@ from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from Products.Formulator.XMLToForm import XMLToForm
 from Products.Formulator.FormToXML import formToXML
 from Products.Formulator.TALESField import TALESMethod
-import transaction
 import unittest
 from lxml import etree
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
@@ -83,7 +82,7 @@ class TestProxyField(ERP5TypeTestCase):
             new_selection.append(skin_id)
         ps.manage_skinLayers(skinpath=tuple(new_selection),
                              skinname=skin_name, add_skin=1)
-    transaction.commit()
+    self.commit()
 
   def testEmptySurchargedFieldLibrary(self):
     """
@@ -227,7 +226,7 @@ class TestProxyField(ERP5TypeTestCase):
     field = getattr(form, 'my_title')
     field.manage_edit_xmlrpc(dict(
       form_id='Base_viewGeekFieldLibrary', field_id='my_title'))
-    transaction.commit()
+    self.commit()
 
     self.assertEquals(None, field.get_value('title'))
     self.changeSkin('GenericView')

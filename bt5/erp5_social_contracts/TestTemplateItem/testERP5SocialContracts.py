@@ -27,10 +27,7 @@
 ##############################################################################
 
 import unittest
-
-import transaction
 from DateTime import DateTime
-
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 
@@ -55,19 +52,17 @@ class TestERP5SocialContracts(ERP5TypeTestCase):
                                       title='Person3')
 
   def beforeTearDown(self):
-    transaction.begin()
+    self.abort()
     self.portal.person_module.manage_delObjects(
             list(self.portal.person_module.objectIds()))
     self.portal.social_contract_module.manage_delObjects(
             list(self.portal.social_contract_module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def test_getChildCount(self):
     self.assertEquals(0, self.person_1.Person_getChildCount())
     
     self.person_2.setNaturalParentValue(self.person_1)
-    transaction.commit()
     self.tic()
     self.assertEquals(1, self.person_1.Person_getChildCount())
     
@@ -83,7 +78,6 @@ class TestERP5SocialContracts(ERP5TypeTestCase):
                           start_date='2001-01-01')
     contract_1.setDestinationValueList((self.person_1, self.person_2))
     contract_1.validate()
-    transaction.commit()
     self.tic()
     self.assertEquals(1, self.person_1.Person_getPartnerCount())
 
@@ -94,7 +88,6 @@ class TestERP5SocialContracts(ERP5TypeTestCase):
     contract_2.setStopDate('3000-01-01')
     contract_2.validate()
 
-    transaction.commit()
     self.tic()
     self.assertEquals(2, self.person_1.Person_getPartnerCount())
     

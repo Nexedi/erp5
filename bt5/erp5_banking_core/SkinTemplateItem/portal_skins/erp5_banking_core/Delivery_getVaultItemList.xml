@@ -81,18 +81,17 @@
 from Products.ERP5Type.Cache import CachingMethod\n
 \n
 def getVaultItemList(vault_type=None, exclude_vault_type=None,\n
-    user_site=1, leaf_node=1, strict_membership=0, assignment_list=None,\n
+    user_site=1, leaf_node=1, strict_membership=0, assignment=None,\n
     site_list=None, with_base=1, all=0, first_level=0,main_agency=0,\n
     exclude_site_list=None,mode_test=0):\n
 \n
   if vault_type is None:\n
     organisation_list = []\n
-    for assignment in assignment_list :\n
 # XXX FOR NOW, LET\'S USE SITE UNTIL THE LINK BETWEEN ORGANISATIONS AND SITE HAS BEEN SORTED OUT XXX\n
-#      organisation = assignment.getDestinationValue().getMapping()\n
-      organisation = assignment.getSiteValue()\n
-      if organisation is not None:\n
-        organisation_list.append(organisation)\n
+#   organisation = assignment.getDestinationValue().getMapping()\n
+    organisation = assignment.getSiteValue()\n
+    if organisation is not None:\n
+      organisation_list.append(organisation)\n
 \n
     vault_type_dict = {}\n
     for organisation in organisation_list:\n
@@ -205,9 +204,9 @@ getVaultItemList = CachingMethod(getVaultItemList, id=(\'Delivery_getVaultItemLi
 \n
 \n
 if vault_type is None:\n
-  assignment_list = context.Baobab_getUserAssignmentList()\n
+  assignment = context.Baobab_getUserAssignment()\n
 else:\n
-  assignment_list = None\n
+  assignment = None\n
 \n
 erp5_site = context.getPortalObject()\n
 mode_test = 0\n
@@ -255,7 +254,7 @@ if exclude_user_site:\n
 \n
 vault_list = getVaultItemList(vault_type=vault_type, exclude_vault_type=exclude_vault_type,\n
   user_site=user_site, leaf_node=leaf_node, strict_membership=strict_membership,\n
-  assignment_list=assignment_list, site_list=site_list, with_base=with_base, all=all,\n
+  assignment=assignment, site_list=site_list, with_base=with_base, all=all,\n
   first_level=first_level,main_agency=main_agency,exclude_site_list=exclude_site_list,\n
   mode_test=mode_test)\n
 \n

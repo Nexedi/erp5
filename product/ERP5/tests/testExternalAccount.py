@@ -30,7 +30,6 @@
 
 import unittest
 import time
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.Formulator.Errors import ValidationError
@@ -69,7 +68,7 @@ class TestExternalAccount(ERP5TypeTestCase):
                                              title = 'External Account',
                                              preferred_managed_external_domain_name_list = ['erp5.org'])
     preference.enable()
-    self.stepTic()
+    self.tic()
 
 
   def test_01_PersonExternalEmailAccountCreation(self):
@@ -84,7 +83,7 @@ class TestExternalAccount(ERP5TypeTestCase):
     career = person.newContent(portal_type = 'Career',
                                title = 'Career 0')
     career.start()
-    self.stepTic()
+    self.tic()
     self.assertEqual(1, len(portal.external_account_module.objectValues()))
     self.assertEqual(person, portal.external_account_module.objectValues()[0].getSourceValue())    
     self.assertEqual(person.Person_getDefaultExternalEmailText(), \
@@ -94,7 +93,7 @@ class TestExternalAccount(ERP5TypeTestCase):
     
     # invalidate career should invalidate account
     career.stop()
-    self.stepTic()
+    self.tic()
     self.assertEqual(1, len(portal.external_account_module.objectValues()))
     self.assertEqual(person, portal.external_account_module.objectValues()[0].getSourceValue())    
     self.assertEqual(person.Person_getDefaultExternalEmailText(), \
@@ -106,11 +105,11 @@ class TestExternalAccount(ERP5TypeTestCase):
     career = person.newContent(portal_type = 'Career', 
                                title = 'Career 1')
     career.start()
-    self.stepTic()
+    self.tic()
     career = person.newContent(portal_type = 'Career', 
                                title = 'Career 2')
     career.start()
-    self.stepTic()
+    self.tic()
 
     self.assertEqual(1, len(portal.external_account_module.objectValues()))
     self.assertEqual(person, portal.external_account_module.objectValues()[0].getSourceValue())    
@@ -128,7 +127,7 @@ class TestExternalAccount(ERP5TypeTestCase):
     career = person.newContent(portal_type = 'Career',
                                title = 'Career 0')
     career.start()
-    self.stepTic()
+    self.tic()
     self.assertEqual(1, len(portal.external_account_module.objectValues()))
     self.assertFalse(person in [x.getSourceValue() for x in portal.external_account_module.objectValues()])
 

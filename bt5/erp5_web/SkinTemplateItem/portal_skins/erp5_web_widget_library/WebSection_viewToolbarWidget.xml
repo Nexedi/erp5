@@ -58,7 +58,9 @@
               document_url python: test(is_permanent_document, \n
                                         getattr(here, \'editable_absolute_url\', absolute_url), \n
                                         absolute_url);\n
-              http_parameters string:${request/http_parameters}">\n
+              http_parameters string:${request/http_parameters};\n
+              is_document here/isDocument;\n
+              is_clone_allowed python: portal_type in here.getParentValue().getVisibleAllowedContentTypeList();">\n
 \n
 <ul>\n
   <!-- Edit button menu -->\n
@@ -171,6 +173,28 @@
     </div>\n
   </li>\n
 \n
+  <!-- object actions -->\n
+  <li class="toolboxSection"\n
+      id="toolbox-object-actions"\n
+      tal:condition="actions/object_jump | nothing">\n
+    <h3 class="menu_title" i18n:translate="" i18n:domain="ui">Jump</h3>\n
+    <div class="menu">\n
+      <ul>\n
+\n
+        <li tal:repeat="link actions/object_jump">\n
+          <a class="menu-link"\n
+             tal:attributes="href python: link[\'url\'];\n
+                             title python: link[\'title\']">\n
+            <span>\n
+              <tal:block tal:replace="python: link[\'title\']"/>\n
+            </span>\n
+          </a>\n
+        </li>\n
+      </ul>\n
+\n
+    </div>\n
+  </li>\n
+\n
   <!-- Document creation panel.\n
   \n
        This part is displayed for any document apart Web Site and Web Section.\n
@@ -180,9 +204,22 @@
        XXX - This is not so good to create new content in a section\n
              Behaviour should be to create content in section / site\n
   -->\n
+  <li class="toolboxSection"\n
+      id="clone-document-toolbox"\n
+      tal:condition="python: not is_document and is_clone_allowed">\n
+    <h3 class="menu_title">\n
+      <span id="create_new_document_title"></span>\n
+      <span id="clone_document_title">\n
+        <a href="Base_createCloneDocument"\n
+           tal:content="string:Clone $portal_type"/>\n
+      </span>\n
+    </h3>\n
+\n
+  </li>\n
+\n
   <li class="toolboxSection" \n
       id="clone-document-toolbox"\n
-      tal:condition="python:here.isDocument()">\n
+      tal:condition="python: is_document">\n
     <h3 class="menu_title">\n
       <span id="create_new_document_title"></span>\n
       <span id="clone_document_title">\n

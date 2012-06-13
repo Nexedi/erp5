@@ -50,19 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'parent_specialise_portal_type\'] = [\'Amortisation Rule\']\n
-kw[\'portal_type\']             = \'Simulation Movement\'\n
-\n
+            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Amortisation Rule\'\n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-\n
-context.log(\'AmortisationTransaction_selectMovement\', \'SQL\\n%s\' % context.AmortisationTransaction_zSelectMovement(src__=1, **kw))\n
-\n
-if src__==0:\n
-  movement_list = [x.getObject() for x in context.AmortisationTransaction_zSelectMovement(**kw)]\n
-  #context.log(\'SaleOrder_selectMovement\', \'mvt : %s\' % movement_list)\n
-  return movement_list\n
-else:\n
-  return context.AmortisationTransaction_zSelectMovement(src__=1, **kw)\n
+return context.AmortisationTransaction_zSelectMovement(src__=src__, **kw)\n
 </string> </value>
         </item>
         <item>

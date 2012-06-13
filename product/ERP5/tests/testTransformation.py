@@ -28,7 +28,6 @@
 
 from Products.ERP5.tests.testProductionOrder import TestProductionOrderMixin
 from Products.ERP5.tests.testInventoryAPI import BaseTestUnitConversion
-import transaction
 
 class TestTransformationMixin(TestProductionOrderMixin):
   """
@@ -144,7 +143,7 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     self._addPropertySheet('Amount', ps_id)
     self._addPropertySheet(self.transformed_resource_portal_type, ps_id)
     # need to force accessor regeneration after portal type changes
-    transaction.commit()
+    self.commit()
 
     transformation = self.createTransformation()
     transformed_resource = self.createTransformedResource(transformation)
@@ -159,7 +158,7 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
 
     # XXX aborting a transaction should reset classes
     #     if they were reset during the transaction
-    transaction.abort()
+    self.abort()
     self.getTypesTool().resetDynamicDocuments()
 
   def test_variationCategory(self):
@@ -175,7 +174,6 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     )
     transformation.setResourceValue(swimcap)
 
-    transaction.commit()
     self.tic()
     self.assertSameSet(
         set(swimcap.getVariationCategoryList()),
@@ -194,7 +192,6 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
     # create individual variation
     individual_variation = swimcap.newContent(portal_type='Product Individual Variation')
 
-    transaction.commit()
     self.tic()
     transformation = self.createTransformation()
     transformation.setResourceValue(swimcap)
@@ -228,7 +225,7 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
         variation_base_category_list = self.swimsuit_variation_base_category_list
     )
     transformation.setResourceValue(swimsuit)
-    transaction.commit()
+    self.commit()
 
     fabric = self.createResource(
         'Fabric',
@@ -297,7 +294,6 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
                             base_id = 'quantity')
         i += 1
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(swimsuit.getDefaultTransformationValue().getRelativeUrl(),
@@ -351,7 +347,6 @@ class TestTransformation(TestTransformationMixin, BaseTestUnitConversion):
       for colour in self.colour_category_list:
         self.makeMovement(swimsuit_quantity, swimsuit, size, colour)
 
-    transaction.commit()
     self.tic()
 
     inv = self.getSimulationTool().getInventoryList(

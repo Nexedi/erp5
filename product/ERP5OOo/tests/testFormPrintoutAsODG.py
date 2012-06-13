@@ -28,7 +28,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
@@ -97,7 +96,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
       test1.newContent("foo_1", title='Foo Line 1', portal_type='Foo Line')
     if test1._getOb("foo_2", None) is None:
       test1.newContent("foo_2", title='Foo Line 2', portal_type='Foo Line')
-    transaction.commit()
     self.tic()
 
   def getStyleDictFromFieldName(self, content_xml, field_id):
@@ -125,7 +123,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
       foo_module.newContent(id='test1', portal_type='Foo')
     test1 =  foo_module.test1
     test1.setTitle('Foo title!')
-    transaction.commit()
     self.tic()
 
     style_dict = {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}span':
@@ -246,7 +243,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
       foo_module.newContent(id='test1', portal_type='Foo')
     test1 =  foo_module.test1
     test1.setDescription('A text a bit more longer\n\nWith a newline !')
-    transaction.commit()
     self.tic()
 
     style_dict = {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}line-break': {},
@@ -373,7 +369,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
       foo_module.newContent(id='test1', portal_type='Foo')
     test1 =  foo_module.test1
     test1.setTitle('Foo title!')
-    transaction.commit()
     self.tic()
 
     style_dict = {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}span':

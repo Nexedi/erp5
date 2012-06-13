@@ -50,26 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'parent_specialise_portal_type\']  = [\'Trade Model Rule\', \'Trade Model Simulation Rule\']\n
-kw[\'explanation_portal_type\']        = [\'Purchase Order\', \'Purchase Packing List\', \'Returned Purchase Packing List\',\n
-                                        \'Purchase Invoice Transaction\', \'Purchase Invoice\']\n
-kw[\'portal_type\']                    = \'Simulation Movement\'\n
-kw[\'grand_parent_simulation_state\']  = [\'started\', \'stopped\', \'delivered\', \'confirmed\']\n
+            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Trade Model Rule\', \'Trade Model Simulation Rule\'\n
+kw[\'explanation_portal_type\']       = (\'Purchase Order\', \'Purchase Packing List\', \'Returned Purchase Packing List\',\n
+                                       \'Purchase Invoice Transaction\', \'Purchase Invoice\')\n
+kw[\'grand_parent_simulation_state\'] = \'started\', \'stopped\', \'delivered\', \'confirmed\'\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-\n
-movement_list = [] \n
-for movement in context.InvoiceTransaction_zSelectMovement(**kw):\n
-  movement = movement.getObject()\n
-  if movement.getDeliveryValue() is None :\n
-    movement_list.append(movement)\n
-  else :\n
-    from Products.ERP5Type.Log import log\n
-    log(script.getId(),\n
-        "simulation movement %s should not have been selected !" % movement.getPath())\n
-\n
-\n
-return movement_list\n
+return context.InvoiceTransaction_zSelectMovement(**kw)\n
 </string> </value>
         </item>
         <item>

@@ -34,7 +34,6 @@ import logging
 import random
 import socket
 import sys
-import transaction
 import ZODB
 import zLOG
 from App.config import getConfiguration
@@ -378,7 +377,6 @@ def reindex(func):
   def wrapper(self, *args, **kw):
     ret = func(self, *args, **kw)
     if kw.get('reindex', 1):
-      transaction.commit()
       self.tic()
     return ret
   return wrapper
@@ -638,7 +636,6 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
 class SubcontentReindexingWrapper(object):
 
   def _testSubContentReindexing(self, parent_document, children_document_list):
-    transaction.commit()
     self.tic()
     def catalogObjectList(self, object_list, *args, **kw):
       """Wrapper to track list of catalogged objects"""
@@ -654,7 +651,6 @@ class SubcontentReindexingWrapper(object):
       Catalog.catalogObjectList = catalogObjectList
       catalogged_object_path_set = set()
       parent_document.reindexObject()
-      transaction.commit()
       self.tic()
       self.assertEqual(expected_path_set, catalogged_object_path_set)
     finally:

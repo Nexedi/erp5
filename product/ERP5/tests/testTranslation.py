@@ -28,7 +28,6 @@
 ##############################################################################
 import unittest
 
-import transaction
 import MethodObject
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -40,6 +39,7 @@ from Products.ERP5Type.tests.backportUnittest import expectedFailure
 # dependency order
 target_business_templates = (
   'erp5_base',
+  'erp5_simulation',
   'erp5_trade',
 
   'erp5_pdf_editor',
@@ -275,7 +275,6 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
     item_module = self.getPortal().getDefaultModule(portal_type)
     item = item_module.newContent(portal_type=portal_type, title='Lot A')
 
-    transaction.commit()
     self.tic()
     self.portal.Localizer._default_language = 'fr'
 
@@ -286,7 +285,6 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
                       'Validé')
     # Now run indexation of translations.
     self.portal.ERP5Site_updateTranslationTable()
-    transaction.commit()
     self.tic()
     # Ckeck queries with translated workflow state title generated with
     # getMessageIdWithContext
@@ -336,7 +334,6 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
 
       # Update the translation table
       self.portal.ERP5Site_updateTranslationTable()
-      transaction.commit()
       self.tic()
 
       # Check the catalog result
@@ -351,7 +348,6 @@ class TestWorkflowStateTitleTranslation(ERP5TypeTestCase):
                                                       workflow_id))
       # Update the translation table
       self.portal.ERP5Site_updateTranslationTable()
-      transaction.commit()
       self.tic()
 
 class LanguageGetter(MethodObject.Method):
@@ -408,10 +404,10 @@ class TestTranslation(ERP5TypeTestCase):
     dispatcher = self.portal.manage_addProduct['PageTemplates']
     dispatcher.manage_addPageTemplate('myzpt')
     self.myzpt = self.portal.myzpt
-    self.stepTic()
+    self.tic()
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     # unpatch lang_negotiator and get_selected_message
     from Products.Localizer import MessageCatalog
     MessageCatalog.lang_negotiator = self.old_lang_negotiator
@@ -428,7 +424,7 @@ class TestTranslation(ERP5TypeTestCase):
       module.manage_delObjects(list(module.objectIds()))
     self.portal.manage_delObjects(['myzpt'])
 
-    self.stepTic()
+    self.tic()
     super(TestTranslation, self).beforeTearDown()
 
   def test_Localizer_translation(self):
@@ -466,7 +462,7 @@ class TestTranslation(ERP5TypeTestCase):
     organisation = self.portal.organisation_module.newContent(
                             portal_type='Organisation')
 
-    self.stepTic()
+    self.tic()
     self.assertEquals(set([person_1, person_2]),
         set([x.getObject() for x in
           self.portal.portal_catalog(translated_portal_type='Personne')]))

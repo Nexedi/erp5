@@ -119,7 +119,7 @@
 </tal:block>\n
 \n
 <tal:block metal:define-macro="invoke_simulation_alarms">\n
-  <!-- Wait for activities to finish -->\n
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\\  <!-- Wait for activities to finish -->\n
   <tr>\n
     <td>openAndWait</td>\n
     <td>${base_url}/Zuite_invokeSimulationAlarmList</td>\n
@@ -130,6 +130,7 @@
     <td>Done.</td>\n
     <td></td>\n
   </tr> \n
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities </span>\n
 </tal:block>\n
 \n
 <tal:block metal:define-macro="login_as_functional_test_user">\n
@@ -191,6 +192,121 @@
     <td>verifyTextPresent</td>\n
     <td tal:content="python:\n
           here.Zuite_getHowToInfo()[\'functional_test_username\']"></td>\n
+    <td></td>\n
+  </tr>\n
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Base_clearCache</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>assertTextPresent</td>\n
+    <td>Cleared.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Zuite_updateUserPreference</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Init Ok.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/view</td>\n
+    <td></td>\n
+  </tr>\n
+</tal:block>\n
+\n
+<tal:block metal:define-macro="login_as_functional_another_test_user">\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Zuite_createAnotherFunctionalTestUser</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Done.</td>\n
+    <td></td>\n
+  </tr>\n
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Base_clearCache</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>assertTextPresent</td>\n
+    <td>Cleared.</td>\n
+    <td></td>\n
+  </tr>\n
+  <!-- login with functional test user -->\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/logout</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/login_form</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="__ac_name"]</td>\n
+    <td tal:content="python:\n
+          here.Zuite_getHowToInfo()[\'functional_another_test_username\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>type</td>\n
+    <td>//input[@name="__ac_password"]</td>\n
+    <td tal:content="python:\n
+        here.Zuite_getHowToInfo()[\'functional_test_user_password\']"></td>\n
+  </tr>\n
+  <tr>\n
+    <td>clickAndWait</td>\n
+    <td>//input[@name="logged_in:method"]</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/view</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td tal:content="python:\n
+          here.Zuite_getHowToInfo()[\'functional_another_test_username\']"></td>\n
+    <td></td>\n
+  </tr>\n
+  <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/wait_for_activities"> Wait for activities</span>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Base_clearCache</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>assertTextPresent</td>\n
+    <td>Cleared.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/Zuite_updateUserPreference</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>verifyTextPresent</td>\n
+    <td>Init Ok.</td>\n
+    <td></td>\n
+  </tr>\n
+  <tr>\n
+    <td>openAndWait</td>\n
+    <td>${base_url}/view</td>\n
     <td></td>\n
   </tr>\n
 </tal:block>\n

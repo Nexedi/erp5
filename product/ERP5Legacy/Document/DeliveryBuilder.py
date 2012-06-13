@@ -106,7 +106,6 @@ class DeliveryBuilder(OrderBuilder):
       First, select movement matching to criteria define on DeliveryBuilder
       Then, call script simulation_select_method to restrict movement_list
     """
-    movement_list = []
     # We only search Simulation Movement
     kw['portal_type'] = 'Simulation Movement'
     # Search only child movement from this applied rule
@@ -114,31 +113,12 @@ class DeliveryBuilder(OrderBuilder):
       kw['parent_uid'] = applied_rule_uid
     # XXX Add profile query
     # Add resource query
-    if self.getResourcePortalType() not in ('', None):
-      kw['resourceType'] = self.getResourcePortalType()
-    if self.getSimulationSelectMethodId() in ['', None]:
-      movement_list = [x.getObject() for x in self.portal_catalog(**kw)]
-    else:
-      select_method = getattr(self.getPortalObject(), self.getSimulationSelectMethodId())
-      movement_list = select_method(**kw)
-    # XXX Use buildSQLQuery will be better
-    movement_list = [x for x in movement_list if \
-                     x.getDeliveryValueList()==[]]
+    portal_type = self.getResourcePortalType()
+    if portal_type:
+      kw['resource_portal_type'] = portal_type
     # XXX  Add predicate test
-    # XXX FIXME Check that there is no double in the list
-    # Because we can't trust simulation_select_method
-    # Example: simulation_select_method is not tested enough
-    mvt_dict = {}
-    for movement in movement_list:
-      if mvt_dict.has_key(movement):
-        raise SelectMethodError, \
-              "%s return %s twice (or more)" % \
-              (str(self.getSimulationSelectMethodId()),
-               str(movement.getRelativeUrl()))
-      else:
-        mvt_dict[movement] = 1
-    # Return result
-    return movement_list
+    return [movement for movement in self._searchMovementList(**kw)
+                     if not movement.getDelivery()]
 
   def _setDeliveryMovementProperties(self, delivery_movement,
                                      simulation_movement, property_dict,

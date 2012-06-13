@@ -88,9 +88,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       "Organisation Configurator Item",
       group=group_id, site='main', **kw)
 
-    self.stepTic()
+    self.tic()
     item._build(configuration_save.getParentValue())
-    self.stepTic()
+    self.tic()
 
     organisation = self.portal.portal_catalog.getResultValue(
                        portal_type="Organisation", 
@@ -138,9 +138,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                                         object_id=category_id_1,
                                         title="title_%s" % category_id_1)
 
-    self.stepTic()
+    self.tic()
     item0._build(bc)
-    self.stepTic()
+    self.tic()
 
     category_0 = getattr(self.portal.portal_categories.group, category_id_0, None)
     self.assertNotEquals(category_0, None)
@@ -150,7 +150,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(category_1, None)
 
     item1._build(bc)
-    self.stepTic()
+    self.tic()
 
     category_1 = getattr(self.portal.portal_categories.group, category_id_1, None)
     self.assertNotEquals(category_1, None)
@@ -165,7 +165,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                                         title="new_title_%s" % category_id_1)
 
     item2._build(bc)
-    self.stepTic()
+    self.tic()
 
     category_1 = getattr(self.portal.portal_categories.group, 
                          category_id_1, None)
@@ -193,10 +193,10 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                              base_unit_quantity = 0.01,
                              title = brl_currency_title,)
 
-    self.stepTic()
+    self.tic()
 
     item_eur._build(bc)
-    self.stepTic()
+    self.tic()
 
     eur = getattr(self.portal.currency_module, eur_currency_id , None)
     self.assertNotEquals(eur, None)
@@ -206,7 +206,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(brl, None)
 
     item_brl._build(bc)
-    self.stepTic()
+    self.tic()
 
     brl = getattr(self.portal.currency_module, brl_currency_id , None)
     self.assertNotEquals(brl, None)
@@ -215,9 +215,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     # Build several times to not break portal.
 
     item_brl._build(bc)
-    self.stepTic()
+    self.tic()
     item_brl._build(bc)
-    self.stepTic()
+    self.tic()
 
   def testSecurityCategoryMappingConfiguratorItem(self):
     """ Test Security Category Mapping Configurator Item
@@ -239,9 +239,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     item = configuration_save.addConfigurationItem(
                   "Security Category Mapping Configurator Item")
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     # XXX Skin folder should be part of configuration and not always custom
     security_script = getattr(self.portal.portal_skins.custom,
@@ -266,9 +266,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     item = configuration_save.addConfigurationItem(
                   "Account Configurator Item", **account_dict)
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     account = getattr(account_module, account_dict['account_id'], None)
     self.assertNotEquals(account, None)
@@ -288,9 +288,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     item = configuration_save.addConfigurationItem(
                   "Account Configurator Item", **account_dict)
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     same_account = getattr(account_module, account_dict['account_id'], None)
     self.assertEquals(account, same_account)
@@ -326,9 +326,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     createZODBPythonScript(self.getPortal().portal_skins.custom,
                                     property_map["active_sense_method_id"],
                                     "", "context.setEnabled(0)")
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     alarm = getattr(self.portal.portal_alarms, "my_test_alarm", None)
     self.assertNotEquals(None, alarm)
@@ -350,7 +350,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.assertNotEquals(alarm.getPeriodicityStartDate(), None)
     self.failUnless(alarm.getPeriodicityStartDate() < DateTime())
     alarm.activeSense()
-    self.stepTic()
+    self.tic()
     self.assertEquals(alarm.getEnabled(), 0)
 
   def testPortalTypeRolesSpreadsheetConfiguratorItem(self):
@@ -393,9 +393,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     if len(role_list) > 0:
       person_module_type.manage_delObjects([i.id for i in role_list])
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     role_list = [i for i in person_type.objectValues(
                  portal_type="Role Information") 
@@ -448,9 +448,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       "Categories Spreadsheet Configurator Item",
       configuration_spreadsheet_data = data)
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     base_category_list = ["group", "site", "business_application", 
                           "function", "region"]
@@ -498,7 +498,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       reference = "testing_configurator_rule",
       id = "rule_do_not_exist")
 
-    self.stepTic()
+    self.tic()
     self.assertRaises(ValueError, item._build, bc)
 
     rule_reference = "testing_configurator_rule_%s" % self.newUniqueUID()
@@ -508,9 +508,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       id = "new_delivery_simulation_rule",
       trade_phase_list = ['testing/order'])
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     template_id = item.getId()
     rule_list = rule_tool.searchFolder(
@@ -540,9 +540,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       configuration_spreadsheet_data = data,
       reference = reference)
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     business_process = self.portal.portal_catalog.getResultValue(
           portal_type="Business Process",

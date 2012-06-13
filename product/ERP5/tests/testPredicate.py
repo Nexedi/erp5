@@ -33,7 +33,6 @@
 
 import unittest
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -95,7 +94,6 @@ class TestPredicateMixIn(ERP5TypeTestCase):
       self.assertNotEquals(None,
                 self.getCategoryTool().restrictedTraverse(cat_string),
                 cat_string)
-    transaction.commit()
     self.tic()
 
   def getNeededCategoryList(self):
@@ -567,7 +565,6 @@ class TestPredicates(TestPredicateMixIn):
 
     predicate = self.createPredicate(criterion_property_list=['portal_type'])
     predicate.setCriterion('portal_type', ['Person', 'Organisation'])
-    transaction.commit()
     self.tic()
 
     # check that if we define the same filter than on predicate we get same result

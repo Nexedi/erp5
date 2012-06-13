@@ -27,7 +27,6 @@
 ##############################################################################
 import unittest
 
-import transaction
 from DateTime import DateTime
 from Products.ERP5.tests.testAccounting import AccountingTestCase
 from AccessControl.SecurityManagement import newSecurityManager
@@ -37,7 +36,7 @@ class CurrencyExchangeTestCase(AccountingTestCase):
   username = 'username'
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     # clear modules if necessary
     currency_list = ('euro', 'yen', 'usd')
     module = self.portal.currency_module
@@ -55,7 +54,6 @@ class CurrencyExchangeTestCase(AccountingTestCase):
     currency_exchange_type.manage_delObjects(
                 list(currency_exchange_type.objectIds()))
 
-    transaction.commit()
     self.tic()
  
   def login(self, name=username):
@@ -125,7 +123,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()
     self.organisation1.edit(
                     price_currency=new_currency.getRelativeUrl())
@@ -174,7 +171,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()
     self.organisation1.edit(
                    price_currency=new_currency.getRelativeUrl())
@@ -237,7 +233,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()
     self.organisation1.edit(
               price_currency=new_currency.getRelativeUrl())
@@ -290,7 +285,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()
     self.organisation1.edit(
                 price_currency=new_currency.getRelativeUrl())
@@ -328,7 +322,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()
     self.organisation1.edit(
                price_currency=new_currency.getRelativeUrl())
@@ -398,7 +391,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()
     self.organisation1.edit(
             price_currency=new_currency.getRelativeUrl())
@@ -447,7 +439,6 @@ class TestCurrencyExchangeLine(CurrencyExchangeTestCase):
     new_currency.setReference('XOF')
     new_currency.setTitle('Francs CFA')
     new_currency.setBaseUnitQuantity(1.00)
-    transaction.commit()
     self.tic()
     self.organisation1.edit(
                price_currency=new_currency.getRelativeUrl())
@@ -586,7 +577,6 @@ class TestCurrencyExchangeCell(CurrencyExchangeTestCase):
       base_id='path')
     type_b_cell.setBasePrice(1.24)
 
-    transaction.commit()
     self.tic()
 
     # we need a base for asContext, we use the currency, but in real code you

@@ -34,7 +34,6 @@ from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.ERP5Type.Base import TempBase
 from Products.ERP5OOo.tests.testDms import makeFileUpload,TestDocumentMixin, TestDocument
-import transaction
 
 def _getGadgetInstanceUrlFromKnowledgePad(knowledge_pad,  gadget):
   """ Get Knowledge Box's relative URL specialising a gadget in a Knowledge Pad."""
@@ -86,7 +85,7 @@ class TestKMMixIn(TestDocumentMixin):
       portal.web_site_module.manage_delObjects(self.website_id)
     website = portal.web_site_module.newContent(portal_type = 'Web Site',
                                                 id = self.website_id, **kw)
-    self.stepTic()
+    self.tic()
     return website
 
   def login(self):
@@ -135,7 +134,7 @@ class TestKM(TestKMMixIn):
                                                        mode = 'web_section')    
     self.web_section_content_knowledge_pad = portal.restrictedTraverse(
                                           self.web_section_content_knowledge_pad_relative_url)
-    self.stepTic()
+    self.tic()
     # Publish all knowledge pad gadgets
     for gadget in self.portal.portal_gadgets.objectValues():
       if gadget.getValidationState() == 'invisible':
@@ -154,10 +153,10 @@ class TestKM(TestKMMixIn):
     knowledge_pad_module = getattr(portal, 'knowledge_pad_module')
     # remove created by login method pads
     knowledge_pad_module.manage_delObjects(list(knowledge_pad_module.objectIds()))
-    self.stepTic()
+    self.tic()
 
     portal.ERP5Site_createDefaultKnowledgePadListForUser()
-    self.stepTic()
+    self.tic()
     self.assertEqual(1, 
                      len(knowledge_pad_module.searchFolder(portal_type='Knowledge Pad')))
     default_pad = knowledge_pad_module.searchFolder(
@@ -186,7 +185,7 @@ class TestKM(TestKMMixIn):
     
     # add new pad 
     portal.ERP5Site_addNewKnowledgePad(pad_title='Test')
-    self.stepTic()
+    self.tic()
     pads = knowledge_pad_module.ERP5Site_getKnowledgePadListForUser()
     self.assertEqual(2, len(pads))
     for pad in pads:
@@ -205,20 +204,20 @@ class TestKM(TestKMMixIn):
     
     # remove newly added tab, check visibility
     portal.ERP5Site_deleteKnowledgePad(new_pad.getRelativeUrl())
-    self.stepTic()
+    self.tic()
     pads = knowledge_pad_module.ERP5Site_getKnowledgePadListForUser()
     self.assertEqual(1, len(pads))
     self.assertEqual(default_pad, 
                      portal.ERP5Site_getActiveKnowledgePadForUser(pads)[0].getObject())
     manuallly_created_pad = knowledge_pad_module.newContent(portal_type='Knowledge Pad')
     portal.ERP5Site_toggleActiveKnowledgePad(manuallly_created_pad.getRelativeUrl())
-    self.stepTic()
+    self.tic()
     self.assertEqual('invisible', default_pad.getValidationState())
     
     # check for Web context (i.e. Site/Section)
     website = self.website
     website.ERP5Site_createDefaultKnowledgePadListForUser(mode='web_front')
-    self.stepTic()
+    self.tic()
     website_pads = website.ERP5Site_getKnowledgePadListForUser(mode='web_front')
     self.assertEqual(1, len(website_pads))
     self.assertEqual(website, website_pads[0].getPublicationSectionValue())
@@ -233,14 +232,14 @@ class TestKM(TestKMMixIn):
     websection.ERP5Site_createDefaultKnowledgePadListForUser(
                         mode='web_section',
                         default_pad_group = pad_group)
-    self.stepTic()
+    self.tic()
     base_websection_pad, websection_pads = \
              websection.ERP5Site_getActiveKnowledgePadForUser(default_pad_group = pad_group)
    
     # Check stick
     websection.WebSection_stickKnowledgePad(
                     base_websection_pad.getRelativeUrl(), '')
-    self.stepTic()
+    self.tic()
     current_websection_pad, websection_pads = \
              websection.ERP5Site_getActiveKnowledgePadForUser(mode='web_section',      
                                                               default_pad_group = pad_group )
@@ -274,7 +273,7 @@ class TestKM(TestKMMixIn):
       # enable the default site wide preference
       user_pref = portal.portal_preferences.objectValues(portal_type='Preference')[0]
       user_pref.enable()
-    self.stepTic()
+    self.tic()
     self.assertNotEqual(None,  portal.portal_preferences.getActivePreference())
     
     # Create knowledge pads in active preference
@@ -323,7 +322,7 @@ class TestKM(TestKMMixIn):
     websection_content_knowledge_pad.public()
     websection_content_knowledge_pad1.visible()
     websection_content_knowledge_pad1.public()
-    self.stepTic()
+    self.tic()
 
     # check that 4 different modes return knowledge_pads from preference
     # ERP5 front
@@ -357,7 +356,7 @@ class TestKM(TestKMMixIn):
     # is possible and it's exactly the same as original in preference
     # ERP5 front
     portal.ERP5Site_createDefaultKnowledgePadListForUser(mode='erp5_front')
-    self.stepTic()
+    self.tic()
     erp5_knowledge_pad = portal.ERP5Site_getKnowledgePadListForUser(
                                   mode="erp5_front")[0].getObject()
     self.assertEqual(portal.knowledge_pad_module,  
@@ -373,7 +372,7 @@ class TestKM(TestKMMixIn):
     
     # Web Site front
     website.ERP5Site_createDefaultKnowledgePadListForUser(mode='web_front')
-    self.stepTic()
+    self.tic()
     web_knowledge_pad = website.ERP5Site_getKnowledgePadListForUser(
                                        mode="web_front")[0].getObject()
     self.assertEqual(portal.knowledge_pad_module,  
@@ -391,7 +390,7 @@ class TestKM(TestKMMixIn):
     websection.ERP5Site_createDefaultKnowledgePadListForUser( \
                                       mode='web_section', \
                                       default_pad_group = default_pad_group)
-    self.stepTic()
+    self.tic()
     websection_knowledge_pad = websection.ERP5Site_getKnowledgePadListForUser( \
                                       mode="web_section", \
                                       default_pad_group = default_pad_group)[0].getObject()
@@ -410,7 +409,7 @@ class TestKM(TestKMMixIn):
     websection.ERP5Site_createDefaultKnowledgePadListForUser( \
                                mode='web_section', \
                                default_pad_group = default_pad_group_section_content_title)
-    self.stepTic()
+    self.tic()
     websection_content_knowledge_pad = websection.ERP5Site_getKnowledgePadListForUser( \
                      mode="web_section", \
                      default_pad_group = default_pad_group_section_content_title)[0].getObject()
@@ -445,7 +444,7 @@ class TestKM(TestKMMixIn):
     web_front_gadgets = [km_my_tasks_gadget,  km_my_documents_gadget,  km_my_contacts_gadget]
     for gadget in web_front_gadgets:
       self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
-    self.stepTic()
+    self.tic()
     
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
@@ -465,7 +464,7 @@ class TestKM(TestKMMixIn):
                                                title = 'Project: title (български)')
     visit = portal.event_module.newContent(portal_type = 'Visit', \
                                            title = 'Visit: title (български)')
-    self.stepTic()
+    self.tic()
     # simulate asynchronous gadget view (on Web Site, Web Section,Web Section content )
     gadget_view_form_id  = km_my_tasks_gadget.view_form_id
     km_my_tasks_box_url = _getGadgetInstanceUrlFromKnowledgePad( \
@@ -508,7 +507,7 @@ class TestKM(TestKMMixIn):
                         portal_type = 'Presentation', \
                         reference = 'presentation-456', 
                         title = 'Presentation: title 456 (български)')
-    self.stepTic()
+    self.tic()
     # simulate asynchronous gadget view (on Web Site, Web Section,Web Section content )
     gadget_view_form_id  = km_my_documents_gadget.view_form_id
     km_my_documents_gadget_box_url = _getGadgetInstanceUrlFromKnowledgePad( \
@@ -545,7 +544,7 @@ class TestKM(TestKMMixIn):
     # "My Contacts" gadget (add a new document which should be shown shown in it)
     person = portal.person_module.newContent(portal_type = 'Person',
                                              title = 'John Doe')
-    self.stepTic()
+    self.tic()
     # simulate asynchronous gadget view (on Web Site, Web Section,Web Section content )
     gadget_view_form_id  = km_my_contacts_gadget.view_form_id
     km_my_contacts_gadget_box_url = _getGadgetInstanceUrlFromKnowledgePad(
@@ -583,7 +582,7 @@ class TestKM(TestKMMixIn):
                            km_assigned_member_gadget]
     for gadget in web_section_gadgets:
       self.web_section_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
-    self.stepTic()
+    self.tic()
     
     # check that gadgets are added to web section page view
     response = self.publish('%s/WebSection_viewKnowledgePadColumn?active_pad_url=%s' \
@@ -612,7 +611,7 @@ class TestKM(TestKMMixIn):
     latest_docs_subsection.edit(membership_criterion_base_category = ['publication_section'], 
                                 membership_criterion_category=['publication_section/%s' 
                                               %publication_section_category_id_list[0]])
-    self.stepTic()
+    self.tic()
     km_latest_documents_gadget_box_url = _getGadgetInstanceUrlFromKnowledgePad(
                                            self.web_section_knowledge_pad,  
                                            km_latest_documents_gadget)  
@@ -629,7 +628,7 @@ class TestKM(TestKMMixIn):
                           language='en',
                           publication_section_list = publication_section_category_id_list[:1])
     presentation.publish()
-    self.stepTic()
+    self.tic()
     self.changeSkin('KM')
     self.failUnless(presentation.getTitle() in 
           self.publish(self.base_url_pattern 
@@ -655,7 +654,7 @@ class TestKM(TestKMMixIn):
     assigned_members_subsection = self.websection.newContent(portal_type = 'Web Section')
     assigned_members_subsection.edit(membership_criterion_base_category = ['follow_up'], 
                                      membership_criterion_category = ['follow_up/%s'%project.getId()])
-    self.stepTic()
+    self.tic()
     km_assigned_member_gadget_box_url = _getGadgetInstanceUrlFromKnowledgePad(
                                           self.web_section_knowledge_pad,  
                                           km_assigned_member_gadget)
@@ -672,7 +671,7 @@ class TestKM(TestKMMixIn):
                                              title = 'John Doe 1.234', 
                                              reference = 'person_12345')    
     assignment =  person.newContent(portal_type = 'Assignment')
-    self.stepTic()
+    self.tic()
     self.changeSkin('KM')
     self.failUnless(person.getTitle() in 
                     self.publish(self.base_url_pattern 
@@ -683,7 +682,7 @@ class TestKM(TestKMMixIn):
             , self.auth).getBody())
     # clean up
     person.manage_delObjects([assignment.getId()])
-    self.stepTic()
+    self.tic()
     
   def test_11WebSectionContentGadget(self):
     """ Check  Web Section Content Gadgets """
@@ -694,7 +693,7 @@ class TestKM(TestKMMixIn):
     web_section_content_gadgets = [km_document_relations_gadget]
     for gadget in web_section_content_gadgets:
       self.web_section_content_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
-    self.stepTic()
+    self.tic()
 
     # check that gadgets are added to web section page view
     response = self.publish('%s/WebSection_viewKnowledgePadColumn?active_pad_url=%s' \
@@ -712,7 +711,7 @@ class TestKM(TestKMMixIn):
     # add gadget
     self.web_section_content_knowledge_pad.KnowledgePad_addBoxList(
                                **{'uids':[km_document_relations_gadget.getUid()]})
-    self.stepTic()
+    self.tic()
 
     # "Relation" gadget
     gadget_view_form_id  = km_document_relations_gadget.view_form_id
@@ -748,7 +747,7 @@ class TestKM(TestKMMixIn):
     self.webpage.setSimilarValueList([similar_doc])
     self.webpage.setPredecessorValueList([predecessor_doc])
     self.webpage.setSuccessorValueList([successor_doc])    
-    self.stepTic()
+    self.tic()
 
     self.changeSkin('KM')
     # .. should be in gadget html 
@@ -771,7 +770,7 @@ class TestKM(TestKMMixIn):
 
     gadget = portal_gadgets.km_latest_documents
     self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[gadget.getUid()]})
-    self.stepTic()
+    self.tic()
 
     # check that gadgets are added to web front page view
     response = self.publish(url, self.auth)
@@ -804,7 +803,7 @@ class TestKM(TestKMMixIn):
 
     # add gadget
     self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[web_site_browser_gadget.getUid()]})
-    self.stepTic()
+    self.tic()
 
     self.changeSkin('KM')
     # "Subsections" gadget
@@ -815,7 +814,7 @@ class TestKM(TestKMMixIn):
     # .. create subsection and make sure it appears in gadget
     subsection = self.website.newContent(portal_type='Web Section',  
                                          title='Sub Section 12345')
-    self.stepTic()
+    self.tic()
     url = self.base_url_pattern %(self.web_site_url,  
                                   gadget_view_form_id, 
                                   self.website.getRelativeUrl(),  
@@ -827,7 +826,7 @@ class TestKM(TestKMMixIn):
 
     # make section visible
     subsection.edit(visible=True)
-    self.stepTic()
+    self.tic()
     self.changeSkin('KM')
     self.failUnless(subsection.getTitle() in 
                     self.publish(url, self.auth).getBody())
@@ -841,12 +840,12 @@ class TestKM(TestKMMixIn):
     
     # test directly adding a gadget
     self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[km_my_contacts_gadget.getUid()]})
-    self.stepTic()
+    self.tic()
     self.assertSameSet([km_my_contacts_gadget],
                         [x.getSpecialiseValue() for x in self.web_front_knowledge_pad.objectValues()])
     # clean up for rest of test
     self.web_front_knowledge_pad.manage_delObjects(list(self.web_front_knowledge_pad.objectIds()))
-    self.stepTic()
+    self.tic()
 
     # in order to emulate a dialog listbox for adding gadgets we need to set selection and its name
     # in REQUEST. This test like user selects a gadget from dialog's first page then go to second
@@ -855,7 +854,7 @@ class TestKM(TestKMMixIn):
     self.app.REQUEST.set('list_selection_name', selection_name)
     portal.portal_selections.setSelectionParamsFor(selection_name, {'uids':[km_my_documents_gadget.getUid()]})
     self.web_front_knowledge_pad.KnowledgePad_addBoxList(**{'uids':[km_my_contacts_gadget.getUid()]})
-    self.stepTic()
+    self.tic()
     # now even though we explicitly add only one gadget KnowledgePad_addBoxList should check and add one
     # in listbox selection as well
     self.assertSameSet([km_my_documents_gadget, km_my_contacts_gadget],
@@ -886,7 +885,7 @@ class TestKM(TestKMMixIn):
     another_assignment = person.newContent(portal_type= 'Assignment',
                                    destination_project = another_project.getRelativeUrl())
     assignment.open()
-    self.stepTic()
+    self.tic()
 
     self.changeSkin('KM')
     self.assertEquals(1,\
@@ -915,7 +914,7 @@ class TestKMSearch(TestKMMixIn):
                                             connection_string="dummy@127.0.0.1:9306")
       connection = getattr(portal, connection_id)
       connection.manage_open_connection()
-      self.stepTic()
+      self.tic()
 
       for bt5_id in ("erp5_full_text_sphinxse_catalog",):
         bt5 = portal_templates.download("%s/%s.bt5" %(base_url, bt5_id))
@@ -928,7 +927,7 @@ class TestKMSearch(TestKMMixIn):
       z0_uncatalog_sphinxse_index.connection_id=connection_id
       
       website.publish()
-      self.stepTic()
+      self.tic()
 
       # add some test data
       self.web_page = portal.web_page_module.newContent(id=web_page_id,
@@ -938,11 +937,11 @@ class TestKMSearch(TestKMMixIn):
                                                         version='001',
                                                         reference='sphinx-search-tool-page')
       self.web_page.publish()
-      self.stepTic()
+      self.tic()
 
       # reindex site
       portal.ERP5Site_reindexSphinxSE()
-      self.stepTic()
+      self.tic()
     else:
       self.web_page = portal.web_page_module.restrictedTraverse(web_page_id)
       
@@ -994,20 +993,20 @@ class TestKMSearch(TestKMMixIn):
     # set some groups to use Web Sections predicate
     group_one = portal.portal_categories.restrictedTraverse("group/test_zuite/1")
     web_page.setGroupValueList([group_one])
-    self.stepTic()
+    self.tic()
     search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
     self.assertSameSet([website.restrictedTraverse("1")], \
                        [portal.restrictedTraverse(x) for x in search_result_list[0].section_list])
     # multiple sections                       
     group_two = portal.portal_categories.restrictedTraverse("group/test_zuite/2")
     web_page.setGroupValue([group_one, group_two])
-    self.stepTic()
+    self.tic()
     search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
     self.assertSameSet([website.restrictedTraverse("1"), website.restrictedTraverse("2")], \
                        [portal.restrictedTraverse(x) for x in search_result_list[0].section_list])                       
     # unset
     web_page.setGroupValue([])
-    self.stepTic()
+    self.tic()
     search_result_list = website.WebSite_getFullTextSearchResultList(**kw)
     self.assertSameSet([], \
                        [portal.restrictedTraverse(x) for x in search_result_list[0].section_list])
@@ -1070,7 +1069,6 @@ class TestKMSearch(TestKMMixIn):
     file = makeFileUpload(filename)
     document8 = self.portal.portal_contributions.newContent(file=file)
 
-    transaction.commit()
     self.tic()
     # the implicit predecessor will find documents by reference.
     # version and language are not used.
@@ -1085,7 +1083,7 @@ class TestKMSearch(TestKMMixIn):
     #  sqlresult_to_document_list(document1.getImplicitPredecessorValueList()))
 
     # clear transactional variable cache
-    transaction.commit()
+    self.commit()
 
     # the implicit successors should be return document with appropriate
     # language.
@@ -1098,7 +1096,7 @@ class TestKMSearch(TestKMMixIn):
       sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
     # clear transactional variable cache
-    transaction.commit()
+    self.commit()
 
     # if user language is 'fr'.
     self.portal.Localizer.changeLanguage('fr')
@@ -1107,7 +1105,7 @@ class TestKMSearch(TestKMMixIn):
       sqlresult_to_document_list(document5.getImplicitSuccessorValueList()))
 
     # clear transactional variable cache
-    transaction.commit()
+    self.commit()
 
     # if user language is 'ja'.
     self.portal.Localizer.changeLanguage('ja')

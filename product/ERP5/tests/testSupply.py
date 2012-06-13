@@ -29,7 +29,6 @@
 
 import unittest
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.utils import SubcontentReindexingWrapper
@@ -57,7 +56,7 @@ class TestSupplyMixin:
   def beforeTearDown(self):
     module = self.portal.getDefaultModule(self.supply_portal_type)
     module.manage_delObjects(list(module.objectIds()))
-    self.stepTic()
+    self.tic()
 
 class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     ERP5TypeTestCase):
@@ -125,7 +124,6 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
 
     supply_line = self._makeSupplyLine(supply)
     supply_cell = self._makeSupplyCell(supply_line)
-    transaction.commit()
     self.tic()
 
     res_line = self.domain_tool.searchPredicateList(movement,
@@ -141,7 +139,6 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     supply.edit(start_date_range_min='2009/02/01',
                 start_date_range_max='2009/02/28')
 
-    transaction.commit()
     self.tic()
 
     res_line = self.domain_tool.searchPredicateList(movement,
@@ -156,7 +153,6 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     # movement is going back into timeframe...
     movement.edit(start_date='2009/02/15')
 
-    transaction.commit()
     self.tic()
 
     res_line = self.domain_tool.searchPredicateList(movement,
@@ -195,7 +191,6 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
 
     # set new date on supply...
     supply.edit(start_date_range_min=new_date)
-    transaction.commit()
     self.tic()
     
     # ...and check supply line
@@ -218,7 +213,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
 
     supply = self._makeSupply(start_date_range_min=original_date)
     supply_line = self._makeSupplyLine(supply)
-    self.stepTic()
+    self.tic()
 
     # create Sale Order and check Supply Line settings when 
     # a Resource is set on Sale Order Line
@@ -228,7 +223,7 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
                                                      start_date = DateTime())
     sale_order_line = sale_order.newContent(portal_type = 'Sale Order Line')
     sale_order_line.setResource(product.getRelativeUrl())
-    self.stepTic()
+    self.tic()
     supply_line_list = self.domain_tool.searchPredicateList(sale_order,
                                       portal_type=self.supply_line_portal_type)
     self.assertSameSet([supply_line], supply_line_list)
@@ -314,7 +309,6 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self.assertEqual(supply_cell.getDescription(), 'lemon')
     self.assertEqual(supply_cell.getProperty('description'), 'lemon')
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(self.portal.portal_catalog(uid=supply_cell.getUid(), description='apple')), 0)
@@ -331,7 +325,6 @@ class TestSaleSupply(TestSupplyMixin, SubcontentReindexingWrapper,
     self.assertEqual(supply_cell.getDestinationReference(), 'banana')
     self.assertEqual(supply_cell.getProperty('destination_reference'), 'banana')
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(len(self.portal.portal_catalog(uid=supply_cell.getUid(), destination_reference='orange')), 0)

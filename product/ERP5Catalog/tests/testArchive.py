@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import transaction
 import unittest
 
 from Testing import ZopeTestCase
@@ -70,7 +69,7 @@ class TestArchive(InventoryAPITestCase):
                     self.getCategoryTool().group ]:
       module.manage_delObjects(list(module.objectIds()))
     self.getPortal().portal_activities.manageClearActivities()
-    self.stepTic()
+    self.tic()
 
   def login(self):
     uf = self.getPortal().acl_users
@@ -159,7 +158,7 @@ class TestArchive(InventoryAPITestCase):
     self.assertEqual(len(inventory_module.searchFolder(portal_type="Inventory")), 1)    
 
     # Flush message queue
-    self.stepTic()
+    self.tic()
 
     # Check well in catalog
     self.original_connection_id = 'erp5_sql_connection'
@@ -233,7 +232,7 @@ class TestArchive(InventoryAPITestCase):
     dest.ready()
 
     # make sure to commit to release any lock on tables
-    transaction.commit()
+    self.commit()
 
     # Do archive
     portal_archive.manage_archive(destination_archive_id=dest.getId(),
@@ -243,7 +242,7 @@ class TestArchive(InventoryAPITestCase):
                                   clear_destination_sql_catalog=True,
                                   clear_archive_sql_catalog=True)
 
-    self.stepTic()
+    self.tic()
     self.assertEqual(portal_catalog.getSQLCatalog().id, self.new_catalog_id)
     self.assertEqual(archive.getValidationState(), 'validated')
     self.assertEqual(dest.getValidationState(), 'validated')
@@ -256,7 +255,7 @@ class TestArchive(InventoryAPITestCase):
     # Create a new organisation and check it goes in both catalog and not old one
     self.organisation_1 = module.newContent(portal_type='Organisation',
                                             title="GreatTitle3")
-    self.stepTic()
+    self.tic()
     path_list = [self.organisation_1.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.original_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.new_connection_id)
@@ -281,7 +280,7 @@ class TestArchive(InventoryAPITestCase):
     self.assertEquals(100, getInventory(node_uid=self.node.getUid()))
     self.new_mvt = self._makeMovement(quantity=50, stop_date=DateTime("2006/08/06"),
                                       simulation_state='delivered',)
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(self.folder.searchFolder(portal_type="Dummy Movement")), 1)
     # Check objects movement are indexed
     # not in archive and old one but in current catalog
@@ -296,7 +295,7 @@ class TestArchive(InventoryAPITestCase):
     self.pref = portal_preferences.newContent(id='user_pref',
                                               portal_type='Preference',
                                               preferred_archive=archive.getRelativeUrl())
-    self.stepTic()
+    self.tic()
     self.getPreferenceTool().recursiveReindexObject()
     
     self.portal.portal_workflow.doActionFor(self.pref,
@@ -317,27 +316,27 @@ class TestArchive(InventoryAPITestCase):
 
     # go on current catalog
     self.pref.edit(preferred_archive=None)
-    self.stepTic()
+    self.tic()
 
     # unindex and reindex an older movement and check it's well reindexed    
     self.inventory.unindexObject()
-    self.stepTic()
+    self.tic()
     path_list = [self.inventory.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.archive_connection_id)
     self.inventory.reindexObject()
-    self.stepTic()
+    self.tic()
     path_list = [self.inventory.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
     self.checkRelativeUrlInSQLPathList(path_list, connection_id=self.archive_connection_id)
     # check inventory in archive now
     self.pref.edit(preferred_archive=archive.getRelativeUrl())
-    self.stepTic()
+    self.tic()
     self.assertEquals(100, getInventory(node=self.node.getRelativeUrl()))
 
     # check if we unindex an object, it's remove in all catalog:
     module.manage_delObjects([self.organisation_1.id,])
-    self.stepTic()
+    self.tic()
     path_list = [self.organisation_1.getRelativeUrl()]
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.new_connection_id)
     self.checkRelativeUrlNotInSQLPathList(path_list, connection_id=self.archive_connection_id)

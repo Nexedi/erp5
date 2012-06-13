@@ -208,7 +208,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin):
                                          source_total_asset_price=52400.0)
     self.money_deposit_rendering._setSourceValue(self.document_vault)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check we have only one money deposit rendering
     self.assertEqual(len(self.money_deposit_rendering_module.objectValues()), 1)
     # get the money deposit rendering document
@@ -231,7 +231,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.money_deposit_rendering.objectValues()), 1)
     # get the money deposit rendering line
@@ -289,7 +289,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.money_deposit_rendering.objectValues()), 2)
     # get the second money deposit rendering line
@@ -330,7 +330,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/not_defined') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # Check number of money deposit rendering lines (line1 + line2 +invalid_line)
     self.assertEqual(len(self.money_deposit_rendering.objectValues()), 3)
     # Check quantity, same as checkTotal + banknote of 500: 11 for 1992 and 13 for 2003
@@ -348,7 +348,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin):
     # try to do the workflow action "confirm_action', cath the exception ValidationFailed raised by workflow transition
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.money_deposit_rendering, 'order_action', wf_id='money_deposit_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of the money deposit rendering
     state = self.money_deposit_rendering.getSimulationState()
     # check the state is draft
@@ -388,7 +388,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.money_deposit_rendering, 'order_action', wf_id='money_deposit_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.money_deposit_rendering.getSimulationState()
     # check state is ordered
@@ -436,7 +436,7 @@ class TestERP5BankingMoneyDepositRendering(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.money_deposit_rendering, 'deliver_action', wf_id='money_deposit_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of money deposit rendering
     state = self.money_deposit_rendering.getSimulationState()
     # check that state is delivered

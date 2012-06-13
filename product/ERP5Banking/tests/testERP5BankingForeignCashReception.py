@@ -128,7 +128,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
     # set source reference
     self.setDocumentSourceReference(self.foreign_cash_reception)
     # execute tic
-    self.stepTic()
+    self.tic()
     # get the cash inventory document
     self.foreign_cash_reception = getattr(self.foreign_cash_reception_module, 'foreign_cash_reception')
     # check its portal type
@@ -148,7 +148,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
             self.quantity_usd_50,
             variation_list=self.not_defined_variation_list)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.foreign_cash_reception.objectValues()), 1)
     # get the cash transfer line
@@ -192,7 +192,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
             self.quantity_usd_20,
             variation_list=self.not_defined_variation_list)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.foreign_cash_reception.objectValues()), 2)
     # get the cash transfer line
@@ -320,7 +320,7 @@ class TestERP5BankingForeignCashReception(TestERP5BankingMixin):
     self.assertEqual(state, 'confirmed')
     self.workflow_tool.doActionFor(self.foreign_cash_reception, 'deliver_action', wf_id='foreign_cash_reception_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of cash sorting
     state = self.foreign_cash_reception.getSimulationState()
     # check that state is delivered

@@ -123,6 +123,7 @@ event = portal.event_module.newContent(portal_type=\'Mail Message\',\n
                                        default_follow_up =campaign.getRelativeUrl(),\n
                                        description=howto_dict[\'post_event_howto_event_description\'],\n
                                        text_content=howto_dict[\'post_event_howto_event_content\'])\n
+event.plan()\n
 \n
 context.portal_caches.clearAllCache()\n
 \n

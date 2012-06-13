@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
@@ -61,7 +60,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     self.tic()
     for folder in (self.portal.organisation_module,
                    self.portal.sale_order_module,
@@ -71,7 +70,6 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
                    self.portal.returned_sale_packing_list_module,
                    self.portal.portal_simulation,):
       folder.manage_delObjects([x for x in folder.objectIds()])
-    transaction.commit()
     self.tic()
 
 
@@ -354,8 +352,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     returned_packing_list_line.setVariationCategoryList(line_vcl)   
     base_id = 'variation'
     returned_packing_list_line.setCellRange(line_vcl, base_id=base_id) 
-    transaction.commit()
-    self.stepTic()
+    self.tic()
    
     self.assertEquals(2, len(variation_category_list))
     cell_key_list = list(returned_packing_list_line.getCellKeyList(base_id=base_id))
@@ -369,7 +366,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
                 price=100, quantity=200,
                 predicate_category_list=cell_key,
                 variation_category_list=cell_key)
-    transaction.commit()
+    self.commit()
     cell_list = returned_packing_list_line.objectValues(
         portal_type=self.returned_packing_list_cell_portal_type)
     self.assertEquals(2, len(cell_list))
@@ -412,7 +409,7 @@ class ReturnedSalePackingListMixin(TestPackingListMixin):
     self.assertEquals(2, len(cell_list))
     # delete cells
     rplwc_line.deleteContent(map(lambda x: x.getId(), cell_list))
-    transaction.commit()
+    self.commit()
     
     cell_list = rplwc_line.objectValues(
     ortal_type=self.returned_packing_list_cell_portal_type)

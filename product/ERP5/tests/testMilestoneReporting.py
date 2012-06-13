@@ -28,7 +28,6 @@
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5ReportTestCase
 from Products.ERP5Type.tests.utils import reindex
-import transaction
 from DateTime import DateTime
 
 class MilestoneReportingMixin:
@@ -55,7 +54,6 @@ class MilestoneReportingMixin:
     self.portal = self.getPortal()
     for module in (self.portal.project_module,):
       module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def getDataLineLineListByCallingMilestoneReport(self,
