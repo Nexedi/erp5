@@ -6524,6 +6524,85 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     new_bt5_obj.build()
     template_tool.export(new_bt5_obj)
 
+  def test_local_roles_group_id(self):
+    """Tests that roles definition defining local roles group ids are properly
+    exported and installed.
+    """
+    # change security uid columns
+    sql_catalog = self.portal.portal_catalog.getSQLCatalog()
+    saved_sql_catalog_security_uid_columns = \
+      sql_catalog.sql_catalog_security_uid_columns
+
+    sql_catalog.sql_catalog_security_uid_columns = (
+      ' | security_uid',
+      'Alternate | alternate_security_uid',
+    )
+
+    types_tool = self.portal.portal_types
+    object_type = types_tool.newContent('Geek Object', 'Base Type',
+                                type_class='Person')
+
+    types_tool.newContent('Geek Module', 'Base Type',
+      type_class='Folder',
+      type_filter_content_type=1,
+      type_allowed_content_type_list=('Geek Object',), )
+
+    self.portal.newContent(portal_type='Geek Module', id='geek_module')
+    new_object = self.portal.geek_module.newContent(
+      portal_type='Geek Object', id='1')
+
+    # simulate role assignment
+    new_object.__ac_local_roles__ = dict(group=['Assignee'])
+    new_object.__ac_local_roles_group_id_dict__ = dict(group=('Alternate',))
+
+    self.stepTic()
+    transaction.commit()
+
+    object_type.newContent(portal_type='Role Information',
+                           local_roles_group_id='Alternate',
+                           role_name_list=('Assignee', ))
+
+    bt = self.portal.portal_templates.newContent(
+                          portal_type='Business Template',
+                          title=self.id(),
+                          template_local_roles_list=('geek_module/1',),
+                          template_path_list=('geek_module/1',),
+                          template_portal_type_role_list=('Geek Object',),)
+
+    self.stepTic()
+    bt.build()
+    self.stepTic()
+    export_dir = tempfile.mkdtemp()
+    try:
+      bt.export(path=export_dir, local=True)
+      self.stepTic()
+      new_bt = self.portal.portal_templates.download(
+                        url='file://%s' % export_dir)
+    finally:
+      shutil.rmtree(export_dir)
+
+    # uninstall role information and paths
+    object_type.manage_delObjects([x.id for x in object_type.getRoleInformationList()])
+    self.portal.geek_module.manage_delObjects(['1'])
+    self.stepTic()
+
+    new_bt.install()
+    try:
+      role, = object_type.getRoleInformationList()
+      self.assertEquals('Alternate', role.getLocalRolesGroupId())
+      path = self.portal.geek_module['1']
+      self.assertEquals([('group', ['Assignee'],)], [item for item in
+            path.__ac_local_roles__.items() if item[1] != ['Owner']])
+      self.assertEquals(dict(group=('Alternate',)),
+        path.__ac_local_roles_group_id_dict__)
+    finally:
+      # restore state
+      sql_catalog.sql_catalog_security_uid_columns = \
+        saved_sql_catalog_security_uid_columns
+      types_tool.manage_delObjects(['Geek Object', 'Geek Module'])
+      self.portal.manage_delObjects(['geek_module'])
+      self.stepTic()
+
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()
     sequence_string = '\

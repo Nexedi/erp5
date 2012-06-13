@@ -54,6 +54,7 @@
             <key> <string>src</string> </key>
             <value> <string>CREATE TABLE roles_and_users (\n
   uid INT UNSIGNED,\n
+  local_roles_group_id VARCHAR(255),\n
   allowedRolesAndUsers VARCHAR(255),\n
   KEY `uid` (`uid`),\n
   KEY `allowedRolesAndUsers` (`allowedRolesAndUsers`)\n

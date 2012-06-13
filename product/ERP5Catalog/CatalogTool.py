@@ -101,23 +101,32 @@ class IndexableObjectWrapper(object):
                                               getSQLCatalogRoleKeysList())
         getUserById = portal.acl_users.getUserById
 
+        allowed_dict = dict()
+
         # For each local role of a user:
         #   If the local role grants View permission, add it.
         # Every addition implies 2 lines:
         #   user:<user_id>
         #   user:<user_id>:<role_id>
         # A line must not be present twice in final result.
-        allowed = set(rolesForPermissionOn('View', ob))
+        allowed_role_set = set(rolesForPermissionOn('View', ob))
         # XXX the permission name is included by default for verbose
         # logging of security errors, but the catalog does not need to
         # index it. Unfortunately, rolesForPermissionOn does not have
         # an option to disable this behavior at calling time, so
         # discard it explicitly.
-        allowed.discard('_View_Permission')
+        allowed_role_set.discard('_View_Permission')
         # XXX Owner is hardcoded, in order to prevent searching for user on the
         # site root.
-        allowed.discard('Owner')
-        add = allowed.add
+        allowed_role_set.discard('Owner')
+
+        # XXX make this a method of base ?
+        local_roles_group_id_group_id = getattr(ob,
+          '__ac_local_roles_group_id_dict__', dict())
+
+        allowed_by_local_roles_group_id = dict()
+        allowed_by_local_roles_group_id[''] = allowed_role_set
+
         user_role_dict = {}
         user_view_permission_role_dict = {}
         for user, roles in localroles.iteritems():
@@ -127,26 +136,28 @@ class IndexableObjectWrapper(object):
               # If role is monovalued, check if key is a user.
               # If not, continue to index it in roles_and_users table.
               user_role_dict[role] = user
-              if role in allowed:
+              if role in allowed_role_set:
                 user_view_permission_role_dict[role] = user
-            elif role in allowed:
-              add(prefix)
-              add(prefix + ':' + role)
+            elif role in allowed_role_set:
+              for group in local_roles_group_id_group_id.get(user, ('', )):
+                allowed_by_local_roles_group_id.setdefault(group, set()).update(
+                   (prefix, '%s:%s' % (prefix, role)))
 
-        self._cache_result = result = (sorted(allowed), user_role_dict,
+        # sort `allowed` principals
+        sorted_allowed_by_local_roles_group_id = dict()
+        for local_roles_group_id, allowed in \
+                allowed_by_local_roles_group_id.items():
+          sorted_allowed_by_local_roles_group_id[local_roles_group_id] = tuple(
+            sorted(allowed))
+
+        self._cache_result = result = (sorted_allowed_by_local_roles_group_id,
+                                       user_role_dict,
                                        user_view_permission_role_dict)
       return result
 
-    def allowedRolesAndUsers(self):
-      """
-      Return a list of roles and users with View permission.
-      Used by Portal Catalog to filter out items you're not allowed to see.
-
-      WARNING (XXX): some user base local role association is currently
-      being stored (ex. to be determined). This should be prevented or it will
-      make the table explode. To analyse the symptoms, look at the
-      user_and_roles table. You will find some user:foo values
-      which are not necessary.
+    def getLocalRolesGroupIdDict(self):
+      """Returns a mapping of local roles group id to roles and users with View
+      permission.
       """
       return self._getSecurityParameterList()[0]
 
@@ -456,13 +467,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
           allowedRolesAndUsers = new_allowedRolesAndUsers
           role_column_dict = new_role_column_dict
 
-
       return allowedRolesAndUsers, role_column_dict, local_role_column_dict
 
-    def getSecurityUidListAndRoleColumnDict(self, sql_catalog_id=None, **kw):
+    def getSecurityUidDictAndRoleColumnDict(self, sql_catalog_id=None, **kw):
       """
-        Return a list of security Uids and a dictionnary containing available
-        role columns.
+        Return a dict of local_roles_group_id -> security Uids and a
+        dictionnary containing available role columns.
 
         XXX: This method always uses default catalog. This should not break a
         site as long as security uids are considered consistent among all
@@ -477,30 +487,41 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         cache_key = tuple(allowedRolesAndUsers)
         tv = getTransactionalVariable()
         try:
-          security_uid_cache = tv['getSecurityUidListAndRoleColumnDict']
+          security_uid_cache = tv['getSecurityUidDictAndRoleColumnDict']
         except KeyError:
-          security_uid_cache = tv['getSecurityUidListAndRoleColumnDict'] = {}
+          security_uid_cache = tv['getSecurityUidDictAndRoleColumnDict'] = {}
         try:
-          security_uid_list = security_uid_cache[cache_key]
+          security_uid_dict = security_uid_cache[cache_key]
         except KeyError:
           if method is None:
             warnings.warn("The usage of allowedRolesAndUsers is "\
                           "deprecated. Please update your catalog "\
                           "business template.", DeprecationWarning)
-            security_uid_list = [x.security_uid for x in \
+            security_uid_dict = {None: [x.security_uid for x in \
               self.unrestrictedSearchResults(
                 allowedRolesAndUsers=allowedRolesAndUsers,
                 select_expression="security_uid",
-                group_by_expression="security_uid")]
+                group_by_expression="security_uid")] }
           else:
             # XXX: What with this string transformation ?! Souldn't it be done in
-            # dtml instead ?
+            # dtml instead ? ... yes, but how to be bw compatible ?
             allowedRolesAndUsers = [sqlquote(role) for role in allowedRolesAndUsers]
-            security_uid_list = [x.uid for x in method(security_roles_list = allowedRolesAndUsers)]
-          security_uid_cache[cache_key] = security_uid_list
+
+            security_uid_dict = dict()
+            for brain in method(security_roles_list=allowedRolesAndUsers):
+              try:
+                local_roles_group_id = brain.local_roles_group_id
+              except AttributeError:
+                LOG("ERP5Catalog", PROBLEM,
+                    "sql_search_security is not up to date, falling back.")
+                local_roles_group_id = ''
+              security_uid_dict.setdefault(local_roles_group_id,
+                  []).append(brain.uid)
+
+          security_uid_cache[cache_key] = security_uid_dict
       else:
-        security_uid_list = []
-      return security_uid_list, role_column_dict, local_role_column_dict
+        security_uid_dict = []
+      return security_uid_dict, role_column_dict, local_role_column_dict
 
     security.declarePublic('getSecurityQuery')
     def getSecurityQuery(self, query=None, sql_catalog_id=None, **kw):
@@ -516,24 +537,42 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # We need no security check for super user.
         return query
       original_query = query
-      security_uid_list, role_column_dict, local_role_column_dict = \
-          self.getSecurityUidListAndRoleColumnDict(
-              sql_catalog_id=sql_catalog_id, **kw)
+      security_uid_dict, role_column_dict, local_role_column_dict = \
+          self.getSecurityUidDictAndRoleColumnDict(sql_catalog_id=sql_catalog_id, **kw)
+
+      role_query = None
+      security_uid_query = None
       if role_column_dict:
         query_list = []
         for key, value in role_column_dict.items():
           new_query = Query(**{key : value})
           query_list.append(new_query)
         operator_kw = {'operator': 'OR'}
-        query = ComplexQuery(*query_list, **operator_kw)
-        # If security_uid_list is empty, adding it to criterions will only
-        # result in "false or [...]", so avoid useless overhead by not
-        # adding it at all.
-        if security_uid_list:
-          query = ComplexQuery(Query(security_uid=security_uid_list, operator='IN'),
-                               query, operator='OR')
-      elif security_uid_list:
-        query = Query(security_uid=security_uid_list, operator='IN')
+        role_query = ComplexQuery(*query_list, **operator_kw)
+      if security_uid_dict:
+        catalog_security_uid_groups_columns_dict = \
+            self.getSQLCatalog().getSQLCatalogSecurityUidGroupsColumnsDict()
+
+        query_list = []
+        for local_roles_group_id, security_uid_list in\
+                 security_uid_dict.iteritems():
+          assert security_uid_list
+          query_list.append(Query(**{
+            catalog_security_uid_groups_columns_dict[local_roles_group_id]:
+                  security_uid_list,
+            'operator': 'IN'}))
+
+        security_uid_query = ComplexQuery(*query_list, operator='OR')
+
+      if role_query:
+        if security_uid_query:
+          # merge
+          query = ComplexQuery(security_uid_query, role_query, operator='OR')
+        else:
+          query = role_query
+      elif security_uid_query:
+        query = security_uid_query
+
       else:
         # XXX A false query has to be generated.
         # As it is not possible to use SQLKey for now, pass impossible value
@@ -672,16 +711,28 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         else:
           document_w = w
 
-        (security_uid, optimised_roles_and_users) = catalog.getSecurityUid(document_w)
-        #LOG('catalog_object optimised_roles_and_users', 0, str(optimised_roles_and_users))
-        # XXX we should build vars begore building the wrapper
+        (security_uid_dict, optimised_roles_and_users) = \
+              catalog.getSecurityUidDict(document_w)
+
+
         w.optimised_roles_and_users = optimised_roles_and_users
+
+        catalog_security_uid_groups_columns_dict = \
+            catalog.getSQLCatalogSecurityUidGroupsColumnsDict()
+        default_security_uid_column = catalog_security_uid_groups_columns_dict['']
+        for local_roles_group_id, security_uid in security_uid_dict.items():
+          catalog_column = catalog_security_uid_groups_columns_dict.get(
+                local_roles_group_id, default_security_uid_column)
+          setattr(w, catalog_column, security_uid)
+
+        # XXX we should build vars begore building the wrapper
+
         predicate_property_dict = catalog.getPredicatePropertyDict(object)
         if predicate_property_dict is not None:
           w.predicate_property_dict = predicate_property_dict
         else:
           w.predicate_property_dict = {}
-        w.security_uid = security_uid
+
         (subject_set_uid, optimised_subject_list) = catalog.getSubjectSetUid(document_w)
         w.optimised_subject_list = optimised_subject_list
         w.subject_set_uid = subject_set_uid

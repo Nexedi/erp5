@@ -183,5 +183,4 @@ class RoleInformation(XMLObject):
 
     return group_id_role_dict
 
-
 InitializeClass(RoleInformation)

@@ -91,6 +91,7 @@
                         <string>my_template_catalog_topic_key_list</string>
                         <string>my_template_catalog_scriptable_key_list</string>
                         <string>my_template_catalog_local_role_key_list</string>
+                        <string>my_template_catalog_security_uid_column_list</string>
                       </list>
                     </value>
                 </item>
