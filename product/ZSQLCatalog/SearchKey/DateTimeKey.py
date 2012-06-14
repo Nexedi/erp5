@@ -258,8 +258,11 @@ class DateTimeKey(SearchKey):
     query_list = []
     extend = query_list.extend
     for comparison_operator, value_list in operator_value_dict.iteritems():
+      reference_value = value_list[0]
+      if isinstance(reference_value, dict):
+        reference_value = reference_value['query']
       try:
-        if parsed:
+        if isinstance(reference_value, basestring):
           subquery_list = operator_matcher_dict[comparison_operator](
                    self, group, column, value_list, comparison_operator,
                    logical_operator)
