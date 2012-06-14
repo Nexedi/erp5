@@ -1,0 +1,43 @@
+Localizer 1.3.0 (2009/XX/XX)
+============================
+
+Localizer is a Zope product for developers and web masters.  Localizer
+solves the problem of building multilingual products and web sites,
+ranging from internationalization and localization of the user
+interface to management of multilingual content.
+
+What is new?
+------------
+
+Upgraded to Zope 2.12, Python 2.5 and itools 0.50 (previous versions are
+not supported).
+
+Some API obsolete since at least 2004 has been removed:
+
+- The 'ugettext' function has been removed from DTML and ZPT templates,
+  use instead 'gettext'.
+
+- Four methods from the 'LocalPropertyManger' class have been removed:
+
+    _setLocalPropValue => set_localpropvalue
+    _setLocalProperty  => set_localproperty
+    _delLocalProperty  => del_localproperty
+    getLocalProperty   => getLocalAttribute
+
+
+Resources
+---------
+
+Download
+http://download.hforge.org/localizer/Localizer-1.3.0.tar.gz
+http://download.hforge.org/itools/0.50/itools-0.50.7.tar.gz
+
+Home
+http://www.localizer.org/
+
+Mailing list
+http://www.hforge.org/community
+http://archives.hforge.org/index.cgi?list=localizer
+
+Bug Tracker
+http://bugs.hforge.org/

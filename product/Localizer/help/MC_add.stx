@@ -1,0 +1,14 @@
+Localizer - Add Message Catalog
+
+  Description
+
+    This view allows to create a new Message Catalog.
+
+  Controls
+
+    'Id' -- The id of the message catalog
+
+    Title -- The optional title for the message catalog.
+
+    Languages -- The list of available languages that the message catalog
+    will have.

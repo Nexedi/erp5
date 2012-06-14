@@ -1,0 +1,35 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<p class="form-help">
+  <dtml-gettext>
+    Locale folders are useful to store special multilingual objects like
+    images and specific logic. If used the <tt>Localizer</tt> object will
+    transparently add the right locale folder to the url. If you want to
+    use locale folders check the checkbox, otherwise uncheck it, then click
+    the <tt>Change</tt> button.
+  </dtml-gettext>
+</p>
+
+
+<blockquote>
+<form action="manage_hook" method="post">
+  <table>
+    <tr>
+      <td>
+        <input type="checkbox" name="hook"<dtml-if hooked> checked</dtml-if>>
+      </td>
+      <td>
+        <dtml-var "gettext('Use locale folders')">
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><input type="submit" value=" <dtml-var "gettext('Change')"> "></td>
+    </tr>
+  </table>
+</form>
+</blockquote>
+
+
+<dtml-var manage_page_footer>

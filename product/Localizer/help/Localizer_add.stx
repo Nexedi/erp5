@@ -1,0 +1,15 @@
+Localizer - Add Localizer
+
+  Description
+
+    This view allows to create a new Localizer.
+
+  Controls
+
+    Id --  The id of the object is 'Localizer'.
+
+    Title -- The optional title for the Localizer.
+
+    Languages -- The list of available languages that the Localizer will have.
+
+    Add -- Adds the Localizer instance.

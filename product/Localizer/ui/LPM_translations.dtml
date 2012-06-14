@@ -1,0 +1,92 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+<dtml-comment>
+    Set here the default values for the REQUEST varibiles used 
+    for the navigation of the web interface
+</dtml-comment>
+
+<p class="form-help">
+This page allows you to see the properties of LocalContent and translate them.
+Select a property and the property value will appear in the default language.
+You can navigate throw the property translations by clicking on one of the available
+languages. After changing the translation click Save Changes.
+</p>
+<p class="form-help">
+When the property value in the default language changes all the translations become
+obsolete and they are marked with <img src="misc_/Localizer/obsolete" border="0" alt="Obsolete translation flag" />.
+</p>
+<dtml-let languages="get_targetLanguages()"
+          properties="getLocalProperties()">
+
+<dtml-if languages>
+    <dtml-if properties>
+        <dtml-let curr_lang="REQUEST.get('lang', None) or languages[0]['code']"
+                  default_lang="get_default_language()"
+                  curr_prop="REQUEST.get('prop', properties[0]['id'])"
+                  curr_value="getLocalAttribute(curr_prop, curr_lang)">
+
+        <table border="0" cellspacing="3" cellpadding="3" width="90%">
+            <tr>
+                <td rowspan="2" width="30%">
+                    <textarea cols="65" rows="10" wrap="virtual"
+                        readonly="readonly"><dtml-var "getLocalAttribute(curr_prop, default_lang)" html_quote></textarea>
+                    <br />
+                    <dtml-in languages mapping sort=name>
+                        <dtml-let name="gettext(name)">
+                            <dtml-if "code != get_default_language()">
+                            <a href="?lang=<dtml-var code url_quote>&prop=<dtml-var curr_prop url_quote>">
+                                 <dtml-if "code==curr_lang">
+                                    <dtml-if "is_obsolete(curr_prop, code)">
+                                        <span style="font-weight:bold"><dtml-var name></span>
+                                            <img src="misc_/Localizer/obsolete" border="0" alt="Obsolete translation flag" />
+                                    <dtml-else>
+                                        <span style="font-weight:bold"><dtml-var name></span>
+                                    </dtml-if>
+                                <dtml-else>
+                                    <dtml-if "is_obsolete(curr_prop, code)">
+                                        <dtml-var name><img src="misc_/Localizer/obsolete" border="0" alt="Obsolete translation flag" />
+                                    <dtml-else>
+                                        <dtml-var name>
+                                    </dtml-if>
+                                </dtml-if>
+                            </a>
+                            </dtml-if>
+                        </dtml-let>
+                    </dtml-in>
+                    <form action="<dtml-var URL1>" method="post" name="frmProperties">
+                    <textarea name="value:utf8:ustring" cols="65" rows="10"
+                        wrap="virtual"><dtml-var curr_value html_quote></textarea>
+                    <input type="hidden" name="id" value="<dtml-var curr_prop>" />
+                    <input type="hidden" name="destination" value="manage_transPropertiesForm" />
+                    <input type="hidden" name="code" value="<dtml-var curr_lang>" />
+                    <dtml-if languages>
+                        <input type="submit" name="manage_transLocalProperty:method" value=" <dtml-var "gettext('Save changes')"> " />
+                    </dtml-if>
+                    </form>
+                </td>
+                <td valign="top">
+                    <div class="list-header" style="font-weight:bold"> Properties </div>
+                    <dtml-in properties mapping>
+                        <div <dtml-if sequence-even> style="background-color:white"<dtml-elif sequence-odd> style="background-color:#F0F0F0"</dtml-if>>
+                            <a href="?lang=<dtml-var curr_lang url_quote>&prop=<dtml-var id url_quote>">
+                            <dtml-if "id == curr_prop">
+                                <span style="font-weight:bold"><em><dtml-var id></em></span>
+                            <dtml-else>
+                                <dtml-var id>
+                            </dtml-if></a></div>
+                    </dtml-in>
+               </td>
+            </tr>
+        </table>
+        </dtml-let>
+    <dtml-else>
+        There are no properties.
+    </dtml-if>
+<dtml-else>
+    <p>No languages available, please add them using the
+        <a href='manage_languages'>Languages</a> tab</p>
+</dtml-if>
+</dtml-let>
+
+<dtml-var manage_page_footer>

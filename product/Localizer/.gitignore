@@ -1,0 +1,4 @@
+*.pyc
+*.swp
+locale/*.mo
+locale/*~

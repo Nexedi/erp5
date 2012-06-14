@@ -1,0 +1,13 @@
+<configure xmlns="http://namespaces.zope.org/zope">
+
+  <subscriber
+    for="Products.Localizer.Localizer.Localizer
+         zope.lifecycleevent.interfaces.IObjectMovedEvent"
+    handler="Products.Localizer.Localizer.Localizer_moved" />
+
+  <subscriber
+    for="Products.Localizer.MessageCatalog.MessageCatalog
+         zope.lifecycleevent.interfaces.IObjectMovedEvent"
+    handler="Products.Localizer.MessageCatalog.MessageCatalog_moved" />
+
+</configure>

@@ -1,0 +1,34 @@
+Message Catalog - Manage messages.
+
+  Description
+
+    This screen lets to manage the message catalog, it lets to remove
+    messages and to edit the translations.
+
+    The screen is divided in two parts, the working area at the left
+    and the navigation system at the right.
+
+    The working area
+
+      It is divided in two parts, at the top there is a non editable
+      text area that contains the message to be translated.
+
+      At the bottom there's an editable text area wich lets to change
+      the translation. Above this text area there is a menu which lets
+      to change the language that is being edited.
+
+      Finally, there are two buttons, one saves the translation and the
+      other removes the current message.
+
+    Navigation system
+
+      It lets to browse the messages and is divided in two parts.
+
+      At the top there is a search form that lets to show only a subset of
+      the messages, following two criterias. The first one is wether to show
+      all the messages or only those that have an empty translation. The
+      second criteria if used will only show the messages that match the
+      specified string.
+
+      Below the search form there is a list with all the found messages,
+      which can be used to change the message that is being edited.
