@@ -4481,7 +4481,7 @@ CREATE TABLE alternate_roles_and_users (
       local_roles_group_id='Alternate')
 
     self.portal.portal_caches.clearAllCache()
-    self.stepTic()
+    self.tic()
 
     try:
       # create two persons and users
@@ -4496,7 +4496,7 @@ CREATE TABLE alternate_roles_and_users (
       user2.newContent(portal_type='Assignment').open()
       user2.updateLocalRolesOnSecurityGroups()
       self.assertEquals(user2.__ac_local_roles__.get('user2'), ['Auditor'])
-      self.stepTic()
+      self.tic()
 
       # security_uid_dict in catalog contains entries for user1 and user2:
       user1_alternate_security_uid = sql_catalog.security_uid_dict[

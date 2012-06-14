@@ -6555,7 +6555,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     new_object.__ac_local_roles__ = dict(group=['Assignee'])
     new_object.__ac_local_roles_group_id_dict__ = dict(group=('Alternate',))
 
-    self.stepTic()
+    self.tic()
     transaction.commit()
 
     object_type.newContent(portal_type='Role Information',
@@ -6569,13 +6569,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                           template_path_list=('geek_module/1',),
                           template_portal_type_role_list=('Geek Object',),)
 
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       new_bt = self.portal.portal_templates.download(
                         url='file://%s' % export_dir)
     finally:
@@ -6584,7 +6584,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     # uninstall role information and paths
     object_type.manage_delObjects([x.id for x in object_type.getRoleInformationList()])
     self.portal.geek_module.manage_delObjects(['1'])
-    self.stepTic()
+    self.tic()
 
     new_bt.install()
     try:
@@ -6601,7 +6601,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
         saved_sql_catalog_security_uid_columns
       types_tool.manage_delObjects(['Geek Object', 'Geek Module'])
       self.portal.manage_delObjects(['geek_module'])
-      self.stepTic()
+      self.tic()
 
   def test_BusinessTemplateWithTest(self):
     sequence_list = SequenceList()
