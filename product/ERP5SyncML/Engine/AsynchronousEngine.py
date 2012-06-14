@@ -173,6 +173,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
           # Do the final process after all other message are processed
           syncml_logger.info("server will finish sync in activity")
           subscriber.activate(after_method_id=('processServerSynchronization',
+                                               'processClientSynchronization',
                                                'applySyncCommand'),
                               after_tag=(tag,
                                       subscriber.getParentValue().getRelativeUrl()),
@@ -248,7 +249,8 @@ class SyncMLAsynchronousEngine(EngineMixin):
     final_activate_kw = {
       'activity' : 'SQLQueue',
       'after_tag' : tag,
-      'after_method_id' : "processServerSynchronization",
+      'after_method_id' : ("processServerSynchronization",
+                           "processClientSynchronization"),
 #      'after_tag_and_method_id' : (tag, ('sendSyncCommand',
 #                                         'getAndActivate',
 #                                         'sendMessage')),
