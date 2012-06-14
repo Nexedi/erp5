@@ -60,6 +60,9 @@ if me is not None:\n
   if section is not None:\n
     context.setSourceSectionValue(section)\n
     context.setPriceCurrency(section.getPriceCurrency())\n
+new_id = context.portal_ids.generateNewLengthId(id_group = "PTGR",  default=1)\n
+reference = "PTGR-%06d" % (new_id)\n
+context.setSourceReference(reference)\n
 </string> </value>
         </item>
         <item>
