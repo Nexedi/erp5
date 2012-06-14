@@ -336,7 +336,8 @@ class SyncMLSubscription(XMLObject):
           # use gid to compare because their ids can be different
           incoming_data = conduit.replaceIdFromXML(incoming_data, 'gid', gid)
           # produce xupdate
-          data_diff = conduit.generateDiff(incoming_data, actual_xml)
+          data_diff = conduit.generateDiff(new_data=incoming_data,
+                                           former_data=actual_xml)
 
           if data_diff and len(data_diff):
             # XXX Here maybe a conflict must be raised as document was never
@@ -625,7 +626,8 @@ class SyncMLSubscription(XMLObject):
               new_document = conduit.replaceIdFromXML(xml_object, 'gid', gid)
               previous_document = conduit.replaceIdFromXML(signature.getData(),
                                                            'gid', gid)
-              data_diff = conduit.generateDiff(new_document, previous_document)
+              data_diff = conduit.generateDiff(new_data=new_document,
+                                               former_data=previous_document)
 
             if not data_diff:
               # MD5 Checksum can detect changes like <lang/> != <lang></lang>
