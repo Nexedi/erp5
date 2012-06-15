@@ -70,8 +70,6 @@ except ImportError:
     pass
 
 
-from AccessControl import getSecurityManager
-from Products.ERP5Type import Permissions
 from DateTime import DateTime
 from random import randint
 
@@ -186,7 +184,7 @@ class FolderMixIn(ExtensionClass.Base):
     Generate id base on date, useful for HBTreeFolder
     We also append random id
     """
-    current_date = str(DateTime().Date()).replace("/", "")
+    current_date = DateTime().strftime('%Y%m%d')
     my_id = self._generateRandomId()
     return "%s-%s" %(current_date, my_id)
     
@@ -1200,7 +1198,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     if isinstance(to_class, type('')):
       to_class = getClassFromString(to_class)
 
-    folder = self.getObject()
     for o in self.listFolderContents():
       # Make sure this sub object is not the same as object
       if o.getPhysicalPath() != self.getPhysicalPath():
@@ -1485,7 +1482,6 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
     corrected_list = []
     for object in from_object_related_object_list:
       #LOG('Folder.mergeContent, working on object:',0,object)
-      object_url = object.getRelativeUrl()
       new_category_list = []
       found = 0
       for category in object.getCategoryList(): # so ('destination/person/1',...)
