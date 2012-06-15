@@ -268,7 +268,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
   def _doTranslationDomainRegistration(self):
     from zope.i18n.interfaces import ITranslationDomain
-    from Products.ERP5Type.patches.Localizer import (
+    from Products.Localizer.MessageCatalog import (
       message_catalog_alias_sources
     )
     sm = self.getSiteManager()

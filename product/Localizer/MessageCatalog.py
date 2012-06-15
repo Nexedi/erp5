@@ -568,21 +568,21 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
 
         # Get the messages, and perhaps its translations.
+        # Convert keys to unicode for proper sorting.
         d = {}
         if x == 'locale.pot':
             filename = x
             for k in self._messages.keys():
-                d[k] = ""
+                d[to_unicode(k, encoding=charset)] = u""
         else:
             filename = '%s.po' % x
             for k, v in self._messages.items():
-                try:
-                    d[k] = v[x]
-                except KeyError:
-                    d[k] = ""
+                k = to_unicode(k, encoding=charset)
+                d[k] = to_unicode(v.get(x, ""), encoding=charset)
 
         # Generate the file
         def backslashescape(x):
+            x = to_str(x)
             quote_esc = compile(r'"')
             x = quote_esc.sub('\\"', x)
 
@@ -605,13 +605,6 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             RESPONSE.setHeader('Content-type','application/data')
             RESPONSE.setHeader('Content-Disposition',
                                'inline;filename=%s' % filename)
-
-        r2 = []
-        for x in r:
-            if isinstance(x, unicode):
-                r2.append(x.encode(charset))
-            else:
-                r2.append(x)
 
         return '\n'.join(r2)
 
@@ -702,6 +695,17 @@ InitializeClass(MessageCatalog)
 InitializeClass(POFile)
 
 
+# This dict define the alias between old Translation Service catalog id
+#   and new Localizer Message Catalog.
+message_catalog_aliases = { "Default": "default"
+                          , "ui"     : "erp5_ui"
+                          , "content": "erp5_content"
+                          }
+
+# "invert" message_catalog_aliases mapping
+message_catalog_alias_sources = {}
+for name, value in message_catalog_aliases.items():
+    message_catalog_alias_sources.setdefault(value, []).append(name)
 
 def MessageCatalog_moved(object, event):
     # FIXME This does not work if what we move is the folder that contains
@@ -710,9 +714,19 @@ def MessageCatalog_moved(object, event):
     if container is not None:
         sm = getSiteManager(container)
         sm.unregisterUtility(object, ITranslationDomain, event.oldName)
+        # unregister old aliases
+        oldAliases = message_catalog_alias_sources.get(event.oldName, ())
+        sm = getSiteManager(event.oldParent)
+        for alias in oldAliases:
+            sm.unregisterUtility(object, ITranslationDomain, alias)
 
     container = event.newParent
     if container is not None:
         sm = getSiteManager(container)
         sm.registerUtility(object, ITranslationDomain, event.newName)
 
+        # register new aliases
+        newAliases = message_catalog_alias_sources.get(event.newName, ())
+        sm = getSiteManager(event.newParent)
+        for alias in newAliases:
+            sm.registerUtility(object, ITranslationDomain, alias)

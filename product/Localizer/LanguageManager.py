@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2000-2004  Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
 from urlparse import urlparse
 
 # Import from itools
-from itools.i18n import get_language_name, get_languages
+from .itools.i18n import get_language_name, get_languages
 
 # Import from Zope
 from App.class_init import InitializeClass
@@ -60,8 +60,11 @@ class LanguageManager(Tabs):
         """Adds a new language.
         """
         if language not in self._languages:
-            self._languages = tuple(self._languages) + (language,)
-
+            # Sort the language list, else selected languages
+            # can be nearly random.
+            new_language_list = tuple(self._languages) + (language,)
+            new_language_list = tuple(sorted(new_language_list))
+            self._languages = new_language_list
 
     def del_language(self, language):
         """Removes a language.
@@ -77,7 +80,7 @@ class LanguageManager(Tabs):
         that tells wether the language is the default one or not.
         """
         return [ {'code': x,
-                  'name': get_language_name(x),
+                  'name': self.get_language_name(x),
                   'default': x == self._default_language}
                  for x in self._languages ]
 
@@ -127,7 +130,11 @@ class LanguageManager(Tabs):
         """
         if id is None:
             id = self.get_default_language()
-        return get_language_name(id)
+        language_name = get_language_name(id)
+        if language_name=='???':
+            return self.get_user_defined_language_name(id) or language_name
+        else:
+            return language_name
 
 
     security.declarePublic('get_available_languages')
@@ -188,7 +195,7 @@ class LanguageManager(Tabs):
         """
         Returns all ISO languages, used by 'manage_languages'.
         """
-        return get_languages()
+        return get_languages() + self.get_user_defined_languages()
 
 
     security.declareProtected('Manage languages', 'manage_addLanguage')
@@ -246,6 +253,45 @@ class LanguageManager(Tabs):
         self._upgrade()
         RESPONSE.redirect('manage_main')
 
+    # Add a feature which allows users to be able to add a new language.
+    security.declarePublic('get_user_defined_language_name')
+    def get_user_defined_language_name(self, id=None):
+        """
+        Returns the name of the given user defined language code.
+        """
+        for language_dict in self.get_user_defined_languages():
+            if language_dict['code']==id:
+                return language_dict['name']
+
+    security.declarePublic('get_user_defined_languages')
+    def get_user_defined_languages(self):
+        user_define_language_dict_list = []
+        localizer = getattr(self, 'Localizer', None)
+        if localizer is not None:
+            for value in getattr(self, 'user_defined_languages', ()):
+                splitted_value = value.split(' ', 1)
+                if len(splitted_value)==2:
+                    user_define_language_dict_list.append(
+                        {'name':splitted_value[0].strip(),
+                         'code':splitted_value[1].strip(),})
+        return user_define_language_dict_list
+
+    def _add_user_defined_language(self, language_name, language_code):
+        self.user_defined_languages = (
+            getattr(self, 'user_defined_languages', ())+
+            ('%s %s' % (language_name, language_code),)
+            )
+        self._p_changed = True
+
+    def _del_user_defined_language(self, language_code):
+        user_defined_languages = []
+        for language_dict in self.get_user_defined_languages():
+            if language_dict['code']!=language_code:
+                user_defined_languages.append('%s %s' %
+                                              (language_dict['name'],
+                                               language_dict['code']))
+        self.user_defined_languages = tuple(user_defined_languages)
+        self._p_changed = True
 
 
 

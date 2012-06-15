@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2000-2004  Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,6 @@
 # Import from the Standard Library
 from urllib import unquote
 
-# Import from itools
-from itools.i18n import get_language_name
-
 # Import from Zope
 from AccessControl import ClassSecurityInfo
 from Acquisition import aq_parent
@@ -27,6 +24,7 @@ from App.class_init import InitializeClass
 from OFS.Folder import Folder
 from zLOG import LOG, ERROR, INFO, PROBLEM
 from zope.interface import implements
+from zope.i18n import translate
 from ZPublisher.BeforeTraverse import registerBeforeTraverse, \
      unregisterBeforeTraverse, queryBeforeTraverse, NameCaller
 
@@ -63,7 +61,8 @@ class Localizer(LanguageManager, Folder):
     id = 'Localizer'
 
     _properties = ({'id': 'title', 'type': 'string'},
-                   {'id': 'accept_methods', 'type': 'tokens'})
+                   {'id': 'accept_methods', 'type': 'tokens'},
+                   {'id': 'user_defined_languages', 'type': 'lines'},)
 
     accept_methods = ('accept_path', 'accept_cookie', 'accept_url')
 
@@ -74,6 +73,7 @@ class Localizer(LanguageManager, Folder):
         + LanguageManager.manage_options \
         + Folder.manage_options[1:]
 
+    user_defined_languages = ()
 
     def __init__(self, title, languages):
         self.title = title
@@ -207,7 +207,7 @@ class Localizer(LanguageManager, Folder):
 
         langs = []
         for x in ob_languages:
-            langs.append({'id': x, 'title': get_language_name(x),
+            langs.append({'id': x, 'title': self.get_language_name(x),
                           'selected': x == ob_language})
 
         return langs
@@ -234,6 +234,16 @@ class Localizer(LanguageManager, Folder):
 
         response.redirect(goto)
 
+    security.declarePublic('translate')
+    def translate(self, domain, msgid, lang=None, *args, **kw):
+        """
+        backward compatibility shim over zope.i18n.translate. Please avoid.
+        """
+        # parameter reordering/mangling necessary
+        assert not args
+        if lang is not None:
+            kw['target_language'] = lang
+        return translate(msgid, domain=domain, **kw)
 
 InitializeClass(Localizer)
 

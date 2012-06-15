@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2000-2006  Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -24,7 +24,7 @@ import os
 from thread import allocate_lock, get_ident
 
 # Import from itools
-from itools.i18n import AcceptLanguageType
+from .itools.i18n import AcceptLanguageType
 
 # Import from Zope
 import Globals

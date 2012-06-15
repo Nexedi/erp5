@@ -53,12 +53,6 @@ Globals.get_request = get_request
 
 from zope.site.hooks import setSite
 
-try:
-  import itools.zope
-  itools.zope.get_context = get_context
-except ImportError:
-  pass
-
 from Testing import ZopeTestCase
 from Testing.ZopeTestCase import PortalTestCase, user_name
 from Products.CMFCore.utils import getToolByName
