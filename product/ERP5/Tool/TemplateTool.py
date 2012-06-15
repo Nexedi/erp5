@@ -354,29 +354,80 @@ class TemplateTool (BaseTool):
         REQUEST.RESPONSE.redirect("%s?portal_status_message=%s"
                                     % (ret_url, psm))
 
-    def _download_local(self, path, bt_id):
+    def _download_local(self, path, bt_id, repository_url):
       """Download Business Template from local directory or file
       """
       if os.path.isdir(os.path.normpath(path)):
         path = os.path.normpath(path)
-        def callback(file_list, directory, files):
-          for excluded_directory in ('CVS', '.svn'):
-            try:
-              files.remove(excluded_directory)
-            except ValueError:
-              pass
-          for file in files:
-            absolute_path = os.path.join(directory, file)
-            if os.path.isfile(absolute_path):
-              file_list.append(absolute_path)
 
-        file_list = []
-        os.path.walk(path, callback, file_list)
-        file_list.sort()
-        # import bt object
-        bt = self.newContent(portal_type='Business Template', id=bt_id)
+        bt_title = path.rsplit('/', 1)[1]
+        repository_filename_sha_dict = None
+        property_dict_list = self.repository_dict.get(repository_url)
+        if property_dict_list is not None:
+          for property_dict in property_dict_list:
+            if property_dict['title'] == bt_title:
+              repository_filename_sha_dict = property_dict.get('filename_sha_dict')
+              break
+
+        if repository_filename_sha_dict is None:
+          def callback(file_list, directory, files):
+            for excluded_directory in ('CVS', '.svn'):
+              try:
+                files.remove(excluded_directory)
+              except ValueError:
+                pass
+            for file in files:
+              absolute_path = os.path.join(directory, file)
+              if os.path.isfile(absolute_path):
+                file_list.append(absolute_path)
+
+          file_list = []
+          os.path.walk(path, callback, file_list)
+          file_list.sort()
+          # import bt object
+          bt = self.newContent(portal_type='Business Template', id=bt_id)
+        else:
+          installed_bt = self.getInstalledBusinessTemplate(bt_name)
+
+          installed_set = set(installed_bt._sha_file_dict)
+          repository_set = set(repository_filename_sha_dict)
+
+          object_to_update_dict = {}
+          file_list = []
+          for p in (installed_set - repository_set):
+            file_list.append(os.path.join(path, p) + '.xml')
+
+            type_name, p = p.split('TemplateItem/', 1)
+            if installed_bt.isKeepObject(p):
+              object_to_update_dict[p] = 'Removed but should be kept', type_name
+            else:
+              object_to_update_dict[p] = 'Removed', type_name
+
+          for p in (repository_set - installed_set):
+            file_list.append(os.path.join(path, p) + '.xml')
+
+            type_name, p = p.split('TemplateItem/', 1)
+            object_to_update_dict[p] = 'New', type_name
+          
+          for p, sha in repository_filename_sha_dict.iteritems():
+            if (p in installed_bt._sha_file_dict and
+                sha != installed_bt._sha_file_dict[p]):
+              file_list.append(os.path.join(path, p) + '.xml')
+
+              type_name, p = p.split('TemplateItem/', 1)
+              if installed_bt.isKeepObject(path):
+                modified_object_dict[p] = 'Modified but should be kept', type_name
+              else:
+                object_to_update_dict[p] = 'Modified', type_name
+
+          bt = self.manage_clone(ob=installed_bt, id=self.generateNewId())
+          # XXX-arnau-bt5: PersistentMapping(), really?
+          bt._sha_dict = repository_filename_sha_dict
+          bt._object_to_update_dict = object_to_update_dict
+
         bt_path = os.path.join(path, 'bt')
 
+        # XXX-arnau-bt5: should use sha index even for bt5 properties
         # import properties
         prop_dict = {}
         for prop in bt.propertyMap():
@@ -418,7 +469,7 @@ class TemplateTool (BaseTool):
           LOG('ERP5', INFO, 'TemplateTool doing a svn checkout of %s' % url)
           return self._download_svn(url, bt_id)
 
-        return self._download_local(file_path, bt_id)
+        return self._download_local(file_path, bt_id, url)
       finally:
         os.remove(temppath)
 
@@ -428,7 +479,7 @@ class TemplateTool (BaseTool):
       try:
         from Products.ERP5VCS.WorkingCopy import getVcsTool
         getVcsTool('svn').__of__(self).export(url, svn_checkout_dir)
-        return self._download_local(svn_checkout_dir, bt_id)
+        return self._download_local(svn_checkout_dir, bt_id, url)
       finally:
         shutil.rmtree(svn_checkout_tmp_dir)
 
@@ -474,7 +525,7 @@ class TemplateTool (BaseTool):
           return self[self._setObject(id, bt)]
         bt = self._download_url(url, id)
       else:
-        bt = self._download_local(name, id)
+        bt = self._download_local(name, id, url)
 
       bt.build(no_action=True)
       return bt
@@ -714,6 +765,7 @@ class TemplateTool (BaseTool):
               if type(id) == type(u''):
                 id = id.encode('utf-8')
               temp_property_dict = {}
+              filename_sha_dict = {}
               for node in template.childNodes:
                 if node.nodeName in property_list:
                   value = ''
@@ -724,6 +776,15 @@ class TemplateTool (BaseTool):
                         value = value.encode('utf-8')
                       break
                   temp_property_dict.setdefault(node.nodeName, []).append(value)
+                elif node.nodeName == 'content':
+                  for filename_node in node.getElementsByTagName('filename'):
+                    path_node = filename_node.getElementsByTag('path')[0]
+                    path = path_node.childNodes[0].data
+
+                    sha_node = filename_node.getElementsByTag('sha')[0]
+                    sha = sha_node.childNodes[0].data
+
+                    filename_sha_dict[path] = sha
 
               property_dict = {}
               property_dict['id'] = id
@@ -742,8 +803,7 @@ class TemplateTool (BaseTool):
                   temp_property_dict.get('provision', ())
               property_dict['copyright_list'] = \
                   temp_property_dict.get('copyright', ())
-
-              property_dict_list.append(property_dict)
+              property_dict['filename_sha_dict'] = filename_sha_dict
           finally:
             doc.unlink()
         finally:

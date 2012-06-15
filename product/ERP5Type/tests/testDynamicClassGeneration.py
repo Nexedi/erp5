@@ -1899,6 +1899,7 @@ class TestPortalType(Person):
       person_type.setTypeClass('TestPortalType')
       self.commit()
 
+      import pdb; pdb.set_trace()
       self.assertHasAttribute(person, 'test42')
       self.assertEquals(person.test42(), 42)
 

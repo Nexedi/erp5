@@ -1,3 +1,7 @@
+#(setq python-guess-indent nil)
+# (setq python-indent 2)
+# (setq py-indent-offset 2)
+#(setq tab-width 2)
 ##############################################################################
 #
 # Copyright (c) 2006 Nexedi SARL and Contributors. All Rights Reserved.
@@ -35,6 +39,7 @@ from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
 from Products.ERP5Type.tests.utils import LogInterceptor
+from App.config import getConfiguration
 import os
 
 # Define variable to chek if performance are good or not
@@ -107,7 +112,7 @@ LISTBOX_COEF=0.00173                # 0.02472
 DO_TEST = 1
 
 # set 1 to get profiler's result (unit_test/tests/<func_name>)
-PROFILE=0
+PROFILE=1
 
 class TestPerformance(ERP5TypeTestCase, LogInterceptor):
 
@@ -198,15 +203,19 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
           self.failUnless(min < req_time < max,
                           '%.4f < %.4f < %.4f' % (min, req_time, max))
 
-    def profile(self, func, suffix=''):
-        from cProfile import Profile
-        prof_file = '%s%s' % (func.__name__, suffix)
+    def profile(self, func, name=None, suffix='.prof', func_args=(), func_kwargs={}):
+        if name is None:
+            name = func.__name__
+
+        prof_file = '%s%s' % (name, suffix)
         try:
             os.unlink(prof_file)
         except OSError:
             pass
+
+        from cProfile import Profile
         prof = Profile()
-        prof.runcall(func)
+        prof.runcall(func, *func_args, **func_kwargs)
         prof.dump_stats(prof_file)
 
     def test_00_viewBarObject(self, quiet=quiet, run=run_all_test,
@@ -383,6 +392,807 @@ class TestPerformance(ERP5TypeTestCase, LogInterceptor):
               MIN_OBJECT_MANY_LINES_VIEW,
               req_time,
               MAX_OBJECT_MANY_LINES_VIEW))
+
+    def test_03_installBusinessTemplate(self, quiet=quiet):
+      """
+      """
+      template_tool = self.getTemplateTool()
+      bt = template_tool.newContent(portal_type='Business Template')
+
+      # Filesystem Property Sheet
+      property_sheet_id_list = []
+      cfg = getConfiguration()
+      for i in xrange(20):
+        ps_title = 'UnitTest%d' % i
+        ps_data =  '''class UnitTest%i:
+  """Fake property sheet for unit test"""
+  _properties = ({"id": "ps_prop1", "type": "string"},)
+  _categories = ()''' % i
+
+        file_path = os.path.join(cfg.instancehome, 'PropertySheet',
+                                 ps_title + '.py')
+
+        if os.path.exists(file_path):
+          os.remove(file_path)
+
+        with file(file_path, 'w') as f:
+          f.write(ps_data)
+
+        property_sheet_id_list.append(ps_title)
+
+      bt.edit(template_property_sheet_id_list=property_sheet_id_list)
+      bt.build()
+      transaction.commit()
+      self.tic()
+
+      def time_decorator(function):
+        def patched(*args, **kwargs):
+          before = time()
+          function(*args, **kwargs)
+          elapsed = time() - before
+
+          LOG('PERFORMANCES', 0,
+              'PATCHED %s, call time: %.4f' % (function, elapsed))
+
+        return patched
+
+      from Products.ERP5.Document.BusinessTemplate import \
+          FilesystemDocumentTemplateItem, PropertySheetTemplateItem
+
+      _resetDynamicModules = FilesystemDocumentTemplateItem._resetDynamicModules
+      preinstall = PropertySheetTemplateItem.preinstall
+      install = PropertySheetTemplateItem.install
+
+      from Products.ERP5Type.Tool.TypesTool import TypesTool
+      resetDynamicDocuments = TypesTool.resetDynamicDocuments
+
+      iteration = 10
+      def run():
+        req_time = 0.
+        try:
+          FilesystemDocumentTemplateItem._resetDynamicModules = time_decorator(
+              _resetDynamicModules)
+
+          TypesTool.resetDynamicDocuments = time_decorator(
+              resetDynamicDocuments)                  
+
+          PropertySheetTemplateItem.preinstall = time_decorator(preinstall)
+          PropertySheetTemplateItem.install = time_decorator(install)
+
+          for i in xrange(0, iteration + 1):
+            LOG('PERFORMANCES', 0,
+                '>>>>>>>>>>>>> INSTALL (%d/%d)' % (i, iteration))
+
+            before = time()
+            object_to_update_dict = bt.preinstall()
+            bt.install(force=False, object_to_update=object_to_update_dict)
+            transaction.commit()
+            self.tic()
+            elapsed = float(time() - before)
+            req_time += elapsed
+
+            LOG('PERFORMANCES', 0,
+                '<<<<<<<<<<<<< FINISHED INSTALLATION: %.4f (%d/%d)' % \
+                    (elapsed, i, iteration))
+
+            bt.uninstall()
+            transaction.commit()
+            self.tic()
+        finally:
+            FilesystemDocumentTemplateItem._resetDynamicModules = \
+                _resetDynamicModules
+
+            TypesTool.resetDynamicDocuments = resetDynamicDocuments
+
+            PropertySheetTemplateItem.preinstall = preinstall
+            PropertySheetTemplateItem.install = install
+
+        req_time /= iteration
+
+        if not quiet:
+            print "Time to install Business Template with Filesystem " \
+                "Property Sheets: %.4f" % req_time
+
+        if PROFILE:
+          if PropertySheetTemplateItem._perform_migration:
+            prefix = 'zodb-'
+          else:
+            prefix = 'filesystem-'
+
+          self.profile(bt.preinstall,
+                       name=prefix + 'preinstall')
+
+          self.profile(bt.install,
+                       name=prefix + 'install',
+                       func_kwargs={'force': True,
+                                    'object_to_update': object_to_update_dict})
+
+          self.profile(self.getPortal().portal_types.resetDynamicDocuments,
+                       name=prefix + 'reset')
+
+          transaction.commit()
+          self.tic()
+          bt.uninstall()
+
+        return req_time
+
+      try:
+        PropertySheetTemplateItem._perform_migration = False
+        run()
+      finally:
+        PropertySheetTemplateItem._perform_migration = True          
+
+      # Migrate Property Sheets to ZODB
+      bt.install(force=True)
+      transaction.commit()
+      self.tic()
+
+      bt.uninstall()
+      transaction.commit()
+      self.tic()
+
+      run()
+
+    def _upgrade(self, export_path, sha_file_dict):
+      portal = self.getPortal()
+      template_tool = portal.portal_templates
+
+      # Independent
+      from Products import ERP5
+      os.system('%s %s' % (os.path.join(ERP5.__path__[0], 'bin', 'genbt5list'),
+                           export_path))
+
+      template_tool.updateRepositoryBusinessTemplateList((export_path,))
+
+      update_bt_list = template_tool.getUpdatedRepositoryBusinessTemplateList()
+      # END
+
+      sha_dict = {}
+
+      from hashlib import sha1
+
+      def callback(arg_tuple, directory, files):
+        bt_sha_file_dict, file_list = arg_tuple
+        for excluded_directory in ('CVS', '.svn'):
+          try:
+            files.remove(excluded_directory)
+          except ValueError:
+            pass
+        for file in files:
+          absolute_path = os.path.join(directory, file)
+          if os.path.isfile(absolute_path):
+            if absolute_path in bt_sha_file_dict:
+              with open(absolute_path) as f:
+                if sha1(f.read()).hexdigest() == bt_sha_file_dict[absolute_path]:
+                  continue
+
+            file_list.append(absolute_path)
+
+      for update_bt in update_bt_list:
+        # download
+        repository, title = template_tool.decodeRepositoryBusinessTemplateUid(
+          update_bt.getUid())
+
+        installed_bt = template_tool.getInstalledBusinessTemplate(title=title)
+
+        clone, = template_tool.manage_pasteObjects(
+          template_tool.manage_copyObjects(ids=[installed_bt.getId()]))
+
+        bt = template_tool[clone['new_id']]
+
+        bt_title = bt.getTitle()
+        path = os.path.join(export_path, bt_title)
+        file_list = []
+        os.path.walk(path, callback, (sha_file_dict[bt_title], file_list))
+        file_list.sort()
+
+#        import pdb; pdb.set_trace()
+        bt.importFile(dir=True, file=file_list, root_path=path)
+        bt.build(no_action=True)
+
+      transaction.commit()
+      self.tic()
+
+    def test_04_upgradeBusinessTemplate(self, quiet=quiet):
+      portal = self.getPortal()
+      template_tool = portal.portal_templates
+      property_sheet_tool = portal.portal_property_sheets
+
+      # Create dummy property sheets
+      bt_dict = {}
+      for i in range(1): # XXX: 20
+        bt_title = 'test_performance_%d' % i
+
+        property_sheet_path_list = []
+        for j in range(10): # XXX: 10
+          clone, = property_sheet_tool.manage_pasteObjects(
+            property_sheet_tool.manage_copyObjects(ids=['DublinCore']))
+
+          property_sheet = property_sheet_tool[clone['new_id']]
+          property_sheet_id = '%s_%d' % (bt_title, j)
+          property_sheet.setId(property_sheet_id)
+          property_sheet_path_list.append('portal_property_sheets/%s' % \
+                                          property_sheet_id)
+
+        bt = template_tool.newContent(
+          title=bt_title,
+          portal_type='Business Template',
+          template_property_sheet_id_list=property_sheet_path_list)
+
+        bt.build()
+        bt.install(force=True)
+        transaction.commit()
+        self.tic()
+
+        bt_dict[bt_title] = {'bt': bt,
+                             'property_sheet_path_list': property_sheet_path_list}
+
+      from App.config import getConfiguration
+      export_path = os.path.join(getConfiguration().instancehome,
+                                 'var', 'upgradeBusinessTemplate')
+
+      if os.path.exists(export_path):
+        import shutil
+        shutil.rmtree(export_path)
+
+      os.makedirs(export_path)
+
+      sha_dict = {}
+      sha_file_dict = {}
+      for title, d in bt_dict.iteritems():
+        bt_sha_dict = {}
+        bt_sha_file_dict = {}
+
+        d['bt'].export(path=os.path.join(export_path, title), local=True,
+                       sha_dict=bt_sha_dict,
+                       sha_file_dict=bt_sha_file_dict)
+
+        sha_dict[title] = bt_sha_dict
+        sha_file_dict[title] = bt_sha_file_dict
+
+      def run():
+        for d in bt_dict.itervalues():
+          bt = d['bt']
+          property_sheet_path_list = d['property_sheet_path_list']
+
+          clone, = template_tool.manage_pasteObjects(
+            template_tool.manage_copyObjects(ids=[bt.getId()]))
+
+          bt = template_tool[clone['new_id']]
+
+          for index, name in enumerate(('short_title_property',
+                                        'contributor_property',
+                                        'right_property')):
+            property_sheet = portal.unrestrictedTraverse(
+              property_sheet_path_list[index])
+
+            getattr(property_sheet, name).setPropertyDefault("python: ('foo',)")
+
+          property_sheet = portal.unrestrictedTraverse(
+            property_sheet_path_list[index + 1])
+
+          property_sheet.deleteContent('title_property')
+
+          transaction.commit()
+          self.tic()
+
+          bt.build()
+          bt.install(force=False, with_sha=True, object_to_update=bt.preinstall())
+          transaction.commit()
+          self.tic()
+
+          with open(os.path.join(export_path, bt.getTitle(),
+                                 'bt', 'revision'), 'w') as f:
+            f.write(str(int(bt.getRevision()) + 1))
+
+        self._upgrade(export_path, sha_file_dict)
+#        import pdb; pdb.set_trace()
+
+        from Products import ERP5
+        os.system('%s %s' % (os.path.join(ERP5.__path__[0], 'bin', 'genbt5list'),
+                             export_path))
+
+        template_tool.updateRepositoryBusinessTemplateList((export_path,))
+
+        update_bt_list = template_tool.getUpdatedRepositoryBusinessTemplateList()
+
+        install_bt_list = []
+        for update_bt in update_bt_list:
+          repository_id_tuple = template_tool.decodeRepositoryBusinessTemplateUid(
+            update_bt.getUid())
+
+          begin = time()
+          bt = template_tool.download(os.path.join(*repository_id_tuple))
+          print "DOWNLOAD: %.4f" % (time() - begin)
+
+          install_bt_list.append(bt)
+
+        begin = time()
+        transaction.commit()
+        self.tic()
+        print "COMMIT: %.4f" % (time() - begin)
+
+        full_begin = time()
+        end_preinstall = end_install = 0.
+        for bt in install_bt_list:
+          begin = time()
+          object_to_update_dict = bt.preinstall(sha_dict=sha_dict[bt.getTitle()])
+          end = time() - begin
+          print "PREINSTALL: %.4f" % end
+          end_preinstall += end
+
+#          assert object_to_update_dict == bt.preinstall()
+
+          begin = time()
+          bt.install(force=False, object_to_update=object_to_update_dict)
+          end = time() - begin
+          print "INSTALL: %.4f" % end
+          end_install += end
+
+          bt_dict[bt.getTitle()]['bt'] = bt
+
+        begin = time()
+        transaction.commit()
+        self.tic()
+        print "COMMIT: %.4f" % (time() - begin)
+
+        full_end = time() - full_begin
+
+        print "===> TOTAL PREINSTALL: %.4f (AVG=%.4f)" % \
+            (end_preinstall, end_preinstall / len(install_bt_list))
+
+        print "===> TOTAL INSTALL: %.4f (AVG=%.4f)" % \
+            (end_install, end_install / len(install_bt_list))
+
+        print "===> TOTAL: %.4f (AVG=%.4f)" % (full_end,
+                                               full_end / len(install_bt_list))
+
+#        import pdb; pdb.set_trace()
+        # operation_log = template_tool.installBusinessTemplateListFromRepository(
+        #   update_bt_list)
+
+      run()
+
+    def test_05_fastUpgradeBusinessTemplate(self, quiet=quiet):
+      portal = self.getPortal()
+      template_tool = portal.portal_templates
+      property_sheet_tool = portal.portal_property_sheets
+
+      from Products.ERP5Type.Globals import PersistentMapping
+      import OFS.XMLExportImport
+      from hashlib import sha1
+      from StringIO import StringIO
+      def generateShaForInstalledBusinessTemplate(bt):
+          """
+          UGUU
+
+          XXX: moved to install()
+          XXX: object_to_update?
+          """
+          bt._sha_file_dict = PersistentMapping()
+          for path, obj in bt._property_sheet_item._objects.iteritems():
+              f = StringIO()
+              OFS.XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+              bt._sha_file_dict[os.path.join('PropertySheetTemplateItem',
+                                             path)] = sha1(f.getvalue()).hexdigest()
+
+      # Create dummy property sheets
+      bt_dict = {}
+      for i in range(1): # XXX: 20
+        bt_title = 'test_performance_%d' % i
+
+        property_sheet_path_list = []
+        for j in range(10): # XXX: 10
+          clone, = property_sheet_tool.manage_pasteObjects(
+            property_sheet_tool.manage_copyObjects(ids=['DublinCore']))
+
+          property_sheet = property_sheet_tool[clone['new_id']]
+          property_sheet_id = '%s_%d' % (bt_title, j)
+          property_sheet.setId(property_sheet_id)
+          property_sheet_path_list.append('portal_property_sheets/%s' % \
+                                          property_sheet_id)
+
+        bt = template_tool.newContent(
+          title=bt_title,
+          portal_type='Business Template',
+          template_property_sheet_id_list=property_sheet_path_list)
+
+        bt.build()
+        bt.install(force=True)
+        # B-UGUU
+        generateShaForInstalledBusinessTemplate(bt)
+        # E-UGUU
+        transaction.commit()
+        self.tic()
+
+        bt_dict[bt_title] = {'bt': bt,
+                             'property_sheet_path_list': property_sheet_path_list}
+
+      from App.config import getConfiguration
+      export_path = os.path.join(getConfiguration().instancehome,
+                                 'var', 'upgradeBusinessTemplate')
+
+      if os.path.exists(export_path):
+        import shutil
+        shutil.rmtree(export_path)
+
+      os.makedirs(export_path)
+
+      # B-UGUU
+      from hashlib import sha1
+      def callback(arg_tuple, directory, files):
+        export_path, sha_dict = arg_tuple
+        for excluded_directory in ('CVS', '.svn'):
+          try:
+            files.remove(excluded_directory)
+          except ValueError:
+            pass
+        for file in files:
+          absolute_path = os.path.join(directory, file)
+          if os.path.isfile(absolute_path):
+            key = absolute_path[len(export_path) + 1:]
+            key = key.rsplit('.', 1)[0]
+            if key.startswith('bt/'):
+              continue            
+
+            with open(absolute_path) as f:
+              sha_dict[key] = sha1(f.read()).hexdigest()
+      # E-UGUU
+
+      filesystem_sha_dict = {}
+      filesystem_property_dict = {}
+      for title, d in bt_dict.iteritems():
+        bt_path = os.path.join(export_path, title)
+        d['bt'].export(path=bt_path, local=True)
+
+        # B-UGUU
+        os.path.walk(bt_path, callback,
+                     (bt_path, filesystem_sha_dict.setdefault(title, {})))
+
+        filesystem_property_dict[title] = bt.propertyMap()
+        # E-UGUU
+
+      def run():
+        for d in bt_dict.itervalues():
+          bt = d['bt']
+          property_sheet_path_list = d['property_sheet_path_list']
+
+          clone, = template_tool.manage_pasteObjects(
+            template_tool.manage_copyObjects(ids=[bt.getId()]))
+
+          bt = template_tool[clone['new_id']]
+
+          for index, name in enumerate(('short_title_property',
+                                        'contributor_property',
+                                        'right_property')):
+            property_sheet = portal.unrestrictedTraverse(
+              property_sheet_path_list[index])
+
+            getattr(property_sheet, name).setPropertyDefault("python: ('foo',)")
+
+          property_sheet = portal.unrestrictedTraverse(
+            property_sheet_path_list[index + 1])
+
+          property_sheet.deleteContent('title_property')
+
+          transaction.commit()
+          self.tic()
+
+          bt.build()
+          object_to_update_dict = bt.preinstall()
+          bt.install(force=False, object_to_update=object_to_update_dict)
+          # B-UGUU: could be optimized by computing the hash of modified
+          # objects only
+          generateShaForInstalledBusinessTemplate(bt)
+          # E-UGUU
+          transaction.commit()
+          self.tic()
+
+          with open(os.path.join(export_path, bt.getTitle(),
+                                 'bt', 'revision'), 'w') as f:
+            f.write(str(int(bt.getRevision()) + 1))
+
+        from Products import ERP5
+        os.system('%s %s' % (os.path.join(ERP5.__path__[0], 'bin', 'genbt5list'),
+                             export_path))
+
+        template_tool.updateRepositoryBusinessTemplateList((export_path,))
+
+        update_bt_list = template_tool.getUpdatedRepositoryBusinessTemplateList()
+
+        bt_object_to_update_dict = {}
+        install_bt_list = []
+        for update_bt in update_bt_list:
+          repository_id_tuple = template_tool.decodeRepositoryBusinessTemplateUid(
+            update_bt.getUid())
+
+          begin = time()
+          # B-UGUU
+          path, title = repository_id_tuple
+          bt = template_tool.download(
+            os.path.join(path, title),
+            filesystem_sha_dict=filesystem_sha_dict[title],
+            object_to_update_dict=bt_object_to_update_dict.setdefault(title, {}))
+
+#          import pdb; pdb.set_trace()
+          # E-UGUU
+          print "DOWNLOAD: %.4f" % (time() - begin)
+          install_bt_list.append(bt)
+
+        begin = time()
+        transaction.commit()
+        self.tic()
+        print "COMMIT: %.4f" % (time() - begin)
+
+        full_begin = time()
+        end_preinstall = end_install = 0.
+        for bt in install_bt_list:
+          print "====> %r" % bt.preinstall()
+
+          # # begin = time()
+          # # object_to_update_dict = bt.preinstall(sha_dict=sha_dict[bt.getTitle()])
+          # # end = time() - begin
+          # # print "PREINSTALL: %.4f" % end
+          # # end_preinstall += end
+
+#          assert object_to_update_dict == bt.preinstall()
+
+          begin = time()
+          title = bt.getTitle()
+
+
+          self.profile(bt.install,
+                       name='testPerformanceInstall' + title,
+                       func_kwargs={'force': True,
+                                    'object_to_update': bt_object_to_update_dict[title]})
+
+#          self.profile(bt.install(force=False, object_to_update=bt_object_to_update_dict[title])
+          end = time() - begin
+          print "INSTALL: %.4f" % end
+          end_install += end
+
+          bt_dict[title]['bt'] = bt
+
+        begin = time()
+        transaction.commit()
+        self.tic()
+        print "COMMIT: %.4f" % (time() - begin)
+
+        full_end = time() - full_begin
+
+        print "===> TOTAL INSTALL: %.4f (AVG=%.4f)" % \
+            (end_install, end_install / len(install_bt_list))
+
+        print "===> TOTAL: %.4f (AVG=%.4f)" % (full_end,
+                                               full_end / len(install_bt_list))
+
+        # import pdb; pdb.set_trace()
+        # operation_log = template_tool.installBusinessTemplateListFromRepository(
+        #   update_bt_list)
+
+      run()
+#      import pdb; pdb.set_trace()
+
+
+    def test_06_WTFFastUpgradeBusinessTemplate(self, quiet=quiet):
+      portal = self.getPortal()
+      template_tool = portal.portal_templates
+      property_sheet_tool = portal.portal_property_sheets
+
+      from Products.ERP5Type.Globals import PersistentMapping
+      import OFS.XMLExportImport
+      from hashlib import sha1
+      from StringIO import StringIO
+      def generateShaForInstalledBusinessTemplate(bt):
+          """
+          UGUU
+
+          XXX: moved to install()
+          XXX: object_to_update?
+          """
+          bt._sha_file_dict = PersistentMapping()
+          for path, obj in bt._property_sheet_item._objects.iteritems():
+              f = StringIO()
+              OFS.XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+              bt._sha_file_dict[os.path.join('PropertySheetTemplateItem',
+                                             path)] = sha1(f.getvalue()).hexdigest()
+
+      # Create dummy property sheets
+      bt_dict = {}
+      for i in range(1): # XXX: 20
+        bt_title = 'test_performance_%d' % i
+
+        property_sheet_path_list = []
+        for j in range(10): # XXX: 10
+          clone, = property_sheet_tool.manage_pasteObjects(
+            property_sheet_tool.manage_copyObjects(ids=['DublinCore']))
+
+          property_sheet = property_sheet_tool[clone['new_id']]
+          property_sheet_id = '%s_%d' % (bt_title, j)
+          property_sheet.setId(property_sheet_id)
+          property_sheet_path_list.append('portal_property_sheets/%s' % \
+                                          property_sheet_id)
+
+        bt = template_tool.newContent(
+          title=bt_title,
+          portal_type='Business Template',
+          template_property_sheet_id_list=property_sheet_path_list)
+
+        bt.build()
+        bt.install(force=True)
+        # B-UGUU
+        generateShaForInstalledBusinessTemplate(bt)
+        # E-UGUU
+        transaction.commit()
+        self.tic()
+
+        bt_dict[bt_title] = {'bt': bt,
+                             'property_sheet_path_list': property_sheet_path_list}
+
+      from App.config import getConfiguration
+      export_path = os.path.join(getConfiguration().instancehome,
+                                 'var', 'upgradeBusinessTemplate')
+
+      if os.path.exists(export_path):
+        import shutil
+        shutil.rmtree(export_path)
+
+      os.makedirs(export_path)
+
+      # B-UGUU
+      from hashlib import sha1
+      def callback(arg_tuple, directory, files):
+        export_path, sha_dict = arg_tuple
+        for excluded_directory in ('CVS', '.svn'):
+          try:
+            files.remove(excluded_directory)
+          except ValueError:
+            pass
+        for file in files:
+          absolute_path = os.path.join(directory, file)
+          if os.path.isfile(absolute_path):
+            key = absolute_path[len(export_path) + 1:]
+            key = key.rsplit('.', 1)[0]
+            if key.startswith('bt/'):
+              continue            
+
+            with open(absolute_path) as f:
+              sha_dict[key] = sha1(f.read()).hexdigest()
+      # E-UGUU
+
+      filesystem_sha_dict = {}
+      filesystem_property_dict = {}
+      for title, d in bt_dict.iteritems():
+        bt_path = os.path.join(export_path, title)
+        d['bt'].export(path=bt_path, local=True)
+
+        # B-UGUU
+        os.path.walk(bt_path, callback,
+                     (bt_path, filesystem_sha_dict.setdefault(title, {})))
+
+        filesystem_property_dict[title] = bt.propertyMap()
+        # E-UGUU
+
+      def run():
+        for d in bt_dict.itervalues():
+          bt = d['bt']
+          property_sheet_path_list = d['property_sheet_path_list']
+
+          clone, = template_tool.manage_pasteObjects(
+            template_tool.manage_copyObjects(ids=[bt.getId()]))
+
+          bt = template_tool[clone['new_id']]
+
+          for index, name in enumerate(('short_title_property',
+                                        'contributor_property',
+                                        'right_property')):
+            property_sheet = portal.unrestrictedTraverse(
+              property_sheet_path_list[index])
+
+            getattr(property_sheet, name).setPropertyDefault("python: ('foo',)")
+
+          property_sheet = portal.unrestrictedTraverse(
+            property_sheet_path_list[index + 1])
+
+          property_sheet.deleteContent('title_property')
+
+          transaction.commit()
+          self.tic()
+
+          bt.build()
+          object_to_update_dict = bt.preinstall()
+          bt.install(force=False, object_to_update=object_to_update_dict)
+          # B-UGUU: could be optimized by computing the hash of modified
+          # objects only
+          generateShaForInstalledBusinessTemplate(bt)
+          # E-UGUU
+          transaction.commit()
+          self.tic()
+
+          with open(os.path.join(export_path, bt.getTitle(),
+                                 'bt', 'revision'), 'w') as f:
+            f.write(str(int(bt.getRevision()) + 1))
+
+        from Products import ERP5
+        os.system('%s %s' % (os.path.join(ERP5.__path__[0], 'bin', 'genbt5list'),
+                             export_path))
+
+        template_tool.updateRepositoryBusinessTemplateList((export_path,))
+        import pdb; pdb.set_trace()
+        update_bt_list = template_tool.getUpdatedRepositoryBusinessTemplateList()
+
+        bt_object_to_update_dict = {}
+        install_bt_list = []
+        for update_bt in update_bt_list:
+          repository_id_tuple = template_tool.decodeRepositoryBusinessTemplateUid(
+            update_bt.getUid())
+
+          begin = time()
+          # B-UGUU
+          path, title = repository_id_tuple
+          bt = template_tool.download(
+            os.path.join(path, title),
+            filesystem_sha_dict=filesystem_sha_dict[title],
+            object_to_update_dict=bt_object_to_update_dict.setdefault(title, {}))
+
+#          import pdb; pdb.set_trace()
+          # E-UGUU
+          print "DOWNLOAD: %.4f" % (time() - begin)
+          install_bt_list.append(bt)
+
+        begin = time()
+        transaction.commit()
+        self.tic()
+        print "COMMIT: %.4f" % (time() - begin)
+
+        full_begin = time()
+        end_preinstall = end_install = 0.
+        for bt in install_bt_list:
+          print "====> %r" % bt.preinstall()
+
+          # # begin = time()
+          # # object_to_update_dict = bt.preinstall(sha_dict=sha_dict[bt.getTitle()])
+          # # end = time() - begin
+          # # print "PREINSTALL: %.4f" % end
+          # # end_preinstall += end
+
+#          assert object_to_update_dict == bt.preinstall()
+
+          begin = time()
+          title = bt.getTitle()
+
+
+          self.profile(bt.install,
+                       name='testPerformanceInstall' + title,
+                       func_kwargs={'force': True,
+                                    'object_to_update': bt_object_to_update_dict[title]})
+
+#          self.profile(bt.install(force=False, object_to_update=bt_object_to_update_dict[title])
+          end = time() - begin
+          print "INSTALL: %.4f" % end
+          end_install += end
+
+          bt_dict[title]['bt'] = bt
+
+        begin = time()
+        transaction.commit()
+        self.tic()
+        print "COMMIT: %.4f" % (time() - begin)
+
+        full_end = time() - full_begin
+
+        print "===> TOTAL INSTALL: %.4f (AVG=%.4f)" % \
+            (end_install, end_install / len(install_bt_list))
+
+        print "===> TOTAL: %.4f (AVG=%.4f)" % (full_end,
+                                               full_end / len(install_bt_list))
+
+        # import pdb; pdb.set_trace()
+        # operation_log = template_tool.installBusinessTemplateListFromRepository(
+        #   update_bt_list)
+
+      run()
+#      import pdb; pdb.set_trace()
 
 def test_suite():
   suite = unittest.TestSuite()

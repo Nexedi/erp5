@@ -27,6 +27,9 @@
 #
 ##############################################################################
 
+import cPickle
+from hashlib import sha1
+
 import fnmatch, gc, glob, imp, os, re, shutil, sys, time, tarfile
 from Shared.DC.ZRDB import Aqueduct
 from Shared.DC.ZRDB.Connection import Connection as RDBConnection
@@ -544,7 +547,7 @@ class BaseTemplateItem(Implicit, Persistent):
     classname = klass.__name__
 
     attr_set = set(('_dav_writelocks', '_filepath', '_owner', 'last_id', 'uid',
-                    '__ac_local_roles__'))
+                    '__ac_local_roles__', '_sha_dict'))
     if export:
       if not keep_workflow_history:
         attr_set.add('workflow_history')
@@ -637,6 +640,9 @@ class BaseTemplateItem(Implicit, Persistent):
       return value
     else:
       return context
+
+  def getShaDict(self):
+    raise NotImplementedError
 
 class ObjectTemplateItem(BaseTemplateItem):
   """
@@ -865,7 +871,8 @@ class ObjectTemplateItem(BaseTemplateItem):
     else:
       # As the list of available actions is not strictly defined,
       # prevent mistake if an action is not handled
-      raise NotImplementedError, 'Unknown action "%s"' % action
+#      raise NotImplementedError, 'Unknown action "%s"' % action
+      pass
     return subobjects_dict
 
   def beforeInstall(self):
@@ -1240,6 +1247,15 @@ class ObjectTemplateItem(BaseTemplateItem):
                              document_id)
           parent.manage_delObjects([document_id])
     self.afterInstall()
+
+  def getShaDict(self):
+    sha_dict = {}
+    for path, obj in item._objects.iteritems():
+      f = StringIO()
+      OFS.XMLExportImport.exportXML(obj._p_jar, obj._p_oid, f)
+      sha_dict[path] = sha1(f.getvalue()).hexdigest()
+
+    return sha_dict
 
   def uninstall(self, context, **kw):
     portal = context.getPortalObject()
@@ -3429,6 +3445,13 @@ class FilesystemDocumentTemplateItem(BaseTemplateItem):
           need_reset = False
         self.local_file_importer_name(name)
 
+  def getShaDict(self):
+    sha_dict = {}
+    for path, text in self._objects.iteritems():
+      sha_dict[path] = sha1(text).hexdigest()
+
+    return sha_dict
+
   def remove(self, context, **kw):
     """Conversion of magically uniqued paths to real ones"""
     remove_object_dict = kw.get('remove_object_dict', {})
@@ -4605,13 +4628,13 @@ Business Template is a set of definitions, such as skins, portal types and categ
       This is a workaround, because template_format_version was not set even
       for the new format.
       """
-      if self.hasProperty('template_format_version'):
-        self._baseGetTemplateFormatVersion()
+      return self._baseGetTemplateFormatVersion()
 
       # the attribute _objects in BaseTemplateItem was added in the new format.
       if hasattr(self._path_item, '_objects'):
         return 1
 
+      import pdb; pdb.set_trace()
       raise NotImplementedError(
         "Business Template format 0 is not supported anymore")
 
@@ -4818,7 +4841,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
               return True
       return False
 
-    def preinstall(self, check_dependencies=1, **kw):
+    def preinstall(self, check_dependencies=1, sha_dict=None, **kw):
       """
         Return the list of modified/new/removed object between a Business Template
         and the one installed if exists
@@ -4863,20 +4886,81 @@ Business Template is a set of definitions, such as skins, portal types and categ
           # installed_item will be None and there will be no check for
           # modification
           installed_item = getattr(installed_bt, item_name, None)
+          type_name = new_item.__class__.__name__[:-12]
           if installed_item is not None and hasattr(installed_item, '_objects'):
-            modified_object = new_item.preinstall(context=self, 
+            if sha_dict:
+              for path in new_item._objects:
+                if path in installed_bt._sha_dict:
+                  if sha_dict[path] != installed_bt._sha_dict[path]:
+                    if self.isKeepObject(path):
+                      modified_object_list[path] = 'Modified but should be kept', type_name
+                    else:
+                      modified_object_list[path] = 'Modified', type_name
+
+                  p = path.rsplit('/', 1)[0]
+                  if p in modified_object_list:
+                    del modified_object_list[p]
+
+                else:
+                  modified_object_list[path] = 'New', type_name
+
+                  p = path.rsplit('/', 1)[0]
+                  if p in modified_object_list:
+                    del modified_object_list[p]
+
+              # get removed object
+              #
+              # XXX-arnau-bt5: copy/paste from ObjectTemplateItem.preinstall()
+              for path in set(installed_item._objects) - set(new_item._objects):
+                if self.isKeepObject(path):
+                  modified_object_list[path] = 'Removed but should be kept', type_name
+                else:
+                  modified_object_list[path] = 'Removed', type_name
+
+            else:
+              modified_object = new_item.preinstall(context=self, 
                                                   installed_item=installed_item,
                                                   installed_bt=installed_bt)
-            if len(modified_object) > 0:
-              modified_object_list.update(modified_object)
+              if len(modified_object) > 0:
+                modified_object_list.update(modified_object)
           else:
             for path in new_item._objects.keys():
-              modified_object_list.update({path : ['New', new_item.__class__.__name__[:-12]]})
+              modified_object_list.update({path : ['New', type_name]})
 
       if reinstall:
         self.portal_templates.manage_delObjects(ids=[INSTALLED_BT_FOR_DIFF])
 
       return modified_object_list
+
+    def getTrashBin(self):
+      """
+      WTF
+      """
+      trashbin = getattr(self, '_v_trashbin', _MARKER)
+      if trashbin is _MARKER:
+        print "======> CREATING TRASHBIN"
+####        import pdb; pdb.set_trace()
+        trash_tool = getToolByName(self.getPortalObject(), 'portal_trash', None)
+        if trash_tool is None:
+          raise AttributeError, 'Trash Tool is not installed'
+
+        if trash_tool is not None:
+          trashbin = trash_tool.newTrashBin(self.getTitle(), self)
+        else:
+          trashbin = None
+
+        self._v_trashbin = trashbin
+
+      return trashbin
+
+    security.declareProtected(Permissions.ManagePortal,
+                              'computeShaDict')
+    def computeShaDict(self):
+      self._sha_dict = {}
+      for item_name in self._item_name_list:
+        item = getattr(self, item_name, None)
+        if item is not None:
+          self._sha_dict.update(item.getShaDict())
 
     def _install(self, force=1, object_to_update=None, update_translation=0,
                  update_catalog=_MARKER, **kw):
@@ -4898,6 +4982,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             installed_bt, 'replace'):
           installed_bt.replace(self)
 
+      # WTF
       trash_tool = getToolByName(site, 'portal_trash', None)
       if trash_tool is None:
         raise AttributeError, 'Trash Tool is not installed'
@@ -4907,10 +4992,17 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # always created a trash bin because we may to save object already present
       # but not in a previous business templates apart at creation of a new site
+      # WTF
       if trash_tool is not None and (len(object_to_update) > 0 or len(self.portal_templates) > 2):
         trashbin = trash_tool.newTrashBin(self.getTitle(), self)
       else:
         trashbin = None
+####      trashbin = _MARKER
+
+      if with_sha:
+        self._sha_dict = PersistentMapping()
+      if with_sha_file:
+        self._sha_file_dict = PersistentMapping()
 
       # Install everything
       if len(object_to_update) or force:
@@ -4962,7 +5054,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
         gen.setup(site, 0, update=1)
 
       # remove trashbin if empty
-      if trashbin is not None:
+      if trashbin is not None and trashbin is not _MARKER:
+        trash_tool = getToolByName(site, 'portal_trash', None)
+        if trash_tool is None:
+          raise AttributeError, 'Trash Tool is not installed'
+
         if len(trashbin) == 0:
           trash_tool.manage_delObjects([trashbin.getId(),])
 
@@ -5289,7 +5385,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
         return None in vcs
 
     security.declareProtected(Permissions.ManagePortal, 'export')
-    def export(self, path=None, local=0, bta=None, **kw):
+    def export(self, path=None, local=0, bta=None, sha_dict=None,
+               sha_file_dict=None, **kw):
       """
         Export this Business Template
       """
@@ -5322,9 +5419,23 @@ Business Template is a set of definitions, such as skins, portal types and categ
         elif prop_type in ('lines', 'tokens'):
           bta.addObject('\n'.join(value), name=id, path='bt', ext='')
 
+      # XXX-arnau-bt5: There should be a SHA for the bt5 metadata as well
+      import cPickle
+      from hashlib import sha1
+
       # Export each part
       for item_name in self._item_name_list:
-        getattr(self, item_name).export(context=self, bta=bta)
+        item = getattr(self, item_name)
+        item.export(context=self, bta=bta)
+
+        if isinstance(sha_dict, dict):
+          for p, obj in item._objects.iteritems():
+            sha_dict[p] = sha1(cPickle.dumps(obj)).hexdigest()
+        if isinstance(sha_file_dict, dict):
+          for p in item._objects:
+            absolute_path = os.path.join(path, item.__class__.__name__, p) + '.xml'
+            with open(absolute_path) as f:
+              sha_file_dict[absolute_path] = sha1(f.read()).hexdigest()
 
       return bta.finishCreation()
 
@@ -5338,7 +5449,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       else:
         bta = BusinessTemplateTarball(importing=1, file=file)
 
-      self.storeTemplateItemData()
+##      self.storeTemplateItemData()
 
       # Create temporary modules/classes for classes defined by this BT.
       # This is required if the BT contains instances of one of these classes.

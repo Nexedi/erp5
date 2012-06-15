@@ -37,6 +37,7 @@ import sys
 import tempfile
 import shutil
 import cgi
+import hashlib
 
 property_list = '''
 title
@@ -75,26 +76,34 @@ def readBusinessTemplate(tar):
   """Read an archived Business Template info.
   """
   property_dict = {}
+  filename_sha_dict = {}
   for info in tar:
-    name_list = info.name.split('/')
-    if len(name_list) == 3 and name_list[1] == 'bt' and name_list[2] in property_list:
-      property_file = tar.extractfile(info)
-      property_name = name_list[2]
-      readProperty(property_dict, property_name, property_file)
+    if info.isfile():
+      _, name_list = info.name.split('/', 2)
+      file_object = tar.extractfile(info)
+      if name_list[1] == 'bt' and name_list[2] in property_list:
+        readProperty(property_dict, name_list[2], file_object)
+      else:
+        filename_sha_dict[os.path.join(name_list)] = \
+            hashlib.sha1(file_object.read()).hexdigest()
 
-  return property_dict
+  return property_dict, filename_sha_dict
 
 def readBusinessTemplateDirectory(dir):
   """Read Business Template Directory info.
   """
   property_dict = {}
-  for property_name in property_list:
-    filename = os.path.join(dir, 'bt', property_name)
-    if os.path.isfile(filename):
-      property_file = open(filename, 'rb')
-      readProperty(property_dict, property_name, property_file)
+  filename_sha_dict = {}
+  for path, _, filename_list in os.walk(dir):
+    for filename in filename_list:
+      with open(os.path.join(path, filename), 'rb') as file_object:
+        if path.split('/', 2)[1] == 'bt' and filename in property_list:
+          readProperty(property_dict, filename, file_object)
+        else:
+          filename_sha_dict[os.path.join(path, filename)] = \
+              hashlib.sha1(file_object.read()).hexdigest()
 
-  return property_dict
+  return property_dict, filename_sha_dict
 
 def generateInformation(fd):
   os.write(fd, '<?xml version="1.0"?>\n')
@@ -109,12 +118,12 @@ def generateInformation(fd):
         err('An error happened in %s; skipping\n' % (file,))
         continue
       try:
-        property_dict = readBusinessTemplate(tar)
+        property_dict, filename_sha_dict = readBusinessTemplate(tar)
       finally:
         tar.close()
     elif os.path.isfile(os.path.join(file, bt_title_path)):
       info('Reading Directory %s... ' % (file,))
-      property_dict = readBusinessTemplateDirectory(file)
+      property_dict, filename_sha_dict = readBusinessTemplateDirectory(file)
     else:
       continue
     os.write(fd, '  <template id="%s">\n' % (file,))
@@ -126,6 +135,15 @@ def generateInformation(fd):
         for value in property_value:
           os.write(fd, '    <%s>%s</%s>\n' % (
                 property_id, cgi.escape(value), property_id))
+
+    os.write(fd, '    <content>\n')
+    for filename, sha in filename_sha_dict.iteritems():
+      os.write(fd, '      <filename>\n')
+      os.write(fd, '        <path>%s</path>\n' % filename)
+      os.write(fd, '        <sha>%s</sha>\n' % sha)
+      os.write(fd, '      </filename>\n')
+    os.write(fd, '    </content>\n')
+
     os.write(fd, '  </template>\n')
     info('done\n')
   os.write(fd, '</repository>\n')

@@ -193,12 +193,14 @@ def generatePortalTypeClass(site, portal_type_name):
     type_class_namespace = document_class_registry.get(type_class, '')
     if not (type_class_namespace.startswith('Products.ERP5Type') or
             portal_type_name in core_portal_type_class_dict):
+      from erp5.component import document
       try:
-        klass = getattr(__import__('erp5.component.document.' + type_class,
-                                   fromlist=['erp5.component.document'],
-                                   level=0),
-                        type_class)
-      except (ImportError, AttributeError):
+        if type_class in document._registry_dict:
+          klass = getattr(__import__('erp5.component.document.' + type_class,
+                                     fromlist=['erp5.component.document'],
+                                     level=0),
+                          type_class)
+      except AttributeError:
         pass
 
     if klass is None:
@@ -304,7 +306,7 @@ def synchronizeDynamicModules(context, force=False):
     cookie = portal.getCacheCookie('dynamic_classes')
     if cookie == last_sync:
       # up to date, nothing to do
-      return
+      return False
     last_sync = cookie
 
   import erp5
@@ -394,3 +396,5 @@ def synchronizeDynamicModules(context, force=False):
   cache_tool = getattr(portal, 'portal_caches', None)
   if cache_tool is not None:
     cache_tool.clearCache()
+
+  return True
