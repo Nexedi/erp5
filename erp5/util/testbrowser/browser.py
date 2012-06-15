@@ -864,6 +864,13 @@ class ContextMainForm(MainForm):
     """
     self.submit(name='Folder_create:method')
 
+  def submitClone(self):
+    """
+    Clone the previously selected objects. Use the class attribute
+    rather than the name as the latter is dependent on the context.
+    """
+    self.submit(class_attribute='clone')
+
   def submitDelete(self):
     """
     Delete the previously selected objects.
