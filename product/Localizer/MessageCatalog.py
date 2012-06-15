@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2000-2007  Juan David Ibáñez Palomar <jdavid@itaapy.com>
 # Copyright (C) 2003  Roberto Quero, Eduardo Corrales
 # Copyright (C) 2004  Søren Roug
@@ -28,11 +28,8 @@ from re import compile
 from time import gmtime, strftime, time
 from urllib import quote
 
-# Import from itools
-from itools.datatypes import LanguageTag
-import itools.gettext
-from itools.tmx import TMXFile, Sentence, TMXUnit, TMXNote
-from itools.xliff import XLFFile, XLFNote
+# Import from polib
+import polib
 
 # Import from Zope
 from AccessControl import ClassSecurityInfo
@@ -66,15 +63,20 @@ def md5text(str):
     return md5(str.encode('utf-8')).hexdigest()
 
 
-def to_unicode(x):
+def to_unicode(x, encoding=HTTPRequest.default_encoding):
     """In Zope the ISO-8859-1 encoding has an special status, normal strings
     are considered to be in this encoding by default.
     """
     if isinstance(x, unicode):
         return x
-    encoding = HTTPRequest.default_encoding
     return unicode(x, encoding)
 
+
+def to_str(x):
+    """Make sure we have an (utf-8 encoded) string"""
+    if isinstance(x, str):
+        return x
+    x.encode('utf-8')
 
 def message_encode(message):
     """Encodes a message to an ASCII string.
@@ -620,18 +622,18 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         messages = self._messages
 
         # Load the data
-        po = itools.gettext.POFile(string=data)
-        for msgid in po.get_msgids():
-            # TODO Keep the context if any
-            _context, msgid = msgid
+        po = polib.pofile(data)
+        encoding = to_str(po.encoding)
+        for entry in po:
+            msgid = to_unicode(entry.msgid, encoding=encoding)
             if msgid:
-                msgstr = po.get_msgstr(msgid) or ''
+                msgstr = to_unicode(entry.msgstr or '', encoding=encoding)
                 if not messages.has_key(msgid):
                     messages[msgid] = PersistentMapping()
                 messages[msgid][lang] = msgstr
 
         # Set the encoding (the full header should be loaded XXX)
-        self.update_po_header(lang, charset=po.get_encoding())
+        self.update_po_header(lang, charset=encoding)
 
 
     security.declareProtected('Manage messages', 'manage_import')
