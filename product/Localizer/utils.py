@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2000-2003  Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -15,9 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Import from itools
-from itools import get_abspath
-from itools.i18n import AcceptLanguageType, init_language_selector
-from itools.gettext import get_domain, register_domain
+from .itools.utils import get_abspath
+from .itools.i18n import AcceptLanguageType, init_language_selector
 
 # Import from Zope
 from App.Common import package_home
@@ -62,20 +61,22 @@ init_language_selector(lang_negotiator)
 # directory.
 ###########################################################################
 class DomainAware(object):
+    """
+    This class is just a stub. We're not interested in filesystem-based
+    po-file translations.
+
+    All subclasses should be either changed not to require DomainAware
+    or removed altogether.
+    """
 
     def __init__(self, namespace):
         mname = namespace['__name__']
         domain = get_abspath('locale', mname=mname)
         self.class_domain = domain
-        register_domain(domain, domain)
 
 
     def gettext(self, message, language=None):
-        domain = get_domain(self.class_domain)
-        if language is None:
-            languages = domain.get_languages()
-            language = select_language(languages)
-        return domain.gettext(message, language)
+        return message
 
 _ = DomainAware(globals()).gettext
 

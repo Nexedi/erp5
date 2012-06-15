@@ -1,60 +1,13 @@
+This is a fork of the Localizer product, as found originally at:
 
-Localizer is the de-facto standard to build multilingual applications with
-Zope. It helps to internationalize and localize Zope products and to build
-multilingual web sites through the Management Interface. It deals with
-both user interfaces and content.
+https://github.com/hforge/Localizer
 
+All functionality not explicitly used by ERP5 has been or will be removed.
 
-Requirements
+Moreover, all monkey-patches, and all dependencies on itools should be
+moved into native Zope APIs.
 
-  - Python 2.5.2 or later
-
-  - Zope 2.12.2 or later
-
-  - itools 0.50.6 or later (download from
-    "http://www.hforge.org/itools":http://www.hforge.org/itools)
-
-
-Installation
-
-  Download Localizer. Unpack the tarball and install it in the "Products"
-  directory::
-
-    $ tar xzf Localizer-1.3.0.tar.gz
-    $ cp -r Localizer-1.3.0 <Zope instance>/Products/Localizer
-
-  Another option, case you are running Unix, is to use symbolic links::
-
-    $ ln -s Localizer-1.3.0 <Zope instance>/Products/Localizer
-
-
-Resources
-
-  - "Home site":http://www.localizer.org/
-
-  - "Mailing list subscription":http://www.hforge.org/community
-
-  - "Mailing list archives":http://archives.hforge.org/index.cgi?list=localizer
-
-  - "Bug Tracker":http://bugs.hforge.org/
-
-
-Examples of sites powered by Localizer
-
-  - "European Environment Agency":http://www.eea.eu.int/
-
-  - "Bank Winter":http://www.bankwinter.com/
-
-  - "Castagnari":http://www.castagnari.com/
-
-  - "Hiru":http://www.hiru.com/
-
-  - "Hotsak":http://www.hotsak.com/
-
-  - "Ego Ibarra":http://www.egoibarra.com/
-
-  - "Udaleuskaltegiak":http://www.udaleuskaltegiak.net/
-
+The copyright notice of the original code is as follows:
 
 Author and License
 

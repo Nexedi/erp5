@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2000-2005 Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -47,29 +47,3 @@ class LocalDTMLFile(DomainAware, DTMLFile):
         bound_data['gettext'] = self.gettext
         return apply(LocalDTMLFile.inheritedAttribute('_exec'),
                      (self, bound_data, args, kw))
-
-
-
-# Zope Page Templates (ZPT)
-# XXX Deprecated, use the i18n namespace instead.
-try:
-    from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-except ImportError:
-    # If ZPT is not installed
-    class LocalPageTemplateFile:
-        pass
-else:
-    class LocalPageTemplateFile(DomainAware, PageTemplateFile):
-        """ """
-
-        def __init__(self, name, _prefix=None, **kw):
-            PageTemplateFile.__init__(self, name, _prefix, **kw)
-            DomainAware.__init__(self, _prefix)
-
-
-        def _exec(self, bound_data, args, kw):
-            # Add our gettext first
-            bound_data['gettext'] = self.gettext
-            return apply(LocalPageTemplateFile.inheritedAttribute('_exec'),
-                         (self, bound_data, args, kw))
-

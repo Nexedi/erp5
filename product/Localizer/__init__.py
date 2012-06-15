@@ -1,4 +1,4 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 # Copyright (C) 2000-2005  Juan David Ibáñez Palomar <jdavid@itaapy.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,17 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Check whether itools is installed
-msg = ('itools 0.50 or later is needed, download from '
-       'http://download.hforge.org/itools/0.50')
-try:
-    import itools
-except ImportError:
-    raise ImportError, msg
-# Check itools is version 0.50 or later
-if itools.__version__ < '0.50':
-    raise ImportError, msg
-
 # Import from the Standard Library
 import os.path
 
@@ -34,10 +23,8 @@ from DocumentTemplate.DT_String import String
 
 # Import from Localizer
 from patches import get_request
-import Localizer, LocalContent, MessageCatalog, LocalFolder
-from LocalAttributes import LocalAttribute
-from LocalFiles import LocalDTMLFile, LocalPageTemplateFile
-from LocalPropertyManager import LocalPropertyManager, LocalProperty
+import Localizer, MessageCatalog
+from LocalFiles import LocalDTMLFile
 from GettextTag import GettextTag
 
 
@@ -72,26 +59,12 @@ def initialize(context):
                                           Localizer.manage_addLocalizer),
                           icon = 'img/localizer.gif')
 
-    # Register LocalContent
-    context.registerClass(
-        LocalContent.LocalContent,
-        constructors = (LocalContent.manage_addLocalContentForm,
-                        LocalContent.manage_addLocalContent),
-        icon='img/local_content.gif')
-
     # Register MessageCatalog
     context.registerClass(
         MessageCatalog.MessageCatalog,
         constructors = (MessageCatalog.manage_addMessageCatalogForm,
                         MessageCatalog.manage_addMessageCatalog),
         icon='img/message_catalog.gif')
-
-    # Register LocalFolder
-    context.registerClass(
-        LocalFolder.LocalFolder,
-        constructors = (LocalFolder.manage_addLocalFolderForm,
-                        LocalFolder.manage_addLocalFolder),
-        icon='img/local_folder.gif')
 
     context.registerHelp()
 
