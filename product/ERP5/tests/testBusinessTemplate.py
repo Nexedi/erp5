@@ -6556,7 +6556,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     new_object.__ac_local_roles_group_id_dict__ = dict(group=('Alternate',))
 
     self.tic()
-    transaction.commit()
 
     object_type.newContent(portal_type='Role Information',
                            local_roles_group_id='Alternate',
