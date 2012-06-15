@@ -587,7 +587,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertTrue('Assignor' in user.getRolesInContext(obj))
     self.assertEqual(('Alternate',),
       obj.__ac_local_roles_group_id_dict__.get('F1_G1_S1'))
-    transaction.abort()
+    self.abort()
 
 
   def testDynamicLocalRole(self):
