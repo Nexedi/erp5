@@ -36,7 +36,7 @@
             <key> <string>_text</string> </key>
             <value> <unicode encoding="cdata"><![CDATA[
 
-<div class="blog_rss"><a href="./Blog_viewAsRSS"><img src="erp5_web_blog_image/rss-image.png" alt="This blog as RSS" /></a></div>\n
+<div class="blog_rss"><a href="./WebSection_viewContentListAsRSS"><img src="web_images/rss-image.png" alt="This blog as RSS" /></a></div>\n
 \n
 <tal:block tal:define="real_context here/getContext; \n
                        base_url_string real_context/absolute_url;\n
@@ -75,8 +75,8 @@
   <!-- <div class="post_read_more"><a tal:attributes="href url" i18n:translate="" i18n:domain="ui">Read more</a></div> -->\n
   <div class="post_bottom">\n
     <a tal:attributes="href comments_url"><tal:block tal:replace="comment_count">0</tal:block> <tal:block i18n:translate="" i18n:domain="ui">comment</tal:block></a> | \n
-    <tal:block i18n:translate="" i18n:domain="ui">Share</tal:block>: <a title="Facebook" tal:attributes="href facebook_url"><img width="20px" alt="Facebook logo" src="erp5_web_blog_image/facebook-button.png" /></a>\n
-         <a title="Twitter" tal:attributes="href twitter_url"><img width="20px" alt="Twitter Logo" src="erp5_web_blog_image/twitter-button.png" /></a>\n
+    <tal:block i18n:translate="" i18n:domain="ui">Share</tal:block>: <a title="Facebook" tal:attributes="href facebook_url"><img width="20px" alt="Facebook logo" src="web_images/facebook-button.png" /></a>\n
+         <a title="Twitter" tal:attributes="href twitter_url"><img width="20px" alt="Twitter Logo" src="web_images/twitter-button.png" /></a>\n
 \n
   </div><!--End post_bottom-->\n
 \n

@@ -65,6 +65,16 @@ if pref is None:\n
 \n
 pref.setPreferredSubversionWorkingCopyList(tuple(working_copy_list.split(\',\')))\n
 pref.setPreferredHtmlStyleUnsavedFormWarning(False)\n
+\n
+if pref.getPreferenceState() == \'disabled\':\n
+  pref.enable()\n
+\n
+pref = getattr(context.portal_preferences, "erp5_ui_test_system_preference", None)\n
+if pref is None:\n
+  pref = context.portal_preferences.newContent(id="erp5_ui_test_system_preference",\n
+                                               portal_type="System Preference",\n
+                                               priority=1)\n
+\n
 pref.setPreferredOoodocServerAddress(conversion_server_hostname)\n
 pref.setPreferredOoodocServerPortNumber(conversion_server_port)\n
 \n

@@ -6,32 +6,8 @@
  <portal_type id="Production Order Line">
   <item>Production Order Cell</item>
  </portal_type>
- <portal_type id="Production Order Model Root Simulation Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
- </portal_type>
- <portal_type id="Production Order Model Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
- </portal_type>
  <portal_type id="Production Order Module">
   <item>Production Order</item>
- </portal_type>
- <portal_type id="Production Order Root Simulation Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
- </portal_type>
- <portal_type id="Production Order Rule">
-  <item>Category Divergence Tester</item>
-  <item>Composed Divergence Tester</item>
-  <item>Property Divergence Tester</item>
-  <item>Quantity Divergence Tester</item>
  </portal_type>
  <portal_type id="Production Packing List">
   <item>Production Packing List Line</item>
@@ -50,12 +26,6 @@
  </portal_type>
  <portal_type id="Production Report Module">
   <item>Production Report</item>
- </portal_type>
- <portal_type id="Rule Tool">
-  <item>Production Order Model Root Simulation Rule</item>
-  <item>Production Order Model Rule</item>
-  <item>Production Order Root Simulation Rule</item>
-  <item>Production Order Rule</item>
  </portal_type>
  <portal_type id="Supply Chain">
   <item>Supply Link</item>

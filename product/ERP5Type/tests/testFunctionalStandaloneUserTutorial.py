@@ -48,7 +48,7 @@ BASE_REMOTE_SELENIUM_TEST_URL_LIST = [
      "http://www.erp5.com/user-Howto.Create.Sale.Orders-HTML5/TestPage_viewSeleniumTest",
      "http://www.erp5.com/user-Howto.Manage.Packing.Lists-HTML5/TestPage_viewSeleniumTest",
      "http://www.erp5.com/user-Howto.Manage.Invoices-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Create.A.Payment-HTML5-DRAFT/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.A.Payment-HTML5/TestPage_viewSeleniumTest",
 
      # Extra Tests, Additional Tests not yet related to any previous tutorial
      "http://www.erp5.com/user-HowTo.Use.FullText.Search-TESTONLY/TestPage_viewSeleniumTest",

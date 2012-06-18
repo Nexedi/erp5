@@ -12,22 +12,6 @@
   <workflow>delivery_movement_causality_interaction_workflow, delivery_movement_simulation_interaction_workflow, edit_workflow, production_matrix_workflow, production_order_interaction_workflow</workflow>
  </chain>
  <chain>
-  <type>Production Order Model Root Simulation Rule</type>
-  <workflow>edit_workflow, rule_validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Production Order Model Rule</type>
-  <workflow>edit_workflow, rule_validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Production Order Root Simulation Rule</type>
-  <workflow>edit_workflow, rule_validation_workflow</workflow>
- </chain>
- <chain>
-  <type>Production Order Rule</type>
-  <workflow>edit_workflow, rule_validation_workflow</workflow>
- </chain>
- <chain>
   <type>Production Packing List</type>
   <workflow>delivery_causality_interaction_workflow, delivery_causality_workflow, delivery_simulation_interaction_workflow, edit_workflow, production_packing_list_workflow</workflow>
  </chain>

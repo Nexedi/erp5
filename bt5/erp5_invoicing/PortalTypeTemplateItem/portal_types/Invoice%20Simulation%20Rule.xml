@@ -19,12 +19,6 @@
             <value> <string>ERP5 Invoice Simulation Rule</string> </value>
         </item>
         <item>
-            <key> <string>description</string> </key>
-            <value> <string>      Transformation Sourcing Rule object make sure\n
-      items required in a Transformation are sourced\n
-</string> </value>
-        </item>
-        <item>
             <key> <string>factory</string> </key>
             <value> <string>addInvoiceSimulationRule</string> </value>
         </item>

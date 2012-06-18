@@ -127,14 +127,19 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.assertEqual(group1, discussion_thread_object1.getGroupValue())
     self.assertEqual(group2, discussion_thread_object2.getGroupValue())
     
-    # check getDocumentValue.. on Web Section context
+    # check getDocumentValue.. on Web Section context (by default forum is public 
+    # so threads should be part of document list)
+    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in web_section1.getDocumentValueList()])
+    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in web_section2.getDocumentValueList()])
+
+    # test archiving threads so the do not belong any more to web section document list
+    discussion_thread_object1.archive()
+    discussion_thread_object2.archive()
+    self.tic()
+
     self.assertSameSet([], web_section1.getDocumentValueList())
     self.assertSameSet([], web_section2.getDocumentValueList())
-    discussion_thread_object1.publish()
-    discussion_thread_object2.publish()
-    self.tic()
-    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in web_section1.getDocumentValueList()])
-    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in web_section2.getDocumentValueList()])    
+
 
 def test_suite():
   suite = unittest.TestSuite()

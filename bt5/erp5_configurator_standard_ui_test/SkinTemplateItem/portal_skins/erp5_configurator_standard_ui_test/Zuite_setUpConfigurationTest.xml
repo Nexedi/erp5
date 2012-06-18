@@ -52,8 +52,9 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 \n
-# set url, user/password\n
-configuration_info = context.Zuite_getConfigurationTestDict()\n
+bt_repository_list = [\'http://www.erp5.org/dists/snapshot/bt5/\']\n
+customer_user1_reference = \'PERSON_USER_REFERENCE\'\n
+customer_user1_used_reference = \'PERSON_RESERVED_REFERENCE\'\n
 \n
 # setup preferences\n
 preference_id = \'default_initial_configurator_system_preference\'\n
@@ -81,10 +82,10 @@ if default_site_preference.getPreferenceState() != \'global\':\n
 # update repository info of Configurator site\n
 if len(portal.portal_templates.getRepositoryList()) == 0:\n
   portal.portal_templates.updateRepositoryBusinessTemplateList(\n
-    repository_list = configuration_info[\'bt_repository_list\'])\n
+    repository_list = bt_repository_list)\n
 \n
 # (Re)Create the Business Configurator\n
-bc_id = configuration_info[\'business_configuration_id\']\n
+bc_id = \'STANDARD_CONFIGURATOR_TEST\'\n
 business_configuration = getattr(context.business_configuration_module, bc_id, None)\n
 if business_configuration is not None:\n
   context.business_configuration_module.manage_delObjects([bc_id])\n
@@ -98,12 +99,12 @@ business_configuration.setResource(workflow_path)\n
 \n
 # (Re)Create the Person with already used login.\n
 kw = dict(portal_type="Person",\n
-          reference=configuration_info[\'customer_user1_used_reference\'])\n
+          reference=customer_user1_used_reference)\n
 person = context.portal_catalog.getResultValue(**kw)\n
 if person is None:\n
   context.person_module.newContent(**kw)\n
 \n
-kw[\'reference\'] = configuration_info[\'customer_user1_reference\']\n
+kw[\'reference\'] = customer_user1_reference\n
 person = context.portal_catalog.getResultValue(**kw)\n
 if person is not None:\n
   context.person_module.manage_delObjects([person.getId()])\n

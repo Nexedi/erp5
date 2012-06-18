@@ -264,6 +264,11 @@ class Image(TextConvertableMixin, File, OFSImage):
     """
     Implementation of conversion for Image files
     """
+    if format == 'svg' and self.getContentType()=='image/svg+xml':
+      # SVG format is a textual data which can be returned as it is
+      # so client (browser) can draw an image out of it
+      return self.getContentType(), self.getData()
+
     if format in VALID_TEXT_FORMAT_LIST:
       try:
         return self.getConversion(format=format)

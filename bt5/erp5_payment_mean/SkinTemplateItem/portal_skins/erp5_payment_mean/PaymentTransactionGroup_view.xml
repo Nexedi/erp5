@@ -101,6 +101,7 @@
                     <value>
                       <list>
                         <string>my_title</string>
+                        <string>my_source_reference</string>
                         <string>my_reference</string>
                         <string>my_source_section</string>
                         <string>my_source_payment</string>
@@ -111,6 +112,7 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_destination_reference</string>
                         <string>my_stop_date</string>
                         <string>my_payment_transaction_group_type</string>
                         <string>my_payment_mode</string>

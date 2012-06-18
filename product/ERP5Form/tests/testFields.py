@@ -884,29 +884,31 @@ class TestFieldValueCache(ERP5TypeTestCase):
       dict(on_memory_field='123').get(key, d)
 
     form = self.root.form
-    form.field = StringField('test_field')
+    def addField(field):
+      form._setObject(field.id, field, set_owner=0, suppress_events=1)
+    addField(StringField('field'))
     form.field._p_oid = makeDummyOid()
     # method field
     form.field.values['external_validator'] = Method('this_is_a_method')
     # on-memory field (not in zodb)
-    form.my_on_memory_field = StringField('my_on_memory_field')
+    addField(StringField('my_on_memory_field'))
     form.my_on_memory_field._p_oid = None
-    form.my_on_memory_tales_field = StringField('my_on_memory_tales_field')
+    addField(StringField('my_on_memory_tales_field'))
     form.my_on_memory_tales_field.manage_tales_xmlrpc({
       'default': 'python: repr(here)'})
     form.my_on_memory_field._p_oid = None
     # proxy field
-    form.proxy_field = ProxyField.ProxyField('test_proxy_field')
+    addField(ProxyField.ProxyField('proxy_field'))
     form.proxy_field._p_oid = makeDummyOid()
     form.proxy_field.values['form_id'] = 'form'
     form.proxy_field.values['field_id'] = 'field'
     # proxy field with tales
-    form.proxy_field_tales = ProxyField.ProxyField('test_proxy_field')
+    addField(ProxyField.ProxyField('proxy_field_tales'))
     form.proxy_field_tales._p_oid = makeDummyOid()
     form.proxy_field_tales.tales['form_id'] = TALESMethod('string:form')
     form.proxy_field_tales.tales['field_id'] = TALESMethod('string:field')
     # datetime field (input style is list)
-    form.datetime_field = DateTimeField('datetime_field')
+    addField(DateTimeField('datetime_field'))
     form.datetime_field._p_oid = makeDummyOid()
     form.datetime_field._edit(dict(input_style='list'))
     for i in form.datetime_field.sub_form.fields.values():

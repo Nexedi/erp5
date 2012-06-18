@@ -710,7 +710,10 @@ class BusinessProcess(Path, XMLObject):
 
     # result can not be empty
     if not result:
-      raise ValueError("A Business Process can not erase amounts")
+      raise ValueError("A Business Process can not erase amounts:"
+                       " no Trade Model Path found for %r"
+                       " (rule=%s, trade_phase=%r)"
+                       % (amount, explanation.getSpecialise(), trade_phase))
 
     # Sort movement list and make sure the total is equal to total_quantity
     total_quantity = amount.getQuantity()

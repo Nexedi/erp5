@@ -27,10 +27,6 @@
 ##############################################################################
 
 from Products.ERP5Type.Tool.WebServiceTool import ConnectionError
-from urllib import urlencode
-from urllib2 import URLError, HTTPError, Request, \
-     urlopen, HTTPBasicAuthHandler, build_opener, \
-     install_opener
 from Products.ERP5.ERP5Site import getSite
 
 class MethodWrapper(object):
@@ -65,7 +61,7 @@ class DocumentConnection:
     """
     """
     self.reference=url
-  
+
   def connect(self):
     """Get a handle to a remote connection."""
     return self

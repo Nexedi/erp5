@@ -91,8 +91,8 @@ sale_order = portal.sale_order_module.newContent(\n
                                    source_administration=my_organisation.getRelativeUrl(),\n
                                    delivery_mode=\'delivery_mode/air\',\n
                                    order=\'order/normal\',\n
-                                   start_date=DateTime(),\n
-                                   stop_date=DateTime()+1,\n
+                                   start_date=DateTime().earliestTime(),\n
+                                   stop_date=DateTime().earliestTime()+1,\n
 )\n
 sale_order.setPriceCurrency(currency.getRelativeUrl())\n
 sale_order.setIncoterm(\'incoterm/cpt\')\n
