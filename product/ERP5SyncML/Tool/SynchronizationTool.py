@@ -370,12 +370,16 @@ class SynchronizationTool(BaseTool):
           syncml_request.header['message_id']):
         # Message already processed, resend the response
         # XXX How to make sure we send the good last response ?
-        syncml_response = subscription.getLastSentMessage("")
+        raise NotImplementedError
       else:
         return engine.processClientSynchronization(syncml_request, subscription)
 
     # Send the message
-    subscription.sendMessage(str(syncml_response))
+    # XXX This must depends on activity enables property
+    subscription.activate(
+      activity="SQLQueue",
+      priority=ACTIVITY_PRIORITY,
+      tag=subscription.getRelativeUrl()).sendMessage(str(syncml_response))
     return str(syncml_response)
 
   def applySyncCommand(self, subscription_path, response_message_id,

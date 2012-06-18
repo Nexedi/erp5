@@ -191,7 +191,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
       # clients, which is not the case here
       # XXX To avoid issue with multiple message, this must be stored
       # in memcached instead of this variable
-      gid_list = subscriber.getGidList()
+      # gid_list = subscriber.getGidList()
 
       if subscriber.getSynchronizationState() == "initializing":
         raise ValueError("Subscription still initializing, must not get here")
@@ -218,6 +218,7 @@ class SyncMLAsynchronousEngine(EngineMixin):
         else:
           # Send all modification using activities
           activity_created = self.runGetAndActivate(subscription=subscriber,
+                                                    after_method_id=after_method_id,
                                                     tag=tag)
           syncml_logger.info("X--> Server is sending modifications in activities")
         if not activity_created:
@@ -237,12 +238,13 @@ class SyncMLAsynchronousEngine(EngineMixin):
                             xml=str(syncml_response))
 
 
-  def runGetAndActivate(self, subscription, tag):
+  def runGetAndActivate(self, subscription, tag, after_method_id=None):
     """
     Generate tag and method parameter and call the getAndActivate method
     """
     activate_kw = {
       'activity' : 'SQLQueue',
+      'after_method_id' : after_method_id,
       'tag' :tag,
       'priority' :ACTIVITY_PRIORITY
       }
@@ -251,9 +253,6 @@ class SyncMLAsynchronousEngine(EngineMixin):
       'after_tag' : tag,
       'after_method_id' : ("processServerSynchronization",
                            "processClientSynchronization"),
-#      'after_tag_and_method_id' : (tag, ('sendSyncCommand',
-#                                         'getAndActivate',
-#                                         'sendMessage')),
       'priority' :ACTIVITY_PRIORITY + 1
       }
     method_kw = {
@@ -292,7 +291,10 @@ class SyncMLAsynchronousEngine(EngineMixin):
         syncml_response = None
       subscription.applyActionList(syncml_request, syncml_response)
       if syncml_response:
-        subscription.sendMessage(xml=str(syncml_response))
+        subscription.activate(
+          activity="SQLQueue",
+          priority=ACTIVITY_PRIORITY,
+          tag=subscription.getRelativeUrl()).sendMessage(xml=str(syncml_response))
 
     else:
       # XXX For now always split by one

@@ -33,7 +33,7 @@ from Products.PluggableAuthService.interfaces.plugins import \
 
 from Products.ERP5SyncML.XMLSyncUtils import resolveSyncmlStatusCode, decode
 from Products.ERP5SyncML.SyncMLMessage import SyncMLResponse
-from Products.ERP5SyncML.SyncMLConstant import NULL_ANCHOR
+from Products.ERP5SyncML.SyncMLConstant import NULL_ANCHOR, ACTIVITY_PRIORITY
 
 syncml_logger = getLogger('ERP5SyncML')
 
@@ -449,6 +449,10 @@ class EngineMixin(object):
 
     # Generate and send the message
     syncml_response.addFinal()
-    subscriber.sendMessage(xml=str(syncml_response))
+    # XXX This must depends on 'activity enabled' property
+    subscriber.activate(
+      activity="SQLQueue",
+      priority=ACTIVITY_PRIORITY,
+      tag=publication.getRelativeUrl()).sendMessage(xml=str(syncml_response))
 
     return syncml_response
