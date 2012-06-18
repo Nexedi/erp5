@@ -375,11 +375,15 @@ class SynchronizationTool(BaseTool):
         return engine.processClientSynchronization(syncml_request, subscription)
 
     # Send the message
-    # XXX This must depends on activity enables property
-    subscription.activate(
-      activity="SQLQueue",
-      priority=ACTIVITY_PRIORITY,
-      tag=subscription.getRelativeUrl()).sendMessage(str(syncml_response))
+    # XXX This must depends on activity enables property, maybe use engine
+    if subscription.getIsActivityEnabled():
+      subscription.activate(
+        activity="SQLQueue",
+        priority=ACTIVITY_PRIORITY,
+        tag=subscription.getRelativeUrl()).sendMessage(str(syncml_response))
+    else:
+      subscription.sendMessage(str(syncml_response))
+
     return str(syncml_response)
 
   def applySyncCommand(self, subscription_path, response_message_id,

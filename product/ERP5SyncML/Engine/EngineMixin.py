@@ -450,9 +450,12 @@ class EngineMixin(object):
     # Generate and send the message
     syncml_response.addFinal()
     # XXX This must depends on 'activity enabled' property
-    subscriber.activate(
-      activity="SQLQueue",
-      priority=ACTIVITY_PRIORITY,
-      tag=publication.getRelativeUrl()).sendMessage(xml=str(syncml_response))
+    if subscriber.getIsActivityEnabled():
+      subscriber.activate(
+        activity="SQLQueue",
+        priority=ACTIVITY_PRIORITY,
+        tag=publication.getRelativeUrl()).sendMessage(xml=str(syncml_response))
+    else:
+      subscriber.sendMessage(xml=str(syncml_response))
 
     return syncml_response
