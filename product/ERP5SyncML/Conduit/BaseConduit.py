@@ -39,7 +39,7 @@ class BaseConduit(object):
     # This must be a sub-BaseConduit
     return "text/xml"
 
-  def generateDiff(self, former_document, new_document):
+  def generateDiff(self, new_data, former_data):
     return None
 
   def getXMLFromObjectWithId(self, object, xml_mapping, context_document=None):

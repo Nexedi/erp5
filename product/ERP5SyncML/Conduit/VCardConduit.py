@@ -224,10 +224,10 @@ class VCardConduit(ERP5Conduit):
     """
     return 'text/vcard'
 
-  def generateDiff(self, old_data, new_data):
+  def generateDiff(self, new_data, former_data):
     """return unified diff for plain-text documents
     """
-    diff = '\n'.join(difflib.unified_diff(old_data.splitlines(),
+    diff = '\n'.join(difflib.unified_diff(former_data.splitlines(),
                                           new_data.splitlines()))
     return diff
 
