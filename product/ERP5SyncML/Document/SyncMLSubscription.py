@@ -842,8 +842,10 @@ class SyncMLSubscription(XMLObject):
     Generate new session using portal ids
     """
     id_group = ("session_id", self.getRelativeUrl())
-    return self.getPortalObject().portal_ids.generateNewId(id_group=id_group,
-                                                           default=1)
+    return self.getPortalObject().portal_ids.generateNewId(
+      id_group=id_group,
+      id_generator="mysql_non_continuous_increasing_non_zodb",
+      default=1)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'getNextMessageId')
   def getNextMessageId(self):
@@ -852,10 +854,6 @@ class SyncMLSubscription(XMLObject):
     This depends on the session id as there is no way to reset it
     """
     return self.getNextMessageIdList(id_count=1)[0]
-    # id_group = ("message_id", self.getRelativeUrl(), self.getSessionId())
-    # return self.getPortalObject().portal_ids.generateNewId(
-    #   id_group=id_group, id_generator="mysql_non_continuous_increasing",
-    #   default=1)
 
   security.declareProtected(Permissions.ModifyPortalContent, 'getNextMessageIdList')
   def getNextMessageIdList(self, id_count):
@@ -865,7 +863,7 @@ class SyncMLSubscription(XMLObject):
     """
     id_group = ("message_id", self.getRelativeUrl(), self.getSessionId())
     return self.getPortalObject().portal_ids.generateNewIdList(
-      id_generator="mysql_non_continuous_increasing",
+      id_generator="mysql_non_continuous_increasing_non_zodb",
       id_group=id_group, id_count=id_count, default=1)
 
 
