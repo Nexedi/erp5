@@ -836,7 +836,7 @@ class SyncMLSubscription(XMLObject):
         % (self.getPath(), list_method_id)
     return result_list
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'getNewSessionId')
+  security.declareProtected(Permissions.ModifyPortalContent, 'generateNewSessionId')
   def generateNewSessionId(self):
     """
     Generate new session using portal ids
