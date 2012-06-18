@@ -65,7 +65,7 @@ class VCardConduit(ERP5Conduit):
         ERP5Conduit.constructContent(self, object, object_id, portal_type)
     else: #if the object exist, it juste must be update
       new_object = sub_object
-    #LOG('addNode', 0, 'new_object:%s, sub_object:%s' % (new_object, sub_object)) 
+    #LOG('addNode', 0, 'new_object:%s, sub_object:%s' % (new_object, sub_object))
     self.updateNode(xml=xml,
                     object=new_object,
                     force=force,
@@ -88,7 +88,7 @@ class VCardConduit(ERP5Conduit):
     return []
 
   security.declareProtected(Permissions.ModifyPortalContent, 'updateNode')
-  def updateNode(self, xml=None, object=None, previous_xml=None, force=0, 
+  def updateNode(self, xml=None, object=None, previous_xml=None, force=0,
       simulate=0,  **kw):
     """
     A node is updated
@@ -127,17 +127,17 @@ class VCardConduit(ERP5Conduit):
     """
     prefered_type = 'text/x-vcard'
     return prefered_type
-  
-  def changePropertyEncoding(self, property_parameters_list, 
+
+  def changePropertyEncoding(self, property_parameters_list,
       property_value_list):
     """
     if there is a property 'ENCODING', change the string encoding to utf-8
     """
     encoding=''
 
-    for item in property_parameters_list :
-      if ENCODING in item:
-        encoding = item['ENCODING']
+#    for item in property_parameters_list :
+#      if ENCODING in item:
+#        encoding = item['ENCODING']
 
     property_value_list_well_incoded=[]
     if encoding == 'QUOTED-PRINTABLE':
@@ -227,8 +227,8 @@ class VCardConduit(ERP5Conduit):
   def generateDiff(self, new_data, former_data):
     """return unified diff for plain-text documents
     """
-    diff = '\n'.join(difflib.unified_diff(former_data.splitlines(),
-                                          new_data.splitlines()))
+    diff = '\n'.join(difflib.unified_diff(new_data.splitlines(),
+                                          former_data.splitlines()))
     return diff
 
 

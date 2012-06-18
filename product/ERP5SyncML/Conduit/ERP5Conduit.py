@@ -1093,7 +1093,7 @@ class ERP5Conduit(XMLSyncUtilsMixin):
   def generateDiff(self, new_data, former_data):
     """return xupdate node
     """
-    return getXupdateObject(former_data, new_data)
+    return getXupdateObject(new_data, former_data)
 
   def applyDiff(self, original_data, diff):
     """Use xuproc for computing patched content
