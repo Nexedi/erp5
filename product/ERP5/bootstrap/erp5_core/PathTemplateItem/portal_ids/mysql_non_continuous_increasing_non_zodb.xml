@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>mysql_non_continuous_increasing_non_zodb.xml</string> </value>
+            <value> <string>mysql_non_continuous_increasing_non_zodb</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
