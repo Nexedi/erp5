@@ -449,10 +449,11 @@ class EngineMixin(object):
 
     # Generate and send the message
     syncml_response.addFinal()
-    # XXX This must depends on 'activity enabled' property
     if subscriber.getIsActivityEnabled():
       subscriber.activate(
         activity="SQLQueue",
+        after_method_id="reset", # Wait for all reset to be done
+                                 # before starting syn
         priority=ACTIVITY_PRIORITY,
         tag=publication.getRelativeUrl()).sendMessage(xml=str(syncml_response))
     else:
