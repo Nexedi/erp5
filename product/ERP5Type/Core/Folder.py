@@ -1253,10 +1253,11 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
   def reindexObjectSecurity(self, *args, **kw):
     """
         Reindex security-related indexes on the object
-        (and its descendants).
     """
-    # In ERP5, simply reindex all objects.
-    self.recursiveReindexObject(*args, **kw)
+    # In ERP5, simply reindex all objects, recursively by default.
+    reindex = self._getTypeBasedMethod('reindexObjectSecurity',
+                                       'recursiveReindexObject')
+    reindex(*args, **kw)
 
   security.declarePublic( 'recursiveReindexObject' )
   def recursiveReindexObject(self, activate_kw=None, **kw):

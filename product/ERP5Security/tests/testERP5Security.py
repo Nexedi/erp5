@@ -32,6 +32,8 @@
 
 import unittest
 
+import transaction
+
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -901,6 +903,39 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
         cloned_subdocument.get_local_roles(),
         (((cloning_owner_id), ('Owner',)),)
     )
+
+  def _checkMessageMethodIdList(self, expected_method_id_list):
+    actual_method_id_list = sorted([
+        message.method_id
+        for message in self.portal.portal_activities.getMessageList()
+    ])
+    self.assertEqual(expected_method_id_list, actual_method_id_list)
+
+  def test_reindexObjectSecurity_on_modules(self):
+    person_module = self.portal.person_module
+    portal_activities = self.portal.portal_activities
+    check = self._checkMessageMethodIdList
+
+    check([])
+    # We need at least one person for this test.
+    self.assertTrue(len(person_module.keys()))
+    # When we update security of a module...
+    person_module.reindexObjectSecurity()
+    transaction.commit()
+    # we don't want all underlying objects to be recursively
+    # reindexed. After all, its contents do not acquire local roles.
+    check(['immediateReindexObject'])
+    self.tic()
+    check([])
+    # But non-module objects, with subobjects that acquire local
+    # roles, should reindex their security recursively:
+    person, = [rec.getObject()
+               for rec in person_module.searchFolder(reference=self.username)]
+    self.assertTrue(len(person.objectIds()))
+    person.reindexObjectSecurity()
+    transaction.commit()
+    check(['recursiveImmediateReindexObject'])
+    self.tic()
 
 def test_suite():
   suite = unittest.TestSuite()
