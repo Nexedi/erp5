@@ -4537,9 +4537,9 @@ CREATE TABLE alternate_roles_and_users (
 
       # searches still work for other users
       self.login('ERP5TypeTestCase')
-      self.assertEquals(sorted([user1, user2]),
-        sorted([o.getObject() for o in
-          self.portal.portal_catalog(portal_type='Person')]))
+      self.assertSameSet([user1, user2],
+        [o.getObject() for o in
+          self.portal.portal_catalog(portal_type='Person')])
 
     finally:
       # restore catalog configuration
