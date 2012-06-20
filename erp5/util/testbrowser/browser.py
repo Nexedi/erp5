@@ -31,8 +31,9 @@
 ##############################################################################
 
 import logging
-
 import sys
+import urllib
+
 from urlparse import urljoin
 from z3c.etestbrowser.browser import ExtendedTestBrowser
 from zope.testbrowser.browser import onlyOne
@@ -197,6 +198,9 @@ class Browser(ExtendedTestBrowser):
     # it, otherwise it is a relative path and will be concatenated to
     # ERP5 base URL
     absolute_url = urljoin(self._erp5_base_url, url_or_path)
+
+    if isinstance(data, dict):
+      data = urllib.urlencode(data)
 
     self._logger.debug("Opening url: " + absolute_url)
     super(Browser, self).open(absolute_url, data)
