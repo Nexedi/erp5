@@ -1102,6 +1102,44 @@ class ContextMainForm(MainForm):
 
     return control
 
+from zope.testbrowser.browser import SubmitControl
+
+class SubmitControlWithTime(SubmitControl):
+  """
+  Only define to wrap click methods to measure the time spent
+  """
+  __metaclass__ = measurementMetaClass(prefix='click')
+
+from zope.testbrowser.browser import ImageControl
+
+class ImageControlWithTime(ImageControl):
+  """
+  Only define to wrap click methods to measure the time spent
+  """
+  __metaclass__ = measurementMetaClass(prefix='click')
+
+import zope.testbrowser.browser
+
+browser_controlFactory = zope.testbrowser.browser.controlFactory
+def controlFactory(control, *args, **kwargs):
+  """
+  Monkey patch controlFactory in zope.testbrowser to get elapsed time on
+  ImageControl and SubmitControl
+  """
+  try:
+    t = control.type
+  except AttributeError:
+    # This is a subcontrol
+    pass
+  else:
+    if t in ('submit', 'submitbutton'):
+      return SubmitControlWithTime(control, *args, **kwargs)
+    elif t == 'image':
+      return ImageControlWithTime(control, *args, **kwargs)
+
+  return browser_controlFactory(control, *args, **kwargs)
+
+zope.testbrowser.browser.controlFactory = controlFactory
 
 from zope.testbrowser.browser import Link
 
