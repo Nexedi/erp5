@@ -207,6 +207,53 @@ class Browser(ExtendedTestBrowser):
     self._logger.debug("Opening: " + url_or_path)
     super(Browser, self).open(url_or_path, data)
 
+  def openNoVisit(self, url_or_path, data=None, site_relative=True):
+    """
+    Copy/paste from zope.testbrowser.Browser.open() to allow opening an URL
+    without changing the current page. See L{open}.
+
+    @see zope.testbrowser.interfaces.IBrowser
+    """
+    if site_relative:
+      # In case url_or_path is an absolute URL, urljoin() will return
+      # it, otherwise it is a relative path and will be concatenated to
+      # ERP5 base URL
+      url_or_path = urljoin(self._erp5_base_url, url_or_path)
+
+    import mechanize
+
+    if isinstance(data, dict):
+      data = urllib.urlencode(data)
+
+    response = None
+    url_or_path = str(url_or_path)
+    self._logger.debug("Opening: " + url_or_path)
+    self._start_timer()
+    try:
+      try:
+        try:
+          response = self.mech_browser.open_novisit(url_or_path, data)
+        except Exception, e:
+          fix_exception_name(e)
+          raise
+      except mechanize.HTTPError, e:
+        if e.code >= 200 and e.code <= 299:
+          # 200s aren't really errors
+          pass
+        elif self.raiseHttpErrors:
+          raise
+    finally:
+      self._stop_timer()
+
+    # if the headers don't have a status, I suppose there can't be an error
+    if 'Status' in self.headers:
+      code, msg = self.headers['Status'].split(' ', 1)
+      code = int(code)
+      if self.raiseHttpErrors and code >= 400:
+        raise mechanize.HTTPError(url_or_path, code, msg, self.headers, fp=None)
+
+    return response
+
   def randomSleep(self, minimum, maximum):
     """
     Allow to randomly sleep in seconds in the interval [minimum,
