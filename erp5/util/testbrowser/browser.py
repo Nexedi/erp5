@@ -566,6 +566,33 @@ class Browser(ExtendedTestBrowser):
 
     return activity_counter
 
+  def waitForActivity(self, interval=20, maximum_attempt_number=30):
+    """
+    Wait for activities every C{interval} seconds at most
+    C{maximum_attempt_number} of times and return the waiting time (excluding
+    loading time to get the number of remaining time).
+
+    This is mainly relevant when a setup script triggering activities has to
+    be executed before running the actual script.
+
+    @param interval: Interval between checking for remaining activities
+    @type interval: int
+    @param maximum_attempt_number: Number of attempts before failing
+    @type maximum_attempt_number: int
+    @return: Number of seconds spent waiting
+    @rtype: int
+    """
+    current_attempt_counter = 0
+    while current_attempt_counter < maximum_attempt_number:
+      if self.getRemainingActivityCounter() == 0:
+        return current_attempt_counter * interval
+
+      time.sleep(interval)
+      current_attempt_counter += 1
+
+    raise AssertionError("Maximum number of attempts reached while waiting "
+                         "for activities to be processed")
+
 from zope.testbrowser.browser import Form, ListControl
 
 class LoginError(Exception):
