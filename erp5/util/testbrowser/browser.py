@@ -186,24 +186,26 @@ class Browser(ExtendedTestBrowser):
 
     super(Browser, self).__init__()
 
-  def open(self, url_or_path=None, data=None):
+  def open(self, url_or_path=None, data=None, site_relative=True):
     """
-    Open a relative (to the ERP5 base URL) or absolute URL. If the
-    given URL is not given, then it will open the home ERP5 page.
+    Open a relative (to the ERP5 base URL) or absolute URL. If the given URL
+    is not given, then it will open the home ERP5 page. If C{site_relative} is
+    False, it will open the URL within the current context.
 
     @param url_or_path: Relative or absolute URL
     @type url_or_path: str
     """
-    # In case url_or_path is an absolute URL, urljoin() will return
-    # it, otherwise it is a relative path and will be concatenated to
-    # ERP5 base URL
-    absolute_url = urljoin(self._erp5_base_url, url_or_path)
+    if site_relative:
+      # In case url_or_path is an absolute URL, urljoin() will return
+      # it, otherwise it is a relative path and will be concatenated to
+      # ERP5 base URL
+      url_or_path = urljoin(self._erp5_base_url, url_or_path)
 
     if isinstance(data, dict):
       data = urllib.urlencode(data)
 
-    self._logger.debug("Opening url: " + absolute_url)
-    super(Browser, self).open(absolute_url, data)
+    self._logger.debug("Opening: " + url_or_path)
+    super(Browser, self).open(url_or_path, data)
 
   def randomSleep(self, minimum, maximum):
     """
