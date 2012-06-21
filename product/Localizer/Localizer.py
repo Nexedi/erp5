@@ -31,7 +31,7 @@ from ZPublisher.BeforeTraverse import registerBeforeTraverse, \
 # Import Localizer modules
 from interfaces import ILocalizer
 from LocalFiles import LocalDTMLFile
-from MessageCatalog import MessageCatalog
+from MessageCatalog import MessageCatalog, to_unicode
 from utils import lang_negotiator
 from LanguageManager import LanguageManager
 
@@ -243,7 +243,7 @@ class Localizer(LanguageManager, Folder):
         assert not args
         if lang is not None:
             kw['target_language'] = lang
-        return translate(msgid, domain=domain, **kw)
+        return translate(to_unicode(msgid), domain=domain, **kw)
 
 InitializeClass(Localizer)
 

@@ -230,12 +230,17 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     security.declarePublic('message_exists')
     def message_exists(self, message):
         """ """
-        return self._messages.has_key(message)
+        # BBB call get_message_key to support both (old) str key and
+        # (new) unicode key.
+        return bool(self.get_message_key(message))
 
 
     security.declareProtected('Manage messages', 'message_edit')
     def message_edit(self, message, language, translation, note):
         """ """
+        # BBB call get_message_key to support both (old) str key and
+        # (new) unicode key.
+        message = self.get_message_key(message) or message
         self._messages[message][language] = translation
         self._messages[message]['note'] = note
 
@@ -243,6 +248,9 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     security.declareProtected('Manage messages', 'message_del')
     def message_del(self, message):
         """ """
+        # BBB call get_message_key to support both (old) str key and
+        # (new) unicode key.
+        message = self.get_message_key(message) or message
         del self._messages[message]
 
 
@@ -258,6 +266,9 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             raise TypeError, 'only strings can be translated.'
 
         message = message.strip()
+        # BBB call get_message_key to support both (old) str key and
+        # (new) unicode key.
+        message = self.get_message_key(message) or message
 
         if default is None:
             default = message
