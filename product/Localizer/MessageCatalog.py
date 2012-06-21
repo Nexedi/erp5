@@ -633,9 +633,15 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             msgid = to_unicode(entry.msgid, encoding=encoding)
             if msgid:
                 msgstr = to_unicode(entry.msgstr or '', encoding=encoding)
-                if not messages.has_key(msgid):
-                    messages[msgid] = PersistentMapping()
-                messages[msgid][lang] = msgstr
+                translation_map = messages.get(msgid)
+                if translation_map is None:
+                    # convert old non-unicode translations if they exist:
+                    translation_map = messages.pop(self.get_message_key(msgid),
+                                                   None)
+                    if translation_map is None:
+                        translation_map = PersistentMapping()
+                    messages[msgid] = translation_map
+                translation_map[lang] = msgstr
 
         # Set the encoding (the full header should be loaded XXX)
         self.update_po_header(lang, charset=encoding)
