@@ -76,7 +76,7 @@ def to_str(x):
     """Make sure we have an (utf-8 encoded) string"""
     if isinstance(x, str):
         return x
-    x.encode('utf-8')
+    return x.encode('utf-8')
 
 def message_encode(message):
     """Encodes a message to an ASCII string.
@@ -606,7 +606,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             RESPONSE.setHeader('Content-Disposition',
                                'inline;filename=%s' % filename)
 
-        return '\n'.join(r2)
+        return '\n'.join(r)
 
 
     security.declareProtected('Manage messages', 'po_import')
