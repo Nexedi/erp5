@@ -1,0 +1,14 @@
+Localizer - Manage languages
+
+  Description
+
+    This view allows to manage the available languages (add and delete) and
+    to set the default language.
+
+  Controls
+
+    Add -- Adds a new language.
+
+    Delete -- Removes the selected languages.
+
+    Change -- Changes the default language.

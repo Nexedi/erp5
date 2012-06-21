@@ -1111,8 +1111,7 @@ class ActivityTool (Folder, UniqueObject):
         # runing unit tests. Recreate it if it does not exist.
         if getattr(request.other, 'PARENTS', None) is None:
           request.other['PARENTS'] = parents
-        # XXX: itools (used by Localizer) requires PATH_INFO to be set, and it's
-        # not when runing unit tests. Recreate it if it does not exist.
+        # XXX: PATH_INFO might not be set when runing unit tests.
         if request.environ.get('PATH_INFO') is None:
           request.environ['PATH_INFO'] = '/Control_Panel/timer_service/process_timer'
         

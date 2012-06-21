@@ -2019,12 +2019,13 @@ class Catalog(Folder,
     return self.getColumnSearchKey(column)[0] is not None
 
   @profiler_decorator
-  def getColumnDefaultSearchKey(self, key):
+  def getColumnDefaultSearchKey(self, key, search_key_name=None):
     """
       Return a SearchKey instance which would ultimately receive the value
       associated with given key.
     """
-    search_key, related_key_definition = self.getColumnSearchKey(key)
+    search_key, related_key_definition = self.getColumnSearchKey(key,
+      search_key_name=search_key_name)
     if search_key is None:
       result = None
     else:
@@ -2062,13 +2063,13 @@ class Catalog(Folder,
     return result
 
   @profiler_decorator
-  def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key):
+  def _buildQueryFromAbstractSyntaxTreeNode(self, node, search_key, wrap):
     if search_key.dequoteParsedText():
       _dequote = dequote
     else:
       _dequote = lambda x: x
     if node.isLeaf():
-      result = search_key.buildQuery(_dequote(node.getValue()),
+      result = search_key.buildQuery(wrap(_dequote(node.getValue())),
         comparison_operator=node.getComparisonOperator())
     elif node.isColumn():
       result = self.buildQueryFromAbstractSyntaxTreeNode(node.getSubNode(), node.getColumnName())
@@ -2079,9 +2080,9 @@ class Catalog(Folder,
       for subnode in node.getNodeList():
         if subnode.isLeaf():
           value_dict.setdefault(subnode.getComparisonOperator(),
-            []).append(_dequote(subnode.getValue()))
+            []).append(wrap(_dequote(subnode.getValue())))
         else:
-          subquery = self._buildQueryFromAbstractSyntaxTreeNode(subnode, search_key)
+          subquery = self._buildQueryFromAbstractSyntaxTreeNode(subnode, search_key, wrap)
           if subquery is not None:
             append(subquery)
       logical_operator = node.getLogicalOperator()
@@ -2100,7 +2101,7 @@ class Catalog(Folder,
     return result
 
   @profiler_decorator
-  def buildQueryFromAbstractSyntaxTreeNode(self, node, key):
+  def buildQueryFromAbstractSyntaxTreeNode(self, node, key, wrap=lambda x: x):
     """
       Build a query from given Abstract Syntax Tree (AST) node by recursing in
       its childs.
@@ -2129,7 +2130,8 @@ class Catalog(Folder,
       else:
         build_key = search_key.getSearchKey(sql_catalog=self,
           related_key_definition=related_key_definition)
-      result = self._buildQueryFromAbstractSyntaxTreeNode(node, build_key)
+      result = self._buildQueryFromAbstractSyntaxTreeNode(node, build_key,
+        wrap)
       if related_key_definition is not None:
         result = search_key.buildQuery(sql_catalog=self,
           related_key_definition=related_key_definition,
@@ -2180,22 +2182,7 @@ class Catalog(Folder,
         empty_value_dict[key] = value
       else:
         script = self.getScriptableKeyScript(key)
-        if isinstance(value, _Query):
-          # Query instance: use as such, ignore key.
-          result = value
-        elif script is not None:
-          result = script(value)
-        elif isinstance(value, basestring):
-          # String: parse using key's default search key.
-          search_key = self.getColumnDefaultSearchKey(key)
-          if search_key is not None:
-            abstract_syntax_tree = self._parseSearchText(search_key, value)
-            if abstract_syntax_tree is None:
-              # Parsing failed, create a query from the bare string.
-              result = self.buildSingleQuery(key, value)
-            else:
-              result = self.buildQueryFromAbstractSyntaxTreeNode(abstract_syntax_tree, key)
-        elif isinstance(value, dict):
+        if isinstance(value, dict):
           # Dictionnary: might contain the search key to use.
           search_key_name = value.get('key')
           # Backward compatibility: former "Keyword" key is now named
@@ -2206,7 +2193,37 @@ class Catalog(Folder,
           # as "RawKey"
           elif search_key_name == 'ExactMatch':
             search_key_name = value['key'] = 'RawKey'
-          result = self.buildSingleQuery(key, value, search_key_name)
+        if isinstance(value, _Query):
+          # Query instance: use as such, ignore key.
+          result = value
+        elif script is not None:
+          result = script(value)
+        elif isinstance(value, (basestring, dict)):
+          # String: parse using key's default search key.
+          raw_value = value
+          if isinstance(value, dict):
+            # De-wrap value for parsing, and re-wrap when building queries.
+            def wrap(x):
+              result = raw_value.copy()
+              result['query'] = x
+              return result
+            value = value['query']
+          else:
+            wrap = lambda x: x
+            search_key_name = None
+          search_key = self.getColumnDefaultSearchKey(key,
+            search_key_name=search_key_name)
+          if search_key is not None:
+            if isinstance(value, basestring):
+              abstract_syntax_tree = self._parseSearchText(search_key, value)
+            else:
+              abstract_syntax_tree = None
+            if abstract_syntax_tree is None:
+              # Parsing failed, create a query from the bare string.
+              result = self.buildSingleQuery(key, raw_value, search_key_name)
+            else:
+              result = self.buildQueryFromAbstractSyntaxTreeNode(
+                abstract_syntax_tree, key, wrap)
         else:
           # Any other type, just create a query. (can be a DateTime, ...)
           result = self.buildSingleQuery(key, value)

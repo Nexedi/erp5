@@ -1,0 +1,18 @@
+Localizer - Import/Export messages
+
+  Description
+
+    This views allows to import and export messages.
+
+  Controls
+
+    File / Language -- The file (and language) to be exported.
+
+    Export -- Exports the file.
+
+    File -- The file that you want to import.
+
+    Language -- The language of the translations contained in the file to
+    be imported.
+
+    Import -- Imports the file.

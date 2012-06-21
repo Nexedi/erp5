@@ -1,0 +1,105 @@
+<dtml-var manage_page_header>
+<dtml-var manage_tabs>
+
+
+<p class="form-help">
+  <dtml-gettext>
+    With this form you can change the title of the message catalog. The
+    title also is used as the value of the <tt>Project-Id-Version</tt>
+    field in the header of the PO files, which are generated when the
+    message catalog is exported.
+  </dtml-gettext>
+</p>
+
+
+<blockquote>
+<form action="manage_properties" method="post">
+  <table>
+    <tr>
+      <th align="right">
+        <dtml-var "gettext('Title')">
+      </th>
+      <td>
+        <input type="text" name="title" value="<dtml-var title>">
+      </td>
+    </tr>
+    <tr>
+      <th></th>
+      <td>
+        <input type="submit" value=" <dtml-var "gettext('Save changes')"> ">
+      </td>
+    </tr>
+  </table>
+</form>
+</blockquote>
+
+
+<p class="form-help">
+  <dtml-gettext>
+    Besides the title the header of a PO file stores more information;
+    the name and the email address of the last translator, the email
+    address of the translation team and the charset. The forms below
+    let you modify this information for each language.
+  </dtml-gettext>
+</p>
+
+<blockquote>
+<dtml-in get_languages_mapping mapping>
+  <h4>
+    <dtml-var "gettext(name)"> [<dtml-var code>]
+  </h4>
+  <blockquote>
+    <form action="update_po_header" method="post">
+      <input type="hidden" name="lang" value="<dtml-var code>">
+      <dtml-with "get_po_header(code)" mapping>
+        <table>
+          <tr>
+            <td align="right"><dtml-var "gettext('Your name')"></td>
+            <td>
+              <input type="text" name="last_translator_name" size="30"
+                     value="<dtml-var last_translator_name>">
+            </td>
+          </tr>
+          <tr>
+            <td align="right"><dtml-var "gettext('Your e-mail address')"></td>
+            <td>
+              <input type="text" name="last_translator_email" size="30"
+                     value="<dtml-var last_translator_email>">
+            </td>
+          </tr>
+          <tr>
+            <td align="right"><dtml-var "gettext('Team e-mail address')"></td>
+            <td>
+              <input type="text" name="language_team" size="30"
+                     value="<dtml-var language_team>">
+            </td>
+          </tr>
+          <tr>
+            <td align="right"><dtml-var "gettext('Charset')"></td>
+            <td>
+              <select name="charset">
+                <dtml-in get_charsets prefix=sequence>
+                  <option value="<dtml-var sequence-item>"
+                          <dtml-if "charset == sequence_item">selected</dtml-if>>
+                    <dtml-var sequence-item>
+                  </option>
+                </dtml-in>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <input type="submit"
+                     value=" <dtml-var "gettext('Save changes')"> ">
+            </td>
+          </tr>
+        </table>
+      </dtml-with>
+    </form>
+  </blockquote>
+</dtml-in>
+</blockquote>
+
+
+<dtml-var manage_page_footer>
