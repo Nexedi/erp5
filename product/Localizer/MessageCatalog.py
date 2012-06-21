@@ -266,12 +266,13 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             raise TypeError, 'only strings can be translated.'
 
         message = message.strip()
-        # BBB call get_message_key to support both (old) str key and
-        # (new) unicode key.
-        message = self.get_message_key(message) or message
 
         if default is None:
             default = message
+
+        # BBB call get_message_key to support both (old) str key and
+        # (new) unicode key.
+        message = self.get_message_key(message) or to_unicode(message)
 
         # Add it if it's not in the dictionary
         if add and not self._messages.has_key(message) and message:
