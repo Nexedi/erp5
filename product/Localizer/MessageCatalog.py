@@ -262,7 +262,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
         If a default is provided, use it instead of the message id
         as a translation for unknown messages.
         """
-        if not isinstance(message, (str, unicode)):
+        if not isinstance(message, basestring):
             raise TypeError, 'only strings can be translated.'
 
         message = message.strip()
