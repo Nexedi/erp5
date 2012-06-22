@@ -62,7 +62,7 @@
   </dtml-in>\n
   <dtml-if expr="row_list">\n
 INSERT INTO\n
-  roles_and_users\n
+  roles_and_users(uid, local_roles_group_id, allowedRolesAndUsers)\n
 VALUES\n
     <dtml-in prefix="row" expr="row_list">\n
 (<dtml-sqlvar expr="row_item[0]" type="string">, <dtml-sqlvar expr="row_item[1]" type="string">, <dtml-sqlvar expr="row_item[2]" type="string">)\n
