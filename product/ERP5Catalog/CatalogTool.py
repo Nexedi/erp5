@@ -124,7 +124,7 @@ class IndexableObjectWrapper(object):
         local_roles_group_id_group_id = getattr(ob,
           '__ac_local_roles_group_id_dict__', dict())
 
-        allowed_by_local_roles_group_id = dict()
+        allowed_by_local_roles_group_id = {}
         allowed_by_local_roles_group_id[''] = allowed_role_set
 
         user_role_dict = {}
@@ -140,11 +140,14 @@ class IndexableObjectWrapper(object):
                 user_view_permission_role_dict[role] = user
             elif role in allowed_role_set:
               for group in local_roles_group_id_group_id.get(user, ('', )):
-                allowed_by_local_roles_group_id.setdefault(group, set()).update(
-                   (prefix, '%s:%s' % (prefix, role)))
+                try:
+                  group_allowed_set = allowed_by_local_roles_group_id[group]
+                except KeyError:
+                   allowed_by_local_roles_group_id[group] = group_allowed_set = set()
+                group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
 
         # sort `allowed` principals
-        sorted_allowed_by_local_roles_group_id = dict()
+        sorted_allowed_by_local_roles_group_id = {}
         for local_roles_group_id, allowed in \
                 allowed_by_local_roles_group_id.items():
           sorted_allowed_by_local_roles_group_id[local_roles_group_id] = tuple(
