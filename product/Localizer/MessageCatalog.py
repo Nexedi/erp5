@@ -76,7 +76,7 @@ def to_str(x):
     """Make sure we have an (utf-8 encoded) string"""
     if isinstance(x, str):
         return x
-    x.encode('utf-8')
+    return x.encode('utf-8')
 
 def message_encode(message):
     """Encodes a message to an ASCII string.
@@ -230,12 +230,17 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     security.declarePublic('message_exists')
     def message_exists(self, message):
         """ """
-        return self._messages.has_key(message)
+        # BBB call get_message_key to support both (old) str key and
+        # (new) unicode key.
+        return bool(self.get_message_key(message))
 
 
     security.declareProtected('Manage messages', 'message_edit')
     def message_edit(self, message, language, translation, note):
         """ """
+        # BBB call get_message_key to support both (old) str key and
+        # (new) unicode key.
+        message = self.get_message_key(message) or message
         self._messages[message][language] = translation
         self._messages[message]['note'] = note
 
@@ -243,6 +248,9 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
     security.declareProtected('Manage messages', 'message_del')
     def message_del(self, message):
         """ """
+        # BBB call get_message_key to support both (old) str key and
+        # (new) unicode key.
+        message = self.get_message_key(message) or message
         del self._messages[message]
 
 
@@ -261,6 +269,10 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
 
         if default is None:
             default = message
+
+        # BBB call get_message_key to support both (old) str key and
+        # (new) unicode key.
+        message = self.get_message_key(message) or to_unicode(message)
 
         # Add it if it's not in the dictionary
         if add and not self._messages.has_key(message) and message:
@@ -606,7 +618,7 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
             RESPONSE.setHeader('Content-Disposition',
                                'inline;filename=%s' % filename)
 
-        return '\n'.join(r2)
+        return '\n'.join(r)
 
 
     security.declareProtected('Manage messages', 'po_import')
