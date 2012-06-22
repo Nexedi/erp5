@@ -193,6 +193,11 @@ class MessageCatalog(LanguageManager, ObjectManager, SimpleItem):
                   target_language=None, default=None):
         """ """
         msgstr = self.gettext(msgid, lang=target_language, default=default)
+        # BBB support str in mapping by converting to unicode for
+        # backward compatibility.
+        if mapping:
+            mapping = dict([to_unicode(k), to_unicode(v)]
+                            for k, v in mapping.iteritems())
         return interpolate(msgstr, mapping)
 
 
