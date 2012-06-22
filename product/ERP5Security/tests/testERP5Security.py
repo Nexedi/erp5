@@ -478,16 +478,21 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
           ),)
         """)
     # configure group, site, function categories
+    category_tool = self.getCategoryTool()
     for bc in ['group', 'site', 'function']:
-      base_cat = self.getCategoryTool()[bc]
+      base_cat = category_tool[bc]
       code = bc[0].upper()
+      if base_cat.get('subcat', None) is not None:
+        continue
       base_cat.newContent(portal_type='Category',
                           id='subcat',
                           codification="%s1" % code)
     # add another function subcategory.
-    self.getCategoryTool()['function'].newContent(portal_type='Category',
-                                                  id='another_subcat',
-                                                  codification='F2')
+    function_category = category_tool['function']
+    if function_category.get('another_subcat', None) is not None:
+      function_category.newContent(portal_type='Category',
+                                   id='another_subcat',
+                                   codification='F2')
     self.defined_category = "group/subcat\n"\
                             "site/subcat\n"\
                             "function/subcat"
@@ -505,11 +510,13 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                                   site='subcat',
                                   function='subcat' )
     assignment.open()
+    self.person = pers
     self.tic()
 
   def beforeTearDown(self):
     """Called before teardown."""
     # clear base categories
+    self.person.getParentValue().manage_delObjects([self.person.getId()])
     for bc in ['group', 'site', 'function']:
       base_cat = self.getCategoryTool()[bc]
       base_cat.manage_delObjects(list(base_cat.objectIds()))
