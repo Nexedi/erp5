@@ -68,7 +68,7 @@ def to_unicode(x, encoding=None):
     are considered to be in this encoding by default.
     """
     if isinstance(x, str):
-        unicode(x, encoding or HTTPRequest.default_encoding)
+        return unicode(x, encoding or HTTPRequest.default_encoding)
     return unicode(x)
 
 
