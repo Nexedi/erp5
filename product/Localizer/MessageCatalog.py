@@ -63,13 +63,13 @@ def md5text(str):
     return md5(str.encode('utf-8')).hexdigest()
 
 
-def to_unicode(x, encoding=HTTPRequest.default_encoding):
+def to_unicode(x, encoding=None):
     """In Zope the ISO-8859-1 encoding has an special status, normal strings
     are considered to be in this encoding by default.
     """
-    if isinstance(x, unicode):
-        return x
-    return unicode(x, encoding)
+    if isinstance(x, str):
+        unicode(x, encoding or HTTPRequest.default_encoding)
+    return unicode(x)
 
 
 def to_str(x):
