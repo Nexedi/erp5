@@ -489,7 +489,7 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
                           codification="%s1" % code)
     # add another function subcategory.
     function_category = category_tool['function']
-    if function_category.get('another_subcat', None) is not None:
+    if function_category.get('another_subcat', None) is None:
       function_category.newContent(portal_type='Category',
                                    id='another_subcat',
                                    codification='F2')
