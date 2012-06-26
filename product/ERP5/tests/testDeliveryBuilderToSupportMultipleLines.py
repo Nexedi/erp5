@@ -27,6 +27,7 @@
 ##############################################################################
 
 import unittest
+import transaction
 
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -34,6 +35,7 @@ from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5.tests.testInvoice import TestSaleInvoiceMixin
 from Products.ERP5.tests.utils import newSimulationExpectedFailure
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestNestedLineMixin(TestSaleInvoiceMixin):
 
@@ -323,7 +325,31 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
     self.assertEquals(self.new_invoice_quantity, document.getTotalQuantity())
     self.assertEquals(self.new_invoice_quantity, line_line.getQuantity())
 
+  def stepPrioritizeInvoiceUpdateCausalityStateTic(self, sequence):
+    invoice = sequence['invoice']
+    invoice_path = invoice.getPhysicalPath()
+    prioritize_uid_list = []
+    def stop_condition(message_list):
+      for message in message_list:
+        if (message.object_path == invoice_path and
+            message.method_id == 'updateCausalityState'):
+          prioritize_uid_list.append(message.uid)
+          return True
+        return False
+    self.tic(stop_condition=stop_condition)
+    update_causality_message_uid, = prioritize_uid_list
+    # make all other messages have less priority:
+    for table in 'message', 'message_queue':
+      self.portal.cmf_activity_sql_connection.manage_test("""
+        update %s
+          set priority=200
+        where uid <> %s
+      """ % (table, update_causality_message_uid))
+    transaction.commit()
+    self.stepTic(sequence)
+
   @newSimulationExpectedFailure
+  @expectedFailure
   def test_04_MergingMultipleSaleOrders(self, quiet=quiet):
     sequence_list = SequenceList()
     sequence = sequence_list.addSequenceString(self.DEFAULT_SEQUENCE + \
@@ -355,9 +381,10 @@ class TestNestedLine(TestNestedLineMixin, ERP5TypeTestCase):
 
       stepStartPackingList
       stepCheckInvoicingRule
-      stepTic
+      stepPrioritizeInvoiceUpdateCausalityStateTic
 
       stepCheckInvoiceIsDivergent
+      stepCheckInvoiceIsDiverged
       stepAdoptPrevisionInvoiceQuantity
       stepTic
     """
