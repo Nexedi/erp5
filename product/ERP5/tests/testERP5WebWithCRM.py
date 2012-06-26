@@ -146,7 +146,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                       form_kw['source_organisation_title'])
 
   def test_02_Contact_Us_with_Aunthenticated_user(self):
-    """Test creation of Web Message with Authenticted User
+    """Test creation of Web Message with Authenticated User
     """
     web_section = self.setupWebSection()
     self.logout()
