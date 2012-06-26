@@ -33,7 +33,7 @@ from Persistence import PersistentMapping
 
 class TestLocalizer(ERP5TypeTestCase):
   def afterSetUp(self):
-    self.message_catalog = self.Localizer.erp5_ui
+    self.message_catalog = self.portal.Localizer.erp5_ui
     if 'fr' not in self.message_catalog.get_available_languages():
       self.message_catalog.add_language('fr')
     self.message_catalog._messages.clear()
