@@ -29,7 +29,7 @@
 
 from types import ModuleType
 import sys
-import threading
+from Products.ERP5Type.dynamic.import_lock import ImportLock
 
 class DynamicModule(ModuleType):
   """This module may generate new objects at runtime."""
@@ -41,7 +41,7 @@ class DynamicModule(ModuleType):
   def __init__(self, name, factory, doc=None):
     super(DynamicModule, self).__init__(name, doc=doc)
     self._factory = factory
-    self._lock = threading.RLock()
+    self._lock = ImportLock()
 
   def __getattr__(self, name):
     if name[:2] == '__':
