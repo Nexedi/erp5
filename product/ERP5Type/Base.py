@@ -86,6 +86,7 @@ from Products.ERP5Type.Accessor.TypeDefinition import asDate
 from Products.ERP5Type.Message import Message
 from Products.ERP5Type.ConsistencyMessage import ConsistencyMessage
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5Type.dynamic.import_lock import ImportLock
 
 from zope.interface import classImplementsOnly, implementedBy
 
@@ -710,7 +711,7 @@ class Base( CopyContainer,
   isTempDocument = ConstantGetter('isTempDocument', value=False)
 
   # Dynamic method acquisition system (code generation)
-  aq_method_lock = threading.RLock()
+  aq_method_lock = ImportLock()
   aq_method_generated = set()
   aq_method_generating = []
   aq_portal_type = {}
