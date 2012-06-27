@@ -515,8 +515,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
               try:
                 local_roles_group_id = brain.local_roles_group_id
               except AttributeError:
-                LOG("ERP5Catalog", PROBLEM,
-                    "sql_search_security is not up to date, falling back.")
+                # backwards compatability in cases when catalog use default schema
                 local_roles_group_id = ''
               security_uid_dict.setdefault(local_roles_group_id,
                   []).append(brain.uid)
