@@ -58,7 +58,11 @@ preferred_forum_quote_original_message= portal.ERP5Site_getUserPreferredForumSet
 if discussion_post_uid is not None:\n
   # set title & text_content\n
   discussion_post = getattr(context, discussion_post_uid)\n
-  title = \'Re: %s\' %discussion_post.getTitle()\n
+  \n
+  title = discussion_post.getTitle()\n
+  if not title.lower().startswith(\'re:\'):\n
+    # stop exploding "Re: Re: .." to one level\n
+    title = \'Re: %s\' %title\n
   context.REQUEST.set(\'discussion_post_title\', title)\n
   if preferred_forum_quote_original_message:\n
     author_dict = discussion_post.DiscussionPost_getAuthorDict()\n
