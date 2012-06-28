@@ -70,9 +70,9 @@ if site_list in MARKER:\n
 membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
 multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()\n
 \n
-reference = title.replace(\' \', \'-\')\n
-exisiting_document = context.getDocumentValue(reference)\n
-if exisiting_document is not None:\n
+reference = title.replace(\' \', \'-\').replace(\'?\', \'\').replace(\':\', \'\')\n
+existing_document = context.getDocumentValue(reference)\n
+if existing_document is not None:\n
   # if there are other document which reference duplicates just add some random part\n
   # so we can distinguish)\n
   reference = \'%s-%s\' %(context.Base_generateRandomString(), reference)\n
