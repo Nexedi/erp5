@@ -660,7 +660,7 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
     """
     config = getConfiguration()
     if getattr(config, 'product_config', None) is not None:
-      parameter_dict = config.product_config.get(self.getPath())
+      parameter_dict = config.product_config.get(self.getPath(), {})
       if 'promise_path' in parameter_dict:
         promise_path = parameter_dict['promise_path']
         import ConfigParser
