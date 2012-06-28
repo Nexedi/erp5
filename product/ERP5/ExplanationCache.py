@@ -137,7 +137,7 @@ class ExplanationCache:
         if not isinstance(value, dict):
           # We have a real root
           result.append('%s/%s' % (prefix, key))
-          result.append('%s/%s/%%' % (prefix, key))
+          result.append(('%s/%s/%%' % (prefix, key)).replace('_', r'\_'))
           # XXX-JPS here we must add all parent movements XXX-JPS
         else:
           browsePathDict('%s/%s' % (prefix, key), value) # Recursing with string append is slow XXX-JPS
@@ -262,7 +262,7 @@ class ExplanationCache:
         if simulation_path.startswith(path):
           # Only keep a path pattern which matches current simulation movement
           path_set.add(path)
-          path_set.add("%s/%%" % path)
+          path_set.add("%s/%%" % path.replace('_', r'\_'))
 
     # Lookup in cache based on path_tuple
     path_tuple = tuple(path_set) # XXX-JPS is the order guaranteed here ?
