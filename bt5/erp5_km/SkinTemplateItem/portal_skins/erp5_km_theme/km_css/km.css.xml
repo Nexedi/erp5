@@ -1340,6 +1340,12 @@ button.formbt > span{\n
 .full-width{\n
   width:100%;\n
 }\n
+\n
+/* discussions */\n
+.discussion-post-body-container a{\n
+  color:#686868;\n
+  text-decoration: underline;\n
+}\n
 </tal:block>
 
 ]]></unicode> </value>
