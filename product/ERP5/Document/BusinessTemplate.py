@@ -5589,7 +5589,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
             (SimpleItem.SimpleItem,), {'__module__': module_id}))
 
       for item_name in self._item_name_list:
-        item_object = getattr(self, item_name)
+        item_object = getattr(self, item_name, None)
         # this check is due to backwards compatability when there can be a
         # difference between install erp5_property_sheets (esp. BusinessTemplate
         # property sheet) 
