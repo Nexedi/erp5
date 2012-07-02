@@ -29,7 +29,9 @@
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Persistence import PersistentMapping
+from zope.site.hooks import setSite
 
 class TestLocalizer(ERP5TypeTestCase):
   def afterSetUp(self):
@@ -37,6 +39,12 @@ class TestLocalizer(ERP5TypeTestCase):
     if 'fr' not in self.message_catalog.get_available_languages():
       self.message_catalog.add_language('fr')
     self.message_catalog._messages.clear()
+
+  def beforeTearDown(self):
+    tmp_obj = getattr(self, 'tmp_obj', None)
+    if tmp_obj is not None:
+      tmp_obj.aq_parent.manage_delObjects(ids=[tmp_obj.getId(),])
+      self.tic()
 
   def test_non_ascii_msgid(self):
     self.assertEqual(self.portal.Base_translateString('This is 1€.', lang='fr'),
@@ -98,6 +106,26 @@ class TestLocalizer(ERP5TypeTestCase):
     # po_import() converts existing str key to unicode key.
     self.assertFalse('This is 1€.' in self.message_catalog._messages)
     self.assertTrue(u'This is 1€.' in self.message_catalog._messages)
+
+  def test_localizer_transle_in_activity(self):
+    self.assertEqual(self.portal.Base_translateString('This is 1€.', lang='fr'),
+                     "This is 1€.")
+    self.message_catalog.message_edit(u'This is 1€.', 'fr', u"C'est 1€.", '')
+    skin = self.portal.portal_skins.custom
+    createZODBPythonScript(
+      skin, 'test_activity', '',
+      "context.setComment(context.Base_translateString('This is 1€.', lang='fr'))",
+      )
+    tmp_obj = self.portal.portal_templates.newContent()
+    self.tic()
+    tmp_obj.activate().test_activity()
+    # here we don't call self.tic() that calls self.getPortal() that
+    # reinvoke setSite(portal).
+    setSite()
+    self.commit()
+    while self.portal.portal_activities.getMessageList():
+      self.portal.portal_activities.process_timer(None, None)
+    self.assertEquals(tmp_obj.getComment(), "C'est 1€.")
 
 def test_suite():
   suite = unittest.TestSuite()

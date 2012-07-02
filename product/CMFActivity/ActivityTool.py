@@ -54,6 +54,7 @@ from zExceptions import ExceptionFormatter
 from BTrees.OIBTree import OIBTree
 from Zope2 import app
 from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
+from zope.site.hooks import setSite
 
 try:
   from Products import iHotfix
@@ -306,6 +307,10 @@ class Message(BaseMessage):
             self.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info,
                                    context=activity_tool)
           else:
+            # Store site info
+            portal = getattr(obj, 'getPortalObject', lambda:None)()
+            if portal is not None:
+              setSite(portal)
             if activity_tool.activity_timing_log:
               result = activity_timing_method(method, self.args, self.kw)
             else:
