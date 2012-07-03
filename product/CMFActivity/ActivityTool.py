@@ -308,9 +308,7 @@ class Message(BaseMessage):
                                    context=activity_tool)
           else:
             # Store site info
-            portal = getattr(obj, 'getPortalObject', lambda:None)()
-            if portal is not None:
-              setSite(portal)
+            setSite(activity_tool.getParentValue())
             if activity_tool.activity_timing_log:
               result = activity_timing_method(method, self.args, self.kw)
             else:
