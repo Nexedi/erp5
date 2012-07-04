@@ -1,6 +1,13 @@
 Changes
 =======
 
+0.4.4 (2012-07-XX)
+------------------
+
+ * erp5.util.taskdistribution:
+
+  - New module [Vincent Pelletier]
+
 0.4.3 (2012-04-24)
 ----------------
 
