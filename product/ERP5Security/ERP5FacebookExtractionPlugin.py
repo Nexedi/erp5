@@ -1,0 +1,235 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+# Copyright (c) 2012 Nexedi SA and Contributors. All Rights Reserved.
+#
+# WARNING: This program as such is intended to be used by professional
+# programmers who take the whole responsibility of assessing all potential
+# consequences resulting from its eventual inadequacies and bugs
+# End users who are looking for a ready-to-use solution with commercial
+# guarantees and support are strongly advised to contract a Free Software
+# Service Company
+#
+# This program is Free Software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+#
+##############################################################################
+
+from Products.ERP5Type.Globals import InitializeClass
+from AccessControl import ClassSecurityInfo
+
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from Products.PluggableAuthService.interfaces import plugins
+from Products.PluggableAuthService.utils import classImplements
+from Products.PluggableAuthService.plugins.BasePlugin import BasePlugin
+from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products.PluggableAuthService.PluggableAuthService import DumbHTTPExtractor
+from AccessControl.SecurityManagement import getSecurityManager,\
+    setSecurityManager, newSecurityManager
+from Products.ERP5Type.Cache import DEFAULT_CACHE_SCOPE
+import socket
+from Products.ERP5Security.ERP5UserManager import getUserByLogin
+from zLOG import LOG, ERROR, INFO
+
+try:
+  import facebook
+except ImportError:
+  facebook = None
+
+#Form for new plugin in ZMI
+manage_addERP5FacebookExtractionPluginForm = PageTemplateFile(
+  'www/ERP5Security_addERP5FacebookExtractionPlugin', globals(),
+  __name__='manage_addERP5FacebookExtractionPluginForm')
+
+def addERP5FacebookExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
+  """ Add a ERP5FacebookExtractionPlugin to a Pluggable Auth Service. """
+
+  plugin = ERP5FacebookExtractionPlugin(id, title)
+  dispatcher._setObject(plugin.getId(), plugin)
+
+  if REQUEST is not None:
+      REQUEST['RESPONSE'].redirect(
+          '%s/manage_workspace'
+          '?manage_tabs_message='
+          'ERP5FacebookExtractionPlugin+added.'
+          % dispatcher.absolute_url())
+
+class ERP5FacebookExtractionPlugin(BasePlugin):
+  """
+  Plugin to authenicate as machines.
+  """
+
+  meta_type = "ERP5 Facebook Extraction Plugin"
+  # cache_fatory_name proposal to begin configurable
+  cache_factory_name = 'facebook_token_cache_factory'
+  reference_prefix = 'fb_'
+  security = ClassSecurityInfo()
+
+  def __init__(self, id, title=None):
+    #Register value
+    self._setId(id)
+    self.title = title
+
+  #####################
+  # memcached helpers #
+  #####################
+  def _getCacheFactory(self):
+    portal = self.getPortalObject()
+    cache_tool = portal.portal_caches
+    cache_factory = cache_tool.getRamCacheRoot().get(self.cache_factory_name)
+    #XXX This conditional statement should be remove as soon as
+    #Broadcasting will be enable among all zeo clients.
+    #Interaction which update portal_caches should interact with all nodes.
+    if cache_factory is None \
+        and getattr(cache_tool, self.cache_factory_name, None) is not None:
+      #ram_cache_root is not up to date for current node
+      cache_tool.updateCache()
+    cache_factory = cache_tool.getRamCacheRoot().get(self.cache_factory_name)
+    if cache_factory is None:
+      raise KeyError
+    return cache_factory
+
+  def setFacebookToken(self, key, body):
+    cache_factory = self._getCacheFactory()
+    cache_duration = cache_factory.cache_duration
+    for cache_plugin in cache_factory.getCachePluginList():
+      cache_plugin.set(key, DEFAULT_CACHE_SCOPE,
+                       body, cache_duration=cache_duration)
+
+  def getFacebookToken(self, key):
+    cache_factory = self._getCacheFactory()
+    for cache_plugin in cache_factory.getCachePluginList():
+      cache_entry = cache_plugin.get(key, DEFAULT_CACHE_SCOPE)
+      if cache_entry is not None:
+        return cache_entry.getValue()
+    raise KeyError('Key %r not found' % key)
+
+  def getFacebookEntry(self, token):
+    timeout = socket.getdefaulttimeout()
+    try:
+      # require really fast interaction
+      socket.setdefaulttimeout(5)
+      facebook_entry = facebook.GraphAPI(token).get_object("me")
+    except Exception:
+      facebook_entry = None
+    finally:
+      socket.setdefaulttimeout(timeout)
+
+    user_entry = {}
+    if facebook_entry is not None:
+      # sanitise value
+      try:
+        for k in ('first_name', 'last_name', 'id', 'email'):
+          if k == 'id':
+            user_entry['reference'] = self.reference_prefix + facebook_entry[k].encode(
+              'utf-8')
+          else:
+            user_entry[k] = facebook_entry[k].encode('utf-8')
+      except KeyError:
+        user_entry = None
+    return user_entry
+
+  ####################################
+  #ILoginPasswordHostExtractionPlugin#
+  ####################################
+  security.declarePrivate('extractCredentials')
+  def extractCredentials(self, request):
+    """ Extract facebook credentials from the request header. """
+    Base_createFacebookUser = getattr(self.getPortalObject(),
+      'Base_createFacebookUser', None)
+    if facebook is None or Base_createFacebookUser is None:
+      # no facebook library available or not configured
+      if facebook is None:
+        LOG('ERP5FacebookExtractionPlugin', INFO,
+          'No facebook module available, disabled authentication.')
+      if Base_createFacebookUser is None:
+        LOG('ERP5FacebookExtractionPlugin', INFO,
+          'No Base_createFacebookUser script available, install '
+            'erp5_credential_facebook, disabled authentication.')
+      return DumbHTTPExtractor().extractCredentials(request)
+
+    creds = {}
+    token = None
+    if request._auth is not None:
+      # 1st - try to fetch from Authorization header
+      if 'facebook' in request._auth.lower():
+        l = request._auth.split()
+        if len(l) == 2:
+          token = l[1]
+
+    if token is None:
+      # no token
+      return DumbHTTPExtractor().extractCredentials(request)
+
+    # token is available
+    user = None
+    facebook_entry = None
+    try:
+      user = self.getFacebookToken(token)
+    except KeyError:
+      facebook_entry = self.getFacebookEntry(token)
+      if facebook_entry is not None:
+        user = facebook_entry['reference']
+
+    if user is None:
+      # fallback to default way
+      return DumbHTTPExtractor().extractCredentials(request)
+
+    tag = '%s_user_creation_in_progress' % user
+
+    if self.getPortalObject().portal_activities.countMessageWithTag(tag) > 0:
+      self.REQUEST['USER_CREATION_IN_PROGRESS'] = user
+    else:
+      # create the user if not found
+      person_list = getUserByLogin(self.getPortalObject(), user)
+      if len(person_list) == 0:
+        sm = getSecurityManager()
+        if sm.getUser().getId() != SUPER_USER:
+          newSecurityManager(self, self.getUser(SUPER_USER))
+        try:
+          self.REQUEST['USER_CREATION_IN_PROGRESS'] = user
+          if facebook_entry is None:
+            facebook_entry = self.getFacebookEntry(token)
+          try:
+            self.Base_createFacebookUser(tag, **facebook_entry)
+          except Exception:
+            LOG('ERP5FacebookExtractionPlugin', ERROR,
+              'Issue while calling creation script:', error=True)
+            raise
+        finally:
+          setSecurityManager(sm)
+    try:
+      self.setFacebookToken(token, user)
+    except KeyError:
+      # allow to work w/o cache
+      pass
+    creds['external_login'] = user
+    creds['remote_host'] = request.get('REMOTE_HOST', '')
+    try:
+      creds['remote_address'] = request.getClientAddr()
+    except AttributeError:
+      creds['remote_address'] = request.get('REMOTE_ADDR', '')
+    return creds
+
+  manage_editERP5FacebookExtractionPluginForm = PageTemplateFile(
+      'www/ERP5Security_editERP5FacebookExtractionPlugin',
+      globals(),
+      __name__='manage_editERP5FacebookExtractionPluginForm')
+
+#List implementation of class
+classImplements( ERP5FacebookExtractionPlugin,
+                plugins.ILoginPasswordHostExtractionPlugin
+               )
+InitializeClass(ERP5FacebookExtractionPlugin)
+

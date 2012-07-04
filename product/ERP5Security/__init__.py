@@ -28,6 +28,7 @@ import ERP5UserFactory
 import ERP5KeyAuthPlugin
 import ERP5ExternalAuthenticationPlugin
 import ERP5BearerExtractionPlugin
+import ERP5FacebookExtractionPlugin
 
 def mergedLocalRoles(object):
   """Returns a merging of object and its ancestors'
@@ -64,6 +65,7 @@ registerMultiPlugin(ERP5UserFactory.ERP5UserFactory.meta_type)
 registerMultiPlugin(ERP5KeyAuthPlugin.ERP5KeyAuthPlugin.meta_type)
 registerMultiPlugin(ERP5ExternalAuthenticationPlugin.ERP5ExternalAuthenticationPlugin.meta_type)
 registerMultiPlugin(ERP5BearerExtractionPlugin.ERP5BearerExtractionPlugin.meta_type)
+registerMultiPlugin(ERP5FacebookExtractionPlugin.ERP5FacebookExtractionPlugin.meta_type)
 
 def initialize(context):
 
@@ -126,6 +128,15 @@ def initialize(context):
                          , constructors=(
                             ERP5BearerExtractionPlugin.manage_addERP5BearerExtractionPluginForm,
                             ERP5BearerExtractionPlugin.addERP5BearerExtractionPlugin, )
+                         , visibility=None
+                         , icon='www/portal.gif'
+                         )
+
+    context.registerClass( ERP5FacebookExtractionPlugin.ERP5FacebookExtractionPlugin
+                         , permission=ManageUsers
+                         , constructors=(
+                            ERP5FacebookExtractionPlugin.manage_addERP5FacebookExtractionPluginForm,
+                            ERP5FacebookExtractionPlugin.addERP5FacebookExtractionPlugin, )
                          , visibility=None
                          , icon='www/portal.gif'
                          )
