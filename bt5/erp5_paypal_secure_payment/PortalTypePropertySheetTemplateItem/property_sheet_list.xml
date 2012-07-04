@@ -1,0 +1,6 @@
+<property_sheet_list>
+ <portal_type id="Paypal Service">
+  <item>PaymentService</item>
+  <item>PaypalService</item>
+ </portal_type>
+</property_sheet_list>
