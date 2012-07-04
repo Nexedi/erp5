@@ -1,7 +1,15 @@
 Changes
 =======
 
-0.4.4 (2012-07-XX)
+0.4.5 (2012-07-04)
+------------------
+
+ * erp5.util.taskdistribution:
+
+  - xmlrpclib does not support named parameters, use positional ones
+    [Vincent Pelletier]
+
+0.4.4 (2012-07-04)
 ------------------
 
  * erp5.util.taskdistribution:

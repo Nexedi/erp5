@@ -102,18 +102,18 @@ class RPCRetry(object):
         self._logger = logger
         self.__rpc_lock = threading.Lock()
 
-    def _RPC(self, func_id, args=(), kw={}):
+    def _RPC(self, func_id, args=()):
         with self.__rpc_lock:
-            return getattr(self._proxy, func_id)(*args, **kw)
+            return getattr(self._proxy, func_id)(*args)
 
-    def _retryRPC(self, func_id, args=(), kw={}):
+    def _retryRPC(self, func_id, args=()):
         retry_time = self._retry_time
         while True:
             try:
-                return self._RPC(func_id, args, kw)
+                return self._RPC(func_id, args)
             except SAFE_RPC_EXCEPTION_LIST:
-                self._logger.warning('Got exception, retrying: %s(*%r, **%r) '
-                    'in %is', func_id, args, kw, retry_time, exc_info=1)
+                self._logger.warning('Got exception, retrying: %s%r '
+                    'in %is', func_id, tuple(args), retry_time, exc_info=1)
                 time.sleep(retry_time)
                 retry_time *= 1.5
 
@@ -396,15 +396,9 @@ class TaskDistributionTool(RPCRetry):
         revision has already been completed).
         Otherwise, returns a TestResultProxy instance.
         """
-        result = self._retryRPC('createTestResult', kw={
-            'name': '',
-            'revision': revision,
-            'test_name_list': test_name_list,
-            'allow_restart': allow_restart,
-            'test_title': test_title,
-            'node_title': node_title,
-            'project_title': project_title,
-        })
+        result = self._retryRPC('createTestResult', ('', revision,
+            test_name_list, allow_restart, test_title, node_title,
+            project_title))
         if result:
             test_result_path, revision = result
             result = TestResultProxy(self._proxy, self._retry_time,
@@ -428,7 +422,7 @@ class DummyTaskDistributionTool(object):
     def getProtocolRevision(self):
         return 1
 
-    def createTestResult(self, name, revision, test_name_list, *args, **kw):
+    def createTestResult(self, name, revision, test_name_list, *args):
         self.test_name_list = test_name_list[:]
         return None, revision
 
@@ -439,11 +433,11 @@ class DummyTaskDistributionTool(object):
                     del self.test_name_list[i]
                     return None, test
 
-    def stopUnitTest(self, *args, **kw):
+    def stopUnitTest(self, *args):
         pass
 
     reportTaskFailure = reportTaskStatus = stopUnitTest
 
-    def isTaskAlive(self, *args, **kw):
+    def isTaskAlive(self, *args):
         return int(bool(self.test_name_list))
 
