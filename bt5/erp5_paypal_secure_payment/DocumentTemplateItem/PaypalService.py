@@ -57,13 +57,22 @@ class PaypalService(XMLObject):
   def initialize(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
 
-  def navigate(self, page_template, REQUEST=None, **kw):
+  def _getFieldList(self, paypal_dict):
+    field_list = []
+    for k,v in paypal_dict.iteritems():
+      field_list.append((k, v))
+    return field_list
+
+  def navigate(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
     self.Base_checkConsistency()
+    page_template = kw.pop("page_template")
+    paypal_dict = kw.get("paypal_dict", {})
     temp_document = newTempDocument(self, 'id')
     temp_document.edit(
       link_url_string=self.getLinkUrlString(),
-      title='title',
+      title=self.getTitle(),
+      field_list=self._getFieldList(paypal_dict),
       # append the rest of transmitted parameters page template
       **kw
     )

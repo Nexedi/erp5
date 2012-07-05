@@ -79,17 +79,21 @@ class TestERP5PaypalSecurePayment(TestERP5PaypalSecurePaymentMixin):
       service_username="business@sample.com"
     )
     pt_id = str(random.random())
-    page_template_text = """
-    link=<tal:block tal:replace='here/link_url_string'/>
+    page_template_text = """<tal:block tal:repeat="value here/field_list">key=<tal:block tal:replace="python: value[0]"/> value=<tal:block tal:replace="python: value[1]"/>
+</tal:block>link=<tal:block tal:replace='here/link_url_string'/>
 business=<tal:block tal:replace='here/service_username'/>
     """
     self.portal.portal_skins.custom.manage_addProduct['PageTemplates']\
                 .manage_addPageTemplate(id=pt_id, text=page_template_text)
     # flush skin cache
     self.portal.changeSkin(None)
+    paypal_dict = {
+        "return" : "http://ipn/"
+    }
     try:
-      result = self.service.navigate(pt_id)
-      self.assertEquals(result, """link=http://paypal/
+      result = self.service.navigate(page_template=pt_id, paypal_dict=paypal_dict)
+      self.assertEquals(result, """key=return value=http://ipn/
+link=http://paypal/
 business=business@sample.com""")
     finally:
       self.portal.portal_skins.custom.manage_delObjects([pt_id])
