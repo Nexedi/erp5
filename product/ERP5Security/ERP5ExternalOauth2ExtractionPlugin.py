@@ -197,6 +197,11 @@ class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugi
   header_string = 'facebook'
 
   def getUserEntry(self, token):
+    if facebook is None:
+      LOG('ERP5FacebookExtractionPlugin', INFO,
+          'No facebook module, install facebook-sdk package. '
+            'Authentication disabled.')
+      return None
     timeout = socket.getdefaulttimeout()
     try:
       # require really fast interaction
