@@ -226,10 +226,6 @@ class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugi
         user_entry = None
     return user_entry
 
-  manage_editERP5FacebookExtractionPluginForm = PageTemplateFile(
-      'www/ERP5Security_editERP5FacebookExtractionPlugin',
-      globals(),
-      __name__='manage_editERP5FacebookExtractionPluginForm')
 
 #List implementation of class
 classImplements( ERP5FacebookExtractionPlugin,
