@@ -65,15 +65,9 @@ def addERP5FacebookExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
           'ERP5FacebookExtractionPlugin+added.'
           % dispatcher.absolute_url())
 
-class ERP5FacebookExtractionPlugin(BasePlugin):
-  """
-  Plugin to authenicate as machines.
-  """
+class ERP5ExternalOauth2ExtractionPlugin:
 
-  meta_type = "ERP5 Facebook Extraction Plugin"
-  # cache_fatory_name proposal to begin configurable
-  cache_factory_name = 'facebook_token_cache_factory'
-  reference_prefix = 'fb_'
+  cache_factory_name = 'extrenal_oauth2_token_cache_factory'
   security = ClassSecurityInfo()
 
   def __init__(self, id, title=None):
@@ -100,14 +94,14 @@ class ERP5FacebookExtractionPlugin(BasePlugin):
       raise KeyError
     return cache_factory
 
-  def setFacebookToken(self, key, body):
+  def setToken(self, key, body):
     cache_factory = self._getCacheFactory()
     cache_duration = cache_factory.cache_duration
     for cache_plugin in cache_factory.getCachePluginList():
       cache_plugin.set(key, DEFAULT_CACHE_SCOPE,
                        body, cache_duration=cache_duration)
 
-  def getFacebookToken(self, key):
+  def getToken(self, key):
     cache_factory = self._getCacheFactory()
     for cache_plugin in cache_factory.getCachePluginList():
       cache_entry = cache_plugin.get(key, DEFAULT_CACHE_SCOPE)
@@ -115,55 +109,25 @@ class ERP5FacebookExtractionPlugin(BasePlugin):
         return cache_entry.getValue()
     raise KeyError('Key %r not found' % key)
 
-  def getFacebookEntry(self, token):
-    timeout = socket.getdefaulttimeout()
-    try:
-      # require really fast interaction
-      socket.setdefaulttimeout(5)
-      facebook_entry = facebook.GraphAPI(token).get_object("me")
-    except Exception:
-      facebook_entry = None
-    finally:
-      socket.setdefaulttimeout(timeout)
-
-    user_entry = {}
-    if facebook_entry is not None:
-      # sanitise value
-      try:
-        for k in ('first_name', 'last_name', 'id', 'email'):
-          if k == 'id':
-            user_entry['reference'] = self.reference_prefix + facebook_entry[k].encode(
-              'utf-8')
-          else:
-            user_entry[k] = facebook_entry[k].encode('utf-8')
-      except KeyError:
-        user_entry = None
-    return user_entry
-
   ####################################
   #ILoginPasswordHostExtractionPlugin#
   ####################################
   security.declarePrivate('extractCredentials')
   def extractCredentials(self, request):
-    """ Extract facebook credentials from the request header. """
-    Base_createFacebookUser = getattr(self.getPortalObject(),
-      'Base_createFacebookUser', None)
-    if facebook is None or Base_createFacebookUser is None:
-      # no facebook library available or not configured
-      if facebook is None:
-        LOG('ERP5FacebookExtractionPlugin', INFO,
-          'No facebook module available, disabled authentication.')
-      if Base_createFacebookUser is None:
-        LOG('ERP5FacebookExtractionPlugin', INFO,
-          'No Base_createFacebookUser script available, install '
-            'erp5_credential_facebook, disabled authentication.')
+    """ Extract Oauth2 credentials from the request header. """
+    Base_createOauth2User = getattr(self.getPortalObject(),
+      'Base_createOauth2User', None)
+    if Base_createOauth2User is None:
+      LOG('ERP5ExternalOauth2ExtractionPlugin', INFO,
+          'No Base_createOauth2User script available, install '
+            'erp5_credential_oauth2, disabled authentication.')
       return DumbHTTPExtractor().extractCredentials(request)
 
     creds = {}
     token = None
     if request._auth is not None:
       # 1st - try to fetch from Authorization header
-      if 'facebook' in request._auth.lower():
+      if self.header_string in request._auth.lower():
         l = request._auth.split()
         if len(l) == 2:
           token = l[1]
@@ -172,15 +136,16 @@ class ERP5FacebookExtractionPlugin(BasePlugin):
       # no token
       return DumbHTTPExtractor().extractCredentials(request)
 
+
     # token is available
     user = None
-    facebook_entry = None
+    user_entry = None
     try:
-      user = self.getFacebookToken(token)
+      user = self.getToken(self.prefix + token)
     except KeyError:
-      facebook_entry = self.getFacebookEntry(token)
-      if facebook_entry is not None:
-        user = facebook_entry['reference']
+      user_entry = self.getUserEntry(token)
+      if user_entry is not None:
+        user = user_entry['reference']
 
     if user is None:
       # fallback to default way
@@ -199,18 +164,18 @@ class ERP5FacebookExtractionPlugin(BasePlugin):
           newSecurityManager(self, self.getUser(SUPER_USER))
         try:
           self.REQUEST['USER_CREATION_IN_PROGRESS'] = user
-          if facebook_entry is None:
-            facebook_entry = self.getFacebookEntry(token)
+          if user_entry is None:
+            user_entry = self.getUserEntry(token)
           try:
-            self.Base_createFacebookUser(tag, **facebook_entry)
+            self.Base_createOauth2User(tag, **user_entry)
           except Exception:
-            LOG('ERP5FacebookExtractionPlugin', ERROR,
+            LOG('ERP5ExternalOauth2ExtractionPlugin', ERROR,
               'Issue while calling creation script:', error=True)
             raise
         finally:
           setSecurityManager(sm)
     try:
-      self.setFacebookToken(token, user)
+      self.setToken(self.prefix + token, user)
     except KeyError:
       # allow to work w/o cache
       pass
@@ -221,6 +186,40 @@ class ERP5FacebookExtractionPlugin(BasePlugin):
     except AttributeError:
       creds['remote_address'] = request.get('REMOTE_ADDR', '')
     return creds
+
+class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin):
+  """
+  Plugin to authenicate as machines.
+  """
+
+  meta_type = "ERP5 Facebook Extraction Plugin"
+  prefix = 'fb_'
+  header_string = 'facebook'
+
+  def getUserEntry(self, token):
+    timeout = socket.getdefaulttimeout()
+    try:
+      # require really fast interaction
+      socket.setdefaulttimeout(5)
+      facebook_entry = facebook.GraphAPI(token).get_object("me")
+    except Exception:
+      facebook_entry = None
+    finally:
+      socket.setdefaulttimeout(timeout)
+
+    user_entry = {}
+    if facebook_entry is not None:
+      # sanitise value
+      try:
+        for k in ('first_name', 'last_name', 'id', 'email'):
+          if k == 'id':
+            user_entry['reference'] = self.prefix + facebook_entry[k].encode(
+              'utf-8')
+          else:
+            user_entry[k] = facebook_entry[k].encode('utf-8')
+      except KeyError:
+        user_entry = None
+    return user_entry
 
   manage_editERP5FacebookExtractionPluginForm = PageTemplateFile(
       'www/ERP5Security_editERP5FacebookExtractionPlugin',

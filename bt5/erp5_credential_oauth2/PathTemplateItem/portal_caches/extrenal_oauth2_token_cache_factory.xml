@@ -36,7 +36,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>facebook_token_cache_factory</string> </value>
+            <value> <string>extrenal_oauth2_token_cache_factory</string> </value>
         </item>
         <item>
             <key> <string>portal_type</string> </key>
