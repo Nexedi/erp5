@@ -47,6 +47,13 @@ try:
 except ImportError:
   facebook = None
 
+try:
+  import apiclient.discovery
+  import httplib2
+  import oauth2client.client
+except ImportError:
+  httplib2 = None
+
 #Form for new plugin in ZMI
 manage_addERP5FacebookExtractionPluginForm = PageTemplateFile(
   'www/ERP5Security_addERP5FacebookExtractionPlugin', globals(),
@@ -63,6 +70,24 @@ def addERP5FacebookExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
           '%s/manage_workspace'
           '?manage_tabs_message='
           'ERP5FacebookExtractionPlugin+added.'
+          % dispatcher.absolute_url())
+
+#Form for new plugin in ZMI
+manage_addERP5GoogleExtractionPluginForm = PageTemplateFile(
+  'www/ERP5Security_addERP5GoogleExtractionPlugin', globals(),
+  __name__='manage_addERP5GoogleExtractionPluginForm')
+
+def addERP5GoogleExtractionPlugin(dispatcher, id, title=None, REQUEST=None):
+  """ Add a ERP5GoogleExtractionPlugin to a Pluggable Auth Service. """
+
+  plugin = ERP5GoogleExtractionPlugin(id, title)
+  dispatcher._setObject(plugin.getId(), plugin)
+
+  if REQUEST is not None:
+      REQUEST['RESPONSE'].redirect(
+          '%s/manage_workspace'
+          '?manage_tabs_message='
+          'ERP5GoogleExtractionPlugin+added.'
           % dispatcher.absolute_url())
 
 class ERP5ExternalOauth2ExtractionPlugin:
@@ -135,7 +160,6 @@ class ERP5ExternalOauth2ExtractionPlugin:
     if token is None:
       # no token
       return DumbHTTPExtractor().extractCredentials(request)
-
 
     # token is available
     user = None
@@ -226,10 +250,58 @@ class ERP5FacebookExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugi
         user_entry = None
     return user_entry
 
+class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin):
+  """
+  Plugin to authenicate as machines.
+  """
+
+  meta_type = "ERP5 Google Extraction Plugin"
+  prefix = 'go_'
+  header_string = 'google'
+
+  def getUserEntry(self, token):
+    if httplib2 is None:
+      LOG('ERP5GoogleExtractionPlugin', INFO,
+        'No Google modules available, please install google-api-python-client '
+        'package. Authentication disabled..')
+      return None
+    timeout = socket.getdefaulttimeout()
+    try:
+      # require really fast interaction
+      socket.setdefaulttimeout(5)
+      http = oauth2client.client.AccessTokenCredentials(token, 'ERP5 Client'
+        ).authorize(httplib2.Http())
+      service = apiclient.discovery.build("oauth2", "v1", http=http)
+      google_entry = service.userinfo().get().execute()
+    except Exception:
+      google_entry = None
+    finally:
+      socket.setdefaulttimeout(timeout)
+
+    user_entry = {}
+    if google_entry is not None:
+      # sanitise value
+      try:
+        for k in (('first_name', 'name'),
+            ('last_name', 'family_name'),
+            ('reference', 'id'),
+            ('email', 'email')):
+          value = google_entry[k[1]].encode('utf-8')
+          if k[0] == 'reference':
+            value = self.prefix + value
+          user_entry[k[0]] = value
+      except KeyError:
+        user_entry = None
+    return user_entry
 
 #List implementation of class
 classImplements( ERP5FacebookExtractionPlugin,
                 plugins.ILoginPasswordHostExtractionPlugin
                )
 InitializeClass(ERP5FacebookExtractionPlugin)
+
+classImplements( ERP5GoogleExtractionPlugin,
+                plugins.ILoginPasswordHostExtractionPlugin
+               )
+InitializeClass(ERP5GoogleExtractionPlugin)
 
