@@ -66,6 +66,7 @@ registerMultiPlugin(ERP5KeyAuthPlugin.ERP5KeyAuthPlugin.meta_type)
 registerMultiPlugin(ERP5ExternalAuthenticationPlugin.ERP5ExternalAuthenticationPlugin.meta_type)
 registerMultiPlugin(ERP5BearerExtractionPlugin.ERP5BearerExtractionPlugin.meta_type)
 registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5FacebookExtractionPlugin.meta_type)
+registerMultiPlugin(ERP5ExternalOauth2ExtractionPlugin.ERP5GoogleExtractionPlugin.meta_type)
 
 def initialize(context):
 
@@ -137,6 +138,15 @@ def initialize(context):
                          , constructors=(
                             ERP5ExternalOauth2ExtractionPlugin.manage_addERP5FacebookExtractionPluginForm,
                             ERP5ExternalOauth2ExtractionPlugin.addERP5FacebookExtractionPlugin, )
+                         , visibility=None
+                         , icon='www/portal.gif'
+                         )
+
+    context.registerClass( ERP5ExternalOauth2ExtractionPlugin.ERP5GoogleExtractionPlugin
+                         , permission=ManageUsers
+                         , constructors=(
+                            ERP5ExternalOauth2ExtractionPlugin.manage_addERP5GoogleExtractionPluginForm,
+                            ERP5ExternalOauth2ExtractionPlugin.addERP5GoogleExtractionPlugin, )
                          , visibility=None
                          , icon='www/portal.gif'
                          )
