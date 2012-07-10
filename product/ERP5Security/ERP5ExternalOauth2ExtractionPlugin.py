@@ -282,7 +282,7 @@ class ERP5GoogleExtractionPlugin(ERP5ExternalOauth2ExtractionPlugin, BasePlugin)
     if google_entry is not None:
       # sanitise value
       try:
-        for k in (('first_name', 'name'),
+        for k in (('first_name', 'given_name'),
             ('last_name', 'family_name'),
             ('reference', 'id'),
             ('email', 'email')):
