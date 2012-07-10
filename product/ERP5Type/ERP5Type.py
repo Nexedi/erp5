@@ -97,15 +97,11 @@ class LocalRoleAssignorMixIn(object):
         for group_id, role_list \
                 in role_generator.getLocalRolesFor(ob, user_name).iteritems():
           group_id_role_dict.setdefault(group_id, set()).update(role_list)
-
-          # don't keep track of default group not to increase db size
           if local_roles_group_id:
-            if local_roles_group_id not in \
-                local_roles_group_id_group_id.get(group_id, ()):
-              local_roles_group_id_group_id[group_id] = \
-                local_roles_group_id_group_id.get(group_id, ()) +\
-                (local_roles_group_id,)
-
+            for role in role_list:
+              # Feed local_roles_group_id_group_id with local roles assigned to a group
+              local_roles_group_id_group_id.setdefault(local_roles_group_id, set()).update(((group_id, role),))
+  
       ## Update role assignments to groups
       # Save the owner
       for group, role_list in (ob.__ac_local_roles__ or {}).iteritems():

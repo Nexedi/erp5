@@ -129,23 +129,30 @@ class IndexableObjectWrapper(object):
 
         user_role_dict = {}
         user_view_permission_role_dict = {}
+        optimized_role_set = set()
+        # First parse optimized roles and build optimized_role_set
+        for role_definition_group, user_and_role_list in local_roles_group_id_group_id.items():
+          try:
+            group_allowed_set = allowed_by_local_roles_group_id[role_definition_group]
+          except KeyError:
+            allowed_by_local_roles_group_id[role_definition_group] = group_allowed_set = set()
+          for user, role in user_and_role_list:
+            prefix = 'user:' + user
+            group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
+            optimized_role_set.add((user, role))
+            
+        # Then parse other roles
         for user, roles in localroles.iteritems():
           prefix = 'user:' + user
           for role in roles:
             if (role in role_dict) and (getUserById(user) is not None):
               # If role is monovalued, check if key is a user.
               # If not, continue to index it in roles_and_users table.
-              user_role_dict[role] = user
+              if (user, role) not in optimized_role_set:
+                user_role_dict[role] = user # Only add to user_role_dict if not in optimized_role_set (double check)
               if role in allowed_role_set:
                 user_view_permission_role_dict[role] = user
-            elif role in allowed_role_set:
-              for group in local_roles_group_id_group_id.get(user, ('', )):
-                try:
-                  group_allowed_set = allowed_by_local_roles_group_id[group]
-                except KeyError:
-                   allowed_by_local_roles_group_id[group] = group_allowed_set = set()
-                group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
-
+                
         # sort `allowed` principals
         sorted_allowed_by_local_roles_group_id = {}
         for local_roles_group_id, allowed in \
