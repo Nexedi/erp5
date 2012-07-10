@@ -140,7 +140,7 @@ class IndexableObjectWrapper(object):
             prefix = 'user:' + user
             group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
             optimized_role_set.add((user, role))
-            
+
         # Then parse other roles
         for user, roles in localroles.iteritems():
           prefix = 'user:' + user
@@ -150,9 +150,15 @@ class IndexableObjectWrapper(object):
               # If not, continue to index it in roles_and_users table.
               if (user, role) not in optimized_role_set:
                 user_role_dict[role] = user # Only add to user_role_dict if not in optimized_role_set (double check)
-              if role in allowed_role_set:
-                user_view_permission_role_dict[role] = user
-                
+            else:
+              # add here local roles which are not part of optimized ones
+              if (user, role) not in optimized_role_set:
+                user_group = '%s:%s' % (prefix, role)
+                if prefix not in allowed_role_set:
+                  allowed_role_set.add(prefix)
+                if user_group not in allowed_role_set:
+                  allowed_role_set.add(user_group)
+ 
         # sort `allowed` principals
         sorted_allowed_by_local_roles_group_id = {}
         for local_roles_group_id, allowed in \
