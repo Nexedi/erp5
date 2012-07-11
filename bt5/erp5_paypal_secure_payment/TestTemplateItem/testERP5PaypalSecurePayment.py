@@ -26,7 +26,7 @@
 ##############################################################################
 
 import random
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, get_request
+from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 
 
 def getMessageList(o):
@@ -99,16 +99,3 @@ business=business@sample.com""")
       self.portal.portal_skins.custom.manage_delObjects([pt_id])
       # flush skin cache
       self.portal.changeSkin(None)
-
-  def test_reportPaymentStatus(self):
-    script_id = "Base_paymentResponse"
-    custom_skin = self.portal.portal_skins.custom
-    custom_skin.manage_addProduct['PythonScripts']\
-               .manage_addPythonScript(id=script_id)
-    script = custom_skin[script_id]
-    script.ZPythonScript_edit('**kw', "if kw.has_key('cmd'):\n  return 'VERIFIED'")
-    self.tic()
-    script_absolute_url = script.absolute_url()
-    self.service.edit(link_url_string=script_absolute_url)
-    response = self.service.reportPaymentStatus(get_request())
-    self.assertTrue(response)
