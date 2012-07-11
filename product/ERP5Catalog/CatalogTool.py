@@ -150,8 +150,9 @@ class IndexableObjectWrapper(object):
               # If not, continue to index it in roles_and_users table.
               if (user, role) not in optimized_role_set:
                 user_role_dict[role] = user # Only add to user_role_dict if not in optimized_role_set (double check)
-            else:
+            elif not (role in role_dict):
               # add here local roles which are not part of optimized ones
+              # and at the same time not a special ones like Owner
               if (user, role) not in optimized_role_set:
                 user_group = '%s:%s' % (prefix, role)
                 if prefix not in allowed_role_set:
