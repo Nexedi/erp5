@@ -43,15 +43,18 @@ def __call__(self, *args, **kw):
   Component Extension if available, otherwise fallback on filesystem
   Extension
   """
-  try:
-    f = getattr(__import__('erp5.component.extension.' + self._module,
-                           fromlist=['erp5.component.extension'],
-                           level=0),
-                self._function)
+  import erp5.component.extension
+  module_fullname = 'erp5.component.extension.' + self._module
+  module_loader = erp5.component.extension.find_module(module_fullname)
 
-  except (ImportError, AttributeError):
+  if module_loader is None:
     return ExternalMethod__call__(self, *args, **kw)
   else:
+    from Products.ERP5Type.Base import Base
+    with Base.aq_method_lock:
+      module = module_loader.load_module(module_fullname)
+
+    f = getattr(module, self._function)
     _v_f = getattr(self, '_v_f', None)
     if not _v_f or f is not _v_f:
       f = self.getFunction(f=f)

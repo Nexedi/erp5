@@ -110,7 +110,13 @@ class ComponentDynamicPackage(ModuleType):
           # Only consider modified or validated states as state transition will
           # be handled by component_validation_workflow which will take care of
           # updating the registry
-          if component.getValidationState() in ('modified', 'validated'):
+          try:
+            validation_state_tuple = component.getValidationState()
+          except AttributeError:
+            # XXX: Accessors may have not been generated yet
+            pass
+
+          if validation_state_tuple in ('modified', 'validated'):
             version = component.getVersion(validated_only=True)
             # The versions should have always been set on ERP5Site property
             # beforehand
