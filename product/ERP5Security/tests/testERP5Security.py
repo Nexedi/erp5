@@ -585,8 +585,8 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     obj = self._makeOne()
     self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
     self.assertTrue('Assignor' in user.getRolesInContext(obj))
-    self.assertEqual(('Alternate',),
-      obj.__ac_local_roles_group_id_dict__.get('F1_G1_S1'))
+    self.assertEqual(('F1_G1_S1',),
+      obj.__ac_local_roles_group_id_dict__.get('Alternate'))
     self.abort()
 
 
