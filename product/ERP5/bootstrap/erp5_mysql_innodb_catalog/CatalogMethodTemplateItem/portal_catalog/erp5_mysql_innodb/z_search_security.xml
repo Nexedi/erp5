@@ -52,10 +52,10 @@
             <key> <string>src</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-SELECT \n
-  DISTINCT uid, local_roles_group_id\n
+SELECT\n
+  DISTINCT uid\n
 FROM \n
-  roles_and_users \n
+  roles_and_users\n
 WHERE \n
   allowedRolesAndUsers \n
   IN (<dtml-in security_roles_list><dtml-var sequence-item><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)\n
