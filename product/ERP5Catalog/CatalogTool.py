@@ -158,7 +158,9 @@ class IndexableObjectWrapper(object):
                   group_allowed_set = allowed_by_local_roles_group_id[group]
                 except KeyError:
                    allowed_by_local_roles_group_id[group] = group_allowed_set = set()
-                group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
+                if (user, role) not in optimized_role_set:
+                  # add only if not already added to optimized_role_set to avoid polluting indexation table
+                  group_allowed_set.update((prefix, '%s:%s' % (prefix, role)))
  
         # sort `allowed` principals
         sorted_allowed_by_local_roles_group_id = {}
