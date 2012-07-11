@@ -31,7 +31,6 @@
 from __future__ import absolute_import
 
 import sys
-import threading
 
 from Products.ERP5.ERP5Site import getSite
 from Products.ERP5Type.Base import Base
@@ -202,7 +201,7 @@ class ComponentDynamicPackage(ModuleType):
 
     return version_package
 
-  def __load_module(self, fullname):
+  def load_module(self, fullname):
     """
     Load a module with given fullname (see PEP 302) if it's not already in
     sys.modules. It is assumed that imports are filtered properly in
@@ -216,6 +215,9 @@ class ComponentDynamicPackage(ModuleType):
 
     As per PEP-302, raise an ImportError if the Loader could not load the
     module for any reason...
+
+    Import is protected by Python Import Lock, but if this method is not
+    called through Import, it must be protected by Base.aq_method_lock
     """
     site = getSite()
     name = fullname[len(self._namespace_prefix):]
@@ -310,14 +312,6 @@ class ComponentDynamicPackage(ModuleType):
       setattr(self, name, module)
 
     return module
-
-  def load_module(self, fullname):
-    """
-    Make sure that loading module is thread-safe using aq_method_lock to make
-    sure that modules do not disappear because of an ongoing reset
-    """
-    with Base.aq_method_lock:
-      return self.__load_module(fullname)
 
   def reset(self, sub_package=None):
     """
