@@ -120,9 +120,17 @@ if project:\n
   else:\n
     params[\'project_uid\'] = traverse(project).getUid()\n
 if function:\n
-  params[\'function_category\'] = function\n
+  function_value = traverse(function, None)\n
+  if function_value is not None and function_value.getPortalType() != \'Category\':\n
+    params[\'function_uid\'] = function_value.getUid()\n
+  else:\n
+    params[\'function_category\'] = function\n
 if funding:\n
-  params[\'funding_category\'] = funding\n
+  funding_value = traverse(funding, None)\n
+  if funding_value is not None and funding_value.getPortalType() != \'Category\':\n
+    params[\'funding_uid\'] = funding_value.getUid()\n
+  else:\n
+    params[\'funding_category\'] = funding\n
 if mirror_section:\n
   params[\'mirror_section_uid\'] = traverse(mirror_section).getUid()\n
 if parent_portal_type:\n

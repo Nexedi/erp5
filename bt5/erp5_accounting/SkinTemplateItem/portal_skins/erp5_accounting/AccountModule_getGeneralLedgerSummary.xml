@@ -60,8 +60,12 @@ inventory_kw = dict(section_uid=section_uid,\n
                     )\n
 if function_category:\n
   inventory_kw[\'function_category\'] = function_category\n
+if function_uid:\n
+  inventory_kw[\'function_uid\'] = function_uid\n
 if funding_category:\n
   inventory_kw[\'funding_category\'] = funding_category\n
+if funding_uid:\n
+  inventory_kw[\'funding_uid\'] = funding_uid\n
 if project_uid:\n
   inventory_kw[\'project_uid\'] = project_uid\n
 if mirror_section_category:\n
@@ -114,7 +118,7 @@ return [Object(debit_price=debit, credit_price=credit)]\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>section_uid, simulation_state, at_date, period_start_date, precision, node_category=None, function_category=None, funding_category=None, project_uid=None, from_date=\'ignored\', mirror_section_category=None, mirror_section_uid=None, **kw</string> </value>
+            <value> <string>section_uid, simulation_state, at_date, period_start_date, precision, node_category=None, function_category=None, function_uid=None, funding_category=None, funding_uid=None, project_uid=None, from_date=\'ignored\', mirror_section_category=None, mirror_section_uid=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

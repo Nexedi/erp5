@@ -104,6 +104,7 @@ if project:\n
     params[\'project_uid\'] = Query(project_uid=None)\n
   else:\n
     params[\'project_uid\'] = portal.portal_categories.restrictedTraverse(project).getUid()\n
+\n
 funding_category = request.get(\'funding\')\n
 if funding_category:\n
   if funding_category == \'None\':\n
