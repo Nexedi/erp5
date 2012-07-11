@@ -152,7 +152,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
     token = None
     if request._auth is not None:
       # 1st - try to fetch from Authorization header
-      if self.header_string in request._auth.lower():
+      if self.header_string.lower() in request._auth.lower():
         l = request._auth.split()
         if len(l) == 2:
           token = l[1]
