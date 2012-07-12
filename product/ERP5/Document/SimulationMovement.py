@@ -716,7 +716,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     catalog_simulation_movement_list = portal_catalog(
       portal_type='Simulation Movement',
       causality_uid=[p.getUid() for p in remaining_path_set],
-      path='%s/%%' % self.getPath())
+      path='%s/%%' % self.getPath().replace('_', r'\_'))
 
     for movement in catalog_simulation_movement_list:
       path = movement.getCausalityValue()

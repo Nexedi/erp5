@@ -26,6 +26,7 @@ from hashlib import md5
 from warnings import warn
 from ExtensionClass import pmc_init_of
 from ZTUtils import make_query
+from DateTime import DateTime
 
 # XXX make sure that get_request works.
 import Products.ERP5Type.Utils
@@ -275,6 +276,21 @@ def profile_if_environ(environment_var_name):
       # No profiling, return identity decorator
       return lambda self, method: method
 
+# Patch DateTime to allow pinning the notion of "now".
+assert getattr(DateTime, '_original_parse_args', None) is None
+DateTime._original_parse_args = DateTime._parse_args
+
+_pinned_date_time = None
+
+def _parse_args(self, *args, **kw):
+  if _pinned_date_time is not None and (not args or args[0] == None):
+    # simulate fixed "Now"
+    args = (_pinned_date_time,) + args[1:]
+  return self._original_parse_args(*args, **kw)
+
+_parse_args._original = DateTime._original_parse_args
+DateTime._parse_args = _parse_args
+
 class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
     """Mixin class for ERP5 based tests.
     """
@@ -353,6 +369,17 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
       assert cls.__bases__[0] is DummyMailHostMixin
       cls.__bases__ = cls.__bases__[1:]
       pmc_init_of(cls)
+
+    def pinDateTime(self, date_time):
+      # pretend time has stopped at a certain date (i.e. the test runs
+      # infinitely fast), to avoid errors on tests that are started
+      # just before midnight.
+      global _pinned_date_time
+      assert date_time is None or isinstance(date_time, DateTime)
+      _pinned_date_time = date_time
+
+    def unpinDateTime(self):
+      self.pinDateTime(None)
 
     def getDefaultSitePreferenceId(self):
       """Default id, usefull method to override

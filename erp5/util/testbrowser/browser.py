@@ -777,7 +777,8 @@ class MainForm(Form):
     @todo: Use information sent back as headers rather than looking
            into the page content?
     """
-    if 'Logged In as' in self.browser.contents:
+    check_logged_in_xpath = '//div[@id="logged_in_as"]/*'
+    if self.etree.xpath(check_logged_in_xpath):
       self._logger.debug("Already logged in")
       # TODO: Perhaps zope.testbrowser should be patched instead?
       self.browser.timer.start_time = self.browser.timer.end_time = 0
@@ -797,7 +798,7 @@ class MainForm(Form):
       self.browser.open('login_form')
       login(self.browser.mainForm)
 
-    if 'Logged In as' not in self.browser.contents:
+    if not self.etree.xpath(check_logged_in_xpath):
       raise LoginError("%s: Could not log in as '%s:%s'" % \
                          (self.browser._erp5_base_url,
                           self.browser._username,
