@@ -58,7 +58,14 @@ domain_port = promise_url.split(\'//\')[1].split(\'/\')[0]\n
 port = domain_port.split(\':\')[-1]\n
 domain = domain_port[:-(len(port)+1)]\n
 \n
-portal.portal_preferences.getActiveSystemPreference().edit(\n
+system_preference = portal_preferences.getActiveSystemPreference()\n
+if system_preference is None:\n
+  system_preference = portal_preferences.newContent(\n
+                 portal_type="System Preference", \n
+                 title="Created by Promise Alarms")\n
+  system_preference.enable()\n
+\n
+system_preference.edit(\n
   preferred_ooodoc_server_address=domain,\n
   preferred_ooodoc_server_port_number=port,\n
 )\n
