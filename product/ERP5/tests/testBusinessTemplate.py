@@ -6553,8 +6553,8 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     # simulate role assignment
     new_object.__ac_local_roles__ = dict(group=['Assignee'])
-    new_object.__ac_local_roles_group_id_dict__ = dict(group=('Alternate',))
-
+    initial___ac_local_roles_group_id_dict__ = dict(Alternate=set([('group', 'Assignee')]))
+    new_object.__ac_local_roles_group_id_dict__ = initial___ac_local_roles_group_id_dict__
     self.tic()
 
     object_type.newContent(portal_type='Role Information',
@@ -6592,7 +6592,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       path = self.portal.geek_module['1']
       self.assertEquals([('group', ['Assignee'],)], [item for item in
             path.__ac_local_roles__.items() if item[1] != ['Owner']])
-      self.assertEquals(dict(group=('Alternate',)),
+      self.assertEquals(initial___ac_local_roles_group_id_dict__,
         path.__ac_local_roles_group_id_dict__)
     finally:
       # restore state

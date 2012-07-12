@@ -4576,8 +4576,9 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       for principal, local_roles_group_id_list in sorted(local_roles_group_id_dict.items()):
         xml_data += "\n  <principal id='%s'>" % escape(principal)
         for local_roles_group_id in local_roles_group_id_list:
-          xml_data += "\n    <local_roles_group_id>%s</local_roles_group_id>" % \
-                escape(local_roles_group_id)
+          for item in local_roles_group_id:
+            xml_data += "\n    <local_roles_group_id>%s</local_roles_group_id>" % \
+                escape(item)
         xml_data += "\n  </principal>"
       xml_data += '\n </local_roles_group_id>'
 
@@ -4609,10 +4610,9 @@ class LocalRolesTemplateItem(BaseTemplateItem):
     # local roles group id
     local_roles_group_id_dict = {}
     for principal in xml.findall('//principal'):
-      local_roles_group_id_dict[principal.get('id')] = tuple(
+      local_roles_group_id_dict[principal.get('id')] = set([tuple(
         [group_id.text for group_id in
-            principal.findall('./local_roles_group_id')])
-
+            principal.findall('./local_roles_group_id')])])
     self._objects['local_roles/%s' % (file_name[:-4],)] = (
       local_roles_dict, local_roles_group_id_dict)
 
