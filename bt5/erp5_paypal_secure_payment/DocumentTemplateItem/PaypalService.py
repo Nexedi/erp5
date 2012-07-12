@@ -103,8 +103,7 @@ class PaypalService(XMLObject):
     request.add_header("Content-type", "application/x-www-form-urlencoded")
     response = urlopen(request)
     status = response.read()
-    method = self._getTypeBasedMethod("reportPaymentStatus")
     LOG("PaypalService status", DEBUG, status)
-    if method and status == "VERIFIED":
-      method(REQUEST=REQUEST)
-    return True
+    method_id = self._getTypeBasedMethod("reportPaymentStatus").id
+    getattr(self.activate(), method_id)(response_dict=REQUEST.form)
+    return status == "VERIFIED"
