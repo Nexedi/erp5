@@ -116,7 +116,7 @@ class ComponentDynamicPackage(ModuleType):
             # beforehand
             if version in version_priority_set:
               reference = component.getReference(validated_only=True)
-              self.__registry_dict.setdefault(reference, {})[version] = component
+              self.__registry_dict.setdefault(reference, {})[version] = component.getId()
 
     return self.__registry_dict
 
@@ -234,7 +234,7 @@ class ComponentDynamicPackage(ModuleType):
                             (fullname, self._namespace, error))
 
       try:
-        component = self._registry_dict[name][version]
+        component_id = self._registry_dict[name][version]
       except KeyError:
         raise ImportError("%s: version %s of Component %s could not be found" % \
                             (fullname, version, name))
@@ -249,8 +249,8 @@ class ComponentDynamicPackage(ModuleType):
 
       # Version priority name list is ordered in descending order
       for version in site.getVersionPriorityNameList():
-        component = component_version_dict.get(version)
-        if component is not None:
+        component_id = component_version_dict.get(version)
+        if component_id is not None:
           break
       else:
         raise ImportError("%s: no version of Component %s in Site priority" % \
@@ -267,6 +267,8 @@ class ComponentDynamicPackage(ModuleType):
         return module
 
       module_fullname_alias = self._namespace + '.' + name
+
+    component = getattr(site.portal_components, component_id)
 
     module_fullname = '%s.%s_version.%s' % (self._namespace, version, name)
     module = ModuleType(module_fullname, component.getDescription())
