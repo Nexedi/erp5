@@ -7003,9 +7003,13 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     self.getPortalObject().portal_components.deleteContent(
       sequence['document_id'])
 
-  def stepCheckZodbDocumentExists(self, sequence=None, **kw):
+  def stepCheckZodbDocumentExistsAndValidated(self, sequence=None, **kw):
     self.assertHasAttribute(self.getPortalObject().portal_components,
                             sequence['document_id'])
+
+    self.assertEquals(getattr(self.getPortalObject().portal_components,
+                              sequence['document_id']).getValidationState(),
+                      'validated')
 
   def stepCheckZodbDocumentRemoved(self, sequence=None, **kw):
     component_tool = self.getPortalObject().portal_components
@@ -7074,7 +7078,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckBuiltBuildingState \
                        CheckNoTrashBin \
                        CheckSkinsLayers \
-                       CheckZodbDocumentExists \
+                       CheckZodbDocumentExistsAndValidated \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
@@ -7139,7 +7143,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        CheckBuiltBuildingState \
                        CheckNoTrashBin \
                        CheckSkinsLayers \
-                       CheckZodbDocumentExists \
+                       CheckZodbDocumentExistsAndValidated \
                        UninstallBusinessTemplate \
                        CheckBuiltBuildingState \
                        CheckNotInstalledInstallationState \
@@ -7254,7 +7258,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
                        InstallWithoutForceBusinessTemplate \
                        Tic \
                        \
-                       CheckZodbDocumentExists \
+                       CheckZodbDocumentExistsAndValidated \
                        CheckInstalledInstallationState \
                        CheckBuiltBuildingState \
                        \

@@ -4022,6 +4022,11 @@ class DocumentTemplateItem(FilesystemToZodbTemplateItem):
 
     if self._is_already_migrated(object_list):
       ObjectTemplateItem.install(self, context, **kw)
+      portal = context.getPortalObject()
+      for object_path in object_list:
+        obj = portal.unrestrictedTraverse(object_path)
+        obj.validate()
+
       self.portal_components.reset(force=True, reset_portal_type=True)
     else:
       FilesystemDocumentTemplateItem.install(self, context, **kw)
