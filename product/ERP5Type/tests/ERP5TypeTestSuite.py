@@ -273,8 +273,6 @@ class ProjectTestSuite(ERP5TypeTestSuite):
     path_list = self._search_path_list or sys.path
     product_test_file_glob = pjoin('tests', 'test*.py')
     bt_test_file_glob = pjoin('TestTemplateItem', 'test*.py')
-    bt_component_test_file_glob = pjoin('TestTemplateItem',
-      'portal_components', 'test*.py')
     test_file_list = []
     extend = test_file_list.extend
     for product_dir in self._searchDirectory('product', path_list):
@@ -283,7 +281,6 @@ class ProjectTestSuite(ERP5TypeTestSuite):
     for bt_dir in self._searchDirectory('bt5', path_list):
       for bt_id in self._bt_list:
         extend(_glob(pjoin(bt_dir, bt_id, bt_test_file_glob)))
-        extend(_glob(pjoin(bt_dir, bt_id, bt_component_test_file_glob)))
     return list(frozenset((path.splitext(path.basename(name))[0]
       for name in test_file_list)))
 
