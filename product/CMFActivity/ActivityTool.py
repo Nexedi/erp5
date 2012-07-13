@@ -769,7 +769,7 @@ class ActivityTool (Folder, UniqueObject):
       nodes = self._nodes
       if isinstance(nodes, tuple):
         new_nodes = OIBTree()
-        new_nodes.update([(x, ROLE_PROCESSING) for x in self._nodes])
+        new_nodes.update([(x, ROLE_PROCESSING) for x in nodes])
         self._nodes = nodes = new_nodes
       return nodes
 
@@ -847,7 +847,6 @@ class ActivityTool (Folder, UniqueObject):
     def manage_addToProcessingList(self, unused_node_list=None, REQUEST=None):
       """ Change one or more idle nodes into processing nodes """
       if unused_node_list is not None:
-        node_dict = self.getNodeDict()
         for node in unused_node_list:
           self.updateNode(node, ROLE_PROCESSING)
       if REQUEST is not None:
@@ -864,7 +863,6 @@ class ActivityTool (Folder, UniqueObject):
     def manage_removeFromProcessingList(self, processing_node_list=None, REQUEST=None):
       """ Change one or more procesing nodes into idle nodes """
       if processing_node_list is not None:
-        node_dict = self.getNodeDict()
         for node in processing_node_list:
           self.updateNode(node, ROLE_IDLE)
       if REQUEST is not None:
