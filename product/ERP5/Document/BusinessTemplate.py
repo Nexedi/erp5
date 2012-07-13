@@ -4801,6 +4801,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
     #    ( and more )
     _item_name_list = [
       '_registered_version_priority_selection_item',
+      '_workflow_item',
       '_product_item',
       '_document_item',
       '_property_sheet_item',
@@ -4810,7 +4811,6 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_role_item',
       '_tool_item',
       '_message_translation_item',
-      '_workflow_item',
       '_site_property_item',
       '_portal_type_item',
       #'_portal_type_workflow_chain_item',
@@ -6081,6 +6081,11 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
         if migrated_id_list:
           template_id_list_method(migrated_id_list)
+          path_list = self.getTemplateKeepWorkflowPathList()
+          path_list.extend([ ('portal_components/' + id_)
+                             for id_ in migrated_id_list ])
+
+          self.setTemplateKeepWorkflowPathList(path_list)
 
       component_dict = component_portal_type_dict.get('Document Component')
       if component_dict:
