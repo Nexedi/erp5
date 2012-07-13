@@ -114,14 +114,14 @@ class ComponentDynamicPackage(ModuleType):
           except AttributeError:
             # XXX: Accessors may have not been generated yet
             pass
-
-          if validation_state_tuple in ('modified', 'validated'):
-            version = component.getVersion(validated_only=True)
-            # The versions should have always been set on ERP5Site property
-            # beforehand
-            if version in version_priority_set:
-              reference = component.getReference(validated_only=True)
-              self.__registry_dict.setdefault(reference, {})[version] = component.getId()
+          else:
+            if validation_state_tuple in ('modified', 'validated'):
+              version = component.getVersion(validated_only=True)
+              # The versions should have always been set on ERP5Site property
+              # beforehand
+              if version in version_priority_set:
+                reference = component.getReference(validated_only=True)
+                self.__registry_dict.setdefault(reference, {})[version] = component.getId()
 
     return self.__registry_dict
 
