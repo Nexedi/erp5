@@ -39,7 +39,9 @@
         <item>
             <key> <string>periodicity_hour</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
