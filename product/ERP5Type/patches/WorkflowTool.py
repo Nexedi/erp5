@@ -379,11 +379,6 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
         if type(criterion_value_list) is not ExclusionList:
           criterion_id_list.append(criterion_id)
           expected_class = class_dict[criterion_id]
-          # in some cases it's not always possible get expected_class from 
-          # first row from catalog (espc. when multiple security uids case which
-          # are not always filled in - i.e. mostly default None)
-          if expected_class == type(None):
-            expected_class = type(criterion_value_list[0])
           if type(criterion_value_list[0]) is not expected_class:
             criterion_dict[criterion_id] = ImmutableSet([expected_class(x) for x in criterion_value_list])
           elif type(criterion_value_list) is not ImmutableSet:
