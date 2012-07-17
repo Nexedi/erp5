@@ -51,8 +51,10 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>from Products.CMFActivity.ActiveResult import ActiveResult\n
+from Products.ERP5.Tool.TemplateTool import BusinessTemplateUnknownError\n
 \n
 portal = context.getPortalObject()\n
+template_tool = portal.portal_templates\n
 bt5 = portal.getPromiseParameter(\'portal_templates\', \'expected_bt5\')\n
 \n
 if bt5 is None:\n
@@ -60,26 +62,35 @@ if bt5 is None:\n
 \n
 active_result = ActiveResult()\n
 \n
-portal.portal_templates.updateRepositoryBusinessTemplateList(portal.portal_templates.getRepositoryList())\n
+template_tool.updateRepositoryBusinessTemplateList(\n
+  template_tool.getRepositoryList())\n
 \n
-bt5_list = [x[1] for x in portal.portal_templates.resolveBusinessTemplateListDependency(bt5.split(), newest_only=True)]\n
-bt5_list.extend([x.getTitle() for x in portal.portal_templates.getUpdatedRepositoryBusinessTemplateList()])\n
-bt5_list = list(set(bt5_list))\n
+try:\n
+  bt5_list = [x[1] for x in template_tool.resolveBusinessTemplateListDependency(\n
+                                                    bt5.split(),\n
+                                                    newest_only=True)]\n
 \n
-# XXX Can not import BusinessTemplateUnknownError\n
-# except BusinessTemplateUnknownError, error:\n
-#   active_result.edit(\n
-#     summary="Unable to resolve bt5 dependencies", \n
-#     severity=5, \n
-#     detail=error)\n
+  bt5_list.extend([x.getTitle() for x in \\\n
+                   template_tool.getUpdatedRepositoryBusinessTemplateList()])\n
 \n
-severity = len(bt5_list)\n
-if severity == 0:\n
+  bt5_list = list(set(bt5_list))\n
+  severity = len(bt5_list)\n
+\n
+except BusinessTemplateUnknownError, error:\n
+  severity = -1\n
+  detail = str(error)\n
+\n
+if severity == -1:\n
+  severity = 5\n
+  summary = "Unable to resolve bt5 dependencies"\n
+\n
+elif severity == 0:\n
   summary = "Nothing to do."\n
   detail = ""\n
 else:\n
   summary = "Upgrade needed"\n
   detail = "Needed to install %s" % \', \'.join(bt5_list)\n
+\n
 active_result.edit(\n
   summary=summary, \n
   severity=severity,\n
