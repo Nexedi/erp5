@@ -36,6 +36,7 @@ from Persistence import Persistent
 from Products.ERP5Type.Globals import PersistentMapping
 from itertools import izip
 from MySQLdb import ProgrammingError, OperationalError
+from DateTime import DateTime
 
 def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     '''
@@ -340,6 +341,17 @@ def getWorklistListQuery(grouped_worklist_dict):
   assert COUNT_COLUMN_TITLE not in total_criterion_id_dict
   return (total_criterion_id_list, query)
 
+# XXX: see ZMySQLDA/db.py:DB.defs
+# This dict is used to tell which cast to apply to worklist parameters to get
+# values comparable with SQL result content.
+_sql_cast_dict = {
+  'i': long,
+  'l': long,
+  'n': float,
+  'd': DateTime,
+}
+_sql_cast_fallback = str
+
 def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
   """
     Return a dict regrouping each worklist's result, extracting it from
@@ -360,8 +372,8 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
   if len(catalog_result) > 0:
     # Transtype all worklist definitions where needed
     criterion_id_list = []
-    class_dict = dict(((name, value.__class__) for name, value in \
-                       izip(catalog_result.names(), catalog_result[0])))
+    class_dict = dict(((name, _sql_cast_dict.get(x['type'], _sql_cast_fallback))
+      for name, x in catalog_result.data_dictionary().iteritems()))
     for criterion_dict in grouped_worklist_dict.itervalues():
       for criterion_id, criterion_value_list in criterion_dict.iteritems():
         if type(criterion_value_list) is not ExclusionList:
