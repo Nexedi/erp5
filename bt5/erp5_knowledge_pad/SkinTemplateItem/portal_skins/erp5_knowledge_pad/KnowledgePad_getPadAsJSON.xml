@@ -66,11 +66,12 @@ context.ERP5Site_toggleActiveKnowledgePad(pad_relative_url, mode, redirect=False
 \n
 # generate needed JavaScript code\n
 javascript_list = []\n
-for box in pad.objectValues():\n
+for box in pad.searchFolder(portal_type=\'Knowledge Box\',\n
+                            validation_state=[\'visible\', \'invisible\']):\n
+  box = box.getObject()\n
   gadget = box.getSpecialiseValue()\n
   gadget_type = gadget.getRenderType()\n
-  if box.getValidationState() in [\'visible\', \'invisible\'] \\\n
-        and gadget_type==\'asynchronous\' and gadget.getValidationState()!=\'invisible\':\n
+  if gadget_type==\'asynchronous\' and gadget.getValidationState()!=\'invisible\':\n
     edit_form_id=gadget.getEditFormId()\n
     view_form_id=gadget.getViewFormId()\n
     base_url = \'%s/%s\' %(context.absolute_url(), view_form_id) \n
