@@ -96,7 +96,9 @@
                 <item>
                     <key> <string>left</string> </key>
                     <value>
-                      <list/>
+                      <list>
+                        <string>your_information</string>
+                      </list>
                     </value>
                 </item>
                 <item>
@@ -142,11 +144,11 @@
         </item>
         <item>
             <key> <string>update_action</string> </key>
-            <value> <string>ERP5Site_viewCheckConsistency</string> </value>
+            <value> <string>ERP5Site_updateConfigurationConsistency</string> </value>
         </item>
         <item>
             <key> <string>update_action_title</string> </key>
-            <value> <string>Refresh</string> </value>
+            <value> <string>Force Reload Promises</string> </value>
         </item>
       </dictionary>
     </pickle>
