@@ -57,7 +57,7 @@ if len(uids):\n
   for alarm in context.portal_alarms.searchFolder(uid=uids):\n
     alarm.solve()\n
     # Invoke activiveSense a bit later\n
-    alarm.activity().activeSense()\n
+    alarm.activate().activeSense()\n
   portal_status_message = N_("Site Configuration is going to be fixed by Activities.")\n
 else:\n
   portal_status_message = N_("No Site Configuration fix was request.")\n
@@ -69,7 +69,7 @@ if enable_alarm:\n
       alarm.setEnabled(1)\n
       updated = True\n
   if updated:\n
-    portal_status_message += N_("Consistency Information Periodical Update was enabled.")\n
+    portal_status_message += N_("Consistency Check information will be periodically updated.")\n
 \n
 form_id = context.REQUEST.get("form_id", "")\n
 \n
