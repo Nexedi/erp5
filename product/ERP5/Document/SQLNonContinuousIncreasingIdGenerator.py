@@ -282,3 +282,27 @@ class SQLNonContinuousIncreasingIdGenerator(IdGenerator):
     portal.IdTool_zDropTable()
     portal.IdTool_zCreateEmptyTable()
     self._updateSqlTable()
+
+  security.declareProtected(Permissions.ModifyPortalContent,
+       'updateLastMaxIdDictFromTable')
+  def updateLastMaxIdDictFromTable(self):
+    """
+      Update the Persistent id_dict from portal_ids table.
+
+      Warning: IdToool_zGetValueList ZSQL method retrieve all the records of
+      portal_ids table. So this method neither does not scale well if you have
+      millions id_group.
+    """
+    portal = self.getPortalObject()
+    get_value_list = portal.IdTool_zGetValueList
+    new_id_dict = dict()
+    for line in get_value_list().dictionaries():
+      id_group = line['id_group']
+      last_id = line['last_id']
+      if isinstance(last_id, int) or isinstance(last_id, long):
+        new_id_dict[id_group] = ScalarMaxConflictResolver(last_id)
+      else:
+        raise TypeError, 'the value in the dictionary given is not a number'
+    if self.last_max_id_dict is None:
+      self.last_max_id_dict = PersistentMapping()
+    self.last_max_id_dict.update(new_id_dict)
