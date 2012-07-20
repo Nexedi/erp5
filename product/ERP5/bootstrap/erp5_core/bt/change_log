@@ -1,3 +1,6 @@
+2012-07-20 tatuya
+* Set max_row 0 on IdTool_zGetValueList so that we can get all the records of portal_ids table when there are more than 1000 id_group.
+
 2012-03-07 arnaud.fontaine
 * Allow to choose preferred source code editor in Preference view.
 * Use source code editor defined in Preference for Component_view.
