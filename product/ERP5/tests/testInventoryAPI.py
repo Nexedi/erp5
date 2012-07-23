@@ -2742,6 +2742,7 @@ class TestInventoryDocument(InventoryAPITestCase):
                                          optimisation__=False,
                                          mirror_uid=self.mirror_node.getUid())])
 
+  @expectedFailure
   def test_MultipleSectionAndFullInventory(self):
     """Make sure that getInventoryList works in the situation which
     two sections use the same node and one section has full inventory for
