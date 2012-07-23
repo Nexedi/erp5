@@ -45,6 +45,7 @@ from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
 from Products.DCWorkflow.DCWorkflow import ValidationFailed
 from Products.ERP5Type.Base import _aq_reset
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 
 class InventoryAPITestCase(ERP5TypeTestCase):
   """Base class for Inventory API Tests {{{
@@ -132,6 +133,8 @@ class InventoryAPITestCase(ERP5TypeTestCase):
                     self.folder.getId() ]:
       folder = self.portal[module]
       folder.manage_delObjects(list(folder.objectIds()))
+    self.portal.portal_skins.custom.manage_delObjects(list(self.portal.portal_skins.custom.objectIds()))
+
     self.tic()
 
   def login(self, quiet=0, run=1):
@@ -2738,6 +2741,125 @@ class TestInventoryDocument(InventoryAPITestCase):
                   [x.path for x in self.resource.getInventoryList(
                                          optimisation__=False,
                                          mirror_uid=self.mirror_node.getUid())])
+
+  def test_MultipleSectionAndFullInventory(self):
+    """Make sure that getInventoryList works in the situation which
+    two sections use the same node and one section has full inventory for
+    the node.
+    """
+    # In this test we do not need doucments made by afterSetUp.
+    self.portal.inventory_module.manage_delObjects(list(self.portal.inventory_module.objectIds()))
+    self.folder.manage_delObjects(list(self.folder.objectIds()))
+
+    self.commit()
+    self.tic()
+
+    createZODBPythonScript(self.portal.portal_skins.custom,
+                           'Inventory_getDefaultInventoryCalculationList', '',
+'''return ({
+'inventory_params':{
+ 'section_uid':context.getDestinationSectionUid(),
+ 'node_uid':context.getDestinationUid(),
+ 'group_by_variation':1,
+ 'group_by_resource':1},
+'list_method':'getMovementList',
+'first_level':({'key':'resource_relative_url',
+                'getter':'getResource',
+                'setter':('appendToCategoryList', 'resource')},
+               {'key':'variation_text',
+                'getter':'getVariationText',
+                'setter':'splitAndExtendToCategoryList'},
+               ),
+},)
+''')
+
+    self.commit()
+
+    getCurrentInventoryList = self.getSimulationTool().getCurrentInventoryList
+
+    # Add movements for section
+    self._makeMovement(source_section_value=None,
+                       source_value=None,
+                       destination_section_value=self.section,
+                       destination_value=self.node,
+                       start_date=DateTime('2012/07/18 00:00:00 GMT+9'),
+                       simulation_state='delivered',
+                       resource_value=self.resource,
+                       quantity=1)
+    self._makeMovement(source_section_value=None,
+                       source_value=None,
+                       destination_section_value=self.section,
+                       destination_value=self.node,
+                       start_date=DateTime('2012/07/21 00:00:00 GMT+9'),
+                       simulation_state='delivered',
+                       resource_value=self.resource,
+                       quantity=2)
+
+    # Add movemnets for other section
+    self._makeMovement(source_section_value=None,
+                       source_value=None,
+                       destination_section_value=self.other_section,
+                       destination_value=self.node,
+                       start_date=DateTime('2012/07/19 00:00:00 GMT+9'),
+                       simulation_state='delivered',
+                       resource_value=self.resource,
+                       quantity=3)
+    self._makeMovement(source_section_value=None,
+                       source_value=None,
+                       destination_section_value=self.other_section,
+                       destination_value=self.node,
+                       start_date=DateTime('2012/07/20 00:00:00 GMT+9'),
+                       simulation_state='delivered',
+                       resource_value=self.resource,
+                       quantity=4)
+
+    self.commit()
+    self.tic()
+
+    # Check inventory
+    result = {}
+    for brain in getCurrentInventoryList(node_uid=self.node.getUid(),
+                                         group_by_resource=1,
+                                         group_by_node=1,
+                                         group_by_section=1):
+      key = (brain.section_uid, brain.node_uid, brain.resource_uid)
+      if not key in result:
+        result[key] = 0
+      result[key] = result[key] + brain.inventory
+
+    self.assertEqual(result,
+                     {(self.section.getUid(), self.node.getUid(), self.resource.getUid()):3,
+                      (self.other_section.getUid(), self.node.getUid(), self.resource.getUid()):7})
+
+    # Add full inventory for section, not for other section
+    full_inventory1 = self.portal.inventory_module.newContent(portal_type='Inventory')
+    full_inventory1.edit(destination_section_value=self.section,
+                         destination_value=self.node,
+                         full_inventory=1,
+                         start_date=DateTime('2012/07/20 00:00:00 GMT+9'))
+    line = full_inventory1.newContent(portal_type='Inventory Line')
+    line.setResourceValue(self.resource)
+    line.setQuantity(100)
+    full_inventory1.deliver()
+
+    self.commit()
+    self.tic()
+
+    # Check inventory again. This time, full inventory should change
+    # section's inventory. It should not change other section's inventory.
+    result = {}
+    for brain in getCurrentInventoryList(node_uid=self.node.getUid(),
+                                         group_by_resource=1,
+                                         group_by_node=1,
+                                         group_by_section=1):
+      key = (brain.section_uid, brain.node_uid, brain.resource_uid)
+      if not key in result:
+        result[key] = 0
+      result[key] = result[key] + brain.inventory
+
+    self.assertEqual(result,
+                     {(self.section.getUid(), self.node.getUid(), self.resource.getUid()):102,
+                      (self.other_section.getUid(), self.node.getUid(), self.resource.getUid()):7})
 
 
 class BaseTestUnitConversion(InventoryAPITestCase):
