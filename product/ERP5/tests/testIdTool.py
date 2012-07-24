@@ -31,6 +31,7 @@
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from _mysql_exceptions import ProgrammingError
 
 class TestIdTool(ERP5TypeTestCase):
@@ -329,6 +330,61 @@ class TestIdTool(ERP5TypeTestCase):
     # value
     id_dict = self.getLastGenerator(id_generator).exportGeneratorIdDict()
     self.assertEquals(id_dict['07'], 6)
+
+  def test_08_updateLastMaxIdDictFromTable(self):
+    """
+     Check that it can update id_dict persistent object from portal_ids table.
+     Also, check that it can update more than 1000 keys.
+    """
+    id_generator = 'test_application_sql'
+    sql_generator = self.getLastGenerator(id_generator)
+    sql_generator.setStoredInZodb(False)
+    self.assertEquals(0, self.id_tool.generateNewId(id_generator=id_generator,
+                                                    id_group='A-08'))
+    self.assertEquals(1, self.id_tool.generateNewId(id_generator=id_generator,
+                                                    id_group='A-08'))
+    self.assertEquals(2, self.id_tool.generateNewId(id_generator=id_generator,
+                                                    id_group='A-08'))
+    self.assertEquals(0, self.id_tool.generateNewId(id_generator=id_generator,
+                                                    id_group='B-08'))
+    self.assertEquals(1, self.id_tool.generateNewId(id_generator=id_generator,
+                                                    id_group='B-08'))
+
+    A_LOT_OF_KEY = 2500
+    var_id = 'C-%04d'
+    for x in xrange(A_LOT_OF_KEY):
+      self.assertEquals(0, self.id_tool.generateNewId(id_generator=id_generator,
+                                                      id_group=var_id % x))
+
+    # test before update
+    self.assertEquals(None, sql_generator.last_max_id_dict.get('A-08'))
+    self.assertEquals(None, sql_generator.last_max_id_dict.get('B-08'))
+    for x in xrange(A_LOT_OF_KEY):
+      self.assertEquals(None, sql_generator.last_max_id_dict.get(var_id % x))
+    createZODBPythonScript(
+      self.portal.portal_skins.custom,
+      'IdTool_updateLastMaxId',
+      'last_id_group=None',
+r"""
+id_tool = context.getPortalObject().portal_ids
+sql_generator = id_tool.searchFolder(
+  reference='test_sql_non_continuous_increasing')[0].getLatestVersionValue()
+
+new_last_id_group = sql_generator.updateLastMaxIdDictFromTable(last_id_group)
+if new_last_id_group is not None:
+  getattr(context.activate(), script.id)(new_last_id_group)
+""")
+
+    # update dict from sql with activities
+    sql_generator.IdTool_updateLastMaxId()
+
+    self.tic()
+
+    # asserts
+    self.assertEquals(2, sql_generator.last_max_id_dict['A-08'].value)
+    self.assertEquals(1, sql_generator.last_max_id_dict['B-08'].value)
+    for x in xrange(A_LOT_OF_KEY):
+      self.assertEquals(0, sql_generator.last_max_id_dict[var_id % x].value)
 
 def test_suite():
   suite = unittest.TestSuite()
