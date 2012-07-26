@@ -34,7 +34,6 @@ from AccessControl import Unauthorized
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.Sequence import Step, Sequence, SequenceList
 from zLOG import LOG
-import transaction
 import random
 import email
 from email.header import decode_header, make_header
@@ -80,7 +79,7 @@ class TestEGovMixin(SecurityTestCase):
       for idx, step in enumerate(self._step_list):
         step.play(context, sequence=self, quiet=quiet)
         # commit transaction after each step
-        transaction.commit()
+        self.commit()
   Sequence.play = play
 
   def play(self, context, sequence=None, quiet=0):
@@ -139,7 +138,6 @@ class TestEGovMixin(SecurityTestCase):
     self.portal.__class__.DeclarationTVA_zGetSIGTASInformation \
         = lambda x,**kw: []
 
-    transaction.commit()
     self.tic()
     
   def beforeTearDown(self):
@@ -148,7 +146,6 @@ class TestEGovMixin(SecurityTestCase):
       # we want to keep some IDs
       module.manage_delObjects([x for x in module.objectIds()
                                 if x not in ('EUR',)])
-    transaction.commit()
     self.tic()
 
   def getUserFolder(self) :
@@ -200,7 +197,6 @@ class TestEGovMixin(SecurityTestCase):
           'group/dgid/di/csf/bf')
 
       # make this available to catalog
-      transaction.commit()
       self.tic()
 
   def createOneOrganisation(self, username, role=None, function=None, 
@@ -232,7 +228,6 @@ class TestEGovMixin(SecurityTestCase):
           role='entreprise/siege')
 
       # make this available to catalog
-      transaction.commit()
       self.tic()
 
   def checkRights(self, object_list, security_mapping, username):

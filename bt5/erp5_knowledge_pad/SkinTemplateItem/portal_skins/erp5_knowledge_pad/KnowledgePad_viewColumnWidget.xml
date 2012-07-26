@@ -56,6 +56,7 @@
         tal:define="box python: getattr(here, box_id);\n
                     box_relative_url box/getRelativeUrl;\n
                     box_dom_id python: \'%s\' %box_relative_url.replace(\'/\', \'_\');\n
+                    box_class python: (\'%s %s\' % (\'block\', box.getGroup() or \'\')).strip;\n
                     view_form_dom_id python: \'%s_content\' %box_dom_id;\n
                     edit_form_dom_id python: \'%s_edit_form\' %box_dom_id;\n
                     gadget_title_dom_id python: \'%s_gadget_title\' %box_dom_id;\n
@@ -71,13 +72,15 @@
 \n
     <!-- Render gadget as hidden one -->\n
     <div tal:condition="not: is_gadget_visible"\n
-         tal:attributes="id box_dom_id"\n
+         tal:attributes="id box_dom_id;\n
+                         class box_class"\n
          class="block invisible-gadget"></div>\n
 \n
     <!-- Show only public gadgets -->\n
     <div class="block" \n
          tal:condition="is_gadget_visible"\n
-         tal:attributes="id box_dom_id">\n
+         tal:attributes="id box_dom_id;\n
+                         class box_class">\n
 \n
       <h3 class="handle">\n
         <span class="handle">\n

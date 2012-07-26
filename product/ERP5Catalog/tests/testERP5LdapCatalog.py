@@ -36,7 +36,6 @@ from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 
-import transaction
 
 class TestERP5LdapCatalog(ERP5TypeTestCase):
   """
@@ -79,7 +78,7 @@ class TestERP5LdapCatalog(ERP5TypeTestCase):
             self.bind_as,
             self.password,
             1)
-    transaction.commit()
+    self.commit()
     # make sure there is no message any more
     self.tic()
 
@@ -89,7 +88,6 @@ class TestERP5LdapCatalog(ERP5TypeTestCase):
                     self.getCategoryTool().region,
                     self.getCategoryTool().group ]:
       module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def test_01_HasEverything(self):
@@ -112,7 +110,6 @@ class TestERP5LdapCatalog(ERP5TypeTestCase):
                                         reference='foobar%s' % i,
                                         password='secret%s' % i,
                                         default_email_text='foo%s@bar.com' % i)
-    transaction.commit()
     self.tic()
     #Check Indexation
     for p in self.getPersonModule().contentValues():
@@ -129,7 +126,6 @@ class TestERP5LdapCatalog(ERP5TypeTestCase):
       self.assertEqual(p.getPassword(), result_ldap.userPassword[0])
     #Clear Catalog
     self.getPortal().portal_catalog.erp5_mysql_innodb.manage_catalogClear()
-    transaction.commit()
     self.tic()
     #Check Catalog is cleared
     self.assertEqual(len(self.getPortal().z_ldap_search_person_list()), 0)

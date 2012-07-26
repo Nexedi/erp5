@@ -402,7 +402,7 @@ class TestERP5BankingCheckbookReception(TestERP5BankingMixin):
     self.assertEqual(state, 'confirmed')
     self.workflow_tool.doActionFor(self.checkbook_reception, 'deliver_action', wf_id='checkbook_reception_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of cash sorting
     state = self.checkbook_reception.getSimulationState()
     # check that state is delivered

@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return \'test_packing_list_root_simulation_rule\'\n
+            <value> <string>return \'test_delivery_root_simulation_rule\'\n
 </string> </value>
         </item>
         <item>

@@ -1,6 +1,2 @@
-Sale Invoice | -invoice_workflow
-Sale Invoice | test_invoice_workflow
-Sale Order | -order_workflow
-Sale Order | test_order_workflow
-Sale Packing List | -packing_list_workflow
-Sale Packing List | test_packing_list_workflow
+Sale Order | test_simulation_performance_interaction_workflow
+Sale Packing List | test_simulation_performance_interaction_workflow

@@ -51,6 +51,8 @@ from OFS.Image import Image as OFSImage
 from OFS.Image import getImageInfo
 from zLOG import LOG, WARNING
 
+from Products.ERP5Type.ImageUtil import transformUrlToDataURI
+
 # import mixin
 from Products.ERP5.mixin.text_convertable import TextConvertableMixin
 
@@ -262,6 +264,11 @@ class Image(TextConvertableMixin, File, OFSImage):
     """
     Implementation of conversion for Image files
     """
+    if format == 'svg' and self.getContentType()=='image/svg+xml':
+      # SVG format is a textual data which can be returned as it is
+      # so client (browser) can draw an image out of it
+      return self.getContentType(), self.getData()
+
     if format in VALID_TEXT_FORMAT_LIST:
       try:
         return self.getConversion(format=format)
@@ -330,6 +337,10 @@ class Image(TextConvertableMixin, File, OFSImage):
     else:
       parameter_list.append('-')
 
+    data = str(self.getData())
+    if self.getContentType() == "image/svg+xml":
+      data = transformUrlToDataURI(data)
+
     process = subprocess.Popen(parameter_list,
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
@@ -338,7 +349,7 @@ class Image(TextConvertableMixin, File, OFSImage):
     try:
         # XXX: The only portable way is to pass what stdin.write can accept,
         #      which is a string for PIPE.
-        image, err = process.communicate(str(self.getData()))
+        image, err = process.communicate(data)
     finally:
         del process
     if image:

@@ -1,3 +1,9 @@
+2012-07-17 Kazuhiko
+* do not use birthday property in Credential Request or Credential Update, because its storage is start_date and start_date has different meaning in these portal types.
+
+2012-04-27 Kazuhiko
+* use document_reference in Credential Recovery as the reference of nofitication message if exists.
+
 2010-05-27 fabien
 * implement Credential Request, add class, improve forms, ...
 * Rename credential_question base category to question and add sub categories.

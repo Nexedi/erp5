@@ -27,7 +27,6 @@
 #
 ##############################################################################
 
-import transaction
 import unittest
 
 from Products.ERP5Type.tests.testERP5Type import PropertySheetTestCase
@@ -69,7 +68,7 @@ class TestConstraint(PropertySheetTestCase):
 
   def beforeTearDown(self):
     self.login()
-    transaction.abort()
+    self.abort()
     module = self.portal.organisation_module
     module.manage_delObjects(list(module.objectIds()))
     super(TestConstraint, self).beforeTearDown()
@@ -100,7 +99,6 @@ class TestConstraint(PropertySheetTestCase):
     """
     module = self.portal.getDefaultModule(self.object_portal_type)
     obj = module.newContent(portal_type=self.object_portal_type)
-    transaction.commit()
     self.tic()
     return obj
 
@@ -1112,7 +1110,6 @@ class TestConstraint(PropertySheetTestCase):
     self.assertEqual(1, len(message_list))
     self.assertNotEqual('', message_list[0].getTranslatedMessage())
     related_obj.setGroupValue(obj)
-    transaction.commit()
     self.tic()
     self.assertEqual(0, len(constraint.checkConsistency(obj)))
 
@@ -1269,7 +1266,7 @@ class TestConstraint(PropertySheetTestCase):
     ti = self.getTypesTool().getTypeInfo(obj)
     allowed_types = ti.getTypeAllowedContentTypeList()
     ti._setTypeAllowedContentTypeList(allowed_types + ['Organisation'])
-    transaction.commit()
+    self.commit()
     try:
       self.assertEqual(sorted([
         'Property default_organisation_title was migrated from local properties.']),

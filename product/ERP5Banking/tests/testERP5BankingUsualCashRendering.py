@@ -207,7 +207,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
         description='test',
         destination=self.auxiliaire.getRelativeUrl(), source_total_asset_price=52400.0)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check we have only one vault transfer
     self.assertEqual(len(self.usual_cash_rendering_module.objectValues()), 1)
     # get the vault transfer document
@@ -231,7 +231,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_10000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is only one line created
     self.assertEqual(len(self.usual_cash_rendering.objectValues()), 1)
     # get the vault transfer line
@@ -293,7 +293,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_200)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check the number of lines (line1 + line2)
     self.assertEqual(len(self.usual_cash_rendering.objectValues()), 2)
     # get the second vault transfer line
@@ -334,7 +334,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
             ('emission_letter', 'cash_status', 'variation'), ('emission_letter/p', 'cash_status/valid') + self.variation_list,
             self.quantity_5000)
     # execute tic
-    self.stepTic()
+    self.tic()
     # Check number of vault transfer lines (line1 + line2 +invalid_line)
     self.assertEqual(len(self.usual_cash_rendering.objectValues()), 3)
     # Check quantity, same as checkTotal + banknote of 500: 11 for 1992 and 13 for 2003
@@ -353,7 +353,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
     # try to do the workflow action "plan_action', cath the exception ValidationFailed raised by workflow transition
     self.assertRaises(ValidationFailed, self.workflow_tool.doActionFor, self.usual_cash_rendering, 'plan_action', wf_id='usual_cash_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of the usual_cash_rendering
     state = self.usual_cash_rendering.getSimulationState()
     # check the state is draft
@@ -394,7 +394,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.usual_cash_rendering, 'plan_action', wf_id='usual_cash_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.usual_cash_rendering.getSimulationState()
     # check state is planned
@@ -413,7 +413,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
     # do the Workflow action
     self.workflow_tool.doActionFor(self.usual_cash_rendering, 'order_action', wf_id='usual_cash_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state
     state = self.usual_cash_rendering.getSimulationState()
     # check state is ordered
@@ -461,7 +461,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.usual_cash_rendering, 'deliver_action', wf_id='usual_cash_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of usual_cash_rendering
     state = self.usual_cash_rendering.getSimulationState()
     # check that state is delivered
@@ -479,7 +479,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
     # do the workflow transition "deliver_action"
     self.workflow_tool.doActionFor(self.usual_cash_rendering, 'deliver_action', wf_id='usual_cash_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of usual_cash_rendering
     state = self.usual_cash_rendering.getSimulationState()
     # check that state is delivered
@@ -497,7 +497,7 @@ class TestERP5BankingUsualCashRendering(TestERP5BankingMixin):
 
     self.workflow_tool.doActionFor(self.usual_cash_rendering, 'order_to_deliver_action', wf_id='usual_cash_rendering_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of usual_cash_rendering
     state = self.usual_cash_rendering.getSimulationState()
     # check that state is delivered

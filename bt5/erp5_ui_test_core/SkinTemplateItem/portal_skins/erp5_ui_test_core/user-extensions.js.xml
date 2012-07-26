@@ -8,7 +8,7 @@
       <dictionary>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts20417149.43</string> </value>
+            <value> <string>ts37194719.51</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -71,7 +71,6 @@ Selenium.prototype.assertPortalStatusMessage = function(text) {\n
     Assert.matches(text, actualValue);\n
 };\n
 \n
-\n
 Selenium.prototype.doType = function(locator, newText) {\n
     if (typeof(netscape) != "undefined") {\n
       // on firefox, we enable privilege to upload file in javascript.\n
@@ -94,7 +93,17 @@ Selenium.prototype.doPhantomRender = function(filename) {\n
         page.render(filename);\n
     }\n
 };\n
-
+\n
+Selenium.prototype.assertElementPositionRangeTop = function(locator, range){\n
+    var positionTop = parseFloat(this.getElementPositionTop(locator));\n
+    /* example of range 450..455 */\n
+    var rangeList = range.split("..");\n
+    var minimumPositionTop = parseFloat(rangeList[0]);\n
+    var maximumPositionTop = parseFloat(rangeList[1]);\n
+    if (positionTop < minimumPositionTop || positionTop > maximumPositionTop ){\n
+      Assert.fail(positionTop + " is not between " + minimumPositionTop + " and " + maximumPositionTop);\n
+    };\n
+};
 
 ]]></string> </value>
         </item>
@@ -104,7 +113,7 @@ Selenium.prototype.doPhantomRender = function(filename) {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>2422</int> </value>
+            <value> <int>2949</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

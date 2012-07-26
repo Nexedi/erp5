@@ -28,7 +28,6 @@
 
 from DateTime import DateTime
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import transaction
 
 def isSameSet(a, b):
   for i in a:
@@ -154,7 +153,6 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
 
     if self.PAS_installed:
       # reindexing is required for the security to work
-      transaction.commit()
       self.tic()
 
 
@@ -311,7 +309,8 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     #currency_list = (('EUR', 'Euro', 1/650., 'USD'), ('USD', 'Dollar', 650., 'EUR'))
     # first create currency
     for currency_id, title, base_price, cell_price, price_currency in currency_list:
-      currency = self.getCurrencyModule().newContent(id=currency_id, title=title, reference=currency_id)
+      self._maybeNewContent(self.getCurrencyModule(), id=currency_id,
+        title=title, reference=currency_id)
 
     if only_currency:
       return
@@ -394,38 +393,38 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # Now create required category for banknotes and coin
     self.cash_status_base_category = getattr(self.category_tool, 'cash_status')
     # add the category valid in cash_status which define status of banknotes and coin
-    self.cash_status_valid = self.cash_status_base_category.newContent(id='valid', portal_type='Category')
-    self.cash_status_to_sort = self.cash_status_base_category.newContent(id='to_sort', portal_type='Category')
-    self.cash_status_cancelled = self.cash_status_base_category.newContent(id='cancelled', portal_type='Category')
-    self.cash_status_not_defined = self.cash_status_base_category.newContent(id='not_defined', portal_type='Category')
-    self.cash_status_mutilated = self.cash_status_base_category.newContent(id='mutilated', portal_type='Category')
-    self.cash_status_retired = self.cash_status_base_category.newContent(id='retired', portal_type='Category')
-    self.cash_status_new_not_emitted = self.cash_status_base_category.newContent(id='new_not_emitted', portal_type='Category')
-    self.cash_status_mixed = self.cash_status_base_category.newContent(id='mixed', portal_type='Category')
+    self.cash_status_valid = self._maybeNewContent(self.cash_status_base_category, id='valid', portal_type='Category')
+    self.cash_status_to_sort = self._maybeNewContent(self.cash_status_base_category, id='to_sort', portal_type='Category')
+    self.cash_status_cancelled = self._maybeNewContent(self.cash_status_base_category, id='cancelled', portal_type='Category')
+    self.cash_status_not_defined = self._maybeNewContent(self.cash_status_base_category, id='not_defined', portal_type='Category')
+    self.cash_status_mutilated = self._maybeNewContent(self.cash_status_base_category, id='mutilated', portal_type='Category')
+    self.cash_status_retired = self._maybeNewContent(self.cash_status_base_category, id='retired', portal_type='Category')
+    self.cash_status_new_not_emitted = self._maybeNewContent(self.cash_status_base_category, id='new_not_emitted', portal_type='Category')
+    self.cash_status_mixed = self._maybeNewContent(self.cash_status_base_category, id='mixed', portal_type='Category')
 
     self.emission_letter_base_category = getattr(self.category_tool, 'emission_letter')
     # add the category k in emission letter that will be used fo banknotes and coins
-    self.emission_letter_p = self.emission_letter_base_category.newContent(id='p', portal_type='Category')
-    self.emission_letter_s = self.emission_letter_base_category.newContent(id='s', portal_type='Category')
-    self.emission_letter_b = self.emission_letter_base_category.newContent(id='b', portal_type='Category')
-    self.emission_letter_k = self.emission_letter_base_category.newContent(id='k', portal_type='Category')
-    self.emission_letter_mixed = self.emission_letter_base_category.newContent(id='mixed', portal_type='Category')
-    self.emission_letter_not_defined = self.emission_letter_base_category.newContent(id='not_defined', portal_type='Category')
+    self.emission_letter_p = self._maybeNewContent(self.emission_letter_base_category, id='p', portal_type='Category')
+    self.emission_letter_s = self._maybeNewContent(self.emission_letter_base_category, id='s', portal_type='Category')
+    self.emission_letter_b = self._maybeNewContent(self.emission_letter_base_category, id='b', portal_type='Category')
+    self.emission_letter_k = self._maybeNewContent(self.emission_letter_base_category, id='k', portal_type='Category')
+    self.emission_letter_mixed = self._maybeNewContent(self.emission_letter_base_category, id='mixed', portal_type='Category')
+    self.emission_letter_not_defined = self._maybeNewContent(self.emission_letter_base_category, id='not_defined', portal_type='Category')
 
     self.variation_base_category = getattr(self.category_tool, 'variation')
     # add the category 1992 in variation
-    self.variation_1992 = self.variation_base_category.newContent(id='1992', portal_type='Category')
+    self.variation_1992 = self._maybeNewContent(self.variation_base_category, id='1992', portal_type='Category')
     # add the category 2003 in variation
-    self.variation_2003 = self.variation_base_category.newContent(id='2003', portal_type='Category')
+    self.variation_2003 = self._maybeNewContent(self.variation_base_category, id='2003', portal_type='Category')
     # add the category not_defined in variation
-    self.variation_not_defined = self.variation_base_category.newContent(id='not_defined',
+    self.variation_not_defined = self._maybeNewContent(self.variation_base_category, id='not_defined',
                                       portal_type='Category')
 
     # Now create required category for region and coin
     self.region_base_category = getattr(self.category_tool, 'region')
     # add the category valid in cash_status which define status of banknotes and coin
-    self.region_france = self.region_base_category.newContent(id='france', title="France", portal_type='Category')
-    self.region_spain = self.region_base_category.newContent(id='spain', title="Spain", portal_type='Category')
+    self.region_france = self._maybeNewContent(self.region_base_category, id='france', title="France", portal_type='Category')
+    self.region_spain = self._maybeNewContent(self.region_base_category, id='spain', title="Spain", portal_type='Category')
 
     # Create Resources Document (Banknotes & Coins)
     # get the currency cash module
@@ -486,6 +485,13 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
          price_currency_value=self.currency_2, variation_list=('not_defined', ),
          quantity_unit_value=self.unit)
 
+  def _maybeNewContent(self, container, id, **kw):
+    try:
+      result = container[id]
+    except KeyError:
+      result = container.newContent(id=id, **kw)
+    return result
+
   def createFunctionGroupSiteCategory(self, no_site=0, site_list=None):
     """
     Create site group function category that can be used for security
@@ -495,55 +501,55 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
 
     # add category unit in quantity_unit which is the unit that will be used for banknotes and coins
     self.variation_base_category = getattr(self.category_tool, 'quantity_unit')
-    self.unit = self.variation_base_category.newContent(id='unit', title='Unit')
+    self.unit = self._maybeNewContent(self.variation_base_category, id='unit', title='Unit')
 
-    self.category_tool.role.newContent(id='internal', portal_type='Category')
+    self._maybeNewContent(self.category_tool.role, id='internal', portal_type='Category')
 
     # add category for currency_exchange_type
     self.currency_exchange_type = getattr(self.category_tool, 'currency_exchange_type')
-    self.currency_exchange_type.newContent(id='sale')
-    self.currency_exchange_type.newContent(id='purchase')
-    self.currency_exchange_type.newContent(id='transfer')
+    self._maybeNewContent(self.currency_exchange_type, id='sale')
+    self._maybeNewContent(self.currency_exchange_type, id='purchase')
+    self._maybeNewContent(self.currency_exchange_type, id='transfer')
 
     # get the base category function
     self.function_base_category = getattr(self.category_tool, 'function')
     # add category banking in function which will hold all functions neccessary in a bank (at least for this unit test)
-    self.banking = self.function_base_category.newContent(id='banking', portal_type='Category', codification='BNK')
-    self.caissier_principal = self.banking.newContent(id='caissier_principal', portal_type='Category', codification='CCP')
-    self.controleur_caisse = self.banking.newContent(id='controleur_caisse', portal_type='Category', codification='CCT')
-    self.void_function = self.banking.newContent(id='void_function', portal_type='Category', codification='VOID')
-    self.gestionnaire_caisse_courante = self.banking.newContent(id='gestionnaire_caisse_courante', portal_type='Category', codification='CCO')
-    self.gestionnaire_caveau = self.banking.newContent(id='gestionnaire_caveau', portal_type='Category', codification='CCV')
-    self.caissier_particulier = self.banking.newContent(id='caissier_particulier', portal_type='Category', codification='CGU')
-    self.controleur_caisse_courante = self.banking.newContent(id='controleur_caisse_courante', portal_type='Category', codification='CCC')
-    self.controleur_caveau = self.banking.newContent(id='controleur_caveau', portal_type='Category', codification='CCA')
-    self.comptable = self.banking.newContent(id='comptable', portal_type='Category', codification='FXF')
-    self.commis_comptable = self.banking.newContent(id='commis_comptable', portal_type='Category', codification='CBM')
-    self.commis_caisse = self.banking.newContent(id='commis_caisse', portal_type='Category', codification='CCM')
-    self.chef_section_comptable = self.banking.newContent(id='chef_section_comptable', portal_type='Category', codification='CSB')
-    self.chef_comptable = self.banking.newContent(id='chef_comptable', portal_type='Category', codification='CCB')
-    self.chef_de_tri = self.banking.newContent(id='chef_de_tri', portal_type='Category', codification='CTR')
-    self.chef_caisse = self.banking.newContent(id='chef_caisse', portal_type='Category', codification='CCP')
-    self.chef_section = self.banking.newContent(id='chef_section', portal_type='Category', codification='FXS')
-    self.chef_section_financier = self.banking.newContent(id='chef_section_financier', portal_type='Category', codification='FXA')
-    self.financier_a = self.banking.newContent(id='financier_a', portal_type='Category', codification='FNA')
-    self.financier_b = self.banking.newContent(id='financier_b', portal_type='Category', codification='FNB')
-    self.chef_financier = self.banking.newContent(id='chef_financier', portal_type='Category', codification='FCF')
-    self.admin_local = self.banking.newContent(id='administrateur_local', portal_type='Category', codification='ADL')
-    self.agent_saisie_sref = self.banking.newContent(id='agent_saisie_sref', portal_type='Category', codification='SSREF')
-    self.chef_sref = self.banking.newContent(id='chef_sref', portal_type='Category', codification='CSREF')
-    self.analyste_sref = self.banking.newContent(id='analyste_sref', portal_type='Category', codification='ASREF')
-    self.gestionnaire_devise_a = self.banking.newContent(id='gestionnaire_cours_devise_a', portal_type='Category', codification='GCA')
-    self.gestionnaire_devise_b = self.banking.newContent(id='gestionnaire_cours_devise_b', portal_type='Category', codification='GCB')
-    self.comptable_inter_site = self.banking.newContent(id='comptable_inter_site', portal_type='Category', codification='FXFIS')
+    self.banking = self._maybeNewContent(self.function_base_category, id='banking', portal_type='Category', codification='BNK')
+    self.caissier_principal = self._maybeNewContent(self.banking, id='caissier_principal', portal_type='Category', codification='CCP')
+    self.controleur_caisse = self._maybeNewContent(self.banking, id='controleur_caisse', portal_type='Category', codification='CCT')
+    self.void_function = self._maybeNewContent(self.banking, id='void_function', portal_type='Category', codification='VOID')
+    self.gestionnaire_caisse_courante = self._maybeNewContent(self.banking, id='gestionnaire_caisse_courante', portal_type='Category', codification='CCO')
+    self.gestionnaire_caveau = self._maybeNewContent(self.banking, id='gestionnaire_caveau', portal_type='Category', codification='CCV')
+    self.caissier_particulier = self._maybeNewContent(self.banking, id='caissier_particulier', portal_type='Category', codification='CGU')
+    self.controleur_caisse_courante = self._maybeNewContent(self.banking, id='controleur_caisse_courante', portal_type='Category', codification='CCC')
+    self.controleur_caveau = self._maybeNewContent(self.banking, id='controleur_caveau', portal_type='Category', codification='CCA')
+    self.comptable = self._maybeNewContent(self.banking, id='comptable', portal_type='Category', codification='FXF')
+    self.commis_comptable = self._maybeNewContent(self.banking, id='commis_comptable', portal_type='Category', codification='CBM')
+    self.commis_caisse = self._maybeNewContent(self.banking, id='commis_caisse', portal_type='Category', codification='CCM')
+    self.chef_section_comptable = self._maybeNewContent(self.banking, id='chef_section_comptable', portal_type='Category', codification='CSB')
+    self.chef_comptable = self._maybeNewContent(self.banking, id='chef_comptable', portal_type='Category', codification='CCB')
+    self.chef_de_tri = self._maybeNewContent(self.banking, id='chef_de_tri', portal_type='Category', codification='CTR')
+    self.chef_caisse = self._maybeNewContent(self.banking, id='chef_caisse', portal_type='Category', codification='CCP')
+    self.chef_section = self._maybeNewContent(self.banking, id='chef_section', portal_type='Category', codification='FXS')
+    self.chef_section_financier = self._maybeNewContent(self.banking, id='chef_section_financier', portal_type='Category', codification='FXA')
+    self.financier_a = self._maybeNewContent(self.banking, id='financier_a', portal_type='Category', codification='FNA')
+    self.financier_b = self._maybeNewContent(self.banking, id='financier_b', portal_type='Category', codification='FNB')
+    self.chef_financier = self._maybeNewContent(self.banking, id='chef_financier', portal_type='Category', codification='FCF')
+    self.admin_local = self._maybeNewContent(self.banking, id='administrateur_local', portal_type='Category', codification='ADL')
+    self.agent_saisie_sref = self._maybeNewContent(self.banking, id='agent_saisie_sref', portal_type='Category', codification='SSREF')
+    self.chef_sref = self._maybeNewContent(self.banking, id='chef_sref', portal_type='Category', codification='CSREF')
+    self.analyste_sref = self._maybeNewContent(self.banking, id='analyste_sref', portal_type='Category', codification='ASREF')
+    self.gestionnaire_devise_a = self._maybeNewContent(self.banking, id='gestionnaire_cours_devise_a', portal_type='Category', codification='GCA')
+    self.gestionnaire_devise_b = self._maybeNewContent(self.banking, id='gestionnaire_cours_devise_b', portal_type='Category', codification='GCB')
+    self.comptable_inter_site = self._maybeNewContent(self.banking, id='comptable_inter_site', portal_type='Category', codification='FXFIS')
 
     # get the base category group
     self.group_base_category = getattr(self.category_tool, 'group')
-    self.baobab_group = self.group_base_category.newContent(id='baobab', portal_type='Category', codification='BAOBAB')
+    self.baobab_group = self._maybeNewContent(self.group_base_category, id='baobab', portal_type='Category', codification='BAOBAB')
     # get the base category site
     self.site_base_category = getattr(self.category_tool, 'site')
     # add the category testsite in the category site which hold vaults situated in the bank
-    self.testsite = self.site_base_category.newContent(id='testsite', portal_type='Category', codification='TEST')
+    self.testsite = self._maybeNewContent(self.site_base_category, id='testsite', portal_type='Category', codification='TEST')
     site_reference_from_codification_dict = {
       'P10': ('FR', '000', '11111', '000000000000', '25'),
       'S10': ('SP', '000', '11111', '000000000000', '08'),
@@ -554,9 +560,9 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
       'S10': 'spain',  # madrid
       'HQ1': 'france', # main
     }
-    self.paris = self.testsite.newContent(id='paris', portal_type='Category', codification='P10',  vault_type='site')
-    self.madrid = self.testsite.newContent(id='madrid', portal_type='Category', codification='S10',  vault_type='site')
-    self.siege = self.site_base_category.newContent(id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
+    self.paris = self._maybeNewContent(self.testsite, id='paris', portal_type='Category', codification='P10',  vault_type='site')
+    self.madrid = self._maybeNewContent(self.testsite, id='madrid', portal_type='Category', codification='S10',  vault_type='site')
+    self.siege = self._maybeNewContent(self.site_base_category, id='siege', portal_type='Category', codification='HQ1',  vault_type='site')
     created_site_list = [self.paris, self.madrid, self.siege]
 
     self._createBanknotesAndCoins()
@@ -569,7 +575,7 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
             for category_id in site[2].split('/'):
               contained = getattr(container, category_id, None)
               if contained is None:
-                contained = container.newContent(id=category_id, portal_type='Category')
+                contained = self._maybeNewContent(container, id=category_id, portal_type='Category')
               container = contained
             if len(site) > 3:
               site_reference_from_codification_dict[site[1]] = site[3]
@@ -578,59 +584,64 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
           codification = site[1]
           site = site[0]
         if site not in ("paris", 'madrid', 'siege'):
-          site = container.newContent(id=site, portal_type='Category',  codification=codification, vault_type='site')
+          site = self._maybeNewContent(container, id=site, portal_type='Category',  codification=codification, vault_type='site')
           created_site_list.append(site)
 
     # Create organisation + bank account for each site category.
-    newContent = self.organisation_module.newContent
+    organisation_module = self.organisation_module
+    newContent = organisation_module.newContent
     for site in created_site_list:
       codification = site.getCodification()
-      organisation = newContent(
-        portal_type='Organisation',
-        id='site_%s' % (codification, ),
-        site=site.getRelativeUrl(),
-        region=site_region_from_codification_dict.get(codification),
-        group='baobab',
-        role='internal',
-        function='banking')
-      site_reference = site_reference_from_codification_dict.get(codification)
-      if site_reference is not None:
-        self.createBankAccount(
-          person=organisation,
-          account_id='account_%s' % (codification, ),
-          currency=self.currency_1,
-          amount=0,
-          bank_country_code=site_reference[0],
-          bank_code=site_reference[1],
-          branch=site_reference[2],
-          bank_account_number=site_reference[3],
-          bank_account_key=site_reference[4],
-        )
+      organisation_id = 'site_%s' % (codification, )
+      try:
+        organisation_module[organisation_id]
+      except KeyError:
+        organisation = newContent(
+          portal_type='Organisation',
+          id=organisation_id,
+          site=site.getRelativeUrl(),
+          region=site_region_from_codification_dict.get(codification),
+          group='baobab',
+          role='internal',
+          function='banking')
+        site_reference = site_reference_from_codification_dict.get(codification)
+        if site_reference is not None:
+          self.createBankAccount(
+            person=organisation,
+            account_id='account_%s' % (codification, ),
+            currency=self.currency_1,
+            amount=0,
+            bank_country_code=site_reference[0],
+            bank_code=site_reference[1],
+            branch=site_reference[2],
+            bank_account_number=site_reference[3],
+            bank_account_key=site_reference[4],
+          )
 
     self.vault_type_base_category = getattr(self.category_tool, 'vault_type')
-    site_vault_type = self.vault_type_base_category.newContent(id='site')
-    surface_vault_type = site_vault_type.newContent('surface')
-    bi_vault_type = surface_vault_type.newContent('banque_interne')
-    co_vault_type = surface_vault_type.newContent('caisse_courante')
-    de_co_vault_type = co_vault_type.newContent('encaisse_des_devises')
-    guichet_bi_vault_type = bi_vault_type.newContent('guichet')
-    gp_vault_type = surface_vault_type.newContent('gros_paiement')
-    guichet_gp_vault_type = gp_vault_type.newContent('guichet')
-    gv_vault_type = surface_vault_type.newContent('gros_versement')
-    guichet_gv_vault_type = gv_vault_type.newContent('guichet')
-    op_vault_type = surface_vault_type.newContent('operations_diverses')
-    guichet_op_vault_type = op_vault_type.newContent('guichet')
-    caveau_vault_type = site_vault_type.newContent('caveau')
-    auxiliaire_vault_type = caveau_vault_type.newContent('auxiliaire')
-    auxiliaire_vault_type.newContent('auxiliaire_vault_type')
-    auxiliaire_vault_type.newContent('encaisse_des_devises')
-    externe = auxiliaire_vault_type.newContent('encaisse_des_externes')
-    externe.newContent('transit')
-    caveau_vault_type.newContent('reserve')
-    serre = caveau_vault_type.newContent('serre')
-    serre.newContent('transit')
-    serre.newContent('retire')
-    salle_tri = surface_vault_type.newContent('salle_tri')
+    site_vault_type = self._maybeNewContent(self.vault_type_base_category, id='site')
+    surface_vault_type = self._maybeNewContent(site_vault_type, 'surface')
+    bi_vault_type = self._maybeNewContent(surface_vault_type, 'banque_interne')
+    co_vault_type = self._maybeNewContent(surface_vault_type, 'caisse_courante')
+    de_co_vault_type = self._maybeNewContent(co_vault_type, 'encaisse_des_devises')
+    guichet_bi_vault_type = self._maybeNewContent(bi_vault_type, 'guichet')
+    gp_vault_type = self._maybeNewContent(surface_vault_type, 'gros_paiement')
+    guichet_gp_vault_type = self._maybeNewContent(gp_vault_type, 'guichet')
+    gv_vault_type = self._maybeNewContent(surface_vault_type, 'gros_versement')
+    guichet_gv_vault_type = self._maybeNewContent(gv_vault_type, 'guichet')
+    op_vault_type = self._maybeNewContent(surface_vault_type, 'operations_diverses')
+    guichet_op_vault_type = self._maybeNewContent(op_vault_type, 'guichet')
+    caveau_vault_type = self._maybeNewContent(site_vault_type, 'caveau')
+    auxiliaire_vault_type = self._maybeNewContent(caveau_vault_type, 'auxiliaire')
+    self._maybeNewContent(auxiliaire_vault_type, 'auxiliaire_vault_type')
+    self._maybeNewContent(auxiliaire_vault_type, 'encaisse_des_devises')
+    externe = self._maybeNewContent(auxiliaire_vault_type, 'encaisse_des_externes')
+    self._maybeNewContent(externe, 'transit')
+    self._maybeNewContent(caveau_vault_type, 'reserve')
+    serre = self._maybeNewContent(caveau_vault_type, 'serre')
+    self._maybeNewContent(serre, 'transit')
+    self._maybeNewContent(serre, 'retire')
+    salle_tri = self._maybeNewContent(surface_vault_type, 'salle_tri')
       
     if not no_site:
       destination_site_list = [x.getId() for x in created_site_list]
@@ -638,12 +649,12 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
         # create bank structure for each agency
         site = c.getId()
         # surface
-        surface = c.newContent(id='surface', portal_type='Category', codification='',  vault_type='site/surface')
-        caisse_courante = surface.newContent(id='caisse_courante', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
-        caisse_courante.newContent(id='encaisse_des_billets_et_monnaies', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
-        caisse_courante.newContent(id='billets_mutiles', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
-        caisse_courante.newContent(id='billets_macules', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
-        encaisse_des_devises = caisse_courante.newContent(id='encaisse_des_devises', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante/encaisse_des_devises')
+        surface = self._maybeNewContent(c, id='surface', portal_type='Category', codification='',  vault_type='site/surface')
+        caisse_courante = self._maybeNewContent(surface, id='caisse_courante', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
+        self._maybeNewContent(caisse_courante, id='encaisse_des_billets_et_monnaies', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
+        self._maybeNewContent(caisse_courante, id='billets_mutiles', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
+        self._maybeNewContent(caisse_courante, id='billets_macules', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante')
+        encaisse_des_devises = self._maybeNewContent(caisse_courante, id='encaisse_des_devises', portal_type='Category', codification='',  vault_type='site/surface/caisse_courante/encaisse_des_devises')
         # create counter for surface
         for s in ['banque_interne', 'gros_versement', 'gros_paiement']:
           vault_codification = c.getCodification()
@@ -653,61 +664,61 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
             vault_codification += 'GV'
           elif s == 'gros_paiement':
             vault_codification += 'GP'
-          s = surface.newContent(id='%s' % (s, ), portal_type='Category', codification=vault_codification,  vault_type='site/surface/%s' % (s, ))
+          s = self._maybeNewContent(surface, id='%s' % (s, ), portal_type='Category', codification=vault_codification,  vault_type='site/surface/%s' % (s, ))
           for ss in ['guichet_1', 'guichet_2']:
             final_vault_codification = vault_codification + ss[-1]
-            ss =  s.newContent(id='%s' % (ss, ), portal_type='Category', codification=final_vault_codification,  vault_type='site/surface/%s/guichet' % (s.getId(), ))
+            ss =  self._maybeNewContent(s, id='%s' % (ss, ), portal_type='Category', codification=final_vault_codification,  vault_type='site/surface/%s/guichet' % (s.getId(), ))
             for sss in ['encaisse_des_billets_et_monnaies']:
-              sss =  ss.newContent(id='%s' % (sss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
+              sss =  self._maybeNewContent(ss, id='%s' % (sss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
               for ssss in ['entrante', 'sortante']:
-                sss.newContent(id='%s' % (ssss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
+                self._maybeNewContent(sss, id='%s' % (ssss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
             for sss in ['encaisse_des_devises']:
-              sss =  ss.newContent(id='%s' % (sss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
+              sss =  self._maybeNewContent(ss, id='%s' % (sss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
               for currency in ['usd']:
-                currency_cat = sss.newContent(id='%s' % (currency, ), portal_type='Category', codification='',  vault_type='site/surface/%s' % (ss.getId(), ))
+                currency_cat = self._maybeNewContent(sss, id='%s' % (currency, ), portal_type='Category', codification='',  vault_type='site/surface/%s' % (ss.getId(), ))
                 for ssss in ['entrante', 'sortante']:
-                  currency_cat.newContent(id='%s' % (ssss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
+                  self._maybeNewContent(currency_cat, id='%s' % (ssss, ), portal_type='Category', codification='',  vault_type='site/surface/%s/guichet' % (s.getId(), ))
         # create sort room
-        salle_tri = surface.newContent(id='salle_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
+        salle_tri = self._maybeNewContent(surface, id='salle_tri', portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
         for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_billets_recus_pour_ventilation', 'encaisse_des_differences', 'encaisse_des_externes']:
-          ss =  salle_tri.newContent(id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
+          ss =  self._maybeNewContent(salle_tri, id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/surface/salle_tri')
           if 'ventilation' in ss.getId():
             for country in destination_site_list:
               if country[0] != c.getCodification()[0]:
-                ss.newContent(id='%s' % (country, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
+                self._maybeNewContent(ss, id='%s' % (country, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
         # caveau
-        caveau =  c.newContent(id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
+        caveau =  self._maybeNewContent(c, id='caveau', portal_type='Category', codification='',  vault_type='site/caveau')
         for s in ['auxiliaire', 'reserve', 'serre']:
-          s = caveau.newContent(id='%s' % (s, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s, ))
+          s = self._maybeNewContent(caveau, id='%s' % (s, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s, ))
           if s.getId() == 'serre':
             for ss in ['encaisse_des_billets_neufs_non_emis', 'encaisse_des_billets_retires_de_la_circulation', 'encaisse_des_billets_detruits', 'encaisse_des_billets_neufs_non_emis_en_transit_allant_a']:
-              ss =  s.newContent(id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
+              ss =  self._maybeNewContent(s, id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
               if 'transit' in ss.getId():
                 for country in destination_site_list:
                   if country[0] != c.getCodification()[0]:
-                    ss.newContent(id='%s' % (country, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
+                    self._maybeNewContent(ss, id='%s' % (country, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
 
           else:
             for ss in ['encaisse_des_billets_et_monnaies', 'encaisse_des_externes',
                        'encaisse_des_billets_recus_pour_ventilation', 'encaisse_des_devises']:
-              ss =  s.newContent(id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
+              ss =  self._maybeNewContent(s, id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
               if 'ventilation' in ss.getId():
                 for country in destination_site_list:
                   if country[0] != c.getCodification()[0]:
-                    ss.newContent(id='%s' % (country, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
+                    self._maybeNewContent(ss, id='%s' % (country, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
               if 'devises' in ss.getId():
                 for currency in ['eur', 'usd']:
-                  ss.newContent(id='%s' % (currency, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (ss.getId(), ))
+                  self._maybeNewContent(ss, id='%s' % (currency, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (ss.getId(), ))
               if 'encaisse_des_externes' in ss.getId():
-                ss.newContent(id='transit', portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
+                self._maybeNewContent(ss, id='transit', portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
               #if ss.getId()=='encaisse_des_devises':
               #  for
             if s.getId() == 'auxiliaire':
               for ss in ['encaisse_des_billets_a_ventiler_et_a_detruire', 'encaisse_des_billets_ventiles_et_detruits', 'billets_detenus_par_des_tiers', 'encaisse_des_billets_recus_pour_ventilation_venant_de']:
-                s.newContent(id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
+                self._maybeNewContent(s, id='%s' % (ss, ), portal_type='Category', codification='',  vault_type='site/caveau/%s' % (s.getId(), ))
         # Create forreing currency entries in encaisse_des_devises.
         for currency in ['usd', ]:
-          caisse_courante.encaisse_des_devises.newContent(id=currency, portal_type='Category', codification='', vault_type='site/surface/caisse_courante/encaisse_des_devises')
+          self._maybeNewContent(caisse_courante.encaisse_des_devises, id=currency, portal_type='Category', codification='', vault_type='site/surface/caisse_courante/encaisse_des_devises')
 
     return created_site_list
 
@@ -805,14 +816,11 @@ class TestERP5BankingMixin(ERP5TypeTestCase):
     # the default currency for the site
     if not self.portal.hasProperty('reference_currency_id'):
       self.portal.manage_addProperty('reference_currency_id', 'EUR', type='string')
-    else:
-      self.portal._updateProperty('reference_currency_id', "EUR")
     # not working days
     if not self.portal.hasProperty('not_working_days'):
       self.portal.manage_addProperty('not_working_days', '', type='string')
     else:
-      self.portal._updateProperty('not_working_days', "")
-      
+      self.portal.not_working_days = ''
     setattr(self.portal, 'functionnal_test_mode', 1)
     # the person module
     self.person_module = self.getPersonModule()

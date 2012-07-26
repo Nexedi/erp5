@@ -617,7 +617,7 @@ class BusinessProcess(Path, XMLObject):
     """
     remaining_trade_phase_list = []
     trade_state = business_link.getSuccessor()
-    tv = getTransactionalVariable(self)
+    tv = getTransactionalVariable()
     # We might need a key which depends on the explanation
     key = 'BusinessProcess_predecessor_successor_%s' % self.getRelativeUrl()
     predecessor_successor_dict = tv.get(key, None)
@@ -710,7 +710,10 @@ class BusinessProcess(Path, XMLObject):
 
     # result can not be empty
     if not result:
-      raise ValueError("A Business Process can not erase amounts")
+      raise ValueError("A Business Process can not erase amounts:"
+                       " no Trade Model Path found for %r"
+                       " (rule=%s, trade_phase=%r)"
+                       % (amount, explanation.getSpecialise(), trade_phase))
 
     # Sort movement list and make sure the total is equal to total_quantity
     total_quantity = amount.getQuantity()

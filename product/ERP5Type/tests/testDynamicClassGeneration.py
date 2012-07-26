@@ -30,7 +30,6 @@
 
 import gc
 import unittest
-import transaction
 
 from persistent import Persistent
 from Products.ERP5Type.dynamic.portal_type_class import synchronizeDynamicModules
@@ -73,7 +72,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # Import a .xml containing a Person created with an old
     # Products.ERP5Type.Document.Person.Person type
     self.importObjectFromFile(person_module, 'non_migrated_person.xml')
-    transaction.commit()
+    self.commit()
     unload('non_migrated_person')
     old_object = person_module.non_migrated_person
     # object unpickling should have instanciated a new style object directly
@@ -81,7 +80,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
 
     obj_id = newId()
     person_module._setObject(obj_id, Person(obj_id))
-    transaction.commit()
+    self.commit()
     unload(obj_id)
     old_object = person_module[obj_id]
     # From now on, everything happens as if the object was a old, non-migrated
@@ -100,7 +99,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # Test persistent migration
     old_object.migrateToPortalTypeClass()
     old_object = None
-    transaction.commit()
+    self.commit()
     old_object = connection.get(unload(obj_id))
     check(1)
     # but the container still have the old class
@@ -112,10 +111,10 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # Test persistent migration of containers
     obj_id = newId()
     person_module._setObject(obj_id, Person(obj_id))
-    transaction.commit()
+    self.commit()
     unload(obj_id)
     person_module.migrateToPortalTypeClass()
-    transaction.commit()
+    self.commit()
     unload(obj_id)
     old_object = person_module[obj_id]
     check(1)
@@ -128,7 +127,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     old_object = None
     unload(obj_id)
     person_module.migrateToPortalTypeClass(True)
-    transaction.commit()
+    self.commit()
     old_object = connection.get(unload(obj_id))
     check(1)
 
@@ -149,13 +148,13 @@ class TestPortalTypeClass(ERP5TypeTestCase):
       # just use a mixin/method that Person does not have yet
       person_type.setTypeMixin('TextConvertableMixin')
 
-      transaction.commit()
+      self.commit()
 
       self.assertNotEquals(getattr(person, 'asText', None), None)
     finally:
       # reset the type
       person_type.setTypeMixin(None)
-      transaction.commit()
+      self.commit()
 
   def testChangeDocument(self):
     """
@@ -174,13 +173,13 @@ class TestPortalTypeClass(ERP5TypeTestCase):
       # change the base type class
       person_type.setTypeClass('Organisation')
 
-      transaction.commit()
+      self.commit()
 
       self.assertNotEquals(getattr(person, 'getCorporateName', None), None)
     finally:
       # reset the type
       person_type.setTypeClass('Person')
-      transaction.commit()
+      self.commit()
 
   def testTempPortalType(self):
     newType = self.portal.portal_types.newContent
@@ -227,7 +226,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # implementing IForTest
     dummy_type.edit(type_class='Person',
                     type_interface_list=['IForTest',],)
-    transaction.commit()
+    self.commit()
 
     from erp5.portal_type import InterfaceTestType
 
@@ -266,7 +265,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     types_tool = self.portal.portal_types
 
     ptype = types_tool.newContent(id=name, type_class="Folder")
-    transaction.commit()
+    self.commit()
     module_class = types_tool.getPortalTypeClass(name)
     module_class.loadClass()
 
@@ -283,7 +282,7 @@ class TestPortalTypeClass(ERP5TypeTestCase):
     # while the class has not been reset is should still descend from Folder
     self.assertTrue(issubclass(module_class, Folder))
     # finish transaction and trigger workflow/DynamicModule reset
-    transaction.commit()
+    self.commit()
     # while the class has not been unghosted it's still a Folder
     self.assertTrue(issubclass(module_class, Folder))
     # but it changes as soon as the class is loaded
@@ -601,7 +600,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
     # Make sure there is no pending transaction which could interfere
     # with the tests
-    transaction.commit()
     self.tic()
 
     # Ensure that erp5.acessor_holder is empty
@@ -613,7 +611,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     accessor, which will run the interaction workflow trigger, on
     commit at the latest
     """
-    transaction.commit()
+    self.commit()
     self.test_module.getId()
 
   def testAssignUnassignZodbPropertySheet(self):
@@ -635,7 +633,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # accessor holder which should be in the Person type inheritance
       person_type.setTypePropertySheetList('TestMigration')
 
-      transaction.commit()
+      self.commit()
 
       self.assertTrue('TestMigration' in person_type.getTypePropertySheetList())
 
@@ -706,7 +704,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       # been called before.  Thus, the next statement may not reset
       # erp5.accessor_holder as loading Person portal type calls
       # '_setType*'
-      transaction.commit()
+      self.commit()
 
       person_type.setTypePropertySheetList(())
 
@@ -717,7 +715,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
 
     # Check that the new-style Property Sheet has been properly
     # unassigned by creating a new person in Person module
-    transaction.commit()
+    self.commit()
 
     self.failIf('TestMigration' in person_type.getTypePropertySheetList())
 
@@ -1030,7 +1028,6 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     self.assertEquals(1, len(constraint.checkConsistency(self.test_module)))
 
     self.test_module.setCategoryList(('gender/Test Migration',))
-    transaction.commit()
     self.tic()
 
     self.assertEquals([], constraint.checkConsistency(self.test_module))
@@ -1080,7 +1077,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                expression='python: object.getTitle() == "my_tales_constraint_title"')
     dummy.Predicate_view()
 
-    transaction.commit()
+    self.commit()
 
     # Recreate class with a newly added constraint
     synchronizeDynamicModules(portal, force=True)
@@ -1088,7 +1085,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     test_module = getattr(portal, 'Test Migration')
     test_module.objectValues()
     # Then close this new connection.
-    transaction.abort()
+    self.abort()
     con.close()
     # This code depends on ZODB implementation.
     for i in db.pool.available[:]:
@@ -1098,7 +1095,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     del con
 
     # Back to the default connection.
-    transaction.abort()
+    self.abort()
     self.app._p_jar._resetCache()
     setSite(old_site)
 
@@ -1119,7 +1116,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     # Action -> add Acquired Property
     arrow.newContent(portal_type="Acquired Property")
     # a user is doing this, so commit after each request
-    transaction.commit()
+    self.commit()
 
     accessor = getattr(property_sheet_tool, "setTitle", None)
     # sites used to break at this point
@@ -1133,21 +1130,21 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       self.fail("Creating an empty Acquired Property raises an error")
 
     arrow.newContent(portal_type="Category Property")
-    transaction.commit()
+    self.commit()
     try:
       person.newContent(portal_type="Career")
     except Exception:
       self.fail("Creating an empty Category Property raises an error")
 
     dynamic_category = arrow.newContent(portal_type="Dynamic Category Property")
-    transaction.commit()
+    self.commit()
     try:
       person.newContent(portal_type="Career")
     except Exception:
       self.fail("Creating an empty Dynamic Category Property raises an error")
 
     arrow.newContent(portal_type="Property Existence Constraint")
-    transaction.commit()
+    self.commit()
     try:
       person.newContent(portal_type="Career")
     except Exception:
@@ -1173,7 +1170,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
       portal_type="Dynamic Category Property",
       category_expression='python: ["foo", None, "region"]')
 
-    transaction.commit()
+    self.commit()
     try:
       person.newContent(portal_type="Career")
     except Exception:
@@ -1185,7 +1182,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
                      acquisition_portal_type="python: ('foo', None)",
                      content_portal_type="python: ('goo', None)")
     # a user is doing this, so commit after each request
-    transaction.commit()
+    self.commit()
     try:
       person.newContent(portal_type="Career")
     except Exception:
@@ -1197,7 +1194,7 @@ class TestZodbPropertySheet(ERP5TypeTestCase):
     # called for StandardProperty and AcquiredProperty, namely
     # evaluateExpressionFromString
     dynamic_category.setCategoryExpression('python: [')
-    transaction.commit()
+    self.commit()
     try:
       person.newContent(portal_type="Career")
     except Exception:
@@ -1246,7 +1243,31 @@ from Products.ERP5Type.mixin.component import ComponentMixin
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from App.config import getConfiguration
 
-class _TestZodbComponent(SecurityTestCase):
+class TestDeveloperMixin:
+
+  def login(self, user_name='ERP5TypeTestCase', quiet=0):
+    """
+    Make sure that the test user has Developer Role, otherwise the user cannot
+    do anything on Components...
+    """
+    config = getConfiguration()
+    product_config = getattr(config, 'product_config', None)
+    if product_config is None:
+      product_config = config.product_config = {}
+
+    if product_config.get('erp5') is None:
+      class DummyDeveloperConfig(object):
+        pass
+      dummy_developer_config = DummyDeveloperConfig()
+      dummy_developer_config.developer_list = [user_name]
+      product_config['erp5'] = dummy_developer_config
+
+    elif user_name not in product_config['erp5'].developer_list:
+      product_config['erp5'].developer_list.append(user_name)
+
+    return ERP5TypeTestCase.login(self, user_name, quiet)
+
+class _TestZodbComponent(TestDeveloperMixin, SecurityTestCase):
   """
   Abstract class which defined convenient methods used by any Component Test
   and tests ran for all Component Test classes
@@ -1255,25 +1276,6 @@ class _TestZodbComponent(SecurityTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_base',)
-
-  def login(self, user_name='ERP5TypeTestCase', quiet=0):
-    """
-    Make sure that the test user has Developer Role, otherwise the user cannot
-    do anything on Components...
-    """
-    product_config = getattr(getConfiguration(), 'product_config', None)
-    if product_config is None:
-      class DummyDeveloperConfig(object):
-        pass
-
-      dummy_developer_config = DummyDeveloperConfig()
-      dummy_developer_config.developer_list = [user_name]
-      getConfiguration().product_config = {'erp5': dummy_developer_config}
-
-    elif user_name not in product_config['erp5'].developer_list:
-      product_config['erp5'].developer_list.append(user_name)
-
-    return super(_TestZodbComponent, self).login(user_name, quiet)
 
   def afterSetUp(self):
     self._component_tool = self.getPortal().portal_components
@@ -1338,17 +1340,14 @@ class _TestZodbComponent(SecurityTestCase):
       'def foobar(*args, **kwargs):\n  return "ValidateInvalidate"')
 
     test_component.validate()
-    transaction.commit()
     self.tic()
 
     self.assertModuleImportable('TestValidateInvalidateComponent')
     test_component.invalidate()
-    transaction.commit()
     self.tic()
     self.failIfModuleImportable('TestValidateInvalidateComponent')
 
     test_component.validate()
-    transaction.commit()
     self.tic()
     self.assertModuleImportable('TestValidateInvalidateComponent')
 
@@ -1368,7 +1367,6 @@ class _TestZodbComponent(SecurityTestCase):
                                      'def foobar(*args, **kwargs):\n  return 42')
 
       component.validate()
-      transaction.commit()
       self.tic()
 
       self.assertEquals(ComponentTool._reset_performed, True)
@@ -1402,7 +1400,6 @@ class _TestZodbComponent(SecurityTestCase):
       ComponentTool.reset = assertResetNotCalled
       try:
         component.setReference(invalid_reference)
-        transaction.commit()
         self.tic()
       finally:
         ComponentTool.reset = ComponentTool._original_reset
@@ -1423,7 +1420,6 @@ class _TestZodbComponent(SecurityTestCase):
     ComponentTool.reset = assertResetCalled
     try:
       component.setReference(valid_reference)
-      transaction.commit()
       self.tic()
 
       self.assertEquals(ComponentTool._reset_performed, True)
@@ -1455,7 +1451,6 @@ class _TestZodbComponent(SecurityTestCase):
                                      valid_version)
 
       component.validate()
-      transaction.commit()
       self.tic()
 
       self.assertEquals(ComponentTool._reset_performed, True)
@@ -1482,7 +1477,6 @@ class _TestZodbComponent(SecurityTestCase):
       ComponentTool.reset = assertResetNotCalled
       try:
         component.setVersion(invalid_version)
-        transaction.commit()
         self.tic()
       finally:
         ComponentTool.reset = ComponentTool._original_reset
@@ -1503,7 +1497,6 @@ class _TestZodbComponent(SecurityTestCase):
     ComponentTool.reset = assertResetCalled
     try:
       component.setVersion(valid_version)
-      transaction.commit()
       self.tic()
 
       self.assertEquals(ComponentTool._reset_performed, True)
@@ -1531,7 +1524,6 @@ class _TestZodbComponent(SecurityTestCase):
     try:
       component = self._newComponent('TestComponentWithSyntaxError', valid_code)
       component.validate()
-      transaction.commit()
       self.tic()
 
       self.assertEquals(ComponentTool._reset_performed, True)
@@ -1559,7 +1551,6 @@ class _TestZodbComponent(SecurityTestCase):
       ComponentTool.reset = assertResetNotCalled
       try:
         component.setTextContent(invalid_code)
-        transaction.commit()
         self.tic()
       finally:
         ComponentTool.reset = ComponentTool._original_reset
@@ -1580,7 +1571,6 @@ class _TestZodbComponent(SecurityTestCase):
     ComponentTool.reset = assertResetCalled
     try:
       component.setTextContent(valid_code)
-      transaction.commit()
       self.tic()
 
       self.assertEquals(ComponentTool._reset_performed, True)
@@ -1607,7 +1597,6 @@ class _TestZodbComponent(SecurityTestCase):
 """)
 
     component.validate()
-    transaction.commit()
     self.tic()
 
     top_module_name = self._getComponentModuleName()
@@ -1623,7 +1612,6 @@ def bar(*args, **kwargs):
 """ % top_module_name)
 
     component_import.validate()
-    transaction.commit()
     self.tic()
 
     # Versioned package and its alias must be available
@@ -1669,7 +1657,6 @@ def bar(*args, **kwargs):
 """)
 
     component_erp5_version.validate()
-    transaction.commit()
     self.tic()
 
     component_foo_version = self._newComponent(
@@ -1680,7 +1667,6 @@ def bar(*args, **kwargs):
       'foo')
 
     component_foo_version.validate()
-    transaction.commit()
     self.tic()
 
     self.assertModuleImportable('TestVersionPriority')
@@ -1705,7 +1691,6 @@ def bar(*args, **kwargs):
       # Add 'foo' version with a higher priority as 'erp5' version and check
       # whether 'foo' version of the Component is used and not erp5 version
       site.setVersionPriorityList(('foo | 99.0',) + priority_tuple)
-      transaction.commit()
       self.tic()
 
       self.assertEquals(ComponentTool._reset_performed, True)
@@ -1721,7 +1706,6 @@ def bar(*args, **kwargs):
     finally:
       ComponentTool.reset = ComponentTool._original_reset
       site.setVersionPriorityList(priority_tuple)
-      transaction.commit()
       self.tic()
 
   def testDeveloperRoleSecurity(self):
@@ -1733,7 +1717,6 @@ def bar(*args, **kwargs):
     component = self._newComponent('TestDeveloperRoleSecurity',
                                    'def foo():\n  print "ok"')
 
-    transaction.commit()
     self.tic()
 
     user_id = 'ERP5TypeTestCase'
@@ -1799,7 +1782,6 @@ class TestZodbExtensionComponent(_TestZodbComponent):
       'def foobar(*args, **kwargs):\n  return 42')
 
     test_component.validate()
-    transaction.commit()
     self.tic()
 
     self.assertModuleImportable('TestExternalMethodComponent')
@@ -1813,7 +1795,6 @@ class TestZodbExtensionComponent(_TestZodbComponent):
                              'TestExternalMethodComponent',
                              'foobar')
 
-    transaction.commit()
     self.tic()
 
     external_method = self.getPortal().TestExternalMethod
@@ -1824,7 +1805,6 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     from Products.PythonScripts.PythonScript import manage_addPythonScript
     manage_addPythonScript(self.getPortal(), 'TestPythonScript')
     self.getPortal().TestPythonScript.write('return context.TestExternalMethod()')
-    transaction.commit()
     self.tic()
 
     self.assertEqual(self.getPortal().TestPythonScript(), 42)
@@ -1832,7 +1812,6 @@ class TestZodbExtensionComponent(_TestZodbComponent):
     # Invalidate the Extension Component and check that it's not callable
     # anymore
     test_component.invalidate()
-    transaction.commit()
     self.tic()
 
     # XXX-arnau: perhaps the error message should be more meaningful?
@@ -1891,7 +1870,6 @@ class TestPortalType(Person):
 """)
 
     test_component.validate()
-    transaction.commit()
     self.tic()
 
     # As TestPortalType Document Component has been validated, it should now
@@ -1919,7 +1897,7 @@ class TestPortalType(Person):
     self.assertTrue('TestPortalType' in person_type.getDocumentTypeList())
     try:
       person_type.setTypeClass('TestPortalType')
-      transaction.commit()
+      self.commit()
 
       self.assertHasAttribute(person, 'test42')
       self.assertEquals(person.test42(), 42)
@@ -1932,7 +1910,7 @@ class TestPortalType(Person):
 
     finally:
       person_type.setTypeClass('Person')
-      transaction.commit()
+      self.commit()
 
   def testDocumentWithImport(self):
     """
@@ -1967,7 +1945,6 @@ class TestDocumentWithImport(TestDocumentImported):
     return 4242
 """)
 
-    transaction.commit()
     self.tic()
 
     self.failIfModuleImportable('TestDocumentWithImport')
@@ -1975,7 +1952,6 @@ class TestDocumentWithImport(TestDocumentImported):
 
     test_imported_component.validate()
     test_component.validate()
-    transaction.commit()
     self.tic()
 
     # TestPortalWithImport must be imported first to check if
@@ -2036,7 +2012,6 @@ class Test(ERP5TypeTestCase):
 
     component = self._newComponent('testRunLiveTest', source_code)
     component.validate()
-    transaction.commit()
     self.tic()
 
     self.assertEqual(component.getValidationState(), 'validated')
@@ -2065,7 +2040,6 @@ class Test(ERP5TypeTestCase):
 '''
 
     component.setTextContent(source_code)
-    transaction.commit()
     self.tic()
 
     self.assertEqual(component.getValidationState(), 'validated')

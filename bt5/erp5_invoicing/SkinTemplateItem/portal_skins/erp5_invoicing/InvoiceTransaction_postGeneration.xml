@@ -76,7 +76,8 @@ if not invoice.Invoice_isAdvanced():\n
     invoice.setResource(invoice.getPriceCurrency())\n
 \n
 related_packing_list = invoice.getDefaultCausalityValue()\n
-related_order = related_packing_list.getDefaultCausalityValue()\n
+related_order = None if related_packing_list is None else \\\n
+  related_packing_list.getDefaultCausalityValue()\n
 \n
 # copy payment conditions from packing list\n
 # if missing, try to copy from order (for compatibility)\n
@@ -115,7 +116,8 @@ if related_order is not None and context.portal_skins.hasObject(\'erp5_simulatio
     context.manage_pasteObjects(clipboard)\n
   \n
 # copy title, if not updating a new delivery\n
-if not invoice.hasTitle() and related_packing_list.hasTitle():\n
+if not invoice.hasTitle() and related_packing_list is not None and \\\n
+   related_packing_list.hasTitle():\n
   invoice.setTitle(related_packing_list.getTitle())\n
 \n
 # initialize accounting_workflow to confirmed state\n

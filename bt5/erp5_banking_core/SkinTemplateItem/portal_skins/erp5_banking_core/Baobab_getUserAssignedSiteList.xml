@@ -59,11 +59,11 @@ if user_id is None:\n
 \n
 def getSiteList(user_id=user_id):\n
 \n
-  valid_assignment_list = context.Baobab_getUserAssignmentList(user_id=user_id)\n
+  valid_assignment = context.Baobab_getUserAssignment(user_id=user_id)\n
 \n
   site_list = []\n
-  for a in valid_assignment_list:\n
-    new_site = a.getSite()\n
+  if valid_assignment != None:\n
+    new_site = valid_assignment.getSite()\n
     if not new_site.startswith(\'site\'):\n
       new_site=\'site/%s\' % new_site\n
     if new_site not in (\'\', None):\n

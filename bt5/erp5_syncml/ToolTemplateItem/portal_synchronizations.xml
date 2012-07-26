@@ -29,10 +29,6 @@
             <value> <string>portal_synchronizations</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
             <key> <string>sync_finished</string> </key>
             <value> <int>1</int> </value>
         </item>

@@ -132,7 +132,7 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin):
     #     self.setDestinationValue(self.reception)
     #     self.setResourceValue(self.currency_1)
     # execute tic
-    self.stepTic()
+    self.tic()
     # get the cash inventory document
     self.monetary_reception = getattr(self.monetary_reception_module, 'monetary_reception')
     # check its portal type
@@ -170,7 +170,7 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin):
 
     self.createCashContainer(self.monetary_reception, 'Cash Container Item', global_dict, line_list)
     # execute tic
-    self.stepTic()
+    self.tic()
     # check there is two line created
     self.assertEqual(len(self.monetary_reception.objectValues()), 3)
 
@@ -316,7 +316,7 @@ class TestERP5BankingMonetaryReception(TestERP5BankingMixin):
     self.assertEqual(state, 'confirmed')
     self.workflow_tool.doActionFor(self.monetary_reception, 'deliver_action', wf_id='monetary_reception_workflow')
     # execute tic
-    self.stepTic()
+    self.tic()
     # get state of cash sorting
     state = self.monetary_reception.getSimulationState()
     # check that state is delivered

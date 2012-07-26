@@ -55,6 +55,9 @@
 Simulation Movements can come from normal Invoice Transaction Rule\n
 and same rule which is children of Trade Model Rule """\n
 \n
+buildSQLQuery = context.portal_catalog.buildSQLQuery\n
+select = context.InvoiceTransaction_zSelectMovement\n
+\n
 # search for normal movements\n
 kw[\'parent_specialise_reference\'] = [\'default_invoice_transaction_rule\']\n
 kw[\'grand_grand_parent_specialise_reference\'] = [\n
@@ -70,32 +73,20 @@ else:\n
                                          \'%s Packing List\' % trade_type,\n
                                          \'Returned %s Packing List\' % trade_type]\n
 kw[\'portal_type\']                   = \'Simulation Movement\'\n
-kw[\'grand_parent_simulation_state\'] = [\'started\']\n
 \n
 search_kw = kw.copy()\n
-search_kw.update(context.portal_catalog.buildSQLQuery(**search_kw))\n
+search_kw[\'grand_parent_simulation_state\'] = [\'started\']\n
+search_kw.update(buildSQLQuery(**search_kw))\n
 \n
-normal_movement_list = [movement for movement in context.InvoiceTransaction_zSelectMovement(**search_kw)]\n
+movement_list = list(select(**search_kw))\n
 \n
 # update query to search for movements which are children of Trade Model Rule\n
-kw.pop(\'grand_parent_simulation_state\')\n
 kw[\'grand_grand_parent_specialise_reference\'] = \'default_trade_model_rule\'\n
 kw[\'grand_grand_grand_parent_simulation_state\'] = [\'started\']\n
 \n
-search_kw = kw.copy()\n
+kw.update(buildSQLQuery(**kw))\n
 \n
-search_kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-\n
-trade_model_movement_list = [movement for movement in context.InvoiceTransaction_zSelectMovement(**search_kw)]\n
-\n
-movement_list = [] \n
-for movement in normal_movement_list + trade_model_movement_list:\n
-  movement = movement.getObject()\n
-  if movement.getDeliveryValue() is None and movement not in movement_list :\n
-    movement_list.append(movement)\n
-  else :\n
-    from Products.ERP5Type.Log import log\n
-    log(script.getId(), "simulation movement %s should not have been selected !" % movement.getPath())\n
+movement_list += select(**kw)\n
 \n
 return movement_list\n
 </string> </value>

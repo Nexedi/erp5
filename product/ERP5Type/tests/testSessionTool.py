@@ -26,7 +26,6 @@
 #
 ##############################################################################
 
-import transaction
 import unittest
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -86,7 +85,7 @@ class TestSessionTool(ERP5TypeTestCase):
     cache_plugin.setIntIndex(0)
     if portal_type == 'Distributed Ram Cache':
       cache_plugin.edit(specialise='portal_memcached/default_memcached_plugin')
-    transaction.commit()
+    self.commit()
     portal_caches.updateCache()
 
   def stepTestSetGet(self, sequence=None,
@@ -259,7 +258,7 @@ class TestSessionTool(ERP5TypeTestCase):
 
     session = self.portal.portal_sessions[self.session_id]
     self.assertEquals(session.get('key'),  'value')
-    transaction.abort()
+    self.abort()
 
   def test_01_CheckSessionTool(self):
     """ Checks session tool is present """

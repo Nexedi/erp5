@@ -26,40 +26,30 @@
 #
 ##############################################################################
 
-from ZODB.POSException import ConflictError
 from Products.CMFCore.CatalogTool import CatalogTool as CMFCoreCatalogTool
 from Products.ZSQLCatalog.ZSQLCatalog import ZCatalog
 from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery
 from Products.ERP5Type import Permissions
-from Products.ERP5Type.Cache import CachingMethod
 from AccessControl import ClassSecurityInfo, getSecurityManager
-from Products.CMFCore.utils import UniqueObject, _checkPermission, _getAuthenticatedUser, getToolByName
-from Products.ERP5Type.Globals import InitializeClass, DTMLFile, package_home
+from AccessControl.User import system as system_user
+from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser, getToolByName
+from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent, ImplicitAcquisitionWrapper
-from DateTime.DateTime import DateTime
 from Products.CMFActivity.ActiveObject import ActiveObject
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 
 from AccessControl.PermissionRole import rolesForPermissionOn
 
-from Products.PageTemplates.Expressions import SecureModuleImporter
-from Products.CMFCore.Expression import Expression
-from Products.PageTemplates.Expressions import getEngine
 from MethodObject import Method
 
 from Products.ERP5Security import mergedLocalRoles
 from Products.ERP5Security.ERP5UserManager import SUPER_USER
 from Products.ERP5Type.Utils import sqlquote
 
-import os, urllib, warnings
-import sys
+import warnings
 from zLOG import LOG, PROBLEM, WARNING, INFO
 
 ACQUIRE_PERMISSION_VALUE = []
-
-from Persistence import Persistent
-from Acquisition import Implicit
-
 DYNAMIC_METHOD_NAME = 'z_related_'
 DYNAMIC_METHOD_NAME_LEN = len(DYNAMIC_METHOD_NAME)
 STRICT_DYNAMIC_METHOD_NAME = DYNAMIC_METHOD_NAME + 'strict_'
@@ -254,7 +244,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
 
     default_result_limit = None
     default_count_limit = 1
-    
+
     manage_options = ({ 'label' : 'Overview', 'action' : 'manage_overview' },
                      ) + ZCatalog.manage_options
 
@@ -396,13 +386,13 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         a parameter named local_roles so that listed documents only include
         those documents for which the user (or the group) was
         associated one of the given local roles.
-      
+
         The use of getAllowedRolesAndUsers is deprecated, you should use
         getSecurityQuery instead
       """
       user = _getAuthenticatedUser(self)
       user_str = str(user)
-      user_is_superuser = (user_str == SUPER_USER)
+      user_is_superuser = (user == system_user) or (user_str == SUPER_USER)
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
       role_column_dict = {}
       local_role_column_dict = {}
@@ -519,6 +509,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         values. The query takes into account the fact that some roles are
         catalogued with columns.
       """
+      user = _getAuthenticatedUser(self)
+      user_str = str(user)
+      user_is_superuser = (user == system_user) or (user_str == SUPER_USER)
+      if user_is_superuser:
+        # We need no security check for super user.
+        return query
       original_query = query
       security_uid_list, role_column_dict, local_role_column_dict = \
           self.getSecurityUidListAndRoleColumnDict(
@@ -539,7 +535,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       elif security_uid_list:
         query = Query(security_uid=security_uid_list, operator='IN')
       else:
-        # XXX A false query has to be generated. 
+        # XXX A false query has to be generated.
         # As it is not possible to use SQLKey for now, pass impossible value
         # on uid (which will be detected as False by MySQL, as it is not in the
         # column range)
@@ -630,12 +626,12 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         #    now = DateTime()
         #    #kw[ 'effective' ] = { 'query' : now, 'range' : 'max' }
         #    #kw[ 'expires'   ] = { 'query' : now, 'range' : 'min' }
-        catalog_id = self.getPreferredSQLCatalogId(kw.pop("sql_catalog_id", None))        
+        catalog_id = self.getPreferredSQLCatalogId(kw.pop("sql_catalog_id", None))
         query = self.getSecurityQuery(query=query, sql_catalog_id=catalog_id, **kw)
         kw.setdefault('limit', self.default_count_limit)
         # get catalog from preference
         return ZCatalog.countResults(self, query=query, sql_catalog_id=catalog_id, **kw)
-    
+
     security.declarePrivate('unrestrictedCountResults')
     def unrestrictedCountResults(self, REQUEST=None, **kw):
         """Calls ZSQLCatalog.countResults directly without restrictions.
@@ -662,7 +658,7 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         # Find the parent definition for security
         is_acquired = 0
         while getattr(document_object, 'isRADContent', 0):
-          # This condition tells which object should acquire 
+          # This condition tells which object should acquire
           # from their parent.
           # XXX Hardcode _View_Permission for a performance point of view
           if getattr(aq_base(document_object), '_View_Permission', ACQUIRE_PERMISSION_VALUE) == ACQUIRE_PERMISSION_VALUE\
@@ -683,6 +679,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
         predicate_property_dict = catalog.getPredicatePropertyDict(object)
         if predicate_property_dict is not None:
           w.predicate_property_dict = predicate_property_dict
+        else:
+          w.predicate_property_dict = {}
         w.security_uid = security_uid
         (subject_set_uid, optimised_subject_list) = catalog.getSubjectSetUid(document_w)
         w.optimised_subject_list = optimised_subject_list

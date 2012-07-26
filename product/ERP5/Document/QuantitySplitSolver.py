@@ -93,11 +93,10 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           new_id = "%s_split_%s" % (simulation_movement.getId(), split_index)
         # Copy at same level
         kw = _getPropertyAndCategoryList(simulation_movement)
-        kw.update({'portal_type':simulation_movement.getPortalType(),
-                   'id':new_id,
-                   'delivery':None,
-                   'quantity':split_quantity})
-        new_movement = applied_rule.newContent(activate_kw=activate_kw, **kw)
+        kw.update(delivery=None, quantity=split_quantity)
+        new_movement = applied_rule.newContent(
+          new_id, simulation_movement.getPortalType(),
+          activate_kw=activate_kw, **kw)
         # Dirty code until IPropertyRecordable is revised.
         # Merge original simulation movement recorded property to new one.
         recorded_property_dict = simulation_movement._getRecordedPropertyDict(None)
@@ -106,8 +105,6 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           if new_movement_recorded_property_dict is None:
             new_movement_recorded_property_dict = new_movement._recorded_property_dict = PersistentMapping()
           new_movement_recorded_property_dict.update(recorded_property_dict)
-        if activate_kw is not None:
-          new_movement.setDefaultActivateParameterDict(activate_kw)
         # record zero quantity property, because this was originally zero.
         # without this, splitanddefer after accept decision does not work
         # properly.
@@ -123,6 +120,8 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
         if stop_date is not None:
           new_movement.recordProperty('stop_date')
           new_movement.setStopDate(stop_date)
+        if activate_kw:
+          new_movement.setDefaultActivateParameterDict({})
         # XXX we need to call expand on both simulation_movement and new_movement here?
         # simulation_movement.expand(activate_kw=activate_kw)
         # new_movement.expand(activate_kw=activate_kw)

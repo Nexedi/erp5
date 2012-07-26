@@ -50,32 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>DEBUG = 1\n
-from Products.ERP5Type.Log import log\n
-LOG = lambda msg:log("SaleInvoice_selectPackingListMovement", msg)\n
-\n
-kw[\'parent_specialise_portal_type\']  = [\'Invoicing Rule\', \'Invoice Simulation Rule\']\n
-kw[\'explanation_portal_type\']        = [\'Task\', \'Task Report\']\n
-kw[\'portal_type\']                    = \'Simulation Movement\'\n
-kw[\'grand_parent_simulation_state\']  = [\'started\', \'stopped\',\'delivered\']\n
+            <value> <string>kw[\'parent_specialise_portal_type\'] = (\'Invoicing Rule\',\n
+                                       \'Invoice Simulation Rule\')\n
+kw[\'explanation_portal_type\']       = \'Task\', \'Task Report\'\n
+kw[\'grand_parent_simulation_state\'] = \'started\', \'stopped\', \'delivered\'\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-\n
-if DEBUG : \n
-  LOG("SQL used = %s"%context.InvoiceTransaction_zSelectMovement(src__=1, **kw))\n
-\n
-movement_list = [] \n
-for movement in context.InvoiceTransaction_zSelectMovement(**kw) :\n
-  movement = movement.getObject()\n
-  if movement.getDeliveryValue() is None :\n
-    movement_list.append(movement)\n
-  else : \n
-    LOG("simulation movement %s should not have been selected !" % movement.getPath())\n
-\n
-if DEBUG :\n
-  LOG("selected movement_list : %s"%movement_list)\n
-\n
-return movement_list\n
+return context.InvoiceTransaction_zSelectMovement(**kw)\n
 </string> </value>
         </item>
         <item>

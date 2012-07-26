@@ -29,7 +29,6 @@
 
 import os
 import string
-import transaction
 import urllib
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -177,12 +176,10 @@ class TestCommerce(ERP5TypeTestCase):
 
     self.app.REQUEST.set('session_id', SESSION_ID)
     self.login('ivan')
-    transaction.commit()
     self.tic()
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -228,7 +225,6 @@ class TestCommerce(ERP5TypeTestCase):
                     start_date='1972-01-01', stop_date='2999-12-31',
                     group=group, destination_project=destination_project)
     assignment.open()
-    transaction.commit()
     self.tic()
 
     #XXX: Security hack (lucas)
@@ -301,7 +297,6 @@ class TestCommerce(ERP5TypeTestCase):
     supply_line.setPriceCurrency('currency_module/EUR')
     ups.validate()
     ups.publish()
-    transaction.commit()
     self.tic()
 
   def createUser(self, name, role_list):
@@ -323,12 +318,10 @@ class TestCommerce(ERP5TypeTestCase):
       website = self.portal.web_site_module.newContent(portal_type='Web Site',
                                                         id='website',
                                                         **kw)
-      transaction.commit()
       self.tic()
 
     website.WebSite_setupECommerceWebSite()
     self.initialiseSupplyLine()
-    transaction.commit()
     self.tic()
 
     self.createDefaultOrganisation()
@@ -356,7 +349,6 @@ class TestCommerce(ERP5TypeTestCase):
                                             portal_type='Sale Order Line')
     order_line.setResource(shipping_list[0].getRelativeUrl())
     order_line.setQuantity(1)
-    transaction.commit()
     self.tic()
     
   def doFakePayment(self):
@@ -517,7 +509,6 @@ class TestCommerce(ERP5TypeTestCase):
     """
     default_product = self.getDefaultProduct()
     self.createShoppingCartWithProductListAndShipping()
-    transaction.commit()
     self.tic()
 
     shopping_cart = self.website.SaleOrder_getShoppingCart(action='reset')
@@ -555,7 +546,6 @@ class TestCommerce(ERP5TypeTestCase):
     """
     default_product = self.getDefaultProduct()
     self.website.Resource_addToShoppingCart(default_product, quantity=1)
-    transaction.commit()
     self.tic()
 
     # the confirmation should not be possible if the user is not logged
@@ -610,7 +600,6 @@ class TestCommerce(ERP5TypeTestCase):
                                            quantity=1)
     self.website.Resource_addToShoppingCart(self.getDefaultProduct('2'),
                                            quantity=1)
-    transaction.commit()
     self.tic()
 
     self.assertEquals(2, len(self.website.SaleOrder_getShoppingCartItemList()))
@@ -620,7 +609,6 @@ class TestCommerce(ERP5TypeTestCase):
     self.doFakePayment()
     
     self.website.SaleOrder_finalizeShopping()
-    transaction.commit()
     self.tic()
 
     sale_order_object_list = self.portal.sale_order_module.contentValues()
@@ -638,7 +626,6 @@ class TestCommerce(ERP5TypeTestCase):
     self.portal.product_module.newContent(portal_type='Product',
                                           title='shipping',
                                           product_line=shipping_url)
-    transaction.commit()
     self.tic()
     self.assertEquals(2,
                len(self.portal.SaleOrder_getAvailableShippingResourceList()))
@@ -749,7 +736,6 @@ class TestCommerce(ERP5TypeTestCase):
     self.assertEquals(0, len(self.portal.sale_order_module.contentValues()))
 
     self.website.WebSection_doPaypalPayment(token=token)
-    transaction.commit()
     self.tic()
 
     #8 check if sale order created
@@ -771,7 +757,6 @@ class TestCommerce(ERP5TypeTestCase):
                                               category='product_line/ldlc',
                                               section_id='product_section',
                                               depth=2)
-    transaction.commit()
     self.tic()
 
     self.assertEquals(14,
@@ -858,7 +843,6 @@ class TestCommerce(ERP5TypeTestCase):
     for key, item in kw.items():
       self.app.REQUEST.set('field_your_%s' % key, item)
     self.website.WebSite_createWebSiteAccount('WebSite_viewRegistrationDialog')
-    transaction.commit()
     self.tic()
 
     self.login('toto')
@@ -888,7 +872,6 @@ class TestCommerce(ERP5TypeTestCase):
     file_upload = FileUpload(os.path.join(os.path.dirname(__file__),
                           'test_data', 'images', 'erp5_logo_small.png'), 'rb')
     product.edit(default_image_file=file_upload)
-    transaction.get()
     self.tic()
 
     self.logout()
@@ -947,7 +930,6 @@ class TestCommerce(ERP5TypeTestCase):
     self.website.SaleOrder_paymentRedirect(field_my_comment=comment)    
     self.doFakePayment()
     self.website.SaleOrder_finalizeShopping()
-    transaction.commit()
     self.tic()
 
     sale_order_object_list = self.portal.sale_order_module.contentValues()

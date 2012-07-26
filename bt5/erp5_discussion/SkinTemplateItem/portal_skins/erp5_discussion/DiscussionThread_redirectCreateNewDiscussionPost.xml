@@ -53,17 +53,20 @@
             <value> <string encoding="cdata"><![CDATA[
 
 portal = context.getPortalObject()\n
-user = str(portal.portal_membership.getAuthenticatedMember())\n
-preferred_forum_quote_original_message= portal.ERP5Site_getUserPreferredForumSettingsDict(user)[\'preferred_forum_quote_original_message\']\n
+preferred_forum_quote_original_message= portal.ERP5Site_getUserPreferredForumSettingsDict()[\'preferred_forum_quote_original_message\']\n
 \n
 if discussion_post_uid is not None:\n
   # set title & text_content\n
   discussion_post = getattr(context, discussion_post_uid)\n
-  title = \'Re: %s\' %discussion_post.getTitle()\n
+  \n
+  title = discussion_post.getTitle()\n
+  if not title.lower().startswith(\'re:\'):\n
+    # stop exploding "Re: Re: .." to one level\n
+    title = \'Re: %s\' %title\n
   context.REQUEST.set(\'discussion_post_title\', title)\n
   if preferred_forum_quote_original_message:\n
     author_dict = discussion_post.DiscussionPost_getAuthorDict()\n
-    text_content = \'<blockquote>From: %s<br/>%s</blockquote>\' %(author_dict[\'author_title\'],\n
+    text_content = \'<blockquote style="background-color: #E9E9E9;border: 1px solid #8CACBB;margin: 5px;padding: 10px 15px;">From: %s<br/>%s</blockquote>\' %(author_dict[\'author_title\'],\n
                                                                discussion_post.getTextContent())\n
     context.REQUEST.set(\'discussion_post_text_content\', text_content)\n
 \n

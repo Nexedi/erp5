@@ -53,7 +53,7 @@ def _DateTime(*args, **kw):
   return DateTime(*args, **kw)
 
 @profiler_decorator
-def castDate(value):
+def castDate(value, change_timezone=True):
   if value is None:
     return None
   date_kw = {'datefmt': 'international'}
@@ -69,6 +69,17 @@ def castDate(value):
     pass
   elif isinstance(value, basestring):
     try:
+      # This is needed because DateTime(2012) ignores timezone.
+      # >>> DateTime()
+      # DateTime('2012/01/30 19:06:34.216686 GMT+9')
+      # >>> DateTime('2012')
+      # DateTime('2012/01/01 00:00:00 GMT+0')
+      # Timezone changed from GMT+9 to GMT+0!
+      # Then document at "2012/01/01 00:00:00 GMT+9" cannot be found by
+      # query of '2012'.
+      # Because "2012/01/01 00:00:00 GMT+9" < "2012/01/01 00:00:00 GMT+0".
+      if value.isdigit():
+        raise DateTimeError
       value = _DateTime(value, **date_kw)
     except DateTimeError:
       delimiter_count = countDelimiters(value)
@@ -83,7 +94,14 @@ def castDate(value):
         raise
   else:
     raise TypeError, 'Unknown date type: %r' % (value)
-  return value.toZone('UTC')
+  if change_timezone:
+    return value.toZone('UTC')
+  else:
+    # This is needed. Because if you call toZone('UTC'),
+    # 2012/12/01 can become 2012/11/30 and then month
+    # is changed! Month must not be changed. Otherwise
+    # getMonthLen returns wrong value.
+    return value
 
 # (strongly) inspired from DateTime.DateTime.py
 delimiter_list = ' -/.:,+'
@@ -114,7 +132,7 @@ def countDelimiters(value):
 
 @profiler_decorator
 def getPeriodBoundaries(value):
-  first_date = castDate(value)
+  first_date = castDate(value, change_timezone=False)
   if isinstance(value, dict):
     value = value['query']
   # Try to guess how much was given in query.
@@ -127,7 +145,7 @@ def getPeriodBoundaries(value):
   delta = delta_list[delimiter_count]
   if callable(delta):
     delta = delta(first_date)
-  return first_date, first_date + delta
+  return first_date.toZone('UTC'), (first_date + delta).toZone('UTC')
 
 @profiler_decorator
 def wholePeriod(search_key, group, column, value_list, exclude=False):
@@ -258,8 +276,11 @@ class DateTimeKey(SearchKey):
     query_list = []
     extend = query_list.extend
     for comparison_operator, value_list in operator_value_dict.iteritems():
+      reference_value = value_list[0]
+      if isinstance(reference_value, dict):
+        reference_value = reference_value['query']
       try:
-        if parsed:
+        if isinstance(reference_value, basestring):
           subquery_list = operator_matcher_dict[comparison_operator](
                    self, group, column, value_list, comparison_operator,
                    logical_operator)

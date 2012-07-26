@@ -3,6 +3,34 @@ import argparse, pprint, socket, sys, time, xmlrpclib
 from DummyTaskDistributionTool import DummyTaskDistributionTool
 from ERP5TypeTestSuite import ERP5TypeTestSuite
 
+# XXX: below section is shared with erp5/util/testnode/testnode.py .
+# They are supposed to be merged into a common library/tool someday, until
+# then please keep them synchronised.
+# Depending on used xmlrpc backend, different exceptions can be thrown.
+SAFE_RPC_EXCEPTION_LIST = [socket.error, xmlrpclib.ProtocolError, xmlrpclib.Fault]
+parser, _ = xmlrpclib.getparser()
+if xmlrpclib.ExpatParser and isinstance(parser, xmlrpclib.ExpatParser):
+  SAFE_RPC_EXCEPTION_LIST.append(xmlrpclib.expat.ExpatError)
+else:
+  print >>sys.stderr, 'Warning: unhandled xmlrpclib parser %r, some ' \
+    'exceptions might get through safeRpcCall' % (parser, )
+SAFE_RPC_EXCEPTION_LIST = tuple(SAFE_RPC_EXCEPTION_LIST)
+parser_klass = parser.__class__
+__original_feed = parser_klass.feed
+def verbose_feed(self, data):
+  try:
+    return __original_feed(self, data)
+  except Exception:
+    print >>sys.stderr, 'Error parsing data:', repr(data)
+    raise
+try:
+  parser_klass.feed = verbose_feed
+except TypeError:
+  print >>sys.stderr, 'Warning: could not monkey-patch %r.feed to output ' \
+    'parsed data on error, debugging in case of error will be more ' \
+    'difficult' % (parser_klass, )
+del parser, verbose_feed, parser_klass, _
+
 def makeSuite(node_quantity=None, test_suite=None, revision=None,
               db_list=None, **kwargs):
   # BBB tests (plural form) is only checked for backward compatibility
@@ -39,7 +67,7 @@ def safeRpcCall(function, *args):
   while True:
     try:
       return function(*xmlrpc_arg_list)
-    except (socket.error, xmlrpclib.ProtocolError), e:
+    except SAFE_RPC_EXCEPTION_LIST, e:
       print >>sys.stderr, e
       pprint.pprint(args, file(function._Method__name, 'w'))
       time.sleep(retry)

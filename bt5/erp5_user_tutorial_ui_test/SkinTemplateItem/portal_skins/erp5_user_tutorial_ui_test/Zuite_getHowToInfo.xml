@@ -82,8 +82,11 @@ return {\'now\': DateTime(),\n
         \'link_howto_person_first_name\': \'ZUITE-TEST-LINK\',\n
         \'link_howto_person_last_name\': \'USER-001\',\n
         \'link_howto_organisation_title\': \'ZUITE-TEST-LINK-ORGANISATION-001\',\n
+        \'link_howto_organisation2_title\': \'ZUITE-TEST-LINK-ORGANISATION-002\',\n
         \'product_howto_product_title\': \'ZUITE-TEST-PRODUCT-PRODUCT-001\',\n
         \'product_howto_organisation_title\': \'ZUITE-TEST-PRODUCT-ORGANISATION-001\',\n
+        \'product_howto_currency_title\': \'Euro\',\n
+        \'product_howto_currency_tag\': \'EUR\',\n
         \'sale_howto_product_title\': \'ZUITE-TEST-SALEORDER-PRODUCT-001\',\n
         \'sale_howto_organisation_title\': \'ZUITE-TEST-SALEORDER-ORGANISATION-001\',\n
         \'sale_howto_organisation2_title\': \'ZUITE-TEST-SALEORDER-ORGANISATION-002\',\n
@@ -167,6 +170,7 @@ return {\'now\': DateTime(),\n
         \'dig_currency_title\': \'ZUITE_TEST_DIG_EURO\',\n
 \n
         \'functional_test_username\' : \'functional_test_username\',\n
+        \'functional_another_test_username\' : \'functional_another_test_username\',\n
         \'functional_test_user_password\' : \'secret\',\n
         \'functional_test_user_email\': \'lucas@nexedi.com\',\n
 \n

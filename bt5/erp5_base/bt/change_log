@@ -1,3 +1,6 @@
+2012-04-10 Kazuhiko
+* add an external method to generate barcode image.
+
 2011-11-11 arnaud.fontaine
 * Fix document conversion not being performed when data is set directly.
 

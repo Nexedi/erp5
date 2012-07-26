@@ -27,7 +27,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.Sequence import Sequence
 from Products.ERP5.tests.testPackingList import TestPackingListMixin
@@ -56,13 +55,12 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
                         validation_state="validated")
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     portal_rules = self.portal.portal_rules
     rule_id_list = [rule_id for rule_id in portal_rules.objectIds()
                     if rule_id.startswith('testDivergenceTester_')]
     if rule_id_list:
       portal_rules.deleteContent(rule_id_list)
-      transaction.commit()
       self.tic()
 
   def stepResetDeliveringRule(self, sequence):
@@ -74,7 +72,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     new_rule_id = prefix + rule.getId()
     new_rule_reference = prefix + rule.getReference()
     rule = portal_rules.manage_clone(rule, new_rule_id)
-    transaction.savepoint(optimistic=True)
     rule.setVersion(str(int(rule.getVersion()) + 1))
     rule.setReference(new_rule_reference)
     tester_list = rule.contentValues(
@@ -86,7 +83,6 @@ class TestDivergenceTester(TestPackingListMixin, ERP5TypeTestCase):
     if movement is not None:
       applied_rule = movement.getDeliveryRelatedValue().getParentValue()
       applied_rule.setSpecialiseValue(rule)
-    transaction.commit()
     self.tic()
     sequence.edit(rule=rule)
 

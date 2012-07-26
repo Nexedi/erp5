@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="ZopePageTemplate" module="Products.PageTemplates.ZopePageTemplate"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_bind_names</string> </key>
+            <value>
+              <object>
+                <klass>
+                  <global name="NameAssignments" module="Shared.DC.Scripts.Bindings"/>
+                </klass>
+                <tuple/>
+                <state>
+                  <dictionary>
+                    <item>
+                        <key> <string>_asgns</string> </key>
+                        <value>
+                          <dictionary>
+                            <item>
+                                <key> <string>name_subpath</string> </key>
+                                <value> <string>traverse_subpath</string> </value>
+                            </item>
+                          </dictionary>
+                        </value>
+                    </item>
+                  </dictionary>
+                </state>
+              </object>
+            </value>
+        </item>
+        <item>
+            <key> <string>_text</string> </key>
+            <value> <unicode encoding="cdata"><![CDATA[
+
+<tal:block  tal:define="group_list here/Form_getGroupTitleAndId;\n
+                        form_id here/getId;">\n
+\n
+  <tal:block tal:repeat="group group_list">\n
+\n
+        <tal:block tal:define="gid group/gid;">\n
+\n
+          <fieldset tal:attributes="class python:gid +\' editable\';">\n
+\n
+            <tal:block tal:repeat="field python: here.get_fields_in_group(group[\'goid\'])">\n
+\n
+              <tal:block tal:define="title field/title;\n
+                                     field_name python: \'field_%s\' %field.getId();\n
+                                     proxied_field python: test(field.meta_type==\'ProxyField\', field.getRecursiveTemplateField(), field);\n
+                                     field_type python: proxied_field.meta_type;\n
+                                     is_listbox python: field_type==\'ListBox\'">\n
+\n
+                <div class="field">\n
+                  <label tal:content="title" tal:condition="not:is_listbox"/>\n
+                  <div class="input">\n
+\n
+<!--                    <span tal:replace="structure python: getattr(here.gadgets.form, field_type).gadget(field_name=field_name)"/> -->\n
+\n
+                    <!-- XXX: render gadget asynchronously -->\n
+                    <div tal:attributes="gadget string:gadgets/form/${field_type}/gadget?field_name=${field_name};\n
+                                         id string:${form_id}_${field_name};\n
+                                         gadget:property string: {&quot;cacheable&quot;: &quot;1&quot;, &quot;cache_id&quot;: &quot;${form_id}_${field_name}&quot;}"></div>\n
+\n
+                  </div>\n
+                </div>\n
+\n
+              </tal:block>\n
+\n
+            </tal:block>\n
+\n
+           </fieldset>\n
+\n
+        </tal:block>\n
+\n
+  </tal:block>\n
+\n
+</tal:block>
+
+]]></unicode> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/html</string> </value>
+        </item>
+        <item>
+            <key> <string>expand</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>Form_asRenderJSGadget</string> </value>
+        </item>
+        <item>
+            <key> <string>output_encoding</string> </key>
+            <value> <string>iso-8859-15</string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <unicode></unicode> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

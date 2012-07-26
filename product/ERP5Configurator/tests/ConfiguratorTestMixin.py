@@ -113,33 +113,31 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
       self.stepCleanUpRequest()
 
     self.restricted_security = 0
-    # information to know if a business template is a standard business
-    # template or a custom one
-    public_bt5_repository_list = ['http://www.erp5.org/dists/snapshot/bt5/']
-    template_list = self._getBTPathAndIdList(["erp5_base"])
-    if len(template_list) > 0:
-      bt5_repository_path = "/".join(template_list[0][0].split("/")[:-1])
-      try:
-        self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-               [bt5_repository_path], None)
-      except (RuntimeError, IOError): 
-        # If bt5 repository is not a repository use public one.
-        self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                                  public_bt5_repository_list)
-    else:
-      self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                                    public_bt5_repository_list)
+    self.setupAutomaticBusinessTemplateRepository()
 
     # it is required by SecurityTestCase
     self.workflow_tool = self.portal.portal_workflow
     self.setDefaultSitePreference()
+    self.setSystemPreference()
     self.portal.portal_activities.unsubscribe()
+
+  def setSystemPreference(self):
+    portal_type = 'System Preference'
+    preference_list = self.portal.portal_preferences.contentValues(
+                                                       portal_type=portal_type)
+    if not preference_list:
+      preference = self.portal.portal_preferences.newContent(
+                                                       portal_type=portal_type)
+    else:
+      preference = preference_list[0]
+    conversion_dict = _getConversionServerDict()
+    preference.setPreferredOoodocServerAddress(conversion_dict['hostname'])
+    preference.setPreferredOoodocServerPortNumber(conversion_dict['port'])
+    if self.portal.portal_workflow.isTransitionPossible(preference, 'enable'):
+      preference.enable()
 
   def setDefaultSitePreference(self):
     default_pref = self.portal.portal_preferences.default_site_preference
-    conversion_dict = _getConversionServerDict()
-    default_pref.setPreferredOoodocServerAddress(conversion_dict['hostname'])
-    default_pref.setPreferredOoodocServerPortNumber(conversion_dict['port'])
     if self.portal.portal_workflow.isTransitionPossible(default_pref, 'enable'):
       default_pref.enable()
     return default_pref
@@ -172,7 +170,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     response_dict = self.portal.portal_configurator._next(
                             business_configuration, next_dict)
     sequence.edit(response_dict=response_dict)
-    
+
   def stepConfiguratorPrevious(self, sequence=None, sequence_list=None, **kw):
     """ Go to the previous form. """
     business_configuration = sequence.get("business_configuration")
@@ -477,8 +475,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
   def stepSetupInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Install the Configuration """
-    next_dict = {}
-    sequence.edit(next_dict=next_dict)
+    sequence.edit(next_dict={})
 
   def stepCheckInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Check the installation of the configuration """
@@ -1099,7 +1096,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # (skip some states)
     transaction.start()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.all_username_list:
       # everybody can view
@@ -1155,7 +1152,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # in started state, we can modify again, and go back to stopped state
     transaction.restart()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.accountant_username_list:
       self.failUnlessUserCanModifyDocument(username, transaction)
@@ -1239,7 +1236,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # (skip some states)
     transaction.start()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.all_username_list:
       # everybody can view
@@ -1295,7 +1292,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # in started state, we can modify again, and go back to stopped state
     transaction.restart()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.accountant_username_list:
       self.failUnlessUserCanModifyDocument(username, transaction)
@@ -1385,7 +1382,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # (skip some states)
     transaction.start()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.all_username_list:
       # everybody can view
@@ -1441,7 +1438,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # in started state, we can modify again, and go back to stopped state
     transaction.restart()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.accountant_username_list:
       self.failUnlessUserCanModifyDocument(username, transaction)
@@ -1515,7 +1512,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # (skip some states)
     transaction.start()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.all_username_list:
       # everybody can view
@@ -1571,7 +1568,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
     # in started state, we can modify again, and go back to stopped state
     transaction.restart()
     self.assertEquals('started', transaction.getSimulationState())
-    self.stepTic()
+    self.tic()
 
     for username in self.accountant_username_list:
       self.failUnlessUserCanModifyDocument(username, transaction)
@@ -1640,7 +1637,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
 
     accounting_transaction_a.setCausalityValueList([accounting_transaction_b,
                                                     accounting_transaction_c])
-    self.stepTic()
+    self.tic()
   
     accounting_transaction_list = accounting_transaction_a.\
           AccountingTransaction_getCausalityGroupedAccountingTransactionList()
@@ -1657,7 +1654,7 @@ class TestLiveConfiguratorWorkflowMixin(SecurityTestCase):
   
     accounting_transaction_x_related_to_a.delete()
     accounting_transaction_y_related_to_a.cancel()
-    self.stepTic()
+    self.tic()
  
     accounting_transaction_list = accounting_transaction_a.\
           AccountingTransaction_getCausalityGroupedAccountingTransactionList()

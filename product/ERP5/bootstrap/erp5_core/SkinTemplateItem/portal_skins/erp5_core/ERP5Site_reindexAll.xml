@@ -67,7 +67,6 @@ context.portal_preferences.activate(\n
                                          object_tag=tag,\n
                                          object_priority=additional_priority,\n
                                          sql_catalog_id=sql_catalog_id,\n
-                                         passive_commit=passive_commit,\n
                                          start_tree=start_tree,\n
                                          stop_tree=stop_tree,)\n
 \n
@@ -85,7 +84,6 @@ if person_module is not None :\n
                                          object_tag=tag,\n
                                          object_priority=higher_priority,\n
                                          sql_catalog_id=sql_catalog_id,\n
-                                         passive_commit=passive_commit,\n
                                          start_tree=start_tree,\n
                                          stop_tree=stop_tree,)\n
 \n
@@ -110,7 +108,6 @@ context.portal_categories.activate(\n
                                          object_after_tag=object_after_tag,\n
                                          object_priority=higher_priority,\n
                                          sql_catalog_id=sql_catalog_id,\n
-                                         passive_commit=passive_commit,\n
                                          start_tree=start_tree,\n
                                          stop_tree=stop_tree,)\n
 \n
@@ -132,7 +129,6 @@ for folder in [context.portal_alarms, context.portal_activities]:\n
                                            object_after_tag=object_after_tag,\n
                                            object_priority=object_priority,\n
                                            sql_catalog_id=sql_catalog_id,\n
-                                           passive_commit=passive_commit,\n
                                            start_tree=start_tree,\n
                                            stop_tree=stop_tree,)\n
 \n
@@ -154,7 +150,6 @@ context.portal_simulation.activate(\n
                                          object_after_tag=object_after_tag,\n
                                          object_priority=higher_priority,\n
                                          sql_catalog_id=sql_catalog_id,\n
-                                         passive_commit=passive_commit,\n
                                          start_tree=start_tree,\n
                                          stop_tree=stop_tree,)\n
 \n
@@ -209,7 +204,6 @@ for folder in tool_list:\n
                                            object_after_tag=object_after_tag,\n
                                            object_priority=object_priority,\n
                                            sql_catalog_id=sql_catalog_id,\n
-                                           passive_commit=passive_commit,\n
                                            start_tree=start_tree,\n
                                            stop_tree=stop_tree,)\n
 \n
@@ -227,7 +221,6 @@ for folder in portal.objectValues(("ERP5 Folder",)):\n
                                      object_after_tag=object_after_tag,\n
                                      object_priority=object_priority,\n
                                      sql_catalog_id=sql_catalog_id,\n
-                                     passive_commit=passive_commit,\n
                                      start_tree=start_tree,\n
                                      stop_tree=stop_tree,)\n
 \n
@@ -247,7 +240,6 @@ for folder in portal.objectValues(("ERP5 Folder",)):\n
                                      object_after_tag=object_after_tag,\n
                                      object_priority=object_priority,\n
                                      sql_catalog_id=sql_catalog_id,\n
-                                     passive_commit=passive_commit,\n
                                      start_tree=start_tree,\n
                                      stop_tree=stop_tree,)\n
 \n
@@ -257,7 +249,6 @@ context.portal_simulation.activate(\n
       priority=3 + additional_priority\n
       ).InventoryModule_reindexMovementList(\n
                             sql_catalog_id=sql_catalog_id,\n
-                            passive_commit=passive_commit,\n
                             final_activity_tag=\'last_inventory_activity\')\n
 \n
 if final_activity_tag is not None:\n
@@ -278,7 +269,7 @@ return printed\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>sql_catalog_id=None, additional_priority=0, passive_commit=1, clear_catalog=0, final_activity_tag=None, start_tree=None, stop_tree=None</string> </value>
+            <value> <string>sql_catalog_id=None, additional_priority=0, clear_catalog=0, final_activity_tag=None, start_tree=None, stop_tree=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

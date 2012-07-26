@@ -86,16 +86,17 @@ class DownloadableMixin:
     output_format = None
     if not format:
       # Guess the format from original mimetype
-      mimetypes_registry = getToolByName(self.getPortalObject(),
-                                                          'mimetypes_registry')
-      mimetype_object_list = mimetypes_registry.lookup(mime)
-      for mimetype_object in mimetype_object_list:
-        if mimetype_object.extensions:
-          output_format = mimetype_object.extensions[0]
-          break
-        elif mimetype_object.globs:
-          output_format = mimetype_object.globs.strip('*.')
-          break
+      if mime:
+        mimetypes_registry = getToolByName(self.getPortalObject(),
+                                                            'mimetypes_registry')
+        mimetype_object_list = mimetypes_registry.lookup(mime)
+        for mimetype_object in mimetype_object_list:
+          if mimetype_object.extensions:
+            output_format = mimetype_object.extensions[0]
+            break
+          elif mimetype_object.globs:
+            output_format = mimetype_object.globs.strip('*.')
+            break
     else:
       output_format = format
 

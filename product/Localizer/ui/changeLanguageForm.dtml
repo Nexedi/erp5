@@ -1,0 +1,13 @@
+<form id="change_language" action="<dtml-var absolute_url>/changeLanguage"
+      method="post">
+  <div>
+    <select name="lang" onchange="javascript:document.getElementById('change_language').submit()">
+      <dtml-in "context.get_languages_map()" mapping>
+        <option value="<dtml-var id>"<dtml-if selected> selected="selected"</dtml-if>><dtml-var "gettext(title, id)"></option>
+      </dtml-in>
+    </select>
+    <dtml-comment>
+      <input type="submit" value="<dtml-var "gettext('Change')">">
+    </dtml-comment>
+  </div>
+</form>

@@ -29,7 +29,6 @@
 
 # import requested python module
 import os
-import transaction
 from zLOG import LOG
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
@@ -101,7 +100,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
     self.bi_counter_vault = self.paris.surface.banque_interne.guichet_1.encaisse_des_billets_et_monnaies.sortante
     self.createCashInventory(source=None, destination=self.bi_counter_vault, currency=self.currency_1,
                              line_list=line_list)
-    self.stepTic()
+    self.tic()
     # create a person and a bank account
     self.person_1 = self.createPerson(id='person_1',
                                       first_name='toto',
@@ -293,7 +292,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
       self.workflow_tool.doActionFor(new_payment, 'plan_action', 
                                      wf_id='check_payment_workflow')
     self.assertEqual(new_payment.getSimulationState(), 'planned')
-    transaction.commit()
+    self.commit()
     if will_fail:
       message = self.assertWorkflowTransitionFails(new_payment,
                          'check_payment_workflow', 'confirm_action')
@@ -303,7 +302,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
       if insuffisient_balance:
         self.assertTrue(message.find('Bank account is not sufficient')>=0)
       self.assertEqual(new_payment.getSimulationState(), 'planned')
-      transaction.commit()
+      self.commit()
       self.workflow_tool.doActionFor(new_payment, 'reject_action', 
                                      wf_id='check_payment_workflow')
       self.workflow_tool.doActionFor(new_payment, 'cancel_action', 
@@ -314,7 +313,7 @@ class TestERP5BankingCheckPaymentMixin(TestERP5BankingMixin):
                         new_payment, 'confirm_action', 
                         wf_id='check_payment_workflow')
       self.assertEqual(new_payment.getSimulationState(), 'confirmed')
-      transaction.commit()
+      self.commit()
       if check_pay_will_fail:
         self.stepInputCashDetails(check_payment=new_payment)
         message = self.assertWorkflowTransitionFails(new_payment,

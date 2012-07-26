@@ -70,7 +70,8 @@ It is possible to specify a group id and a group title by naming a group followi
       <tal:block tal:condition="preferred_html_style_developper_mode">\n
         <tal:block metal:use-macro="developper_shortcut_render/macros/form" />\n
       </tal:block>\n
-\n
+      <div class="form"\n
+           tal:attributes="id form/getId">\n
       <tal:block tal:repeat="group group_list">\n
         <tal:block tal:define="gid     group/gid;">\n
           <fieldset tal:condition="python: gid.find(\'hidden\') &lt; 0"\n
@@ -86,11 +87,11 @@ It is possible to specify a group id and a group title by naming a group followi
           </fieldset>\n
         </tal:block>\n
       </tal:block>\n
+      </div>\n
       <p class="clear"></p>\n
     </tal:block>\n
   </tal:block>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -108,7 +109,7 @@ It is possible to specify a group id and a group title by naming a group followi
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

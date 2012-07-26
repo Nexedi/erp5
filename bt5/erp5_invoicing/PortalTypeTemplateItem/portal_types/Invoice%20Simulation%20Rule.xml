@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="ERP5TypeInformation" module="Products.ERP5Type.ERP5Type"/>
+      <global name="Base Type" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -17,12 +17,6 @@
         <item>
             <key> <string>content_meta_type</string> </key>
             <value> <string>ERP5 Invoice Simulation Rule</string> </value>
-        </item>
-        <item>
-            <key> <string>description</string> </key>
-            <value> <string>      Transformation Sourcing Rule object make sure\n
-      items required in a Transformation are sourced\n
-</string> </value>
         </item>
         <item>
             <key> <string>factory</string> </key>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="SQL Non Continuous Increasing Id Generator" module="erp5.portal_type"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>default_reference</string> </key>
+            <value> <string>mysql_non_continuous_increasing_non_zodb</string> </value>
+        </item>
+        <item>
+            <key> <string>id</string> </key>
+            <value> <string>mysql_non_continuous_increasing_non_zodb</string> </value>
+        </item>
+        <item>
+            <key> <string>portal_type</string> </key>
+            <value> <string>SQL Non Continuous Increasing Id Generator</string> </value>
+        </item>
+        <item>
+            <key> <string>sid</string> </key>
+            <value>
+              <none/>
+            </value>
+        </item>
+        <item>
+            <key> <string>store_interval</string> </key>
+            <value> <int>1</int> </value>
+        </item>
+        <item>
+            <key> <string>stored_in_zodb</string> </key>
+            <value> <int>0</int> </value>
+        </item>
+        <item>
+            <key> <string>version</string> </key>
+            <value> <string>001</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

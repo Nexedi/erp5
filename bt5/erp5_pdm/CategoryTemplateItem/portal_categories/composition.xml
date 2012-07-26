@@ -101,10 +101,6 @@
             </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
             <key> <string>membership_criterion_base_category</string> </key>
             <value>
               <tuple/>

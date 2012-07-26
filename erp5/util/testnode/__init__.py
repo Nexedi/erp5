@@ -30,12 +30,12 @@ import logging
 import os
 import pkg_resources
 
-import testnode
+from testnode import TestNode
 
-CONFIG = dict(
-  computer_id='COMPUTER',
-  partition_reference='test0',
-)
+CONFIG = {
+  'computer_id': 'COMPUTER',
+  'partition_reference': 'test0',
+}
 
 def main(*args):
   parser = argparse.ArgumentParser()
@@ -48,15 +48,21 @@ def main(*args):
     parsed_argument = parser.parse_args(list(args))
   else:
     parsed_argument = parser.parse_args()
+  logger_format = '%(asctime)s %(name)-13s: %(levelname)-8s %(message)s'
+  formatter = logging.Formatter(logger_format)
+  logging.basicConfig(level=logging.INFO,
+                     format=logger_format)
   logger = logging.getLogger('erp5testnode')
   if parsed_argument.console or parsed_argument.logfile:
-    logger.setLevel(logging.INFO)
     if parsed_argument.console:
       logger.addHandler(logging.StreamHandler())
       logger.info('Activated console output.')
     if parsed_argument.logfile:
-      logger.addHandler(logging.FileHandler(filename=parsed_argument.logfile))
+      file_handler = logging.FileHandler(filename=parsed_argument.logfile)
+      file_handler.setFormatter(formatter)
+      logger.addHandler(file_handler)
       logger.info('Activated logfile %r output' % parsed_argument.logfile)
+      CONFIG['log_file'] = parsed_argument.logfile
   else:
     logger.addHandler(logging.NullHandler())
   CONFIG['logger'] = logger.info
@@ -64,40 +70,33 @@ def main(*args):
   # do not change case of option keys
   config.optionxform = str
   config.readfp(parsed_argument.configuration_file[0])
-  def geto(o):
-    return config.get('testnode', o)
-  CONFIG['slapos_directory'] = geto('slapos_directory')
-  CONFIG['working_directory'] = geto('working_directory')
-  CONFIG['test_suite_directory'] = geto('test_suite_directory')
-  CONFIG['log_directory'] = geto('log_directory')
-  CONFIG['run_directory'] = geto('run_directory')
-  for d in CONFIG['slapos_directory'], CONFIG['working_directory'], \
-      CONFIG['test_suite_directory'], CONFIG['log_directory'], \
-      CONFIG['run_directory']:
+  for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
+      'log_directory', 'run_directory', 'proxy_host', 'proxy_port',
+      'git_binary', 'zip_binary', 'test_suite_title', 'test_node_title',
+      'test_suite', 'project_title', 'node_quantity', 'ipv4_address',
+      'ipv6_address', 'test_suite_master_url', 'slapgrid_partition_binary',
+      'slapgrid_software_binary', 'slapproxy_binary'):
+    CONFIG[key] = config.get('testnode', key)
+  for key in ('slapos_directory', 'working_directory', 'test_suite_directory',
+      'log_directory', 'run_directory'):
+    d = CONFIG[key]
     if not os.path.isdir(d):
       raise ValueError('Directory %r does not exists.' % d)
-  CONFIG['software_root'] = os.path.join(CONFIG['slapos_directory'],
-        'software')
-  CONFIG['instance_root'] = os.path.join(CONFIG['slapos_directory'],
-        'instance')
-  for d in CONFIG['software_root'], CONFIG['instance_root']:
-    if not os.path.lexists(d):
-      os.mkdir(d)
-  CONFIG['proxy_database'] = os.path.join(CONFIG['slapos_directory'],
-        'proxy.db')
-  CONFIG['proxy_host'] = geto('proxy_host')
-  CONFIG['proxy_port'] = geto('proxy_port')
+  slapos_directory = CONFIG['slapos_directory']
+  CONFIG['software_root'] = software_root = os.path.join(slapos_directory,
+    'software')
+  CONFIG['instance_root'] = instance_root = os.path.join(slapos_directory,
+    'instance')
+  CONFIG['proxy_database'] = os.path.join(slapos_directory, 'proxy.db')
+  CONFIG['slapos_config'] = slapos_config = os.path.join(slapos_directory,
+    'slapos.cfg')
+  if not os.path.lexists(software_root):
+    os.mkdir(software_root)
   CONFIG['master_url'] = 'http://%s:%s' % (CONFIG['proxy_host'],
         CONFIG['proxy_port'])
-  slapos_config = pkg_resources.resource_string('erp5.util.testnode',
-    'template/slapos.cfg.in')
-  slapos_config = slapos_config % CONFIG
-  CONFIG['slapos_config'] = os.path.join(CONFIG['slapos_directory'],
-    'slapos.cfg')
-  open(CONFIG['slapos_config'], 'w').write(slapos_config)
-  CONFIG['git_binary'] = geto('git_binary')
-  CONFIG['zip_binary'] = geto('zip_binary')
-  CONFIG['runTestSuite'] = os.path.join(CONFIG['instance_root'],
+  open(slapos_config, 'w').write(pkg_resources.resource_string(
+    'erp5.util.testnode', 'template/slapos.cfg.in') % CONFIG)
+  CONFIG['runTestSuite'] = os.path.join(instance_root,
     CONFIG['partition_reference'], 'bin', 'runTestSuite')
 
   # generate vcs_repository_list
@@ -113,24 +112,16 @@ def main(*args):
       CONFIG['bt5_path'] = bt5_path
 
   CONFIG['vcs_repository_list'] = vcs_repository_list
-  CONFIG['test_suite_title'] = geto('test_suite_title')
-  CONFIG['test_node_title'] = geto('test_node_title')
-  CONFIG['test_suite'] = geto('test_suite')
-  CONFIG['project_title'] = geto('project_title')
-  CONFIG['node_quantity'] = geto('node_quantity')
-  CONFIG['ipv4_address'] = geto('ipv4_address')
-  CONFIG['ipv6_address'] = geto('ipv6_address')
-  CONFIG['test_suite_master_url'] = geto('test_suite_master_url')
-  CONFIG['slapgrid_partition_binary'] = geto('slapgrid_partition_binary')
-  CONFIG['slapgrid_software_binary'] = geto('slapgrid_software_binary')
-  bot_environment = {}
   if 'bot_environment' in config.sections():
     bot_environment = dict(config.items('bot_environment'))
+  else:
+    bot_environment = {}
   CONFIG['bot_environment'] = bot_environment
   CONFIG['environment'] = dict(config.items('environment'))
-  CONFIG['slapproxy_binary'] = geto('slapproxy_binary')
-  instance_dict = {}
   if 'instance_dict' in config.sections():
     instance_dict = dict(config.items('instance_dict'))
+  else:
+    instance_dict = {}
   CONFIG['instance_dict'] = instance_dict
-  testnode.run(CONFIG)
+  testnode = TestNode(logger.info, CONFIG)
+  testnode.run()

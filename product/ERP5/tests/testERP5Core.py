@@ -31,7 +31,6 @@ import unittest
 from hashlib import md5
 import pprint
 
-import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Testing import ZopeTestCase
 
@@ -120,12 +119,11 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     self.auth = '%s:%s' % (self.manager_username, self.manager_password)
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     unregister_translation_domain_fallback()
     if 'test_folder' in self.portal.objectIds():
       self.portal.manage_delObjects(['test_folder'])
     self.portal.portal_selections.setSelectionFor('test_selection', None)
-    transaction.commit()
     self.tic()
 
   def test_01_ERP5Site_createModule(self, quiet=quiet, run=run_all_test):
@@ -245,7 +243,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     # as Member
     self.createUser('usual_member')
     self.logout()
-    transaction.commit()
     self.tic()
     super(TestERP5Core, self).login('usual_member')
     expected = {'folder': [],
@@ -394,12 +391,11 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     # Login as the above user
     newSecurityManager(None, user)
     self.auth = '%s:%s' % (login_name, password)
-    transaction.commit()
+    self.commit()
 
     # Create preference
     portal.portal_preferences.newContent('Preference', title='My Test Preference')
 
-    transaction.commit()
     self.tic()
 
     self.assertEqual(
@@ -416,14 +412,12 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     uid_list = [document_1.getUid(), document_2.getUid()]
     self.portal.portal_selections.setSelectionParamsFor(
           'test_selection', dict(uids=uid_list))
-    transaction.commit()
     self.tic()
     md5_string = md5(str(sorted(map(str, uid_list)))).hexdigest()
     redirect = module.Folder_delete(selection_name='test_selection',
                                     uids=uid_list,
                                     md5_object_uid_list=md5_string)
     self.assert_('Deleted.' in redirect, redirect)
-    transaction.savepoint(optimistic=True)
     self.assertEquals(len(module.objectValues()), 0)
 
   def test_Folder_delete_related_object(self):
@@ -435,7 +429,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       default_career_subordination_value=organisation)
     for obj in person, organisation:
       obj.manage_addLocalRoles(self.manager_username, ['Assignor'])
-    transaction.commit()
+    self.commit()
     self.assertEqual(0, organisation.getRelationCountForDeletion())
     self.tic()
     self.assertEqual(2, organisation.getRelationCountForDeletion())
@@ -449,7 +443,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
         selection_name='test_selection', md5_object_uid_list=md5_string)
       self.assertTrue(('Sorry, 1 item is in use.', 'Deleted.')[assert_deleted]
                       in redirect, redirect)
-      transaction.commit()
       self.tic()
     delete(0, organisation)
     delete(1, person)
@@ -473,7 +466,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
     uid_list = [document_2.getUid(), ]
     self.portal.portal_selections.setSelectionParamsFor(
                           'test_selection', dict(uids=uid_list))
-    transaction.commit()
     self.tic()
     self.assertEquals([document_1],
         self.portal.portal_categories.getRelatedValueList(document_2))
@@ -485,7 +477,6 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
                                     uids=uid_list,
                                     md5_object_uid_list=md5_string)
     self.assert_('Sorry, 1 item is in use.' in redirect, redirect)
-    transaction.savepoint(optimistic=True)
     self.assertEquals(len(module.objectValues()), 2)
 
   def test_getPropertyForUid(self):
@@ -530,7 +521,7 @@ class TestERP5Core(ERP5TypeTestCase, ZopeTestCase.Functional):
       self.assertEqual(queryUtility(ITranslationDomain, 'ui'), erp5_ui_catalog)
     finally:
       # clean everything up, we don't want to mess the test environment
-      transaction.abort()
+      self.abort()
       setSite(old_site)
 
 def test_suite():

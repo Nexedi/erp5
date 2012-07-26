@@ -65,7 +65,6 @@ if id_list_list is not None:\n
 activate_kw = {\n
   \'tag\': object_tag,\n
   \'after_tag\': object_after_tag,\n
-  \'passive_commit\': passive_commit,\n
   \'priority\': object_priority\n
 }\n
 for key, value in activate_kw.items():\n
@@ -102,7 +101,6 @@ if id_list_list is not None:\n
          object_priority=object_priority,\n
          object_tag=object_tag,\n
          sql_catalog_id=sql_catalog_id,\n
-         passive_commit=passive_commit,\n
          folder_tag=folder_tag,\n
          folder_after_tag=folder_after_tag,\n
          count=count,\n
@@ -113,7 +111,7 @@ if id_list_list is not None:\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>id_list, id_list_list=None, folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, passive_commit=1, count=None</string> </value>
+            <value> <string>id_list, id_list_list=None, folder_tag=None, folder_after_tag=None, object_tag=None, object_after_tag=None, object_priority=1, sql_catalog_id=None, count=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

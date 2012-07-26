@@ -28,7 +28,6 @@
 
 import unittest
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
@@ -128,16 +127,14 @@ class TestNotificationTool(ERP5TypeTestCase):
     portal._setObject('MailHost', DummyMailHost('MailHost'))
     portal.email_from_address = 'site@example.invalid'
     self.portal.portal_caches.clearAllCache()
-    transaction.commit()
     self.tic()
     self.login('erp5user')
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     # clear modules if necessary
     self.portal.person_module.manage_delObjects(
             list(self.portal.person_module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def stepAddUserA(self, sequence=None, sequence_list=None, **kw):
@@ -502,7 +499,6 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     TestNotificationTool.beforeTearDown(self)
     self.portal.event_module.manage_delObjects(
             list(self.portal.event_module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def test_store_as_event(self):
@@ -511,13 +507,12 @@ class TestNotificationToolWithCRM(TestNotificationTool):
     person = self.portal.person_module.newContent(
         portal_type="Person",
         default_email_text="userA@example.invalid")
-
+    self.tic()
     self.portal.portal_notifications.sendMessage(
                                   store_as_event=True,
                                   recipient=person,
                                   subject='Subject',
                                   message='Message')
-    transaction.commit()
     self.tic()
     last_message = self.portal.MailHost._last_message
     self.assertNotEquals((), last_message)

@@ -11,7 +11,6 @@ class_file:
 path
 method_id
 group_method_id
-order_validation_text
 </params>
 SELECT uid FROM
   message
@@ -20,5 +19,4 @@ WHERE
   AND path = <dtml-sqlvar path type="string">
   AND method_id = <dtml-sqlvar method_id type="string">
   AND group_method_id = <dtml-sqlvar group_method_id type="string">
-  AND order_validation_text = <dtml-sqlvar order_validation_text type="string">
 FOR UPDATE

@@ -85,7 +85,6 @@ reversal = accounting_module.newContent (\n
   mapping={\'title\': unicode(context.getTitleOrId(), \'utf8\'),\n
            \'specific_reference\': specific_reference}),\n
     resource=context.getResource(),\n
-    reference=context.getReference(),\n
     causality_value_list=causality_value_list,\n
     created_by_builder=1 # XXX to prevent init script to create lines\n
   )\n

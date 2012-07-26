@@ -59,10 +59,6 @@ This is not used anymore and is left only as an example.</string> </value>
             <value> <string>new_accounting_transaction_root_simulation_rule</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Accounting Transaction Root Simulation Rule</string> </value>
         </item>

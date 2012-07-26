@@ -40,7 +40,6 @@
 
 
 import unittest
-import transaction
 
 from Products.ERP5Type.Utils import cartesianProduct
 from copy import copy
@@ -94,7 +93,6 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     preference.setPreferredApparelComponentVariationBaseCategoryList(('variation',))
     if preference.getPreferenceState() == 'disabled':
       preference.enable()
-    transaction.commit()
     self.tic()
 
   def afterSetUp(self, quiet=1, run=run_all_test):
@@ -345,14 +343,13 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
     workflow_tool = self.getPortal().portal_workflow
     workflow_tool.doActionFor(packing_list,
                       "confirm_action", "packing_list_workflow")
-    transaction.commit()
+    self.commit()
     # Apply tic so that the packing list is not in building state
     self.tic() # acceptable here because this is not the job
                # of the test to check if can do all transition
                # without processing messages
     workflow_tool.doActionFor(packing_list,
                       "set_ready_action", "packing_list_workflow")
-    transaction.commit()
     self.tic()
     workflow_tool.doActionFor(packing_list,
                       "start_action", "packing_list_workflow")
@@ -613,7 +610,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
 
     bc = category_tool.newContent(portal_type = 'Base Category', id = 'testing_category')
     self.createCategory(bc, ['a', ['aa', 'ab'], 'o', 'z', ['za', 'zb', ['zba', 'zbb'], 'zc'] ])
-    self.stepTic()
+    self.tic()
 
     category_org_list = [ ['testing_category/a/aa', 'testing_category/o'], # 0
                           ['testing_category/a/aa', 'testing_category/z'], # 1
@@ -1235,8 +1232,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
       LOG("Transiting '%s' on packing list %s" % (action, transition_step['id']), 0, '')
       workflow_tool.doActionFor(transited_pl, action, packing_list_workflow)
       transited_pl.recursiveImmediateReindexObject() # XXX
-      transaction.commit()
-      self.stepTic()
+      self.tic()
 
       for omit_transit in (0,1):
         values = expected_values[omit_transit]
@@ -1726,9 +1722,7 @@ class TestInventory(TestOrderMixin, ERP5TypeTestCase):
               )
       sequence.edit(packing_list_list = packing_list_list)
 
-    transaction.commit()
-    self.stepTic()
-    transaction.commit()
+    self.tic()
 
     # Then test the next negative date
     next_date = simulation.getNextNegativeInventoryDate(

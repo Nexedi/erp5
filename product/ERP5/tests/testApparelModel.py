@@ -29,7 +29,6 @@ import unittest
 from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from zLOG import LOG
-import transaction
 
 class TestApparelModel(ERP5TypeTestCase):
 

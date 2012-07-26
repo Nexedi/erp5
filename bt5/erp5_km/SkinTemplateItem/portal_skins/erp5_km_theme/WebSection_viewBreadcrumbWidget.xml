@@ -58,17 +58,20 @@
                        breadcrumb_list python: current_web_section.getBreadcrumbItemList(current_web_document);">\n
 <ul class="breadcrumb">\n
   <li tal:repeat="breadcrumb python:breadcrumb_list[:(is_web_section_default_document and -1 or None)]">\n
-    <a href="#" tal:attributes="href python:current_web_section.getPermanentURL(breadcrumb[1]);\n
-                                title python:breadcrumb[2];"\n
-                tal:content="python:breadcrumb[0]">Title</a>\n
-    <tal:block tal:condition="not: repeat/breadcrumb/end">\n
-      <img class="breadcrumb_separator" src="../km_img/crumb.png" alt="&gt;"\n
-       tal:attributes="src string:${portal_path}/km_img/crumb.png"/>\n
+    <tal:block tal:define="is_last repeat/breadcrumb/end">\n
+      <a href="#"\n
+         tal:attributes="href python:current_web_section.getPermanentURL(breadcrumb[1]);\n
+                         title python:breadcrumb[2];\n
+                         class python: test(is_last, \'last-breadcrumb\', \'breadcrumb\')"\n
+         tal:content="python:breadcrumb[0]">Title</a>\n
+      <img tal:condition="not: is_last"\n
+             class="breadcrumb_separator"\n
+             src="../km_img/crumb.png" alt="&gt;"\n
+             tal:attributes="src string:${portal_path}/km_img/crumb.png"/>\n
     </tal:block>\n
   </li>\n
 </ul>\n
-</tal:block>\n
-
+</tal:block>
 
 ]]></unicode> </value>
         </item>
@@ -86,7 +89,7 @@
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

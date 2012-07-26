@@ -52,6 +52,15 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 \n
+howto_dict = context.Zuite_getHowToInfo()\n
+\n
+# remove the currency if it was created by us before\n
+currency = context.portal_catalog.getResultValue(portal_type=\'Currency\',\n
+                                                 title=howto_dict[\'product_howto_currency_title\'],\n
+                                                 local_roles = \'Owner\')\n
+if currency is not None:\n
+  context.currency_module.deleteContent(currency.getId())\n
+\n
 # remove the product of the test if existing\n
 product_list = context.Zuite_checkPortalCatalog(portal_type=\'Product\', max_count=1,\n
                                                 title=context.Zuite_getHowToInfo()[\'product_howto_product_title\'])\n

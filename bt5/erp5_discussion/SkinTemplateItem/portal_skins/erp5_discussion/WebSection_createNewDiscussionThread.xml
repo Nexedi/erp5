@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
  This script allows to create a new Discussion Thread.\n
 """\n
 MARKER = [\'\', None, []]\n
@@ -69,7 +71,15 @@ if site_list in MARKER:\n
 # set predicate settings for current Web Section\n
 membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
 multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()\n
-reference = title.replace(\' \', \'-\')\n
+\n
+reference = title.replace(\' \', \'-\').replace(\'?\', \'\').replace(\':\', \'\').replace(\'/\', \'\').replace(\'&\', \'\').replace(\'=\', \'\')\n
+existing_document = context.getDocumentValue(reference)\n
+if existing_document is not None:\n
+  # if there are other document which reference duplicates just add some random part\n
+  # so we can distinguish)\n
+  reference = \'%s-%s\' %(context.Base_generateRandomString(), reference)\n
+\n
+category_list = []\n
 create_kw = dict(title = title,\n
                  source_value = person,\n
                  reference = reference,\n
@@ -80,12 +90,19 @@ create_kw = dict(title = title,\n
                  classification=classification,\n
                  group_list=group_list,\n
                  site_list=site_list)\n
+\n
 for base_category in multimembership_criterion_base_category_list:\n
-  create_kw[\'%s_list\' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]\n
+  #create_kw[\'%s_list\' %base_category] = [x for x in membership_criterion_category_list if x.startswith(base_category)]\n
+  category_list.extend([x for x in membership_criterion_category_list if x.startswith(base_category)])\n
 \n
 discussion_thread = portal.discussion_thread_module.newContent(\n
                       portal_type = "Discussion Thread",\n
                       **create_kw)\n
+# as we create a thread under a "root" predicate web section copy\n
+# all categories from it to create thread, this way thread will be part\n
+# of web section (through getDocumentValue API)\n
+discussion_thread.setCategoryList(category_list)\n
+\n
 discussion_post = discussion_thread.newContent(\n
                       portal_type = "Discussion Post",\n
                       title = title,\n
@@ -95,8 +112,8 @@ discussion_post = discussion_thread.newContent(\n
                       language = language)\n
 \n
 # depending on security model Thread and Post can be directly published or shared\n
-portal_status_message = "New discussion created. Your post will be reviewed for approval."\n
-discussion_thread.submit()\n
+portal_status_message = "New discussion created in backgroud."\n
+discussion_thread.publish()\n
 \n
 if send_notification_text not in (\'\', None):\n
   # we can send notifications\n
@@ -135,13 +152,23 @@ if send_notification_text not in (\'\', None):\n
         message_text_format=notification_message.getContentType(),\n
         store_as_event=False)\n
 \n
-return discussion_thread.Base_redirect(form_id,\n
+return context.Base_redirect(form_id,\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
-</string> </value>
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
             <value> <string>title, text_content, form_id=\'view\', predecessor=None, description=None, subject_list=None, classification=None, group_list=None, site_list=None, send_notification_text=None, reference=None,**kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Assignor</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>

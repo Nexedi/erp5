@@ -2,7 +2,7 @@
 <ZopeData>
   <record id="1" aka="AAAAAAAAAAE=">
     <pickle>
-      <global name="BaseCategory" module="Products.ERP5.Tool.Category"/>
+      <global name="Base Category" module="erp5.portal_type"/>
     </pickle>
     <pickle>
       <dictionary>
@@ -89,10 +89,6 @@
         <item>
             <key> <string>id_group</string> </key>
             <value> <string>None</string> </value>
-        </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
         </item>
         <item>
             <key> <string>membership_criterion_base_category</string> </key>

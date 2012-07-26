@@ -59,11 +59,11 @@ if user_id is None:\n
 \n
 def getGroupList(user_id=user_id):\n
 \n
-  valid_assignment_list = context.Baobab_getUserAssignmentList(user_id=user_id)\n
+  valid_assignment = context.Baobab_getUserAssignment(user_id=user_id)\n
 \n
   group_list = []\n
-  for a in valid_assignment_list:\n
-    new_group = a.getGroup()\n
+  if valid_assignment != None:\n
+    new_group = valid_assignment.getGroup()\n
     if not new_group.startswith(\'group\'):\n
       new_group=\'group/%s\' % new_group\n
     if new_group not in (\'\', None):\n

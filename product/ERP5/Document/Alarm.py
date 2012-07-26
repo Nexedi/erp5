@@ -32,10 +32,11 @@ from DateTime import DateTime
 from AccessControl import ClassSecurityInfo, Unauthorized
 from AccessControl.SecurityManagement import getSecurityManager, \
             setSecurityManager, newSecurityManager
+from AccessControl.User import nobody
 from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5Security.ERP5UserManager import SUPER_USER
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 
 class Alarm(XMLObject, PeriodicityMixin):
@@ -118,11 +119,10 @@ class Alarm(XMLObject, PeriodicityMixin):
       if not checkPermission(Permissions.ManagePortal, self):
         raise Unauthorized('fixing problems or activating a disabled alarm is not allowed')
 
-    # Switch to the superuser temporarily, so that the behavior would not
+    # Use UnrestrictedMethod, so that the behavior would not
     # change even if this method is invoked by random users.
-    sm = getSecurityManager()
-    newSecurityManager(None, portal_membership.getMemberById(SUPER_USER))
-    try:
+    @UnrestrictedMethod
+    def _activeSense():
       # Set the next date at which this method should be invoked
       self.setNextAlarmDate()
 
@@ -158,6 +158,13 @@ class Alarm(XMLObject, PeriodicityMixin):
           getattr(self.activate(tag=tag), method_id)()
         if self.isAlarmNotificationMode():
           self.activate(after_tag=tag).notify(include_active=True, params=params)
+
+    # switch to nobody temporarily so that unrestricted _activeSense
+    # is already invoked by system user.
+    sm = getSecurityManager()
+    newSecurityManager(None, nobody)
+    try:
+      _activeSense()
     finally:
       # Restore the original user.
       setSecurityManager(sm)

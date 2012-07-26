@@ -50,34 +50,10 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-delivery = state_change[\'object\'].getParentValue()\n
-if not delivery.isDelivery:\n
-  # update simulation from delivery\n
-  return\n
-\n
-# copy&paste from delivery_movement_simulation_interaction_workflow/scripts/DeliveryMovement_updateSimulation\n
-delivery_path = delivery.getPath()\n
-path_and_method_id = (delivery_path, (\'immediateReindexObject\',\'recursiveImmediateReindexObject\'))\n
-expand_tag = delivery_path + \'_expand\'\n
-tag = delivery_path + \'_updateAppliedRule\'\n
-\n
-priority = 3\n
-\n
-activate_kw = { \n
-  \'tag\': expand_tag,\n
-  \'priority\': priority,\n
-}\n
-delivery.activate(\n
-    after_path_and_method_id=path_and_method_id,\n
-    after_tag=expand_tag,\n
-    tag=tag,\n
-    priority=priority,\n
-    ).Delivery_updateAppliedRule(activate_kw=activate_kw)\n
-
-
-]]></string> </value>
+            <value> <string>delivery = state_change[\'object\'].getParentValue()\n
+if delivery.isDelivery:\n
+  delivery.Delivery_updateSimulation()\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

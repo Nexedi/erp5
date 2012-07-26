@@ -1471,10 +1471,6 @@
             <key> <string>id</string> </key>
             <value> <string>portal_contributions</string> </value>
         </item>
-        <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>1</string> </value>
-        </item>
       </dictionary>
     </pickle>
   </record>

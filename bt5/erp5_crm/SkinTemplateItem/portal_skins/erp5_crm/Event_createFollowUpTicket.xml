@@ -57,13 +57,24 @@ event = context\n
 operator_list = event.getDestinationList()\n
 try:\n
   source_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
+  if source_value:\n
+    operator_list.append(source_value.getRelativeUrl())\n
 except ValueError:\n
   source_value = None\n
-if source_value is not None:\n
-  source_section_value = source_value.getDefaultCareerSubordinationValue()\n
-  operator_list.append(source_value.getRelativeUrl())\n
-else:\n
-  source_section_value = None\n
+source_section = portal.portal_preferences.getPreferredSection(),\n
+\n
+\n
+resource_kw = {\n
+  "Campaign" : "follow_up_campaign_resource",\n
+  "Meeting" : "follow_up_meeting_resource",\n
+  "Sale Opportunity" : "follow_up_sale_opportunity_resource",\n
+  "Support Request" : "follow_up_support_request_resource",\n
+}\n
+\n
+resource = None\n
+if follow_up_ticket_type in resource_kw:\n
+  resource = kw.get(resource_kw[follow_up_ticket_type], None)\n
+\n
 \n
 module = portal.getDefaultModule(follow_up_ticket_type)\n
 ticket = module.newContent(\n
@@ -71,20 +82,25 @@ ticket = module.newContent(\n
             title=follow_up_ticket_title,\n
             start_date=event.getStartDate(),\n
             destination_decision_list=event.getSourceList(),\n
-            destination_section=event.getSourceSection() or event.getSource(),\n
+            # destination_section=event.getSourceSection() or event.getSource(),\n
             source_trade_set=operator_list,\n
             source_value=source_value,\n
-            source_section_value=source_section_value,\n
+            source_section=source_section,\n
+            resource=resource,\n
            )\n
 \n
 follow_up_list = event.getFollowUpList()\n
 follow_up_list.append(ticket.getRelativeUrl())\n
 event.edit(follow_up_list=follow_up_list)\n
+\n
+if portal.portal_workflow.isTransitionPossible(\n
+    ticket, \'submit\'):\n
+  ticket.submit()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>follow_up_ticket_title="Sale Opportunity", follow_up_ticket_type=None, follow_up_ticket_resource=None, **kw</string> </value>
+            <value> <string>follow_up_ticket_title="Sale Opportunity", follow_up_ticket_type=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

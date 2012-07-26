@@ -30,7 +30,6 @@
 import unittest
 from lxml import etree
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
@@ -259,7 +258,7 @@ return []
     request.form['my_file_upload'] = FileUpload(DummyFieldStorage())
     listbox.get_value('default', render_format='list', REQUEST=request)
     try:
-      transaction.commit()
+      self.commit()
     except TypeError, e:
       self.fail('Unable to commit transaction: %s' % e)
 
@@ -317,7 +316,7 @@ return []
     request = get_request()
     request['here'] = here
 
-    transaction.commit()
+    self.commit()
 
     listbox_title_column = form.listbox_title
 

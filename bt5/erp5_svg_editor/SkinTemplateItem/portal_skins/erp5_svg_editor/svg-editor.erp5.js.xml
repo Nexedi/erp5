@@ -41,7 +41,7 @@
             <value> <unicode>window.onload = function() {\n
   var svg_canvas = window.frames["svgframe"].svgCanvas;\n
   var text_content = $.ajax({\n
-                             url: "getTextContent",\n
+                             url: "Base_getSVGTextContent",\n
                              async: false\n
                             }).responseText;\n
   text_content != "" ? svg_canvas.setSvgString(text_content) : null;\n
@@ -53,7 +53,7 @@ $(document).ready(function(){\n
     var svg_canvas = window.frames["svgframe"].svgCanvas;\n
     $.ajax({\n
        type: "POST",\n
-       url: "Base_setTextContentWrapper",\n
+       url: "Base_setSVGTextContent",\n
        data: "text=" + svg_canvas.getSvgString(),\n
        success: function(){\n
          window.location.reload();\n
@@ -77,7 +77,7 @@ $(document).ready(function(){\n
         </item>
         <item>
             <key> <string>output_encoding</string> </key>
-            <value> <string>utf-8</string> </value>
+            <value> <string>iso-8859-15</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

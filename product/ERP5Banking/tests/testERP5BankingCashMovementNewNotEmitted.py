@@ -110,7 +110,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
       description='test',
       start_date=self.date,
       source_total_asset_price=2000000.0)
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(self.cash_movement_module.objectValues()), 1)
     self.cash_movement = getattr(self.cash_movement_module, 'cash_movement_1')
     self.assertEqual(self.cash_movement.getPortalType(), 'Cash Movement New Not Emitted')
@@ -159,7 +159,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
       'Cash Movement New Not Emitted Line',
     )
 
-    self.stepTic()
+    self.tic()
     self.assertEqual(len(self.cash_movement.objectValues()), 3)
     self.assertEqual(self.cash_movement.getBaobabDestination(),
             'site/testsite/principale/spain/caveau/serre/encaisse_des_billets_neufs_non_emis')
@@ -170,7 +170,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     """
     self.workflow_tool.doActionFor(self.cash_movement, 'stop_action',
                   wf_id='cash_movement_new_not_emitted_workflow', stop_date=self.date)
-    self.stepTic()
+    self.tic()
     state = self.cash_movement.getSimulationState()
     self.assertEqual(state, 'stopped')
 
@@ -179,7 +179,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     Confirm the cash_movement and check it
     """
     self.workflow_tool.doActionFor(self.cash_movement, 'confirm_action', wf_id='cash_movement_new_not_emitted_workflow')
-    self.stepTic()
+    self.tic()
     state = self.cash_movement.getSimulationState()
     self.assertEqual(state, 'confirmed')
 
@@ -188,7 +188,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     Start the cash_movement and check it
     """
     self.workflow_tool.doActionFor(self.cash_movement, 'start_action', wf_id='cash_movement_new_not_emitted_workflow')
-    self.stepTic()
+    self.tic()
     state = self.cash_movement.getSimulationState()
     self.assertEqual(state, 'started')
 
@@ -198,7 +198,7 @@ class TestERP5BankingCashMovementNewNotEmitted(TestERP5BankingMonetaryReceptionM
     and check that the deliver of a cash tranfer have achieved
     """
     self.workflow_tool.doActionFor(self.cash_movement, 'deliver_action', wf_id='cash_movement_new_not_emitted_workflow')
-    self.stepTic()
+    self.tic()
     state = self.cash_movement.getSimulationState()
     self.assertEqual(state, 'delivered')
 

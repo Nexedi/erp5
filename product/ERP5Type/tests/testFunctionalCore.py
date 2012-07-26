@@ -29,7 +29,6 @@
 
 import os
 import unittest
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
@@ -48,7 +47,12 @@ class TestZeleniumCore(ERP5TypeFunctionalTestCase):
                 'erp5_trade', 'erp5_pdm', 'erp5_ooo_import',
                 'erp5_accounting', 'erp5_invoicing',
                 'erp5_simplified_invoicing', 'erp5_project',
-                'erp5_simulation', 'erp5_simulation_test',
+                'erp5_simulation',
+                'erp5_configurator_standard_solver',
+                'erp5_configurator_standard_trade_template',
+                'erp5_configurator_standard_accounting_template',
+                'erp5_configurator_standard_invoicing_template',
+                'erp5_simulation_test',
                 'erp5_accounting_ui_test',
                 'erp5_pdm_ui_test',
                 'erp5_trade_ui_test',

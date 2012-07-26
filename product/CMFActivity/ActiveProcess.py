@@ -36,6 +36,7 @@ from BTrees.Length import Length
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE, \
   VALIDATE_ERROR_STATE
 from random import randrange
+from .ActiveResult import ActiveResult
 
 manage_addActiveProcessForm = DTMLFile('dtml/ActiveProcess_add', globals())
 
@@ -105,6 +106,10 @@ class ActiveProcess(Base):
         self.result_len.change(1)
         return
     result_list.append(result)
+
+  security.declareProtected(CMFCorePermissions.ManagePortal, 'postActiveResult')
+  def postActiveResult(self, *args, **kw):
+    return self.postResult(ActiveResult(*args, **kw))
 
   security.declareProtected(CMFCorePermissions.ManagePortal, 'getResultList')
   def getResultList(self, **kw):

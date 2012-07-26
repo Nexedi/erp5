@@ -423,19 +423,6 @@ class ERP5TypeInformation(XMLObject,
       import erp5.portal_type as module
       return getattr(module, self.getId())
 
-    security.declarePrivate('updatePropertySheetDefinitionDict')
-    def updatePropertySheetDefinitionDict(self, definition_dict):
-      for property_sheet_name in self.getTypePropertySheetList():
-        base = getattr(PropertySheet, property_sheet_name, None)
-        if base is not None:
-          for list_name, property_list in definition_dict.items():
-            try:
-              property_list += getattr(base, list_name, ())
-            except TypeError:
-              raise ValueError("%s is not a list for %s" % (list_name, base))
-      if '_categories' in definition_dict:
-        definition_dict['_categories'] += self.getTypeBaseCategoryList()
-
     # The following 2 methods are needed before there are generated.
 
     security.declareProtected(Permissions.AccessContentsInformation,
@@ -517,24 +504,21 @@ class ERP5TypeInformation(XMLObject,
                               'getInstancePropertyAndBaseCategoryList')
     def getInstancePropertyAndBaseCategoryList(self):
       """Return all the properties and base categories of the portal type. """
-      # PropertHolder._properties doesn't contain 'content' properties.
-      ob = self.constructTempInstance(self, self.getId())
-      property_list = list(getattr(ob.__class__, '_properties', []))
-      self.updatePropertySheetDefinitionDict({'_properties': property_list})
-      for property_sheet in getClassPropertyList(ob.__class__):
-        property_list += getattr(property_sheet, '_properties', () )
-
+      # XXX: Hack until introspection methods are defined. At least, this works
+      #      for portal_type whose properties are defined dynamically
+      #      (e.g. temporary property sheets).
+      #      See also AcquiredProperty._asPropertyMap
+      cls = self.getPortalObject().portal_types.getPortalTypeClass(self.getId())
       return_set = set()
-      for property in property_list:
+      for property in cls.getAccessorHolderPropertyList(content=True):
         if property['type'] == 'content':
           for suffix in property['acquired_property_id']:
             return_set.add(property['id'] + '_' + suffix)
         else:
           return_set.add(property['id'])
-      for category in ob.getBaseCategoryList():
+      for category in cls._categories:
         return_set.add(category)
         return_set.add(category + '_free_text')
-
       # XXX Can't return set to restricted code in Zope 2.8.
       return list(return_set)
 

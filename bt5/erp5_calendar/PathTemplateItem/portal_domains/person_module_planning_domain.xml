@@ -33,10 +33,6 @@
             <value> <string>person_module_planning_domain</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>42</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Base Domain</string> </value>
         </item>

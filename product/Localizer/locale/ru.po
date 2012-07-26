@@ -1,0 +1,1145 @@
+# russian po file for Localizer.
+# Copyright (C) 2003 Free Software Foundation, Inc.
+# Alexey Lubimov <avl@altlinux.ru>, 2003.
+msgid ""
+msgstr ""
+"Project-Id-Version: User messages\n"
+"POT-Creation-Date: 2010-01-29 14:01+CET\n"
+"PO-Revision-Date: 2003-07-31 09:07+MSK\n"
+"Last-Translator: Lubimov Alexey <avl@altlinux.ru>\n"
+"Language-Team: ru <RU@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: MessageCatalog.py:684
+msgid "%s"
+msgstr ""
+
+#: MessageCatalog.py:809 LocalContent.py:237
+msgid "1.1.x"
+msgstr ""
+
+#: MessageCatalog.py:679 LocalContent.py:143
+msgid "1.x"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"A Local Content object provides a storage for multilingual (and non "
+"multilingual) properties. It also helps you keep your content separated from "
+"the logic and the presentation."
+msgstr ""
+"Local Content объект предоставляет хранилище для многоязычных (и не "
+"многоязычных) свойств. Он также помогает хранить данные (content) отдельно "
+"от логики (logic) и представления (presentation)."
+
+#, fuzzy
+msgid ""
+"A Localizer object lets you customize the language negotiation policy. It "
+"lets you use cookies, the path or any other criteria to select the user "
+"preferred language."
+msgstr ""
+"Объект Localizer позволяет адаптировать политику выбора языка. Он позволяет "
+"использовать куки (cookies), путь и любые другие критерии для выбора "
+"предпочитаемого пользователем языка."
+
+msgid ""
+"A local folder is a generic solution to manage any kind of multingual "
+"objects, files, images, scripts, etc.."
+msgstr ""
+"Локальная папка, это универсальный способ управления любыми аспектами "
+"мультиязыковых объектов, файлов, изображений, скриптов и т.д...\r\n"
+"  "
+
+msgid ""
+"A message catalog stores messages and its translations to different "
+"languages. It provides the <tt>gettext</tt> method to get the right "
+"translation for a given message. Message catalogs are useful to translate "
+"the application interfaces (labels, buttons, etc..)."
+msgstr ""
+"Каталог сообщений хранит сообщения и их переводы на разные языки  Он "
+"предоставляет <tt>gettext</tt> метод для доступа к правильному переводу "
+"требуемого сообщения. Каталог сообщений используется для перевода интерфейса "
+"приложений (метки, кнопки, итд..)."
+
+#: utils.py:96
+msgid "Abkhazian"
+msgstr ""
+
+msgid "Add"
+msgstr "Добавить"
+
+msgid "Add Local Content"
+msgstr "Добавить локальное содержимое"
+
+msgid "Add Local Folder"
+msgstr "Добавить локальную папку"
+
+msgid "Add Localizer"
+msgstr "Добавить Localizer"
+
+msgid "Add Message Catalog"
+msgstr "Добавить каталог сообщений"
+
+#, fuzzy
+msgid "Add language"
+msgstr "Язык"
+
+#: utils.py:97
+msgid "Afar"
+msgstr ""
+
+#: utils.py:98
+msgid "Afrikaans"
+msgstr ""
+
+#: utils.py:99
+msgid "Albanian"
+msgstr ""
+
+#: utils.py:100
+msgid "Amharic"
+msgstr ""
+
+#: utils.py:101
+msgid "Arabic"
+msgstr ""
+
+#: utils.py:102
+msgid "Armenian"
+msgstr ""
+
+#: utils.py:103
+#, fuzzy
+msgid "Assamese"
+msgstr "Сообщения"
+
+#: LocalFolder.py:62
+msgid "Attributes"
+msgstr "Атрибуты"
+
+#: utils.py:104
+msgid "Aymara"
+msgstr ""
+
+#: utils.py:105
+msgid "Azerbaijani"
+msgstr ""
+
+#: utils.py:106
+msgid "Bashkir"
+msgstr ""
+
+#: utils.py:107
+msgid "Basque"
+msgstr "Язык басков"
+
+#: utils.py:116
+msgid "Belarusian"
+msgstr ""
+
+#: utils.py:108
+msgid "Bengali"
+msgstr ""
+
+#, fuzzy
+msgid ""
+"Besides the title the header of a PO file stores more information; the name "
+"and the email address of the last translator, the email address of the "
+"translation team and the charset. The forms below let you modify this "
+"information for each language."
+msgstr ""
+"Кроме заглавия, заголовок PO файла содержит дополнительную информацию, имя и "
+"e-mail последнего переводчика, e-mail команды переводчиков и кодировку. "
+"Форму внизу позволяет изменить эту информацию для каждого языка."
+
+#: utils.py:109
+msgid "Bhutani"
+msgstr ""
+
+#: utils.py:110
+msgid "Bihari"
+msgstr ""
+
+#: utils.py:111
+msgid "Bislama"
+msgstr ""
+
+#: utils.py:112
+msgid "Bosnian"
+msgstr ""
+
+#: utils.py:113
+msgid "Breton"
+msgstr ""
+
+#, fuzzy
+msgid "Browse the messages"
+msgstr "Сообщений нет"
+
+#: utils.py:114
+#, fuzzy
+msgid "Bulgarian"
+msgstr "Венгерский"
+
+#: utils.py:115
+msgid "Burmese"
+msgstr ""
+
+#: utils.py:117
+msgid "Cambodian"
+msgstr ""
+
+#: utils.py:118
+msgid "Catalan"
+msgstr "Каталонское наречие"
+
+msgid "Change"
+msgstr "Изменить"
+
+msgid "Charset"
+msgstr "Кодировка"
+
+#: utils.py:119
+#, fuzzy
+msgid "Chinese"
+msgstr "Изменить"
+
+#: utils.py:120
+msgid "Chinese/China"
+msgstr ""
+
+#: utils.py:121
+msgid "Chinese/Taiwan"
+msgstr ""
+
+msgid "Clear catalog and import all messages"
+msgstr ""
+
+#: utils.py:88
+msgid "Contents"
+msgstr "Содержимое"
+
+#: utils.py:122
+msgid "Cornish"
+msgstr ""
+
+#: utils.py:123
+msgid "Corsican"
+msgstr ""
+
+#: utils.py:124
+#, fuzzy
+msgid "Croatian"
+msgstr "Каталонское наречие"
+
+#: utils.py:125
+msgid "Czech"
+msgstr ""
+
+#: utils.py:126
+#, fuzzy
+msgid "Danish"
+msgstr "Испанский"
+
+#, fuzzy
+msgid "Default language"
+msgstr "Скрыть этот язык"
+
+msgid "Delete"
+msgstr "Удалить"
+
+#, fuzzy
+msgid "Delete languages"
+msgstr "Языки не доступны"
+
+#: utils.py:127
+msgid "Dutch"
+msgstr ""
+
+#: utils.py:128
+msgid "Dutch/Belgium"
+msgstr ""
+
+#: utils.py:129
+msgid "English"
+msgstr ""
+
+#: utils.py:130
+msgid "English/United Kingdom"
+msgstr ""
+
+#: utils.py:131
+msgid "English/United States"
+msgstr ""
+
+#: utils.py:132
+msgid "Esperanto"
+msgstr ""
+
+#: utils.py:133
+msgid "Estonian"
+msgstr ""
+
+#: MessageCatalog.py:308 LocalContent.py:81
+msgid "Export"
+msgstr "Экспорт"
+
+msgid "Export messages to PO file"
+msgstr ""
+
+msgid "Export messages to TMX file"
+msgstr ""
+
+msgid "Export messages to XLIFF file"
+msgstr ""
+
+#: utils.py:134
+msgid "Faroese"
+msgstr ""
+
+#: utils.py:135
+msgid "Fiji"
+msgstr ""
+
+msgid "File"
+msgstr "Файл"
+
+msgid "File / Language"
+msgstr "Файл / язык"
+
+msgid "Filter"
+msgstr "Фильтр"
+
+#: utils.py:94
+msgid "Find"
+msgstr "Поиск"
+
+#: utils.py:136
+msgid "Finnish"
+msgstr ""
+
+#: utils.py:137
+msgid "French"
+msgstr "Французский"
+
+#: utils.py:138
+#, fuzzy
+msgid "French/Belgium"
+msgstr "Французский"
+
+#: utils.py:139
+#, fuzzy
+msgid "French/Canada"
+msgstr "Французский"
+
+#: utils.py:140
+#, fuzzy
+msgid "French/France"
+msgstr "Французский"
+
+#: utils.py:141
+msgid "French/Switzerland"
+msgstr ""
+
+#: utils.py:142
+msgid "Frisian"
+msgstr ""
+
+#: utils.py:143
+msgid "Galician"
+msgstr ""
+
+#: utils.py:144
+#, fuzzy
+msgid "Georgian"
+msgstr "Немецкий"
+
+#: utils.py:145
+msgid "German"
+msgstr "Немецкий"
+
+#: utils.py:146
+#, fuzzy
+msgid "German/Austria"
+msgstr "Немецкий"
+
+#: utils.py:147
+#, fuzzy
+msgid "German/Germany"
+msgstr "Немецкий"
+
+#: utils.py:148
+msgid "German/Switzerland"
+msgstr ""
+
+#: utils.py:149
+msgid "Greek"
+msgstr ""
+
+#: utils.py:150
+msgid "Greenlandic"
+msgstr ""
+
+#: utils.py:151
+#, fuzzy
+msgid "Guarani"
+msgstr "Венгерский"
+
+#: utils.py:152
+msgid "Gujarati"
+msgstr ""
+
+#: utils.py:153
+msgid "Hausa"
+msgstr ""
+
+#: utils.py:154
+msgid "Hebrew"
+msgstr ""
+
+#: utils.py:155
+#, fuzzy
+msgid "Hindi"
+msgstr "Поиск"
+
+msgid "How much"
+msgstr ""
+
+#: utils.py:156
+msgid "Hungarian"
+msgstr "Венгерский"
+
+#: utils.py:157
+msgid "Icelandic"
+msgstr ""
+
+msgid "Id"
+msgstr "Id"
+
+#: MessageCatalog.py:306 LocalContent.py:79
+msgid "Import"
+msgstr "Импорт"
+
+msgid "Import all messages"
+msgstr ""
+
+msgid "Import only translations for messages that exist already"
+msgstr ""
+
+msgid "Import translations from PO file"
+msgstr ""
+
+msgid "Import translations from TMX file"
+msgstr ""
+
+msgid "Import translations from XLIFF file"
+msgstr ""
+
+#: MessageCatalog.py:761
+msgid "Imported %d messages and %d notes"
+msgstr ""
+
+#: MessageCatalog.py:880
+msgid "Imported %d messages and %d notes to %s"
+msgstr ""
+
+#: LocalContent.py:294
+msgid "Imported %d messages to %s"
+msgstr ""
+
+#: utils.py:158
+msgid "Indonesian"
+msgstr ""
+
+#: utils.py:159
+msgid "Interlingua"
+msgstr ""
+
+#: utils.py:160
+msgid "Interlingue"
+msgstr ""
+
+#: utils.py:161
+msgid "Inuktitut"
+msgstr ""
+
+#: utils.py:162
+msgid "Inupiak"
+msgstr ""
+
+#: utils.py:163
+msgid "Irish"
+msgstr ""
+
+#: utils.py:164
+#, fuzzy
+msgid "Italian"
+msgstr "Каталонское наречие"
+
+#: utils.py:165
+msgid "Japanese"
+msgstr "Японский"
+
+#: utils.py:166
+#, fuzzy
+msgid "Javanese"
+msgstr "Японский"
+
+#: utils.py:167
+msgid "Kannada"
+msgstr ""
+
+#: utils.py:168
+msgid "Kashmiri"
+msgstr ""
+
+#: utils.py:169
+msgid "Kazakh"
+msgstr ""
+
+#: utils.py:170
+msgid "Kinyarwanda"
+msgstr ""
+
+#: utils.py:171
+msgid "Kirghiz"
+msgstr ""
+
+#: utils.py:172
+msgid "Kirundi"
+msgstr ""
+
+#: utils.py:173
+msgid "Korean"
+msgstr ""
+
+#: utils.py:174
+msgid "Kurdish"
+msgstr ""
+
+msgid "Language"
+msgstr "Язык"
+
+#: LanguageManager.py:157
+msgid "Languages"
+msgstr "Языки"
+
+#: utils.py:175
+msgid "Laothian"
+msgstr ""
+
+#: utils.py:176
+msgid "Latin"
+msgstr ""
+
+#: utils.py:177
+msgid "Latvian"
+msgstr ""
+
+#: utils.py:178
+msgid "Lingala"
+msgstr ""
+
+#: utils.py:179
+msgid "Lithuanian"
+msgstr ""
+
+#: LocalPropertyManager.py:67
+msgid "Local properties"
+msgstr "Локальные свойства"
+
+msgid ""
+"Locale folders are useful to store special multilingual objects like images "
+"and specific logic. If used the <tt>Localizer</tt> object will transparently "
+"add the right locale folder to the url. If you want to use locale folders "
+"check the checkbox, otherwise uncheck it, then click the <tt>Change</tt> "
+"button."
+msgstr ""
+"Папки локалей используются для хранения многоязычных объектов, таких как "
+"изображения и специфичной логики. При использовании объект- <tt>Localizer</"
+"tt> прозрачно добавит папку локалей в url. При желании использовать папки "
+"локалей, необходимо отметить чекбокс или в ином случае снять с него отметку "
+"и щелкнуть кнопку <tt>Изменить</tt>."
+
+#: MessageCatalog.py:678 MessageCatalog.py:808 LocalContent.py:142
+#: LocalContent.py:236
+#, fuzzy
+msgid "Localizer"
+msgstr "Добавить Localizer"
+
+#: utils.py:180
+msgid "Luxembourgish"
+msgstr ""
+
+#: utils.py:181
+msgid "Macedonian"
+msgstr ""
+
+#: utils.py:182
+msgid "Malagasy"
+msgstr ""
+
+#: utils.py:183
+msgid "Malay"
+msgstr ""
+
+#: utils.py:184
+msgid "Malayalam"
+msgstr ""
+
+#: utils.py:185
+msgid "Maltese"
+msgstr ""
+
+#: utils.py:186
+msgid "Maori"
+msgstr ""
+
+#: utils.py:187
+msgid "Marathi"
+msgstr ""
+
+#, fuzzy
+msgid "Message to translate"
+msgstr "Сообщения"
+
+#: MessageCatalog.py:303
+msgid "Messages"
+msgstr "Сообщения"
+
+#: MessageCatalog.py:763 MessageCatalog.py:879 LocalContent.py:293
+#, fuzzy
+msgid "Messages imported"
+msgstr "Сообщения"
+
+#: utils.py:188
+msgid "Moldavian"
+msgstr ""
+
+#: utils.py:189
+msgid "Mongolian"
+msgstr ""
+
+msgid "Name"
+msgstr "Имя"
+
+#: utils.py:190
+msgid "Nauru"
+msgstr ""
+
+#: utils.py:191
+msgid "Nepali"
+msgstr ""
+
+msgid ""
+"No languages available, please add them using the <a "
+"href='manage_languages'>Languages</a> tab"
+msgstr ""
+
+#: utils.py:192
+msgid "Northern Saami"
+msgstr ""
+
+#: utils.py:193
+msgid "Norwegian"
+msgstr ""
+
+msgid "Note"
+msgstr ""
+
+#: utils.py:194
+msgid "Occitan"
+msgstr ""
+
+msgid "Only untranslated messages"
+msgstr "Только непереведнные сообщения"
+
+#, fuzzy
+msgid "Original language"
+msgstr "Скрыть этот язык"
+
+#: utils.py:195
+msgid "Oriya"
+msgstr ""
+
+#: utils.py:196
+msgid "Oromo"
+msgstr ""
+
+#: utils.py:93
+msgid "Ownership"
+msgstr "Владелец"
+
+#: utils.py:197
+msgid "Pashto"
+msgstr ""
+
+#: utils.py:198
+#, fuzzy
+msgid "Persian"
+msgstr "Немецкий"
+
+#: utils.py:199
+msgid "Polish"
+msgstr ""
+
+#: utils.py:200
+#, fuzzy
+msgid "Portuguese"
+msgstr "Свойства"
+
+#: utils.py:201
+msgid "Portuguese/Brazil"
+msgstr ""
+
+#: utils.py:90 MessageCatalog.py:305
+msgid "Properties"
+msgstr "Свойства"
+
+#: utils.py:202
+msgid "Punjabi"
+msgstr ""
+
+#: utils.py:203
+msgid "Quechua"
+msgstr ""
+
+msgid "Results %d-%d of %d"
+msgstr "Результаты  %d-%d из %d"
+
+#: utils.py:204
+msgid "Rhaeto-Romance"
+msgstr ""
+
+#: utils.py:205
+msgid "Romanian"
+msgstr ""
+
+#: utils.py:206
+msgid "Russian"
+msgstr ""
+
+#: utils.py:207
+msgid "Samoan"
+msgstr ""
+
+#: utils.py:208
+#, fuzzy
+msgid "Sangho"
+msgstr "Испанский"
+
+#: utils.py:209
+msgid "Sanskrit"
+msgstr ""
+
+msgid "Save"
+msgstr "Сохранить"
+
+msgid "Save changes"
+msgstr "Сохранить изменения"
+
+#: MessageCatalog.py:439 MessageCatalog.py:454
+msgid "Saved changes."
+msgstr "Изменения сохранены."
+
+#: utils.py:210
+msgid "Scots Gaelic"
+msgstr ""
+
+#: utils.py:91
+msgid "Security"
+msgstr "Безопасность"
+
+#: utils.py:211
+#, fuzzy
+msgid "Serbian"
+msgstr "Немецкий"
+
+#: utils.py:212
+msgid "Serbo-Croatian"
+msgstr ""
+
+#: utils.py:213
+msgid "Sesotho"
+msgstr ""
+
+#: utils.py:214
+msgid "Setswana"
+msgstr ""
+
+#: utils.py:215
+msgid "Shona"
+msgstr ""
+
+#: utils.py:216
+#, fuzzy
+msgid "Sindhi"
+msgstr "Поиск"
+
+#: utils.py:217
+msgid "Sinhalese"
+msgstr ""
+
+#: utils.py:218
+msgid "Siswati"
+msgstr ""
+
+#: utils.py:219
+msgid "Slovak"
+msgstr ""
+
+#: utils.py:220
+msgid "Slovenian"
+msgstr ""
+
+#: utils.py:221
+msgid "Somali"
+msgstr ""
+
+#: utils.py:222
+msgid "Spanish"
+msgstr "Испанский"
+
+#: utils.py:223
+msgid "Spanish/Argentina"
+msgstr ""
+
+#: utils.py:224
+#, fuzzy
+msgid "Spanish/Colombia"
+msgstr "Испанский"
+
+#: utils.py:225
+#, fuzzy
+msgid "Spanish/Mexico"
+msgstr "Испанский"
+
+#: utils.py:226
+#, fuzzy
+msgid "Spanish/Spain"
+msgstr "Испанский"
+
+#: utils.py:227
+msgid "Sundanese"
+msgstr ""
+
+#: utils.py:228
+msgid "Swahili"
+msgstr ""
+
+#: utils.py:229
+msgid "Swedish"
+msgstr ""
+
+#: utils.py:230
+msgid "Tagalog"
+msgstr ""
+
+#: utils.py:231
+msgid "Tajik"
+msgstr ""
+
+#: utils.py:232
+#, fuzzy
+msgid "Tamil"
+msgstr "Заголовок"
+
+#, fuzzy
+msgid "Target language"
+msgstr "Языки не доступны"
+
+#, fuzzy
+msgid "Target languages"
+msgstr "Языки не доступны"
+
+#: utils.py:233
+msgid "Tatar"
+msgstr ""
+
+msgid "Team e-mail address"
+msgstr "Групповой e-mail адрес"
+
+#: utils.py:234
+msgid "Telugu"
+msgstr ""
+
+#: utils.py:235
+msgid "Thai"
+msgstr ""
+
+msgid ""
+"The message catalog also supports importing TMX files. You can add new "
+"messages and translations importing a TMX file in TMX level 1. Enter the "
+"filename and click the <tt>Import</tt> button."
+msgstr ""
+"Каталог сообщений также поддерживает импорт TMX файлов. Вы можете добавить "
+"новый сообщения и переводы, импортируя TMX файл в TMX уровень 1. Введите имя "
+"файла и щелкните по кнопке <tt>Импорт</tt> "
+
+#, fuzzy
+msgid "There are no attributes"
+msgstr "Атрибутов нет"
+
+#, fuzzy
+msgid "There are no languages"
+msgstr "Языки не доступны"
+
+#, fuzzy
+msgid "There are no messages."
+msgstr "Сообщений нет"
+
+msgid "This object is up-to-date."
+msgstr ""
+
+#, fuzzy
+msgid "This object must be upgraded."
+msgstr "Этот объект не требует обновления"
+
+#: utils.py:236
+msgid "Tibetan"
+msgstr ""
+
+#: utils.py:237
+msgid "Tigrinya"
+msgstr ""
+
+msgid "Title"
+msgstr "Заголовок"
+
+msgid "To add a language select it and click the <tt>Add</tt> button."
+msgstr ""
+"Чтобы добавить язык, его надо выбрать и щелкнуть по кнопке <tt>Добавить</tt>"
+
+msgid "To add an attribute introduce its id and click the <tt>Add</tt> button."
+msgstr ""
+"Чтобы добавить атрибуты, надо ввести их id и щелкнуть по кнопке "
+"<tt>Добавить</tt>"
+
+#, fuzzy
+msgid ""
+"To change the default language select it and click the <tt>Change</tt> "
+"button."
+msgstr ""
+"Чтобы добавить язык, его надо выбрать и щелкнуть по кнопке <tt>Добавить</tt>"
+
+#, fuzzy
+msgid "To delete a language check it and click the <tt>Delete</tt> button."
+msgstr ""
+"Чтобы удалить атрибут, надо отметить его и щелкнуть кнопку <tt>Удалить</tt>"
+
+msgid "To delete an attribute check it and click the <tt>Delete</tt> button."
+msgstr ""
+"Чтобы удалить атрибут, надо отметить его и щелкнуть кнопку <tt>Удалить</tt>"
+
+#: utils.py:238
+msgid "Tonga"
+msgstr ""
+
+#: LocalPropertyManager.py:70
+#, fuzzy
+msgid "Translate properties"
+msgstr "Свойств нет"
+
+#, fuzzy
+msgid "Translations"
+msgstr "Свойств нет"
+
+#: utils.py:239
+msgid "Tsonga"
+msgstr ""
+
+#: utils.py:240
+msgid "Turkish"
+msgstr ""
+
+#: utils.py:241
+msgid "Turkmen"
+msgstr ""
+
+#: utils.py:242
+msgid "Twi"
+msgstr ""
+
+msgid "Type"
+msgstr "Тип"
+
+#: utils.py:243
+msgid "Uighur"
+msgstr ""
+
+#: utils.py:244
+msgid "Ukrainian"
+msgstr ""
+
+#: utils.py:92
+msgid "Undo"
+msgstr "Отмена"
+
+#: LanguageManager.py:168
+msgid "Upgrade"
+msgstr "Обновление"
+
+#: utils.py:245
+msgid "Urdu"
+msgstr ""
+
+msgid "Use locale folders"
+msgstr "Использовать локальные папки"
+
+#: utils.py:246
+msgid "Uzbek"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+#: utils.py:247
+msgid "Vietnamese"
+msgstr ""
+
+#: utils.py:89
+msgid "View"
+msgstr "Вид"
+
+#: utils.py:248
+msgid "Volapuk"
+msgstr ""
+
+#: utils.py:249
+msgid "Welsh"
+msgstr ""
+
+msgid ""
+"With this form you can change the title of the message catalog. The title "
+"also is used as the value of the <tt>Project-Id-Version</tt> field in the "
+"header of the PO files, which are generated when the message catalog is "
+"exported."
+msgstr ""
+"В этой форме можно изменить заголовок каталога сообщений. Заголовок также "
+"используется, как значение <tt>Project-Id-Version</tt> в шапке PO файлов, "
+"которые генерируются при экспорте этого каталога сообщений."
+
+#: utils.py:250
+msgid "Wolof"
+msgstr ""
+
+#: utils.py:251
+msgid "Xhosa"
+msgstr ""
+
+#: utils.py:252
+msgid "Yiddish"
+msgstr ""
+
+#: utils.py:253
+msgid "Yoruba"
+msgstr ""
+
+msgid ""
+"You can add new messages and translations importing a PO file. Enter the "
+"filename, select the language of the translations and click the <tt>Import</"
+"tt> button."
+msgstr ""
+"Можно добавить новые сообщения и переводы импортируя PO файл. Для этого "
+"введите имя файла, выберите язык переводов и щелкните по кнопке <tt>Импорт</"
+"tt>"
+
+msgid ""
+"You can export the messages and their translations to PO files. Check "
+"<tt>locale.pot</tt> to get only the messages, without their translations. "
+"Check any other option to get a PO file with the messages and their "
+"translations to the selected language. Then click the <tt>Export</tt> button."
+msgstr ""
+"Можно экспортировать сообщения и их переводы в PO файлы. Опция <tt>locale."
+"pot</tt> позволяет получить только сообщения, без их перевода.  Для "
+"получения  PO файла с сообщениями и их переводами, необходимо ототметить "
+"нужные опции и атем щелкнуть по кнопке <tt>Экспорт</tt>"
+
+msgid ""
+"You can export the messages and their translations to TMX level 1 files. To "
+"do that just click the <tt>Export</tt> button."
+msgstr ""
+"Можно экспортировать сообщения и их перевод в TMX уровень 1 файлы. Для этого "
+"просто щелкните по кнопке <tt>Экспорт</tt>"
+
+#, fuzzy
+msgid ""
+"You can export the messages and their translations to XLIFF files. Check any "
+"option to get a XLIFF file with the messages and their translations to the "
+"selected language. Then click the <tt>Export</tt> button."
+msgstr ""
+"Можно экспортировать сообщения и их переводы в PO файлы. Опция <tt>locale."
+"pot</tt> позволяет получить только сообщения, без их перевода.  Для "
+"получения  PO файла с сообщениями и их переводами, необходимо ототметить "
+"нужные опции и атем щелкнуть по кнопке <tt>Экспорт</tt>"
+
+msgid "Your e-mail address"
+msgstr "Ваш e-mail адрес"
+
+msgid "Your name"
+msgstr "Ваше имя"
+
+#: utils.py:254
+#, fuzzy
+msgid "Zhuang"
+msgstr "Изменить"
+
+#: utils.py:255
+msgid "Zulu"
+msgstr ""
+
+#: MessageCatalog.py:681 LocalContent.py:145
+msgid "paragraph"
+msgstr ""
+
+#: MessageCatalog.py:680 MessageCatalog.py:810 LocalContent.py:144
+#: LocalContent.py:238
+msgid "plaintext"
+msgstr ""
+
+#: LocalContent.py:148
+msgid "utf-8"
+msgstr ""
+
+#~ msgid "This <tt>%s</tt> object needs to be upgraded"
+#~ msgstr "Этот <tt>%s</tt> объект требует обновления"
+
+#~ msgid "This <tt>Localizer</tt> object needs to be upgraded."
+#~ msgstr "Этот объект <tt>Localizer</tt> требует обновления"
+
+#, fuzzy
+#~ msgid "This <tt>Localizer</tt> object doesn't need to be upgraded."
+#~ msgstr "Этот объект <tt>Localizer</tt> не требует обновления"
+
+#~ msgid "Import/Export"
+#~ msgstr "Импорт/Экспорт"
+
+#~ msgid "TMX"
+#~ msgstr "TMX"
+
+#~ msgid "label"
+#~ msgstr "Метка"
+
+#~ msgid "Default"
+#~ msgstr "По умолчанию"
+
+#~ msgid "Show this language"
+#~ msgstr "Показать этот язык"
+
+#~ msgid ""
+#~ "To add a new property enter its name, select its type and click the "
+#~ "<tt>Add</tt> button."
+#~ msgstr ""
+#~ "Для добавки нового свойства, надо ввести его имя и щелкнуть по кнопке  "
+#~ "<tt>Добавить</tt>."
+
+#~ msgid ""
+#~ "To delete a language check it and click the <tt>Delete</tt> button. To "
+#~ "change the default language select it and click the <tt>Change</tt> "
+#~ "button."
+#~ msgstr ""
+#~ "Для удаления языка, его надо отметить и щелкнуть <tt>Удалить</tt>. Для "
+#~ "установки языка по умолчанию, его надо выбрать и щелкнуть кнопку "
+#~ "<tt>Изменить</tt>"

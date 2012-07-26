@@ -87,8 +87,8 @@
                     <key> <string>hidden</string> </key>
                     <value>
                       <list>
-                        <string>listbox_effective_date</string>
                         <string>listbox_contributor</string>
+                        <string>listbox_effective_date</string>
                       </list>
                     </value>
                 </item>
@@ -96,8 +96,8 @@
                     <key> <string>left</string> </key>
                     <value>
                       <list>
-                        <string>listbox</string>
                         <string>add_new_article</string>
+                        <string>listbox</string>
                       </list>
                     </value>
                 </item>

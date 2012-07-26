@@ -28,7 +28,6 @@
 ##############################################################################
 
 
-import transaction
 from AccessControl import Unauthorized
 from Products.ERP5Type.tests.SecurityTestCase import SecurityTestCase
 from ShaCacheMixin import ShaCacheMixin
@@ -73,7 +72,6 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
                    'document_module',):
       folder = self.portal[module]
       folder.manage_delObjects(list(folder.objectIds()))
-    transaction.commit()
     self.tic()
 
   # Tests
@@ -126,7 +124,7 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
 
          document = module.newContent(portal_type=portal_type)
          document.publishAlive()
-         self.stepTic()
+         self.tic()
 
          self.logout()
          self.assertTrue(self.portal.portal_membership.isAnonymousUser())
@@ -151,7 +149,7 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
         document.view()
 
         document.publishAlive()
-        self.stepTic()
+        self.tic()
 
         self.assertEquals('Published Alive',
                             document.getValidationStateTitle())
@@ -194,7 +192,7 @@ class TestShaCacheSecurity(ShaCacheMixin, ShaSecurityMixin, SecurityTestCase):
         self.changeUser(self.toto_user)
         document = module.newContent(portal_type=portal_type)
         document.publishAlive()
-        self.stepTic()
+        self.tic()
 
         self.changeUser(self.lucas_user)
         document()

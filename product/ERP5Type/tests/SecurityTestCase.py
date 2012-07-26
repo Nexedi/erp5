@@ -30,7 +30,6 @@
 """
 
 from pprint import pformat
-import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
@@ -123,7 +122,7 @@ class SecurityTestCase(ERP5TypeTestCase):
   def tearDown(self):
     """Clean up for next test.
     """
-    transaction.abort()
+    self.abort()
     self.portal.portal_caches.clearAllCache()
     super(SecurityTestCase, self).tearDown()
 

@@ -76,7 +76,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -93,7 +92,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                                                           **kw)
     websection = website.newContent(portal_type='Web Section', **kw)
     website.publish()
-    transaction.commit()
     self.tic()
     return websection
 
@@ -110,7 +108,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                'text_content': 'I want ERP5 for my company',
               }
     web_section.WebSection_addWebMessage(**form_kw)
-    transaction.commit()
     self.tic()
 
     self.login()
@@ -127,7 +124,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
 
     # Trig alarm execution
     self.portal.portal_alarms.fetch_incoming_web_message_list.activeSense()
-    transaction.commit()
     self.tic()
     self.assertEquals(event.getSimulationState(), 'delivered')
     ticket = event.getFollowUpValue()
@@ -151,7 +147,7 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                       form_kw['source_organisation_title'])
 
   def test_02_Contact_Us_with_Aunthenticated_user(self):
-    """Test creation of Web Message with Authenticted User
+    """Test creation of Web Message with Authenticated User
     """
     web_section = self.setupWebSection()
     self.logout()
@@ -164,6 +160,33 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
                'text_content': 'I want ERP5 for my company',
               }
     web_section.WebSection_addWebMessage(**form_kw)
+    transaction.commit()
+    # here we check a random bug caused by the ordering of activities
+    should_stop = [None]
+    event_module_path_prefix = self.portal.event_module.getPath() + '/'
+    deprioritize_message_list = []
+    # we'll stop whenever we find the message that reindex the newly created
+    # event object
+    def stop_condition(message_list):
+      for message in message_list:
+        object_path = '/'.join(message.object_path)
+        if (message.method_id == 'immediateReindexObject' and
+            object_path.startswith(event_module_path_prefix)):
+          deprioritize_message_list.append(message)
+          return True
+      return False
+    self.tic(stop_condition=stop_condition)
+    web_message_reindex_message, = deprioritize_message_list
+    web_message_path = web_message_reindex_message.object_path
+    self.assertTrue(
+      self.portal.unrestrictedTraverse(web_message_path).getPortalType(),
+      'Web Message',
+    )
+    # we'll deprioritize this message, so it executes last of all
+    self.portal.cmf_activity_sql_connection.manage_test("""
+      update message set priority=100
+      where uid=%s
+    """ % web_message_reindex_message.uid)
     transaction.commit()
     self.tic()
     self.logout()
@@ -184,7 +207,6 @@ class TestERP5WebWithCRM(ERP5TypeTestCase):
 
     # Trig alarm execution
     self.portal.portal_alarms.fetch_incoming_web_message_list.activeSense()
-    transaction.commit()
     self.tic()
     self.assertEquals(event.getSimulationState(), 'delivered')
 

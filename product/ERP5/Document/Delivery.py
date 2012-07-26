@@ -339,18 +339,12 @@ class Delivery(XMLObject, ImmobilisationDelivery,
     security.declareProtected(Permissions.AccessContentsInformation, 'isSimulated')
     def isSimulated(self):
       """
-        Returns 1 if all movements have a delivery or order counterpart
+        Returns 1 if all non-null movements have a delivery counterpart
         in the simulation
       """
       for m in self.getMovementList():
-        #LOG('Delivery.isSimulated m',0,m.getPhysicalPath())
-        #LOG('Delivery.isSimulated m.isSimulated',0,m.isSimulated())
-        if not m.isSimulated():
-          #LOG('Delivery.isSimulated m.getQuantity',0,m.getQuantity())
-          #LOG('Delivery.isSimulated m.getSimulationQuantity',0,m.getSimulationQuantity())
-          if m.getQuantity() != 0.0 or m.getSimulationQuantity() not in (0, None):
-            return 0
-          # else Do we need to create a simulation movement ? XXX probably not
+        if m.getQuantity() and not m.isSimulated():
+          return 0
       return 1
 
     security.declareProtected(Permissions.AccessContentsInformation, 'isDivergent')
@@ -844,21 +838,21 @@ class Delivery(XMLObject, ImmobilisationDelivery,
         This method will look at the causality and check if the
         causality has already a causality
       """
-      causality_value_list = [x for x in self.getCausalityValueList()
-                                if x is not self]
-      initial_list = []
-      if len(causality_value_list)==0:
-        initial_list = [self]
-      else:
+      causality_value_list = self.getCausalityValueList()
+      if causality_value_list:
+        initial_list = []
         for causality in causality_value_list:
           # The causality may be something which has not this method
           # (e.g. item)
-          if hasattr(causality, 'getRootCausalityValueList'):
-            tmp_causality_list = causality.getRootCausalityValueList()
-            initial_list.extend([x for x in tmp_causality_list
-                                 if x not in initial_list])
-      return initial_list
-
+          try:
+            getRootCausalityValueList = causality.getRootCausalityValueList
+          except AttributeError:
+            continue
+          assert causality != self
+          initial_list += [x for x in getRootCausalityValueList()
+                             if x not in initial_list]
+        return initial_list
+      return [self]
 
     # XXX Temp hack, should be removed has soon as the structure of
     # the order/delivery builder will be reviewed. It might
@@ -982,6 +976,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       """
       divergent_tester_list = []
       for simulation_movement in self._getAllRelatedSimulationMovementList():
+        simulation_movement = simulation_movement.getObject()
         rule = simulation_movement.getParentValue().getSpecialiseValue()
         for tester in rule._getDivergenceTesterList(exclude_quantity=False):
           if tester.explain(simulation_movement) not in (None, []):

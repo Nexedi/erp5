@@ -27,14 +27,13 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from AccessControl.SecurityManagement import newSecurityManager
 from zLOG import LOG
 from Products.ERP5Type.tests.Sequence import SequenceList
 from DateTime import DateTime
-
+from Products.ERP5Type.tests.backportUnittest import expectedFailure
 
 class TestResource(ERP5TypeTestCase):
   """
@@ -94,7 +93,6 @@ class TestResource(ERP5TypeTestCase):
     preference.setPreferredApparelModelIndividualVariationBaseCategoryList(('colour', 'morphology'))
     if preference.getPreferenceState() == 'disabled':
       preference.enable()
-    transaction.commit()
     self.tic()
 
   def afterSetUp(self):
@@ -105,7 +103,7 @@ class TestResource(ERP5TypeTestCase):
     self.setUpPreferences()
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     for folder in (
           self.portal.getDefaultModule(self.resource_portal_type),
           self.portal.getDefaultModule(self.sale_supply_portal_type),
@@ -114,7 +112,6 @@ class TestResource(ERP5TypeTestCase):
           self.portal.getDefaultModule("Sale Order"),
           self.portal.getDefaultModule("Purchase Order"),):
       folder.manage_delObjects([i for i in folder.objectIds()])
-    transaction.commit()
     self.tic()
 
   def createCategories(self):
@@ -616,7 +613,7 @@ class TestResource(ERP5TypeTestCase):
               supply_line.setProperty(key, pricing_param)
       # Commit transaction
       self.logMessage("Commit transaction...", tab=1)
-      transaction.commit()
+      self.commit()
       # Tic
       self.logMessage("Tic...", tab=1)
       self.tic()
@@ -636,7 +633,6 @@ class TestResource(ERP5TypeTestCase):
     preference.setPreferredProductOptionalVariationBaseCategoryList(['industrial_phase'])
     if preference.getPreferenceState() == 'disabled':
       preference.enable()
-    transaction.commit()
     self.tic()
     # Create another product/supply, in order to be sure that the
     # nothing will be generated from this supply!
@@ -692,7 +688,7 @@ class TestResource(ERP5TypeTestCase):
     cell2.setMembershipCriterionCategory('industrial_phase/phase2')
     # Commit transaction
     self.logMessage("Commit transaction...", tab=1)
-    transaction.commit()
+    self.commit()
     # Tic
     self.logMessage("Tic...", tab=1)
     self.tic()
@@ -754,7 +750,7 @@ class TestResource(ERP5TypeTestCase):
         test_case_list.append((product, node, base_price))
     # Commit transaction
     self.logMessage("Commit transaction...", tab=1)
-    transaction.commit()
+    self.commit()
     # Tic
     self.logMessage("Tic...", tab=1)
     self.tic()
@@ -860,7 +856,7 @@ class TestResource(ERP5TypeTestCase):
 
     # Commit transaction
     self.logMessage("Commit transaction...", tab=1)
-    transaction.commit()
+    self.commit()
     # Tic
     self.logMessage("Tic...", tab=1)
     self.tic()
@@ -953,11 +949,9 @@ class TestResource(ERP5TypeTestCase):
     sale_order_line = sale_order.newContent(
         portal_type=self.sale_order_line_portal_type,
         resource_value=product)
-    transaction.commit()
     self.tic()
     self.assertEquals(sale_order_line.getPrice(), 400.0)
     sale_order.setDestinationSectionValue(orga2)
-    transaction.commit()
     self.tic()
     sale_order_line.setPrice(None)
     self.assertEquals(sale_order_line.getPrice(), 200.0)
@@ -969,11 +963,9 @@ class TestResource(ERP5TypeTestCase):
     purchase_order_line = purchase_order.newContent(
         portal_type="Purchase Order Line",
         resource_value=product)
-    transaction.commit()
     self.tic()
     self.assertEquals(purchase_order_line.getPrice(), 40.0)
     purchase_order.setSourceSectionValue(orga2)
-    transaction.commit()
     self.tic()
     purchase_order_line.setPrice(None)
     self.assertEquals(purchase_order_line.getPrice(), 20.0)
@@ -985,11 +977,9 @@ class TestResource(ERP5TypeTestCase):
     internal_packing_list_line = internal_packing_list.newContent(
         portal_type="Internal Packing List Line",
         resource_value=product)
-    transaction.commit()
     self.tic()
     self.assertEquals(internal_packing_list_line.getPrice(), 4.0)
     internal_packing_list.setDestinationSectionValue(orga2)
-    transaction.commit()
     self.tic()
     internal_packing_list_line.setPrice(None)
     self.assertEquals(internal_packing_list_line.getPrice(), 2.0)
@@ -1001,7 +991,6 @@ class TestResource(ERP5TypeTestCase):
     supply_line = resource.newContent(
                     portal_type=self.sale_supply_line_portal_type)
     supply_line.setBasePrice(1000)
-    transaction.commit()
     self.tic()
     sale_order = self.portal.getDefaultModule("Sale Order").newContent(
                               portal_type='Sale Order',)
@@ -1037,7 +1026,6 @@ class TestResource(ERP5TypeTestCase):
                     portal_type=self.sale_supply_line_portal_type)
     supply_line.setBasePrice(1000)
     supply_line.setPriceCurrencyValue(currency)
-    transaction.commit()
     self.tic()
     sale_order = self.portal.getDefaultModule("Sale Order").newContent(
                               portal_type='Sale Order',
@@ -1126,6 +1114,84 @@ class TestResource(ERP5TypeTestCase):
         'test_source_reference_on_internal_supply_line')
     self.assertEquals(resource.getInternalSupplyLineDestinationReference(),
         'test_destination_reference_on_internal_supply_line')
+
+  def testQuantityUnitOnMovement(self):
+    """Make sure that changing default quantity unit on resource does not
+       affect to movement.
+       In this test, always use Base.edit method. Because Base.edit is
+       used when real user edit document through edit form.
+    """
+    # Set up quantity unit categories
+    # weight
+    quantity_unit_category_value = self.portal.portal_categories.quantity_unit
+    quantity_unit_weight = quantity_unit_category_value._getOb('weight', None)
+    if quantity_unit_weight is None:
+      quantity_unit_weight = quantity_unit_category_value.newContent(
+        id='weight', portal_type='Category')
+    quantity_unit_gram = quantity_unit_weight._getOb('gram', None)
+    if quantity_unit_gram is None:
+      quantity_unit_gram = quantity_unit_weight.newContent(
+        portal_type='Category', id='gram')
+    # volume
+    quantity_unit_volume = quantity_unit_category_value._getOb('volume', None)
+    if quantity_unit_volume is None:
+      quantity_unit_volume = quantity_unit_category_value.newContent(
+        id='volume', portal_type='Category')
+    quantity_unit_liter = quantity_unit_volume._getOb('liter', None)
+    if quantity_unit_liter is None:
+      quantity_unit_liter = quantity_unit_volume.newContent(
+        portal_type='Category', id='liter')
+    self.commit()
+
+    # Create resource
+    resource_value = self.portal.getDefaultModule(
+      self.product_portal_type).newContent(portal_type=self.product_portal_type)
+    resource_value.edit(quantity_unit_value_list=(
+        quantity_unit_gram, quantity_unit_liter))
+    self.commit()
+    self.assertEqual(resource_value.getDefaultQuantityUnitValue(),
+                     quantity_unit_gram)
+
+    # Create sale order line
+    sale_order = self.portal.getDefaultModule('Sale Order').newContent(
+      portal_type='Sale Order')
+    sale_order_line = sale_order.newContent(
+      portal_type=self.sale_order_line_portal_type)
+    self.commit()
+
+    # Set resource to movement
+    sale_order_line.edit(resource_value=resource_value)
+    self.commit()
+    self.assertEqual(sale_order_line.getQuantityUnitValue(),
+                     quantity_unit_gram)
+
+    # Select different quantity unit
+    sale_order_line.edit(quantity_unit_value=quantity_unit_liter)
+    self.commit()
+    self.assertEqual(sale_order_line.getQuantityUnitValue(),
+                     quantity_unit_liter)
+
+    # Select empty(no quantity unit)
+    sale_order_line.edit(quantity_unit_value=None)
+    self.commit()
+
+    # Select default quantity unit again
+    sale_order_line.edit(quantity_unit_value=quantity_unit_gram)
+    self.commit()
+    self.assertEqual(sale_order_line.getQuantityUnitValue(),
+                     quantity_unit_gram)
+
+    # Change default quantity unit on resource
+    # Now liter is default quantity unit.
+    resource_value.edit(quantity_unit_value_list=(
+        quantity_unit_liter, quantity_unit_gram))
+    self.commit()
+
+    # Check existing movement again and make sure that quantity
+    # unit is not changed.
+    expectedFailure(self.assertEqual)(
+      sale_order_line.getQuantityUnitValue(),
+      quantity_unit_gram)
 
 def test_suite():
   suite = unittest.TestSuite()

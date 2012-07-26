@@ -28,7 +28,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5.tests.testInventoryAPI import InventoryAPITestCase
 
 class TestERP5Administration(InventoryAPITestCase):
@@ -53,7 +52,6 @@ class TestERP5Administration(InventoryAPITestCase):
     alarm = portal.portal_alarms.check_stock
 
     def checkActiveProcess(failed):
-      transaction.commit()
       self.tic()
       self.assertEqual(alarm.getLastActiveProcess().ActiveProcess_sense(),
                        failed)
@@ -68,7 +66,6 @@ class TestERP5Administration(InventoryAPITestCase):
 
     alarm.setAlarmNotificationMode('never')
     mvt = self._makeMovement(quantity=1.23)
-    transaction.commit()
     self.tic()
     alarm.activeSense()
     checkActiveProcess(0)
@@ -84,9 +81,11 @@ class TestERP5Administration(InventoryAPITestCase):
     person = self.portal.person_module.newContent(portal_type='Person')
     # this document will be non consistent, for PropertyTypeValidity
     person.title = 3 
+    # tic right now to make sure the person is indexed, indeed the alarm
+    # could use catalog to retrieve objects to check
+    self.tic()
     
     alarm.activeSense()
-    transaction.commit()
     self.tic()
     
     # some errors were detected
@@ -105,7 +104,6 @@ class TestERP5Administration(InventoryAPITestCase):
     # this alarm can solve, as long as the constraints can solve, this is the
     # case of PropertyTypeValidity
     alarm.solve()
-    transaction.commit()
     self.tic()
     self.assertEquals('3', person.title)
 

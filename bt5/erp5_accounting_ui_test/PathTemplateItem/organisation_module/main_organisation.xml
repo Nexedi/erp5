@@ -128,10 +128,6 @@
             <value> <string>main_organisation</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>3</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Organisation</string> </value>
         </item>

@@ -26,7 +26,19 @@
 #
 ##############################################################################
 
-from zLOG import LOG, INFO
+from zLOG import (
+  LOG,
+  INFO,
+  TRACE,
+  DEBUG,
+  BLATHER,
+  INFO,
+  PROBLEM,
+  WARNING,
+  ERROR,
+  PANIC,
+)
+
 from traceback import extract_stack
 
 marker_ = []

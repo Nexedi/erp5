@@ -29,7 +29,6 @@
 
 import unittest
 import logging
-import transaction
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Acquisition import aq_base
@@ -42,6 +41,7 @@ from Products.CMFCore.Expression import Expression
 from Products.ERP5Type.tests.utils import LogInterceptor
 from Products.ERP5Type.Workflow import addWorkflowByType
 from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
+from Products.ERP5Type.tests.testDynamicClassGeneration import TestDeveloperMixin
 from Products.ERP5VCS.WorkingCopy import getVcsTool
 import shutil
 import os
@@ -58,7 +58,7 @@ from Products.PortalTransforms.Transform import Transform
 Transform_tr_init = Transform._tr_init
 Transform_manage_beforeDelete = Transform.manage_beforeDelete
 
-class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
+class BusinessTemplateMixin(TestDeveloperMixin, ERP5TypeTestCase, LogInterceptor):
   def getBusinessTemplateList(self):
     return ('erp5_base',
             'erp5_csv_style',
@@ -103,7 +103,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     if (content_type_registry is not None and
         'any' in content_type_registry.predicate_ids):
       content_type_registry.removePredicate('any')
-      transaction.commit()
+      self.commit()
 
   def beforeTearDown(self):
     """Remove objects created in tests."""
@@ -181,7 +181,7 @@ class BusinessTemplateMixin(ERP5TypeTestCase, LogInterceptor):
     for property_sheet in ('UnitTest',):
       if property_sheet in property_sheet_tool.objectIds():
         property_sheet_tool.manage_delObjects([property_sheet])
-    transaction.commit()
+    self.commit()
     self._ignore_log_errors()
 
   def getBusinessTemplate(self,title):
@@ -6176,7 +6176,6 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       # create a previously existing instance of the overriden document type
       File = portal.portal_types.getPortalTypeClass('File')
       portal._setObject('another_file', File('another_file'))
-      transaction.commit()
       self.tic()
       # logged errors could keep a reference to a traceback having a reference
       # to 'another_file' object
@@ -6189,14 +6188,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
         bt = template_tool.download(bt_path)
         assert marker_list
         if i:
-          transaction.commit()
           self.tic()
         bt.install(force=1)
         assert not marker_list
         gc.enable()
         for id in object_id_list:
           self.assertEqual(getattr(portal, id).int_index, i)
-        transaction.commit()
         self.tic()
     finally:
       BaseTemplateItem.removeProperties = BaseTemplateItem_removeProperties
@@ -6263,13 +6260,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                              'Dummy Type | source',),
                           template_action_path_list=(
                              'Dummy Type | view',),)
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       # portal type template item are exported in their physical location
       for template_item in ('PortalTypeTemplateItem',
                             'ActionTemplateItem',):
@@ -6287,7 +6284,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     types_tool.type_provider_list = registered_type_provider_list
     # uninstall the type provider (this will also uninstall the contained types)
     self.portal.manage_delObjects(['dummy_type_provider'])
-    self.stepTic()
+    self.tic()
 
     new_bt.install()
     try:
@@ -6347,13 +6344,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                           portal_type='Business Template',
                           title='test_bt',
                           template_tool_id_list=('dummy_type_provider', ),)
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       new_bt = self.portal.portal_templates.download(
                         url='file:/%s' % export_dir)
     finally:
@@ -6363,7 +6360,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     types_tool.type_provider_list = registered_type_provider_list
     # uninstall the type provider (this will also uninstall the contained types)
     self.portal.manage_delObjects(['dummy_type_provider'])
-    self.stepTic()
+    self.tic()
 
     new_bt.install()
 
@@ -6379,13 +6376,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     bt = self.portal.portal_templates.newContent(
                           portal_type='Business Template',
                           title='test_bt',)
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       new_bt = self.portal.portal_templates.download(
                         url='file:/%s' % export_dir)
     finally:
@@ -6411,13 +6408,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                           title='test_bt',
                           template_action_path_list=(
                              'portal_actions | test_global_action',),)
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       # actions are exported in portal_types/ and then the id of the container
       # tool
       self.assertEquals(['portal_actions'],
@@ -6430,12 +6427,12 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     # manually uninstall the action
     self.portal.portal_actions.deleteActions(selections=[action_idx])
-    self.stepTic()
+    self.tic()
 
     # install the business template and make sure the action is properly
     # installed
     new_bt.install()
-    self.stepTic()
+    self.tic()
     self.assertNotEquals(None,
         self.portal.portal_actions.getActionInfo('object_view/test_global_action'))
 
@@ -6449,7 +6446,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
             id='exported_path',
             title='Exported',
             portal_type='Folder')
-    self.stepTic()
+    self.tic()
 
     uid = self.portal.exported_path.getUid()
 
@@ -6458,13 +6455,13 @@ class TestBusinessTemplate(BusinessTemplateMixin):
                           title='test_bt',
                           template_path_list=(
                             'exported_path',))
-    self.stepTic()
+    self.tic()
     bt.build()
-    self.stepTic()
+    self.tic()
     export_dir = tempfile.mkdtemp()
     try:
       bt.export(path=export_dir, local=True)
-      self.stepTic()
+      self.tic()
       new_bt = self.portal.portal_templates.download(
                         url='file:/%s' % export_dir)
     finally:
@@ -6472,7 +6469,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
 
     # modify the document
     self.portal.exported_path.setTitle('Modified')
-    self.stepTic()
+    self.tic()
 
     # install the business template
     new_bt.install()
@@ -6483,7 +6480,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     # but its uid did not change
     self.assertEquals(uid, self.portal.exported_path.getUid())
     # and it is still in the catalog
-    self.stepTic()
+    self.tic()
     self.assertEquals(self.portal.exported_path,
         self.portal.portal_catalog.getResultValue(uid=uid))
 
@@ -6963,25 +6960,6 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
   component_module = DocumentComponent._getDynamicModuleNamespace()
   component_portal_type = DocumentComponent.portal_type
 
-  def login(self, user_name='ERP5TypeTestCase', quiet=0):
-    """
-    XXX-arnau: Copy/paste from testDynamicClassGeneration
-    """
-    from App.config import getConfiguration
-    product_config = getattr(getConfiguration(), 'product_config', None)
-    if product_config is None:
-      class DummyDeveloperConfig(object):
-        pass
-
-      dummy_developer_config = DummyDeveloperConfig()
-      dummy_developer_config.developer_list = [user_name]
-      getConfiguration().product_config = {'erp5': dummy_developer_config}
-
-    elif user_name not in product_config['erp5'].developer_list:
-      product_config['erp5'].developer_list.append(user_name)
-
-    return super(TestDocumentTemplateItem, self).login(user_name, quiet)
-
   def stepCreateZodbDocument(self, sequence=None, **kw):
     document_id = self.component_module + '.erp5.' + self.document_title
     self.getPortalObject().portal_components.newContent(
@@ -7167,7 +7145,7 @@ class TestDocumentTemplateItem(BusinessTemplateMixin):
     copied, = template_tool.manage_pasteObjects(cb_data)
     copied_bt = template_tool._getOb(copied['new_id'])
     getattr(copied_bt, self.set_template_id_method_name)(sequence['document_id'])
-    transaction.commit()
+    self.commit()
     sequence.edit(current_bt=copied_bt)
 
   importFromFilesystem = DocumentComponent.importFromFilesystem

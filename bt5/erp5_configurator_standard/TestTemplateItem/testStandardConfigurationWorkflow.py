@@ -29,10 +29,10 @@
 
 
 import os
-import transaction
 from DateTime import DateTime
 from Products.ERP5Type.tests.Sequence import SequenceList
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
@@ -50,6 +50,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
       stepCheckPersonInformationList
       stepCheckValidOrganisationList
       stepCheckValidCurrencyList
+      stepCheckAlarmList
       stepCheckPublicGadgetList
       stepCheckPreferenceList
       stepCheckModulesBusinessApplication
@@ -280,10 +281,22 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     currency_list = self.getBusinessConfigurationObjectList(business_configuration, 'Currency')
     self.assertNotEquals(len(currency_list), 0)
     for currency in currency_list:
-      # XXX FIXME: should the currency be validated by After Configuration Script?
-      # On tiolive it is not validated, is there any reason?
-      # self.assertEquals('validated', currency.getValidationState())
+      self.assertEquals('validated', currency.getValidationState())
       currency.Base_checkConsistency()
+
+  def stepCheckAlarmList(self, sequence=None, sequence_list=None, **kw):
+    """
+      Check if after configuration the Alarms objects are enabled.
+    """
+    business_configuration = sequence.get("business_configuration")
+    alarm_list = self.getBusinessConfigurationObjectList(business_configuration, 'Alarm')
+    self.assertEquals(len(alarm_list), 2)
+    for alarm in alarm_list:
+      self.failUnless(alarm.getPeriodicityStartDate() < DateTime())
+      self.assertNotEquals(alarm.getPeriodicityStartDate(), None)
+      self.assertEquals(alarm.getPeriodicityMinuteFrequency(), 5)
+      self.assertEquals(alarm.getEnabled(), True)
+      self.assertNotEquals(alarm.getActiveSenseMethodId(), None)
 
   def stepCheckPublicGadgetList(self, sequence=None, sequence_list=None, **kw):
     """
@@ -567,14 +580,14 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(accounting_credit_path.getEfficiency(), -1.0)
     self.assertEquals(accounting_credit_path.getTradePhase(), 'trade/accounting')
     self.assertEquals(accounting_credit_path.getTradeDate(), 'trade_phase/trade/invoicing')
-    self.assertEquals(accounting_credit_path.getTestMethodId(), "isAccountingMovementType")
+    self.assertEquals(accounting_credit_path.getSource(), "account_module/receivable")
 
     accounting_debit_path = getattr(business_process, "accounting_debit_path", None)
     self.assertNotEquals(accounting_debit_path, None)
     self.assertEquals(accounting_debit_path.getEfficiency(), 1.0)
     self.assertEquals(accounting_debit_path.getTradePhase(), 'trade/accounting')
     self.assertEquals(accounting_debit_path.getTradeDate(), 'trade_phase/trade/invoicing')
-    self.assertEquals(accounting_debit_path.getTestMethodId(), "isAccountingMovementType")
+    self.assertEquals(accounting_debit_path.getSource(), "account_module/sales")
 
     order_link = getattr(business_process, "order_link", None)
     self.assertNotEquals(order_link, None)
@@ -782,7 +795,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     delivery.confirm()
     delivery.start()
     delivery.stop()
-    transaction.commit()
     self.tic()
 
     # inventories of that resource are index in grams
@@ -810,8 +822,6 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     inventory = portal.portal_types['Inventory']
     sale_packing_list = portal.portal_types['Sale Packing List']
     sale_packing_list_line = portal.portal_types['Sale Packing List Line']
-    self.assertEquals(True,
-                      'TradeOrder' in sale_packing_list.getTypePropertySheetList())
     self.assertEquals(True,
                       'TradeOrderLine' in sale_packing_list_line.getTypePropertySheetList())
     self.assertEquals(True,
@@ -855,9 +865,9 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
                                 quantity_unit='unit/piece',
                                 individual_variation_base_category='variation',
                                 base_contribution='base_amount/taxable')
-    self.stepTic()
+    self.tic()
     resource.validate()
-    self.stepTic()
+    self.tic()
 
     start_date = sale_trade_condition.getEffectiveDate() + 1
     stop_date = sale_trade_condition.getExpirationDate() - 1
@@ -868,31 +878,31 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
        destination_administration=destination_administration.getRelativeUrl(),
        start_date=start_date,
        stop_date=stop_date)
-    self.stepTic()
+    self.tic()
 
     # Set the rest through the trade condition.
     order.SaleOrder_applySaleTradeCondition()
-    self.stepTic()
+    self.tic()
 
     order.newContent(portal_type='Sale Order Line',
                      resource=resource.getRelativeUrl(),
                      quantity=1.0)
-    self.stepTic()
+    self.tic()
 
     # stepPlanSaleOrders
     self.assertEquals(order.getSimulationState(), 'draft')
     order.plan()
-    self.stepTic()
+    self.tic()
     self.assertEquals(order.getSimulationState(), 'planned')
 
     # stepOrderSaleOrders
     order.order()
-    self.stepTic()
+    self.tic()
     self.assertEquals(order.getSimulationState(), 'ordered')
 
     # stepConfirmSaleOrders
     order.confirm()
-    self.stepTic()
+    self.tic()
     self.assertEquals(order.getSimulationState(), 'confirmed')
 
     # stepCheckSaleOrderSimulation
@@ -979,7 +989,7 @@ class TestConsultingConfiguratorWorkflow(StandardConfigurationMixin):
 
   def uploadFile(self, file_id):
     file_obj = getattr(self.portal, file_id)
-    file_path = '/tmp/%s' % file_id
+    file_path = tests_home + '/%s' % file_id
     temp_file = open(file_path, 'w+b')
     try:
       temp_file.write(str(file_obj))

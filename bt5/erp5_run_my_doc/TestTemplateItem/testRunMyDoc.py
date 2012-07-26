@@ -74,7 +74,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
                                    portal_type='Web Site',
                                    id=self.website_id)
       website.publish()
-      self.stepTic()
+      self.tic()
 
     test_page = self.portal.test_page_module.newContent(
               portal_type="Test Page",
@@ -83,7 +83,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
               version="001")
               
     test_page.publish()
-    self.stepTic()
+    self.tic()
     
     document = website.WebSection_getDocumentValue(test_page_reference)
     
@@ -105,19 +105,19 @@ class TestRunMyDoc(ERP5TypeTestCase):
                                      reference=web_page_reference, 
                                      language="en", version="001")
     web_page.publishAlive()
-    self.stepTic()
+    self.tic()
 
     image_reference = "IMAGE-REFERENCE-%s" % str(time())
     image_page = self.portal.image_module.newContent(
                                    reference=image_reference, 
                                    language="en", version="001")
     image_page.publishAlive()
-    self.stepTic()
+    self.tic()
     image_page_2 = self.portal.image_module.newContent(
                                    reference=image_reference, 
                                    language="en", version="002")
     image_page_2.publishAlive()
-    self.stepTic()
+    self.tic()
 
     self.portal.REQUEST.form['data_uri'] = image_upload
     fake_image_reference = "DO-NOT-EXISTANT-IMAGE"
@@ -130,7 +130,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
     self.assertEquals(None, 
                    self.portal.Zuite_uploadScreenshot(image_upload, image_reference))
 
-    self.stepTic()
+    self.tic()
     # The right image were updated.
     image_upload.seek(0)
     self.assertEquals(image_page_2.getData(), image_upload.read().decode("base64"))
@@ -223,7 +223,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
     self.assertEquals(test_page.TestPage_viewSeleniumTest(), expected_test_html % 
                                  ("ERP5TypeTestCase", ""))
 
-    self.stepTic()
+    self.tic()
     test_page.TestPage_runSeleniumTest()
 
     zuite = getattr(self.portal.portal_tests, 'TESTPAGEREFERENCE', None)
@@ -291,7 +291,7 @@ class TestRunMyDoc(ERP5TypeTestCase):
 
     self.assertEquals(test_page.TestPage_viewSeleniumTest(REQUEST=self.portal.REQUEST),
                       expected_test_html % ("http://toto.com", "toto", "toto"))
-    self.stepTic()
+    self.tic()
     test_page.TestPage_runSeleniumTest()
 
     zuite = getattr(self.portal.portal_tests, 'TESTPAGEREFERENCE', None)

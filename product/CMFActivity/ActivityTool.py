@@ -44,6 +44,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.User import system as system_user
 from Products.CMFCore.utils import UniqueObject, _getAuthenticatedUser
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Acquisition import aq_base, aq_inner, aq_parent
@@ -51,6 +52,9 @@ from ActivityBuffer import ActivityBuffer
 from ActivityRuntimeEnvironment import BaseMessage
 from zExceptions import ExceptionFormatter
 from BTrees.OIBTree import OIBTree
+from Zope2 import app
+from Products.ERP5Type.UnrestrictedMethod import PrivilegedUser
+from zope.site.hooks import setSite
 
 try:
   from Products import iHotfix
@@ -203,6 +207,13 @@ class Message(BaseMessage):
           request.environ['HTTP_ACCEPT_LANGUAGE']
       self.request_info['_script'] = list(request._script)
 
+  def getGroupId(self):
+    get = self.activity_kw.get
+    group_method_id = get('group_method_id', '')
+    if group_method_id is None:
+      group_method_id = 'portal_activities/dummyGroupMethod/' + self.method_id
+    return group_method_id + '\0' + get('group_id', '')
+
   def getObject(self, activity_tool):
     """return the object referenced in this message."""
     return activity_tool.unrestrictedTraverse(self.object_path)
@@ -231,7 +242,9 @@ class Message(BaseMessage):
 
   def changeUser(self, user_name, activity_tool):
     """restore the security context for the calling user."""
-    uf = activity_tool.getPortalObject().acl_users
+    portal = activity_tool.getPortalObject()
+    portal_uf = portal.acl_users
+    uf = portal_uf
     user = uf.getUserById(user_name)
     # if the user is not found, try to get it from a parent acl_users
     # XXX this is still far from perfect, because we need to store all
@@ -239,8 +252,15 @@ class Message(BaseMessage):
     # replay the activity with exactly the same security context as if
     # it had been executed without activity.
     if user is None:
-      uf = activity_tool.getPortalObject().aq_parent.acl_users
+      uf = portal.aq_parent.acl_users
       user = uf.getUserById(user_name)
+    if user is None and user_name == system_user.getUserName():
+      # The following logic partly comes from unrestricted_apply()
+      # implementation in ERP5Type.UnrestrictedMethod but we get roles
+      # from the portal to have more roles.
+      uf = portal_uf
+      role_list = uf.valid_roles()
+      user = PrivilegedUser(user_name, None, role_list, ()).__of__(uf)
     if user is not None:
       user = user.__of__(uf)
       newSecurityManager(None, user)
@@ -287,6 +307,8 @@ class Message(BaseMessage):
             self.setExecutionState(MESSAGE_NOT_EXECUTABLE, exc_info,
                                    context=activity_tool)
           else:
+            # Store site info
+            setSite(activity_tool.getParentValue())
             if activity_tool.activity_timing_log:
               result = activity_timing_method(method, self.args, self.kw)
             else:
@@ -307,9 +329,6 @@ class Message(BaseMessage):
     return activity.validate(activity_tool, self,
                              check_order_validation=check_order_validation,
                              **self.activity_kw)
-
-  def getDependentMessageList(self, activity, activity_tool):
-    return activity.getDependentMessageList(activity_tool, self, **self.activity_kw)
 
   def notifyUser(self, activity_tool, retry=False):
     """Notify the user that the activity failed."""
@@ -1095,8 +1114,7 @@ class ActivityTool (Folder, UniqueObject):
         # runing unit tests. Recreate it if it does not exist.
         if getattr(request.other, 'PARENTS', None) is None:
           request.other['PARENTS'] = parents
-        # XXX: itools (used by Localizer) requires PATH_INFO to be set, and it's
-        # not when runing unit tests. Recreate it if it does not exist.
+        # XXX: PATH_INFO might not be set when runing unit tests.
         if request.environ.get('PATH_INFO') is None:
           request.environ['PATH_INFO'] = '/Control_Panel/timer_service/process_timer'
         
@@ -1422,13 +1440,13 @@ class ActivityTool (Folder, UniqueObject):
       if not is_initialized:
         self.initialize()
       message_list = []
-      method_id = "_validate_%s" % validator_id
+      method_id = "_validate_" + validator_id
       for activity in activity_dict.itervalues():
         method = getattr(activity, method_id, None)
         if method is not None:
           result = method(aq_inner(self), message, validation_value)
           if result:
-            message_list.extend([(activity, m) for m in result])
+            message_list += [(activity, m) for m in result]
       return message_list
 
     # Required for tests (time shift)

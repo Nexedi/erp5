@@ -265,7 +265,7 @@ class ContributionTool(BaseTool):
                                input_parameter_dict=input_parameter_dict
                                )
     object_id = document.getId()
-    document = self._getOb(object_id) # Call _getOb to purge cache
+    document = self[object_id] # Call __getitem__ to purge cache
 
     kw['filename'] = filename # Override filename property
     # Then edit the document contents (so that upload can happen)
@@ -427,11 +427,7 @@ class ContributionTool(BaseTool):
     # Return document to newContent method
     return document
 
-  def _getOb(self, id, default=_marker):
-    """
-    Check for volatile temp object info first
-    and try to find it
-    """
+  def __getitem__(self, id):
     # Use the document cache if possible and return result immediately
     # this is only useful for webdav
     volatile_cache = getattr(self, '_v_document_cache', None)
@@ -453,14 +449,10 @@ class ContributionTool(BaseTool):
     # when
     #   o = folder._getOb(id)
     # was called in DocumentConstructor
-    if default is _marker:
-      result = BaseTool._getOb(self, id)
-    else:
-      result = BaseTool._getOb(self, id, default=default)
-    if result is not None:
-      # if result is None, ignore it at this stage
-      # we can be more lucky with portal_catalog
-      return result
+    if id in self:
+      # NOTE: used 'id in self' instead of catching KeyError because
+      # __getitem__ can return NullResource
+      return super(ContributionTool, self).__getitem__(id)
 
     # Return an object listed by listDAVObjects
     # ids are concatenation of uid + '-' + standard file name of documents
@@ -469,10 +461,8 @@ class ContributionTool(BaseTool):
     object = self.getPortalObject().portal_catalog.unrestrictedGetResultValue(uid=uid)
     if object is not None:
       return object.getObject() # Make sure this does not break security. XXX
-    if default is not _marker:
-      return default
-    # Raise an AttributeError the same way as in OFS.ObjectManager._getOb
-    raise AttributeError, id
+    # Overriden method can return a NullResource or raise a KeyError:
+    return super(ContributionTool, self).__getitem__(id)
 
 
   def listDAVObjects(self):

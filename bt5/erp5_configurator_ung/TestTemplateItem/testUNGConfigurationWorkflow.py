@@ -25,10 +25,12 @@
 #
 ##############################################################################
 
-from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
+from Products.ERP5Type.tests.ERP5TypeTestCase import  _getConversionServerDict
 from Products.ERP5Type.tests.Sequence import SequenceList
+from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
+                                             TestLiveConfiguratorWorkflowMixin
 
-class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
+class TestUNGConfiguratorWorkflowMixin(TestLiveConfiguratorWorkflowMixin):
   """
     Test UNG Configuration Workflow Mixin.
   """
@@ -104,20 +106,11 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
 
   def getBusinessTemplateList(self):
     return ('erp5_core_proxy_field_legacy',
-            'erp5_full_text_myisam_catalog',
-            'erp5_base',
-            'erp5_workflow',
-            'erp5_configurator',
-            'erp5_configurator_ung',)
-
-  def afterSetUp(self):
-    self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                           ['http://www.erp5.org/dists/snapshot/bt5/'])
-    preference = self.portal.portal_preferences.newContent(portal_type="System Preference")
-    preference.setTitle("global_system_preference")
-    preference.setPreferredOoodocServerAddress("localhost")
-    preference.setPreferredOoodocServerPortNumber(8011)
-    preference.enable()
+        'erp5_full_text_myisam_catalog',
+        'erp5_base',
+        'erp5_workflow',
+        'erp5_configurator',
+        'erp5_configurator_ung',)
 
   def stepCreateBusinessConfiguration(self, sequence=None, sequence_list=None, **kw):
     """ Create one Business Configuration """
@@ -135,46 +128,6 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     self.setBusinessConfigurationWorkflow(business_configuration,
                                    "workflow_module/ung_configuration_workflow")
 
-  def assertCurrentStep(self, step_title, server_response):
-    """ Checks the current step title. """
-    self.assertTrue(
-      '<h2>%s</h2>' % step_title in server_response['data'],
-      'Unable to guess current step title (expected:%s) in: \n%s' %
-      (step_title, server_response))
-
-  def stepConfiguratorNext(self, sequence=None, sequence_list=None, **kw):
-    """ Go Next into Configuration """
-    business_configuration = sequence.get("business_configuration")
-    next_dict = sequence.get("next_dict")
-    response_dict = self.portal.portal_configurator._next(
-                            business_configuration, next_dict)
-    sequence.edit(response_dict=response_dict)
-
-  def setBusinessConfigurationWorkflow(self, business_configuration, workflow):
-    """ Set configurator workflow """
-    business_configuration.setResource(workflow)
-
-  def stepCheckBT5ConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
-    """ Check if the Configuration Item list is correct """
-    business_configuration = sequence.get("business_configuration")
-    # second one: install some standard business templates
-    standard_bt5_config_save = business_configuration['1']
-    self.assertEquals(len(self.standard_bt5_list),
-          len(standard_bt5_config_save.contentValues(
-                  portal_type='Standard BT5 Configurator Item')))
-    self.assertEquals(
-      set(self.standard_bt5_list),
-      set([x.bt5_id for x in standard_bt5_config_save.contentValues()]))
-
-  def stepCheckConfigureOrganisationForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check if Confire Configure step was showed """
-    response_dict = sequence.get("response_dict")
-    if 'command' in response_dict:
-      self.assertEquals('show', response_dict['command'])
-    self.assertEquals(None, response_dict['previous'])
-    self.assertEquals('Configure Organisation', response_dict['next'])
-    self.assertCurrentStep('Your Organisation', response_dict)
-
   def stepSetupOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Create one Organisation with Basic information """
     next_dict = dict(
@@ -185,14 +138,6 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
         field_your_default_address_zip_code='59000')
     sequence.edit(next_dict=next_dict)
 
-  def stepCheckConfigureUserAccountNumberForm(self, sequence=None, sequence_list=None, **kw):
-    """ """
-    response_dict = sequence.get("response_dict")
-    if 'command' in response_dict:
-      self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Configure user accounts number', response_dict['next'])
-    self.assertEquals('Previous', response_dict['previous'])
-    self.assertCurrentStep('Number of user accounts', response_dict)
 
   def stepCheckOrganisationConfiguratorItem(self, sequence=None, sequence_list=None, **kw):
     """ Check if organisation was created fine """
@@ -212,15 +157,6 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     next_dict = dict(field_your_user_number="3")
     sequence.edit(next_dict=next_dict)
 
-  def stepCheckConfigureMultipleUserAccountForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check the multiple user account form """
-    response_dict = sequence.get("response_dict")
-    if 'command' in response_dict:
-      self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Previous', response_dict['previous'])
-    self.assertEquals('Configure user accounts', response_dict['next'])
-    self.assertCurrentStep('Configuration of users', response_dict)
-
   def _stepSetupMultipleUserAccountThree(self, sequence, user_list):
     """ Generic step to create multiple user account """
     next_dict = {}
@@ -230,7 +166,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     sequence.edit(next_dict=next_dict)
 
   def stepCheckConfigurePreferenceForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check the multiple user account form """
+    """ Check the preference form """
     response_dict = sequence.get("response_dict")
     if 'command' in response_dict:
       self.assertEquals('show', response_dict['command'])
@@ -253,13 +189,6 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
                      field_your_preferred_event_sender_email="test@test.com",
                      default_field_your_lang=1)
     sequence.edit(next_dict=next_dict)
-
-  def stepCheckConfigureWebSiteForm(self, sequence=None, sequence_list=None, **kw):
-    """ Check the installation form """
-    response_dict = sequence.get("response_dict")
-    self.assertEquals('show', response_dict['command'])
-    self.assertEquals('Previous', response_dict['previous'])
-    self.assertEquals('Install', response_dict['next'])
 
   def stepCheckMultipleUserAccountThreeBrazil(self, sequence=None, sequence_list=None, **kw):
      """ Check if the users were created correctly """
@@ -288,26 +217,14 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     response_dict = sequence.get("response_dict")
     self.assertEquals('show', response_dict['command'])
 
-  def stepSetupInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
-    """ Install the Configuration """
-    sequence.edit(next_dict={})
-
-  def stepCheckInstallConfiguration(self, sequence=None, sequence_list=None, **kw):
-    """ Check the installation of the configuration """
-    response_dict = sequence.get("response_dict")
-    self.assertEquals('install', response_dict['command'])
-
-  def stepStartConfigurationInstallation(self, sequence=None, sequence_list=None, **kw):
-    """ Starts the installation """
-    business_configuration = sequence.get("business_configuration")
-    self.portal.portal_configurator.startInstallation(
-         business_configuration, REQUEST=self.portal.REQUEST)
-
   def stepCheckSystemPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check System Preference"""
     system_preference = self.portal.portal_catalog.getResultValue(portal_type="System Preference")
-    self.assertEquals(system_preference.getPreferredOoodocServerPortNumber(), 8011)
-    self.assertEquals(system_preference.getPreferredOoodocServerAddress(), "localhost")
+    conversion_dict = _getConversionServerDict()
+    self.assertEquals(system_preference.getPreferredOoodocServerPortNumber(),
+                      conversion_dict['port'])
+    self.assertEquals(system_preference.getPreferredOoodocServerAddress(),
+                      conversion_dict['hostname'])
 
   def stepCheckUserPreferenceAfterInstallation(self, sequence=None, sequence_list=None, **kw):
     """ Check System Preference"""
@@ -321,14 +238,14 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     preference = portal_catalog.getResultValue(portal_type="Preference",
                                                title='Preference for Person Creator')
     self.assertEquals(preference.getPreferenceState(), "enabled")
-    ung_preference = self.portal.portal_preferences.ung_preference
-    self.assertEquals(ung_preference.getPreferenceState(), "global")
+    preference = self.portal.portal_preferences.ung_preference
+    self.assertEquals(preference.getPreferenceState(), "global")
   
   def _stepCheckWebSiteRoles(self):
     """ Check permission of Web Site with normal user """
     self.changeSkin("UNGDoc")
     self.portal.web_page_module.ERP5Site_createNewWebDocument("web_page_template")
-    self.stepTic()
+    self.tic()
     self.changeSkin("UNGDoc")
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList()
     self.assertEquals(len(result_list), 1)
@@ -339,7 +256,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     new_object.edit(title="New")
     new_object = self.portal.web_page_module.newContent(portal_type="Web Illustration")
     new_object.edit(title="New")
-    self.stepTic()
+    self.tic()
     kw = {"portal_type": "Web Page", "title": "New"}
     self.changeSkin("UNGDoc")
     result_list = self.portal.web_site_module.ung.WebSection_getWebPageObjectList(**kw)
@@ -361,12 +278,12 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     pad = self.portal.knowledge_pad_module.newContent(portal_type="Knowledge Pad")
     pad.edit(publication_section_value=self.portal.web_site_module.ung)
     pad.visible()
-    self.stepTic()
+    self.tic()
     gadget = self.portal.portal_gadgets.searchFolder()[0]
     gadget_id = gadget.getId()
     self.changeSkin("UNGDoc")
     self.portal.web_site_module.ung.WebSection_addGadgetList(gadget_id)
-    self.stepTic()
+    self.tic()
     box_list = pad.contentValues()
     self.assertEquals(len(box_list), 1)
     knowledge_box = box_list[0]
@@ -392,7 +309,7 @@ class TestUNGConfiguratorWorkflowMixin(ERP5TypeTestCase):
     portal.REQUEST.form.update(event_dict)
     self.changeSkin("UNGDoc")
     portal.event_module.EventModule_createNewEvent()
-    self.stepTic()
+    self.tic()
     event = portal.portal_catalog.getResultValue(portal_type="Note")
     self.assertEquals(event.getDescription(), "testUNG Sample")
     start_date = event.getStartDate()

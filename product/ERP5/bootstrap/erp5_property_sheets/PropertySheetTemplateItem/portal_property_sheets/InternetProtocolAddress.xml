@@ -29,10 +29,6 @@
             <value> <string>InternetProtocolAddress</string> </value>
         </item>
         <item>
-            <key> <string>last_id</string> </key>
-            <value> <string>9</string> </value>
-        </item>
-        <item>
             <key> <string>portal_type</string> </key>
             <value> <string>Property Sheet</string> </value>
         </item>

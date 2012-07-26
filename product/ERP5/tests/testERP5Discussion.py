@@ -29,7 +29,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
@@ -71,10 +70,9 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.auth = '%s:%s' % (self.manager_username, self.manager_password)
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     for module in (self.portal.discussion_thread_module,):
       module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def stepCreateThread(self):
@@ -89,14 +87,14 @@ class TestERP5Discussion(ERP5TypeTestCase):
     """Create a new discussion thread"""
 
     self.stepCreateThread();
-    self.stepTic()
+    self.tic()
 
   def test_02_createDiscussionPost(self):
     """Create a disucssion post inside a discussion thread"""
 
     thread = self.stepCreateThread();
     post = self.stepCreatePost(thread);
-    self.stepTic()
+    self.tic()
 
   def test_MultipleForum(self):
     """
@@ -116,12 +114,12 @@ class TestERP5Discussion(ERP5TypeTestCase):
     web_section1.setMembershipCriterionCategoryList([group1.getRelativeUrl()])
     web_section2.setMultimembershipCriterionBaseCategoryList(['group'])
     web_section2.setMembershipCriterionCategoryList([group2.getRelativeUrl()])    
-    self.stepTic()
+    self.tic()
     
     # add threads on Web Section context
     web_section1.WebSection_createNewDiscussionThread('test1', 'test1 body')
     web_section2.WebSection_createNewDiscussionThread('test2', 'test2 body')    
-    self.stepTic()
+    self.tic()
     discussion_thread_object1 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
                                                                     title = 'test1')
     discussion_thread_object2 = portal.portal_catalog.getResultValue(portal_type = 'Discussion Thread',
@@ -129,14 +127,19 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.assertEqual(group1, discussion_thread_object1.getGroupValue())
     self.assertEqual(group2, discussion_thread_object2.getGroupValue())
     
-    # check getDocumentValue.. on Web Section context
+    # check getDocumentValue.. on Web Section context (by default forum is public 
+    # so threads should be part of document list)
+    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in web_section1.getDocumentValueList()])
+    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in web_section2.getDocumentValueList()])
+
+    # test archiving threads so the do not belong any more to web section document list
+    discussion_thread_object1.archive()
+    discussion_thread_object2.archive()
+    self.tic()
+
     self.assertSameSet([], web_section1.getDocumentValueList())
     self.assertSameSet([], web_section2.getDocumentValueList())
-    discussion_thread_object1.publish()
-    discussion_thread_object2.publish()
-    self.stepTic()
-    self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in web_section1.getDocumentValueList()])
-    self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in web_section2.getDocumentValueList()])    
+
 
 def test_suite():
   suite = unittest.TestSuite()

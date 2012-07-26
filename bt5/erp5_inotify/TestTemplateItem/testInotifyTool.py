@@ -27,7 +27,6 @@
 ##############################################################################
 
 import os, shutil, tempfile, unittest
-import transaction
 from Acquisition import aq_base
 from Products.ERP5Type.Base import Base
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
@@ -45,7 +44,7 @@ class TestInotifyTool(ERP5TypeTestCase):
     for inotify in inotify_tool.objectValues():
       inotify._setEnabled(False)
     inotify_tool._p_changed = 1
-    transaction.commit()
+    self.commit()
     def checkCache(notify_list):
       self.assertEqual(notify_list,
         getattr(aq_base(inotify_tool), '_v_notify_list', None))
@@ -53,7 +52,7 @@ class TestInotifyTool(ERP5TypeTestCase):
     tmp_dir = tempfile.mkdtemp()
     try:
       inotify_tool.process_timer(None, None)
-      transaction.commit()
+      self.commit()
       checkCache([])
       inotify = inotify_tool.newContent(inode_path='string:'+tmp_dir,
                                         sense_method_id='Inotify_test',
@@ -61,34 +60,34 @@ class TestInotifyTool(ERP5TypeTestCase):
       inotify_id = inotify.getId()
       checkCache(None)
       inotify_tool.process_timer(None, None)
-      transaction.commit()
+      self.commit()
       checkCache([])
       event_list = []
       inotify.__class__.Inotify_test = lambda self, events: \
         event_list.extend(events)
       try:
         inotify.setEnabled(True)
-        transaction.commit()
+        self.commit()
         checkCache(None)
         inotify_tool.process_timer(None, None)
-        transaction.commit()
+        self.commit()
         checkCache([inotify_id])
         self.assertEqual(event_list, [])
         p = os.path.join(tmp_dir, '1')
         with open(p, 'w') as f:
           inotify_tool.process_timer(None, None)
-          transaction.commit()
+          self.commit()
           self.assertEqual(event_list, [{'path': p, 'mask': IN_CREATE}])
           del event_list[:]
           f.write('foo')
         inotify_tool.process_timer(None, None)
-        transaction.commit()
+        self.commit()
         self.assertEqual(event_list, [{'path': p, 'mask': IN_MODIFY}])
         del event_list[:]
         p2 = os.path.join(tmp_dir, '2')
         os.rename(p, p2)
         inotify_tool.process_timer(None, None)
-        transaction.commit()
+        self.commit()
         expected = [{'path': p, 'mask': IN_DELETE},
                     {'path': p2, 'mask': IN_CREATE}]
         expected.remove(event_list.pop())

@@ -30,7 +30,6 @@
 
 import unittest
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
-import transaction
 from DateTime import DateTime
 
 class TestAcknowledgementTool(ERP5TypeTestCase):
@@ -63,7 +62,6 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
                stop_date = now+2)
     portal.portal_workflow.doActionFor(event, 'start_action')
     self.assertEqual(event.getSimulationState(), 'started')
-    transaction.commit()
     self.tic()
 
     acknowledgement_tool_kw = {}
@@ -98,7 +96,7 @@ class TestAcknowledgementTool(ERP5TypeTestCase):
     # the event
     self.assertEqual(acknowledgement.getPortalType(), 'Acknowledgement')
     self.assertEqual(acknowledgement.getTextContent(), "A Nice Message")
-    transaction.commit()
+    self.commit()
 
     # We should not have any acknowledgements, we just committed previous
     # transaction, this means that we look if the mechanism that looks at

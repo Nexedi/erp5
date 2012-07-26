@@ -84,7 +84,6 @@ div {\n
   margin:0;\n
   padding:0;\n
   float:none;\n
-  width:100%;\n
   position:relative;\n
 }\n
 \n
@@ -172,12 +171,21 @@ fieldset.hidden_fieldset { \n
   padding-top: 5px;\n
 }\n
 \n
+#master,\n
+.document,\n
+.content{\n
+  min-width:75%;\n
+}\n
+\n
+#km_left .content{\n
+  width:750px;\n
+}\n
+\n
 #wrapper_right{\n
   float: left;\n
   width:22.5%;\n
-  position:relative;\n
   margin-left: 19px;\n
-  padding-top: 4px;\n
+  margin-top: 23px;\n
 }\n
 \n
 #km_left {\n
@@ -227,7 +235,7 @@ div#wrapper_headline div.header_title {\n
 }\n
 \n
 #wrapper_path {\n
-  float:left;\n
+/*   float:left; */\n
   width: 100%;\n
 }\n
 \n
@@ -249,10 +257,13 @@ div#wrapper_headline div.header_title {\n
   height:100%;\n
 }\n
 \n
-#menu ul li.collapse-menu{\n
+#menu ul li.collapse-able{\n
   background: url(km_img/collapse-down-arrow.gif) no-repeat transparent right 10px;\n
   padding-right: 0px;\n
 }\n
+\n
+\n
+\n
 \n
 #menu ul li.non-collapse-menu{\n
   background: none;\n
@@ -450,10 +461,6 @@ div#mainwrapper div.wrapper div.gadget fieldset.widget legend{\n
 .content .field .input {\n
   width: 100%;\n
   margin-top: 4px;\n
-}\n
-\n
-.content .field label {\n
-  width:30%;\n
   float:left;\n
 }\n
 \n
@@ -567,10 +574,12 @@ fieldset.right{\n
 */\n
 \n
 fieldset.registration {\n
-  width:36%;\n
+  width:auto;\n
   background-color: #FFFFFF;\n
   margin-right: 0.5%;\n
   height: auto;\n
+  margin-bottom:2em;\n
+  padding:10px;\n
 }\n
 \n
 \n
@@ -624,6 +633,11 @@ div.web-toolbar{\n
 div.web-toolbar h3{\n
   color:#FFFFFF;\n
   padding-top: 4px;\n
+}\n
+\n
+div.web-toolbar h3 a{\n
+  color:#FFFFFF;\n
+  font-weight: bold;\n
 }\n
 \n
 #wrapper_footer div.web-toolbar ul{\n
@@ -934,8 +948,7 @@ fieldset.right h4 {\n
   padding:5px;\n
 }\n
 \n
-.document > .content ul li {\n
-  background:transparent url(km_img/bg_bullet_square.gif) no-repeat scroll 0 0.5em;\n
+.content ul li {\n
   margin:0 0 0.3em 2px;\n
   padding:0 0 0 12px;\n
   list-style-image:none;\n
@@ -1038,7 +1051,7 @@ table tbody tr td {\n
 \n
 /* Collapse down navigation */\n
 #menu ul.nav li{\n
-  z-index:1;\n
+  z-index:1000;\n
 }\n
 \n
 #menu ul.nav li a, #menu ul.nav li a:visited {\n
@@ -1075,11 +1088,11 @@ table tbody tr td {\n
   top:0;\n
   padding-top:30px;\n
   left:0;\n
-  width:205px;\n
+  width:auto;\n
   opacity: <tal:block tal:replace="menu_opacity">0.80</tal:block>;\n
 }\n
 \n
-#menu ul.nav li:hover ul li a {\n
+#menu ul.nav  li:hover ul li a {\n
   text-align:left;\n
   display:block;\n
   background:#818363;\n
@@ -1095,6 +1108,7 @@ table tbody tr td {\n
 \n
 #menu ul.nav li:hover ul li a:hover { background:#37391e; }\n
 #menu ul.nav li:hover ul li a.workflow_title:hover { background:#818363; }\n
+\n
 \n
 #menu ul.nav li:hover ul li:hover ul {\n
   display:block;\n
@@ -1323,7 +1337,19 @@ button.formbt > span{\n
 .highlight{\n
   background-color: yellow;\n
 }\n
+.full-width{\n
+  width:100%;\n
+}\n
 \n
+/* discussions */\n
+.discussion-post-body-container a{\n
+  color:#686868;\n
+  text-decoration: underline;\n
+}\n
+/* web page list item */\n
+.page ul li {\n
+    list-style: square outside none;\n
+}\n
 </tal:block>
 
 ]]></unicode> </value>

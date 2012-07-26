@@ -32,7 +32,6 @@
 #
 
 
-import transaction
 import os, sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
@@ -112,7 +111,6 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
       variations = [variation1, variation2]
 
       # Commit and catalog
-      transaction.commit()
       self.tic()
       
       component.setVariationBaseCategoryList(['variation'])
@@ -234,7 +232,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         membership_criterion_base_category = base_category_list,
         membership_criterion_category = [size],
         categories = ('variation/' + variation.getRelativeUrl() ) )
-    self.stepTic()
+    self.tic()
 
     # Transformed Resource 3 : 3 variation axis
     line_list = [ ('size/Baby', 'ColourVariation1', 'MorphologyVariation1', '2', 3.),
@@ -315,7 +313,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         membership_criterion_category = [size, colour, morphology],
         quantity = quantity,
         mapped_value_property_list = ['quantity'] ) 
-    self.stepTic()
+    self.tic()
 
     
   def stepCreateIncludedTransformationLine(self, sequence=None, sequence_list=None, **kw):
@@ -361,7 +359,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         membership_criterion_category = [size],
         quantity = quantity,
         mapped_value_property_list = ['quantity'])
-    self.stepTic()
+    self.tic()
     
   # Transformed Resource : 1 variation axis
     line_list =  [ ('size/Baby',     1.),
@@ -390,7 +388,7 @@ class TestApparelTransformation(TestOrderMixin, ERP5TypeTestCase):
         membership_criterion_category = [size],
         quantity = quantity,
         mapped_value_property_list = ['quantity'])
-    self.stepTic()
+    self.tic()
     
     
   def stepIncludeTransformation(self, sequence=None, sequence_list=None, **kw):

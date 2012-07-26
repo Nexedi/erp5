@@ -28,7 +28,6 @@
 ##############################################################################
 
 import unittest
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5OOo.tests.TestFormPrintoutMixin import TestFormPrintoutMixin
 from Products.ERP5Type.tests.backportUnittest import expectedFailure
@@ -97,7 +96,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
       test1.newContent("foo_1", title='Foo Line 1', portal_type='Foo Line')
     if test1._getOb("foo_2", None) is None:
       test1.newContent("foo_2", title='Foo Line 2', portal_type='Foo Line')
-    transaction.commit()
     self.tic()
 
   def getStyleDictFromFieldName(self, content_xml, field_id):
@@ -115,7 +113,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     return style_dict
 
   # see comment at top
-  @expectedFailure
   def test_01_TextField(self):
     """
     mapping a field to textbox
@@ -126,7 +123,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
       foo_module.newContent(id='test1', portal_type='Foo')
     test1 =  foo_module.test1
     test1.setTitle('Foo title!')
-    transaction.commit()
     self.tic()
 
     style_dict = {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}span':
@@ -166,7 +162,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
                      'application/vnd.oasis.opendocument.graphics')
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
                      'inline;filename="Foo_viewAsODGPrintout.odg"')
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
@@ -176,7 +172,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Changed Title!") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 3. False case: change the field name
     test1.setTitle("you cannot find")
@@ -188,7 +184,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertFalse(content_xml.find("you cannot find") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
     # put back
     foo_form.manage_renameObject('xxx_title', 'my_title', REQUEST=request)
 
@@ -211,7 +207,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(content_xml.find("call!") > 0)
     # when just call FormPrintout, it does not change content-type
     self.assertEqual(request.RESPONSE.getHeader('content-type'), 'text/html')
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
@@ -220,7 +216,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 6. Normal case: unicode string
     test1.setTitle(u'Français test2')
@@ -247,7 +243,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
       foo_module.newContent(id='test1', portal_type='Foo')
     test1 =  foo_module.test1
     test1.setDescription('A text a bit more longer\n\nWith a newline !')
-    transaction.commit()
     self.tic()
 
     style_dict = {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}line-break': {},
@@ -276,7 +271,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     odf_document = foo_printout.index_html(request)
     self.assertTrue(odf_document is not None)
     # validate the generated document
-    #self._validate(odf_document)
+    self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     content = etree.XML(content_xml)
@@ -328,7 +323,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     # 01 - Normal image mapping
     odf_document = foo_printout(request)
     self.assertTrue(odf_document is not None)
-    #self._validate(odf_document)
+    self._validate(odf_document)
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Pictures/0.png") > 0)
@@ -362,7 +357,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     content_xml = builder.extract("content.xml")
     # confirming the image was removed
     self.assertFalse(content_xml.find("Pictures/0.png") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
   def test_04_ProxyField(self):
     """
@@ -374,7 +369,6 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
       foo_module.newContent(id='test1', portal_type='Foo')
     test1 =  foo_module.test1
     test1.setTitle('Foo title!')
-    transaction.commit()
     self.tic()
 
     style_dict = {'{urn:oasis:names:tc:opendocument:xmlns:text:1.0}span':
@@ -414,7 +408,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
                      'application/vnd.oasis.opendocument.graphics')
     self.assertEqual(request.RESPONSE.getHeader('content-disposition'),
                      'inline;filename="Foo_viewProxyFieldAsODGPrintout.odg"')
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 2. Normal case: change the field value and check again the ODF document
     test1.setTitle("Changed Title!")
@@ -424,7 +418,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Changed Title!") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 3. False case: change the field name
     test1.setTitle("you cannot find")
@@ -436,7 +430,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertFalse(content_xml.find("you cannot find") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
     # put back
     foo_form.manage_renameObject('xxx_title', 'my_title', REQUEST=request)
 
@@ -458,7 +452,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     self.assertTrue(content_xml.find("call!") > 0)
     self.assertEqual(request.RESPONSE.getHeader('content-type'),
                      'application/vnd.oasis.opendocument.graphics')
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 5. Normal case: utf-8 string
     test1.setTitle("Français")
@@ -467,7 +461,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
     # 6. Normal case: unicode string
     test1.setTitle(u'Français test2')
@@ -476,7 +470,7 @@ class TestFormPrintoutAsODG(TestFormPrintoutMixin):
     builder = OOoBuilder(odf_document)
     content_xml = builder.extract("content.xml")
     self.assertTrue(content_xml.find("Français test2") > 0)
-    #self._validate(odf_document)
+    self._validate(odf_document)
 
 def test_suite():
   suite = unittest.TestSuite()

@@ -1,0 +1,175 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_Cacheable__manager_id</string> </key>
+            <value> <string>http_cache</string> </value>
+        </item>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts34648236.68</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>grid.locale-fr.js</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>application/javascript</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+;(function($){\r\n
+/**\r\n
+ * jqGrid French Translation\r\n
+ * Tony Tomov tony@trirand.com\r\n
+ * http://trirand.com/blog/ \r\n
+ * Dual licensed under the MIT and GPL licenses:\r\n
+ * http://www.opensource.org/licenses/mit-license.php\r\n
+ * http://www.gnu.org/licenses/gpl.html\r\n
+**/\r\n
+$.jgrid = $.jgrid || {};\r\n
+$.extend($.jgrid,{\r\n
+\tdefaults : {\r\n
+\t\trecordtext: "Enregistrements {0} - {1} sur {2}",\r\n
+\t\temptyrecords: "Aucun enregistrement à afficher",\r\n
+\t\tloadtext: "Chargement...",\r\n
+\t\tpgtext : "Page {0} sur {1}"\r\n
+\t},\r\n
+\tsearch : {\r\n
+\t\tcaption: "Recherche...",\r\n
+\t\tFind: "Chercher",\r\n
+\t\tReset: "Annuler",\r\n
+\t\todata : [\'égal\', \'différent\', \'inférieur\', \'inférieur ou égal\',\'supérieur\',\'supérieur ou égal\', \'commence par\',\'ne commence pas par\',\'est dans\',"n\'est pas dans",\'finit par\',\'ne finit pas par\',\'contient\',\'ne contient pas\'],\r\n
+\t\tgroupOps: [\t{ op: "AND", text: "tous" },\t{ op: "OR",  text: "aucun" }\t],\r\n
+\t\tmatchText: " correspondance",\r\n
+\t\trulesText: " règles"\r\n
+\t},\r\n
+\tedit : {\r\n
+\t\taddCaption: "Ajouter",\r\n
+\t\teditCaption: "Editer",\r\n
+\t\tbSubmit: "Valider",\r\n
+\t\tbCancel: "Annuler",\r\n
+\t\tbClose: "Fermer",\r\n
+\t\tsaveData: "Les données ont changé ! Enregistrer les modifications ?",\r\n
+\t\tbYes: "Oui",\r\n
+\t\tbNo: "Non",\r\n
+\t\tbExit: "Annuler",\r\n
+\t\tmsg: {\r\n
+\t\t\trequired: "Champ obligatoire",\r\n
+\t\t\tnumber: "Saisissez un nombre correct",\r\n
+\t\t\tminValue: "La valeur doit être supérieure ou égale à",\r\n
+\t\t\tmaxValue: "La valeur doit être inférieure ou égale à",\r\n
+\t\t\temail: "n\'est pas un email correct",\r\n
+\t\t\tinteger: "Saisissez un entier correct",\r\n
+\t\t\turl: "n\'est pas une adresse correcte. Préfixe requis (\'http://\' or \'https://\')",\r\n
+\t\t\tnodefined : " n\'est pas défini!",\r\n
+\t\t\tnovalue : " la valeur de retour est requise!",\r\n
+\t\t\tcustomarray : "Une fonction personnalisée devrait retourner un tableau (array)!",\r\n
+\t\t\tcustomfcheck : "Une fonction personnalisée devrait être présente dans le cas d\'une vérification personnalisée!"\r\n
+\t\t}\r\n
+\t},\r\n
+\tview : {\r\n
+\t\tcaption: "Voir les enregistrement",\r\n
+\t\tbClose: "Fermer"\r\n
+\t},\r\n
+\tdel : {\r\n
+\t\tcaption: "Supprimer",\r\n
+\t\tmsg: "Supprimer les enregistrements sélectionnés ?",\r\n
+\t\tbSubmit: "Supprimer",\r\n
+\t\tbCancel: "Annuler"\r\n
+\t},\r\n
+\tnav : {\r\n
+\t\tedittext: " ",\r\n
+\t\tedittitle: "Editer la ligne sélectionnée",\r\n
+\t\taddtext:" ",\r\n
+\t\taddtitle: "Ajouter une ligne",\r\n
+\t\tdeltext: " ",\r\n
+\t\tdeltitle: "Supprimer la ligne sélectionnée",\r\n
+\t\tsearchtext: " ",\r\n
+\t\tsearchtitle: "Chercher un enregistrement",\r\n
+\t\trefreshtext: "",\r\n
+\t\trefreshtitle: "Recharger le tableau",\r\n
+\t\talertcap: "Avertissement",\r\n
+\t\talerttext: "Veuillez sélectionner une ligne",\r\n
+\t\tviewtext: "",\r\n
+\t\tviewtitle: "Afficher la ligne sélectionnée"\r\n
+\t},\r\n
+\tcol : {\r\n
+\t\tcaption: "Afficher/Masquer les colonnes",\r\n
+\t\tbSubmit: "Valider",\r\n
+\t\tbCancel: "Annuler"\r\n
+\t},\r\n
+\terrors : {\r\n
+\t\terrcap : "Erreur",\r\n
+\t\tnourl : "Aucune adresse n\'est paramétrée",\r\n
+\t\tnorecords: "Aucun enregistrement à traiter",\r\n
+\t\tmodel : "Nombre de titres (colNames) <> Nombre de données (colModel)!"\r\n
+\t},\r\n
+\tformatter : {\r\n
+\t\tinteger : {thousandsSeparator: " ", defaultValue: \'0\'},\r\n
+\t\tnumber : {decimalSeparator:",", thousandsSeparator: " ", decimalPlaces: 2, defaultValue: \'0,00\'},\r\n
+\t\tcurrency : {decimalSeparator:",", thousandsSeparator: " ", decimalPlaces: 2, prefix: "", suffix:"", defaultValue: \'0,00\'},\r\n
+\t\tdate : {\r\n
+\t\t\tdayNames:   [\r\n
+\t\t\t\t"Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam",\r\n
+\t\t\t\t"Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"\r\n
+\t\t\t],\r\n
+\t\t\tmonthNames: [\r\n
+\t\t\t\t"Jan", "Fév", "Mar", "Avr", "Mai", "Jui", "Jul", "Aou", "Sep", "Oct", "Nov", "Déc",\r\n
+\t\t\t\t"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Décembre"\r\n
+\t\t\t],\r\n
+\t\t\tAmPm : ["am","pm","AM","PM"],\r\n
+\t\t\tS: function (j) {return j == 1 ? \'er\' : \'e\';},\r\n
+\t\t\tsrcformat: \'Y-m-d\',\r\n
+\t\t\tnewformat: \'d/m/Y\',\r\n
+\t\t\tmasks : {\r\n
+\t\t\t\tISO8601Long:"Y-m-d H:i:s",\r\n
+\t\t\t\tISO8601Short:"Y-m-d",\r\n
+\t\t\t\tShortDate: "n/j/Y",\r\n
+\t\t\t\tLongDate: "l, F d, Y",\r\n
+\t\t\t\tFullDateTime: "l, F d, Y g:i:s A",\r\n
+\t\t\t\tMonthDay: "F d",\r\n
+\t\t\t\tShortTime: "g:i A",\r\n
+\t\t\t\tLongTime: "g:i:s A",\r\n
+\t\t\t\tSortableDateTime: "Y-m-d\\\\TH:i:s",\r\n
+\t\t\t\tUniversalSortableDateTime: "Y-m-d H:i:sO",\r\n
+\t\t\t\tYearMonth: "F, Y"\r\n
+\t\t\t},\r\n
+\t\t\treformatAfterEdit : false\r\n
+\t\t},\r\n
+\t\tbaseLinkUrl: \'\',\r\n
+\t\tshowAction: \'\',\r\n
+\t\ttarget: \'\',\r\n
+\t\tcheckbox : {disabled:true},\r\n
+\t\tidName : \'id\'\r\n
+\t}\r\n
+});\r\n
+})(jQuery);\r\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>4273</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>grid.locale-fr.js</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>

@@ -93,14 +93,21 @@ zeo_server_pid = None
 node_pid_list = []
 
 ZEvent = sys.modules.get('ZServer.PubCore.ZEvent')
+zrpc = sys.modules.get('ZEO.zrpc.connection')
 def fork():
   pid = os.fork()
   if pid:
-    # recreate the event pipe if it already exists
+    # recreate event pipes that already exist
     for obj in socket_map.values():
-      assert obj is ZEvent.the_trigger
       obj.close()
-      ZEvent.the_trigger = ZEvent.simple_trigger()
+      if obj is ZEvent.the_trigger:
+        ZEvent.the_trigger = ZEvent.simple_trigger()
+      else:
+        assert obj is zrpc.ManagedServerConnection.trigger
+        zrpc.ManagedServerConnection.trigger = zrpc.trigger()
+        zrpc.ManagedClientConnection.trigger.close()
+        zrpc.ManagedClientConnection.trigger = \
+          zrpc.client_trigger = zrpc.trigger(zrpc.client_map)
     # make sure parent and child have 2 different RNG
     instance_random.seed(instance_random.random())
   return pid
@@ -159,7 +166,6 @@ else:
     break
   else:
     forkNodes()
-    # do not import ClientStorage before forking due to client trigger
     from ZEO.ClientStorage import ClientStorage
     Storage = ClientStorage(zeo_client)
 

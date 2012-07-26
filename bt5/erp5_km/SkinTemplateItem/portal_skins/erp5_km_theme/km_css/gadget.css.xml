@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts21528683.48</string> </value>
+            <value> <string>ts38362642.97</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -202,7 +202,7 @@ div.gadget-management{\n
 }\n
 \n
 div.right-gadget{\n
-  float:right;\n
+  /*float:right;*/\n
   display:block;\n
 }\n
 \n
@@ -717,7 +717,7 @@ div.block fieldset.gadget-profile div.field{\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>12257</int> </value>
+            <value> <int>12261</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

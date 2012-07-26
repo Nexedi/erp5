@@ -31,10 +31,10 @@ from Products.ERP5Type.tests.utils import reindex
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.tests.Sequence import SequenceList
+from DateTime import DateTime
 import email, re
 from email.header import decode_header, make_header
 from email.utils import parseaddr
-import transaction
 import cgi
 from urlparse import urlparse
 
@@ -81,7 +81,6 @@ class TestERP5Credential(ERP5TypeTestCase):
       system_preference = self.portal.portal_preferences.newContent(
         portal_type='System Preference')
       system_preference.enable()
-    system_preference.edit(preferred_event_sender_email=['Sample s@s.com',])
 
   @reindex
   def enableAlarm(self):
@@ -141,7 +140,7 @@ class TestERP5Credential(ERP5TypeTestCase):
 
   def beforeTearDown(self):
     self.login()
-    transaction.abort()
+    self.abort()
     # clear modules if necessary
     module_list = (self.portal.getDefaultModule('Credential Request'),
         self.portal.getDefaultModule('Credential Update'),
@@ -150,7 +149,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     for module in module_list:
       module.manage_delObjects(list(module.objectIds()))
     self.resetCredentialSystemPreference()
-    transaction.commit()
     self.tic()
     self.logout()
 
@@ -251,7 +249,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     preference.edit(preferred_credential_request_automatic_approval=True,
                     preferred_credential_alarm_automatic_call=automatic_call)
     self._enablePreference()
-    self.stepTic()
+    self.tic()
     self.logout()
 
   def stepSetCredentialAssignmentPropertyList(self, sequence={}):
@@ -261,7 +259,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     preference = self._getPreference()
     preference.edit(preferred_subscription_assignment_category_list=category_list)
     self._enablePreference()
-    self.stepTic()
+    self.tic()
     self.logout()
 
   def stepSetOrganisationCredentialUpdateAutomaticApprovalPreferences(self,
@@ -270,7 +268,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     preference = self._getPreference()
     preference.edit(preferred_organisation_credential_update_automatic_approval=True)
     self._enablePreference()
-    transaction.commit()
     self.tic()
     self.logout()
 
@@ -280,7 +277,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     preference = self._getPreference()
     preference.edit(preferred_credential_recovery_automatic_approval=True)
     self._enablePreference()
-    transaction.commit()
     self.tic()
     self.logout()
 
@@ -290,7 +286,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     preference = self._getPreference()
     preference.edit(preferred_person_credential_update_automatic_approval=True)
     self._enablePreference()
-    transaction.commit()
     self.tic()
     self.logout()
 
@@ -303,11 +298,11 @@ class TestERP5Credential(ERP5TypeTestCase):
         portal_type="Credential Request", reference=reference)
     mail_message = portal_catalog.getResultValue(portal_type="Mail Message",
                                                  follow_up=credential_request)
-    self.stepTic()
+    self.tic()
     self.logout()
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
     self.login("ERP5TypeTestCase")
-    self.stepTic()
+    self.tic()
     person = portal_catalog.getResultValue(reference=reference,
                                            portal_type="Person")
     assignment_list = person.objectValues(portal_type="Assignment")
@@ -372,6 +367,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         last_name='Simpson',
         reference=credential_reference,
         password='secret',
+        date_of_birth=DateTime('1970/01/01'),
         default_email_text='homer.simpson@fox.com',
         role_list=['internal'],
         )
@@ -482,7 +478,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertTrue('portal_status_message=Thanks%20for%20your%20registration.%20You%20will%20be%20receive%20an%20email%20to%20activate%20your%20account.'\
         in result)
 
-    transaction.commit()
     self.tic()
     credential_request_module = self.portal.getDefaultModule('Credential Request')
     result = credential_request_module.contentValues(\
@@ -523,7 +518,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertTrue('portal_status_message=Thanks%20for%20your%20registration.%20You%20will%20be%20receive%20an%20email%20to%20activate%20your%20account.'\
         in result)
 
-    transaction.commit()
     self.tic()
     credential_request_module = self.portal.getDefaultModule('Credential Request')
     result = credential_request_module.contentValues(\
@@ -555,6 +549,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     person = person_module.newContent(title='Barney',
                              reference='barney',
                              password='secret',
+                             start_date=DateTime('1970/01/01'),
                              default_email_text='barney@duff.com')
     # create an assignment
     assignment = person.newContent(portal_type='Assignment',
@@ -669,7 +664,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         )
     message_str = "You%20didn%27t%20enter%20the%20correct%20answer."
     self.assertTrue(message_str not in result)
-    self.stepTic()
+    self.tic()
     self.login()
     result_list = self.portal.portal_catalog(
         portal_type='Credential Recovery', reference=person_reference)
@@ -785,7 +780,6 @@ class TestERP5Credential(ERP5TypeTestCase):
                                                    password="new_password",
                                                    password_confirm="new_password",
                                                    password_key=key)
-    transaction.commit()
     self.tic()
     # reset the cache
     self.portal.portal_caches.clearAllCache()
@@ -814,7 +808,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         default_address_zip_code="28024030",
         **kw)
     self.login("ERP5TypeTestCase")
-    self.stepTic()
+    self.tic()
     return result
 
   def stepCreateCredentialRequestSample(self, sequence=None,
@@ -852,6 +846,17 @@ class TestERP5Credential(ERP5TypeTestCase):
   def stepLogin(self, sequence):
     self.login()
 
+  def stepCheckPersonAfterSubscriptionRequest(self, sequence=None,
+      sequence_list=None, **kw):
+    self.login()
+    person = self.portal.portal_catalog.getResultValue(
+      reference=sequence["person_reference"], portal_type="Person")
+    self.assertEquals("Homer", person.getFirstName())
+    self.assertEquals("Simpson", person.getLastName())
+    self.assertEquals("homer.simpson@fox.com", person.getDefaultEmailText())
+    self.assertEquals(DateTime('1970/01/01'), person.getStartDate())
+    self.logout()
+
   def stepSetAuditorRoleToCurrentPerson(self, sequence=None,
       sequence_list=None, **kw):
     person_reference = sequence["person_reference"]
@@ -868,6 +873,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals("tom", person.getFirstName())
     self.assertEquals("Simpson", person.getLastName())
     self.assertEquals("tom@host.com", person.getDefaultEmailText())
+    self.assertEquals(DateTime('1970/01/01'), person.getStartDate())
 
   def stepCheckPersonWhenCredentialUpdateFail(self, sequence=None,
       sequence_list=None, **kw):
@@ -1093,7 +1099,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence = dict(automatic_call=False)
     self.stepSetCredentialRequestAutomaticApprovalPreferences(sequence)
     self.stepSetCredentialAssignmentPropertyList()
-    self.stepTic()
+    self.tic()
     self._createCredentialRequest()
     portal_catalog = self.portal.portal_catalog
     credential_request = portal_catalog.getResultValue(
@@ -1103,7 +1109,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.logout()
     self.portal.ERP5Site_activeLogin(mail_message.getReference())
     self.login("ERP5TypeTestCase")
-    self.stepTic()
+    self.tic()
     person = portal_catalog.getResultValue(reference="barney",
         portal_type="Person")
     assignment_list = person.objectValues(portal_type="Assignment")
@@ -1149,7 +1155,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     self.assertEquals(credential_request.getFunction(), "member")
 
     self.portal.portal_alarms.accept_submitted_credentials.activeSense()
-    transaction.commit()
     self.tic()
     self.assertEqual('accepted', credential_request.getValidationState())
 
@@ -1158,7 +1163,6 @@ class TestERP5Credential(ERP5TypeTestCase):
       'ease%20choose%20different%20one' in  response)
 
     self.portal.portal_alarms.accept_submitted_credentials.activeSense()
-    transaction.commit()
     self.tic()
 
   def test_double_ERP5Site_newCredentialRequest_indexation(self):
@@ -1173,7 +1177,7 @@ class TestERP5Credential(ERP5TypeTestCase):
         default_email_text='some@one.com',)
     self.login()
     self.assertTrue('Credential%20Request%20Created.' in response)
-    transaction.commit()
+    self.commit()
     self.logout()
     response = self.portal.ERP5Site_newCredentialRequest(reference=reference,
         default_email_text='some@one.com',)
@@ -1182,7 +1186,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     # request will already refuse to create new credential request.
     self.assertTrue('Selected%20login%20is%20already%20in%20use%2C%20pl'
       'ease%20choose%20different%20one' in response)
-    transaction.commit()
     self.tic()
     # just to be sure that last response not resulted with creation of object
     self.assertEqual(1, self.portal.portal_catalog.countResults(
@@ -1214,6 +1217,7 @@ class TestERP5Credential(ERP5TypeTestCase):
     sequence_string = "CreateSimpleSubscriptionRequest Tic " \
            "SubmitSubscriptionRequest Tic " \
            "AcceptSubscriptionRequest Tic " \
+           "stepCheckPersonAfterSubscriptionRequest " \
            "SetAuditorRoleToCurrentPerson " \
            "SetAssigneeRoleToCurrentPersonInCredentialUpdateModule Tic " \
            "LoginAsCurrentPersonReference " \
@@ -1234,7 +1238,7 @@ class TestERP5Credential(ERP5TypeTestCase):
       role='internal')
     assignment = person.newContent(portal_type='Assignment', function='manager')
     assignment.open()
-    transaction.commit()
+    self.commit()
     credential_update = self.portal.credential_update_module.newContent(
         portal_type='Credential Update',
         first_name='Some Name',
@@ -1293,7 +1297,6 @@ class TestERP5Credential(ERP5TypeTestCase):
       text_content=self.contract_content
     )
     self.contract.publish()
-    transaction.commit()
     self.tic()
 
   def test_ERP5Site_viewCredentialRequestForm_contract(self):
@@ -1320,7 +1323,6 @@ class TestERP5Credential(ERP5TypeTestCase):
     # create cool web site
     web_site = self.portal.web_site_module.newContent(portal_type='Web Site')
     web_site.publish()
-    transaction.commit()
     self.tic()
 
     # render the form anonymous...

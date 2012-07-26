@@ -213,8 +213,7 @@ class ArchiveTool(BaseTool):
 
     # Create inventory just before finish of hot reindexing
     inventory_date = archive.getStopDateRangeMax()
-    self.activate(passive_commit=1,
-                  after_method_id=('playBackRecordedObjectList'),
+    self.activate(after_method_id=('playBackRecordedObjectList'),
                   priority=5).runInventoryMethod(archive.id,
                                                  source_connection_id,
                                                  destination_sql_catalog_id,
@@ -222,8 +221,7 @@ class ArchiveTool(BaseTool):
                                                  )
     
 
-    self.activate(passive_commit=1,
-                  after_method_id=('runInventoryMethod'),
+    self.activate(after_method_id=('runInventoryMethod'),
                   after_tag="runInventoryMethod",
                   priority=5).InventoryModule_reindexMovementList(sql_catalog_id=destination_sql_catalog_id,
                                                                   final_activity_tag="InventoryModule_reindexMovementList"

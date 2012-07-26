@@ -29,6 +29,8 @@
 from AccessControl import Unauthorized
 from zLOG import LOG, INFO
 import uuid
+from DateTime import DateTime
+from Products.ERP5Type.tests.utils import createZODBPythonScript
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
 
@@ -48,6 +50,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
             'erp5_simulation',
             'erp5_pdm',
             'erp5_trade',
+            'erp5_accounting',
             'erp5_configurator_standard_trade_template')
 
   def createConfigurationSave(self):
@@ -85,9 +88,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       "Organisation Configurator Item",
       group=group_id, site='main', **kw)
 
-    self.stepTic()
+    self.tic()
     item._build(configuration_save.getParentValue())
-    self.stepTic()
+    self.tic()
 
     organisation = self.portal.portal_catalog.getResultValue(
                        portal_type="Organisation", 
@@ -135,9 +138,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                                         object_id=category_id_1,
                                         title="title_%s" % category_id_1)
 
-    self.stepTic()
+    self.tic()
     item0._build(bc)
-    self.stepTic()
+    self.tic()
 
     category_0 = getattr(self.portal.portal_categories.group, category_id_0, None)
     self.assertNotEquals(category_0, None)
@@ -147,7 +150,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(category_1, None)
 
     item1._build(bc)
-    self.stepTic()
+    self.tic()
 
     category_1 = getattr(self.portal.portal_categories.group, category_id_1, None)
     self.assertNotEquals(category_1, None)
@@ -162,7 +165,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                                         title="new_title_%s" % category_id_1)
 
     item2._build(bc)
-    self.stepTic()
+    self.tic()
 
     category_1 = getattr(self.portal.portal_categories.group, 
                          category_id_1, None)
@@ -190,10 +193,10 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
                              base_unit_quantity = 0.01,
                              title = brl_currency_title,)
 
-    self.stepTic()
+    self.tic()
 
     item_eur._build(bc)
-    self.stepTic()
+    self.tic()
 
     eur = getattr(self.portal.currency_module, eur_currency_id , None)
     self.assertNotEquals(eur, None)
@@ -203,7 +206,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(brl, None)
 
     item_brl._build(bc)
-    self.stepTic()
+    self.tic()
 
     brl = getattr(self.portal.currency_module, brl_currency_id , None)
     self.assertNotEquals(brl, None)
@@ -212,9 +215,143 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     # Build several times to not break portal.
 
     item_brl._build(bc)
-    self.stepTic()
+    self.tic()
     item_brl._build(bc)
-    self.stepTic()
+    self.tic()
+
+  def testSecurityCategoryMappingConfiguratorItem(self):
+    """ Test Security Category Mapping Configurator Item
+        XXX This test and the Security Category Mapping should be improved to
+            allow provide the name of skin folder and the script/categories to
+            be used for the script oucome. For now it does the minimum.
+    """
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+
+    expect_script_outcome = (
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function']),
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['follow_up']),
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['function', 'follow_up']),
+           ('ERP5Type_getSecurityCategoryFromAssignmentStrict', ['group']),
+           ('ERP5Type_getSecurityCategoryRoot', ['group']),)
+
+
+    item = configuration_save.addConfigurationItem(
+                  "Security Category Mapping Configurator Item")
+
+    self.tic()
+    item._build(bc)
+    self.tic()
+
+    # XXX Skin folder should be part of configuration and not always custom
+    security_script = getattr(self.portal.portal_skins.custom,
+                              "ERP5Type_getSecurityCategoryMapping", None)
+
+    self.assertNotEquals(None, security_script)
+    self.assertEquals(security_script(), expect_script_outcome)
+
+  def testAccountConfiguratorItem(self):
+    """ Test Account Configurator Item """
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+    account_module = self.portal.account_module
+
+    account_dict = {
+             'account_type': 'asset/receivable',
+             'account_id': 'receivable',
+             'title': 'Customers',
+             'gap': 'ias/ifrs/4/41',
+             'financial_section': 'asset/current_assets/trade_receivables'}
+
+    item = configuration_save.addConfigurationItem(
+                  "Account Configurator Item", **account_dict)
+
+    self.tic()
+    item._build(bc)
+    self.tic()
+
+    account = getattr(account_module, account_dict['account_id'], None)
+    self.assertNotEquals(account, None)
+    self.assertEquals(account.getTitle(), account_dict['title'])
+    self.assertEquals(account.getGap(), account_dict['gap'])
+    self.assertEquals(account.getFinancialSection(),
+                      account_dict['financial_section'])
+    self.assertEquals(account.getAccountType(),
+                      account_dict['account_type'])
+
+    # Update Account dict and try to create again the same account,
+    # the account should be only updated instead a new account be created.
+    account_dict['title'] = 'Clientes'
+    previous_gap = account_dict['gap']
+    account_dict['gap'] = 'br/pcg/1/1.1/1.1.2'
+
+    item = configuration_save.addConfigurationItem(
+                  "Account Configurator Item", **account_dict)
+
+    self.tic()
+    item._build(bc)
+    self.tic()
+
+    same_account = getattr(account_module, account_dict['account_id'], None)
+    self.assertEquals(account, same_account)
+    self.assertEquals(account.getTitle(), account_dict['title'])
+    self.assertSameSet(account.getGapList(), [previous_gap,
+                                              account_dict['gap']])
+    self.assertEquals(account.getFinancialSection(),
+                      account_dict['financial_section'])
+    self.assertEquals(account.getAccountType(),
+                      account_dict['account_type'])
+
+  def testAlarmConfiguratorItem(self):
+    """ Test Alarm Configurator Item """
+    configuration_save = self.createConfigurationSave()
+    bc = configuration_save.getParentValue()
+
+    property_map = {
+      "active_sense_method_id" : "Base_setDummy",
+      "periodicity_hour_list" : [5, 6],
+      "periodicity_minute_list": [30, 31],
+      "periodicity_minute_frequency": 5,
+      "periodicity_month_list": [1, 2],
+      "periodicity_month_day_list": [3, 4],
+      "periodicity_week_list": [6, 7],
+                        }
+
+    item = configuration_save.addConfigurationItem(
+                  "Alarm Configurator Item",
+                  id="my_test_alarm",
+                  title="My Test Alarm",
+                  **property_map)
+
+    createZODBPythonScript(self.getPortal().portal_skins.custom,
+                                    property_map["active_sense_method_id"],
+                                    "", "context.setEnabled(0)")
+    self.tic()
+    item._build(bc)
+    self.tic()
+
+    alarm = getattr(self.portal.portal_alarms, "my_test_alarm", None)
+    self.assertNotEquals(None, alarm)
+
+    self.assertEquals(alarm.getEnabled(), True)
+    self.assertEquals(alarm.getTitle(), "My Test Alarm")
+    self.assertEquals(alarm.getPeriodicityMinuteFrequency(),
+                      property_map["periodicity_minute_frequency"])
+    self.assertEquals(alarm.getPeriodicityMonthList(),
+                      property_map["periodicity_month_list"])
+    self.assertEquals(alarm.getPeriodicityMonthDayList(),
+                      property_map["periodicity_month_day_list"])
+    self.assertEquals(alarm.getPeriodicityHourList(),
+                      property_map["periodicity_hour_list"])
+    self.assertEquals(alarm.getPeriodicityHourList(),
+                      property_map["periodicity_hour_list"])
+    self.assertEquals(alarm.getActiveSenseMethodId(),
+                      property_map["active_sense_method_id"])
+    self.assertNotEquals(alarm.getPeriodicityStartDate(), None)
+    self.failUnless(alarm.getPeriodicityStartDate() < DateTime())
+    alarm.activeSense()
+    self.tic()
+    self.assertEquals(alarm.getEnabled(), 0)
 
   def testPortalTypeRolesSpreadsheetConfiguratorItem(self):
     """ Test Portal Type Roles Configurator Item """
@@ -256,9 +393,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
     if len(role_list) > 0:
       person_module_type.manage_delObjects([i.id for i in role_list])
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     role_list = [i for i in person_type.objectValues(
                  portal_type="Role Information") 
@@ -311,9 +448,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       "Categories Spreadsheet Configurator Item",
       configuration_spreadsheet_data = data)
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     base_category_list = ["group", "site", "business_application", 
                           "function", "region"]
@@ -361,7 +498,7 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       reference = "testing_configurator_rule",
       id = "rule_do_not_exist")
 
-    self.stepTic()
+    self.tic()
     self.assertRaises(ValueError, item._build, bc)
 
     rule_reference = "testing_configurator_rule_%s" % self.newUniqueUID()
@@ -371,9 +508,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       id = "new_delivery_simulation_rule",
       trade_phase_list = ['testing/order'])
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     template_id = item.getId()
     rule_list = rule_tool.searchFolder(
@@ -403,9 +540,9 @@ class TestConfiguratorItem(TestLiveConfiguratorWorkflowMixin):
       configuration_spreadsheet_data = data,
       reference = reference)
 
-    self.stepTic()
+    self.tic()
     item._build(bc)
-    self.stepTic()
+    self.tic()
 
     business_process = self.portal.portal_catalog.getResultValue(
           portal_type="Business Process",

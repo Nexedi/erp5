@@ -68,7 +68,7 @@ def createBusinessProcess(self, *args, **kw):
 TestTradeModelLine.createBusinessProcess = createBusinessProcess
 
 def checkWithoutBPM(self, order):
-  transaction.commit() # clear transactional cache
+  self.commit()# clear transactional cache
   order.getSpecialiseValue()._setSpecialise(None)
   self.checkAggregatedAmountList(order)
   applied_rule_id = order.getCausalityRelatedId(portal_type='Applied Rule')
@@ -76,11 +76,11 @@ def checkWithoutBPM(self, order):
   for line in order.getMovementList():
     simulation_movement_list, = self.getTradeModelSimulationMovementList(line)
     self.assertFalse(simulation_movement_list)
-  transaction.abort()
+  self.abort()
 TestTradeModelLine.checkWithoutBPM = checkWithoutBPM
 
 def checkModelLineOnDelivery(self, delivery):
-  transaction.commit() # clear transactional cache
+  self.commit()# clear transactional cache
   delivery.newContent(portal_type='Trade Model Line',
                       price=0.5,
                       base_application='base_amount/discount',
@@ -98,7 +98,7 @@ def checkModelLineOnDelivery(self, delivery):
       service_tax_2=dict(total_price=tax_price),
       tax_3=dict(total_price=total_tax_price),
       total_discount=dict(total_price=(total_tax_price+discount_price) * 0.8))
-  transaction.abort()
+  self.abort()
 TestTradeModelLine.checkModelLineOnDelivery = checkModelLineOnDelivery
 
 def checkComposition(self, movement, specialise_value_list, type_count_dict):

@@ -29,7 +29,6 @@
 
 import unittest
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Testing.ZopeTestCase.PortalTestCase import PortalTestCase
 
@@ -65,7 +64,6 @@ class TestWorklist(ERP5TypeTestCase):
 
   def clearModule(self, module):
     module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def beforeTearDown(self):
@@ -120,7 +118,6 @@ class TestWorklist(ERP5TypeTestCase):
       )
       assignment.open()
     # Reindexing is required for the security to work
-    transaction.commit()
     self.tic()
 
   def createUsers(self):
@@ -248,7 +245,6 @@ class TestWorklist(ERP5TypeTestCase):
       self.logMessage("Create document as Manager")
       document = self.createDocument()
 
-      transaction.commit()
       self.tic()
       self.clearCache()
 
@@ -275,7 +271,6 @@ class TestWorklist(ERP5TypeTestCase):
           self.logMessage("Give %s %s role" % (user_id, role))
           document.manage_addLocalRoles(user_id, [role])
         document.reindexObject()
-        transaction.commit()
         self.tic()
         self.clearCache()
 
@@ -302,7 +297,6 @@ class TestWorklist(ERP5TypeTestCase):
       # Change int value on document
       new_value = self.int_value + 1
       document.setProperty(self.int_catalogued_variable_id, new_value)
-      transaction.commit()
       self.tic()
       self.clearCache()
 
@@ -339,7 +333,6 @@ class TestWorklist(ERP5TypeTestCase):
         for i, count in enumerate(count_list):
           document.manage_permission('View', local_role_list[:i], 0)
           document.reindexObject()
-          transaction.commit()
           self.tic()
           self.clearCache()
 
@@ -354,7 +347,7 @@ class TestWorklist(ERP5TypeTestCase):
       current_sql_catalog_local_role_keys = \
             sql_catalog.sql_catalog_local_role_keys
       sql_catalog.sql_catalog_local_role_keys = ('Owner | owner', )
-      transaction.commit()
+      self.commit()
       self.portal.portal_caches.clearAllCache()
 
       try:
@@ -362,7 +355,7 @@ class TestWorklist(ERP5TypeTestCase):
       finally:
         sql_catalog.sql_catalog_local_role_keys = \
             current_sql_catalog_local_role_keys
-        transaction.commit()
+        self.commit()
     finally:
       self.removeWorklists()
 
@@ -396,7 +389,6 @@ class TestWorklist(ERP5TypeTestCase):
 
     try:
       document = self.createDocument()
-      transaction.commit()
       self.tic()
       self.clearCache()
       self.logMessage("  Check no document has region/role categories defined")
@@ -409,7 +401,6 @@ class TestWorklist(ERP5TypeTestCase):
       self.createDocument(region='somewhere')
       self.createDocument(region='elsewhere')
 
-      transaction.commit()
       self.tic()
       self.clearCache()
       self.logMessage(
@@ -446,7 +437,6 @@ class TestWorklist(ERP5TypeTestCase):
       document.manage_addLocalRoles("foo", ["Associate"])
       document.validate()
       document.reindexObject()
-      transaction.commit()
       self.tic()
       self.clearCache()
 
@@ -499,7 +489,6 @@ class TestWorklist(ERP5TypeTestCase):
 
     try:
       document = self.createDocument()
-      transaction.commit()
       self.tic()
       self.clearCache()
       self.logMessage("  Check no document has region categories defined")
@@ -512,7 +501,6 @@ class TestWorklist(ERP5TypeTestCase):
       self.createDocument(region='somewhere')
       self.createDocument(region='elsewhere')
 
-      transaction.commit()
       self.tic()
       self.clearCache()
       self.logMessage(

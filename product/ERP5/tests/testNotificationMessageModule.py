@@ -29,7 +29,6 @@
 
 import unittest
 
-import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import createZODBPythonScript
 from AccessControl.SecurityManagement import newSecurityManager
@@ -63,17 +62,15 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
     portal._setObject('MailHost', DummyMailHost('MailHost'))
     portal.email_from_address = 'site@example.invalid'
     self.portal.portal_caches.clearAllCache()
-    transaction.commit()
     self.tic()
     self.login('erp5user')
 
   def beforeTearDown(self):
-    transaction.abort()
+    self.abort()
     # clear modules if necessary
     module_list = (self.getNotificationMessageModule(),)
     for module in module_list:
       module.manage_delObjects(list(module.objectIds()))
-    transaction.commit()
     self.tic()
 
   def test_01_get_document(self):
@@ -85,7 +82,6 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                                language='en',
                                version='01')
     n_m_en.validate()
-    transaction.commit()
     self.tic()
     result = tool.getDocumentValue(reference='A')
     self.assertEqual(result.getRelativeUrl(), n_m_en.getRelativeUrl())
@@ -95,7 +91,6 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                                language='fr',
                                version='01')
     n_m_fr.validate()
-    transaction.commit()
     self.tic()
     result = tool.getDocumentValue(reference='A', language='fr')
     self.assertEqual(result.getRelativeUrl(), n_m_fr.getRelativeUrl())
@@ -105,7 +100,6 @@ class TestNotificationMessageModule(ERP5TypeTestCase):
                                   language='fr',
                                   version='02')
     n_m_fr_02.validate()
-    transaction.commit()
     self.tic()
     result = tool.getDocumentValue(reference='A', language='fr')
     self.assertEqual(result.getRelativeUrl(), n_m_fr_02.getRelativeUrl())

@@ -14,14 +14,6 @@ DeadlockDebugger can of course also be used in non-deadlock situations,
 when a Zope process is taking a long time and you wish to know what code
 is being executed.
 
-Installation
-------------
-
-This product requires the 'threadframe' python module
-(http://www.majid.info/mylos/stories/2004/06/10/threadframe.html).
-When DeadlockDebugger starts, it verifies that threadframe is available,
-please check the event.log for ERROR message.
-
 Configuration
 -------------
 

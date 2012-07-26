@@ -34,7 +34,6 @@ import logging
 import random
 import socket
 import sys
-import transaction
 import ZODB
 import zLOG
 from App.config import getConfiguration
@@ -378,7 +377,6 @@ def reindex(func):
   def wrapper(self, *args, **kw):
     ret = func(self, *args, **kw)
     if kw.get('reindex', 1):
-      transaction.commit()
       self.tic()
     return ret
   return wrapper
@@ -635,50 +633,25 @@ def updateCellList(portal, line, cell_type, cell_range_method, cell_dict_list):
       cell.edit(predicate_category_list=category_list,
                 variation_category_list=category_list)
 
-def catalogObjectListWrapper(self, object_list, method_id_list=None,
-    disable_cache=0, check_uid=1, idxs=None):
-  """Wrapper to mark inside of portal object list of catalogged objects"""
-  import transaction
-  portal = self.getPortalObject()
-  for q in object_list:
-    portal.catalogged_object_path_dict[q.getPath()] = 1
-  transaction.commit()
-
 class SubcontentReindexingWrapper(object):
-  def wrap_catalogObjectList(self):
-    self.original_catalogObjectList = Catalog.catalogObjectList
-    Catalog.catalogObjectList = catalogObjectListWrapper
-
-  def unwrap_catalogObjectList(self):
-    Catalog.catalogObjectList = self.original_catalogObjectList
 
   def _testSubContentReindexing(self, parent_document, children_document_list):
-    """Helper method which shall be called *before* tic or commit"""
-    # cleanup existing reindexing
-    transaction.commit()
     self.tic()
-    parent_document.reindexObject()
-    self.portal.catalogged_object_path_dict = PersistentMapping()
-    transaction.commit()
-    expected_path_list = [q.getPath() for q in children_document_list +
-        [parent_document]]
+    def catalogObjectList(self, object_list, *args, **kw):
+      """Wrapper to track list of catalogged objects"""
+      for q in object_list:
+        catalogged_object_path_set.add(q.getPath())
+      return orig_catalogObjectList(self, object_list, *args, **kw)
+    orig_catalogObjectList = Catalog.__dict__['catalogObjectList']
+    expected_path_set = set(q.getPath()
+      for q in children_document_list + [parent_document])
+    self.assertEqual(expected_path_set, set(x.getPath()
+      for x in self.portal.portal_catalog(path=expected_path_set)))
     try:
-      # wrap call to catalogObjectList
-      self.wrap_catalogObjectList()
-      self.stepTic()
-      self.assertSameSet(
-        self.portal.catalogged_object_path_dict.keys(),
-        expected_path_list
-      )
-      # do real assertions
-      self.portal.catalogged_object_path_dict = PersistentMapping()
-      transaction.commit()
+      Catalog.catalogObjectList = catalogObjectList
+      catalogged_object_path_set = set()
       parent_document.reindexObject()
-      self.stepTic()
-      self.assertSameSet(
-        self.portal.catalogged_object_path_dict.keys(),
-        expected_path_list
-      )
+      self.tic()
+      self.assertEqual(expected_path_set, catalogged_object_path_set)
     finally:
-      # unwrap catalogObjectList
-      self.unwrap_catalogObjectList()
+      Catalog.catalogObjectList = orig_catalogObjectList
