@@ -7,6 +7,7 @@ import sys
 import glob
 import threading
 import ZODB
+import subprocess
 from asyncore import socket_map
 from ZODB.DemoStorage import DemoStorage
 from ZODB.FileStorage import FileStorage
@@ -47,8 +48,7 @@ if save_mysql:
     command = 'mysqldump %s > %s' % (getMySQLArguments(), dump_sql_path,)
     if verbosity:
       _print('Dumping MySQL database with %s...' % command)
-    ret = os.system(command)
-    assert not ret
+    subprocess.check_call(command, shell=True)
 
 _print("Cleaning static files ... ")
 for static_dir in static_dir_list:
@@ -62,8 +62,7 @@ if load:
   if save_mysql:
     if os.path.exists(dump_sql_path):
       _print("Restoring MySQL database ... ")
-      ret = os.system("mysql %s < %s" % (getMySQLArguments(), dump_sql_path))
-      assert not ret
+      subprocess.check_call("mysql %s < %s" % (getMySQLArguments(), dump_sql_path), shell=True)
     else:
       _print("Could not find MySQL dump (%r), will recreate catalog ... " % dump_sql_path)
       os.environ['erp5_tests_recreate_catalog'] = '1'
