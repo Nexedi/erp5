@@ -141,12 +141,16 @@ class TestResultLineProxy(RPCRetry):
 
     def stop(self, test_count=None, error_count=None, failure_count=None,
             skip_count=None, duration=None, date=None, command=None,
-            stdout=None, stderr=None, html_test_result=None):
+            stdout=None, stderr=None, html_test_result=None, **kw):
         """
         Notify server of test completion.
 
         Without any parameter, notifies of a test failure which prevents any
         precise reading (step count, how many succeeded, etc).
+
+        BBB: extra named arguments are deprecated (if some are really needed,
+        they must be declared as explicit parameters, with proper default
+        value).
         """
         status_dict = {
             'test_count': test_count,
@@ -156,6 +160,9 @@ class TestResultLineProxy(RPCRetry):
             'duration': duration,
             'date': date,
         }
+        if kw:
+            self._logger.info('Extra parameters provided: %r', kw)
+            status_dict.update(kw)
         if command is not None:
             status_dict['command'] = command
         if stdout is not None:
