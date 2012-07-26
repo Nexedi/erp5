@@ -2765,6 +2765,7 @@ class TestInventoryDocument(InventoryAPITestCase):
                                          optimisation__=False,
                                          mirror_uid=self.mirror_node.getUid())])
 
+  @expectedFailure
   def test_ResourceCategory(self):
     """Make sure that resource category works when full inventory exists."""
     # In this test we do not need doucments made by afterSetUp.
@@ -2781,6 +2782,7 @@ class TestInventoryDocument(InventoryAPITestCase):
                                         resource_category='product_line/level1',
                                         optimisation__=True))
 
+  @expectedFailure
   def test_SectionCategory(self):
     """Make sure that section category works when full inventory exists."""
     # In this test we do not need doucments made by afterSetUp.
@@ -2794,6 +2796,7 @@ class TestInventoryDocument(InventoryAPITestCase):
                                         section_category='group/level1/level2',
                                         optimisation__=True))
 
+  @expectedFailure
   def test_NodeCategory(self):
     # In this test we do not need doucments made by afterSetUp.
     self.clearAllInventoryAndSetUpTwoInventory()
