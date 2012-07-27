@@ -36,7 +36,7 @@ import urllib
 
 from urlparse import urljoin
 from z3c.etestbrowser.browser import ExtendedTestBrowser
-from zope.testbrowser.browser import onlyOne
+from zope.testbrowser.browser import onlyOne, fix_exception_name
 
 def measurementMetaClass(prefix):
   """
