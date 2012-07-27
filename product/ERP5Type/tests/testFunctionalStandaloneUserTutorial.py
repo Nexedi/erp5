@@ -34,21 +34,21 @@ from Products.ERP5Type.tests.ERP5TypeFunctionalTestCase import \
         ERP5TypeFunctionalTestCase
 
 BASE_REMOTE_SELENIUM_TEST_URL_LIST = [
-     "http://www.erp5.com/user-Howto.Create.Person-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Create.Organisations-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Link.Persons.and.Organisations-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Create.Campaigns-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Create.Outgoing.Events-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Post.Outgoing.Events-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Manage.Support.Request-HTML5/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.Persons/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.Organisations/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Link.Persons.and.Organisations/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.Campaigns/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.Outgoing.Events/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Post.Outgoing.Events/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Manage.Support.Request/TestPage_viewSeleniumTest",
 
      # Part 2 - PDM, Trade and simulation related tests
-     "http://www.erp5.com/user-Howto.Create.and.Manage.Products-HTML5/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.and.Manage.Products/TestPage_viewSeleniumTest",
      # DO NOT CONTAINS TEST YET "http://www.erp5.com/user-Howto.Create.Trade.Conditions-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Create.Sale.Orders-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Manage.Packing.Lists-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Manage.Invoices-HTML5/TestPage_viewSeleniumTest",
-     "http://www.erp5.com/user-Howto.Create.A.Payment-HTML5/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.Sale.Orders/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Manage.Packing.Lists/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Manage.Invoices/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.A.Payment/TestPage_viewSeleniumTest",
 
      # Extra Tests, Additional Tests not yet related to any previous tutorial
      "http://www.erp5.com/user-HowTo.Use.FullText.Search-TESTONLY/TestPage_viewSeleniumTest",
