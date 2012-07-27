@@ -424,9 +424,15 @@ class Browser(ExtendedTestBrowser):
     @raise LookupError: Not found
     """
     try:
-      return self.etree.xpath('//div[@id="transition_message"]')[0].text
+      transition_message = self.etree.xpath(
+        '//div[@id="transition_message"]')[0].text
     except IndexError:
       raise LookupError("Cannot find div with ID 'transition_message'")
+    else:
+      if isinstance(transition_message, unicode):
+        transition_message = transition_message.encode('utf-8')
+
+      return transition_message
 
   def getInformationArea(self):
     """
