@@ -987,7 +987,7 @@ class ContextMainForm(MainForm):
                            maximum_attempt_number=1,
                            sleep_between_attempt=0,
                            dialog_name=None,
-                           dialog_expected_transition_message=None,
+                           expected_transition_message=None,
                            **kw):
     """
     Select and submit a workflow action, given either by its label
@@ -1022,8 +1022,8 @@ class ContextMainForm(MainForm):
     @type sleep_between_attempt: int
     @param dialog_name: Function to call after the workflow action ('cancel' or 'confirm')
     @type dialog_name: str
-    @param dialog_expected_transition_message: Expected dialog transition message
-    @type dialog_expected_transition_message: str
+    @param expected_transition_message: Expected dialog transition message
+    @type expected_transition_message: str
     """
     url_before = self.browser.url
 
@@ -1045,13 +1045,14 @@ class ContextMainForm(MainForm):
         getattr(self.browser.mainForm,
                 'submitDialog' + dialog_name.capitalize())()
 
-        if dialog_expected_transition_message:
-          transition_message = self.browser.getTransitionMessage()
-          if transition_message != dialog_expected_transition_message:
-            raise AssertionError("Expected transition message: %s, got: %s" % \
-                                   (dialog_expected_transition_message,
-                                    transition_message))
+      if expected_transition_message:
+        transition_message = self.browser.getTransitionMessage()
+        if transition_message != expected_transition_message:
+          raise AssertionError("Expected transition message: %s, got: %s" % \
+                                 (expected_transition_message,
+                                  transition_message))
 
+      if dialog_name:
         return show_dialog_time
 
     if maximum_attempt_number == 1:
