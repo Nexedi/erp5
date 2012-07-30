@@ -50,8 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>
-preference_tool = context.getPortalObject().portal_preferences\n
+            <value> <string>preference_tool = context.getPortalObject().portal_preferences\n
 \n
 preference = preference_tool.getActivePreference()\n
 \n
