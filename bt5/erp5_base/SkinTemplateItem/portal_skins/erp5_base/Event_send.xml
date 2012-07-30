@@ -117,14 +117,13 @@ if download or not use_activity:\n
 if use_activity:\n
   destination_list = context.getDestinationValueList()\n
   path_list = [x.getPath() for x in destination_list]\n
-  uid_list = [x.getUid() for x in destination_list]\n
   method_kw = dict(event_relative_url=context.getRelativeUrl(),\n
     from_url=from_url,\n
     attachment_list=attachment_list)\n
   context.activate(\n
     after_path_and_method_id=(path_list, \n
                               (\'immediateReindexObject\', \'recursiveImmediateReindexObject\'))).Event_sendByActivity(\n
-    uid_list=uid_list,\n
+    path_list=path_list,\n
     method_kw=method_kw, **kw)\n
 \n
 # Transit event workflow\n
