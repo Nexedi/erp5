@@ -44,7 +44,7 @@ BASE_REMOTE_SELENIUM_TEST_URL_LIST = [
 
      # Part 2 - PDM, Trade and simulation related tests
      "http://www.erp5.com/user-Howto.Create.and.Manage.Products/TestPage_viewSeleniumTest",
-     # DO NOT CONTAINS TEST YET "http://www.erp5.com/user-Howto.Create.Trade.Conditions-HTML5/TestPage_viewSeleniumTest",
+     "http://www.erp5.com/user-Howto.Create.Trade.Conditions/TestPage_viewSeleniumTest",
      "http://www.erp5.com/user-Howto.Create.Sale.Orders/TestPage_viewSeleniumTest",
      "http://www.erp5.com/user-Howto.Manage.Packing.Lists/TestPage_viewSeleniumTest",
      "http://www.erp5.com/user-Howto.Manage.Invoices/TestPage_viewSeleniumTest",
