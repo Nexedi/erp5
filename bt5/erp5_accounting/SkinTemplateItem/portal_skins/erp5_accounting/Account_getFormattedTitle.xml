@@ -54,7 +54,7 @@
   account = context\n
 \n
 gap_id = account.Account_getGapId(gap_root=gap_root)\n
-title  = account.getTitle()\n
+title  = account.getTranslatedTitle()\n
 \n
 if gap_id:\n
   title = "%s - %s" % (gap_id, title)\n
