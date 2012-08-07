@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts83858910.02</string> </value>
+            <value> <string>ts44338467.6</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -20,7 +20,7 @@
         </item>
         <item>
             <key> <string>content_type</string> </key>
-            <value> <string>text/x-unknown-content-type</string> </value>
+            <value> <string>application/octet-stream</string> </value>
         </item>
         <item>
             <key> <string>data</string> </key>
@@ -93,7 +93,7 @@ others files in certain cases.\r\n
 <!--- Generate Text Inputs --->\r\n
 <cfset i = 0>\r\n
 <cfloop list="#submitted_text#" index="textinput">\r\n
-  <cfset texts.textinputs = ListAppend(texts.textinputs, \'textinputs[#i#] = decodeURIComponent("#textinput#");\', CRLF)>\r\n
+  <cfset texts.textinputs = ListAppend(texts.textinputs, \'textinputs[#i#] = decodeURIComponent("\' & htmleditformat( textinput ) & \'");\', CRLF)>\r\n
   <cfset i = i + 1>\r\n
 </cfloop>\r\n
 \r\n
@@ -184,7 +184,7 @@ wordWindowObj.writeBody();\r\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>5538</int> </value>
+            <value> <int>5562</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

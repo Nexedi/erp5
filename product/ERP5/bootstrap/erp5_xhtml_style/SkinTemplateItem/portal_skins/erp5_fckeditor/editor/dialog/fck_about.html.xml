@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts83858910.0</string> </value>
+            <value> <string>ts44338434.35</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -106,7 +106,7 @@ window.onload = function()\r\n
 \t\t\t\t\t\t\t\tborder-left: #000000 1px solid; border-bottom: #000000 1px solid">\r\n
 \t\t\t\t\t\t\t\t<span fcklang="DlgAboutVersion">version</span>\r\n
 \t\t\t\t\t\t\t\t<br />\r\n
-\t\t\t\t\t\t\t\t<b>2.6.6</b><br />\r\n
+\t\t\t\t\t\t\t\t<b>2.6.8</b><br />\r\n
 \t\t\t\t\t\t\t\tBuild 25427</td>\r\n
 \t\t\t\t\t\t</tr>\r\n
 \t\t\t\t\t</table>\r\n
