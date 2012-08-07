@@ -80,7 +80,7 @@ for sub_object in sub_object_list:\n
     except TypeError:\n
       pub_xml = getattr(pub_object, pub_xml_method_id)()\n
   else:\n
-    pub_xml = \'\'\n
+    pub_xml = ""\n
   diff = portal.diffXML(xml_plugin=sub_xml, xml_erp5=pub_xml, html=False)\n
   context.log("Got diff for GID %s" %(gid,))\n
   if diff != "No diff":\n

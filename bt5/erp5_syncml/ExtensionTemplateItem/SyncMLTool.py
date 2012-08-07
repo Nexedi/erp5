@@ -31,6 +31,10 @@ from Products.ERP5Type.DiffUtils import DiffFile
 def diffXML(xml_plugin="", xml_erp5="", html=True):
   if isinstance(xml_erp5, unicode):
     xml_erp5 = xml_erp5.encode('utf-8')
+  if xml_plugin == "":
+    xml_plugin="<object>Not found</object>"
+  if xml_erp5 == "":
+    xml_erp5="<object>Not found</object>"
   xml = etree.fromstring(xml_erp5)
   xml_erp5 = etree.tostring(xml, pretty_print=True, encoding="utf-8")
   if isinstance(xml_plugin, unicode):
