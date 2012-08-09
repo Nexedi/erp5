@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="File" module="OFS.Image"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>_EtagSupport__etag</string> </key>
+            <value> <string>ts58866282.8</string> </value>
+        </item>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>SaleInvoiceTransaction_getPrintout.css</string> </value>
+        </item>
+        <item>
+            <key> <string>content_type</string> </key>
+            <value> <string>text/css</string> </value>
+        </item>
+        <item>
+            <key> <string>data</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+<tal:block define="dummy python: request.RESPONSE.setHeader(\'Content-Type\', \'text/css;; charset=utf-8\')"/>\n
+/* From http://www.jonathantneal.com/examples/invoice/style.css */\n
+/* reset */\n
+\n
+*\n
+{\n
+  border: 0;\n
+  box-sizing: content-box;\n
+  color: inherit;\n
+  font-family: inherit;\n
+  font-size: inherit;\n
+  font-style: inherit;\n
+  font-weight: inherit;\n
+  line-height: inherit;\n
+  list-style: none;\n
+  margin: 0;\n
+  padding: 0;\n
+  text-decoration: none;\n
+  vertical-align: top;\n
+}\n
+\n
+/* heading */\n
+\n
+h1 { font: bold 100% sans-serif; letter-spacing: 0.5em; text-align: center; text-transform: uppercase; }\n
+\n
+/* table */\n
+table { page-break-inside: avoid}\n
+tr { page-break-inside:avoid ,page-break-after:avoid,page-break-before:avoid}\n
+table { font-size: 75%; table-layout: fixed; width: 100%; }\n
+table { border-collapse: separate; border-spacing: 2px; }\n
+th, td { border-width: 1px; padding: 0.5em; position: relative; text-align: left; }\n
+th, td { border-radius: 0.25em; border-style: solid; }\n
+th { background: #EEE; border-color: #BBB; }\n
+td { border-color: #DDD; }\n
+\n
+/* page */\n
+\n
+html { font: 16px/1 \'Open Sans\', sans-serif; overflow: auto; padding: 0.5in; }\n
+html { background: #999; cursor: default; }\n
+\n
+body { box-sizing: border-box; min-height: 11in; margin: 0 auto; overflow: hidden; padding: 0.5in; width: 8.5in; }\n
+body { background: #FFF; border-radius: 1px; box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); }\n
+\n
+/* header */\n
+\n
+header { margin: 0 0 3em; }\n
+header:after { clear: both; content: ""; display: table; }\n
+\n
+header h1 {background: #EEE; border-style: solid; border-color: #DDD; border-radius: 0.25em; margin: 0 0 1em; padding: 0.5em 0; }\n
+header address { float: left; font-size: 75%; font-style: normal; line-height: 1.25; margin: 0 1em 1em 0; }\n
+header address p { margin: 0 0 0.25em; }\n
+header span, header img { display: block; float: right; }\n
+header span { margin: 0 0 1em 1em; max-height: 25%; max-width: 60%; position: relative; }\n
+header img { max-height: 100%; max-width: 100%; }\n
+header input { cursor: pointer; -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; height: 100%; left: 0; opacity: 0; position: absolute; top: 0; width: 100%; }\n
+\n
+/* article */\n
+\n
+article, article address, table.meta { margin: 0 0 2em; }\n
+article:after { clear: both; content: ""; display: table; }\n
+/* article h1 { clip: rect(0 0 0 0); position: absolute; } */\n
+article h2:after { \n
+  content: ":";\n
+  font-size: 1em;\n
+}\n
+\n
+article address { float: left; font-size: 125%; font-weight: bold; }\n
+\n
+\n
+/* table detail */\n
+table.detail { clear: both; width: 100%; margin: 0 0 2em;}\n
+table.detail td:nth-child(1) { text-align: right; width: 10%;  background: #EEE; border-color: #BBB; }\n
+table.detail td:nth-child(2) { text-align: left; width: 28%; }\n
+table.detail td:nth-child(3) { text-align: right; width: 10%;  background: #EEE; border-color: #BBB; }\n
+table.detail td:nth-child(4) { text-align: left; width: 28%; }\n
+table.detail td:nth-child(5) { height:100%; text-align: left; width: 24%; padding: 0px;}\n
+\n
+/* inner table in detail*/\n
+table.inner-table {\n
+  height:100%;\n
+  border-collapse: collapse;\n
+  border-style: hidden;\n
+}\n
+table.inner-table td:nth-child(1) { width: 10%;  background: #EEE; border-color: #BBB; }\n
+table.inner-table td:nth-child(2) { width: 10%; }\n
+\n
+/* table items */\n
+\n
+table.inventory { clear: both; width: 100%; margin: 0 0 2em; }\n
+table.inventory th { font-weight: bold; text-align: center; }\n
+\n
+table.inventory th:nth-child(1) { width: 5%; }\n
+table.inventory th:nth-child(2) { width: 15%; }\n
+table.inventory th:nth-child(3) { width: 15%; }\n
+table.inventory th:nth-child(4) { width: 18%; }\n
+table.inventory th:nth-child(5) { width: 10%; }\n
+table.inventory th:nth-child(6) { width: 7%; }\n
+table.inventory th:nth-child(7) { width: 7%; }\n
+table.inventory th:nth-child(8) { width: 10%; }\n
+table.inventory th:nth-child(9) { width: 13%; }\n
+\n
+table.inventory td:nth-child(1) { text-align: right; }\n
+table.inventory td:nth-child(2) { text-align: left; }\n
+table.inventory td:nth-child(3) { text-align: left; }\n
+table.inventory td:nth-child(4) { text-align: left; }\n
+table.inventory td:nth-child(5) { text-align: right; }\n
+table.inventory td:nth-child(6) { text-align: right; }\n
+table.inventory td:nth-child(7) { text-align: right; }\n
+table.inventory td:nth-child(8) { text-align: right; }\n
+table.inventory td:nth-child(9) { text-align: right; }\n
+\n
+\n
+/* table balance */\n
+\n
+table.balance { float: right; width: 46%; margin: 0 0 2em; }\n
+table.balance th, table.balance td { width: 50%; text-align: right;}\n
+table.balance{ clear: both; }\n
+table.balance th{ width: 37.5%; }\n
+table.balance td{ width: 12.5%; }\n
+\n
+/* table tax */\n
+\n
+table.tax { float: right; clear: both; width: 50%; }\n
+table.tax th { font-weight: bold; text-align: center; }\n
+table.tax td { text-align: right; }\n
+table.tax { margin: 0 0 2em; }\n
+\n
+/* aside */\n
+\n
+aside h1 { border: none; border-width: 0 0 1px; margin: 0 0 1em; }\n
+aside h1 { border-color: #999; border-bottom-style: solid; }\n
+\n
+/* bottom */\n
+\n
+footer {\n
+  font-size: 0.50em;\n
+  width: 100%;\n
+  clear: both;\n
+  text-align: right;\n
+  margin-top: 3em;\n
+}\n
+\n
+@media print {\n
+  * { -webkit-print-color-adjust: exact; }\n
+  html { background: none; padding: 0; }\n
+  body { box-shadow: none; margin: 0; }\n
+  span:empty { display: none; }\n
+}\n
+\n
+@page { margin: 0; }
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>precondition</string> </key>
+            <value> <string></string> </value>
+        </item>
+        <item>
+            <key> <string>size</string> </key>
+            <value> <int>5187</int> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string>SaleInvoiceTransaction_getPrintout.css</string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
