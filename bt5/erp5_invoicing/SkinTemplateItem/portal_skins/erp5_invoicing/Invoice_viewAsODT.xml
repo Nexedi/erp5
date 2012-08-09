@@ -747,7 +747,7 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
             </table:table-cell>\n
-            <table:table-cell table:style-name=\'Table1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Vat Code; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+            <table:table-cell table:style-name=\'Table1.A2\' office:value-type=\'string\' tal:define=\'orig_string string:Tax Code; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\'><span tal:replace=\'orig_message\'/></text:p>\n
               <text:p text:style-name=\'Item_20_Table_20_Title_20_Left\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
             </table:table-cell>\n
@@ -761,14 +761,13 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
             </table:table-cell>\n
           </table:table-row>\n
         </table:table-header-rows>\n
-        <tal:block tal:define="global list_number python: 0">\n
-          <table:table-row table:style-name=\'Table1.3\' tal:repeat=\'line_dict python:data_dict["line_not_vat"]\'>\n
+        <tal:block>\n
+          <table:table-row table:style-name=\'Table1.3\' tal:repeat=\'line_dict python:data_dict["line_not_tax"]\'>\n
             <tal:block tal:omit-tag=\'\' tal:define=\'style_name python:line_dict["style_name"];\n
                  left_style_name python:line_dict["left_style_name"];\n
-                 right_style_name python:line_dict["right_style_name"];\n
-                 global list_number python: list_number + 1\'>\n
+                 right_style_name python:line_dict["right_style_name"];\'>\n
               <table:table-cell table:style-name=\'Table1.A3\' office:value-type=\'string\'>\n
-                <text:p text:style-name=\'Table_20_Contents_20_Left\'  tal:content= \'list_number\' tal:attributes=\'text:style-name left_style_name\'>100</text:p>\n
+                <text:p text:style-name=\'Table_20_Contents_20_Left\'  tal:content= \'python:line_dict["number_not_tax_line"]\' tal:attributes=\'text:style-name left_style_name\'>100</text:p>\n
               </table:table-cell>\n
               <table:table-cell table:style-name=\'Table1.A3\' office:value-type=\'string\'>\n
                 <text:p text:style-name=\'Table_20_Contents\'\n
@@ -878,14 +877,14 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
                 <table:table-cell table:style-name="Table3.A1" office:value-type="string">\n
                   <text:p text:style-name="Table_20_Contents"/>\n
                 </table:table-cell>\n
-                <table:table-cell table:style-name="Table3.D2" table:number-columns-spanned="3" office:value-type=\'string\' tal:define=\'orig_string string:Total Excluding VAT; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+                <table:table-cell table:style-name="Table3.D2" table:number-columns-spanned="3" office:value-type=\'string\' tal:define=\'orig_string string:Total Excluding Tax; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
                   <text:p text:style-name=\'Table_20_Heading\'><span tal:replace=\'orig_message\'/>:</text:p>\n
                   <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/>:</text:p>  \n
                 </table:table-cell>\n
                 <table:covered-table-cell/>\n
                 <table:covered-table-cell/>\n
                 <table:table-cell table:style-name="Table3.G2" office:value-type="string">\n
-                  <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python: price_renderer(data_dict["total_price_novat"])\'>800.000,00</text:p>\n
+                  <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content=\'python: price_renderer(data_dict["total_price_exclude_tax"])\'>800.000,00</text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
               <table:table-row table:style-name="Table3.3">\n
@@ -917,7 +916,7 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
                 <table:table-cell table:style-name="Table3.A1" office:value-type="string">\n
                   <text:p text:style-name="Table_20_Contents"/>\n
                 </table:table-cell>\n
-                <table:table-cell table:style-name=\'Table3.D4\' office:value-type=\'string\' tal:define=\'orig_string string:Vat Code; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+                <table:table-cell table:style-name=\'Table3.D4\' office:value-type=\'string\' tal:define=\'orig_string string:Tax Code; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
                   <text:p text:style-name=\'P9\'><span tal:replace=\'orig_message\'/></text:p>\n
                   <text:p text:style-name=\'P9\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
                 </table:table-cell>\n
@@ -929,12 +928,12 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
                   <text:p text:style-name=\'P8\'><span tal:replace=\'orig_message\'/></text:p>\n
                   <text:p text:style-name=\'P8\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
                 </table:table-cell>\n
-                <table:table-cell table:style-name=\'Table3.D4\' office:value-type=\'string\' tal:define=\'orig_string string:Vat Price; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+                <table:table-cell table:style-name=\'Table3.D4\' office:value-type=\'string\' tal:define=\'orig_string string:Tax Price; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
                   <text:p text:style-name=\'P8\'><span tal:replace=\'orig_message\'/></text:p>\n
                   <text:p text:style-name=\'P8\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/></text:p>\n
                 </table:table-cell>\n
               </table:table-row>\n
-              <tal:block tal:repeat=\'line_vat_dict python:data_dict["line_vat"]\'>\n
+              <tal:block tal:repeat=\'line_tax_dict python:data_dict["line_tax"]\'>\n
                 <table:table-row table:style-name=\'Table3.5\'>\n
                   <table:table-cell table:style-name=\'Table3.A2\' office:value-type=\'string\'>\n
                     <text:p text:style-name=\'Table_20_Contents\'/>\n
@@ -947,47 +946,47 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
                   </table:table-cell>\n
                   <tal:block tal:define="global ">\n
                     <table:table-cell table:style-name=\'Table3.D5\'\n
-                                    tal:condition="python: line_vat_dict[\'vat_number\'] != \'\'"\n
+                                    tal:condition="python: line_tax_dict[\'number_tax_line\'] != \'\'"\n
                                     office:value-type=\'float\'\n
-                                    tal:attributes=\'office:value line_vat_dict/vat_number\'>\n
-                        <text:p  text:style-name="P6" tal:content="python: line_vat_dict[\'vat_number\']">:</text:p>\n
+                                    tal:attributes=\'office:value line_tax_dict/number_tax_line\'>\n
+                        <text:p  text:style-name="P6" tal:content="python: line_tax_dict[\'number_tax_line\']">:</text:p>\n
                     </table:table-cell>\n
                     <table:table-cell table:style-name=\'Table3.D5\'\n
                               office:value-type=\'string\'\n
-                              tal:condition="python: line_vat_dict[\'vat_number\'] == \'\'"> \n
+                              tal:condition="python: line_tax_dict[\'number_tax_line\'] == \'\'"> \n
                       <text:p text:style-name=\'P6\'/>\n
                     </table:table-cell>\n
                     <table:table-cell table:style-name=\'Table3.E5\'\n
-                                      tal:condition="python: line_vat_dict[\'total_quantity\'] != \'\'"\n
+                                      tal:condition="python: line_tax_dict[\'total_quantity\'] != \'\'"\n
                                       office:value-type=\'float\'\n
-                                      tal:attributes=\'office:value line_vat_dict/total_quantity\'> \n
-                       <text:p text:style-name=\'Table_20_Heading\' tal:content="python: price_renderer(line_vat_dict[\'total_quantity\'])">qty</text:p>\n
+                                      tal:attributes=\'office:value line_tax_dict/total_quantity\'> \n
+                       <text:p text:style-name=\'Table_20_Heading\' tal:content="python: price_renderer(line_tax_dict[\'total_quantity\'])">qty</text:p>\n
                     </table:table-cell>\n
                     <table:table-cell table:style-name=\'Table3.E5\'\n
                               office:value-type=\'string\'\n
-                              tal:condition="python: line_vat_dict[\'total_quantity\'] == \'\'"> \n
+                              tal:condition="python: line_tax_dict[\'total_quantity\'] == \'\'"> \n
                       <text:p text:style-name=\'Table_20_Heading\'/>\n
                     </table:table-cell>\n
                     <table:table-cell table:style-name=\'Table3.F5\'\n
-                                      tal:condition="python: line_vat_dict[\'base_price\'] != \'\'"\n
+                                      tal:condition="python: line_tax_dict[\'base_price\'] != \'\'"\n
                                       office:value-type=\'float\'\n
-                                      tal:attributes=\'office:value line_vat_dict/base_price\'>\n
-                        <text:p text:style-name=\'Table_20_Heading\' tal:content="python:  quantity_renderer(line_vat_dict[\'base_price\']*100*1.00)+\'%\'">:</text:p>\n
+                                      tal:attributes=\'office:value line_tax_dict/base_price\'>\n
+                        <text:p text:style-name=\'Table_20_Heading\' tal:content="python:  quantity_renderer(line_tax_dict[\'base_price\']*100*1.00)+\'%\'">:</text:p>\n
                     </table:table-cell>      \n
                     <table:table-cell table:style-name=\'Table3.F5\'\n
                               office:value-type=\'string\'\n
-                              tal:condition="python: line_vat_dict[\'base_price\'] == \'\'"> \n
+                              tal:condition="python: line_tax_dict[\'base_price\'] == \'\'"> \n
                       <text:p text:style-name=\'Table_20_Heading\'/>\n
                     </table:table-cell> \n
                     <table:table-cell table:style-name=\'Table3.G5\'\n
-                                      tal:condition="python: line_vat_dict[\'total_price\'] != \'\'"\n
+                                      tal:condition="python: line_tax_dict[\'total_price\'] != \'\'"\n
                                       office:value-type=\'float\'\n
-                                      tal:attributes=\'office:value line_vat_dict/total_price\'>\n
-                        <text:p text:style-name=\'Table_20_Heading\' tal:content="python:  price_renderer(line_vat_dict[\'total_price\'])">:</text:p>\n
+                                      tal:attributes=\'office:value line_tax_dict/total_price\'>\n
+                        <text:p text:style-name=\'Table_20_Heading\' tal:content="python:  price_renderer(line_tax_dict[\'total_price\'])">:</text:p>\n
                     </table:table-cell>  \n
                     <table:table-cell table:style-name=\'Table3.G5\'\n
                               office:value-type=\'string\'\n
-                              tal:condition="python: line_vat_dict[\'total_price\'] == \'\'"> \n
+                              tal:condition="python: line_tax_dict[\'total_price\'] == \'\'"> \n
                       <text:p text:style-name=\'Table_20_Heading\'/>\n
                     </table:table-cell>             \n
                   </tal:block>\n
@@ -1015,6 +1014,23 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
                 <table:table-cell table:style-name="Table3.G8">\n
                   <text:p text:style-name="Table_20_Contents_20_Right"/>\n
                 </table:table-cell>\n
+                <table:table-cell table:style-name="Table3.D2" table:number-columns-spanned="3" office:value-type=\'string\' tal:define=\'orig_string string:Total Including VAT; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+                  <text:p text:style-name=\'Table_20_Heading\'><span tal:replace=\'orig_message\'/> :</text:p>\n
+                  <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/>:</text:p>  \n
+                </table:table-cell>\n
+                <table:covered-table-cell/>\n
+                <table:covered-table-cell/>\n
+                    <table:table-cell table:style-name=\'Table3.G2\'\n
+                                      tal:condition="python: data_dict[\'total_price\'] != \'\'"\n
+                                      office:value-type=\'float\'\n
+                                      tal:attributes=\'office:value data_dict/total_price\'>\n
+                        <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content="python:  price_renderer(data_dict[\'total_price\'])">:</text:p>\n
+                    </table:table-cell>  \n
+                    <table:table-cell table:style-name=\'Table3.G2\'\n
+                              office:value-type=\'string\'\n
+                              tal:condition="python: data_dict[\'total_price\'] == \'\'"> \n
+                      <text:p text:style-name=\'Table_20_Contents_20_Right\'/>\n
+                    </table:table-cell> \n
               </table:table-row>\n
               <table:table-row table:style-name="Table3.2">\n
                 <table:table-cell table:style-name="Table3.A2" office:value-type="string">\n
@@ -1026,7 +1042,7 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
                 <table:table-cell table:style-name="Table3.A1" office:value-type="string">\n
                   <text:p text:style-name="Table_20_Contents"/>\n
                 </table:table-cell>\n
-                <table:table-cell table:style-name="Table3.D2" table:number-columns-spanned="3" office:value-type=\'string\' tal:define=\'orig_string string:Total Including VAT; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
+                <table:table-cell table:style-name="Table3.D2" table:number-columns-spanned="3" office:value-type=\'string\' tal:define=\'orig_string string:Total Including Tax; orig_message python:unicode(here.Base_translateString(orig_string, lang=default_language),"utf-8"); translated_message python:unicode(here.Base_translateString(orig_string),"utf-8")\'>\n
                   <text:p text:style-name=\'Table_20_Heading\'><span tal:replace=\'orig_message\'/> :</text:p>\n
                   <text:p text:style-name=\'Table_20_Heading\' tal:condition=\'python:translated_message != orig_message\'><span tal:replace=\'translated_message\'/>:</text:p>  \n
                 </table:table-cell>\n

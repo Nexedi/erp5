@@ -1648,9 +1648,9 @@ class TestInvoice(TestInvoiceMixin):
     m = OpenDocumentTextFile(output)
     text_content=m.toString().encode('ascii','replace')
     if text_content.find('Resource Tax') != -1 :
-      self.fail('fail to delete the vat line in product line')
-    if text_content.find('Vat Code') == -1 :
-      self.fail('fail to add the vat code')
+      self.fail('fail to delete the tax line in product line')
+    if text_content.find('Tax Code') == -1 :
+      self.fail('fail to add the tax code')
     if text_content.find('Amount') == -1 :
       self.fail('fail to add the amount for each tax')
     if text_content.find('Rate') == -1 :
