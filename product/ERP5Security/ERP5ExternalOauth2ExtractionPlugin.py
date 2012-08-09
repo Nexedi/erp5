@@ -175,7 +175,7 @@ class ERP5ExternalOauth2ExtractionPlugin:
       # fallback to default way
       return DumbHTTPExtractor().extractCredentials(request)
 
-    tag = '%s_user_creation_in_progress' % user
+    tag = '%s_user_creation_in_progress' % user.encode('hex')
 
     if self.getPortalObject().portal_activities.countMessageWithTag(tag) > 0:
       self.REQUEST['USER_CREATION_IN_PROGRESS'] = user
