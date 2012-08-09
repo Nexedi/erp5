@@ -81,6 +81,6 @@ def main():
       test = test_result.start(suite.running.keys())
       if test is not None:
         suite.start(test.name, lambda status_dict, __test=test:
-          test.stop(**status_dict))
+          __test.stop(**status_dict))
       elif not suite.running:
         break
