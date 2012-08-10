@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.6 (2012-08-10)
+------------------
+
+ * erp5.util.taskdistribution:
+
+  - set socket timeout for RPC calls to prevent a deadlock happens.
+    [Rafael Monnerat]
+
 0.4.5 (2012-07-04)
 ------------------
 
