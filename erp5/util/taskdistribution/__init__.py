@@ -107,7 +107,8 @@ class RPCRetry(object):
             default_timeout = socket.getdefaulttimeout()
             socket.setdefaulttimeout(self.timeout)
             try:
-                return getattr(self._proxy, func_id)(*args)
+                with self.__rpc_lock:
+                    return getattr(self._proxy, func_id)(*args)
             finally:
                 socket.setdefaulttimeout(default_timeout)
 
