@@ -95,16 +95,21 @@ def patchRPCParser(error_handler):
     parser_klass.feed = verbose_feed
 
 class RPCRetry(object):
-    def __init__(self, proxy, retry_time, logger):
+    def __init__(self, proxy, retry_time, logger, timeout=120):
         super(RPCRetry, self).__init__()
         self._proxy = proxy
         self._retry_time = retry_time
         self._logger = logger
         self.__rpc_lock = threading.Lock()
+        self.timeout = timeout
 
     def _RPC(self, func_id, args=()):
-        with self.__rpc_lock:
-            return getattr(self._proxy, func_id)(*args)
+            default_timeout = socket.getdefaulttimeout()
+            socket.setdefaulttimeout(self.timeout)
+            try:
+                return getattr(self._proxy, func_id)(*args)
+            finally:
+                socket.setdefaulttimeout(default_timeout)
 
     def _retryRPC(self, func_id, args=()):
         retry_time = self._retry_time
