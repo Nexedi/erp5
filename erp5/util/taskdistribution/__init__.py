@@ -158,25 +158,21 @@ class TestResultLineProxy(RPCRetry):
         they must be declared as explicit parameters, with proper default
         value).
         """
-        status_dict = {
-            'test_count': test_count,
-            'error_count': error_count,
-            'failure_count': failure_count,
-            'skip_count': skip_count,
-            'duration': duration,
-            'date': date,
-        }
+        status_dict = dict(x for x in (
+            ('test_count', test_count),
+            ('error_count',  error_count),
+            ('failure_count',  failure_count),
+            ('skip_count',  skip_count),
+            ('duration',  duration),
+            ('date',  date),
+            ('command',  command),
+            ('stdout',  stdout),
+            ('stderr',  stderr),
+            ('html_test_result',  html_test_result),
+        ) if x[1] is not None)
         if kw:
             self._logger.info('Extra parameters provided: %r', kw)
             status_dict.update(kw)
-        if command is not None:
-            status_dict['command'] = command
-        if stdout is not None:
-            status_dict['stdout'] = stdout
-        if stderr is not None:
-            status_dict['stderr'] = stderr
-        if html_test_result is not None:
-            status_dict['html_test_result'] = html_test_result
         self._retryRPC('stopUnitTest', (self._test_result_line_path,
             status_dict))
 
