@@ -4263,7 +4263,26 @@ class CatalogKeyTemplateItemBase(BaseTemplateItem):
       xml_data = self.generateXml(path=path)
       bta.addObject(xml_data, name=path)
 
-class CatalogSearchKeyTemplateItem(CatalogKeyTemplateItemBase):
+class CatalogUniqueKeyTemplateItemBase(CatalogKeyTemplateItemBase):
+  # like CatalogKeyTemplateItemBase, but for keys which use
+  # "key | value" syntax to configure dictionaries.
+  # The keys (part before the pipe) must be unique.
+
+  def _getMapFromKeyList(self, key_list):
+    # in case of duplicates, only the last installed entry will survive
+    return dict(tuple(part.strip() for part in key.split('|', 1))
+                for key in key_list)
+
+  def _getListFromKeyMap(self, key_map):
+    return [" | ".join(item) for item in sorted(key_map.items())]
+
+  def _getUpdatedCatalogKeyList(self, catalog_key_list, new_key_list):
+    # treat key lists as dictionaries, parse and update:
+    catalog_key_map = self._getMapFromKeyList(catalog_key_list)
+    catalog_key_map.update(self._getMapFromKeyList(new_key_list))
+    return self._getListFromKeyMap(catalog_key_map)
+
+class CatalogSearchKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_search_keys'
   key_list_title = 'search_key_list'
   key_title = 'Search key'
@@ -4273,7 +4292,7 @@ class CatalogResultKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_title = 'result_key_list'
   key_title = 'Result key'
 
-class CatalogRelatedKeyTemplateItem(CatalogKeyTemplateItemBase):
+class CatalogRelatedKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_related_keys'
   key_list_title = 'related_key_list'
   key_title = 'Related key'
@@ -4326,17 +4345,17 @@ class CatalogTopicKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_title = 'topic_key_list'
   key_title = 'Topic key'
 
-class CatalogScriptableKeyTemplateItem(CatalogKeyTemplateItemBase):
+class CatalogScriptableKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_scriptable_keys'
   key_list_title = 'scriptable_key_list'
   key_title = 'Scriptable key'
 
-class CatalogRoleKeyTemplateItem(CatalogKeyTemplateItemBase):
+class CatalogRoleKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_role_keys'
   key_list_title = 'role_key_list'
   key_title = 'Role key'
 
-class CatalogLocalRoleKeyTemplateItem(CatalogKeyTemplateItemBase):
+class CatalogLocalRoleKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_local_role_keys'
   key_list_title = 'local_role_key_list'
   key_title = 'LocalRole key'
