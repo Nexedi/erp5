@@ -1350,6 +1350,12 @@ button.formbt > span{\n
 .page ul li {\n
     list-style: square outside none;\n
 }\n
+\n
+/* contained inside content area images should be re-sized to fit in */\n
+.content img {\n
+  max-width: 720px;\n
+}\n
+\n
 </tal:block>
 
 ]]></unicode> </value>
