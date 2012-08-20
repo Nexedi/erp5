@@ -54,7 +54,7 @@ if lxml:
   class LXMLValidator:
     """Validate ODF document using RelaxNG and lxml"""
     schema_url = \
-      'http://docs.oasis-open.org/office/v1.1/OS/OpenDocument-schema-v1.1.rng'
+      'http://docs.oasis-open.org/office/v1.2/os/OpenDocument-v1.2-os-schema.rng'
 
     def __init__(self, schema_url=schema_url):
       self.schema_url = schema_url
