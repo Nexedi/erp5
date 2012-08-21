@@ -97,7 +97,7 @@
                           <string>link</string>
                         </tuple>
                         <tuple>
-                          <string>description</string>
+                          <string>DiscussionPost_getDescription</string>
                           <string>description</string>
                         </tuple>
                         <tuple>
