@@ -179,9 +179,7 @@
         </item>
         <item>
             <key> <string>solve_method_id</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>Alarm_activateFixConsistency</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
