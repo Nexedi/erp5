@@ -36,7 +36,7 @@ from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyLocalizer
 from Products.ERP5Type.tests.utils import createZODBPythonScript
-from Products.ERP5Type.tests.backportUnittest import expectedFailure
+from Products.ERP5Type.tests.backportUnittest import expectedFailure, skip
 
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg', )
 HTTP_OK = 200
@@ -194,6 +194,7 @@ class TestERP5Web(ERP5TypeTestCase):
     self.assertEquals("""Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé Hé
 Hé Hé Hé!""", page.asText().strip())
 
+  @skip('WebSite_createWebSiteAccount is disabled by default.')
   def test_03_CreateWebSiteUser(self):
     """
       Create Web site User.
