@@ -2371,7 +2371,7 @@ class Catalog(Folder,
                           limit=None, extra_column_list=(),
                           ignore_unknown_columns=False,
                           **kw):
-    return self.buildEntireQuery(
+    query = self.buildEntireQuery(
       kw,
       query_table=query_table,
       query_table_alias=query_table_alias,
@@ -2379,10 +2379,21 @@ class Catalog(Folder,
       limit=limit,
       extra_column_list=extra_column_list,
       ignore_unknown_columns=ignore_unknown_columns,
-    ).asSQLExpression(
+    )
+    result = query.asSQLExpression(
       self,
       only_group_columns,
     ).asSQLExpressionDict()
+    # Force index for acquisition about to expire worklist. Without
+    # this modification, the "portal_type" key is used instead and the
+    # query takes 20 seconds instead of 0.05 second
+    if 'causality_acquisition_about_to_expire' in kw or \
+       'causality_acquisition_about_to_expire' in query.select_dict:
+      from .TableDefinition import TableAlias
+      catalog = TableAlias('catalog').render()
+      result['from_expression'] = result['from_expression'].replace(
+        catalog, catalog + ' use index(PRIMARY)')
+    return result
 
   # Compatibililty SQL Sql
   security.declarePrivate('buildSqlQuery')
