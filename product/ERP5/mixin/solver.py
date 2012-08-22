@@ -29,9 +29,11 @@
 
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, interfaces
+from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5.mixin.configurable import ConfigurableMixin
 
-class SolverMixin:
+class SolverMixin(object):
   """
   Provides generic methods and helper methods to implement ISolver.
   """
@@ -58,3 +60,38 @@ class SolverMixin:
     target_solver_type = self.getPortalTypeValue()
     solver_list = target_solver_type.getDeliverySolverValueList()
     return solver_list
+
+class ConfigurablePropertySolverMixin(SolverMixin,
+                                      ConfigurableMixin,
+                                      XMLObject):
+  """
+  Base class for Target Solvers that can be applied to many
+  solver-decisions of a solver process, and need to accumulate the
+  tested_property_list configuration among all solver-decisions
+  """
+
+  add_permission = Permissions.AddPortalContent
+  isIndexable = 0 # We do not want to fill the catalog with objects on which we need no reporting
+
+  # Declarative security
+  security = ClassSecurityInfo()
+  security.declareObjectProtected(Permissions.AccessContentsInformation)
+
+  zope.interface.implements(interfaces.ISolver,
+                            interfaces.IConfigurable,)
+
+  # Default Properties
+  property_sheets = ( PropertySheet.Base
+                    , PropertySheet.XMLObject
+                    , PropertySheet.CategoryCore
+                    , PropertySheet.DublinCore
+                    , PropertySheet.TargetSolver
+                    )
+
+  def getTestedPropertyList(self):
+    configuration_dict = self.getConfigurationPropertyDict()
+    tested_property_list = configuration_dict.get('tested_property_list')
+    if tested_property_list is None:
+      portal_type = self.getPortalObject().portal_types.getTypeInfo(self)
+      tested_property_list = portal_type.getTestedPropertyList()
+    return tested_property_list

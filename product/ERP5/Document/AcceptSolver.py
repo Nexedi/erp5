@@ -27,37 +27,16 @@
 #
 ##############################################################################
 
-import zope.interface
-from AccessControl import ClassSecurityInfo
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.XMLObject import XMLObject
-from Products.ERP5.mixin.solver import SolverMixin
-from Products.ERP5.mixin.configurable import ConfigurableMixin
+from Products.ERP5.mixin.solver import ConfigurablePropertySolverMixin
 
-class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
+class AcceptSolver(ConfigurablePropertySolverMixin):
   """Target solver that accepts the values from the decision on the prevision.
   """
   meta_type = 'ERP5 Accept Solver'
   portal_type = 'Accept Solver'
-  add_permission = Permissions.AddPortalContent
-  isIndexable = 0 # We do not want to fill the catalog with objects on which we need no reporting
-
-  # Declarative security
-  security = ClassSecurityInfo()
-  security.declareObjectProtected(Permissions.AccessContentsInformation)
-
-  # Default Properties
-  property_sheets = ( PropertySheet.Base
-                    , PropertySheet.XMLObject
-                    , PropertySheet.CategoryCore
-                    , PropertySheet.DublinCore
-                    , PropertySheet.TargetSolver
-                    )
-
-  # Declarative interfaces
-  zope.interface.implements(interfaces.ISolver,)
 
   # ISolver Implementation
+  # XXX-Leo: Needs security declaration! It's currently public.
   def solve(self, activate_kw=None):
     """
     Adopt new property to simulation movements, with keeping the
@@ -90,11 +69,18 @@ class AcceptSolver(SolverMixin, ConfigurableMixin, XMLObject):
           if solved_property == 'quantity':
             new_value *= simulation_movement.getDeliveryRatio()
           value_dict[solved_property] = new_value
-        for property_id, value in value_dict.iteritems():
-          if not simulation_movement.isPropertyRecorded(property_id):
-            simulation_movement.recordProperty(property_id)
-          simulation_movement.setMappedProperty(property_id, value)
-        simulation_movement.expand(activate_kw=activate_kw)
+        self._updateSimulationMovement(simulation_movement, value_dict,
+                                       activate_kw)
     # Finish solving
     if portal.portal_workflow.isTransitionPossible(self, 'succeed'):
       self.succeed()
+
+  # allow subclasses to override this method and do interesting things
+  # like recording the same values in other simulation movements
+  def _updateSimulationMovement(self, simulation_movement, value_dict,
+                                activate_kw):
+    for property_id, value in value_dict.iteritems():
+      if not simulation_movement.isPropertyRecorded(property_id):
+        simulation_movement.recordProperty(property_id)
+      simulation_movement.setMappedProperty(property_id, value)
+    simulation_movement.expand(activate_kw=activate_kw)
