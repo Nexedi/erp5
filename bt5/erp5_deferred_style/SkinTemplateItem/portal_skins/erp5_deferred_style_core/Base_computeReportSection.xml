@@ -50,88 +50,88 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-portal = context.getPortalObject()\n
-request = portal.REQUEST\n
-format = request.get(\'format\', \'\')\n
-skin_name = request.get(\'deferred_portal_skin\', portal.portal_skins.getDefaultSkin())\n
+            <value> <string>portal = context.getPortalObject()\n
+N_ = portal.Base_translateString\n
 \n
-tag = \'active-report-wrapped-%s\' % random.randint(0, 1000)\n
-priority = 3\n
+form = context.restrictedTraverse(form)\n
+request = container.REQUEST\n
+request.other.update(request_other)\n
 \n
-person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
-if person_value is None:\n
-  portal.changeSkin(None)\n
-  return context.Base_redirect(\'view\', keep_items=dict(\n
-              portal_status_message=translateString(\n
-                        "No person found for your user")))\n
+if form.meta_type == \'ERP5 Report\':\n
+  report_section_list = getattr(context, form.report_method)()\n
+elif form.meta_type == \'ERP5 Form\':\n
+  report_section_list = []\n
+  for field in form.get_fields():\n
+    if field.getRecursiveTemplateField().meta_type == \'ReportBox\':\n
+      report_section_list.extend(field.render())\n
+else:\n
+  raise ValueError, \'form meta_type (%r) unknown\' %(form.meta_type,)\n
 \n
-if person_value.getDefaultEmailText(\'\') in (\'\', None):\n
-  portal.changeSkin(None)\n
-  return context.Base_redirect(\'view\', keep_items=dict(\n
-              portal_status_message=translateString(\n
-                        "You haven\'t defined your email address")))\n
-  \n
-user_name = person_value.getReference()\n
-\n
-# save request parameters\n
-# XXX we exclude some reserved names in a very ad hoc way\n
-request_form = dict()\n
-for k, v in request.form.items():\n
+# Rebuild request_other as report section can have modify request content\n
+request_other = dict()\n
+for k, v in request.items():\n
   if k not in (\'TraversalRequestNameStack\', \'AUTHENTICATED_USER\', \'URL\',\n
       \'SERVER_URL\', \'AUTHENTICATION_PATH\', \'USER_PREF_LANGUAGES\', \'PARENTS\',\n
-      \'PUBLISHED\', \'AcceptLanguage\', \'AcceptCharset\', \'RESPONSE\',\n
+      \'PUBLISHED\', \'AcceptLanguage\', \'AcceptCharset\', \'RESPONSE\', \'SESSION\',\n
       \'ACTUAL_URL\'):\n
     # XXX proxy fields stores a cache in request.other that cannot be pickled\n
-    if str(k).startswith(\'field__proxyfield\'):\n
+    if same_type(k, \'\') and str(k).startswith(\'field__proxyfield\'):\n
       continue\n
     # Remove FileUpload parameters\n
     elif getattr(v, \'headers\', \'\'):\n
       continue\n
-    request_form[k] = v\n
+    request_other[k] = v\n
 \n
 localizer_language = portal.Localizer.get_selected_language()\n
+active_process = portal.portal_activities.newActiveProcess()\n
+\n
+for idx, report_section in enumerate(report_section_list):\n
+  if report_section.getPath():\n
+    doc = report_section.getObject(portal)\n
+  else:\n
+    doc = context\n
+  doc.activate(activity=\'SQLQueue\',\n
+               active_process=active_process,\n
+               tag=tag,\n
+               priority=priority,\n
+              ).Base_renderReportSection(skin_name=skin_name,\n
+                                         localizer_language=localizer_language,\n
+                                         report_section=report_section,\n
+                                        report_section_idx=idx,\n
+                                         request_other=request_other)\n
 \n
 activity_context = context\n
 if activity_context == portal:\n
   # portal is not an active object\n
   activity_context = portal.portal_simulation\n
 \n
-\n
-params = dict()\n
-form = getattr(context, deferred_style_dialog_method)\n
-if hasattr(form, \'ZScriptHTML_tryParams\'):\n
-  # Some actions are wrapped by a script.\n
-  # In that case we look at script signature to pass them the sames\n
-  for param in form.ZScriptHTML_tryParams():\n
-    params[param] = request.get(param)\n
-else:\n
-  params[\'format\'] = format\n
-\n
-activity_context.activate(\n
-    activity=\'SQLQueue\', tag=tag, priority=priority).Base_renderSimpleView(\n
-           localizer_language=localizer_language,\n
+activity_context.activate(activity=\'SQLQueue\', after_tag=tag, priority=priority).Base_report(\n
+           active_process_url=active_process.getRelativeUrl(),\n
            skin_name=skin_name,\n
-           request_form=request_form,\n
-           deferred_style_dialog_method=deferred_style_dialog_method,\n
+           localizer_language=localizer_language,\n
+           title=N_(form.getProperty(\'title\')),\n
+           request_other=request_other,\n
+           form_path=form.getPhysicalPath(),\n
            user_name=user_name,\n
-           params=params,\n
+           format=format,\n
           )\n
-\n
-context.activate(activity=\'SQLQueue\', after_tag=tag).getTitle()\n
-\n
-portal.changeSkin(None)\n
-return context.Base_redirect(\'view\', keep_items=dict(\n
-              portal_status_message=translateString("Report Started")))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>deferred_style_dialog_method, **kw</string> </value>
+            <value> <string>form, request_other, user_name, tag, skin_name, format, priority, **kw</string> </value>
+        </item>
+        <item>
+            <key> <string>_proxy_roles</string> </key>
+            <value>
+              <tuple>
+                <string>Manager</string>
+              </tuple>
+            </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_activateSimpleView</string> </value>
+            <value> <string>Base_computeReportSection</string> </value>
         </item>
       </dictionary>
     </pickle>
