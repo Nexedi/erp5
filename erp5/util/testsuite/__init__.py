@@ -198,3 +198,101 @@ class TestSuite(object):
     if p.returncode:
       raise SubprocessError(result)
     return result
+
+# (XXX) The code bellow is an generic extension to run a test for any egg. 
+#       The code above was moved from ERP5 code base, because it is generic
+#       Enough to be used by others.
+# (FIXME) Imports should be reorganised in a better way
+import argparse
+import sys
+import glob
+import re
+import os
+import shlex
+from erp5.util import taskdistribution
+import re, os, shlex, glob
+
+class EggTestSuite(TestSuite):
+
+  def run(self, test):
+    print test
+    original_dir = os.getcwd()
+    try:
+      os.chdir(test)
+      return self.runUnitTest(test)
+    finally:
+      os.chdir(original_dir)
+
+  def runUnitTest(self, *args, **kw):
+    try:
+      # (FIXME) The python should be provided by environment with 
+      #         appropriated configuration.
+      runUnitTest = "python setup.py test"
+      args = tuple(shlex.split(runUnitTest))
+      status_dict = self.spawn(*args, **kw)
+    except SubprocessError, e:
+      status_dict = e.status_dict
+    test_log = status_dict['stderr']
+    search = self.RUN_RE.search(test_log)
+    if search:
+      groupdict = search.groupdict()
+      status_dict.update(duration=float(groupdict['seconds']),
+                         test_count=int(groupdict['all_tests']))
+    search = self.STATUS_RE.search(test_log)
+    if search:
+      groupdict = search.groupdict()
+      status_dict.update(error_count=int(groupdict['errors'] or 0),
+                         failure_count=int(groupdict['failures'] or 0)
+                                 +int(groupdict['unexpected_successes'] or 0),
+                         skip_count=int(groupdict['skips'] or 0)
+                                   +int(groupdict['expected_failures'] or 0))
+    return status_dict
+
+  def getTestList(self):
+    # (FIXME) The test name should be nicer in order to provide a good report.
+    #         On task distribution.
+    source_code_to_test = os.environ.get("SOURCE_CODE_TO_TEST", '.')
+    return source_code_to_test.split(",")
+
+def runTestSuite():
+  parser = argparse.ArgumentParser(description='Run a test suite.')
+  parser.add_argument('--test_suite', help='The test suite name')
+  parser.add_argument('--test_suite_title', help='The test suite title',
+                      default=None)
+  parser.add_argument('--test_node_title', help='The test node title',
+                      default=None)
+  parser.add_argument('--project_title', help='The project title',
+                      default=None)
+  parser.add_argument('--revision', help='The revision to test',
+                      default='dummy_revision')
+  parser.add_argument('--node_quantity', help='Number of parallel tests to run',
+                      default=1, type=int)
+  parser.add_argument('--master_url',
+                      help='The Url of Master controling many suites',
+                      default=None)
+  parser.add_argument('--source_code_path_list',
+                      help='List of Eggs folders to test, splited by commam',
+                      default='.')
+
+  args = parser.parse_args()
+  master = taskdistribution.TaskDistributionTool(args.master_url)
+  os.environ.setdefault("SOURCE_CODE_TO_TEST", args.source_code_path_list)
+  test_suite_title = args.test_suite_title or args.test_suite
+  revision = args.revision
+  suite = EggTestSuite(1, test_suite=args.test_suite,
+                    node_quantity=args.node_quantity,
+                    revision=revision)
+
+  test_result = master.createTestResult(revision, suite.getTestList(),
+    args.test_node_title, suite.allow_restart, test_suite_title,
+    args.project_title)
+  if test_result is not None:
+    assert revision == test_result.revision, (revision, test_result.revision)
+    while suite.acquire():
+      test = test_result.start(suite.running.keys())
+      if test is not None:
+        suite.start(test.name, lambda status_dict, __test=test:
+          __test.stop(**status_dict))
+      elif not suite.running:
+        break
+
