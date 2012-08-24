@@ -109,6 +109,9 @@ def initialize( context ):
   ModuleSecurityInfo('Products.ERP5.Document.Image').declarePublic(
                                                 'getSizeFromImageDisplay')
 
+  # Make sure InteactionWorkflow is visible in UI
+  import Products.ERP5.InteractionWorkflow
+
 # backward compatibility names
 XML = None
 UI = None
