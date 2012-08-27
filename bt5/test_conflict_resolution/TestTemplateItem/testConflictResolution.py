@@ -91,32 +91,29 @@ class TestERP5(ERP5TypeTestCase):
     return 'erp5_base', 'test_conflict_resolution'
 
   def afterSetUp(self):
-    other_node = self.getOtherZEOClientNode()
+    other_node = self.getOtherZopeNode()
     self.other_node = self.portal.portal_web_services.connect(
       "http://%s%s" % (other_node, self.portal.getPath()),
       'ERP5TypeTestCase', '', 'xml-rpc')
     self.login()
 
-  def getOtherZEOClientNode(self):
-    from ZEO.ClientStorage import ClientStorage
-    storage = self.portal._p_jar._storage
+  def getOtherZopeNode(self):
     activity_tool = self.portal.portal_activities
     node_list = list(activity_tool.getProcessingNodeList())
     node_list.remove(activity_tool.getCurrentNode())
-    assert node_list and isinstance(storage, ClientStorage), \
-      "this unit test must be run with at least 2 ZEO clients"
+    assert node_list, "this unit test must be run with at least 2 Zope nodes"
     return node_list[0]
 
   def testZODBCookie(self):
     cookie_name = self._testMethodName
     portal = self.portal
-    self.assertEqual(0, portal.getCacheCookie(cookie_name))
+    cookie = portal.getCacheCookie(cookie_name) # 0
     self.commit()
     portal.newCacheCookie(cookie_name) # 1
     self.other_node.newCacheCookie(cookie_name) # 1
     self.other_node.newCacheCookie(cookie_name) # 2
     self.commit()# max(1, 2) + 1
-    self.assertEqual(3, portal.getCacheCookie(cookie_name))
+    self.assertEqual(cookie + 3, portal.getCacheCookie(cookie_name))
 
   def testActiveProcess(self):
     active_process = self.portal.portal_activities.newActiveProcess()
