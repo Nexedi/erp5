@@ -504,17 +504,6 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
               % grouped_worklist_dict.keys(),
               error=sys.exc_info())
           continue
-        except ProgrammingError, error_value:
-          # 1146 = table does not exist
-          if not use_cache or error_value[0] != 1146:
-            raise
-          try:
-            self.Base_zCreateWorklistTable()
-          except ProgrammingError, error_value:
-            # 1050 = table exists (alarm run just a bit too late)
-            if error_value[0] != 1050:
-              raise
-            catalog_brain_result = []
         if src__:
           action_list.append(catalog_brain_result)
         else:
