@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts37339345.5</string> </value>
+            <value> <string>ts46068994.72</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -53,7 +53,7 @@ var RenderJs = (function () {\n
           load: function (root) {\n
                     /* Load gadget layout by traversing DOM */\n
                     var gadget_list;\n
-                    gadget_list = root.find("[gadget]");\n
+                    gadget_list = root.find("[data-gadget]");\n
                     // Load chilren\n
                     gadget_list.each(function() {\n
                       RenderJs.loadGadgetFromUrl($(this));\n
@@ -70,7 +70,7 @@ var RenderJs = (function () {\n
           loadGadgetFromUrl: function(gadget) {\n
                     /* Load gadget\'s SPECs from URL */\n
                     var url, gadget_id, gadget_property, cacheable, cache_id, app_cache, data, gadget_js;\n
-                    url = gadget.attr("gadget");\n
+                    url = gadget.attr("data-gadget");\n
                     gadget_id = gadget.attr("id");\n
 \n
                     // register gadget in javascript namespace\n
@@ -78,7 +78,7 @@ var RenderJs = (function () {\n
                     RenderJs.GadgetIndex.registerGadget(gadget_js);\n
 \n
                     if (url!==undefined && url!==""){\n
-                      gadget_property = gadget.attr("gadget:property");\n
+                      gadget_property = gadget.attr("data-gadget:property");\n
                       cacheable = false;\n
                       if (gadget_property!==undefined) {\n
                         gadget_property = $.parseJSON(gadget_property);\n
@@ -91,13 +91,11 @@ var RenderJs = (function () {\n
                           app_cache = RenderJs.Cache.get(cache_id, undefined);\n
                           if(app_cache===undefined || app_cache===null){\n
                             // not in cache so we pull from network and cache\n
-                            //console.log("not in cache: " + cache_id + "  " + url);\n
                             $.ajax({url:url,\n
                                     yourCustomData: {"gadget_id": gadget_id, "cache_id": cache_id},\n
                                     success: function (data) {\n
                                                 cache_id = this.yourCustomData.cache_id;\n
                                                 gadget_id = this.yourCustomData.gadget_id;\n
-                                                //console.log("set in cache: " + cache_id);\n
                                                 RenderJs.Cache.set(cache_id, data);\n
                                                 RenderJs.GadgetIndex.getGadgetById(gadget_id).setReady();\n
                                                 RenderJs.updateAndRecurse(gadget, data);\n
@@ -114,7 +112,6 @@ var RenderJs = (function () {\n
                         }\n
                       else {\n
                         // not to be cached\n
-                        //console.log("Not to be cached " + url + gadget_id);\n
                         $.ajax({url:url,\n
                                 yourCustomData: {"gadget_id": gadget_id},\n
                                 success: function (data) {\n
@@ -153,9 +150,7 @@ var RenderJs = (function () {\n
             var is_gadget_list_loaded;\n
             is_gadget_list_loaded = RenderJs.GadgetIndex.isGadgetListLoaded();\n
             if (is_gadget_list_loaded){\n
-              //console.log("to trigger ");\n
               if (!RenderJs.isReady()) {\n
-                //console.log("trigger ", RenderJs.GadgetIndex.getGadgetList());\n
                 RenderJs.GadgetIndex.getRootGadget().getDom().trigger("ready");\n
                 RenderJs.setReady(true);\n
               }\n
@@ -180,8 +175,8 @@ var RenderJs = (function () {\n
           updateGadgetData: function(gadget) {\n
                     /* Do real gagdet update here */\n
                     var data_source, data_handler;\n
-                    data_source = gadget.attr("gadget:data-source");\n
-                    data_handler = gadget.attr("gadget:data-handler");\n
+                    data_source = gadget.attr("data-gadget:data-source");\n
+                    data_handler = gadget.attr("data-gadget:data-handler");\n
                     // acquire data and pass it to method handler\n
                     if (data_source!==undefined){\n
                       $.ajax({url:data_source,\n
@@ -334,9 +329,9 @@ var RenderJs = (function () {\n
                           tab_container=$(\'#\'+dom_id);\n
                           tab_container.empty();\n
                           html_string =[\'<div class="gadget" \',\n
-                                        \'gadget="\' + gadget + \'"\',\n
-                                        \'gadget:data-handler="\' + gadget_data_handler + \'" \',\n
-                                        \'gadget:data-source="\' + gadget_data_source +\'"></div>\'].join(\'\\n\');\n
+                                        \'data-gadget="\' + gadget + \'"\',\n
+                                        \'data-gadget:data-handler="\' + gadget_data_handler + \'" \',\n
+                                        \'data-gadget:data-source="\' + gadget_data_source +\'"></div>\'].join(\'\\n\');\n
 \n
                           tab_container.append(html_string);\n
                           tab_gadget = tab_container.find(".gadget");\n
@@ -473,7 +468,6 @@ var RenderJs = (function () {\n
                             func = new Function(func_body);\n
                             source_gadget.dom.bind(source_method_id, func);\n
                           }\n
-                          console.log(source_gadget_id, \'.\', source_method_id, \'-->\', destination_gadget_id, \'.\', destination_method_id);\n
                         }\n
                         );\n
                       }\n
@@ -489,7 +483,7 @@ var RenderJs = (function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>19475</int> </value>
+            <value> <int>18997</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
