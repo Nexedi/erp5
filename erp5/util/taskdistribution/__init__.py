@@ -95,16 +95,22 @@ def patchRPCParser(error_handler):
     parser_klass.feed = verbose_feed
 
 class RPCRetry(object):
-    def __init__(self, proxy, retry_time, logger):
+    def __init__(self, proxy, retry_time, logger, timeout=120):
         super(RPCRetry, self).__init__()
         self._proxy = proxy
         self._retry_time = retry_time
         self._logger = logger
         self.__rpc_lock = threading.Lock()
+        self.timeout = timeout
 
     def _RPC(self, func_id, args=()):
-        with self.__rpc_lock:
-            return getattr(self._proxy, func_id)(*args)
+            default_timeout = socket.getdefaulttimeout()
+            socket.setdefaulttimeout(self.timeout)
+            try:
+                with self.__rpc_lock:
+                    return getattr(self._proxy, func_id)(*args)
+            finally:
+                socket.setdefaulttimeout(default_timeout)
 
     def _retryRPC(self, func_id, args=()):
         retry_time = self._retry_time
@@ -141,29 +147,32 @@ class TestResultLineProxy(RPCRetry):
 
     def stop(self, test_count=None, error_count=None, failure_count=None,
             skip_count=None, duration=None, date=None, command=None,
-            stdout=None, stderr=None, html_test_result=None):
+            stdout=None, stderr=None, html_test_result=None, **kw):
         """
         Notify server of test completion.
 
         Without any parameter, notifies of a test failure which prevents any
         precise reading (step count, how many succeeded, etc).
+
+        BBB: extra named arguments are deprecated (if some are really needed,
+        they must be declared as explicit parameters, with proper default
+        value).
         """
-        status_dict = {
-            'test_count': test_count,
-            'error_count': error_count,
-            'failure_count': failure_count,
-            'skip_count': skip_count,
-            'duration': duration,
-            'date': date,
-        }
-        if command is not None:
-            status_dict['command'] = command
-        if stdout is not None:
-            status_dict['stdout'] = stdout
-        if stderr is not None:
-            status_dict['stderr'] = stderr
-        if html_test_result is not None:
-            status_dict['html_test_result'] = html_test_result
+        status_dict = dict(x for x in (
+            ('test_count', test_count),
+            ('error_count',  error_count),
+            ('failure_count',  failure_count),
+            ('skip_count',  skip_count),
+            ('duration',  duration),
+            ('date',  date),
+            ('command',  command),
+            ('stdout',  stdout),
+            ('stderr',  stderr),
+            ('html_test_result',  html_test_result),
+        ) if x[1] is not None)
+        if kw:
+            self._logger.info('Extra parameters provided: %r', kw)
+            status_dict.update(kw)
         self._retryRPC('stopUnitTest', (self._test_result_line_path,
             status_dict))
 

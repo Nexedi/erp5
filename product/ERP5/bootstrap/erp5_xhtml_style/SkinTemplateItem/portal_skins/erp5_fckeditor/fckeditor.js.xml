@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts83858910.28</string> </value>
+            <value> <string>ts44338348.56</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -87,7 +87,7 @@ FCKeditor.MinHeight = 200 ;\r\n
  */\r\n
 FCKeditor.MinWidth = 750 ;\r\n
 \r\n
-FCKeditor.prototype.Version\t\t\t= \'2.6.6\' ;\r\n
+FCKeditor.prototype.Version\t\t\t= \'2.6.8\' ;\r\n
 FCKeditor.prototype.VersionBuild\t= \'25427\' ;\r\n
 \r\n
 FCKeditor.prototype.Create = function()\r\n

@@ -4177,10 +4177,7 @@ class RoleTemplateItem(BaseTemplateItem):
     path = obsolete_key
     bta.addObject(xml_data, name=path)
 
-class CatalogSearchKeyTemplateItem(BaseTemplateItem):
-  key_list_attr = 'sql_catalog_search_keys'
-  key_list_title = 'search_key_list'
-  key_title = 'Search key'
+class CatalogKeyTemplateItemBase(BaseTemplateItem):
 
   def build(self, context, **kw):
     catalog = _getCatalogValue(self)
@@ -4205,6 +4202,10 @@ class CatalogSearchKeyTemplateItem(BaseTemplateItem):
     key_list = [key.text for key in xml.getroot()]
     self._objects[file_name[:-4]] = key_list
 
+  def _getUpdateDictAction(self, update_dict):
+    action = update_dict.get(self.key_list_title, 'nothing')
+    return action
+
   def install(self, context, trashbin, **kw):
     catalog = _getCatalogValue(self)
     if catalog is None:
@@ -4222,16 +4223,16 @@ class CatalogSearchKeyTemplateItem(BaseTemplateItem):
       keys = self._archive.keys()
     update_dict = kw.get('object_to_update')
     force = kw.get('force')
-    # XXX same as related key
-    if update_dict.has_key(self.key_list_title) or force:
-      if not force:
-        action = update_dict[self.key_list_title]
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in catalog_key_list:
-          catalog_key_list.append(key)
+    if force or self._getUpdateDictAction(update_dict) != 'nothing':
+      catalog_key_list = self._getUpdatedCatalogKeyList(catalog_key_list, keys)
       setattr(catalog, self.key_list_attr, catalog_key_list)
+
+  def _getUpdatedCatalogKeyList(self, catalog_key_list, new_key_list):
+    catalog_key_list = list(catalog_key_list) # copy
+    for key in new_key_list:
+      if key not in catalog_key_list:
+        catalog_key_list.append(key)
+    return catalog_key_list
 
   def uninstall(self, context, **kw):
     catalog = _getCatalogValue(self)
@@ -4267,100 +4268,99 @@ class CatalogSearchKeyTemplateItem(BaseTemplateItem):
       xml_data = self.generateXml(path=path)
       bta.addObject(xml_data, name=path)
 
-class CatalogResultKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogUniqueKeyTemplateItemBase(CatalogKeyTemplateItemBase):
+  # like CatalogKeyTemplateItemBase, but for keys which use
+  # "key | value" syntax to configure dictionaries.
+  # The keys (part before the pipe) must be unique.
+
+  def _getMapFromKeyList(self, key_list):
+    # in case of duplicates, only the last installed entry will survive
+    return dict(tuple(part.strip() for part in key.split('|', 1))
+                for key in key_list)
+
+  def _getListFromKeyMap(self, key_map):
+    return [" | ".join(item) for item in sorted(key_map.items())]
+
+  def _getUpdatedCatalogKeyList(self, catalog_key_list, new_key_list):
+    # treat key lists as dictionaries, parse and update:
+    catalog_key_map = self._getMapFromKeyList(catalog_key_list)
+    catalog_key_map.update(self._getMapFromKeyList(new_key_list))
+    return self._getListFromKeyMap(catalog_key_map)
+
+class CatalogSearchKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
+  key_list_attr = 'sql_catalog_search_keys'
+  key_list_title = 'search_key_list'
+  key_title = 'Search key'
+
+class CatalogResultKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_search_result_keys'
   key_list_title = 'result_key_list'
   key_title = 'Result key'
 
-class CatalogRelatedKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogRelatedKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_related_keys'
   key_list_title = 'related_key_list'
   key_title = 'Related key'
 
   # override this method to support 'key_list' for backward compatibility.
-  def install(self, context, trashbin, **kw):
-    catalog = _getCatalogValue(self)
-    if catalog is None:
-      LOG('BusinessTemplate', 0, 'no SQL catalog was available')
-      return
+  def _getUpdateDictAction(self, update_dict):
+    action = update_dict.get(self.key_list_title, _MARKER)
+    if action is _MARKER:
+      action = update_dict.get('key_list', 'nothing')
+    return action
 
-    catalog_key_list = list(getattr(catalog, self.key_list_attr, []))
-    if context.getTemplateFormatVersion() == 1:
-      if len(self._objects.keys()) == 0: # needed because of pop()
-        return
-      keys = []
-      for k in self._objects.values().pop(): # because of list of list
-        keys.append(k)
-    else:
-      keys = self._archive.keys()
-    update_dict = kw.get('object_to_update')
-    force = kw.get('force')
-    # XXX must a find a better way to manage related key
-    if update_dict.has_key(self.key_list_title) or update_dict.has_key('key_list') or force:
-      if not force:
-        if update_dict.has_key(self.key_list_title):
-          action = update_dict[self.key_list_title]
-        else: # XXX for backward compatibility
-          action = update_dict['key_list']
-        if action == 'nothing':
-          return
-      for key in keys:
-        if key not in catalog_key_list:
-          catalog_key_list.append(key)
-      setattr(catalog, self.key_list_attr, catalog_key_list)
-
-class CatalogResultTableTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogResultTableTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_search_tables'
   key_list_title = 'result_table_list'
   key_title = 'Result table'
 
 # keyword
-class CatalogKeywordKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogKeywordKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_keyword_search_keys'
   key_list_title = 'keyword_key_list'
   key_title = 'Keyword key'
 
 # datetime
-class CatalogDateTimeKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogDateTimeKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_datetime_search_keys'
   key_list_title = 'datetime_key_list'
   key_title = 'DateTime key'
 
 # full text
-class CatalogFullTextKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogFullTextKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_full_text_search_keys'
   key_list_title = 'full_text_key_list'
   key_title = 'Fulltext key'
 
 # request
-class CatalogRequestKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogRequestKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_request_keys'
   key_list_title = 'request_key_list'
   key_title = 'Request key'
 
 # multivalue
-class CatalogMultivalueKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogMultivalueKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_multivalue_keys'
   key_list_title = 'multivalue_key_list'
   key_title = 'Multivalue key'
 
 # topic
-class CatalogTopicKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogTopicKeyTemplateItem(CatalogKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_topic_search_keys'
   key_list_title = 'topic_key_list'
   key_title = 'Topic key'
 
-class CatalogScriptableKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogScriptableKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_scriptable_keys'
   key_list_title = 'scriptable_key_list'
   key_title = 'Scriptable key'
 
-class CatalogRoleKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogRoleKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_role_keys'
   key_list_title = 'role_key_list'
   key_title = 'Role key'
 
-class CatalogLocalRoleKeyTemplateItem(CatalogSearchKeyTemplateItem):
+class CatalogLocalRoleKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_attr = 'sql_catalog_local_role_keys'
   key_list_title = 'local_role_key_list'
   key_title = 'LocalRole key'

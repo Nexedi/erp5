@@ -71,8 +71,8 @@
             \074script src="erp5_form.js"\076\074/script\076\n
 \n
             \074div id="content"\n
-                gadget="gadgets/content/gadget"\n
-                tal:attributes="gadget string:gadgets/tabular_gadget/gadget?object_path=${object_path}\046current_form_id=${form_id}"\076\074/div\076\n
+                data-gadget="gadgets/content/gadget"\n
+                tal:attributes="data-gadget string:gadgets/tabular_gadget/gadget?object_path=${object_path}\046current_form_id=${form_id}"\076\074/div\076\n
 \n
             \074script type="text/javascript" language="javascript"\076\n
               //\074![CDATA[\n

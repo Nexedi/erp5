@@ -33,6 +33,7 @@ import urllib
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload
+from Products.ERP5Type.tests.backportUnittest import skip
 
 SESSION_ID = "12345678"
 LANGUAGE_LIST = ('en', 'fr', 'de', 'bg',)
@@ -825,6 +826,7 @@ class TestCommerce(ERP5TypeTestCase):
     shoppping_cart_item_list = self.website.SaleOrder_getShoppingCartItemList()
     self.assertEquals(1, len(shoppping_cart_item_list))
 
+  @skip('WebSite_createWebSiteAccount is disabled by default.')
   def test_22_createShoppingCartWithAnonymousAndLogin(self):
     """
       Test adding an arbitrary resources to shopping cart with Anonymous user

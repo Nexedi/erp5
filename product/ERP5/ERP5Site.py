@@ -644,14 +644,14 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
   def getPromiseParameter(self, section, option):
     """
     Read external promise parameters.
-    
+
     The parameters should be provided by an external configuration file.
     Location of this configuration file is defined in the zope configuration
     file in a product_config named as the path of the ERP5 site.
-    Example if the site id is erp5: 
-      <product-config /erp5>                                                              
+    Example if the site id is erp5:
+      <product-config /erp5>
         promise_path /tmp/promise.cfg
-      </product-config> 
+      </product-config>
 
     The promise configuration is a simple ConfigParser readable file (a list of
     section containing a list of string parameters.

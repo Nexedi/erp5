@@ -63,6 +63,11 @@
       verified and opened by administrator first\n
     - you need to adjust group, function and site to your needs\n
 """\n
+\n
+# since the following code is just an example, we simply raise an exception so that\n
+# it is not executed actually.\n
+raise NotImplementedError\n
+\n
 from Products.Formulator.Errors import ValidationError, FormValidationError\n
 portal = context.getPortalObject()\n
 translateString = context.Base_translateString\n

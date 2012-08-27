@@ -37,6 +37,7 @@ import tarfile
 
 from Acquisition import Implicit, Explicit
 from AccessControl import ClassSecurityInfo
+from AccessControl.SecurityInfo import ModuleSecurityInfo
 from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.DiffUtils import DiffFile
@@ -82,6 +83,8 @@ class BusinessTemplateIsMeta(Exception):
   """ Exception when the business template is provided by another one
   """
   pass
+
+ModuleSecurityInfo(__name__).declarePublic('BusinessTemplateUnknownError')
 
 class TemplateTool (BaseTool):
     """
