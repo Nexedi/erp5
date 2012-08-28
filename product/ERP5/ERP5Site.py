@@ -485,7 +485,11 @@ class ERP5Site(FolderMixIn, CMFSite, CacheCookieMixin):
 
     # Make sure that reset is not performed when creating a new site
     if not getattr(self, '_v_bootstrapping', False):
-      self.portal_components.resetOnceAtTransactionBoundary()
+      try:
+        self.portal_components.resetOnceAtTransactionBoundary()
+      except AttributeError:
+        # This should only happen before erp5_core is installed
+        pass
 
   version_priority_list = property(getVersionPriorityList,
                                    setVersionPriorityList)
