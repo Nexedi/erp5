@@ -628,6 +628,10 @@ class HBTreeFolder2Base (Persistent):
             raise AttributeError, name
         return res
 
+    def __contains__(self, key):
+        marker = []
+        return self._getOb(key, marker) is not marker
+
 
 InitializeClass(HBTreeFolder2Base)
 
