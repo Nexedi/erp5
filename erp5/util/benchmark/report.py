@@ -269,6 +269,25 @@ def drawDecorator(xlabel, ylabel, with_table=False):
 
   return inner
 
+def forceZeroBarDrawing(result_list):
+  """
+  Dirty hack to draw a bar even if the value is zero, otherwise nothing is
+  drawn and bars are not properly aligned
+  """
+  no_zero_list = []
+  zero_count = 0
+  for value in result_list:
+    if value == 0:
+      value = 1e-20
+      zero_count += 1
+
+    no_zero_list.append(value)
+
+  if len(result_list) == zero_count:
+    return result_list
+
+  return no_zero_list
+
 @drawDecorator(xlabel=None, ylabel='Seconds', with_table=True)
 def drawBarDiagram(axes, stat_list, only_average=False):
   mean_list = []
@@ -306,17 +325,19 @@ def drawBarDiagram(axes, stat_list, only_average=False):
     width = 0.33
     avg_rect_position = ind + width
 
-  avg_rects = axes.bar(avg_rect_position, mean_list, width, color='r',
-                       label='Mean')
+  avg_rects = axes.bar(avg_rect_position, forceZeroBarDrawing(mean_list),
+                       width, color='r', label='Mean')
 
   axes.errorbar(numpy.arange(0.5, len(stat_list)), mean_list,
                 yerr=[yerr_lower, yerr_upper], fmt=None,
                 label='Standard deviation')
 
   if not only_average:
-    min_rects = axes.bar(ind, minimum_list, width, color='y', label='Minimum')
-    max_rects = axes.bar(ind + width * 2, maximum_list, width, label='Maximum',
-                         color='g')
+    min_rects = axes.bar(ind, forceZeroBarDrawing(minimum_list),
+                         width, color='y', label='Minimum')
+
+    max_rects = axes.bar(ind + width * 2, forceZeroBarDrawing(maximum_list),
+                         width, label='Maximum', color='g')
 
   axes.table(rowLabels=['Minimum', 'Average', 'Std. deviation', 'Maximum', 'Errors'],
              colLabels=label_list,
