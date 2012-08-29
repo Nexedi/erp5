@@ -62,24 +62,12 @@ search_kw = dict(\n
   node_category=\'account_type/asset/cash/bank\',\n
 #  group_by=(\'parent_uid\', ), # The limit is not applied on the number of payment transactions, but on the number of lines (to simplify setting aggregate relation).\n
 \n
-  # For better performance, add \'payment_transaction_group_aggregate_uid\' column in stock table\n
-  # and use payment_transaction_group_aggregate_uid=None here\n
-  where_expression= """\n
-NOT EXISTS (\n
-  SELECT * FROM\n
-    catalog as payment_transaction_group_catalog, category\n
-  WHERE \n
-    category.uid = stock.uid\n
-    AND category.base_category_uid = %s\n
-    AND payment_transaction_group_catalog.uid = category.category_uid\n
-    AND payment_transaction_group_catalog.portal_type = \'Payment Transaction Group\'\n
-    AND payment_transaction_group_catalog.validation_state NOT IN (\'deleted\', \'cancelled\')\n
-  LIMIT 1 )\n
-""" % portal.portal_categories.aggregate.getUid()\n
+  # we have \'aggregate/payment_transaction_module/xxx\' in sub_variation_text if the line is already grouped.\n
+  sub_variation_text=\'\',\n
 )\n
 \n
 if context.getPaymentMode():\n
-  search_kw[\'payment_transaction_line_payment_mode_uid\'] = context.getPaymentModeUid()\n
+  search_kw[\'parent_payment_mode_uid\'] = context.getPaymentModeUid()\n
 \n
 if limit:\n
   search_kw[\'limit\'] = limit\n
