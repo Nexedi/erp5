@@ -5361,6 +5361,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
             item.install(self, force=force, object_to_update=object_to_update,
                                trashbin=trashbin, installed_bt=installed_bt)
 
+      # TSXX : prevent deletion of catalog
+      update_catalog = 0
       if update_catalog:
         catalog = _getCatalogValue(self)
         if (catalog is None) or (not site.isIndexable):
