@@ -50,14 +50,15 @@ class TestTemplateTool(ERP5TypeTestCase):
   test_tool_id = 'test_portal_templates'
 
   def getBusinessTemplateList(self):
-    return ('erp5_base', 'erp5_csv_style')
+    return ('erp5_core_proxy_field_legacy', 'erp5_base', 'erp5_csv_style')
 
   def getTitle(self):
     return "Template Tool"
 
   def afterSetUp(self):
     self.templates_tool = self.portal.portal_templates
-    self.setupAutomaticBusinessTemplateRepository()
+    self.setupAutomaticBusinessTemplateRepository(
+         searchable_business_template_list=["erp5_core", "erp5_base"])
     if getattr(self.portal, self.test_tool_id, None) is not None:
       self.portal.manage_delObjects(ids=[self.test_tool_id])
     self.portal.newContent(portal_type='Template Tool',
@@ -408,38 +409,39 @@ class TestTemplateTool(ERP5TypeTestCase):
       addRepositoryEntry(title='biz', dependency_list=()),
       addRepositoryEntry(title='ca1', provision_list=('sql',)),
       addRepositoryEntry(title='ca2', provision_list=('sql',)),
-      addRepositoryEntry(title='end', dependency_list=('baz','sql')),
+      addRepositoryEntry(title='a', dependency_list=()),
+      addRepositoryEntry(title='b', dependency_list=('a'), revision='5'),
+      addRepositoryEntry(title='end', dependency_list=('baz','sql', 'b')),
       )
 
     # Simulate that we have some installed bt.
-    for bt_id in ('foo', 'ca1'):
+    for bt_id in ('foo', 'ca1', 'b'):
       bt = template_tool.newContent(portal_type='Business Template',
                              title=bt_id, revision='4', id=bt_id)
       bt.install()
     
     bt5_id_list = ['baz']
     bt5_list = template_tool.resolveBusinessTemplateListDependency(bt5_id_list)
-    self.assertEquals([(repository, 'bar.bt5'),
+    self.assertEquals([(repository, 'foo.bt5'),
+                       (repository, 'bar.bt5'),
                        (repository, 'baz.bt5')], bt5_list)
 
     bt5_id_list = ['foo']
-    bt5_list = template_tool.resolveBusinessTemplateListDependency(bt5_id_list)
-    self.assertEquals([], bt5_list)
-    bt5_list = template_tool.resolveBusinessTemplateListDependency(bt5_id_list,
-                   newest_only=True)
-    self.assertEquals([], bt5_list)
-
     bt5_list = template_tool.resolveBusinessTemplateListDependency(
-                      bt5_id_list, False)
+                      bt5_id_list)
     self.assertEquals([(repository, 'foo.bt5')], bt5_list)
 
     bt5_id_list = ['biz', 'end']
 
     bt5_list = template_tool.resolveBusinessTemplateListDependency(bt5_id_list)
-    self.assertEquals([(repository, 'bar.bt5'),
+    self.assertEquals([(repository, 'foo.bt5'),
+                       (repository, 'a.bt5'),
+                       (repository, 'bar.bt5'),
+                       (repository, 'b.bt5'),
+                       (repository, 'ca1.bt5'),
                        (repository, 'baz.bt5'),
-                       (repository, 'biz.bt5'),
-                       (repository, 'end.bt5')], bt5_list)
+                       (repository, 'end.bt5'),
+                       (repository, 'biz.bt5')], bt5_list)
 
     # By removing ca1, we remove the choice for the "sql" provider.
     # Therefore template tool does not know any more what to take for "sql".
@@ -447,12 +449,12 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     self.assertRaises(BusinessTemplateMissingDependency,
                 template_tool.resolveBusinessTemplateListDependency,
-                bt5_id_list, False)
+                bt5_id_list)
 
     bt5_id_list = ['erp5_do_not_exist']
     self.assertRaises(BusinessTemplateUnknownError,
                    template_tool.resolveBusinessTemplateListDependency,
-                   bt5_id_list, False)
+                   bt5_id_list)
 
   def test_installBusinessTemplatesFromRepository_simple(self):
     """ Simple test for portal_templates.installBusinessTemplatesFromRepository
@@ -509,8 +511,7 @@ class TestTemplateTool(ERP5TypeTestCase):
       bt5_name = 'erp5_odt_style'
       operation_log = template_tool.installBusinessTemplateListFromRepository([bt5_name],
                             only_newer=False, update_catalog=1)
-
-      self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
+      self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertEquals(bt.getTitle(), bt5_name)
       self.commit()

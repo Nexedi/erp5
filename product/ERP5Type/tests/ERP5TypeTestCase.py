@@ -570,7 +570,7 @@ class ERP5TypeTestCaseMixin(ProcessingNodeTestCase, PortalTestCase):
                                    public_bt5_repository_list)
        else:
          self.portal.portal_templates.updateRepositoryBusinessTemplateList(
-                  bt5_repository_path_list, None) 
+                  bt5_repository_path_list, None)
      elif accept_public:
        self.portal.portal_templates.updateRepositoryBusinessTemplateList(
                                      public_bt5_repository_list)
