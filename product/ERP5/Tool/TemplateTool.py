@@ -1050,7 +1050,7 @@ class TemplateTool (BaseTool):
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRepositoryBusinessTemplateList' )
     def getRepositoryBusinessTemplateList(self, update_only=False,
-             template_list=None):
+             template_list=None, **kw):
       """Get the list of Business Templates in repositories.
 
          update_only: return only bt that needs to be updated
@@ -1240,39 +1240,42 @@ class TemplateTool (BaseTool):
           template_title_list.remove(available_bt5.title)
           bt5 = self.decodeRepositoryBusinessTemplateUid(available_bt5.uid)
           bt5_set.add(bt5)
+          meta_dependency_set = set()
           for dep_repository, dep_id in self.getDependencyList(bt5):
             if dep_repository != 'meta':
               bt5_set.add((dep_repository, dep_id))
             else:
-              provider_list = self.getProviderList(dep_id)
-              provider_installed = False
-              provider_title = None
-              for provider in provider_list:
-                if provider in [i[1].replace(".bt5", "") for i in bt5_set] or \
-                      provider in installed_bt5_title_list or \
-                      provider in template_title_list:
-                  provider_title = provider
-                  for candidate in available_bt5_list:
-                    if candidate.title == provider:
-                      bt5_set.add(\
-                        self.decodeRepositoryBusinessTemplateUid(
-                            candidate.uid))
-                      break
-                  break
-              if provider_title is None and len(provider_list) == 1:
-                provider_title = provider_list[0]
-              LOG('resolveBT, provider_title', 0, provider_title)
-              if provider_title:
+              meta_dependency_set.add((dep_repository, dep_id))
+          for dep_repository, dep_id in meta_dependency_set:
+            provider_list = self.getProviderList(dep_id)
+            provider_installed = False
+            provider_title = None
+            for provider in provider_list:
+              if provider in [i[1].replace(".bt5", "") for i in bt5_set] or \
+                    provider in installed_bt5_title_list or \
+                    provider in template_title_list:
+                provider_title = provider
                 for candidate in available_bt5_list:
-                  if candidate.title == provider_title:
+                  if candidate.title == provider:
                     bt5_set.add(\
                       self.decodeRepositoryBusinessTemplateUid(
                           candidate.uid))
                     break
-              else:
-                raise BusinessTemplateMissingDependency,\
-                  "Unable to resolve dependencies for %s, options are %s" \
-                      % (dep_id, provider_list)
+                break
+            if provider_title is None and len(provider_list) == 1:
+              provider_title = provider_list[0]
+            LOG('resolveBT, provider_title', 0, provider_title)
+            if provider_title:
+              for candidate in available_bt5_list:
+                if candidate.title == provider_title:
+                  bt5_set.add(\
+                    self.decodeRepositoryBusinessTemplateUid(
+                        candidate.uid))
+                  break
+            else:
+              raise BusinessTemplateMissingDependency,\
+                "Unable to resolve dependencies for %s, options are %s" \
+                    % (dep_id, provider_list)
 
       if len(template_title_list) > 0:
          raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repositories %s' % \
@@ -1475,7 +1478,9 @@ class TemplateTool (BaseTool):
     security.declareProtected(Permissions.ManagePortal,
         'upgradeSite')
     def upgradeSite(self, bt5_list, deprecated_after_script_dict=None,
-                    deprecated_reinstall_set=None, dry_run=False):
+                    deprecated_reinstall_set=None, dry_run=False,
+                    delete_orphaned=False,
+                    keep_bt5_id_set=None):
       """
       Upgrade many business templates at a time. bt5_list should
       contains only final business templates, then all dependencies
@@ -1483,10 +1488,9 @@ class TemplateTool (BaseTool):
       old business templates will be updated, and orphelin business
       templates will be deleted
 
-      deprecated_after_script_dict: this parameter needs to be removed
-                                    by setting it at business template level.
-                                    It list script to run when, like
-                                    {"foo": ('script1','script2')}
+      keep_bt5_id_set: business template that should not be deleted.
+                       This is useful if we want to keep an old business
+                       template without updating it and without removing it
 
       deprecated_reinstall_set: this parameter needs to be removed
                                 by setting it at business template level.
@@ -1497,7 +1501,6 @@ class TemplateTool (BaseTool):
       self.updateRepositoryBusinessTemplateList(self.getRepositoryList())
       # do upgrade
       message_list = []
-      deprecated_after_script_dict = deprecated_after_script_dict or {}
       deprecated_reinstall_set = deprecated_reinstall_set or set()
       def append(message):
         message_list.append(message)
@@ -1516,15 +1519,24 @@ class TemplateTool (BaseTool):
         if not(dry_run):
           bt5_url = "%s/%s" % (bt5.repository, bt5.title)
           self.updateBusinessTemplateFromUrl(bt5_url)
-        for after_script in  deprecated_after_script_dict.get(bt5.title, []):
-          append("After business template %s call %s" % \
-            (bt5.title, after_script))
-          script = getattr(self, after_script, None)
-          if script is None:
-            raise ValueError, "Unable to find after script %r of bt %s" % \
-               (script, bt5.title)
+      if delete_orphaned:
+        if keep_bt5_id_set is None:
+          keep_bt5_id_set = set()
+        to_remove_bt5_list = [x for x in self.getInstalledBusinessTemplateList()
+                              if x.title not in dependency_list]
+        sorted_to_remove_bt5_id_list = self.sortDownloadedBusinessTemplateList(
+                                  [x.id for x in to_remove_bt5_list])
+        sorted_to_remove_bt5_id_list.reverse()
+        to_remove_bt5_list.sort(
+          key=lambda x: sorted_to_remove_bt5_id_list.index(x.id))
+        for bt in to_remove_bt5_list:
+          if bt.title in keep_bt5_id_set:
+            continue
+          append("Uninstall business template %s" % bt.title)
           if not(dry_run):
-            script()
+            # XXX Here is missing parameters to really remove stuff
+            bt.uninstall()
+
       return message_list
 
 InitializeClass(TemplateTool)
