@@ -974,8 +974,12 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
 
   def _setObject(self, *args, **kw):
     if self._folder_handler == HBTREE_HANDLER:
+      if self._htree is None:
+        HBTreeFolder2Base.__init__(self, self.id)
       return CMFHBTreeFolder._setObject(self, *args, **kw)
     else:
+      if self._tree is None:
+        BTreeFolder2Base.__init__(self, self.id)
       return CMFBTreeFolder._setObject(self, *args, **kw)
 
   def get(self, id, default=None):
