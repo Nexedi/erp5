@@ -84,7 +84,8 @@ class AcknowledgeableMixin:
                           user_name=user_name)
       if len(self.portal_catalog(portal_type='Acknowledgement',
                 default_causality_uid=self.getUid(),
-                default_destination_uid=person_value.getUid())) > 0:
+                default_destination_uid=person_value.getUid(),
+                limit=1)) > 0:
         result = True
     return result
 
