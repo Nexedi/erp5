@@ -128,7 +128,7 @@ class Image(TextConvertableMixin, File, OFSImage):
           width, height = header[1:]
     self.height = height
     self.width = width
-    self._setContentType(content_type)
+    self._setContentType(content_type or 'application/unknown')
 
   def _upradeImage(self):
     """
