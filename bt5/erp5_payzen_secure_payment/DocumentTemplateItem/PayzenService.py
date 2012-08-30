@@ -196,6 +196,61 @@ else:
         signature = False
 
       return [data_kw, signature, last_sent, last_received]
+
+    @setUTCTimeZone
+    def soap_cancel(self, transmissionDate, transactionId, comment=''):
+      # prepare with passed parameters
+      kw = dict(transmissionDate=transmissionDate, transactionId=transactionId,
+        comment=comment)
+
+      signature_sorted_key_list= ['shopId', 'transmissionDate', 'transactionId',
+        'sequenceNb', 'ctxMode', 'comment']
+      kw.update(
+        ctxMode=self.getPayzenVadsCtxMode(),
+        shopId=self.getServiceUsername(),
+        sequenceNb=1,
+      )
+      kw['wsSignature'] = self._getSignature(kw, signature_sorted_key_list)
+      # Note: Code shall not raise since now, as communication begin and caller
+      #       will have to log sent/received messages.
+      client = suds.client.Client(self.wsdl_link.getUrlString())
+      data = client.service.cancel(**kw)
+      # Note: Code shall not raise since now, as communication begin and caller
+      #       will have to log sent/received messages.
+      try:
+        data_kw = dict(data)
+        for k in data_kw.keys():
+          v = data_kw[k]
+          if not isinstance(v, str):
+            data_kw[k] = str(v)
+      except Exception:
+        data_kw = {}
+        signature = False
+        LOG('PayzenService', WARNING,
+          'Issue during processing data_kw:', error=True)
+      else:
+        try:
+          signature = self._check_transactionInfoSignature(data)
+        except Exception:
+          LOG('PayzenService', WARNING, 'Issue during signature calculation:',
+            error=True)
+          signature = False
+
+      try:
+        last_sent = str(client.last_sent())
+      except Exception:
+        LOG('PayzenService', WARNING,
+          'Issue during converting last_sent to string:', error=True)
+        signature = False
+
+      try:
+        last_received = str(client.last_received())
+      except Exception:
+        LOG('PayzenService', WARNING,
+          'Issue during converting last_received to string:', error=True)
+        signature = False
+
+      return [data_kw, signature, last_sent, last_received]
 finally:
   if present:
     os.environ['TZ'] = tz
