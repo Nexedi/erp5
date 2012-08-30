@@ -83,8 +83,8 @@ class AcknowledgeableMixin:
       person_value = self.ERP5Site_getAuthenticatedMemberPersonValue(
                           user_name=user_name)
       if len(self.portal_catalog(portal_type='Acknowledgement',
-                causality_relative_url=self.getRelativeUrl(),
-                destination_relative_url=person_value.getRelativeUrl())) > 0:
+                default_causality_uid=self.getUid(),
+                default_destination_uid=person_value.getUid())) > 0:
         result = True
     return result
 
