@@ -116,31 +116,36 @@ class AcknowledgementTool(BaseTool):
     document_list = []
     if user_name is not None:
       portal = self.getPortalObject()
-      now = DateTime()
-      # First look at all event that define the current user as destination
-      all_document_list = [x for x in \
-         self.portal_catalog(portal_type = portal_type,
-              simulation_state = self.getPortalTransitInventoryStateList(),
-  #           start_date = {'query':now,'range':'max'},
-  #           stop_date = {'query':now,'range':'min'},
-              default_destination_reference=user_name)]
-      # Now we can look directly at acknowledgement document not approved yet
-      # so not in a final state
-      final_state_list = self.getPortalCurrentInventoryStateList()
-      query = NegatedQuery(Query(simulation_state=final_state_list))
-      all_document_list.extend([x for x in \
-         self.portal_catalog(portal_type = portal_type,
-              query=query,
-  #           start_date = {'query':now,'range':'max'},
-  #           stop_date = {'query':now,'range':'min'},
-              destination_reference=user_name)])
-      for document in all_document_list:
-        # We filter manually on dates until a good solution is found for
-        # searching by dates on the catalog
-        if (document.getStartDate() < now < (document.getStopDate()+1)):
-          acknowledged = document.isAcknowledged(user_name=user_name)
-          if not acknowledged:
-            document_list.append(document.getRelativeUrl())
+      person_value = portal.ERP5Site_getAuthenticatedMemberPersonValue(
+                                                      user_name=user_name)
+      if person_value is None:
+        raise ValueError('No user found')
+      else:
+        now = DateTime()
+        # First look at all event that define the current user as destination
+        all_document_list = [x for x in \
+           self.portal_catalog(portal_type = portal_type,
+                simulation_state = self.getPortalTransitInventoryStateList(),
+#               start_date = {'query':now,'range':'max'},
+#               stop_date = {'query':now,'range':'min'},
+                default_destination_uid=person_value.getUid())]
+        # Now we can look directly at acknowledgement document not approved yet
+        # so not in a final state
+        final_state_list = self.getPortalCurrentInventoryStateList()
+        query = NegatedQuery(Query(simulation_state=final_state_list))
+        all_document_list.extend([x for x in \
+           self.portal_catalog(portal_type = portal_type,
+                query=query,
+#               start_date = {'query':now,'range':'max'},
+#               stop_date = {'query':now,'range':'min'},
+                default_destination_uid=person_value.getUid())])
+        for document in all_document_list:
+          # We filter manually on dates until a good solution is found for
+          # searching by dates on the catalog
+          if (document.getStartDate() < now < (document.getStopDate()+1)):
+            acknowledged = document.isAcknowledged(user_name=user_name)
+            if not acknowledged:
+              document_list.append(document.getRelativeUrl())
     else:
       raise ValueError('No user name given')
     return document_list
