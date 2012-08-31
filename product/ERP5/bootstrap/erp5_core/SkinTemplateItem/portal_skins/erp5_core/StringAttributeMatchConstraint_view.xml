@@ -107,8 +107,7 @@
                     <value>
                       <list>
                         <string>my_message_no_such_property</string>
-                        <string>my_message_property_not_set</string>
-                        <string>my_message_attribute_match</string>
+                        <string>my_message_attribute_not_match</string>
                       </list>
                     </value>
                 </item>

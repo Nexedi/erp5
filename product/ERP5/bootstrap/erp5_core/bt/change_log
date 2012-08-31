@@ -1,3 +1,6 @@
+2012-09-04 arnaud.fontaine
+* message_attribute_does_not_match was incorrectly renamed to message_attribute_match when migrating StringAttributeMatch constraint from filesystem to ZODB. Also, use message_attribute_not_match instead of message_attribute_does_not_match to follow ERP5 naming convention.
+
 2012-07-20 tatuya
 * Set max_row 0 on IdTool_zGetValueList so that we can get all the records of portal_ids table when there are more than 1000 id_group.
 
