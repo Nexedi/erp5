@@ -1,3 +1,6 @@
+2012-09-04 arnaud.fontaine
+* message_attribute_does_not_match was incorrectly renamed to message_attribute_match when migrating StringAttributeMatch constraint from filesystem to ZODB.
+
 2012-03-07 arnaud.fontaine
 * Add property to define preferred source code editor to Preference Property Sheets.
 
