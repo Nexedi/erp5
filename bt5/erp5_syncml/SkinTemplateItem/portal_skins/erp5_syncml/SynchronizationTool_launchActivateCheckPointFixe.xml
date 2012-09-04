@@ -96,6 +96,16 @@ activate_kw = {\n
   "activity" : "SQLQueue",\n
 }\n
 \n
+# Register start of point fixe\n
+from Products.CMFActivity.ActiveResult import ActiveResult\n
+active_result = ActiveResult()\n
+active_result.edit(summary=\'Info\',\n
+                   severity=0,\n
+                   detail="Point fixe check launched at %r" % (DateTime().strftime("%d/%m/%Y %H:%M"),))\n
+sub.activate(active_process=active_process_path,\n
+            activity=\'SQLQueue\',\n
+            priority=2,).ERP5Site_saveCheckCatalogTableResult(active_result)\n
+\n
 context.SynchronizationTool_activateCheckPointFixe(callback=callback, method_kw=method_kw, activate_kw=activate_kw)\n
 \n
 qs = \'?portal_status_message=%s\' % "Point fixe running, active process path is %s" % (active_process_path,)\n
