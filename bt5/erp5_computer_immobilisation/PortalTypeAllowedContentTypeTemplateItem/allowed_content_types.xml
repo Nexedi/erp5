@@ -7,6 +7,9 @@
  <portal_type id="Computer Module">
   <item>Computer</item>
  </portal_type>
+ <portal_type id="Computer Network Module">
+  <item>Computer Network</item>
+ </portal_type>
  <portal_type id="Computer Partition">
   <item>Internet Protocol Address</item>
  </portal_type>

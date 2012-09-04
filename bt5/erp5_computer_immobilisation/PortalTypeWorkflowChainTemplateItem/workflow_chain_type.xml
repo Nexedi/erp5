@@ -4,6 +4,10 @@
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
  <chain>
+  <type>Computer Network</type>
+  <workflow>edit_workflow, local_permission_interaction_workflow, validation_workflow</workflow>
+ </chain>
+ <chain>
   <type>Computer Partition</type>
   <workflow>edit_workflow, validation_workflow</workflow>
  </chain>
