@@ -1061,6 +1061,8 @@ class Folder(CopyContainer, CMFBTreeFolder, CMFHBTreeFolder, Base, FolderMixIn):
         return False
       return CMFBTreeFolder.hasObject(self, id)
 
+  __contains__ = hasObject
+
   # Override Zope default by folder id generation
   def _get_id(self, id):
     if self._getOb(id, None) is None :
