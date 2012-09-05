@@ -10,13 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
+                <string>portal_type</string>
                 <string>title</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>my_title</string> </value>
+            <value> <string>my_specialise_title</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -73,11 +74,22 @@
               <dictionary>
                 <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_string_field</string> </value>
+                    <value> <string>my_relation_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
                     <value> <string>Base_viewFieldLibrary</string> </value>
+                </item>
+                <item>
+                    <key> <string>portal_type</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>Computer Model</string>
+                          <string>Computer Model</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
@@ -85,7 +97,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Title</string> </value>
+                    <value> <string>Computer Model</string> </value>
                 </item>
               </dictionary>
             </value>
