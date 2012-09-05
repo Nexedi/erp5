@@ -489,6 +489,7 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         # expression.
         select_expression = select_expression_prefix + ', ' \
                             + group_by_expression
+        catalog_brain_result = []
         try:
           catalog_brain_result = search_result(
                                       select_expression=select_expression,
@@ -504,6 +505,16 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
               % grouped_worklist_dict.keys(),
               error=sys.exc_info())
           continue
+        except ProgrammingError, error_value:
+          # 1146 = table does not exist
+          if not use_cache or error_value[0] != 1146:
+            raise
+          try:
+            self.Base_zCreateWorklistTable()
+          except ProgrammingError, error_value:
+            # 1050 = table exists (alarm run just a bit too late)
+            if error_value[0] != 1050:
+              raise
         if src__:
           action_list.append(catalog_brain_result)
         else:
