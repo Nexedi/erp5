@@ -49,9 +49,6 @@ class AttributeUnicityConstraint(PropertyExistenceConstraint):
   property_sheets = PropertyExistenceConstraint.property_sheets + \
                     (PropertySheet.AttributeUnicityConstraint,)
 
-  _message_id_tuple = ('message_invalid_attribute_unicity',)
-
-
   def _checkConsistency(self, obj, fixit=0):
     """Check the object's consistency.
       We will make sure that each non None constraint_definition is 
@@ -83,3 +80,5 @@ class AttributeUnicityConstraint(PropertyExistenceConstraint):
 
     return error_list
 
+  _message_id_tuple = PropertyExistenceConstraint._message_id_tuple + \
+      ('message_invalid_attribute_unicity',)
