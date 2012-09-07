@@ -95,7 +95,7 @@ class CategoryMembershipArityConstraint(ConstraintMixin):
                    max_arity=max_arity)
 
     # Generate an error message
-    if len(portal_type_list) == 0:
+    if len(portal_type_list) != 0:
       if max_arity is None:
         message_id = 'message_arity_with_portal_type_too_small'
       else:
