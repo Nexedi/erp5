@@ -89,3 +89,4 @@ class AccountTypeConstraint(ConstraintMixin):
           break
     return error_list
 
+  _message_id_tuple = ('message_inconsistent_account_type',)
