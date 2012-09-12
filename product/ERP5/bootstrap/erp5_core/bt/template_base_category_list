@@ -16,6 +16,7 @@ destination_project
 destination_section
 destination_trade
 elementary_type
+local_role_group
 mapping
 order
 origin
