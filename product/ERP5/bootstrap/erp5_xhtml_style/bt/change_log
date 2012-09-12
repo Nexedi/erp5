@@ -1,3 +1,6 @@
+2012-9-12 yusei
+* Improve listbox sort feature. Now both ascending arrow and descending arrow are displayed in title column and user can sort in specific order explicitly. User also can sort multiple columns by click without using sort-on-dialog.
+
 2013-01-28 Kazuhiko
 * update RequireJS 2.1.4.
 
