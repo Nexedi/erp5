@@ -3047,7 +3047,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
             k = k[5:]
           elif k == 'role_name':
             k, v = 'id', '; '.join(v)
-          elif k not in ('title', 'description'):
+          elif k not in ('title', 'description', 'categories'):
             k = {'id': 'object_id', # for stable sort
                  'role_base_category': 'base_category',
                  'role_base_category_script_id': 'base_category_script',
@@ -3067,7 +3067,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       xml_data += "\n  <role id='%s'>" % role['id']
       # uniq
       for property in ('title', 'description', 'condition',
-          'base_category_script', 'local_roles_group_id'):
+          'base_category_script'):
         prop_value = role.get(property)
         if prop_value:
           if isinstance(prop_value, str):
@@ -3075,7 +3075,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
           xml_data += "\n   <property id='%s'>%s</property>" % \
               (property, prop_value)
       # multi
-      for property in ('category', 'base_category'):
+      for property in ('categories', 'category', 'base_category'):
         for prop_value in role.get(property, []):
           if isinstance(prop_value, str):
             prop_value = prop_value.decode('utf-8')

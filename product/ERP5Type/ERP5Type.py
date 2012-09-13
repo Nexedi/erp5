@@ -93,7 +93,14 @@ class LocalRoleAssignorMixIn(object):
       local_roles_group_id_group_id = {}
       # Merge results from applicable roles
       for role_generator in self.getFilteredRoleListFor(ob):
-        local_roles_group_id = role_generator.getProperty('local_roles_group_id', '')
+        local_roles_group_id = ''
+        if getattr(role_generator, 'getLocalRoleGroupValue', None) is not None:
+          # only some role generators like 'Role Information' support it
+          local_role_group = role_generator.getLocalRoleGroupValue()
+          if local_role_group is not None:
+            # role definitions use category to classify different types of local roles
+            # so use their categories' reference
+            local_roles_group_id = local_role_group.getReference() or local_role_group.getId()
         for group_id, role_list \
                 in role_generator.getLocalRolesFor(ob, user_name).iteritems():
           group_id_role_dict.setdefault(group_id, set()).update(role_list)

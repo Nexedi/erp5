@@ -98,6 +98,12 @@ CREATE TABLE alternate_roles_and_users (
       ' | security_uid',
       'Alternate | alternate_security_uid', )
 
+    # add category
+    self.portal.portal_categories.local_role_group.newContent(
+      portal_type='Category', 
+      reference = 'Alternate',
+      id = 'Alternate')
+
     # configure security on person, each user will be able to see his own
     # person thanks to an Auditor role on "Alternate" local roles group id.
     self.portal.portal_types.Person.newContent(
@@ -105,7 +111,7 @@ CREATE TABLE alternate_roles_and_users (
       role_name='Auditor',
       role_base_category_script_id='ERP5Type_getSecurityCategoryFromSelf',
       role_base_category='agent',
-      local_roles_group_id='Alternate')
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl())
 
     self.portal.portal_caches.clearAllCache()
     self.tic()

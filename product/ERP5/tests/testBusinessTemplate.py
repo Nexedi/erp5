@@ -6537,6 +6537,11 @@ class TestBusinessTemplate(BusinessTemplateMixin):
       ' | security_uid',
       'Alternate | alternate_security_uid',
     )
+    # add category
+    self.portal.portal_categories.local_role_group.newContent(
+      portal_type='Category', 
+      reference = 'Alternate',
+      id = 'Alternate')
 
     types_tool = self.portal.portal_types
     object_type = types_tool.newContent('Geek Object', 'Base Type',
@@ -6558,7 +6563,7 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     self.tic()
 
     object_type.newContent(portal_type='Role Information',
-                           local_roles_group_id='Alternate',
+                           local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl(),
                            role_name_list=('Assignee', ))
 
     bt = self.portal.portal_templates.newContent(
@@ -6588,7 +6593,8 @@ class TestBusinessTemplate(BusinessTemplateMixin):
     new_bt.install()
     try:
       role, = object_type.getRoleInformationList()
-      self.assertEquals('Alternate', role.getLocalRolesGroupId())
+      self.assertEquals(self.portal.portal_categories.local_role_group.Alternate, 
+                        role.getLocalRoleGroupValue())
       path = self.portal.geek_module['1']
       self.assertEquals([('group', ['Assignee'],)], [item for item in
             path.__ac_local_roles__.items() if item[1] != ['Owner']])
