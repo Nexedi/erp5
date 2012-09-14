@@ -7,6 +7,12 @@
     <pickle>
       <dictionary>
         <item>
+            <key> <string>_col</string> </key>
+            <value>
+              <tuple/>
+            </value>
+        </item>
+        <item>
             <key> <string>allow_simple_one_argument_traversal</string> </key>
             <value>
               <none/>
@@ -14,7 +20,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>security_roles_list</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -30,7 +36,9 @@
         </item>
         <item>
             <key> <string>connection_hook</string> </key>
-            <value> <string></string> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>connection_id</string> </key>
@@ -38,7 +46,7 @@
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>z_search_security</string> </value>
+            <value> <string>z_create_roles_and_users</string> </value>
         </item>
         <item>
             <key> <string>max_cache_</string> </key>
@@ -46,22 +54,19 @@
         </item>
         <item>
             <key> <string>max_rows_</string> </key>
-            <value> <int>0</int> </value>
+            <value> <int>1000</int> </value>
         </item>
         <item>
             <key> <string>src</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-SELECT\n
-  DISTINCT uid\n
-FROM \n
-  roles_and_users\n
-WHERE \n
-  allowedRolesAndUsers \n
-  IN (<dtml-in security_roles_list><dtml-var sequence-item><dtml-if sequence-end><dtml-else>,</dtml-if></dtml-in>)\n
-
-
-]]></string> </value>
+            <value> <string>CREATE TABLE roles_and_users (\n
+  uid INT UNSIGNED,\n
+  local_roles_group_id VARCHAR(255) default \'\',\n
+  allowedRolesAndUsers VARCHAR(255),\n
+  KEY `uid` (`uid`),\n
+  KEY `allowedRolesAndUsers` (`allowedRolesAndUsers`),\n
+  KEY `local_roles_group_id` (`local_roles_group_id`)\n
+)  ENGINE=InnoDB;\n
+</string> </value>
         </item>
         <item>
             <key> <string>title</string> </key>

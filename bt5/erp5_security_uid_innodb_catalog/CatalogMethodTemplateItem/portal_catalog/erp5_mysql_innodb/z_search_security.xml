@@ -53,7 +53,7 @@
             <value> <string encoding="cdata"><![CDATA[
 
 SELECT\n
-  DISTINCT uid\n
+  DISTINCT uid, local_roles_group_id\n
 FROM \n
   roles_and_users\n
 WHERE \n

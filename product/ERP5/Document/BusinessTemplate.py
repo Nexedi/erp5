@@ -545,7 +545,7 @@ class BaseTemplateItem(Implicit, Persistent):
     classname = klass.__name__
 
     attr_set = set(('_dav_writelocks', '_filepath', '_owner', 'last_id', 'uid',
-                    '__ac_local_roles__'))
+                    '__ac_local_roles__', '__ac_local_roles_group_id_dict__'))
     if export:
       if not keep_workflow_history:
         attr_set.add('workflow_history')
@@ -3047,11 +3047,12 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
             k = k[5:]
           elif k == 'role_name':
             k, v = 'id', '; '.join(v)
-          elif k not in ('title', 'description'):
+          elif k not in ('title', 'description', 'categories'):
             k = {'id': 'object_id', # for stable sort
                  'role_base_category': 'base_category',
                  'role_base_category_script_id': 'base_category_script',
-                 'role_category': 'category'}.get(k)
+                 'role_category': 'category',
+                 'local_roles_group_id': 'local_roles_group_id'}.get(k)
             if not k:
               continue
           type_role_dict[k] = v
@@ -3074,7 +3075,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
           xml_data += "\n   <property id='%s'>%s</property>" % \
               (property, prop_value)
       # multi
-      for property in ('category', 'base_category'):
+      for property in ('categories', 'category', 'base_category'):
         for prop_value in role.get(property, []):
           if isinstance(prop_value, str):
             prop_value = prop_value.decode('utf-8')
@@ -3161,7 +3162,7 @@ class PortalTypeRolesTemplateItem(BaseTemplateItem):
       path = 'portal_types/%s' % roles_path.split('/', 1)[1]
       try:
         obj = p.unrestrictedTraverse(path)
-        setattr(obj, '_roles', [])
+        obj.manage_delObjects([x.id for x in obj.getRoleInformationList()])
       except (NotFound, KeyError):
         pass
 
@@ -4360,6 +4361,12 @@ class CatalogLocalRoleKeyTemplateItem(CatalogUniqueKeyTemplateItemBase):
   key_list_title = 'local_role_key_list'
   key_title = 'LocalRole key'
 
+class CatalogSecurityUidColumnTemplateItem(CatalogSearchKeyTemplateItem):
+  key_list_attr = 'sql_catalog_security_uid_columns'
+  key_list_title = 'security_uid_column_list'
+  key_title = 'Security Uid Columns'
+
+
 class MessageTranslationTemplateItem(BaseTemplateItem):
 
   def build(self, context, **kw):
@@ -4532,13 +4539,27 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       obj = p.unrestrictedTraverse(path.split('/', 1)[1])
       local_roles_dict = getattr(obj, '__ac_local_roles__',
                                         {}) or {}
-      self._objects[path] = (local_roles_dict, )
+      local_roles_group_id_dict = getattr(
+        obj, '__ac_local_roles_group_id_dict__', {}) or {}
+      self._objects[path] = (local_roles_dict, local_roles_group_id_dict)
 
   # Function to generate XML Code Manually
   def generateXml(self, path=None):
-    local_roles_dict = self._objects[path][0]
-    # local roles
+    # With local roles groups id, self._object contains for each path a tuple
+    # containing the dict of local roles and the dict of local roles group ids.
+    # Before it was only containing the dict of local roles. This method is
+    # also used on installed business templates to show a diff during
+    # installation, so it might be called on old format objects.
+    if len(self._objects[path]) == 2:
+      # new format
+      local_roles_dict, local_roles_group_id_dict = self._objects[path]
+    else:
+      # old format, before local roles group id
+      local_roles_group_id_dict = dict()
+      local_roles_dict, = self._objects[path]
+
     xml_data = '<local_roles_item>'
+    # local roles
     xml_data += '\n <local_roles>'
     for key in sorted(local_roles_dict):
       xml_data += "\n  <role id='%s'>" %(key,)
@@ -4547,6 +4568,20 @@ class LocalRolesTemplateItem(BaseTemplateItem):
         xml_data += "\n   <item>%s</item>" %(item,)
       xml_data += '\n  </role>'
     xml_data += '\n </local_roles>'
+
+    if local_roles_group_id_dict:
+      # local roles group id dict (not included by default to be stable with
+      # old bts)
+      xml_data += '\n <local_roles_group_id>'
+      for principal, local_roles_group_id_list in sorted(local_roles_group_id_dict.items()):
+        xml_data += "\n  <principal id='%s'>" % escape(principal)
+        for local_roles_group_id in local_roles_group_id_list:
+          for item in local_roles_group_id:
+            xml_data += "\n    <local_roles_group_id>%s</local_roles_group_id>" % \
+                escape(item)
+        xml_data += "\n  </principal>"
+      xml_data += '\n </local_roles_group_id>'
+
     xml_data += '\n</local_roles_item>'
     if isinstance(xml_data, unicode):
       xml_data = xml_data.encode('utf8')
@@ -4571,7 +4606,15 @@ class LocalRolesTemplateItem(BaseTemplateItem):
       id = role.get('id')
       item_type_list = [item.text for item in role]
       local_roles_dict[id] = item_type_list
-    self._objects['local_roles/%s' % (file_name[:-4],)] = (local_roles_dict, )
+
+    # local roles group id
+    local_roles_group_id_dict = {}
+    for principal in xml.findall('//principal'):
+      local_roles_group_id_dict[principal.get('id')] = set([tuple(
+        [group_id.text for group_id in
+            principal.findall('./local_roles_group_id')])])
+    self._objects['local_roles/%s' % (file_name[:-4],)] = (
+      local_roles_dict, local_roles_group_id_dict)
 
   def install(self, context, trashbin, **kw):
     update_dict = kw.get('object_to_update')
@@ -4585,8 +4628,22 @@ class LocalRolesTemplateItem(BaseTemplateItem):
             continue
         path = roles_path.split('/')[1:]
         obj = p.unrestrictedTraverse(path)
-        local_roles_dict = self._objects[roles_path][0]
+        # again we might be installing an business template in format before
+        # existance of local roles group id.
+        if len(self._objects[roles_path]) == 2:
+          local_roles_dict, local_roles_group_id_dict = self._objects[roles_path]
+        else:
+          local_roles_group_id_dict = dict()
+          local_roles_dict, = self._objects[roles_path]
         setattr(obj, '__ac_local_roles__', local_roles_dict)
+        if local_roles_group_id_dict:
+          setattr(obj, '__ac_local_roles_group_id_dict__',
+                  local_roles_group_id_dict)
+          # we try to have __ac_local_roles_group_id_dict__ set only if
+          # it is actually defining something else than default
+        elif getattr(aq_base(obj), '__ac_local_roles_group_id_dict__',
+                    None) is not None:
+          delattr(obj, '__ac_local_roles_group_id_dict__')
         obj.reindexObject()
 
   def uninstall(self, context, object_path=None, **kw):
@@ -4748,6 +4805,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
       '_catalog_scriptable_key_item',
       '_catalog_role_key_item',
       '_catalog_local_role_key_item',
+      '_catalog_security_uid_column_item',
     ]
 
     def __init__(self, *args, **kw):
@@ -4910,6 +4968,14 @@ Business Template is a set of definitions, such as skins, portal types and categ
       self._catalog_local_role_key_item = \
           CatalogLocalRoleKeyTemplateItem(
                self.getTemplateCatalogLocalRoleKeyList())
+      try:
+        self._catalog_security_uid_column_item = \
+          CatalogSecurityUidColumnTemplateItem(
+               self.getTemplateCatalogSecurityUidColumnList())
+      except AttributeError:
+        # be backwards compatible with old zope instances which
+        # do not contain recent version of erp5_property_sheets
+        pass
 
     security.declareProtected(Permissions.ManagePortal, 'build')
     def build(self, no_action=0):
@@ -5523,7 +5589,12 @@ Business Template is a set of definitions, such as skins, portal types and categ
             (SimpleItem.SimpleItem,), {'__module__': module_id}))
 
       for item_name in self._item_name_list:
-        getattr(self, item_name).importFile(bta)
+        item_object = getattr(self, item_name, None)
+        # this check is due to backwards compatability when there can be a
+        # difference between install erp5_property_sheets (esp. BusinessTemplate
+        # property sheet) 
+        if item_object is not None:
+          item_object.importFile(bta)
 
       # Remove temporary modules created above to allow import of real modules
       # (during the installation).
@@ -5631,6 +5702,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
         'CatalogScriptableKey' : '_catalog_scriptable_key_item',
         'CatalogRoleKey' : '_catalog_role_key_item',
         'CatalogLocalRoleKey' : '_catalog_local_role_key_item',
+        'CatalogSecurityUidColumn' : '_catalog_security_uid_column_item',
         }
 
       object_id = REQUEST.object_id
@@ -5693,6 +5765,7 @@ Business Template is a set of definitions, such as skins, portal types and categ
                      '_catalog_scriptable_key_item',
                      '_catalog_role_key_item',
                      '_catalog_local_role_key_item',
+                     '_catalog_security_uid_column_item',
                      '_portal_type_allowed_content_type_item',
                      '_portal_type_hidden_content_type_item',
                      '_portal_type_property_sheet_item',

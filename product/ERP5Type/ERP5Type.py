@@ -89,8 +89,26 @@ class LocalRoleAssignorMixIn(object):
         else:
           user_name = getSecurityManager().getUser().getId()
 
-      group_id_role_dict = self.getLocalRolesFor(ob, user_name)
-
+      group_id_role_dict = {}
+      local_roles_group_id_group_id = {}
+      # Merge results from applicable roles
+      for role_generator in self.getFilteredRoleListFor(ob):
+        local_roles_group_id = ''
+        if getattr(role_generator, 'getLocalRoleGroupValue', None) is not None:
+          # only some role generators like 'Role Information' support it
+          local_role_group = role_generator.getLocalRoleGroupValue()
+          if local_role_group is not None:
+            # role definitions use category to classify different types of local roles
+            # so use their categories' reference
+            local_roles_group_id = local_role_group.getReference() or local_role_group.getId()
+        for group_id, role_list \
+                in role_generator.getLocalRolesFor(ob, user_name).iteritems():
+          group_id_role_dict.setdefault(group_id, set()).update(role_list)
+          if local_roles_group_id:
+            for role in role_list:
+              # Feed local_roles_group_id_group_id with local roles assigned to a group
+              local_roles_group_id_group_id.setdefault(local_roles_group_id, set()).update(((group_id, role),))
+  
       ## Update role assignments to groups
       # Save the owner
       for group, role_list in (ob.__ac_local_roles__ or {}).iteritems():
@@ -101,23 +119,16 @@ class LocalRoleAssignorMixIn(object):
       for group, role_list in group_id_role_dict.iteritems():
         if role_list:
           ac_local_roles[group] = list(role_list)
+
+      if local_roles_group_id_group_id:
+        ob.__ac_local_roles_group_id_dict__ = local_roles_group_id_group_id
+      elif getattr(aq_base(ob),
+            '__ac_local_roles_group_id_dict__', None) is not None:
+        delattr(ob, '__ac_local_roles_group_id_dict__')
+
       ## Make sure that the object is reindexed
       if reindex:
         ob.reindexObjectSecurity()
-
-    security.declarePrivate("getLocalRolesFor")
-    def getLocalRolesFor(self, ob, user_name=None):
-      """Compute the security that should be applied on an object
-
-      Returned value is a dict: {groud_id: role_name_set, ...}
-      """
-      group_id_role_dict = {}
-      # Merge results from applicable roles
-      for role in self.getFilteredRoleListFor(ob):
-        for group_id, role_list \
-        in role.getLocalRolesFor(ob, user_name).iteritems():
-          group_id_role_dict.setdefault(group_id, set()).update(role_list)
-      return group_id_role_dict
 
     security.declarePrivate('getFilteredRoleListFor')
     def getFilteredRoleListFor(self, ob=None):

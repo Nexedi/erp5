@@ -14,8 +14,7 @@
         </item>
         <item>
             <key> <string>arguments_src</string> </key>
-            <value> <string>security_uid\r\n
-optimised_roles_and_users</string> </value>
+            <value> <string>optimised_roles_and_users</string> </value>
         </item>
         <item>
             <key> <string>cache_time_</string> </key>
@@ -56,16 +55,14 @@ optimised_roles_and_users</string> </value>
             <value> <string encoding="cdata"><![CDATA[
 
 <dtml-let row_list="[]">\n
-  <dtml-in prefix="loop" expr="_.range(_.len(security_uid))">\n
-    <dtml-if expr="optimised_roles_and_users[loop_item]">\n
-      <dtml-in prefix="role" expr="optimised_roles_and_users[loop_item]">\n
-        <dtml-call expr="row_list.append([security_uid[loop_item], role_item])">\n
-      </dtml-in>\n
-    </dtml-if>\n
+  <dtml-in prefix="loop" expr="_.range(_.len(optimised_roles_and_users))">\n
+    <dtml-in prefix="role" expr="optimised_roles_and_users[loop_item]">\n
+      <dtml-call expr="row_list.append([role_item[0], role_item[2]])">\n
+    </dtml-in>\n
   </dtml-in>\n
   <dtml-if expr="row_list">\n
 INSERT INTO\n
-  roles_and_users\n
+  roles_and_users(uid, allowedRolesAndUsers)\n
 VALUES\n
     <dtml-in prefix="row" expr="row_list">\n
 (<dtml-sqlvar expr="row_item[0]" type="string">, <dtml-sqlvar expr="row_item[1]" type="string">)\n

@@ -36,6 +36,7 @@ from Persistence import Persistent
 from Products.ERP5Type.Globals import PersistentMapping
 from itertools import izip
 from MySQLdb import ProgrammingError, OperationalError
+from DateTime import DateTime
 
 def DCWorkflowDefinition_notifyWorkflowMethod(self, ob, transition_list, args=None, kw=None):
     '''
@@ -89,7 +90,6 @@ DCWorkflowDefinition.notifySuccess = DCWorkflowDefinition_notifySuccess
 
 WORKLIST_METADATA_KEY = 'metadata'
 SECURITY_PARAMETER_ID = 'local_roles'
-SECURITY_COLUMN_ID = 'security_uid'
 COUNT_COLUMN_TITLE = 'count'
 
 class ExclusionList(list):
@@ -145,7 +145,7 @@ def updateWorklistSetDict(worklist_set_dict, workflow_worklist_key, valid_criter
       [workflow_worklist_key] = valid_criterion_dict
 
 def groupWorklistListByCondition(worklist_dict, sql_catalog,
-                                 getSecurityUidListAndRoleColumnDict=None):
+                                 getSecurityUidDictAndRoleColumnDict=None):
   """
     Get a list of dict of WorklistVariableMatchDict grouped by compatible
     conditions.
@@ -185,7 +185,7 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
   for workflow_id, worklist in worklist_dict.iteritems():
     for worklist_id, worklist_match_dict in worklist.iteritems():
       workflow_worklist_key = '/'.join((workflow_id, worklist_id))
-      if getSecurityUidListAndRoleColumnDict is None:
+      if getSecurityUidDictAndRoleColumnDict is None:
         valid_criterion_dict, metadata = getValidCriterionDict(
           worklist_match_dict=worklist_match_dict,
           sql_catalog=sql_catalog,
@@ -201,15 +201,18 @@ def groupWorklistListByCondition(worklist_dict, sql_catalog,
         security_kw = {}
         if len(security_parameter):
           security_kw[SECURITY_PARAMETER_ID] = security_parameter
-        uid_list, role_column_dict, local_role_column_dict = \
-            getSecurityUidListAndRoleColumnDict(**security_kw)
+        uid_dict, role_column_dict, local_role_column_dict = \
+            getSecurityUidDictAndRoleColumnDict(**security_kw)
 
         for key, value in local_role_column_dict.items():
           worklist_match_dict[key] = [value]
 
-        if len(uid_list):
-          uid_list.sort()
-          role_column_dict[SECURITY_COLUMN_ID] = uid_list
+        catalog_security_uid_groups_columns_dict = \
+            sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict()
+        for local_roles_group_id, uid_list in uid_dict.iteritems():
+          role_column_dict[
+            catalog_security_uid_groups_columns_dict[local_roles_group_id]] = uid_list
+
         # Make sure every item is a list - or a tuple
         for security_column_id in role_column_dict.iterkeys():
           value = role_column_dict[security_column_id]
@@ -271,6 +274,8 @@ def generateNestedQuery(priority_list, criterion_dict,
                         **{my_criterion_id: criterion_value})
           if isinstance(criterion_value, ExclusionTuple):
             query = NegatedQuery(query)
+            query = ComplexQuery(operator='OR',
+                      *(query, Query(**{my_criterion_id: None})))
           append(ComplexQuery(query, subcriterion_query, operator='AND'))
   else:
     possible_value_list = tuple()
@@ -296,6 +301,8 @@ def generateNestedQuery(priority_list, criterion_dict,
     if len(impossible_value_list):
       query = Query(operator='IN', **{my_criterion_id: impossible_value_list})
       query = NegatedQuery(query)
+      query = ComplexQuery(operator='OR',
+                *(query, Query(**{my_criterion_id: None})))
       value_query_list.append(query)
     append(ComplexQuery(operator='AND', *value_query_list))
   if len(query_list):
@@ -334,6 +341,17 @@ def getWorklistListQuery(grouped_worklist_dict):
   assert COUNT_COLUMN_TITLE not in total_criterion_id_dict
   return (total_criterion_id_list, query)
 
+# XXX: see ZMySQLDA/db.py:DB.defs
+# This dict is used to tell which cast to apply to worklist parameters to get
+# values comparable with SQL result content.
+_sql_cast_dict = {
+  'i': long,
+  'l': long,
+  'n': float,
+  'd': DateTime,
+}
+_sql_cast_fallback = str
+
 def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
   """
     Return a dict regrouping each worklist's result, extracting it from
@@ -354,8 +372,8 @@ def sumCatalogResultByWorklist(grouped_worklist_dict, catalog_result):
   if len(catalog_result) > 0:
     # Transtype all worklist definitions where needed
     criterion_id_list = []
-    class_dict = dict(((name, value.__class__) for name, value in \
-                       izip(catalog_result.names(), catalog_result[0])))
+    class_dict = dict(((name, _sql_cast_dict.get(x['type'], _sql_cast_fallback))
+      for name, x in catalog_result.data_dictionary().iteritems()))
     for criterion_dict in grouped_worklist_dict.itervalues():
       for criterion_id, criterion_value_list in criterion_dict.iteritems():
         if type(criterion_value_list) is not ExclusionList:
@@ -462,8 +480,8 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
     else:
       search_result = portal_catalog.unrestrictedSearchResults
       select_expression_prefix = 'count(*) as %s' % (COUNT_COLUMN_TITLE, )
-    getSecurityUidListAndRoleColumnDict = \
-      portal_catalog.getSecurityUidListAndRoleColumnDict
+    getSecurityUidDictAndRoleColumnDict = \
+      portal_catalog.getSecurityUidDictAndRoleColumnDict
     security_query_cache_dict = {}
     def _getWorklistActionList():
       worklist_result_dict = {}
@@ -474,8 +492,8 @@ def WorkflowTool_listActions(self, info=None, object=None, src__=False):
         groupWorklistListByCondition(
           worklist_dict=worklist_dict,
           sql_catalog=sql_catalog,
-          getSecurityUidListAndRoleColumnDict=\
-            getSecurityUidListAndRoleColumnDict)
+          getSecurityUidDictAndRoleColumnDict=\
+            getSecurityUidDictAndRoleColumnDict)
       if src__:
         action_list = []
       for grouped_worklist_dict in worklist_list_grouped_by_condition:
@@ -587,7 +605,8 @@ def WorkflowTool_refreshWorklistCache(self):
       sql_catalog = portal_catalog.getSQLCatalog()
       table_column_id_set = ImmutableSet(
           [COUNT_COLUMN_TITLE] + self.Base_getWorklistTableColumnIDList())
-      security_column_id_list = ['security_uid'] + \
+      security_column_id_list = list(
+        sql_catalog.getSQLCatalogSecurityUidGroupsColumnsDict().values()) + \
         [x[1] for x in sql_catalog.getSQLCatalogRoleKeysList()] + \
         [x[1] for x in sql_catalog.getSQLCatalogLocalRoleKeysList()]
       (worklist_list_grouped_by_condition, worklist_metadata) = \
