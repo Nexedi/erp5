@@ -81,7 +81,7 @@
   PRIMARY KEY (`uid`, `order_id`),\n
   KEY `section_uid` (`section_uid`)\n
   -- TODO: keys\n
-) TYPE=InnoDB\n
+) ENGINE=InnoDB\n
 </string> </value>
         </item>
         <item>
