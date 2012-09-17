@@ -1222,7 +1222,7 @@ class TemplateTool (BaseTool):
         install_dependency=False):
       """Deprecated.
       """
-      DeprecationWarning('getInstalledBusinessTemplatesList is deprecated; Use getInstalledBusinessTemplateList instead.', DeprecationWarning)
+      DeprecationWarning('installBusinessTemplatesFromRepositories is deprecated; Use self.installBusinessTemplateListFromRepository instead.', DeprecationWarning)
       return self.installBusinessTemplateListFromRepository(template_list,
         only_newer, update_catalog, activate, install_dependency)
 
