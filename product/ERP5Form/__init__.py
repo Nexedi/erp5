@@ -186,7 +186,7 @@ def initialize( context ):
 ## Initialize security ##
 ModuleSecurityInfo('Products.ERP5Form.Report').declarePublic('ReportSection',)
 ModuleSecurityInfo('Products.ERP5Form.MultiRelationField').declarePublic('SUB_FIELD_ID',)
-ModuleSecurityInfo('Products.ERP5Form.Selection').declarePublic('Selection',)
+allow_module('Products.ERP5Form.Selection')
 import Selection
 allow_class(Selection)
 
