@@ -72,6 +72,18 @@
             </value>
         </item>
         <item>
+            <key> <string>acquisition_base_category</string> </key>
+            <value>
+              <tuple>
+                <string>parent</string>
+              </tuple>
+            </value>
+        </item>
+        <item>
+            <key> <string>acquisition_portal_type</string> </key>
+            <value> <string>python:[\'Computer\']</string> </value>
+        </item>
+        <item>
             <key> <string>description</string> </key>
             <value>
               <none/>
