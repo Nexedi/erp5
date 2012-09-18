@@ -3,7 +3,7 @@
 
 <h2>Edit Extension Class: <dtml-var class_id>
   <dtml-if expr="hasattr(this(), 'externalEditLink_')">
-    <dtml-var expr="externalEditLink_(this()['Extensions'][class_id])">
+    <dtml-var expr="externalEditLink_(this()._getOb('Extensions')[class_id])">
   </dtml-if></h2>
 <form method="POST" action="<dtml-var absolute_url>">
 <input type="hidden" name=":default_method" value="changeExtensionEditingPreferences">
