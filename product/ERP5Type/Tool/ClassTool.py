@@ -224,7 +224,7 @@ if allowClassTool():
         self.__importer(class_id)
         self.portal_types.resetDynamicDocumentsOnceAtTransactionBoundary()
       
-    def __getitem__(self, key, default=_MARKER ):
+    def _getOb(self, key, default=_MARKER ):
       if key in self.objectIds():
         return FileProxy(self, key).__of__(self)
       # maybe the file has just been uploaded, and is still in the temporary
@@ -240,7 +240,7 @@ if allowClassTool():
       # be read yet, because the transaction is not commited.
       self._v_created = {name: True}
       self.write(name, body, create=True)
-      return self.__getitem__(name)
+      return self._getOb(name)
 
     def _verifyObjectPaste(self, ob, validate_src=True):
       # we only allow FileProxy (this is used in PUT)
@@ -262,12 +262,12 @@ if allowClassTool():
       security = ClassSecurityInfo()
     
       # we set _folder_handler to OFS_HANDLER to have default behaviour of
-      # using objectIds and __getitem__
+      # using objectIds and _getOb
       _folder_handler = OFS_HANDLER
       def objectIds(self, spec=None):
         return ('PropertySheet', 'Document', 'Constraint', 'Extensions', 'tests')
 
-      def __getitem__(self, key, default=_MARKER):
+      def _getOb(self, key, default=_MARKER):
         from Products.ERP5Type.Utils import importLocalPropertySheet
         from Products.ERP5Type.Utils import importLocalDocument
         from Products.ERP5Type.Utils import importLocalConstraint
