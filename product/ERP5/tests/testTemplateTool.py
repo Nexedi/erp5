@@ -50,7 +50,10 @@ class TestTemplateTool(ERP5TypeTestCase):
   test_tool_id = 'test_portal_templates'
 
   def getBusinessTemplateList(self):
-    return ('erp5_core_proxy_field_legacy', 'erp5_base', 'erp5_csv_style')
+    return ('erp5_core_proxy_field_legacy',
+            'erp5_full_text_myisam_catalog',
+            'erp5_base',
+            'erp5_csv_style')
 
   def getTitle(self):
     return "Template Tool"
@@ -69,8 +72,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.tic()
     mark_replaced_bt_list = ["erp5_odt_style", "erp5_pdm", 'erp5_accounting',
            'erp5_workflow', 'erp5_configurator', 'erp5_configurator_ung',
-           'erp5_ingestion_mysql_innodb_catalog', "erp5_configurator_standard",
-           'erp5_full_text_myisam_catalog']
+           'erp5_ingestion_mysql_innodb_catalog', "erp5_configurator_standard"]
     for bt_name in mark_replaced_bt_list:
       bt = self.templates_tool.getInstalledBusinessTemplate(bt_name)
       if (bt is not None) and bt.getInstallationState() in ['installed',
@@ -465,7 +467,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     self.assertEquals(bt, None)
     operation_log = \
       self.templates_tool.installBusinessTemplateListFromRepository([bt5_name])
-    self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
+    self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
     bt = self.templates_tool.getInstalledBusinessTemplate(bt5_name, strict=True)
     self.assertNotEquals(bt, None)
     self.assertEquals(bt.getTitle(), bt5_name)
@@ -479,7 +481,7 @@ class TestTemplateTool(ERP5TypeTestCase):
     operation_log = self.templates_tool.installBusinessTemplateListFromRepository(
           [bt5_name], only_newer=False)
 
-    self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
+    self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
     bt_new = self.templates_tool.getInstalledBusinessTemplate(bt5_name,
                                                               strict=True)
     self.assertNotEquals(bt.getId(), bt_new.getId())
@@ -518,21 +520,10 @@ class TestTemplateTool(ERP5TypeTestCase):
       self.checkFolderReindexAllActivityPresense()
       self.tic()
 
-      bt5_name = 'erp5_full_text_myisam_catalog'
-      operation_log = template_tool.installBusinessTemplateListFromRepository(
-                 [bt5_name], only_newer=False)
-      self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
-      bt = template_tool.getInstalledBusinessTemplate(bt5_name)
-      self.assertNotEquals(bt, None)
-      self.assertEquals(bt.getTitle(), bt5_name)
-      self.commit()
-      self.checkFolderReindexAllActivityPresense()
-      self.tic()
-
       # Install again should not force catalog to be updated
       operation_log = template_tool.installBusinessTemplateListFromRepository(
                 [bt5_name], only_newer=False)
-      self.assertTrue("Installed %s with" % bt5_name in operation_log[0])
+      self.assertTrue("Installed %s with" % bt5_name in operation_log[-1])
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
       self.assertNotEquals(bt, None)
       self.assertEquals(bt.getTitle(), bt5_name)
@@ -575,7 +566,9 @@ class TestTemplateTool(ERP5TypeTestCase):
     """
     bt5_name_list = ['erp5_configurator_ung', 'erp5_configurator_standard']
     template_tool = self.portal.portal_templates
-    repository = template_tool.getRepositoryList()[0]
+    for repos in template_tool.getRepositoryList():
+      if "bootstrap" not in repos:
+        repository = repos
     self.tic()
     for bt5_name in bt5_name_list:
       bt = template_tool.getInstalledBusinessTemplate(bt5_name)
@@ -616,18 +609,9 @@ class TestTemplateTool(ERP5TypeTestCase):
   def test_sortBusinessTemplateList(self):
     """Check sorting of a list of business template by their dependencies
     """
-    repository = "http://www.erp5.org/dists/snapshot/bt5/"
     template_tool = self.portal.portal_templates
 
-    # XXX This test requires the usage of the public repository due ".bt5" usage
-    if repository not in template_tool.getRepositoryList():
-       self.portal.portal_templates.updateRepositoryBusinessTemplateList([repository])
-
     bt5list = template_tool.resolveBusinessTemplateListDependency(('erp5_credential',))
-    # because erp5_base is already installed, it is not returned
-    # by resolveBusinessTemplateListDependency, so append it manualy
-    bt5list.append((repository, "erp5_base.bt5"))
-
     # add some entropy by disorder bt5list returned by
     # resolveBusinessTemplateListDependency
     position_list = range(len(bt5list))
@@ -639,19 +623,27 @@ class TestTemplateTool(ERP5TypeTestCase):
 
     ordered_list = template_tool.sortBusinessTemplateList(new_bt5_list)
     # group orders
-    first_group =  range(0, 2)
-    second_group = range(2, 4)
-    third_group = range(4, 7)
-    fourth_group = range(7, 8)
-    expected_position_dict = dict((('erp5_ingestion_mysql_innodb_catalog.bt5',
-                                    first_group),
-                                   ('erp5_base.bt5', first_group),
-                                   ('erp5_jquery.bt5', second_group),
-                                   ('erp5_ingestion.bt5', second_group),
-                                   ('erp5_xhtml_jquery_style.bt5', third_group),
-                                   ('erp5_web.bt5', third_group),
-                                   ('erp5_crm.bt5', third_group),
-                                   ('erp5_credential.bt5', fourth_group)))
+    first_group = range(0, 6)
+    second_group =  range(6, 8)
+    third_group = range(8, 10)
+    fourth_group = range(10, 13)
+    fifth_group = range(13, 14)
+
+    expected_position_dict = dict((('erp5_property_sheets', first_group),
+                                   ('erp5_core_proxy_field_legacy', first_group),
+                                   ('erp5_mysql_innodb_catalog', first_group),
+                                   ('erp5_core', first_group),
+                                   ('erp5_full_text_myisam_catalog', first_group),
+                                   ('erp5_xhtml_style', first_group),
+                                   ('erp5_ingestion_mysql_innodb_catalog', second_group),
+                                   ('erp5_base', second_group),
+                                   ('erp5_jquery', third_group),
+                                   ('erp5_ingestion', third_group),
+                                   ('erp5_xhtml_jquery_style', fourth_group),
+                                   ('erp5_web', fourth_group),
+                                   ('erp5_crm', fourth_group),
+                                   ('erp5_credential', fifth_group)))
+
     for bt in ordered_list:
       self.assertTrue(ordered_list.index(bt) in expected_position_dict[bt[1]],
             'Expected positions for %r: %r, got %r' % (bt[1], 
