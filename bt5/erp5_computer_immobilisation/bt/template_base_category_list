@@ -1,4 +1,5 @@
 allocation_scope
+capacity_scope
 cpu_core
 cpu_frequency
 cpu_type
