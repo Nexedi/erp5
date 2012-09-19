@@ -35,6 +35,7 @@ from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 from AccessControl import ModuleSecurityInfo
 import sys, Permissions
 from Products.PythonScripts.Utility import allow_class
+from AccessControl.SecurityInfo import allow_module
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(),
                                   permissions_module = Permissions)
