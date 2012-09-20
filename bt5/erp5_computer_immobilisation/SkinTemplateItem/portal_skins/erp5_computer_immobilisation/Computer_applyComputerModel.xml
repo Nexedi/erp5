@@ -62,7 +62,6 @@ if computer_model is None:\n
   result = False\n
 else :\n
   category_list = [\n
-    \'allocation_scope\',\n
     \'cpu_core\',\n
     \'cpu_frequency\',\n
     \'cpu_type\',\n
@@ -71,7 +70,6 @@ else :\n
     \'local_area_network_type\',\n
     \'memory_size\',\n
     \'memory_type\',\n
-    \'product_line\',\n
     \'role\',\n
     \'storage_capacity\',\n
     \'storage_interface\',\n
