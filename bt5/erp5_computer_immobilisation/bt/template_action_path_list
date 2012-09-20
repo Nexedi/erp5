@@ -4,6 +4,7 @@ Computer Module | view
 Computer Network Module | view
 Computer Network | view
 Computer Partition | view
+Computer | apply_computer_model
 Computer | computer_partition
 Computer | tcp_port_number
 Computer | view
