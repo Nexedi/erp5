@@ -97,6 +97,13 @@
                       <list>
                         <string>my_title</string>
                         <string>my_reference</string>
+                        <string>my_group</string>
+                        <string>my_cpu_core</string>
+                        <string>my_cpu_frequency</string>
+                        <string>my_cpu_type</string>
+                        <string>my_local_area_network_type</string>
+                        <string>my_memory_size</string>
+                        <string>my_memory_type</string>
                       </list>
                     </value>
                 </item>
@@ -104,6 +111,11 @@
                     <key> <string>right</string> </key>
                     <value>
                       <list>
+                        <string>my_storage_capacity</string>
+                        <string>my_storage_interface</string>
+                        <string>my_storage_redundancy</string>
+                        <string>my_storage_technology</string>
+                        <string>my_wide_area_network_type</string>
                         <string>my_translated_validation_state_title</string>
                       </list>
                     </value>
