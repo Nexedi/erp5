@@ -75,7 +75,8 @@ else :\n
     \'role\',\n
     \'storage_capacity\',\n
     \'storage_interface\',\n
-    \'storage_redundancy\'\n
+    \'storage_redundancy\',\n
+    \'wide_area_network_type\'\n
   ]\n
 \n
   new_category_dict = {}\n
