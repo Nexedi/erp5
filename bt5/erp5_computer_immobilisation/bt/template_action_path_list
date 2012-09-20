@@ -3,9 +3,11 @@ Computer Model | view
 Computer Module | view
 Computer Network Module | view
 Computer Network | view
+Computer Partition | model
 Computer Partition | view
 Computer | apply_computer_model
 Computer | computer_partition
+Computer | model
 Computer | tcp_port_number
 Computer | view
 Internet Protocol Address | view
