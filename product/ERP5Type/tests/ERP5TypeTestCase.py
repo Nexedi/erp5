@@ -1396,15 +1396,6 @@ def fortify():
   '''Add some extra checks that we don't have at runtime, not to slow down the
   system.
   '''
-  # check that we don't store persistent objects in cache
-  from Products.ERP5Type.CachePlugins.BaseCache import CacheEntry
-  CacheEntry.__original_init__ = CacheEntry.__init__
-  def __init__(self, value, *args, **kw):
-    # this will raise TypeError if you try to cache a persistent object
-    dumps(value)
-    return self.__original_init__(value, *args, **kw)
-  CacheEntry.__init__ = __init__
-
   # randomize priorities of activities in a deterministic way
   seed = os.environ.get("random_activity_priority")
   if seed is not None:
