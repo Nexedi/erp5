@@ -76,9 +76,14 @@ for builder_id in builder_id_list:\n
                           \'Delivery_updateAppliedRule\')\n
   activate_kw          = dict(tag=index_tag)\n
   builder.activate(\n
+    tag=\'invoice_builder_alarm\',\n
     serialization_tag=serialization_tag,\n
     after_tag=after_tag,\n
     after_method_id=after_method_id).build(activate_kw=activate_kw)\n
+\n
+# add a dummy activity so alarm calling can detect we still have a pending activity\n
+# and do not start this script again before previous call is finished\n
+context.activate(after_tag=\'invoice_builder_alarm\').getId()\n
 </string> </value>
         </item>
         <item>
