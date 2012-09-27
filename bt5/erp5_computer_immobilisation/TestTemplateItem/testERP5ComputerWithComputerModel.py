@@ -103,7 +103,6 @@ class TestERP5ComputerWithComputerModel(ERP5TypeTestCase):
 
   def test_category_coverage(self):
     category_dict = {
-      'allocation_scope': ['allocation_scope1', 'allocation_scope2'],
       'cpu_core': ['cpu_core1', 'cpu_core2'],
       'cpu_frequency': ['cpu_frequency1', 'cpu_frequency2'],
       'cpu_type': ['cpu_type1', 'cpu_type2'],
@@ -113,8 +112,6 @@ class TestERP5ComputerWithComputerModel(ERP5TypeTestCase):
         'local_area_network_type2'],
       'memory_size': ['memory_size1', 'memory_size2'],
       'memory_type': ['memory_type1', 'memory_type2'],
-      'product_line': ['product_line1', 'product_line2'],
-      'role': ['role1', 'role2'],
       'storage_capacity': ['storage_capacity1', 'storage_capacity2'],
       'storage_interface': ['storage_interface1', 'storage_interface2'],
       'storage_redundancy': ['storage_redundancy1', 'storage_redundancy2'],
