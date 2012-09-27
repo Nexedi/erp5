@@ -58,7 +58,8 @@ class SlapOSControler(object):
     # connections
     time.sleep(10)
     slap = slapos.slap.slap()
-    slap.initializeConnection(config['master_url'])
+    self.slap = slap
+    self.slap.initializeConnection(config['master_url'])
     # register software profile
     self.software_profile = config['custom_profile_path']
     slap.registerSupply().supply(
@@ -80,14 +81,16 @@ class SlapOSControler(object):
       # In order to be able to change partition naming scheme, do this at
       # instance_root level (such change happened already, causing problems).
       shutil.rmtree(instance_root)
-    os.mkdir(instance_root)
+    if not(os.path.exists(instance_root)):
+      os.mkdir(instance_root)
     for i in range(0, MAX_PARTIONS):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
       # this is not a problem as usually all services are on different ports
       partition_reference = '%s-%s' %(config['partition_reference'], i)
       partition_path = os.path.join(instance_root, partition_reference)
-      os.mkdir(partition_path)
+      if not(os.path.exists(partition_path)):
+        os.mkdir(partition_path)
       os.chmod(partition_path, 0750)
       computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
                                                     'address': config['ipv4_address'],
@@ -116,7 +119,7 @@ class SlapOSControler(object):
     # a SR may fail for number of reasons (incl. network failures)
     # so be tolerant and run it a few times before giving up
     for runs in range(0, MAX_SR_RETRIES):
-      status_dict = self.spawn(config['slapgrid_software_binary'], '-v', '-c',
+      status_dict = self.spawn(config['slapgrid_software_binary'], '-v', '-c','--now',
                  config['slapos_config'], raise_error_if_fail=False,
                  log_prefix='slapgrid_sr', get_output=False)
     return status_dict
@@ -124,10 +127,9 @@ class SlapOSControler(object):
   def runComputerPartition(self, config, environment,
                            stdout=None, stderr=None):
     self.log("SlapOSControler.runComputerPartition")
-    slap = slapos.slap.slap()
     # cloudooo-json is required but this is a hack which should be removed
     config['instance_dict']['cloudooo-json'] = "{}"
-    slap.registerOpenOrder().request(self.software_profile,
+    self.slap.registerOpenOrder().request(self.software_profile,
         partition_reference='testing partition',
         partition_parameter_kw=config['instance_dict'])
 
@@ -138,4 +140,5 @@ class SlapOSControler(object):
       status_dict = self.spawn(config['slapgrid_partition_binary'], '-v', '-c',
                  config['slapos_config'], raise_error_if_fail=False,
                  log_prefix='slapgrid_cp', get_output=False)
+      self.log('slapgrid_cp status_dict : %r' % (status_dict,))
     return status_dict
