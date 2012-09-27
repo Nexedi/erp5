@@ -270,4 +270,3 @@ branch = %(branch)s
           test_result.removeWatch(log_file_name)
         except KeyError:
            log("KeyError, Watcher already deleted or not added correctly")
-          
