@@ -1305,6 +1305,11 @@ class DateTimeWidget(Widget):
                                     description=("Display timezone"),
                                     default=0)
 
+  default_timezone = fields.StringField('default_timezone',
+                                    title="Default timezone",
+                                    description=("Convert dates to the given timezone"),
+                                    default='')
+
   default = fields.DateTimeField('default',
                                    title="Default",
                                    description=("The default datetime."),
@@ -1378,8 +1383,8 @@ class DateTimeWidget(Widget):
   property_names = Widget.property_names +\
                     ['default_now', 'date_separator', 'time_separator',
                      'input_style', 'input_order', 'date_only',
-                     'ampm_time_style', 'timezone_style', 'hide_day',
-                     'hidden_day_is_last_day']
+                     'ampm_time_style', 'timezone_style', 'default_timezone',
+                     'hide_day', 'hidden_day_is_last_day']
 
   def getInputOrder(self, field):
     input_order = field.get_value('input_order')
@@ -1402,6 +1407,7 @@ class DateTimeWidget(Widget):
                 This only describes the field format settings, not the actual
                 format of provided value.
         query : Passthrough of given value.
+        timezone: the timezone to consider.
     """
     if not value:
       return None
@@ -1412,11 +1418,13 @@ class DateTimeWidget(Widget):
       value = value.encode(field.get_form_encoding())
     return {'query': value,
             'format': field.get_value('date_separator').join(input_order),
+            'timezone': field.get_value('default_timezone'),
             'type': 'date'}
 
   def render(self, field, key, value, REQUEST, render_prefix=None):
     use_ampm = field.get_value('ampm_time_style')
     use_timezone = field.get_value('timezone_style')
+    timezone = field.get_value('default_timezone')
     # FIXME: backwards compatibility hack:
     if not hasattr(field, 'sub_form'):
       from StandardFields import create_datetime_text_sub_form
@@ -1439,6 +1447,8 @@ class DateTimeWidget(Widget):
     ampm   = None
     timezone = None
     if isinstance(value, DateTime):
+      if timezone:
+        value = value.toZone(timezone)
       year = "%04d" % value.year()
       month = "%02d" % value.month()
       day = "%02d" % value.day()
@@ -1503,6 +1513,9 @@ class DateTimeWidget(Widget):
 
     use_ampm = field.get_value('ampm_time_style')
     use_timezone = field.get_value('timezone_style')
+    default_timezone = field.get_value('default_timezone')
+    if default_timezone:
+      value = value.toZone(default_timezone)
 
     year = "%04d" % value.year()
     month = "%02d" % value.month()
