@@ -59,7 +59,10 @@ def castDate(value, change_timezone=True):
     # input.
     assert value['type'] == 'date'
     format = value.get('format')
+    timezone = value.get('timezone')
     value = value['query']
+    if timezone:
+      value = "%s %s" % (value, timezone)
     if format == '%m/%d/%Y':
       date_kw.pop('datefmt')
   if isinstance(value, DateTime):
