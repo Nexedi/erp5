@@ -199,16 +199,22 @@ class TestRunMyDoc(ERP5TypeTestCase):
           <td>%s</td>
           <td>base_password</td>
          </tr>
-        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr><td>selectAndWait</td> 
+        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr> 
+            <td>selectAndWait</td> 
             <td>name=select_module</td> 
             <td>label=Test Pages</td> 
-          </tr><tr><td>verifyTextPresent</td> 
+          </tr> 
+          <tr> 
+            <td>verifyTextPresent</td> 
             <td>Test Pages</td> 
             <td> <br></td> 
-          </tr><tr style="opacity: 1;"><td>clickAndWait</td> 
+          </tr> 
+          <tr style="opacity: 1;"> 
+            <td>clickAndWait</td> 
             <td>css=a.fast_input &gt; span.image</td> 
             <td> <br></td> 
-          </tr><tr><td>verifyTextPresent</td> 
+          </tr> <tr> 
+            <td>verifyTextPresent</td> 
             <td>Test Pages</td> 
             <td> <br></td> 
           </tr>
@@ -265,16 +271,22 @@ class TestRunMyDoc(ERP5TypeTestCase):
           <td>%s</td>
           <td>base_password</td>
          </tr>
-        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr><td>selectAndWait</td> 
+        <span metal:use-macro="container/Zuite_viewTestMacroLibrary/macros/init_test_environment" style="display: none;">init</span><tr> 
+            <td>selectAndWait</td> 
             <td>name=select_module</td> 
             <td>label=Test Pages</td> 
-          </tr><tr><td>verifyTextPresent</td> 
+          </tr> 
+          <tr> 
+            <td>verifyTextPresent</td> 
             <td>Test Pages</td> 
             <td> <br></td> 
-          </tr><tr style="opacity: 1;"><td>clickAndWait</td> 
+          </tr> 
+          <tr style="opacity: 1;"> 
+            <td>clickAndWait</td> 
             <td>css=a.fast_input &gt; span.image</td> 
             <td> <br></td> 
-          </tr><tr><td>verifyTextPresent</td> 
+          </tr> <tr> 
+            <td>verifyTextPresent</td> 
             <td>Test Pages</td> 
             <td> <br></td> 
           </tr>
