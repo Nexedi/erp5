@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.8 (2012-09-27)
+------------------
+
+ * erp5.util.testnode:
+
+  - use taskdistribution module to reduce code
+    [Vincent Pelletier], [Pere Cortes]
+
 0.4.7 (2012-09-03)
 ------------------
 
