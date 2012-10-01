@@ -73,7 +73,7 @@ class AmortisationRule(RuleMixin):
 
     # Simulation workflow
     security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-    def expand(self, applied_rule, force=0, **kw):
+    def expand(self, applied_rule, expand_policy=None, activate_kw={}):
       """
         Expands the current movement downward.
 
@@ -82,6 +82,8 @@ class AmortisationRule(RuleMixin):
         An applied rule can be expanded only if its parent movement
         is expanded.
       """
+      assert expand_policy == "immediate" and not activate_kw
+
       invalid_state_list = self.getPortalUpdatableAmortisationTransactionStateList()
       to_aggregate_movement_list = []
                                                  

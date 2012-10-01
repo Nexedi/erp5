@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].Delivery_updateSimulation()\n
+            <value> <string>state_change[\'object\'].updateSimulation(expand_root=1)\n
 </string> </value>
         </item>
         <item>

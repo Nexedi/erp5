@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2009 Nexedi SA and Contributors. All Rights Reserved.
-#                    Jean-Paul Smets-Solanes <jp@nexedi.com>
+# Copyright (c) 2012 Nexedi SA and Contributors. All Rights Reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,29 +28,21 @@
 """
 Products.ERP5.interfaces.expandable
 """
-
 from zope.interface import Interface
 
 class IExpandable(Interface):
+  """Common Interface for Applied Rules and Simulation Movements
   """
-    An Expandable class provides methods which trigger
-    the generation of the root applied rule of a simulation tree
-    and its expansion. Classes which implement IExpandable include
-    Deliveries (whenever can be the cause of an Applied Rule),
-    Items (whenever they are the cause of a movement sequence)
-    such as Subscription Items or Immobilisation Items, Movements
-    (which have been previously built).
-  """
-
-  def expand(applied_rule_id=None, activate_kw=None, **kw):
+  def expand(expand_policy=None, activate_kw=None):
     """
-      Expand the current Expandable class into the simulation.
-      If no applied_rule_id is provided, try first to find 
-      appropriate applied rule if any to start expansion process.
+    Update subobjects of this document and expand them
 
-      applied_rule_id -- a hint parameter (optional), which can
-                         be provided to reindex the whole 
-                         simulation tree from the root applied rule
+    expand_policy -- string defining whether a node in the simulation tree
+                     should be expand immediately or in a separate activity,
+                     or None to use the preferred policy
 
-      activate_kw -- (TO BE EXPLAINED BY KAZ)
+    activate_kw -- activity parameters, required to control
+                   activity constraints
+
+    Available policies: immediate, deferred, vertical_time_bound
     """

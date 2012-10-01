@@ -30,19 +30,18 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
-from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
-from Products.ERP5Type.Errors import SimulationError
 from Products.ERP5.Document.Item import Item
 from Products.ERP5.mixin.composition import CompositionMixin
-from Products.ERP5.mixin.rule import MovementGeneratorMixin
+from Products.ERP5.mixin.rule import MovementGeneratorMixin, SimulableMixin
 from Products.ERP5.mixin.periodicity import PeriodicityMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.Base import Base
 
 from zLOG import LOG
 
-class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, PeriodicityMixin):
+class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
+                       SimulableMixin, PeriodicityMixin):
   """
     A SubscriptionItem is an Item which expands itself
     into simulation movements which represent the item future.
@@ -70,37 +69,15 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IExpandableItem,
-                            interfaces.IMovementGenerator,
+  zope.interface.implements(interfaces.IMovementGenerator,
                            )
 
-  # IExpandable interface implementation
-  @UnrestrictedMethod # YXU - Is it a good permission setting?
-  def expand(self, applied_rule_id=None, activate_kw=None, **kw):
-    """
-      Lookup start / stop properties in related Open Order
-      or Path and expand.
-    """
+  def _createRootAppliedRule(self):
     # only try to expand if we are not in draft state
     if self.getValidationState() in ('draft', ): # XXX-JPS harcoded
       return
+    return super(SubscriptionItem, self)._createRootAppliedRule()
 
-    # do not expand if no bp/stc is applied
-    if self.getSpecialiseValue() is None:
-      return
-
-    # use hint if provided (but what for ?) XXX-JPS
-    if applied_rule_id is not None:
-      portal_simulation = getToolByName(self, 'portal_simulation')
-      my_applied_rule = portal_simulation[applied_rule_id]
-    else:
-      my_applied_rule = self._getRootAppliedRule(activate_kw=activate_kw)
-
-    # Pass expand
-    if my_applied_rule is not None:
-      my_applied_rule.expand(activate_kw=activate_kw, **kw) # XXX-JPS why **kw ?
-
-  # IExpandableItem interface implementation
   def getSimulationMovementSimulationState(self, simulation_movement):
     """Returns the simulation state for this simulation movement.
 
@@ -120,139 +97,6 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
     """
     return False
 
-  def getRuleReference(self):
-    """Returns an appropriate rule reference.
-    XXX Copy/Paste from delivery
-    """
-    method = self._getTypeBasedMethod('getRuleReference')
-    if method is not None:
-      return method()
-    else:
-      raise SimulationError('%s_getRuleReference script is missing.'
-                            % self.getPortalType().replace(' ', ''))
-
-  @UnrestrictedMethod # XXX-JPS What is this ?
-  def updateAppliedRule(self, rule_reference=None, rule_id=None, **kw):
-    """
-    Create a new Applied Rule if none is related, or call expand
-    on the existing one.
-
-    The chosen applied rule will be the validated rule with reference ==
-    rule_reference, and the higher version number.
-    """
-    if rule_id is not None:
-      from warnings import warn
-      warn('rule_id to updateAppliedRule is deprecated; use rule_reference instead',
-           DeprecationWarning)
-      rule_reference = rule_id
-
-    if rule_reference is None:
-      return
-
-    portal_rules = getToolByName(self, 'portal_rules')
-    res = portal_rules.searchFolder(reference=rule_reference,
-        validation_state="validated", sort_on='version',
-        sort_order='descending') # XXX validated is Hardcoded !
-
-    if len(res) > 0:
-      rule_id = res[0].getId()
-    else:
-      raise ValueError, 'No such rule as %r is found' % rule_reference
-
-    self._createAppliedRule(rule_id, **kw)
-
-  def _createAppliedRule(self, rule_id, activate_kw=None, **kw):
-    """
-      Create a new Applied Rule is none is related, or call expand
-      on the existing one.
-    """
-    # Look up if existing applied rule
-    my_applied_rule_list = self.getCausalityRelatedValueList(
-        portal_type='Applied Rule')
-    my_applied_rule = None
-    if len(my_applied_rule_list) == 0:
-      if self.isSimulated():
-        # No need to create a DeliveryRule
-        # if we are already in the simulation process
-        pass
-      else:
-        # Create a new applied order rule (portal_rules.order_rule)
-        portal_rules = getToolByName(self, 'portal_rules')
-        portal_simulation = getToolByName(self, 'portal_simulation')
-        my_applied_rule = portal_rules[rule_id].\
-            constructNewAppliedRule(portal_simulation,
-                                    activate_kw=activate_kw)
-        # Set causality
-        my_applied_rule.setCausalityValue(self)
-        # We must make sure this rule is indexed
-        # now in order not to create another one later
-        my_applied_rule.reindexObject(activate_kw=activate_kw, **kw)
-    elif len(my_applied_rule_list) == 1:
-      # Re expand the rule if possible
-      my_applied_rule = my_applied_rule_list[0]
-    else:
-      raise SimulationError('Delivery %s has more than one applied'
-                            ' rule.' % self.getRelativeUrl())
-
-    my_applied_rule_id = None
-    expand_activate_kw = {}
-    if my_applied_rule is not None:
-      my_applied_rule_id = my_applied_rule.getId()
-      expand_activate_kw['after_path_and_method_id'] = (
-          my_applied_rule.getPath(),
-          ['immediateReindexObject', 'recursiveImmediateReindexObject'])
-    # We are now certain we have a single applied rule
-    # It is time to expand it
-    self.activate(activate_kw=activate_kw, **expand_activate_kw).expand(
-        applied_rule_id=my_applied_rule_id,
-        activate_kw=activate_kw, **kw)
-
-  def _getRootAppliedRule(self, tested_base_category_list=None,
-                                activate_kw=None):
-    """
-      Returns existing root applied rule or, if none,
-      create a new one a return it
-    """
-    # Look up if existing applied rule
-    my_applied_rule_list = self.getCausalityRelatedValueList(
-        portal_type='Applied Rule')
-    my_applied_rule = None
-    if len(my_applied_rule_list) == 0:
-      if self.isSimulated():
-        # No need to create a DeliveryRule
-        # if we are already in the simulation process
-        pass
-      else:
-        # Create a new applied order rule (portal_rules.order_rule)
-        portal_rules = getToolByName(self, 'portal_rules')
-        portal_simulation = getToolByName(self, 'portal_simulation')
-        search_rule_kw = { 'sort_on': 'version', 'sort_order': 'descending' }
-        if self.getRuleReference() is None:
-          rule_value_list = portal_rules.searchRuleList(self, **search_rule_kw)
-          if len(rule_value_list) > 1:
-            raise SimulationError('Expandable Document %s has more than one'
-                                  ' matching rule.' % self.getRelativeUrl())
-        else:
-          rule_value_list = portal_rules.searchRuleList(self,
-            reference=self.getRuleReference(), **search_rule_kw)
-        if len(rule_value_list):
-          rule_value = rule_value_list[0]
-          my_applied_rule = rule_value.constructNewAppliedRule(portal_simulation,
-                                    activate_kw=activate_kw)
-          # Set causality
-          my_applied_rule.setCausalityValue(self)
-          # We must make sure this rule is indexed
-          # now in order not to create another one later
-          my_applied_rule.reindexObject(activate_kw=activate_kw) # XXX-JPS removed **kw
-    elif len(my_applied_rule_list) == 1:
-      # Re expand the rule if possible
-      my_applied_rule = my_applied_rule_list[0]
-    else:
-      raise SimulationError('Expandable Document %s has more than one root'
-                            ' applied rule.' % self.getRelativeUrl())
-
-    return my_applied_rule
-
   # IMovementGenerator interface implementation
   def _getUpdatePropertyDict(self, input_movement):
     # Default implementation bellow can be overriden by subclasses
@@ -268,7 +112,6 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
     """
     from Products.ERP5Type.Document import newTempMovement
     result = []
-    catalog_tool = getToolByName(self, 'portal_catalog')
 
     # Try to find the source open order
     open_order_movement_list = self.getAggregateRelatedValueList(
@@ -293,7 +136,7 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin, Periodici
         price = movement.getPrice()
         price_currency = movement.getPriceCurrency()
         base_application_list = movement.getBaseApplicationList()
-        base_contribution_list = movement.getBaseContributionList()
+        base_contribution_list = movhement.getBaseContributionList()
         use_list = movement.getUseList()
 
         specialise = movement.getSpecialise()

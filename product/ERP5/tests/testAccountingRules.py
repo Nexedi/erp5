@@ -677,15 +677,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice._delObject(invoice_line.getId())
     invoice.recursiveReindexObject()
 
-  def stepUpdateAppliedRule(self, sequence, **kw) :
-    """ update the applied rule for the invoice. In the UI, the call to
-    updateAppliedRule is made in an interraction workflow when you edit
-    an invoice or its content."""
-    # edit is done through interaction workflow, so we just call 'edit'
-    # on the invoice (but this is not necessary)
-    invoice=sequence.get('invoice')
-    invoice.edit()
-
   def stepCreateSimpleInvoiceTwoLines(self, sequence, **kw) :
     """
       similar to stepCreateSimpleInvoice, but replace
@@ -1784,7 +1775,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   @newSimulationExpectedFailure
   def test_05a_SimpleInvoiceReExpandAddLine(self, quiet=QUIET,
         run=RUN_ALL_TESTS):
-    """ Add a new line then updateAppliedRule.
+    """ Add a new line then updateSimulation.
     Create an empty invoice, plan, add a line so that this
     invoice is the same as `SimpleInvoice`, confirm it then check
     accounting lines
@@ -1951,7 +1942,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     if not run:
       return
     if not quiet:
-      message = 'Test Simple Invoice Rule (many updateAppliedRule)'
+      message = 'Test Simple Invoice Rule (many updateSimulation)'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', INFO, message)
 
@@ -1974,7 +1965,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepTic """ +
       ("""
       stepEditInvoiceLine
-      stepUpdateAppliedRule
       stepTic""" * 4) +
       """
       stepConfirmInvoice

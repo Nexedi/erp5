@@ -53,12 +53,11 @@
             <value> <string>delivery = state_change[\'object\']\n
 \n
 portal = delivery.getPortalObject()\n
-solver_tool = getattr(portal, \'portal_solvers\', None)\n
-solver_process_tool = getattr(portal, \'portal_solver_processes\', None)\n
-\n
-if solver_tool is None or solver_process_tool is None:\n
+try:\n
+  portal.portal_solvers\n
+  portal.portal_solver_processes\n
+except AttributeError:\n
   delivery.diverge()\n
-  return\n
 else:\n
   solver_tag = \'%s_solve\' % delivery.getPath()\n
   delivery.activate(tag=solver_tag).Delivery_solveDivergenceAutomatically()\n

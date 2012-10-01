@@ -65,7 +65,7 @@ index_tag            = \'index:\' + delivery_portal_type\n
 after_method_id      = (\'recursiveImmediateReindexObject\',\n
                         \'immediateReindexObject\',\n
                         \'expand\',\n
-                        \'Delivery_updateAppliedRule\')\n
+                        \'_updateSimulation\')\n
 activate_kw          = dict(tag=index_tag)\n
 builder.activate(\n
   serialization_tag=serialization_tag,\n

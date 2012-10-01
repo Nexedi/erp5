@@ -56,7 +56,7 @@ if portal.portal_workflow.isTransitionPossible(context, \'calculate\'):\n
 else:\n
   # Make sure no other node is moving the delivery\n
   # to \'diverged\' or \'solved\' state.\n
-  context.serialize()\n
+  context.serializeCausalityState()\n
 </string> </value>
         </item>
         <item>

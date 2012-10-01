@@ -30,20 +30,18 @@
 
 import zope.interface
 
-from Products.CMFCore.utils import getToolByName
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as ConstantGetter
-from Products.ERP5Type.Errors import SimulationError
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5.Document.ImmobilisationDelivery import ImmobilisationDelivery
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
+from Products.ERP5.mixin.rule import SimulableMixin
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
-
 from zLOG import LOG, PROBLEM
 
-class Delivery(XMLObject, ImmobilisationDelivery,
+class Delivery(XMLObject, ImmobilisationDelivery, SimulableMixin,
                CompositionMixin, AmountGeneratorMixin):
     """
         Each time delivery is modified, it MUST launch a reindexing of
@@ -321,12 +319,6 @@ class Delivery(XMLObject, ImmobilisationDelivery,
         container_list.append(m)
       return container_list
 
-    def applyToDeliveryRelatedMovement(self, portal_type='Simulation Movement',
-                                       method_id='expand', **kw):
-      for simulation_movement in self._getAllRelatedSimulationMovementList():
-        # And apply
-        getattr(simulation_movement.getObject(), method_id)(**kw)
-
     #######################################################
     # Causality computation
     security.declareProtected(Permissions.AccessContentsInformation, 'isConvergent')
@@ -394,6 +386,16 @@ class Delivery(XMLObject, ImmobilisationDelivery,
         else:
           self.converge()
 
+    def updateSimulation(self, calculate=False, **kw):
+      if calculate:
+        path = self.getPath()
+        self.activate(
+          after_tag=('built:'+path, 'expand:'+path),
+          after_path_and_method_id=(path, '_localBuild'),
+          ).updateCausalityState()
+      if kw:
+        super(Delivery, self).updateSimulation(**kw)
+
     def splitAndDeferMovementList(self, start_date=None, stop_date=None,
         movement_uid_list=[], delivery_solver=None,
         target_solver='CopyToTarget', delivery_builder=None):
@@ -434,8 +436,9 @@ class Delivery(XMLObject, ImmobilisationDelivery,
         movement.activate(tag=solver_tag).Movement_solveMovement(
             delivery_solver, target_solver)
       tag_list.append(solver_tag)
+      kw = {'after_tag': tag_list[:], 'tag': expand_tag}
       for s_m in deferred_simulation_movement_list:
-        s_m.activate(after_tag=tag_list[:], tag=expand_tag).expand()
+        s_m.expand('deferred', activate_kw=kw)
       tag_list.append(expand_tag)
 
       detached_movement_url_list = []
@@ -476,9 +479,7 @@ class Delivery(XMLObject, ImmobilisationDelivery,
         Reindex children and simulation
       """
       self.recursiveReindexObject(*k, **kw)
-      # NEW: we never rexpand simulation - This is a task for DSolver / TSolver
-      # Make sure expanded simulation is still OK (expand and reindex)
-      # self.activate().applyToDeliveryRelatedMovement(method_id = 'expand')
+      # do not reexpand simulation: this is a task for DSolver / TSolver
 
     #######################################################
     # Stock Management
@@ -685,150 +686,50 @@ class Delivery(XMLObject, ImmobilisationDelivery,
 
     ##########################################################################
     # Applied Rule stuff
-    @UnrestrictedMethod # XXX-JPS What is this ?
-    def updateAppliedRule(self, rule_reference=None, rule_id=None, **kw):
+
+    security.declareProtected(Permissions.AccessContentsInformation,
+                              'localBuild')
+    def localBuild(self, activity_kw=()):
+      """Activate builders for this delivery
+
+      The generated activity will find all buildable business links for this
+      delivery, and call related builders, which will select all simulation
+      movements part of the same explanation(s) as the delivery.
+
+      XXX: Consider moving it to SimulableMixin if it's useful for
+           Subscription Items.
       """
-      Create a new Applied Rule if none is related, or call expand
-      on the existing one.
-
-      The chosen applied rule will be the validated rule with reference ==
-      rule_reference, and the higher version number.
-      """
-      if rule_id is not None:
-        from warnings import warn
-        warn('rule_id to updateAppliedRule is deprecated; use rule_reference instead',
-             DeprecationWarning)
-        rule_reference = rule_id
-
-      if rule_reference is None:
-        return
-
-      # only expand if we are not in a "too early" or "too late" state
-      if (self.getSimulationState() in
-          self.getPortalDraftOrderStateList()):
-        return
-
-      portal_rules = getToolByName(self, 'portal_rules')
-      res = portal_rules.searchFolder(reference=rule_reference,
-          validation_state="validated", sort_on='version',
-          sort_order='descending') # XXX validated is Hardcoded !
-
-      if len(res) > 0:
-        rule_id = res[0].getId()
+      # XXX: Previous implementation waited for expand activities of related
+      #      documents and even suggested to look at explanation tree,
+      #      instead of causalities. Is it required ?
+      kw = {'priority': 3}
+      kw.update(activity_kw)
+      after_tag = kw.pop('after_tag', None)
+      if isinstance(after_tag, basestring):
+        after_tag = [after_tag]
       else:
-        raise ValueError, 'No such rule as %r is found' % rule_reference
+        after_tag = list(after_tag) if after_tag else []
+      after_tag.append('expand:' + self.getPath())
+      self.activate(after_tag=after_tag, **kw)._localBuild()
 
-      self._createAppliedRule(rule_id, **kw)
+    def _localBuild(self):
+      """Do an immediate local build for this delivery"""
+      return self.asComposedDocument().build(explanation=self)
 
-    def _createAppliedRule(self, rule_id, activate_kw=None, **kw):
-      """
-        Create a new Applied Rule is none is related, or call expand
-        on the existing one.
-      """
-      # Look up if existing applied rule
-      my_applied_rule_list = self.getCausalityRelatedValueList(
-          portal_type='Applied Rule')
-      my_applied_rule = None
-      if len(my_applied_rule_list) == 0:
-        if self.isSimulated():
-          # No need to create a DeliveryRule
-          # if we are already in the simulation process
-          pass
-        else:
-          # Create a new applied order rule (portal_rules.order_rule)
-          portal_rules = getToolByName(self, 'portal_rules')
-          portal_simulation = getToolByName(self, 'portal_simulation')
-          my_applied_rule = portal_rules[rule_id].\
-              constructNewAppliedRule(portal_simulation,
-                                      activate_kw=activate_kw)
-          # Set causality
-          my_applied_rule.setCausalityValue(self)
-          # We must make sure this rule is indexed
-          # now in order not to create another one later
-          my_applied_rule.reindexObject(activate_kw=activate_kw, **kw)
-      elif len(my_applied_rule_list) == 1:
-        # Re expand the rule if possible
-        my_applied_rule = my_applied_rule_list[0]
-      else:
-        raise SimulationError('Delivery %s has more than one applied'
-                              ' rule.' % self.getRelativeUrl())
-
-      my_applied_rule_id = None
-      expand_activate_kw = {}
-      if my_applied_rule is not None:
-        my_applied_rule_id = my_applied_rule.getId()
-        expand_activate_kw['after_path_and_method_id'] = (
-            my_applied_rule.getPath(),
-            ['immediateReindexObject', 'recursiveImmediateReindexObject'])
-      # We are now certain we have a single applied rule
-      # It is time to expand it
-      self.activate(activate_kw=activate_kw, **expand_activate_kw).expand(
-          applied_rule_id=my_applied_rule_id,
-          activate_kw=activate_kw, **kw)
-
-    security.declareProtected(Permissions.ModifyPortalContent, 'expand')
+    # deprecated - see ExpandableMixin
     @UnrestrictedMethod
-    def expand(self, applied_rule_id=None, activate_kw=None,**kw):
-      """
-        Reexpand applied rule
+    def updateAppliedRule(self, rule_reference=None, rule_id=None, **kw):
+      reference = self.getRuleReference()
+      if (rule_id or rule_reference) != reference:
+        raise RuntimeError("expected %r as rule reference, got %r"
+                           % (reference, rule_reference))
+      self._updateSimulation(create_root=1) # should it be always reexpanded ?
 
-        Also reexpand all rules related to movements
-
-        NOTE: seems to be deprecated ?
-      """
-      excluded_rule_path_list = []
-      if applied_rule_id is not None:
-        my_applied_rule = self.portal_simulation.get(applied_rule_id, None)
-        if my_applied_rule is not None:
-          excluded_rule_path_list.append(my_applied_rule.getPath())
-          my_applied_rule.expand(activate_kw=activate_kw,**kw)
-          # once expanded, the applied_rule must be reindexed
-          # because some simulation_movement may change even
-          # if there are not edited (acquisition)
-          #
-          # XXX yo thinks that this is excessive. First of all, we may
-          # need to reindex simulation movements but not applied rules
-          # here. So we should skip reindexing applied rules.
-          # In addition, the policy is "copy everything required to
-          # simulation movements", so acquisitions should not matter to
-          # indexing. The only exception is the simulation state.
-          # I think, if each simulation movement remembers the previous
-          # state, we can avoid unnecessary reindexing.
-          my_applied_rule.recursiveReindexSimulationMovement(activate_kw=activate_kw)
-        else:
-          LOG("ERP5", PROBLEM,
-              "Could not expand applied rule %s for delivery %s" %\
-                  (applied_rule_id, self.getId()))
-      self.expandRuleRelatedToMovement(
-                  excluded_rule_path_list=excluded_rule_path_list,
-                  activate_kw=activate_kw,
-                  **kw)
-
-    security.declareProtected(Permissions.ModifyPortalContent,
-        'expandRuleRelatedToMovement')
-    def expandRuleRelatedToMovement(self,excluded_rule_path_list=None,
-                                    activate_kw=None,**kw):
-      """
-      Some delivery movement may be related to another applied rule than
-      the one related to the delivery. Delivery movements may be related
-      to many simulation movements from many different root applied rules,
-      so it is required to expand the applied rule parent to related
-      simulation movements.
-
-      exclude_rule_path : do not expand this applied rule (or children
-                          applied rule)
-      """
-      excluded_rule_path_list = set(excluded_rule_path_list or ())
-      to_expand = sorted(set(sm.getParentValue()
-        for sm in self._getAllRelatedSimulationMovementList()
-        if sm.getRootAppliedRule().getPath() not in excluded_rule_path_list),
-        key=lambda x: x.getRelativeUrl())
-      prev_ar = None
-      for ar in to_expand:
-        if not ar.aq_inContextOf(prev_ar):
-          ar.expand(activate_kw=activate_kw, **kw)
-          ar.recursiveReindexSimulationMovement(activate_kw=activate_kw)
-          prev_ar = ar
+    def _createRootAppliedRule(self):
+      portal = self.getPortalObject()
+      # Only create RAR if we are not in a "too early" or "too late" state.
+      if self.getSimulationState() not in portal.getPortalDraftOrderStateList():
+        return super(Delivery, self)._createRootAppliedRule()
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRootCausalityValueList')
@@ -893,15 +794,6 @@ class Delivery(XMLObject, ImmobilisationDelivery,
       #       however, the real question is "is this really necessary"
       #       since the main purpose of this method is superceded
       #       by IDivergenceController
-
-    def getRuleReference(self):
-      """Returns an appropriate rule reference."""
-      method = self._getTypeBasedMethod('getRuleReference')
-      if method is not None:
-        return method()
-      else:
-        raise SimulationError('%s_getRuleReference script is missing.'
-                              % self.getPortalType().replace(' ', ''))
 
     security.declareProtected( Permissions.AccessContentsInformation,
                                'getRootSpecialiseValue')

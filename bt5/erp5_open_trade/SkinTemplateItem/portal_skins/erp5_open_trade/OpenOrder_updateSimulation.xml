@@ -50,22 +50,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>subscription_item_dict = dict()\n
+            <value> <string>subscription_item_set = set()\n
 \n
-for open_order_line in context.contentValues():\n
-  for path in [open_order_line] + open_order_line.getCellValueList():\n
-    for item in path.getAggregateValueList():\n
-       if item.providesIExpandableItem(): # XXX hack to make it fails\n
-         subscription_item_dict[item] = 1\n
-\n
-# XXX tag / after tag !\n
-for item in subscription_item_dict:\n
-  activate_kw = dict(tag=\'%s_expand\' % item.getPath())\n
-  applied_rule = item.getCausalityRelatedValue(portal_type=\'Applied Rule\')\n
-  if applied_rule is not None:\n
-    applied_rule.activate(activate_kw=activate_kw).expand(activate_kw=activate_kw)\n
-  else:\n
-    item.activate(activate_kw=activate_kw).expand(activate_kw=activate_kw)\n
+for open_order_line in context.objectValues():\n
+  for ob in [open_order_line] + open_order_line.getCellValueList():\n
+    for item in ob.getAggregateValueList():\n
+       if getattr(item.aq_explicit, \'updateSimulation\', None) is not None and \\\n
+          item not in subscription_item_set:\n
+         subscription_item_set.add(item)\n
+         item.updateSimulation(expand_root=1)\n
 </string> </value>
         </item>
         <item>

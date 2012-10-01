@@ -40,12 +40,9 @@ from Products.ERP5Type.Base import WorkflowMethod
 from Products.ERP5Type.Globals import PersistentMapping
 from Products.ERP5Type.XMLObject import XMLObject
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
+from Products.ERP5.ExpandPolicy import TREE_DELIVERED_CACHE_KEY
 from Products.ERP5.mixin.explainable import ExplainableMixin
 from Products.ERP5.mixin.rule import RuleMixin
-
-TREE_DELIVERED_CACHE_KEY = 'AppliedRule._isTreeDelivered_cache'
-TREE_DELIVERED_CACHE_ENABLED = 'TREE_DELIVERED_CACHE_ENABLED'
 
 class AppliedRule(XMLObject, ExplainableMixin):
   """
@@ -83,7 +80,8 @@ class AppliedRule(XMLObject, ExplainableMixin):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IMovementCollection,)
+  zope.interface.implements(interfaces.IExpandable,
+                            interfaces.IMovementCollection)
 
   def tpValues(self) :
     """ show the content in the left pane of the ZMI """
@@ -95,74 +93,17 @@ class AppliedRule(XMLObject, ExplainableMixin):
     """Tells whether generated movement needs to be accounted or not."""
     return self.getSpecialiseValue().isAccountable(movement)
 
+  security.declarePrivate("getSimulationState")
+  def getSimulationState(self):
+    return
+
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  @UnrestrictedMethod
-  def expand(self, **kw):
+  def expand(self, *args, **kw):
+    """Expand this applied rule to create new documents inside the applied rule
     """
-      Expands the current movement downward.
-
-      -> new status -> expanded
-
-      An applied rule can be expanded only if its parent movement
-      is expanded.
-    """
-    tv = getTransactionalVariable()
-    cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
-    cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
-
-    # enable cache
-    if not cache_enabled:
-      cache[TREE_DELIVERED_CACHE_ENABLED] = 1
-
-    rule = self.getSpecialiseValue()
-    if rule is not None:
-      rule.expand(self,**kw)
-
-    # disable and clear cache
-    if not cache_enabled:
-      try:
-        del tv[TREE_DELIVERED_CACHE_KEY]
-      except KeyError:
-        pass
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'solve')
-  def solve(self, solution_list):
-    """
-      Solve inconsistency according to a certain number of solutions
-      templates. This updates the
-
-      -> new status -> solved
-
-      This applies a solution to an applied rule. Once
-      the solution is applied, the parent movement is checked.
-      If it does not diverge, the rule is reexpanded. If not,
-      diverge is called on the parent movement.
-    """
-    rule = self.getSpecialiseValue()
-    if rule is not None:
-      rule.solve(self)
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
-  def diverge(self):
-    """
-      -> new status -> diverged
-
-      This basically sets the rule to "diverged"
-      and blocks expansion process
-    """
-    rule = self.getSpecialiseValue()
-    if rule is not None:
-      rule.diverge(self)
+    self.getSpecialiseValue().expand(self, *args, **kw)
 
   # Solvers
-  security.declareProtected(Permissions.AccessContentsInformation,
-      'isStable')
-  def isStable(self):
-    """
-    Tells whether the rule is stable or not.
-    """
-    return self.getSpecialiseValue().isStable(self)
-
   security.declareProtected(Permissions.AccessContentsInformation,
       'isDivergent')
   def isDivergent(self, sim_mvt):
@@ -205,26 +146,21 @@ class AppliedRule(XMLObject, ExplainableMixin):
 
     see SimulationMovement._isTreeDelivered
     """
-    tv = getTransactionalVariable()
-    cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
-    cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
-
-    def getTreeDelivered(applied_rule):
-      for movement in applied_rule.objectValues():
+    def getTreeDelivered():
+      for movement in self.objectValues():
         if movement._isTreeDelivered():
           return True
       return False
-
+    try:
+      cache = getTransactionalVariable()[TREE_DELIVERED_CACHE_KEY]
+    except KeyError:
+      return getTreeDelivered()
     rule_key = self.getRelativeUrl()
-    if cache_enabled:
-      try:
-        return cache[rule_key]
-      except:
-        result = getTreeDelivered(self)
-        cache[rule_key] = result
-        return result
-    else:
-      return getTreeDelivered(self)
+    try:
+      return cache[rule_key]
+    except KeyError:
+      cache[rule_key] = result = getTreeDelivered()
+      return result
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'getMovementList')
@@ -233,59 +169,6 @@ class AppliedRule(XMLObject, ExplainableMixin):
      Return a list of movements.
     """
     return self.objectValues(portal_type=RuleMixin.movement_type)
-
-  security.declareProtected(Permissions.AccessContentsInformation,
-          'getIndexableChildSimulationMovementValueList')
-  def getIndexableChildSimulationMovementValueList(self):
-    return [x for x in self.getIndexableChildValueList()
-              if x.getPortalType() == 'Simulation Movement']
-
-  security.declarePublic('recursiveImmediateReindexSimulationMovement')
-  def recursiveImmediateReindexSimulationMovement(self, **kw):
-    """
-      Applies immediateReindexObject recursively to Simulation Movements
-    """
-    # Reindex direct children
-    root_indexable = int(getattr(self.getPortalObject(), 'isIndexable', 1))
-    for movement in self.objectValues():
-      if movement.isIndexable and root_indexable:
-        movement.immediateReindexObject(**kw)
-    # Go recursively
-    for movement in self.objectValues():
-      for applied_rule in movement.objectValues():
-        applied_rule.recursiveImmediateReindexSimulationMovement(**kw)
-
-  security.declarePublic('recursiveReindexSimulationMovement')
-  def recursiveReindexSimulationMovement(self, activate_kw=None, **kw):
-    if self.isIndexable:
-      if activate_kw is None:
-        activate_kw = {}
-
-    reindex_kw = self.getDefaultReindexParameterDict()
-    if reindex_kw is not None:
-      reindex_activate_kw = reindex_kw.pop('activate_kw', None)
-      if reindex_activate_kw is not None:
-        reindex_activate_kw = reindex_activate_kw.copy()
-        if activate_kw is not None:
-          # activate_kw parameter takes precedence
-          reindex_activate_kw.update(activate_kw)
-        activate_kw = reindex_activate_kw
-      kw.update(reindex_kw)
-
-    group_id_list  = []
-    if kw.get("group_id", "") not in ('', None):
-      group_id_list.append(kw.get("group_id", ""))
-    if kw.get("sql_catalog_id", "") not in ('', None):
-      group_id_list.append(kw.get("sql_catalog_id", ""))
-    group_id = ' '.join(group_id_list)
-
-    self.activate(
-      group_method_id='portal_catalog/catalogObjectList',
-      expand_method_id='getIndexableChildSimulationMovementValueList',
-      alternate_method_id='alternateReindexObject',
-      group_id=group_id,
-      serialization_tag=self.getRootDocumentPath(),
-      **activate_kw).recursiveImmediateReindexSimulationMovement(**kw)
 
   def _migrateSimulationTree(self, get_matching_key,
                              get_original_property_dict, root_rule=None):
@@ -480,7 +363,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
         AppliedRule.isIndexable = SimulationMovement.isIndexable = \
           ConstantGetter('isIndexable', value=False)
         mixin.updateMovementCollection = updateMovementCollection
-        self.expand()
+        self.expand("immediate")
       finally:
         mixin.updateMovementCollection = orig_updateMovementCollection
         del AppliedRule.isIndexable, SimulationMovement.isIndexable
@@ -512,7 +395,7 @@ class AppliedRule(XMLObject, ExplainableMixin):
       return rule_dict
     initial_rule_dict = fillRuleDict()
     try:
-      self.expand()
+      self.expand("immediate")
     except ConflictError:
       raise
     except Exception:

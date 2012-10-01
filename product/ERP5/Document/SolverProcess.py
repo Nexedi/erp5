@@ -180,8 +180,9 @@ class SolverProcess(XMLObject, ActiveProcess):
     """
       Start solving
     """
-    isTransitionPossible = self.getPortalObject().portal_workflow.isTransitionPossible
-    for solver in self.contentValues(portal_type=self.getPortalObject().getPortalTargetSolverTypeList()):
+    portal = self.getPortalObject()
+    isTransitionPossible = portal.portal_workflow.isTransitionPossible
+    for solver in self.objectValues(portal_type=portal.getPortalTargetSolverTypeList()):
       if solver.isTempObject():
         solver_type = solver.getPortalTypeValue()
         # Since multiple documents may need the same solver, activity must be
