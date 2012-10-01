@@ -168,9 +168,6 @@ class asComposedDocument(object):
                            object_list)
     return sortValueList(object_list, sort_on, sort_order, **kw)
 
-# XXX Legacy simulation allows model lines on deliveries.
-#     Enabled if erp5_simulation_legacy BT is installed.
-_LEGACY_SIMULATION = False
 
 class CompositionMixin:
   """
@@ -212,12 +209,6 @@ class CompositionMixin:
         # we don't use getSpecialiseValueList to avoid acquisition on the parent
         model_list = effective_list[effective_index].getValueList('specialise',
                                         portal_type=specialise_type_list or ())
-      elif _LEGACY_SIMULATION:
-        parent = self
-        while isinstance(parent, CompositionMixin):
-          effective_list.append(parent)
-          parent = parent.getParentValue()
-        effective_index += len(effective_list)
       effective_index += 1
       for model in model_list:
         model = _getEffectiveModel(model, start_date, stop_date)

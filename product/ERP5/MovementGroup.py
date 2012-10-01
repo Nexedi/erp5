@@ -600,35 +600,6 @@ class IntIndexMovementGroup(RootMovementGroup):
 
 allow_class(IntIndexMovementGroup)
 
-class TransformationAppliedRuleCausalityMovementGroup(RootMovementGroup):
-  """
-  Groups movement that comes from simulation movement that shares the
-  same Production Applied Rule.
-  """
-  def __init__(self, movement, **kw):
-    RootMovementGroup.__init__(self, movement=movement, **kw)
-    explanation_relative_url = self._getExplanationRelativeUrl(movement)
-    self.explanation = explanation_relative_url
-    explanation_value = movement.getPortalObject().restrictedTraverse(
-                                                    explanation_relative_url)
-    self.setGroupEdit(causality_value=explanation_value)
-
-  def _getExplanationRelativeUrl(self, movement):
-    """ Get the order value for a movement """
-    transformation_applied_rule = movement.getParentValue()
-    transformation_rule = transformation_applied_rule.getSpecialiseValue()
-    if transformation_rule.getPortalType() != 'Transformation Rule':
-      raise MovementGroupError, 'movement! %s' % movement.getPath()
-    # XXX Dirty hardcoded
-    production_movement = transformation_applied_rule.pr
-    production_packing_list = production_movement.getExplanationValue()
-    return production_packing_list.getRelativeUrl()
-
-  def test(self,movement):
-    return self._getExplanationRelativeUrl(movement) == self.explanation
-
-allow_class(TransformationAppliedRuleCausalityMovementGroup)
-
 class ParentExplanationMovementGroup(RootMovementGroup): pass
 
 class ParentExplanationCausalityMovementGroup(ParentExplanationMovementGroup):

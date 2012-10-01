@@ -94,7 +94,6 @@ UPGRADABLE_BT5_ID_LIST = (\n
                         "tiolive_base",\n
                         "erp5_tax_resource",\n
                         "erp5_discount_resource",\n
-                        "erp5_legacy_tax_system",\n
                         "erp5_ooo_import",\n
                         "erp5_l10n_fr",\n
                         "erp5_l10n_ja",\n

@@ -50,20 +50,11 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ZSQLCatalog.SQLCatalog import Query, ComplexQuery\n
-\n
-kw[\'query\'] = ComplexQuery(\n
-  Query(portal_type=\'Simulation Movement\', explanation_portal_type=\'Internal Order\'),\n
-  ComplexQuery(\n
-    Query(parent_specialise_portal_type=[\'Order Rule\', \'Delivery Rule\', \'Delivery Root Simulation Rule\'],\n
-          simulation_state=\'confirmed\'),\n
-    Query(parent_specialise_portal_type=\'Delivery Simulation Rule\',\n
-          grand_parent_simulation_state=\'confirmed\'),\n
-    operator=\'or\'),\n
-  operator=\'and\')\n
+            <value> <string>kw[\'explanation_portal_type\'] = \'Internal Order\'\n
+kw[\'parent_specialise_portal_type\'] = \'Delivery Simulation Rule\'\n
+kw[\'grand_parent_simulation_state\'] = \'confirmed\'\n
 \n
 kw.update(context.portal_catalog.buildSQLQuery(**kw))\n
-\n
 return context.Order_zSelectMovement(src__=src__, **kw)\n
 </string> </value>
         </item>
