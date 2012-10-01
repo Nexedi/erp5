@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.9 (2012-10-01)
+------------------
+
+ * erp5.util.testnode:
+
+  - remove --now parameter when calling slapgrid-sr since
+    it is not yet well supported [Sebastien Robin]
+
 0.4.8 (2012-09-27)
 ------------------
 
