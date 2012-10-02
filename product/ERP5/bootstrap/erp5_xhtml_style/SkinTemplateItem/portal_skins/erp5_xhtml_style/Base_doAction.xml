@@ -52,7 +52,8 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 Base_translateString = portal.Base_translateString\n
-preserved_parameters={\'form_id\': form_id, \'cancel_url\': cancel_url}\n
+preserved_parameters = {\'form_id\': form_id, \'cancel_url\': cancel_url,
+  \'md5_object_uid_list\': md5_object_uid_list}\n
 request = context.REQUEST\n
 \n
 if select_action is None:\n
@@ -118,7 +119,7 @@ return context.ERP5Site_redirect(redirect_url, keep_items=preserved_parameters, 
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>select_action=None, form_id=None, cancel_url=None, **kw</string> </value>
+            <value> <string>select_action=None, form_id=None, cancel_url=None, md5_object_uid_list=None, **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
