@@ -52,8 +52,11 @@
             <key> <string>_body</string> </key>
             <value> <string>portal = context.getPortalObject()\n
 Base_translateString = portal.Base_translateString\n
-preserved_parameters = {\'form_id\': form_id, \'cancel_url\': cancel_url,
-  \'md5_object_uid_list\': md5_object_uid_list}\n
+preserved_parameter_dict = {\n
+  \'form_id\': form_id,\n
+  \'cancel_url\': cancel_url,\n
+  \'md5_object_uid_list\': md5_object_uid_list,\n
+}\n
 request = context.REQUEST\n
 \n
 if select_action is None:\n
@@ -85,8 +88,8 @@ elif doAction0 == \'add\':\n
   type_name = \' \'.join(Base_doAction[1:])\n
   new_content = context.newContent(portal_type=type_name,\n
                                    container=context)\n
-  preserved_parameters[\'portal_status_message\'] = Base_translateString("Object created.")\n
-  preserved_parameters[\'editable_mode\'] = 1\n
+  preserved_parameter_dict[\'portal_status_message\'] = Base_translateString("Object created.")\n
+  preserved_parameter_dict[\'editable_mode\'] = 1\n
   try:\n
     tmp_kw = new_content.getRedirectParameterDictAfterAdd(context, **kw)\n
   except AttributeError:\n
@@ -105,16 +108,16 @@ elif doAction0 == \'template\':\n
     new_content_id = new_content_list[0][\'new_id\']\n
     new_content = context[new_content_id]\n
     new_content.makeTemplateInstance()\n
-    preserved_parameters[\'portal_status_message\'] = Base_translateString("Template created.")\n
+    preserved_parameter_dict[\'portal_status_message\'] = Base_translateString("Template created.")\n
     redirect_url = new_content.absolute_url()\n
   else:\n
-    preserved_parameters[\'portal_status_message\'] = Base_translateString("Template does not exist.")\n
+    preserved_parameter_dict[\'portal_status_message\'] = Base_translateString("Template does not exist.")\n
     redirect_url = context.absolute_url()\n
 else:\n
   redirect_url = request[\'ACTUAL_URL\']\n
-  preserved_parameters[\'portal_status_message\'] = Base_translateString(\'Error: the action "%s" is not recognised.\' % (doAction0, ))\n
+  preserved_parameter_dict[\'portal_status_message\'] = Base_translateString(\'Error: the action "%s" is not recognised.\' % (doAction0, ))\n
 \n
-return context.ERP5Site_redirect(redirect_url, keep_items=preserved_parameters, **kw)\n
+return context.ERP5Site_redirect(redirect_url, keep_items=preserved_parameter_dict, **kw)\n
 </string> </value>
         </item>
         <item>
