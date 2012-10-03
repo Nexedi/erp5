@@ -31,8 +31,15 @@ from zLOG import LOG, BLATHER
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.mixin.builder import BuilderMixin, SelectMethodError
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 from Products.ERP5Type.CopySupport import CopyError, tryMethodCallWithTemporaryPermission
+
+# Quite ugly way to avoid useless expand when building lines
+# in a delivery that already have lines and a root applied rule.
+# For example, it's normally useless to expand after building
+# accounting lines in an invoice with manually created invoice lines.
+BUILDING_KEY = 'building_from_portal_simulation'
 
 class SimulatedDeliveryBuilder(BuilderMixin):
   """
@@ -137,6 +144,12 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       Create the relation between simulation movement
       and delivery movement.
     """
+    delivery = delivery_movement.getExplanationValue()
+    building = getTransactionalVariable()[BUILDING_KEY]
+    if delivery in building:
+      building.add(delivery_movement)
+    simulation_movement.recursiveReindexObject(activate_kw=dict(
+      activate_kw or (), tag='built:'+delivery.getPath()))
     BuilderMixin._setDeliveryMovementProperties(
                             self, delivery_movement,
                             simulation_movement, property_dict,
@@ -151,12 +164,22 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       # Delivery will probably diverge now, but this is not the job of
       # Delivery Builder to resolve such problem.
       # Use Solver instead.
-      simulation_movement.edit(delivery_ratio=0)
+      simulation_movement._setDeliveryRatio(0)
     else:
-      simulation_movement.edit(delivery_ratio=1)
-
-    simulation_movement.edit(delivery_value=delivery_movement,
-                             activate_kw=activate_kw)
+      simulation_movement._setDeliveryRatio(1)
+    delivery_movement = delivery_movement.getRelativeUrl()
+    if simulation_movement.getDeliveryList() != [delivery_movement]:
+      simulation_movement._setDelivery(delivery_movement)
+      if not simulation_movement.isTempDocument():
+        try:
+          getCausalityState = delivery.aq_explicit.getCausalityState
+        except AttributeError:
+          return
+        if getCausalityState() == 'building':
+          # Make sure no other node is changing state of the delivery
+          delivery.serializeCausalityState()
+        else:
+          delivery.startBuilding()
 
   # Simulation consistency propagation
   security.declareProtected(Permissions.ModifyPortalContent,
@@ -337,6 +360,10 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       new_delivery_id = str(delivery_module.generateNewId())
       delivery = super(SimulatedDeliveryBuilder, self)._createDelivery(
         delivery_module, movement_list, activate_kw)
+      # Interactions will usually trigger reindexing of related SM when
+      # simulation state changes. Disable them for this transaction
+      # because we already do this in _setDeliveryMovementProperties
+      delivery.updateSimulation(index_related=0)
     else:
       # from duplicated original delivery
       cp = tryMethodCallWithTemporaryPermission(
@@ -352,6 +379,25 @@ class SimulatedDeliveryBuilder(BuilderMixin):
       delivery.deleteContent(delete_id_list)
 
     return delivery
+
+  def _processDeliveryLineGroup(self, delivery, movement_group_node,
+                                *args, **kw):
+    building = getTransactionalVariable().setdefault(BUILDING_KEY, set())
+    if None in building:
+      super(SimulatedDeliveryBuilder, self)._processDeliveryLineGroup(
+          delivery, movement_group_node, *args, **kw)
+      return
+    building.add(None)
+    try:
+      for movement in movement_group_node.getMovementList():
+        if not movement.isTempDocument():
+          building.add(delivery)
+          break
+      super(SimulatedDeliveryBuilder, self)._processDeliveryLineGroup(
+        delivery, movement_group_node, *args, **kw)
+    finally:
+      building.remove(None)
+      building.discard(delivery)
 
   def _createDeliveryLine(self, delivery, movement_list, activate_kw):
     """

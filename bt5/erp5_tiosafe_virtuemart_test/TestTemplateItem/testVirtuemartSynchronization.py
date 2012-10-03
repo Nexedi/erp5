@@ -46,8 +46,6 @@ class TestVirtuemartSynchronization(ERP5TypeTestCase):
         'erp5_pdm',
         'erp5_trade',
         'erp5_simulation',
-        'erp5_simulation_legacy',
-        'erp5_trade_simulation_legacy',
         'erp5_syncml',
         'erp5_tiosafe_core',
         'erp5_tiosafe_test',

@@ -458,13 +458,13 @@ class TestTaskMixin:
       self.assertEqual(task_line.getDescription(),
                        task_report_line.getDescription())
 
-  def stepVerifyTaskReportCausalityState(self, sequence=None,
+  def stepAssertDraftCausalityState(self, sequence=None,
                                          sequence_list=None, **kw):
     """
       Verify that confirmed task report starts building and gets solved.
     """
     task_report = sequence.get('task_report')
-    self.assertEqual(task_report.getCausalityState(), 'solved')
+    self.assertEqual(task_report.getCausalityState(), 'draft')
 
   def stepVerifyTaskReportNoPrice(self, sequence=None,
                                   sequence_list=None, **kw):
@@ -625,7 +625,7 @@ class TestTask(TestTaskMixin, ERP5TypeTestCase):
     sequence_string = self.default_task_report_sequence + '\
                        stepConfirmTaskReport \
                        stepTic \
-                       stepVerifyTaskReportCausalityState \
+                       stepAssertDraftCausalityState \
                        stepStartTaskReport \
                        stepFinishTaskReport \
                        stepCloseTaskReport \

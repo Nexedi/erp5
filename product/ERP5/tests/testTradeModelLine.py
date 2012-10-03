@@ -370,8 +370,8 @@ class TestTradeModelLine(TestTradeModelLineMixin):
   def checkWithoutBPM(self, order):
     self.commit()# clear transactional cache
     order.getSpecialiseValue()._setSpecialise(None)
-    self.assertRaises(ValueError, order.expand,
-      applied_rule_id=order.getCausalityRelatedId(portal_type='Applied Rule'))
+    self.assertRaises(ValueError, order.getCausalityRelatedValue(
+      portal_type='Applied Rule').expand, 'immediate')
     self.abort()
 
   def checkModelLineOnDelivery(self, delivery):

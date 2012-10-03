@@ -117,18 +117,7 @@ Please visit ERP5: %(url)s\n
                                             subject="[ERP5 Task] %s" % task_report.getTitle(), \n
                                             message=message)\n
 \n
-# Then, modify state\n
-confirm_tag = \'%s_confirm\' % task_report.getPath()\n
-task_report.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
-  tag=confirm_tag).Delivery_confirm()\n
-\n
-# First set the task_report in the building state\n
-task_report.startBuilding()\n
-# Then an activity should put the causality state in diverged or solved\n
-task_report.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
-  after_tag=confirm_tag).updateCausalityState()\n
+task_report.Delivery_confirm()\n
 </string> </value>
         </item>
         <item>

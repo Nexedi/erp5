@@ -50,23 +50,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.CMFCore.utils import getToolByName\n
-\n
-transaction = context\n
-preference_tool = getToolByName(context, \'portal_preferences\')\n
-\n
-transaction.edit (\n
+            <value> <string>preference_tool = context.getPortalObject().portal_preferences\n
+context.edit(\n
     source_section = preference_tool.getPreferredAccountingTransactionSourceSection(),\n
     resource = preference_tool.getPreferredAccountingTransactionCurrency())\n
-\n
-if hasattr(transaction, \'startBuilding\') :\n
-  transaction.startBuilding()\n
-  transaction.updateCausalityState()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>*args, **kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

@@ -56,7 +56,7 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_set.*</string>
+                <string>_set(?!LastId$|Ob$|Object$|Delivery$|DeliveryValue$)</string>
               </list>
             </value>
         </item>

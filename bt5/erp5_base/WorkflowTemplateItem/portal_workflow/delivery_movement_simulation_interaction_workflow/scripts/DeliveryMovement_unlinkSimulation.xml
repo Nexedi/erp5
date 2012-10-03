@@ -69,6 +69,8 @@ for simulation_movement in simulation_movement_list:\n
   # \'order\' category is deprecated. it is kept for compatibility.\n
   if simulation_movement.getOrder() == delivery_movement.getRelativeUrl():\n
     simulation_movement.setOrder(None)\n
+\n
+context.DeliveryMovement_updateSimulation(state_change)\n
 </string> </value>
         </item>
         <item>

@@ -28,7 +28,7 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
-                <string>Delivery_calculateCausalityState</string>
+                <string>Delivery_calculate</string>
               </list>
             </value>
         </item>

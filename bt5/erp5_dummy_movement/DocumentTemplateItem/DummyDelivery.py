@@ -69,3 +69,6 @@ class DummyDelivery(Delivery):
   def setCausalityState(self, state):
     """Directly sets a causality state."""
     self.causality_state = state
+
+  def serializeCausalityState(self):
+    pass

@@ -37,9 +37,11 @@ from Products.ERP5Type.Base import Base
 #from Products.ERP5.Core import MetaNode, MetaResource
 
 from Products.ERP5Type.XMLObject import XMLObject
+from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
 from Products.ERP5.mixin.amount_generator import AmountGeneratorMixin
 from Products.ERP5.mixin.composition import CompositionMixin
 from Products.ERP5.Document.Amount import Amount
+from Products.ERP5.Document.SimulatedDeliveryBuilder import BUILDING_KEY
 
 from zLOG import LOG, WARNING
 
@@ -581,6 +583,23 @@ class Movement(XMLObject, Amount, CompositionMixin, AmountGeneratorMixin):
     # 'order' category is deprecated. it is kept for compatibility.
     return (len(self.getDeliveryRelatedValueList()) > 0) or\
            (len(self.getOrderRelatedValueList()) > 0)
+
+  security.declareProtected(Permissions.AccessContentsInformation,
+                            'isGeneratedBySimulation')
+  def isGeneratedBySimulation(self):
+    """
+      Returns true if the movement is linked to a simulation movement whose
+      parent is not a root applied rule, even if the movement is being built.
+
+      Otherwise, this means the movement is or should be linked to a root
+      simulation movement.
+    """
+    simulation_movement = self.getDeliveryRelatedValue()
+    if simulation_movement is not None and \
+       not simulation_movement.getParentValue().isRootAppliedRule():
+      return True
+    building = getTransactionalVariable().get(BUILDING_KEY, ())
+    return self in building or self.getRootDeliveryValue() in building
 
   # New Causality API
   security.declareProtected( Permissions.AccessContentsInformation,

@@ -50,28 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>"""\n
- +-----+    +--------+\n
- |Order|    |Delivery|   \n
- +-----+    +--------+\n
-    |      /\n
-   [AR]   /          \n
-     `--[SM] (1)     \n
-          |        \n
-        [AR]     \n
-           `--[SM] (2)\n
-                | \n
-                  ...\n
-\n
-  This script reindex simulation movements in (1), so that delivery builder select movement in (2)\n
-with an up to date simulation state. We reindex simulation movements with the tag _updateAppliedRule,\n
-because that delivery builder builds after that tag.\n
-"""\n
-\n
-delivery = state_change[\'object\']\n
-tag = \'%s_expand\' % delivery.getPath()\n
-delivery.applyToDeliveryRelatedMovement(method_id=\'recursiveReindexObject\',\n
-                                        activate_kw=dict(tag=tag))\n
+            <value> <string>state_change[\'object\'].updateSimulation(create_root=1, index_related=1)\n
 </string> </value>
         </item>
         <item>

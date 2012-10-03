@@ -84,8 +84,6 @@ class TestAccountingRulesMixin:
   applied_rule_portal_type             = "Applied Rule"
   simulation_movement_portal_type      = "Simulation Movement"
   accounting_rule_cell_portal_type     = "Accounting Rule Cell"
-  invoice_transaction_rule_portal_type \
-                    = "Invoice Transaction Rule"
 
   payment_transaction_portal_type      = "Payment Transaction"
   payment_transaction_line_definition_list = (
@@ -678,15 +676,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     invoice_line = sequence.get('invoice_line')
     invoice._delObject(invoice_line.getId())
     invoice.recursiveReindexObject()
-
-  def stepUpdateAppliedRule(self, sequence, **kw) :
-    """ update the applied rule for the invoice. In the UI, the call to
-    updateAppliedRule is made in an interraction workflow when you edit
-    an invoice or its content."""
-    # edit is done through interaction workflow, so we just call 'edit'
-    # on the invoice (but this is not necessary)
-    invoice=sequence.get('invoice')
-    invoice.edit()
 
   def stepCreateSimpleInvoiceTwoLines(self, sequence, **kw) :
     """
@@ -1786,7 +1775,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
   @newSimulationExpectedFailure
   def test_05a_SimpleInvoiceReExpandAddLine(self, quiet=QUIET,
         run=RUN_ALL_TESTS):
-    """ Add a new line then updateAppliedRule.
+    """ Add a new line then updateSimulation.
     Create an empty invoice, plan, add a line so that this
     invoice is the same as `SimpleInvoice`, confirm it then check
     accounting lines
@@ -1953,7 +1942,7 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
     if not run:
       return
     if not quiet:
-      message = 'Test Simple Invoice Rule (many updateAppliedRule)'
+      message = 'Test Simple Invoice Rule (many updateSimulation)'
       ZopeTestCase._print('\n%s ' % message)
       LOG('Testing... ', INFO, message)
 
@@ -1976,7 +1965,6 @@ class TestAccountingRules(TestAccountingRulesMixin, ERP5TypeTestCase):
       stepTic """ +
       ("""
       stepEditInvoiceLine
-      stepUpdateAppliedRule
       stepTic""" * 4) +
       """
       stepConfirmInvoice

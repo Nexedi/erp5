@@ -50,8 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'parent_specialise_portal_type\'] = (\'Invoice Transaction Rule\',\n
-                                       \'Invoice Transaction Simulation Rule\')\n
+            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Invoice Transaction Simulation Rule\'\n
 kw[\'explanation_portal_type\'] = \'Pay Sheet Transaction\'\n
 kw[\'grand_parent_simulation_state\'] = \'confirmed\', \'started\'\n
 \n

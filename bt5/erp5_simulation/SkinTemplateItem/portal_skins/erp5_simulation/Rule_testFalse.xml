@@ -50,7 +50,9 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>return False\n
+            <value> <string># XXX: Using reference to select a rule (for a root applied rule) is wrong\n
+#      and should be replaced by predicate and workflow state.\n
+return False\n
 </string> </value>
         </item>
         <item>
