@@ -1240,7 +1240,10 @@ class ObjectTemplateItem(BaseTemplateItem):
             container_path_list = recursive_path.split('/')[:-1]
             self._backupObject(action, trashbin, container_path_list,
                                document_id)
-            parent.manage_delObjects([document_id])
+            try:
+              parent.manage_delObjects([document_id])
+            except BadRequest:
+              pass # subobject removed manually
     else:
       # for old business template format
       BaseTemplateItem.install(self, context, trashbin, **kw)
