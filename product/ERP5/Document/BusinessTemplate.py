@@ -1323,7 +1323,10 @@ class ObjectTemplateItem(BaseTemplateItem):
       document_id = document.getId()
       self._backupObject(action, trashbin, path.split('/')[:-1],
                          document_id)
-      parent.manage_delObjects([document_id])
+      try:
+        parent.manage_delObjects([document_id])
+      except BadRequest:
+        pass # removed manually
 
     self.afterInstall()
 
