@@ -83,7 +83,7 @@ class TrashTool(BaseTool):
       if object_id not in backup_object_container.objectIds():
         # export object
         object_path = container_path + [object_id]
-        obj = self.unrestrictedTraverse(object_path)
+        obj = self.unrestrictedTraverse(object_path, None)
         if obj is not None:
           connection = obj._p_jar
           o = obj
@@ -139,11 +139,10 @@ class TrashTool(BaseTool):
     if not keep_sub:
       # export subobjects
       if save:
-        obj = backup_object_container._getOb(object_id)
-        object_path = list(obj.getPhysicalPath())
+        obj = backup_object_container._getOb(object_id, None)
       else:
         object_path = container_path + [object_id]
-        obj = self.unrestrictedTraverse(object_path)
+        obj = self.unrestrictedTraverse(object_path, None)
       if obj is not None:
         for subobject_id in list(obj.objectIds()):
           subobject = obj[subobject_id]
