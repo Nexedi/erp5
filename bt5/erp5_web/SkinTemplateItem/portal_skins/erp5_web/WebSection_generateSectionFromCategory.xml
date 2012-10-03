@@ -194,7 +194,7 @@ return context.Base_redirect(form_id,\n
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>category, section_id, depth=1, update_existing=0, remove_missing=0, form_id=\'view\', **kw</string> </value>
+            <value> <string>category, section_id, depth=1, generate_nice_id=False, update_existing=0, remove_missing=0, form_id=\'view\', **kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
