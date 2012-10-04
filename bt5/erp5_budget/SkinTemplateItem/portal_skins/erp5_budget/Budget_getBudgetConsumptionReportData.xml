@@ -76,12 +76,16 @@ else:\n
   # ... or on the budget module, and in this case, all budgets are used\n
   defined_group = request[\'section_category\']\n
   strict_section_membership = request.get(\'section_category_strict\', False)\n
-  validation_state = request.get(\'validation_state\', [])\n
-  \n
-  budget_list = portal.portal_catalog.searchResults(\n
-                                portal_type=\'Budget\',\n
-                                validation_state=validation_state)\n
+  search_kw = dict(portal_type=\'Budget\',\n
+                   validation_state=validation_state)\n
+  budget_type = request.get(\'budget_type\')\n
+  if budget_type:\n
+    search_kw[\'default_budget_type_uid\'] = portal.portal_categories.budget_type.restrictedTraverse(budget_type).getUid()\n
+  specialise = request.get(\'specialise\')\n
+  if specialise:\n
+    search_kw[\'default_specialise_uid\'] = portal.restrictedTraverse(specialise).getUid()\n
 \n
+  budget_list = portal.portal_catalog.searchResults(**search_kw)\n
   group_filtered_budget_list = []\n
   filtered_budget_list = []\n
   for budget in budget_list:\n
