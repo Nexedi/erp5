@@ -97,8 +97,7 @@ class WorkingCopy(Implicit):
   def getWorkingCopyList(self):
     working_copy_list = []
     preferences = self.getPortalObject().portal_preferences
-    for path in (preferences.getPreferredWorkingCopyList() or # BBB
-                 preferences.getPreferredSubversionWorkingCopyList()):
+    for path in preferences.getPreferredWorkingCopyList():
       try:
         getVcsTool(vcs=self.reference, path=path)
         working_copy_list.append(path)

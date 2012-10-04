@@ -1,3 +1,6 @@
+2012-10-04 arnaud.fontaine
+* getPreferredSubversionWorkingCopyList() cannot be set properly.
+
 2012-04-19 Kazuhiko
 * add TypesTool_viewRoleInformationList that lists all Role Informations.
 
