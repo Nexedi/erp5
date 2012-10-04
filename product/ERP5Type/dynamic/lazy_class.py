@@ -43,7 +43,8 @@ class ERP5BaseBroken(Broken, ERP5Base):
   def __getattr__(self, name):
     try:
       return self.__dict__['__Broken_state__'][name]
-    except KeyError:
+    # TypeError: SynchronizationTool => SynchronisationTool
+    except (KeyError, TypeError):
       raise AttributeError("state of broken %r object has no %r key"
                            % (self.__class__.__name__, name))
 
