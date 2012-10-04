@@ -173,15 +173,15 @@ branch = %(branch)s
             if revision != test_result.revision:
               previous_revision = test_result.revision
               log('Disagreement on tested revision, checking out:')
-              for i, repository_revision in enumerate(previous_revision.split(',')):
+              for i, repository_revision in enumerate(test_result.revision.split(',')):
                 vcs_repository = vcs_repository_list[i]
                 repository_path = vcs_repository['repository_path']
-                revision = repository_revision.rsplit('-', 1)[1]
+                checkout_revision = repository_revision.rsplit('-', 1)[1]
                 # other testnodes on other boxes are already ready to test another
                 # revision
-                log('  %s at %s' % (repository_path, revision))
+                log('  %s at %s' % (repository_path, checkout_revision))
                 updater = Updater(repository_path, git_binary=config['git_binary'],
-                                  revision=revision, log=log,
+                                  revision=checkout_revision, log=log,
                                   process_manager=process_manager)
                 updater.checkout()
 
