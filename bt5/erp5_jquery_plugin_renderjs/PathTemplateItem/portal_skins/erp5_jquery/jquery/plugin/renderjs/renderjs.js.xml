@@ -12,7 +12,7 @@
         </item>
         <item>
             <key> <string>_EtagSupport__etag</string> </key>
-            <value> <string>ts46068994.72</string> </value>
+            <value> <string>ts49355317.03</string> </value>
         </item>
         <item>
             <key> <string>__name__</string> </key>
@@ -26,454 +26,596 @@
             <key> <string>data</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
+/*global console, require, $, localStorage, document */\n
+"use strict";\n
+\n
+/*\n
+ * RenderJs - Generic Gadget library renderer.\n
+ * http://www.renderjs.org/documentation\n
+ */\n
+\n
+// by default RenderJs will render all gadgets when page is loaded\n
+// still it\'s possible to override this and use explicit gadget rendering\n
+var RENDERJS_ENABLE_IMPLICIT_GADGET_RENDERING = true;\n
+\n
+// by default RenderJs will examin and bind all interaction gadgets\n
+// available\n
+var RENDERJS_ENABLE_IMPLICIT_INTERACTION_BIND = true;\n
+\n
+if (typeof require !== \'undefined\') {\n
+  // example of how we can use requirejs to load external libraries\n
+  //require(["../../../../lib/jstorage/jstorage.js"], function (util) {\n
+  //});\n
+}\n
+\n
 // fallback for IE\n
 if (typeof console === "undefined" || typeof console.log === "undefined") {\n
   console = {};\n
-  console.log = function() {};\n
+  console.log = function () {};\n
 }\n
 \n
-\n
-/*\n
- * Generic Gadget library renderer\n
- */\n
-\n
 var RenderJs = (function () {\n
+    // a variable indicating if current gadget loading is over or not\n
+    var is_ready = false;\n
 \n
-  // a variable indicating if current gadget loading is over or not\n
-  var is_ready = false;\n
-  \n
-  return  {\n
-   \n
-          bootstrap: function (root){\n
-                    /* initial load application gadget */\n
-                    RenderJs.loadGadgetFromUrl(root);\n
-                    RenderJs.load(root);\n
-          },\n
+    return {\n
+        bootstrap: function (root) {\n
+            /* initial load application gadget */\n
+            var gadget_id;\n
+            gadget_id = root.attr("id");\n
+            if (gadget_id!==undefined) {\n
+              // bootstart root gadget only if it is indeed a gadget\n
+              RenderJs.loadGadgetFromUrl(root);\n
+            }\n
+            RenderJs.load(root);\n
+        },\n
 \n
-          load: function (root) {\n
-                    /* Load gadget layout by traversing DOM */\n
-                    var gadget_list;\n
-                    gadget_list = root.find("[data-gadget]");\n
-                    // Load chilren\n
-                    gadget_list.each(function() {\n
-                      RenderJs.loadGadgetFromUrl($(this));\n
-                    });\n
-          },\n
+        load: function (root) {\n
+            /* Load gadget layout by traversing DOM */\n
+            var gadget_list, gadget, gadget_id, gadget_js;\n
+            gadget_list = root.find("[data-gadget]");\n
 \n
-          updateAndRecurse: function(gadget, data){\n
-                    /* Update current gadget and recurse down */\n
-                    gadget.append(data);\n
-                    // a gadget may contain sub gadgets\n
-                    this.load(gadget);\n
-          },\n
+            // register all gadget in advance so checkAndTriggerReady\n
+            // can have accurate information for list of all gadgets\n
+            gadget_list.each(function () {\n
+              gadget = $(this);\n
+              gadget_id = gadget.attr("id");\n
+              gadget_js = new RenderJs.Gadget(gadget_id, gadget);\n
+              RenderJs.GadgetIndex.registerGadget(gadget_js);\n
+            });\n
 \n
-          loadGadgetFromUrl: function(gadget) {\n
-                    /* Load gadget\'s SPECs from URL */\n
-                    var url, gadget_id, gadget_property, cacheable, cache_id, app_cache, data, gadget_js;\n
-                    url = gadget.attr("data-gadget");\n
-                    gadget_id = gadget.attr("id");\n
+            // Load chilren\n
+            gadget_list.each(function () {\n
+                RenderJs.loadGadgetFromUrl($(this));\n
+            });\n
+        },\n
 \n
-                    // register gadget in javascript namespace\n
-                    gadget_js = new RenderJs.Gadget(gadget_id, gadget);\n
-                    RenderJs.GadgetIndex.registerGadget(gadget_js);\n
+        updateAndRecurse: function (gadget, data) {\n
+            /* Update current gadget and recurse down */\n
+            gadget.append(data);\n
+            // a gadget may contain sub gadgets\n
+            this.load(gadget);\n
+        },\n
 \n
-                    if (url!==undefined && url!==""){\n
-                      gadget_property = gadget.attr("data-gadget:property");\n
-                      cacheable = false;\n
-                      if (gadget_property!==undefined) {\n
-                        gadget_property = $.parseJSON(gadget_property);\n
-                        cacheable = Boolean(gadget_property.cacheable);\n
-                      }\n
-                      //cacheable = false ; // to develop faster\n
-                      if (cacheable) {\n
-                          // get from cache if possible, use last part from URL as cache_key\n
-                          cache_id = gadget_property.cache_id;\n
-                          app_cache = RenderJs.Cache.get(cache_id, undefined);\n
-                          if(app_cache===undefined || app_cache===null){\n
-                            // not in cache so we pull from network and cache\n
-                            $.ajax({url:url,\n
-                                    yourCustomData: {"gadget_id": gadget_id, "cache_id": cache_id},\n
-                                    success: function (data) {\n
-                                                cache_id = this.yourCustomData.cache_id;\n
-                                                gadget_id = this.yourCustomData.gadget_id;\n
-                                                RenderJs.Cache.set(cache_id, data);\n
-                                                RenderJs.GadgetIndex.getGadgetById(gadget_id).setReady();\n
-                                                RenderJs.updateAndRecurse(gadget, data);\n
-                                                RenderJs.checkAndTriggerReady();\n
-                                      }});\n
-                          }\n
-                          else {\n
-                            // get from cache\n
-                            data = app_cache;\n
-                            gadget_js.setReady();\n
-                            this.updateAndRecurse(gadget, data);\n
-                            this.checkAndTriggerReady();\n
-                          }\n
+        loadGadgetFromUrl: function (gadget) {\n
+            /* Load gadget\'s SPECs from URL */\n
+            var url, gadget_id, gadget_property, cacheable, cache_id,\n
+                app_cache, data, gadget_js;\n
+            url = gadget.attr("data-gadget");\n
+            gadget_id = gadget.attr("id");\n
+            gadget_js = RenderJs.GadgetIndex.getGadgetById(gadget_id);\n
+            if (gadget_js===undefined) {\n
+              // register gadget in javascript namespace if not already registered\n
+              gadget_js = new RenderJs.Gadget(gadget_id, gadget);\n
+              RenderJs.GadgetIndex.registerGadget(gadget_js);\n
+            }\n
+\n
+            // update Gadget\'s instance with contents of "data-gadget-property"\n
+            gadget_property = gadget.attr("data-gadget-property");\n
+            if (gadget_property !== undefined) {\n
+              gadget_property = $.parseJSON(gadget_property);\n
+              $.each(gadget_property, function (key, value) {\n
+                gadget_js[key] = value;\n
+              });\n
+            }\n
+\n
+            if (url !== undefined && url !== "") {\n
+                cacheable = gadget.attr("data-gadget-cacheable");\n
+                cache_id = gadget.attr("data-gadget-cache-id");\n
+                if (cacheable !== undefined && cache_id !== undefined) {\n
+                    cacheable = Boolean(parseInt(cacheable, 10));\n
+                }\n
+                //cacheable = false ; // to develop faster\n
+                if (cacheable) {\n
+                    // get from cache if possible, use last part from URL as\n
+                    // cache_key\n
+                    app_cache = RenderJs.Cache.get(cache_id, undefined);\n
+                    if (app_cache === undefined || app_cache === null) {\n
+                        // not in cache so we pull from network and cache\n
+                        $.ajax({\n
+                            url: url,\n
+                            yourCustomData: {\n
+                                "gadget_id": gadget_id,\n
+                                "cache_id": cache_id\n
+                            },\n
+                            success: function (data) {\n
+                                cache_id = this.yourCustomData.cache_id;\n
+                                gadget_id = this.yourCustomData.gadget_id;\n
+                                RenderJs.Cache.set(cache_id, data);\n
+                                RenderJs.GadgetIndex.getGadgetById(gadget_id).\n
+                                    setReady();\n
+                                RenderJs.updateAndRecurse(gadget, data);\n
+                                RenderJs.checkAndTriggerReady();\n
+                            }\n
+                        });\n
+                    } else {\n
+                        // get from cache\n
+                        data = app_cache;\n
+                        gadget_js.setReady();\n
+                        this.updateAndRecurse(gadget, data);\n
+                        this.checkAndTriggerReady();\n
+                    }\n
+                } else {\n
+                    // not to be cached\n
+                    $.ajax({\n
+                        url: url,\n
+                        yourCustomData: {"gadget_id": gadget_id},\n
+                        success: function (data) {\n
+                            gadget_id = this.yourCustomData.gadget_id;\n
+                            RenderJs.GadgetIndex.getGadgetById(gadget_id).\n
+                                setReady();\n
+                            RenderJs.updateAndRecurse(gadget, data);\n
+                            RenderJs.checkAndTriggerReady();\n
                         }\n
-                      else {\n
-                        // not to be cached\n
-                        $.ajax({url:url,\n
-                                yourCustomData: {"gadget_id": gadget_id},\n
-                                success: function (data) {\n
-                                  gadget_id = this.yourCustomData.gadget_id;\n
-                                  RenderJs.GadgetIndex.getGadgetById(gadget_id).setReady();\n
-                                  RenderJs.updateAndRecurse(gadget, data);\n
-                                  RenderJs.checkAndTriggerReady();\n
-                                }});\n
-                      }\n
-                    }\n
-                    else {\n
-                      // gadget is an inline one so no need to load it from network\n
-                      gadget_js.setReady();\n
-                      RenderJs.checkAndTriggerReady();\n
-                    }\n
-          },\n
+                    });\n
+                }\n
+            } else {\n
+                // gadget is an inline one so no need to load it from network\n
+                gadget_js.setReady();\n
+                RenderJs.checkAndTriggerReady();\n
+            }\n
+        },\n
 \n
-          isReady: function (value) {\n
+        isReady: function (value) {\n
             /*\n
-            * Get rendering status\n
-            */\n
+             * Get rendering status\n
+             */\n
             return is_ready;\n
-          },\n
-          \n
-          setReady: function (value) {\n
+        },\n
+\n
+        setReady: function (value) {\n
             /*\n
-            * Update rendering status\n
-            */\n
-            is_ready = value;            \n
-          },\n
-          \n
-          checkAndTriggerReady: function() {\n
+             * Update rendering status\n
+             */\n
+            is_ready = value;\n
+        },\n
+\n
+        bindReady: function (ready_function) {\n
             /*\n
-            * Trigger "ready" event only if all gadgets were marked as "ready"\n
-            */\n
+             * Bind a function on ready gadget loading.\n
+             */\n
+            $("body").one("ready", ready_function);\n
+        },\n
+\n
+        checkAndTriggerReady: function () {\n
+            /*\n
+             * Trigger "ready" event only if all gadgets were marked as "ready"\n
+             */\n
             var is_gadget_list_loaded;\n
             is_gadget_list_loaded = RenderJs.GadgetIndex.isGadgetListLoaded();\n
-            if (is_gadget_list_loaded){\n
-              if (!RenderJs.isReady()) {\n
-                RenderJs.GadgetIndex.getRootGadget().getDom().trigger("ready");\n
-                RenderJs.setReady(true);\n
-              }\n
-              //is_ready = true;\n
+            if (is_gadget_list_loaded) {\n
+                if (!RenderJs.isReady()) {\n
+                    // backwards compatability with already written code\n
+                    RenderJs.GadgetIndex.getRootGadget().getDom().\n
+                        trigger("ready");\n
+                    // trigger ready on root body element\n
+                    $("body").trigger("ready");\n
+                    RenderJs.setReady(true);\n
+                }\n
             }\n
             return is_gadget_list_loaded;\n
-          },\n
+        },\n
 \n
-          update: function (root) {\n
-                    /* update gadget with data from remote source */\n
-                    root.find("[gadget]").each(function(i,v){RenderJs.updateGadgetData($(this));});\n
-          },\n
+        update: function (root) {\n
+            /* update gadget with data from remote source */\n
+            root.find("[gadget]").each(function (i, v) {\n
+                RenderJs.updateGadgetData($(this));\n
+            });\n
+        },\n
 \n
-          updateGadgetWithDataHandler: function (result) {\n
-                                        var data_handler;\n
-                                        data_handler = this.yourCustomData.data_handler;\n
-                                        if (data_handler!==undefined){\n
-                                          eval(data_handler+ "(result)");\n
-                                        }\n
-          },\n
+        updateGadgetWithDataHandler: function (result) {\n
+            var data_handler;\n
+            data_handler = this.yourCustomData.data_handler;\n
+            if (data_handler !== undefined) {\n
+                eval(data_handler + "(result)");\n
+            }\n
+        },\n
 \n
-          updateGadgetData: function(gadget) {\n
-                    /* Do real gagdet update here */\n
-                    var data_source, data_handler;\n
-                    data_source = gadget.attr("data-gadget:data-source");\n
-                    data_handler = gadget.attr("data-gadget:data-handler");\n
-                    // acquire data and pass it to method handler\n
-                    if (data_source!==undefined){\n
-                      $.ajax({url:data_source,\n
-                              dataType: "json",\n
-                              yourCustomData: {"data_handler": data_handler},\n
-                              success: RenderJs.updateGadgetWithDataHandler});}\n
-          },\n
+        updateGadgetData: function (gadget) {\n
+            /* Do real gagdet update here */\n
+            var data_source, data_handler;\n
+            data_source = gadget.attr("data-gadget-source");\n
+            data_handler = gadget.attr("data-gadget-handler");\n
+            // acquire data and pass it to method handler\n
+            if (data_source !== undefined && data_source !== "") {\n
+                $.ajax({\n
+                    url: data_source,\n
+                    dataType: "json",\n
+                    yourCustomData: {"data_handler": data_handler},\n
+                    success: RenderJs.updateGadgetWithDataHandler\n
+                });\n
+            }\n
+        },\n
 \n
-          Cache : (function() {\n
-                  /*\n
-                  * Generic cache implementation that can fall back to local namespace storage\n
-                  * if no "modern" storage like localStorage is available\n
-                  */\n
+        addGadget: function (dom_id, gadget, gadget_data_handler,\n
+                            gadget_data_source) {\n
+            /*\n
+             * add new gadget and render it\n
+             */\n
+            var html_string, tab_container, tab_gadget;\n
+            tab_container = $(\'#\' + dom_id);\n
+            tab_container.empty();\n
+            html_string = [\n
+                \'<div class="gadget" \',\n
+                \'data-gadget="\' + gadget + \'"\',\n
+                \'data-gadget-handler="\' + gadget_data_handler + \'" \',\n
+                \'data-gadget-source="\' + gadget_data_source + \'"></div>\'\n
+            ].join(\'\\n\');\n
 \n
-                  return {\n
+            tab_container.append(html_string);\n
+            tab_gadget = tab_container.find(".gadget");\n
+            // render new gadget\n
+            RenderJs.setReady(false);\n
+            RenderJs.loadGadgetFromUrl(tab_gadget);\n
+            // clear previous events\n
+            RenderJs.GadgetIndex.getRootGadget().getDom().bind(\n
+                "ready",\n
+                function () {\n
+                    if (!is_ready) {\n
+                        RenderJs.updateGadgetData(tab_gadget);\n
+                        is_ready = true;\n
+                    }\n
+                }\n
+            );\n
+            return tab_gadget;\n
+        },\n
 \n
-                    ROOT_CACHE_ID: \'APP_CACHE\',\n
+        Cache: (function () {\n
+            /*\n
+             * Generic cache implementation that can fall back to local\n
+             * namespace storage if no "modern" storage like localStorage\n
+             * is available\n
+             */\n
+            return {\n
+                ROOT_CACHE_ID: \'APP_CACHE\',\n
 \n
-                    getCacheId: function (cache_id) {\n
-                      /* We should have a way to \'purge\' localStorage by setting a ROOT_CACHE_ID in all browser\n
-                      * instances\n
-                      */\n
-                      return this.ROOT_CACHE_ID + cache_id;\n
-                    },\n
-\n
-                    hasLocalStorage: function() {\n
-                      /*\n
-                      * Feature test if localStorage is supported\n
-                      */\n
-                      var mod;\n
-                      mod = \'localstorage_test_12345678\';\n
-                      try {\n
-                          localStorage.setItem(mod, mod);\n
-                          localStorage.removeItem(mod);\n
-                          return true;\n
-                      }\n
-                      catch (e) {\n
-                          return false;\n
-                      }\n
-                    },\n
-\n
-                    get: function (cache_id, default_value) {\n
-                      /* Get cache key value */\n
-                      cache_id = this.getCacheId(cache_id);\n
-                      if (this.hasLocalStorage()) {\n
-                        return this.LocalStorageCachePlugin.get(cache_id, default_value);\n
-                      }\n
-                      //fallback to javscript namespace cache\n
-                      return this.NameSpaceStorageCachePlugin.get(cache_id, default_value);\n
-                    },\n
-\n
-                    set: function (cache_id, data) {\n
-                      /* Set cache key value */\n
-                      cache_id = this.getCacheId(cache_id);\n
-                      if (this.hasLocalStorage()){\n
-                        this.LocalStorageCachePlugin.set(cache_id, data);}\n
-                      else{\n
-                        this.NameSpaceStorageCachePlugin.set(cache_id, data);}\n
-                    },\n
-\n
-                    LocalStorageCachePlugin : (function() {\n
-                      /*\n
-                      * This plugin saves using HTML5 localStorage.\n
-                      */\n
-                      return {\n
-                              get: function (cache_id, default_value) {\n
-                                /* Get cache key value */\n
-                                return $.jStorage.get(cache_id, default_value);\n
-                              },\n
-\n
-                              set: function (cache_id, data) {\n
-                                /* Set cache key value */\n
-                                $.jStorage.set(cache_id, data);\n
-                              }\n
-                      }}()),\n
-\n
-                      NameSpaceStorageCachePlugin: (function() {\n
-                        /*\n
-                        * This plugin saves within current page namespace.\n
-                        */\n
-\n
-                        var namespace = {};\n
-\n
-                        return {\n
-                                get: function (cache_id, default_value) {\n
-                                  /* Get cache key value */\n
-                                  return namespace[cache_id];\n
-                                },\n
-\n
-                                set: function (cache_id, data) {\n
-                                  /* Set cache key value */\n
-                                  namespace[cache_id] = data;\n
-                                }\n
-\n
-                        }}())\n
-\n
-          }}()),\n
-\n
-          Gadget: ( function (id, dom) {\n
-                  /*\n
-                  * Javascript Gadget representation\n
-                  */\n
-                  this.id = id;\n
-                  this.dom = dom;\n
-                  this.is_ready = false;\n
-\n
-                  this.getId = function() {\n
-                    return this.id;\n
-                  };\n
-\n
-                  this.getDom = function() {\n
-                    return this.dom;\n
-                  };\n
-\n
-                  this.isReady = function() {\n
+                getCacheId: function (cache_id) {\n
                     /*\n
-                    * Return True if remote gadget is loaded into DOM.\n
-                    */\n
-                    return this.is_ready;\n
-                  };\n
+                     * We should have a way to \'purge\' localStorage by setting a\n
+                     * ROOT_CACHE_ID in all browser instances\n
+                     */\n
+                    return this.ROOT_CACHE_ID + cache_id;\n
+                },\n
 \n
-                  this.setReady = function() {\n
+                hasLocalStorage: function () {\n
                     /*\n
-                    * Return True if remote gadget is loaded into DOM.\n
-                    */\n
-                    this.is_ready = true;\n
-                  };\n
-          }),\n
-                \n
-          TabbularGadget : (function () {\n
-                  /*\n
-                  * Generic tabular gadget\n
-                  */\n
-                  return {\n
+                     * Feature test if localStorage is supported\n
+                     */\n
+                    var mod;\n
+                    mod = \'localstorage_test_12345678\';\n
+                    try {\n
+                        localStorage.setItem(mod, mod);\n
+                        localStorage.removeItem(mod);\n
+                        return true;\n
+                    } catch (e) {\n
+                        return false;\n
+                    }\n
+                },\n
 \n
-                        toggleVisibility: function(visible_dom) {\n
-                          /*\n
-                          * Set tab as active visually and mark as not active rest.\n
-                          */\n
-                          $(".selected").addClass("not_selected"); $(".selected").removeClass("selected");\n
-                          visible_dom.addClass("selected");\n
-                          visible_dom.removeClass("not_selected");\n
-                        },\n
+                get: function (cache_id, default_value) {\n
+                    /* Get cache key value */\n
+                    cache_id = this.getCacheId(cache_id);\n
+                    if (this.hasLocalStorage()) {\n
+                        return this.LocalStorageCachePlugin.\n
+                            get(cache_id, default_value);\n
+                    }\n
+                    //fallback to javscript namespace cache\n
+                    return this.NameSpaceStorageCachePlugin.\n
+                        get(cache_id, default_value);\n
+                },\n
 \n
-                        addNewTabGadget: function(dom_id, gadget, gadget_data_handler, gadget_data_source) {\n
-                          /*\n
-                          * add new gadget and render it\n
-                          */\n
-                          var html_string;\n
-                          tab_container=$(\'#\'+dom_id);\n
-                          tab_container.empty();\n
-                          html_string =[\'<div class="gadget" \',\n
-                                        \'data-gadget="\' + gadget + \'"\',\n
-                                        \'data-gadget:data-handler="\' + gadget_data_handler + \'" \',\n
-                                        \'data-gadget:data-source="\' + gadget_data_source +\'"></div>\'].join(\'\\n\');\n
+                set: function (cache_id, data) {\n
+                    /* Set cache key value */\n
+                    cache_id = this.getCacheId(cache_id);\n
+                    if (this.hasLocalStorage()) {\n
+                        this.LocalStorageCachePlugin.set(cache_id, data);\n
+                    } else {\n
+                        this.NameSpaceStorageCachePlugin.set(cache_id, data);\n
+                    }\n
+                },\n
 \n
-                          tab_container.append(html_string);\n
-                          tab_gadget = tab_container.find(".gadget");\n
-\n
-                          // XXX: we should unregister all gadgets (if any we replace now in DOM)\n
-\n
-                          // render new gadget\n
-                          RenderJs.setReady(false);\n
-                          RenderJs.loadGadgetFromUrl(tab_gadget);\n
-                          // clear previous events\n
-                          RenderJs.GadgetIndex.getRootGadget().getDom().bind("ready", function (){\n
-                            if (!is_ready){\n
-                              RenderJs.updateGadgetData(tab_gadget);\n
-                              is_ready = true;\n
+                LocalStorageCachePlugin: (function () {\n
+                    /*\n
+                     * This plugin saves using HTML5 localStorage.\n
+                     */\n
+                    return {\n
+                        get: function (cache_id, default_value) {\n
+                            /* Get cache key value */\n
+                            if (cache_id in localStorage) {\n
+                              return JSON.parse(localStorage.getItem(cache_id));\n
                             }\n
-                          });\n
+                            else {\n
+                              return default_value;\n
+                            }\n
+                        },\n
+\n
+                        set: function (cache_id, data) {\n
+                            /* Set cache key value */\n
+                            localStorage.setItem(cache_id, JSON.stringify(data));\n
                         }\n
+                    };\n
+                }()),\n
 \n
-          }}()),\n
+                NameSpaceStorageCachePlugin: (function () {\n
+                    /*\n
+                     * This plugin saves within current page namespace.\n
+                     */\n
+                    var namespace = {};\n
 \n
-\n
-          GadgetIndex : (function () {\n
-                  /*\n
-                  * Generic gadget index placeholder\n
-                  */\n
-                  var gadget_list = [];\n
-\n
-                  return  {\n
-\n
-                        getGadgetList: function() {\n
-                          /*\n
-                          * Return list of registered gadgets\n
-                          */\n
-                          return gadget_list;\n
+                    return {\n
+                        get: function (cache_id, default_value) {\n
+                            /* Get cache key value */\n
+                            return namespace[cache_id];\n
                         },\n
 \n
-                        registerGadget: function(gadget) {\n
-                          /*\n
-                          * Register gadget\n
-                          */\n
-                          gadget_list.push(gadget);\n
-                        },\n
+                        set: function (cache_id, data) {\n
+                            /* Set cache key value */\n
+                            namespace[cache_id] = data;\n
+                        }\n
+                    };\n
+                }())\n
+            };\n
+        }()),\n
 \n
-                        unregisterGadget: function(gadget) {\n
-                          /*\n
-                          * Unregister gadget\n
-                          */\n
-                          var index = $.inArray(gadget, gadget_list);\n
-                          if (index!==-1) {\n
-                            gadget_list.splice(index, 1);\n
-                          }\n
-                        },\n
+        Gadget: (function (gadget_id, dom) {\n
+            /*\n
+             * Javascript Gadget representation\n
+             */\n
+            this.id = gadget_id;\n
+            this.dom = dom;\n
+            this.is_ready = false;\n
 \n
-                        getGadgetById: function (gadget_id) {\n
-                          /*\n
-                          * Get gadget javascript representation by its Id\n
-                          */\n
-                          var gadget;\n
-                          gadget = undefined;\n
-                          $(RenderJs.GadgetIndex.getGadgetList()).each(\n
-                            function (index, value) {\n
-                              if (value.getId()===gadget_id) {\n
+            this.getId = function () {\n
+                return this.id;\n
+            };\n
+\n
+            this.getDom = function () {\n
+                return this.dom;\n
+            };\n
+\n
+            this.isReady = function () {\n
+                /*\n
+                 * Return True if remote gadget is loaded into DOM.\n
+                 */\n
+                return this.is_ready;\n
+            };\n
+\n
+            this.setReady = function () {\n
+                /*\n
+                 * Return True if remote gadget is loaded into DOM.\n
+                 */\n
+                this.is_ready = true;\n
+            };\n
+        }),\n
+\n
+        TabbularGadget: (function () {\n
+            /*\n
+             * Generic tabular gadget\n
+             */\n
+            return {\n
+                toggleVisibility: function (visible_dom) {\n
+                    /*\n
+                     * Set tab as active visually and mark as not active rest.\n
+                     */\n
+                    $(".selected").addClass("not_selected");\n
+                    $(".selected").removeClass("selected");\n
+                    visible_dom.addClass("selected");\n
+                    visible_dom.removeClass("not_selected");\n
+                },\n
+\n
+                addNewTabGadget: function (dom_id, gadget, gadget_data_handler,\n
+                                          gadget_data_source) {\n
+                    /*\n
+                     * add new gadget and render it\n
+                     */\n
+                    var tab_gadget;\n
+                    tab_gadget = RenderJs.addGadget(\n
+                        dom_id, gadget, gadget_data_handler, gadget_data_source\n
+                    );\n
+                    // XXX: we should unregister all gadgets (if any we replace now in DOM)\n
+                }\n
+            };\n
+        }()),\n
+\n
+        GadgetIndex: (function () {\n
+            /*\n
+             * Generic gadget index placeholder\n
+             */\n
+            var gadget_list = [];\n
+\n
+            return {\n
+                getGadgetList: function () {\n
+                    /*\n
+                     * Return list of registered gadgets\n
+                     */\n
+                    return gadget_list;\n
+                },\n
+\n
+                registerGadget: function (gadget) {\n
+                    /*\n
+                     * Register gadget\n
+                     */\n
+                    gadget_list.push(gadget);\n
+                },\n
+\n
+                unregisterGadget: function (gadget) {\n
+                    /*\n
+                     * Unregister gadget\n
+                     */\n
+                    var index = $.inArray(gadget, gadget_list);\n
+                    if (index !== -1) {\n
+                        gadget_list.splice(index, 1);\n
+                    }\n
+                },\n
+\n
+                getGadgetById: function (gadget_id) {\n
+                    /*\n
+                     * Get gadget javascript representation by its Id\n
+                     */\n
+                    var gadget;\n
+                    gadget = undefined;\n
+                    $(RenderJs.GadgetIndex.getGadgetList()).each(\n
+                        function (index, value) {\n
+                            if (value.getId() === gadget_id) {\n
                                 gadget = value;\n
-                              }});\n
-                          return gadget;\n
-                        },\n
+                            }\n
+                        }\n
+                    );\n
+                    return gadget;\n
+                },\n
 \n
-                        getRootGadget: function () {\n
-                          /*\n
-                          * Return root gadget (always first one in list)\n
-                          */\n
-                          return this.getGadgetList()[0];\n
-                        },\n
+                getRootGadget: function () {\n
+                    /*\n
+                     * Return root gadget (always first one in list)\n
+                     */\n
+                    return this.getGadgetList()[0];\n
+                },\n
 \n
-                        isGadgetListLoaded: function () {\n
-                          /*\n
-                          * Return True if all gadgets were loaded from network or cache\n
-                          */\n
-                          var result;\n
-                          result = true;\n
-                          $(this.getGadgetList()).each(\n
-                            function (index, value) {\n
-                              if (value.isReady()===false) {\n
+                isGadgetListLoaded: function () {\n
+                    /*\n
+                     * Return True if all gadgets were loaded from network or\n
+                     * cache\n
+                     */\n
+                    var result;\n
+                    result = true;\n
+                    $(this.getGadgetList()).each(\n
+                        function (index, value) {\n
+                            if (value.isReady() === false) {\n
                                 result = false;\n
-                              }\n
-                            });\n
-                          return result;\n
-                        },\n
-\n
-                        getSelf: function (){\n
-                          /*\n
-                          * Return Gadget\'s Javascript representation\n
-                          */\n
-                          // XXX:\n
+                            }\n
                         }\n
+                    );\n
+                    return result;\n
+                }\n
+            };\n
+        }()),\n
 \n
-          }}()),\n
+        InteractionGadget : (function () {\n
+            /*\n
+             * Basic gadget interaction gadget implementation.\n
+             */\n
+            return {\n
+                bind: function (gadget_dom) {\n
+                    /*\n
+                     * Bind event between gadgets.\n
+                     */\n
+                    var gadget_id, gadget_connection_list,\n
+                      createMethodInteraction = function (\n
+                        original_source_method_id, source_gadget_id,\n
+                        source_method_id, destination_gadget_id,\n
+                        destination_method_id) {\n
+                        var interaction = function () {\n
+                            RenderJs.GadgetIndex.getGadgetById(\n
+                                source_gadget_id)[original_source_method_id].\n
+                                apply(null, arguments);\n
+                            RenderJs.GadgetIndex.getGadgetById(\n
+                                destination_gadget_id)[destination_method_id].\n
+                                apply(null, arguments);\n
+                        };\n
+                        return interaction;\n
+                    },\n
+                    createTriggerInteraction = function (\n
+                        destination_gadget_id, destination_method_id) {\n
+                        var interaction = function () {\n
+                            RenderJs.GadgetIndex.getGadgetById(\n
+                                destination_gadget_id)[destination_method_id].\n
+                                apply(null, arguments);\n
+                        };\n
+                        return interaction;\n
+                    };\n
+                    gadget_id = gadget_dom.attr("id");\n
+                    gadget_connection_list = gadget_dom.attr("data-gadget-connection");\n
+                    gadget_connection_list = $.parseJSON(gadget_connection_list);\n
+                    $.each(gadget_connection_list, function (key, value) {\n
+                        var source, source_gadget_id, source_method_id,\n
+                        source_gadget, destination, destination_gadget_id,\n
+                        destination_method_id, destination_gadget,\n
+                        original_source_method_id;\n
+                        source = value.source.split(".");\n
+                        source_gadget_id = source[0];\n
+                        source_method_id = source[1];\n
+                        source_gadget = RenderJs.GadgetIndex.\n
+                            getGadgetById(source_gadget_id);\n
 \n
-          InteractionGadget : (function () {\n
-                  /*\n
-                  * Basic gadget interaction gadget implementation.\n
-                  */\n
-                  return {\n
+                        destination = value.destination.split(".");\n
+                        destination_gadget_id = destination[0];\n
+                        destination_method_id = destination[1];\n
+                        destination_gadget = RenderJs.GadgetIndex.\n
+                            getGadgetById(destination_gadget_id);\n
 \n
-                      bind: function (gadget_dom){\n
-                        /*\n
-                        * Bind event between gadgets.\n
-                        */\n
-                        gadget_id = gadget_dom.attr("id");\n
-                        gadget_dom.find("connect").each(function (key, value){\n
-                          var source, source_gadget_id, source_method_id, source_gadget, destination, destination_gadget_id,\n
-                              destination_method_id, destination_gadget, func_body, func;\n
-                          source = $(value).attr("source").split(".");\n
-                          source_gadget_id = source[0];\n
-                          source_method_id = source[1];\n
-                          source_gadget = RenderJs.GadgetIndex.getGadgetById(source_gadget_id);\n
-\n
-                          destination = $(value).attr("destination").split(".");\n
-                          destination_gadget_id = destination[0];\n
-                          destination_method_id = destination[1];\n
-                          destination_gadget = RenderJs.GadgetIndex.getGadgetById(destination_gadget_id);\n
-\n
-                          if (source_gadget.hasOwnProperty(source_method_id)){\n
+                        if (source_gadget.hasOwnProperty(source_method_id)) {\n
                             // direct javascript use case\n
-                            func_body = \'RenderJs.GadgetIndex.getGadgetById("\' + source_gadget_id + \'")["original_\' + source_method_id + \'"]();\';\n
-                            func_body = func_body + \'\\nRenderJs.GadgetIndex.getGadgetById("\' + destination_gadget_id + \'")["\' + destination_method_id + \'"]();\';\n
-                            func = new Function(func_body);\n
-                            source_gadget["original_" + source_method_id] = source_gadget[source_method_id];\n
-                            source_gadget[source_method_id] =  func;\n
-                          }\n
-                          else{\n
-                            // this is a custom event attached to HTML gadget representation\n
-                            func_body = \'RenderJs.GadgetIndex.getGadgetById("\' + destination_gadget_id + \'")["\' + destination_method_id + \'"]();\';\n
-                            func = new Function(func_body);\n
-                            source_gadget.dom.bind(source_method_id, func);\n
-                          }\n
+                            original_source_method_id = "original_" +\n
+                                source_method_id;\n
+                            source_gadget[original_source_method_id] =\n
+                                source_gadget[source_method_id];\n
+                            source_gadget[source_method_id] =\n
+                                createMethodInteraction(\n
+                                    original_source_method_id,\n
+                                    source_gadget_id,\n
+                                    source_method_id,\n
+                                    destination_gadget_id,\n
+                                    destination_method_id\n
+                                );\n
                         }\n
-                        );\n
-                      }\n
-          }}())\n
+                        else {\n
+                            // this is a custom event attached to HTML gadget\n
+                            // representation\n
+                            source_gadget.dom.bind(\n
+                                source_method_id,\n
+                                createTriggerInteraction(\n
+                                    destination_gadget_id, destination_method_id\n
+                                )\n
+                            );\n
+                        }\n
+                    });\n
+                }\n
+            };\n
+        }())\n
+    };\n
+}());\n
 \n
-  }}());
+// impliticly call RenderJs bootstrap\n
+$(document).ready(function () {\n
+    if (RENDERJS_ENABLE_IMPLICIT_GADGET_RENDERING) {\n
+        RenderJs.bootstrap($(\'body\'));\n
+    }\n
+    if (RENDERJS_ENABLE_IMPLICIT_INTERACTION_BIND) {\n
+      var root_gadget = RenderJs.GadgetIndex.getRootGadget();\n
+      // We might have a page without gadgets.\n
+      // Be careful, right now we can be in this case because\n
+      // asynchronous gadget loading is not finished\n
+      if (root_gadget !== undefined) {\n
+        RenderJs.bindReady(\n
+           function () {\n
+             // examine all Intaction Gadgets and bind accordingly\n
+             $("div[data-gadget-connection]").each( function(index, element) {\n
+               RenderJs.InteractionGadget.bind($(element));\n
+             })\n
+           });\n
+      }\n
+    }\n
+});
 
 ]]></string> </value>
         </item>
@@ -483,7 +625,7 @@ var RenderJs = (function () {\n
         </item>
         <item>
             <key> <string>size</string> </key>
-            <value> <int>18997</int> </value>
+            <value> <int>22925</int> </value>
         </item>
         <item>
             <key> <string>title</string> </key>
