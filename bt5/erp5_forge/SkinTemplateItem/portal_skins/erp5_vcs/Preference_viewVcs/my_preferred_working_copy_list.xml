@@ -118,7 +118,7 @@
       <dictionary>
         <item>
             <key> <string>_text</string> </key>
-            <value> <string>python: here.getPreferredWorkingCopyList() or here.getPreferredSubversionWorkingCopyList()</string> </value>
+            <value> <string>python: here.getPreferredWorkingCopyList()</string> </value>
         </item>
       </dictionary>
     </pickle>
