@@ -1,6 +1,14 @@
 Changes
 =======
 
+0.4.10 (2012-10-01)
+------------------
+
+ * erp5.util.testnode:
+
+  - Allow to use a firefox built by testnode for
+    functional tests [Gabriel Monnerat]
+
 0.4.9 (2012-10-01)
 ------------------
 
