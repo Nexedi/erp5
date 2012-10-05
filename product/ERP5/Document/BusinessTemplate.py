@@ -5001,6 +5001,8 @@ Business Template is a set of definitions, such as skins, portal types and categ
       # Build each part
       for item_name in self._item_name_list:
         item = getattr(self, item_name)
+        if item is None:
+          continue
         if self.getBtForDiff():
           item.is_bt_for_diff = 1
         item.build(self)
@@ -5559,7 +5561,9 @@ Business Template is a set of definitions, such as skins, portal types and categ
 
       # Export each part
       for item_name in self._item_name_list:
-        getattr(self, item_name).export(context=self, bta=bta)
+        item = getattr(self, item_name, None)
+        if item is not None:
+          item.export(context=self, bta=bta)
 
       return bta.finishCreation()
 
