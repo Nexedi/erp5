@@ -27,9 +27,7 @@
         </item>
         <item>
             <key> <string>content_icon</string> </key>
-            <value>
-              <none/>
-            </value>
+            <value> <string>web_page.png</string> </value>
         </item>
         <item>
             <key> <string>description</string> </key>
