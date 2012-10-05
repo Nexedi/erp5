@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<ZopeData>
+  <record id="1" aka="AAAAAAAAAAE=">
+    <pickle>
+      <global name="DTMLDocument" module="OFS.DTMLDocument"/>
+    </pickle>
+    <pickle>
+      <dictionary>
+        <item>
+            <key> <string>__name__</string> </key>
+            <value> <string>activity_watcher.js</string> </value>
+        </item>
+        <item>
+            <key> <string>_vars</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>globals</string> </key>
+            <value>
+              <dictionary/>
+            </value>
+        </item>
+        <item>
+            <key> <string>raw</string> </key>
+            <value> <string encoding="cdata"><![CDATA[
+
+(function () {\n
+var interval = 1000,\n
+div = \'#activity_watcher\',\n
+html_content = \'\',\n
+basedir = location.pathname.split(\'/\').slice(0,-1).join(\'/\') + \'/\',\n
+fillhtml = function (data,messagetype,string) {\n
+  if (data[string] && data[string].line_list) {\n
+    for (i = 0; i < data[string].line_list.length; i++) {\n
+      var key_list = [\'message\',\'method_id\',\'node\',\'min_pri\',\'max_pri\'], j;\n
+      html_content += \'<tr><td>\' + messagetype + \'</td>\';\n
+      for (j = 0; j < key_list.length; j++) {\n
+        html_content += \'<td>\' + data[string].line_list[i][key_list[j]] + \'</td>\';\n
+      }\n
+      html_content += \'</tr>\';\n
+    }\n
+  }\n
+},\n
+fillhtml2 = function (data,messagetype,string) {\n
+  if (data[string] && data[string].line_list) {\n
+    for (i = 0; i < data[string].line_list.length; i++) {\n
+      var key_list = [\'min\',\'avg\',\'max\'], j;\n
+      html_content += \'<tr><td>\' + messagetype + \'</td>\' +\n
+        \'<td>\' + data[string].line_list[i].pri + \'</td>\';\n
+      for (j = 0; j < key_list.length; j++) {\n
+        // if (typeof data[string].line_list[i][key_list[j]] == \'number\') {\n
+        //   var d = new Date(data[string].line_list[i][key_list[j]]);\n
+        //   html_content += \'<td>\' + d.getTime() + \'</td>\';\n
+        // } else {\n
+          html_content += \'<td>\' + data[string].line_list[i][key_list[j]] + \'</td>\';\n
+        // }\n
+      }\n
+      html_content += \'</tr>\';\n
+    }\n
+  }\n
+},\n
+watcher = function () {\n
+  $.ajax({\n
+    url: basedir + \'ActivityTool_getSqlStatisticList\',\n
+    type: \'POST\',\n
+    timeout: 10000,\n
+    success: function (response) {\n
+      var i, data;\n
+      data = JSON.parse(response);\n
+      html_content = \'<table><tr><th>Type</th><th>Message</th><th>Method Id</th><th>Processing Node</th><th>Min pri</th><th>Max pri</th></tr>\';\n
+      fillhtml(data,\'dict\',\'SQLDict\');\n
+      fillhtml(data,\'queue\',\'SQLQueue\');\n
+      html_content += \'</table>\' +\n
+        \'<table><tr><th>Type</th><th>Pri</th><th>Min</th><th>Avg</th><th>Max</th></tr>\';\n
+      fillhtml2(data,\'dict\',\'SQLDict2\');\n
+      fillhtml2(data,\'queue\',\'SQLQueue2\');\n
+      html_content += \'</table>\';\n
+      $(div).html(html_content);\n
+      setTimeout(watcher,interval);\n
+    },\n
+    error: function (type) {\n
+      if (!html_content) {\n
+        $(div).html(\'ERROR \' + type.status + \': \' + type.statusText);\n
+      } else {\n
+        $(div).html(\'ERROR \' + type.status + \': \' + type.statusText + \'<br />\' + html_content);\n
+      }\n
+      if (type.status < 400) {\n
+        setTimeout(watcher,interval);\n
+      }\n
+    }\n
+  });\n
+};\n
+watcher();\n
+}());\n
+
+
+]]></string> </value>
+        </item>
+        <item>
+            <key> <string>title</string> </key>
+            <value> <string></string> </value>
+        </item>
+      </dictionary>
+    </pickle>
+  </record>
+</ZopeData>
