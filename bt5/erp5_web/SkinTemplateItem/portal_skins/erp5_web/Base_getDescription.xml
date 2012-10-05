@@ -60,8 +60,10 @@ if portal_type==\'Discussion Thread\':\n
   discussion_post_list = context.objectValues()\n
   if len(discussion_post_list):\n
     return discussion_post_list[0].getTextContent()\n
-if portal_type==\'Discussion Post\':\n
+\n
+if getattr(context, \'getTextContent\', None) is not None:\n
   return context.getTextContent()\n
+\n
 # by default use getDescription\n
 if getattr(context, \'getDescription\', None) is not None:\n
   return context.getDescription()\n
