@@ -166,10 +166,6 @@ class TaskDistributionTool(BaseTool):
       else:
         raise ValueError('found this list of project : %r for title %r' % \
                       ([x.path for x in project_list], project_title))
-    else:
-      # Backward compatibility
-      project = portal.ERP5Site_getProjectFromTestSuite(name)
-      test_result.setSourceProjectValue(project)
     test_result.updateLocalRolesOnSecurityGroups() # XXX
     test_result_path = test_result.getRelativeUrl()
     self.test_result_dict[test_title] = test_result_path, line_dict
