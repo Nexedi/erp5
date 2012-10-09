@@ -10,15 +10,14 @@
             <key> <string>delegated_list</string> </key>
             <value>
               <list>
-                <string>css_class</string>
                 <string>default</string>
-                <string>title</string>
+                <string>editable</string>
               </list>
             </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>your_rss_link</string> </value>
+            <value> <string>listbox_link</string> </value>
         </item>
         <item>
             <key> <string>message_values</string> </key>
@@ -55,14 +54,14 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value>
                       <persistent> <string encoding="base64">AAAAAAAAAAI=</string> </persistent>
                     </value>
+                </item>
+                <item>
+                    <key> <string>editable</string> </key>
+                    <value> <string></string> </value>
                 </item>
                 <item>
                     <key> <string>field_id</string> </key>
@@ -74,10 +73,6 @@
                 </item>
                 <item>
                     <key> <string>target</string> </key>
-                    <value> <string></string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
                     <value> <string></string> </value>
                 </item>
               </dictionary>
@@ -88,16 +83,16 @@
             <value>
               <dictionary>
                 <item>
-                    <key> <string>css_class</string> </key>
-                    <value> <string>hidden_label</string> </value>
-                </item>
-                <item>
                     <key> <string>default</string> </key>
                     <value> <string></string> </value>
                 </item>
                 <item>
+                    <key> <string>editable</string> </key>
+                    <value> <int>0</int> </value>
+                </item>
+                <item>
                     <key> <string>field_id</string> </key>
-                    <value> <string>my_editor_field</string> </value>
+                    <value> <string>my_string_field</string> </value>
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
@@ -106,10 +101,6 @@
                 <item>
                     <key> <string>target</string> </key>
                     <value> <string>Click to edit the target</string> </value>
-                </item>
-                <item>
-                    <key> <string>title</string> </key>
-                    <value> <string>RSS / Atom Link</string> </value>
                 </item>
               </dictionary>
             </value>
@@ -127,7 +118,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:<a href="WebSection_viewLatestDiscussionPostListAsRSS"/> <img src="web_images/rss-image.png" title="Read RSS"/></a>
+python:\'%s/%s/view?list_start=%s&reset=1#%s\' %(here.REQUEST[\'URL1\'], cell.getParentValue().getReference(), cell.getId(), cell.getUid())
 
 ]]></string> </value>
         </item>

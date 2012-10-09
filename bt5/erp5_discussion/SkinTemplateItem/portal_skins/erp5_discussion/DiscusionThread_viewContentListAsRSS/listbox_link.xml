@@ -118,7 +118,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-python:\'%s/view?list_start=%s&reset=1#%s\' %(here.absolute_url(), cell.getId(), cell.getUid())
+python:\'%s/view?list_start=%s&reset=1#%s\' %(here.REQUEST[\'URL1\'], cell.getId(), cell.getUid())
 
 ]]></string> </value>
         </item>
