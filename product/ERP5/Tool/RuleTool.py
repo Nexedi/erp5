@@ -26,11 +26,13 @@
 #
 ##############################################################################
 
+from zLOG import LOG, INFO
 from Products.ERP5Type.Tool.BaseTool import BaseTool
 from AccessControl import ClassSecurityInfo
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile
 from Products.ERP5Type import Permissions
 from Products.ERP5 import _dtmldir
+from Products.ERP5Type.UnrestrictedMethod import UnrestrictedMethod
 
 class RuleTool(BaseTool):
   """
@@ -135,5 +137,15 @@ class RuleTool(BaseTool):
 
     return rule_list
 
+  security.declarePrivate('updateSimulation')
+  @UnrestrictedMethod
+  def updateSimulation(self, message_list):
+    expandable_dict = {}
+    for m in message_list:
+      expandable_dict.setdefault(m[0], {}).update(m[2])
+    for expandable, kw in expandable_dict.iteritems():
+      LOG("RuleTool", INFO, "Updating simulation for %s: %r"
+                            % (expandable.getPath(), kw))
+      expandable._updateSimulation(**kw)
 
 InitializeClass(RuleTool)

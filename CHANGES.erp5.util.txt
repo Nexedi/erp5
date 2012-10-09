@@ -1,6 +1,51 @@
 Changes
 =======
 
+0.4.10 (2012-10-01)
+------------------
+
+ * erp5.util.testnode:
+
+  - Allow to use a firefox built by testnode for
+    functional tests [Gabriel Monnerat]
+
+0.4.9 (2012-10-01)
+------------------
+
+ * erp5.util.testnode:
+
+  - remove --now parameter when calling slapgrid-sr since
+    it is not yet well supported [Sebastien Robin]
+
+0.4.8 (2012-09-27)
+------------------
+
+ * erp5.util.testnode:
+
+  - use taskdistribution module to reduce code
+    [Vincent Pelletier], [Pere Cortes]
+
+0.4.7 (2012-09-03)
+------------------
+
+ * erp5.util.taskdistribution:
+
+  - work around test lines acquiring values from parent when no value is
+    provided. [Vincent Pelletier]
+  - fix a regression introduced in 0.4.6 which allowed parallel XMLRPC calls,
+    which is not supported. [Rafael Monnerat]
+
+ * erp5.util.benchmark:
+
+  - check whether at least one result file could be found when generating a
+    scalability report. [Arnaud Fontaine]
+  - make sure that diagram bars are properly aligned in scalability test
+    report. [Arnaud Fontaine]
+
+ * erp5.util.testsuite:
+
+  - new module [Rafael Monnerat]
+
 0.4.6 (2012-08-10)
 ------------------
 

@@ -52,10 +52,9 @@
             <key> <string>_body</string> </key>
             <value> <string>"""Reset references on copied transactions.\n
 """\n
-context.setSourceReference(None)\n
 context.setReference(None)\n
-context.setDestinationReference(None)\n
-context.setSolver(None)\n
+# invoice is a delivery so call generic afterClone script\n
+context.Delivery_afterClone()\n
 </string> </value>
         </item>
         <item>

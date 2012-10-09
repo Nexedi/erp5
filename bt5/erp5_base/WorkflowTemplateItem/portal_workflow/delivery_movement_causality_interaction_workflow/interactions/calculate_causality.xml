@@ -28,7 +28,7 @@
             <key> <string>after_script_name</string> </key>
             <value>
               <list>
-                <string>DeliveryMovement_calculateCausalityState</string>
+                <string>DeliveryMovement_calculate</string>
               </list>
             </value>
         </item>
@@ -56,7 +56,8 @@
             <key> <string>method_id</string> </key>
             <value>
               <list>
-                <string>_set.*</string>
+                <string>_set(?!LastId$|Ob$|Object$)</string>
+                <string>manage_afterAdd</string>
               </list>
             </value>
         </item>

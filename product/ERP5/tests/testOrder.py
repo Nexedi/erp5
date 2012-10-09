@@ -1134,23 +1134,13 @@ class TestOrderMixin(SubcontentReindexingWrapper):
     order_line = sequence.get('order_line')
     order_line.getParentValue().manage_delObjects([order_line.getId()])
 
-  def stepCheckOrderSimulationStable(self, sequence=None, \
-      sequence_list=None, **kw):
+  def stepCheckOrderConvergent(self, sequence=None, sequence_list=None, **kw):
     """
     Tests that the simulation related to the order is stable and not
     divergent
     """
     order = sequence.get('order')
-    order_movement_list = order.getMovementList()
-    related_simulation_list = []
-    for order_movement in order_movement_list:
-      related_simulation_list.extend(order_movement.getOrderRelatedValueList())
-    related_applied_rule_list = {}
-    for simulation_mvt in related_simulation_list:
-      self.assertFalse(simulation_mvt.isDivergent())
-      related_applied_rule_list[simulation_mvt.getParentValue()]=1
-    for applied_rule in related_applied_rule_list.keys():
-      self.assertTrue(applied_rule.isStable())
+    self.assertTrue(order.isConvergent())
 
   def stepPackingListAdoptPrevision(self,sequence=None, sequence_list=None,
                                     **kw):
@@ -2078,7 +2068,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepConfirmOrder \
                       stepTic \
                       stepCheckOrderSimulation \
-                      stepCheckOrderSimulationStable \
+                      stepCheckOrderConvergent \
                       '
     sequence_list.addSequenceString(sequence_string)
     # XXX XXX FIXME
@@ -2109,7 +2099,7 @@ class TestOrder(TestOrderMixin, ERP5TypeTestCase):
                       stepTic \
                       stepCheckOrderSimulation \
                       stepCheckDeliveryBuilding \
-                      stepCheckOrderSimulationStable \
+                      stepCheckOrderConvergent \
                       '
 #     sequence_list.addSequenceString(sequence_string)
 

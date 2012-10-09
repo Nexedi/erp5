@@ -626,10 +626,35 @@
   <td></td>\n
 </tr>\n
 \n
+<!-- Test show listbox of a form in "view" mode -->\n
+<tr>\n
+  <td>open</td>\n
+  <td>${base_url}/foo_module/0/Base_viewListMode?proxy_form_id=Foo_view&proxy_field_id=listbox</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//button[@title="ID"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//button[@title="Title"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//button[@title="Quantity"]</td>\n
+  <td></td>\n
+</tr>\n
+<tr>\n
+  <td>verifyElementPresent</td>\n
+  <td>//button[@title="Date"]</td>\n
+  <td></td>\n
+</tr>\n
 </tbody></table>\n
 </body>\n
-</html>\n
-
+</html>
 
 ]]></unicode> </value>
         </item>

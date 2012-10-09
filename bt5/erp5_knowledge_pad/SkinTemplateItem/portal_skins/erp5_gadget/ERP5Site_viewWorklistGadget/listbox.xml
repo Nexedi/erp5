@@ -84,6 +84,10 @@
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
+                        <tuple>
+                          <string>link</string>
+                          <string>RSS</string>
+                        </tuple>
                       </list>
                     </value>
                 </item>

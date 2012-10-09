@@ -112,6 +112,8 @@ class DownloadableMixin:
       # need to return it as attachment
       filename = self.getStandardFilename(format=format)
       RESPONSE.setHeader('Cache-Control', 'Private') # workaround for Internet Explorer's bug
+      # workaround for IE's bug to download files over SSL
+      RESPONSE.setHeader('Pragma', '')
       RESPONSE.setHeader('Content-Disposition',
                          'attachment; filename="%s"' % filename)
       RESPONSE.setHeader('Accept-Ranges', 'bytes')

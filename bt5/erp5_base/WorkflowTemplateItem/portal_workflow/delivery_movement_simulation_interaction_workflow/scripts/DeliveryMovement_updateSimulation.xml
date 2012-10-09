@@ -50,7 +50,15 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>state_change[\'object\'].getRootDeliveryValue().Delivery_updateSimulation()\n
+            <value> <string>movement = state_change[\'object\']\n
+if not movement.isGeneratedBySimulation():\n
+  # A setter was called on a movement that should be linked to\n
+  # a root simulation movement, which usually copies the movement.\n
+  # If there\'s a new movement in the delivery (e.g. _setObject),\n
+  # the root applied rule must be reexpanded in order to generate\n
+  # the missing simulation movement.\n
+  # XXX: Otherwise, it should be enough to reexpand the related SM.\n
+  movement.getRootDeliveryValue().updateSimulation(expand_root=1)\n
 </string> </value>
         </item>
         <item>

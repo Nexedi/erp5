@@ -60,8 +60,6 @@ split_and_defer = 0\n
 listbox = state_change[\'kwargs\'].get(\'listbox\')\n
 split_movement_list = []\n
 if listbox is not None:\n
-  # Create Delivery Applied Rule (if required)\n
-  delivery.Delivery_updateAppliedRule()\n
   for line in listbox:\n
     url = line[\'listbox_key\']\n
     choice = line[\'choice\']\n

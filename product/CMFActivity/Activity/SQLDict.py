@@ -132,16 +132,51 @@ class SQLDict(SQLBase):
       original_uid = path_and_method_id_dict.get(key)
       if original_uid is None:
         m = self.loadMessage(line.message, uid=uid, line=line)
+        merge_parent = m.activity_kw.get('merge_parent')
         try:
-          result = activity_tool.SQLDict_selectDuplicatedLineList(
-            path=path,
-            method_id=method_id,
-            group_method_id=line.group_method_id,
-          )
-          uid_list = [x.uid for x in result]
-          if uid_list:
+          if merge_parent:
+            path_list = []
+            while merge_parent != path:
+              path = path.rsplit('/', 1)[0]
+              assert path
+              original_uid = path_and_method_id_dict.get((path, method_id))
+              if original_uid is not None:
+                return None, original_uid, [uid]
+              path_list.append(path)
+            uid_list = []
+            if path_list:
+              result = activity_tool.SQLDict_selectParentMessage(
+                path=path_list,
+                method_id=method_id,
+                group_method_id=line.group_method_id,
+                processing_node=processing_node)
+              if result: # found a parent
+                # mark child as duplicate
+                uid_list.append(uid)
+                # switch to parent
+                line = result[0]
+                key = line.path, method_id
+                uid = line.uid
+                m = self.loadMessage(line.message, uid=uid, line=line)
+            # return unreserved similar children
+            result = activity_tool.SQLDict_selectChildMessageList(
+              path=line.path,
+              method_id=method_id,
+              group_method_id=line.group_method_id)
+            reserve_uid_list = [x.uid for x in result]
+            uid_list += reserve_uid_list
+            if not line.processing_node:
+              # reserve found parent
+              reserve_uid_list.append(uid)
+          else:
+            result = activity_tool.SQLDict_selectDuplicatedLineList(
+              path=path,
+              method_id=method_id,
+              group_method_id=line.group_method_id)
+            reserve_uid_list = uid_list = [x.uid for x in result]
+          if reserve_uid_list:
             activity_tool.SQLDict_reserveDuplicatedLineList(
-              processing_node=processing_node, uid=uid_list)
+              processing_node=processing_node, uid=reserve_uid_list)
           else:
             activity_tool.SQLDict_commit() # release locks
         except:
@@ -152,6 +187,8 @@ class SQLDict(SQLBase):
           self._log(TRACE, 'Reserved duplicate messages: %r' % uid_list)
         path_and_method_id_dict[key] = uid
         return m, uid, uid_list
+      # We know that original_uid != uid because caller skips lines we returned
+      # earlier.
       return None, original_uid, [uid]
     return load
 

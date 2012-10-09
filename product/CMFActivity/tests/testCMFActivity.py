@@ -35,6 +35,7 @@ from Testing import ZopeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import DummyMailHost
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
+from Products.ERP5Type.Base import Base
 from Products.CMFActivity.ActiveObject import INVOKE_ERROR_STATE,\
                                               VALIDATE_ERROR_STATE
 from Products.CMFActivity.Activity.Queue import VALIDATION_ERROR_DELAY
@@ -3585,6 +3586,70 @@ class TestCMFActivity(ERP5TypeTestCase, LogInterceptor):
     finally:
       activity_tool.__class__.invokeGroup = ActivityTool_invokeGroup
     self.assertEqual(invoked, [1])
+
+  def test_mergeParent(self):
+    category_tool = self.portal.portal_categories
+    # Test data:     c0
+    #               /  \
+    #             c1    c2
+    #            /  \   |
+    #           c3  c4  c5
+    c = [category_tool.newContent()]
+    for i in xrange(5):
+      c.append(c[i//2].newContent())
+    transaction.commit()
+    self.tic()
+    def activate(i, priority=1, **kw):
+      kw.setdefault('merge_parent', c[0].getPath())
+      c[i].activate(priority=priority, **kw).doSomething()
+    def check(*expected):
+      transaction.commit()
+      self.tic()
+      self.assertEquals(tuple(invoked), expected)
+      del invoked[:]
+    invoked = []
+    def doSomething(self):
+      invoked.append(c.index(self))
+    Base.doSomething = doSomething
+    try:
+      for t in (0, 1), (0, 4, 2), (1, 0, 5), (3, 2, 0):
+        for p, i in enumerate(t):
+          activate(i, p)
+        check(0)
+      activate(1, 0); activate(5, 1); check(1, 5)
+      activate(3, 0); activate(1, 1); check(1)
+      activate(2, 0); activate(1, 1); activate(4, 2); check(2, 1)
+      activate(4, 0); activate(5, 1); activate(3, 2); check(4, 5, 3)
+      activate(3, 0, merge_parent=c[1].getPath()); activate(0, 1); check(3, 0)
+      # Following test shows that a child can be merged with a parent even if
+      # 'merge_parent' is not specified. This can't be avoided without loading
+      # all found duplicates, which would be bad for performance.
+      activate(0, 0); activate(4, 1, merge_parent=None); check(0)
+    finally:
+      del Base.doSomething
+    def activate(i, priority=1, **kw):
+      c[i].activate(group_method_id='portal_categories/invokeGroup',
+                    merge_parent=c[(i-1)//2 or i].getPath(),
+                    priority=priority, **kw).doSomething()
+    def invokeGroup(self, message_list):
+      invoked.append([c.index(m[0]) for m in message_list])
+    category_tool.__class__.invokeGroup = invokeGroup
+    try:
+      activate(5, 0); activate(1, 1); check([5, 1])
+      activate(4, 0); activate(1, 1); activate(2, 0); check([1, 2])
+      activate(1, 0); activate(5, 0); activate(3, 1); check([1, 5])
+      for p, i in enumerate((5, 3, 2, 1, 4)):
+        activate(i, p, group_id=str(2 != i != 5))
+      check([2], [1])
+      for cost in 0.3, 0.1:
+        activate(2, 0, group_method_cost=cost)
+        activate(3, 1);  activate(4, 2); activate(1, 3)
+        check([2, 1])
+    finally:
+      del category_tool.__class__.invokeGroup
+    category_tool._delObject(c[0].getId())
+    transaction.commit()
+    self.tic()
 
 def test_suite():
   suite = unittest.TestSuite()

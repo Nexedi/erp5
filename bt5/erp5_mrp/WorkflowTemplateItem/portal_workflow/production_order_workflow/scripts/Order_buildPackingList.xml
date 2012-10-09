@@ -50,46 +50,8 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-order = state_change[\'object\']\n
-business_process =  order.getSpecialiseValue()\n
-\n
-# When a business process is selected as specialise, ProductionOrderModelRule can be used.\n
-# But another one is selected, ProductionOrderRule is still used.\n
-if (business_process is not None and\n
-    business_process.getPortalType() in context.getPortalBusinessProcessTypeList()):\n
-  rule_reference=\'default_production_order_model_rule\'\n
-  builder_list = []\n
-  for path in business_process.getBuildablePathValueList(order):\n
-    builder_list.extend(path.getDeliveryBuilderValueList())\n
-else:\n
-  rule_reference=\'default_production_order_rule\'\n
-  builder_list = [\n
-    order.portal_deliveries.production_report_builder,\n
-    order.portal_deliveries.production_packing_list_builder\n
-]\n
-\n
-order_path = order.getPath()\n
-tag = order_path + \'_updateAppliedRule\'\n
-expand_tag = order_path + \'_expand\'\n
-activate_kw = {\'tag\':expand_tag, \'priority\':3}\n
-order.activate(tag=tag, after_tag=expand_tag).updateAppliedRule(rule_reference=rule_reference, activate_kw=activate_kw)\n
-\n
-for i in xrange(len(builder_list)):\n
-    if i > 0:\n
-      after_tag = (tag, expand_tag, \'%s_builder_%s\' % (order_path, i-1))\n
-    else:\n
-      after_tag = (tag, expand_tag)\n
-    builder_list[i].activate(\n
-      activity=\'SQLQueue\',\n
-      after_tag=after_tag,\n
-      tag=\'%s_builder_%s\' % (order_path, i),\n
-      priority=3).build(explanation_uid=order.getUid(),\n
-                        activate_kw=activate_kw)\n
-
-
-]]></string> </value>
+            <value> <string>state_change[\'object\'].localBuild()\n
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>

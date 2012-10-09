@@ -74,8 +74,6 @@ Please look at this URL:\n
        task_report.ERP5Site_getAbsoluteUrl(), task_report.getRelativeUrl())\n
     portal.portal_notifications.sendMessage(sender=source_person, recipient=destination_decision_person,\n
                                             subject="Task Report Finished", message=message)\n
-\n
-container.PackingList_updateAppliedRule(state_change)\n
 </string> </value>
         </item>
         <item>

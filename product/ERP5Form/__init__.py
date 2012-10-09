@@ -163,6 +163,9 @@ def initialize( context ):
     import AudioField
     FieldRegistry.registerField(AudioField.AudioField,
                                 'www/StringField.gif')
+    import GadgetField
+    FieldRegistry.registerField(GadgetField.GadgetField,
+                                'www/StringField.gif')
 
     # register help for the product
     context.registerHelp()

@@ -608,7 +608,9 @@ def main(argument_list=None):
     opts, args = getopt.getopt(sys.argv[1:],
         "hpvD", ["help", "verbose", "profile", "coverage=", "portal_id=",
         "data_fs_path=",
-        "bt5_path=",
+        "bt5_path",
+        "firefox_bin=",
+        "xvfb_bin=",
         "recreate_catalog=", "erp5_sql_connection_string=",
         "cmf_activity_sql_connection_string=",
         "extra_sql_connection_string_list=",
@@ -682,6 +684,10 @@ def main(argument_list=None):
     elif opt ==  '--bt5_path':
       os.environ["erp5_tests_bt5_path"] = \
           os.environ.get("erp5_tests_bt5_path", "") + arg
+    elif opt == '--firefox_bin':
+      os.environ["firefox_bin"] = arg
+    elif opt == '--xvfb_bin':
+      os.environ["xvfb_bin"] = arg
     elif opt == '--recreate_catalog':
       os.environ["erp5_tests_recreate_catalog"] = arg
     elif opt == "--erp5_sql_connection_string":

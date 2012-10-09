@@ -27,21 +27,16 @@
 #
 ##############################################################################
 
-import transaction
 import zope.interface
 from AccessControl import ClassSecurityInfo
-from Products.CMFCore.utils import getToolByName
 
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5Type.TransactionalVariable import getTransactionalVariable
-
 from Products.ERP5.Document.Movement import Movement
+from Products.ERP5.ExpandPolicy import policy_dict, TREE_DELIVERED_CACHE_KEY
 
 from zLOG import LOG, WARNING
 
-from Acquisition import aq_base
-
-from Products.ERP5.Document.AppliedRule import TREE_DELIVERED_CACHE_KEY, TREE_DELIVERED_CACHE_ENABLED
 from Products.ERP5.mixin.property_recordable import PropertyRecordableMixin
 from Products.ERP5.mixin.explainable import ExplainableMixin
 
@@ -120,7 +115,8 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
                     )
 
   # Declarative interfaces
-  zope.interface.implements(interfaces.IPropertyRecordable, )
+  zope.interface.implements(interfaces.IExpandable,
+                            interfaces.IPropertyRecordable)
 
   def tpValues(self) :
     """ show the content in the left pane of the ZMI """
@@ -133,22 +129,6 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     """
     """
     return self._baseGetPrice(default) # Call the price method
-
-  security.declareProtected( Permissions.AccessContentsInformation,
-                             'getCausalityState')
-  def getCausalityState(self):
-    """
-      Returns the current state in causality
-    """
-    return getattr(aq_base(self), 'causality_state', 'solved')
-
-  security.declareProtected( Permissions.ModifyPortalContent,
-                             'setCausalityState')
-  def setCausalityState(self, value):
-    """
-      Change causality state
-    """
-    self.causality_state = value
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getSimulationState')
@@ -171,22 +151,19 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
     if order is not None:
       return order.getSimulationState()
 
-    parent = self.getParentValue()
+    applied_rule = self.getParentValue()
+    parent = applied_rule.getParentValue()
     try:
-      try:
-        parent_state = parent.getSimulationState()
-      except AttributeError:
-        item = parent.getCausalityValue(
-                portal_type=self.getPortalItemTypeList())
-        if interfaces.IExpandableItem.providedBy(item):
-          return item.getSimulationMovementSimulationState(self)
-        raise
-      return parent_to_movement_simulation_state[parent_state]
-    except (KeyError, AttributeError):
+      if isinstance(parent, SimulationMovement):
+        return parent_to_movement_simulation_state[parent.getSimulationState()]
+      getState = applied_rule.getCausalityValue() \
+        .aq_explicit.getSimulationMovementSimulationState
+    except (AttributeError, KeyError):
       LOG('SimulationMovement.getSimulationState', WARNING,
           'Could not acquire simulation state from %s'
           % self.getRelativeUrl(), error=True)
-      return None
+    else:
+      return getState(self)
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getTranslatedSimulationStateTitle')
@@ -255,35 +232,6 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
   #######################################################
   # Causality Workflow Methods
 
-  security.declareProtected(Permissions.ModifyPortalContent, 'calculate')
-  def calculate(self):
-    """Move related delivery in 'calculating' state by activity
-
-    Activity to update causality state is delayed until all related simulation
-    movement are reindexed.
-    This method should be only called by
-    simulation_movement_causality_interaction_workflow.
-    """
-    delivery = self.getDeliveryValue()
-    if delivery is not None:
-      delivery = delivery.getRootDeliveryValue()
-      tv = getTransactionalVariable()
-      path = self.getPath()
-      delivery_path = delivery.getPath()
-      key = 'SimulationMovement.calculate', delivery_path
-      try:
-        tv[key].append(path)
-      except KeyError:
-        tv[key] = [path]
-        def before_commit():
-          method_id_list = ('immediateReindexObject',
-                            'recursiveImmediateReindexObject')
-          tag = delivery_path + '_calculate'
-          delivery.activate(tag=tag).Delivery_calculate(activate_kw=
-            {'after_path_and_method_id': (tv[key], method_id_list)})
-          tv[key] = None # disallow further calls to 'calculate'
-        transaction.get().addBeforeCommitHook(before_commit)
-
   security.declarePrivate('_getApplicableRuleList')
   def _getApplicableRuleList(self):
     """ Search rules that match this movement
@@ -297,25 +245,32 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
                                        sort_order='descending')
 
   security.declareProtected(Permissions.ModifyPortalContent, 'expand')
-  def expand(self, **kw):
-    """
+  def expand(self, expand_policy=None, **kw):
+    """Update applied rules inside this simulation movement and expand them
+
     Checks all existing applied rules and make sure they still apply.
     Checks for other possible rules and starts expansion process (instanciates
     applied rules and calls expand on them).
+    """
+    policy_dict[expand_policy](**kw).expand(self)
 
+  def _expandNow(self, maybe_expand):
+    """
     First get all applicable rules,
     then, delete all applied rules that no longer match and are not linked to
-    a delivery,
+    a delivery, or expand those that still apply,
     finally, apply new rules if no rule with the same type is already applied.
     """
-    tv = getTransactionalVariable()
-    cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
-    cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
-
-    # enable cache
-    if not cache_enabled:
-      cache[TREE_DELIVERED_CACHE_ENABLED] = 1
-
+    # XXX: Although policy is "copy everything required to simulation
+    #      movements", we must reindex in case that simulation state has
+    #      changed.
+    #      Also, if this movement is edited (by 'expand' call on the parent),
+    #      there's already a reindexing activity so this does nothing; but if
+    #      'expand' was deferred for this movement, this will generate a
+    #      second & useless reindexing activity.
+    #      All this could be avoided if each simulation movement remembered
+    #      the previous state.
+    self.reindexObject()
     applicable_rule_dict = {}
     for rule in self._getApplicableRuleList():
       reference = rule.getReference()
@@ -339,28 +294,10 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
         else:
           self._delObject(applied_rule.getId())
       else:
-        applied_rule.expand(**kw)
+        maybe_expand(rule, applied_rule)
 
     for rule in applicable_rule_list:
-      rule.constructNewAppliedRule(self, **kw).expand(**kw)
-
-    self.setCausalityState('expanded')
-
-    # disable and clear cache
-    if not cache_enabled:
-      try:
-        del tv[TREE_DELIVERED_CACHE_KEY]
-      except KeyError:
-        pass
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'diverge')
-  def diverge(self):
-    """
-       -> new status -> diverged
-
-       Movements which diverge can not be expanded
-    """
-    self.setCausalityState('diverged')
+      maybe_expand(rule, rule.constructNewAppliedRule(self))
 
   security.declareProtected( Permissions.AccessContentsInformation,
                              'getExplanationValue')
@@ -580,7 +517,7 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
   #                                         'recursiveImmediateReindexObject']))
   #    activity.edit()
 
-  def _isTreeDelivered(self, ignore_first=0):
+  def _isTreeDelivered(self):
     """
     checks if subapplied rules  of this movement (going down the complete
     simulation tree) have a child with a delivery relation.
@@ -588,32 +525,23 @@ class SimulationMovement(PropertyRecordableMixin, Movement, ExplainableMixin):
 
     see AppliedRule._isTreeDelivered
     """
-    tv = getTransactionalVariable()
-    cache = tv.setdefault(TREE_DELIVERED_CACHE_KEY, {})
-    cache_enabled = cache.get(TREE_DELIVERED_CACHE_ENABLED, 0)
-
-    def getTreeDelivered(movement, ignore_first=0):
-      if not ignore_first:
-        if len(movement.getDeliveryList()) > 0:
-          return True
-      for applied_rule in movement.objectValues():
+    def getTreeDelivered():
+      if self.getDeliveryList():
+        return True
+      for applied_rule in self.objectValues():
         if applied_rule._isTreeDelivered():
           return True
       return False
-
-    if ignore_first:
-      rule_key = (self.getRelativeUrl(), 1)
-    else:
-      rule_key = self.getRelativeUrl()
-    if cache_enabled:
-      try:
-        return cache[rule_key]
-      except KeyError:
-        result = getTreeDelivered(self, ignore_first=ignore_first)
-        cache[rule_key] = result
-        return result
-    else:
-      return getTreeDelivered(self, ignore_first=ignore_first)
+    try:
+      cache = getTransactionalVariable()[TREE_DELIVERED_CACHE_KEY]
+    except KeyError:
+      return getTreeDelivered()
+    rule_key = self.getRelativeUrl()
+    try:
+      return cache[rule_key]
+    except KeyError:
+      cache[rule_key] = result = getTreeDelivered()
+      return result
 
   security.declareProtected(Permissions.AccessContentsInformation,
                             'isBuildable')

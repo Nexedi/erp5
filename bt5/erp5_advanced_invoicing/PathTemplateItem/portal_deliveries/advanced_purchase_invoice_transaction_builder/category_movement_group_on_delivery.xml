@@ -37,6 +37,7 @@
             <key> <string>tested_property</string> </key>
             <value>
               <tuple>
+                <string>specialise</string>
                 <string>source_section</string>
                 <string>destination_section</string>
                 <string>source_payment</string>

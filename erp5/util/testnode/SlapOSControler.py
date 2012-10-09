@@ -30,6 +30,7 @@ import subprocess
 import time
 import xml_marshaller
 import shutil
+import glob
 
 MAX_PARTIONS = 10
 MAX_SR_RETRIES = 3
@@ -58,12 +59,15 @@ class SlapOSControler(object):
     # connections
     time.sleep(10)
     slap = slapos.slap.slap()
-    slap.initializeConnection(config['master_url'])
+    self.slap = slap
+    self.slap.initializeConnection(config['master_url'])
     # register software profile
-    self.software_profile = config['custom_profile_path']
-    slap.registerSupply().supply(
-        self.software_profile,
-        computer_guid=config['computer_id'])
+    self.software_path_list = config.get("software_list", [])
+    self.software_path_list.append(config['custom_profile_path'])
+    for path in self.software_path_list:
+      slap.registerSupply().supply(
+          path,
+          computer_guid=config['computer_id'])
     computer = slap.registerComputer(config['computer_id'])
     # Reset all previously generated software if needed
     if reset_software:
@@ -80,14 +84,16 @@ class SlapOSControler(object):
       # In order to be able to change partition naming scheme, do this at
       # instance_root level (such change happened already, causing problems).
       shutil.rmtree(instance_root)
-    os.mkdir(instance_root)
+    if not(os.path.exists(instance_root)):
+      os.mkdir(instance_root)
     for i in range(0, MAX_PARTIONS):
       # create partition and configure computer
       # XXX: at the moment all partitions do share same virtual interface address
       # this is not a problem as usually all services are on different ports
       partition_reference = '%s-%s' %(config['partition_reference'], i)
       partition_path = os.path.join(instance_root, partition_reference)
-      os.mkdir(partition_path)
+      if not(os.path.exists(partition_path)):
+        os.mkdir(partition_path)
       os.chmod(partition_path, 0750)
       computer.updateConfiguration(xml_marshaller.xml_marshaller.dumps({
                                                     'address': config['ipv4_address'],
@@ -124,11 +130,16 @@ class SlapOSControler(object):
   def runComputerPartition(self, config, environment,
                            stdout=None, stderr=None):
     self.log("SlapOSControler.runComputerPartition")
-    slap = slapos.slap.slap()
     # cloudooo-json is required but this is a hack which should be removed
     config['instance_dict']['cloudooo-json'] = "{}"
-    slap.registerOpenOrder().request(self.software_profile,
-        partition_reference='testing partition',
+    # report-url, report-project and suite-url are required to seleniumrunner
+    # instance. This is a hack which must be removed.
+    config['instance_dict']['report-url'] = config.get("report-url", "")
+    config['instance_dict']['report-project'] = config.get("report-project", "")
+    config['instance_dict']['suite-url'] = config.get("suite-url", "")
+    for path in self.software_path_list:
+      self.slap.registerOpenOrder().request(path,
+        partition_reference='testing partition %s' % self.software_path_list.index(path),
         partition_parameter_kw=config['instance_dict'])
 
     # try to run for all partitions as one partition may in theory request another one 
@@ -138,4 +149,5 @@ class SlapOSControler(object):
       status_dict = self.spawn(config['slapgrid_partition_binary'], '-v', '-c',
                  config['slapos_config'], raise_error_if_fail=False,
                  log_prefix='slapgrid_cp', get_output=False)
+      self.log('slapgrid_cp status_dict : %r' % (status_dict,))
     return status_dict

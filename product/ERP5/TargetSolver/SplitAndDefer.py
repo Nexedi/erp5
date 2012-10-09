@@ -98,11 +98,11 @@ class SplitAndDefer(CopyToTarget):
       if stop_date is not None:
         new_movement.recordProperty('stop_date')
         new_movement.edit(stop_date=stop_date)
-      new_movement.activate(**self.additional_parameters).expand()
+      new_movement.expand(activate_kw=self.additional_parameters)
     # adopt new quantity on original simulation movement
     simulation_movement.edit(quantity=new_movement_quantity)
     simulation_movement.setDefaultActivateParameterDict(self.activate_kw)
-    simulation_movement.activate(**self.additional_parameters).expand()
+    simulation_movement.expand(activate_kw=self.additional_parameters)
 
     # SplitAndDefer solves the divergence at the current level, no need to
     # backtrack.

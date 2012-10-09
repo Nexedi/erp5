@@ -50,23 +50,18 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>from Products.ERP5Type.Message import translateString\n
-\n
-if REQUEST is not None:\n
+            <value> <string>if REQUEST is not None:\n
   from zExceptions import Unauthorized\n
   raise Unauthorized(script.id)\n
 \n
-packing_list = context\n
- \n
-# Modify state\n
-packing_list_state = packing_list.getSimulationState()\n
-if packing_list_state == "draft":\n
-  packing_list.confirm(comment=translateString(\'Initialised by Delivery Builder.\'))\n
+if context.getSimulationState() == "draft":\n
+  from Products.ERP5Type.Message import translateString\n
+  context.confirm(comment=translateString(\'Initialised by Delivery Builder.\'))\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>REQUEST=None, **kw</string> </value>
+            <value> <string>REQUEST=None</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

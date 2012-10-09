@@ -122,18 +122,3 @@ def updateCareerValidationState(self):
           line['validation_state'] = line.pop('state')
       career.workflow_history._p_changed = 1
       career.reindexObject()
-    
-def updateInvoiceTransactionRule(self):
-  """Invoice Transaction Rule now uses ID instead of relative urls for cell
-  coordinates (r20475)
-  """
-  assert self.getPortalType() == 'Invoice Transaction Rule'
-  movement_index = aq_base(self).index['movement']
-  for index, coordinate_dict in movement_index.items():
-    fixed_coordinate_list = []
-    for coord, index in coordinate_dict.items():
-      new_coord = coord.split('/')[-1]
-      coordinate_dict[new_coord] = coordinate_dict.pop(coord)
-      # ( coordinate_dict is a persistent mapping, so no need to mark the
-      # object as _p_changed )
-  
