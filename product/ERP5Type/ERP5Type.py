@@ -81,7 +81,7 @@ class LocalRoleAssignorMixIn(object):
         Assign Local Roles to Groups on object 'ob', based on Portal Type Role
         Definitions and "ERP5 Role Definition" objects contained inside 'ob'.
 
-        Reindex is obsoleted, as there is modification detection.
+        Reindexation will be done only if there is any modification.
       """
       if user_name is None:
         # First try to guess from the owner
@@ -107,7 +107,8 @@ class LocalRoleAssignorMixIn(object):
       if ac_local_roles != current_roles:
         # apply changes and reindex only in case if roles has been changed
         ob.__ac_local_roles__ = ac_local_roles
-        ob.reindexObjectSecurity()
+        if reindex:
+          ob.reindexObjectSecurity()
 
     security.declarePrivate("getLocalRolesFor")
     def getLocalRolesFor(self, ob, user_name=None):
