@@ -26,18 +26,28 @@
         </item>
         <item>
             <key> <string>periodicity_day_frequency</string> </key>
-            <value> <int>1</int> </value>
+            <value>
+              <none/>
+            </value>
         </item>
         <item>
             <key> <string>periodicity_hour</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <int>0</int>
+                <int>1</int>
+                <int>2</int>
+                <int>3</int>
+                <int>4</int>
+              </tuple>
             </value>
         </item>
         <item>
             <key> <string>periodicity_minute</string> </key>
             <value>
-              <tuple/>
+              <tuple>
+                <int>0</int>
+              </tuple>
             </value>
         </item>
         <item>
