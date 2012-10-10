@@ -48,6 +48,15 @@ def popenCommunicate(command_list, input=None, **kwargs):
     command_list, result))
   return result
 
+def binary_search(binary):
+  env_path_list = [p for p in os.getenv('PATH', '').split(os.pathsep)
+                if os.path.isdir(p)]
+  mode   = os.R_OK | os.X_OK
+  for path in env_path_list:
+    pathbin = os.path.join(path, binary)
+    if os.access(pathbin, mode) == 1:
+      return pathbin
+
 class CertificateAuthorityBusy(Exception):
   """Exception raised when certificate authority is busy"""
   pass
@@ -71,7 +80,7 @@ class CertificateAuthorityTool(BaseTool):
   isIndexable = 0
 
   certificate_authority_path = os.environ.get('CA_PATH', '')
-  openssl_binary = os.environ.get('OPENSSL_BINARY', '')
+  openssl_binary = binary_search('openssl')
 
   manage_options = (({'label': 'Edit',
                       'action': 'manage_editCertificateAuthorityToolForm',},
@@ -82,11 +91,6 @@ class CertificateAuthorityTool(BaseTool):
                    'type':'string',
                    'mode':'w',
                    'label':'Absolute path to certificate authority',
-                   },
-                   {'id':'openssl_binary',
-                   'type':'string',
-                   'mode':'w',
-                   'label':'Absolute path to OpenSSL binary'
                    },
                   )
                  )
@@ -118,11 +122,7 @@ class CertificateAuthorityTool(BaseTool):
       raise CertificateAuthorityDamaged('Path to Certificate Authority %r is '
         'wrong' % self.certificate_authority_path)
     if not self.openssl_binary:
-      raise CertificateAuthorityDamaged('OpenSSL binary path is not '
-        'configured' % self.certificate_authority_path)
-    if not os.path.isfile(self.openssl_binary):
-       raise CertificateAuthorityDamaged('OpenSSL binary %r does not exists' %
-        self.openssl_binary)
+      raise CertificateAuthorityDamaged('OpenSSL binary was not found!')
     self.serial = os.path.join(self.certificate_authority_path, 'serial')
     self.crl = os.path.join(self.certificate_authority_path, 'crlnumber')
     self.index = os.path.join(self.certificate_authority_path, 'index.txt')
@@ -159,7 +159,7 @@ class CertificateAuthorityTool(BaseTool):
   security.declareProtected(Permissions.ManageProperties,
       'manage_editCertificateAuthorityTool')
   def manage_editCertificateAuthorityTool(self, certificate_authority_path,
-      openssl_binary, RESPONSE=None):
+      RESPONSE=None):
     """Edit the object"""
     error_message = ''
 
@@ -167,11 +167,6 @@ class CertificateAuthorityTool(BaseTool):
       error_message += 'Invalid Certificate Authority'
     else:
       self.certificate_authority_path = certificate_authority_path
-
-    if openssl_binary == '' or openssl_binary is None:
-      error_message += 'Invalid OpenSSL binary'
-    else:
-      self.openssl_binary = openssl_binary
 
     #Redirect
     if RESPONSE is not None:
