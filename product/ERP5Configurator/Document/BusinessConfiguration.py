@@ -382,23 +382,3 @@ class BusinessConfiguration(Item):
 
     if self.portal_workflow.isTransitionPossible(self, 'install'):
       self.activate(after_tag=kw["tag"]).install()
-
-  security.declareProtected(Permissions.ModifyPortalContent, 'resetBusinessConfiguration')
-  def resetBusinessConfiguration(self):
-    """ 
-      Reset Business Confiration at server side.
-      Remove all traces from user input (i.e. Configuration Saves, workflow history).
-    """
-    object_ids = []
-    for obj in self.contentValues(filter={'portal_type': ['Configuration Save']}):
-      object_ids.append(obj.getId())
-    self.manage_delObjects(object_ids)
-    if getattr(self, "workflow_history", None) is not None:
-      del self.workflow_history
-    if getattr(self, "_global_configuration_attributes", None) is not None:
-      del self._global_configuration_attributes
-    if getattr(self, "_multi_entry_transitions", None) is not None:
-      del self._multi_entry_transitions
-    self.setSpecialiseValue(None)
-    # ERP5 Workflow initialization
-    erp5_workflow = self.getResourceValue()

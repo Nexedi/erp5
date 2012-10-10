@@ -33,17 +33,11 @@ from Products.ERP5Type.Globals import DTMLFile
 from Products.ERP5Type.Accessor.Constant import PropertyGetter as \
     ConstantGetter
 from Products.ERP5Type.Tool.BaseTool import BaseTool
-from Products.ERP5Type.Cache import CachingMethod
 from Products.ERP5Type import Permissions
 from Products.ERP5Configurator import _dtmldir
 from Products.Formulator.Errors import FormValidationError
-import cookielib
-from base64 import encodestring
-from urllib import quote
 from DateTime import DateTime
 
-# global (RAM) cookie storage
-cookiejar = cookielib.CookieJar()
 referer = None
 installation_status = {'bt5': {'current': 0,
                                'all': 0, },
@@ -52,23 +46,6 @@ installation_status = {'bt5': {'current': 0,
 # cookie name to store user's preferred language name
 LANGUAGE_COOKIE_NAME = 'configurator_user_preferred_language'
 BUSINESS_CONFIGURATION_COOKIE_NAME = 'business_configuration_key'
-
-def getAvailableLanguageFromHttpAcceptLanguage(http_accept_language,
-                                               available_language_list,
-                                               default='en'):
-  for language_set in http_accept_language.split(','):
-    language_tag = language_set.split(';')[0]
-    language = language_tag.split('-')[0]
-    if language in available_language_list:
-      return language
-  return default
-
-def _isUserAcknowledged(cookiejar):
-  """ Is user authenticated to remote system through a cookie. """
-  for cookie in cookiejar:
-    if cookie.name == '__ac' and cookie.value != '':
-      return 1
-  return 0
 
 def _validateFormToRequest(form, REQUEST, **kw):
     """ Validate form to REQUEST. """
@@ -117,29 +94,6 @@ class ConfiguratorTool(BaseTool):
   security.declareProtected(Permissions.ManagePortal, 'manage_overview')
   manage_overview = DTMLFile('explainConfiguratorTool', _dtmldir)
 
-  def getConfiguratorUserPreferredLanguage(self):
-    """ Get configuration language as selected by user """
-    REQUEST = getattr(self, 'REQUEST', None)
-    configurator_user_preferred_language = None
-    if REQUEST is not None:
-      # language value will be in cookie or REQUEST itself.
-      configurator_user_preferred_language = REQUEST.get(LANGUAGE_COOKIE_NAME,
-          None)
-      if configurator_user_preferred_language is None:
-        # Find a preferred language from HTTP_ACCEPT_LANGUAGE
-        available_language_list = [i[1] for i in self\
-            .ConfiguratorTool_getConfigurationLanguageList()]
-        configurator_user_preferred_language = \
-            getAvailableLanguageFromHttpAcceptLanguage(
-          REQUEST.get('HTTP_ACCEPT_LANGUAGE', 'en'),
-          available_language_list)
-    if configurator_user_preferred_language is None:
-      configurator_user_preferred_language = 'en'
-    return configurator_user_preferred_language
-
-  ######################################################
-  ##               Navigation                         ##
-  ######################################################
   def login(self, REQUEST):
     """ Login client and show next form. """
     bc = REQUEST.get('field_your_business_configuration')
@@ -200,8 +154,7 @@ class ConfiguratorTool(BaseTool):
     ## client can not go further hist business configuration is already built
     if business_configuration.isEndConfigurationState() or \
          business_configuration.getNextTransition() == None:
-      return self._terminateConfigurationProcess(response,
-          'no_available_transitions')
+      return self._terminateConfigurationProcess(response)
 
     isMultiEntryTransition = business_configuration._isMultiEntryTransition()
     ## validate multiple forms
@@ -294,8 +247,7 @@ class ConfiguratorTool(BaseTool):
           need_validation = 0
           if business_configuration.getNextTransition() == None:
             ### client can not continue at the momen
-            return self._terminateConfigurationProcess(response,
-                reason='no_available_transitions')
+            return self._terminateConfigurationProcess(response)
           response["previous"], html, form_title, response["next"] \
                   = business_configuration._displayNextForm()
         else:
@@ -304,8 +256,7 @@ class ConfiguratorTool(BaseTool):
           business_configuration._executeTransition(form_kw=form_kw, request_kw=kw)
       elif need_validation == 0:
         if business_configuration.getNextTransition() == None:
-          return self._terminateConfigurationProcess(response,
-              'no_available_transitions')
+          return self._terminateConfigurationProcess(response)
         ## validation failure
         rendered = True
         response["previous"], html, form_title, response["next"] =\
@@ -326,18 +277,13 @@ class ConfiguratorTool(BaseTool):
       response.update(command = "show", data = html_data)
     return response
 
-  def _terminateConfigurationProcess(self, response, reason=''):
+  def _terminateConfigurationProcess(self, response):
     """ Terminate process and return some explanations to client why
         he can no longer continue. """
-    if reason == 'no_available_transitions':
-      form_html = self.BusinessConfiguration_viewStopForm()
-      response.update(command="show", next=None, \
-                      previous=None, data=form_html)
-    elif reason == 'authentification_failure':
-      form_html = self.BusinessConfiguration_viewUnauthenticatedForm()
-      response.update(command="show", data=form_html,
-                      next=None, previous=None,)
-
+    response.update(command="show",
+                    next=None, \
+                    previous=None,
+                    data=self.BusinessConfiguration_viewStopForm())
     return response
 
   #security.declareProtected(Permissions.ModifyPortalContent, 'previous')
@@ -356,12 +302,9 @@ class ConfiguratorTool(BaseTool):
   def _previous(self, business_configuration, kw):
     """ Returns previous form. """
     response = {}
-    ## is client is not allowed access ?
-    if business_configuration is None:
-      form_html = self.BusinessConfiguration_viewUnauthenticatedForm()
-      return self.ConfiguratorTool_dialogForm(form_html=form_html)
     ## client can not go further his business configuration is already built
-    if business_configuration.isEndConfigurationState():
+    if business_configuration is None or \
+         business_configuration.isEndConfigurationState():
       form_html = self.BusinessConfiguration_viewStopForm()
       return self.ConfiguratorTool_dialogForm(form_html = form_html,
                                         next = "Next")
@@ -410,9 +353,7 @@ class ConfiguratorTool(BaseTool):
 
     global installation_status
     # init installation status
-    bt5_file_list = len(business_configuration.contentValues(
-                                portal_types=["File", "Link"])) or 1
-    installation_status['bt5']['all'] = bt5_file_list
+    installation_status['bt5']['all'] = 1
     installation_status['bt5']['current'] = 0
     installation_status['activity_list'] = []
     active_process = self.portal_activities.newActiveProcess()
