@@ -396,8 +396,6 @@ class IntrospectionTool(LogMixin, BaseTool):
     if certificate_authority is not None:
       collect_information_by_property(certificate_authority,
         'certificate_authority_path')
-      collect_information_by_property(certificate_authority,
-        'openssl_binary')
     return connection_dict
 
   security.declareProtected(Permissions.ManagePortal, 
