@@ -2767,6 +2767,9 @@ class ListBoxValidator(Validator.Validator):
         except KeyError:
           raise KeyError('Field %s is not present in request object.'
                          % field.id)
+        select = field.get_value('select')
+        if select:
+          selected_uid_set = set(REQUEST.get('uids', ()))
         #LOG('ListBox.validate: REQUEST',0,REQUEST)
         errors = []
         object_list = None
@@ -2894,6 +2897,8 @@ class ListBoxValidator(Validator.Validator):
             else:
               LOG("ListBox WARNING",0,"Object uid %s could not be validated" % uid)
           result[row_key] = row_result
+          if select:
+            row_result['listbox_selected'] = uid in selected_uid_set
         if len(errors) > 0:
             #LOG("ListBox FormValidationError",0,str(error_result))
             #LOG("ListBox FormValidationError",0,str(errors))
