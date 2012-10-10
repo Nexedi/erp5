@@ -94,15 +94,10 @@ for f in form.get_fields():\n
 listbox = request.get(\'listbox\') # XXX: hardcoded field name\n
 if listbox is not None:\n
   listbox_line_list = []\n
-  listbox = getattr(request,\'listbox\',None) # XXX: hardcoded field name\n
-  listbox_keys = listbox.keys()\n
-  listbox_keys.sort()\n
-  for key in listbox_keys:\n
-    listbox_line = listbox[key]\n
-    listbox_line[\'listbox_key\'] = key\n
-    listbox_line_list.append(listbox[key])\n
-  listbox_line_list = tuple(listbox_line_list)\n
-  doaction_param_list[\'listbox\'] = listbox_line_list # XXX: hardcoded field name\n
+  for key, value in sorted(listbox.iteritems()):\n
+    value[\'listbox_key\'] = key\n
+    listbox_line_list.append(value)\n
+  doaction_param_list[\'listbox\'] = tuple(listbox_line_list)\n
 \n
 try:\n
   context.portal_workflow.doActionFor(\n
