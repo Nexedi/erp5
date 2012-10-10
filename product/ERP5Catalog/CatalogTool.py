@@ -392,7 +392,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
       user = _getAuthenticatedUser(self)
       user_str = str(user)
-      user_is_superuser = (user == system_user) or (user_str == SUPER_USER)
+      user_is_superuser = (user == system_user) or (user_str == SUPER_USER) or \
+          ('Manager' in user.getRoles())
       allowedRolesAndUsers = self._listAllowedRolesAndUsers(user)
       role_column_dict = {}
       local_role_column_dict = {}
@@ -511,7 +512,8 @@ class CatalogTool (UniqueObject, ZCatalog, CMFCoreCatalogTool, ActiveObject):
       """
       user = _getAuthenticatedUser(self)
       user_str = str(user)
-      user_is_superuser = (user == system_user) or (user_str == SUPER_USER)
+      user_is_superuser = (user == system_user) or (user_str == SUPER_USER) or \
+          ('Manager' in user.getRoles())
       if user_is_superuser:
         # We need no security check for super user.
         return query
