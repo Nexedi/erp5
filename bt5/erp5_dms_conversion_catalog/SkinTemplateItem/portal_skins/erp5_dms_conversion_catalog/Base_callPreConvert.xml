@@ -63,19 +63,21 @@ if portal_type not in allowed_portal_type_list:\n
   # no need to convert any non DMS types\n
   return\n
 \n
-format = portal.portal_preferences.getPreferredImageFormat()\n
-quality = portal.portal_preferences.getPreferredImageQuality()\n
-preferred_image_size = portal.portal_preferences.getPreferredImageSize()\n
+if kw=={}:\n
+  # use default set of system preferences\n
+  format = portal.portal_preferences.getPreferredImageFormat()\n
+  quality = portal.portal_preferences.getPreferredImageQuality()\n
+  # thumbnail is required always\n
+  display_list = ["thumbnail"]\n
+  kw = dict(format=format, quality=quality, display_list = display_list)\n
 \n
-# thumbnail is required always\n
-display_list = ["thumbnail"]\n
 method = context.getTypeBasedMethod(\'preConvert\')\n
-return method(**dict(format=format, quality=quality, display_list = display_list))\n
+return method(**kw)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string></string> </value>
+            <value> <string>**kw</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
