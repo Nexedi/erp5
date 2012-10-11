@@ -244,6 +244,9 @@ def getSearchDialog(self, REQUEST=None):
       short_column_id = short_column_id[:-len('_translated_title')]
     if short_column_id.endswith('_title'):
       short_column_id = short_column_id[:-len('_title')]
+    if short_column_id.endswith('_reference') and short_column_id not in (
+        'source_reference', 'destination_reference'):
+      short_column_id = short_column_id[:-len('_reference')]
     if short_column_id.startswith('default_'):
       short_column_id = short_column_id[len('default_'):]
     if short_column_id in base_category_list:
