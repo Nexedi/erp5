@@ -79,7 +79,7 @@
                 </item>
                 <item>
                     <key> <string>form_id</string> </key>
-                    <value> <string>Document_viewFieldLibrary</string> </value>
+                    <value> <string>File_viewFieldLibrary</string> </value>
                 </item>
                 <item>
                     <key> <string>target</string> </key>
