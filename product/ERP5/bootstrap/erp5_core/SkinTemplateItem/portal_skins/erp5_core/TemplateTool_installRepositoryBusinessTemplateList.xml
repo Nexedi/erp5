@@ -71,6 +71,7 @@ if len(uids) == 0:\n
 id_list = []\n
 portal_status_message = \'\'\n
 current_uid_list=[]\n
+installed_business_template_title_list = context.getInstalledBusinessTemplateTitleList()\n
 for uid in uids:\n
   current_uid_list.append(uid)\n
   repository, id = context.decodeRepositoryBusinessTemplateUid(uid)\n
@@ -79,8 +80,11 @@ for uid in uids:\n
 # Check for missing dependencies\n
 for uid in uids:\n
   repository, id = context.decodeRepositoryBusinessTemplateUid(uid)\n
-  dependency_list = context.getDependencyList((repository, id));\n
+  dependency_list = context.getDependencyList((repository, id))\n
   for dep_repository, dep_id in dependency_list:\n
+    if dep_id != id and \\\n
+        dep_id in installed_business_template_title_list:\n
+      continue\n
     if dep_id not in id_list:\n
       id_list.append(dep_id)\n
       if dep_repository != \'meta\':\n
