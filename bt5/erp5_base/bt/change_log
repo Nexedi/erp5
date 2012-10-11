@@ -1,3 +1,6 @@
+2012-10-11 arnaud.fontaine
+* Fix dead ProxyField as Document_viewFieldLibrary is only available in erp5_dms which depends upon erp5_base itself.
+
 2012-04-10 Kazuhiko
 * add an external method to generate barcode image.
 
