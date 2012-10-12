@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors.
@@ -147,6 +148,10 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.assertSameSet([], web_section1.getDocumentValueList())
     self.assertSameSet([], web_section2.getDocumentValueList())
 
+
+  def test_02_ReferenceGenerationFromString(self):
+    s = "a test by ivan !@#$%^&*()[]\\é"
+    self.assertEqual('a-test-by-ivan', self.portal.Base_generateReferenceFromString(s))
 
 def test_suite():
   suite = unittest.TestSuite()
