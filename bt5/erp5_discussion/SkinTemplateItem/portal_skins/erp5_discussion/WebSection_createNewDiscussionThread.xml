@@ -50,9 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string encoding="cdata"><![CDATA[
-
-"""\n
+            <value> <string>"""\n
  This script allows to create a new Discussion Thread.\n
 """\n
 MARKER = [\'\', None, []]\n
@@ -72,7 +70,8 @@ if site_list in MARKER:\n
 membership_criterion_category_list = context.getMembershipCriterionCategoryList()\n
 multimembership_criterion_base_category_list = context.getMultimembershipCriterionBaseCategoryList()\n
 \n
-reference = title.replace(\' \', \'-\').replace(\'?\', \'\').replace(\':\', \'\').replace(\'/\', \'\').replace(\'&\', \'\').replace(\'=\', \'\')\n
+reference = context.Base_generateReferenceFromString(title)\n
+\n
 existing_document = context.getDocumentValue(reference)\n
 if existing_document is not None:\n
   # if there are other document which reference duplicates just add some random part\n
@@ -154,9 +153,7 @@ if send_notification_text not in (\'\', None):\n
 \n
 return context.Base_redirect(form_id,\n
          keep_items = dict(portal_status_message=context.Base_translateString(portal_status_message)))\n
-
-
-]]></string> </value>
+</string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
