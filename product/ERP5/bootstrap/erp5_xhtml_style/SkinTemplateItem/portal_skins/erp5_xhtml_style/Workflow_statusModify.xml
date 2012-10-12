@@ -118,10 +118,11 @@ except ValidationFailed, error_message:\n
                           # that would become an error.\n
     log("Status message has been truncated")\n
     message = "%s ..." % message[:(2000 - 4)]\n
-  return context.Base_redirect(form_id,\n
-                  keep_items={\'portal_status_message\': message}, **kw)\n
-\n
-portal_status_message = request.get(\'portal_status_message\', translateString(\'Status changed.\'))\n
+else:\n
+  message = request.get(\'portal_status_message\')\n
+  if message is None:\n
+    message = translateString(\'Status changed.\')\n
+  kw.clear() # useful ?\n
 \n
 # Allow to redirect to another document\n
 redirect_document_path = request.get(\'redirect_document_path\', None)\n
@@ -132,7 +133,7 @@ else:\n
   redirect_document = context\n
 \n
 return redirect_document.Base_redirect(form_id,\n
-                keep_items={\'portal_status_message\': portal_status_message})\n
+                keep_items={\'portal_status_message\': message}, **kw)\n
 
 
 ]]></string> </value>
