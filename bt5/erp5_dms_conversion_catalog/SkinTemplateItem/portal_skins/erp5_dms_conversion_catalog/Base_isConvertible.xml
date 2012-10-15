@@ -51,34 +51,30 @@
         <item>
             <key> <string>_body</string> </key>
             <value> <string>"""\n
-  Pre convert to know good defaults.\n
-  Use type based methods to allow finer granularity (for example in case of PDF we support many frames inside a document).\n
+  Return true or false based on if document is convertible or not.\n
 """\n
+MARKER = (None, \'\',)\n
 portal = context.getPortalObject()\n
 \n
-if not context.Base_isConvertible():\n
-  # no need to convert any non convertible types\n
-  return\n
+portal_type = context.getPortalType()\n
+allowed_portal_type_list = portal.getPortalDocumentTypeList() + portal.getPortalEmbeddedDocumentTypeList()\n
 \n
-if kw=={}:\n
-  # use default set of system preferences\n
-  format = portal.portal_preferences.getPreferredImageFormat()\n
-  quality = portal.portal_preferences.getPreferredImageQuality()\n
-  # thumbnail is required always\n
-  display_list = ["thumbnail"]\n
-  kw = dict(format=format, quality=quality, display_list = display_list)\n
+if portal_type not in allowed_portal_type_list:\n
+  return False\n
 \n
-method = context.getTypeBasedMethod(\'preConvert\')\n
-return method(**kw)\n
+# XXX: we do check if "data" methods exists on pretending to be Document portal types\n
+# we need a way to do this by introspection\n
+return (getattr(context, "getData", None) is not None and context.getData() not in MARKER) or \\\n
+       (getattr(context, "getBaseData", None) is not None and context.getBaseData() not in MARKER)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Base_callPreConvert</string> </value>
+            <value> <string>Base_isConvertible</string> </value>
         </item>
       </dictionary>
     </pickle>
