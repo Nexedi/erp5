@@ -608,7 +608,7 @@ def main(argument_list=None):
     opts, args = getopt.getopt(sys.argv[1:],
         "hpvD", ["help", "verbose", "profile", "coverage=", "portal_id=",
         "data_fs_path=",
-        "bt5_path",
+        "bt5_path=",
         "firefox_bin=",
         "xvfb_bin=",
         "recreate_catalog=", "erp5_sql_connection_string=",
