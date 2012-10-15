@@ -961,7 +961,7 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
                                       tal:condition="python: line_vat_dict[\'total_quantity\'] != \'\'"\n
                                       office:value-type=\'float\'\n
                                       tal:attributes=\'office:value line_vat_dict/total_quantity\'> \n
-                       <text:p text:style-name=\'Table_20_Heading\' tal:content="python: quantity_renderer(line_vat_dict[\'total_quantity\'])">qty</text:p>\n
+                       <text:p text:style-name=\'Table_20_Heading\' tal:content="python: price_renderer(line_vat_dict[\'total_quantity\'])">qty</text:p>\n
                     </table:table-cell>\n
                     <table:table-cell table:style-name=\'Table3.E5\'\n
                               office:value-type=\'string\'\n
@@ -972,7 +972,7 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
                                       tal:condition="python: line_vat_dict[\'base_price\'] != \'\'"\n
                                       office:value-type=\'float\'\n
                                       tal:attributes=\'office:value line_vat_dict/base_price\'>\n
-                        <text:p text:style-name=\'Table_20_Heading\' tal:content="python:  line_vat_dict[\'base_price\']">:</text:p>\n
+                        <text:p text:style-name=\'Table_20_Heading\' tal:content="python:  quantity_renderer(line_vat_dict[\'base_price\']*100*1.00)+\'%\'">:</text:p>\n
                     </table:table-cell>      \n
                     <table:table-cell table:style-name=\'Table3.F5\'\n
                               office:value-type=\'string\'\n
@@ -983,7 +983,7 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
                                       tal:condition="python: line_vat_dict[\'total_price\'] != \'\'"\n
                                       office:value-type=\'float\'\n
                                       tal:attributes=\'office:value line_vat_dict/total_price\'>\n
-                        <text:p text:style-name=\'Table_20_Heading\' tal:content="python:  line_vat_dict[\'total_price\']">:</text:p>\n
+                        <text:p text:style-name=\'Table_20_Heading\' tal:content="python:  price_renderer(line_vat_dict[\'total_price\'])">:</text:p>\n
                     </table:table-cell>  \n
                     <table:table-cell table:style-name=\'Table3.G5\'\n
                               office:value-type=\'string\'\n
@@ -1036,7 +1036,7 @@ MQAATUVUQS1JTkYvbWFuaWZlc3QueG1sUEsFBgAAAAACAAIAngAAAOkyAAAAAA==</string> </valu
                                       tal:condition="python: data_dict[\'total_price\'] != \'\'"\n
                                       office:value-type=\'float\'\n
                                       tal:attributes=\'office:value data_dict/total_price\'>\n
-                        <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content="python:  data_dict[\'total_price\']">:</text:p>\n
+                        <text:p text:style-name=\'Table_20_Contents_20_Right\' tal:content="python:  price_renderer(data_dict[\'total_price\'])">:</text:p>\n
                     </table:table-cell>  \n
                     <table:table-cell table:style-name=\'Table3.G2\'\n
                               office:value-type=\'string\'\n
