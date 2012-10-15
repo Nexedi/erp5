@@ -56,12 +56,9 @@ bt5 = portal.getPromiseParameter(\'portal_templates\', \'expected_bt5\')\n
 if bt5 is None:\n
   return\n
 \n
-bt5_list = [x[1] for x in portal.portal_templates.resolveBusinessTemplateListDependency(bt5.split(), newest_only=True)]\n
-bt5_list.extend([x.getTitle() for x in portal.portal_templates.getUpdatedRepositoryBusinessTemplateList()])\n
-bt5_list = list(set(bt5_list))\n
-\n
-portal.portal_templates.installBusinessTemplateListFromRepository(\n
-          bt5_list, activate=True, install_dependency=True)\n
+bt5_list = bt5.split()\n
+bt5_list.extend(portal.portal_templates.getInstalledBusinessTemplateTitleList())\n
+portal.portal_templates.upgradeSite(bt5_list)\n
 </string> </value>
         </item>
         <item>

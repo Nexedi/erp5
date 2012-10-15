@@ -62,20 +62,12 @@ if bt5 is None:\n
 \n
 active_result = ActiveResult()\n
 \n
-template_tool.updateRepositoryBusinessTemplateList(\n
-  template_tool.getRepositoryList())\n
+bt5_list = bt5.split()\n
+bt5_list.extend(template_tool.getInstalledBusinessTemplateTitleList())\n
 \n
 try:\n
-  bt5_list = [x[1] for x in template_tool.resolveBusinessTemplateListDependency(\n
-                                                    bt5.split(),\n
-                                                    newest_only=True)]\n
-\n
-  bt5_list.extend([x.getTitle() for x in \\\n
-                   template_tool.getUpdatedRepositoryBusinessTemplateList()])\n
-\n
-  bt5_list = list(set(bt5_list))\n
-  severity = len(bt5_list)\n
-\n
+  message_list = template_tool.upgradeSite(bt5_list, dry_run=True)\n
+  severity = len(message_list)\n
 except BusinessTemplateUnknownError, error:\n
   severity = -1\n
   detail = str(error)\n
@@ -83,13 +75,13 @@ except BusinessTemplateUnknownError, error:\n
 if severity == -1:\n
   severity = 5\n
   summary = "Unable to resolve bt5 dependencies"\n
-\n
 elif severity == 0:\n
   summary = "Nothing to do."\n
   detail = ""\n
 else:\n
-  summary = "Upgrade needed"\n
-  detail = "Needed to install %s" % \', \'.join(bt5_list)\n
+  summary = "Upgrade needed."\n
+  detail = "Information: %s" % ",".join(message_list)\n
+\n
 \n
 active_result.edit(\n
   summary=summary, \n
