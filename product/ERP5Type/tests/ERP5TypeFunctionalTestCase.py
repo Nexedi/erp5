@@ -31,7 +31,7 @@ import os
 import time
 import signal
 import re
-from subprocess import Popen, PIPE
+import subprocess
 import shutil
 import transaction
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase, \
@@ -71,29 +71,19 @@ class Xvfb:
     self.display_list = [":%s" % i for i in range(123, 144)]
     self.display = None
     self.fbdir = fbdir
-    self.pid = None
 
   def _runCommand(self, display):
     xvfb_bin = os.environ.get("xvfb_bin", "Xvfb")
-    command = [xvfb_bin, '-fbdir' , self.fbdir, display]
-
-    self.process = Popen(" ".join(command),
-                         stdout=PIPE,
-                         stderr=PIPE,
-                         shell=True,
-                         close_fds=True)
-
-    # try to check if X screen is available
-    time.sleep(5)
-    check_process = Popen('xdpyinfo -display %s >/dev/null 2>&1 && echo "Used" || echo "Free"' %display,
-                         stdout=PIPE,
-                         stderr=PIPE,
-                         shell=True,
-                         close_fds=True)
-    result = check_process.communicate()[0]
-    if result == 'Free':
-      # Xvfb did not start properly so stop here
-      raise NotImplementedError, "Can not start Xvfb, stop test execution"
+    with open(os.devnull, 'w') as null:
+      self.process = subprocess.Popen(
+        (xvfb_bin, '-fbdir' , self.fbdir, display),
+        stdout=null, stderr=null, close_fds=True)
+      # try to check if X screen is available
+      time.sleep(5)
+      if subprocess.call(('xdpyinfo', '-display', display),
+                         stdout=null, stderr=subprocess.STDOUT):
+        # Xvfb did not start properly so stop here
+        raise EnvironmentError("Can not start Xvfb, stop test execution")
 
   def run(self):
     for display_try in self.display_list:
@@ -103,38 +93,22 @@ class Xvfb:
         self.display = display_try
         break
 
-    display = os.environ.get('DISPLAY')
-    if display:
-      auth = Popen(['xauth', 'list', display], stdout=PIPE).communicate()[0]
-      if auth:
-        (displayname, protocolname, hexkey) = auth.split()
-        Popen(['xauth', 'add', 'localhost/unix:%s' % display, protocolname, hexkey])
-
     print 'Xvfb : %d' % self.process.pid
     print 'Take screenshots using xwud -in %s/Xvfb_screen0' % self.fbdir
 
   def quit(self):
     if hasattr(self, 'process'):
-      process_pid = self.process.pid
-      try:
-        self.process.terminate()
-      finally:
-        if process_pid:
-          print "Stopping Xvfb on pid: %s" % self.pid
-          os.kill(process_pid, signal.SIGTERM)
+      self.process.terminate()
 
 class Browser:
 
-  use_xvfb = 1
   def __init__(self, profile_dir, host, port):
     self.profile_dir = profile_dir
     self.host = host
     self.port = port
-    self.pid = None
 
   def quit(self):
-    if self.pid:
-      os.kill(self.pid, signal.SIGTERM)
+    self.process.kill()
 
   def _run(self, url, display):
     """ This method should be implemented on a subclass """
@@ -148,11 +122,12 @@ class Browser:
     self._setEnviron()
     self._setDisplay(display)
     self._run(url)
-    print "Browser %s running on pid: %s" % (self.__class__.__name__, self.pid)
+    print "Browser %s running on pid: %s" % (self.__class__.__name__,
+                                             self.process.pid)
 
   def clean(self):
     """ Clean up removing profile dir and recreating it"""
-    os.system("rm -rf %s" % self.profile_dir)
+    shutil.rmtree(self.profile_dir, ignore_errors=True)
     os.mkdir(self.profile_dir)
 
   def _createFile(self, filename, content):
@@ -162,17 +137,12 @@ class Browser:
     return file_path
 
   def _setDisplay(self, display):
-    if display is None:
-      try:
-        shutil.copy2(os.path.expanduser('~/.Xauthority'), '%s/.Xauthority' % self.profile_dir)
-      except IOError:
-        pass
-    else:
+    if display:
       os.environ["DISPLAY"] = display
 
-  def _runCommand(self, command_tuple):
-    print " ".join(list(command_tuple))
-    self.pid = os.spawnlp(os.P_NOWAIT, *command_tuple)
+  def _runCommand(self, *args):
+    print " ".join(args)
+    self.process = subprocess.Popen(args, close_fds=True)
 
 class Firefox(Browser):
   """ Use firefox to open run all the tests"""
@@ -188,8 +158,8 @@ class Firefox(Browser):
     # Prepare to run
     self._createFile('prefs.js', self.getPrefJs())
     firefox_bin = os.environ.get("firefox_bin", "firefox")
-    self._runCommand((firefox_bin, firefox_bin, "-no-remote",
-                     "-profile", self.profile_dir, url))
+    self._runCommand(firefox_bin, "-no-remote",
+                     "-profile", self.profile_dir, url)
 
     os.environ['MOZ_NO_REMOTE'] = '0'
 
@@ -227,8 +197,11 @@ user_pref("dom.max_script_run_time", 120);
 user_pref("capability.principal.codebase.p1.granted", "UniversalFileRead");
 user_pref("signed.applets.codebase_principal_support", true);
 user_pref("capability.principal.codebase.p1.id", "http://%s:%s");
-user_pref("capability.principal.codebase.p1.subjectName", "");""" % \
-    (self.host, self.port)
+user_pref("capability.principal.codebase.p1.subjectName", "");
+
+// For debugging, do not waste space on screen
+user_pref("browser.tabs.autoHide", true);
+""" % (self.host, self.port)
 
 class PhantomJS(Browser):
   def _createRunJS(self):
@@ -249,7 +222,7 @@ page.open(address, function (status) {
     return self._createFile('run.js', run_js)
 
   def _run(self, url):
-    self._runCommand(("phantomjs", "phantomjs", self._createRunJS(), url))
+    self._runCommand("phantomjs", self._createRunJS(), url)
 
 class FunctionalTestRunner:
 
@@ -273,7 +246,7 @@ class FunctionalTestRunner:
       self.browser = Firefox(profile_dir, host, int(port))
 
   def getStatus(self):
-    transaction.commit()
+    transaction.begin()
     return self.portal.portal_tests.TestTool_getResults(self.run_only)
 
   def _getTestURL(self):
@@ -291,13 +264,15 @@ class FunctionalTestRunner:
     xvfb = Xvfb(self.instance_home)
     try:
       start = time.time()
-      if not debug and self.browser.use_xvfb:
+      if not debug:
+        print("\nSet 'erp5_debug_mode' environment variable to 1"
+              " to use your existing display instead of Xvfb.")
         xvfb.run()
       self.browser.run(self._getTestURL() , xvfb.display)
       while self.getStatus() is None:
         time.sleep(10)
         if (time.time() - start) > float(self.timeout):
-          raise TimeoutError("Test took more them %s seconds" % self.timeout)
+          raise TimeoutError("Test took more than %s seconds" % self.timeout)
 
     finally:
       self.browser.quit()
