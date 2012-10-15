@@ -367,6 +367,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(['trade/sale'], preference_tool.getPreferredSaleUseList())
     self.assertEquals(['trade/purchase'], preference_tool.getPreferredPurchaseUseList())
     self.assertEquals(['trade/container'], preference_tool.getPreferredPackingUseList())
+    self.assertEquals(['trade/tax']), preference_tool.getPreferredTaxUseList())
 
   def stepCheckModulesBusinessApplication(self, sequence=None, sequence_list=None, **kw):
     """

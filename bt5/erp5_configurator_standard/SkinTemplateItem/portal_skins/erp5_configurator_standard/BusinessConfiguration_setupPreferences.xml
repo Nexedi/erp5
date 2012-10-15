@@ -211,7 +211,8 @@ system_prefs = dict(\n
   preferred_client_role_list = [\'client\'],\n
   preferred_sale_use_list = [\'trade/sale\'],\n
   preferred_purchase_use_list = [\'trade/purchase\'],\n
-  preferred_packing_use_list = [\'trade/container\'])\n
+  preferred_packing_use_list = [\'trade/container\'],\n
+  preferred_tax_use_list=[\'trade/tax\'])\n
 \n
 configuration_save.addConfigurationItem(\n
     \'System Preference Configurator Item\',\n
