@@ -64,6 +64,23 @@ class TestDocumentWithPreConversion(TestDocument):
                         'Embedded-XXX?format=jpeg&display=large&quality=75'], 
                         web_page.Base_extractImageUrlList())
 
+  def test_Base_isConvertible(self):
+    """
+      Test pre converion only happens on proper documents.
+    """
+    print "da"
+    image = self.portal.image_module.newContent(portal_type='Image',
+                                               reference='Embedded-XXX',
+                                               version='001',
+                                               language='en')
+    # empty image is not convertible
+    self.assertEqual(False, image.Base_isConvertible())
+    
+    # image with data is convertible
+    upload_file = makeFileUpload('cmyk_sample.jpg')
+    image.edit(file=upload_file)
+    self.tic()
+    self.assertEqual(True, image.Base_isConvertible())
 
 def test_suite():
   suite = unittest.TestSuite()
