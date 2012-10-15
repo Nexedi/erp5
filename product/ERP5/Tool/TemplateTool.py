@@ -42,6 +42,7 @@ from Products.CMFActivity.ActiveResult import ActiveResult
 from Products.ERP5Type.Globals import InitializeClass, DTMLFile, PersistentMapping
 from Products.ERP5Type.DiffUtils import DiffFile
 from Products.ERP5Type.Tool.BaseTool import BaseTool
+from Products.ERP5Type.Cache import transactional_cached
 from Products.ERP5Type import Permissions
 from Products.ERP5.Document.BusinessTemplate import BusinessTemplateMissingDependency
 from Acquisition import aq_base
@@ -876,6 +877,7 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                'getDependencyList')
+    @transactional_cached(lambda self, bt: (self, bt))
     def getDependencyList(self, bt):
       """
        Return the list of missing dependencies for a business
