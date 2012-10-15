@@ -30,6 +30,8 @@
   Tests invoice creation from simulation.
 
 """
+import sys, zipfile, xml.dom.minidom
+import StringIO
 
 from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.utils import FileUpload, DummyMailHost
@@ -1609,12 +1611,15 @@ class TestInvoice(TestInvoiceMixin):
     self.assertEquals(DateTime(2002, 03, 04),
                  invoice_transaction_movement.getStopDate())
 
-
   def test_Invoice_viewAsODT(self):
     resource = self.portal.getDefaultModule(
         self.resource_portal_type).newContent(
                     portal_type=self.resource_portal_type,
                     title='Resource',)
+    resource_tax = self.portal.getDefaultModule(
+        self.resource_portal_type).newContent(
+                    portal_type=self.resource_portal_type,
+                    title='Resource Tax',)
     client = self.portal.organisation_module.newContent(
                               portal_type='Organisation', title='Client')
     vendor = self.portal.organisation_module.newContent(
@@ -1628,14 +1633,78 @@ class TestInvoice(TestInvoiceMixin):
                               source_section_value=vendor,
                               destination_value=client,
                               destination_section_value=client)
-    line = invoice.newContent(portal_type=self.invoice_line_portal_type,
+    product_line1 = invoice.newContent(portal_type=self.invoice_line_portal_type,
                             resource_value=resource,
                             quantity=10,
+                            base_contribution='tax1',
                             price=3)
+    product_line2 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource,
+                            quantity=20,
+                            base_contribution='tax1',
+                            price=5)
+    product_line3 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource,
+                            quantity=60,
+                            base_contribution='tax2',
+                            price=5)
+    product_line4 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource,
+                            quantity=60,
+                            price=3)
+    product_line5 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource,
+                            quantity=7,
+                            price=20)
+    tax_line1 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource_tax,
+                            use='trade/tax',
+                            base_contribution='tax1',
+                            quantity=130,
+                            price=0.2)
+    tax_line2 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource_tax,
+                            use='trade/tax',
+                            base_contribution='tax2',
+                            quantity=300,
+                            price=0.05)
+    tax_line3 = invoice.newContent(portal_type=self.invoice_line_portal_type,
+                            resource_value=resource_tax,
+                            use='trade/tax',
+                            base_contribution='tax3',
+                            quantity=20,
+                            price=0.1)
     invoice.confirm()
     self.tic()
-
     odt = invoice.Invoice_viewAsODT()
+    import cStringIO
+    output = cStringIO.StringIO()
+    output.write(odt)
+    m = OpenDocumentTextFile(output)
+    text_content=m.toString().encode('ascii','replace')
+    if text_content.find('Resource Tax') != -1 :
+      self.fail('fail to delete the vat line in product line')
+    if text_content.find('Vat Code') == -1 :
+      self.fail('fail to add the vat code')
+    if text_content.find('Amount') == -1 :
+      self.fail('fail to add the amount for each tax')
+    if text_content.find('Rate') == -1 :
+      self.fail('fail to add the Rate for each tax')
+    tax1_product_total_price=str(10*3+20*5)
+    if text_content.find(tax1_product_total_price) == -1 :
+      self.fail('fail to get the total price of products which tax1')
+    tax2_product_total_price=str(60*5)
+    if text_content.find(tax2_product_total_price) == -1 :
+      self.fail('fail to get the total price of products which tax2')
+    no_tax_product_total_price=str(60*3+7*20)
+    if text_content.find(no_tax_product_total_price) == -1 :
+      self.fail('fail to get the total price of products which have no tax')
+    product_total_price_no_tax=str(10*3+20*5+60*5+60*3+7*20)
+    if text_content.find(product_total_price_no_tax) == -1 :
+      self.fail('fail to get the total price of the products without tax')
+    product_total_price=str(10*3+20*5+60*5+60*3+7*20+130*0.2+300*0.05+20*0.1)
+    if text_content.find(product_total_price) == -1 :
+      self.fail('fail to get the total price of the products with tax')
     from Products.ERP5OOo.tests.utils import Validator
     odf_validator = Validator()
     err_list = odf_validator.validate(odt)
@@ -3536,6 +3605,28 @@ class TestPurchaseInvoice(TestInvoice, ERP5TypeTestCase):
       stepCheckDeliveryBuilding
       stepTic
     """
+
+class OpenDocumentTextFile :
+  def __init__ (self, filelikeobj) :
+    zip = zipfile.ZipFile(filelikeobj)
+    self.content = xml.dom.minidom.parseString(zip.read("content.xml"))
+
+  def toString (self) :
+    """ Converts the document to a string. """
+    buffer = u""
+    for val in ["text:p", "text:h", "text:list"]:
+      for paragraph in self.content.getElementsByTagName(val) :
+        buffer += self.textToString(paragraph) + "\n"
+    return buffer
+
+  def textToString(self, element) :
+    buffer = u""
+    for node in element.childNodes :
+      if node.nodeType == xml.dom.Node.TEXT_NODE :
+        buffer += node.nodeValue
+      elif node.nodeType == xml.dom.Node.ELEMENT_NODE :
+        buffer += self.textToString(node)
+    return buffer
 
 import unittest
 def test_suite():
