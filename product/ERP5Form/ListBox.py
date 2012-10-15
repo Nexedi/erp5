@@ -2870,7 +2870,7 @@ class ListBoxValidator(Validator.Validator):
                     if o.getUid() == int(uid):
                       break
                   except ValueError:
-                    if str(object.getUid()) == uid:
+                    if str(o.getUid()) == uid:
                       break
                 else:
                   raise err
