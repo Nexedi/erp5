@@ -224,7 +224,7 @@ for line in getSubLineList(context):\n
       \'stop_date\': getOrderedDate(line.getStopDate()) or \'\',\n
       \'base_price\': line.getPrice() or \'\',\n
       \'total_price\': line.getTotalPrice() or 0,\n
-      \'specialise_title\' : line.getProperty(\'specialise_title\', \'\'),\n
+      \'specialise_title\' : line.getSpecialiseTitle(checked_permission=\'Access Content Information\'),\n
     }\n
 \n
     if line_dict[\'use_type_tax\']:\n
@@ -457,7 +457,7 @@ data_dict = {\n
   \'vat_list\': total_vat,\n
   \'vat_total_price\':total_vat_price,\n
   \'description\': getFieldAsLineList(context.getDescription()),\n
-  \'specialise_title\': context.getProperty(\'specialise_title\',\'\'),\n
+  \'specialise_title\' : context.getSpecialiseTitle(checked_permission=\'Access Content Information\'),\n
   \'line_vat\':line_vat,\n
   \'line_not_vat\':line_not_vat,\n
   \'line_list\': line_list,\n
