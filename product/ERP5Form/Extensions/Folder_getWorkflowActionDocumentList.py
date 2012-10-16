@@ -28,10 +28,14 @@
 ##############################################################################
 
 from Products.PythonScripts.standard import Object
+from hashlib import md5
 
 # Some workflow does not make sense in the context of mass transition and are
 # not proposed.
 skipped_workflow_id_list = ['delivery_causality_workflow',]
+
+def generateUid(workflow_id, workflow_state):
+  return 'new_%s' % md5('%s%s' % (workflow_id, workflow_state)).hexdigest()
 
 def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   """This returns the list of all "document groups", ie document of the same
@@ -70,7 +74,6 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
   
   document_list = []
   
-  counter = 0
   if not selection_uid_list:
     for workflow_state in possible_state_list:
       params = \
@@ -90,19 +93,19 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
           translated_workflow_state_title = doc.getProperty(
                           'translated_%s_title' % state_var)
           if state_var == workflow_state:
-            counter += 1
+            workflow_id = workflow.getId()
+            current_workflow_state = doc.getProperty(state_var)
             document_list.append(doc.asContext(
-                            uid='new_%s' % counter,
+                            uid=generateUid(workflow_id, current_workflow_state),
                             getListItemUrl=UrlGetter(doc, state_var),
                             workflow_title=Base_translateString(workflow.title_or_id()),
                             translated_workflow_state_title=
                                    translated_workflow_state_title,
                             count=brain.count,
-                            
-                            workflow_id=workflow.getId(),
+                            workflow_id=workflow_id,
                             portal_type=doc.getPortalTypeName(),
                             state_var=state_var,
-                            workflow_state=doc.getProperty(state_var),
+                            workflow_state=current_workflow_state,
                             ))
   
   else:
@@ -125,26 +128,25 @@ def getDocumentGroupByWorkflowStateList(self, form_id='', **kw):
             workflow_state_dict[key] = document, document_count + 1
     
     
-    counter = 0
     for (ptype, workflow_id, state), (doc, document_count) in\
                 workflow_state_dict.items():
-      counter += 1
       workflow = wf_tool.getWorkflowById(workflow_id)
       state_var = workflow.variables.getStateVar()
       translated_workflow_state_title = doc.getProperty(
                       'translated_%s_title' % state_var)
+      workflow_id = workflow.getId()
+      current_workflow_state = doc.getProperty(state_var)
       document_list.append(doc.asContext(
-                uid='new_%s' % counter,
+                uid=generateUid(workflow_id, current_workflow_state),
                 getListItemUrl=UrlGetter(doc, state_var),
                 workflow_title=Base_translateString(workflow.title_or_id()),
                 translated_workflow_state_title=
                        translated_workflow_state_title,
                 count=document_count,
-                
-                workflow_id=workflow.getId(),
+                workflow_id=workflow_id,
                 portal_type=doc.getPortalTypeName(),
                 state_var=state_var,
-                workflow_state=doc.getProperty(state_var),
+                workflow_state=current_workflow_state,
                 ))
   
   # Let us sort this list by translated title of workflow state and workflow
