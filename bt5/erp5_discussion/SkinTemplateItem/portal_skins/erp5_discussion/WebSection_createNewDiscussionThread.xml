@@ -53,6 +53,8 @@
             <value> <string>"""\n
  This script allows to create a new Discussion Thread.\n
 """\n
+from zExceptions import Unauthorized\n
+\n
 MARKER = [\'\', None, []]\n
 \n
 portal = context.getPortalObject()\n
@@ -60,7 +62,13 @@ person = portal.ERP5Site_getAuthenticatedMemberPersonValue()\n
 \n
 version = \'001\'\n
 language = portal.Localizer.get_selected_language()\n
-user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()\n
+\n
+try:\n
+  user_assignment_dict = portal.ERP5Site_getPersonAssignmentDict()\n
+except Unauthorized:\n
+  # not in all cases current logged in user may access its details\n
+  user_assignment_dict = {\'group_list\': [], \'site_list\':[]}\n
+\n
 if group_list in MARKER:\n
   group_list = user_assignment_dict[\'group_list\']\n
 if site_list in MARKER:\n
