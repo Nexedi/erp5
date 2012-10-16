@@ -877,57 +877,62 @@ class TemplateTool (BaseTool):
 
     security.declareProtected(Permissions.AccessContentsInformation,
                                'getDependencyList')
-    @transactional_cached(lambda self, bt: (self, bt))
     def getDependencyList(self, bt):
       """
        Return the list of missing dependencies for a business
        template, given a tuple : (repository, id)
       """
-      # We do not take into consideration the dependencies
-      # for meta business templates
-      if bt[0] == 'meta':
-        return []
-      result_list = []
-      for repository, property_dict_list in self.repository_dict.items():
-        if repository == bt[0]:
-          for property_dict in property_dict_list:
-            if property_dict['id'] == bt[1]:
-              dependency_list = [q for q in property_dict['dependency_list'] if q]
-              for dependency_couple in dependency_list:
-                # dependency_couple is like "erp5_xhtml_style (>= 0.2)"
-                dependency_couple_list = dependency_couple.split(' ', 1)
-                dependency = dependency_couple_list[0]
-                version_restriction = None
-                if len(dependency_couple_list) > 1:
-                  version_restriction = dependency_couple_list[1]
-                  if version_restriction.startswith('('):
-                    # Something like "(>= 1.0rc6)".
-                    version_restriction = version_restriction[1:-1]
-                require_update = False
-                if dependency not in result_list:
-                  # Get the lastest version of the dependency on the
-                  # repository that meet the version restriction
-                  provider_installed = False
-                  bt_dep = None
-                  try:
-                    bt_dep = self.getLastestBTOnRepos(dependency, version_restriction)
-                  except BusinessTemplateUnknownError:
-                    raise BusinessTemplateMissingDependency, 'While analysing %s the following dependency could not be satisfied: %s (%s)\nReason: Business Template could not be found in the repositories'%(bt[1], dependency, version_restriction or '')
-                  except BusinessTemplateIsMeta:
-                    provider_list = self.getProviderList(dependency)
-                    for provider in provider_list:
-                      if self.portal_templates.getInstalledBusinessTemplate(provider) is not None:
-                        bt_dep = self.getLastestBTOnRepos(provider)
-                        break
-                    if bt_dep is None:
-                      bt_dep = ('meta', dependency)
-                  sub_dep_list = self.getDependencyList(bt_dep)
-                  for sub_dep in sub_dep_list:
-                    if sub_dep not in result_list:
-                      result_list.append(sub_dep)
-                  result_list.append(bt_dep)
-              return result_list
-      raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repository %s'%(bt[1], bt[0])
+      # use by using "self" on transactional_cached decorator
+      # breaks ERP5Site creation due aq_base.
+      @transactional_cached(lambda bt: (bt))
+      def _getDependency(bt):
+        # We do not take into consideration the dependencies
+        # for meta business templates
+        if bt[0] == 'meta':
+          return []
+        result_list = []
+        for repository, property_dict_list in self.repository_dict.items():
+          if repository == bt[0]:
+            for property_dict in property_dict_list:
+              if property_dict['id'] == bt[1]:
+                dependency_list = [q for q in property_dict['dependency_list'] if q]
+                for dependency_couple in dependency_list:
+                  # dependency_couple is like "erp5_xhtml_style (>= 0.2)"
+                  dependency_couple_list = dependency_couple.split(' ', 1)
+                  dependency = dependency_couple_list[0]
+                  version_restriction = None
+                  if len(dependency_couple_list) > 1:
+                    version_restriction = dependency_couple_list[1]
+                    if version_restriction.startswith('('):
+                      # Something like "(>= 1.0rc6)".
+                      version_restriction = version_restriction[1:-1]
+                  require_update = False
+                  if dependency not in result_list:
+                    # Get the lastest version of the dependency on the
+                    # repository that meet the version restriction
+                    provider_installed = False
+                    bt_dep = None
+                    try:
+                      bt_dep = self.getLastestBTOnRepos(dependency, version_restriction)
+                    except BusinessTemplateUnknownError:
+                      raise BusinessTemplateMissingDependency, 'While analysing %s the following dependency could not be satisfied: %s (%s)\nReason: Business Template could not be found in the repositories'%(bt[1], dependency, version_restriction or '')
+                    except BusinessTemplateIsMeta:
+                      provider_list = self.getProviderList(dependency)
+                      for provider in provider_list:
+                        if self.portal_templates.getInstalledBusinessTemplate(provider) is not None:
+                          bt_dep = self.getLastestBTOnRepos(provider)
+                          break
+                      if bt_dep is None:
+                        bt_dep = ('meta', dependency)
+                    sub_dep_list = self.getDependencyList(bt_dep)
+                    for sub_dep in sub_dep_list:
+                      if sub_dep not in result_list:
+                        result_list.append(sub_dep)
+                    result_list.append(bt_dep)
+                return result_list
+        raise BusinessTemplateUnknownError, 'The Business Template %s could not be found on repository %s'%(bt[1], bt[0])
+
+      return _getDependency(bt)
 
     def findProviderInBTList(self, provider_list, bt_list):
       """
