@@ -452,7 +452,7 @@ body {\n
 }\n
 \n
 #main_form, /* BBB */\n
-.main_form,  {\n
+.main_form  {\n
   color: inherit;\n
 }\n
 \n
