@@ -56,11 +56,8 @@
 """\n
 portal = context.getPortalObject()\n
 \n
-portal_type = context.getPortalType()\n
-allowed_portal_type_list = portal.getPortalDocumentTypeList() + portal.getPortalEmbeddedDocumentTypeList()\n
-\n
-if portal_type not in allowed_portal_type_list:\n
-  # no need to convert any non DMS types\n
+if not context.Base_isConvertible():\n
+  # no need to convert any non convertible types\n
   return\n
 \n
 if kw=={}:\n

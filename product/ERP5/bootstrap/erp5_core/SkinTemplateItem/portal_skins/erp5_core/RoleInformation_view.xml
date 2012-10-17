@@ -98,7 +98,7 @@
                         <string>my_title</string>
                         <string>my_role_name_list</string>
                         <string>my_condition</string>
-                        <string>my_local_roles_group_id</string>
+                        <string>my_local_role_group</string>
                       </list>
                     </value>
                 </item>

@@ -58,7 +58,7 @@
 portal = context.getPortalObject()\n
 \n
 MARKER = (None, \'\',)\n
-API_ARGUMENT_LIST = [\'format\', \'display\', \'quality\', \'resolution\']\n
+API_ARGUMENT_LIST = [\'format\', \'display\', \'display_list\', \'quality\', \'resolution\']\n
 validation_state = (\'released\', \'released_alive\', \'published\', \'published_alive\',\n
                     \'shared\', \'shared_alive\', \'public\', \'validated\')\n
 \n

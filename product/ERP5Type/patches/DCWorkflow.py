@@ -400,8 +400,7 @@ def DCWorkflowDefinition_executeTransition(self, ob, tdef=None, kwargs=None):
         sci = StateChangeInfo(
             ob, self, status, tdef, old_sdef, new_sdef, kwargs)
         # put the error message in the workflow history
-        sci.setWorkflowVariable(ob, workflow_id=self.id,
-                                error_message = before_script_error_message)
+        sci.setWorkflowVariable(error_message=before_script_error_message)
         if validation_exc :
             # reraise validation failed exception
             raise validation_exc, None, validation_exc_traceback

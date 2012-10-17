@@ -50,33 +50,31 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>transition = state_change[\'transition\'].id[len(\'user_\'):]\n
+            <value> <string>"""\n
+  Return true or false based on if document is convertible or not.\n
+"""\n
+MARKER = (None, \'\',)\n
+portal = context.getPortalObject()\n
 \n
-def TestTitle(object):\n
-  """\n
-  This is the test for this particular action\n
-  """\n
-  if object.getTitle() == \'truc\':\n
-    return 1\n
-  return 0\n
+portal_type = context.getPortalType()\n
+allowed_portal_type_list = portal.getPortalDocumentTypeList() + portal.getPortalEmbeddedDocumentTypeList()\n
 \n
-object = state_change[\'object\']\n
+if portal_type not in allowed_portal_type_list:\n
+  return False\n
 \n
-if TestTitle(object):\n
-  method = getattr(context, transition)\n
-  method()\n
-else:\n
-  kw = {\'error_message\':\'Why do you want to do this ?????\'}\n
-  state_change.setWorkflowVariable(object, **kw)\n
+# XXX: we do check if "data" methods exists on pretending to be Document portal types\n
+# we need a way to do this by introspection\n
+return (getattr(context, "getData", None) is not None and context.getData() not in MARKER) or \\\n
+       (getattr(context, "getBaseData", None) is not None and context.getBaseData() not in MARKER)\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>state_change</string> </value>
+            <value> <string></string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>test_error_message</string> </value>
+            <value> <string>Base_isConvertible</string> </value>
         </item>
       </dictionary>
     </pickle>

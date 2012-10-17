@@ -50,24 +50,37 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>portal = context.getPortalObject()\n
-bt5 = portal.getPromiseParameter(\'portal_templates\', \'expected_bt5\')\n
+            <value> <string encoding="cdata"><![CDATA[
+
+"""\n
+  Generate reference from a string by escaping all non ascii characters.\n
+  XXX: add support for non-ascii characters using unidecode python library\n
+"""\n
+transliterate_list = [\'?\', \':\', \';\', \'/\', \'&\', \'=\', \'^\', \'@\', \'>\', \'<\', \']\', \'[\', \'^\', \'\\\\\']\n
 \n
-if bt5 is None:\n
-  return\n
+def removeNonAscii(s): \n
+  return "".join(i for i in s if ord(i)>44 and ord(i)<123)\n
 \n
-bt5_list = bt5.split()\n
-bt5_list.extend(portal.portal_templates.getInstalledBusinessTemplateTitleList())\n
-portal.portal_templates.upgradeSite(bt5_list)\n
-</string> </value>
+# reference can be used for permanent URL so be friendly to spaces (SEO)\n
+s = s.strip()\n
+s =s.replace(\' \', \'-\')\n
+\n
+s = removeNonAscii(s)\n
+for item in transliterate_list:\n
+  s = s.replace(item, \'-\')\n
+\n
+return s.strip(\'-\')\n
+
+
+]]></string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>**kw</string> </value>
+            <value> <string>s</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>
-            <value> <string>Alarm_installPromiseBt5</string> </value>
+            <value> <string>Base_generateReferenceFromString</string> </value>
         </item>
       </dictionary>
     </pickle>

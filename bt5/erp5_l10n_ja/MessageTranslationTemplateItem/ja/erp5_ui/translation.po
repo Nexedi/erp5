@@ -3243,6 +3243,12 @@ msgstr "関連する出荷明細書がありません"
 msgid "No Trade Condition."
 msgstr "取引条件がありません。"
 
+msgid "No result !"
+msgstr "見つかれませんでした！"
+
+msgid "No result."
+msgstr "見つかれませんでした。"
+
 msgid "No such document was found."
 msgstr "ドキュメントが見つかりませんでした。"
 
