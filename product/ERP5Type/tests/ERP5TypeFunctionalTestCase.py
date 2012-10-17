@@ -328,6 +328,8 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     self.setSystemPreference()
     self.portal.portal_tests.TestTool_cleanUpTestResults()
     self.tic()
+    self.runner = FunctionalTestRunner(self.serverhost, self.serverport,
+                                self.portal, self.run_only, self.use_phanthom)
 
   def setSystemPreference(self):
     conversion_dict = _getConversionServerDict()
@@ -358,8 +360,6 @@ class ERP5TypeFunctionalTestCase(ERP5TypeTestCase):
     # first of all, abort to get rid of the mysql participation inn this
     # transaction
     self.portal._p_jar.sync()
-    self.runner = FunctionalTestRunner(self.serverhost, self.serverport,
-                                self.portal, self.run_only, self.use_phanthom)
 
     if self.remote_code_url_list is not None:
       self.runner.remote_code_url_list = self.remote_code_url_list
