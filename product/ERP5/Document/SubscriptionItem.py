@@ -30,6 +30,7 @@
 import zope.interface
 from AccessControl import ClassSecurityInfo
 
+from Products.CMFCore.utils import getToolByName
 from Products.ERP5Type import Permissions, PropertySheet, interfaces
 from Products.ERP5.Document.Item import Item
 from Products.ERP5.mixin.composition import CompositionMixin
