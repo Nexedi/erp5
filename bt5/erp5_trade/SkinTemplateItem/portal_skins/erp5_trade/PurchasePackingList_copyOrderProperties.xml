@@ -50,31 +50,13 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>if related_simulation_movement_path_list is None:\n
-  raise RuntimeError, \'related_simulation_movement_path_list is missing. Update ERP5 Product.\'\n
-\n
-packing_list = context\n
-\n
-# First, copy Order properties\n
-packing_list.PackingList_copyOrderProperties()\n
-\n
-# Then, modify state\n
-confirm_tag = \'%s_confirm\' % packing_list.getPath()\n
-packing_list.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
-  tag=confirm_tag).Delivery_confirm()\n
-\n
-# First set the packing_list in the building state\n
-packing_list.startBuilding()\n
-# Then an activity should put the causality state in diverged or solved\n
-packing_list.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
-  after_tag=confirm_tag).updateCausalityState()\n
+            <value> <string>context.PackingList_copyOrderProperties()\n
+context.Delivery_confirm()\n
 </string> </value>
         </item>
         <item>
             <key> <string>_params</string> </key>
-            <value> <string>related_simulation_movement_path_list=None</string> </value>
+            <value> <string>related_simulation_movement_path_list</string> </value>
         </item>
         <item>
             <key> <string>id</string> </key>

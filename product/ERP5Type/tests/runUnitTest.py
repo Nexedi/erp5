@@ -138,8 +138,7 @@ Options:
                              Make ZServer listen on given host:port
                              If used with --activity_node=, this can be a
                              comma-separated list of addresses.
-  --neo_storage              Use a volatile NEO storage instead of a DemoStorage
-                             (not compatible with --save or --load).
+  --neo_storage              Use a NEO storage (SQLite) instead of FileStorage.
   --products_path=path,path  Comma-separated list of products paths locations
                              which shall be used in test environment.
   --sys_path=path,path       Comma-separated list of paths which will be used to

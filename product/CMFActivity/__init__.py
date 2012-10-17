@@ -67,4 +67,5 @@ def initialize( context ):
 cmfactivity_globals = globals()
 
 from AccessControl.SecurityInfo import allow_module
+allow_module('Products.CMFActivity.ActiveResult')
 allow_module('Products.CMFActivity.Errors')

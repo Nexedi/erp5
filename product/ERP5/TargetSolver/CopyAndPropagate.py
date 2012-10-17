@@ -73,8 +73,8 @@ class CopyAndPropagate(TargetSolver):
                            quantity_ratio=quantity_ratio,
                            value_dict=value_dict,
                            property_id=property_id)
-    # XXX can we use activity for further expand?
-    simulation_movement.expand()
+    # XXX: would it be safe to expand by activity ?
+    simulation_movement.expand('immediate')
 
   def _solveRecursively(self, simulation_movement, is_last_movement=1,
                         quantity_ratio=None, value_dict=None,

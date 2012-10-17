@@ -39,7 +39,7 @@ class ILocalRoleGenerator(Interface):
     Returned value is a dict: {groud_id: role_name_set, ...}
     """
 
-class ILocalRoleAssignor(ILocalRoleGenerator):
+class ILocalRoleAssignor(Interface):
   """
   """
   def updateLocalRolesOnDocument(ob, user_name=None, reindex=True):

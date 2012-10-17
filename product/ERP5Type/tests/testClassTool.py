@@ -54,6 +54,13 @@ class TestClassTool(ERP5TypeTestCase):
     portal = self.portal
     self.assertNotEqual(None,getattr(portal,'portal_classes',None))
     self.commit()
+    # check if web UI works
+    portal_classes = portal.portal_classes
+    portal_classes.manage_viewDocumentList()
+    portal_classes.manage_viewPropertySheetList()
+    portal_classes.manage_viewConstraintList()
+    portal_classes.manage_viewExtensionList()
+    portal_classes.manage_viewTestList()
 
 
   def test_02_CheckFileWriteIsTransactional(self):

@@ -671,20 +671,12 @@ class TestInvoiceMixin(TestPackingListMixin):
   def stepCheckTwoInvoices(self,sequence=None, sequence_list=None, **kw):
     """ checks invoice properties are well set. """
     # Now we will check that we have two invoices created
-    packing_list = sequence.get('packing_list')
-    invoice_list = packing_list.getCausalityRelatedValueList(
-         portal_type=self.invoice_portal_type)
-    self.assertEquals(len(invoice_list),1)
-    invoice = invoice_list[0]
-    self.assertEquals(invoice.getSimulationState(), 'confirmed')
-    sequence.edit(invoice=invoice)
-    new_packing_list = sequence.get('new_packing_list')
-    new_invoice_list = new_packing_list.getCausalityRelatedValueList(
-        portal_type=self.invoice_portal_type)
-    self.assertEquals(len(new_invoice_list),1)
-    new_invoice = new_invoice_list[0]
-    self.assertEquals(new_invoice.getSimulationState(), 'confirmed')
-    sequence.edit(new_invoice=new_invoice)
+    for x in '', 'new_':
+      packing_list = sequence.get(x + 'packing_list')
+      invoice, = packing_list.getCausalityRelatedValueList(
+          portal_type=self.invoice_portal_type)
+      self.assertEqual(invoice.getSimulationState(), 'confirmed')
+      sequence.set(x + 'invoice', invoice)
 
   def stepStartTwoInvoices(self,sequence=None, sequence_list=None, **kw):
     """ start both invoices. """
@@ -783,50 +775,28 @@ class TestInvoiceMixin(TestPackingListMixin):
     newSecurityManager(None, user)
 
   def stepEditInvoice(self, sequence=None, sequence_list=None, **kw):
-    """Edit the current invoice, to trigger updateAppliedRule."""
+    """Edit the current invoice, to trigger updateSimulation."""
     invoice = sequence.get('invoice')
-    invoice.edit()
-
-    # call updateAppliedRule directly, don't rely on edit interactions
-    rule_reference = 'default_invoice_rule'
-    self.assertNotEquals(0,
-        len(self.portal.portal_rules.searchFolder(reference=rule_reference)))
-    invoice.updateAppliedRule(rule_reference=rule_reference)
+    invoice.edit(description='This invoice was edited!')
 
   def stepCheckInvoiceRuleNotAppliedOnInvoiceEdit(self,
                     sequence=None, sequence_list=None, **kw):
     """If we call edit on the invoice, invoice rule should not be
     applied on lines created by delivery builder."""
     invoice = sequence.get('invoice')
-    # FIXME: empty applied rule should not be created
-    #self.assertEquals(len(invoice.getCausalityRelatedValueList(
-    #         portal_type=self.applied_rule_portal_type)), 0)
-    for invoice_mvt in invoice.getMovementList():
-      self.assertEquals(len(invoice_mvt.getOrderRelatedValueList(
-            portal_type=self.simulation_movement_portal_type)), 0)
+    self.assertEqual([], invoice.getCausalityRelatedValueList())
 
   def stepEditPackingList(self, sequence=None, sequence_list=None, **kw):
-    """Edit the current packing list, to trigger updateAppliedRule."""
+    """Edit the current packing list, to trigger updateSimulation."""
     packing_list = sequence.get('packing_list')
-    packing_list.edit()
-
-    # call updateAppliedRule directly, don't rely on edit interactions
-    rule_reference = 'default_delivery_rule'
-    self.assertNotEquals(0,
-        len(self.portal.portal_rules.searchFolder(reference=rule_reference)))
-    packing_list.updateAppliedRule(rule_reference=rule_reference)
+    packing_list.edit(description='This packing list was edited!')
 
   def stepCheckDeliveryRuleNotAppliedOnPackingListEdit(self,
                     sequence=None, sequence_list=None, **kw):
     """If we call edit on the packing list, delivery rule should not be
     applied on lines created by delivery builder."""
     packing_list = sequence.get('packing_list')
-    # FIXME: empty applied rule should not be created
-    #self.assertEquals(len(packing_list.getCausalityRelatedValueList(
-    #         portal_type=self.applied_rule_portal_type)), 0)
-    for delivery_mvt in packing_list.getMovementList():
-      self.assertEquals(len(delivery_mvt.getOrderRelatedValueList(
-            portal_type=self.simulation_movement_portal_type)), 0)
+    self.assertEqual([], packing_list.getCausalityRelatedValueList())
 
   def stepDecreaseInvoiceLineQuantity(self, sequence=None, sequence_list=None,
       **kw):
@@ -1039,14 +1009,9 @@ class TestInvoiceMixin(TestPackingListMixin):
       # check which activities are failing
       self.assertTrue(str(exc).startswith('tic is looping forever.'),
           '%s does not start with "tic is looping forever."' % str(exc))
-      msg_list = ['/'.join(x.object_path) for x in
-          self.getActivityTool().getMessageList()]
-      self.assertTrue(invoice.getPath() in msg_list, '%s in %s' %
-          (invoice.getPath(), msg_list))
-      method_id_list = [x.method_id for x in
-          self.getActivityTool().getMessageList()]
-      self.assertTrue('Delivery_buildOnComposedDocument' in method_id_list, '%s in %s' %
-          ('Delivery_buildOnComposedDocument', method_id_list))
+      msg_list = [('/'.join(x.object_path), x.method_id)
+          for x in self.getActivityTool().getMessageList()]
+      self.assertTrue((invoice.getPath(), '_localBuild') in msg_list, msg_list)
       # flush failing activities
       activity_tool = self.getActivityTool()
       activity_tool.manageClearActivities(keep=0)
@@ -2682,7 +2647,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
     We want to prevent this from happening:
       - Create a packing list
       - An invoice is created from packing list
-      - Invoice is edited, updateAppliedRule is called
+      - Invoice is edited, updateSimulation is called
       - A new Invoice Rule is created for this invoice, and accounting
         movements for this invoice are present twice in the simulation.
     """
@@ -2702,9 +2667,9 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         stepTic
         stepCheckInvoiceBuilding
         stepEditInvoice
+        stepTic
         stepCheckInvoiceRuleNotAppliedOnInvoiceEdit
         stepCheckInvoicesConsistency
-        stepTic
       """)
     sequence_list.play(self, quiet=quiet)
 
@@ -2721,9 +2686,8 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         base_sequence +
       """
         stepEditPackingList
-        stepCheckDeliveryRuleNotAppliedOnPackingListEdit
-        stepCheckInvoicesConsistency
         stepTic
+        stepCheckDeliveryRuleNotAppliedOnPackingListEdit
       """)
     sequence_list.play(self, quiet=quiet)
 
@@ -2794,6 +2758,7 @@ class TestSaleInvoice(TestSaleInvoiceMixin, TestInvoice, ERP5TypeTestCase):
         base_sequence +
     """
       stepAddPackingListLine
+      stepTic
       stepSetContainerFullQuantity
       stepTic
       stepSetReadyPackingList

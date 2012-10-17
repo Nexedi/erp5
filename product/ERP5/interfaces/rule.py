@@ -37,8 +37,7 @@ class IRule(IMovementCollectionUpdater):
   Documents which implement IRule can be used to
   expand applied rules in ERP5 simulation.
   """
-  def constructNewAppliedRule(context, id=None,
-                              activate_kw=None, **kw):
+  def constructNewAppliedRule(context, **kw):
     """
     Create a new applied rule in the context.
 
@@ -48,13 +47,10 @@ class IRule(IMovementCollectionUpdater):
     context -- usually, a parent simulation movement of the
                newly created applied rule
 
-    activate_kw -- activity parameters, required to control
-                   activity constraints
-
-    kw -- XXX-JPS probably wrong interface specification
+    kw -- optional parameters which can be passed to Folder API
     """
 
-  def expand(applied_rule, **kw):
+  def expand(applied_rule, expand_policy=None, activate_kw=None):
     """
     Expand this applied rule to create new documents inside the
     applied rule.
@@ -66,6 +62,14 @@ class IRule(IMovementCollectionUpdater):
     of compensation are implemented through
     IMovementCollectionUpdater API
 
-    kw -- XXX-JPS probably wrong interface specification
-          activate_kw should probably be defined explicitely here
+    applied_rule -- applied rule to expand
+
+    expand_policy -- string defining whether a node in the simulation tree
+                     should be expand immediately or in a separate activity,
+                     or None to use the preferred policy
+
+    activate_kw -- activity parameters, required to control
+                   activity constraints
+
+    Available policies: immediate, deferred, vertical_time_bound
     """

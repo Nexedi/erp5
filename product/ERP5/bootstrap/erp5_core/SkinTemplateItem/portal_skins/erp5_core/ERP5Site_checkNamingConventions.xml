@@ -75,35 +75,52 @@ LOWERCASE_WORD_DICT = dict([(word, 1) for word in LOWERCASE_WORD_LIST])\n
 # List of allowed characters, usefull to detect non-english strings\n
 ALLOWED_CHARS = \'abcdefghijklmnopqrstuvwxyz0123456789%/. ()-_?&\'\n
 \n
-\n
-\n
 def checkField(folder, form, field):\n
   """\n
     Generic function that test the validity of ERP5Form fields.\n
   """\n
   path = \'/\'.join([folder.id, form.id])\n
-  error_message = checkTitle(path, field.id, field.title())\n
-  if field.id == \'listbox\':\n
+  error_message = checkTitle(path, field.id, field.title(), field)\n
+  template_field = getFieldFromProxyField(field)\n
+  if template_field is None:\n
+    error_message = "Could not get a field from a proxy field %s" % field.id\n
+    return error_message\n
+  elif template_field.meta_type == \'ListBox\':\n
+    a = template_field.getListMethodName()    \n
+  if isListBox(field):\n
     path = \'/\'.join([path, \'listbox\'])\n
     for id, title in field.get_value(\'columns\'):\n
-      error_message += checkTitle(path, \'columns\', title)\n
+      error_message += checkTitle(path, \'columns\', title, field)\n
     for id, title in field.get_value(\'all_columns\'):\n
-      error_message += checkTitle(path, \'all_columns\', title)\n
+      error_message += checkTitle(path, \'all_columns\', title, field)\n
 \n
-    a = field.getListMethodName()\n
     if (a!= None and not a.endswith(\'List\')):\n
       if a not in [\'portal_catalog\', \'searchFolder\', \'objectValues\']:\n
         error_message = "%s : %s : %r Bad Naming Convention\\n" % (path, id, a)\n
   return error_message\n
 \n
+def isListBox(field):\n
+  template_field = getFieldFromProxyField(field)\n
+  if template_field is None:\n
+    return False\n
+  elif template_field.meta_type == \'ListBox\':\n
+    return True\n
+  return False\n
 \n
-def checkTitle(path, id, title):\n
+def getFieldFromProxyField(field):\n
+  if field.meta_type == \'ProxyField\':\n
+    template_field = field.getRecursiveTemplateField()\n
+    return template_field\n
+  return field      \n
+\n
+def checkTitle(path, id, title, field=None):\n
   """\n
     Generic function that test the validity of a title.\n
   """\n
   error_message = \'\'\n
 \n
-  if len(title.strip()) == 0:\n
+  if (field is not None and not field.get_value(\'hidden\') and \\\n
+   (title is None or len(title.strip()) == 0)) or (field is None and (title is None or len(title.strip()) == 0)):\n
     return "%s : %s : can\'t be empty\\n" % (path, id)\n
 \n
   for c in title:\n

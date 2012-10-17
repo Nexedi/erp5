@@ -78,12 +78,7 @@ class ImmobilisableItem(Item, Amount):
                       , PropertySheet.Amortisation
                       )
 
-    # FIXME: ImmobilisableItem have to implement IExpandableItem, but they do
-    # not have 'expand' method at the time beeing, simulation methods used here
-    # have different names.
-
-    zope.interface.implements(interfaces.IExpandableItem,
-                              interfaces.IImmobilisationItem)
+    zope.interface.implements(interfaces.IImmobilisationItem)
  
     # IExpandableItem interface implementation
     def getSimulationMovementSimulationState(self, simulation_movement):
@@ -101,12 +96,6 @@ class ImmobilisableItem(Item, Amount):
           return 'planned'
       return 'draft'
  
-    def expand(self, applied_rule_id=None, activate_kw=None, **kw):
-      """Expand is not implemented that way for now...
-      """
-      pass
-
-
     security.declareProtected(Permissions.AccessContentsInformation,
                               'getImmobilisationRelatedMovementList')
     def getImmobilisationRelatedMovementList(self,
@@ -1076,7 +1065,7 @@ class ImmobilisableItem(Item, Amount):
         my_applied_rule = my_applied_rule_list[-1]
       # We are now certain we have a single applied rule
       # It is time to expand it
-      my_applied_rule.expand()
+      my_applied_rule.expand('immediate') # XXX: can it be done by activity ?
 
     security.declareProtected(Permissions.AccessContentsInformation,
                               'expandAmortisation')

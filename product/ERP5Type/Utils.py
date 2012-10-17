@@ -66,6 +66,7 @@ try:
 except ImportError:
   magic = None
 
+# XXX-JPS: We need naming conventions and central list of decorators.
 def simple_decorator(decorator):
   """Decorator to turn simple function into well-behaved decorator
 

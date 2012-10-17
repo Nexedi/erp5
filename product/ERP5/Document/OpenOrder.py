@@ -27,10 +27,8 @@
 #
 ##############################################################################
 
-import zope.interface
 from AccessControl import ClassSecurityInfo
-
-from Products.ERP5Type import Permissions, PropertySheet, interfaces
+from Products.ERP5Type import Permissions, PropertySheet
 from Products.ERP5.Document.Supply import Supply
 
 class OpenOrder(Supply):
@@ -45,9 +43,6 @@ class OpenOrder(Supply):
   security = ClassSecurityInfo()
   security.declareObjectProtected(Permissions.AccessContentsInformation)
 
-  # Declarative interfaces
-  zope.interface.implements(interfaces.IExpandable)
-
   # Declarative properties
   property_sheets = ( PropertySheet.Base
                     , PropertySheet.XMLObject
@@ -59,23 +54,3 @@ class OpenOrder(Supply):
                     , PropertySheet.Order
                     , PropertySheet.Version
                     )
-
-  # Expandable Interface Implementation
-  def expand(self, *args, **kw):
-    """
-      Any Open Order Line / Open Order Cell which does not relate
-      (aggregate) to a Subscription Item must be expanded
-      through the default rule. 
-
-      What would be nice is to use the SubscriptionItemRule to expand
-      lines one by one so that an Item can be used at any time.
-      expansion logic is provided by the OpenOrder or by the 
-      SubscriptionItem
-
-      Others are expanded by their Item
-
-      NOTE-JPS: not sure if it is really necessary to keep this
-                since only used by one client and tiolive. For tiolive
-                it will be dropped out
-    """
-    

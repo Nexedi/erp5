@@ -71,6 +71,7 @@ from Products.ERP5Type.patches import ExternalMethod
 from Products.ERP5Type.patches import User
 from Products.ERP5Type.patches import zopecontenttype
 from Products.ERP5Type.patches import OFSImage
+from Products.ERP5Type.patches import _transaction
 from Products.ERP5Type.patches import default_zpublisher_encoding
 
 # These symbols are required for backward compatibility

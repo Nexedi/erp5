@@ -67,7 +67,7 @@ def UnrestrictedMethod(function):
   """
   return lambda *args, **kw: unrestricted_apply(function, args, kw)
 
-def unrestricted_apply(function, args=(), kw={}):
+def unrestricted_apply(function, args=(), kw={}): # XXX-JPS: naming
     """Function to bypass all security checks
 
     This function is as dangerous as 'UnrestrictedMethod' decorator. Read its

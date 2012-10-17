@@ -280,7 +280,7 @@ class TestAdvancedInvoice(TestSaleInvoiceMixin, ERP5TypeTestCase):
 
     invoice_transaction  = invoice.getCausalityRelatedValue()
     self.assertNotEquals(invoice_transaction, None)
-    self.assertEquals('draft', invoice_transaction.getCausalityState())
+    self.assertEquals('solved', invoice_transaction.getCausalityState())
     
   def test_AcceptQuantityDivergenceOnInvoiceWithStoppedPackingList(self, quiet=quiet, run=RUN_ALL_TESTS):
     """Accept divergence with stopped packing list"""

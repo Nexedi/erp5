@@ -52,6 +52,8 @@ bt5_base_path = os.environ.get('erp5_tests_bt5_path',
 bootstrap_base_path = os.path.join(os.path.dirname(ERP5PackagePath),
                                    'bootstrap')
 
+# some forms have intentionally empty listbox selections like RSS generators
+FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST = ['erp5_web_widget_library/WebSection_viewContentListAsRSS']
 
 class TestXHTML(ERP5TypeTestCase):
 
@@ -237,7 +239,8 @@ class TestXHTML(ERP5TypeTestCase):
       for field in self.getFieldList(form, form_path):
         if field.getRecursiveTemplateField().meta_type == 'ListBox':
           selection_name = field.get_value("selection_name")
-          if selection_name in ("",None):
+          if selection_name in ("",None) and \
+            form_path not in FORM_LISTBOX_EMPTY_SELECTION_PATH_LIST:
             error_list.append(form_path)
     self.assertEquals(error_list, [])
     

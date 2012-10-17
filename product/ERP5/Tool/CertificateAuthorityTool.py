@@ -80,7 +80,7 @@ class CertificateAuthorityTool(BaseTool):
   isIndexable = 0
 
   certificate_authority_path = os.environ.get('CA_PATH', '')
-  openssl_binary = binary_search('openssl')
+  openssl_binary = binary_search('openssl') 
 
   manage_options = (({'label': 'Edit',
                       'action': 'manage_editCertificateAuthorityToolForm',},

@@ -35,6 +35,7 @@ from Products.ERP5Type.Utils import initializeProduct, updateGlobals
 from AccessControl import ModuleSecurityInfo
 import sys, Permissions
 from Products.PythonScripts.Utility import allow_class
+from AccessControl.SecurityInfo import allow_module
 this_module = sys.modules[ __name__ ]
 document_classes = updateGlobals( this_module, globals(),
                                   permissions_module = Permissions)
@@ -162,6 +163,9 @@ def initialize( context ):
     import AudioField
     FieldRegistry.registerField(AudioField.AudioField,
                                 'www/StringField.gif')
+    import GadgetField
+    FieldRegistry.registerField(GadgetField.GadgetField,
+                                'www/StringField.gif')
 
     # register help for the product
     context.registerHelp()
@@ -186,6 +190,7 @@ def initialize( context ):
 ## Initialize security ##
 ModuleSecurityInfo('Products.ERP5Form.Report').declarePublic('ReportSection',)
 ModuleSecurityInfo('Products.ERP5Form.MultiRelationField').declarePublic('SUB_FIELD_ID',)
+allow_module('Products.ERP5Form.Selection')
 import Selection
 allow_class(Selection)
 

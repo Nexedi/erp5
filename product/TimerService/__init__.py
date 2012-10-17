@@ -15,26 +15,16 @@ cp_id = 'timer_service'
 
 def getTimerService(context):
     """ returns the SMTP srevice instance """
-    return context.Control_Panel.timer_service
-
-def make_timer_service(cp):
-    """Control_Panel smtp service"""
-    timer_service = TimerService(cp_id)
-    cp._setObject(cp_id, timer_service)
-    return getattr(cp, cp_id)
-
-def initialize(context):
-    # hook into the Control Panel
-    cp = context._ProductContext__app.Control_Panel
-    if cp_id in cp.objectIds():
-        #cp._delObject(cp_id)
-        timer = getattr(cp, cp_id)
-        timer_service = timer
-        if not isinstance(timer_service, TimerService):
-            timer = make_timer_service(cp)
-    else:
-        timer = make_timer_service(cp)
-
-    if timer._version < current_version:
-        cp._delObject(cp_id)
-        timer = make_timer_service(cp)
+    root = context.getPhysicalRoot()
+    try:
+        timer_service = getattr(root, cp_id)
+    except AttributeError:
+        try:
+            control_panel = root.Control_Panel
+            timer_service = getattr(control_panel, cp_id)
+        except AttributeError:
+            timer_service = TimerService(cp_id)
+        else:
+            control_panel._delObject(cp_id)
+        root._setObject(cp_id, timer_service)
+    return timer_service

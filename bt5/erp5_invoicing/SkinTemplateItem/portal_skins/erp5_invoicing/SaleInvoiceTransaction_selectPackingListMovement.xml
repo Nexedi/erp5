@@ -50,7 +50,7 @@
         </item>
         <item>
             <key> <string>_body</string> </key>
-            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Invoicing Rule\', \'Invoice Simulation Rule\'\n
+            <value> <string>kw[\'parent_specialise_portal_type\'] = \'Invoice Simulation Rule\'\n
 kw[\'explanation_portal_type\']       = \'Sale Order\', \'Sale Packing List\', \'Returned Sale Packing List\'\n
 kw[\'grand_parent_simulation_state\'] = \'started\', \'stopped\', \'delivered\'\n
 \n

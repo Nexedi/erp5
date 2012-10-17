@@ -280,9 +280,9 @@ class ConfiguratorTool(BaseTool):
   def _terminateConfigurationProcess(self, response):
     """ Terminate process and return some explanations to client why
         he can no longer continue. """
-    response.update(command="show",
+    response.update(command="show", 
                     next=None, \
-                    previous=None,
+                    previous=None, 
                     data=self.BusinessConfiguration_viewStopForm())
     return response
 

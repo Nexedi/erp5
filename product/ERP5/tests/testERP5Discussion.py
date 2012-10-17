@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2010 Nexedi SA and Contributors.
@@ -132,6 +133,13 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.assertSameSet([discussion_thread_object1], [x.getObject() for x  in web_section1.getDocumentValueList()])
     self.assertSameSet([discussion_thread_object2], [x.getObject() for x  in web_section2.getDocumentValueList()])
 
+    # test RSS generation by testing indirectly its "get" method
+    # (new post should be first in list)
+    current_post_list = list(discussion_thread_object1.objectValues())
+    new_post = discussion_thread_object1.newContent()
+    self.tic()
+    self.assertSameSet([new_post] + current_post_list, web_section1.WebSection_getLatestDiscussionPostList())
+
     # test archiving threads so the do not belong any more to web section document list
     discussion_thread_object1.archive()
     discussion_thread_object2.archive()
@@ -140,6 +148,10 @@ class TestERP5Discussion(ERP5TypeTestCase):
     self.assertSameSet([], web_section1.getDocumentValueList())
     self.assertSameSet([], web_section2.getDocumentValueList())
 
+
+  def test_02_ReferenceGenerationFromString(self):
+    s = "a test by ivan !@#$%^&*()[]\\é"
+    self.assertEqual('a-test-by-ivan', self.portal.Base_generateReferenceFromString(s))
 
 def test_suite():
   suite = unittest.TestSuite()

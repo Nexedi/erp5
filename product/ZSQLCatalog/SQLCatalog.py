@@ -524,6 +524,14 @@ class Catalog(Folder,
                       'a monovalued local role',
       'type': 'lines',
       'mode': 'w' },
+    { 'id': 'sql_catalog_security_uid_columns',
+      'title': 'Security Uid Columns',
+      'description': 'A list of mappings "local_roles_group_id | security_uid_column"'
+                     ' local_roles_group_id will be the name of a local roles'
+                     ' group, and security_uid_column is the corresponding'
+                     ' column in catalog table',
+      'type': 'lines',
+      'mode': 'w' },
     { 'id': 'sql_catalog_table_vote_scripts',
       'title': 'Table vote scripts',
       'description': 'Scripts helping column mapping resolution',
@@ -575,6 +583,7 @@ class Catalog(Folder,
   sql_catalog_scriptable_keys = ()
   sql_catalog_role_keys = ()
   sql_catalog_local_role_keys = ()
+  sql_catalog_security_uid_columns = (' | security_uid',)
   sql_catalog_table_vote_scripts = ()
   sql_catalog_raise_error_on_uid_check = True
 
@@ -625,6 +634,18 @@ class Catalog(Folder,
       role, column = role_key.split('|')
       role_key_dict[role.strip()] = column.strip()
     return role_key_dict.items()
+
+  def getSQLCatalogSecurityUidGroupsColumnsDict(self):
+    """
+    Return a mapping of local_roles_group_id name to the name of the column
+    storing corresponding security_uid.
+    The default mappiny is {'': 'security_uid'}
+    """
+    local_roles_group_id_dict = {}
+    for local_roles_group_id_key in self.sql_catalog_security_uid_columns:
+      local_roles_group_id, column = local_roles_group_id_key.split('|')
+      local_roles_group_id_dict[local_roles_group_id.strip()] = column.strip()
+    return local_roles_group_id_dict
 
   def getSQLCatalogLocalRoleKeysList(self):
     """
@@ -765,61 +786,73 @@ class Catalog(Folder,
     self.subject_set_uid_dict = OIBTree()
     self.subject_set_uid_index = None
 
-  security.declarePrivate('getSecurityUid')
-  def getSecurityUid(self, wrapped_object):
+  security.declarePrivate('getSecurityUidDict')
+  def getSecurityUidDict(self, wrapped_object):
     """
-      Cache a uid for each security permission
-      Return a tuple with a security uid (string) and a new tuple content the
-      roles and users if not exist already.
-
-     With the roles of object, search the security_uid associate in the
-     catalog_innodb:
-      - if the security not exist a security uid is generated with id_tool
-        or security_uid_index property and
-        return the new security_uid and the tuple contains the new roles
-        to add the roles in roles_and_user table of the database.
-      - if the security exist the security uid is returned and the second
-        element is None for not recreate the security in roles_and_user
-        table of the database.
-
-      We try to create a unique security (to reduce number of lines)
-      and to assign security only to root document
+    returns a tuple with a dict of security uid by local group id, and a tuple
+    containing optimised_roles_and_users that might have been created.
     """
-    # Get security information
-    allowed_roles_and_users = tuple(wrapped_object.allowedRolesAndUsers())
-    # Make sure no duplicates
     if getattr(aq_base(self), 'security_uid_dict', None) is None:
       self._clearSecurityCache()
-    elif self.security_uid_dict.has_key(allowed_roles_and_users):
-      return (self.security_uid_dict[allowed_roles_and_users], None)
-    # If the id_tool is there, it is better to use it, it allows
-    # to create many new security uids by the same time
-    # because with this tool we are sure that we will have 2 different
-    # uids if two instances are doing this code in the same time
+
     id_tool = getattr(self.getPortalObject(), 'portal_ids', None)
-    if id_tool is not None:
-      default = 1
-      # We must keep compatibility with existing sites
-      previous_security_uid = getattr(self, 'security_uid_index', None)
-      if previous_security_uid is not None:
-        # At some point, it was a Length
-        if isinstance(previous_security_uid, Length):
-          default = previous_security_uid() + 1
+
+    optimised_roles_and_users = []
+    local_roles_group_id_to_security_uid_mapping= dict()
+
+    # Get security information
+    for local_roles_group_id, allowed_roles_and_users in\
+          wrapped_object.getLocalRolesGroupIdDict().iteritems():
+      allowed_roles_and_users = tuple(sorted(allowed_roles_and_users))
+
+      key = (local_roles_group_id, allowed_roles_and_users)
+      if self.security_uid_dict.has_key(key):
+        local_roles_group_id_to_security_uid_mapping[local_roles_group_id] \
+                = self.security_uid_dict[key]
+      elif self.security_uid_dict.has_key(allowed_roles_and_users)\
+           and not local_roles_group_id:
+        # This key is present in security_uid_dict without
+        # local_roles_group_id, it has been inserted before
+        # local_roles_group_id were introduced.
+        local_roles_group_id_to_security_uid_mapping[local_roles_group_id] = \
+          self.security_uid_dict[allowed_roles_and_users]
+      else:
+        # If the id_tool is there, it is better to use it, it allows
+        # to create many new security uids by the same time
+        # because with this tool we are sure that we will have 2 different
+        # uids if two instances are doing this code in the same time
+        if id_tool is not None:
+          default = 1
+          # We must keep compatibility with existing sites
+          previous_security_uid = getattr(self, 'security_uid_index', None)
+          if previous_security_uid is not None:
+            # At some point, it was a Length
+            if isinstance(previous_security_uid, Length):
+              default = previous_security_uid() + 1
+            else:
+              default = previous_security_uid
+          security_uid = int(id_tool.generateNewId(id_generator='uid',
+              id_group='security_uid_index', default=default))
         else:
-          default = previous_security_uid
-      security_uid = int(id_tool.generateNewId(id_generator='uid',
-          id_group='security_uid_index', default=default))
-    else:
-      previous_security_uid = getattr(self, 'security_uid_index', None)
-      if previous_security_uid is None:
-        previous_security_uid = 0
-      # At some point, it was a Length
-      if isinstance(previous_security_uid, Length):
-        previous_security_uid = previous_security_uid()
-      security_uid = previous_security_uid + 1
-      self.security_uid_index = security_uid
-    self.security_uid_dict[allowed_roles_and_users] = security_uid
-    return (security_uid, allowed_roles_and_users)
+          previous_security_uid = getattr(self, 'security_uid_index', None)
+          if previous_security_uid is None:
+            previous_security_uid = 0
+          # At some point, it was a Length
+          if isinstance(previous_security_uid, Length):
+            previous_security_uid = previous_security_uid()
+          security_uid = previous_security_uid + 1
+          self.security_uid_index = security_uid
+
+        self.security_uid_dict[key] = security_uid
+        local_roles_group_id_to_security_uid_mapping[local_roles_group_id]\
+            = security_uid
+
+        # If some optimised_roles_and_users are returned by this method it
+        # means that new entries will have to be added to roles_and_users table.
+        for user in allowed_roles_and_users:
+          optimised_roles_and_users.append((security_uid, local_roles_group_id, user))
+
+    return (local_roles_group_id_to_security_uid_mapping, optimised_roles_and_users)
 
   def getRoleAndSecurityUidList(self):
     """
@@ -828,7 +861,8 @@ class Catalog(Folder,
     """
     result = []
     extend = result.extend
-    for role_list, security_uid in getattr(aq_base(self), 'security_uid_dict', {}).iteritems():
+    for role_list, security_uid in getattr(
+            aq_base(self), 'security_uid_dict', {}).iteritems():
       extend([(role, security_uid) for role in role_list])
     return result
 

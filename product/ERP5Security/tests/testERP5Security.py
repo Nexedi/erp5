@@ -580,6 +580,29 @@ class TestLocalRoleManagement(ERP5TypeTestCase):
     self.assertFalse('Assignee' in user.getRolesInContext(obj))
     self.abort()
 
+  def testLocalRolesGroupId(self):
+    """Assigning a role with local roles group id.
+    """
+    self.portal.portal_categories.local_role_group.newContent(
+      portal_type='Category', 
+      reference = 'Alternate',
+      id = 'Alternate')
+    self._getTypeInfo().newContent(portal_type='Role Information',
+      role_name='Assignor',
+      local_role_group_value=self.portal.portal_categories.local_role_group.Alternate.getRelativeUrl(),      
+      role_category=self.defined_category)
+
+    self.loginAsUser(self.username)
+    user = getSecurityManager().getUser()
+
+    obj = self._makeOne()
+    self.assertEqual(['Assignor'], obj.__ac_local_roles__.get('F1_G1_S1'))
+    self.assertTrue('Assignor' in user.getRolesInContext(obj))
+    self.assertEqual(set([('F1_G1_S1', 'Assignor')]),
+      obj.__ac_local_roles_group_id_dict__.get('Alternate'))
+    self.abort()
+
+
   def testDynamicLocalRole(self):
     """Test simple case of setting a dynamic role.
     The site category is not defined explictly the role, and will have the

@@ -39,7 +39,7 @@
         </item>
         <item>
             <key> <string>description</string> </key>
-            <value> <string>XXX Deprecated. It must be moved to erp5_simulation_legacy BT. 2 new portal types will replace it: Generated Delivery Builder and Simulated Delivery Builder, which will be in erp5_simulation BT.\n
+            <value> <string>XXX Deprecated. It must be deleted. 2 new portal types replace it: Generated Delivery Builder and Simulated Delivery Builder\n
 \n
 Delivery Builder objects allow to gather multiple Simulation Movements into\n
 a single Delivery. The initial quantity property of the Delivery Line is\n

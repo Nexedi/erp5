@@ -1,0 +1,7 @@
+This bt5 provides generic Z SQL methods that allows a site developer to split security uids into different catalog columns.
+In order to use this optimization it's required to:
+1. Make analyze which are most common uids
+2. Place them in a new catalog column
+3. Adjust respective z_catalog_object_list and z_create_catalog
+
+Note: In order to use this technique a full catalog re-index is required.

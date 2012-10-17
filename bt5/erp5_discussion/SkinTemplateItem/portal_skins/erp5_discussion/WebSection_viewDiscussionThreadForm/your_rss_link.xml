@@ -127,7 +127,7 @@
             <key> <string>_text</string> </key>
             <value> <string encoding="cdata"><![CDATA[
 
-string:<a href="WebSection_viewContentListAsRSS"/> <img src="web_images/rss-image.png" title="Read RSS"/></a>
+string:<a href="WebSection_viewLatestDiscussionPostListAsRSS"/> <img src="web_images/rss-image.png" title="Read RSS"/></a>
 
 ]]></string> </value>
         </item>

@@ -56,14 +56,6 @@
 the new Invoice.\n
 """\n
 from Products.ERP5Type.Message import translateString\n
-try:\n
-  from Products.CMFCore.WorkflowCore import WorkflowException\n
-except ImportError:\n
-  # WorkflowException has not always been allowed in restricted\n
-  # environment, in this case, make sure WorkflowException is \n
-  # defined \n
-  class WorkflowException(Exception):\n
-    pass\n
 \n
 if related_simulation_movement_path_list is None:\n
   raise RuntimeError, \'related_simulation_movement_path_list is missing. Update ERP5 Product.\'\n
@@ -95,40 +87,17 @@ if not invoice.contentValues(portal_type=\'Payment Condition\'):\n
       clipboard = related_order.manage_copyObjects(ids=payment_condition_copy_id_list)\n
       invoice.manage_pasteObjects(clipboard)\n
 \n
-if related_order is not None and context.portal_skins.hasObject(\'erp5_simulation_legacy\'):\n
-  # copy trade condition:\n
-  if not context.getSpecialise():\n
-    context.edit(specialise=related_order.getSpecialise())\n
-  \n
-  # copy order\'s trade model lines\n
-  invoice_trade_model_line_reference_list = [document.getReference() \\\n
-      for document in context.contentValues(portal_type=\'Trade Model Line\')]\n
-  order_trade_model_line_copy_id_list = []\n
-  for order_trade_model_line in related_order.contentValues(\n
-      portal_type=\'Trade Model Line\'):\n
-    if order_trade_model_line.getReference() not in \\\n
-        invoice_trade_model_line_reference_list:\n
-      order_trade_model_line_copy_id_list.append(order_trade_model_line.getId())\n
-  \n
-  if order_trade_model_line_copy_id_list:\n
-    clipboard = related_order.manage_copyObjects(\n
-      ids=order_trade_model_line_copy_id_list)\n
-    context.manage_pasteObjects(clipboard)\n
-  \n
 # copy title, if not updating a new delivery\n
 if not invoice.hasTitle() and related_packing_list is not None and \\\n
    related_packing_list.hasTitle():\n
   invoice.setTitle(related_packing_list.getTitle())\n
 \n
 # initialize accounting_workflow to confirmed state\n
-confirm_tag = \'%s_confirm\' % invoice.getPath()\n
 if invoice.getSimulationState() == \'draft\':\n
-  invoice.activate(after_path_and_method_id=(related_simulation_movement_path_list,\n
-  (\'immediateReindexObject\',\'recursiveImmediateReindexObject\')),\n
-  tag=confirm_tag).Delivery_confirm()\n
-\n
-# First set the invoice in the building state on the causality workflow\n
-invoice.startBuilding()\n
+  invoice.Delivery_confirm()\n
+else:\n
+  # call builder just same as after script of \'confirm\' transition\n
+  # invoice.localBuild()\n # avoid local building in interaction-drop
 
 
 ]]></string> </value>

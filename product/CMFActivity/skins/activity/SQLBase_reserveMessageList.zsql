@@ -39,6 +39,8 @@ ORDER BY
     ERP5Site_reindexAll, e.g. current date would work if MySQL
     shuffles enough lines with same priority/date).
   - or even better, use NEO <http://www.neoppod.org/>
+  For higher concurrency than 10 or 20 nodes of activity, it might be required
+  to add a random start point to reduce the risk of MySQL locks.
 </dtml-comment>
   priority, date
 LIMIT <dtml-sqlvar count type="int">

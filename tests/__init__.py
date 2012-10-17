@@ -6,7 +6,7 @@ import sys
 class _ERP5(ERP5TypeTestSuite):
   realtime_output = False
   enabled_product_list = ('CMFActivity', 'CMFCategory', 'ERP5', 'ERP5Catalog',
-                          'ERP5eGovSecurity', 'ERP5Form', 'ERP5Legacy',
+                          'ERP5eGovSecurity', 'ERP5Form',
                           'ERP5OOo', 'ERP5Security', 'ERP5SyncML', 'ERP5Type',
                           'ERP5VCS', 'ERP5Wizard', 'Formulator', 'ERP5Workflow',
                           'ERP5Configurator','HBTreeFolder2', 'MailTemplates', 

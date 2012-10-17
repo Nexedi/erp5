@@ -122,9 +122,8 @@ class QuantitySplitSolver(SolverMixin, ConfigurableMixin, XMLObject):
           new_movement.setStopDate(stop_date)
         if activate_kw:
           new_movement.setDefaultActivateParameterDict({})
-        # XXX we need to call expand on both simulation_movement and new_movement here?
-        # simulation_movement.expand(activate_kw=activate_kw)
-        # new_movement.expand(activate_kw=activate_kw)
+        simulation_movement.expand(activate_kw=activate_kw)
+        new_movement.expand(activate_kw=activate_kw)
     # Finish solving
     if self.getPortalObject().portal_workflow.isTransitionPossible(
       self, 'succeed'):

@@ -65,7 +65,6 @@ class PaypalService(XMLObject):
 
   def navigate(self, REQUEST=None, **kw):
     """See Payment Service Interface Documentation"""
-    self.Base_checkConsistency()
     page_template = kw.pop("page_template")
     paypal_dict = kw.get("paypal_dict", {})
     temp_document = newTempDocument(self, 'id')

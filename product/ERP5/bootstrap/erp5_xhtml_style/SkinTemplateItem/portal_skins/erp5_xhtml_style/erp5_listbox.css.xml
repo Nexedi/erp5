@@ -425,11 +425,15 @@ div.listbox-content-fixed-width{\n
 }\n
 \n
 table.listbox td.listbox-table-no-result-row{\n
+  background-color:#DAE6F6;\n
+  color:#001730;\n
   border: 1px solid #3D6474;\n
   text-align:center;\n
 }\n
 \n
 table.listbox tr.listbox-stat-line{\n
+  background-color:#C1DAEB;\n
+  color:#001730;\n
   border-top: 1px solid #3D6474;\n
 }\n
 \n

@@ -62,10 +62,7 @@ if address not in MARKER and port not in MARKER:\n
   for index_uid in range(len(uid)):\n
     document_relative_url = getRelativeUrl[index_uid]\n
     document = portal.restrictedTraverse(document_relative_url)\n
-    # XXX: we do check if "data" methods exists on pretending to be Document portal types\n
-    # we need a way to do this by introspection\n
-    if ((getattr(document, "getData", None) is not None and document.getData() not in MARKER) or \\\n
-        (getattr(document, "getBaseData", None) is not None and document.getBaseData() not in MARKER)):\n
+    if document.Base_isConvertible():\n
       document.activate(priority=4, tag="conversion").Base_callPreConvert()\n
 </string> </value>
         </item>
