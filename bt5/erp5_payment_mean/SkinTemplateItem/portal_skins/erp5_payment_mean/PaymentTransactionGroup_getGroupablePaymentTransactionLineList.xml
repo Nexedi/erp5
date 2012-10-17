@@ -67,7 +67,7 @@ search_kw = dict(\n
 )\n
 \n
 if context.getPaymentMode():\n
-  search_kw[\'parent_payment_mode_uid\'] = context.getPaymentModeUid()\n
+  search_kw[\'payment_transaction_line_payment_mode_uid\'] = context.getPaymentModeUid()\n
 \n
 if limit:\n
   search_kw[\'limit\'] = limit\n
