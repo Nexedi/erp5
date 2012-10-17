@@ -70,7 +70,7 @@ kw[\'portal_type\'] = portal.getPortalOpenOrderTypeList()\n
 \n
 portal.portal_catalog.searchAndActivate(\n
   method_id=\'OpenOrder_updateSimulation\',\n
-  method_kw={\'tag\': tag},\n
+#  method_kw={\'tag\': tag}, # XXX: Post merge compatibility, maybe OpenOrder_updateSimulation shall be reconfigured to being able to expand without activity (immediate expand)\n
   packet_size=1, # As OpenOrder_updateSimulation can generate big transaction separate the calls\n
   activate_kw={\'tag\':tag},\n
   **kw # XXX: In one query put parents of last modified lines\n
