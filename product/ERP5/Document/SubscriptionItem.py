@@ -112,6 +112,7 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
     """
     from Products.ERP5Type.Document import newTempMovement
     result = []
+    catalog_tool = getToolByName(self, 'portal_catalog')
 
     # Now generate movements for each valid open order
     for movement in catalog_tool(portal_type="Open Sale Order Line",
@@ -138,7 +139,7 @@ class SubscriptionItem(Item, CompositionMixin, MovementGeneratorMixin,
         price = movement.getPrice()
         price_currency = movement.getPriceCurrency()
         base_application_list = movement.getBaseApplicationList()
-        base_contribution_list = movhement.getBaseContributionList()
+        base_contribution_list = movement.getBaseContributionList()
         use_list = movement.getUseList()
 
         specialise = movement.getSpecialise()
