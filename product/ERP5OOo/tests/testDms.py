@@ -1349,7 +1349,7 @@ class TestDocument(TestDocumentMixin):
     self.tic()
     self.assertEquals('converted', document.getExternalProcessingState())
 
-  def test_Base_createNewFile(self):
+  def test_Base_contribute(self):
     """
       Test contributing a file and attaching it to context.
     """
@@ -1374,7 +1374,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals('title', document.getTitle())
     self.assertEquals(contributed_document, document)
 
-  def test_Base_createNewFile_empty(self):
+  def test_Base_contribute_empty(self):
     """
       Test contributing an empty file and attaching it to context.
     """
@@ -1402,7 +1402,7 @@ class TestDocument(TestDocumentMixin):
     self.assertEquals('File', document.getPortalType())
     self.assertEquals(contributed_document, document)
 
-  def test_Base_createNewFile_forced_type(self):
+  def test_Base_contribute_forced_type(self):
     """Test contributing while forcing the portal type.
     """
     person = self.portal.person_module.newContent(portal_type='Person')
