@@ -16,6 +16,7 @@
                 <string>portal_types</string>
                 <string>search_columns</string>
                 <string>selection_name</string>
+                <string>sort</string>
                 <string>sort_columns</string>
                 <string>title</string>
               </list>
@@ -93,12 +94,16 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Priority</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
                         </tuple>
                         <tuple>
-                          <string>cache_duration</string>
-                          <string>Cache Duration</string>
+                          <string>portal_type</string>
+                          <string>Type</string>
                         </tuple>
                       </list>
                     </value>
@@ -126,12 +131,12 @@
                     <value>
                       <list>
                         <tuple>
-                          <string>Cache Factory</string>
-                          <string>Cache Factory</string>
+                          <string>Ram Cache</string>
+                          <string>Ram Cache</string>
                         </tuple>
                         <tuple>
-                          <string>Cache Bag</string>
-                          <string>Cache Bag</string>
+                          <string>Distributed Ram Cache</string>
+                          <string>Distributed Ram Cache</string>
                         </tuple>
                       </list>
                     </value>
@@ -153,7 +158,18 @@
                 </item>
                 <item>
                     <key> <string>selection_name</string> </key>
-                    <value> <string>cache_tool_cache_list_selection</string> </value>
+                    <value> <string>search_selection1</string> </value>
+                </item>
+                <item>
+                    <key> <string>sort</string> </key>
+                    <value>
+                      <list>
+                        <tuple>
+                          <string>int_index</string>
+                          <string>Priority</string>
+                        </tuple>
+                      </list>
+                    </value>
                 </item>
                 <item>
                     <key> <string>sort_columns</string> </key>
@@ -164,8 +180,16 @@
                           <string>ID</string>
                         </tuple>
                         <tuple>
+                          <string>int_index</string>
+                          <string>Priority</string>
+                        </tuple>
+                        <tuple>
                           <string>title</string>
                           <string>Title</string>
+                        </tuple>
+                        <tuple>
+                          <string>portal_type</string>
+                          <string>Type</string>
                         </tuple>
                       </list>
                     </value>
@@ -176,7 +200,7 @@
                 </item>
                 <item>
                     <key> <string>title</string> </key>
-                    <value> <string>Cache Factories</string> </value>
+                    <value> <string>Cache Plugins</string> </value>
                 </item>
               </dictionary>
             </value>
