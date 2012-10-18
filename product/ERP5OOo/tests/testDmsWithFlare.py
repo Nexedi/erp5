@@ -44,11 +44,14 @@ class TestDocumentWithFlare(TestDocument):
   def setSystemPreference(self):
     system_preference = TestDocument.setSystemPreference(self)
     memcached = _getPersistentMemcachedServerDict()
-    system_preference.setPreferredConversionCacheFactory('dms_cache_factory')
+    # create a Cache Bag for tests
+    cache_bag = self.portal.portal_caches.newContent(portal_type = 'Cache Bag')
+    cache_bag.cache_duration = 15768000
+    cache_plugin = cache_bag.newContent(portal_type='Distributed Ram Cache')
+    system_preference.setPreferredConversionCacheFactory(cache_bag.getId())
     persistent_memcached_plugin = self.portal.portal_memcached.persistent_memcached_plugin
     persistent_memcached_plugin.setUrlString('%s:%s' %(memcached['hostname'], memcached['port']))
-    self.portal.portal_caches.dms_cache_factory.persistent_cache_plugin.setSpecialiseValue(persistent_memcached_plugin)
-
+    cache_plugin.setSpecialiseValue(persistent_memcached_plugin)
 
 def test_suite():
   suite = unittest.TestSuite()

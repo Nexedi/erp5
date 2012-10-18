@@ -71,8 +71,16 @@ class CacheFactory(XMLObject):
   security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheFactory')
   def getRamCacheFactory(self):
     """ Return RAM based cache factory """
-    erp5_site_id = self.getPortalObject().getId()
-    return CachingMethod.factories[erp5_site_id][self.cache_scope]
+    cache_factory_name = self.getId()
+    cache_tool = self.portal_caches
+    cache_factory = CachingMethod.factories.get(cache_factory_name)
+    #XXX This conditional statement should be remove as soon as
+    #Broadcasting will be enable among all zeo clients.
+    #Interaction which update portal_caches should interact with all nodes.
+    if cache_factory is None and getattr(cache_tool, cache_factory_name, None) is not None:
+      #ram_cache_root is not up to date for current node
+      cache_tool.updateCache()
+    return CachingMethod.factories[cache_factory_name]
 
   security.declareProtected(Permissions.AccessContentsInformation, 'getRamCacheFactoryPluginList')
   def getRamCacheFactoryPluginList(self):

@@ -133,9 +133,14 @@ class TestDocumentMixin(ERP5TypeTestCase):
     preference_list = self.portal.portal_preferences.contentValues(
                                                        portal_type=portal_type)
     if not preference_list:
+      # create a Cache Bag for tests
+      cache_bag = self.portal.portal_caches.newContent(portal_type = 'Cache Bag')
+      cache_bag.cache_duration = 36000
+      cache_plugin = cache_bag.newContent(portal_type='Ram Cache')
+      cache_plugin.cache_expire_check_interval = 54000
       preference = self.portal.portal_preferences.newContent(title="Default System Preference",
                                                              # use local RAM based cache as some tests need it
-                                                             preferred_conversion_cache_factory = 'erp5_content_long',
+                                                             preferred_conversion_cache_factory = cache_bag.getId(),
                                                              portal_type=portal_type)
     else:
       preference = preference_list[0]

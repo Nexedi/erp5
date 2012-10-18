@@ -67,7 +67,7 @@ class CacheTool(BaseTool):
   def getCacheFactoryList(self):
     """ Return available cache factories """
     rd = {}
-    for cf in self.objectValues('ERP5 Cache Factory'):
+    for cf in self.objectValues(['ERP5 Cache Factory', 'ERP5 Cache Bag']):
       cache_scope = cf.getId()
       rd[cache_scope] = {}
       rd[cache_scope]['cache_plugins'] = []
