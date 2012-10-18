@@ -36,7 +36,6 @@ from Products.ERP5Type.tests.runUnitTest import tests_home
 from Products.ERP5Type.tests.utils import FileUpload
 from Products.ERP5Configurator.tests.ConfiguratorTestMixin import \
                                              TestLiveConfiguratorWorkflowMixin
-from AccessControl import Unauthorized
 
 class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
   """
@@ -367,7 +366,7 @@ class StandardConfigurationMixin(TestLiveConfiguratorWorkflowMixin):
     self.assertEquals(['trade/sale'], preference_tool.getPreferredSaleUseList())
     self.assertEquals(['trade/purchase'], preference_tool.getPreferredPurchaseUseList())
     self.assertEquals(['trade/container'], preference_tool.getPreferredPackingUseList())
-    self.assertEquals(['trade/tax']), preference_tool.getPreferredTaxUseList())
+    self.assertEquals(['trade/tax'], preference_tool.getPreferredTaxUseList())
 
   def stepCheckModulesBusinessApplication(self, sequence=None, sequence_list=None, **kw):
     """
