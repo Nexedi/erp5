@@ -1411,6 +1411,27 @@ class TestDocument(TestDocumentMixin):
                                      file=makeFileUpload('TEST-en-002.odt'))
     self.assertEquals('PDF', contributed_document.getPortalType())
 
+  def test_Base_contribute_input_parameter_dict(self):
+    """Test contributing while entering input parameters.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    contributed_document = person.Base_contribute(
+                                     title='user supplied title',
+                                     file=makeFileUpload('TEST-en-002.pdf'))
+    self.tic()
+    self.assertEquals('user supplied title', contributed_document.getTitle())
+
+  def test_Base_contribute_input_parameter_dict_request(self):
+    """Test contributing while entering input parameters through the dialog.
+    """
+    person = self.portal.person_module.newContent(portal_type='Person')
+    self.portal.REQUEST.form['title'] = 'user supplied title'
+    contributed_document = person.Base_contribute(
+                                     file=makeFileUpload('TEST-en-002.pdf'))
+    self.tic()
+    self.assertEquals('user supplied title', contributed_document.getTitle())
+
+
   def test_HTML_to_ODT_conversion_keep_enconding(self):
     """This test perform an PDF conversion of HTML content
     then to plain text.

@@ -86,6 +86,16 @@ if classification not in MARKER:\n
 if follow_up_list:\n
   document_kw[\'follow_up_list\'] = follow_up_list\n
 \n
+\n
+form = portal.REQUEST.form\n
+# Lookup for input values in request.form or kw to try to get values in two available modes: the\n
+# script coulbe be called from ERP5 Form or directly from Python.\n
+# FIXME: this list of properties should not be hardcoded.\n
+for key in (\'title\', \'short_title\', \'reference\', \'language\', \'version\', \'description\', ):\n
+  value = form.get(key, kw.get(key, None))\n
+  if value not in MARKER:\n
+    document_kw[key] = value\n
+\n
 if attach_document_to_context:\n
   # attach document to current context using follow_up\n
   follow_up_list = document_kw.setdefault(\'follow_up_list\', [])\n
@@ -126,20 +136,7 @@ if synchronous_metadata_discovery:\n
                                input_parameter_dict=document_kw)\n
   is_existing_document_updated = (merged_document!=document)\n
   document = merged_document\n
-# introspect document and find editable properties\n
-# then use form or kw and try to get values in two available modes: the\n
-# script coulbe be called: from ERP5 From or directly from Python script\n
-document_edit_kw = {}\n
-property_id_list = document.propertyIds()\n
-form = context.REQUEST.form\n
-for key in property_id_list:\n
-  value = form.get(key, kw.get(key, None))\n
-  if value not in MARKER:\n
-    document_edit_kw[key] = value\n
 \n
-# edit document   \n
-if document_edit_kw is not {}:\n
-  document.edit(**document_edit_kw)\n
 document_portal_type = document.getTranslatedPortalType()\n
 if not is_existing_document_updated:\n
   message = translateString(\'${portal_type} created successfully.\',\n
