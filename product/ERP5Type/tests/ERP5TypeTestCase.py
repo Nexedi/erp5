@@ -19,6 +19,7 @@ import sys
 import time
 import traceback
 import urllib
+import ConfigParser
 from cStringIO import StringIO
 from cPickle import dumps
 from glob import glob
@@ -262,6 +263,27 @@ def _getPersistentMemcachedServerDict():
                             'localhost')
   port = os.environ.get('persistent_memcached_server_port', '12121')
   return dict(hostname=hostname, port=port)
+
+def _createTestPromiseConfigurationFile(promise_path):
+  kumofs_url = "memcached://%(hostname)s:%(port)s/" % \
+                             _getVolatileMemcachedServerDict()
+  memcached_url = "memcached://%(hostname)s:%(port)s/" % \
+                             _getPersistentMemcachedServerDict()
+  cloudooo_url = "cloudooo://%(hostname)s:%(port)s/" % \
+                             _getConversionServerDict()
+
+  promise_config = ConfigParser.RawConfigParser()
+  promise_config.add_section('external_service')
+  promise_config.set('external_service', 'cloudooo_url', cloudooo_url)
+  promise_config.set('external_service', 'memcached_url',memcached_url)
+  promise_config.set('external_service', 'kumofs_url', kumofs_url)
+
+  if os.environ.get('TEST_CA_PATH') is not None:
+    promise_config.add_section('portal_certificate_authority')
+    promise_config.set('portal_certificate_authority', 'certificate_authority_path',
+                                           os.environ['TEST_CA_PATH'])
+
+  promise_config.write(open(promise_path, 'w'))
 
 def profile_if_environ(environment_var_name):
     if int(os.environ.get(environment_var_name, 0)):
@@ -928,6 +950,15 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
       """
       return ()
 
+    def loadPromise(self):
+      """ Create promise configuration file and load it into configuration
+      """
+      promise_path = os.path.join(instancehome, "promise.cfg")
+      ZopeTestCase._print('Adding Promise at %s...\n' % promise_path)
+      _createTestPromiseConfigurationFile(promise_path)
+      config.product_config["/%s" % self.getPortalName()] = \
+         {"promise_path": promise_path}
+
     def _updateConnectionStrings(self):
       """Update connection strings with values passed by the testRunner
       """
@@ -1088,6 +1119,7 @@ class ERP5TypeCommandLineTestCase(ERP5TypeTestCaseMixin):
               self._setUpDummyMailHost()
               self.serverhost, self.serverport = self.startZServer(verbose=True)
               self._registerNode(distributing=1, processing=1)
+              self.loadPromise()
 
             self._updateConnectionStrings()
             self._recreateCatalog()
