@@ -56,7 +56,7 @@ portal = context.getPortalObject()\n
 \n
 portal_certificate_authority = getattr(portal, \'portal_certificate_authority\', None)\n
 promise_ca_path = portal.getPromiseParameter(\'portal_certificate_authority\', \'certificate_authority_path\')\n
-if promise_ca_path is not None:\n
+if promise_ca_path is None:\n
   severity = 0\n
   summary = "Nothing to do."\n
   detail = ""\n
