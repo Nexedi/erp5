@@ -63,6 +63,12 @@ if workflow_action:\n
     if action[\'id\'] == workflow_action:\n
       return action[\'name\']\n
 \n
+if workflow_action:\n
+  # It means that workflow_action is not available now. Redirect to default view with a nice message.\n
+  from Products.ERP5Type.Message import translateString\n
+  message = translateString("Workflow state may have been updated by other user. Please try again.")\n
+  context.Base_redirect(\'view\', keep_items={\'portal_status_message\': message})\n
+\n
 return form.title\n
 </string> </value>
         </item>
