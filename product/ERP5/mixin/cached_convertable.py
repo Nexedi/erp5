@@ -184,7 +184,12 @@ class CachedConvertableMixin:
 
     # get preferred cache factory or cache bag
     cache_factory = self._getCacheFactory()
-    if cache_factory is not None:
+
+    # volatile case
+    if cache_factory is None:
+      return getattr(aq_base(self), 'temp_conversion_data', {})[cache_id]
+
+    else:
       data_dict = cache_factory.get(cache_id, None)
       if data_dict:
         if isinstance(data_dict, tuple):
