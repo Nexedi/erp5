@@ -35,7 +35,7 @@ from Products.ERP5Type.tests.ERP5TypeTestCase import ERP5TypeTestCase
 from Products.ERP5Type.tests.ERP5TypeTestCase import _getPersistentMemcachedServerDict, _getVolatileMemcachedServerDict
 from Products.ERP5Type.CachePlugins.DummyCache import DummyCache
 from AccessControl.SecurityManagement import newSecurityManager
-from Products.ERP5Type.Cache import CachingMethod
+from Products.ERP5Type.Cache import CachingMethod, DEFAULT_CACHE_SCOPE
 from zLOG import LOG
 
 class TestingCache(DummyCache):
@@ -482,6 +482,39 @@ return 'a' * 1024 * 1024 * 25
       # Call conversion for ram_cache_factory
       calculation_time = self._callCache(my_cache, real_calculation=True)
       print "\n\tCalculation time (3rd call)", calculation_time
+
+  def test_06_CheckCacheBag(self):
+    """Check Cache Bag
+    """
+    portal_caches = self.portal.portal_caches
+
+    cache_bag = portal_caches.newContent(portal_type="Cache Bag",
+                                         cache_duration=3600)
+
+    cache_plugin1 = cache_bag.newContent(portal_type="Ram Cache")
+    cache_plugin1.setIntIndex(0)
+
+    cache_plugin2 = cache_bag.newContent(portal_type="Ram Cache")
+    cache_plugin2.setIntIndex(1)
+    self.tic()
+
+    # test proper init
+    ram_cache_factory_plugin_list = cache_bag.getRamCacheFactoryPluginList()
+    self.assertEqual(2, len(ram_cache_factory_plugin_list))
+
+    # test get / set API
+    cache_bag.set('x', 'value_fox_x')
+    self.assertEqual('value_fox_x', cache_bag.get('x'))
+
+    # test that only first cache plugin is used to set
+    self.assertEqual('value_fox_x',
+                     ram_cache_factory_plugin_list[0].get('x',DEFAULT_CACHE_SCOPE).getValue())
+    self.assertRaises(KeyError, ram_cache_factory_plugin_list[1].get, 'x', DEFAULT_CACHE_SCOPE)
+
+    # check hot copy happens from second in order plugin to first
+    ram_cache_factory_plugin_list[1].set('y', DEFAULT_CACHE_SCOPE, 'value_for_y', cache_bag.cache_duration)
+    self.assertEqual('value_for_y', cache_bag.get('y'))
+    self.assertEqual('value_for_y', ram_cache_factory_plugin_list[0].get('y',DEFAULT_CACHE_SCOPE).getValue())
 
   def test_99_CachePluginInterface(self):
     """Test Class against Interface
