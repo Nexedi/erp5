@@ -91,6 +91,22 @@ def getUserByLogin(portal, login, exact_match=True):
   return [x.getObject() for x in result if not exact_match
                                            or x['reference'] in login]
 
+@transactional_cached(lambda portal, *args: args)
+def getValidAssignmentList(user):
+  """Returns list of valid assignments."""
+  assignment_list = [x for x in user.contentValues(portal_type="Assignment") if x.getValidationState() == "open"]
+  valid_assignment_list = []
+  # check dates if exist
+  login_date = DateTime()
+  for assignment in assignment_list:
+    if assignment.getStartDate() is not None and \
+           assignment.getStartDate() > login_date:
+      continue
+    if assignment.getStopDate() is not None and \
+           assignment.getStopDate() < login_date:
+      continue
+    valid_assignment_list.append(assignment)
+  return valid_assignment_list
 
 class ERP5UserManager(BasePlugin):
     """ PAS plugin for managing users in ERP5
@@ -141,22 +157,8 @@ class ERP5UserManager(BasePlugin):
             user = user_list[0]
 
             try:
-              # get assignment
-              assignment_list = [x for x in user.contentValues(portal_type="Assignment") if x.getValidationState() == "open"]
-              valid_assignment_list = []
-              # check dates if exist
-              login_date = DateTime()
-              for assignment in assignment_list:
-                if assignment.getStartDate() is not None and \
-                       assignment.getStartDate() > login_date:
-                  continue
-                if assignment.getStopDate() is not None and \
-                       assignment.getStopDate() < login_date:
-                  continue
-                valid_assignment_list.append(assignment)
-
               if (ignore_password or pw_validate(user.getPassword(), password)) and \
-                     len(valid_assignment_list) and user \
+                     len(getValidAssignmentList(user)) and user \
                      .getValidationState() != 'deleted': #user.getCareerRole() == 'internal':
                 return login, login # use same for user_id and login
             finally:
