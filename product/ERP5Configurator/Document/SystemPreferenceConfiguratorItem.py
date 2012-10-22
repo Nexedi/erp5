@@ -88,6 +88,7 @@ class SystemPreferenceConfiguratorItem(ConfiguratorItemMixin, XMLObject):
              'preferred_sale_use_list',
              'preferred_purchase_use_list',
              'preferred_packing_use_list',
+             'preferred_tax_use_list',
              # Express
              )
 
