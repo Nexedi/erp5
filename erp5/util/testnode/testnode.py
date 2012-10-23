@@ -61,7 +61,8 @@ class TestNode(object):
     config = self.config
     installed_reference_set = set(os.listdir(config['slapos_directory']))
     wished_reference_set = set([x['test_suite_reference'] for x in test_suite_data])
-    to_remove_reference_set = installed_reference_set.discard - wished_reference_set
+    to_remove_reference_set = installed_reference_set.difference(
+                                 wished_reference_set)
     for y in to_remove_reference_set:
       fpath = os.path.join(config['slapos_directory'],y)
       if os.path.isdir(fpath):
