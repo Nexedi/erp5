@@ -281,7 +281,7 @@ branch = %(branch)s
     log = self.log
     log('Testnode.run, finally close')
     process_manager.killPreviousRun()
-    if 0 and test_result is not None:
+    if test_result is not None:
       try:
         test_result.removeWatch(log_file_name)
       except KeyError:
@@ -298,84 +298,84 @@ branch = %(branch)s
     test_result = None
     try:
       while True:
-        begin = time.time()
-        portal_url = config['test_suite_master_url']
-        portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
-        test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
-        test_suite_json =  test_suite_portal.startTestSuite(config['test_node_title'])
-        test_suite_data = json.loads(test_suite_json)
-        #Clean-up test suites
-        self.checkOldTestSuite(test_suite_data)
-        for test_suite in test_suite_data:
-          self.updateConfigForTestSuite(test_suite)
-          run_software = True
-          self.process_manager.supervisord_pid_file = os.path.join(config['instance_root'], 'var', 'run',
-          'supervisord.pid')
-          # Write our own software.cfg to use the local repository
-          vcs_repository_list = self.constructProfile()
-          retry = False
-          retry_software_count = 0
-          same_revision_count = 0
-          test_suite_title = config['test_suite_title']
-          try:
+        try:
+          begin = time.time()
+          portal_url = config['test_suite_master_url']
+          portal = taskdistribution.TaskDistributionTool(portal_url, logger=DummyLogger(log))
+          test_suite_portal = taskdistribution.TaskDistributor(portal_url, logger=DummyLogger(log))
+          test_suite_json =  test_suite_portal.startTestSuite(config['test_node_title'])
+          test_suite_data = json.loads(test_suite_json)
+          #Clean-up test suites
+          self.checkOldTestSuite(test_suite_data)
+          for test_suite in test_suite_data:
+            self.updateConfigForTestSuite(test_suite)
+            run_software = True
+            self.process_manager.supervisord_pid_file = os.path.join(config['instance_root'], 'var', 'run',
+            'supervisord.pid')
+            # Write our own software.cfg to use the local repository
+            vcs_repository_list = self.constructProfile()
+            retry = False
+            retry_software_count = 0
+            same_revision_count = 0
+            test_suite_title = config['test_suite_title']
             # kill processes from previous loop if any
-              process_manager.killPreviousRun()
-              full_revision_list = self.getFullRevisionList(revision_dict)
+            process_manager.killPreviousRun()
+            full_revision_list = self.getFullRevisionList(revision_dict)
             # Make sure we have local repository
-              now = time.time()
-              try: 
-                if previous_revision_dict[test_suite_title] == revision_dict[test_suite_title]:
-                  log('Same Revision')
-                  same_revision_count += 1
-                  if not(retry) and same_revision_count <= 2:
-                    log('Sleeping a bit since same revision')
-                    time.sleep(DEFAULT_SLEEP_TIMEOUT)
-                    continue
-                  same_revision_count = 0
-                  log('Retrying install or checking if previous test was cancelled')
-              except KeyError:
-                pass
-              retry = False
-              previous_revision_dict[test_suite_title] = revision_dict[test_suite_title]
-              now = time.time()
-              test_result = portal.createTestResult(revision_dict[test_suite_title],[],
-                                                    config['test_node_title'],False,test_suite_title,config['project_title'])
-              remote_test_result_needs_cleanup = True
-              log("testnode, test_result : %r" % (test_result, ))
-              if test_result is not None:
-                log_file_name = self.addWatcher(test_result)
-                self.checkRevision(test_result,revision_dict,previous_revision_dict,
-                                   vcs_repository_list)
-                # Now prepare the installation of SlapOS and create instance
-                status_dict = self.prepareSlapOS(retry_software_count,retry)
-                # Give some time so computer partitions may start
-                # as partitions can be of any kind we have and likely will never have
-                # a reliable way to check if they are up or not ...
-                time.sleep(20)
-                self.runTestSuite(revision_dict,portal_url)
-                test_result.removeWatch(log_file_name)
-          except SubprocessError, e:
-            log("SubprocessError", exc_info=sys.exc_info())
+            now = time.time()
+            try: 
+              if previous_revision_dict[test_suite_title] == revision_dict[test_suite_title]:
+                log('Same Revision')
+                same_revision_count += 1
+                if not(retry) and same_revision_count <= 2:
+                  log('Sleeping a bit since same revision')
+                  time.sleep(DEFAULT_SLEEP_TIMEOUT)
+                  continue
+                same_revision_count = 0
+                log('Retrying install or checking if previous test was cancelled')
+            except KeyError:
+              pass
+            retry = False
+            previous_revision_dict[test_suite_title] = revision_dict[test_suite_title]
+            now = time.time()
+            test_result = portal.createTestResult(revision_dict[test_suite_title],[],
+                                                  config['test_node_title'],False,test_suite_title,config['project_title'])
+            remote_test_result_needs_cleanup = True
+            log("testnode, test_result : %r" % (test_result, ))
             if test_result is not None:
+              log_file_name = self.addWatcher(test_result)
+              self.checkRevision(test_result,revision_dict,previous_revision_dict,
+                                 vcs_repository_list)
+              # Now prepare the installation of SlapOS and create instance
+              status_dict = self.prepareSlapOS(retry_software_count,retry)
+              # Give some time so computer partitions may start
+              # as partitions can be of any kind we have and likely will never have
+              # a reliable way to check if they are up or not ...
+              time.sleep(20)
+              self.runTestSuite(revision_dict,portal_url)
               test_result.removeWatch(log_file_name)
-            if remote_test_result_needs_cleanup:
-              status_dict = e.status_dict or {}
-              test_result.reportFailure(
-                command=status_dict.get('command'),
-                stdout=status_dict.get('stdout'),
-                stderr=status_dict.get('stderr'),
-              )
-            log("SubprocessError, going to sleep %s" % DEFAULT_SLEEP_TIMEOUT)
-            time.sleep(DEFAULT_SLEEP_TIMEOUT)
-            continue
-          except CancellationError, e:
-            log("CancellationError", exc_info=sys.exc_info())
-            process_manager.under_cancellation = False
-            retry = True
-            continue
-          except:
-              log("erp5testnode exception", exc_info=sys.exc_info())
-              raise
+        except SubprocessError, e:
+          log("SubprocessError", exc_info=sys.exc_info())
+          if test_result is not None:
+            test_result.removeWatch(log_file_name)
+          if remote_test_result_needs_cleanup:
+            status_dict = e.status_dict or {}
+            test_result.reportFailure(
+              command=status_dict.get('command'),
+              stdout=status_dict.get('stdout'),
+              stderr=status_dict.get('stderr'),
+            )
+          log("SubprocessError, going to sleep %s" % DEFAULT_SLEEP_TIMEOUT)
+          time.sleep(DEFAULT_SLEEP_TIMEOUT)
+          continue
+        except CancellationError, e:
+          log("CancellationError", exc_info=sys.exc_info())
+          process_manager.under_cancellation = False
+          retry = True
+          continue
+        except:
+            log("erp5testnode exception", exc_info=sys.exc_info())
+            raise
         if (now-begin) < 120:
           time.sleep(120 - (now-begin))
     finally:
