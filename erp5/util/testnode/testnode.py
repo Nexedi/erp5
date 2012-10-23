@@ -68,7 +68,6 @@ class TestNode(object):
        shutil.rmtree(fpath)
       else:
        os.remove(fpath)
-     pass
 
   def updateConfigForTestSuite(self, test_suite_data):
     config = self.config
@@ -354,8 +353,7 @@ branch = %(branch)s
                 # a reliable way to check if they are up or not ...
                 time.sleep(20)
                 self.runTestSuite(revision_dict,portal_url)
-               if test_result is not None:
-                  test_result.removeWatch(log_file_name)
+                test_result.removeWatch(log_file_name)
           except SubprocessError, e:
             log("SubprocessError", exc_info=sys.exc_info())
             if test_result is not None:
